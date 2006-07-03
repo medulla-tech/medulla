@@ -1,0 +1,957 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
+#
+# $Id$
+#
+# This file is part of LMC.
+#
+# LMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# LMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with LMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import os
+import os.path
+import re
+import logging
+import ldap.modlist
+import fileinput
+import tempfile
+
+# Initialise preload variable to True
+preload = True
+
+# Try to import module posix1e
+try:
+    from posix1e import *
+except: 
+    logger = logging.getLogger()
+    logger.error("\nPython module pylibacl not found...\nPlease install :\n  * python-pylibacl on Debian/Ubuntu\n  * python-libacl on CentOS 4.3\n  * pylibacl on Mandriva 2006\n")
+    # Define preload to False
+    preload = False
+
+from lmc.support.errorObj import errorMessage
+from lmc.support.lmcException import *
+from lmc.support import lmctools
+import lmc.plugins.base
+from lmc.support.config import *
+from lmc.plugins.base import ldapUserGroupControl
+
+from lmc.support.lmctools import shProcessProtocol
+from lmc.support.lmctools import generateBackgroundProcess
+from twisted.internet import reactor
+
+INI = "/etc/lmc/plugins/samba.ini"
+
+VERSION = "1.0.0"
+APIVERSION = "1:0:0"
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
+
+def getVersion(): return VERSION
+def getApiVersion(): return APIVERSION
+def getRevision(): return REVISION
+
+def activate():
+    """
+     this function define if the module "base" can be activated.
+     @return: return True if this module can be activate
+     @rtype: boolean
+    """
+    configParser = lmctools.getConfigParser("samba")
+    logger = logging.getLogger()
+    
+    if preload == False:
+        logger.info("Plugin samba disabled : missing python modules.. See errors above.")
+	return False
+    
+    if (configParser.get("main","disable")=="1"):
+        logger.info("samba plugin disabled by configuration.")
+        return False
+
+
+    try:
+        ldapObj = ldapUserGroupControl()
+        ret = True
+    except ldap.INVALID_CREDENTIALS:
+        logger.error("Can't bind to LDAP: invalid credentials.")
+        return False
+
+    # Test if the Samba LDAP schema is available in the directory
+    try:
+         schema =  ldapObj.getSchema("sambaSamAccount")
+         if len(schema) <= 0:
+             logger.error("Samba schema seems not be include in LDAP directory");
+             return False
+    except:
+        logger.exception("invalid schema")
+        return False
+
+
+    ##verify if init script exist
+    if os.path.exists(SambaConfig("samba").samba_init_script):
+        return True
+    else:
+        logger.error(SambaConfig("samba").samba_init_script + " does not exist")
+        return False
+
+    ## verify if samba conf file exist
+    if os.path.exists(SambaConfig("samba").samba_conf_file):
+        return True
+    else:
+        logger.error(SambaConfig("samba").samba_conf_file + " does not exist")
+        return False
+
+    return ret
+
+def isSmbAntiVirus():
+    return os.path.exists(SambaConfig("samba").clam_av_so)
+
+def getDetailedShares():
+    """Get a complete array of information about all shares"""
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    resList=smbObj.getDetailedShares()
+    return resList
+
+
+def getACLOnShare(name):
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    return smbObj.getACLOnShare(name)
+
+def addShare(name, comment, group, permAll, av = 0):
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    smbObj.addShare(name, comment, group, permAll, av)
+    smbObj.save()
+    return 0
+
+def delShare(name, file):
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    smbObj.delShare(name, file)
+    smbObj.save()
+    return 0
+
+def shareInfo(name):
+    """get an array of information about a share"""
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    return smbObj.shareInfo(name)
+
+def getSmbInfo():
+    """get main information of global section"""
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    return smbObj.getSmbInfo()
+
+def smbInfoSave(pdc, homes, options):
+    """save information about global section"""
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    return smbObj.smbInfoSave(pdc, homes, options)
+
+def isPdc():
+    try: smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+    except: raise lmcException('cannot open conffile')
+    return smbObj.isPdc()
+
+def backupShare(share, media, login):
+    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+
+    configParser = lmctools.getConfigParser("base")
+    path = configParser.get("backup-tools", "path")
+    destpath = configParser.get("backup-tools", "destpath")
+
+    cmd = os.path.join(path, "backup.sh")
+
+    if share == "homes": savedir = "/home/" # FIXME
+    else: savedir = os.path.join(smbObj.sharespath, share)
+
+    # FIXME: check for error
+    lmctools.shlaunchBackground(cmd+" "+share+" "+savedir+" "+destpath+" "+login+" "+media+" "+path,"backup share "+share,lmctools.progressBackup)
+    return 0
+
+def restartSamba():
+    lmctools.shlaunchBackground(SambaConfig("samba").samba_init_script+' restart')
+    return 0;
+
+def addSmbAttr(uid, password):
+    return sambaLdapControl().addSmbAttr(uid, password)
+
+def isSmbUser(uid):
+    return sambaLdapControl().isSmbUser(uid)
+
+def changeUserPasswd(uid, password):
+    return sambaLdapControl().changeUserPasswd(uid, password)
+
+def changeSambaAttributes(uid, attributes):
+    return sambaLdapControl().changeSambaAttributes(uid, attributes)
+
+def delSmbAttr(uid):
+    return sambaLdapControl().delSmbAttr(uid)
+
+def isEnabledUser(uid):
+    return sambaLdapControl().isEnabledUser(uid)
+
+def isLockedUser(uid):
+    return sambaLdapControl().isLockedUser(uid)
+
+def enableUser(uid):
+    return sambaLdapControl().enableUser(uid)
+
+def disableUser(uid):
+    return sambaLdapControl().disableUser(uid)
+
+def lockUser(uid):
+    return sambaLdapControl().lockUser(uid)
+
+def unlockUser(uid):
+    return sambaLdapControl().unlockUser(uid)
+
+def makeSambaGroup(group):
+    return sambaLdapControl().makeSambaGroup(group)
+
+
+class SambaConfig(PluginConfig):
+
+    def readConf(self):
+        PluginConfig.readConf(self)
+        try: self.samba_conf_file = self.get("main", "sambaConfFile")
+        except: pass
+        try: self.samba_init_script = self.get("main", "sambaInitScript")
+        except: pass
+        try: self.clam_av_so = self.get("main", "sambaClamavSo")
+        except: pass
+
+    def setDefault(self):
+        PluginConfig.setDefault(self)
+        self.samba_conf_file = '/etc/samba/smb.conf'
+        self.samba_init_script = '/etc/init.d/samba'
+        self.clam_av_so = "/usr/lib/samba/vfs/vscan-clamav.so"
+
+class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
+
+    def __init__(self, conffile = None, conffilebase = None):
+        lmc.plugins.base.ldapUserGroupControl.__init__(self, conffilebase)
+
+        if conffile: configFile = conffile
+        else: configFile = INI
+        cp = ConfigParser()
+        cp.read(configFile)
+
+        self.userDefault["samba"] = {}
+        USERDEFAULT = "userDefault"
+        if cp.has_section(USERDEFAULT):
+            for option in cp.options(USERDEFAULT):
+                self.userDefault["samba"][option] = cp.get(USERDEFAULT, option)
+
+        # Fill dictionnary of hooks from config
+        if cp.has_section("hooks"):
+            for option in cp.options("hooks"):
+                self.hooks["samba." + option] = cp.get("hooks", option)
+
+    def addSmbAttr(self, uid, password):
+        cmd = 'smbpasswd -s -a '+uid
+        shProcess = generateBackgroundProcess(cmd)
+        shProcess.write(password+"\n")
+        shProcess.write(password+"\n")
+        ret = shProcess.getExitCode()
+
+        if ret != 0:
+            raise Exception("Failed to modify password entry\n"+shProcess.stdall)
+
+        if not ret:
+            # Command was successful, now set default attributes
+            # Get current user entry
+            dn = 'uid=' + uid + ',' + self.baseUsersDN
+            s = self.l.search_s(dn, ldap.SCOPE_BASE)
+            c, old = s[0]
+            new = old.copy()
+            # Modify attributes
+            for attribute, value in self.userDefault["samba"].items():
+                if value == "DELETE":
+                    for key in new.keys():
+                        if key.lower() == attribute:
+                            del new[key]
+                            break
+                else:
+                    for key in new.keys():
+                        if key.lower() == attribute:
+                            new[key] = value
+                            break
+            # Update LDAP
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        self.runHook("samba.addsmbattr", uid, password)
+        return 0
+
+    def isSmbUser(self, uid):
+        ret = False
+        if self.existUser(uid): ret = "sambaSamAccount" in self.getDetailedUser(uid)["objectClass"]
+        return ret
+
+    def changeSambaAttributes(self, uid, attributes):
+        """
+        Change the SAMBA attributes for an user.
+        If an attribute is an empty string, it is deleted.
+
+        @param uid: login of the user
+        @type uid: str
+        @param attributes: dictionnary of the SAMBA attributes
+        @type attributes: dict
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+
+        # We update the old attributes array with the new SAMBA attributes
+        new = old.copy()
+        for key in attributes.keys():
+            if key.startswith("samba"):
+                value = attributes[key]
+                if value == "":
+                    # Maybe delete this SAMBA LDAP attribute
+                    try:
+                        del new[key]
+                    except KeyError:
+                        pass
+                else:
+                    if value.startswith("\\\\\\\\"):
+                        value = value.replace("\\\\", "\\")
+                    # Update this SAMBA LDAP attribute
+                    new[key] = value
+        modlist = ldap.modlist.modifyModlist(old, new)
+        self.l.modify_s(dn, modlist)
+        self.runHook("samba.changesambaattributes", uid)
+        return 0
+
+    def delSmbAttr(self, uid):
+        """remove smb attributes via smbpasswd cmd"""
+        return lmctools.shlaunch("/usr/bin/smbpasswd -x " + uid)
+
+    def changeUserPasswd(self, uid, passwd):
+        """
+        change SAMBA user password
+
+        @param uid: user name
+        @type  uid: str
+
+        @param passwd: non encrypted password
+        @type  passwd: str
+        """
+        cmd = 'smbpasswd -s -a '+uid
+        shProcess = generateBackgroundProcess(cmd)
+        shProcess.write(passwd+"\n")
+        shProcess.write(passwd+"\n")
+        ret = shProcess.getExitCode()
+
+        if ret != 0:
+            raise Exception("Failed to modify password entry\n" + shProcess.stdall)
+
+        self.runHook("samba.changeuserpasswd", uid, passwd)
+        return 0
+
+    def isEnabledUser(self, uid):
+        """
+        Return True if the SAMBA user is enabled
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        flags = flags.strip("[]")
+        flags = flags.strip()
+        return not flags.startswith("D")
+
+    def isLockedUser(self, uid):
+        """
+        Return True if the SAMBA user is locked
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        flags = flags.strip("[]")
+        flags = flags.strip()
+        return "L" in flags
+
+    def enableUser(self, uid):
+        """
+        Enable the SAMBA user
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        flags = flags.strip("[]")
+        flags = flags.strip()
+        if not flags.startswith("D"):
+            # Huh ? User has been already enabled
+            # Do nothing
+            pass
+        else:
+            flags = flags[1:]
+            flags = "[" + flags.ljust(11) + "]"
+            new["sambaAcctFlags"] = [flags]
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        return 0
+
+    def disableUser(self, uid):
+        """
+        Disable the SAMBA user
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        # flags should be something like "[U          ]"
+        flags = flags.strip("[]")
+        flags = flags.strip()
+        if flags.startswith("D"):
+            # Huh ? User has been already disabled
+            # Do nothing
+            pass
+        else:
+            flags = "D" + flags
+            flags = "[" + flags.ljust(11) + "]"
+            new["sambaAcctFlags"] = [flags]
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        return 0
+
+    def unlockUser(self, uid):
+        """
+        Unlock the SAMBA user
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        # flags should be something like "[U          ]"
+        if "L" in flags:
+            flags = flags.strip("[]")
+            flags = flags.strip()
+            flags = flags.replace("L", "")
+            flags = "[" + flags.ljust(11) + "]"
+            new["sambaAcctFlags"] = [flags]
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        return 0
+
+    def lockUser(self, uid):
+        """
+        Lock the SAMBA user
+        """
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = old.copy()
+        flags = new["sambaAcctFlags"][0]
+        # flags should be something like "[U          ]"
+        if not "L" in flags:
+            flags = flags.strip("[]")
+            flags = flags.strip()
+            flags = flags + "L"
+            flags = "[" + flags.ljust(11) + "]"
+            new["sambaAcctFlags"] = [flags]
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        return 0
+
+    def makeSambaGroup(self, group):
+        """
+        Transform a POSIX group as a SAMBA group.
+        It adds in the LDAP the necessary attributes to the group.
+
+        @param group: the group name
+        @type group: str
+        """
+        lmctools.shLaunch("net groupmap add unixgroup=%s" % group)
+
+    def isSambaGroup(self, group):
+        ret = False
+        if self.existGroup(group): ret = "sambaGroupMapping" in self.getDetailedGroup(group)["objectClass"]
+        return ret
+        
+
+##########################################################################
+# Class de gestion de smbConf
+##########################################################################
+
+class smbConf:
+
+    def __init__(self, smbconffile = "/etc/samba/smb.conf", conffile = None, conffilebase = None):
+        """
+        Constructor for object that read/write samba conf file.
+
+        We use the testparm command on the smb configuration file to sanitize it,
+        and to replace all keyword synonyms with the preferred keywords:
+         - 'write ok', 'writeable', 'writable' -> 'read only'
+         - 'public' -> 'guest ok'
+         ...
+
+        In SAMBA source code, parameters are defined in param/loadparm.c
+        """
+        if not conffile: configParser = lmctools.getConfigParser("samba")
+        else:
+            configParser = ConfigParser()
+            configParser.read(conffile)
+        self.sharespath = configParser.get("main", "sharespath")
+
+        self.conffilebase = conffilebase
+        self.smbConfFile = smbconffile
+        smbConfVerbose = self.getVerboseTestparmOutput()
+        smbConf = self.getTestparmOutput()
+
+        self.contentArrVerbose = self._parseSmbConfFile(smbConfVerbose)
+        self.contentArr = self._parseSmbConfFile(smbConf)
+
+    def _parseSmbConfFile(self, confString):
+        """
+        Parse SAMBA configuration file content
+        """
+        contentArr = {}
+        for a in confString.split("["):
+            b = a.split("]")
+
+            for i in range(len(b)/2):
+                listArg = b.pop()
+                localArgArr = {}
+
+                sectionName = b.pop()
+                contentArr[sectionName] = {}
+                for c in listArg.split("\n"):
+
+                    if '=' in c:
+                        arg = c.split("=", 1)
+                        localArgArr[arg.pop().strip()] = arg.pop().strip()
+
+                contentArr[sectionName] = localArgArr
+
+        return contentArr
+
+    def outputSmbConfFile(self):
+        """
+        Output as a string smb.conf file content
+        """
+        if self.getContent("global","unix charset") == "UTF-8":
+            encode_method = "utf8"
+        else:
+            encode_method = "iso-8859-1"
+
+        out = ""
+        # Begin by the [global] section
+        k = "global"
+        out = out + '[' + k + ']\n'
+        for (k2,v2) in self.contentArr[k].items():
+            encodeS='\t'+k2+' = '+v2+'\n'
+            if isinstance(encodeS,str) :
+                encodeS = unicode(encodeS,'utf8',"replace")
+            encodeS = encodeS.encode(encode_method,'replace')
+            out = out + encodeS
+        out = out + "\n"
+
+        # Do the rest
+        del self.contentArr[k]
+        for (k,v) in self.contentArr.items():
+            out = out + '[' + k + ']\n'
+            for (k2,v2) in v.items():
+                encodeS='\t'+k2+' = '+v2+'\n'
+                if isinstance(encodeS,str) :
+                    encodeS = unicode(encodeS,"utf8","replace")
+                encodeS = encodeS.encode(encode_method,'replace')
+                out = out + encodeS
+            out = out + "\n"
+        return out
+
+    def validate(self, conffile = "/etc/samba/smb.conf"):
+        """
+        Validate SAMBA configuration file with testparm.
+
+        @return: Return True if smb.conf has been validated, else return False
+        """
+        cmd = lmctools.shLaunch("/usr/bin/testparm -s %s" % conffile)
+        if cmd.exitCode:
+            ret = False
+        elif "Unknown" in cmd.err or "ERROR:" in cmd.err or "Ignoring badly formed line" in cmd.err:
+            ret = False
+        else: ret = True
+        return ret
+
+    def getVerboseTestparmOutput(self, conffile = "/etc/samba/smb.conf"):
+        """
+        Get verbose SAMBA configuration file with testparm.
+
+        @return: Return the smb.conf file formatted by testparm in verbose mode
+        """
+        cmd = lmctools.shLaunch("/usr/bin/testparm -v -s %s" % conffile)
+        return cmd.out
+
+    def getTestparmOutput(self, conffile = "/etc/samba/smb.conf"):
+        """
+        Get SAMBA configuration file with testparm.
+
+        @return: Return the smb.conf file formatted by testparm
+        """
+        cmd = lmctools.shLaunch("/usr/bin/testparm -s %s" % conffile)
+        return cmd.out
+
+    def isValueTrue(self, string):
+        """
+        @param string: a string
+        @type string: str
+        @return: Return 1 if string is yes/true/1 (case insensitive), return 0 if string is no/false/0 (case insensitive), else return -1
+        $rtype: int
+        """
+        string = str(string).lower()
+        if string in ["yes", "true", "1"]: return 1
+        elif string in ["no", "false", "0"]: return 0
+        else: return -1
+
+    def isValueAuto(self, string):
+        """
+        @param string: a string
+        @type string: str
+        @return: Return True if string is 'auto' (case insensitive), else return False
+        $rtype: int
+        """
+        string = string.lower()
+        return string == "auto"
+
+    def getBooleanValue(self, section, option):
+        """
+        Return the boolean value of an option in a section.
+
+        """
+        pass
+
+    def getSmbInfo(self):
+        """
+        return main information about global section
+        """
+        resArray = {}
+        resArray['logons'] = self.isValueTrue(self.getContent('global','domain logons'))
+        resArray['master'] = self.isValueTrue(self.getContent('global','domain master'))
+        if resArray['master'] == -1:
+            resArray["master"] = self.isValueAuto(self.getContent('global','domain master'))
+        resArray['homes'] = self.contentArr.has_key('homes')
+        resArray['pdc'] = (resArray['logons']) and (resArray['master'])
+        for option in ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script"]:
+            resArray[option] = self.getContent("global", option)
+        return resArray
+
+    def isPdc(self):
+        ret = self.getSmbInfo()
+        return ret["pdc"]
+
+    def getContent(self,section, content):
+        """get information from self.contentArr[section][content]"""
+        try:
+            return self.contentArrVerbose[section][content]
+        except KeyError:
+            return -1
+
+    def setContent(self,section, content,value):
+        """set a content in self.contentArr[section][content]=value"""
+        try:
+            self.contentArr[section][content]=value;
+        except KeyError:
+            self.contentArr[section] = {}
+            self.setContent(section,content,value)
+
+    def remove(self, section, option):
+        """
+        Remove an option from a section.
+        """
+        try:
+            del self.contentArr[section][option]
+        except KeyError:
+            pass
+
+    def smbInfoSave(self, pdc, homes, options):
+        """
+        Set information in global section:
+         @param pdc: Is it a PDC ?
+         @param homes: Do we share users' home ?
+         @param options: dict with global options
+        """
+        current = self.getSmbInfo()
+
+        # For this two smb.conf global option, we put a space and not an empty
+        # value in smb.conf, else a value by default is set by Samba
+        for option in ["logon path", "logon home"]:
+            if not options[option]: options[option] = " "
+
+        # We update only what has changed from the current configuration
+        for option in ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script"]:
+            if options[option]:
+                if options[option] != current[option]:
+                    self.setContent("global", option, options[option])
+                # else do nothing, the option is already set
+            else:
+                self.remove("global", option)
+
+        if current["pdc"] != pdc:
+            if pdc: self.setContent('global','domain logons','yes')
+            else: self.setContent('global','domain logons','no')
+            # Default value of domain master (auto) is sufficient
+            self.remove("global", "domain master")
+
+        if current["homes"] != homes:
+            if homes:
+                self.setContent('homes','comment','Repertoires utilisateurs')
+                self.setContent('homes','browseable','no')
+                self.setContent('homes','read only','no')
+                self.setContent('homes','create mask','0700')
+                self.setContent('homes','directory mask','0700')
+                # Set the vscan-clamav plugin if available
+                if os.path.exists(SambaConfig("samba").clam_av_so):
+                    self.setContent("homes", "vfs objects", "vscan-clamav")
+            else:
+                try:
+                    self.delShare('homes',0)
+                except lmcException:
+                    pass
+        # Save file
+        self.save()
+        return 0
+
+    def getDetailedShares(self):
+        """return detailed list of shares"""
+        resList = []
+        #foreach element in smb.conf
+        # so for each element in self.contentArr
+        for section in self.getSectionList():
+            if not section in ["global", "printers", "print$"]:
+                localArr = []
+                localArr.append(section)
+                comment = self.getContent(section, 'comment' )
+                if (comment != -1):
+                    localArr.append(comment)
+                resList.append(localArr)
+
+        resList.sort()
+        return resList
+
+    def getSectionList(self):
+        returnArr = list()
+        for (k,v) in self.contentArr.items():
+            returnArr.append(k)
+        return returnArr
+
+    def save(self):
+        """
+        Write SAMBA configuration file (smb.conf) to disk
+        """
+        handle, tmpfname = tempfile.mkstemp("lmc")
+        f = os.fdopen(handle, "w")
+        f.write(self.outputSmbConfFile())
+        f.close()
+        if not self.validate(tmpfname): raise LmcException("smb.conf file is not valid")
+        lmctools.shlaunch("cp %s %s" % (tmpfname, self.smbConfFile))
+        lmctools.shlaunch("rm %s" % tmpfname)
+
+    def delShare(self, name, remove):
+        """
+        Delete a share from SAMBA configuration, and maybe delete the share
+        directory from disk.
+        The save method must be called to update smb.conf.
+
+        @param name: Name of the share
+        @param remove: If true, we physically remove the directory
+        """
+        try:
+            path = self.getContent(name, 'path')
+            del self.contentArr[name]
+        except KeyError:
+            raise lmcException('share "'+ name+'" does not exist')
+
+        if remove: lmctools.shlaunch('rm -fr '+ path)
+
+    def shareInfo(self, name):
+        """
+        Get information about a share
+        """
+        returnArr = {}
+        returnArr['desc'] = self.getContent(name,'comment')
+        if returnArr['desc'] == -1: returnArr['desc'] = ""
+        if self.isValueTrue(self.getContent(name,'public')) == 1:
+            returnArr['permAll'] = 1
+        elif self.isValueTrue(self.getContent(name,'guest ok')) == 1:
+            returnArr['permAll'] = 1
+        else: returnArr['permAll'] = 0
+
+        #if we cannot find it
+        if (self.getContent(name, 'vfs objects') == -1):
+            returnArr['antivirus'] = False
+        else:
+            returnArr['antivirus'] = True
+
+        # Get the directory group owner
+        # FIXME: ???
+        try:
+            path = os.path.join(self.sharespath, name)
+            ps = os.popen('stat %s | grep Access: | head -n 1' % path, 'r')
+            # more matching regex
+            # 'Gid: *\( *[0-9]*/ *([^/]*)\)$'
+            groupArr= re.findall('/ *([^/]*)\)$', ps.read())
+            for group in groupArr:
+                returnArr['group']=group
+        except:
+            #raise lmcException('cannot retrieve group attribute')
+            pass
+        return returnArr
+
+
+    def addShare(self, name, comment, groups, permAll, av):
+        """
+        add a share in smb.conf
+        and create it physicaly
+        """
+        if self.contentArr.has_key(name):
+            raise Exception('This share already exist')
+
+        # create samba share directory
+        path = os.path.join(self.sharespath, name)
+
+        # FIXME: we should test os.system return value, and in fact not use os.system !
+        os.system("mkdir -p '%s'" % path)
+        os.system("chown 'root:root' %s" % (path))
+
+        # create table and fix permission
+        tmpInsert = {}
+        tmpInsert['comment'] = comment
+        if permAll:
+            lmctools.shlaunch("setfacl -b "+path)
+            tmpInsert['public'] = 'yes'
+            os.system("chmod 0777 '%s'" % path)
+        else:
+            tmpInsert['public'] = 'no'
+            os.system("chmod 0770 '%s'" % path)
+            lmctools.shlaunch("setfacl -b "+path)
+            acl1 = ACL(file=path)
+            # Add and set default mask to rwx
+            # This is needed by the ACL system, else the ACLs won't be valid
+            e = acl1.append()
+            e.permset.add(ACL_READ)
+            e.permset.add(ACL_WRITE)
+            e.permset.add(ACL_EXECUTE)
+            e.tag_type = ACL_MASK
+
+            # For each specified group, we add rwx access
+            for group in groups:
+                e = acl1.append()
+                e.permset.add(ACL_READ)
+                e.permset.add(ACL_WRITE)
+                e.permset.add(ACL_EXECUTE)
+                e.tag_type = ACL_GROUP
+                # Search the gid number corresponding to the given group
+                ldapobj = lmc.plugins.base.ldapUserGroupControl(self.conffilebase)
+                gidNumber = ldapobj.getDetailedGroup(group)['gidNumber'][0]
+                e.qualifier = int(gidNumber)
+            # Test if our ACLs are valid
+            if acl1.valid():
+                acl1.applyto(path)
+            else:
+                logger = logging.getLogger()
+                logger.error("cannot save acl on folder " + path)
+
+        tmpInsert['writeable'] = 'yes'
+        tmpInsert['browseable'] = 'yes'
+        tmpInsert['path'] = path
+
+        # Set the vscan-clamav plugin if available
+        if av == 1: tmpInsert['vfs objects'] = 'vscan-clamav'
+
+        self.contentArr[name] = tmpInsert
+
+        return 'partage ' + name +' ajoute' # FIXME: Should return 0
+
+    def getACLOnShare(self, name):
+        """
+        Return a list with all the groups that have rwx access to the share.
+
+        @param name: name of the share (last component of the path
+        @type name: str
+
+        @rtype: list
+        @return: list of groups that have rwx access to the share.
+        """
+        path = os.path.join(self.sharespath, name)
+        ret= []
+        ldapobj = lmc.plugins.base.ldapUserGroupControl(self.conffilebase)
+        acl1 = ACL(file=path)
+        for e in acl1:
+            if e.permset.write:
+                if e.tag_type == ACL_GROUP:
+                    res = ldapobj.getDetailedGroupById(str(e.qualifier))
+                    ret.append( res['cn'][0])
+        return ret
+
+
+class sambaLog:
+
+    def __init__(self, logs = ["/var/log/samba/log.nmbd", "/var/log/samba/log.smbd"]):
+        self.logs = logs
+        self.rex = {
+            "PDC" : "Samba server (\S+) is now a domain master browser for workgroup (\S+) on subnet (\S+)",
+            "LOGON" : "Samba is now a logon server for workgroup (\S+) on subnet (\S+)",
+            "STOP" : "going down...",
+            "START" : "Netbios nameserver version (\S+) started.",
+            "AUTHSUCCESS" : "authentication for user \[(\S+)\] -> \[(\S+)\] -> \[(\S+)\] succeeded",
+            "AUTHFAILED" :  "Authentication for user \[(\S+)\] -> \[(\S+)\] FAILED with error (\S+)"
+            }
+
+    def get(self):
+        return self.filterLog(self.parse())
+
+    def filterLog(self, logs):
+        filteredLogs = []
+        for log in logs:
+            for key in self.rex:
+                m = re.search(self.rex[key], log["msg"])
+                if m:
+                    l = {}
+                    l["day"] = log["day"]
+                    l["hour"] = log["hour"]
+                    l["msg"] = key
+                    filteredLogs.append(l.copy())
+        return filteredLogs
+
+    def parse(self):
+        logs = {}
+        for logFile in self.logs:
+            l = {}
+            firstdate = 0
+            f = file(logFile)
+            for line in f:
+                if line.startswith("["):
+                    firstdate = 1
+                    if l: logs.append(l.copy())
+                    l = {}
+                    l["msg"] = ""
+                    m = re.match("\[(.*)\].*", line)
+                    day, hour, num = m.group(1).split()
+                    hour = hour[:-1]
+                    l["day"] = day
+                    l["hour"] = hour
+                else:
+                    if firstdate:
+                        line = line.strip()
+                        line = line.strip("*")
+                        if len(line): l["msg"] = l["msg"] + line
+            f.close()
+        return logs
+
+
