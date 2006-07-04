@@ -1,0 +1,55 @@
+<?php
+/**
+ * (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
+ *
+ * $Id$
+ *
+ * This file is part of LMC.
+ *
+ * LMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+?>
+<?php
+
+/* $Id$ */
+
+/**
+ * this file provide session registration
+ */
+
+session_start();
+session_cache_expire (30);
+
+
+if (!isset($_SESSION["expire"]) ) 
+{ 
+  if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"]))
+  { 
+    session_destroy(); 
+    $goto = ""; 
+  } 
+  else 
+  { 
+    $goto = "?goto=".$_SERVER["SCRIPT_NAME"]; 
+  } 
+ 
+  $root = $conf["global"]["root"]; 
+  header("Location: ".$root."index.php".$goto); 
+  exit; 
+}
+
+$_SESSION["expire"] = time() + 90 * 60;
+
+?>

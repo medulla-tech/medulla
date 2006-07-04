@@ -1,0 +1,33 @@
+<style type="text/css">
+<!--
+
+.actionacllist {
+
+	margin-top: 5px;
+	clear: right;
+	padding: 2px;
+	background-color: #EEEEEE;
+	color: #666;
+}
+
+-->
+</style>
+
+
+
+<h2>{edit_acl} </h2>
+<form name="form1" id="form1" method="post" action="">
+
+<!-- BEGIN module -->
+
+    <h2>{module_name}</h2>
+
+    {aclpage_template}
+
+    {aclattr_template}
+
+<!-- END module -->
+<input name="buser" type="submit" class="btnPrimary" value="Valider" />
+<input name="breset" type="reset" class="btnSecondary" value="Effacer" />
+
+</form>

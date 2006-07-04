@@ -1,0 +1,159 @@
+<?php
+/**
+ * (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
+ *
+ * $Id$
+ *
+ * This file is part of LMC.
+ *
+ * LMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+?>
+<?
+
+        /**
+         * module declaration
+         */
+        $mod = new Module("base");
+        $mod->setVersion("1.0.0");
+        $mod->setRevision("###SVN_VERSION###");
+        $mod->setAPIVersion('1:0:0');
+
+        /**
+         * define main submod
+         */
+
+        $submod = new SubModule("main");
+        $submod->setVisibility(False);
+
+        $page = new Page("default",_("LMC root page"));
+        $page->setFile("main_content.php");
+        $submod->addPage($page);
+
+        $mod->addSubmod($submod);
+
+
+
+        /**
+         * user submod definition
+         */
+
+        $submod = new SubModule("users");
+        $submod->setDescription(_("Users"));
+        $submod->setImg('img/navbar/user');
+        $submod->setDefaultPage("base/users/index");
+        $submod->setPriority(10);
+
+
+        $page = new Page("index",_("User list"));
+        $submod->addPage($page);
+
+        $page = new Page("ajaxAutocompleteGroup");
+        $page->setFile("modules/base/users/ajaxAutocompleteGroup.php",
+                       array("AJAX" =>True)
+                       );
+        $submod->addPage($page);
+
+        $page = new Page("ajaxFilter");
+        $page->setFile("modules/base/users/ajaxFilter.php",
+                       array("AJAX" =>True)
+                       );
+        $submod->addPage($page);
+
+        $page = new Page("ajaxGroup");
+        $page->setFile("modules/base/users/ajaxGroup.php",
+                       array("AJAX" =>True)
+                       );
+        $submod->addPage($page);
+
+        $page = new Page("add",_("Add a user"));
+        $submod->addPage($page);
+
+        $page = new Page("edit",_("Edit a user"));
+        $submod->addPage($page);
+
+        $page = new Page("editacl",_("Edit ACL permissions on a user"));
+        $submod->addPage($page);
+
+        $page = new Page("delete",_("Delete a user"));
+        $page->setFile("modules/base/users/delete.php",
+                        array("noHeader"=>True)
+                        );
+        $submod->addPage($page);
+
+        $page = new Page("backup",_("Backup user files"));
+        $page->setFile("modules/base/users/backup.php",
+                        array("noHeader"=>True)
+                        );
+        $submod->addPage($page);
+
+        $page = new Page("passwd",_("Change user password"));
+        $submod->addPage($page);
+
+        $mod->addSubmod($submod);
+
+        /**
+         * groups submod definition
+         */
+
+        $submod = new SubModule("groups");
+        $submod->setDescription(_("Groups"));
+        $submod->setImg('img/navbar/group');
+        $submod->setDefaultPage("base/groups/index");
+        $submod->setPriority(20);
+
+
+        $page = new Page("index",_("Group list"));
+        $submod->addPage(&$page);
+
+
+        $page = new Page("add",_("Add a group"));
+        $submod->addPage($page);
+
+        $page = new Page("delete",_("Delete a group"));
+        $page->setFile("modules/base/groups/delete.php",
+                        array("noHeader"=>True)
+                        );
+        $submod->addPage($page);
+
+        $page = new Page("ajaxFilter");
+        $page->setFile("modules/base/groups/ajaxFilter.php",
+                        array("AJAX"=>True)
+                        );
+        $submod->addPage($page);
+
+        $page = new Page("members",_("Group members"));
+        $submod->addPage($page);
+
+        $mod->addSubmod($submod);
+
+        /**
+         * ACL properties
+         */
+
+        $mod->addACL("nlogin",_("User login"));
+        $mod->addACL("name", _("User name"));
+        $mod->addACL("groups",_("User groups"));
+        $mod->addACL("firstname",_("User firstname"));
+        $mod->addACL("homeDir",_("User home directory"));
+
+        $mod->addACL("pass",_("Password"));
+        $mod->addACL("confpass",_("Confirm your password"));
+        $mod->addACL("isBaseDesactive",_("Enable/Disable user account"));
+
+        $LMCApp =& LMCApp::getInstance();
+        $LMCApp->addModule($mod);
+
+?>

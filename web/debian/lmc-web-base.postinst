@@ -1,0 +1,32 @@
+#!/bin/sh
+
+case "$1" in
+    configure)
+	webservers="apache apache2 apache-ssl"
+	for server in $webservers ; do	    
+	    includefile="/etc/lmc/apache.conf"
+	    . /usr/share/wwwconfig-common/apache-include_all.sh
+	    test "$status" = "uncomment" -o "$status" = "include" && restart="$server $restart"
+	done
+	
+	servers="apache apache2 apache-ssl"
+	. /usr/share/wwwconfig-common/restart.sh
+
+	chown www-data:root /etc/lmc/lmc.ini
+	chmod 660 /etc/lmc/lmc.ini
+
+	;;
+    
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+	;;
+    
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

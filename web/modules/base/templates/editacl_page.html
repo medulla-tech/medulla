@@ -1,0 +1,23 @@
+<a href="javascript:void()" onclick="checkAll('acl[{module_name}]',1);">{select_all}</a>
+<a href="javascript:void()" onclick="checkAll('acl[{module_name}]',0);">{unselect_all}</a><br />
+
+    <div id="mod{module_name}" name="mod{module_name}" display="{modvis}">
+    <table border="1" cellspacing="0" cellpadding="2">
+    <tr><td width="50%"><b>{function_name_desc}</b></td><td><b>{authorize}</b></td></tr>
+    <!-- BEGIN submodule -->
+
+
+
+        <!-- BEGIN action -->
+        <tr {tr_class}><td>{desc_action}</td>
+        <td><input id="acl[{module_name}][{submodule_name}][{action_name}][right]" name="acl[{module_name}][{submodule_name}][{action_name}][right]" {checked} type="checkbox" class="checkbox" /></td></tr>
+        <!-- END action -->
+
+
+
+
+
+    <!-- END submodule -->
+    </table>
+    </div>
+    <br />

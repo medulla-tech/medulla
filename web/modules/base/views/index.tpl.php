@@ -1,0 +1,103 @@
+<?php
+/**
+ * (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
+ *
+ * $Id$
+ *
+ * This file is part of LMC.
+ *
+ * LMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * LMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+?>
+
+
+<form name="userForm" id="userForm" action="#">
+
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onKeyUp="pushSearchUser(); return false;">
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onClick="document.getElementById('param').value =''; pushSearchUser(); return false;">
+    </span>
+    </div>
+
+    <script>
+        document.getElementById('param').focus();
+    </script>
+</form>
+
+<h2><?= _("User list");?></h2>
+
+<div class="fixheight"></div>
+<div id="userContainer">
+
+<?php
+
+if ($error)
+{
+  echo $error;
+}
+
+
+$arrUser = array();
+$arrSnUser = array();
+$homeDirArr = array();
+
+/*for ($idx = $start;
+     ($idx < count($users)) && ($idx <= $end);
+     $idx++)*/
+
+$css = array();
+
+for ($idx = 0; $idx < count($users); $idx++)
+ {
+    if ($users[$idx]["enabled"]) {
+        $css[$idx] = "userName";
+    }  else $css[$idx] = "userNameDisabled";
+    $arrUser[]=$users[$idx]['uid'];
+
+
+
+
+    $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];
+    $homeDirArr[]=$users[$idx]['homeDirectory'];
+}
+
+
+// $arrUser is the list of all Users
+$n = new UserInfos($arrUser,_("Login"));
+
+$n->setCssClass("userName");
+
+$n->css = $css;
+
+$n->addExtraInfo($arrSnUser,_("Name"));
+
+//add a list with all homeDir
+$n->addExtraInfo($homeDirArr,_("Home directory"));
+
+$n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user") );
+//
+$n->addActionItem(new ActionItem(_("LMC rights"),"editacl","editacl","user") );
+$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","user") );
+$n->addActionItem(new ActionPopupItem(_("Backup"),"backup","archiver","user") );
+
+$n->setName(_("Users"));
+$n->display();
+
+?>
+
+</div>
