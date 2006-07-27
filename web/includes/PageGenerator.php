@@ -210,7 +210,7 @@ class ActionPopupItem extends ActionItem {
 
     function encapsulate($obj) {
         $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\" ";
-        $str.= "  onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$param."'); return false;\">";
+	$str.= "  onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
 
         $str.= "$obj";
         $str.=" </a>";
