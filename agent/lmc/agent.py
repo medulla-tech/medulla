@@ -43,7 +43,7 @@ import support.lmcException
 Fault = xmlrpclib.Fault
 __config = None #shared config object
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 def getAvailablePlugins(path):
     """
@@ -152,7 +152,7 @@ class LmcServer(xmlrpc.XMLRPC,object):
         request.finish()
 
     def getRevision(self):
-        return "###SVN_VERSION###"
+        return "$Rev$"
 
     def getVersion(self):
         return VERSION
