@@ -27,8 +27,8 @@
          * module declaration
          */
         $mod = new Module("base");
-        $mod->setVersion("1.0.0");
-        $mod->setRevision("###SVN_VERSION###");
+        $mod->setVersion("1.0.1");
+        $mod->setRevision("$Rev$");
         $mod->setAPIVersion('1:0:0');
 
         /**
