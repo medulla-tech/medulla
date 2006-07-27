@@ -1638,8 +1638,16 @@ class ldapAuthen:
         the user.
         @rtype: int
         """
-        if (self.result==None): return 1
-        return 0
+        ret = False
+        if self.result == -1:
+            ret = False
+        elif ldap.__version__ == "2.2.0":
+            if self.result != None:
+                if len(self.result) == 2:
+                    if self.result[0] == ldap.RES_BIND:
+                        ret = True
+        elif self.result == None: ret = True
+        return ret
 
 
 class GpoManager:
