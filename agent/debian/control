@@ -2,7 +2,7 @@ Source: lmc-agent
 Section: admin
 Priority: optional
 Maintainer: Linbox <infos@linbox.com>
-Build-Depends-Indep: debhelper (>= 4.0.0), python
+Build-Depends-Indep: debhelper (>= 4.0.0), python-dev
 Build-Depends: debhelper (>= 4.0.0), libglib2.0-dev
 Standards-Version: 3.6.1
 
