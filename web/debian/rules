@@ -53,14 +53,8 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/$(PACKAGE).
-	mkdir -p $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc
-	mkdir -p $(CURDIR)/debian/$(PACKAGE)/etc/lmc
-
-	install --mode=640 -g www-data confs/lmc.ini $(CURDIR)/debian/$(PACKAGE)/etc/lmc/lmc.ini
-	install --mode=644 debian/apache.conf debian/$(PACKAGE)/etc/lmc
-
-	cp -a index.php main.php main_content.php graph img includes modules logout jsframework\
-		$(CURDIR)/debian/$(PACKAGE)/usr/share/lmc
+	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/$(PACKAGE)
+	install --mode=644 debian/apache.conf debian/$(PACKAGE)/etc/lmc/apache.conf
 
 # Build architecture-independent files here.
 binary-indep: build install
