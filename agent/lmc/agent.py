@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -22,7 +21,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from twisted.web import xmlrpc, server
-from twisted.internet import ssl, reactor
+from twisted.internet import ssl
+from twisted.internet import reactor
 
 import re
 import imp
@@ -43,7 +43,7 @@ import support.lmcException
 Fault = xmlrpclib.Fault
 __config = None #shared config object
 
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 
 def getAvailablePlugins(path):
     """
