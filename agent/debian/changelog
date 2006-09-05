@@ -1,3 +1,9 @@
+lmc-agent (1.1.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Linbox <infos@linbox.com>  Tue,  5 Sep 2006 10:43:54 +0200
+
 lmc-agent (1.0.1-1) unstable; urgency=low
 
   * New upstream release.
