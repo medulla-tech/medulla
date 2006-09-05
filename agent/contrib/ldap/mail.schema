@@ -1,0 +1,31 @@
+# Attributes
+attributetype ( 1.3.6.1.4.1.40098.1.1.13.1
+		NAME 'maildrop'
+		DESC 'Mail addresses where mail is delivered -- ie forwards'
+		EQUALITY caseIgnoreMatch
+		SUBSTR caseIgnoreSubstringsMatch
+		SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{512})
+
+attributetype ( 1.3.6.1.4.1.40098.1.1.13.2
+		NAME 'mailalias'
+		DESC 'Mail addresses accepted by this account -- ie aliases'
+		EQUALITY caseIgnoreMatch
+		SUBSTR caseIgnoreSubstringsMatch
+		SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{512})
+
+attributetype ( 1.3.6.1.4.1.40098.1.1.13.3
+		NAME 'mailenable'
+		DESC 'Mail Account validity'
+		SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{8})
+
+# Objectclass
+objectclass ( 1.3.6.1.4.1.40098.1.2.13.1
+		NAME 'mailAccount'
+		DESC 'Mail Account'
+		SUP top
+		AUXILIARY
+		MUST maildrop
+		MAY (
+			mailalias $ mailenable
+		    )
+		)
