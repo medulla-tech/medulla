@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
  *
- * $Id: index.php 40 2006-06-09 08:19:07Z jwax $
+ * $Id$
  *
  * This file is part of LMC.
  *
