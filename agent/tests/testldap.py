@@ -3,7 +3,7 @@
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: testldap.py 512 2006-06-30 07:17:56Z cedric $
+# $Id: testldap.py 543 2006-07-19 13:36:46Z cedric $
 #
 # This file is part of LMC.
 #
@@ -37,8 +37,7 @@ def cleanLdap():
     os.system("/etc/init.d/slapd stop")
     os.system("killall -9 slapd")
     os.system("rm -f /var/lib/ldap/*")
-    os.system("cp contrib/ldap/lmc.schema /etc/ldap/schema")
-    os.system("cp contrib/ldap/printer.schema /etc/ldap/schema")
+    os.system("cp contrib/ldap/*.schema /etc/ldap/schema")
     os.system("dpkg-reconfigure -pcritical slapd")
     os.system("cp contrib/ldap/slapd.conf /etc/ldap")
     os.system("/etc/init.d/slapd restart")
