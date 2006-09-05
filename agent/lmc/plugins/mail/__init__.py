@@ -2,7 +2,7 @@
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: __init__.py 557 2006-07-21 12:15:30Z acecile $
+# $Id$
 #
 # This file is part of LMC.
 #
@@ -33,7 +33,7 @@ import logging
 
 VERSION = "1.1.0"
 APIVERSION = "1:0:0"
-REVISION = int("$Rev: 463 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
