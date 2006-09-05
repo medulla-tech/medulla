@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -32,7 +31,7 @@ import logging
 from lmc.support import lmctools
 from lmc.support.config import *
 
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 APIVERSION = "1:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
