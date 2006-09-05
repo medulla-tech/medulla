@@ -1,25 +1,5 @@
 #!/bin/bash
-#
-#    backup script for the Linbox Management Console
-#
-#    Copyright (C) 2004 Julien BLACHE / Sirius Technologies <julien.blache@siriustech.org>
-#
-#    $Id: backup.sh 48 2004-05-10 13:18:53Z jblache $
-#
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-#
-## ARGUMENTS
+# $Id: backup.sh 48 2004-05-10 13:18:53Z jwax $
 # arg1 : share name
 # arg2 : share path
 # arg3 : backup path
@@ -59,13 +39,14 @@ done
 
 for i in $(seq 1 ${nbcd}); do
     echo ${login}-${share}-${stamp}/${stamp}-${share}-vol${i}.iso
+    echo "Creation volume ${i}/${nbcd}"
 
-    mkisofs -v -v -graft-points -iso-level 4 \
+    mkisofs -v -graft-points -iso-level 4 \
 	-path-list ${tmpdir}/list${i} \
 	-J -r -A "Backup de ${sharepath} (date: ${stamp})" \
 	-o ${backupdest}/${stamp}-${share}-vol${i}.iso \
 	  2>&1
-#	these options are not supported for the moment by mkisofs
+#	-volset-size ${nbcd} -volset-seqno ${i}  2>&1
 #	-volset-size ${nbcd} -volset-seqno ${i} >> ${log} 2>&1
 
     if [ "$?" != "0" ]; then
