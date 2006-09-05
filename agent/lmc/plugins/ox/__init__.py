@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -34,8 +33,8 @@ import logging
 import os
 import ConfigParser
 
-VERSION = "1.0.1"
-APIVERSION = "1:0:0"
+VERSION = "1.1.0"
+APIVERSION = "2:0:1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
@@ -110,7 +109,7 @@ def isOxUser(uid):
     return "OXUserObject" in lmc.plugins.base.getUserAttributes(uid,"objectClass")
     #else: return False
 
-def addOxAttr(uid,domain,lang,timezone):
+def addOxAttr(uid,domain,lang,timezone,enabled):
     """
     add OxAttributes
     @param uid: user name
@@ -125,7 +124,7 @@ def addOxAttr(uid,domain,lang,timezone):
     launch java applet, creating ox entities
     """
     oxc = oxControl()
-    return oxc.addOxAttr(uid,domain,lang,timezone)
+    return oxc.addOxAttr(uid,domain,lang,timezone,enabled)
 
 def delOxAttr(uid):
     """
@@ -141,7 +140,7 @@ def delOxAttr(uid):
     return oxc.delOxAttr(uid)
 
 #change main UserAttributes
-def changeUserOxAttributes(uid,domain,lang,timezone):
+def changeUserOxAttributes(uid,domain,lang,timezone,enabled):
     """
     change OxAttributes
     @param uid: user name
@@ -153,10 +152,17 @@ def changeUserOxAttributes(uid,domain,lang,timezone):
     use ldapObj.changeUserAttributes to change ldap attributes
     """
     ldapObj = lmc.plugins.base.ldapUserGroupControl()
-    ldapObj.changeUserAttributes(uid,"mail",uid+"@"+domain)
     ldapObj.changeUserAttributes(uid,"mailDomain",domain)
     ldapObj.changeUserAttributes(uid,"preferredLanguage",lang)
     ldapObj.changeUserAttributes(uid,"OXTimeZone",timezone)
+
+    if enabled:
+        if oxControl().version!="0.8.0-5":
+            ldapObj.changeUserAttributes(uid,"mailEnabled","OK")
+        else:
+            ldapObj.changeUserAttributes(uid,"mailEnabled","TRUE")
+    else:
+        ldapObj.changeUserAttributes(uid,"mailEnabled","NONE")
     return 0
 
 
@@ -194,7 +200,7 @@ class oxControl(ldapUserGroupControl):
         try: self.version = cp.get("main", "version")
         except: pass
 
-    def addOxAttr(self,uid,domain,lang,timezone):
+    def addOxAttr(self,uid,domain,lang,timezone,enabled):
         """Give attributes to an OXUser"""
         cn='uid='+uid+', '+ self.baseUsersDN
         attrs= []
@@ -218,7 +224,9 @@ class oxControl(ldapUserGroupControl):
             newattrs["lnetMailAccess"]="5"
             newattrs["mailEnabled"]="TRUE"
 
-        newattrs["mail"]=uid+"@"+domain
+        if not enabled:
+            newattrs["mailEnabled"]="NONE"
+
         newattrs["mailDomain"]=domain
         newattrs["o"]=self.oXorganization
         newattrs["preferredLanguage"]=lang
@@ -314,7 +322,10 @@ def migrateUser():
     migrateUser = []
 
     for userid in userOx:
-        attr = lmc.plugins.base.getUserAttributes(userid,"mailEnabled")
+        try:
+            attr = lmc.plugins.base.getUserAttributes(userid,"mailEnabled")
+        except:
+            attr= list()
         if 'TRUE' in attr:
             logger.info("migrating "+userid)
             ldapObj = lmc.plugins.base.ldapUserGroupControl()
