@@ -1,3 +1,19 @@
+lmc-web-base 1.1.0
+------------------
+
+ * New home page to improve navigation
+ * The old home page has been moved to a new "Status" page
+ * New Log page to show LDAP operations log
+ * The number of users in a group is now displayed in the group list
+ * Internal module management improvement
+
+
+lmc-web-base 1.0.1
+------------------
+
+ * Fix a popup generator bug.
+
+
 lmc-web-base 1.0.0
 ------------------
 
