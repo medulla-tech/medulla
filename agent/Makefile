@@ -38,24 +38,16 @@ LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
 SBINFILES = bin/lmc-agent
 
-all: build
+all: install
 
 # Cleaning target
 clean:
 	@echo ""
 	@echo "Cleaning sources..."
-	$(MAKE) clean -C backup-tools
-
-# Build cdlist binary
-cdlist:
-	@echo ""
-	@echo "Build cdlist binary..."
-	$(MAKE) -C backup-tools
-
-build: cdlist
+	@echo "Nothing to do"
 
 # Install everything
-install: build 
+install: 
 	@# Install directories
 	@echo ""
 	@echo "Creating directories..."
@@ -120,9 +112,9 @@ docs:
 
 test:
 	PYTHONPATH=. python tests/testldap.py
-	#PYTHONPATH=. python tests/testprinters.py
 	PYTHONPATH=. python tests/testsamba.py
 	PYTHONPATH=. python tests/testproxy.py
+	PYTHONPATH=. python tests/testmail.py
 
 lint:
 	pylint --disable-all --html=y --enable-variables=y lmc/*.py lmc/support/*.py lmc/plugins/*.py > /var/www/portail/lmc-lint.html
