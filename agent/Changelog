@@ -1,3 +1,10 @@
+lmc-agent 1.1.0
+---------------
+
+ * New mail plugin to manage user email delivery with postfix
+ * SAMBA plugin: shares connections and session status are now available
+ * base plugin: All log files can now be accessed
+
 lmc-agent 1.0.1
 ---------------
 
