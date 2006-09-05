@@ -82,7 +82,7 @@ lastmod         on
 # Others should not be able to see it, except the
 # admin entry below
 # These access lines apply to database #1 only
-access to attrs=userPassword
+access to attrs=userPassword,sambaLMPassword,sambaNTPassword
         by dn="cn=admin,dc=linbox,dc=com" write
         by anonymous auth
         by self write
