@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -25,7 +24,9 @@ from lmc.support.errorObj import errorMessage
 from lmc.support.lmcException import lmcException
 from lmc.support import lmctools
 from lmc.support.lmctools import cSort
+from lmc.support.config import *
 from time import time
+
 
 from lmc.support.lmctools import shProcessProtocol
 from lmc.support.lmctools import generateBackgroundProcess
@@ -46,6 +47,7 @@ from sets import Set
 import logging
 import shutil
 
+from time import mktime, strptime, strftime
 #
 # Access control on a LDAP server
 # include Users/Groups and Machine access for Samba
@@ -62,8 +64,8 @@ baseGroupsDN = ""
 
 modList= None
 
-VERSION = "1.0.1"
-APIVERSION = "1:0:0"
+VERSION = "1.1.0"
+APIVERSION = "2:0:1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
@@ -88,6 +90,7 @@ def listProcess():
             assoc.append(psdict[i].desc)
             assoc.append(psdict[i].progress)
             assoc.append(psdict[i].status)
+            #assoc.append(psdict[i].out)
             ret.append(assoc)
 
     return ret
@@ -109,7 +112,7 @@ def activate():
         ret = True
     except ldap.INVALID_CREDENTIALS:
         logger.error("Can't bind to LDAP: invalid credentials.")
-        ret = False
+        return False
 
     # Test if the LMC LDAP schema is available in the directory
     try:
@@ -156,6 +159,18 @@ def changeAclAttributes(uid,acl):
     ldapObj = ldapUserGroupControl()
     ldapObj.changeUserAttributes(uid,acl)
     return 0
+
+def setPrefs(uid,pref):
+    ldapObj = ldapUserGroupControl()
+    ldapObj.changeUserAttributes(uid,'lmcPrefs',pref)
+    return 0
+
+def getPrefs(uid):
+    ldapObj = ldapUserGroupControl()
+    try:
+        return ldapObj.getDetailedUser(uid)['lmcPrefs'][0]
+    except:
+        return ''
 
 def changeGroupDescription(cn,desc):
     ldapObj = ldapUserGroupControl()
@@ -359,6 +374,11 @@ def isLocked(login):
 def getAllGroupsFromUser(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.getAllGroupsFromUser(uid)
+
+
+###log view accessor
+def getLdapLog(filter = ''):
+    return LogView('ldap.log').getLog(filter)
 
 _reptable = {}
 def _fill_reptable():
@@ -917,7 +937,12 @@ class ldapUserGroupControl:
          @param attrVal: attribute value
          @type  attrVal: object
         """
-        self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,attrVal)])
+        if attrVal:
+            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,attrVal)])
+        else:
+            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,'rien')])
+            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr,'rien')])
+
         return 0
 
     def changeGroupAttributes(self,uid,attr,attrVal):
@@ -1239,9 +1264,26 @@ class ldapUserGroupControl:
         @return: list of all users correspond criteria
         @rtype: list
         """
+        if (pattern==''): pattern = "*"
+        return self.searchUserAdvance("uid="+pattern,base)
+
+    def searchUserAdvance(self, pattern = '', base = None):
+        """
+        search a user in ldapdirectory
+        @param pattern : pattern for search filter
+          ex: *admin*, luc*
+        @type pattern : str
+
+         if empty, return all user
+
+        search begin at baseUsersDN (defines in INIFILE)
+
+        @return: list of all users correspond criteria
+        @rtype: list
+        """
         if not base: base = self.baseUsersDN
         if (pattern==''): searchFilter = "uid=*"
-        else: searchFilter = "uid=" + pattern
+        else: searchFilter = pattern
         result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
 
         # prepare array for processing
@@ -1343,7 +1385,7 @@ class ldapUserGroupControl:
         Test if the user exists in the LDAP.
 
         @param uid: user uid
-        @type uid: str        
+        @type uid: str
 
         @return: return True if a user exist in the ldap BaseDN directory
         @rtype: boolean
@@ -1360,7 +1402,7 @@ class ldapUserGroupControl:
 
         @param group: group name
         @type group: str
-        
+
         @return: return True if a group exist in the LDAP directory
         @rtype: boolean
         """
@@ -1392,10 +1434,16 @@ class ldapUserGroupControl:
 
                     gidNumber = int(entry[1]['gidNumber'][0])
 
+                    try:
+                        numbr = len(entry[1]['memberUid'])
+                    except:
+                        numbr = 0;
+
                     cell = []
 
                     cell.append(cn)
                     cell.append(description)
+                    cell.append(numbr)
 
                     if (gidNumber >= minNumber): resArr[cn.lower()] = cell
 
@@ -1857,3 +1905,61 @@ def launch(s):
     ret = lmctools.shlaunch(s)
 
     return ret
+
+################################################################################
+###### LOG VIEW CLASS
+################################################################################
+
+class LogView:
+    """
+    LogView class. Provide accessor to show log content
+    """
+
+    def __init__(self, filename = 'ldap.log', logdir = "/var/log",pattern=None):
+        self.file = open(os.path.join(logdir, filename),'r')
+        if pattern == None:
+            self.pattern = "(.*) ([^ ]*) slapd\[([0-9]*)\]: conn=([0-9]+) (op|fd)=([0-9]+) ([A-Za-z]+) (.*)$"
+        else:
+            self.pattern = pattern
+
+        config = PluginConfig("base")
+        try: self.maxElt = config.get("LogView", "maxElt")
+        except NoSectionError, NoOptionError: self.maxElt= 200;
+
+
+    def getLog(self, filter=""):
+        log = self.file.readlines()
+        log.reverse()
+
+        elts = list()
+        for line in log:
+            if filter in line:
+                elts.append(line)
+
+
+        res = list()
+        for line in elts[0:self.maxElt]:
+           parsed = self.parseLine(line)
+           if parsed:
+               res.append(parsed)
+           else:
+               res.append(line)
+
+        return res
+
+    def parseLine(self,line):
+        sre = re.search(self.pattern, line)
+        if sre:
+            group = sre.groups()
+            if group:
+                timed = strptime(group[0]+" "+strftime("%Y"),"%b %d %H:%M:%S %Y")
+                res = list()
+                res.append(mktime(timed))
+                #fetch all but the first (time)
+                for item in group[1:40]:
+                    res.append(item)
+                return res
+            else:
+                return 0
+        else:
+            return line
