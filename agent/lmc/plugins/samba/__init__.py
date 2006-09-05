@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -28,18 +27,16 @@ import logging
 import ldap.modlist
 import fileinput
 import tempfile
-
-# Initialise preload variable to True
-preload = True
+from lmc.plugins.base import ldapUserGroupControl
+from time import mktime, strptime
 
 # Try to import module posix1e
 try:
     from posix1e import *
-except: 
+except ImportError:
     logger = logging.getLogger()
     logger.error("\nPython module pylibacl not found...\nPlease install :\n  * python-pylibacl on Debian/Ubuntu\n  * python-libacl on CentOS 4.3\n  * pylibacl on Mandriva 2006\n")
-    # Define preload to False
-    preload = False
+    raise
 
 from lmc.support.errorObj import errorMessage
 from lmc.support.lmcException import *
@@ -54,8 +51,8 @@ from twisted.internet import reactor
 
 INI = "/etc/lmc/plugins/samba.ini"
 
-VERSION = "1.0.1"
-APIVERSION = "1:0:0"
+VERSION = "1.1.0"
+APIVERSION = "1:0:1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
@@ -70,26 +67,20 @@ def activate():
     """
     configParser = lmctools.getConfigParser("samba")
     logger = logging.getLogger()
-    
-    if preload == False:
-        logger.info("Plugin samba disabled : missing python modules.. See errors above.")
-	return False
-    
+
     if (configParser.get("main","disable")=="1"):
         logger.info("samba plugin disabled by configuration.")
         return False
 
-
     try:
         ldapObj = ldapUserGroupControl()
-        ret = True
     except ldap.INVALID_CREDENTIALS:
         logger.error("Can't bind to LDAP: invalid credentials.")
         return False
 
     # Test if the Samba LDAP schema is available in the directory
     try:
-         schema =  ldapObj.getSchema("sambaSamAccount")
+         schema = ldapObj.getSchema("sambaSamAccount")
          if len(schema) <= 0:
              logger.error("Samba schema seems not be include in LDAP directory");
              return False
@@ -98,21 +89,19 @@ def activate():
         return False
 
 
-    ##verify if init script exist
-    if os.path.exists(SambaConfig("samba").samba_init_script):
-        return True
-    else:
-        logger.error(SambaConfig("samba").samba_init_script + " does not exist")
+    # Verify if init script exist
+    init = SambaConfig("samba").samba_init_script
+    if not os.path.exists(init):
+        logger.error(init + " does not exist")
         return False
 
-    ## verify if samba conf file exist
-    if os.path.exists(SambaConfig("samba").samba_conf_file):
-        return True
-    else:
-        logger.error(SambaConfig("samba").samba_conf_file + " does not exist")
+    # Verify if samba conf file exist
+    conf = SambaConfig("samba").samba_conf_file
+    if not os.path.exists(conf):
+        logger.error(conf + " does not exist")
         return False
 
-    return ret
+    return True
 
 def isSmbAntiVirus():
     return os.path.exists(SambaConfig("samba").clam_av_so)
@@ -215,6 +204,12 @@ def unlockUser(uid):
 
 def makeSambaGroup(group):
     return sambaLdapControl().makeSambaGroup(group)
+
+def getSmbStatus():
+    return smbConf().getSmbStatus()
+
+def getConnected():
+    return smbConf().getConnected()
 
 
 class SambaConfig(PluginConfig):
@@ -483,7 +478,7 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         ret = False
         if self.existGroup(group): ret = "sambaGroupMapping" in self.getDetailedGroup(group)["objectClass"]
         return ret
-        
+
 
 ##########################################################################
 # Class de gestion de smbConf
@@ -899,6 +894,62 @@ class smbConf:
                     ret.append( res['cn'][0])
         return ret
 
+    def getSmbStatus(self):
+        """
+        Return SAMBA shares connection status
+        """
+        output = lmctools.shlaunch('/usr/bin/net status shares parseable')
+        section = "none"
+        service = dict()
+        user = dict()
+
+        for line in output:
+            tab = line.split('\\',7)
+            serviceitem = dict()
+            serviceitem['pid'] = tab[0]
+
+            # Create unix timestamp
+            serviceitem['lastConnect'] = mktime(strptime(tab[6]))
+
+            serviceitem['machine'] = tab[4]
+
+            if tab[2]:
+                serviceitem['useruid'] = tab[2]
+                serviceitem['ip'] = tab[5]
+            else:
+                serviceitem['useruid'] = 'anonymous'
+
+            if tab[0]==tab[2]:
+                indIndex = "homes"
+            else:
+                indIndex = tab[0]
+
+            if not indIndex in service:
+                service[indIndex] = list()
+
+            service[indIndex].append(serviceitem)
+
+        return service
+
+    def getConnected(self):
+        """
+        Return all opened SAMBA sessions
+        """
+        output = lmctools.shlaunch('/usr/bin/net status sessions parseable')
+        result = []
+        for line in output:
+            #7727\useruid\Domain Users\machine\192.168.0.17
+            # 0    1    2             3          4
+            tab = line.split('\\',5)
+            sessionsitem = {}
+            sessionsitem['pid'] = tab[0]
+            sessionsitem['useruid'] = tab[1]
+            sessionsitem['machine'] = tab[3]
+            sessionsitem['ip'] = tab[4]
+            result.append(sessionsitem)
+        return result
+
+
 
 class sambaLog:
 
@@ -953,5 +1004,4 @@ class sambaLog:
                         if len(line): l["msg"] = l["msg"] + line
             f.close()
         return logs
-
 
