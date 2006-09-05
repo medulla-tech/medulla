@@ -85,20 +85,6 @@ $res="";
 
   return $combineRes;
 }
-/*
-function createAclAttrString($arrAcl) {
-$res="";
-  //fetch all modules in $arrAcl
-  foreach ($arrAcl as $modKey => $valKey ){
-  {
-    //fetch all submodules in $valKey
-    foreach ($valKey as $attrKey => $submodvalKey ){
-          $res.=":$modKey#$attrKey=$submodvalKey";
-    }
-  }
-  if ($res=='') { return ':'; }
-  return $res;
-}*/
 
 function setFormError($name) {
   global $formErrorArray;

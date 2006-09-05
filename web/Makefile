@@ -29,13 +29,15 @@ CHOWN = $(shell which chown)
 CHGRP = $(shell which chgrp)
 HTTPDUSER = www-data
 SED = $(shell which sed)
+RM = $(shell which rm)
+APACHE_CONF = confs/apache/lmc.conf
 
 FILESTOINSTALL = graph img includes index.php jsframework logout main_content.php main.php modules
 
 # Default target
 all:
 
-debian-package: revision build_mo
+debian-package: revision
 	sed -i "s/##VERSION##/`cat revision`/" debian/changelog
 	sed -i "s/###SVN_VERSION###/`cat revision`/" modules/base/infoPackage.inc.php
 	dpkg-buildpackage -b -uc -rfakeroot
@@ -54,13 +56,22 @@ move: debian-package
 generate-doc:
 	gen-doc/create.sh
 
+clean_mo:
+	sh scripts/clean_mo.sh
+
 build_mo:
 	sh scripts/build_mo.sh
 
 build_pot:
 	sh scripts/build_pot.sh
 
-install: build_mo
+apache_conf:
+	$(SED) 's!###DATADIR###!$(DATADIR)!' $(APACHE_CONF).tmpl > $(APACHE_CONF)
+
+clean: clean_mo
+	$(RM) -f $(APACHE_CONF)
+
+install: build_mo apache_conf
 	@echo ""
 	@echo "Installing lmc-web in $(DESTDIR)$(DATADIR)"
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)
@@ -71,3 +82,4 @@ install: build_mo
 	$(INSTALL) confs/lmc.ini -m 640 -o root -g $(HTTPDUSER) $(DESTDIR)$(ETCDIR)
 	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/lmc.ini
 	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/lmc.ini
+	find $(DESTDIR)$(DATADIR) -type f -name *.po -exec rm -f {} \;

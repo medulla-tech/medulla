@@ -24,6 +24,43 @@
 <?php
 /* $Id$ */
 
+function check_auth($login, $pass) {
+  $param[]=$login;
+  $param[]=$pass;
+
+  return xmlCall("base.ldapAuth",$param);
+}
+
+function auth_user ($login, $pass, $error)
+{
+  global $conf;
+  global $error;
+
+  if (($login == "") || (!preg_match("/^[a-zA-Z][.a-zA-Z0-9]*$/", $login)) || ($pass == ""))
+    {
+      return false;
+    }
+
+  $param[]=$login;
+  $param[]=$pass;
+
+  //put server selected in $_SESSION
+  $urlArr=parse_url($_POST["server"]);
+  $_SESSION["XMLRPC_agent"] = $urlArr;
+
+  $ret= xmlCall("base.ldapAuth",$param);
+
+  if ($ret!="1") // erreur
+    {
+          if (!isXMLRPCError()) {
+	       $error = _T("Invalid login");
+          }
+	  return false;
+    }
+
+  return true;
+}
+
 /**
  * get an array of ldap users via cpu
  * @return list of users in an array of ldap users

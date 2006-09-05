@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-30 08:49+0200\n"
-"PO-Revision-Date: 2006-06-23 17:18+0200\n"
+"POT-Creation-Date: 2006-08-04 15:15+0200\n"
+"PO-Revision-Date: 2006-08-04 15:18+0200\n"
 "Last-Translator: Jérome Wax <jerome.wax@linbox.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,429 +33,240 @@ msgstr ""
 "X-Generator: KBabel 1.10\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
-#: index.php:126 index.php:127 index.php:128 index.php:129
-msgid "incorrect ID"
-msgstr "Identifiant incorrect"
+#: graph/header.inc.php:201
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr ""
+"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
 
-#: index.php:199 modules/base/users/edit.php:247
-#: modules/base/users/ajaxFilter.php:143 modules/base/views/index.tpl.php:81
-#: index.php:200 modules/base/users/edit.php:248 index.php:201 index.php:217
-#: modules/base/users/edit.php:256 modules/base/users/edit.php:258
-msgid "Login"
-msgstr "Identifiant"
+#: graph/navbar.inc.php:46
+msgid "Expert mode"
+msgstr "Mode expert"
 
-#: index.php:207 modules/base/users/edit.php:258
-#: modules/base/infoPackage.inc.php:106 index.php:208
-#: modules/base/users/edit.php:259 index.php:209
-#: modules/base/infoPackage.inc.php:109 index.php:225
-#: modules/base/users/edit.php:267 modules/base/users/edit.php:269
-#: modules/base/infoPackage.inc.php:152
-msgid "Password"
-msgstr "Mot de passe"
+#: graph/navbar.inc.php:47
+msgid "Standard mode"
+msgstr "Mode standard"
 
-#: index.php:211 index.php:212 index.php:213 index.php:229
-msgid "Server"
-msgstr "Serveur"
-
-#: index.php:235 index.php:236 index.php:237 index.php:253
-msgid "Language"
-msgstr "Langue"
-
-#: index.php:267 index.php:268 index.php:269 index.php:285
-msgid "Connect"
-msgstr "Connecter"
-
-#: main_content.php:86 main_content.php:102
-msgid "no backup in progress"
-msgstr "Aucune sauvegarde en cours"
-
-#: main_content.php:122
-msgid "Power up since "
-msgstr "Mise en marche depuis "
-
-#: main_content.php:126 main_content.php:142
-msgid "day"
-msgstr "jour"
-
-#: main_content.php:131 main_content.php:147
-msgid "hour"
-msgstr "heure"
-
-#: main_content.php:134 main_content.php:150
-msgid "minute"
-msgstr "minute"
-
-#: main_content.php:147
-msgid "user"
-msgstr "utilisateur"
-
-#: main_content.php:148
-msgid "system load"
-msgstr "charge système"
-
-#: main_content.php:155 main_content.php:168
-msgid "Memory"
-msgstr "Mémoire"
-
-#: main_content.php:157 main_content.php:170
-msgid "Swap"
-msgstr "Espace d'échange"
-
-#: main_content.php:270 modules/base/users/index.php:37
-#: modules/base/users/backup.php:38 modules/base/users/delete.php:52
-#: modules/base/users/passwd.php:50 modules/base/users/edit.php:58
-#: modules/base/users/editacl.php:38 modules/base/groups/index.php:46
-#: modules/base/groups/delete.php:49 modules/base/groups/members.php:64
-#: modules/base/groups/add.php:43 main_content.php:283
-#: modules/base/users/edit.php:60 graph/navbar.inc.php:65
-#: graph/navbar.inc.php:83
-msgid "Home"
-msgstr "Page principale"
-
-#: main_content.php:286
-msgid "General informations on server"
-msgstr "Informations générales sur le serveur"
-
-#: main_content.php:292
-msgid "Server state"
-msgstr "Statut du serveur"
-
-#: main_content.php:299
-msgid "hard drive partitions"
-msgstr "Partitions sur le disque"
-
-#: main_content.php:307
-msgid "background actions"
-msgstr "Actions en arrière plan"
-
-#: logout/index.php:48
-msgid "Disconnect"
-msgstr "Déconnexion"
-
-#: logout/index.php:50
-msgid "You will close your session"
-msgstr "Votre session va être fermée"
-
-#: logout/index.php:53 graph/navbar.inc.php:52 logout/index.php:56
+#: graph/navbar.inc.php:52 logout/index.php:56
 msgid "logout"
 msgstr "déconnexion"
 
-#: modules/base/users/index.php:39 modules/base/users/backup.php:40
-#: modules/base/users/delete.php:54 modules/base/users/passwd.php:52
-#: modules/base/users/edit.php:60 modules/base/users/editacl.php:40
-#: modules/base/localNavbar.php:24 modules/base/users/edit.php:62
-#: modules/base/users/ajaxFilter.php:160 modules/base/views/index.tpl.php:98
-#: modules/base/infoPackage.inc.php:54
-msgid "Users"
-msgstr "Utilisateurs"
+#: graph/navbar.inc.php:54
+msgid "Logout "
+msgstr "Déconnexion"
 
-#: modules/base/users/index.php:41 modules/base/users/localSidebar.php:27
-#: modules/base/groups/index.php:50 modules/base/groups/localSidebar.php:27
-msgid "List"
-msgstr "Gestion"
+#: graph/navbar.inc.php:65 graph/navbar.inc.php:83
+#: modules/base/groups/members.php:64 modules/base/groups/delete.php:49
+#: modules/base/groups/add.php:43 modules/base/users/passwd.php:50
+#: modules/base/users/editacl.php:38 main_content.php:169
+msgid "Home"
+msgstr "Page principale"
 
-#: modules/base/users/backup.php:42 modules/base/users/ajaxFilter.php:158
-#: modules/base/views/index.tpl.php:96
-msgid "Backup"
-msgstr "Sauvegarde"
-
-#: modules/base/users/backup.php:45 modules/base/users/backup.php:63
-msgid "Backup a user's folder"
-msgstr "Sauvegarde des fichiers de l'utilisateur"
-
-#: modules/base/users/backup.php:66
-#, php-format
-msgid "Backup of %s user's folder is launched in background"
-msgstr ""
-"La sauvegarde du répertoire de l'utilisateur %s a été lancée en arrière plan"
-
-#: modules/base/users/backup.php:69
-#, php-format
-msgid "Your files will be stored in"
-msgstr "Vos fichiers seront stockés dans le fichier"
-
-#: modules/base/users/backup.php:71
-#, php-format
-msgid "file on share %s at the end of the process"
-msgstr "dans le partage %s à la fin du processus"
-
-#: modules/base/users/backup.php:74
-msgid "Operation duration depend of the amount of data"
-msgstr "La durée des opérations dépend du volume d'informations à traiter"
-
-#: modules/base/users/backup.php:91
-#, php-format
-msgid "%s home directory will be archived."
-msgstr "Le répertoire %s va être archivé."
-
-#: modules/base/users/backup.php:96
-#, php-format
+#: graph/navbar.inc.php:128
 msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
+"If this phrase does not change, you browser is not supported by the LMC "
+"application"
 msgstr ""
-"Veuillez choisir la taille du médium à utiliser pour l'archivage. Si le "
-"volume des données dépasse la taille du médium choisi, un jeu de média sera "
-"créé."
+"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la LMC"
 
-#: modules/base/users/backup.php:100
-msgid "Media size"
-msgstr "Taille du médium"
-
-#: modules/base/users/backup.php:107
-msgid "Launch backup"
-msgstr "Lancement de la sauvegarde"
-
-#: modules/base/users/backup.php:108 modules/base/users/passwd.php:103
-#: modules/base/groups/delete.php:100
-msgid "Return"
-msgstr "Retour"
-
-#: modules/base/users/delete.php:56 modules/base/infoPackage.inc.php:68
-#: modules/base/infoPackage.inc.php:71 modules/base/infoPackage.inc.php:90
-msgid "Delete a user"
-msgstr "Supprimer un utilisateur"
-
-#: modules/base/users/delete.php:64 modules/base/users/delete.php:107
-msgid "Delete user"
-msgstr "Supprimer un utilisateur"
-
-#: modules/base/users/delete.php:80
-#, php-format
-msgid "User %s has been sucessfully deleted"
-msgstr "L'utilisateur %s a été supprimé avec succès"
-
-#: modules/base/users/delete.php:98
-#, php-format
-msgid "You will delete user <b>%s</b>."
-msgstr "Vous allez supprimer l'utilisateur <b>%s</b>."
-
-#: modules/base/users/delete.php:102
-msgid "Delete all user's files"
-msgstr "Supprimer tous les fichiers de l'utilisateur"
-
-#: modules/base/users/delete.php:108 modules/base/users/edit.php:330
-#: modules/base/groups/members.php:205 modules/base/users/edit.php:334
-#: modules/base/users/edit.php:342 modules/base/users/edit.php:344
-msgid "Cancel"
-msgstr "Annuler"
-
-#: modules/base/users/passwd.php:54 modules/base/users/passwd.php:62
-#: modules/base/users/passwd.php:102 modules/base/users/localSidebar.php:33
-msgid "Change your password"
-msgstr "Changement de votre mot de passe"
-
-#: modules/base/users/passwd.php:75
-msgid "Your password has been changed"
-msgstr "Votre mot de passe a été changé"
-
-#: modules/base/users/passwd.php:81
-msgid "Change your user's password"
-msgstr "Changement du mot de passe utilisateur"
-
-#: modules/base/users/passwd.php:91
-msgid "You are going to change your password"
-msgstr "Vous allez changer votre mot de passe"
-
-#: modules/base/users/passwd.php:95
-msgid "New password"
-msgstr "Nouveau mot de passe"
-
-#: modules/base/users/passwd.php:97 modules/base/infoPackage.inc.php:107
-#: modules/base/infoPackage.inc.php:110 modules/base/infoPackage.inc.php:153
-msgid "Confirm your password"
-msgstr "Confirmation du mot de passe"
-
-#: modules/base/users/passwd.php:107
-msgid "Passwords are mismatching. Please retry."
-msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
-
-#: modules/base/users/edit.php:62 modules/base/users/localSidebar.php:30
-#: modules/base/groups/localSidebar.php:30
-#: modules/base/views/editGroups.tpl.php:56 modules/base/users/edit.php:64
-#: includes/FormGenerator.php:143
-msgid "Add"
-msgstr "Ajout"
-
-#: modules/base/users/edit.php:88 modules/base/users/edit.php:90
-msgid "Password confirmation mismatch"
-msgstr "Les mots de passes ne correspondent pas"
-
-#: modules/base/users/edit.php:94 modules/base/users/edit.php:96
-msgid "User's name invalid !"
-msgstr "Nom de l'utilisateur invalide !"
-
-#: modules/base/users/edit.php:109 modules/base/users/edit.php:111
-msgid "Password is empty."
-msgstr "Le mot de passe est vide."
-
-#: modules/base/users/edit.php:119 modules/base/users/edit.php:121
-msgid "This user already exists."
-msgstr "Cet utilisateur existe déjà."
-
-#: modules/base/users/edit.php:124 modules/base/users/edit.php:147
-#: modules/base/users/edit.php:126 modules/base/users/edit.php:149
-msgid "User enabled."
-msgstr "Utilisateur activé."
-
-#: modules/base/users/edit.php:127 modules/base/users/edit.php:142
-#: modules/base/users/edit.php:129 modules/base/users/edit.php:144
-msgid "User disabled."
-msgstr "Utilisateur désactivé."
-
-#: modules/base/users/edit.php:156 modules/base/users/edit.php:158
-msgid "Attributes updated."
-msgstr "Attributs mis à jour."
-
-#: modules/base/users/edit.php:166 modules/base/users/edit.php:168
-msgid "Password updated."
-msgstr "Mot de passe mis à jour."
-
-#: modules/base/users/edit.php:201 modules/base/users/edit.php:203
-#: modules/base/users/edit.php:204
-#, php-format
-msgid "User %s created without problems"
-msgstr "L'utilisateur %s a été créé avec succès"
-
-#: modules/base/users/edit.php:218 modules/base/infoPackage.inc.php:59
-#: modules/base/infoPackage.inc.php:62 modules/base/infoPackage.inc.php:81
-msgid "Add a user"
-msgstr "Ajout d'un utilisateur"
-
-#: modules/base/users/edit.php:221 modules/base/infoPackage.inc.php:62
-#: modules/base/infoPackage.inc.php:65 modules/base/infoPackage.inc.php:84
-msgid "Edit a user"
-msgstr "Édition d'un utilisateur"
-
-#: modules/base/users/edit.php:251 modules/base/users/ajaxFilter.php:149
-#: modules/base/views/index.tpl.php:87 modules/base/users/edit.php:252
-#: modules/base/users/edit.php:260 modules/base/users/edit.php:262
-msgid "Name"
-msgstr "Nom"
-
-#: modules/base/users/edit.php:254 modules/base/users/edit.php:255
-#: modules/base/users/edit.php:263 modules/base/users/edit.php:265
-msgid "First name"
-msgstr "Prénom"
-
-#: modules/base/users/edit.php:262 modules/base/users/edit.php:263
-#: modules/base/users/edit.php:271 modules/base/users/edit.php:273
-msgid "Confirm password"
-msgstr "Confirmation du mot de passe"
-
-#: modules/base/users/edit.php:275
-msgid "User is disabled"
-msgstr "Utilisateur désactivé"
-
-#: modules/base/users/edit.php:285 modules/base/users/ajaxFilter.php:152
-#: modules/base/views/index.tpl.php:90 modules/base/users/edit.php:289
-#: modules/base/users/edit.php:297 modules/base/users/edit.php:299
-msgid "Home directory"
-msgstr "Répertoire de l'utilisateur"
-
-#: modules/base/users/edit.php:329 modules/base/groups/members.php:204
-#: modules/base/users/edit.php:333 modules/base/users/edit.php:341
-#: modules/base/users/edit.php:343
-msgid "Confirm"
-msgstr "Valider"
-
-#: modules/base/users/ajaxFilter.php:50 modules/base/users/ajaxFilter.php:56
-#: modules/base/groups/ajaxFilter.php:46 modules/base/groups/ajaxFilter.php:52
 #: graph/navbartools.inc.php:44 graph/navbartools.inc.php:53
+#: modules/base/groups/ajaxFilter.php:46 modules/base/groups/ajaxFilter.php:52
+#: modules/base/users/ajaxFilter.php:47 modules/base/users/ajaxFilter.php:53
 msgid "Previous"
 msgstr "Précédent"
 
-#: modules/base/users/ajaxFilter.php:61 modules/base/users/ajaxFilter.php:69
-#: modules/base/groups/ajaxFilter.php:57 modules/base/groups/ajaxFilter.php:65
 #: graph/navbartools.inc.php:58 graph/navbartools.inc.php:67
-#: includes/ajaxTools.php:73
+#: includes/ajaxTools.php:73 modules/base/groups/ajaxFilter.php:57
+#: modules/base/groups/ajaxFilter.php:65 modules/base/users/ajaxFilter.php:57
+#: modules/base/users/ajaxFilter.php:64
 msgid "Next"
 msgstr "Suivant"
 
-#: modules/base/users/ajaxFilter.php:154 modules/base/views/index.tpl.php:92
-msgid "Edit"
-msgstr "Édition"
+#: includes/ErrorHandling.php:74
+msgid "Show complete trackback"
+msgstr "Afficher la traceback complète"
 
-#: modules/base/users/ajaxFilter.php:156 modules/base/users/editacl.php:42
-#: modules/base/users/editacl.php:197 modules/base/views/index.tpl.php:94
-#: modules/base/users/editacl.php:216
-msgid "Edit ACL"
-msgstr "Édition des ACL"
+#: includes/ErrorHandling.php:75
+msgid "Complete Traceback"
+msgstr "Traceback complète"
 
-#: modules/base/users/ajaxFilter.php:157 modules/base/groups/index.php:135
-#: modules/base/groups/ajaxFilter.php:123
+#: includes/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "L'utilisateur root ne peut pas avoir de favoris"
+
+#: includes/favorites.php:149
+msgid "Add this page to your favorite"
+msgstr "Ajouter cette page à vos favoris"
+
+#: includes/commonErrorHandling.php:29
+msgid "This item already exists in your LDAP directory"
+msgstr "Cette entrée existe déjà dans l'annuaire LDAP"
+
+#: includes/commonErrorHandling.php:30
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
+msgstr ""
+"Pour résoudre ce problème:        <ul>         <li>changez le nom de cette "
+"entrée</li>         <li>supprimer cette entrée avant de la recréer</li> </ul>"
+
+#: includes/commonErrorHandling.php:42
+msgid "LMC Agent can't contact your LDAP server"
+msgstr "L'agent LMC ne peut pas contacter le serveur LDAP"
+
+#: includes/commonErrorHandling.php:43
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/lmc/plugins/base/ini </li>\n"
+"                            <li>Verify you LDAP server is up</li>\n"
+"                        </ul>"
+msgstr ""
+"Pour résoudre ce problème:        <ul>         <li>Vérifiez que votre "
+"serveur LDAP est correctement configuré dans /etc/lmc/plugins/base.ini</"
+"li>        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
+
+#: includes/commonErrorHandling.php:54
+msgid "This items seems to not be in the index"
+msgstr "Cette entrée semble ne pas être indexé"
+
+#: includes/commonErrorHandling.php:55
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe "
+"plus</li>            <li> elle est mal orthographiée</li> </ul>"
+
+#: includes/commonErrorHandling.php:67
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
+
+#: includes/commonErrorHandling.php:68
+msgid ""
+"Verify that your smbpasswd is correctly configures:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly "
+"configure</li>\n"
+"                        </ul>"
+msgstr ""
+"Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur "
+"LDAP n'est pas en fonction</li>    <li>Votre serveur samba n'est pas "
+"correctement configuré</li> </ul>"
+
+#: includes/acl.inc.php:102
+msgid "You do not have required rights"
+msgstr "Vous n'avez pas les droits requis !"
+
+#: includes/FormGenerator.php:164 modules/base/groups/localSidebar.php:30
+#: modules/base/users/localSidebar.php:32
+#: modules/base/users/localSidebar.php:44
+#: modules/base/views/editGroups.tpl.php:56
+msgid "Add"
+msgstr "Ajout"
+
+#: includes/FormGenerator.php:415 modules/base/groups/ajaxFilter.php:128
+#: modules/base/groups/index.php:124 modules/base/users/ajaxFilter.php:144
 #: modules/base/views/editGroups.tpl.php:44
-#: modules/base/views/index.tpl.php:95 includes/FormGenerator.php:336
+#: modules/base/views/index.tpl.php:95
 msgid "Delete"
 msgstr "Suppression"
 
-#: modules/base/users/ajaxFilter.php:160
-msgid "Users list"
-msgstr "Liste des utilisateurs"
+#: includes/xmlrpc.inc.php:95
+msgid "lmc-agent not responding"
+msgstr "l'agent LMC ne répond pas"
 
-#: modules/base/users/editacl.php:78 modules/base/users/editacl.php:97
-msgid "hide"
-msgstr "caché"
+#: includes/xmlrpc.inc.php:96
+msgid "LMC-Agent seems to be down or not correctly configured."
+msgstr "LMC-Agent semble ne pas répondre ou n'est pas correctement configuré."
 
-#: modules/base/users/editacl.php:79 modules/base/users/editacl.php:98
-msgid "description"
-msgstr "description"
+#: includes/xmlrpc.inc.php:96
+msgid "<br/> Error: "
+msgstr "<br/>Erreur:"
 
-#: modules/base/users/editacl.php:80 modules/base/users/editacl.php:99
-msgid "read only"
-msgstr "lecture seule"
+#: includes/xmlrpc.inc.php:96
+msgid " - "
+msgstr " - "
 
-#: modules/base/users/editacl.php:81 modules/base/users/editacl.php:100
-msgid "read/write"
-msgstr "lecture/écriture"
+#: includes/xmlrpc.inc.php:198
+msgid "unknown error"
+msgstr "erreur inconnue"
 
-#: modules/base/users/editacl.php:134 modules/base/users/editacl.php:153
-msgid "Select all"
-msgstr "Tout sélectionner"
-
-#: modules/base/users/editacl.php:135 modules/base/users/editacl.php:154
-msgid "Deselect all"
-msgstr "Tout desélectionner"
-
-#: modules/base/users/editacl.php:136 modules/base/users/editacl.php:155
-msgid "Function name"
-msgstr "Nom de la fonction"
-
-#: modules/base/users/editacl.php:137 modules/base/users/editacl.php:156
-msgid "Authorize"
-msgstr "Autorisation"
-
-#: modules/base/users/editacl.php:173 modules/base/users/editacl.php:192
-msgid "Warning no desc found in infoPackage.inc.php :"
+#: includes/xmlrpc.inc.php:199
+msgid ""
+"This exception is unknow. Please contact us to add an error handling on this "
+"error."
 msgstr ""
-"Attention, aucune description n'a pu être trouvée dans le fichier "
-"infoPackage.inc.php :"
+"Cette exception est inconnue. Veuillez nous contacter pour correctement "
+"gérer cette erreur."
 
-#: modules/base/groups/index.php:48 modules/base/groups/index.php:127
-#: modules/base/groups/delete.php:51 modules/base/groups/members.php:66
-#: modules/base/groups/add.php:45 modules/base/groups/ajaxFilter.php:115
-#: modules/base/views/roGroups.tpl.php:25
-#: modules/base/views/editGroups.tpl.php:25 modules/base/localNavbar.php:25
-#: modules/base/infoPackage.inc.php:112
+#: includes/PageGenerator.php:340
+msgid "to"
+msgstr "à"
+
+#: includes/PageGenerator.php:341
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Total <b>%s</b>"
+
+#: includes/PageGenerator.php:342
+msgid "page"
+msgstr "page"
+
+#: includes/PageGenerator.php:821
+msgid "Ok"
+msgstr "Ok"
+
+#: includes/bgps_view.php:65
+msgid "No job."
+msgstr "Aucune action."
+
+#: modules/base/groups/ajaxFilter.php:118 modules/base/groups/members.php:66
+#: modules/base/groups/delete.php:51 modules/base/groups/index.php:115
+#: modules/base/groups/add.php:45 modules/base/views/roGroups.tpl.php:25
+#: modules/base/views/editGroups.tpl.php:25
+#: modules/base/infoPackage.inc.php:166
 msgid "Groups"
 msgstr "Groupes"
 
-#: modules/base/groups/index.php:107 modules/base/groups/index.php:138
-#: modules/base/infoPackage.inc.php:79 modules/base/infoPackage.inc.php:82
-#: modules/base/infoPackage.inc.php:118
-msgid "Group list"
-msgstr "Liste des groupes"
-
-#: modules/base/groups/index.php:131 modules/base/groups/ajaxFilter.php:119
+#: modules/base/groups/ajaxFilter.php:122 modules/base/groups/index.php:119
 msgid "Comments"
 msgstr "Commentaires"
 
-#: modules/base/groups/index.php:134 modules/base/groups/ajaxFilter.php:122
+#: modules/base/groups/ajaxFilter.php:127 modules/base/groups/index.php:123
 msgid "Edit members"
 msgstr "Édition des membres"
 
-#: modules/base/groups/delete.php:53 modules/base/infoPackage.inc.php:86
-#: modules/base/infoPackage.inc.php:89 modules/base/infoPackage.inc.php:125
+#: modules/base/groups/ajaxFilter.php:131
+msgid "Groups management"
+msgstr "Gestion des groupes"
+
+#: modules/base/groups/members.php:68 modules/base/groups/members.php:140
+#: modules/base/groups/members.php:177 modules/base/infoPackage.inc.php:191
+msgid "Group members"
+msgstr "Membres d'un groupe"
+
+#: modules/base/groups/members.php:150
+msgid "All users"
+msgstr "Tous les utilisateurs"
+
+#: modules/base/groups/members.php:204 modules/base/users/edit.php:340
+msgid "Confirm"
+msgstr "Valider"
+
+#: modules/base/groups/members.php:205 modules/base/users/delete.php:87
+#: modules/base/users/edit.php:341
+msgid "Cancel"
+msgstr "Annuler"
+
+#: modules/base/groups/delete.php:53 modules/base/infoPackage.inc.php:179
 msgid "Delete a group"
 msgstr "Supprimer un groupe"
 
@@ -471,19 +282,24 @@ msgstr "Vous allez supprimer un groupe"
 msgid "This group will be deleted even though it is not empty"
 msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
-#: modules/base/groups/members.php:68 modules/base/groups/members.php:140
-#: modules/base/groups/members.php:177 modules/base/infoPackage.inc.php:96
-#: modules/base/infoPackage.inc.php:99 modules/base/infoPackage.inc.php:137
-msgid "Group members"
-msgstr "Membres d'un groupe"
+#: modules/base/groups/delete.php:100 modules/base/users/passwd.php:106
+#: modules/base/users/backup.php:96
+msgid "Return"
+msgstr "Retour"
 
-#: modules/base/groups/members.php:150
-msgid "All users"
-msgstr "Tous les utilisateurs"
+#: modules/base/groups/localSidebar.php:27
+#: modules/base/users/localSidebar.php:29
+#: modules/base/users/localSidebar.php:41
+msgid "List"
+msgstr "Gestion"
 
-#: modules/base/groups/add.php:47 modules/base/infoPackage.inc.php:82
-#: modules/base/views/editGroups.tpl.php:47
-#: modules/base/infoPackage.inc.php:85 modules/base/infoPackage.inc.php:122
+#: modules/base/groups/index.php:94 modules/base/groups/index.php:127
+#: modules/base/infoPackage.inc.php:172
+msgid "Group list"
+msgstr "Liste des groupes"
+
+#: modules/base/groups/add.php:47 modules/base/views/editGroups.tpl.php:47
+#: modules/base/infoPackage.inc.php:176
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
@@ -511,329 +327,508 @@ msgstr "Nom du groupe"
 msgid "Create"
 msgstr "Créer"
 
-#: modules/base/groups/ajaxFilter.php:126
-msgid "Groups management"
-msgstr "Gestion des groupes"
+#: modules/base/users/ajaxFilter.php:130 modules/base/users/edit.php:248
+#: modules/base/views/index.tpl.php:81 index.php:190
+msgid "Login"
+msgstr "Identifiant"
 
-#: modules/base/infoPackage.inc.php:37 modules/base/infoPackage.inc.php:40
-#: modules/base/infoPackage.inc.php:41
-msgid "LMC root page"
-msgstr "Page racine de la LMC"
+#: modules/base/users/ajaxFilter.php:136 modules/base/users/edit.php:252
+#: modules/base/views/index.tpl.php:87
+msgid "Name"
+msgstr "Nom"
 
-#: modules/base/infoPackage.inc.php:40 modules/base/views/index.tpl.php:42
-#: modules/base/views/index.tpl.php:98 modules/base/infoPackage.inc.php:43
-#: modules/base/infoPackage.inc.php:60
-msgid "User list"
-msgstr "Liste des utilisateurs"
-
-#: modules/base/infoPackage.inc.php:55 modules/base/infoPackage.inc.php:58
-msgid "Users ajax filter"
-msgstr "filtre Utilisateur"
-
-#: modules/base/infoPackage.inc.php:65 modules/base/infoPackage.inc.php:68
-#: modules/base/infoPackage.inc.php:87
-msgid "Edit ACL permissions on a user"
-msgstr "Éditez les ACL d'un utilisateur"
-
-#: modules/base/infoPackage.inc.php:73 modules/base/infoPackage.inc.php:76
-#: modules/base/infoPackage.inc.php:96
-msgid "Backup user files"
-msgstr "Sauvegarde des fichiers de l'utilisateur"
-
-#: modules/base/infoPackage.inc.php:76 modules/base/infoPackage.inc.php:79
-#: modules/base/infoPackage.inc.php:102
-msgid "Change user password"
-msgstr "Changement du mot de passe utilisateur"
-
-#: modules/base/infoPackage.inc.php:92 modules/base/infoPackage.inc.php:95
-msgid "Groups ajax filter"
-msgstr "filtre pour les groupes"
-
-#: modules/base/infoPackage.inc.php:100 modules/base/infoPackage.inc.php:103
-#: modules/base/infoPackage.inc.php:146
-msgid "User login"
-msgstr "Identifiant de l'utilisateur "
-
-#: modules/base/infoPackage.inc.php:101 modules/base/infoPackage.inc.php:104
-#: modules/base/infoPackage.inc.php:147
-msgid "User name"
-msgstr "Nom de l'utilisateur"
-
-#: modules/base/infoPackage.inc.php:102 modules/base/infoPackage.inc.php:105
-#: modules/base/infoPackage.inc.php:148
-msgid "User groups"
-msgstr "Groupes de l'utilisateur"
-
-#: modules/base/infoPackage.inc.php:103 modules/base/infoPackage.inc.php:106
-#: modules/base/infoPackage.inc.php:149
-msgid "User firstname"
-msgstr "Prénom de l'utilisateur"
-
-#: modules/base/infoPackage.inc.php:104 modules/base/infoPackage.inc.php:107
-#: modules/base/infoPackage.inc.php:150
-msgid "User home directory"
+#: modules/base/users/ajaxFilter.php:139 modules/base/users/edit.php:294
+#: modules/base/views/index.tpl.php:90
+msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:108 modules/base/infoPackage.inc.php:111
-#: modules/base/infoPackage.inc.php:154
-msgid "Enable/Disable user account"
-msgstr "Activer/Désactiver un compte"
+#: modules/base/users/ajaxFilter.php:141 modules/base/views/index.tpl.php:92
+msgid "Edit"
+msgstr "Édition"
 
-#: modules/base/views/editGroups.tpl.php:95
-#: modules/base/views/editGroups.tpl.php:91
-msgid "This group doesn't exist"
-msgstr "Ce groupe n'existe pas"
+#: modules/base/users/ajaxFilter.php:143 modules/base/views/index.tpl.php:94
+msgid "LMC rights"
+msgstr "Droits LMC"
 
-#: modules/base/includes/users-xmlrpc.inc.php:68
+#: modules/base/users/ajaxFilter.php:145 modules/base/views/index.tpl.php:96
+msgid "Backup"
+msgstr "Sauvegarde"
+
+#: modules/base/users/ajaxFilter.php:147 modules/base/users/passwd.php:52
+#: modules/base/users/editacl.php:40 modules/base/views/index.tpl.php:98
+#: modules/base/infoPackage.inc.php:103
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: modules/base/users/passwd.php:54 modules/base/users/passwd.php:62
+#: modules/base/users/passwd.php:105 modules/base/users/localSidebar.php:35
+msgid "Change your password"
+msgstr "Changement de votre mot de passe"
+
+#: modules/base/users/passwd.php:76
+msgid "Your password has been changed"
+msgstr "Votre mot de passe a été changé"
+
+#: modules/base/users/passwd.php:82
+msgid "Change your user's password"
+msgstr "Changement du mot de passe utilisateur"
+
+#: modules/base/users/passwd.php:92
+msgid "You are going to change your password"
+msgstr "Vous allez changer votre mot de passe"
+
+#: modules/base/users/passwd.php:96
+msgid "Current password"
+msgstr "Mot de passe actuel"
+
+#: modules/base/users/passwd.php:98
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: modules/base/users/passwd.php:100 modules/base/infoPackage.inc.php:208
+msgid "Confirm your password"
+msgstr "Confirmation du mot de passe"
+
+#: modules/base/users/passwd.php:111
+msgid "Invalid current password. Please retry."
+msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
+
+#: modules/base/users/passwd.php:113
+msgid "Passwords are mismatching. Please retry."
+msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
+
+#: modules/base/users/delete.php:45 modules/base/users/delete.php:86
+msgid "Delete user"
+msgstr "Supprimer un utilisateur"
+
+#: modules/base/users/delete.php:61
 #, php-format
-msgid "user %s created<br />"
-msgstr "utilisateur %s créé <br/>"
+msgid "User %s has been sucessfully deleted"
+msgstr "L'utilisateur %s a été supprimé avec succès"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:119
+#: modules/base/users/delete.php:77
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "Vous allez supprimer l'utilisateur <b>%s</b>."
+
+#: modules/base/users/delete.php:81
+msgid "Delete all user's files"
+msgstr "Supprimer tous les fichiers de l'utilisateur"
+
+#: modules/base/users/backup.php:36 modules/base/users/backup.php:51
+msgid "Backup a user's folder"
+msgstr "Sauvegarde des fichiers de l'utilisateur"
+
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of %s user's folder is launched in background"
+msgstr ""
+"La sauvegarde du répertoire de l'utilisateur %s a été lancée en arrière plan"
+
+#: modules/base/users/backup.php:57
+#, php-format
+msgid "Your files will be stored in"
+msgstr "Vos fichiers seront stockés dans le fichier"
+
+#: modules/base/users/backup.php:59
+#, php-format
+msgid "file on share %s at the end of the process"
+msgstr "dans le partage %s à la fin du processus"
+
+#: modules/base/users/backup.php:62
+msgid "Operation duration depend of the amount of data"
+msgstr "La durée des opérations dépend du volume d'informations à traiter"
+
+#: modules/base/users/backup.php:79
+#, php-format
+msgid "%s home directory will be archived."
+msgstr "Le répertoire %s va être archivé."
+
+#: modules/base/users/backup.php:84
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Veuillez choisir la taille du médium à utiliser pour l'archivage. Si le "
+"volume des données dépasse la taille du médium choisi, un jeu de média sera "
+"créé."
+
+#: modules/base/users/backup.php:88
+msgid "Media size"
+msgstr "Taille du médium"
+
+#: modules/base/users/backup.php:95
+msgid "Launch backup"
+msgstr "Lancement de la sauvegarde"
+
+#: modules/base/users/edit.php:78
+msgid "Password confirmation mismatch"
+msgstr "Les mots de passes ne correspondent pas"
+
+#: modules/base/users/edit.php:83
+msgid "User's name invalid !"
+msgstr "Nom de l'utilisateur invalide !"
+
+#: modules/base/users/edit.php:91
+msgid "This is not a valid telephone number."
+msgstr "Ceci n'est pas un numéro de téléphone valide."
+
+#: modules/base/users/edit.php:103
+msgid "Password is empty."
+msgstr "Le mot de passe est vide."
+
+#: modules/base/users/edit.php:113
+msgid "This user already exists."
+msgstr "Cet utilisateur existe déjà."
+
+#: modules/base/users/edit.php:118 modules/base/users/edit.php:141
+msgid "User enabled."
+msgstr "Utilisateur activé."
+
+#: modules/base/users/edit.php:121 modules/base/users/edit.php:136
+msgid "User disabled."
+msgstr "Utilisateur désactivé."
+
+#: modules/base/users/edit.php:153
+msgid "Attributes updated."
+msgstr "Attributs mis à jour."
+
+#: modules/base/users/edit.php:163
+msgid "Password updated."
+msgstr "Mot de passe mis à jour."
+
+#: modules/base/users/edit.php:194
+#, php-format
+msgid "User %s created without problems"
+msgstr "L'utilisateur %s a été créé avec succès"
+
+#: modules/base/users/edit.php:220
+msgid "Add user"
+msgstr "Ajout d'un utilisateur"
+
+#: modules/base/users/edit.php:223
+msgid "Edit user"
+msgstr "Édition d'un utilisateur"
+
+#: modules/base/users/edit.php:255
+msgid "First name"
+msgstr "Prénom"
+
+#: modules/base/users/edit.php:259 modules/base/infoPackage.inc.php:207
+#: index.php:198
+msgid "Password"
+msgstr "Mot de passe"
+
+#: modules/base/users/edit.php:263
+msgid "Confirm password"
+msgstr "Confirmation du mot de passe"
+
+#: modules/base/users/edit.php:268
+msgid "Telephone number"
+msgstr "Numéro de téléphone"
+
+#: modules/base/users/edit.php:281
+msgid "User is disabled, if checked"
+msgstr "Utilisateur désactivé, si cochée"
+
+#: modules/base/users/edit.php:282
+msgid ""
+"Disabled users cannot be logged into any services. <br/>\n"
+"                            Shell command are replaced by /bin/false"
+msgstr ""
+"Les utilisateurs désactivés ne peuvent s'authentifier sur aucun services.<br/"
+">\n"
+"Le shell de l'utilisateur est /bin/false."
+
+#: modules/base/users/editacl.php:42 modules/base/users/editacl.php:216
+msgid "Edit ACL"
+msgstr "Édition des ACL"
+
+#: modules/base/users/editacl.php:97
+msgid "hide"
+msgstr "caché"
+
+#: modules/base/users/editacl.php:98
+msgid "description"
+msgstr "description"
+
+#: modules/base/users/editacl.php:99
+msgid "read only"
+msgstr "lecture seule"
+
+#: modules/base/users/editacl.php:100
+msgid "read/write"
+msgstr "lecture/écriture"
+
+#: modules/base/users/editacl.php:153
+msgid "Select all"
+msgstr "Tout sélectionner"
+
+#: modules/base/users/editacl.php:154
+msgid "Deselect all"
+msgstr "Tout desélectionner"
+
+#: modules/base/users/editacl.php:155
+msgid "Function name"
+msgstr "Nom de la fonction"
+
+#: modules/base/users/editacl.php:156
+msgid "Authorize"
+msgstr "Autorisation"
+
+#: modules/base/users/editacl.php:192
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr ""
+"Attention, aucune description n'a pu être trouvée dans le fichier "
+"infoPackage.inc.php :"
+
+#: modules/base/status/index.php:102
+msgid "no backup in progress"
+msgstr "Aucune sauvegarde en cours"
+
+#: modules/base/status/index.php:138
+msgid "Uptime: "
+msgstr "Démarré depuis: "
+
+#: modules/base/status/index.php:142
+msgid "day"
+msgstr "jour"
+
+#: modules/base/status/index.php:147
+msgid "hour"
+msgstr "heure"
+
+#: modules/base/status/index.php:150
+msgid "minute"
+msgstr "minute"
+
+#: modules/base/status/index.php:168
+msgid "Memory"
+msgstr "Mémoire"
+
+#: modules/base/status/index.php:170
+msgid "Swap"
+msgstr "Espace d'échange"
+
+#: modules/base/status/index.php:305
+msgid "Global view"
+msgstr "Vue globale"
+
+#: modules/base/status/index.php:311
+msgid "Server status"
+msgstr "Statut du serveur"
+
+#: modules/base/status/index.php:318
+msgid "Hard drive partitions"
+msgstr "Partitions sur le disque"
+
+#: modules/base/status/index.php:326
+msgid "Background jobs"
+msgstr "Actions en arrière plan"
+
 #: modules/base/includes/groups-xmlrpc.inc.php:99
 #, php-format
 msgid "Group %s already exist"
 msgstr "Le groupe %s existe déjà"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:133
 #: modules/base/includes/groups-xmlrpc.inc.php:113
 #, php-format
 msgid "Group %s created"
 msgstr "Groupe %s crée"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:141
 #: modules/base/includes/groups-xmlrpc.inc.php:124
 msgid "Error: group null"
 msgstr "Erreur, groupe nul"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:146
 #: modules/base/includes/groups-xmlrpc.inc.php:129
 msgid "Error lpadmin cannot be removed"
 msgstr "Erreur, lpadmin ne peut être supprimé"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:153
 #: modules/base/includes/groups-xmlrpc.inc.php:136
 #, php-format
 msgid "Error when deleting %s"
 msgstr "Erreur lors de la suppression de %s"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:158
 #: modules/base/includes/groups-xmlrpc.inc.php:141
 #, php-format
 msgid "Group %s deleted"
 msgstr "Groupe %s supprimé"
 
-#: graph/navbar.inc.php:46
-msgid "Expert mode"
-msgstr "Mode expert"
-
-#: graph/navbar.inc.php:47
-msgid "Standard mode"
-msgstr "Mode standard"
-
-#: graph/navbar.inc.php:54
-msgid "Disconnect "
-msgstr "Déconnexion"
-
-#: graph/navbar.inc.php:116 graph/navbar.inc.php:115
-msgid ""
-"If this phrase does not change, you browser is not supported by the LMC "
-"application"
-msgstr ""
-"Si cette phrase ne change pas, votre navigateur n'est pas supporté par la LMC"
-
-#: includes/acl.inc.php:102
-msgid "You do not have required rights"
-msgstr "Vous n'avez pas les droits requis !"
-
-#: includes/PageGenerator.php:325
-msgid "on"
-msgstr "sur"
-
-#: includes/PageGenerator.php:326
+#: modules/base/includes/users-xmlrpc.inc.php:105
 #, php-format
-msgid "with a total of <b>%s items</b>"
-msgstr "avec un total de <b>%s éléments</b>"
+msgid "user %s created<br />"
+msgstr "utilisateur %s créé <br/>"
 
-#: includes/PageGenerator.php:327
-msgid "page"
-msgstr "page"
+#: modules/base/includes/errorHandling.php:27
+msgid "LDAP log file does not exist."
+msgstr "Le journal LDAP n'existe pas."
 
-#: main.php:121 main.php:122
-msgid "Error, you don't have correct rights !"
-msgstr "Erreur, vous n'avez pas les droits requis !"
+#: modules/base/includes/errorHandling.php:28
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+"Vérifiez que vous avez:                       <p>Cette ligne dans le "
+"fichier /etc/ldap/slapd.conf:                         <pre>loglevel        "
+"256</pre></p>\n"
+"                        <p>et cette ligne dans le fichier /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log</pre>\n"
+"                        </p>"
 
-#: main_content.php:138
-msgid "Uptime: "
-msgstr "Démarré depuis: "
+#: modules/base/logview/ajax_showlog.php:36
+#: modules/base/logview/ajax_showlog.php:45
+msgid "Conn."
+msgstr "Conn."
 
-#: main_content.php:299
-msgid "Global view"
-msgstr "Vue globale"
+#: modules/base/logview/ajax_showlog.php:38
+#: modules/base/logview/ajax_showlog.php:47
+#: modules/base/logview/ajax_showlog.php:48
+msgid "Actions"
+msgstr "Actions"
 
-#: main_content.php:305
-msgid "Server status"
-msgstr "Statut du serveur"
+#: modules/base/logview/ajax_showlog.php:40
+#: modules/base/logview/ajax_showlog.php:50
+#: modules/base/logview/ajax_showlog.php:49
+msgid "Extra informations"
+msgstr "Informations supplémentaires"
 
-#: main_content.php:312
-msgid "Hard drive partitions"
-msgstr "Partitions sur le disque"
+#: modules/base/logview/ajax_showlog.php:42
+#: modules/base/logview/ajax_showlog.php:54
+#: modules/base/logview/ajax_showlog.php:50
+msgid "Date"
+msgstr "Date"
 
-#: main_content.php:320
-msgid "Background jobs"
-msgstr "Actions en arrière plan"
+#: modules/base/logview/index.php:60 modules/base/infoPackage.inc.php:73
+msgid "Log view"
+msgstr "Journaux"
 
-#: logout/index.php:48 logout/index.php:51
+#: modules/base/views/editGroups.tpl.php:91
+msgid "This group doesn't exist"
+msgstr "Ce groupe n'existe pas"
+
+#: modules/base/views/index.tpl.php:42 modules/base/infoPackage.inc.php:109
+msgid "User list"
+msgstr "Liste des utilisateurs"
+
+#: modules/base/infoPackage.inc.php:33
+msgid "User and group"
+msgstr "Gestion des utilisateurs et des groupes"
+
+#: modules/base/infoPackage.inc.php:43
+msgid "LMC root page"
+msgstr "Page racine de la LMC"
+
+#: modules/base/infoPackage.inc.php:49
+msgid "Favorites page"
+msgstr "Favoris"
+
+#: modules/base/infoPackage.inc.php:58
+msgid "Status"
+msgstr "Statut"
+
+#: modules/base/infoPackage.inc.php:63
+msgid "Default status page"
+msgstr "Page de statut par défaut"
+
+#: modules/base/infoPackage.inc.php:78
+msgid "LDAP log"
+msgstr "Journal LDAP"
+
+#: modules/base/infoPackage.inc.php:130
+msgid "Add a user"
+msgstr "Ajout d'un utilisateur"
+
+#: modules/base/infoPackage.inc.php:133
+msgid "Edit a user"
+msgstr "Édition d'un utilisateur"
+
+#: modules/base/infoPackage.inc.php:137
+msgid "Edit ACL permissions on a user"
+msgstr "Éditez les ACL d'un utilisateur"
+
+#: modules/base/infoPackage.inc.php:141
+msgid "Delete a user"
+msgstr "Supprimer un utilisateur"
+
+#: modules/base/infoPackage.inc.php:147
+msgid "Backup user files"
+msgstr "Sauvegarde des fichiers de l'utilisateur"
+
+#: modules/base/infoPackage.inc.php:153
+msgid "Change user password"
+msgstr "Changement du mot de passe utilisateur"
+
+#: modules/base/infoPackage.inc.php:201
+msgid "User login"
+msgstr "Identifiant de l'utilisateur "
+
+#: modules/base/infoPackage.inc.php:202
+msgid "User name"
+msgstr "Nom de l'utilisateur"
+
+#: modules/base/infoPackage.inc.php:203
+msgid "User groups"
+msgstr "Groupes de l'utilisateur"
+
+#: modules/base/infoPackage.inc.php:204
+msgid "User firstname"
+msgstr "Prénom de l'utilisateur"
+
+#: modules/base/infoPackage.inc.php:205
+msgid "User home directory"
+msgstr "Répertoire de l'utilisateur"
+
+#: modules/base/infoPackage.inc.php:209
+msgid "Enable/Disable user account"
+msgstr "Activer/Désactiver un compte"
+
+#: logout/index.php:51
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: logout/index.php:50 logout/index.php:53
+#: logout/index.php:53
 msgid "Your session will be closed"
 msgstr "Votre session va être fermé"
 
-#: modules/base/users/edit.php:220 modules/base/users/edit.php:228
-#: modules/base/users/edit.php:230
-msgid "Add user"
-msgstr "Ajout d'un utilisateur"
+#: index.php:101
+msgid "incorrect ID"
+msgstr "Identifiant incorrect"
 
-#: modules/base/users/edit.php:223 modules/base/users/edit.php:231
-#: modules/base/users/edit.php:233
-msgid "Edit user"
-msgstr "Édition d'un utilisateur"
+#: index.php:202
+msgid "Server"
+msgstr "Serveur"
 
-#: modules/base/users/edit.php:276 modules/base/users/edit.php:284
-#: modules/base/users/edit.php:286
-msgid "User is disabled, if checked"
-msgstr "Utilisateur désactivé, si cochée"
+#: index.php:226
+msgid "Language"
+msgstr "Langue"
 
-#: modules/base/users/edit.php:277 modules/base/users/edit.php:285
-#: modules/base/users/edit.php:287
-msgid ""
-"Disabled users cannot be logged into any services. <br/>\n"
-"                               Shell command are replaced by /bin/false"
+#: index.php:258
+msgid "Connect"
+msgstr "Connecter"
+
+#: main.php:122
+msgid "Error, you don't have correct rights !"
+msgstr "Erreur, vous n'avez pas les droits requis !"
+
+#: modules/base/logview/ajax_showlog.php:48
+msgid "Op"
 msgstr ""
-"Les utilisateurs désactives ne peuvent s'authentifier sur aucun services.<br/"
-">\n"
-"La commande shell est remplacé par /bin/false"
 
-#: modules/base/users/ajaxFilter.php:156 modules/base/views/index.tpl.php:94
-msgid "LMC rights"
-msgstr "Droits LMC"
+#: modules/base/logview/ajax_showlog.php:45
+msgid "Connection"
+msgstr "Connexion"
 
-#: graph/navbar.inc.php:54
-msgid "Logout "
-msgstr "Déconnexion"
+#: modules/base/logview/ajax_showlog.php:48
+#: modules/base/logview/ajax_showlog.php:47
+msgid "Operation"
+msgstr "Opération"
 
-#: includes/PageGenerator.php:325
-msgid "to"
-msgstr "à"
-
-#: includes/PageGenerator.php:326
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr "- Total <b>%s</b>"
-
-#: includes/PageGenerator.php:721 includes/PageGenerator.php:760
-msgid "Ok"
-msgstr "Ok"
-
-#: includes/ErrorHandling.php:51
-msgid "Show complete trackback"
-msgstr "Afficher la traceback complete"
-
-#: includes/ErrorHandling.php:52
-msgid "Complete Traceback"
-msgstr "Traceback complete"
-
-#: includes/xmlrpc.inc.php:95
-msgid "lmc-agent not responding"
-msgstr "l'agent lmc ne répond pas"
-
-#: includes/xmlrpc.inc.php:96
-msgid "LMC-Agent seems to be down or not correctly configured."
-msgstr ""
-"LMC-Agent semble ne pas être répondre ou n'est pas correctement configuré."
-
-#: includes/xmlrpc.inc.php:96
-msgid "<br/> Error: "
-msgstr "<br/>Erreur:"
-
-#: includes/xmlrpc.inc.php:96
-msgid " - "
-msgstr "-"
-
-#: includes/xmlrpc.inc.php:198
-msgid "unknown error"
-msgstr "erreur inconnue"
-
-#: includes/xmlrpc.inc.php:199
-msgid ""
-"This exception is unknow. Please contact us to add an error handling on this "
-"error."
-msgstr ""
-"Cette exception est inconnue. Veuillez nous contacter pour correctement "
-"gérer cette erreur."
-
-#: includes/commonErrorHandling.php:6
-msgid "This item already exists in your LDAP directory"
-msgstr "Cette entrée existe déjà dans le répertoire LDAP"
-
-#: includes/commonErrorHandling.php:7
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>change this entry name</li>\n"
-"                            <li>delete this entry before recreate it</li>\n"
-"                        </ul>"
-msgstr ""
-"Pour résoudre ce probèle:        <ul>         <li>changez le nom de cette "
-"entrée</li>         <li>supprimer cette entrée avant de la recréer</li> </ul>"
-
-#: includes/commonErrorHandling.php:19
-msgid "LMC Agent can't contact your LDAP server"
-msgstr "L'agent LMC ne peut pas contacter le serveur LDAP"
-
-#: includes/commonErrorHandling.php:20
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly "
-"configured in /etc/lmc/plugins/base/ini </li>\n"
-"                            <li>Verify you LDAP server is up</li>\n"
-"                        </ul>"
-msgstr ""
-"Pour résoudre ce problème:        <ul>         <li>Vérifiez que votre "
-"serveur LDAP est correctement configurer dans /etc/lmc/plugins/base.ini</"
-"li>        <li>Vérifier que votre serveur LDAP</li> </ul> "
-
-#: includes/commonErrorHandling.php:31
-msgid "This items seems to not be in the index"
-msgstr "Cette entrée semble ne pas être indexé"
-
-#: includes/commonErrorHandling.php:32
-msgid ""
-"This problem can appear if:\n"
-"                        <ul>\n"
-"                            <li>This item no longer exists.</li>\n"
-"                            <li>You misspelled it.</li>\n"
-"                        </ul>"
-msgstr ""
-"Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe "
-"plus</li>            <li> elle est mal orthographiée</li> </ul>"
-
-#: includes/commonErrorHandling.php:44
-msgid "smbpasswd failed to change your password entry"
-msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
-
-#: includes/commonErrorHandling.php:45
-msgid ""
-"Verify that your smbpasswd is correctly configures:\n"
-"                        <ul>\n"
-"                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly "
-"configure</li>\n"
-"                        </ul>"
-msgstr ""
-"Verifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur "
-"LDAP n'est pas en fonction</li>    <li>Votre serveur samba n'est pas "
-"correctement configuré</li> </ul>"
+#: modules/base/logview/index.php:60
+msgid "LDAP operations log view"
+msgstr "Journal des opérations LDAP"

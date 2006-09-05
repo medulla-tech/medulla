@@ -32,7 +32,6 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-#	make -C helpers
 
 	touch build-stamp
 
@@ -42,7 +41,7 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	#-$(MAKE) -C helpers clean
+	$(MAKE) clean
 
 	dh_clean 
 
@@ -54,7 +53,13 @@ install: build
 
 	# Add here commands to install the package into debian/$(PACKAGE).
 	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/$(PACKAGE)
-	install --mode=644 debian/apache.conf debian/$(PACKAGE)/etc/lmc/apache.conf
+	install --mode=644 confs/apache/lmc.conf debian/$(PACKAGE)/etc/lmc/apache.conf
+
+	# Remove Scripaculous license, readme and changelog
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/MIT-LICENSE
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/CHANGELOG
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/README
+
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -67,12 +72,10 @@ binary-arch: build install
 	dh_installchangelogs 
 	dh_installdocs
 	dh_link
-	dh_strip
 	dh_compress
 	# Keep /etc/lmc/ini as root:www-data and 640
 	dh_fixperms -X/etc/lmc/lmc.ini
 	dh_installdeb
-	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

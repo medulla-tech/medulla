@@ -21,7 +21,6 @@ for name in `find ${1} -type f -name *.po`
     newname=`echo ${name} | sed 's!^\(.*\)/\(.*\).po$!\1/\2.mo!'`
     echo -n "Building ${name} as ${newname}..."
     msgfmt ${name} -o ${newname} || true
-    rm ${name}
     echo "done"
   done
 

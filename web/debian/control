@@ -1,14 +1,15 @@
 Source: lmc-web-base
 Section: admin
 Priority: optional
-Maintainer: Linbox <infos@linbox.com>
-Build-Depends: debhelper (>= 4.0.0), libglib2.0-dev
-Standards-Version: 3.6.1
+Maintainer: Linbox FAS <infos@linbox.com>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.7.2
 
 Package: lmc-web-base
 Architecture: all
-Depends: libapache2-mod-php4, apache2 | apache2-mpm-prefork, wwwconfig-common, ${shlibs:Depends}, ${misc:Depends}
+Depends: libapache2-mod-php4 | libapache2-mod-php5, apache2 | apache2-mpm-prefork, wwwconfig-common, ${shlibs:Depends}
 Replaces: lmc-base
 Description: LMC web interface to interact with a LMC agent
  Linbox Management Console web interface designed by Linbox
- <http://linbox.com>.
+ .
+ Homepage: http://lds.linbox.org/

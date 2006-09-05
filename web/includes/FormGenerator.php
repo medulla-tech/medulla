@@ -29,7 +29,7 @@
 function displayErrorCss($name) {
   global $formErrorArray;
   if ($formErrorArray[$name]==1) {
-    print ' style="color: #C00;"';
+    print ' style="color: #C00; text-align:right;"';
     }
 }
 
@@ -49,7 +49,7 @@ class CheckboxTpl extends AbstractTpl{
    *  $arrParam accept ["value"] to corresponding value
    */
   function display($arrParam) {
-    print '<input '.$arrParam["value"].' name="'.$this->name.'" type="checkbox" class="checkbox" '.$arrParam["extraArg"].' />';
+    print '<input '.$arrParam["value"].' name="'.$this->name.'" id="'.$this->name.'" type="checkbox" class="checkbox" '.$arrParam["extraArg"].' />';
   }
 
    function displayRo($arrParam) {
@@ -98,8 +98,45 @@ class PasswordTpl extends AbstractTpl{
  */
 class InputTpl extends AbstractTpl{
 
+  function InputTpl($name,$regexp='/.*/') {
+    $this->name=$name;
+    $this->regexp = $regexp;
+  }
 
-  function InputTpl($name) {
+  /**
+   *  display input Element
+   *  $arrParam accept ["value"] to corresponding value
+   */
+  function display($arrParam) {
+    if ($arrParam=='') {
+        $arrParam = $_POST[$this->name];
+    }
+    print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="text" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
+
+    print '<script>
+                $(\''.$this->name.'\').validate = function() {
+                    if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
+                        return true
+                    }
+                    var rege = '.$this->regexp.'
+                    if ((rege.exec($(\''.$this->name.'\').value))!=null) {
+                        return true
+                    } else {
+                        $(\''.$this->name.'\').style.backgroundColor = \'pink\';
+                        new Element.scrollTo(\'container_input_'.$this->name.'\');
+                        return 0;
+                    }
+                }
+           </script>';
+  }
+}
+
+/**
+ * simple add label with Hidden field
+ */
+class HiddenTpl extends AbstractTpl{
+
+  function HiddenTpl($name) {
     $this->name=$name;
   }
 
@@ -111,7 +148,8 @@ class InputTpl extends AbstractTpl{
     if ($arrParam=='') {
         $arrParam = $_POST[$this->name];
     }
-    print '<input name="'.$this->name.'" id="'.$this->name.'" type="text" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' />';
+    print $arrParam['value'].'<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'"/>';
+
   }
 }
 
@@ -121,6 +159,11 @@ class MultipleInputTpl extends AbstractTpl {
     function MultipleInputTpl($name,$desc='') {
        $this->name = $name;
        $this->desc = $desc;
+       $this->regexp = '/.*/';
+    }
+
+    function setRegexp($regexp) {
+       $this->regexp = $regexp;
     }
 
     function display($arrParam) {
@@ -128,7 +171,7 @@ class MultipleInputTpl extends AbstractTpl {
         print '<table>';
         foreach ($arrParam as $key => $param) {
               $test = new DeletableTrFormElement($this->desc,
-                                                 new InputTpl($this->name.'['.$key.']'),
+                                                 new InputTpl($this->name.'['.$key.']',$this->regexp),
                                                  array('key'=>$key,
                                                        'name'=> $this->name)
                                                  );
@@ -147,6 +190,57 @@ class MultipleInputTpl extends AbstractTpl {
         print '</table>';
         print '</div>';
     }
+
+   function displayRo($arrParam) {
+               print '<div id="'.$this->name.'">';
+        print '<table>';
+        foreach ($arrParam as $key => $param) {
+              $test = new DeletableTrFormElement($this->desc,
+                                                 new InputTpl($this->name.'['.$key.']',$this->regexp),
+                                                 array('key'=>$key,
+                                                       'name'=> $this->name)
+                                                 );
+              $test->setCssError($name.$key);
+              $test->displayRo(array("value"=>$param));
+        }
+        if (count($arrParam) == 0) {
+            print '<tr><td width="40%" style="text-align:right;">';
+            print $this->desc;
+            print '</td><td>';
+            print '</td></tr>';
+        }
+        print '</table>';
+        print '</div>';
+   }
+
+   function displayHide($arrParam) {
+        print '<div id="'.$this->name.'">';
+        print '<table>';
+        print '<tr><td width="40%" style="text-align:right;">'.$this->desc.'</td>';
+        print '<td style="color: rgb(204, 0, 0);">'.'indisponible'.'</td></tr>';
+        print '</table>';
+        print '<div style="display:none">';
+        print '<table>';
+        foreach ($arrParam as $key => $param) {
+              $test = new DeletableTrFormElement($this->desc,
+                                                 new InputTpl($this->name.'['.$key.']',$this->regexp),
+                                                 array('key'=>$key,
+                                                       'name'=> $this->name)
+                                                 );
+              $test->setCssError($name.$key);
+              $test->displayHide(array("value"=>$param));
+        }
+        if (count($arrParam) == 0) {
+            print '<tr><td width="40%" style="text-align:right;">';
+            print $this->desc;
+            print '</td><td>';
+            print '</td></tr>';
+        }
+        print '</table>';
+        print '</div>';
+        print '</div>';
+   }
+
 
 }
 
@@ -291,6 +385,13 @@ class FormElement {
     }
 
   }
+  function displayRo($arrParam) {
+      $this->template->displayRo($arrParam);
+  }
+
+  function displayHide($arrParam) {
+      $this->template->displayHide($arrParam);
+  }
 }
 
 
@@ -342,6 +443,30 @@ class DeletableTrFormElement extends FormElement{
 
 
   }
+
+  function displayRo($arrParam) {
+
+    if ($this->key==0) {
+        $desc = $this->desc;
+    }
+    print '<tr><td width="40%" ';
+    print displayErrorCss($this->cssErrorName);
+    print 'style = "text-align: right;">';
+
+    //if we got a tooltip, we show it
+    if ($this->tooltip) {
+        print "<a href=\"#\" class=\"tooltip\">".$desc."<span>".$this->tooltip."</span></a>";
+    } else {
+        print $desc;
+    }
+    print '</td><td>';
+
+    parent::displayRo($arrParam);
+
+    print '</td></tr>';
+
+
+  }
 }
 
 /**
@@ -381,6 +506,25 @@ class TrFormElement extends FormElement{
     print '</td><td>';
 
     parent::display($arrParam);
+
+    print '</td></tr>';
+  }
+
+  function displayRo($arrParam) {
+
+    print '<tr><td width="40%" ';
+    print displayErrorCss($this->cssErrorName);
+    print 'style = "text-align: right;">';
+
+    //if we got a tooltip, we show it
+    if ($this->tooltip) {
+        print "<a href=\"#\" class=\"tooltip\">".$this->desc."<span>".$this->tooltip."</span></a>";
+    } else {
+        print $this->desc;
+    }
+    print '</td><td>';
+
+    parent::displayRo($arrParam);
 
     print '</td></tr>';
   }

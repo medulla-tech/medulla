@@ -22,6 +22,7 @@ var launch = 0;
     }
 
 
+
 /**
  * update group div via ajax request
  */

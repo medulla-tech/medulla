@@ -43,38 +43,25 @@ $maxperpage = $conf["global"]["maxperpage"];
 </style>
 
 <?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Groups"),
-                    "link" => "main.php?module=base&submod=groups&action=index"),
-              array("name" => _("List")));
-
 require("localSidebar.php");
 
 require("graph/navbar.inc.php");
 
-if (!isset($_GET["items"]))
-{
+if (!isset($_GET["items"])) {
   $groups = get_groups($error);
   $start = 0;
 
-  if (count($groups) > 0)
-    {
+  if (count($groups) > 0) {
       $end = $conf["global"]["maxperpage"] - 1;
-    }
-  else
-    {
+  } else {
       $end = 0;
-    }
-}
-else
-{
+  }
+} else {
   $groups = unserialize(base64_decode(urldecode($_GET["items"])));
 }
-if (isset($_GET["start"]))
-{
-$start = $_GET["start"];
-$end = $_GET["end"];
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+    $end = $_GET["end"];
 }
 
 ?>
@@ -82,7 +69,7 @@ $end = $_GET["end"];
 
 
 
-<form name="groupForm" id="groupForm" action="#">
+<form name="groupForm" id="groupForm" action="#" onSubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
@@ -115,12 +102,13 @@ $end = $_GET["end"];
 
 $arrGroup = array();
 $arrComment = array();
+$arrNb = array();
 
-for ($idx = 0; $idx < count($groups); $idx++)
- {
+for ($idx = 0; $idx < count($groups); $idx++) {
     $arrGroup[]=$groups[$idx][0];
     $arrComment[]= new EditInPlace($groups[$idx][1],'modules/base/groups/ajaxEditDesc.php',
                                     array("group"=>$groups[$idx][0]));
+    $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';
 }
 
 
@@ -129,6 +117,7 @@ $n = new ListInfos($arrGroup,_("Groups"));
 $n->setCssClass("groupName");
 
 $n->addExtraInfo($arrComment,_("Comments"));
+$n->setAdditionalInfo($arrNb);
 
 
 $n->addActionItem(new ActionItem(_("Edit members"),"members","edit","group") );

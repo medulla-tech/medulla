@@ -22,40 +22,28 @@
  */
 ?>
 <?php
-function sched_backup($user, $media)
-{
+function sched_backup($user, $media) {
     $param = array($user,$media,$_SESSION["login"]);
     return xmlCall("base.backupUser",$param);
 }
 
-if (isset($_POST["bback"]))
-{
+if (isset($_POST["bback"])) {
     header("Location: main.php?module=base&submod=users&action=index");
     exit;
 }
-?>
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?module=base&submod=users&action=index"),
-              array("name" => _("Backup")));
 ?>
 
 <h2><?= _("Backup a user's folder") ?></h2>
 
 <?php
-if (isset($_GET["user"]))
-{
+if (isset($_GET["user"])) {
   $user = urldecode($_GET["user"]);
 }
-if (isset($_POST["user"]))
-{
+if (isset($_POST["user"])) {
   $user = $_POST["user"];
 }
 
-if (isset($_POST["bgo"]))
-{
+if (isset($_POST["bgo"])) {
   sched_backup($user, $_POST["media"]);
 ?>
 

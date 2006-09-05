@@ -27,9 +27,11 @@
          * module declaration
          */
         $mod = new Module("base");
-        $mod->setVersion("1.0.1");
+        $mod->setVersion("1.1.0");
         $mod->setRevision("$Rev$");
-        $mod->setAPIVersion('1:0:0');
+        $mod->setAPIVersion('2:0:1');
+        $mod->setDescription(_("User and group"));
+        $mod->setPriority(1);
 
         /**
          * define main submod
@@ -40,10 +42,57 @@
 
         $page = new Page("default",_("LMC root page"));
         $page->setFile("main_content.php");
+        $page->setOptions(array("visible"=>False));
+        $submod->addPage($page);
+        $mod->addSubmod($submod);
+
+        $page = new Page("favorites",_("Favorites page"));
+        $page->setFile("includes/favorites.php");
+        $page->setOptions(array("visible"=>False,"AJAX" =>True));
+        $submod->addPage($page);
+        $mod->addSubmod($submod);
+
+
+        $submod = new SubModule("status");
+        $submod->setVisibility(True);
+        $submod->setDescription(_("Status"));
+        $submod->setImg('img/navbar/load');
+        $submod->setDefaultPage("base/status/index");
+        $submod->setPriority(10000);
+
+        $page = new Page("index",_("Default status page"));
+        $page->setFile("modules/base/status/index.php");
+
         $submod->addPage($page);
 
         $mod->addSubmod($submod);
 
+
+        $submod = new ExpertSubModule("logview");
+        $submod->setVisibility(True);
+        $submod->setDescription(_("Log view"));
+        $submod->setImg('img/navbar/logview');
+        $submod->setDefaultPage("base/logview/index");
+        $submod->setPriority(10001);
+
+        $page = new Page("index",_("LDAP log"));
+        $page->setFile("modules/base/logview/index.php");
+
+        $submod->addPage($page);
+
+        $page = new Page("show");
+        $page->setFile("modules/base/logview/ajax_showlog.php",
+                       array("AJAX" =>True,"visible"=>False)
+                       );
+        $submod->addPage($page);
+
+        $page = new Page("setsearch");
+        $page->setFile("modules/base/logview/ajax_setSearch.php",
+                       array("AJAX" =>True,"visible"=>False)
+                       );
+        $submod->addPage($page);
+
+        $mod->addSubmod($submod);
 
 
         /**
@@ -62,19 +111,19 @@
 
         $page = new Page("ajaxAutocompleteGroup");
         $page->setFile("modules/base/users/ajaxAutocompleteGroup.php",
-                       array("AJAX" =>True)
+                       array("AJAX" =>True,"visible"=>False)
                        );
         $submod->addPage($page);
 
         $page = new Page("ajaxFilter");
         $page->setFile("modules/base/users/ajaxFilter.php",
-                       array("AJAX" =>True)
+                       array("AJAX" =>True,"visible"=>False)
                        );
         $submod->addPage($page);
 
         $page = new Page("ajaxGroup");
         $page->setFile("modules/base/users/ajaxGroup.php",
-                       array("AJAX" =>True)
+                       array("AJAX" =>True,"visible"=>False)
                        );
         $submod->addPage($page);
 
@@ -82,24 +131,29 @@
         $submod->addPage($page);
 
         $page = new Page("edit",_("Edit a user"));
+        $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
 
         $page = new Page("editacl",_("Edit ACL permissions on a user"));
+        $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
 
         $page = new Page("delete",_("Delete a user"));
         $page->setFile("modules/base/users/delete.php",
-                        array("noHeader"=>True)
+                        array("noHeader"=>True,"visible"=>False)
                         );
         $submod->addPage($page);
 
         $page = new Page("backup",_("Backup user files"));
         $page->setFile("modules/base/users/backup.php",
-                        array("noHeader"=>True)
+                        array("noHeader"=>True,"visible"=>False)
                         );
         $submod->addPage($page);
 
         $page = new Page("passwd",_("Change user password"));
+        if ($_SESSION["login"]=='root') {
+            $page->setOptions(array("visible"=>False));
+        }
         $submod->addPage($page);
 
         $mod->addSubmod($submod);
@@ -124,17 +178,18 @@
 
         $page = new Page("delete",_("Delete a group"));
         $page->setFile("modules/base/groups/delete.php",
-                        array("noHeader"=>True)
+                        array("noHeader"=>True,"visible"=>False)
                         );
         $submod->addPage($page);
 
         $page = new Page("ajaxFilter");
         $page->setFile("modules/base/groups/ajaxFilter.php",
-                        array("AJAX"=>True)
+                        array("AJAX"=>True,"visible"=>False)
                         );
         $submod->addPage($page);
 
         $page = new Page("members",_("Group members"));
+        $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
 
         $mod->addSubmod($submod);

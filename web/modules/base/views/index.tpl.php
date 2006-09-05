@@ -23,7 +23,7 @@
 ?>
 
 
-<form name="userForm" id="userForm" action="#">
+<form name="userForm" id="userForm" action="#" onSubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 

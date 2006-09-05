@@ -95,6 +95,7 @@ function xmlCall($method,$params) {
                 $errObj->setMsg(_("lmc-agent not responding"));
                 $errObj->setAdvice(_("LMC-Agent seems to be down or not correctly configured.".'<br/> Error: '. $errNo . ' - '. $errString));
                 $errObj->setTraceBackDisplay(false);
+                $errObj->setSize(400);
                 $errObj->process('');
 
                 $errorStatus = 1;

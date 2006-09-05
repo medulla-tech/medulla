@@ -34,11 +34,6 @@ require("modules/base/includes/users.inc.php");
 </style>
 
 <?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?module=base&submod=users&action=index"),
-              array("name" => _("List")));
 
 require("localSidebar.php");
 
@@ -46,39 +41,32 @@ require("graph/navbar.inc.php");
 
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
 
-if (!isset($_GET["items"]))
-{
+if (!isset($_GET["items"])) {
   $users = get_users_detailed($error, $_GET["filter"]);
   $start = 0;
 
-  if (count($users) > 0)
-    {
+  if (count($users) > 0) {
       $end = $conf["global"]["maxperpage"] - 1;
-    }
-  else
-    {
+  } else {
       $end = 0;
-    }
-}
-else
-{
+  }
+} else {
   $users = unserialize(base64_decode(urldecode($_GET["items"])));
 }
 
-if (isset($_GET["start"]))
-{
-$start = $_GET["start"];
-$end = $_GET["end"];
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+    $end = $_GET["end"];
 }
 
 if (!$users) {
-$start = 0;
-$end = 0;
+    $start = 0;
+    $end = 0;
 }
 
 if (isset($_POST["filter"])) {
-$start = 0;
-$end = 9;
+    $start = 0;
+    $end = 9;
 }
 
 setVar('start',$start);

@@ -1,3 +1,4 @@
+
 <?php
 /**
  * (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
@@ -20,159 +21,20 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?
-/* définition des fonctions pour cette page */
 
-function
-print_mem_bar($title, $max, $used, $cache = 0, $width = 400)
-{
-  $wused = ($used / $max) * $width;
+/* bord haut gauche arrondi */
+$topLeft = 1;
 
-  if ($title != "")
-    {
-      echo $title." :";
-    }
-  echo "<div class=\"membarfree\" style=\"width: ".$width."px\">";
-  if ($cache > 0)
-    {
-      printf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
-      $wused = (($used - $cache) / $max) * $width;
-    }
-  printf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
-
-  if ($cache > 0)
-    {
-      echo "</div>";
-    }
-  echo "</div>\n";
-}
-
-function
-print_disk_info()
-{
-  /* -l option to only get local filesystem occupation */
-  remote_exec("df -m",$df);
-
-  unset($df[0]);
-
-echo "<table>";
-
-$incomplete_lines = "";
-
-  foreach ($df as $disk)
-    {
-      //if previous is truncated we add it to the current line
-      if ($incomplete_lines) {
-  	$disk = $incomplete_lines ." ". $disk;
-	unset($incomplete_lines);
-      }
-
-      if (preg_match("/^\/dev\/mapper\/data-snap/", $disk)
-          || preg_match("/^[ ]+/", $disk))
-        {
-          continue;
-        }
-
-      //if device name use whole line... we skip this line
-      //concatenate it with the next
-      if (!preg_match(("/[ ]/"),$disk)) {
-	$incomplete_lines = $disk;
-	continue;
-      }
-
-      $disk = preg_split("/[ ]+/", $disk);
-
-      if (array_search($disk[0], array("tmpfs","none"))!==FALSE)
-	{
-	  continue;
-	}
-
-	echo "<tr><td>$disk[5]</td><td>($disk[0])</td><td>[$disk[4]]</td></tr>\n";
-	echo "<tr><td colspan=\"3\" style=\"padding-bottom: 2px;\">";
-	print_mem_bar("", $disk[1], $disk[2]);
-	echo "</td>\n";
-    }
-echo "</table>";
-}
-
-function print_ps() {
-  remote_exec("ps aux |grep backup.sh | grep -v grep",$ps);
-  if (!$ps) {
-    print _("no backup in progress");
-  }
-  foreach ($ps as $line) {
-
-    //remove all espaces but one
-    while (strstr($line,'  ')) {
-      $line=str_replace('  ',' ',$line);
-    }
-
-    //explode it
-    $arrSplit = explode(' ',$line,11);
-    //print_r($arrSplit);
-    print $arrSplit[10];
-    print "<br />";
-  }
-
-}
-
-function
-print_health()
-{
-  $up = file_get_contents("/proc/uptime");
-  $up = trim($up);
-
-  list($up) = explode(" ", $up);
-
-  $days = (int) ($up / (24*60*60));
-  $up -= $days * 24*60*60;
-  $hrs = (int)($up / (60*60));
-  $up -= $hrs * 60*60;
-  $mins = (int)($up / 60);
-
-  ($days > 1) ? $d = "s" : $d = "";
-  ($hrs > 1) ? $h = "s" : $h = "";
-  ($mins > 1) ? $m = "s" : $m = "";
-
-  echo _("Uptime: ");
-
-  if ($days > 0)
-    {
-      echo $days." "._("day").$d." ";
-    }
-
-  if (($days > 0) || ($hrs > 0))
-    {
-      echo $hrs." "._("hour").$h." ";
-    }
-
-  echo $mins." "._("minute").$m."<br>\n";
-
-  //$load = file_get_contents("/proc/loadavg");
-  remote_exec("cat /proc/loadavg",$load);
-  $load = trim($load[0]);
-
-  $load = explode(" ", $load);
-
-  remote_exec("uptime", $users);
-  preg_match("/([0-9]+) user/", $users[0], $users);
-
-  ($users[1] != 1) ? $u = "s" : $u = "";
-
-  echo "<br>\n";
-
-  remote_exec("free -m", $mem);
-
-  $m = preg_split("/[ ]+/", $mem[1]);
-  print_mem_bar(_("Memory"), $m[1], $m[2],$m[5]+$m[6]);
-  $m = preg_split("/[ ]+/", $mem[3]);
-  print_mem_bar(_("Swap"), $m[1], $m[2]);
+global $acl_error;
+if ($acl_error) {
+  print "<div id=\"errorCode\">$acl_error</div>";
 }
 
 /* inclusion header HTML */
 require("graph/header.inc.php");
 
+
+require("graph/navbar.inc.php");
 ?>
 
 <!-- Définition de styles locaux à cette page -->
@@ -276,53 +138,95 @@ div.right {
 
 form { padding-top: 10px; }
 
+
+.submod {
+    background-color: #E5E5E5;
+    margin: 0.7em;
+    padding: 0.7em;
+    -moz-border-radius: 5px;
+}
+
+.module {
+    float: left;
+    background-color: #EEE;
+    margin: 0.7em;
+    padding: 0.7em;
+    -moz-border-radius: 10px;
+    width: 180px;
+}
+
+ul {
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
 -->
 </style>
 
-<?php
-$path = array(array("name" => _("Home")));
-/* bord haut gauche arrondi */
-$topLeft = 1;
-
-/* Inclusion de la bar de navigation */
-require("graph/navbar.inc.php");
-
-global $acl_error;
-if ($acl_error) {
-  print "<div id=\"errorCode\">$acl_error</div>";
-}
-
-?>
 
 
 
-<h2><?= _("Global view")?></h2>
+<h2><?= _("Home")?></h2>
 
 <div class="fixheight"></div>
+<?php
 
-<div class="left">
-  <div id="statusPad">
-    <h2><?= _("Server status") ?></h2>
-<?php print_health(); ?>
-  </div>
-</div>
 
-<div class="right">
-  <div id="accueilPad">
-    <h2><?= _("Hard drive partitions") ?></h2>
-<?php print_disk_info(); ?>
-  </div>
-</div>
+function display_page($page,$submod,$mod) {
+    if ($page->getDescription()&&$page->isVisible()) {
+        $url = urlStr($mod->getName()."/".$submod->getName()."/".$page->_action);
+        if (hasCorrectAcl($mod->getName(),$submod->getName(),$page->_action)) {
+            echo "<li><a href=\"$url\">".$page->getDescription()."</a></li>";
+        } else {
+            echo "<li style=\"color: #BBB;\">".$page->getDescription()."</li>";
+        }
+    }
+}
 
-<div class="right">
-  <div id="statusPad">
+function display_submod($submod,$mod) {
+    if (!$submod->hasVisible()) {
+        return;
+    }
+    echo '<div class="submod">';
+    ?> <img src="<?= $submod->_img?>_select.png" alt="" style="float:right;" /><?php
+    /*if (!$submod->_visibility) { //if submod not visible
+        return;
+    }*/
+    echo '<h3>';
+    $url = urlStr($submod->_defaultpage);
+    echo "<a style=\"text-decoration: none;\" href=\"$url\">".$submod->getDescription()."</a><br/>";
+    echo "</h3>";
+    print "<ul>";
+    foreach ($submod->getPages() as $page) {
+        display_page($page,$submod,$mod);
+    }
+    print "</ul>";
+    echo '</div>';
+}
 
-    <h2><?=  _("Background jobs") ?></h2>
-    <?php //print_ps();?>
-    <div id="bgps">
+function display_mod($mod) {
+    if (!$mod->hasVisible()) {
+        return;
+    }
+
+?>
+    <div class="module">
+        <h2><?= $mod->getDescription(); ?></h2>
+        <?php foreach (getSorted($mod->getSubmodules()) as $submod) {
+            display_submod($submod,$mod);
+        }
+        ?>
     </div>
-    <script>
-        new Ajax.PeriodicalUpdater('bgps','includes/bgps_view.php', {asynchronous: true, frequency: 2});
-    </script>
-  </div>
+<?php
+}
+
+        $LMCApp =& LMCApp::getInstance();
+
+        foreach(getSorted($LMCApp->getModules()) as $key => $mod) {
+            display_mod($mod);
+        }
+
+?>
+<div style="clear: both;">
+</div>
 </div>

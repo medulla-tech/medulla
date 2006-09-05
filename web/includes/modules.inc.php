@@ -112,6 +112,16 @@ function insert_without_delete($arr,$ind,$value) {
     }
 }
 
+function getSorted($objlist) {
+    $prio = array();
+   foreach ($objlist as $obj) {
+            $prio = insert_without_delete($prio,$obj->getPriority(),$obj);
+    }
+
+    ksort($prio);
+    return $prio;
+}
+
 function autoGenerateNavbar() {
     $LMCApp =& LMCApp::getInstance();
 
@@ -184,10 +194,18 @@ function isNoHeader($pModules,$pSubmod,$pAction) {
 function callPluginFunction($function,$paramArr = null) {
   $list=$_SESSION["modulesList"];
 
+  $LMCApp =& LMCApp::getInstance();
+  foreach(getSorted($LMCApp->getModules()) as $key => $mod) { //fetch and order plugin
+        if (array_search($mod->getName(),$list)!==FALSE){
+            $ordered_list[] = $mod->getName();
+        }
+  }
+
+  $list = $ordered_list; //set $ordered_list as $list;
+
   // If the user try to change his/her password, we do it for each available
   // module, and we bypass all ACL check
   if (($function == "changeUserPasswd")||($function == "baseEdit")) {
-    $list = $_SESSION["supportModList"];
     global $conf;
     foreach($list as $module) {
       if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));

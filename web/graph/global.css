@@ -1197,3 +1197,71 @@ a.tooltip:hover img{
 	border-style:none;
 	border-width:0;
 }
+
+.submodfav {
+    background-color: #E5E5E5;
+    margin: 0.3em;
+    padding: 0.3em;
+    -moz-border-radius: 5px;
+}
+
+.submodfav_select {
+    background-color: #E5E5C5;
+    margin: 0.3em;
+    padding: 0.3em;
+    -moz-border-radius: 5px;
+}
+
+.submodfav_sselect {
+    background-color: #D5D5B5;
+    margin: 0.3em;
+    padding: 0.3em;
+    -moz-border-radius: 5px;
+}
+
+.modulefav h3 {
+    margin:0px;
+    padding: 0px;
+}
+
+.submodfav h4 {
+    margin:0px;
+    padding: 0px;
+}
+
+.modulefav {
+    background-color: #EEE;
+    margin: 0.3em;
+    padding: 0.3em;
+    -moz-border-radius: 10px;
+    width: 160px;
+}
+
+.modulefav_select {
+    background-color: #EEC;
+    margin: 0.3em;
+    padding: 0.3em;
+    -moz-border-radius: 10px;
+    width: 160px;
+}
+
+.redbutton {
+    margin-right: 0.5em;
+    float:right;
+    -moz-border-radius: 0.1em;
+    padding-left: 0.2em;
+    padding-right: 0.3em;
+    background-color: #E99;
+    color: #FFF;
+    text-decoration: none;
+}
+
+.redbutton a{
+    color: #FFF;
+    text-decoration: none;
+}
+.formblock {
+    -moz-border-radius:9px;
+    padding: 1em;
+    margin: 1em;
+}

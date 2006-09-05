@@ -22,6 +22,8 @@
  */
 ?>
 <?
+if ($_SESSION["login"]!='root') {
+
 $sidebar = array("class" => "users",
                  "content" => array(array("id" => "global",
                                     "text" => _("List"),
@@ -32,4 +34,17 @@ $sidebar = array("class" => "users",
 			      array("id" => "changePasswd",
                                     "text" => _("Change your password"),
                                     "link" => "main.php?module=base&submod=users&action=passwd")));
+} else {
+
+$sidebar = array("class" => "users",
+                 "content" => array(array("id" => "global",
+                                    "text" => _("List"),
+                                    "link" => "main.php?module=base&submod=users&action=index"),
+                              array("id" => "addUser",
+                                    "text" => _("Add"),
+                                    "link" => "main.php?module=base&submod=users&action=add"),
+			      ));
+
+
+}
 ?>

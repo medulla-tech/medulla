@@ -85,9 +85,15 @@ function print_ajax_nav($curstart,
 }
 
 function displayInputLiveSearch($action) {
+
+
+if (strstr($action,'?')===False) {
+    $action = $action ."?ajax=1";
+}
+
 ?>
 
-<form name="Form" id="Form" action="#">
+<form name="Form" id="Form" action="#" onSubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
@@ -109,7 +115,7 @@ function displayInputLiveSearch($action) {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('container','<?= $action ?>?filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('container','<?= $action ?>&filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -118,7 +124,7 @@ function displayInputLiveSearch($action) {
         */
 
         function updateSearchParam(filter, start, end) {
-            new Ajax.Updater('container','<?= $action ?>?filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('container','<?= $action ?>&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
         /**

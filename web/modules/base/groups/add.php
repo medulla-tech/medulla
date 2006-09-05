@@ -52,15 +52,17 @@ require("graph/navbar.inc.php");
 
 if (isset($_POST["badd"]))
 {
-  if (!preg_match("/^[a-z][0-9\-_a-z]*$/", $_POST["groupname"]))
+  if (!preg_match("/^[a-zA-Z][0-9\-_a-zA-Z ]*$/", $_POST["groupname"]))
     {
       $error = _("Invalid groupname");
     }
     else {
 
   $groupname = $_POST["groupname"];
+  $groupdesc = $_POST["groupdesc"];
 
   $result = create_group($error, $groupname);
+  change_group_desc($groupname,$groupdesc);
   }
 }
 ?>
@@ -75,8 +77,15 @@ if (isset($_POST["badd"]))
 
 <form name="groupform" method="post" action="<? echo $PHP_SELF; ?>">
 <table cellspacing="0">
-<tr><td><?= _("Group name")?></td>
-    <td><input id="groupname" name="groupname" type="text" class="textfield" size="23" value="<?php if (isset($error)){echo $groupname;} ?>" /></td></tr>
+<tr>
+<td style="text-align:right;"><?= _("Group name")?></td>
+    <td><input id="groupname" name="groupname" type="text" class="textfield" size="23" value="<?php if (isset($error)){echo $groupname;} ?>" /></td>
+</tr>
+<tr>
+<td style="text-align:right;"><?= _("Description")?></td>
+    <td><input id="groupdesc" name="groupdesc" type="text" class="textfield" size="23" value="<?php if (isset($error)){echo $groupdesc;} ?>" /></td>
+
+</tr>
 </table>
 
 <input name="badd" type="submit" class="btnPrimary" value="<?= _("Create"); ?>" />

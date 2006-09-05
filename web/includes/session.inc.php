@@ -33,21 +33,23 @@ session_start();
 session_cache_expire (30);
 
 
-if (!isset($_SESSION["expire"]) ) 
-{ 
+if (!isset($_SESSION["expire"]) )
+{
   if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"]))
-  { 
-    session_destroy(); 
-    $goto = ""; 
-  } 
-  else 
-  { 
-    $goto = "?goto=".$_SERVER["SCRIPT_NAME"]; 
-  } 
- 
-  $root = $conf["global"]["root"]; 
-  header("Location: ".$root."index.php".$goto); 
-  exit; 
+  {
+    session_destroy();
+    $goto = "";
+  }
+  else
+  {
+    $goto = "?goto=".$_SERVER["SCRIPT_NAME"];
+  }
+
+  $root = $conf["global"]["root"];
+    echo "<script>\n";
+            echo "window.location = '".$root."index.php".$goto."';";
+    echo "</script>\n";
+  exit;
 }
 
 $_SESSION["expire"] = time() + 90 * 60;

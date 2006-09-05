@@ -68,8 +68,8 @@ function hasCorrectModuleAcl($module) {
   //if you have one acces to the module
   if ($_SESSION["acl"][$module]) {return true;}
 
-  //if no redirArray exist... invisible or addon module
   if (!$redirArray[$module]) { return true; }
+
   return false;
 }
 

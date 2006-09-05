@@ -22,10 +22,6 @@
  */
 ?>
 <?php
-/* $Id$ */
-
-
-
 if (isset($_POST["bback"]))
 {
   header("Location: main.php?module=base&submod=users&action=index");
@@ -33,8 +29,6 @@ if (isset($_POST["bback"]))
 }
 
 require("modules/base/includes/users.inc.php");
-//require("graph/header.inc.php");
-
 ?>
 
 
@@ -47,19 +41,6 @@ require("modules/base/graph/users/index.css");
 
 -->
 </style>
-
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?modules=base&submod=users&action=index"),
-              array("name" => _("Delete a user")));
-
-//require("localSidebar.php");
-
-//require("graph/navbar.inc.php");
-
-?>
 
 <h2><?= _("Delete user") ?></h2>
 
@@ -87,9 +68,7 @@ if (isset($_POST["bdeluser"]))
 </form>
 
 <?php
-}
-else
-{
+} else {
 ?>
 
 <form action="main.php?module=base&submod=users&action=delete" method="post">

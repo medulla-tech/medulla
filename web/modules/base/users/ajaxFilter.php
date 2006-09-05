@@ -30,12 +30,10 @@ $maxperpage = $conf["global"]["maxperpage"];
 
 
 require("graph/navbartools.inc.php");
-//require("includes/PageGenerator.php");
 
 
 function
-print_ajax_nav($curstart, $curend, $items, $filter)
-{
+print_ajax_nav($curstart, $curend, $items, $filter) {
   $_GET["action"] = "index";
   global $conf;
 
@@ -45,29 +43,26 @@ print_ajax_nav($curstart, $curend, $items, $filter)
   echo '<form method="post" action="' . $PHP_SELF . '">';
   echo "<ul class=\"navList\">\n";
 
-  if ($curstart == 0)
-    {
+  if ($curstart == 0) {
       echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
-    }
-  else
-    {
+  } else {
       $start = $curstart - $max;
       $end = $curstart - 1;
-      echo "<li class=\"previousList\"><a href=\"#\" onClick=\"updateSearchUserParam('$filter','$start','$end'); return false\";>"._("Previous")."</a></li>\n";
-    }
+      echo "<li class=\"previousList\"><a href=\"#\"
+          onClick=\"updateSearchUserParam('$filter','$start','$end');
+          return false\";>"._("Previous")."</a></li>\n";
+  }
 
-  if (($curend + 1) >= count($items))
-    {
+  if (($curend + 1) >= count($items)) {
       echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
-    }
-  else
-    {
+  } else {
       $start = $curend + 1;
       $end = $curend + $max;
 
-
-      echo "<li class=\"nextList\"><a href=\"#\" onClick=\"updateSearchUserParam('$filter','$start','$end'); return false\";>"._("Next")."</a></li>\n";
-    }
+      echo "<li class=\"nextList\"><a href=\"#\"
+           onClick=\"updateSearchUserParam('$filter','$start','$end');
+           return false\";>"._("Next")."</a></li>\n";
+  }
 
   echo "</ul>\n";
 }
@@ -76,39 +71,32 @@ print_ajax_nav($curstart, $curend, $items, $filter)
 
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
 
-if (!isset($_GET["items"]))
-{
+if (!isset($_GET["items"])) {
   $users = get_users_detailed($error, $_GET["filter"]);
   $start = 0;
 
-  if (count($users) > 0)
-    {
-      $end = $conf["global"]["maxperpage"] - 1;
-    }
-  else
-    {
-      $end = 0;
-    }
-}
-else
-{
+  if (count($users) > 0) {
+    $end = $conf["global"]["maxperpage"] - 1;
+  } else {
+    $end = 0;
+  }
+} else {
   $users = unserialize(base64_decode(urldecode($_GET["items"])));
 }
 
-if (isset($_GET["start"]))
-{
-$start = $_GET["start"];
-$end = $_GET["end"];
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+    $end = $_GET["end"];
 }
 
 if (!$users) {
-$start = 0;
-$end = 0;
+    $start = 0;
+    $end = 0;
 }
 
 if (isset($_POST["filter"])) {
-$start = 0;
-$end = 9;
+    $start = 0;
+    $end = 9;
 }
 
 
@@ -127,11 +115,10 @@ $homeDirArr = array();
 
 $css =array();
 
-for ($idx = 0; $idx < count($users); $idx++)
- {
+for ($idx = 0; $idx < count($users); $idx++) {
     if ($users[$idx]["enabled"]) {
         $css[$idx] = "userName";
-    }  else $css[$idx] = "userNameDisabled";
+    } else $css[$idx] = "userNameDisabled";
     $arrUser[]=$users[$idx]['uid'];
 
     $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];;

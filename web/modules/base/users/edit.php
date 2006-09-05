@@ -37,10 +37,6 @@ if ($_GET["action"]=="add") {
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/groups.inc.php");
 
-/*if ($_POST["buser"]&&!$_GET["edit"]) {
-   header("Location: main.php?module=base&submod=users&action=edit&user=".$_POST["nlogin"]);
-}*/
-
 //unset form local var
 unset($_SESSION["affectGroup"]);
 unset($_SESSION["possibleGroup"]);
@@ -55,13 +51,7 @@ unset($_SESSION["possibleGroup"]);
 
 -->
 </style>
-
 <?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?module=base&submod=users&action=index"),
-              array("name" => _("Add")));
 
 require("localSidebar.php");
 
@@ -69,57 +59,59 @@ require("graph/navbar.inc.php");
 
 
 //verify validity of information
-if (isset($_POST["buser"]))
-{
+if (isset($_POST["buser"])) {
 
-  global $error;
-  $nlogin = $_POST["nlogin"];
-  $name = $_POST["name"];
-  $firstname = $_POST["firstname"];
-  $confpass = $_POST["confpass"];
-  $homedir = $_POST["homeDir"];
+global $error;
+$nlogin = $_POST["nlogin"];
+$name = $_POST["name"];
+$firstname = $_POST["firstname"];
+$confpass = $_POST["confpass"];
+$homedir = $_POST["homeDir"];
 
-  $detailArr["cn"][0]=$nlogin;
-  $detailArr["givenName"][0]=$firstname;
-  $detailArr["sn"][0]=$name;
-  $pass = $_POST["pass"];
-  $desactive = $_POST["isBaseDesactive"];
+$detailArr["cn"][0]=$nlogin;
+$detailArr["givenName"][0]=$firstname;
+$detailArr["sn"][0]=$name;
+$pass = $_POST["pass"];
+$desactive = $_POST["isBaseDesactive"];
 
-  if ($pass != $confpass)
-    {
-      $error.= _("Password confirmation mismatch")." <br/>";
-      setFormError("pass");
-    }
+if ($pass != $confpass) {
+    $error.= _("Password confirmation mismatch")." <br/>";
+    setFormError("pass");
+}
 
-  if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin))
-    {
-      $error.= _("User's name invalid !")."<br/>";
-      setFormError("login");
-    }
+if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin)) {
+    $error.= _("User's name invalid !")."<br/>";
+    setFormError("login");
+}
 
 
-  //verify validity with plugin function
-  callPluginFunction("verifInfo",array($_POST));
+if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))  {
+    global $error;
+    setFormError("telephoneNumber");
+    $error.= _("This is not a valid telephone number.")."<br />";
+}
+
+
+//verify validity with plugin function
+callPluginFunction("verifInfo",array($_POST));
 
 
     //if this user does not exist (not editing a user)
-    if (!$error&&($_GET["action"]=="add"))
-    {
-      if (!exist_user($nlogin)) {
-        if ($pass =='') //if we not precise a password
-        {
-          $error.= _("Password is empty.")."<br/>"; //refuse addition
-          setFormError("pass");
+    if (!$error&&($_GET["action"]=="add")) {
+        if (!exist_user($nlogin)) {
+            if ($pass =='') {//if we not precise a password
+                $error.= _("Password is empty.")."<br/>"; //refuse addition
+                setFormError("pass");
+            } else {  //if no problem
+                $result = add_user($nlogin, $pass, $name, $firstname, $homedir);
+                changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
+                $_GET["user"]=$nlogin;
+                $newuser=true;
+            }
         }
-        else {  //if no problem
-          $result = add_user($nlogin, $pass, $name, $firstname, $homedir);
-          $_GET["user"]=$nlogin;
-          $newuser=true;
+        else { //if user exist
+            $error.= _("This user already exists.")."<br/>";
         }
-      }
-      else { //if user exist
-        $error.= _("This user already exists.")."<br/>";
-      }
     }
 } elseif ($_POST["benable"]) {
     $ret = callPluginFunction("enableUser", $_GET["user"]);
@@ -153,6 +145,9 @@ if ($_GET["user"]) {
          if ($_POST["homeDir"]) {
             move_home($nlogin,$_POST["homeDir"]);
          }
+
+         //change phone number
+         changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
 
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
@@ -229,11 +224,11 @@ if ($_GET["action"]=="add") {
   }
 
 ?>
-
 <div class="fixheight"></div>
 
 <div>
-<form id="edit" method="post" action="<? echo $PHP_SELF; ?>" onSubmit="selectAll();">
+<form id="edit" method="post" action="<? echo $PHP_SELF; ?>" onSubmit="selectAll(); return validateForm();">
+<div class="formblock" style="background-color: #F4F4F4;">
 <table cellspacing="0">
 <?php
 
@@ -248,90 +243,104 @@ if ($_GET["action"]=="add") {
 ?>
 <?php
 
-    //display form
+//display form
 
-    $test = new TrFormElement(_("Login"),new InputTpl("nlogin"));
-    $test->setCssError("login");
-    $test->display(array("value"=>$detailArr["uid"][0]));
-
-    $test = new TrFormElement(_("Name"),new InputTpl("name"));
-    $test->display(array("value"=>$detailArr["sn"][0]));
-
-    $test = new TrFormElement(_("First name"),new InputTpl("firstname"));
-    $test->display(array("value"=>$detailArr["givenName"][0]));
+if ($_GET["action"]=="add") {
+    $formElt = new InputTpl("nlogin",'/^[a-zA-Z][A-Za-z0-9_.-]*$/');
+} else {
+    $formElt = new HiddenTpl("nlogin");
+}
 
 
-    $test = new TrFormElement(_("Password"),new PasswordTpl("pass"));
-    $test->setCssError("pass");
-    $test->display(null);
+$test = new TrFormElement(_("Login"),$formElt);
+$test->setCssError("login");
+$test->display(array("value"=>$detailArr["uid"][0]));
 
-    $test = new TrFormElement(_("Confirm password"),new PasswordTpl("confpass"));
-    $test->setCssError("pass");
-    $test->display(null);
+$test = new TrFormElement(_("Name"),new InputTpl("name"));
+$test->display(array("value"=>$detailArr["sn"][0]));
+
+$test = new TrFormElement(_("First name"),new InputTpl("firstname"));
+$test->display(array("value"=>$detailArr["givenName"][0]));
 
 
-    $checked="";
-    if ($detailArr["uid"][0]) {
-    if ($detailArr["loginShell"][0]=='/bin/false') {
-                $checked = "checked";
-            }
-    }
-    $param = array ("value" => $checked);
+$test = new TrFormElement(_("Password"),new PasswordTpl("pass"));
+$test->setCssError("pass");
+$test->display(null);
 
-    $test = new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
-            array("tooltip"=>_("Disabled users cannot be logged into any services. <br/>
-                               Shell command are replaced by /bin/false"))
-            );
-    $test->setCssError("isBaseDesactive");
-    $test->display($param);
+$test = new TrFormElement(_("Confirm password"),new PasswordTpl("confpass"));
+$test->setCssError("pass");
+$test->display(null);
+
+
+$test = new TrFormElement(_("Telephone number"),new InputTpl("telephoneNumber"));
+$test->setCssError("telephoneNumber");
+$test->display(array("value"=>$detailArr["telephoneNumber"][0]));
+
+
+$checked="";
+if ($detailArr["uid"][0]) {
+if ($detailArr["loginShell"][0]=='/bin/false') {
+            $checked = "checked";
+        }
+}
+$param = array ("value" => $checked);
+
+$test = new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
+        array("tooltip"=>_("Disabled users cannot be logged into any services. <br/>
+                            Shell command are replaced by /bin/false"))
+        );
+$test->setCssError("isBaseDesactive");
+$test->display($param);
 
 ?>
-    </table>
-    <div id="expertMode" <?displayExpertCss();?>>
-    <table cellspacing="0">
-    <?php
+</table>
+<div id="expertMode" <?displayExpertCss();?>>
+<table cellspacing="0">
+<?php
 
-     $test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
-     $test->display(array("value"=>$detailArr["homeDirectory"][0]));
-     ?>
+$test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
+$test->display(array("value"=>$detailArr["homeDirectory"][0]));
+?>
 
-     <tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
-     <td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
-
-
-    </table>
-    </div>
+<tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
+<td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
 
 
-    <?php
+</table>
+</div>
 
-    setVar('detailArr',$detailArr);
 
-    $existACL=existAclAttr("groups");
+<?php
 
-    //if not
-    if (!$existACL) {
-      $aclattrright="rw";
-      $isAclattrright=true;
-    } else {
-      $aclattrright=(getAclAttr("groups"));
-      $isAclattrright=$aclattrright!='';
+setVar('detailArr',$detailArr);
+
+$existACL=existAclAttr("groups");
+
+//if not
+if (!$existACL) {
+    $aclattrright="rw";
+    $isAclattrright=true;
+} else {
+    $aclattrright=(getAclAttr("groups"));
+    $isAclattrright=$aclattrright!='';
+}
+
+if ($aclattrright=="rw") {
+    renderTPL("editGroups");
+} else {
+    if ($aclattrright=="ro") {
+        renderTPL("roGroups");
+    }  else {
+        renderTPL("norightGroups");
     }
-
-    if ($aclattrright=="rw") {
-        renderTPL("editGroups");
-    } else {
-        if ($aclattrright=="ro") {
-            renderTPL("roGroups");
-        }  else {
-            renderTPL("norightGroups");
-        }
-    }
+}
 
 
-    //call plugin baseEdit form
-    callPluginFunction("baseEdit",array($detailArr,$_POST));
- ?>
+print '</div>';
+
+//call plugin baseEdit form
+callPluginFunction("baseEdit",array($detailArr,$_POST));
+?>
 
 </table>
 

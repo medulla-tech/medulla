@@ -100,10 +100,23 @@ autoGenerateNavbar(); //auto generation of navbar for new modules;
 
 includeNavbarModule(fetchModulesList($conf["global"]["rootfsmodules"]));
 
+if ($_SESSION["login"]=='root') {
+    $favact = "_disabled";
+} else {
+    $favact = "";
+}
+
 ?>
-
-
 </ul>
+
+<style>
+#navbar ul li#fav { 				width: 70px; }
+                #navbar ul li#fav a {         background: url("img/navbar/fav<?= $favact?>.png") no-repeat transparent;
+                                        background-position: 50% 10px;}
+                #navbar ul li#fav a:hover {   background: url("img/navbar/fav<?= $favact?>.png") no-repeat transparent;
+                                        background-position: 50% 10px	}
+
+</style>
 </div>
 
 <div id="content">

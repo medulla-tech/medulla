@@ -1,0 +1,9 @@
+### Add an alias /lmc on www server root
+Alias /lmc ###DATADIR###
+
+### Allow access to lmc web directory to everyone 
+<Directory ###DATADIR###>
+                AllowOverride None
+                Order allow,deny
+                allow from all
+</Directory>

@@ -102,7 +102,7 @@ class EditInPlace extends ActionEncapsulator{
 
        $str .= '<script>';
        $str .= "     new Ajax.InPlaceEditor($('id$idx'),'".$this->url."', {\n
-                okButton: true, cancelLink: true, cancelText : 'Annuler',
+                okButton: true, cancelLink: true, cancelText : '"._('Cancel')."',
                 highlightcolor : '#FF9966',
                 ajaxOptions: {method: 'get' },\n
                 callback: function(form,value) {\n
@@ -159,7 +159,7 @@ class ActionItem {
      */
     function displayWithRight($param) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$param."\">";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".urlencode($param)."\">";
         echo ".</a></li>";
     }
 
@@ -176,10 +176,18 @@ class ActionItem {
      * transform $obj param in link for this action
      */
     function encapsulate($obj) {
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\">";
-        $str.= "$obj";
-        $str.=" </a>";
-        return $str;
+        if (hasCorrectAcl($_GET["module"],$_GET["submod"],$this->action)) {
+            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\">";
+            $str.= "$obj";
+            $str.=" </a>";
+            return $str;
+        } else {
+            $str= "<a title=\"".$this->desc."\" href=\"#\">";
+            $str.= "$obj";
+            $str.=" </a>";
+            return $str;
+        }
+
     }
 
     /**
@@ -210,7 +218,7 @@ class ActionPopupItem extends ActionItem {
 
     function encapsulate($obj) {
         $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\" ";
-	$str.= "  onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
+        $str.= "  onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
 
         $str.= "$obj";
         $str.=" </a>";
@@ -225,13 +233,14 @@ class ActionPopupItem extends ActionItem {
  *	class who maintain array presentation of information
  */
 class ListInfos{
-    var $arrInfo; /*< main list */
+    var $arrInfo; /**< main list */
     var $extraInfo;
     var $name;
-    var $arrAction; /*< list of possible action */
+    var $arrAction; /**< list of possible action */
     var $end, $start;
 
-    var $description; /*< list of description (not an obligation) */
+    var $description; /**< list of description (not an obligation) */
+    var $col_witdh; /**can specify column width
 
 
     /**
@@ -243,6 +252,11 @@ class ListInfos{
         $this->arrAction=array();
         $this->description[] = $description;
         $this->initVar();
+        $this->col_width = array();
+    }
+
+    function setAdditionalInfo($addinfo) {
+        $this->_addInfo = $addinfo;
     }
 
     /**
@@ -257,9 +271,10 @@ class ListInfos{
      *	add an array String to display
      *	@param $arrString an Array String to display
      */
-    function addExtraInfo($arrString, $description= "") {
+    function addExtraInfo($arrString, $description= "",$width="") {
         $this->extraInfo[]=&$arrString;
         $this->description[] = $description;
+        $this->col_width[] = $width;
     }
 
 
@@ -353,19 +368,29 @@ class ListInfos{
     function drawMainAction($idx) {
         echo "<td class=\"".$this->cssClass."\">";
         echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx]);
+        if ($this->_addInfo[$idx]) {
+            print $this->_addInfo[$idx];
+        }
         echo "</td>";
     }
 
     function drawTable($navbar = 1) {
 	echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         echo "<thead><tr>";
-        foreach ($this->description as $desc) {
+        foreach ($this->description as $key => $desc) {
+            if ($this->col_width[$key]) {
+                $width_styl = 'width: '.$this->col_width[$key].';';
+            }
             if (!$first) {
-                echo "<td><span style=\"color: #777; padding-left: 32px;\">$desc</span></td>";
+
+                if (!$this->first_elt_padding) {
+                    $this->first_elt_padding = 32;
+                }
+                echo "<td style=\"$width_styl\"><span style=\"color: #777; padding-left: ".$this->first_elt_padding."px;\">$desc</span></td>";
                 $first = 1;
 
             } else {
-                echo "<td><span style=\"color: #777;\">$desc</span></td>";
+                echo "<td style=\"$width_styl\"><span style=\"color: #777;\">$desc</span></td>";
             }
         }
 
@@ -437,8 +462,10 @@ class ListInfos{
     }
 
 
-    function display($navbar = 1 ) {
-        $this->drawHeader($navbar);
+    function display($navbar = 1, $header =1 ) {
+        if ($header ==1) {
+            $this->drawHeader($navbar);
+        }
         $this->drawTable($navbar);
     }
 }
@@ -683,9 +710,16 @@ class PageGenerator {
  */
 class NotifyWidget {
 
+    /**
+     * default constructor
+     */
     function NotifyWidget() {
     }
 
+    /**
+     * Add a string in notify widget
+     * @param $str any HTML CODE
+     */
     function add($str) {
 
         if (!isset($_SESSION['__notify'])) {
@@ -694,10 +728,17 @@ class NotifyWidget {
         $_SESSION['__notify'][] = $str;
     }
 
+    /**
+     * set width size
+     * @param $size size in px
+     */
     function setSize($size) {
         $_SESSION['__notify_size'] = $size;
     }
 
+    /**
+     * private internal function
+     */
     function getSize() {
         if ($_SESSION['__notify_size']) {
             return $_SESSION['__notify_size'];
@@ -706,13 +747,21 @@ class NotifyWidget {
         }
     }
 
-    //level must be beetween 0,5
-    // 0: info (default)
-    // <= 1: error for the moment
+    /**
+     * @brief set level (change icon in widget)
+     * @param $level level must be beetween 0 and 5
+     * level must be beetween 0,5
+     * 0: info (default, blue info bubble)
+     * <= 1: error for the moment (red icon)
+     * 5 is critical
+     */
     function setLevel($level) {
         $_SESSION['__notify_level'] = $level;
     }
 
+    /**
+     * private internal function
+     */
     function getLevel() {
         if ($_SESSION['__notify_level']) {
             return $_SESSION['__notify_level'];
@@ -721,6 +770,9 @@ class NotifyWidget {
         }
     }
 
+    /**
+     * private internal function
+     */
     function getImgLevel() {
         if ($this->getLevel()!=0) {
             return "img/common/icn_alert.gif";
@@ -730,10 +782,16 @@ class NotifyWidget {
 
     }
 
+    /**
+     * private internal function
+     */
     function get() {
         $_SESSION['__notify'];
     }
 
+    /**
+     * private internal function
+     */
     function showJS() {
         if (!isset($_SESSION['__notify'])) {
             return;
@@ -746,6 +804,9 @@ class NotifyWidget {
     }
 
 
+    /**
+     * private internal function
+     */
     function display() {
         if (!isset($_SESSION['__notify'])) {
             return;
@@ -773,12 +834,20 @@ class NotifyWidget {
 /**
  * create an url
  * except param like "base/users/index"
+ * @param $link string except format like "module/submod/action"
+ * @param $param assoc array with param to add in GET method
  */
-function urlStr($link) {
+function urlStr($link,$param=array()) {
     $arr = array();
     $arr = explode ('/',$link);
 
-    return "main.php?module=".$arr[0]."&submod=".$arr[1]."&action=".$arr[2];
+
+    $enc_param = "";
+    foreach ($param as $key=>$value) {
+        $enc_param.= "&$key=$value";
+    }
+
+    return "main.php?module=".$arr[0]."&submod=".$arr[1]."&action=".$arr[2].$enc_param;
 }
 
 function findInSideBar($sidebar,$query) {

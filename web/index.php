@@ -37,35 +37,7 @@ require("includes/PageGenerator.php");
 
 $root = $conf["global"]["root"];
 
-function auth_user ($login, $pass, $error)
-{
-  global $conf;
-  global $error;
 
-  if (($login == "") || (!preg_match("/^[a-zA-Z][.a-zA-Z0-9]*$/", $login)) || ($pass == ""))
-    {
-      return false;
-    }
-
-  $param[]=$login;
-  $param[]=$pass;
-
-  //put server selected in $_SESSION
-  $urlArr=parse_url($_POST["server"]);
-  $_SESSION["XMLRPC_agent"] = $urlArr;
-
-  $ret= xmlCall("base.ldapAuth",$param);
-
-  if ($ret!="1") // erreur
-    {
-          if (!isXMLRPCError()) {
-	       $error = _T("Invalid login");
-          }
-	  return false;
-    }
-
-  return true;
-}
 
 
 if (isset($_POST["bConnect"]))

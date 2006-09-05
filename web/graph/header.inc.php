@@ -127,6 +127,19 @@ changeObjectDisplay(layer_ref, state)
         new Ajax.Updater('__popup_container',url,{onComplete: displayPopup(evt), evalScripts:true})
     }
 
+    function showPopupFav(evt,url) {
+        $('popup').style.width='200px';
+        if (!evt) evt = window.event;
+        new Ajax.Updater('__popup_container',url,{onComplete: displayPopupFav(evt), evalScripts:true})
+    }
+
+    function displayPopupFav (evt) {
+        obj = document.getElementById('popup')
+        obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-100+"px"
+        obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px"
+        getStyleObject('popup').display='inline';
+    }
+
     function displayPopup (evt) {
         obj = document.getElementById('popup')
         obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-300+"px"
@@ -162,4 +175,35 @@ changeObjectDisplay(layer_ref, state)
         obj.style.top = 200+"px";
         getStyleObject('popup').display='inline';
     }
+
+function validateForm() {
+    var resultok;
+    resultok = 0;
+    var resultbad;
+    resultbad = 0;
+    var inputlist;
+    inputlist = document.getElementsByTagName('input');
+    inputlist = $A(inputlist);
+	inputlist.each( function(input){
+			try {
+                            var result = input.validate()
+                            if (result!=true) {
+                                resultbad++;
+                            } else {
+                                resultok++;
+                            }
+                        }
+                        catch (ex) {
+                            //do nothing... function not exist
+                        }
+		});
+    if (resultbad!=0) {
+        alert('<?= _("Form cannot be submit. Input errors are highlighted in red.") ?>');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
 </script>

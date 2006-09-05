@@ -64,7 +64,8 @@ $user = $_SESSION["login"];
 <div class="fixheight"></div>
 
 <?php
-if (isset($_POST["bchpasswd"]) && ($_POST["newpass"] == $_POST["confpass"]) && ($_POST["newpass"] != ""))
+
+if ((check_auth($_SESSION['login'], $_POST["curpass"], $error))&&(isset($_POST["bchpasswd"]) && ($_POST["newpass"] == $_POST["confpass"]) && ($_POST["newpass"] != "")))
 {
   callPluginFunction("changeUserPasswd", array(array($user, $_POST["newpass"])));
 
@@ -92,6 +93,8 @@ else
 </p>
 
 <table cellspacing="0">
+<tr><td><?= _("Current password") ?></td>
+    <td><input name="curpass" type="password" class="textfield" size="23" /></td></tr>
 <tr><td><?= _("New password") ?></td>
     <td><input name="newpass" type="password" class="textfield" size="23" /></td></tr>
 <tr><td><?= _("Confirm your password") ?></td>
@@ -104,7 +107,11 @@ else
 <?php
 if (isset($_POST["bchpasswd"]))
 {
-  echo _("Passwords are mismatching. Please retry.");
+  if (isset($_POST["bchpasswd"]) && ($_POST["newpass"] == $_POST["confpass"]) && ($_POST["newpass"])) {
+    echo _("Invalid current password. Please retry.");
+  } else {
+    echo _("Passwords are mismatching. Please retry.");
+  }
 }
 ?>
 </form>

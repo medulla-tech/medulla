@@ -218,8 +218,10 @@ $tpl->set_file("main", "modules/base/templates/editacl.html");
 $tpl->set_block("main", "module", "modules");
 
 foreach ($_SESSION["modulesList"] as $key) {
-
-    $tpl->set_var("module_name",$key);
+    $LMCApp =&LMCApp::getInstance();
+    $mod = $LMCApp->getModule($key);
+    $mod_name = $mod->getDescription();
+    $tpl->set_var("module_name",$mod_name);
 
             //check if plugin have information in redirArray
             if ($redirArray[$key]) {
