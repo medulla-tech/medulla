@@ -26,6 +26,7 @@ import copy
 # PostgreSQL connection
 import psycopg
 from lmc.support import lmctools
+from lmc.support.config import *
 from lmc.support.lmcException import lmcException
 import lmc.plugins.base
 from lmc.plugins.base import ldapUserGroupControl
@@ -47,49 +48,75 @@ def activate():
      @return: return True if this module can be activate
      @rtype: boolean
     """
-    configParser = lmctools.getConfigParser("ox")
-
+    config = OxConfig("ox")
     logger = logging.getLogger()
-    ret = False
-    if (configParser.get("main","disable")=="1"):
-        logger.info("ox plugin disabled by configuration.")
-    else:
-        oxcontrol = None
+    result = True
+    msg = ""
+    try:
+        config.check()
+    except ConfigException, ce:
+        msg = str(ce)
+        result = False
+    except Exception, e:
+        msg = str(e)
+        result = False
+    if result and config.disabled:
+        result = False
+        msg = "disabled by configuration"
+    if not result:
+        logger.warning("Plugin proxy: " + msg + ".")
+    if config.version == "0.8.0-6":
+        migrateUser()
+    return result
+    
+class OxConfig(PluginConfig):
+
+    def readConf(self):
+        PluginConfig.readConf(self)
+        self.oxroot = self.get("main", "oxroot")
+        self.oxdbname = self.get("main", "oxdbname")
+        self.oxdbuser = self.get("main", "oxdbuser")
+        self.oxdbpassword = self.get("main", "oxdbpassword")
+        self.javapath = self.get("main", "javapath")
+        self.jarpath = self.get("main", "jarpath")
+        try: self.oXorganization = self.get("main", "organization")
+        except NoSectionError, NoOptionError: pass
+        try: self.version = self.get("main", "version")
+        except NoSectionError, NoOptionError: pass
+
+    def setDefault(self):
+        PluginConfig.setDefault(self)
+        self.oXorganization = "Linbox"
+        self.version = "0.8.0-5"
+
+    def check(self):
+        if self.disabled: return
+        if not os.path.exists(self.oxroot):
+            raise ConfigException("Open-Xchange is not installed into %s" % self.oxroot)
+        paths = [ "etc/groupware/system.properties", "lib/intranet.jar", "lib/comfiretools.jar", "lib/nas.jar" ]
+        for path in paths:
+            if not os.path.exists(os.path.join(self.oxroot, path)):
+                raise ConfigException("Can't find Open-Xchange file %s" % os.path.join(self.oxroot, path))
+        if not os.path.exists(self.javapath):
+            raise ConfigException("JAVA is not installed into %s" % self.javapath)
+        if not os.path.exists(self.jarpath):
+            raise ConfigException("Additional JAVA jar are not available into %s" % self.jarpath)
+        if not os.path.exists(os.path.join(self.jarpath, "postgresql.jar")):
+            raise ConfigException("postgresql.jar is not available into %s" % self.jarpath)
+        # Verify if Open-Xchange LDAP schema is available in the directory
         try:
-            oxcontrol = oxControl()
-        except Exception, e:
-            logger.info("ox plugin can't be enabled: error: " + str(e))
-
-        if oxcontrol:
-            if os.path.exists(oxcontrol.oxroot):
-                ret = True
-                if oxcontrol.version == "0.8.0-6":
-                    logger.info("Migrating users to Open-Xchange " + configParser.get("main","version"))
-                    migrateUser()
-            else:
-                logger.error("Open-Xchange is not installed.")
-
-    ### verify is schema is present
-    try:
-        ldapObj = ldapUserGroupControl()
-        ret = True
-    except ldap.INVALID_CREDENTIALS:
-        logger.error("Can't bind to LDAP: invalid credentials.")
-        return False
-
-    # Test if the OX LDAP schema is available in the directory
-    try:
-         schema =  ldapObj.getSchema("OXUserObject")
-         if len(schema) <= 0:
-             logger.error("OX schema seems not be include in LDAP directory");
-             return False
-    except:
-        logger.exception("invalid schema")
-        return False
-
-
-
-    return ret
+            ldapObj = ldapUserGroupControl()
+        except ldap.INVALID_CREDENTIALS:
+            raise ConfigException("Can't bind to LDAP: invalid credentials.")
+        schema = ldapObj.getSchema("OXUserObject")
+        if len(schema) <= 0:
+            raise ConfigException("OX schema seems not be included into LDAP directory")
+        # DB access check
+        try:
+            db = psycopg.connect("dbname=%s user=%s password=%s" % (self.oxdbname, self.oxdbuser, self.oxdbpassword))
+        except psycopg.OperationalError, e:
+            raise ConfigException("Can't connect to Open-Xchange database: " + str(e))
+        db.close()
 
 def isOxUser(uid):
     """
@@ -104,10 +131,7 @@ def isOxUser(uid):
     logger = logging.getLogger()
     logger.info( "debug :"+str(uid))
     logger.info(lmc.plugins.base.getUserAttributes(uid,"objectClass"))
-
-    #if lmc.plugins.base.existUser(uid):
     return "OXUserObject" in lmc.plugins.base.getUserAttributes(uid,"objectClass")
-    #else: return False
 
 def addOxAttr(uid,domain,lang,timezone,enabled):
     """
@@ -157,7 +181,7 @@ def changeUserOxAttributes(uid,domain,lang,timezone,enabled):
     ldapObj.changeUserAttributes(uid,"OXTimeZone",timezone)
 
     if enabled:
-        if oxControl().version!="0.8.0-5":
+        if oxControl().configox.version!="0.8.0-5":
             ldapObj.changeUserAttributes(uid,"mailEnabled","OK")
         else:
             ldapObj.changeUserAttributes(uid,"mailEnabled","TRUE")
@@ -172,33 +196,8 @@ class oxControl(ldapUserGroupControl):
         """
         Object for managing OX users
         """
+        self.configox = OxConfig("ox")
         ldapUserGroupControl.__init__(self, conffilebase)
-        self._setDefaultOXConfig()
-        self._readOxConfig(conffile)
-
-    def _setDefaultOXConfig(self):
-        """
-        Set default config options for OX plugin
-        """
-        self.oXorganization = "Linbox"
-        self.version = "0.8.0-5"
-
-    def _readOxConfig(self, conffile):
-        """
-        Read OX plugin conf file
-        """
-        cp = ConfigParser.ConfigParser()
-        cp.read(conffile)
-        self.oxroot = cp.get("main", "oxroot")
-        self.oxdbname = cp.get("main", "oxdbname")
-        self.oxdbuser = cp.get("main", "oxdbuser")
-        self.oxdbpassword = cp.get("main", "oxdbpassword")
-        self.javapath = cp.get("main", "javapath")
-        self.jarpath = cp.get("main", "jarpath")
-        try: self.oXorganization = cp.get("main", "organization")
-        except: pass
-        try: self.version = cp.get("main", "version")
-        except: pass
 
     def addOxAttr(self,uid,domain,lang,timezone,enabled):
         """Give attributes to an OXUser"""
@@ -215,9 +214,7 @@ class oxControl(ldapUserGroupControl):
         if not "OpenLDAPaci" in newattrs:
             newattrs["OpenLDAPaci"]='1#entry#grant;r,w,s,c;cn,initials,mail,title,ou,l,birthday,description,street,postalcode,st,c,oxtimezone,homephone,mobile,pager,facsimiletelephonenumber,telephonenumber,labeleduri,jpegphoto,loginDestination,sn,givenname,;r,s,c;[all]#self#"'
 
-        configParser = lmctools.getConfigParser("ox")
-
-        if (self.version=="0.8.0-6"):
+        if (self.configox.version=="0.8.0-6"):
             newattrs["lnetMailAccess"]="TRUE"
             newattrs["mailEnabled"]="OK"
         else:
@@ -228,7 +225,7 @@ class oxControl(ldapUserGroupControl):
             newattrs["mailEnabled"]="NONE"
 
         newattrs["mailDomain"]=domain
-        newattrs["o"]=self.oXorganization
+        newattrs["o"]=self.configox.oXorganization
         newattrs["preferredLanguage"]=lang
         newattrs["userCountry"]="Tuxworld"
 
@@ -264,7 +261,7 @@ class oxControl(ldapUserGroupControl):
             raise lmcException(e)
 
         # Add correct rights to pgsql
-        o = psycopg.connect("dbname=%s user=%s password=%s" % (self.oxdbname, self.oxdbuser, self.oxdbpassword))
+        o = psycopg.connect("dbname=%s user=%s password=%s" % (self.configox.oxdbname, self.configox.oxdbuser, self.configox.oxdbpassword))
         c = o.cursor()
         query="INSERT INTO usr_general_rights SELECT creating_date, created_from, changing_date, changed_from,text('"+uid+"'), addr_u, addr_r, addr_d, cont_u, cont_r, cont_d, data_u, data_r, data_d, serie_u, serie_r, serie_d, task_u, task_r, task_d, refer, proj_u, proj_r, proj_d, dfolder_u, dfolder_r, dfolder_d, doc_u, doc_r, doc_d, knowl_u, knowl_r, knowl_d, bfolder_u, bfolder_r, bfolder_d, bookm_u, bookm_r, bookm_d, pin_u, pin_r, pin_d, forum_n, fentrie_n, setup, pin_public, internal, int_groups, kfolder_u, kfolder_r, kfolder_d, webmail FROM sys_gen_rights_template WHERE login LIKE 'default_template'"
         c.execute(query)
@@ -272,7 +269,7 @@ class oxControl(ldapUserGroupControl):
         o.close()
 
         # Executing folder creation
-        lmctools.shlaunch('%(javapath)s -Dopenexchange.propfile=%(oxroot)s/etc/groupware/system.properties -classpath %(oxroot)s/lib/comfiretools.jar:%(oxroot)s/lib/nas.jar:%(jarpath)s/postgresql.jar com.openexchange.tools.oxfolder.OXFolderAction addUser ' % {"javapath" : self.javapath, "oxroot" : self.oxroot, "jarpath" : self.jarpath} + uid + ' ' + lang + ' 2>&1 >/dev/null')
+        lmctools.shlaunch('%(javapath)s -Dopenexchange.propfile=%(oxroot)s/etc/groupware/system.properties -classpath %(oxroot)s/lib/comfiretools.jar:%(oxroot)s/lib/nas.jar:%(jarpath)s/postgresql.jar com.openexchange.tools.oxfolder.OXFolderAction addUser ' % {"javapath" : self.configox.javapath, "oxroot" : self.configox.oxroot, "jarpath" : self.configox.jarpath} + uid + ' ' + lang + ' 2>&1 >/dev/null')
 
         return 0
 
@@ -289,7 +286,7 @@ class oxControl(ldapUserGroupControl):
         ldapObj = lmc.plugins.base.ldapUserGroupControl()
         ldapObj.removeUserObjectClass(uid,'OXUserObject')
         # remove right in pgsql
-        o = psycopg.connect("dbname=%s user=%s password=%s" % (self.oxdbname, self.oxdbuser, self.oxdbpassword))
+        o = psycopg.connect("dbname=%s user=%s password=%s" % (self.configox.oxdbname, self.configox.oxdbuser, self.configox.oxdbpassword))
         c = o.cursor()
         query="DELETE FROM usr_general_rights WHERE login LIKE '"+uid+"'"
         c.execute(query)
@@ -301,7 +298,7 @@ class oxControl(ldapUserGroupControl):
         ldapObj.delRecursiveEntry("ou=addr, "+cn)
 
         # launch java applet
-        lmctools.shlaunch('%(javapath)s -Dopenexchange.propfile=%(oxroot)s/etc/groupware/system.properties -classpath %(oxroot)s/lib/intranet.jar:%(oxroot)s/lib/comfiretools.jar:%(oxroot)s/lib/nas.jar:%(jarpath)s/postgresql.jar com.openexchange.groupware.deleteUserGroups deleteUser ' % {"javapath" : self.javapath, "oxroot" : self.oxroot, "jarpath" : self.jarpath} + uid)
+        lmctools.shlaunch('%(javapath)s -Dopenexchange.propfile=%(oxroot)s/etc/groupware/system.properties -classpath %(oxroot)s/lib/intranet.jar:%(oxroot)s/lib/comfiretools.jar:%(oxroot)s/lib/nas.jar:%(jarpath)s/postgresql.jar com.openexchange.groupware.deleteUserGroups deleteUser ' % {"javapath" : self.configox.javapath, "oxroot" : self.configox.oxroot, "jarpath" : self.configox.jarpath} + uid)
 
         return 0
 
