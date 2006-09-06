@@ -316,7 +316,7 @@ def changeUserMainAttributes(uid,newuid,name,surname):
     ldapObj = ldapUserGroupControl()
 
     gecos=name+" "+surname
-    gecos=str(suppression_diacritics(gecos.encode("utf-8")))
+    gecos=str(delete_diacritics(gecos.encode("utf-8")))
     name=str(name.encode("utf-8"))
     surname=str(surname.encode("utf-8"))
 
@@ -439,22 +439,21 @@ def _fill_reptable():
 
 _fill_reptable()
 
-def suppression_diacritics(s) :
+def delete_diacritics(s) :
     """
-    FIXME
-    Suppression des accents et autres marques.
+    Delete accent marks.
 
-    @param s: le texte a nettoyer.
-    @type s: str ou unicode
-    @return: le texte nettoye de ses marques diacritiques.
+    @param s: string to clean
+    @type s: unicode
+    @return: cleaned string
     @rtype: unicode
     """
     if isinstance(s, str):
         s = unicode(s, "utf8", "replace")
-    res = []
+    ret = []
     for c in s:
-        res.append(_reptable.get(ord(c) ,c))
-    return u"".join(res)
+        ret.append(_reptable.get(ord(c) ,c))
+    return u"".join(ret)
 
 
 # FIXME: Change this class name
@@ -691,8 +690,8 @@ class ldapUserGroupControl:
         if not lastN: lastN = uid
 
         # For the gecos LDAP field, make a full ASCII string
-        gecosFirstN=str(suppression_diacritics((firstN.encode("UTF-8"))))
-        gecosLastN=str(suppression_diacritics((lastN.encode("UTF-8"))))
+        gecosFirstN=str(delete_diacritics((firstN.encode("UTF-8"))))
+        gecosLastN=str(delete_diacritics((lastN.encode("UTF-8"))))
         gecos = gecosFirstN + ' ' + gecosLastN
 
         # Build a UTF-8 representation of the unicode strings
@@ -723,12 +722,24 @@ class ldapUserGroupControl:
 
         try:
             # Set default attributes
+            # FIXME: should be put elsewhere
             for attribute, value in self.userDefault["base"].items():
+                # Search if modifiers have been specified
+                s = re.search("^\[(.*)\]", value)
+                if s:
+                    modifiers = s.groups()[0]
+                    # Remove modifiers from the string
+                    value = re.sub("^\[.*\]", "", value)
                 # Interpolate value
                 if "%" in value:
                     for a, v in user_info.items():
                         if type(v) == str:
+                            value = str(value.encode("utf-8"))
+                            if "/" in modifiers: v = delete_diacritics(v)
+                            if "_" in modifiers: v = v.lower()
+                            if "|" in modifiers: v = v.upper()                            
                             value = value.replace("%" + a + "%", v)
+                            value = str(value.encode("utf-8"))
                 if value == "DELETE":
                     for key in user_info.keys():
                         if key.lower() == attribute:
@@ -746,7 +757,7 @@ class ldapUserGroupControl:
                             user_info[key] = value
                             found = True
                             break
-                    if not found: user_info[attribute] = value
+                    if not found: user_info[attribute] = value                
 
             ident = 'uid=' + uid + ',' + self.baseUsersDN
             attributes=[ (k,v) for k,v in user_info.items() ]
@@ -761,7 +772,7 @@ class ldapUserGroupControl:
             if not self.defaultUserGroup:
                 self.delGroup(uid)
             # create error message
-            raise lmcException(error)
+            raise error
 
         # creating home directory
         if self.userHomeAction:
@@ -799,7 +810,7 @@ class ldapUserGroupControl:
 
         # shadowAccount require an userPassword attribute
         password="4r5t40e"
-        comment_UTF8=str(suppression_diacritics((comment.encode("UTF-8"))))
+        comment_UTF8=str(delete_diacritics((comment.encode("UTF-8"))))
         # creating machine skel
         user_info = {'shadowMin':'-1',
                     'uid':uid,
