@@ -49,8 +49,8 @@
     <input type="text" id="autocomplete" name="autocomplete" class="textfield" size="23" onkeypress="return validOnEnter(this,event);" />
     <div id="autocomplete_choices" class="autocomplete">
         <ul>
-            <li>test</li>
-            <li>coin/<li>
+            <li>A</li>
+            <li>B/<li>
         </ul>
     </div>
     <input name="buser" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onClick="addElt($F('autocomplete')); return false;"/>

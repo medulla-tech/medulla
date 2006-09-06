@@ -41,7 +41,6 @@ require("../../../modules/base/includes/groups.inc.php");
 $value = $_POST["value"];
 
 print '<ul>';
-//print '<li>coin</li>';
 foreach(search_groups($value) as $items) {
 
 //foreach($_POST as $key =>$value) {
