@@ -5,6 +5,7 @@ lmc-web-base 1.1.0
  * The old home page has been moved to a new "Status" page
  * New Log page to show LDAP operations log
  * The number of users in a group is now displayed in the group list
+ * Telephone number field is now available when editing a user
  * Internal module management improvement
 
 
