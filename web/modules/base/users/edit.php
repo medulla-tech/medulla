@@ -103,7 +103,7 @@ callPluginFunction("verifInfo",array($_POST));
                 $error.= _("Password is empty.")."<br/>"; //refuse addition
                 setFormError("pass");
             } else {  //if no problem
-                $result = add_user($nlogin, $pass, $name, $firstname, $homedir);
+                $result = add_user($nlogin, $pass, $firstname, $name, $homedir);
                 changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
                 $_GET["user"]=$nlogin;
                 $newuser=true;

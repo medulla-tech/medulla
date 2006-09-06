@@ -90,16 +90,16 @@ function get_users_detailed(&$error, $filter = null)
 }
 
 /**
- * add a user through cpu
+ * add a user
  * @param $login user's login
- * @param $pass user's pass /!\ warning, using smbpasswd to set
- * @param $name user's name
+ * @param $pass user's pass
  * @param $firstname user's firstname
+ * @param $name user's name
  * @param $homedir user home directory
  */
-function add_user($login, $pass, $name, $firstname, $homedir)
+function add_user($login, $pass, $firstname, $name, $homedir)
 {
-  $param = array($login, $pass, $name, $firstname, $homedir);
+  $param = array($login, $pass, $firstname, $name, $homedir);
   $ret = xmlCall("base.createUser",$param);
 
   return sprintf(_("user %s created<br />"),$login);
