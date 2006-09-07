@@ -730,16 +730,15 @@ class ldapUserGroupControl:
                     modifiers = s.groups()[0]
                     # Remove modifiers from the string
                     value = re.sub("^\[.*\]", "", value)
+		else: modifiers = ""
                 # Interpolate value
                 if "%" in value:
                     for a, v in user_info.items():
                         if type(v) == str:
-                            value = str(value.encode("utf-8"))
                             if "/" in modifiers: v = delete_diacritics(v)
                             if "_" in modifiers: v = v.lower()
-                            if "|" in modifiers: v = v.upper()                            
+                            if "|" in modifiers: v = v.upper()
                             value = value.replace("%" + a + "%", v)
-                            value = str(value.encode("utf-8"))
                 if value == "DELETE":
                     for key in user_info.keys():
                         if key.lower() == attribute:
@@ -760,7 +759,21 @@ class ldapUserGroupControl:
                     if not found: user_info[attribute] = value                
 
             ident = 'uid=' + uid + ',' + self.baseUsersDN
-            attributes=[ (k,v) for k,v in user_info.items() ]
+            # Search Python unicode string and encode them to UTF-8
+	    attributes = []
+	    for k,v in user_info.items():
+	        fields = []
+		if type(v) == list:
+                    for item in v:
+                        if type(item) == unicode: item = item.encode("utf-8")
+                        fields.append(item)
+                    attributes.append((k, fields))
+                elif type(v) == unicode:
+                    attributes.append((k, v.encode("utf-8")))
+                else:
+                    attributes.append((k, v))
+
+            # Write into the directory
             self.l.add_s(ident, attributes)
             if self.defaultUserGroup:
                 self.addUserToGroup(self.defaultUserGroup, uid)

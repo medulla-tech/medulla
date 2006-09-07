@@ -108,6 +108,12 @@ class TestManageUserGroup(unittest.TestCase):
         self.assertEqual(len(self.l.getUserGroups("usertest")), 2)
         self.assertEqual(self.l.delUser("usertest", 1), 0)
 
+    def test_userdefault(self):
+        self.l.addUser("usertest", "userpass", u"Héléonôre", u"Rêve")
+        d = self.l.getDetailedUser("usertest")
+        self.assertEqual(d["mail"][0], "HELEONORE.REVE@linbox.com")
+        self.assertEqual(d["displayName"][0], u"héléonôre rêve".encode("utf-8"))
+        self.assertEqual(d["cn"][0], u"Héléonôre Rêve".encode("utf-8"))
 
 if __name__ == "__main__":
     cleanLdap()
