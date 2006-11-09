@@ -1671,7 +1671,7 @@ class ldapAuthen:
     bind return error if login/password give to constructor isn't valid
     """
 
-    def __init__(self, login, password):
+    def __init__(self, login, password, conffile = None):
         """
         Initialise LDAP connection
 
@@ -1687,8 +1687,9 @@ class ldapAuthen:
         If there are any error, self.result is False and a ldap
         exception will be raised.
         """
+        if not conffile: conffile = INI
         config = ConfigParser.ConfigParser()
-        config.read(INI)
+        config.read(conffile)
 
         baseDN = config.get("ldap", "baseUsersDN")
         ldapHost = config.get("ldap", "host")

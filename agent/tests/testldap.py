@@ -75,8 +75,8 @@ class TestManageUserGroup(unittest.TestCase):
     def test_addDelUser(self):
         self.assertEqual(self.l.addUser("usertest", "userpass", u"ùnïcôde", u"çàùôéé"), 0)
 
-        self.assertEqual(ldapAuthen("usertest", "userpass").isRightPass(), True)
-        self.assertEqual(ldapAuthen("usertest", "userbadpass").isRightPass(), False)
+        self.assertEqual(ldapAuthen("usertest", "userpass", "tests/basetest.ini").isRightPass(), True)
+        self.assertEqual(ldapAuthen("usertest", "userbadpass", "tests/basetest.ini").isRightPass(), False)
         
         self.assertEqual(os.path.exists("/home/usertest"), True)
         self.assertEqual(len(self.l.searchUser()), 1)
