@@ -204,6 +204,9 @@
         $mod->addACL("firstname",_("User firstname"));
         $mod->addACL("homeDir",_("User home directory"));
 
+        $mod->addACL("mail",_("Mail address"));
+        $mod->addACL("telephoneNumber",_("Telephone number"));
+
         $mod->addACL("pass",_("Password"));
         $mod->addACL("confpass",_("Confirm your password"));
         $mod->addACL("isBaseDesactive",_("Enable/Disable user account"));
