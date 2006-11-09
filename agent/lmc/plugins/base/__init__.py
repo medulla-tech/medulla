@@ -179,8 +179,18 @@ def changeGroupDescription(cn,desc):
 
 def getUsersLdap(searchFilter = ""):
     ldapObj = ldapUserGroupControl()
-    searchFilter=cleanFilter(searchFilter)
+    searchFilter = cleanFilter(searchFilter)
     return ldapObj.searchUser(searchFilter)
+
+def searchUserAdvanced(searchFilter = ""):
+    """
+    Used by the LMC web interface to get a user list
+    """
+    ldapObj = ldapUserGroupControl()
+    searchFilter = cleanFilter(searchFilter)
+    if searchFilter:
+        searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s))" % (searchFilter, searchFilter, searchFilter)
+    return ldapObj.searchUserAdvance(searchFilter)
 
 def getMachinesLdap(searchFilter= ""):
     ldapObj = ldapUserGroupControl()
