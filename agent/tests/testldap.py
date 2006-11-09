@@ -29,6 +29,7 @@ import os.path
 import time
 
 from lmc.plugins.base import ldapUserGroupControl
+from lmc.plugins.base import ldapAuthen
 
 def cleanLdap():
     # Wipe out /home
@@ -73,6 +74,10 @@ class TestManageUserGroup(unittest.TestCase):
 
     def test_addDelUser(self):
         self.assertEqual(self.l.addUser("usertest", "userpass", u"ùnïcôde", u"çàùôéé"), 0)
+
+        self.assertEqual(ldapAuthen("usertest", "userpass").isRightPass(), True)
+        self.assertEqual(ldapAuthen("usertest", "userbadpass").isRightPass(), False)
+        
         self.assertEqual(os.path.exists("/home/usertest"), True)
         self.assertEqual(len(self.l.searchUser()), 1)
         self.assertEqual(len(self.l.searchUser("usertest")), 1)
