@@ -1662,20 +1662,13 @@ def ldapAuth(uiduser, passwd):
     ldapObj = ldapAuthen(uiduser, passwd)
     return ldapObj.isRightPass()
 
-#def getUserGroups(uid):
-#    ldapObj = ldapUserGroupControl()
-#    return ldapObj.getUserGroups(uid)
-
-
-
 
 class ldapAuthen:
-    """class for LDAP authentification
+    """
+    class for LDAP authentification
 
-       bind with constructor parameters to an ldap directory.
-       bind return error if login/password give to constructor isn't valid
-
-       isRightPass method return if bind to ldap happend with no problem
+    bind with constructor parameters to an ldap directory.
+    bind return error if login/password give to constructor isn't valid
     """
 
     def __init__(self, login, password):
@@ -1688,9 +1681,11 @@ class ldapAuthen:
         @param password: not encrypted password
         @type password: str
 
-        this will bind an ldap connection with login/password
+        Try a LDAP bind.
 
-        if error, store in self.result
+        self.result is True if the bind is successful
+        If there are any error, self.result is False and a ldap
+        exception will be raised.
         """
         config = ConfigParser.ConfigParser()
         config.read(INI)
@@ -1703,33 +1698,24 @@ class ldapAuthen:
         # connect to an ldap V3 (correct if not v3)
         l.protocol_version = ldap.VERSION3
 
-        #if login = root, use admin authentification
+        # if login == root, try to connect as the LDAP manager
         if (login == 'root'): username = config.get("ldap", "rootName")
         else: username = 'uid=' + login + ', ' + baseDN
 
-        # Any errors will throw an ldap.LDAPError exception
+        self.result = False
         try:
-            self.result=l.simple_bind_s(username, password)
-        except:
-            self.result = -1
-
+            l.simple_bind_s(username, password)
+            self.result = True
+        except ldap.INVALID_CREDENTIALS:
+            pass
 
     def isRightPass(self):
         """
-        @return: Return 1 if the class constructor has authenticated successfully the
-        the user.
-        @rtype: int
+        @return: Return True if the class constructor has successfully
+        authenticated the user.
+        @rtype: bool
         """
-        ret = False
-        if self.result == -1:
-            ret = False
-        elif ldap.__version__ == "2.2.0":
-            if self.result != None:
-                if len(self.result) == 2:
-                    if self.result[0] == ldap.RES_BIND:
-                        ret = True
-        elif self.result == None: ret = True
-        return ret
+        return self.result
 
 
 class GpoManager:
