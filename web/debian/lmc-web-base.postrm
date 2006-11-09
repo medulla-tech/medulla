@@ -14,8 +14,6 @@ case "$1" in
 	    fi
 	done
 
-	rm -rf /etc/lmc
-	
 	servers="apache-ssl apache apache2"
 	. /usr/share/wwwconfig-common/restart.sh
         ;;
