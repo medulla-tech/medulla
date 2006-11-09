@@ -104,7 +104,8 @@ callPluginFunction("verifInfo",array($_POST));
                 setFormError("pass");
             } else {  //if no problem
                 $result = add_user($nlogin, $pass, $firstname, $name, $homedir);
-                changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
+                changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
+                changeUserAttributes($nlogin, 'mail', $_POST['mail']);
                 $_GET["user"]=$nlogin;
                 $newuser=true;
             }
@@ -148,6 +149,7 @@ if ($_GET["user"]) {
 
          //change phone number
          changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
+         changeUserAttributes($nlogin,'mail',$_POST['mail']);
 
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
@@ -272,9 +274,14 @@ $test->setCssError("pass");
 $test->display(null);
 
 
+$test = new TrFormElement(_("Mail address"),new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/'));
+$test->setCssError("mail");
+$test->display(array("value"=>$detailArr["mail"][0]));
+
 $test = new TrFormElement(_("Telephone number"),new InputTpl("telephoneNumber"));
 $test->setCssError("telephoneNumber");
 $test->display(array("value"=>$detailArr["telephoneNumber"][0]));
+
 
 
 $checked="";
