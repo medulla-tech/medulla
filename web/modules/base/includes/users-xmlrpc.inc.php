@@ -84,9 +84,9 @@ function get_users(&$error)
  */
 function get_users_detailed(&$error, $filter = null)
 {
-  if ($filter == "") $filter = null;
-  else $filter = "*".$filter . "*";
-    return xmlCall("base.getUsersLdap",$filter);
+    if ($filter == "") $filter = null;
+    else $filter = "*".$filter . "*";
+    return xmlCall("base.searchUserAdvanced", $filter);
 }
 
 /**
