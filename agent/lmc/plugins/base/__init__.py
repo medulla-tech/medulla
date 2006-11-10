@@ -48,13 +48,6 @@ import logging
 import shutil
 
 from time import mktime, strptime, strftime
-#
-# Access control on a LDAP server
-# include Users/Groups and Machine access for Samba
-# warning: samba must be activate with ldap authentification
-#
-#
-
 
 # global definition for ldapUserGroupControl
 INI = "/etc/lmc/plugins/base.ini"
@@ -206,15 +199,26 @@ def getDefaultUserGroup():
     ldapObj = ldapUserGroupControl()
     return ldapObj.defaultUserGroup;
 
+def getUserDefaultPrimaryGroup():
+    return ldapUserGroupControl().defaultUserGroup
+
+def getUserPrimaryGroup(uid):    
+    return ldapUserGroupControl().getUserPrimaryGroup(uid)
+
+def getUserSecondaryGroups(uid):
+    return ldapUserGroupControl().getUserSecondaryGroups(uid)
+
 def createGroup(groupName):
     ldapObj = ldapUserGroupControl()
     return ldapObj.addGroup(groupName)
 
+def existGroup(groupName):
+    return ldapUserGroupControl().existGroup(groupName)
+
 # create a user
-# including "smbpasswd -a" command
-def createUser(login, passwd, firstname, surname, homedir):
+def createUser(login, passwd, firstname, surname, homedir, primaryGroup = None):
     ldapObj = ldapUserGroupControl()
-    return ldapObj.addUser(login, passwd, firstname, surname, homedir)
+    return ldapObj.addUser(login, passwd, firstname, surname, homedir, primaryGroup)
 
 # create a machine
 # via "smbpasswd -a -m"
@@ -233,6 +237,9 @@ def delUserFromGroup(cngroup,uiduser):
 def delUserFromAllGroups(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.delUserFromAllGroups(uid)
+
+def changeUserPrimaryGroup(uid, groupName):
+    return ldapUserGroupControl().changeUserPrimaryGroup(uid, groupName)
 
 def delUser(uiduser, home):
     ldapObj = ldapUserGroupControl()
@@ -655,7 +662,7 @@ class ldapUserGroupControl:
             ret = False
         return ret
 
-    def addUser(self, uid, password, firstN, lastN, homeDir = None):
+    def addUser(self, uid, password, firstN, lastN, homeDir = None, primaryGroup = None):
         """
         Add an user in ldap directory
 
@@ -675,25 +682,27 @@ class ldapUserGroupControl:
 
         @param homeDir: home directory of the user. If empty or None, default to defaultHomeDir/uid
         @type homeDir: str
+
+        @param primaryGroup: primary group of the user. If empty or None, default to defaultUserGroup
+        @type primaryGroup: str
         """
         # Make a homeDir string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
-
         homeDir = os.path.realpath(homeDir)
-
-
         if not self.isAuthorizedHome(homeDir):
             raise Exception(homeDir+"is not an authorized home dir.")
 
+        uidNumber=self.maxUID() + 1
 
-        uidNumber=self.maxUID()+1
-        if self.defaultUserGroup:
-            gidNumber = self.getDetailedGroup(self.defaultUserGroup)["gidNumber"][0]
-        else:
-            gidNumber = self.addGroup(uid)
-            # error in group creation ?
-            if (gidNumber == -1):
-                raise Exception('group error: already exist or cannot instanciate')
+        # Get a gid number
+        if not primaryGroup:
+            if self.defaultUserGroup:
+                primaryGroup = self.defaultUserGroup
+            else:
+                primaryGroup = uid
+                if self.addGroup(uid) == -1:
+                    raise Exception('group error: already exist or cannot instanciate')
+        gidNumber = self.getDetailedGroup(primaryGroup)["gidNumber"][0]
 
         # Put default value in firstN and lastN
         if not firstN: firstN = uid
@@ -785,11 +794,8 @@ class ldapUserGroupControl:
 
             # Write into the directory
             self.l.add_s(ident, attributes)
-            if self.defaultUserGroup:
-                self.addUserToGroup(self.defaultUserGroup, uid)
-            else:
-                self.addUserToGroup(uid, uid)
-
+            # Add user to her/his group primary group
+            self.addUserToGroup(primaryGroup, uid)
         except ldap.LDAPError, error:
             # if we have a problem, we delete the group
             if not self.defaultUserGroup:
@@ -926,6 +932,22 @@ class ldapUserGroupControl:
                 self.delUserFromGroup(group.decode("utf-8"), uid)
         return 0
 
+    def changeUserPrimaryGroup(self, uid, group):
+        """
+        Change the primary group of a user
+
+        @param uid: login of the user
+        @type uid: unicode
+
+        @param group: new primary group
+        @type uid: unicode
+        """
+        gidNumber = self.getDetailedGroup(group)["gidNumber"][0]
+        currentPrimary = self.getUserPrimaryGroup(uid)
+        self.delUserFromGroup(currentPrimary, uid)
+        self.addUserToGroup(group, uid)        
+        self.changeUserAttributes(uid, "gidNumber", gidNumber)
+
     def getAllGroupsFromUser(self, uid):
         """
         Get all groups that own this user
@@ -941,6 +963,38 @@ class ldapUserGroupControl:
                 resArray.append(group)
 
         return resArray
+
+    def getUserPrimaryGroup(self, uid):
+        """
+        Return the primary group of a user
+
+        @param uid: user uid
+        @type uid: unicode
+
+        @return: the name of the group
+        @rtype: unicode
+        """
+        gidNumber = self.getDetailedUser(uid)["gidNumber"][0]
+        return self.getDetailedGroupById(gidNumber)["cn"][0]
+
+    def getUserSecondaryGroups(self, uid):
+        """
+        Return the secondary groups of a user
+
+        @param uid: user uid
+        @type uid: unicode
+
+        @return: a list of the name of the group
+        @rtype: unicode
+        """
+        primary = self.getUserPrimaryGroup(uid)
+        secondary = self.getAllGroupsFromUser(uid)
+        try:
+            secondary.remove(primary)
+        except ValueError:
+            # The primary group is not listed in the secondary groups
+            pass
+        return secondary
 
     def addUserToGroup(self, cngroup, uiduser, base = None):
         """
