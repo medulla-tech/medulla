@@ -24,6 +24,10 @@
 <?php
 /* $Id$ */
 
+function existGroup($group) {
+    return xmlCall("base.existGroup", $group);
+}
+
 function
 get_groups(&$error)
 {

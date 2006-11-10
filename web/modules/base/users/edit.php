@@ -84,12 +84,22 @@ if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin)) {
     setFormError("login");
 }
 
-
 if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))  {
     global $error;
     setFormError("telephoneNumber");
     $error.= _("This is not a valid telephone number.")."<br />";
 }
+
+/* Check that the primary group name exists */
+ if (!strlen($_POST["primary_autocomplete"])) {
+   global $error;
+    setFormError("primary_autocomplete");
+    $error.= _("The primary group field can't be empty.")."<br />";
+} else if (!existGroup($_POST["primary_autocomplete"])) {
+    global $error;
+    setFormError("primary_autocomplete");
+    $error.= _("The group '" . $_POST["primary_autocomplete"] . "' does not exist, and so can't be set as primary group.")."<br />";
+ }
 
 
 //verify validity with plugin function
@@ -103,7 +113,7 @@ callPluginFunction("verifInfo",array($_POST));
                 $error.= _("Password is empty.")."<br/>"; //refuse addition
                 setFormError("pass");
             } else {  //if no problem
-                $result = add_user($nlogin, $pass, $firstname, $name, $homedir);
+                $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $_POST["primary_autocomplete"]);
                 changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
                 changeUserAttributes($nlogin, 'mail', $_POST['mail']);
                 $_GET["user"]=$nlogin;
@@ -165,25 +175,24 @@ if ($_GET["user"]) {
             $result.=_("Password updated.")."<br />";
           }
 
-        if ($_POST['groupsselected']) {
+	  /* Primary group management */
+          if ($_POST["primary_autocomplete"] != getUserPrimaryGroup($_POST['nlogin'])) {
+              /* Update the primary group */
+              changeUserPrimaryGroup($_POST['nlogin'], $_POST["primary_autocomplete"]);
+	  }
 
-            $old = getAllGroupsFromUser($_POST['nlogin']);
-            $new = $_POST['groupsselected'];
-            //modif groups
-            //echo "delete:";
-            foreach (array_diff($old,$new) as $group) {
-                del_member($group,$_POST['nlogin']);
-            }
-            //echo "add:";
-            foreach (array_diff($new,$old) as $group) {
-                add_member($group,$_POST['nlogin']);
-            }
-        }
-
-
-
-
+         /* Secondary groups management */
+         if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
+         $old = getUserSecondaryGroups($_POST['nlogin']);
+         $new = $_POST['groupsselected'];
+         foreach (array_diff($old,$new) as $group) {
+             del_member($group,$_POST['nlogin']);
          }
+         foreach (array_diff($new,$old) as $group) {
+             add_member($group,$_POST['nlogin']);
+         }
+
+     }
   }
   $detailArr = getDetailedUser($_GET["user"]);
 
@@ -321,15 +330,14 @@ $test->display(array("value"=>$detailArr["homeDirectory"][0]));
 
 setVar('detailArr',$detailArr);
 
-$existACL=existAclAttr("groups");
+$existACL = existAclAttr("groups");
 
-//if not
 if (!$existACL) {
-    $aclattrright="rw";
-    $isAclattrright=true;
+    $aclattrright = "rw";
+    $isAclattrright = true;
 } else {
-    $aclattrright=(getAclAttr("groups"));
-    $isAclattrright=$aclattrright!='';
+    $aclattrright = getAclAttr("groups");
+    $isAclattrright = ($aclattrright != '');
 }
 
 if ($aclattrright=="rw") {

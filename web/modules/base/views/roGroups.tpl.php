@@ -20,19 +20,24 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+$primary = getUserPrimaryGroup($detailArr["uid"][0]);
+$secondaries = getUserSecondaryGroups($detailArr["uid"][0]);
+sort($secondaries);
 ?>
+
    <table>
-    <tr><td width="50%"><?= _("Groups");?></td><td>
-        <ul>
+    <tr>
+     <td width="40%" style="text-align:right"><?= _("Primary Group");?></td>
+     <td>
+      <?= $primary; ?>
+    </td>
+    </tr>
+    <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups");?></td><td>
             <?php
-            $sorted = getAllGroupsFromUser($detailArr["uid"][0]);
-            sort($sorted);
-            foreach ($sorted as $group)
-                {
-                echo "<li>".$group."</li>\n";
-            }
+            foreach ($secondaries as $group)
+                echo $group . "<br>";
             ?>
-        </ul>
 
     </td>
     </tr>

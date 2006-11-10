@@ -21,9 +21,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
-   <table>
-    <tr><td width="50%">Groupes </td><td>
-        <span class="error">indisponible</span>
-    </td>
-    </tr>
-    </table>
+<table>
+ <tr>
+  <td width="40%" style="text-align:right">
+   <?= _("Groups");?>
+  </td>
+  <td>
+   <div style="color: #C00;"><?= _("unavailable");?></div>
+  </td>
+ </tr>
+</table>

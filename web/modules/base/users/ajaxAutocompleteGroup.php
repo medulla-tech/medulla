@@ -39,13 +39,17 @@ require("../../../modules/base/includes/groups.inc.php");
 
 
 $value = $_POST["value"];
+$uid = $_GET["uid"];
+
+$groups = search_groups($value);
+if ($uid) $primary = getUserPrimaryGroup($uid);
 
 print '<ul>';
-foreach(search_groups($value) as $items) {
-
-//foreach($_POST as $key =>$value) {
-   ?> <li><?= $items[0]?><span class="informal"><br><?= $items[1]?></span></li>
-   <?php
+foreach($groups as $items) {
+    if ($items[0] != $primary) {
+    ?> <li><?= $items[0]?><span class="informal"><br><?= $items[1];?></span></li>
+    <?php
+    }
 }
 print '</ul>';
 ?>

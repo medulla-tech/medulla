@@ -97,9 +97,9 @@ function get_users_detailed(&$error, $filter = null)
  * @param $name user's name
  * @param $homedir user home directory
  */
-function add_user($login, $pass, $firstname, $name, $homedir)
+function add_user($login, $pass, $firstname, $name, $homedir, $primaryGroup = "")
 {
-  $param = array($login, $pass, $firstname, $name, $homedir);
+  $param = array($login, $pass, $firstname, $name, $homedir, $primaryGroup);
   $ret = xmlCall("base.createUser",$param);
 
   return sprintf(_("user %s created<br />"),$login);
@@ -116,9 +116,25 @@ del_user($login, $files)
 }
 
 function getAllGroupsFromUser($uid) {
-
     return xmlCall("base.getAllGroupsFromUser",array($uid));
 }
+
+function getUserDefaultPrimaryGroup() {
+    return xmlCall("base.getUserDefaultPrimaryGroup",null);
+}
+
+function getUserPrimaryGroup($uid) {
+    return xmlCall("base.getUserPrimaryGroup",array($uid));
+}
+
+function getUserSecondaryGroups($uid) {
+    return xmlCall("base.getUserSecondaryGroups",array($uid));
+}
+
+function changeUserPrimaryGroup($uid, $group) {
+    return xmlCall("base.changeUserPrimaryGroup",array($uid, $group));
+}
+
 
 function chpasswd_user($login, $pass)
 {

@@ -20,23 +20,39 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+if ($detailArr["uid"][0]) { //if user exist
+    $primary = getUserPrimaryGroup($detailArr["uid"][0]);
+    $secondary = getUserSecondaryGroups($detailArr["uid"][0]);
+} else {
+    $primary = getUserDefaultPrimaryGroup();
+    $secondary = array();
+}
+sort($secondary);
+
 ?>
+   <table>
+    <tr>
+     <td width="40%" style="text-align:right">
+      <?= _("Primary Group"); ?>
+     </td>
+     <td>
+      <input type="text" id="primary_autocomplete" name="primary_autocomplete" value="<?= $primary; ?>" class="textfield" size="23" onkeypress="return validOnEnter(this, event);" />
+      <div id="primary_autocomplete_choices" class="autocomplete">
+       <ul>
+        <li>A</li>
+        <li>B/<li>
+       </ul>
+      </div>
+     </td>
+    </tr>
+   </table>
    <table>
     <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups"); ?> </td><td>
         <select multiple size="10" class="list" name="groupsselected[]" id="select">
             <?php
-            if ($detailArr["uid"][0]){ //if user exist
-                $sorted = getAllGroupsFromUser($detailArr["uid"][0]);
-                }
-            else { //else we set the default group
-                $sorted = array();
-                $sorted[] = get_default_group();
-            }
-
-            //sorting group
-            sort($sorted);
-            foreach ($sorted as $group)
-                {
+            foreach ($secondary as $group)
+            {
                 echo "<option value=\"".$group."\">".$group."</option>\n";
             }
             ?>
@@ -68,7 +84,8 @@
         ?>
         //new Ajax.Autocompleter('autocomplete','autocomplete_choices','main.php?module=base&submod=users&action=ajaxAutocompleteGroup');
 
-        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php', {paramName: "value"});
+        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?= $detailArr["uid"][0]; ?>', {paramName: "value"});
+        new Ajax.Autocompleter('primary_autocomplete','primary_autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php', {paramName: "value"});
 
         function validOnEnter(field,event) {
             if (event.keyCode==13) {
