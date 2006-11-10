@@ -68,7 +68,7 @@ class CheckboxTpl extends AbstractTpl{
   if ($arrParam["value"]=="checked") {
       $value="on";
       }
-    print '<div style="color: #C00;">indisponible</div>';
+    print '<div style="color: #C00;">' . _("unavailable") . '</div>';
     print '<input  type="hidden" value="'.$value.'" name="'.$this->name.'">';
   }
 }
@@ -217,7 +217,7 @@ class MultipleInputTpl extends AbstractTpl {
         print '<div id="'.$this->name.'">';
         print '<table>';
         print '<tr><td width="40%" style="text-align:right;">'.$this->desc.'</td>';
-        print '<td style="color: rgb(204, 0, 0);">'.'indisponible'.'</td></tr>';
+        print '<td style="color: rgb(204, 0, 0);">' . _('unavailable') . '</td></tr>';
         print '</table>';
         print '<div style="display:none">';
         print '<table>';
@@ -265,7 +265,7 @@ class AbstractTpl {
   }
 
   function displayHide($arrParam) {
-    print '<div style="color: #C00;">indisponible</div>';
+    print '<div style="color: #C00;">' . _("unavailable") . '</div>';
     print '<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'">';
   }
 }
