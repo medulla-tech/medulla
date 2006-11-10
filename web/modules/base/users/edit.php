@@ -91,14 +91,15 @@ if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))
 }
 
 /* Check that the primary group name exists */
- if (!strlen($_POST["primary_autocomplete"])) {
+ $primary = $_POST["primary_autocomplete"];
+ if (!strlen($primary)) {
    global $error;
     setFormError("primary_autocomplete");
     $error.= _("The primary group field can't be empty.")."<br />";
-} else if (!existGroup($_POST["primary_autocomplete"])) {
+} else if (!existGroup($primary)) {
     global $error;
     setFormError("primary_autocomplete");
-    $error.= _("The group '" . $_POST["primary_autocomplete"] . "' does not exist, and so can't be set as primary group.")."<br />";
+    $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
  }
 
 

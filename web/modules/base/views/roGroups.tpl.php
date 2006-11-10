@@ -28,7 +28,7 @@ sort($secondaries);
 
    <table>
     <tr>
-     <td width="40%" style="text-align:right"><?= _("Primary Group");?></td>
+     <td width="40%" style="text-align:right"><?= _("Primary group");?></td>
      <td>
       <?= $primary; ?>
     </td>

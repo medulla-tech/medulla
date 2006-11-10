@@ -34,7 +34,7 @@ sort($secondary);
    <table>
     <tr>
      <td width="40%" style="text-align:right">
-      <?= _("Primary Group"); ?>
+      <?= _("Primary group"); ?>
      </td>
      <td>
       <input type="text" id="primary_autocomplete" name="primary_autocomplete" value="<?= $primary; ?>" class="textfield" size="23" onkeypress="return validOnEnter(this, event);" />

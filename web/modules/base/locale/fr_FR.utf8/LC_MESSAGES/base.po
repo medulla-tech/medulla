@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-04 15:15+0200\n"
-"PO-Revision-Date: 2006-08-04 15:18+0200\n"
+"POT-Creation-Date: 2006-11-10 17:28+0100\n"
+"PO-Revision-Date: 2006-11-10 17:29+0100\n"
 "Last-Translator: Jérome Wax <jerome.wax@linbox.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -165,16 +165,21 @@ msgstr ""
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
 
-#: includes/FormGenerator.php:164 modules/base/groups/localSidebar.php:30
+#: includes/FormGenerator.php:71 includes/FormGenerator.php:220
+#: includes/FormGenerator.php:268 modules/base/views/norightGroups.tpl.php:30
+msgid "unavailable"
+msgstr "indisponible"
+
+#: includes/FormGenerator.php:186 modules/base/groups/localSidebar.php:30
 #: modules/base/users/localSidebar.php:32
 #: modules/base/users/localSidebar.php:44
-#: modules/base/views/editGroups.tpl.php:56
+#: modules/base/views/editGroups.tpl.php:72
 msgid "Add"
 msgstr "Ajout"
 
-#: includes/FormGenerator.php:415 modules/base/groups/ajaxFilter.php:128
+#: includes/FormGenerator.php:437 modules/base/groups/ajaxFilter.php:128
 #: modules/base/groups/index.php:124 modules/base/users/ajaxFilter.php:144
-#: modules/base/views/editGroups.tpl.php:44
+#: modules/base/views/editGroups.tpl.php:60
 #: modules/base/views/index.tpl.php:95
 msgid "Delete"
 msgstr "Suppression"
@@ -195,17 +200,22 @@ msgstr "<br/>Erreur:"
 msgid " - "
 msgstr " - "
 
-#: includes/xmlrpc.inc.php:198
+#: includes/xmlrpc.inc.php:199
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: includes/xmlrpc.inc.php:199
+#: includes/xmlrpc.inc.php:200
 msgid ""
 "This exception is unknow. Please contact us to add an error handling on this "
 "error."
 msgstr ""
 "Cette exception est inconnue. Veuillez nous contacter pour correctement "
 "gérer cette erreur."
+
+#: includes/PageGenerator.php:105 modules/base/groups/members.php:218
+#: modules/base/users/delete.php:87 modules/base/users/edit.php:364
+msgid "Cancel"
+msgstr "Annuler"
 
 #: includes/PageGenerator.php:340
 msgid "to"
@@ -230,8 +240,9 @@ msgstr "Aucune action."
 
 #: modules/base/groups/ajaxFilter.php:118 modules/base/groups/members.php:66
 #: modules/base/groups/delete.php:51 modules/base/groups/index.php:115
-#: modules/base/groups/add.php:45 modules/base/views/roGroups.tpl.php:25
-#: modules/base/views/editGroups.tpl.php:25
+#: modules/base/groups/add.php:45 modules/base/views/roGroups.tpl.php:36
+#: modules/base/views/editGroups.tpl.php:51
+#: modules/base/views/norightGroups.tpl.php:27
 #: modules/base/infoPackage.inc.php:166
 msgid "Groups"
 msgstr "Groupes"
@@ -248,23 +259,26 @@ msgstr "Édition des membres"
 msgid "Groups management"
 msgstr "Gestion des groupes"
 
-#: modules/base/groups/members.php:68 modules/base/groups/members.php:140
-#: modules/base/groups/members.php:177 modules/base/infoPackage.inc.php:191
+#: modules/base/groups/members.php:68 modules/base/groups/members.php:153
+#: modules/base/groups/members.php:190 modules/base/infoPackage.inc.php:191
 msgid "Group members"
 msgstr "Membres d'un groupe"
 
-#: modules/base/groups/members.php:150
+#: modules/base/groups/members.php:147
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Certains utilisateurs n'ont pas pu être enlevés de ce groupe car ce groupe "
+"est leur groupe primaire."
+
+#: modules/base/groups/members.php:163
 msgid "All users"
 msgstr "Tous les utilisateurs"
 
-#: modules/base/groups/members.php:204 modules/base/users/edit.php:340
+#: modules/base/groups/members.php:217 modules/base/users/edit.php:363
 msgid "Confirm"
 msgstr "Valider"
-
-#: modules/base/groups/members.php:205 modules/base/users/delete.php:87
-#: modules/base/users/edit.php:341
-msgid "Cancel"
-msgstr "Annuler"
 
 #: modules/base/groups/delete.php:53 modules/base/infoPackage.inc.php:179
 msgid "Delete a group"
@@ -298,7 +312,7 @@ msgstr "Gestion"
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: modules/base/groups/add.php:47 modules/base/views/editGroups.tpl.php:47
+#: modules/base/groups/add.php:47 modules/base/views/editGroups.tpl.php:63
 #: modules/base/infoPackage.inc.php:176
 msgid "Add a group"
 msgstr "Ajouter un groupe"
@@ -307,11 +321,11 @@ msgstr "Ajouter un groupe"
 msgid "Invalid groupname"
 msgstr "Nom de groupe invalide"
 
-#: modules/base/groups/add.php:68
+#: modules/base/groups/add.php:70
 msgid "Creation of a new group"
 msgstr "Création d'un nouveau groupe"
 
-#: modules/base/groups/add.php:73
+#: modules/base/groups/add.php:75
 msgid ""
 "The groupname can only contains lowercase letters and numeric, and must "
 "begin with a letter"
@@ -319,25 +333,29 @@ msgstr ""
 "Le nom de groupe ne peut contenir que des lettres minuscules ou caractères "
 "numériques, et il doit commencer par une lettre"
 
-#: modules/base/groups/add.php:78
+#: modules/base/groups/add.php:81
 msgid "Group name"
 msgstr "Nom du groupe"
 
-#: modules/base/groups/add.php:82
+#: modules/base/groups/add.php:85
+msgid "Description"
+msgstr "description"
+
+#: modules/base/groups/add.php:91
 msgid "Create"
 msgstr "Créer"
 
-#: modules/base/users/ajaxFilter.php:130 modules/base/users/edit.php:248
+#: modules/base/users/ajaxFilter.php:130 modules/base/users/edit.php:267
 #: modules/base/views/index.tpl.php:81 index.php:190
 msgid "Login"
 msgstr "Identifiant"
 
-#: modules/base/users/ajaxFilter.php:136 modules/base/users/edit.php:252
+#: modules/base/users/ajaxFilter.php:136 modules/base/users/edit.php:271
 #: modules/base/views/index.tpl.php:87
 msgid "Name"
 msgstr "Nom"
 
-#: modules/base/users/ajaxFilter.php:139 modules/base/users/edit.php:294
+#: modules/base/users/ajaxFilter.php:139 modules/base/users/edit.php:318
 #: modules/base/views/index.tpl.php:90
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
@@ -385,7 +403,7 @@ msgstr "Mot de passe actuel"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
-#: modules/base/users/passwd.php:100 modules/base/infoPackage.inc.php:208
+#: modules/base/users/passwd.php:100 modules/base/infoPackage.inc.php:211
 msgid "Confirm your password"
 msgstr "Confirmation du mot de passe"
 
@@ -470,69 +488,84 @@ msgstr "Les mots de passes ne correspondent pas"
 msgid "User's name invalid !"
 msgstr "Nom de l'utilisateur invalide !"
 
-#: modules/base/users/edit.php:91
+#: modules/base/users/edit.php:90
 msgid "This is not a valid telephone number."
 msgstr "Ceci n'est pas un numéro de téléphone valide."
 
-#: modules/base/users/edit.php:103
+#: modules/base/users/edit.php:98
+msgid "The primary group field can't be empty."
+msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
+
+#: modules/base/users/edit.php:102
+#, php-format
+msgid "The group %s does not exist, and so can't be set as primary group."
+msgstr ""
+"Le groupe %s n'existe pas, et ne peut donc pas être utilisé en tant que "
+"groupe primaire."
+
+#: modules/base/users/edit.php:114
 msgid "Password is empty."
 msgstr "Le mot de passe est vide."
 
-#: modules/base/users/edit.php:113
+#: modules/base/users/edit.php:125
 msgid "This user already exists."
 msgstr "Cet utilisateur existe déjà."
 
-#: modules/base/users/edit.php:118 modules/base/users/edit.php:141
+#: modules/base/users/edit.php:130 modules/base/users/edit.php:153
 msgid "User enabled."
 msgstr "Utilisateur activé."
 
-#: modules/base/users/edit.php:121 modules/base/users/edit.php:136
+#: modules/base/users/edit.php:133 modules/base/users/edit.php:148
 msgid "User disabled."
 msgstr "Utilisateur désactivé."
 
-#: modules/base/users/edit.php:153
+#: modules/base/users/edit.php:166
 msgid "Attributes updated."
 msgstr "Attributs mis à jour."
 
-#: modules/base/users/edit.php:163
+#: modules/base/users/edit.php:176
 msgid "Password updated."
 msgstr "Mot de passe mis à jour."
 
-#: modules/base/users/edit.php:194
+#: modules/base/users/edit.php:206
 #, php-format
 msgid "User %s created without problems"
 msgstr "L'utilisateur %s a été créé avec succès"
 
-#: modules/base/users/edit.php:220
+#: modules/base/users/edit.php:232
 msgid "Add user"
 msgstr "Ajout d'un utilisateur"
 
-#: modules/base/users/edit.php:223
+#: modules/base/users/edit.php:235
 msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
-#: modules/base/users/edit.php:255
+#: modules/base/users/edit.php:274
 msgid "First name"
 msgstr "Prénom"
 
-#: modules/base/users/edit.php:259 modules/base/infoPackage.inc.php:207
+#: modules/base/users/edit.php:278 modules/base/infoPackage.inc.php:210
 #: index.php:198
 msgid "Password"
 msgstr "Mot de passe"
 
-#: modules/base/users/edit.php:263
+#: modules/base/users/edit.php:282
 msgid "Confirm password"
 msgstr "Confirmation du mot de passe"
 
-#: modules/base/users/edit.php:268
+#: modules/base/users/edit.php:287 modules/base/infoPackage.inc.php:207
+msgid "Mail address"
+msgstr "Adresse de messagerie"
+
+#: modules/base/users/edit.php:291 modules/base/infoPackage.inc.php:208
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
-#: modules/base/users/edit.php:281
+#: modules/base/users/edit.php:305
 msgid "User is disabled, if checked"
 msgstr "Utilisateur désactivé, si cochée"
 
-#: modules/base/users/edit.php:282
+#: modules/base/users/edit.php:306
 msgid ""
 "Disabled users cannot be logged into any services. <br/>\n"
 "                            Shell command are replaced by /bin/false"
@@ -627,30 +660,30 @@ msgstr "Partitions sur le disque"
 msgid "Background jobs"
 msgstr "Actions en arrière plan"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:99
+#: modules/base/includes/groups-xmlrpc.inc.php:103
 #, php-format
 msgid "Group %s already exist"
 msgstr "Le groupe %s existe déjà"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:113
+#: modules/base/includes/groups-xmlrpc.inc.php:117
 #, php-format
 msgid "Group %s created"
 msgstr "Groupe %s crée"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:124
+#: modules/base/includes/groups-xmlrpc.inc.php:128
 msgid "Error: group null"
 msgstr "Erreur, groupe nul"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:129
+#: modules/base/includes/groups-xmlrpc.inc.php:133
 msgid "Error lpadmin cannot be removed"
 msgstr "Erreur, lpadmin ne peut être supprimé"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:136
+#: modules/base/includes/groups-xmlrpc.inc.php:140
 #, php-format
 msgid "Error when deleting %s"
 msgstr "Erreur lors de la suppression de %s"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:141
+#: modules/base/includes/groups-xmlrpc.inc.php:145
 #, php-format
 msgid "Group %s deleted"
 msgstr "Groupe %s supprimé"
@@ -681,34 +714,36 @@ msgstr ""
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
-#: modules/base/logview/ajax_showlog.php:36
-#: modules/base/logview/ajax_showlog.php:45
-msgid "Conn."
-msgstr "Conn."
-
-#: modules/base/logview/ajax_showlog.php:38
-#: modules/base/logview/ajax_showlog.php:47
-#: modules/base/logview/ajax_showlog.php:48
-msgid "Actions"
-msgstr "Actions"
-
-#: modules/base/logview/ajax_showlog.php:40
-#: modules/base/logview/ajax_showlog.php:50
-#: modules/base/logview/ajax_showlog.php:49
-msgid "Extra informations"
-msgstr "Informations supplémentaires"
-
-#: modules/base/logview/ajax_showlog.php:42
-#: modules/base/logview/ajax_showlog.php:54
-#: modules/base/logview/ajax_showlog.php:50
+#: modules/base/logview/ajax_showlog.php:43
 msgid "Date"
 msgstr "Date"
 
-#: modules/base/logview/index.php:60 modules/base/infoPackage.inc.php:73
-msgid "Log view"
-msgstr "Journaux"
+#: modules/base/logview/ajax_showlog.php:45
+msgid "Connection"
+msgstr "Connexion"
 
-#: modules/base/views/editGroups.tpl.php:91
+#: modules/base/logview/ajax_showlog.php:47
+msgid "Operation"
+msgstr "Opération"
+
+#: modules/base/logview/ajax_showlog.php:49
+msgid "Actions"
+msgstr "Actions"
+
+#: modules/base/logview/ajax_showlog.php:51
+msgid "Extra informations"
+msgstr "Informations supplémentaires"
+
+#: modules/base/logview/index.php:60
+msgid "LDAP operations log view"
+msgstr "Journal des opérations LDAP"
+
+#: modules/base/views/roGroups.tpl.php:31
+#: modules/base/views/editGroups.tpl.php:37
+msgid "Primary group"
+msgstr "Groupe primaire"
+
+#: modules/base/views/editGroups.tpl.php:108
 msgid "This group doesn't exist"
 msgstr "Ce groupe n'existe pas"
 
@@ -735,6 +770,10 @@ msgstr "Statut"
 #: modules/base/infoPackage.inc.php:63
 msgid "Default status page"
 msgstr "Page de statut par défaut"
+
+#: modules/base/infoPackage.inc.php:73
+msgid "Log view"
+msgstr "Journaux"
 
 #: modules/base/infoPackage.inc.php:78
 msgid "LDAP log"
@@ -784,7 +823,7 @@ msgstr "Prénom de l'utilisateur"
 msgid "User home directory"
 msgstr "Répertoire de l'utilisateur"
 
-#: modules/base/infoPackage.inc.php:209
+#: modules/base/infoPackage.inc.php:212
 msgid "Enable/Disable user account"
 msgstr "Activer/Désactiver un compte"
 
@@ -815,20 +854,3 @@ msgstr "Connecter"
 #: main.php:122
 msgid "Error, you don't have correct rights !"
 msgstr "Erreur, vous n'avez pas les droits requis !"
-
-#: modules/base/logview/ajax_showlog.php:48
-msgid "Op"
-msgstr ""
-
-#: modules/base/logview/ajax_showlog.php:45
-msgid "Connection"
-msgstr "Connexion"
-
-#: modules/base/logview/ajax_showlog.php:48
-#: modules/base/logview/ajax_showlog.php:47
-msgid "Operation"
-msgstr "Opération"
-
-#: modules/base/logview/index.php:60
-msgid "LDAP operations log view"
-msgstr "Journal des opérations LDAP"
