@@ -262,7 +262,7 @@ msgstr "Gestion des groupes"
 #: modules/base/groups/members.php:68 modules/base/groups/members.php:153
 #: modules/base/groups/members.php:190 modules/base/infoPackage.inc.php:191
 msgid "Group members"
-msgstr "Membres d'un groupe"
+msgstr "Membres du groupe"
 
 #: modules/base/groups/members.php:147
 msgid ""
