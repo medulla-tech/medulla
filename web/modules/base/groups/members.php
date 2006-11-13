@@ -87,7 +87,7 @@ $forbidden = array();
 
 if (isset($_POST["bdeluser"]))
 {
-  foreach ($_POST["members"] as $member {
+  foreach ($_POST["members"] as $member) {
       if ($group == getUserPrimaryGroup($member)) {
           /* A user can't be removed from his/her primary group */
           $forbidden[] = $member;
