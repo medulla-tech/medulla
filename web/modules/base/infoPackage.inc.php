@@ -27,9 +27,9 @@
          * module declaration
          */
         $mod = new Module("base");
-        $mod->setVersion("1.1.0");
+        $mod->setVersion("1.1.1");
         $mod->setRevision("$Rev$");
-        $mod->setAPIVersion('2:0:1');
+        $mod->setAPIVersion('3:0:2');
         $mod->setDescription(_("User and group"));
         $mod->setPriority(1);
 

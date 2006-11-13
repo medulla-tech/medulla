@@ -1,3 +1,9 @@
+lmc-web-base (1.1.1-1) testing; urgency=low
+
+  * New upstream release
+
+ -- Linbox <infos@linbox.com>  Mon, 13 Nov 2006 12:02:28 +0100
+
 lmc-web-base (1.1.0-1) testing; urgency=low
 
   * New upstream release
