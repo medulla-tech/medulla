@@ -57,8 +57,8 @@ baseGroupsDN = ""
 
 modList= None
 
-VERSION = "1.1.0"
-APIVERSION = "2:0:1"
+VERSION = "1.1.1"
+APIVERSION = "3:0:2"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
