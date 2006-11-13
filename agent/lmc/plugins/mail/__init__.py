@@ -31,8 +31,8 @@ import copy
 import logging
 
 
-VERSION = "1.1.0"
-APIVERSION = "1:0:0"
+VERSION = "1.1.1"
+APIVERSION = "2:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
@@ -64,8 +64,6 @@ def changeMailalias(uid, mailaliaslist):
 
 def removeMail(uid):
     MailControl().removeUserObjectClass(uid, 'mailAccount')
-    #WARNING: remove mail field if mail account disable
-    MailControl().changeUserAttributes(uid, 'mail', '')
 
 def hasMailObjectClass(uid):
     return MailControl().hasMailObjectClass(uid)
@@ -120,18 +118,6 @@ class MailControl(ldapUserGroupControl):
         """
         if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
         self.changeUserAttributes(uid, 'mailalias', mailaliaslist)
-
-    def changeMail(self, uid, mail):
-        """
-        Change the user mail aliases.
-
-        @param uid: user name
-        @type uid: str
-        @param mailaliaslist: a list of all mail aliases
-        @type mailaliaslist: list
-        """
-        if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
-        self.changeUserAttributes(uid, 'mail', mail)
 
     def hasMailObjectClass(self, uid):
         """
