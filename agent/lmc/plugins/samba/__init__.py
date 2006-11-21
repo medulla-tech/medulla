@@ -88,19 +88,34 @@ def activate():
         logger.exception("invalid schema")
         return False
 
-
     # Verify if init script exist
-    init = SambaConfig("samba").samba_init_script
+    config = SambaConfig("samba")
+    init = config.samba_init_script
     if not os.path.exists(init):
         logger.error(init + " does not exist")
         return False
 
     # Verify if samba conf file exist
-    conf = SambaConfig("samba").samba_conf_file
+    conf = config.samba_conf_file
     if not os.path.exists(conf):
         logger.error(conf + " does not exist")
         return False
 
+    # If SAMBA is defined as a PDC, make extra check
+    smbconf = smbConf()
+    if smbconf.isPdc():
+        # Check that a sambaDomainName entry is in LDAP directory
+        samba = sambaLdapControl()
+        domainInfos = samba.getDomain()
+        if not domainInfos:
+            logger.error("Can't find sambaDomainName entry in LDAP for domain %s. Please check your SAMBA LDAP configuration." % smbconf.getContent("global", "workgroup"));
+            return False
+        # Check that Domain Computers group exists
+        # We need it to put a machine account in the right group when joigning it to the domain
+        if not samba.getDomainComputersGroup():
+            logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Computers' group. Please check your SAMBA LDAP configuration.");
+            return False
+            
     return True
 
 def isSmbAntiVirus():
@@ -211,6 +226,10 @@ def getSmbStatus():
 def getConnected():
     return smbConf().getConnected()
 
+# create a machine account
+def addMachine(name, comment, addMachineScript = False):
+    return sambaLdapControl().addMachine(name, comment, addMachineScript)
+
 
 class SambaConfig(PluginConfig):
 
@@ -249,6 +268,92 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         if cp.has_section("hooks"):
             for option in cp.options("hooks"):
                 self.hooks["samba." + option] = cp.get("hooks", option)
+
+    def getDomainComputersGroup(self):
+        """
+        Return the LDAP posixGroup entry corresponding to the 'Domain Computers' group.
+
+        @return: a posixGroup entry
+        @rtype: dict
+        """
+        domain = self.getDomain()
+        sambaSID = domain["sambaSID"][0]
+        result = self.search("(&(objectClass=sambaGroupMapping)(sambaSID=%s-515))" % sambaSID)
+        if len(result): ret = result[0][0][1]
+        else: ret = {}
+        return ret
+
+    def getDomain(self):
+        """
+        Return the LDAP sambaDomainName entry corresponding to the domain specified in smb.conf
+
+        @return: the sambaDomainName entry
+        @rtype: dict
+        """
+        conf = smbConf()
+        domain = conf.getContent("global", "workgroup")
+        result = self.search("(&(objectClass=sambaDomain)(sambaDomainName=%s))" % domain)
+        if len(result): ret = result[0][0][1]
+        else: ret = {}
+        return ret
+
+    def addMachine(self, uid, comment, addMachineScript = False):
+        """
+        Add a PosixAccount for a machine account.
+        if addMachineScript is False, we run smbpasswd to create the needed LDAP attributes.
+
+        @param uid: name of new machine (no space)
+        @type uid: str
+
+        @param comment: comment of machine (full string accept)
+        @type comment: str
+        """
+        origuid = uid
+        uid = uid + '$'
+        uidNumber = self.maxUID()+1;
+
+        if not comment:
+            comment = "Machine account"
+
+        comment_UTF8 = str(lmc.plugins.base.delete_diacritics((comment.encode("UTF-8"))))
+        gidNumber = self.getDomainComputersGroup()["gidNumber"][0]
+        # creating machine skel
+        user_info = {
+            'objectclass':('account', 'posixAccount', 'top'),
+            'uid':uid,
+            'cn':uid,
+            'uidNumber':str(uidNumber),
+            'gidNumber': str(gidNumber),
+            'gecos':str(comment_UTF8),
+            'homeDirectory':'/dev/null',
+            'loginShell':'/bin/false'
+            }
+        
+        ident = 'uid=' + uid + ',' + self.baseComputersDN
+        attributes=[ (k,v) for k,v in user_info.items() ]
+        self.l.add_s(ident,attributes)
+
+        if not addMachineScript:
+            cmd = 'smbpasswd -a -m ' + uid
+            shProcess = generateBackgroundProcess(cmd)
+            ret = shProcess.getExitCode()
+
+            if ret:
+                self.delMachine(origuid) # Delete machine account we just created
+                raise Exception("Failed to add computer entry\n" + shProcess.stdall)
+
+        return 0
+        
+    def delMachine(self, uid):
+        """
+        Remove a computer account from LDAP
+
+        @param uidUser: computer name
+        @type  uidUser: str
+        """
+        uid = uid + "$"
+        self.l.delete_s('uid=' + uid + ',' + self.baseComputersDN)
+        return 0
 
     def addSmbAttr(self, uid, password):
         cmd = 'smbpasswd -s -a '+uid
