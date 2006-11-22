@@ -577,7 +577,7 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         @param group: the group name
         @type group: str
         """
-        lmctools.shLaunch("net groupmap add unixgroup=%s" % group)
+        lmctools.shLaunch("net groupmap add unixgroup='%s'" % group)
 
     def isSambaGroup(self, group):
         ret = False
