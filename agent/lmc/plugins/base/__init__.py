@@ -508,6 +508,8 @@ class ldapUserGroupControl:
         self.skelDir = "/etc/skel"
         self.defaultUserGroup = None
         self.defaultHomeDir = "/home"
+        self.uidStart = 10000
+        self.gidStart = 10000
 
     def __init__(self, conffile = None):
         """
@@ -551,6 +553,10 @@ class ldapUserGroupControl:
         try: self.skelDir = self.config.get("ldap", "skelDir")
         except: pass
         try: self.defaultHomeDir = self.config.get("ldap", "defaultHomeDir")
+        except: pass
+        try: self.uidStart = self.config.getint("ldap", "uidStart")
+        except: pass
+        try: self.gidStart = self.config.getint("ldap", "gidStart")
         except: pass
 
         try:
@@ -1565,7 +1571,7 @@ class ldapUserGroupControl:
                     if (maxuid <= uidNumber):
                         maxuid = uidNumber
 
-            if (maxuid < 10000): maxuid = 10000
+            if maxuid < self.uidStart: maxuid = self.uidStart
 
         return maxuid
 
@@ -1659,7 +1665,7 @@ class ldapUserGroupControl:
                 if (maxgid<=gidNumber):
                     maxgid = gidNumber
 
-        if (maxgid < 10000): maxgid = 10000
+        if maxgid < self.gidStart: maxgid = self.gidStart
 
         return maxgid
 
