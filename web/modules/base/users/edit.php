@@ -244,13 +244,10 @@ if ($_GET["action"]=="add") {
 <table cellspacing="0">
 <?php
 
-//fetch uid/gid if we create a user
-
- if (!$detailArr["uidNumber"][0]) { //if we create a new user
-                                    //so don't have uid
-
-      $detailArr["uidNumber"][0]=maxUID() + 1;
-      $detailArr["gidNumber"][0]=maxGID() + 1;
+ // Fetch uid/gid if we create a user
+ if ($_GET["action"] == "add") {
+     $detailArr["uidNumber"][0] = maxUID() + 1;
+     $detailArr["gidNumber"][0] = maxGID() + 1;
  }
 ?>
 <?php
