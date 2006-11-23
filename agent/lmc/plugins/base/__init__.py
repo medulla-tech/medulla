@@ -950,8 +950,13 @@ class ldapUserGroupControl:
         """
         gidNumber = self.getDetailedGroup(group)["gidNumber"][0]
         currentPrimary = self.getUserPrimaryGroup(uid)
-        self.delUserFromGroup(currentPrimary, uid)
-        self.addUserToGroup(group, uid)        
+        try:
+            self.delUserFromGroup(currentPrimary, uid)
+        except ldap.NO_SUCH_ATTRIBUTE:
+            # Try to delete the user from a group where the she/he is not
+            # Can be safely passed
+            pass
+        self.addUserToGroup(group, uid)
         self.changeUserAttributes(uid, "gidNumber", gidNumber)
 
     def getAllGroupsFromUser(self, uid):
@@ -1015,7 +1020,12 @@ class ldapUserGroupControl:
         if not base: base = self.baseGroupsDN
         cngroup = cngroup.encode("utf-8")
         uiduser = uiduser.encode("utf-8")
-        self.l.modify_s('cn=' + cngroup + ',' + base, [(ldap.MOD_ADD, 'memberUid', uiduser)])
+        try:
+            self.l.modify_s('cn=' + cngroup + ',' + base, [(ldap.MOD_ADD, 'memberUid', uiduser)])
+        except ldap.TYPE_OR_VALUE_EXISTS:
+            # Try to add a the user to one of his/her group
+            # Can be safely ignored
+            pass
         return 0
 
     def changeUserAttributes(self,uid,attr,attrVal):
