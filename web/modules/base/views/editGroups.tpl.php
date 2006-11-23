@@ -79,7 +79,7 @@ sort($secondary);
         <?php
             foreach (get_groups($error) as $group)
             {
-                echo "groups.push('$group[0]');\n";
+                echo "groups.push('" . htmlentities($group[0], ENT_QUOTES) . "');\n";
             }
         ?>
         //new Ajax.Autocompleter('autocomplete','autocomplete_choices','main.php?module=base&submod=users&action=ajaxAutocompleteGroup');
