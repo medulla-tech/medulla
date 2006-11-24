@@ -196,6 +196,9 @@ def changeUserPasswd(uid, password):
 def changeSambaAttributes(uid, attributes):
     return sambaLdapControl().changeSambaAttributes(uid, attributes)
 
+def changeUserPrimaryGroup(uid, groupName):
+    return sambaLdapControl().changeUserPrimaryGroup(uid, groupName)
+
 def delSmbAttr(uid):
     return sambaLdapControl().delSmbAttr(uid)
 
@@ -429,6 +432,45 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         self.l.modify_s(dn, modlist)
         self.runHook("samba.changesambaattributes", uid)
         return 0
+
+    def changeUserPrimaryGroup(self, uid, group):
+        """
+        Change the SAMBA primary group of a user, if the sambaPrimaryGroupSID
+        of this user is defined. Else do nothing.
+
+        @param uid: login of the user
+        @type uid: unicode
+
+        @param group: new primary group
+        @type uid: unicode
+        """
+        try:
+            spg = self.getDetailedUser(uid)["sambaPrimaryGroupSID"]
+        except KeyError:
+            # This user has no sambaPrimaryGroupSID set
+            # So nothing to do
+            return
+        gidNumber = self.getDetailedGroup(group)["gidNumber"][0]
+        sid = self.gid2sid(gidNumber)
+        if sid:
+            self.changeUserAttributes(uid, "sambaPrimaryGroupSID", sid)
+
+    def gid2sid(self, gidNumber):
+        """
+        Return the SID corresponding to a gid number.
+
+        @param gidNumber: gid number of a group
+        @type gidNumber: int
+
+        @return: SID number, or None if no corresponding SID found
+        @rtype: str
+        """        
+        group = self.getDetailedGroupById(gidNumber)
+        try:
+            sid = group["sambaSID"][0]
+        except KeyError:
+            sid = None
+        return sid
 
     def delSmbAttr(self, uid):
         """remove smb attributes via smbpasswd cmd"""

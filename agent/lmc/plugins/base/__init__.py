@@ -1245,7 +1245,7 @@ class ldapUserGroupControl:
          @return: full raw ldap array (dictionnary of lists)
          @type: dict
         """
-        ret = self.search("gidNumber=" + id, self.baseGroupsDN)
+        ret = self.search("gidNumber=" + str(id), self.baseGroupsDN)
         resArray = []
         if ret:
             for result in ret:
