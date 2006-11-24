@@ -179,7 +179,7 @@ if ($_GET["user"]) {
 	  /* Primary group management */
           if ($_POST["primary_autocomplete"] != getUserPrimaryGroup($_POST['nlogin'])) {
               /* Update the primary group */
-              changeUserPrimaryGroup($_POST['nlogin'], $_POST["primary_autocomplete"]);
+              callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"]));
 	  }
 
          /* Secondary groups management */

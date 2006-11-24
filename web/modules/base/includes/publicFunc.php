@@ -41,6 +41,10 @@ function _base_disableUser($uid) {
 function _base_changeUserPasswd($paramsArr) {
   return xmlCall("base.changeUserPasswd", $paramsArr);
 } 
+
+function _base_changeUserPrimaryGroup($uid, $group) {
+    return xmlCall("base.changeUserPrimaryGroup",array($uid, $group));
+}
  
  
 ?>

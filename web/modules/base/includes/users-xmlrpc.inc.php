@@ -131,11 +131,6 @@ function getUserSecondaryGroups($uid) {
     return xmlCall("base.getUserSecondaryGroups",array($uid));
 }
 
-function changeUserPrimaryGroup($uid, $group) {
-    return xmlCall("base.changeUserPrimaryGroup",array($uid, $group));
-}
-
-
 function chpasswd_user($login, $pass)
 {
     $param[]=$login;
