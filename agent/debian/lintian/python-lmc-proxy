@@ -1,0 +1,1 @@
+python-lmc-proxy: non-standard-file-perm etc/lmc/plugins/proxy.ini 0600 != 0644

@@ -1,0 +1,1 @@
+python-lmc-base: non-standard-file-perm etc/lmc/plugins/base.ini 0600 != 0644

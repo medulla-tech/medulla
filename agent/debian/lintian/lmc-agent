@@ -1,0 +1,3 @@
+lmc-agent: non-standard-file-perm etc/lmc/agent/keys/cacert.pem 0600 != 0644
+lmc-agent: non-standard-file-perm etc/lmc/agent/keys/privkey.pem 0600 != 0644
+lmc-agent: non-standard-file-perm etc/lmc/agent/config.ini 0600 != 0644

@@ -8,35 +8,47 @@
 
 PACKAGE=lmc-agent
 
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	INSTALL_PROGRAM += -s
+# Set distribution name to decide if we'll use python-support or not
+# Can be sarge, etch, sid, dapper, edgy or feisty
+DISTRO = sarge
+
+# Let's turn python-support on by default
+DO_PYSUPPORT = true
+
+# Check for distrib that do not support python-support
+ifeq ($(DISTRO),sarge)
+	DO_PYSUPPORT = false
+endif
+ifeq ($(DISTRO),dapper)
+	DO_PYSUPPORT = false
 endif
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
+build:
 
-	touch configure-stamp
+build-control:
+# Let's build debian/control depending on the use of dh_pysupport or not
+ifeq ($(DO_PYSUPPORT),true)
+	# Set build depends to use dh_pysupport
+	sed 's!###BUILDDEPS###!debhelper (>= 5.0.37.2)!' debian/control.in > debian/control
+	sed -i 's!###BUILDDEPSINDEP###!python-all-dev (>= 2.3.5-11), python-all, python-support (>= 0.5.3)!' debian/control	
+else
+	# Set legacy build depends to use dh_python
+	sed 's!###BUILDDEPS###!debhelper (>= 4.0.0)!' debian/control.in > debian/control
+	sed -i 's!###BUILDDEPSINDEP###!python-dev!' debian/control	
+endif
+# Twisted has been splitted in several parts since etch
+ifeq ($(DISTRO),sarge)
+	sed -i 's!###TWISTEDDEP###!python-twisted!' debian/control
+else
+	sed -i 's!###TWISTEDDEP###!python-twisted-web!' debian/control
+endif
 
-
-build: build-stamp
-
-build-stamp: configure-stamp 
-	dh_testdir
-
-	# Add here commands to compile the package.
-
-	touch build-stamp
-
-clean:
+clean: build-control
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
+	rm -f build-stamp
+	rm -rf build/
 	$(MAKE) clean
-
 	dh_clean 
 
 install: build
@@ -44,37 +56,46 @@ install: build
 	dh_testroot
 	dh_clean -k 
 	dh_installdirs
-
-	# Install all into debian/tmp
 	$(MAKE) PREFIX=/usr DESTDIR=$(CURDIR)/debian/tmp install
-
 	# Delete upstream init script 
 	# (it'll be replaced by a debian specific one)
 	rm -f $(CURDIR)/debian/tmp/etc/init.d/lmc-agent
-
 	# Install all
-	dh_install -i --sourcedir=debian/tmp
+	dh_install -i --sourcedir=$(CURDIR)/debian/tmp
+	# Install lintian overrides for each package
+	for package in `ls $(CURDIR)/debian/lintian/`; do \
+		install -m 0644 -D $(CURDIR)/debian/lintian/$$package \
+			$(CURDIR)/debian/$$package/usr/share/lintian/overrides/$$package; \
+	done
+	# Remove svn directories
+	find $(CURDIR)/debian/tmp -name '.svn' | xargs rm -rf
 
 binary-arch: build install
 	# Nothing to do #
 	
-# Build architecture-independent files here.
 binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
 	dh_installchangelogs -i
 	dh_installdocs -i
 	dh_installdocs -ppython-lmc-base contrib
-	dh_installinit -i
+	# Remove svn directories
+	find $(CURDIR)/debian/python-lmc-base -name '.svn' | xargs rm -rf
 	dh_link -i
 	dh_compress -i
 	# exclude files in /etc/lmc to keep 600 mode
 	dh_fixperms -X/etc/lmc/plugins -X/etc/lmc/agent
+ifeq ($(DO_PYSUPPORT),true)
+	dh_pysupport
+else
 	dh_python -i
+endif
+	# MUST BE RUN AFTER DH_PYSUPPORT
+	dh_installinit -i
 	dh_installdeb -i
 	dh_gencontrol -i
 	dh_md5sums -i
 	dh_builddeb -i
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+.PHONY: build clean binary-indep binary-arch binary install

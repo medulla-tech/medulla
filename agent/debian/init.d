@@ -17,7 +17,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # Run linbox-config at the first boot
 
-set -e
+### BEGIN INIT INFO
+# Provides:          lmc-agent
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Linbox Management Console Agent 
+# Description:       Linbox Management Console Agent
+### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Linbox Management Console XML-RPC Agent"
