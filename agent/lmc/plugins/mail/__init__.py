@@ -141,10 +141,6 @@ class MailControl(ldapUserGroupControl):
         @param maildroplist: a list of all mail drop
         @type maildroplist: list
         """
-
-        if len(maildroplist)==0:
-            return
-
         if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
         self.changeUserAttributes(uid, 'maildrop', maildroplist)
 
