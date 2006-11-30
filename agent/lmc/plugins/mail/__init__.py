@@ -25,6 +25,7 @@
 #
 
 from lmc.plugins.base import ldapUserGroupControl
+from lmc.support.config import *
 import lmc
 import ldap
 import copy
@@ -47,6 +48,17 @@ def activate():
     if len(schema) <= 0:
         logger.error("mailAccount schema is not included in LDAP directory");
         return False
+    
+    config = MailConfig("mail")
+    if config.vDomainSupport:        
+        # Create required OU
+        head, path = config.vDomainDN.split(",", 1)
+        ouName = head.split("=")[1]
+        try:
+            ldapObj.addOu(ouName, path)
+            logger.info("Created OU " + config.vDomainDN)
+        except ldap.ALREADY_EXISTS:
+            pass        
 
     return True
 
@@ -62,17 +74,46 @@ def changeMaildrop(uid, maildroplist):
 def changeMailalias(uid, mailaliaslist):
     MailControl().changeMailalias(uid, mailaliaslist)
 
+def changeMailbox(uid, mailbox):
+    MailControl().changeMailbox(uid, mailbox)
+
 def removeMail(uid):
     MailControl().removeUserObjectClass(uid, 'mailAccount')
 
 def hasMailObjectClass(uid):
     return MailControl().hasMailObjectClass(uid)
 
+def hasVDomainSupport(uid):
+    return MailControl().hasVDomainSupport()
+
+
+class MailConfig(PluginConfig):
+
+    def readConf(self):
+        PluginConfig.readConf(self)
+        try: self.vDomainSupport = self.getboolean("main", "vDomainSupport")
+        except: pass
+        if self.vDomainSupport:
+            self.vDomainDN = self.get("main", "vDomainDN")
+        # FIXME: could be factorized
+        USERDEFAULT = "userDefault"            
+        if self.has_section(USERDEFAULT):
+            for option in self.options(USERDEFAULT):
+                self.userDefault[option] = self.get(USERDEFAULT, option)
+
+    def setDefault(self):
+        PluginConfig.setDefault(self)
+        self.vDomainSupport = False
+        self.userDefault = {}
 
 class MailControl(ldapUserGroupControl):
 
     def __init__(self, conffile = None, conffilebase = None):
         lmc.plugins.base.ldapUserGroupControl.__init__(self, conffilebase)
+        self.configMail = MailConfig("mail")
+
+    def hasVDomainSupport(self):
+        return self.configMail.vDomainSupport
 
     def changeMailEnable(self, uid, enabled):
         """
@@ -118,6 +159,44 @@ class MailControl(ldapUserGroupControl):
         """
         if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
         self.changeUserAttributes(uid, 'mailalias', mailaliaslist)
+
+    def changeMailbox(self, uid, mailbox):
+        """
+        Change the user mailbox attribute (mail delivery directory).
+
+        @param uid: user name
+        @type uid: str
+        @param mailbox: a list of all mail aliases
+        @type mailbox: mailbox value
+        """
+        if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
+        if not mailbox:
+            # FIXME: should be factorized and put elsewhere
+            # Get current user entry
+            dn = 'uid=' + uid + ',' + self.baseUsersDN
+            s = self.l.search_s(dn, ldap.SCOPE_BASE)
+            c, old = s[0]
+            new = old.copy()
+            # Modify attributes
+            for attribute, value in self.configMail.userDefault.items():
+                if "%" in value:
+                    for a, v in old.items():
+                        v = v[0]
+                        if type(v) == str:
+                            value = value.replace("%" + a + "%", v)
+                found = False
+                for key in new.keys():
+                    if key.lower() == attribute:
+                        new[key] = value
+                        found = True
+                        break
+                if not found: new[attribute] = value                
+
+            # Update LDAP
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(dn, modlist)
+        else:
+            self.changeUserAttributes(uid, 'mailbox', mailbox)
 
     def hasMailObjectClass(self, uid):
         """
