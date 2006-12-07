@@ -33,7 +33,6 @@ $css = $conf["global"]["root"]."graph";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Linbox Management Console</title>
-        <link href="jsframework/themes/default.css" rel="stylesheet" media="screen" type="text/css" />
 	<link href="<?php echo $css; ?>/master.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
