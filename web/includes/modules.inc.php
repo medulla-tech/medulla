@@ -60,18 +60,15 @@ function fetchModulesList($dir) {
  * 	in	/etc/lmc/ but lmc-agent.ini
  */
 function fetchIniFile() {
-	global $conf;
-	$conf = array();
-	if (is_dir("/etc/lmc/")) {
-	   if ($dh = opendir("/etc/lmc/")) {
-	         while (($file = readdir($dh)) !== false) {
-		       if (ereg(".ini$",$file)&&!ereg("lmc-agent.ini",$file)) {
-			       $conf = array_merge_recursive(parse_ini_file("/etc/lmc/".$file, TRUE),$conf);
-		       }
-		  }
-	       closedir($dh);
-	   }
-        }
+    global $conf;
+    $INI = "/etc/lmc/lmc.ini";
+    $conf = array();
+    if (is_readable($INI)) {
+        $conf = array_merge_recursive(parse_ini_file($INI, TRUE),$conf);
+    } else {
+        print "LMC: Can't read $INI configuration file. Please check your installation.";
+	exit();
+    }
 }
 
 
@@ -222,7 +219,7 @@ function callPluginFunction($function,$paramArr = null) {
       $result[$item] =  call_user_func_array($functionName,$paramArr);
     }
     else {
-      //print "Call : \"".$functionName."\" not exist<br />";
+      // print "Call : \"".$functionName."\" not exist<br />";
     }
   }
 
