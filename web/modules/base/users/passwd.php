@@ -65,7 +65,7 @@ $user = $_SESSION["login"];
 
 <?php
 
-if ((check_auth($_SESSION['login'], $_POST["curpass"], $error))&&(isset($_POST["bchpasswd"]) && ($_POST["newpass"] == $_POST["confpass"]) && ($_POST["newpass"] != "")))
+if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error)))
 {
   callPluginFunction("changeUserPasswd", array(array($user, $_POST["newpass"])));
 
@@ -73,7 +73,7 @@ if ((check_auth($_SESSION['login'], $_POST["curpass"], $error))&&(isset($_POST["
 
 <?
 $n = new NotifyWidget();
-$n->add(_("Your password has been changed"));
+$n->add(_("Your password has been changed."));
 
 header("Location: ".urlStr("base/users/index"));
 ?>
