@@ -36,10 +36,7 @@ function auth_user ($login, $pass, $error)
   global $conf;
   global $error;
 
-  if (($login == "") || (!preg_match("/^[a-zA-Z][.a-zA-Z0-9]*$/", $login)) || ($pass == ""))
-    {
-      return false;
-    }
+  if (($login == "") || ($pass == "")) return false;
 
   $param[]=$login;
   $param[]=$pass;
