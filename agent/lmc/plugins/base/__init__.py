@@ -772,7 +772,7 @@ class ldapUserGroupControl:
                 elif value.startswith("+"):
                     for key in user_info.keys():
                         if key.lower() == attribute:
-                            user_info[key] = user_info[key] + (value[1:],)
+                            user_info[key] = user_info[key] + tuple(value[1:].split(","))
                             break
                 else:
                     found = False
