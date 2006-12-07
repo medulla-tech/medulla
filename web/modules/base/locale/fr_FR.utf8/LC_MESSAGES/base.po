@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-10 17:28+0100\n"
-"PO-Revision-Date: 2006-11-10 17:29+0100\n"
+"POT-Creation-Date: 2006-12-07 14:17+0100\n"
+"PO-Revision-Date: 2006-12-07 14:17+0100\n"
 "Last-Translator: Jérome Wax <jerome.wax@linbox.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 "X-Generator: KBabel 1.10\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
-#: graph/header.inc.php:201
+#: graph/header.inc.php:200
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 "Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
@@ -192,14 +192,6 @@ msgstr "l'agent LMC ne répond pas"
 msgid "LMC-Agent seems to be down or not correctly configured."
 msgstr "LMC-Agent semble ne pas répondre ou n'est pas correctement configuré."
 
-#: includes/xmlrpc.inc.php:96
-msgid "<br/> Error: "
-msgstr "<br/>Erreur:"
-
-#: includes/xmlrpc.inc.php:96
-msgid " - "
-msgstr " - "
-
 #: includes/xmlrpc.inc.php:199
 msgid "unknown error"
 msgstr "erreur inconnue"
@@ -213,7 +205,7 @@ msgstr ""
 "gérer cette erreur."
 
 #: includes/PageGenerator.php:105 modules/base/groups/members.php:218
-#: modules/base/users/delete.php:87 modules/base/users/edit.php:364
+#: modules/base/users/delete.php:87 modules/base/users/edit.php:361
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -276,7 +268,7 @@ msgstr ""
 msgid "All users"
 msgstr "Tous les utilisateurs"
 
-#: modules/base/groups/members.php:217 modules/base/users/edit.php:363
+#: modules/base/groups/members.php:217 modules/base/users/edit.php:360
 msgid "Confirm"
 msgstr "Valider"
 
@@ -345,17 +337,17 @@ msgstr "description"
 msgid "Create"
 msgstr "Créer"
 
-#: modules/base/users/ajaxFilter.php:130 modules/base/users/edit.php:267
+#: modules/base/users/ajaxFilter.php:130 modules/base/users/edit.php:264
 #: modules/base/views/index.tpl.php:81 index.php:190
 msgid "Login"
 msgstr "Identifiant"
 
-#: modules/base/users/ajaxFilter.php:136 modules/base/users/edit.php:271
+#: modules/base/users/ajaxFilter.php:136 modules/base/users/edit.php:268
 #: modules/base/views/index.tpl.php:87
 msgid "Name"
 msgstr "Nom"
 
-#: modules/base/users/ajaxFilter.php:139 modules/base/users/edit.php:318
+#: modules/base/users/ajaxFilter.php:139 modules/base/users/edit.php:315
 #: modules/base/views/index.tpl.php:90
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
@@ -384,7 +376,7 @@ msgid "Change your password"
 msgstr "Changement de votre mot de passe"
 
 #: modules/base/users/passwd.php:76
-msgid "Your password has been changed"
+msgid "Your password has been changed."
 msgstr "Votre mot de passe a été changé"
 
 #: modules/base/users/passwd.php:82
@@ -481,8 +473,9 @@ msgid "Launch backup"
 msgstr "Lancement de la sauvegarde"
 
 #: modules/base/users/edit.php:78
-msgid "Password confirmation mismatch"
-msgstr "Les mots de passes ne correspondent pas"
+msgid "The confirmation password does not match the original password."
+msgstr ""
+"Le mot de passe de confirmation n'est pas identique au nouveau mot de passe."
 
 #: modules/base/users/edit.php:83
 msgid "User's name invalid !"
@@ -529,8 +522,8 @@ msgstr "Mot de passe mis à jour."
 
 #: modules/base/users/edit.php:206
 #, php-format
-msgid "User %s created without problems"
-msgstr "L'utilisateur %s a été créé avec succès"
+msgid "User %s has been successfully created."
+msgstr "L'utilisateur %s a été créé avec succès."
 
 #: modules/base/users/edit.php:232
 msgid "Add user"
@@ -540,32 +533,32 @@ msgstr "Ajout d'un utilisateur"
 msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
-#: modules/base/users/edit.php:274
+#: modules/base/users/edit.php:271
 msgid "First name"
 msgstr "Prénom"
 
-#: modules/base/users/edit.php:278 modules/base/infoPackage.inc.php:210
+#: modules/base/users/edit.php:275 modules/base/infoPackage.inc.php:210
 #: index.php:198
 msgid "Password"
 msgstr "Mot de passe"
 
-#: modules/base/users/edit.php:282
+#: modules/base/users/edit.php:279
 msgid "Confirm password"
 msgstr "Confirmation du mot de passe"
 
-#: modules/base/users/edit.php:287 modules/base/infoPackage.inc.php:207
+#: modules/base/users/edit.php:284 modules/base/infoPackage.inc.php:207
 msgid "Mail address"
 msgstr "Adresse de messagerie"
 
-#: modules/base/users/edit.php:291 modules/base/infoPackage.inc.php:208
+#: modules/base/users/edit.php:288 modules/base/infoPackage.inc.php:208
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
-#: modules/base/users/edit.php:305
+#: modules/base/users/edit.php:302
 msgid "User is disabled, if checked"
 msgstr "Utilisateur désactivé, si cochée"
 
-#: modules/base/users/edit.php:306
+#: modules/base/users/edit.php:303
 msgid ""
 "Disabled users cannot be logged into any services. <br/>\n"
 "                            Shell command are replaced by /bin/false"
@@ -688,7 +681,7 @@ msgstr "Erreur lors de la suppression de %s"
 msgid "Group %s deleted"
 msgstr "Groupe %s supprimé"
 
-#: modules/base/includes/users-xmlrpc.inc.php:105
+#: modules/base/includes/users-xmlrpc.inc.php:102
 #, php-format
 msgid "user %s created<br />"
 msgstr "utilisateur %s créé <br/>"
@@ -854,3 +847,8 @@ msgstr "Connecter"
 #: main.php:122
 msgid "Error, you don't have correct rights !"
 msgstr "Erreur, vous n'avez pas les droits requis !"
+
+#: modules/base/users/edit.php:78
+msgid "The confirmation password does not match the new password."
+msgstr ""
+"Le mot de passe de confirmation n'est pas identique au nouveau mot de passe."

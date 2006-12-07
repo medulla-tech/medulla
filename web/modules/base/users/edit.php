@@ -75,7 +75,7 @@ $pass = $_POST["pass"];
 $desactive = $_POST["isBaseDesactive"];
 
 if ($pass != $confpass) {
-    $error.= _("Password confirmation mismatch")." <br/>";
+    $error.= _("The confirmation password does not match the new password.")." <br/>";
     setFormError("pass");
 }
 
@@ -203,7 +203,7 @@ if ($_GET["user"]) {
 
 if (strstr($_SERVER[HTTP_REFERER],'module=base&submod=users&action=add') && $_GET["user"])
     if (!isXMLRPCError()) {
-     $result = sprintf(_("User %s created without problems"), $_GET["user"]);
+        $result = sprintf(_("User %s has been successfully created."), $_GET["user"]);
     }
 
 //display result message
