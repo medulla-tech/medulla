@@ -130,7 +130,7 @@ class MailControl(ldapUserGroupControl):
 
     def __init__(self, conffile = None, conffilebase = None):
         lmc.plugins.base.ldapUserGroupControl.__init__(self, conffilebase)
-        self.configMail = MailConfig("mail")
+        self.configMail = MailConfig("mail", conffile)
 
     def hasVDomainSupport(self):
         return self.configMail.vDomainSupport
@@ -190,7 +190,7 @@ class MailControl(ldapUserGroupControl):
         dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
         return self.l.search_s(dn, ldap.SCOPE_BASE)
 
-    def getVDomains(self, filt):
+    def getVDomains(self, filt = ""):
         """
         Get virtual mail domain name list from directory
 
@@ -312,7 +312,7 @@ class MailControl(ldapUserGroupControl):
     def getVDomainUsersCount(self, domain):
         return len(self.search("(&(objectClass=mailAccount)(mail=*@%s))" % domain, self.baseUsersDN, [""]))
         
-    def getVDomainUsers(self, domain, filt):
+    def getVDomainUsers(self, domain, filt = ""):
         filt = filt.strip()
         if not filt: filt = "*"
         else: filt = "*" + filt + "*"
