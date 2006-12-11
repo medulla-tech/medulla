@@ -83,9 +83,29 @@ def removeMail(uid):
 def hasMailObjectClass(uid):
     return MailControl().hasMailObjectClass(uid)
 
-def hasVDomainSupport(uid):
+def hasVDomainSupport():
     return MailControl().hasVDomainSupport()
 
+def addVDomain(domain):
+    MailControl().addVDomain(domain)
+
+def delVDomain(domain):
+    MailControl().delVDomain(domain)
+
+def setVDomainDescription(domain, description):
+    MailControl().setVDomainDescription(domain, description)
+
+def getVDomain(domain):
+    return MailControl().getVDomain(domain)    
+
+def getVDomains(filt):
+    return MailControl().getVDomains(filt)
+
+def getVDomainUsersCount(domain):
+    return MailControl().getVDomainUsersCount(domain)
+
+def getVDomainUsers(domain, filt):
+    return MailControl().getVDomainUsers(domain, filt)
 
 class MailConfig(PluginConfig):
 
@@ -114,6 +134,72 @@ class MailControl(ldapUserGroupControl):
 
     def hasVDomainSupport(self):
         return self.configMail.vDomainSupport
+
+    def addVDomain(self, domain):
+        """
+        Add a virtual mail domain name entry in directory
+
+        @param domain: virtual mail domain name
+        @type domain: str
+        """
+        dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
+        entry = {
+            "virtualdomain" : domain,
+            "objectClass" :  ("mailDomain", "top")
+            }
+        modlist = ldap.modlist.addModlist(entry)
+        self.l.add_s(dn, modlist)        
+
+    def delVDomain(self, domain):
+        """
+        Del a virtual mail domain name entry from directory
+
+        @param domain: virtual mail domain name
+        @type domain: str
+        """
+        dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
+        self.delRecursiveEntry(dn)
+
+    def setVDomainDescription(self, domain, description):
+        """
+        Set the virtualdomaindescription of a virtual mail domain name
+
+        @param domain: virtual mail domain name
+        @type domain: str
+
+        @param description: description
+        @type description: unicode
+        """        
+        dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
+        description = description.encode("utf-8")
+        if description:
+            self.l.modify_s(dn, [(ldap.MOD_REPLACE, "virtualdomaindescription", description)])
+        else:
+            self.l.modify_s(dn, [(ldap.MOD_REPLACE, "virtualdomaindescription", "null")])
+            self.l.modify_s(dn, [(ldap.MOD_DELETE, "virtualdomaindescription", "null")])
+
+    def getVDomain(self, domain):
+        """
+        Get a virtual mail domain name entry from directory
+
+        @param domain: virtual mail domain name
+        @type domain: str
+
+        @rtype: dict
+        """
+        dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
+        return self.l.search_s(dn, ldap.SCOPE_BASE)
+
+    def getVDomains(self, filt):
+        """
+        Get virtual mail domain name list from directory
+
+        @rtype: dict
+        """
+        filt = filt.strip()
+        if not filt: filt = "*"
+        else: filt = "*" + filt + "*"        
+        return self.l.search_s(self.configMail.vDomainDN, ldap.SCOPE_SUBTREE, "(&(objectClass=mailDomain)(virtualdomain=%s))" % filt)
 
     def changeMailEnable(self, uid, enabled):
         """
@@ -207,8 +293,7 @@ class MailControl(ldapUserGroupControl):
         return "mailAccount" in self.getDetailedUser(uid)["objectClass"]
 
     def addMailObjectClass(self, uid, maildrop = None):
-        if maildrop == None:
-            maildrop = uid
+        if maildrop == None: maildrop = uid
         cn = 'uid=' + uid + ', ' + self.baseUsersDN
         attrs = []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
@@ -223,3 +308,13 @@ class MailControl(ldapUserGroupControl):
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
 
         self.l.modify_s(cn, mlist)
+
+    def getVDomainUsersCount(self, domain):
+        return len(self.search("(&(objectClass=mailAccount)(mail=*@%s))" % domain, self.baseUsersDN, [""]))
+        
+    def getVDomainUsers(self, domain, filt):
+        filt = filt.strip()
+        if not filt: filt = "*"
+        else: filt = "*" + filt + "*"
+        return self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=mailAccount)(mail=*@%s)(|(uid=%s)(givenName=%s)(sn=%s)(mail=%s)))" % (domain, filt, filt, filt, filt), ["uid", "givenName", "sn", "mail"])
+    
