@@ -132,11 +132,16 @@ class ActionItem {
      * 	  in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
-    function ActionItem($desc,$action,$classCss,$paramString) {
+    function ActionItem($desc,$action,$classCss,$paramString, $module = null, $submod = null) {
         $this->desc=$desc;
         $this->action=$action;
         $this->classCss=$classCss;
         $this->paramString=$paramString;
+	if ($module == null) $this->module = $_GET["module"];
+	else $this->module = $module;
+	if ($submod == null) $this->submod = $_GET["submod"];
+	else $this->submod = $submod;
+	
     }
 
     /**
@@ -145,7 +150,7 @@ class ActionItem {
      *  display "displayWithRight" if you have correct right
      */
     function display($param) {
-        if (hasCorrectAcl($_GET["module"],$_GET["submod"],$this->action)) {
+        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
             $this->displayWithRight($param);
         } else {
             $this->displayWithNoRight($param);
@@ -159,7 +164,7 @@ class ActionItem {
      */
     function displayWithRight($param) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".urlencode($param)."\">";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".urlencode($param)."\">";
         echo ".</a></li>";
     }
 
@@ -176,8 +181,8 @@ class ActionItem {
      * transform $obj param in link for this action
      */
     function encapsulate($obj) {
-        if (hasCorrectAcl($_GET["module"],$_GET["submod"],$this->action)) {
-            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\">";
+        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
+            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -210,20 +215,17 @@ class ActionItem {
 class ActionPopupItem extends ActionItem {
     function displayWithRight($param) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$param."\"";
-        echo " onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$param."'); return false;\">";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$param."\"";
+        echo " onClick=\"showPopup(event,'main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$param."'); return false;\">";
         echo ".</a></li>";
-
     }
 
     function encapsulate($obj) {
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."\" ";
-        $str.= "  onClick=\"showPopup(event,'main.php?module=".$_GET["module"]."&submod=".$_GET["submod"]."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
-
+        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."\" ";
+        $str.= "  onClick=\"showPopup(event,'main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
-
     }
 
 
@@ -242,17 +244,17 @@ class ListInfos{
     var $description; /**< list of description (not an obligation) */
     var $col_witdh; /**can specify column width
 
-
     /**
      * constructor
      * @param $tab must be an array of array
      */
-    function ListInfos($tab, $description ="") {
+    function ListInfos($tab, $description ="", $extranavbar = "") {
         $this->arrInfo=$tab;
         $this->arrAction=array();
         $this->description[] = $description;
         $this->initVar();
         $this->col_width = array();
+	$this->extranavbar = $extranavbar;
     }
 
     function setAdditionalInfo($addinfo) {
@@ -276,8 +278,6 @@ class ListInfos{
         $this->description[] = $description;
         $this->col_width[] = $width;
     }
-
-
 
     /**
      *	init class' vars
@@ -307,6 +307,7 @@ class ListInfos{
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
 	}
+	$this->maxperpage = $conf["global"]["maxperpage"];
     }
 
 
@@ -327,24 +328,19 @@ class ListInfos{
     /**
      *	draw number of page etc...
      */
-    function drawHeader($navbar=1) {
-
-        global $maxperpage;
+    function drawHeader($navbar=1) {      
         if ($navbar) {
-            print_nav($this->start, $this->end, $this->arrInfo);
+            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
-
-
         echo "<p class=\"listInfos\">";
         echo $this->name." <strong>".min(($this->start + 1), count($this->arrInfo))."</strong>\n ";
         echo _("to")." <strong>".min(($this->end + 1), count($this->arrInfo))."</strong>\n";
         printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
         echo "("._("page")." ";
-        printf("%.0f", ($this->end + 1) / $maxperpage);
+        printf("%.0f", ($this->end + 1) / $this->maxperpage);
         echo " / ";
-        $pages = intval((count($this->arrInfo) / $maxperpage)) ;
-
-        if ((count($this->arrInfo) % $maxperpage > 0) && (count($this->arrInfo) > $maxperpage))
+        $pages = intval((count($this->arrInfo) / $this->maxperpage)) ;
+        if ((count($this->arrInfo) % $this->maxperpage > 0) && (count($this->arrInfo) > $this->maxperpage))
             {
                 $pages++;
             }
@@ -352,14 +348,11 @@ class ListInfos{
             {
                 $pages = 1;
             }
-
         if ($pages<0) {
                     $pages = 0;
                 }
-
         printf("%.0f", $pages);
         echo ")\n";
-
     }
 
     /**
@@ -399,7 +392,6 @@ class ListInfos{
         }
 
         echo "</tr></thead>";
-
 
 	for ( $idx = $this->start;
              ($idx < count($this->arrInfo)) && ($idx <= $this->end);
@@ -445,7 +437,7 @@ class ListInfos{
 	echo "</table>\n";
 
 	if ($navbar) {
-            print_nav($this->start, $this->end, $this->arrInfo);
+            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
         print '<script>';
         print '$(\'help\').innerHTML=\'\''."\n";
@@ -460,7 +452,6 @@ class ListInfos{
         print '</script>';
 
     }
-
 
     function display($navbar = 1, $header =1 ) {
         if ($header ==1) {
