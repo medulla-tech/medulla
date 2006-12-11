@@ -44,6 +44,7 @@ def cleanLdap():
     l = ldapUserGroupControl("tests/basetest.ini")
     l.addOu("Groups", "dc=linbox,dc=com")
     l.addOu("Users",  "dc=linbox,dc=com")
+    l.addOu("mailDomains", "dc=linbox,dc=com")
     l.addGroup("allusers")
 
 
@@ -59,6 +60,39 @@ class TestMailControl(unittest.TestCase):
         self.assertEqual(self.m.hasMailObjectClass("usertest"), True)
         self.m.removeUserObjectClass("usertest", "mailAccount")
         self.assertEqual(self.m.hasMailObjectClass("usertest"), False)
+
+
+class TestMailControlVDomain(unittest.TestCase):
+
+    def setUp(self):
+        cleanLdap()
+        self.m = MailControl(conffile = "tests/vdomaintest.ini", conffilebase = "tests/basetest.ini")
+
+    def test_MailControl(self):
+        self.m.addUser("usertest", "userpass", "test", "test")
+        self.m.addMailObjectClass("usertest", "usertestmail")
+        self.assertEqual(self.m.hasMailObjectClass("usertest"), True)
+        self.m.removeUserObjectClass("usertest", "mailAccount")
+        self.assertEqual(self.m.hasMailObjectClass("usertest"), False)
+
+    def test_VDomains(self):
+        self.assertEqual(len(self.m.getVDomains("")), 0)
+        self.m.addVDomain("linbox.com")
+        self.assertEqual(len(self.m.getVDomains("")), 1)
+        self.assertEqual(len(self.m.getVDomain("linbox.com")), 1)
+        self.assertEqual(self.m.getVDomain("linbox.com")[0][1]["virtualdomain"], ["linbox.com"])
+        self.m.setVDomainDescription("linbox.com", "test")
+        self.assertEqual(self.m.getVDomain("linbox.com")[0][1]["virtualdomaindescription"], ["test"])
+        self.assertEqual(self.m.getVDomainUsersCount("linbox.com"), 0)
+
+        self.m.addUser("usertest", "userpass", "test", "test")
+        self.m.addMailObjectClass("usertest", "usertestmail")
+        self.assertEqual(self.m.getVDomainUsersCount("linbox.com"), 1)
+        self.assertEqual(self.m.getVDomainUsers("linbox.com", ""), [('uid=usertest,ou=Users,dc=linbox,dc=com', {'mail': ['TEST.TEST@linbox.com'], 'givenName': ['test'], 'uid': ['usertest'], 'sn': ['test']})])
+
+        self.m.delVDomain("linbox.com")
+        self.assertEqual(len(self.m.getVDomains("")), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
