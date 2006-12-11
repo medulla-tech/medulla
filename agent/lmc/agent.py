@@ -152,7 +152,7 @@ class LmcServer(xmlrpc.XMLRPC,object):
         request.finish()
 
     def getRevision(self):
-        return "$Rev$"
+        return int("$Rev$".split(':')[1].strip(' $'))
 
     def getVersion(self):
         return VERSION
@@ -197,8 +197,6 @@ def daemon(config):
     # decouple from parent environment
     os.chdir("/")
     os.setsid()
-    # File will rw for root user only
-    os.umask(0077)
 
     # do second fork
     try:
@@ -213,14 +211,15 @@ def daemon(config):
         sys.exit(1)
 
 def agentService(config, conffile, daemonize):
+    # File will be rw for root user only
+    os.umask(0077)
 
-    #create log dir if first start
+    # Create log dir if it doesn't exist
     os.system('mkdir -p /var/log/lmc')
 
     # Initialize logging object
     logging.config.fileConfig(conffile)
     logger = logging.getLogger()
-
 
     # When starting LmcServer, we log to stderr too
     hdlr2 = logging.StreamHandler()
@@ -228,7 +227,6 @@ def agentService(config, conffile, daemonize):
 
     # Changing path to probe and load plugins
     os.chdir(os.path.dirname(globals()["__file__"]))
-
 
     logger.info("lmc-agent starting...")
 
