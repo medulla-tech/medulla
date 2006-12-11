@@ -24,7 +24,7 @@
 <?php
 
 function
-print_nav($curstart, $curend, $items, $search = 0)
+print_nav($curstart, $curend, $items, $search = 0, $extra = "")
 {
   global $conf;
 
@@ -49,7 +49,7 @@ print_nav($curstart, $curend, $items, $search = 0)
       $end = $curstart - 1;
       echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
       //printf("&start=%d&end=%d&items=%s", $start, $end, $encitems);
-      printf("?module=%s&submod=%s&action=%s&start=%d&end=%d&filter=%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+      printf("?module=%s&submod=%s&action=%s&start=%d&end=%d&filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
       echo "\">"._("Previous")."</a></li>\n";
     }
 
@@ -63,7 +63,7 @@ print_nav($curstart, $curend, $items, $search = 0)
       $end = $curend + $max;
       echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
       //printf("&start=%d&end=%d&items=%s", $start, $end, $encitems);
-      printf("?module=%s&submod=%s&action=%s&start=%d&end=%d&filter=%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+      printf("?module=%s&submod=%s&action=%s&start=%d&end=%d&filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
       echo "\">"._("Next")."</a></li>\n";
     }
 
