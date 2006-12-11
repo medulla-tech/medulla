@@ -24,36 +24,27 @@
 <?php
 
 
-require("config.inc.php");
+require("includes/config.inc.php");
 
-require("acl.inc.php");
-require("session.inc.php");
+require("includes/acl.inc.php");
+require("includes/session.inc.php");
 
 includeInfoPackage(fetchModulesList($conf["global"]["rootfsmodules"]));
 
 session_start();
 
-//echo "<h3>VERSION:</h3>";
-
-echo '<h3> Agent revision'.$_SESSION["modListVersion"]['rev'].': </h3>';
+echo "<h2>LMC components version</h2>";
+echo '<h3>LMC agent: version ' . $_SESSION["modListVersion"]['ver'] . ' / revision '.$_SESSION["modListVersion"]['rev'].'</h3>';
 foreach ($_SESSION["supportModList"] as $modName) {
-          echo '<h4 style="padding-top: 1em; padding-bottom: 0em;">'.$modName."</h4>";
-          echo '<b>agent</b> ';
-          $apirev = xmlCall($modName.".getApiVersion",null);
-          $apiver = xmlCall($modName.".getVersion",null);
-          echo "version: $apiver<br/>api:".$apirev.
-                "/ build: ".xmlCall($modName.".getRevision",null)."<br/>";
-          echo '<b>web</b> ';
-          echo "version: ".$__version[$modName]."<br/>";
-          echo "api:  ".$__apiversion[$modName]."/ build: ".$__revision[$modName]."<br/>";
-
-          if ($__apiversion[$modName]!=$apirev) {
-              echo '<div style="color : #D00;">Modules non compatibles !!!</div>';
-          }
-
-
-      }
-
-
+    echo "<b>$modName plugin</b><br/>";
+    $apirev = xmlCall($modName.".getApiVersion",null);
+    $apiver = xmlCall($modName.".getVersion",null);
+    echo "agent: version $apiver / API ".$apirev. " / revision ".xmlCall($modName.".getRevision",null)."<br/>";
+    echo "web: version ".$__version[$modName] .  " / API  ".$__apiversion[$modName]." / revision ".$__revision[$modName]."<br/>";  
+    if ($__apiversion[$modName] != $apirev) {
+        echo '<div style="color : #D00;">Warning: API numbers mismatch</div>';
+    }
+    echo "<br/>";
+}
 
 ?>

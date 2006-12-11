@@ -379,6 +379,8 @@ class Module {
     function setRevision($rev) {
         // STAY FOR COMPATIBILITY REASON
         global $__revision;
+	$tmp = split(" ", $rev);
+	$rev = $tmp[1];
         $__revision[$this->getName()]=$rev;
 
         $this->_revision = $rev;

@@ -47,13 +47,12 @@ $LMCApp->render();
 <?php
     $n = new NotifyWidget();
     $n->showJS();
-
 ?>
 
 <div id="footer">
-LMC Agent r
+LMC Agent
 
-    <a href="#" onClick="showPopupUp(event,'includes/version.php'); return false;">
+    <a href="#" onClick="showPopupUp(event,'version.php'); return false;">
         <?php  echo $_SESSION["modListVersion"]['ver'] ?>
     </a>
 
