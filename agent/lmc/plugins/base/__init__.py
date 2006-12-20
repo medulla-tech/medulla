@@ -694,8 +694,7 @@ class ldapUserGroupControl:
         """
         # Make a homeDir string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
-        homeDir = os.path.realpath(homeDir)
-        if not self.isAuthorizedHome(homeDir):
+        if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(homeDir+"is not an authorized home dir.")
 
         uidNumber=self.maxUID() + 1
