@@ -85,7 +85,7 @@ $users = unserialize(base64_decode($_POST["lusers"]));
 
 $forbidden = array();
 
-if (isset($_POST["bdeluser"]))
+if (isset($_POST["bdeluser_x"]))
 {
   foreach ($_POST["members"] as $member) {
       if ($group == getUserPrimaryGroup($member)) {
@@ -100,7 +100,7 @@ if (isset($_POST["bdeluser"]))
 	}
     }
 }
-else if (isset($_POST["badduser"]))
+else if (isset($_POST["badduser_x"]))
 {
   foreach ($_POST["users"] as $user)
     {
