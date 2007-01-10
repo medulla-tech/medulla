@@ -32,27 +32,26 @@ require_once("ModulesGenerator.php");
  * @return an array of String with a list of dirs
  */
 function fetchModulesList($dir) {
-	if (is_dir($dir)) {
-	   if ($dh = opendir($dir)) {
-	       while (($file = readdir($dh)) !== false) {
-
-                $support=(array_search($file,$_SESSION["supportModList"])!==false);
-                $aclright=hasCorrectModuleAcl($file);
-
-	        if (file_exists("$dir$file/infoPackage.inc.php")&&($support&&$aclright)) {
-			$ret[]="$dir$file";
-                        $registerList[]="$file";
-			}
-	       }
-	       closedir($dh);
-	   }
+    $ret = array();
+    $registerList = array();
+    if (is_dir($dir)) {
+        if ($dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                $support = array_search($file,$_SESSION["supportModList"]) !== false;
+                $aclright = hasCorrectModuleAcl($file);
+                if (file_exists("$dir$file/infoPackage.inc.php") && $support && $aclright) {
+                    $ret[] = "$dir$file";
+                    $registerList[] = "$file";
+                }
+            }
+            closedir($dh);
         }
-	sort($ret);
-        sort($registerList);
-
-        //register modulesList in $_SESSION
-        $_SESSION["modulesList"]=$registerList;
-	return $ret;
+    }
+    sort($ret);
+    sort($registerList);
+    /* register modulesList in $_SESSION */
+    $_SESSION["modulesList"]=$registerList;
+    return $ret;
 }
 
 /**
