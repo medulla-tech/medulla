@@ -1,3 +1,19 @@
+lmc-agent 1.1.1
+---------------
+
+ * base plugin:
+   o the POSIX primary group of a user can be changed
+   o starting uid and gid numbers can now be configured
+   o extra modifiers are now available when setting default attributes for new
+     users 
+ * SAMBA plugin:
+   o SAMBA user primary group can be changed
+   o extra LDAP checks when activating module
+   o joined machines on the domain are now added to the 'Domain Computers'
+     group 
+ * mail plugin: virtual mail domain support
+ * assorted bug fixes 
+
 lmc-agent 1.1.0
 ---------------
 
