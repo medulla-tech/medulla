@@ -823,22 +823,29 @@ class NotifyWidget {
 }
 
 /**
- * create an url
- * except param like "base/users/index"
+ * Create an URL
+ *
  * @param $link string except format like "module/submod/action"
  * @param $param assoc array with param to add in GET method
+ * @param $ampersandEncode bool defining if we want ampersand to be encoded in URL
  */
-function urlStr($link,$param=array()) {
+function urlStr($link, $param = array(), $ampersandEncode = True) {
     $arr = array();
     $arr = explode ('/',$link);
 
+    if ($ampersandEncode) $amp = "&amp;";
+    else $amp = "&";
 
     $enc_param = "";
     foreach ($param as $key=>$value) {
-        $enc_param.= "&$key=$value";
+        $enc_param.= "$amp"."$key=$value";
     }
 
-    return "main.php?module=".$arr[0]."&amp;submod=".$arr[1]."&amp;action=".$arr[2].$enc_param;
+    return "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2].$enc_param;
+}
+
+function urlStrRedirect($link, $param = array()) {
+    return(urlStr($link, $param, False));
 }
 
 function findInSideBar($sidebar,$query) {
