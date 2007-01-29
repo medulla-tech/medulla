@@ -320,8 +320,8 @@ class SubModule {
         }
         global $root;
         list($module,$submod,$action) = split('/',$this->_defaultpage,3);
-        print "<li id=\"".$this->getName()."\"><a href=\"".$root."main.php?module=$module&submod=$submod&action=$action\">\n";
-        print $this->_desc."</a>\n";
+        print "<li id=\"".$this->getName()."\"><a href=\"".$root."main.php?module=$module&amp;submod=$submod&amp;action=$action\">\n";
+        print $this->_desc."</a></li>\n";
         //var_dump($this->_defaultpage);
     }
 }

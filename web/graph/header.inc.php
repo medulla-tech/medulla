@@ -46,7 +46,9 @@ $css = $conf["global"]["root"]."graph";
 <?php
 unset($css);
 ?>
-<script language="javascript">
+<script type="text/javascript">
+
+<!--
 
 var myglobalHandlers = {
     onCreate : function() {
@@ -204,5 +206,6 @@ function validateForm() {
     }
 }
 
+-->
 
 </script>

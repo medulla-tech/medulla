@@ -52,14 +52,16 @@ $LMCApp->render();
 <div id="footer">
 LMC Agent
 
-    <a href="#" onClick="showPopupUp(event,'version.php'); return false;">
+    <a href="#" onclick="showPopupUp(event,'version.php'); return false;">
         <?php  echo $_SESSION["modListVersion"]['ver'] ?>
     </a>
 
 </div>
 
 </div>
-<script>
+<script type="text/javascript">
+
+<!--
 
 function canChangeStyle(elt) {
     if (elt.id=='param') return false;
@@ -111,7 +113,7 @@ focusStyler(nodes);
 
 
 //Event.observe(input, 'focus', ifocus, false);
-
+-->
 
 </script>
 </body>

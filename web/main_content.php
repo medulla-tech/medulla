@@ -31,9 +31,6 @@ if ($acl_error) {
 }
 
 /* inclusion header HTML */
-require("graph/header.inc.php");
-
-
 require("graph/navbar.inc.php");
 ?>
 

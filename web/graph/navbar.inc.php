@@ -39,9 +39,7 @@ $root = $conf["global"]["root"];
 
   <ul>
 
-    <li>
 <?php
-
       if (isExpertMode()) {
         $mode=_("Expert mode");
       } else { $mode = _("Standard mode"); }
@@ -50,7 +48,7 @@ $root = $conf["global"]["root"];
 
     <li id="expertmode"><a href="<?php echo $root   ?>includes/switchmode.php"><?php echo $mode; ?></a></li>
     <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
-        echo " onClick=\"showPopup(event,'".$root."logout/index.php'); return false;\">";
+        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); return false;\">";
         echo _("Logout ").'&nbsp;'.$_SESSION['login'];
         echo "</a></li>";
     ?>
@@ -71,7 +69,7 @@ if ($_GET["module"]) {//if not main page
             print $submod->getDescription();
         } else {
             list($m,$s,$a) = split('/',$submod->_defaultpage,3);
-            print '<a href="main.php?module='.$m.'&submod='.$s.'&action='.$a.'">'.$submod->getDescription().'</a>';
+            print '<a href="main.php?module='.$m.'&amp;submod='.$s.'&amp;action='.$a.'">'.$submod->getDescription().'</a>';
             print ' &gt; ';
             $action = $submod->_pages[$_GET["action"]];
 
@@ -109,7 +107,7 @@ if ($_SESSION["login"]=='root') {
 ?>
 </ul>
 
-<style>
+<style type="text/css">
 #navbar ul li#fav { 				width: 70px; }
                 #navbar ul li#fav a {         background: url("img/navbar/fav<?= $favact?>.png") no-repeat transparent;
                                         background-position: 50% 10px;}
@@ -123,7 +121,7 @@ if ($_SESSION["login"]=='root') {
 
 
 <div id="popup" class="popup" style="display: none;">
-    <div style="float:right"><a href="#" onClick="getStyleObject('popup').display='none'; return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
+    <div style="float:right"><a href="#" onclick="getStyleObject('popup').display='none'; return false;"><img src="img/common/icn_close.png" alt ="[x]"/></a></div>
     <div id="__popup_container">
         <?= _("If this phrase does not change, you browser is not supported by the LMC application"); ?>
     </div>

@@ -838,7 +838,7 @@ function urlStr($link,$param=array()) {
         $enc_param.= "&$key=$value";
     }
 
-    return "main.php?module=".$arr[0]."&submod=".$arr[1]."&action=".$arr[2].$enc_param;
+    return "main.php?module=".$arr[0]."&amp;submod=".$arr[1]."&amp;action=".$arr[2].$enc_param;
 }
 
 function findInSideBar($sidebar,$query) {
