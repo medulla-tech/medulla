@@ -736,7 +736,7 @@ class ldapUserGroupControl:
                      'uid':uid,
                      'gecos':gecos,
                      'shadowLastChange':'11192',
-                     'cn':uid,
+                     'cn': firstN + " " + lastN,
                      'sn':lastN,
                      'givenName':firstN,
                      'shadowInactive':'-1',
