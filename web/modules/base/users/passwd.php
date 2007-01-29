@@ -27,8 +27,8 @@
 
 if (isset($_POST["bback"]))
 {
-  header("Location: ".urlStr("base/users/index"));
-  exit;
+    header("Location: ".urlStrRedirect("base/users/index"));
+    exit;
 }
 require("modules/base/includes/users.inc.php");
 require("graph/header.inc.php");
@@ -75,7 +75,7 @@ if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"
 $n = new NotifyWidget();
 $n->add(_("Your password has been changed."));
 
-header("Location: ".urlStr("base/users/index"));
+header("Location: " . urlStrRedirect("base/users/index"));
 ?>
 
 <form action="<? echo "main.php?module=base&submod=users&action=index"; ?>" method="post">

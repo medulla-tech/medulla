@@ -51,7 +51,7 @@ $p->displaySideMenu();
 ?>
 
 
-<?php displayInputLiveSearch(urlStr('base/logview/setsearch')); ?>
+<?php displayInputLiveSearch(urlStrRedirect('base/logview/setsearch')); ?>
 
 <div id="container">
 </div>
@@ -64,7 +64,7 @@ $p->displaySideMenu();
 <div style="height: 400px; overflow: auto;" id="logupdater"></div>
 
 <script>
-    new Ajax.PeriodicalUpdater('logupdater','<?= urlStr('base/logview/show') ?>','2',{evalScripts: true});
-    new Ajax.Updater('container','<?= urlStr('base/logview/setsearch') ?>');
+    new Ajax.PeriodicalUpdater('logupdater','<?= urlStrRedirect('base/logview/show') ?>','2',{evalScripts: true});
+    new Ajax.Updater('container','<?= urlStrRedirect('base/logview/setsearch') ?>');
 </script>
 

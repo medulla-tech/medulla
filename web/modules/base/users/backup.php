@@ -65,7 +65,7 @@ $str.="</p>";
 $n = new NotifyWidget();
 $n->add($str);
 
-header("Location: ".urlStr("base/users/index"));
+header("Location: ".urlStrRedirect("base/users/index"));
 ?>
 <?php
 }
@@ -93,7 +93,7 @@ else
 <br><br>
 <input name="user" type="hidden" value="<?php echo $user; ?>" />
 <input name="bgo" type="submit" class="btnPrimary" value="<?= _("Launch backup"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _("Return"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>
 <?php
 }
