@@ -82,7 +82,7 @@ def activate():
     try:
          schema = ldapObj.getSchema("sambaSamAccount")
          if len(schema) <= 0:
-             logger.error("Samba schema seems not be include in LDAP directory");
+             logger.error("Samba schema are not included in LDAP directory");
              return False
     except:
         logger.exception("invalid schema")
@@ -101,7 +101,7 @@ def activate():
         logger.error(conf + " does not exist")
         return False
 
-    # If SAMBA is defined as a PDC, make extra check
+    # If SAMBA is defined as a PDC, make extra checks
     smbconf = smbConf()
     if smbconf.isPdc():
         # Check that a sambaDomainName entry is in LDAP directory
@@ -115,7 +115,19 @@ def activate():
         if not samba.getDomainComputersGroup():
             logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Computers' group. Please check your SAMBA LDAP configuration.");
             return False
-            
+        # Check that Domain Admins group exists
+        if not samba.getDomainAdminsGroup():
+            logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Admins' group. Please check your SAMBA LDAP configuration.");
+            return False
+        # Check that Domain Guests group exists
+        if not samba.getDomainGuestsGroup():
+            logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Guests' group. Please check your SAMBA LDAP configuration.");
+            return False
+        # Check that Domain Userss group exists
+        if not samba.getDomainUsersGroup():
+            logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Users' group. Please check your SAMBA LDAP configuration.");
+            return False
+
     return True
 
 def isSmbAntiVirus():
@@ -127,16 +139,23 @@ def getDetailedShares():
     resList=smbObj.getDetailedShares()
     return resList
 
-
 def getACLOnShare(name):
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
     return smbObj.getACLOnShare(name)
 
-def addShare(name, comment, group, permAll, av = 0):
+def getAdminUsersOnShare(name):
+    return smbConf(SambaConfig("samba").samba_conf_file).getAdminUsersOnShare(name)
+
+def getDomainAdminsGroup():
+    return sambaLdapControl().getDomainAdminsGroup()
+
+def isBrowseable(name):
+    return smbConf(SambaConfig("samba").samba_conf_file).isBrowseable(name)
+
+def addShare(name, comment, usergroups, permAll, admingroups, browseable = True, av = 0):
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
-    smbObj.addShare(name, comment, group, permAll, av)
+    smbObj.addShare(name, comment, usergroups, permAll, admingroups, browseable, av)
     smbObj.save()
-    return 0
 
 def delShare(name, file):
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
@@ -271,6 +290,48 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         if cp.has_section("hooks"):
             for option in cp.options("hooks"):
                 self.hooks["samba." + option] = cp.get("hooks", option)
+
+    def getDomainAdminsGroup(self):
+        """
+        Return the LDAP posixGroup entry corresponding to the 'Domain Admins' group.
+
+        @return: a posixGroup entry
+        @rtype: dict
+        """
+        domain = self.getDomain()
+        sambaSID = domain["sambaSID"][0]
+        result = self.search("(&(objectClass=sambaGroupMapping)(sambaSID=%s-512))" % sambaSID)
+        if len(result): ret = result[0][0][1]
+        else: ret = {}
+        return ret
+
+    def getDomainUsersGroup(self):
+        """
+        Return the LDAP posixGroup entry corresponding to the 'Domain Users' group.
+
+        @return: a posixGroup entry
+        @rtype: dict
+        """
+        domain = self.getDomain()
+        sambaSID = domain["sambaSID"][0]
+        result = self.search("(&(objectClass=sambaGroupMapping)(sambaSID=%s-513))" % sambaSID)
+        if len(result): ret = result[0][0][1]
+        else: ret = {}
+        return ret
+
+    def getDomainGuestsGroup(self):
+        """
+        Return the LDAP posixGroup entry corresponding to the 'Domain Guests' group.
+
+        @return: a posixGroup entry
+        @rtype: dict
+        """
+        domain = self.getDomain()
+        sambaSID = domain["sambaSID"][0]
+        result = self.search("(&(objectClass=sambaGroupMapping)(sambaSID=%s-514))" % sambaSID)
+        if len(result): ret = result[0][0][1]
+        else: ret = {}
+        return ret
 
     def getDomainComputersGroup(self):
         """
@@ -797,14 +858,15 @@ class smbConf:
         ret = self.getSmbInfo()
         return ret["pdc"]
 
-    def getContent(self,section, content):
+    def getContent(self, section, content):
         """get information from self.contentArr[section][content]"""
+        # FIXME: shouldn't return -1 but keep the exception raised
         try:
             return self.contentArrVerbose[section][content]
         except KeyError:
             return -1
 
-    def setContent(self,section, content,value):
+    def setContent(self, section, content, value):
         """set a content in self.contentArr[section][content]=value"""
         try:
             self.contentArr[section][content]=value;
@@ -934,12 +996,19 @@ class smbConf:
             returnArr['permAll'] = 1
         else: returnArr['permAll'] = 0
 
-        #if we cannot find it
+        # If we cannot find it
         if (self.getContent(name, 'vfs objects') == -1):
-            returnArr['antivirus'] = False
+            returnArr['antivirus'] = 0
         else:
-            returnArr['antivirus'] = True
+            returnArr['antivirus'] = 1
 
+        if self.getContent(name, 'browseable') == -1:
+            returnArr["browseable"] = 1
+        elif self.isValueTrue(self.getContent(name, 'browseable')):
+            returnArr["browseable"] = 1
+        else:
+            returnArr["browseable"] = 0
+            
         # Get the directory group owner
         # FIXME: ???
         try:
@@ -956,7 +1025,7 @@ class smbConf:
         return returnArr
 
 
-    def addShare(self, name, comment, groups, permAll, av):
+    def addShare(self, name, comment, usergroups, permAll, admingroups, browseable = True, av = False):
         """
         add a share in smb.conf
         and create it physicaly
@@ -992,7 +1061,7 @@ class smbConf:
             e.tag_type = ACL_MASK
 
             # For each specified group, we add rwx access
-            for group in groups:
+            for group in usergroups:
                 e = acl1.append()
                 e.permset.add(ACL_READ)
                 e.permset.add(ACL_WRITE)
@@ -1010,11 +1079,17 @@ class smbConf:
                 logger.error("cannot save acl on folder " + path)
 
         tmpInsert['writeable'] = 'yes'
-        tmpInsert['browseable'] = 'yes'
+        if not browseable: tmpInsert['browseable'] = 'No'
         tmpInsert['path'] = path
 
         # Set the vscan-clamav plugin if available
-        if av == 1: tmpInsert['vfs objects'] = 'vscan-clamav'
+        if av: tmpInsert['vfs objects'] = 'vscan-clamav'
+
+        # Set the admin groups for the share
+        if admingroups:
+            tmpInsert["admin users"] = ""
+            for group in admingroups:
+                tmpInsert["admin users"] = tmpInsert["admin users"] + '"+' + group + '", '
 
         self.contentArr[name] = tmpInsert
 
@@ -1024,7 +1099,7 @@ class smbConf:
         """
         Return a list with all the groups that have rwx access to the share.
 
-        @param name: name of the share (last component of the path
+        @param name: name of the share (last component of the path)
         @type name: str
 
         @rtype: list
@@ -1038,7 +1113,45 @@ class smbConf:
             if e.permset.write:
                 if e.tag_type == ACL_GROUP:
                     res = ldapobj.getDetailedGroupById(str(e.qualifier))
-                    ret.append( res['cn'][0])
+                    ret.append(res['cn'][0])
+        return ret
+
+    def getAdminUsersOnShare(self, name):
+        """
+        Return a list of all the groups in the admin users option of the given share.
+
+        @param name: name of the share
+        @type name: str
+
+        @rtype: list
+        @return: list of administrator groups of the share
+        """
+        adminusers = self.getContent(name, "admin users")
+        ret = []
+        if adminusers != -1:
+            for item in adminusers.split(","):
+                item = item.strip().strip('"')
+                if item.startswith("+"):
+                    item = item[1:]
+                    # Remove the SAMBA domain part
+                    if "\\" in item:
+                        item = item.split("\\")[1]
+                    ret.append(item)
+        return ret
+
+    def isBrowseable(self, name):
+        """
+        Return true if the share is browseable
+        
+        @param name: name of the share (last component of the path)
+        @type name: str
+
+        @rtype: bool
+        @return: False if browseable = No
+        """
+        state = self.getContent(name, "browseable")
+        if state == -1: ret = True
+        else: ret = bool(self.isValueTrue(state))
         return ret
 
     def getSmbStatus(self):
