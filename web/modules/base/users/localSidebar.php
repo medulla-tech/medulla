@@ -27,22 +27,22 @@ if ($_SESSION["login"]!='root') {
 $sidebar = array("class" => "users",
                  "content" => array(array("id" => "global",
                                     "text" => _("List"),
-                                    "link" => "main.php?module=base&submod=users&action=index"),
+                                    "link" => urlStr("base/users/index")),
                               array("id" => "addUser",
                                     "text" => _("Add"),
-                                    "link" => "main.php?module=base&submod=users&action=add"),
+                                    "link" => urlStr("base/users/add")),
 			      array("id" => "changePasswd",
                                     "text" => _("Change your password"),
-                                    "link" => "main.php?module=base&submod=users&action=passwd")));
+                                    "link" => urlStr("base/users/passwd"))));
 } else {
 
 $sidebar = array("class" => "users",
                  "content" => array(array("id" => "global",
                                     "text" => _("List"),
-                                    "link" => "main.php?module=base&submod=users&action=index"),
+                                    "link" => urlStr("base/users/index")),
                               array("id" => "addUser",
                                     "text" => _("Add"),
-                                    "link" => "main.php?module=base&submod=users&action=add"),
+                                    "link" => urlStr("base/users/add")),
 			      ));
 
 

@@ -239,7 +239,7 @@ if ($_GET["action"]=="add") {
 <div class="fixheight"></div>
 
 <div>
-<form id="edit" method="post" action="<? echo $PHP_SELF; ?>" onSubmit="selectAll(); return validateForm();">
+<form id="edit" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="selectAll(); return validateForm();">
 <div class="formblock" style="background-color: #F4F4F4;">
 <table cellspacing="0">
 <?php

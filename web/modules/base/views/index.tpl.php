@@ -23,18 +23,18 @@
 ?>
 
 
-<form name="userForm" id="userForm" action="#" onSubmit="return false;">
+<form name="userForm" id="userForm" action="#" onsubmit="return false;">
 
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
     <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onKeyUp="pushSearchUser(); return false;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearchUser(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onClick="document.getElementById('param').value =''; pushSearchUser(); return false;">
+    onclick="document.getElementById('param').value =''; pushSearchUser(); return false;" />
     </span>
     </div>
 
-    <script>
+    <script type="text/javascript">
         document.getElementById('param').focus();
     </script>
 </form>
@@ -68,10 +68,6 @@ for ($idx = 0; $idx < count($users); $idx++)
         $css[$idx] = "userName";
     }  else $css[$idx] = "userNameDisabled";
     $arrUser[]=$users[$idx]['uid'];
-
-
-
-
     $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];
     $homeDirArr[]=$users[$idx]['homeDirectory'];
 }

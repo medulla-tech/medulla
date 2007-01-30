@@ -41,7 +41,7 @@ sort($secondary);
       <div id="primary_autocomplete_choices" class="autocomplete">
        <ul>
         <li>A</li>
-        <li>B/<li>
+        <li>B</li>
        </ul>
       </div>
      </td>
@@ -57,23 +57,26 @@ sort($secondary);
             }
             ?>
         </select>
-        <input name="buser" type="submit" class="btnPrimary" value="<?= _("Delete"); ?>" onClick="delEltInSelectBox(); return false;"/>
+        <input name="buser" type="submit" class="btnPrimary" value="<?= _("Delete"); ?>" onclick="delEltInSelectBox(); return false;"/>
 
     </td>
+    </tr>
     <tr><td style="text-align:right;"><?= _("Add a group");?></td><td>
 
     <input type="text" id="autocomplete" name="autocomplete" class="textfield" size="23" onkeypress="return validOnEnter(this,event);" />
     <div id="autocomplete_choices" class="autocomplete">
         <ul>
             <li>A</li>
-            <li>B/<li>
+            <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onClick="addElt($F('autocomplete')); return false;"/>
+    <input name="buser" type="submit" class="btnPrimary" value="<?= _("Add"); ?>" onclick="addElt($F('autocomplete')); return false;"/>
     </td></tr>
     </table>
 
     <script type="text/javascript">
+
+    <!--
 
         var groups = new Array();
         <?php
@@ -82,8 +85,6 @@ sort($secondary);
                 echo "groups.push('" . htmlentities($group[0], ENT_QUOTES) . "');\n";
             }
         ?>
-        //new Ajax.Autocompleter('autocomplete','autocomplete_choices','main.php?module=base&submod=users&action=ajaxAutocompleteGroup');
-
         new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?= $detailArr["uid"][0]; ?>', {paramName: "value"});
         new Ajax.Autocompleter('primary_autocomplete','primary_autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php', {paramName: "value"});
 
@@ -152,4 +153,6 @@ sort($secondary);
                 document.getElementById('select').options[i].selected = true;
             }
        }
+
+    -->
     </script>

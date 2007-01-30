@@ -100,7 +100,7 @@ class EditInPlace extends ActionEncapsulator{
         $str.= "<span id=\"id$idx\" class=\"editinplace\">".$this->origText."</span>";
 
 
-       $str .= '<script>';
+       $str .= '<script type="text/javascript">';
        $str .= "     new Ajax.InPlaceEditor($('id$idx'),'".$this->url."', {\n
                 okButton: true, cancelLink: true, cancelText : '"._('Cancel')."',
                 highlightcolor : '#FF9966',
@@ -164,7 +164,7 @@ class ActionItem {
      */
     function displayWithRight($param) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".urlencode($param)."\">";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".urlencode($param)."\">";
         echo ".</a></li>";
     }
 
@@ -173,7 +173,7 @@ class ActionItem {
      */
     function displayWithNoRight($param) {
         echo "<li class=\"".$this->classCss."\" style=\"opacity: .30;\">";
-        echo "<a title=\"".$this->desc."\" href=\"#\" onClick='return false;'>";
+        echo "<a title=\"".$this->desc."\" href=\"#\" onclick='return false;'>";
         echo ".</a></li>";
     }
 
@@ -182,7 +182,7 @@ class ActionItem {
      */
     function encapsulate($obj) {
         if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
-            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."\">";
+            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -215,14 +215,14 @@ class ActionItem {
 class ActionPopupItem extends ActionItem {
     function displayWithRight($param) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$param."\"";
-        echo " onClick=\"showPopup(event,'main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$param."'); return false;\">";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param."\"";
+        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param."'); return false;\">";
         echo ".</a></li>";
     }
 
     function encapsulate($obj) {
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."\" ";
-        $str.= "  onClick=\"showPopup(event,'main.php?module=".$this->module."&submod=".$this->submod."&action=".$this->action."&".$this->paramString."=".$obj."'); return false;\">";
+        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."\" ";
+        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."'); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
@@ -353,6 +353,7 @@ class ListInfos{
                 }
         printf("%.0f", $pages);
         echo ")\n";
+        echo "</p>";
     }
 
     /**
@@ -439,7 +440,7 @@ class ListInfos{
 	if ($navbar) {
             print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
-        print '<script>';
+        print '<script type="text/javascript"><!--';
         print '$(\'help\').innerHTML=\'\''."\n";
         print '$(\'help\').innerHTML+=\'<ul>\''."\n";
         print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\''."\n";
@@ -449,7 +450,7 @@ class ListInfos{
         }
 
         print '$(\'help\').innerHTML+=\'</ul>\''."\n";
-        print '</script>';
+        print '--></script>';
 
     }
 
@@ -809,7 +810,7 @@ class NotifyWidget {
             echo "<p style=\"margin: auto;\">$info</p>";
         }
         echo '<div style="text-align: center;">';
-        echo '<input name="breset" type="reset" class="btnSecondary" onClick="getStyleObject(\'popup\').display=\'none\'; return false;" value="'._("Ok").'" />';
+        echo '<input name="breset" type="reset" class="btnSecondary" onclick="getStyleObject(\'popup\').display=\'none\'; return false;" value="'._("Ok").'" />';
         echo '</div>';
         echo '</td></tr></table>';
         $this->flush();

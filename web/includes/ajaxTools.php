@@ -104,7 +104,7 @@ if (strstr($action,'?')===False) {
     </span>
     </div>
 
-    <script>
+    <script type="text/javascript">
         document.getElementById('param').focus();
 
 

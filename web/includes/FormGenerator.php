@@ -113,7 +113,7 @@ class InputTpl extends AbstractTpl{
     }
     print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="text" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
 
-    print '<script>
+    print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {
                     if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
                         return true
@@ -183,7 +183,7 @@ class MultipleInputTpl extends AbstractTpl {
             print $this->desc;
         }
         print '</td><td>';
-        print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onClick="
+        print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { parameters: Form.serialize($(\'edit\'))+\'&minputname='.$this->name.'&desc='.urlencode($this->desc).'\' }); return false;"/>';
         print '</td></tr>';
@@ -434,7 +434,7 @@ class DeletableTrFormElement extends FormElement{
     print '</td><td>';
 
     parent::display($arrParam);
-    print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onClick="
+    print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { parameters: Form.serialize($(\'edit\'))+\'&minputname='.$this->name.'&del='.$this->key.'&desc='.urlencode($this->desc).'\' }); return false;"/>';
 
