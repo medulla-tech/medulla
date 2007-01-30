@@ -44,12 +44,16 @@ def activate():
     ldapObj = ldapUserGroupControl()
     logger = logging.getLogger()
 
+    config = MailConfig("mail")
+    if config.disabled:
+        logger.warning("Plugin mail: disabled by configuration.")
+        return False
+    
     schema = ldapObj.getSchema("mailAccount")
     if len(schema) <= 0:
         logger.error("mailAccount schema is not included in LDAP directory");
         return False
     
-    config = MailConfig("mail")
     if config.vDomainSupport:        
         # Create required OU
         head, path = config.vDomainDN.split(",", 1)
