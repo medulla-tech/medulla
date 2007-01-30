@@ -49,7 +49,7 @@ sort($secondary);
    </table>
    <table>
     <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups"); ?> </td><td>
-        <select multiple size="10" class="list" name="groupsselected[]" id="select">
+        <select multiple="multiple" size="10" class="list" name="groupsselected[]" id="select">
             <?php
             foreach ($secondary as $group)
             {
@@ -140,7 +140,7 @@ sort($secondary);
 
         function delEltInSelectBox() {
             var len = document.getElementById('select').options.length;
-            for(var i =len-1; i>=0; i--) {
+            for(var i =len-1; i>=0; i = i - 1) {
                 if (document.getElementById('select').options[i].selected) {
                     document.getElementById('select').options[i] = null;
                 }

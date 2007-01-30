@@ -355,8 +355,6 @@ print '</div>';
 callPluginFunction("baseEdit",array($detailArr,$_POST));
 ?>
 
-</table>
-
 <input name="buser" type="submit" class="btnPrimary" value="<?= _("Confirm"); ?>" />
 <input name="breset" type="reset" class="btnSecondary" onclick="window.location.reload( false );" value="<?= _("Cancel"); ?>" />
 

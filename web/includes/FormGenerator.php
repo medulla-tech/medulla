@@ -185,7 +185,7 @@ class MultipleInputTpl extends AbstractTpl {
         print '</td><td>';
         print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { parameters: Form.serialize($(\'edit\'))+\'&minputname='.$this->name.'&desc='.urlencode($this->desc).'\' }); return false;"/>';
+        { parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc).'\' }); return false;"/>';
         print '</td></tr>';
         print '</table>';
         print '</div>';
@@ -436,7 +436,7 @@ class DeletableTrFormElement extends FormElement{
     parent::display($arrParam);
     print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { parameters: Form.serialize($(\'edit\'))+\'&minputname='.$this->name.'&del='.$this->key.'&desc='.urlencode($this->desc).'\' }); return false;"/>';
+        { parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc).'\' }); return false;"/>';
 
 
     print '</td></tr>';
