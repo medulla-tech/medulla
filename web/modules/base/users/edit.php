@@ -177,20 +177,23 @@ if ($_GET["user"]) {
           }
 
 	  /* Primary group management */
-          if ($_POST["primary_autocomplete"] != getUserPrimaryGroup($_POST['nlogin'])) {
+	  $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
+          if ($_POST["primary_autocomplete"] != $primaryGroup) {
               /* Update the primary group */
-              callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"]));
+              callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"], $primaryGroup));
 	  }
 
          /* Secondary groups management */
          if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
          $old = getUserSecondaryGroups($_POST['nlogin']);
          $new = $_POST['groupsselected'];
-         foreach (array_diff($old,$new) as $group) {
-             del_member($group,$_POST['nlogin']);
+         foreach (array_diff($old, $new) as $group) {
+             del_member($group, $_POST['nlogin']);
+	     callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
          }
-         foreach (array_diff($new,$old) as $group) {
-             add_member($group,$_POST['nlogin']);
+         foreach (array_diff($new, $old) as $group) {
+             add_member($group, $_POST['nlogin']);
+	     callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
          }
 
      }

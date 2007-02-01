@@ -192,6 +192,10 @@
         $page->setOptions(array("visible"=>False));
         $submod->addPage($page);
 
+        $page = new Page("edit",_("Edit a group"));
+        $page->setOptions(array("visible"=>False));
+        $submod->addPage($page);
+
         $mod->addSubmod($submod);
 
         /**

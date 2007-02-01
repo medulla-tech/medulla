@@ -124,11 +124,18 @@ else if (isset($_POST["bconfirm"]))
   foreach ($newmem as $new)
     {
       add_member($group, $new);
+      callPluginFunction("addUserToGroup", array($new, $group));
     }
   foreach ($delmem as $del)
     {
       del_member($group, $del);
+      callPluginFunction("delUserFromGroup", array($del, $group));
     }
+  if (!isXMLRPCError()) {
+    $n = new NotifyWidget();
+    $n->add(_T("Group successfully modified"));
+  }
+
 
   $members = get_members($group);
 }

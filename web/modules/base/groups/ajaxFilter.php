@@ -23,14 +23,7 @@
 ?>
 <?php
 
-//require("graph/navbar.inc.php");
-
-
-$root = $conf["global"]["root"];
-$maxperpage = $conf["global"]["maxperpage"];
-
-function
-print_ajax_nav($curstart, $curend, $items, $filter)
+function print_ajax_nav($curstart, $curend, $items, $filter)
 {
   $_GET["action"] = "index";
   global $conf;
@@ -68,25 +61,21 @@ print_ajax_nav($curstart, $curend, $items, $filter)
   echo "</ul>\n";
 }
 
-
-
 require("modules/base/includes/groups.inc.php");
 
+$filter=$_GET["filter"];
 
+$groups = search_groups($filter);
+$start = 0;
 
-    $filter=$_GET["filter"];
-
-  $groups = search_groups($filter);
-  $start = 0;
-
-  if (count($groups) > 0)
-    {
-      $end = $conf["global"]["maxperpage"] - 1;
-    }
-  else
-    {
-      $end = 0;
-    }
+if (count($groups) > 0)
+{
+  $end = $conf["global"]["maxperpage"] - 1;
+}
+else
+{
+  $end = 0;
+}
 
 if (isset($_GET["start"]))
 {
@@ -104,34 +93,23 @@ print_ajax_nav($start, $end, $groups,$filter);
 $arrGroup = array();
 $arrComment = array();
 
-for ($idx = 0; $idx < count($groups); $idx++)
- {
+for ($idx = 0; $idx < count($groups); $idx++) {
     $arrGroup[]=$groups[$idx][0];
     $arrComment[]= new EditInPlace($groups[$idx][1],'modules/base/groups/ajaxEditDesc.php',
                                     array("group"=>$groups[$idx][0]));
-
     $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';
-
 }
 
 
 $n = new ListInfos($arrGroup,_("Groups"));
-
 $n->setCssClass("groupName");
-
 $n->addExtraInfo($arrComment,_("Comments"));
-
 $n->setAdditionalInfo($arrNb);
-
-
 $n->addActionItem(new ActionItem(_("Edit members"),"members","edit","group") );
+$n->addActionItem(new ActionItem(_("Edit group"),"edit", "afficher","group") );
 $n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","group") );
-
-
 $n->setName(_("Groups management"));
 $n->display(0);
-
-
 
 print_ajax_nav($start, $end, $groups,$filter);
 ?>

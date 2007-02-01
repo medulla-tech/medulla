@@ -46,18 +46,13 @@ get_default_group()
 }
 
 
-function
-search_groups($filter = null)
-{
+function search_groups($filter = null) {
 
-  if ($filter == "") $filter = null;
-  else $filter = "*".$filter . "*";
-
+    if ($filter == "") $filter = null;
+    else $filter = "*".$filter . "*";
     $groups = xmlCall("base.getGroupsLdap",$filter);
-
     sort($groups);
     reset($groups);
-
     return $groups;
 }
 
@@ -67,8 +62,12 @@ get_members($group)
     return xmlCall("base.getMembers",$group);
 }
 
-function change_group_desc($cn,$desc) {
-    return xmlCall("base.changeGroupDescription",array($cn,$desc));
+function change_group_desc($cn, $desc) {
+    return xmlCall("base.changeGroupDescription", array($cn, $desc));
+}
+
+function get_detailed_group($group) {
+    return xmlCall("base.getDetailedGroup", array($group));
 }
 
 function
