@@ -207,6 +207,7 @@
         $mod->addACL("groups",_("User groups"));
         $mod->addACL("firstname",_("User firstname"));
         $mod->addACL("homeDir",_("User home directory"));
+        $mod->addACL("loginShell",_("Login shell"));
 
         $mod->addACL("mail",_("Mail address"));
         $mod->addACL("telephoneNumber",_("Telephone number"));

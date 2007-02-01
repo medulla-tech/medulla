@@ -67,6 +67,7 @@ $name = $_POST["name"];
 $firstname = $_POST["firstname"];
 $confpass = $_POST["confpass"];
 $homedir = $_POST["homeDir"];
+$loginShell = $_POST["loginShell"];
 
 $detailArr["cn"][0]=$nlogin;
 $detailArr["givenName"][0]=$firstname;
@@ -117,6 +118,7 @@ callPluginFunction("verifInfo",array($_POST));
                 $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $_POST["primary_autocomplete"]);
                 changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
                 changeUserAttributes($nlogin, 'mail', $_POST['mail']);
+		if (strlen($loginShell) > 0) changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
                 $newuser=true;
             }
@@ -149,7 +151,9 @@ if ($_GET["user"]) {
          } else { //else if it desactive, reactive him
             $detailArr = getDetailedUser($_GET["user"]);
             if ($detailArr["loginShell"][0]=='/bin/false') {
-                changeUserAttributes($nlogin,'loginShell','/bin/bash');
+                if ($_POST['loginShell'] == "/bin/false") $newshell = "/bin/bash";
+                else $newshell = $_POST['loginShell'];
+	        changeUserAttributes($nlogin, 'loginShell', $newshell);
                 $result .= _("User enabled.")."<br />";
             }
          }
@@ -201,7 +205,6 @@ if ($_GET["user"]) {
   $detailArr = getDetailedUser($_GET["user"]);
 
   $enabled = isEnabled($_GET["user"]);
-  //updating /homedir if needed
 }
 
 if (strstr($_SERVER[HTTP_REFERER],'module=base&submod=users&action=add') && $_GET["user"])
@@ -317,11 +320,12 @@ $test->display($param);
 
 $test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
 $test->display(array("value"=>$detailArr["homeDirectory"][0]));
-?>
+
+$test = new TrFormElement(_("Login shell"),new InputTpl("loginShell"));
+$test->display(array("value" => $detailArr["loginShell"][0]));?>
 
 <tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
 <td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
-
 
 </table>
 </div>
