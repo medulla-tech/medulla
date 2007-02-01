@@ -330,6 +330,7 @@ class ListInfos{
      */
     function drawHeader($navbar=1) {      
         if ($navbar) {
+	  print "ici" . $this->extranavbar;
             print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
         echo "<p class=\"listInfos\">";
@@ -510,7 +511,7 @@ class SideMenuItem {
      *
      */
     function getLink() {
-        return 'main.php?module='.$this->module.'&submod='.$this->submod.'&action='.$this->action;
+        return 'main.php?module='.$this->module.'&amp;submod='.$this->submod.'&amp;action='.$this->action;
     }
 
 
@@ -518,8 +519,10 @@ class SideMenuItem {
      *	display the SideMenuItem on the screen
      */
     function display() {
-        echo '<li id="'.$this->action.'">';
-        echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+        if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
+            echo '<li id="'.$this->action.'">';
+	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+        }
     }
 
     /**
