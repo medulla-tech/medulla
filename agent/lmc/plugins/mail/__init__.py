@@ -25,6 +25,7 @@
 #
 
 from lmc.plugins.base import ldapUserGroupControl
+from lmc.plugins.base import delete_diacritics
 from lmc.support.config import *
 import lmc
 import ldap
@@ -84,8 +85,17 @@ def changeMailbox(uid, mailbox):
 def removeMail(uid):
     MailControl().removeUserObjectClass(uid, 'mailAccount')
 
+def removeMailGroup(group):
+    MailControl().removeGroupObjectClass(group, 'mailGroup')
+
+def addMailGroup(group, mail):
+    MailControl().addMailGroup(group, mail)
+
 def hasMailObjectClass(uid):
     return MailControl().hasMailObjectClass(uid)
+
+def hasMailGroupObjectClass(uid):
+    return MailControl().hasMailGroupObjectClass(uid)
 
 def hasVDomainSupport():
     return MailControl().hasVDomainSupport()
@@ -110,6 +120,15 @@ def getVDomainUsersCount(domain):
 
 def getVDomainUsers(domain, filt):
     return MailControl().getVDomainUsers(domain, filt)
+
+def computeMailGroupAlias(group):
+    return MailControl().computeMailGroupAlias(group)
+
+def deleteMailGroupAliases(group):
+    return MailControl().deleteMailGroupAliases(group)
+
+def syncMailGroupAliases(group, foruser = "*"):
+    return MailControl().syncMailGroupAliases(group, foruser)
 
 class MailConfig(PluginConfig):
 
@@ -296,6 +315,18 @@ class MailControl(ldapUserGroupControl):
         """
         return "mailAccount" in self.getDetailedUser(uid)["objectClass"]
 
+    def hasMailGroupObjectClass(self, group):
+        """
+        Return true if the group owns the mailGroup objectClass.
+
+        @param group: group name
+        @type group: str
+
+        @return: return True if the user owns the mailGroup objectClass.
+        @rtype: boolean
+        """
+        return "mailGroup" in self.getDetailedGroup(group)["objectClass"]
+
     def addMailObjectClass(self, uid, maildrop = None):
         if maildrop == None: maildrop = uid
         cn = 'uid=' + uid + ', ' + self.baseUsersDN
@@ -321,4 +352,79 @@ class MailControl(ldapUserGroupControl):
         if not filt: filt = "*"
         else: filt = "*" + filt + "*"
         return self.l.search_s(self.baseUsersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=mailAccount)(mail=*@%s)(|(uid=%s)(givenName=%s)(sn=%s)(mail=%s)))" % (domain, filt, filt, filt, filt), ["uid", "givenName", "sn", "mail"])
+
+    def addMailGroup(self, group, mail):
+        group = group.encode("utf-8")
+        cn = 'cn=' + group + ', ' + self.baseGroupsDN
+        attrs = []
+        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
+        c, attrs = attrib[0]
+        newattrs = copy.deepcopy(attrs)
+        if not 'mailGroup' in newattrs["objectClass"]:
+            newattrs["objectClass"].append('mailGroup')
+        newattrs['mail'] = mail
+        mlist = ldap.modlist.modifyModlist(attrs, newattrs)
+        self.l.modify_s(cn, mlist)
+
+    def searchMailGroupAlias(self, mail):
+        ret = self.search("(&(cn=*)(mail=%s@*))" % mail, self.baseGroupsDN, ["cn"])
+        return len(ret) > 0
     
+    def computeMailGroupAlias(self, group):
+        """
+        Find a mail alias that fits for a group.
+
+        Non ASCII characters are replaced, and spaces are replaced with hyphens
+
+        @param group: group name
+        @type group: str
+
+        @return: return the computed mail alias, or an empty string if it already exists
+        @rtype: str
+        """
+        group = group.lower()
+        group = delete_diacritics(group)
+        group = group.replace(" ", "-")
+        if self.searchMailGroupAlias(group):
+            # This alias already exists
+            return ""
+        else:
+            return group
+
+    def deleteMailGroupAliases(self, group):
+        """
+        Remove the alias of this group from all user entries
+        """ 
+        if hasMailGroupObjectClass(group):
+            mailgroup = self.getDetailedGroup(group)["mail"][0]
+            users = self.search("(&(uid=*)(mailalias=%s))" % mailgroup, self.baseUsersDN, ["uid", "mailalias"])
+            for user in users:
+                uid = user[0][1]["uid"][0]
+                mailaliases = user[0][1]["mailalias"]
+                mailaliases.remove(mailgroup)
+                self.changeMailalias(uid, mailaliases)
+
+    def syncMailGroupAliases(self, group, foruser = "*"):
+        """
+        Sync all users mail aliases for this group
+        """
+        if hasMailGroupObjectClass(group):
+            mailgroup = self.getDetailedGroup(group)["mail"][0]
+            groupusers = self.getMembers(group)
+            allusers = self.search("(&(uid=%s)(objectClass=mailAccount))" % foruser, self.baseUsersDN, ["uid", "mailalias"])
+            for user in allusers:
+                uid = user[0][1]["uid"][0]
+                try:
+                    mailaliases = user[0][1]["mailalias"]
+                except KeyError:
+                    mailaliases = []
+                if uid in groupusers:
+                    # Add group mail alias for users of the group that don't have it
+                    if not mailgroup in mailaliases:
+                        mailaliases.append(mailgroup)
+                        self.changeMailalias(uid, mailaliases)
+                else:
+                    # Remove group mail alias for users that have it but are not in the group
+                    if mailgroup in mailaliases:
+                        mailaliases.remove(mailgroup)
+                        self.changeMailalias(uid, mailaliases)
