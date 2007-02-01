@@ -64,7 +64,7 @@ def activate():
         result = False
         msg = "disabled by configuration"
     if not result:
-        logger.warning("Plugin proxy: " + msg + ".")
+        logger.warning("Plugin ox: " + msg + ".")
     if config.version == "0.8.0-6":
         migrateUser()
     return result
