@@ -24,9 +24,7 @@
 <?
 /* définition des fonctions pour cette page */
 
-function
-print_mem_bar($title, $max, $used, $cache = 0, $width = 320)
-{
+function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
   $wused = ($used / $max) * $width;
 
   if ($title != "")
@@ -48,17 +46,15 @@ print_mem_bar($title, $max, $used, $cache = 0, $width = 320)
   echo "</div>\n";
 }
 
-function
-print_disk_info()
-{
+function print_disk_info() {
   /* -l option to only get local filesystem occupation */
   remote_exec("df -m",$df);
 
   unset($df[0]);
 
-echo "<table style=\"width:95%\">";
+  echo "<table style=\"width:95%\">";
 
-$incomplete_lines = "";
+  $incomplete_lines = "";
 
   foreach ($df as $disk)
     {
@@ -96,33 +92,9 @@ $incomplete_lines = "";
 echo "</table>";
 }
 
-function print_ps() {
-  remote_exec("ps aux |grep backup.sh | grep -v grep",$ps);
-  if (!$ps) {
-    print _("no backup in progress");
-  }
-  foreach ($ps as $line) {
-
-    //remove all espaces but one
-    while (strstr($line,'  ')) {
-      $line=str_replace('  ',' ',$line);
-    }
-
-    //explode it
-    $arrSplit = explode(' ',$line,11);
-    //print_r($arrSplit);
-    print $arrSplit[10];
-    print "<br />";
-  }
-
-}
-
-function
-print_health()
-{
-  $up = file_get_contents("/proc/uptime");
-  $up = trim($up);
-
+function print_health() {
+  remote_exec("cat /proc/uptime", $up);
+  $up = trim($up[0]);
   list($up) = explode(" ", $up);
 
   $days = (int) ($up / (24*60*60));
@@ -149,19 +121,6 @@ print_health()
 
   echo $mins." "._("minute").$m."<br>\n";
 
-  //$load = file_get_contents("/proc/loadavg");
-  remote_exec("cat /proc/loadavg",$load);
-  $load = trim($load[0]);
-
-  $load = explode(" ", $load);
-
-  remote_exec("uptime", $users);
-  preg_match("/([0-9]+) user/", $users[0], $users);
-
-  ($users[1] != 1) ? $u = "s" : $u = "";
-
-  echo "<br>\n";
-
   remote_exec("free -m", $mem);
 
   $m = preg_split("/[ ]+/", $mem[1]);
@@ -170,29 +129,11 @@ print_health()
   print_mem_bar(_("Swap"), $m[1], $m[2]);
 }
 
-/* inclusion header HTML */
-require("graph/header.inc.php");
 
 ?>
 
-<!-- Définition de styles locaux à cette page -->
 <style type="text/css">
 <!--
-
-#section, #sectionTopRight, #sectionBottomLeft {
-        margin: 0 0 0 17px;
-}
-
-#sectionTopRight {
-        border-left: none;
-}
-
-#sectionTopLeft {
-    height: 9px;
-        padding: 0;
-        margin: 0;
-        background: url("<?php echo $root; ?>img/common/sectionTopLeft.gif") no-repeat top left transparent;
-}
 
 div.membarfree {
         border-right: 1px solid #27537C;
@@ -235,7 +176,7 @@ div.left {
         margin-bottom: 1em;
         display: block;
         margin: 0;
-        position: relative;
+	position: relative;
 }
 
 div.right {
@@ -247,7 +188,7 @@ div.right {
         margin-bottom: 1em;
         padding: 10px;
         display: block;
-        position: relative;
+	position: relative;
 }
 
 #accueilPad {
@@ -278,31 +219,18 @@ div.right {
 	padding: 0px;
 }
 
-form { padding-top: 10px; }
-
 -->
 </style>
 
 <?php
-/* Inclusion de la bar de navigation */
 require("graph/navbar.inc.php");
-
-global $acl_error;
-if ($acl_error) {
-  print "<div id=\"errorCode\">$acl_error</div>";
-}
-
-
-/* inclusion header HTML */
-require("graph/header.inc.php");
-
 require("includes/statusSidebar.inc.php");
-
 ?>
 
 
 
 <h2><?= _("Global view")?></h2>
+
 
 <div class="fixheight"></div>
 
@@ -316,7 +244,7 @@ require("includes/statusSidebar.inc.php");
 <div class="right">
   <div id="accueilPad">
     <h2><?= _("Hard drive partitions") ?></h2>
-<?php print_disk_info(); ?>
+  <?php print_disk_info(); ?>
   </div>
 </div>
 
@@ -324,10 +252,9 @@ require("includes/statusSidebar.inc.php");
   <div id="statusPad">
 
     <h2><?=  _("Background jobs") ?></h2>
-    <?php //print_ps();?>
     <div id="bgps">
     </div>
-    <script>
+    <script type="text/javascript">
         new Ajax.PeriodicalUpdater('bgps','includes/bgps_view.php', {asynchronous: true, frequency: 2});
     </script>
   </div>
