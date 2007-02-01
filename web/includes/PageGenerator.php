@@ -330,7 +330,6 @@ class ListInfos{
      */
     function drawHeader($navbar=1) {      
         if ($navbar) {
-	  print "ici" . $this->extranavbar;
             print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
         echo "<p class=\"listInfos\">";
@@ -412,7 +411,7 @@ class ListInfos{
                 } else {
                     echo "<td class=\"".$this->cssClass."\">";
                     echo $this->arrInfo[$idx];
-                    "</td>";
+                    echo "</td>";
                 }
 
                 if ($this->extraInfo)

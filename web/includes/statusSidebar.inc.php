@@ -8,10 +8,8 @@ $LMCApp =& LMCApp::getInstance();
 $mod = $LMCApp->getModule('base');
 $submod = $mod->getSubmod('status');
 
-
-
 foreach ($submod->getPages() as $page) {
-$sidemenu->addSideMenuItem(new SideMenuItem($page->getDescription(),"base","status",$page->getAction()));
+    $sidemenu->addSideMenuItem(new SideMenuItem($page->getDescription(),"base","status",$page->getAction()));
 }
 
 $p = new PageGenerator();
