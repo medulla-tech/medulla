@@ -292,6 +292,10 @@ def getDetailedUser(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.getDetailedUser(uid)
 
+def getDetailedGroup(cn):
+    ldapObj = ldapUserGroupControl()
+    return ldapObj.getDetailedGroup(cn)
+
 def getUserAttribute(uid,attr):
     return getUserAttributes(uid,attr)[0]
 
@@ -1048,12 +1052,12 @@ class ldapUserGroupControl:
 
         return 0
 
-    def changeGroupAttributes(self,uid,attr,attrVal):
+    def changeGroupAttributes(self, group, attr, attrVal):
         """
          change a group attributes
 
-         @param uid: uid of this user (not full ldap path)
-         @type  uid: str
+         @param group: group name
+         @type  group: str
 
          @param attr: attribute name
          @type  attr: str
@@ -1061,12 +1065,13 @@ class ldapUserGroupControl:
          @param attrVal: attribute value
          @type  attrVal: object
         """
+        group = group.encode("utf-8")
         if attrVal:
             attrVal = str(attrVal.encode("utf-8"))
-            self.l.modify_s('cn='+uid+','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,attrVal)])
+            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,attrVal)])
         else:
-            self.l.modify_s('cn='+uid+','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,'rien')])
-            self.l.modify_s('cn='+uid+','+ self.baseGroupsDN, [(ldap.MOD_DELETE,attr,'rien')])
+            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,'rien')])
+            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_DELETE,attr,'rien')])
         return 0
 
     def changeUserPasswd(self,uid,passwd):
@@ -1190,6 +1195,16 @@ class ldapUserGroupControl:
         except ldap.LDAPError, e:
             return e
 
+    def getEntry(self, dn):
+        """
+        Return a raw LDAP entry
+        """
+        attrs = []
+        attrib = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, attrs = attrib[0]
+        newattrs = copy.deepcopy(attrs)
+        return newattrs
+
     def getDetailedUser(self, uid, base = None):
         """
          Return raw ldap info on user
@@ -1212,26 +1227,23 @@ class ldapUserGroupControl:
 
         return newattrs
 
-    def getDetailedGroup(self, uid, base = None):
+    def getDetailedGroup(self, group, base = None):
         """
          Return raw ldap info on a group
 
-         @param uid: group name
-         @type uid: str
+         @param group: group name
+         @type group: str
 
          @return: full raw ldap array (dictionnary of lists)
          @type: dict
 
         """
         if not base: base = self.baseGroupsDN
-        cn = 'cn=' + str(uid) + ', ' + base
+        cn = 'cn=' + group.encode("utf-8") + ', ' + base
         attrs = []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
-
         c,attrs=attrib[0]
-
         newattrs = copy.deepcopy(attrs)
-
         return newattrs
 
     def getDetailedGroupById(self, id, base = None):
@@ -1263,28 +1275,6 @@ class ldapUserGroupControl:
 #         c,attrs=attrib[0]
 #
 #         newattrs = copy.deepcopy(attrs)
-
-        return newattrs
-
-    def getDetailedGroup(self, cn, base = None):
-        """
-         Return raw ldap info on group
-
-         @param uid: user name
-         @type uid: str
-
-         @return: full raw ldap array (dictionnary of lists)
-         @type: dict
-
-        """
-        if not base: base = self.baseGroupsDN
-        cn = 'cn=' + cn + ', ' + base
-        attrs = []
-        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
-
-        c, attrs=attrib[0]
-
-        newattrs = copy.deepcopy(attrs)
 
         return newattrs
 
@@ -1585,42 +1575,63 @@ class ldapUserGroupControl:
         return maxuid
 
     def removeUserObjectClass(self, uid, className):
-
-        #create ldap path
+        # Create LDAP path
         cn = 'uid=' + uid + ', ' + self.baseUsersDN
         attrs= []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
-        #fetch attributes
+        # fetch attributes
         c,attrs=attrib[0]
-
-        #copy new attrs
+        # copy new attrs
         newattrs = copy.deepcopy(attrs)
 
         if (className in newattrs["objectClass"]):
-
             indexRm = newattrs["objectClass"].index(className)
             del newattrs["objectClass"][indexRm]
 
-        #for all element we can try to delete
-        #print self.getAttrToDelete(uid,className)
-        for entry in self.getAttrToDelete(uid,className):
+        # For all element we can try to delete
+        for entry in self.getAttrToDelete(cn, className):
             for k in newattrs.keys():
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
 
-        #apply modification
+        # Apply modification
         mlist = ldap.modlist.modifyModlist(attrs, newattrs)
         self.l.modify_s(cn, mlist)
 
-    def getAttrToDelete(self,uid,className):
+    def removeGroupObjectClass(self, group, className):
+        # Create LDAP path
+        group = group.encode("utf-8")
+        cn = 'cn=' + group + ', ' + self.baseGroupsDN
+        attrs= []
+        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
+
+        # fetch attributes
+        c,attrs=attrib[0]
+        # copy new attrs
+        newattrs = copy.deepcopy(attrs)
+
+        if (className in newattrs["objectClass"]):
+            indexRm = newattrs["objectClass"].index(className)
+            del newattrs["objectClass"][indexRm]
+
+        # For all element we can try to delete
+        for entry in self.getAttrToDelete(cn, className):
+            for k in newattrs.keys():
+                if k.lower()==entry.lower():
+                    del newattrs[k] #delete it
+
+        # Apply modification
+        mlist = ldap.modlist.modifyModlist(attrs, newattrs)
+        self.l.modify_s(cn, mlist)
+
+    def getAttrToDelete(self, dn, className):
         """retrieve all attributes to delete wich correspond to param schema"""
 
-        arrObjectList = self.getDetailedUser(uid)["objectClass"]
-
+        arrObjectList = self.getEntry(dn)["objectClass"]
         indexRm = arrObjectList.index(className);
 
-        #remove deleting objectList from getSchema routine
+        # Remove deleting objectList from getSchema routine
         del arrObjectList[indexRm]
 
         attrList = self.getSchema(className)
