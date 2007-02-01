@@ -63,7 +63,7 @@ class TestShares(unittest.TestCase):
 
     def test_shares(self):
         self.assertEqual(len(self.s.getDetailedShares()) > 0, True)
-        self.s.addShare("sharetest", "sharetest comment", ["grouptestA"], False, 1)
+        self.s.addShare("sharetest", "sharetest comment", ["grouptestA"], False, [], True, True)
         self.assertEqual(os.path.exists(os.path.join(self.s.sharespath, "sharetest")), True)
         self.s.save()
         s = smbConf(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
