@@ -36,7 +36,6 @@ require("modules/base/includes/users.inc.php");
 <?php
 
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
 
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];

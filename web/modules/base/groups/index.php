@@ -22,11 +22,7 @@
  */
 ?>
 <?php
-/* $Id$ */
-
 require("modules/base/includes/groups.inc.php");
-
-//require("graph/header.inc.php");
 ?>
 
 <style type="text/css">
@@ -44,7 +40,6 @@ $maxperpage = $conf["global"]["maxperpage"];
 
 <?php
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
 
 if (!isset($_GET["items"])) {

@@ -23,10 +23,13 @@
 ?>
 <?
 $sidebar = array("class" => "groups",
-                 "content" => array(array("id" => "global",
-                                    "text" => _("List"),
-                                    "link" => "main.php?module=base&submod=groups&action=index"),
-                              array("id" => "addGroup",
-                                    "text" => _("Add"),
-                                    "link" => "main.php?module=base&submod=groups&action=add")));
+                 "content" => array(
+				    array("id" => "global",
+					  "text" => _("List"),
+					  "link" => urlStr("base/groups/index")),
+				    array("id" => "addGroup",
+					  "text" => _("Add"),
+					  "link" => urlStr("base/groups/add"))
+				    )
+		 );
 ?>
