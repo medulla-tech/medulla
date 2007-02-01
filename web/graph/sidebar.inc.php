@@ -39,7 +39,7 @@ foreach ($sidebar["content"] as $item)
 
   //verify acl before echoing
   $arrUrl = parse_url($item["link"]);
-  foreach (split('&',$arrUrl["query"]) as $arg) {
+  foreach (split('&amp;',$arrUrl["query"]) as $arg) {
     list($key,$value) = split('=',$arg);
     //storing arg in an array
     $arrArg[$key]=$value;
