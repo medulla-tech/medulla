@@ -52,7 +52,7 @@ function print_disk_info() {
 
   unset($df[0]);
 
-  echo "<table style=\"width:95%\">";
+  echo "<table>";
 
   $incomplete_lines = "";
 
@@ -84,12 +84,13 @@ function print_disk_info() {
 	  continue;
 	}
 
-	echo "<tr><td>$disk[5]</td><td>($disk[0])</td><td>[$disk[4]]</td></tr>\n";
-	echo "<tr><td colspan=\"3\" style=\"padding-bottom: 2px;\">";
+	echo "<tr><td class=\"statusPad\">$disk[5]</td><td class=\"statusPad\">($disk[0])</td><td class=\"statusPad\">[$disk[4]]</td></tr>\n";
+	echo "<tr><td colspan=\"3\" class=\"statusPad\" style=\"padding-bottom: 2px;\">";
 	print_mem_bar("", $disk[1], $disk[2]);
-	echo "</td>\n";
+	echo "</td></tr>\n";
     }
-echo "</table>";
+
+ echo "</table>";
 }
 
 function print_health() {
@@ -119,7 +120,7 @@ function print_health() {
       echo $hrs." "._("hour").$h." ";
     }
 
-  echo $mins." "._("minute").$m."<br>\n";
+  echo $mins." "._("minute").$m."<br/><br/>\n";
 
   remote_exec("free -m", $mem);
 
@@ -191,32 +192,16 @@ div.right {
 	position: relative;
 }
 
-#accueilPad {
-        overflow: auto;
-}
-
-#accueilPad h2,
-#statusPad h2,
-#accueilPad td {
+h2.statusPad {
         text-align: center;
 }
 
-#accueilPad h2,
-#statusPad h2 {
-	font-size: 14px;
-}
-
-#accueilPad table {
-	color: #666;
-	border: none;
-	border-width: 0px;
-	width: auto;
-}
-
-#accueilPad td {
-	border: none;
-	border-width: none;
-	padding: 0px;
+td.statusPad {
+        border: none;
+        border-width: 1px;
+        padding: 0px;
+        text-align: center;
+        font-size: 11px;
 }
 
 -->
@@ -235,23 +220,23 @@ require("includes/statusSidebar.inc.php");
 <div class="fixheight"></div>
 
 <div class="left">
-  <div id="statusPad">
-    <h2><?= _("Server status") ?></h2>
+  <div class="statusPad">
+    <h2 class="statusPad"><?= _("Server status") ?></h2>
 <?php print_health(); ?>
   </div>
 </div>
 
 <div class="right">
-  <div id="accueilPad">
-    <h2><?= _("Hard drive partitions") ?></h2>
+  <div class="statusPad">
+    <h2 class="statusPad"><?= _("Hard drive partitions") ?></h2>
   <?php print_disk_info(); ?>
   </div>
 </div>
 
 <div class="right">
-  <div id="statusPad">
+  <div>
 
-    <h2><?=  _("Background jobs") ?></h2>
+    <h2 class="statusPad"><?=  _("Background jobs") ?></h2>
     <div id="bgps">
     </div>
     <script type="text/javascript">
