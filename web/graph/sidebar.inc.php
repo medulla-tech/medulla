@@ -36,7 +36,6 @@ echo "<ul class=\"".$sidebar["class"]."\">\n";
 
 foreach ($sidebar["content"] as $item)
 {
-
   //verify acl before echoing
   $arrUrl = parse_url($item["link"]);
   foreach (split('&amp;',$arrUrl["query"]) as $arg) {

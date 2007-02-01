@@ -23,8 +23,8 @@
 ?>
 <?php
 
-function
-print_nav($curstart, $curend, $items, $search = 0, $extra = "")
+/* FIXME: the parameters $search and $extra may be no more needed */
+function print_nav($curstart, $curend, $items, $search = 0, $extra = "")
 {
   global $conf;
 
@@ -33,11 +33,6 @@ print_nav($curstart, $curend, $items, $search = 0, $extra = "")
 
   echo '<form method="post" action="' . $PHP_SELF . '">';
   echo "<ul class=\"navList\">\n";
-
-  if ($search) {
-    echo '<li class="previousList"> N\'afficher que les Ã©lÃ©ments commenÃ§ant par </li>';
-    echo '<input type="text" class="textfield" size="5" name="filter" value="' . $_GET["filter"] . '"/>&nbsp;</form>';
-  }
 
   if ($curstart == 0)
     {
@@ -48,7 +43,6 @@ print_nav($curstart, $curend, $items, $search = 0, $extra = "")
       $start = $curstart - $max;
       $end = $curstart - 1;
       echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
-      //printf("&start=%d&end=%d&items=%s", $start, $end, $encitems);
       printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
       echo "\">"._("Previous")."</a></li>\n";
     }
@@ -62,7 +56,6 @@ print_nav($curstart, $curend, $items, $search = 0, $extra = "")
       $start = $curend + 1;
       $end = $curend + $max;
       echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
-      //printf("&start=%d&end=%d&items=%s", $start, $end, $encitems);
       printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
       echo "\">"._("Next")."</a></li>\n";
     }
