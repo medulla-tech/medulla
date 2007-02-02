@@ -26,9 +26,6 @@
 
 <?php
 
-
-
-global $conf;
 global $result;
 
 if ($_GET["action"]=="add") {
@@ -117,7 +114,7 @@ callPluginFunction("verifInfo",array($_POST));
             } else {  //if no problem
                 $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $_POST["primary_autocomplete"]);
                 changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
-                changeUserAttributes($nlogin, 'mail', $_POST['mail']);
+                if (strlen($_POST['mail']) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
 		if (strlen($loginShell) > 0) changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
                 $newuser=true;
@@ -164,7 +161,9 @@ if ($_GET["user"]) {
 
          //change phone number
          changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
-         changeUserAttributes($nlogin,'mail',$_POST['mail']);
+	 if ($newuser) {
+	   if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+	 } else changeUserAttributes($nlogin, "mail", $_POST["mail"]);
 
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
