@@ -22,70 +22,22 @@
  */
 ?>
 <?php
-/* $Id$ */
-
-
 require("modules/base/includes/groups.inc.php");
 
-if (isset($_POST["bback"]))
-{
-  header("Location: main.php?module=base&submod=groups&action=index");
-  exit;
+if (isset($_POST["bconfirm"])) {
+    $group = $_POST["groupname"];
+    $result = del_group($group);
+    if (!isXMLRPCError()) {
+        $n = new NotifyWidget();
+        $n->add($result);
+        header("Location: " . urlStrRedirect("base/groups/index"));
+    }
+} else {
+    $group = urldecode($_GET["group"]);
 }
-
-?>
-
-<style type="text/css">
-<!--
-
-<?php
-require("modules/base/graph/groups/index.css");
-?>
-
--->
-</style>
-
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Groups"),
-                    "link" => "main.php?module=base&submod=groups&action=index"),
-              array("name" => _("Delete a group")));
-
-//require("localSidebar.php");
-
-//require("graph/navbar.inc.php");
-
-if (isset($_POST["bconfirm"]))
-{
-  $group = $_POST["groupname"];
-
-  $result = del_group($group);
-}
-else
-{
-  $group = urldecode($_GET["group"]);
-}
-
 ?>
 
 <h2><?= _("Delete group"); ?> <?php echo $group; ?></h2>
-
-<!--<div class="fixheight"></div>!-->
-
-<?php
-if (isset($_POST["bconfirm"]))
-{
-
-$n = new NotifyWidget();
-$n->add($result);
-header("Location: main.php?module=base&submod=groups&action=index");
-exit;
-
-}
-else
-{
-?>
 
 <p>
 <?= _("You will delete group"); ?> <strong><?php echo $group; ?></strong>.
@@ -97,9 +49,5 @@ else
 <form action="main.php?module=base&submod=groups&action=delete" method="post">
 <input type="hidden" name="groupname" value="<?php echo $group; ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Delete group"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("Return"); ?>" onClick="new Effect.Fade('popup'); return false;" />
+<input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onclick="new Effect.Fade('popup'); return false;" />
 </form>
-
-<?php
-}
-?>
