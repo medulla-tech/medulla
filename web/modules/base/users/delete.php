@@ -21,54 +21,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
-<?php
-if (isset($_POST["bback"]))
-{
-  header("Location: main.php?module=base&submod=users&action=index");
-  exit;
-}
-
-require("modules/base/includes/users.inc.php");
-?>
-
-
-<style type="text/css">
-<!--
-
-<?php
-require("modules/base/graph/users/index.css");
-?>
-
--->
-</style>
 
 <h2><?= _("Delete user") ?></h2>
 
 <?php
-if (isset($_GET["user"]))
-{
-  $user = urldecode($_GET["user"]);
+require("modules/base/includes/users.inc.php");
+if (isset($_GET["user"])) $user = urldecode($_GET["user"]);
+if (isset($_POST["user"])) $user = $_POST["user"];
+
+if (isset($_POST["bdeluser"])) {
+    del_user($user, $_POST["delfiles"]);
+    if (!isXMLRPCError()) {
+        $n = new NotifyWidget();
+        $n->add(sprintf(_("User %s has been successfully deleted"), $user));
+        header("Location: " . urlStrRedirect("base/users/index" ));
+    }
 }
-if (isset($_POST["user"]))
-{
-  $user = $_POST["user"];
-}
 
-if (isset($_POST["bdeluser"]))
-{
-  del_user($user, $_POST["delfiles"]);
-  $n = new NotifyWidget();
-  $n->add(sprintf(_("User %s has been sucessfully deleted"),$user));
-  header("Location: main.php?module=base&submod=users&action=index");
-?>
-
-
-<form action="main.php?module=base&submod=users&action=index" method="post">
-<input type="submit" name="bback" class="btnPrimary" value="Retour" />
-</form>
-
-<?php
-} else {
 ?>
 
 <form action="main.php?module=base&submod=users&action=delete" method="post">
@@ -81,12 +50,7 @@ if (isset($_POST["bdeluser"]))
 <input type="checkbox" name="delfiles" /> <?= _("Delete all user's files"); ?>
 <br>
 <br>
-
 <input name="user" type="hidden" value="<?php echo $user; ?>" />
 <input name="bdeluser" type="submit" class="btnPrimary" value="<?= _("Delete user"); ?>" />
 <input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
-
-<?php
-}
-?>
