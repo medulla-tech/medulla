@@ -50,6 +50,11 @@ def activate():
     """
     config = OxConfig("ox")
     logger = logging.getLogger()
+    print config.disabled
+    if config.disabled:
+        msg = "disabled by configuration"
+        logger.warning("Plugin ox: " + msg + ".")
+        return False
     result = True
     msg = ""
     try:
@@ -60,13 +65,11 @@ def activate():
     except Exception, e:
         msg = str(e)
         result = False
-    if result and config.disabled:
-        result = False
-        msg = "disabled by configuration"
     if not result:
         logger.warning("Plugin ox: " + msg + ".")
-    if config.version == "0.8.0-6":
-        migrateUser()
+    else:
+        if config.version == "0.8.0-6":
+            migrateUser()
     return result
     
 class OxConfig(PluginConfig):
