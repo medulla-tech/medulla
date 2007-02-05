@@ -38,7 +38,7 @@ LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
 SBINFILES = bin/lmc-agent
 
-all: install
+all:
 
 # Cleaning target
 clean:
