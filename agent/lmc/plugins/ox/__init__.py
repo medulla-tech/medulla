@@ -50,7 +50,6 @@ def activate():
     """
     config = OxConfig("ox")
     logger = logging.getLogger()
-    print config.disabled
     if config.disabled:
         msg = "disabled by configuration"
         logger.warning("Plugin ox: " + msg + ".")
