@@ -123,7 +123,7 @@ def activate():
         if not samba.getDomainGuestsGroup():
             logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Guests' group. Please check your SAMBA LDAP configuration.");
             return False
-        # Check that Domain Userss group exists
+        # Check that Domain Users group exists
         if not samba.getDomainUsersGroup():
             logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Users' group. Please check your SAMBA LDAP configuration.");
             return False
@@ -490,7 +490,7 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
                     # Update this SAMBA LDAP attribute
                     new[key] = value
         modlist = ldap.modlist.modifyModlist(old, new)
-        self.l.modify_s(dn, modlist)
+        if modlist: self.l.modify_s(dn, modlist)
         self.runHook("samba.changesambaattributes", uid)
         return 0
 
