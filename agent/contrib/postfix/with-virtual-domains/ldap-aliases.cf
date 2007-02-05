@@ -1,0 +1,8 @@
+server_host = 127.0.0.1
+search_base = ou=Users,dc=linbox,dc=com
+query_filter = (&(objectClass=mailAccount)(mailalias=%s)(mailenable=OK))
+result_attribute = mail
+bind = yes
+bind_dn = cn=admin,dc=linbox,dc=com
+bind_pw = LiNBoX
+version = 3
