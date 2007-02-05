@@ -103,6 +103,9 @@ def activate():
 
     # If SAMBA is defined as a PDC, make extra checks
     smbconf = smbConf()
+    if not smbconf.validate(conf):
+        logger.error("SAMBA configuration file is not valid")
+        return False
     if smbconf.isPdc():
         # Check that a sambaDomainName entry is in LDAP directory
         samba = sambaLdapControl()
@@ -110,6 +113,23 @@ def activate():
         if not domainInfos:
             logger.error("Can't find sambaDomainName entry in LDAP for domain %s. Please check your SAMBA LDAP configuration." % smbconf.getContent("global", "workgroup"));
             return False
+        smbconfbasesuffix = smbconf.getContent("global", "ldap suffix")
+        if smbconfbasesuffix == -1:
+            logger.error("SAMBA 'ldap suffix' option is not setted.")
+            return False            
+        if ldap.explode_dn(samba.baseDN) != ldap.explode_dn(smbconfbasesuffix):
+            logger.error("SAMBA 'ldap suffix' option is not equal to LMC 'baseDN' option.")
+            return False
+        # Check that SAMBA and LMC given OU are in sync
+        for option in [("ldap user suffix", "baseUsersDN", samba.baseUsersDN), ("ldap group suffix", "baseGroupsDN", samba.baseGroupsDN), ("ldap machine suffix", "baseComputersDN", samba.baseComputersDN)]:
+            smbconfsuffix = smbconf.getContent("global", option[0])
+            if smbconfsuffix == -1:
+                logger.error("SAMBA '" + option[0] + "' option is not setted")
+                return False
+            # Do a case insensitive comparison of the corresponding LMC / SAMBA options
+            if ldap.explode_rdn(smbconfsuffix)[0].lower() != ldap.explode_rdn(option[2])[0].lower():
+                logger.error("SAMBA option '" + option[0] + "' is not equal to LMC '" + option[1] + "' option.")
+                return False
         # Check that Domain Computers group exists
         # We need it to put a machine account in the right group when joigning it to the domain
         if not samba.getDomainComputersGroup():
@@ -127,7 +147,16 @@ def activate():
         if not samba.getDomainUsersGroup():
             logger.error("Can't find sambaGroupMapping entry in LDAP corresponding to 'Domain Users' group. Please check your SAMBA LDAP configuration.");
             return False
-
+        # Check that add machine script option is set, and that the given script exist
+        addMachineScript = smbconf.getContent("global", "add machine script")
+        if not addMachineScript:
+            logger.error("SAMBA 'add machine script' option is not set.")
+            return False
+        else:
+            script = addMachineScript.split(" ")[0]
+            if not os.path.exists(script):
+                logger.error("SAMBA 'add machine script' option is set to a non existing file: " + script)
+                return False
     return True
 
 def isSmbAntiVirus():
