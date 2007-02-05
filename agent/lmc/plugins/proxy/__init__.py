@@ -47,6 +47,10 @@ def activate():
     """
     config = ProxyConfig("proxy")
     logger = logging.getLogger()
+    if config.disabled:
+        msg = "disabled by configuration"        
+        logger.warning("Plugin proxy: " + msg + ".")
+        return False
     result = True
     msg = ""
     try:
@@ -57,9 +61,6 @@ def activate():
     except Exception, e:
         msg = str(e)
         result = False
-    if result and config.disabled:
-        result = False
-        msg = "disabled by configuration"
     if not result:
         logger.warning("Plugin proxy: " + msg + ".")
     return result
