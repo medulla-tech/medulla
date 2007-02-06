@@ -77,3 +77,10 @@ objectclass ( 1.3.6.1.4.1.40098.1.2.13.2
             virtualdomaindescription
             )
         )
+
+# Mail Group Objectclass
+objectclass ( 1.3.6.1.4.1.40098.1.2.13.3
+        NAME 'mailGroup' SUP top AUXILIARY
+        DESC 'Mail Group'
+        MUST ( mail )
+        )
