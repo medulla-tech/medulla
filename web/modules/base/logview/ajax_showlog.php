@@ -20,16 +20,15 @@ $oparr = array();
 
 foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line) {
     if (is_array($line)) {
-
-    $connectionNumber[] = '<a href="#" onClick="$(\'param\').value=\''.'conn='.$line[3].'\'; pushSearch(); return false">'.$line[3].'</a>';
-    $action[] = '<a href="#" onClick="$(\'param\').value=\''.$line[6].'\'; pushSearch(); return false">'.$line[6].'</a>';
-    $extra[] = $line[7];
-    $dateparsed = strftime('%b %d %H:%M:%S',$line[0]);
+    $connectionNumber[] = '<a href="#" onClick="$(\'param\').value=\''.'conn='.$line["conn"].'\'; pushSearch(); return false">'.$line["conn"].'</a>';
+    $action[] = '<a href="#" onClick="$(\'param\').value=\''.$line["op"].'\'; pushSearch(); return false">'.$line["op"].'</a>';
+    $extra[] = $line["extra"];
+    $dateparsed = strftime('%b %d %H:%M:%S',$line["time"]);
     $date[] = str_replace(" ", "&nbsp;", $dateparsed);
-    if ($line[4]=='op') {
-            $oparr[]=$line[5];
+    if ($line["opfd"] == "op") {
+            $oparr[] = $line["opfdnum"];
         } else {
-            $oparr[]="";
+            $oparr[] = "";
         }
     } else {
     $connectionNumber[] = "";
@@ -41,21 +40,12 @@ foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line)
 }
 
 $n = new UserInfos($date,_("Date"),"1px");
-
 $n->addExtraInfo($connectionNumber,_("Connection"),"1px");
-
 $n->addExtraInfo($oparr,_("Operation"),"1px");
-
 $n->addExtraInfo($action,_("Actions"),"1px");
-
 $n->addExtraInfo($extra,_("Extra informations"));
-
-
-//$n->setName(_("LDAP log lines"));
-
 $n->end= 200;
 $n->first_elt_padding = 1;
-
 $n->display(0,0);
 
 ?>
