@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-02-06 14:25+0100\n"
-"PO-Revision-Date: 2007-02-06 14:25+0100\n"
+"PO-Revision-Date: 2007-02-06 15:36+0100\n"
 "Last-Translator: Jérome Wax <jerome.wax@linbox.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -250,7 +250,7 @@ msgstr "Édition des membres"
 
 #: modules/base/groups/ajaxFilter.php:109 modules/base/groups/index.php:119
 msgid "Edit group"
-msgstr "Ajouter un groupe"
+msgstr "Édition du groupe"
 
 #: modules/base/groups/ajaxFilter.php:111
 msgid "Groups management"
@@ -317,7 +317,7 @@ msgstr "Nom du groupe"
 
 #: modules/base/groups/edit.php:124
 msgid "Description"
-msgstr "description"
+msgstr "Description"
 
 #: modules/base/groups/edit.php:135
 msgid "Create"
