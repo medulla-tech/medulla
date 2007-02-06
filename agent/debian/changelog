@@ -1,23 +1,29 @@
+lmc-agent (1.1.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Linbox <info@linbox.com>  Tue,  6 Feb 2007 14:48:58 +0100
+
 lmc-agent (1.1.1-1) unstable; urgency=low
 
   * New upstream release
 
- -- Linbox <infos@linbox.com>  Mon, 13 Nov 2006 11:54:55 +0100
+ -- Linbox <info@linbox.com>  Mon, 13 Nov 2006 11:54:55 +0100
 
 lmc-agent (1.1.0-1) unstable; urgency=low
 
   * New upstream release
 
- -- Linbox <infos@linbox.com>  Tue,  5 Sep 2006 10:43:54 +0200
+ -- Linbox <info@linbox.com>  Tue,  5 Sep 2006 10:43:54 +0200
 
 lmc-agent (1.0.1-1) unstable; urgency=low
 
   * New upstream release.
 
- -- Linbox <infos@linbox.com>  Thu, 27 Jul 2006 15:44:21 +0200
+ -- Linbox <info@linbox.com>  Thu, 27 Jul 2006 15:44:21 +0200
 
 lmc-agent (1.0.0-1) unstable; urgency=low
 
   * Initial Release.
   
- -- Linbox <infos@linbox.com>  Mon,  3 Jul 2006 14:14:36 +0200
+ -- Linbox <info@linbox.com>  Mon,  3 Jul 2006 14:14:36 +0200
