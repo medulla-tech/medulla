@@ -143,16 +143,14 @@ if ($_GET["user"]) {
       if ($_POST["buser"]) { //if we submit modification
 
          if ($_POST['isBaseDesactive']) { //desactive user
-            changeUserAttributes($nlogin,'loginShell','/bin/false');
-            $result .= _("User disabled.")."<br />";
+              changeUserAttributes($nlogin,'loginShell','/bin/false');
+              $result .= _("User disabled.")."<br />";
          } else { //else if it desactive, reactive him
-            $detailArr = getDetailedUser($_GET["user"]);
-            if ($detailArr["loginShell"][0]=='/bin/false') {
-                if ($_POST['loginShell'] == "/bin/false") $newshell = "/bin/bash";
-                else $newshell = $_POST['loginShell'];
-	        changeUserAttributes($nlogin, 'loginShell', $newshell);
-                $result .= _("User enabled.")."<br />";
-            }
+	     if (($_POST['loginShell'] == "/bin/false") || ($_POST['loginShell'] == "")) {
+                 $newshell = "/bin/bash";
+                 $result .= _("User enabled.")."<br />";
+	     } else $newshell = $_POST['loginShell'];
+	     changeUserAttributes($nlogin, 'loginShell', $newshell);
          }
 
          if ($_POST["homeDir"]) {
