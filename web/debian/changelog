@@ -1,23 +1,29 @@
+lmc-web-base (1.1.2-1) testing; urgency=low
+
+  * New upstream release
+
+ -- Linbox <info@linbox.com>  Tue,  6 Feb 2007 14:44:40 +0100
+
 lmc-web-base (1.1.1-1) testing; urgency=low
 
   * New upstream release
 
- -- Linbox <infos@linbox.com>  Mon, 13 Nov 2006 12:02:28 +0100
+ -- Linbox <info@linbox.com>  Mon, 13 Nov 2006 12:02:28 +0100
 
 lmc-web-base (1.1.0-1) testing; urgency=low
 
   * New upstream release
 
- -- Linbox <infos@linbox.com>  Tue,  5 Sep 2006 11:27:50 +0200
+ -- Linbox <info@linbox.com>  Tue,  5 Sep 2006 11:27:50 +0200
 
 lmc-web-base (1.0.1-1) testing; urgency=low
 
   * New upstream release
 
- -- Linbox <infos@linbox.com>  Thu, 27 Jul 2006 15:46:51 +0200
+ -- Linbox <info@linbox.com>  Thu, 27 Jul 2006 15:46:51 +0200
 
 lmc-web-base (1.0.0-1) testing; urgency=low
 
   * New Release.
 
- -- Linbox <infos@linbox.com>  Tue,  4 Jul 2006 22:38:45 +0200
+ -- Linbox <info@linbox.com>  Tue,  4 Jul 2006 22:38:45 +0200
