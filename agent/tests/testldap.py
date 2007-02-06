@@ -56,7 +56,6 @@ class TestEmptyLdap(unittest.TestCase):
 
     def test_empty(self):
         self.assertEqual(self.l.searchUser(), [])
-        self.assertEqual(self.l.searchMachine(), [])
         self.assertEqual(self.l.searchGroup(), {})
         self.assertEqual(self.l.existUser("usertest"), False)
         self.assertEqual(self.l.existUser(""), False)

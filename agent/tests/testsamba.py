@@ -133,6 +133,9 @@ class testSambaLdap(unittest.TestCase):
         self.s.makeSambaGroup("allusers")
         self.assertEqual(self.s.isSambaGroup("allusers"), True)
 
+    def test_machines(self):
+        self.assertEqual(self.s.searchMachine(), [])
+
 
 if __name__ == "__main__":
     unittest.main()
