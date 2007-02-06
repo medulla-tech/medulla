@@ -34,6 +34,11 @@ from lmc.support.lmcException import lmcException
 
 from twisted.internet import protocol
 
+def cleanFilter(f):
+    for char in "()&=":
+        f = f.replace(char, "")
+    return f
+
 # All the command lines launched by this module will use the C locale
 os.environ["LANG"] = "C"
 

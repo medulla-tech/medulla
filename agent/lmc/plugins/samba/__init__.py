@@ -47,6 +47,7 @@ from lmc.plugins.base import ldapUserGroupControl
 
 from lmc.support.lmctools import shProcessProtocol
 from lmc.support.lmctools import generateBackgroundProcess
+from lmc.support.lmctools import cleanFilter
 from twisted.internet import reactor
 
 INI = "/etc/lmc/plugins/samba.ini"
@@ -281,6 +282,13 @@ def getConnected():
 def addMachine(name, comment, addMachineScript = False):
     return sambaLdapControl().addMachine(name, comment, addMachineScript)
 
+def delMachine(name):
+    return sambaLdapControl().delMachine(name)
+
+def getMachinesLdap(searchFilter= ""):
+    ldapObj = sambaLdapControl()
+    searchFilter = cleanFilter(searchFilter)
+    return ldapObj.searchMachine(searchFilter)
 
 class SambaConfig(PluginConfig):
 
@@ -447,6 +455,36 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         uid = uid + "$"
         self.l.delete_s('uid=' + uid + ',' + self.baseComputersDN)
         return 0
+
+    def searchMachine(self, pattern = '', base = None):
+        """return a list of machines"""
+        if (pattern==''): searchFilter = "cn=*"
+        else: searchFilter = "cn=" + pattern
+        if not base: base = self.baseComputersDN
+        result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
+
+        resArr=[]
+        for i in range(len(result_set)):
+            for entry in result_set[i]:
+                try:
+                    localArr= []
+
+                    uid = entry[1]['uid'][0]
+
+                    uidTmp=re.findall('(.*)[$]$',uid);
+
+                    for uid2 in uidTmp:
+                        uidParse=uid2
+
+                    # if name finished by an "$"
+                    if (re.search('(.*)[$]$',uid)):
+                        localArr.append(uidParse)
+                        resArr.append(localArr)
+                except:
+                    pass
+
+        resArr.sort()
+        return resArr
 
     def addSmbAttr(self, uid, password):
         cmd = 'smbpasswd -s -a '+uid

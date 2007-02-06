@@ -30,6 +30,7 @@ from time import time
 
 from lmc.support.lmctools import shProcessProtocol
 from lmc.support.lmctools import generateBackgroundProcess
+from lmc.support.lmctools import cleanFilter
 
 import ldap
 import ldap.schema
@@ -87,11 +88,6 @@ def listProcess():
             ret.append(assoc)
 
     return ret
-
-def cleanFilter(filter):
-    for i in "()&=":
-        filter = filter.replace(i,'')
-    return filter
 
 def activate():
     """
@@ -185,11 +181,6 @@ def searchUserAdvanced(searchFilter = ""):
         searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s))" % (searchFilter, searchFilter, searchFilter)
     return ldapObj.searchUserAdvance(searchFilter)
 
-def getMachinesLdap(searchFilter= ""):
-    ldapObj = ldapUserGroupControl()
-    searchFilter=cleanFilter(searchFilter)
-    return ldapObj.searchMachine(searchFilter)
-
 def getGroupsLdap(searchFilter= ""):
     ldapObj = ldapUserGroupControl()
     searchFilter=cleanFilter(searchFilter);
@@ -220,12 +211,6 @@ def createUser(login, passwd, firstname, surname, homedir, primaryGroup = None):
     ldapObj = ldapUserGroupControl()
     return ldapObj.addUser(login, passwd, firstname, surname, homedir, primaryGroup)
 
-# create a machine
-# via "smbpasswd -a -m"
-def addMachine(name, comment, addMachineScript = False):
-    ldapObj = ldapUserGroupControl()
-    return ldapObj.addMachine(name,comment, addMachineScript)
-
 def addUserToGroup(cngroup,uiduser):
     ldapObj = ldapUserGroupControl()
     return ldapObj.addUserToGroup(cngroup,uiduser)
@@ -244,10 +229,6 @@ def changeUserPrimaryGroup(uid, groupName):
 def delUser(uiduser, home):
     ldapObj = ldapUserGroupControl()
     return ldapObj.delUser(uiduser, home)
-
-def delMachine(uiduser):
-    ldapObj = ldapUserGroupControl()
-    return ldapObj.delMachine(uiduser)
 
 def delGroup(cngroup):
     ldapObj = ldapUserGroupControl()
@@ -569,7 +550,6 @@ class ldapUserGroupControl:
         except:
             self.authorizedHomeDir = [self.defaultHomeDir]
 
-
         # Fill dictionnary of hooks from config
         self.hooks = {}
         if self.config.has_section("hooks"):
@@ -582,7 +562,7 @@ class ldapUserGroupControl:
         if self.config.has_section(USERDEFAULT):
             for option in self.config.options(USERDEFAULT):
                 self.userDefault["base"][option] = self.config.get(USERDEFAULT, option)
-
+        
         self.l = ldap.open(ldapHost)
 
         # you should set this to ldap.VERSION2 if you're using a v2 directory
@@ -1413,39 +1393,6 @@ class ldapUserGroupControl:
                     break
 
         return ret
-
-    def searchMachine(self, pattern = '', base = None):
-        """return a list of machine"""
-        if (pattern==''): searchFilter = "cn=*"
-        else: searchFilter = "cn=" + pattern
-        if not base: base = self.baseComputersDN
-        result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
-
-        resArr=[]
-        for i in range(len(result_set)):
-            for entry in result_set[i]:
-                try:
-                    localArr= []
-
-                    uid = entry[1]['uid'][0]
-
-                    uidTmp=re.findall('(.*)[$]$',uid);
-
-                    for uid2 in uidTmp:
-                        uidParse=uid2
-
-                    # if name finished by an "$"
-                    if (re.search('(.*)[$]$',uid)):
-                        localArr.append(uidParse)
-                        resArr.append(localArr)
-
-                except:
-                    pass
-
-        #resArr = cSort(resArr)
-        resArr.sort()
-        return resArr
-
 
     def getMembers(self,group):
         """
