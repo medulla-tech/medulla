@@ -33,8 +33,8 @@ import copy
 import logging
 
 
-VERSION = "1.1.1"
-APIVERSION = "2:0:0"
+VERSION = "1.1.2"
+APIVERSION = "3:0:1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
