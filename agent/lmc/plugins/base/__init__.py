@@ -1611,29 +1611,22 @@ class ldapUserGroupControl:
             return Set()
 
     def maxGID(self):
-        """fetch maxGID
+        """
+        fetch maxGID
 
         @return: maxGid in ldap directory
         @rtype: int
         """
         result_set = self.search("cn=*", self.baseGroupsDN, None, ldap.SCOPE_ONELEVEL)
-
-        # prepare array for processing
         maxgid = 0
-
         for i in range(len(result_set)):
             for entry in result_set[i]:
-
                 try:
                     gidNumber = int(entry[1]['gidNumber'][0])
                 except KeyError:
-                    pass
-
-                if (maxgid<=gidNumber):
-                    maxgid = gidNumber
-
+                    gidNumber = -1
+                if maxgid <= gidNumber: maxgid = gidNumber
         if maxgid < self.gidStart: maxgid = self.gidStart
-
         return maxgid
 
     def moveHome(self,uid,newHome):
