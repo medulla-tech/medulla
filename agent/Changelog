@@ -1,3 +1,20 @@
+lmc-agent 1.1.2
+---------------
+
+ * base plugin:
+   o simple bug fixes for Fedora Directory Server (FDS) support
+   o do cn="givenName sn" when adding a user
+ * SAMBA plugin
+   o more checks when SAMBA plugin starts
+   o move machines management stuff from base plugin
+ * mail plugin:
+   o mail alias management for group
+   o plugin can now be disabled by configuration
+ * proxy plugin:
+   o plugin can now be disabled by configuration
+ * ox plugin
+   o plugin can now be disabled by configuration
+
 lmc-agent 1.1.1
 ---------------
 
