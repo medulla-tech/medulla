@@ -1,3 +1,10 @@
+lmc-web-base 1.1.2
+------------------
+
+ * user login shell attributes can now be edited 
+ * a group entry can now be edited
+ * code cleanup and XHTML/CSS fixes
+ 
 lmc-web-base 1.1.1
 ------------------
 
