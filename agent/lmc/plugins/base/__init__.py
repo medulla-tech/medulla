@@ -48,7 +48,7 @@ from sets import Set
 import logging
 import shutil
 
-from time import mktime, strptime, strftime
+from time import mktime, strptime, strftime, localtime
 
 # global definition for ldapUserGroupControl
 INI = "/etc/lmc/plugins/base.ini"
@@ -380,7 +380,7 @@ def getAllGroupsFromUser(uid):
 
 ###log view accessor
 def getLdapLog(filter = ''):
-    return LogView('ldap.log').getLog(filter)
+    return LogView().getLog(filter)
 
 _reptable = {}
 def _fill_reptable():
@@ -1956,51 +1956,49 @@ class LogView:
     LogView class. Provide accessor to show log content
     """
 
-    def __init__(self, filename = 'ldap.log', logdir = "/var/log",pattern=None):
-        self.file = open(os.path.join(logdir, filename),'r')
-        if pattern == None:
-            self.pattern = "(.*) ([^ ]*) slapd\[([0-9]*)\]: conn=([0-9]+) (op|fd)=([0-9]+) ([A-Za-z]+) (.*)$"
-        else:
-            self.pattern = pattern
-
+    def __init__(self, logfile = '/var/log/ldap.log', pattern=None):
         config = PluginConfig("base")
+        try: self.logfile = config.get("ldap", "logfile")
+        except NoSectionError, NoOptionError: self.logfile = logfile
         try: self.maxElt = config.get("LogView", "maxElt")
-        except NoSectionError, NoOptionError: self.maxElt= 200;
-
+        except NoSectionError, NoOptionError: self.maxElt= 200
+        self.file = open(self.logfile, 'r')
+        if pattern:
+            self.pattern = pattern
+        else:
+            self.pattern = {
+                "slapd-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
+                "fds-accesslog" : "^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$"
+                }
 
     def getLog(self, filter=""):
         log = self.file.readlines()
         log.reverse()
-
-        elts = list()
+        elts = []
         for line in log:
             if filter in line:
                 elts.append(line)
-
-
-        res = list()
+        res = []
         for line in elts[0:self.maxElt]:
            parsed = self.parseLine(line)
            if parsed:
                res.append(parsed)
            else:
                res.append(line)
-
         return res
 
-    def parseLine(self,line):
-        sre = re.search(self.pattern, line)
-        if sre:
-            group = sre.groups()
-            if group:
-                timed = strptime(group[0]+" "+strftime("%Y"),"%b %d %H:%M:%S %Y")
-                res = list()
-                res.append(mktime(timed))
-                #fetch all but the first (time)
-                for item in group[1:40]:
-                    res.append(item)
-                return res
-            else:
-                return 0
-        else:
-            return line
+    def parseLine(self, line):
+        ret = line
+        # We try each pattern until we found one that works
+        for pattern in self.pattern:
+            sre = re.search(self.pattern[pattern], line)
+            if sre:
+                res = sre.groupdict()
+                if res:
+                    # Use current year if not set
+                    if not res.has_key("Y"):
+                        res["Y"] = str(localtime()[0])
+                    timed = strptime("%s %s %s %s %s %s" % (res["b"], res["d"], res["Y"], res["H"], res["M"], res["S"]), "%b %d %Y %H %M %S")
+                    res["time"] = mktime(timed)
+                    return res
+        return ret
