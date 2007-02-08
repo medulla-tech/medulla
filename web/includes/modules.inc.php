@@ -202,10 +202,12 @@ function callPluginFunction($function,$paramArr = null) {
   // If the user try to change his/her password, we do it for each available
   // module, and we bypass all ACL check
   if (($function == "changeUserPasswd")||($function == "baseEdit")) {
-    global $conf;
-    foreach($list as $module) {
-      if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
-    }
+      /* Change password for all modules, even those where the user has no right. */
+      $list = $_SESSION["supportModList"];
+      global $conf;
+      foreach($list as $module) {
+          if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
+      }
   }
 
   $result = array();
