@@ -160,7 +160,7 @@ class shProcessProtocol(protocol.ProcessProtocol):
 
     def getExitCode(self):
         while not self.done:
-            reactor.iterate(0.1)
+            reactor.iterate()
         return self.exitCode
 
 
@@ -204,7 +204,7 @@ def launch(cmd, param):
     logger = logging.getLogger()
     reactor.spawnProcess(shProcess, cmd, param,os.environ)
     while not shProcess.done:
-        reactor.iterate(0.1)
+        reactor.iterate()
     if shProcess.exitCode != 0: #if process not finished correctly
         raise Exception('process not finished with exit code 0'+"\n"+shProcess.out)
     return shProcess.out
@@ -221,7 +221,7 @@ def shLaunch(cmd):
     shProcess = shProcessProtocol(cmd)
     reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
     while not shProcess.done:
-        reactor.iterate(0.1)
+        reactor.iterate()
     return shProcess
 
 def generateBackgroundProcess(cmd):
