@@ -3,7 +3,4 @@ server_port = 389
 search_base = ou=mailDomains,dc=linbox,dc=com
 query_filter = (&(objectClass=mailDomain)(virtualdomain=%s))
 result_attribute = virtualdomain
-bind = yes
-bind_dn = cn=admin,dc=linbox,dc=com
-bind_pw = LiNBoX
 version = 3
