@@ -174,12 +174,15 @@ def daemon(config):
     @param pidfile: path to pid file
     @type pidfile: str
     """
-    pidfile = config.get("log", "pidfile")
-    name = config.get("log", "name")
+    try:
+        pidfile = config.get("main", "pidfile")
+    except ConfigParser.NoOptionError:
+        # For compatibility with old version
+        pidfile = config.get("log", "pidfile")
 
     # Test if lmcagent has been already launched in daemon mode
     if os.path.isfile(pidfile):
-        print pidfile+" pid already exist. Maybe "+name+" is already running\n"
+        print pidfile+" pid already exist. Maybe lmc-agent is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
         sys.exit(0)
 
@@ -301,11 +304,15 @@ def cleanUp():
     """
     logger = logging.getLogger()
     logger.info('Lmc shutting down, cleaning up...')
-    pidfile = __config.get("log", "pidfile")
+    # FIXME: do we really need this global __config ?
+    try:
+        pidfile = __config.get("main", "pidfile")
+    except ConfigParser.NoOptionError:
+        pidfile = __config.get("log", "pidfile")
 
     # Test if lmcagent pidfile exist
     if os.path.isfile(pidfile):
-        os.system('rm -f '+pidfile)
+        os.unlink(pidfile)
 
 
 def startService(config,logger,mod):
