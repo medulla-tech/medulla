@@ -205,6 +205,8 @@
 
         $mod->addACL("mail",_("Mail address"));
         $mod->addACL("telephoneNumber",_("Telephone number"));
+        $mod->addACL("cn",_("Common name"));
+        $mod->addACL("displayName",_("Preferred name to be used"));
 
         $mod->addACL("pass",_("Password"));
         $mod->addACL("confpass",_("Confirm your password"));
