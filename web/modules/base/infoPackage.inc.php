@@ -121,12 +121,6 @@
                        );
         $submod->addPage($page);
 
-        $page = new Page("ajaxGroup");
-        $page->setFile("modules/base/users/ajaxGroup.php",
-                       array("AJAX" =>True,"visible"=>False)
-                       );
-        $submod->addPage($page);
-
         $page = new Page("add",_("Add a user"));
         $submod->addPage($page);
 
