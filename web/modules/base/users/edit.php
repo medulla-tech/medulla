@@ -323,7 +323,7 @@ $test = new TrFormElement(_("Common name"),new InputTpl("cn"),
 			  );
 $test->display(array("value"=>$detailArr["cn"][0]));
 
-$test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayName")
+$test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayName"),
 			  array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
 			  );
 $test->display(array("value"=>$detailArr["displayName"][0]));?>
