@@ -30,21 +30,18 @@ require("includes/session.inc.php");
 require("includes/acl.inc.php");
 require("includes/i18n.inc.php");
 require("includes/PageGenerator.php");
-
 require("modules/base/includes/edit.inc.php");
 
 $root = $conf["global"]["root"];
 
-if (isset($_POST["delog"]) && ($_POST["delog"]))
-{
-  foreach ($_SESSION as $key => $sessItem) {
-        if ($key != '__notify') { //delete all session element but notify
-            unset($_SESSION[$key]);
-        }
-  }
-
-  header("Location: ".$root."index.php");
-  exit;
+if (isset($_POST["delog"])) {
+    $_SESSION = array();
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(session_name(), '', time()-42000, '/');
+    }
+    session_destroy();
+    header("Location: " . $root . "index.php");
+    exit;
 }
 
 ?>
