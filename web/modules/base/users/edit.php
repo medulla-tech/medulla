@@ -34,11 +34,6 @@ if ($_GET["action"]=="add") {
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/groups.inc.php");
 
-//unset form local var
-unset($_SESSION["affectGroup"]);
-unset($_SESSION["possibleGroup"]);
-
-
 ?>
 
 #expertMode table {
@@ -83,7 +78,6 @@ if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin)) {
 }
 
 if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))  {
-    global $error;
     setFormError("telephoneNumber");
     $error.= _("This is not a valid telephone number.")."<br />";
 }
@@ -153,15 +147,18 @@ if ($_GET["user"]) {
 	     changeUserAttributes($nlogin, 'loginShell', $newshell);
          }
 
-         if ($_POST["homeDir"]) {
-            move_home($nlogin,$_POST["homeDir"]);
-         }
+         if ($_POST["homeDir"]) move_home($nlogin, $_POST["homeDir"]);
 
-         //change phone number
+         // Change phone number
          changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
+	 if (strlen($_POST["cn"]) > 0) changeUserAttributes($nlogin, "cn", $_POST["cn"]);
 	 if ($newuser) {
-	   if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
-	 } else changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+	     if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+	     if (strlen($_POST["displayName"]) > 0) changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
+	 } else {
+	     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+             changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
+	 }
 
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
@@ -303,8 +300,8 @@ if ($detailArr["loginShell"][0]=='/bin/false') {
 $param = array ("value" => $checked);
 
 $test = new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
-        array("tooltip"=>_("Disabled users cannot be logged into any services. <br/>
-                            Shell command are replaced by /bin/false"))
+        array("tooltip"=>_("A disabled user can't log in any UNIX services. <br/>
+                            Her/his login shell command is replaced by /bin/false"))
         );
 $test->setCssError("isBaseDesactive");
 $test->display($param);
@@ -319,7 +316,17 @@ $test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
 $test->display(array("value"=>$detailArr["homeDirectory"][0]));
 
 $test = new TrFormElement(_("Login shell"),new InputTpl("loginShell"));
-$test->display(array("value" => $detailArr["loginShell"][0]));?>
+$test->display(array("value" => $detailArr["loginShell"][0]));
+
+$test = new TrFormElement(_("Common name"),new InputTpl("cn"),
+			  array("tooltip" => _("This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."))
+			  );
+$test->display(array("value"=>$detailArr["cn"][0]));
+
+$test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayName")
+			  array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
+			  );
+$test->display(array("value"=>$detailArr["displayName"][0]));?>
 
 <tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
 <td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
