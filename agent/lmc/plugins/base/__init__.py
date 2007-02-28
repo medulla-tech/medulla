@@ -721,6 +721,7 @@ class ldapUserGroupControl:
                      'gecos':gecos,
                      'shadowLastChange':'11192',
                      'cn': firstN + " " + lastN,
+                     'displayName': firstN + " " + lastN,
                      'sn':lastN,
                      'givenName':firstN,
                      'shadowInactive':'-1',
@@ -1025,6 +1026,8 @@ class ldapUserGroupControl:
          @type  attrVal: object
         """
         if attrVal:
+            if type(attrVal) == unicode:
+                attrVal = attrVal.encode("utf-8")
             self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,attrVal)])
         else:
             self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,'rien')])
