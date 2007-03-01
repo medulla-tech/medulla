@@ -143,8 +143,13 @@ class LmcServer(xmlrpc.XMLRPC,object):
         if not isinstance(result, Fault):
             result = (result,)
         try:
+            if type(result[0]) == dict:
+                # FIXME
+                # Evil hack ! We need this to transport some data as binary instead of string
+                if "jpegPhoto" in result[0]:
+                    result[0]["jpegPhoto"] = [xmlrpclib.Binary(result[0]["jpegPhoto"][0])]
             s = xmlrpclib.dumps(result, methodresponse=1)
-        except:
+        except Exception, e:
             f = Fault(self.FAILURE, "can't serialize output")
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
