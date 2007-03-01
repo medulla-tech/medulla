@@ -40,7 +40,7 @@ import logging
 import os
 import ConfigParser
 
-VERSION = "1.1.2"
+VERSION = "1.1.3"
 APIVERSION = "2:0:1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
