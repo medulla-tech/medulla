@@ -150,6 +150,10 @@
         }
         $submod->addPage($page);
 
+        $page = new Page("getPhoto", _("Get user photo"));
+        $page->setOptions(array("visible"=>False, "noHeader" =>True));
+        $submod->addPage($page);
+
         $mod->addSubmod($submod);
 
         /**
