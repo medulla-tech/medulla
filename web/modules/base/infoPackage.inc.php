@@ -200,6 +200,7 @@
          * ACL properties
          */
 
+        $mod->addACL("jpegPhoto",_("User photo"));
         $mod->addACL("nlogin",_("User login"));
         $mod->addACL("name", _("User name"));
         $mod->addACL("groups",_("User groups"));

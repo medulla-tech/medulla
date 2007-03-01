@@ -36,7 +36,7 @@ function displayErrorCss($name) {
 
 class ImageTpl extends AbstractTpl {
 
-    function CheckboxTpl($name) {
+    function ImageTpl($name) {
         $this->name=$name;
     }
   
@@ -44,6 +44,10 @@ class ImageTpl extends AbstractTpl {
         print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
 	print '</td></tr><tr><td>&nbsp;</td><td><input name="photofilename" type="file" size="23" />';
 	if ($arrParam["action"] == "edit") print '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
+    }
+
+    function displayRo($arrParam) {
+        print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
     }
    
 }
