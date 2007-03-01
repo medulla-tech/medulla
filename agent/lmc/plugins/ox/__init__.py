@@ -23,8 +23,14 @@
 import ldap
 import ldap.modlist
 import copy
+
 # PostgreSQL connection
-import psycopg
+try:
+    import psycopg
+except ImportError:
+    # Try to fallback on psycopg2
+    import psycopg2.psycopg1 as psycopg
+
 from lmc.support import lmctools
 from lmc.support.config import *
 from lmc.support.lmcException import lmcException
