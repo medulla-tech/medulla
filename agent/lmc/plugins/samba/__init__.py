@@ -28,7 +28,7 @@ import ldap.modlist
 import fileinput
 import tempfile
 from lmc.plugins.base import ldapUserGroupControl
-from time import mktime, strptime
+from time import mktime, strptime, time
 
 # Try to import module posix1e
 try:
@@ -238,6 +238,9 @@ def addSmbAttr(uid, password):
 
 def isSmbUser(uid):
     return sambaLdapControl().isSmbUser(uid)
+
+def userPasswdHasExpired(uid):
+    return sambaLdapControl().userPasswdHasExpired(uid)
 
 def changeUserPasswd(uid, password):
     return sambaLdapControl().changeUserPasswd(uid, password)
@@ -739,6 +742,13 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
             self.l.modify_s(dn, modlist)
         return 0
 
+    def userPasswdHasExpired(self, uid):
+        """
+        Return true if the SAMBA password has expired for the given user
+        """
+        sambaPwdMustChange = self.getDetailedUser(uid)["sambaPwdMustChange"][0]
+        return int(sambaPwdMustChange) < time()
+    
     def makeSambaGroup(self, group):
         """
         Transform a POSIX group as a SAMBA group.
