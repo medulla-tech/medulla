@@ -208,6 +208,7 @@
         $mod->addACL("homeDir",_("User home directory"));
         $mod->addACL("loginShell",_("Login shell"));
 
+        $mod->addACL("title",_("User title"));
         $mod->addACL("mail",_("Mail address"));
         $mod->addACL("telephoneNumber",_("Telephone number"));
         $mod->addACL("cn",_("Common name"));

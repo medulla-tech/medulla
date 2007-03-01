@@ -150,8 +150,9 @@ if ($_GET["user"]) {
 
          if ($_POST["homeDir"]) move_home($nlogin, $_POST["homeDir"]);
 
-         // Change phone number
-         changeUserAttributes($nlogin,'telephoneNumber',$_POST['telephoneNumber']);
+         // Change user attributes
+         changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
+         changeUserAttributes($nlogin, 'title', $_POST['title']);
 	 if (strlen($_POST["cn"]) > 0) changeUserAttributes($nlogin, "cn", $_POST["cn"]);
 	 if ($newuser) {
 	     if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
@@ -285,21 +286,9 @@ if ($_GET["action"]=="add") {
     $formElt = new HiddenTpl("nlogin");
 }
 
-
-$test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
-$test->setCssError("Photo");
-$test->display(array("value" => $detailArr["uid"][0], "action" => $_GET["action"]));
-
 $test = new TrFormElement(_("Login"),$formElt);
 $test->setCssError("login");
 $test->display(array("value"=>$detailArr["uid"][0]));
-
-$test = new TrFormElement(_("Name"),new InputTpl("name"));
-$test->display(array("value"=>$detailArr["sn"][0]));
-
-$test = new TrFormElement(_("First name"),new InputTpl("firstname"));
-$test->display(array("value"=>$detailArr["givenName"][0]));
-
 
 $test = new TrFormElement(_("Password"),new PasswordTpl("pass"));
 $test->setCssError("pass");
@@ -309,6 +298,19 @@ $test = new TrFormElement(_("Confirm password"),new PasswordTpl("confpass"));
 $test->setCssError("pass");
 $test->display(null);
 
+
+$test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
+$test->setCssError("Photo");
+$test->display(array("value" => $detailArr["uid"][0], "action" => $_GET["action"]));
+
+$test = new TrFormElement(_("Name"),new InputTpl("name"));
+$test->display(array("value"=>$detailArr["sn"][0]));
+
+$test = new TrFormElement(_("First name"),new InputTpl("firstname"));
+$test->display(array("value"=>$detailArr["givenName"][0]));
+
+$test = new TrFormElement(_("Title"),new InputTpl("title"));
+$test->display(array("value"=>$detailArr["title"][0]));
 
 $test = new TrFormElement(_("Mail address"),new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/'));
 $test->setCssError("mail");
