@@ -134,8 +134,9 @@ if ($_GET["user"]) {
 
   if (!$error) {
       global $result;
-      if ($_POST["buser"]) { //if we submit modification
-
+      if ($_POST["deletephoto"]) {
+        changeUserAttributes($_POST["nlogin"], "jpegPhoto", null);
+      } else if ($_POST["buser"]) { //if we submit modification
          if ($_POST['isBaseDesactive']) { //desactive user
               changeUserAttributes($nlogin,'loginShell','/bin/false');
               $result .= _("User disabled.")."<br />";
@@ -159,6 +160,30 @@ if ($_GET["user"]) {
 	     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
              changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
 	 }
+
+	 /* Change photo */
+	 if (!empty($_FILES["photofilename"]["name"])) {
+	   if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
+	       $size = getimagesize($_FILES["photofilename"]["tmp_name"]);
+               if ($size["mime"] == "image/jpeg") {
+		 $maxwidth = 320;
+		 $maxheight = 320;
+		 if (($size[0] <= $maxwidth) && ($size[1] <= $maxheight)) {
+		   class Trans {
+		     var $scalar;
+		     var $xmlrpc_type;
+		   }
+		   $obj = new Trans();
+		   $obj->scalar = "";
+		   $obj->xmlrpc_type = "base64";
+		   $f = fopen($_FILES["photofilename"]["tmp_name"], "r");
+		   while (!feof($f)) $obj->scalar .= fread($f, 4096);  
+		   fclose($f);
+                   changeUserAttributes($nlogin, "jpegPhoto", $obj);		 
+		 } else $error .= _("The photo is too big. The max size is $maxwidth x $maxheight. <br/>");
+	       } else $error .= _("The photo is not a JPG file.") . "<br/>";
+	   } else $error .= _("The photo is not a JPG file.") . "<br/>";
+	 }	 
 
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
@@ -239,7 +264,7 @@ if ($_GET["action"]=="add") {
 <div class="fixheight"></div>
 
 <div>
-<form id="edit" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="selectAll(); return validateForm();">
+<form id="edit" enctype="multipart/form-data" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="selectAll(); return validateForm();">
 <div class="formblock" style="background-color: #F4F4F4;">
 <table cellspacing="0">
 <?php
@@ -260,6 +285,10 @@ if ($_GET["action"]=="add") {
     $formElt = new HiddenTpl("nlogin");
 }
 
+
+$test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
+$test->setCssError("Photo");
+$test->display(array("value" => $detailArr["uid"][0], "action" => $_GET["action"]));
 
 $test = new TrFormElement(_("Login"),$formElt);
 $test->setCssError("login");
