@@ -1,3 +1,13 @@
+lmc-web-base 1.1.3
+------------------
+
+ * user photo (JPEG format) can now be uploaded
+ * user list now display telephone number and mail address
+ * user "cn", "displayName" and "title" LDAP attribute can now be edited
+ * update scriptaculous AJAX framework to version 1.7.0
+ * destroy user session when login out
+ * code cleanup and bug fixes
+
 lmc-web-base 1.1.2
 ------------------
 
