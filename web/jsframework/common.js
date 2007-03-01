@@ -52,32 +52,3 @@ function pushSearchGroup() {
     launch++;
     setTimeout("updateSearchGroup()",500);
 }
-
-
-/**
- * update div with user
- */
-function updateSearchUser() {
-    launch--;
-
-        if (launch==0) {
-            new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+document.userForm.param.value, { asynchronous:true, evalScripts: true});
-        }
-    }
-
-/**
- * provide navigation in ajax for user
- */
-
-function updateSearchUserParam(filter, start, end) {
-       new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
-    }
-
-/**
- * wait 500ms and update search
- */
-
-function pushSearchUser() {
-    launch++;
-    setTimeout("updateSearchUser()",500);
-}
