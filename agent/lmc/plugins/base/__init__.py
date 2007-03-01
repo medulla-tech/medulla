@@ -47,6 +47,7 @@ import tempfile
 from sets import Set
 import logging
 import shutil
+import xmlrpclib
 
 from time import mktime, strptime, strftime, localtime
 
@@ -178,7 +179,7 @@ def searchUserAdvanced(searchFilter = ""):
     ldapObj = ldapUserGroupControl()
     searchFilter = cleanFilter(searchFilter)
     if searchFilter:
-        searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s))" % (searchFilter, searchFilter, searchFilter)
+        searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s)(telephoneNumber=%s)(mail=%s))" % (searchFilter, searchFilter, searchFilter, searchFilter, searchFilter)
     return ldapObj.searchUserAdvance(searchFilter)
 
 def getGroupsLdap(searchFilter= ""):
@@ -1014,26 +1015,32 @@ class ldapUserGroupControl:
 
     def changeUserAttributes(self,uid,attr,attrVal):
         """
-         change an user attributes
+        Change an user attribute.
+        If an attrVal is empty, the attribute will be removed.
 
-         @param uid: uid of this user (not full ldap path)
-         @type  uid: str
+        @param uid: uid of this user (not full ldap path)
+        @type  uid: str
 
-         @param attr: attribute name
-         @type  attr: str
+        @param attr: attribute name
+        @type  attr: str
 
-         @param attrVal: attribute value
-         @type  attrVal: object
+        @param attrVal: attribute value
+        @type  attrVal: object
         """
-        if attrVal:
+        if attrVal:            
             if type(attrVal) == unicode:
                 attrVal = attrVal.encode("utf-8")
+            elif isinstance(attrVal, xmlrpclib.Binary):
+                # Needed for binary string coming from XMLRPC
+                attrVal = str(attrVal)
             self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,attrVal)])
         else:
-            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,'rien')])
-            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr,'rien')])
-
-        return 0
+            # Remove the attribute because its value is empty
+            try:
+                self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr, None)])
+            except ldap.NO_SUCH_ATTRIBUTE:
+                # The attribute has been already deleted
+                pass
 
     def changeGroupAttributes(self, group, attr, attrVal):
         """
@@ -1368,7 +1375,8 @@ class ldapUserGroupControl:
         for i in range(len(result_set)):
             for entry in result_set[i]:
                 localArr= {}
-                for field in ["uid", "gecos", "homeDirectory", "sn", "givenName"]:
+                # FIXME: field list should not be hardcoded
+                for field in ["uid", "gecos", "homeDirectory", "sn", "givenName", "mail", "telephoneNumber"]:
                     try:
                         localArr[field] = entry[1][field][0]
                     except KeyError:
