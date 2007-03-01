@@ -1,3 +1,10 @@
+lmc-agent 1.1.3
+---------------
+
+ * XML-RPC agent:
+   o allow transfert of binary values in XML-RPC stream
+ * some bug fixes
+
 lmc-agent 1.1.2
 ---------------
 
@@ -12,7 +19,7 @@ lmc-agent 1.1.2
    o plugin can now be disabled by configuration
  * proxy plugin:
    o plugin can now be disabled by configuration
- * ox plugin
+ * ox plugin:
    o plugin can now be disabled by configuration
 
 lmc-agent 1.1.1
