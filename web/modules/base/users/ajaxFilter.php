@@ -28,12 +28,9 @@ require("modules/base/includes/users.inc.php");
 $root = $conf["global"]["root"];
 $maxperpage = $conf["global"]["maxperpage"];
 
-
 require("graph/navbartools.inc.php");
 
-
-function
-print_ajax_nav($curstart, $curend, $items, $filter) {
+function print_ajax_nav($curstart, $curend, $items, $filter) {
   $_GET["action"] = "index";
   global $conf;
 
@@ -111,8 +108,8 @@ global $maxperpage;
 $arrUser = array();
 $arrSnUser = array();
 $homeDirArr = array();
-
-
+$mails = array();
+$phones = array();
 $css =array();
 
 for ($idx = 0; $idx < count($users); $idx++) {
@@ -123,6 +120,12 @@ for ($idx = 0; $idx < count($users); $idx++) {
 
     $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];;
     $homeDirArr[]=$users[$idx]['homeDirectory'];
+    if (strlen($users[$idx]["mail"]) > 0) {
+      $mails[] = '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
+    } else {
+      $mails[] = $users[$idx]["mail"];
+    }
+    $phones[] = $users[$idx]["telephoneNumber"];
 }
 
 
@@ -134,12 +137,10 @@ $n->setCssClass("userName");
 $n->css = $css;
 
 $n->addExtraInfo($arrSnUser,_("Name"));
+$n->addExtraInfo($mails,_("Mail"));
+$n->addExtraInfo($phones,_("Telephone"));
 
-//add a list with all homeDir
-$n->addExtraInfo($homeDirArr,_("Home directory"));
-
-$n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user") );
-//
+$n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user"));
 $n->addActionItem(new ActionItem(_("LMC rights"),"editacl","editacl","user") );
 $n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","user") );
 $n->addActionItem(new ActionPopupItem(_("Backup"),"backup","archiver","user") );

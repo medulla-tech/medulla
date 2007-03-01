@@ -34,47 +34,65 @@ require("modules/base/includes/users.inc.php");
 </style>
 
 <?php
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-
-if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
-
-if (!isset($_GET["items"])) {
-  $users = get_users_detailed($error, $_GET["filter"]);
-  $start = 0;
-
-  if (count($users) > 0) {
-      $end = $conf["global"]["maxperpage"] - 1;
-  } else {
-      $end = 0;
-  }
-} else {
-  $users = unserialize(base64_decode(urldecode($_GET["items"])));
-}
-
-if (isset($_GET["start"])) {
-    $start = $_GET["start"];
-    $end = $_GET["end"];
-}
-
-if (!$users) {
-    $start = 0;
-    $end = 0;
-}
-
-if (isset($_POST["filter"])) {
-    $start = 0;
-    $end = 9;
-}
-
-setVar('start',$start);
-setVar('end',$end);
-setVar('stop',$stop);
-setVar('users',$users);
-
-renderTPL("index");
-
 ?>
+
+<form name="userForm" id="userForm" action="#">
+
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearchUser(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    </span>
+    </div>
+
+    <script type="text/javascript">
+document.getElementById('param').focus();
+
+
+/**
+ * update div with user
+ */
+function updateSearchUser() {
+    launch--;
+
+        if (launch==0) {
+            new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+document.userForm.param.value, { asynchronous:true, evalScripts: true});
+        }
+    }
+
+/**
+ * provide navigation in ajax for user
+ */
+
+function updateSearchUserParam(filter, start, end) {
+       new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+    }
+
+/**
+ * wait 500ms and update search
+ */
+
+function pushSearchUser() {
+    launch++;
+    setTimeout("updateSearchUser()",500);
+}
+        
+pushSearchUser();
+    </script>
+
+</form>
+
+<h2><?= _("User list");?></h2>
+
+<div class="fixheight"></div>
+
+<div id="userContainer">
+</div>
+
+
 
 
