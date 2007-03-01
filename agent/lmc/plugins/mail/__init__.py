@@ -52,9 +52,14 @@ def activate():
     
     schema = ldapObj.getSchema("mailAccount")
     if len(schema) <= 0:
-        logger.error("mailAccount schema is not included in LDAP directory");
+        logger.error("mailAccount objectClass is not included in LDAP directory");
         return False
     
+    schema = ldapObj.getSchema("mailGroup")
+    if len(schema) <= 0:
+        logger.error("mailGroup objectClass is not included in LDAP directory");
+        return False
+
     if config.vDomainSupport:        
         # Create required OU
         head, path = config.vDomainDN.split(",", 1)
