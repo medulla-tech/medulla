@@ -114,6 +114,9 @@ def delVDomain(domain):
 def setVDomainDescription(domain, description):
     MailControl().setVDomainDescription(domain, description)
 
+def setVDomainQuota(domain, quota):
+    MailControl().setVDomainQuota(domain, quota)
+
 def getVDomain(domain):
     return MailControl().getVDomain(domain)    
 
@@ -206,6 +209,26 @@ class MailControl(ldapUserGroupControl):
             self.l.modify_s(dn, [(ldap.MOD_REPLACE, "virtualdomaindescription", "null")])
             self.l.modify_s(dn, [(ldap.MOD_DELETE, "virtualdomaindescription", "null")])
 
+    def setVDomainQuota(self, domain, quota):
+        """
+        Set the quota of a virtual mail domain name
+
+        @param domain: virtual mail domain name
+        @type domain: str
+
+        @param quota: created user quota in the virtual domain
+        @type description: unicode
+        """        
+        dn = "virtualdomain=" + domain + ", " + self.configMail.vDomainDN
+        try:
+            int(quota)
+        except ValueError:
+            quota = None
+        if quota:
+            self.l.modify_s(dn, [(ldap.MOD_REPLACE, "mailuserquota", quota)])
+        else:
+            self.l.modify_s(dn, [(ldap.MOD_DELETE, "mailuserquota", None)])
+
     def getVDomain(self, domain):
         """
         Get a virtual mail domain name entry from directory
@@ -280,33 +303,7 @@ class MailControl(ldapUserGroupControl):
         @type mailbox: mailbox value
         """
         if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
-        if not mailbox:
-            # FIXME: should be factorized and put elsewhere
-            # Get current user entry
-            dn = 'uid=' + uid + ',' + self.baseUsersDN
-            s = self.l.search_s(dn, ldap.SCOPE_BASE)
-            c, old = s[0]
-            new = old.copy()
-            # Modify attributes
-            for attribute, value in self.configMail.userDefault.items():
-                if "%" in value:
-                    for a, v in old.items():
-                        v = v[0]
-                        if type(v) == str:
-                            value = value.replace("%" + a + "%", v)
-                found = False
-                for key in new.keys():
-                    if key.lower() == attribute:
-                        new[key] = value
-                        found = True
-                        break
-                if not found: new[attribute] = value                
-
-            # Update LDAP
-            modlist = ldap.modlist.modifyModlist(old, new)
-            self.l.modify_s(dn, modlist)
-        else:
-            self.changeUserAttributes(uid, 'mailbox', mailbox)
+        if mailbox: self.changeUserAttributes(uid, 'mailbox', mailbox)
 
     def hasMailObjectClass(self, uid):
         """
@@ -333,21 +330,46 @@ class MailControl(ldapUserGroupControl):
         return "mailGroup" in self.getDetailedGroup(group)["objectClass"]
 
     def addMailObjectClass(self, uid, maildrop = None):
+        # Get current user entry
+        dn = 'uid=' + uid + ',' + self.baseUsersDN
+        s = self.l.search_s(dn, ldap.SCOPE_BASE)
+        c, old = s[0]
+        new = copy.deepcopy(old)
+        # Modify attributes
+        for attribute, value in self.configMail.userDefault.items():
+            if "%" in value:
+                for a, v in old.items():
+                    v = v[0]
+                    if type(v) == str:
+                        value = value.replace("%" + a + "%", v)
+            found = False
+            for key in new.keys():
+                if key.lower() == attribute:
+                    new[key] = value
+                    found = True
+                    break
+            if not found: new[attribute] = value                
+
+        if not "mailAccount" in new["objectClass"]:
+            new["objectClass"].append("mailAccount")
+
         if maildrop == None: maildrop = uid
-        cn = 'uid=' + uid + ', ' + self.baseUsersDN
-        attrs = []
-        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
+        new["maildrop"] = maildrop
 
-        c, attrs = attrib[0]
-        newattrs = copy.deepcopy(attrs)
+        if self.hasVDomainSupport():
+            # If the user has her/his mail address in a VDomain, set quota according to domain policy
+            maildomain = new["mail"][0].split("@")[1]
+            try:
+                vdomain = self.getVDomain(maildomain)
+                new["mailuserquota"] = vdomain[0][1]["mailuserquota"]
+            except ldap.NO_SUCH_OBJECT:
+                pass
+            except KeyError:
+                pass
 
-        if not 'mailAccount' in newattrs["objectClass"]:
-            newattrs["objectClass"].append('mailAccount')
-
-        newattrs['maildrop'] = maildrop
-        mlist = ldap.modlist.modifyModlist(attrs, newattrs)
-
-        self.l.modify_s(cn, mlist)
+        # Update LDAP
+        modlist = ldap.modlist.modifyModlist(old, new)
+        self.l.modify_s(dn, modlist)
 
     def getVDomainUsersCount(self, domain):
         return len(self.search("(&(objectClass=mailAccount)(mail=*@%s))" % domain, self.baseUsersDN, [""]))

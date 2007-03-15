@@ -69,7 +69,7 @@ def activate():
     configParser = lmctools.getConfigParser("samba")
     logger = logging.getLogger()
 
-    if (configParser.get("main","disable")=="1"):
+    if configParser.get("main","disable") == "1":
         logger.info("samba plugin disabled by configuration.")
         return False
 
@@ -83,7 +83,7 @@ def activate():
     try:
          schema = ldapObj.getSchema("sambaSamAccount")
          if len(schema) <= 0:
-             logger.error("Samba schema are not included in LDAP directory");
+             logger.error("Samba schema is not included in LDAP directory");
              return False
     except:
         logger.exception("invalid schema")
