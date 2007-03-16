@@ -985,6 +985,21 @@ form {
 	margin: 0;
 }
 
+.textfield:disabled {
+	font: 13px Arial, verdana, sans-serif;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left:0px;
+	border-top: 1px solid #666;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #666;
+	clear: right;
+	padding: 2px;
+	background-color: #FFF;
+        color: #CCC;
+}
+
 .textfield {
 	font: 13px Arial, verdana, sans-serif;
 	margin-top: 0px;
@@ -999,7 +1014,6 @@ form {
 	background-color: #FFFFFF;
 	color: #666;
 }
-
 
 .searchfield {
 	font: 13px Arial, verdana, sans-serif;
