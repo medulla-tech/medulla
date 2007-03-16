@@ -117,6 +117,9 @@ def setVDomainDescription(domain, description):
 def setVDomainQuota(domain, quota):
     MailControl().setVDomainQuota(domain, quota)
 
+def resetUsersVDomainQuota(domain):
+    MailControl().resetUsersVDomainQuota(domain)
+
 def getVDomain(domain):
     return MailControl().getVDomain(domain)    
 
@@ -228,6 +231,18 @@ class MailControl(ldapUserGroupControl):
             self.l.modify_s(dn, [(ldap.MOD_REPLACE, "mailuserquota", quota)])
         else:
             self.l.modify_s(dn, [(ldap.MOD_DELETE, "mailuserquota", None)])
+
+    def resetUsersVDomainQuota(self, domain):
+        """
+        Reset the quota of all users in the given virtual mail domain
+
+        @param domain: virtual mail domain name
+        @type domain: str
+        """
+        vdomain = self.getVDomain(domain)
+        mailuserquota = vdomain[0][1]["mailuserquota"][0]
+        for user in self.getVDomainUsers(domain):
+            self.changeUserAttributes(user[1]["uid"][0], "mailuserquota", mailuserquota)
 
     def getVDomain(self, domain):
         """
