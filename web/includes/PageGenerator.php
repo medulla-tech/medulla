@@ -180,9 +180,9 @@ class ActionItem {
     /**
      * transform $obj param in link for this action
      */
-    function encapsulate($obj) {
+    function encapsulate($obj, $param) {
         if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
-            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."\">";
+	    $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -220,9 +220,9 @@ class ActionPopupItem extends ActionItem {
         echo ".</a></li>";
     }
 
-    function encapsulate($obj) {
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."\" ";
-        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$obj."'); return false;\">";
+    function encapsulate($obj, $param) {
+        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."\" ";
+        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."'); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
@@ -237,6 +237,7 @@ class ActionPopupItem extends ActionItem {
 class ListInfos{
     var $arrInfo; /**< main list */
     var $extraInfo;
+    var $paramInfo;
     var $name;
     var $arrAction; /**< list of possible action */
     var $end, $start;
@@ -255,6 +256,7 @@ class ListInfos{
         $this->initVar();
         $this->col_width = array();
 	$this->extranavbar = $extranavbar;
+        $this->firstColumnActionLink = True;
     }
 
     function setAdditionalInfo($addinfo) {
@@ -277,6 +279,31 @@ class ListInfos{
         $this->extraInfo[]=&$arrString;
         $this->description[] = $description;
         $this->col_width[] = $width;
+    }
+
+    /**
+     *  set parameters array for main action
+     *  @param $arrString an Array of string to be used as parameters for the main action
+     */
+    function setParamInfo($arrString) {
+        $this->paramInfo = $arrString;
+    }
+
+    /**
+     * Set the left padding of the table header.
+     * It will be set to 32 by default
+     * @param $padding an integer
+     */
+    function setTableHeaderPadding($padding) {
+        $this->first_elt_padding = $padding;
+    }
+
+    /**
+     * Disable the link to the first available action in the table
+     * This link is always done by default
+     */
+    function disableFirstColumnActionLink() {
+        $this->firstColumnActionLink = False;
     }
 
     /**
@@ -361,7 +388,7 @@ class ListInfos{
      */
     function drawMainAction($idx) {
         echo "<td class=\"".$this->cssClass."\">";
-        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx]);
+        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         if ($this->_addInfo[$idx]) {
             print $this->_addInfo[$idx];
         }
@@ -406,7 +433,7 @@ class ListInfos{
                 }
 
                 //link to first action (if we have an action)
-                if (count($this->arrAction)!=0) {
+                if (count($this->arrAction) && $this->firstColumnActionLink) {
                     $this->drawMainAction($idx);
                 } else {
                     echo "<td class=\"".$this->cssClass."\">";
@@ -455,7 +482,11 @@ class ListInfos{
     }
 
     function display($navbar = 1, $header =1 ) {
-        if ($header ==1) {
+        if (!isset($this->paramInfo)) {
+	  $this->paramInfo = $this->arrInfo;
+	}
+
+        if ($header == 1) {
             $this->drawHeader($navbar);
         }
         $this->drawTable($navbar);
