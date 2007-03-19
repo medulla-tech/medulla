@@ -501,7 +501,7 @@ class UserInfos extends ListInfos{
 
     function drawMainAction($idx) {
         echo "<td class=\"".$this->css[$idx]."\">";
-        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx]);
+        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         echo "</td>";
     }
 
