@@ -150,6 +150,30 @@ class InputTpl extends AbstractTpl{
 }
 
 /**
+ * Input with IP address check
+ */ 
+class IPInputTpl extends InputTpl {
+
+    function IPInputTpl($name) {
+        $this->name = $name;
+        $this->regexp = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+    }
+
+}
+
+/**
+ * Input with MAC address check
+ */ 
+class MACInputTpl extends InputTpl {
+
+    function MACInputTpl($name) {
+        $this->name = $name;
+        $this->regexp = '/^([0-9a-f]{2}(:|$)){6}$/i';
+    }
+
+}
+
+/**
  * simple add label with Hidden field
  */
 class HiddenTpl extends AbstractTpl{
