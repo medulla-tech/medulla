@@ -194,19 +194,19 @@ if ($_GET["user"]) {
          callPluginFunction("changeUser",array($_POST));
 
           //if we change the password
-          if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "")) {
-	    callPluginFunction("changeUserPasswd", array(array($_GET["user"], $_POST["pass"])));
+         if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "")) {
+             callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
 
-            //update result display
-            $result.=_("Password updated.")."<br />";
-          }
+             //update result display
+             $result.=_("Password updated.")."<br />";
+         }
 
-	  /* Primary group management */
-	  $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
-          if ($_POST["primary_autocomplete"] != $primaryGroup) {
-              /* Update the primary group */
-              callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"], $primaryGroup));
-	  }
+         /* Primary group management */
+         $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
+         if ($_POST["primary_autocomplete"] != $primaryGroup) {
+             /* Update the primary group */
+             callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"], $primaryGroup));
+         }
 
          /* Secondary groups management */
          $old = getUserSecondaryGroups($_POST['nlogin']);

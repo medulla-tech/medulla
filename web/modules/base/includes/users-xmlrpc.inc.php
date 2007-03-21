@@ -20,42 +20,38 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
 
-function check_auth($login, $pass) {
-  $param[]=$login;
-  $param[]=$pass;
-
-  return xmlCall("base.ldapAuth",$param);
+function check_auth($login, $pass) {    
+    $param = array();
+    $param[] = $login;
+    $param[] = prepare_string($pass);
+    return xmlCall("base.ldapAuth", $param);
 }
 
 function auth_user ($login, $pass, $error)
 {
-  global $conf;
-  global $error;
+    global $conf;
+    global $error;
+    
+    if (($login == "") || ($pass == "")) return false;
 
-  if (($login == "") || ($pass == "")) return false;
+    $param = array();
+    $param[] = $login;
+    $param[] = prepare_string($pass);
 
-  $param[]=$login;
-  $param[]=$pass;
-
-  //put server selected in $_SESSION
-  $urlArr=parse_url($_POST["server"]);
-  $_SESSION["XMLRPC_agent"] = $urlArr;
-
-  $ret= xmlCall("base.ldapAuth",$param);
-
-  if ($ret!="1") // erreur
-    {
-          if (!isXMLRPCError()) {
-	       $error = _T("Invalid login");
-          }
-	  return false;
+    //put server selected in $_SESSION
+    $urlArr = parse_url($_POST["server"]);
+    $_SESSION["XMLRPC_agent"] = $urlArr;
+    
+    $ret = xmlCall("base.ldapAuth",$param);    
+    if ($ret != "1") {
+        if (!isXMLRPCError()) {
+            $error = _T("Invalid login");
+        }
+        return false;
     }
-
-  return true;
+    
+    return true;
 }
 
 /**
@@ -96,14 +92,12 @@ function get_users_detailed(&$error, $filter = null)
  */
 function add_user($login, $pass, $firstname, $name, $homedir, $primaryGroup = "")
 {
-  $param = array($login, $pass, $firstname, $name, $homedir, $primaryGroup);
-  $ret = xmlCall("base.createUser",$param);
-
-  return sprintf(_("user %s created<br />"),$login);
+    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $primaryGroup);
+    $ret = xmlCall("base.createUser", $param);    
+    return sprintf(_("user %s created<br />"), $login);
 }
 
-function
-del_user($login, $files)
+function del_user($login, $files)
 {
    callPluginFunction("delUser",$login);
    if ($files=="on") {$fichier=1;} else {$fichier=0;}
@@ -126,13 +120,6 @@ function getUserPrimaryGroup($uid) {
 
 function getUserSecondaryGroups($uid) {
     return xmlCall("base.getUserSecondaryGroups",array($uid));
-}
-
-function chpasswd_user($login, $pass)
-{
-    $param[]=$login;
-    $param[]=$pass;
-  return xmlCall("base.changeUserPasswd",$param);
 }
 
 function exist_user($uid) {
