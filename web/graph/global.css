@@ -1238,7 +1238,7 @@ a.tooltip:hover b{
 
 a.tooltip:hover img{
 	float:none;
-	margin:5;
+	margin:5px;
 	vertical-align:middle;
 	border-style:none;
 	border-width:0;
