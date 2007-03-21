@@ -34,8 +34,6 @@ require_once("../session.inc.php");
 require_once ("../PageGenerator.php");
 require_once ("../FormGenerator.php");
 
-
-
 $arr = $_POST[$name];
 
 if (isset($_POST['del'])) {
@@ -48,12 +46,15 @@ if (isset($_POST['del'])) {
 
 $arr = array_values($arr);
 
+global $aclArray;
+if (!isset($aclArray)) {
+    /*
+     * When this template is reloaded, we loose $aclArray, and this triggesr a PHP warning on some PHP version.
+     * We can safely set it to an empty array.
+     */
+    $aclArray = array();
+}
 
 $test = new FormElement(_T($name,"mail"),new MultipleInputTpl($name,urldecode($_POST['desc'])));
 $test->setCssError($name);
 $test->display($arr);
-
-/*print '<pre>';
-//print_r($_GET);
-print_r($_POST);
-print '</pre>';*/
