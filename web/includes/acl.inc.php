@@ -24,85 +24,82 @@
 <?php
 
 function existAclAttr($attr) {
-global $aclArray;
-  foreach ($aclArray as $items) {
-    if (array_key_exists($attr,$items)) {
-      return true;
+    global $aclArray;
+    foreach ($aclArray as $items) {
+        if (array_key_exists($attr,$items)) {
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 /**
  * return wich module correspond an attribute
  */
 function getAclAttrModule($attr) {
-global $aclArray;
-  foreach ($aclArray as $key=>$items) {
-    if (array_key_exists($attr,$items)) {
-      return $key;
+    global $aclArray;
+    foreach ($aclArray as $key=>$items) {
+        if (array_key_exists($attr,$items)) {
+            return $key;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 function getAclAttr($attr) {
-  if ($_SESSION["login"]=="root") {return "rw";}
-  else { return $_SESSION["aclattr"][$attr]; }
+    if ($_SESSION["login"]=="root") {
+        return "rw";
+    } else { 
+        return $_SESSION["aclattr"][$attr];
+    }
 }
 
 function hasCorrectAcl($module,$submod,$action) {
     global $noAclArray;
     if ($noAclArray[$module][$submod][$action]==1) { return true; }
-  if ($_SESSION["login"]=="root") {return true;}
-  if ($_SESSION["acl"][$module][$submod][$action]["right"]) {return true;}
-  return false;
+    if ($_SESSION["login"]=="root") {return true;}
+    if ($_SESSION["acl"][$module][$submod][$action]["right"]) {return true;}
+    return false;
 }
 
 function hasCorrectModuleAcl($module) {
-
   global $redirArray;
   // if you are root
   if ($_SESSION["login"]=="root") {return true;}
-
   //if you have one acces to the module
   if ($_SESSION["acl"][$module]) {return true;}
-
   if (!$redirArray[$module]) { return true; }
-
   return false;
 }
 
 function getDefaultPage() {
-  $base = "";
-  foreach(array_keys($_SESSION["acl"]) as $key => $value) {
-    if ($value != "") {
-      $base = $value;
-      break;
+    $base = "";
+    foreach(array_keys($_SESSION["acl"]) as $key => $value) {
+        if ($value != "") {
+            $base = $value;
+            break;
+        }
     }
-  }
 
-  $submod = "";
-  foreach(array_keys($_SESSION["acl"][$base]) as $key => $value) {
-    if ($value != "") {
-      $submod = $value;
-      break;
+    $submod = "";
+    foreach(array_keys($_SESSION["acl"][$base]) as $key => $value) {
+        if ($value != "") {
+            $submod = $value;
+            break;
+        }
     }
-  }
 
-  $action = "";
-  foreach(array_keys($_SESSION["acl"][$base][$submod]) as $key => $value) {
-    if ($value != "") {
-      $action = $value;
-      break;
+    $action = "";
+    foreach(array_keys($_SESSION["acl"][$base][$submod]) as $key => $value) {
+        if ($value != "") {
+            $action = $value;
+            break;
+        }
     }
-  }
 
- if (!$base) {
-    return "index.php?error=".urlencode(_("You do not have required rights"));
- }
+    if (!$base) return "index.php?error=".urlencode(_("You do not have required rights"));
 
-  return "main.php?module=$base&submod=$submod&action=$action";
+    return "main.php?module=$base&submod=$submod&action=$action";
 }
 
 ?>
