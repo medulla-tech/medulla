@@ -23,42 +23,15 @@
 
 require_once("graph/navbar.inc.php");
 require_once("includes/ajaxTools.php");
+require("includes/logviewSidebar.inc.php");
+
+displayInputLiveSearch(urlStrRedirect('base/logview/setsearch'));
 ?>
-
-<?
-$sidemenu= new SideMenu();
-
-$sidemenu->setClass("logview");
-
-$LMCApp =& LMCApp::getInstance();
-
-$mod = $LMCApp->getModule('base');
-$submod = $mod->getSubmod('logview');
-
-
-$page = $submod->getPage('index');
-
-$sidemenu->addSideMenuItem(new SideMenuItem($page->getDescription(),"base","logview",$page->getAction()));
-
-$p = new PageGenerator();
-
-/**
- * Affichage du menu
- */
-$p->setSideMenu($sidemenu); //$sidemenu inclus dans localSideBar.php
-$p->displaySideMenu();
-
-?>
-
-
-<?php displayInputLiveSearch(urlStrRedirect('base/logview/setsearch')); ?>
 
 <div id="container">
 </div>
 
-
 <h2><?= _("LDAP operations log view"); ?></h2>
-
 
 <div class="fixheight"></div>
 <div style="height: 400px; overflow: auto;" id="logupdater"></div>
