@@ -29,6 +29,7 @@ import fileinput
 import tempfile
 from lmc.plugins.base import ldapUserGroupControl
 from time import mktime, strptime, time
+import xmlrpclib
 
 # Try to import module posix1e
 try:
@@ -490,6 +491,10 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         return resArr
 
     def addSmbAttr(self, uid, password):
+        # If the password has been encoded in the XML-RPC stream, decode it
+        if isinstance(password, xmlrpclib.Binary):
+            password = str(password)
+        
         cmd = 'smbpasswd -s -a '+uid
         shProcess = generateBackgroundProcess(cmd)
         shProcess.write(password+"\n")
@@ -497,7 +502,7 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         ret = shProcess.getExitCode()
 
         if ret != 0:
-            raise Exception("Failed to modify password entry\n"+shProcess.stdall)
+            raise Exception("Failed to modify password entry\n" + shProcess.stdall)
 
         if not ret:
             # Command was successful, now set default attributes
@@ -617,6 +622,10 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         @param passwd: non encrypted password
         @type  passwd: str
         """
+        # If the passwd has been encoded in the XML-RPC stream, decode it
+        if isinstance(passwd, xmlrpclib.Binary):
+            passwd = str(passwd)
+            
         cmd = 'smbpasswd -s -a '+uid
         shProcess = generateBackgroundProcess(cmd)
         shProcess.write(passwd+"\n")
@@ -746,8 +755,13 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
         """
         Return true if the SAMBA password has expired for the given user
         """
-        sambaPwdMustChange = self.getDetailedUser(uid)["sambaPwdMustChange"][0]
-        return int(sambaPwdMustChange) < time()
+        ret = False
+        try:
+            sambaPwdMustChange = self.getDetailedUser(uid)["sambaPwdMustChange"][0]
+            ret = int(sambaPwdMustChange) < time()
+        except KeyError:
+            pass
+        return ret
     
     def makeSambaGroup(self, group):
         """
