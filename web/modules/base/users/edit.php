@@ -181,7 +181,7 @@ if ($_GET["user"]) {
 		   while (!feof($f)) $obj->scalar .= fread($f, 4096);  
 		   fclose($f);
                    changeUserAttributes($nlogin, "jpegPhoto", $obj);		 
-		 } else $error .= _("The photo is too big. The max size is $maxwidth x $maxheight. <br/>");
+		 } else $error .= sprintf(_("The photo is too big. The max size is %s x %s."), $maxwidth, $maxheight) . "<br/>";
 	       } else $error .= _("The photo is not a JPG file.") . "<br/>";
 	   } else $error .= _("The photo is not a JPG file.") . "<br/>";
 	 }	 
@@ -189,7 +189,8 @@ if ($_GET["user"]) {
          change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
          $result.=_("Attributes updated.")."<br />";
 
-         //modification/creation for all plugins
+         if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
+         // Create/modify user in all enabled LMC modules
          callPluginFunction("changeUser",array($_POST));
 
           //if we change the password
@@ -208,7 +209,6 @@ if ($_GET["user"]) {
 	  }
 
          /* Secondary groups management */
-         if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
          $old = getUserSecondaryGroups($_POST['nlogin']);
          $new = $_POST['groupsselected'];
          foreach (array_diff($old, $new) as $group) {
