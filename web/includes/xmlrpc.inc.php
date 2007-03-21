@@ -23,21 +23,41 @@
 ?>
 <?php
 
+require_once("ErrorHandling.php");
+
+/**
+ * Little class to encapsulate string into a XML-RPC binary string
+ */
+class Trans {
+    var $scalar;
+    var $xmlrpc_type;
+}
+
+/**
+ * Return a Trans object so that a potentially non XML-safe string can be sent
+ * into the XML-RPC stream.
+ * e.g. a password can contains the & character, so the password string must be encoded.
+ */
+function prepare_string($pass) {
+    $obj = new Trans();
+    $obj->scalar = "$pass";
+    $obj->xmlrpc_type = "base64";
+    return $obj;
+}
+
 /**
  * function wich decode UTF-8 Entity with ref
  * &#03; for example
  * need because XMLRPC server doest not like this sort
  * of encoding
  */
-
-require_once("ErrorHandling.php");
-
 function decode_entities($text) {
         $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
         $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
         $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
         return $text;
 }
+
 /**
  * call an xmlrpc call for a method
  * via the xmlrpc server in python (lmc-agent)
@@ -59,8 +79,6 @@ function xmlCall($method,$params) {
             }
 
         $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
-
-#$output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "iso-8859-1" );
 
         if ($params==null) {
                 $request = xmlrpc_encode_request($method,null,$output_options);
@@ -163,11 +181,6 @@ function xmlCall($method,$params) {
                 }
                 $str.=')';
                 $str.= "</div>";
-
-
-
-
-
 
                 if (is_array($xmlResponse)) {
                         $str.= "<pre>";
