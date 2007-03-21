@@ -67,7 +67,6 @@
 
         $mod->addSubmod($submod);
 
-
         $submod = new ExpertSubModule("logview");
         $submod->setVisibility(True);
         $submod->setDescription(_("Log view"));
