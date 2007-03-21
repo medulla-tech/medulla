@@ -707,6 +707,10 @@ class ldapUserGroupControl:
         lastN = str(lastN.encode("utf-8"))
         firstN = str(firstN.encode("utf-8"))
 
+        # If the passwd has been encoded in the XML-RPC stream, decode it
+        if isinstance(password, xmlrpclib.Binary):
+            password = str(password)
+
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
         user_info = {'shadowMin':'-1',
@@ -1064,7 +1068,7 @@ class ldapUserGroupControl:
             self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_DELETE,attr,'rien')])
         return 0
 
-    def changeUserPasswd(self,uid,passwd):
+    def changeUserPasswd(self, uid, passwd):
         """
          crypt user password and change it
 
@@ -1074,6 +1078,10 @@ class ldapUserGroupControl:
          @param passwd: non encrypted password
          @type  passwd: str
         """
+        # If the password has been encoded in the XML-RPC stream, decode it
+        if isinstance(passwd, xmlrpclib.Binary):
+            passwd = str(passwd)
+        
         passwdCrypt="{crypt}" + crypt.crypt(passwd, self.getSalt())
         self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,'userPassWord',passwdCrypt)])
         return 0
@@ -1734,6 +1742,10 @@ class ldapAuthen:
         if (login == 'root'): username = config.get("ldap", "rootName")
         else: username = 'uid=' + login + ', ' + baseDN
 
+        # If the passwd has been encoded in the XML-RPC stream, decode it
+        if isinstance(password, xmlrpclib.Binary):
+            password = str(password)
+
         self.result = False
         try:
             l.simple_bind_s(username, password)
@@ -1994,12 +2006,10 @@ class LogView:
            parsed = self.parseLine(line)
            if parsed:
                res.append(parsed)
-           else:
-               res.append(line)
         return res
 
     def parseLine(self, line):
-        ret = line
+        ret = None
         # We try each pattern until we found one that works
         for pattern in self.pattern:
             sre = re.search(self.pattern[pattern], line)
@@ -2011,5 +2021,5 @@ class LogView:
                         res["Y"] = str(localtime()[0])
                     timed = strptime("%s %s %s %s %s %s" % (res["b"], res["d"], res["Y"], res["H"], res["M"], res["S"]), "%b %d %Y %H %M %S")
                     res["time"] = mktime(timed)
-                    return res
+                    ret = res
         return ret
