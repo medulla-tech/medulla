@@ -116,8 +116,8 @@ class PasswordTpl extends AbstractTpl{
  */
 class InputTpl extends AbstractTpl{
 
-  function InputTpl($name,$regexp='/.*/') {
-    $this->name=$name;
+  function InputTpl($name, $regexp = '/.+/') {
+    $this->name = $name;
     $this->regexp = $regexp;
   }
 
@@ -132,10 +132,15 @@ class InputTpl extends AbstractTpl{
     print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="text" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
 
     print '<script type="text/javascript">
-                $(\''.$this->name.'\').validate = function() {
+                $(\''.$this->name.'\').validate = function() {';
+    if (!isset($arrParam["required"]))
+        /* If a value is not required, and the input field is empty, that's ok */
+        print '
                     if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
                         return true
-                    }
+                    }';
+    if (false) print alert("' . $this->name . '"); // Used for debug only
+    print '
                     var rege = '.$this->regexp.'
                     if ((rege.exec($(\''.$this->name.'\').value))!=null) {
                         return true
@@ -168,7 +173,7 @@ class MACInputTpl extends InputTpl {
 
     function MACInputTpl($name) {
         $this->name = $name;
-        $this->regexp = '/^([0-9a-f]{2}(:|$)){6}$/i';
+        $this->regexp = '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i';
     }
 
 }
@@ -549,7 +554,11 @@ class TrFormElement extends FormElement{
 
     parent::display($arrParam);
 
-    print '</td></tr>';
+    if (isset($arrParam["extra"])) {
+        print "&nbsp;" . $arrParam["extra"];
+    }
+    print "</td></tr>";
+
   }
 
   function displayRo($arrParam) {
