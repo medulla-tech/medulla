@@ -75,7 +75,7 @@
         $submod->setPriority(10001);
 
         $page = new Page("index",_("LDAP log"));
-        $page->setFile("modules/base/logview/index.php");
+        $page->setFile("modules/base/logview/index.php", array("expert" => True));
 
         $submod->addPage($page);
 
