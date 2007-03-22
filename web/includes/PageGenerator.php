@@ -605,13 +605,15 @@ class SideMenuItem {
 class SideMenu {
     var $itemArray;
     var $className;
+    var $activatedItem;
 
     /**
      *	SideMenu default constructor
      *     initalize empty itemArray for SideMenuItem
      */
     function SideMenu() {
-        $this->itemArray=array();
+        $this->itemArray = array();
+        $this->activatedItem = null;
     }
 
     /**
@@ -655,29 +657,21 @@ class SideMenu {
      *	static method to get SideBarCss String
      */
     function getSideBarCss() {
-        $submod=$_GET["submod"];
-        $action=$_GET["action"];
         $css = "";
         foreach ($this->itemArray as $objSideMenuItem) {
-            $active = False;
-            if ($objSideMenuItem->action == $_GET["action"])
-                $active = True;
+            $active = (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem));
             $css = $css . $objSideMenuItem->getCss($active);
         }
         return $css;
-        /*        $css="";
-        $css.= "#sidebar ul.$submod li#$action a {\n";
-        $css.= "        background-color: #FFF;\n";
-        $css.= "        color: #666;\n";
-        $css.= "        border-right: 1px solid #FFF;\n";
-        $css.= "}\n";
-        $css.= "\n";
-        $css.= "#sidebar ul.$submod li#$action a:hover {\n";
-        $css.= "        color: #666;\n";
-        $css.= "}\n"; */
-        return $css;
     }
 
+    /**
+     * Force a menu item to be displayed as activated
+     * Useful for pages that don't have a dedicated tab
+     */
+    function forceActiveItem($item) {
+        $this->activatedItem = $item;
+    }
 
 }
 
@@ -727,6 +721,7 @@ class PageGenerator {
         $this->displayCss();
         $this->sidemenu->display();
     }
+
 }
 
 /**
