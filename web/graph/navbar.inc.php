@@ -43,7 +43,7 @@ $root = $conf["global"]["root"];
 if (isExpertMode()) {
     $mode = _("standard mode");
 } else {
-    $mode=_("expert mode");
+    $mode = _("expert mode");
 }
 
 ?>
