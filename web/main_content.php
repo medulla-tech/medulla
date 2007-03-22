@@ -170,7 +170,7 @@ ul {
 
 
 function display_page($page,$submod,$mod) {
-    if ($page->getDescription()&&$page->isVisible()) {
+    if ($page->getDescription() && $page->isVisible()) {
         $url = urlStr($mod->getName()."/".$submod->getName()."/".$page->_action);
         if (hasCorrectAcl($mod->getName(),$submod->getName(),$page->_action)) {
             echo "<li><a href=\"$url\">".$page->getDescription()."</a></li>";

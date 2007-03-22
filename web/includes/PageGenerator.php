@@ -528,10 +528,10 @@ class SideMenuItem {
      * @param $inactivebg background image to use when menu is currently inactivated
      */
     function SideMenuItem($text,$module,$submod,$action, $activebg = "", $inactivebg = "") {
-        $this->text=$text;
-        $this->module=$module;
-        $this->submod=$submod;
-        $this->action=$action;
+        $this->text = $text;
+        $this->module = $module;
+        $this->submod = $submod;
+        $this->action = $action;
         $this->activebg = $activebg;
         $this->inactivebg = $inactivebg;
     }

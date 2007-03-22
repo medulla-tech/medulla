@@ -518,10 +518,18 @@ class Page {
     }
 
     function isVisible() {
-        if (!isset($this->_options['visible'])) { //Default value
-            return true;
-        }
-        return $this->_options['visible'];
+        $ret = true;
+        if (isset($this->_options['visible'])) $ret = $this->_options['visible'];
+        return $ret && $this->inCurrentMode();
+    }
+
+    /**
+     * Return true if the page can be displayed in the current mode
+     */
+    function inCurrentMode() {
+        if (isset($this->_options["expert"])) $ret = ($this->_options["expert"]) && isExpertMode();
+        else $ret = true;
+        return $ret;
     }
 
     function getAction() {
