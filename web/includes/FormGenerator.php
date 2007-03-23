@@ -74,10 +74,10 @@ class CheckboxTpl extends AbstractTpl{
 
         if ($arrParam["value"]=="checked") {
             $value="on";
-            print "oui";
+            print _("yes");
         }
         else {
-            print "non";
+            print _("no");
         }
         print '<input  type="hidden" value="'.$value.'" name="'.$this->name.'">';
     }
