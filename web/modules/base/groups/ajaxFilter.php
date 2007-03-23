@@ -94,9 +94,8 @@ $arrGroup = array();
 $arrComment = array();
 
 for ($idx = 0; $idx < count($groups); $idx++) {
-    $arrGroup[]=$groups[$idx][0];
-    $arrComment[]= new EditInPlace($groups[$idx][1],'modules/base/groups/ajaxEditDesc.php',
-                                    array("group"=>$groups[$idx][0]));
+    $arrGroup[] = $groups[$idx][0];
+    $arrComment[] = $groups[$idx][1];
     $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';
 }
 
