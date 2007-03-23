@@ -31,7 +31,7 @@ if ($detailArr["uid"][0]) { //if user exist
 sort($secondary);
 
 ?>
-   <table>
+   <table cellspacing="0">
     <tr>
      <td width="40%" style="text-align:right">
       <?= _("Primary group"); ?>
@@ -47,7 +47,7 @@ sort($secondary);
      </td>
     </tr>
    </table>
-   <table>
+   <table cellspacing="0">
     <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups"); ?> </td><td>
         <select multiple="multiple" size="10" class="list" name="groupsselected[]" id="select">
             <?php
