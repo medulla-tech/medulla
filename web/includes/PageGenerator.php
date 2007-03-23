@@ -467,17 +467,19 @@ class ListInfos{
 	if ($navbar) {
             print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
         }
-        print '<script type="text/javascript"><!--';
-        print '$(\'help\').innerHTML=\'\''."\n";
-        print '$(\'help\').innerHTML+=\'<ul>\''."\n";
-        print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\''."\n";
-        foreach ($this->arrAction as $objActionItem) {
-            $content = $objActionItem->strHelp();
-            print '$(\'help\').innerHTML+=\''.$content.'\';'."\n";
+        if (false) {
+            /* Code disabled because not used and make javavascript errors */
+            print '<script type="text/javascript"><!--';
+            print '$(\'help\').innerHTML=\'\''."\n";
+            print '$(\'help\').innerHTML+=\'<ul>\''."\n";
+            print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\''."\n";
+            foreach ($this->arrAction as $objActionItem) {
+                $content = $objActionItem->strHelp();
+                print '$(\'help\').innerHTML+=\''.$content.'\';'."\n";
+            }
+            print '$(\'help\').innerHTML+=\'</ul>\''."\n";
+            print '--></script>';
         }
-
-        print '$(\'help\').innerHTML+=\'</ul>\''."\n";
-        print '--></script>';
 
     }
 
