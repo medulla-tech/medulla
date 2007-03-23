@@ -213,7 +213,7 @@ function createRedirectAclTemplate($module_name,$acl) {
 $tpl = new Template('.', 'keep');
 global $descArray;
 
-$tpl->set_var("edit_acl",_("Edit ACL"));
+$tpl->set_var("edit_acl",_("Edit ACL of user") . "&nbsp;" . $_GET["user"]);
 $tpl->set_file("main", "modules/base/templates/editacl.html");
 $tpl->set_block("main", "module", "modules");
 
@@ -235,5 +235,6 @@ foreach ($_SESSION["modulesList"] as $key) {
     $tpl->parse('modules', 'module', true);
 
 }
+$tpl->set_var("button", _("Confirm"));
 $tpl->pparse("out", "main");
 ?>
