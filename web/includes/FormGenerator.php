@@ -179,6 +179,19 @@ class MACInputTpl extends InputTpl {
 }
 
 /**
+ * Input with a check for a valid DNS domain
+ * We allow up to 10 dots in domain name ! Should be enough ...
+ */
+class DomainInputTpl extends InputTpl {
+
+    function DomainInputTpl($name) {
+        $this->name = $name;
+        $this->regexp = '/^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$/';
+    }
+
+}
+
+/**
  * simple add label with Hidden field
  */
 class HiddenTpl extends AbstractTpl{
