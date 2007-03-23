@@ -64,7 +64,7 @@ function decode_entities($text) {
  * @param $method name of the method
  * @param $params array with param
  */
-function xmlCall($method,$params) {
+function xmlCall($method, $params = null) {
         global $errorStatus;
         if ($errorStatus !=0) { //ignore XMLRPC call after one error
             return;
