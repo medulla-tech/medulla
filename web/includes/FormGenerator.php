@@ -227,7 +227,7 @@ class MultipleInputTpl extends AbstractTpl {
 
     function display($arrParam) {
         print '<div id="'.$this->name.'">';
-        print '<table>';
+        print '<table cellspacing="0">';
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement($this->desc,
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
