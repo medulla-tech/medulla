@@ -53,8 +53,8 @@ from twisted.internet import reactor
 
 INI = "/etc/lmc/plugins/samba.ini"
 
-VERSION = "1.1.3"
-APIVERSION = "4:0:3"
+VERSION = "1.1.4"
+APIVERSION = "4:1:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION

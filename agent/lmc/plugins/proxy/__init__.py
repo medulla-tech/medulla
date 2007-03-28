@@ -31,7 +31,7 @@ import logging
 from lmc.support import lmctools
 from lmc.support.config import *
 
-VERSION = "1.1.3"
+VERSION = "1.1.4"
 APIVERSION = "1:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
