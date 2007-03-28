@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
 # $Id: testldap.py 543 2006-07-19 13:36:46Z cedric $
 #
