@@ -25,7 +25,7 @@
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("1.1.3");
+$mod->setVersion("1.1.4");
 $mod->setRevision("$Rev$");
 $mod->setAPIVersion('4:1:0');
 $mod->setDescription(_("User and group"));
