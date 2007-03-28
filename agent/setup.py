@@ -8,5 +8,5 @@ setup(
     author_email = "cedric.delfosse@linbox.com",
     maintainer = "Cedric Delfosse",
     maintainer_email = "cedric.delfosse@linbox.com",
-    packages = ["lmc", "lmc.support", "lmc.plugins", "lmc.plugins.base", "lmc.plugins.samba", "lmc.plugins.ox", "lmc.plugins.proxy", "lmc.plugins.mail"],
+    packages = ["lmc", "lmc.support", "lmc.plugins", "lmc.plugins.base", "lmc.plugins.samba", "lmc.plugins.ox", "lmc.plugins.proxy", "lmc.plugins.mail", "lmc.plugins.network"],
 )

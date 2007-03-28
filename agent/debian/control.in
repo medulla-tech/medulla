@@ -62,6 +62,17 @@ Description: Linbox Management Console proxy plugin
  .
  Homepage: http://lds.linbox.org
 
+Package: python-lmc-network
+Architecture: all
+Depends: ${python:Depends}, python-lmc-base
+Replaces: lmc-agent (<< 0.409), lmc-plugin-proxy
+Description: Linbox Management Console network plugin
+ DNS/DHCP management plugin for the LMC.
+ .
+ This plugin requires a LDAP-patched version of ISC DHCPD and BIND9.
+ .
+ Homepage: http://lds.linbox.org
+
 Package: python-lmc-plugins-tools
 Architecture: all
 Depends: ${python:Depends}, mkisofs
