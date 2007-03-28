@@ -1,7 +1,7 @@
 #
 # (c) 2004-2006 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: __init__.py 97 2007-03-01 16:24:15Z cedric $
+# $Id$
 #
 # This file is part of LMC.
 #
@@ -37,7 +37,7 @@ INI = "/etc/lmc/plugins/network.ini"
 
 VERSION = "1.1.3"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev: 97 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
