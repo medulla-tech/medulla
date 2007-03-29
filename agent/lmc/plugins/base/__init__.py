@@ -713,25 +713,25 @@ class ldapUserGroupControl:
 
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
-        user_info = {'shadowMin':'-1',
-                     'loginShell':'/bin/bash',
+        user_info = {'loginShell':'/bin/bash',
                      'userPassWord':"{crypt}" + crypt.crypt(password, self.getSalt()),
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
-                     'shadowFlag':'134538308',
-                     'shadowExpire':'-1',
-                     'shadowMax':'99999',
                      'objectclass':('inetOrgPerson','posixAccount','shadowAccount','top','person'),
                      'uid':uid,
                      'gecos':gecos,
-                     'shadowLastChange':'11192',
                      'cn': firstN + " " + lastN,
                      'displayName': firstN + " " + lastN,
                      'sn':lastN,
                      'givenName':firstN,
-                     'shadowInactive':'-1',
                      'homeDirectory' : homeDir,
-                     'shadowWarning':'7'
+                     'shadowExpire':'0', # Password never expire
+                     'shadowInactive':'-1',
+                     'shadowWarning':'7',
+                     'shadowMin':'-1',
+                     'shadowMax':'99999',
+                     'shadowFlag':'134538308',
+                     'shadowLastChange':'11192',
                      }
 
         try:
