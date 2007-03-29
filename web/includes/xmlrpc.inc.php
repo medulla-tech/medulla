@@ -131,7 +131,18 @@ function xmlCall($method, $params = null) {
         }
         // Closing the connection
         fclose($sock);
+        if (!strlen($xmlResponse)) {
+            $errObj = new ErrorHandlingItem('');
+            $errObj->setMsg(_("lmc-agent communication problem"));
+            $errObj->setAdvice(_("Can't communicate with lmc agent. Please check you're using the right TCP port and the right protocol."));
+            $errObj->setTraceBackDisplay(false);
+            $errObj->setSize(400);
+            $errObj->process('');
+            $errorStatus = 1;
+            return FALSE;
+        }
     	$xmlResponse = substr($xmlResponse, strpos($xmlResponse, "\r\n\r\n") +4);
+
 	/*****
          * To decode the XML into PHP, we use the (finaly a short function)
          * xmlrpc_decode function. And that should've done the trick.
