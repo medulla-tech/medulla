@@ -58,66 +58,52 @@ def activate():
         logger.error("Can't bind to LDAP: invalid credentials.")
         return False
 
-    # Test if the Samba LDAP schema is available in the directory
+    # Test if the DHCP/LDAP schema is available in the directory
     try:
-         schema = ldapObj.getSchema("dhcpServer")
-         if len(schema) <= 0:
-             logger.error("DHCP schema is not included in LDAP directory");
-             return False
+        schema = ldapObj.getSchema("dhcpServer")
+        if len(schema) <= 0:
+            logger.error("DHCP schema is not included in LDAP directory");
+            return False
     except:
         logger.exception("invalid schema")
         return False
 
+    # Test if the DNS/LDAP schema is available in the directory
+    try:
+        schema = ldapObj.getSchema("dNSZone")
+        if len(schema) <= 0:
+            logger.error("DHCP schema is not included in LDAP directory");
+            return False
+    except:
+        logger.exception("invalid schema")
+        return False
+
+    # Create required OUs
+    config = NetworkConfig("network")
+    for dn in [config.dhcpDN, config.dnsDN]:
+        head, path = dn.split(",", 1)
+        ouName = head.split("=")[1]
+        try:
+            ldapObj.addOu(ouName, path)
+            logger.info("Created OU " + dn)
+        except ldap.ALREADY_EXISTS:
+            pass        
+
     d = Dhcp()
     try:
         d.addServiceConfig("DHCP config")
+        logger.info("Created DHCP config object")
     except ldap.ALREADY_EXISTS:
         pass
 
-##     d = Dns()
-##     d.addZone("linboxe.com", "172.16.73")
-##     d.addSOA("linboxe.com")
-##     rec = {
-##         "nameserver" : "sarge.linboxe.com.",
-##         "emailaddr" :  "admin.linboxe.com.",
-##         "serial" : "20070306",
-##         "refresh" : "2D",
-##         "retry" : "15M",
-##         "expiry" : "2W",
-##         "minimum" : "1H",
-##         }
-##     d.setSOARecord("linboxe.com", rec)
-##     d.addRecordA("sarge", "172.16.73.129", "linboxe.com")
-##     d.setNSRecord("linboxe.com", "sarge.linboxe.com.")
-##     print d.getZones()
-##     hostname = socket.gethostname()
-##     d.addServer(hostname)
-##     d.setServicePrimaryServer("DHCP config", hostname)
-##     #d.setServiceConfigOption("default-lease-time", 600)
-##     print d.getServiceConfigOption()
-##     #d.setServiceConfigOption("max-lease-time", 7200)
-##     print d.getServiceConfig()
-
-##     d.addSubnet("10.0.0.0", 24)
-##     d.setSubnetOption("10.0.0.0", "domain-name-servers", "10.200.0.2")
-##     d.addPool("10.0.0.0", "Pool 1", "10.0.0.1 10.0.0.25")
-##     d.setPoolOption("Pool 1", "pool-option", "pool-value")
-##     d.addGroup("10.0.0.0", "Group 1")
-##     d.setGroupOption("Group 1", "group-option", "group-value")
-##     d.addHostToSubnet("10.0.0.0", "boulet1")
-##     d.addHostToGroup("Group 1", "boulet2")
-    #d.delPool("Pool 1")
-    #d.delSubnet("10.0.0.0")
-##     d.setServiceConfigStatement("ddns-update-style", "ad-hoc")
-##     d.addSubnet("192.168.0.0", 24)
-##     d.setSubnetOption("192.168.0.0", "subnet-mask", "255.255.255.0")
-##     d.setSubnetOption("192.168.0.0", "routers", "192.168.0.2")
-##     d.setSubnetOption("192.168.0.0", "domain-name", '"domain.org"')
-##     d.setSubnetOption("192.168.0.0", "domain-name-servers", "192.168.0.2")
-##     d.setSubnetStatement("192.168.0.0", "filename",  '"/tftpboot/revoboot/bin/revoboot.pxe"')
-##     d.addPool("192.168.0.0", "Default pool", "192.168.0.240 192.168.0.253")
-##     d.setPoolStatement("Default pool", "max-lease-time" , "1800")
-##     d.setPoolStatement("Default pool", "allow", "unknown clients")
+    hostname = socket.gethostname()
+    try:        
+        d.addServer(hostname)
+        d.setServicePrimaryServer("DHCP config", hostname)
+        logging.info("Add this server '%s' as a DHCP server" % hostname)
+    except ldap.ALREADY_EXISTS:
+        pass
+    
     return True
 
 def addZoneWithSubnet(zonename, network, netmask, reverse = False, description = None, nameserver = None, nameserverip = None):
@@ -263,13 +249,13 @@ class NetworkConfig(PluginConfig):
         self.dnsPidFile = self.get("dns", "pidfile")
         self.dnsInit = self.get("dns", "init")
         self.dnsLogFile = self.get("dns", "logfile")
+        self.bindRootPath = self.get("dns", "bindroot")
+        self.bindUser = self.get("dns", "binduser")
+        self.bindLdap = os.path.join(self.bindRootPath, "named.conf.ldap")
+        self.bindLdapDir = os.path.join(self.bindRootPath, "named.ldap")
 
     def setDefault(self):
         PluginConfig.setDefault(self)
-        self.bindRootPath = "/etc/bind/"
-        self.bindLdap = os.path.join(self.bindRootPath, "named.conf.ldap")
-        self.bindLdapDir = os.path.join(self.bindRootPath, "named.ldap")
-        self.bindUser = "bind"
 
 class Dns(ldapUserGroupControl):
 
