@@ -35,7 +35,7 @@ import lmc
 
 INI = "/etc/lmc/plugins/network.ini"
 
-VERSION = "1.1.3"
+VERSION = "1.1.4"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
@@ -296,9 +296,10 @@ zone "%(zone)s" {
         """
         Return the network address of a zone thanks to its reverse
         """
-        rev = self.getReverseZone(zone)
-        ret = None
-        if rev: ret = self.translateReverse(rev)
+        revZones = self.getReverseZone(zone)
+        ret = []
+        for rev in revZones:
+            ret.append(self.translateReverse(rev))
         return ret
 
     def getAllZonesNetworkAddresses(self):
@@ -315,19 +316,10 @@ zone "%(zone)s" {
         """
         Return the name of the reverse zone of a zone
         """
-        zones = self.getZones(name)
-        ret = None
-        if zones:
-            try:
-                txts = zones[0][1]["tXTRecord"]
-            except KeyError:
-                txts = []
-            rev = None
-            for txt in txts:
-                if txt.startswith(self.reverseMarkup):
-                    rev = txt.replace(self.reverseMarkup, "").strip()
-                    break
-            ret = rev
+        ret = []
+        for result in self.getZones(reverse = True, base = "ou=" + name + "," + self.configDns.dnsDN):
+            zoneName = result[1]["zoneName"][0]
+            if zoneName.endswith(self.reversePrefix): ret.append(zoneName)            
         return ret
 
     def getZoneObjects(self, name, filt = None):
@@ -363,14 +355,15 @@ zone "%(zone)s" {
     def getZone(self, zoneName):
         return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zoneName, zoneName), None)        
         
-    def getZones(self, filt = "", reverse = False):
+    def getZones(self, filt = "", reverse = False, base = None):
         """
         Return all available DNS zones. Reverse zones are returned only if reverse = True
         """
         filt = filt.strip()
         if not filt: filt = "*"
         else: filt = "*" + filt + "*"
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (filt, filt), None)
+        if not base: base = self.configDns.dnsDN
+        search = self.l.search_s(base, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (filt, filt), None)
         ret = []
         for result in search:
             if result[1]["zoneName"] == result[1]["relativeDomainName"]:
@@ -416,7 +409,7 @@ zone "%(zone)s" {
             }    
         f.write(self.templateZone % d)
         if reverse:
-            d["zone"] = network
+            d["zone"] = self.reverseZone(network)
             f.write(self.templateZone % d)
         f.close()
         os.chmod(os.path.join(self.configDns.bindLdapDir, name), 0640)
@@ -437,10 +430,10 @@ zone "%(zone)s" {
         # Create the needed zones object in LDAP
         if reverse:
             reverseZone = self.reverseZone(network)
-            self.addDnsZone(reverseZone)
+            self.addDnsZone(reverseZone, "Reverve zone for " + name, name)
         else:
             reverseZone = None
-        self.addDnsZone(name, description, reverseZone)
+        self.addDnsZone(name, description)
         
         # Fill SOA
         self.addSOA(name)
@@ -457,19 +450,23 @@ zone "%(zone)s" {
         self.setSOARecord(name, rec)
         self.setNSRecord(name, ns)
 
+        # Fill SOA for reverse zone too
+        if reverse:
+            self.addSOA(reverseZone, name)
+            self.setSOARecord(reverseZone, rec)
+            self.setNSRecord(reverseZone, ns)
+
         if nameserverip:
             # Add a A record for the primary nameserver
             self.addRecordA(nameserver, nameserverip, name)
 
     def delZone(self, zone):
         """
-        Delete a DNS zone with its reverse zone
+        Delete a DNS zone with all its reverse zones
         
         @param name: the zone name to delete     
         """
-        revzone = self.getReverseZone(zone)
         self.delRecursiveEntry("ou=" + zone + "," + self.configDns.dnsDN)
-        if revzone: self.delRecursiveEntry("ou=" + revzone + "," + self.configDns.dnsDN)
         os.unlink(os.path.join(self.configDns.bindLdapDir, zone))
         newcontent = []
         f = open(self.configDns.bindLdap, "r")
@@ -572,13 +569,21 @@ zone "%(zone)s" {
             elements.pop(0)
         return None
 
-    def addRecordA(self, hostname, ip, zone, dnsClass = "IN"):
+    def updateZoneSerial(self, zone):
+        """
+        Update the serial number of a zone. Needed after a zone modification.
+        """
+        soa = self.getSOARecord(zone)
+        current = soa["serial"]
+        soa["serial"] = self.computeSerial(current)
+        self.setSOARecord(zone, soa)        
+
+    def addRecordA(self, hostname, ip, zone, container = None, dnsClass = "IN"):
         """
         Add an entry for a zone and its reverse zone
         """
-        revZone = self.getReverseZone(zone)
-        #revZone, ipStart = self.searchReverseZone(ip)
-        dn = "relativeDomainName=" + hostname + "," + "ou=" + zone + "," + self.configDns.dnsDN
+        if not container: container = zone
+        dn = "relativeDomainName=" + hostname + "," + "ou=" + zone + "," + "ou=" + container + "," + self.configDns.dnsDN
         entry = {
             "relativeDomainName" : hostname,
             "objectClass" : ["top", "dNSZone"],
@@ -588,15 +593,20 @@ zone "%(zone)s" {
         }
         attributes=[ (k,v) for k,v in entry.items() ]
         self.l.add_s(dn, attributes)
+        self.updateZoneSerial(zone)
 
+        revZone = self.getReverseZone(zone)
+        # Add host to corresponding reverse zone if there is one
         if revZone:
-            # Add host to corresponding reverse zone if there is one
+            # For now, we only manage a single revZone
+            revZone = revZone[0]
             ipStart = self.translateReverse(revZone)
             ipLast = ip.replace(ipStart, "")
             elements = ipLast.split(".")
             elements.reverse()
+            elements.pop() # Remove the last "."
             relative = ".".join(elements)
-            dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + self.configDns.dnsDN
+            dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + "ou=" + container + "," + self.configDns.dnsDN
             entry = {
                 "relativeDomainName" : relative,
                 "objectClass" : ["top", "dNSZone"],
@@ -606,6 +616,7 @@ zone "%(zone)s" {
             }
             attributes=[ (k,v) for k,v in entry.items() ]
             self.l.add_s(dn, attributes)
+            self.updateZoneSerial(revZone)
 
     def delRecord(self, hostname, zone):
         """
@@ -618,15 +629,24 @@ zone "%(zone)s" {
         if host: self.l.delete_s(host[0][0])
         if revhost: self.l.delete_s(revhost[0][0])
 
-    def computeSerial(self, oldSerial = None):
-        return int(time.time())
+    def computeSerial(self, oldSerial = ""):
+        format = "%Y%m%d"
+        today = time.strftime(format)
+        if oldSerial.startswith(today):
+            num = int(oldSerial[8:])
+            num = num + 1
+            if num >= 100: num = 99
+            ret = today + "%02d" % num
+        else:
+            ret = today + "00"
+        return ret 
 
     def translateReverse(self, revZone):
         revZone = revZone.replace(self.reversePrefix, "")
         elements = revZone.split(".")
         elements.reverse()
         return ".".join(elements)
-        
+
 
 class Dhcp(ldapUserGroupControl):
 
@@ -680,7 +700,10 @@ class Dhcp(ldapUserGroupControl):
         if toremove: options.remove(toremove)
         if value: options.append(option + " " + str(value))
         if not options:
-            self.l.modify_s(dn, [(ldap.MOD_DELETE, "dhcpStatements", None)])
+            try:
+                self.l.modify_s(dn, [(ldap.MOD_DELETE, "dhcpStatements", None)])
+            except ldap.NO_SUCH_ATTRIBUTE:
+                pass
         else:
             self.l.modify_s(dn, [(ldap.MOD_REPLACE, "dhcpStatements", options)])
 
