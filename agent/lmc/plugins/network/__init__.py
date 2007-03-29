@@ -89,13 +89,13 @@ def activate():
         except ldap.ALREADY_EXISTS:
             pass        
 
+    # Create DHCP config base structure
     d = Dhcp()
     try:
         d.addServiceConfig("DHCP config")
         logger.info("Created DHCP config object")
     except ldap.ALREADY_EXISTS:
         pass
-
     hostname = socket.gethostname()
     try:        
         d.addServer(hostname)
@@ -103,6 +103,14 @@ def activate():
         logging.info("Add this server '%s' as a DHCP server" % hostname)
     except ldap.ALREADY_EXISTS:
         pass
+
+    # Create DNS config base structure
+    try:
+        os.mkdir(config.bindLdapDir)
+        os.chmod(config.bindLdapDir, 02750)
+    except OSError, e:
+        # errno = 17 is "File exists"
+        if e.errno != 17: raise    
     
     return True
 
