@@ -115,6 +115,7 @@ def activate():
     if not os.path.exists(config.bindLdap):
         f = open(config.bindLdap, "w")
         f.close()
+        os.chmod(config.bindLdap, 0640)
     
     return True
 
