@@ -111,6 +111,10 @@ def activate():
     except OSError, e:
         # errno = 17 is "File exists"
         if e.errno != 17: raise    
+
+    if not os.path.exists(config.bindLdap):
+        f = open(config.bindLdap, "w")
+        f.close()
     
     return True
 
