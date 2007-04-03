@@ -34,6 +34,89 @@ function displayErrorCss($name) {
 }
 
 
+class RadioTpl extends AbstractTpl {
+    var $name;
+    var $choices;
+    var $choiceVal;
+    var $choiceWidget;
+    var $selected;
+    
+    function RadioTpl($name) {
+        $this->name = $name;
+    }
+    
+    function setChoices($arrChoices) {
+        $this->choices = $arrChoices;
+    }
+
+    function setValues($arrValues) {
+        $this->choiceVal = $arrValues;
+    }
+    
+    function setWidgets($arrWidgets) {
+        $this->choiceWidget = $arrWidgets;
+    }
+
+    function setSelected($selected) {
+        $this->selected = $selected;
+    }
+
+    function display($arrParam) {
+        if (!isset($this->choiceVal)) {
+            $this->choiceVal = $this->choices;
+        }
+        
+        if (!isset($this->selected)) {
+            $this->selected = $this->choiceVal[0];
+        }
+        
+        if (isset($this->choiceWidget)) {
+            print '<table cellspacing="0" style="border: none; margin: 0px;">'."\n";
+        }
+
+        foreach ($this->choiceVal as $key => $value) {
+            if (isset($this->choiceWidget)) {
+                if ($key == 0) {
+                    print '<tr><td style="border-top: none;">';
+                } else {
+                    print '<tr><td>';
+                }
+            } else {
+                if ($key > 0) {
+                    print '<br/>'."\n";
+                }
+            }
+
+            if ($this->selected == $value) {
+                $selected = "checked";
+            } else {
+                $selected = "";
+            }
+
+            print '<input name="'.$this->name.'" value="'.$this->choiceVal[$key].'" id="'.$this->name.'" type="radio" '.$selected.'>'.$this->choices[$key];
+
+            if (isset($this->choiceWidget)) {
+                if ($key == 0) {
+                    print '</td><td style="border-top: none;">';
+                } else {
+                    print '</td><td>';
+                }
+
+                $widget = $this->choiceWidget[$key][0];
+                $wParam = $this->choiceWidget[$key][1];
+                $widget->display($wParam);
+
+                print '</td></tr>'."\n";
+            }
+        }
+
+        if (isset($this->choiceWidget)) {
+            print '</table>'."\n";
+        }
+    }
+
+}
+
 class ImageTpl extends AbstractTpl {
 
     function ImageTpl($name) {
