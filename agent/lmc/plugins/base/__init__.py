@@ -2010,8 +2010,10 @@ class LogView:
 
     def parseLine(self, line):
         ret = None
+        patternKeys = self.pattern.keys()
+        patternKeys.sort()
         # We try each pattern until we found one that works
-        for pattern in self.pattern:
+        for pattern in patternKeys:
             sre = re.search(self.pattern[pattern], line)
             if sre:
                 res = sre.groupdict()
@@ -2022,4 +2024,5 @@ class LogView:
                     timed = strptime("%s %s %s %s %s %s" % (res["b"], res["d"], res["Y"], res["H"], res["M"], res["S"]), "%b %d %Y %H %M %S")
                     res["time"] = mktime(timed)
                     ret = res
+                    break
         return ret
