@@ -232,6 +232,11 @@ def getHostHWAddress(host, address):
 def getHost(host):
     return Dhcp().getHost(host)
 
+# DHCP leases
+
+def getDhcpLeases():    
+    return DhcpLeases().get()
+
 # Log
 
 def getDhcpLog(filter = ''):
@@ -257,6 +262,7 @@ class NetworkConfig(PluginConfig):
         self.dhcpPidFile = self.get("dhcp", "pidfile")
         self.dhcpInit = self.get("dhcp", "init")
         self.dhcpLogFile = self.get("dhcp", "logfile")
+        self.dhcpLeases = self.get("dhcp", "leases")
         # DNS conf
         self.dnsDN = self.get("dns", "dn")        
         self.dnsPidFile = self.get("dns", "pidfile")
@@ -1011,6 +1017,45 @@ class Dhcp(ldapUserGroupControl):
                 self.delRecursiveEntry(host[0])
                 break
 
+class DhcpLeases:
+
+    def __init__(self, conffile = None, conffilebase = None):
+        self.config = NetworkConfig("network", conffile)
+        self.leases = self.__parse()
+
+    def __parse(self):
+        COMMENT = "#"
+        BEGIN = "lease"
+        STARTS = "starts"
+        ENDS = "ends"
+        STATE = "binding state"
+        HARDWARE = "hardware ethernet"
+        HOSTNAME = "client-hostname"
+        END = "}"
+        leases = {}
+        leasesFile = file(self.config.dhcpLeases)
+        current = None
+        for line in leasesFile:
+            line = line.strip().strip(";")
+            if line and not line.startswith(COMMENT):
+                if line.startswith(BEGIN):
+                    current = line.split()[1]
+                    leases[current] = {}
+                elif current:
+                    if line.startswith(STATE):
+                        leases[current]["state"] = line.split()[2]
+                    elif line.startswith(HARDWARE):
+                        leases[current]["hardware"] = line.split()[2]
+                    elif line.startswith(HOSTNAME):
+                        leases[current]["hostname"] = line.split()[1].strip('"')
+                    else:
+                        pass
+        leasesFile.close()
+        return leases
+
+    def get(self):
+        return self.leases
+
 class ServiceManager:
     """
     Class to know a service state, and start/stop/reload it
@@ -1078,7 +1123,8 @@ class DhcpLogView(LogView):
         self.maxElt= 200
         self.file = open(self.logfile, 'r')
         self.pattern = {
-            "dhcpd-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* dhcpd: (?P<extra>.*)$",
+            "dhcpd-syslog1" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* dhcpd: (?P<op>DHCP[A-Z]*) (?P<extra>.*)$",
+            "dhcpd-syslog2" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* dhcpd: (?P<extra>.*)$",
             }
 
 class DnsLogView(LogView):
