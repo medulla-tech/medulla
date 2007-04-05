@@ -149,32 +149,31 @@ class ActionItem {
      * 	@param add &$this->param=$param at the very end of the url
      *  display "displayWithRight" if you have correct right
      */
-    function display($param) {
+    function display($param, $extraParams = array()) {
         if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
-            $this->displayWithRight($param);
+            $this->displayWithRight($param, $extraParams);
         } else {
-            $this->displayWithNoRight($param);
+            $this->displayWithNoRight($param, $extraParams);
         }
     }
-
-
 
     /**
      * display function if you have correct right on this action
      */
-    function displayWithRight($param) {
+    function displayWithRight($param, $extraParams = array()) {
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".urlencode($param)."\">";
-        echo ".</a></li>";
+        $urlChunk = $this->buildUrlChunk($extraParams);
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".urlencode($param) . $urlChunk . "\">&nbsp;</a>";
+        echo "</li>";
     }
 
     /**
      * display function if you don't have the right for this action
      */
-    function displayWithNoRight($param) {
-        echo "<li class=\"".$this->classCss."\" style=\"opacity: .30;\">";
-        echo "<a title=\"".$this->desc."\" href=\"#\" onclick='return false;'>";
-        echo ".</a></li>";
+    function displayWithNoRight($param, $extraParams = array()) {
+        echo "<li class=\"".$this->classCss."\" style=\"opacity: 0.30;\">";
+        echo "<a title=\"".$this->desc."\" href=\"#\" onclick='return false;'>&nbsp;</a>";
+        echo "</li>";            
     }
 
     /**
@@ -196,6 +195,18 @@ class ActionItem {
     }
 
     /**
+     * Build an URL chunk using a array of option => value
+     */
+    function buildUrlChunk($arr) {
+        $urlChunk = "";
+        foreach($arr as $option => $value) {
+            $urlChunk .= "&amp;" . $option . "=" . urlencode($value);
+        }        
+        return $urlChunk;
+    }
+
+
+    /**
      * display help (not use for the moment)
      */
     function strHelp() {
@@ -213,11 +224,12 @@ class ActionItem {
  * @see showPopup (js)
  */
 class ActionPopupItem extends ActionItem {
-    function displayWithRight($param) {
+    function displayWithRight($param, $extraParams = array()) {
+        $urlChunk = $this->buildUrlChunk($extraParams);
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param."\"";
-        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param."'); return false;\">";
-        echo ".</a></li>";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param . $urlChunk . "\"";
+        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param . $urlChunk . "'); return false;\">&nbsp;</a>";
+        echo "</li>";
     }
 
     function encapsulate($obj, $param) {
@@ -227,14 +239,24 @@ class ActionPopupItem extends ActionItem {
         $str.=" </a>";
         return $str;
     }
+}
 
 
+class EmptyActionItem extends ActionItem {
+
+    function EmptyActionItem() {
+    }
+
+    function display($param = null) {
+        print '<li class="empty"> <a href="#" onclick="return false;">&nbsp;</a> </li>';
+    }
+    
 }
 
 /**
  *	class who maintain array presentation of information
  */
-class ListInfos{
+class ListInfos {
     var $arrInfo; /**< main list */
     var $extraInfo;
     var $paramInfo;
@@ -265,18 +287,28 @@ class ListInfos{
 
     /**
      *	add an ActionItem
-     * @param $objActionItem object ActionItem
+     *  @param $objActionItem object ActionItem
      */
     function addActionItem($objActionItem) {
-        $this->arrAction[]=&$objActionItem;
+        $this->arrAction[] = &$objActionItem;
     }
+
+    /**
+     * Add an array of ActionItem
+     * Useful if all action items are not the same for each row of the list
+     *
+     */
+    function addActionItemArray($objActionItemArray) {
+        $this->arrAction[] = &$objActionItemArray;
+    }
+    
 
     /**
      *	add an array String to display
      *	@param $arrString an Array String to display
      */
     function addExtraInfo($arrString, $description= "",$width="") {
-        $this->extraInfo[]=&$arrString;
+        $this->extraInfo[] = &$arrString;
         $this->description[] = $description;
         $this->col_width[] = $width;
     }
@@ -451,8 +483,11 @@ class ListInfos{
                     echo "<td class=\"action\">";
                     echo "<ul class=\"action\">";
                     foreach ($this->arrAction as $objActionItem) {
-                        if (is_a($objActionItem,'ActionItem')) {
-                            $objActionItem->display($this->arrInfo[$idx]);
+                        if (is_a($objActionItem, 'ActionItem')) {
+                            $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
+                        } else if (is_array($objActionItem)) {
+                            $obj = $objActionItem[$idx];
+                            $obj->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
                         }
                     }
                     echo "</ul>";
