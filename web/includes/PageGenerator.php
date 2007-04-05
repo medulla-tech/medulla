@@ -889,6 +889,36 @@ class NotifyWidget {
 }
 
 /**
+ * display a popup window with a message for a successful operation
+ *
+ */
+class NotifyWidgetSuccess extends NotifyWidget {
+    
+    function NotifyWidgetSuccess($message) {
+        $this->flush();
+        $this->add("<div id=\"validCode\">$message</div>");
+        $this->setLevel(0);
+        $this->setSize(600);
+    }
+
+}
+
+/**
+ * display a popup window with a message for a failure
+ *
+ */
+class NotifyWidgetFailure extends NotifyWidget {
+    
+    function NotifyWidgetFailure($message) {        
+        $this->flush();
+        $this->add("<div id=\"errorCode\">$message</div>");
+        $this->setLevel(4);
+        $this->setSize(600);
+    }
+
+}
+
+/**
  * Create an URL
  *
  * @param $link string except format like "module/submod/action"
