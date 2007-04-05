@@ -175,25 +175,6 @@ class CheckboxTpl extends AbstractTpl{
 }
 
 /**
- * password input template
- */
-class PasswordTpl extends AbstractTpl{
-
-    function PasswordTpl($name) {
-        $this->name=$name;
-    }
-
-    /**
-     *  display input Element
-     *  $arrParam accept ["value"] to corresponding value
-     */
-    function display($arrParam) {
-        print '<input name="'.$this->name.'" type="password" class="textfield" size="23" '.$arrParam["disabled"].' />';
-    }
-}
-
-
-/**
  * simple input template
  */
 class InputTpl extends AbstractTpl{
@@ -201,6 +182,7 @@ class InputTpl extends AbstractTpl{
     function InputTpl($name, $regexp = '/.+/') {
         $this->name = $name;
         $this->regexp = $regexp;
+        $this->fieldType = "text";
     }
 
     /**
@@ -211,7 +193,7 @@ class InputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="text" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
 
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
@@ -234,6 +216,19 @@ class InputTpl extends AbstractTpl{
                 }
            </script>';
     }
+}
+
+/**
+ * password input template
+ */
+class PasswordTpl extends InputTpl{
+
+    function PasswordTpl($name, $regexp = '/.+/') {
+        $this->fieldType = "password";        
+        $this->name = $name;
+        $this->regexp = $regexp;
+    }
+
 }
 
 /**
