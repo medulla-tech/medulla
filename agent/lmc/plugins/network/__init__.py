@@ -100,7 +100,8 @@ def activate():
     try:        
         d.addServer(hostname)
         d.setServicePrimaryServer("DHCP config", hostname)
-        logging.info("Add this server '%s' as a DHCP server" % hostname)
+        logging.info("The server '%s' has been set as the primary DHCP server" % hostname)
+        d.setServiceConfigStatement("not", "authoritative")
     except ldap.ALREADY_EXISTS:
         pass
 
