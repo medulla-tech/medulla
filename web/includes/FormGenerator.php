@@ -209,6 +209,7 @@ class CheckboxTpl extends AbstractTpl{
     }
 }
 
+
 /**
  * simple input template
  */
@@ -265,6 +266,20 @@ class PasswordTpl extends InputTpl{
     }
 
 }
+
+/**
+ * Input with very basic IA5 string check. Lots of LDAP fields only accept IA5 strings.
+ */
+
+class IA5InputTpl extends InputTpl {
+
+    function IA5InputTpl($name) {
+        $this->name = $name;
+        $this->regexp = '/^[a-zA-Z0-9 _.-]*$/';
+    }
+
+}
+
 
 /**
  * Input with IP address check
