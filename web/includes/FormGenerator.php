@@ -34,6 +34,41 @@ function displayErrorCss($name) {
 }
 
 
+class TextareaTpl extends AbstractTpl {
+    var $name;
+    
+    function TextareaTpl($name) {
+        $this->name = $name;
+    }
+    
+    function display($arrParam) {
+        echo '<textarea id="'.$this->name.'" class="textfield" rows="3" 
+cols="21" />';
+        
+        if (isset($arrParam["value"])) {
+            echo $arrParam["value"];
+        }
+        
+        echo '</textarea>';
+    }
+}
+
+
+class FileTpl extends AbstractTpl {
+
+    function FileTpl($name) {
+        $this->name=$name;
+    }
+
+    function display($arrParam) {
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="file" class="textfield" size="23" />';
+    }
+    
+    function displayRo($arrParam) {
+    }
+}
+
+
 class RadioTpl extends AbstractTpl {
     var $name;
     var $choices;
@@ -444,7 +479,7 @@ class SelectItem extends AbstractTpl{
     function display($paramArray = null) {
       
         if (!isset($this->elementsVal)) {
-            $elementsVal = $elements;
+            $this->$elementsVal = $elements;
         }
       
         // if value... set it
