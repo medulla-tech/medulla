@@ -232,8 +232,7 @@ def delUser(uiduser, home):
     return ldapObj.delUser(uiduser, home)
 
 def delGroup(cngroup):
-    ldapObj = ldapUserGroupControl()
-    return ldapObj.delGroup(cngroup)
+    ldapUserGroupControl().delGroup(cngroup)
 
 # return a list of member
 # return an array
@@ -1186,12 +1185,7 @@ class ldapUserGroupControl:
          @type  cnGroup: str
 
         """
-        if self.existUser(cnGroup): return -1
-        try :
-            self.l.delete_s('cn='+cnGroup+','+baseGroupsDN)
-            return 0
-        except ldap.LDAPError, e:
-            return e
+        self.l.delete_s('cn=' + cnGroup + ',' + baseGroupsDN)
 
     def getEntry(self, dn):
         """
