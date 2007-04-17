@@ -36,14 +36,15 @@ function displayErrorCss($name) {
 
 class TextareaTpl extends AbstractTpl {
     var $name;
+    var $rows;
     
     function TextareaTpl($name) {
         $this->name = $name;
+        $this->rows = 3;
     }
     
     function display($arrParam) {
-        echo '<textarea id="'.$this->name.'" class="textfield" rows="3" 
-cols="21" />';
+        echo '<textarea name="'.$this->name.'" id="'.$this->name.'" class="textfield" rows="' . $this->rows . '" cols="21" />';
         
         if (isset($arrParam["value"])) {
             echo $arrParam["value"];
