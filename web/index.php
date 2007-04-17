@@ -37,76 +37,53 @@ require("includes/PageGenerator.php");
 
 $root = $conf["global"]["root"];
 
+if (isset($_POST["bConnect"])) {
+    $login = $_POST["username"];
+    $pass = $_POST["password"];
 
-
-
-if (isset($_POST["bConnect"]))
-{
-  $login = $_POST["username"];
-  $pass = $_POST["password"];
-
-  /* Suivre le goto si existant ... */
-  if (isset($_POST["goto"]))
-  {
-    $goto = $_POST["goto"];
-  }
-  else
-  {
-    $goto = $root."main.php";
-  }
-
-  if (auth_user($login, $pass, $error))
-    {
-      /* créer la session */
-      $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
-      $sessionid = md5 (time() . $ip . mt_rand());
-
-      session_id($sessionid);
-      session_start();
-      $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
-      $_SESSION["login"] = $login;
-      /* stock� pour les opérations à venir... */
-      $_SESSION["pass"] = $pass;
-      /* expiration de la session : 90 minutes */
-      $_SESSION["expire"] = time() + 90 * 60;
-
-      $_SESSION['lang']=$_POST['lang'];
-      setcookie('lang',$_POST['lang'],time()+3600*24*30);
-
-
-      $urlArr=parse_url($_POST["server"]);
-      $_SESSION["XMLRPC_agent"] = $urlArr;
-      $tmp = createAclArray(getAcl($login));
-      /*print "<pre>";
-      print_r($tmp);
-      print "</pre>";*/
-      $_SESSION["acl"] = $tmp["acl"];
-      $_SESSION["aclattr"] = $tmp["aclattr"];
-      $_SESSION["supportModList"] = xmlCall("base.getModList",null);
-
-
-      //register version
-      $_SESSION["modListVersion"]['rev'] =  xmlCall("getRevision",null);
-      $_SESSION["modListVersion"]['ver'] =  xmlCall("getVersion",null);
-
-      /* Redirection vers $goto */
-
-
-      header("Location: ".$goto);
-      exit;
-    }
-  else
-    {
-      if (!isXMLRPCError()) {
-        $error = _("incorrect ID");
-      }
+    /* Suivre le goto si existant ... */
+    if (isset($_POST["goto"])) {
+            $goto = $_POST["goto"];
+    } else {
+        $goto = $root."main.php";
     }
 
+    if (auth_user($login, $pass, $error)) {
+        /* Session creation */
+        $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
+        $sessionid = md5 (time() . $ip . mt_rand());
+
+        session_id($sessionid);
+        session_start();
+        $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
+        $_SESSION["login"] = $login;
+        $_SESSION["pass"] = $pass;
+        /* Set session expiration time */
+        $_SESSION["expire"] = time() + 90 * 60;
+
+        $_SESSION['lang'] = $_POST['lang'];
+        setcookie('lang', $_POST['lang'], time() + 3600 * 24 * 30);
+
+        $urlArr = parse_url($_POST["server"]);
+        $_SESSION["XMLRPC_agent"] = $urlArr;
+        $tmp = createAclArray(getAcl($login));
+        $_SESSION["acl"] = $tmp["acl"];
+        $_SESSION["aclattr"] = $tmp["aclattr"];
+        $_SESSION["supportModList"] = xmlCall("base.getModList",null);
+
+        /* Register module version */
+        $_SESSION["modListVersion"]['rev'] = xmlCall("getRevision",null);
+        $_SESSION["modListVersion"]['ver'] = xmlCall("getVersion",null);
+
+        /* Redirect to $goto */
+        header("Location: ".$goto);
+        exit;
+    } else {
+        if (!isXMLRPCError()) $error = _("Login failed");
+    }
 }
 
-if ($_GET['error']) {
-    $error= urldecode($_GET['error'])."<br/>".$error;
-}
+if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 
 ?>
 
@@ -114,15 +91,15 @@ if ($_GET['error']) {
 
 <html>
 <head>
-	<title>Linbox-Free&ALter Soft</title>
+	<title>Linbox-Free&ALter Soft / Linbox Management Console</title>
 	<link href="<?php echo $root; ?>graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<meta http-equiv="imagetoolbar" content="false" />
 	<meta name="Description" content="" />
 	<meta name="Keywords" content="" />
-
+        <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
 </head>
-<body>
+<body onload="Form.focusFirstElement('loginForm')">
 
 <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -134,7 +111,7 @@ if ($_GET['error']) {
         <div id="header">
         <div id="headerLeft"><div id="headerRight">
 
-<!-- Contenu du header ici (mettre dans un <p>) -->
+<!-- Put header content here  -->
 
         <p class="lock"></p>
 
@@ -167,24 +144,18 @@ if (isset($error))
 
         <div id="login">
 
-<!-- Contenu login -->
+<!--Login content -->
 
         <img src="<?php echo $root; ?>img/login/logo_linboxfas_small.gif" alt="" width="131" height="32">
 
-		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" target="_self">
+		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" id="loginForm" target="_self">
 
 <?php
-/* Transmission du goto en POST */
-if (isset($_GET["goto"]))
-{
-  $goto = $_GET["goto"];
-}
+/* Send goto with POST */
+if (isset($_GET["goto"])) $goto = $_GET["goto"];
 
-/* peut-�tre d�j� initalis�, si pass� en POST */
-if (isset($goto))
-{
-  echo "<input name=\"goto\" type=\"hidden\" value=\"$goto\" />\n";
-}
+/* Maybe already initialized if in previous POST */
+if (isset($goto)) echo "<input name=\"goto\" type=\"hidden\" value=\"$goto\" />\n";
 
 ?>
 			<p><?= _("Login");?> :<br>
