@@ -538,10 +538,17 @@ zone "%(zone)s" {
             self.setSOARecord(zoneName, soaRecord)
 
     def setZoneDescription(self, zoneName, description):
+        """
+        Set a zone description using the txTRecord attribute
+        """
         zone = self.getZone(zoneName)
         if zone:
             zoneDN = zone[0][0]
-            self.l.modify_s(zoneDN, [(ldap.MOD_REPLACE, "tXTRecord", [description])])
+            if description:
+                self.l.modify_s(zoneDN, [(ldap.MOD_REPLACE, "tXTRecord", [description])])
+            else:
+                # Just delete the txTRecord attribute
+                self.l.modify_s(zoneDN, [(ldap.MOD_DELETE, "tXTRecord", None)])
 
     def getSOARecord(self, zoneName):
         """
