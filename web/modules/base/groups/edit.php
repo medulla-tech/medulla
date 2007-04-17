@@ -50,45 +50,32 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 
 if (isset($_POST["badd"])) {
-    if (!preg_match("/^[a-zA-Z][0-9\-_a-zA-Z ]*$/", $_POST["groupname"]))  {
-        $error = _("Invalid group name");
-        $n = new NotifyWidget();
-        $n->flush();
-        $n->add("<div id=\"errorCode\">$error</div>");
-        $n->setLevel(4);
-        $n->setSize(600);    
-    } else {
-        $groupname = $_POST["groupname"];
-        $groupdesc = $_POST["groupdesc"];
-        $result = create_group($error, $groupname);
-        change_group_desc($groupname, $groupdesc);
-	if (!isXMLRPCError()) {
-	    $n = new NotifyWidget();
-	    $n->add(sprintf("Group %s successfully added", $groupname));
-	    header("Location: " . urlStrRedirect("base/groups/index"));
-	}
-    }
+    $groupname = $_POST["groupname"];
+    $groupdesc = stripslashes($_POST["groupdesc"]);
+    $result = create_group($error, $groupname);
+    change_group_desc($groupname, $groupdesc);
+    if (!isXMLRPCError()) {
+        new NotifyWidgetSuccess(sprintf(_("Group %s successfully added"), $groupname));
+        header("Location: " . urlStrRedirect("base/groups/index"));
+    }    
 } else if (isset($_POST["bmodify"])) {
     $groupname = $_POST["groupname"];
-    $groupdesc = $_POST["groupdesc"];    
+    $groupdesc = stripslashes($_POST["groupdesc"]);
     change_group_desc($groupname, $groupdesc);
     callPluginFunction("changeGroup", array($_POST));
-    if (!isXMLRPCError()) {
-        $n = new NotifyWidget();
-        $n->add(sprintf("Group %s successfully modified", $groupname));
-    }
+    if (!isXMLRPCError()) new NotifyWidgetSuccess(sprintf(_("Group %s successfully modified"), $groupname));
 }
 
 
 if ($_GET["action"] == "add") {
-    $title = _T("Add group");
+    $title = _("Add group");
     $groupname = "";
     $groupdesc = "";
 } else {
-    $title = _T("Edit group");
+    $title = _("Edit group");
     $groupname = $_GET["group"];
     $detailArr = get_detailed_group($groupname);
-    if (isset($detailArr["description"])) $groupdesc = $detailArr["description"][0];
+    if (isset($detailArr["description"])) $groupdesc = htmlspecialchars($detailArr["description"][0]);
     else $groupdesc = "";
 }
 
@@ -101,30 +88,31 @@ if ($_GET["action"] == "add") {
 <? if ($_GET["action"] == "add") { ?>
 
 <p>
-<?= _("The group name can only contains letters and numeric, and must begin with a letter"); ?>
+<?= _("The group name can only contain letters and numeric, and must begin with a letter"); ?>
 </p>
 
 <?
 }
 ?>
 
-<form name="groupform" method="post" action="<? echo $PHP_SELF; ?>">
+<form name="groupform" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="return validateForm();">
 <table cellspacing="0">
-<tr>
-<td style="text-align:right; width:40%"><?= _("Group name")?></td>
-    <td>
-<? if ($_GET["action"] == "add")  { ?>
-    <input id="groupname" name="groupname" type="text" class="textfield" size="23" value="<?= $groupname; ?>" />
-<? } else {
-    echo $groupname;
-} ?>
-    </td>
-</tr>
-<tr>
-<td style="text-align:right; width:40%"><?= _("Description")?></td>
-    <td><input id="groupdesc" name="groupdesc" type="text" class="textfield" size="23" value="<?= $groupdesc; ?>" /></td>
 
-</tr>
+<?
+if ($_GET["action"]=="add") {
+    $formElt = new InputTpl("groupname", "/^[a-zA-Z][0-9_a-zA-Z-]*$/");
+} else {
+    $formElt = new HiddenTpl("groupname");
+}
+
+$tr = new TrFormElement(_("Group name"), $formElt);
+$tr->display(array("value" => $groupname, "required" => True));
+
+$tr = new TrFormElement(_("Description"), new InputTpl("groupdesc"));
+$tr->display(array("value" => $groupdesc));
+
+?>
+
 </table>
 
 <?
