@@ -28,9 +28,7 @@ function existGroup($group) {
     return xmlCall("base.existGroup", $group);
 }
 
-function
-get_groups(&$error)
-{
+function get_groups(&$error) {
   $groups = xmlCall("base.getGroupsLdap",null);
 
   sort($groups);
@@ -39,9 +37,7 @@ get_groups(&$error)
   return $groups;
 }
 
-function
-get_default_group()
-{
+function get_default_group() {
   return xmlCall("base.getDefaultUserGroup",null);
 }
 
@@ -56,9 +52,7 @@ function search_groups($filter = null) {
     return $groups;
 }
 
-function
-get_members($group)
-{
+function get_members($group) {
     return xmlCall("base.getMembers",$group);
 }
 
@@ -70,29 +64,23 @@ function get_detailed_group($group) {
     return xmlCall("base.getDetailedGroup", array($group));
 }
 
-function
-get_user_groups($user)
-{
+function get_user_groups($user) {
     return xmlCall('base.getUserGroups', $user);
 }
 
-function add_member($group, $user)
-{
+function add_member($group, $user) {
     $param[]=$group;
     $param[]=$user;
     xmlCall('base.addUserToGroup', $param);
 }
 
-function del_member($group, $user)
-{
+function del_member($group, $user) {
     $param[]=$group;
     $param[]=$user;
     xmlCall('base.delUserFromGroup',$param);
 }
 
-function
-create_group(&$error, $group)
-{
+function create_group(&$error, $group) {
     if ($group == "") {
         $error = "Groupe nul";
         return;
@@ -119,30 +107,8 @@ create_group(&$error, $group)
     }
 }
 
-function
-del_group($group)
-{
-  if ($group == "")
-    {
-      return _("Error: group null");
-    }
-
-  if ($group == "lpadmin")
-    {
-      return _("Error lpadmin cannot be removed");
-    }
-
-  $ret = xmlCall("base.delGroup",$group);
-
-  if ($ret)
-    {
-      return sprintf(_("Error when deleting %s"),$group);
-
-    }
-  else
-    {
-      return sprintf(_("Group %s deleted"),$group);
-    }
+function del_group($group) {
+    xmlCall("base.delGroup",$group);
 }
 
 ?>

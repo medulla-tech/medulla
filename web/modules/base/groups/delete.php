@@ -26,10 +26,9 @@ require("modules/base/includes/groups.inc.php");
 
 if (isset($_POST["bconfirm"])) {
     $group = $_POST["groupname"];
-    $result = del_group($group);
+    del_group($group);
     if (!isXMLRPCError()) {
-        $n = new NotifyWidget();
-        $n->add($result);
+        new NotifyWidgetSuccess(sprintf(_("Group %s deleted"), $group));
         header("Location: " . urlStrRedirect("base/groups/index"));
     }
 } else {
