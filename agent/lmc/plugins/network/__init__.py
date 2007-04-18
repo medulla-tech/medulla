@@ -168,6 +168,12 @@ def setNSRecord(zone, nameserver):
 def setZoneDescription(zone, description):
     Dns().setZoneDescription(zone, description)
 
+def hostExists(zone, hostname):
+    return Dns().hostExists(zone, hostname)
+
+def ipExists(zone, ip):
+    return Dns().ipExists(zone, ip)
+
 # DHCP exported call
 
 def addSubnet(network, netmask, name):
@@ -294,6 +300,9 @@ zone "%(zone)s" {
 """
 
     def reverseZone(self, network):
+        """
+        Build a reverse zone name
+        """
         ret = network.split(".")
         ret.reverse()
         return ".".join(ret) + self.reversePrefix
@@ -655,10 +664,58 @@ zone "%(zone)s" {
         return ret 
 
     def translateReverse(self, revZone):
+        """
+        Translate a reverse zone name into a network address.
+        """
         revZone = revZone.replace(self.reversePrefix, "")
         elements = revZone.split(".")
         elements.reverse()
         return ".".join(elements)
+
+    def hostExists(self, zone, hostname):
+        """
+        Return true if one of these statements are true:
+         - hostname is defined in the given zone
+         - hostname is defined in a reverse of the given zone
+
+        This method is useful to know if we can record a machine in a zone
+        without duplicate.
+        """
+        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
+        if search: return True
+        revZone = self.getReverseZone(zone)
+        if revZone:
+            # Search host in the reverse zone
+            revZone = revZone[0]
+            fqdn = hostname + "." + zone + "."
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revZone, fqdn), None)
+            return len(search) > 0
+        return False
+
+    def ipExists(self, zone, ip):
+        """
+        Return true if one of these statements are true:
+         - a hostname with the given ip is defined in the given zone
+         - the ip is defined in the reverse of the given zone
+
+        This method is useful to know if we can record a machine in a zone
+        without duplicate.
+        """
+        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(aRecord=%s))" % (zone, ip), None)
+        if search: return True
+        revZone = self.getReverseZone(zone)
+        if revZone:
+            # Search IP in the reverse zone
+            revZone = revZone[0]
+            ipStart = self.translateReverse(revZone)
+            ipLast = ip.replace(ipStart, "")
+            elements = ipLast.split(".")
+            elements.reverse()
+            elements.pop() # Remove the last "."
+            relative = ".".join(elements)
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (revZone, relative), None)
+            return len(search) > 0
+        return False
 
 
 class Dhcp(ldapUserGroupControl):
