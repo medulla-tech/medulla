@@ -99,7 +99,6 @@ def activate():
     logger = logging.getLogger()
     try:
         ldapObj = ldapUserGroupControl()
-        ret = True
     except ldap.INVALID_CREDENTIALS:
         logger.error("Can't bind to LDAP: invalid credentials.")
         return False
@@ -109,23 +108,27 @@ def activate():
          schema =  ldapObj.getSchema("lmcUserObject")
          if len(schema) <= 0:
              logger.error("LMC schema seems not be include in LDAP directory");
-             ret = False
+             return False
     except:
         logger.exception("invalid schema")
-        ret = False
+        return False
 
-    if ret:
-        # Create required OUs
-        ous = [ ldapObj.baseUsersDN, ldapObj.baseComputersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
-        for ou in ous:
-            head, path = ou.split(",", 1)
-            ouName = head.split("=")[1]
-            try:
-                ldapObj.addOu(ouName, path)
-                logger.info("Created OU " + ou)
-            except ldap.ALREADY_EXISTS:
-                pass
-    return ret
+    if not os.path.isdir(ldapObj.skelDir):
+        logger.error("Skeleton directory %s does not exist or is not a directory" % ldapObj.skelDir)
+        return False
+
+    # Create required OUs
+    ous = [ ldapObj.baseUsersDN, ldapObj.baseComputersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
+    for ou in ous:
+        head, path = ou.split(",", 1)
+        ouName = head.split("=")[1]
+        try:
+            ldapObj.addOu(ouName, path)
+            logger.info("Created OU " + ou)
+        except ldap.ALREADY_EXISTS:
+            pass
+
+    return True
 
 def getModList():
     """
@@ -799,7 +802,7 @@ class ldapUserGroupControl:
 
         # creating home directory
         if self.userHomeAction:
-            shutil.copytree('/etc/skel', homeDir, symlinks = True)
+            shutil.copytree(self.skelDir, homeDir, symlinks = True)
             lmctools.launch('chown', ['chown', '-R', str(uidNumber) + ':' + str(gidNumber), homeDir])
 
         # Run addUser hook
