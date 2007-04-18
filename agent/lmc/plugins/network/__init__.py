@@ -882,7 +882,10 @@ class Dhcp(ldapUserGroupControl):
         subnets = self.getSubnet(subnet)
         if subnets:
             subnetDN = subnets[0][0]
-            self.l.modify_s(subnetDN, [(ldap.MOD_REPLACE, "dhcpComments", description)])
+            if description:
+                self.l.modify_s(subnetDN, [(ldap.MOD_REPLACE, "dhcpComments", description)])
+            else:
+                self.l.modify_s(subnetDN, [(ldap.MOD_DELETE, "dhcpComments", None)])
 
     def setSubnetNetmask(self, subnet, netmask):
         subnets = self.getSubnet(subnet)
