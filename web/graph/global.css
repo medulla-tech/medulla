@@ -379,8 +379,7 @@ html>body #sidebar ul li a { width: auto; }
 
 }
 
-#error {
-    font-weight: bold;
+.error {
     color : #D00;
 }
 
