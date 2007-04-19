@@ -163,7 +163,7 @@ class ActionItem {
     function displayWithRight($param, $extraParams = array()) {
         echo "<li class=\"".$this->classCss."\">";
         $urlChunk = $this->buildUrlChunk($extraParams);
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".urlencode($param) . $urlChunk . "\">&nbsp;</a>";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param) . $urlChunk . "\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -248,7 +248,7 @@ class EmptyActionItem extends ActionItem {
     }
 
     function display($param = null) {
-        print '<li class="empty"> <a href="#" onclick="return false;">&nbsp;</a> </li>';
+        print '<li class="empty"><a href="#" onclick="return false;">&nbsp;</a></li>';
     }
     
 }
