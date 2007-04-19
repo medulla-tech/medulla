@@ -239,6 +239,12 @@ def getHostHWAddress(host, address):
 def getHost(host):
     return Dhcp().getHost(host)
 
+def hostExistsInSubnet(subnet, hostname):
+    return Dhcp().hostExistsInSubnet(subnet, hostname)
+
+def ipExistsInSubnet(subnet, ip):
+    return Dhcp().ipExistsInSubnet(subnet, ip)
+
 # DHCP leases
 
 def getDhcpLeases():    
@@ -1084,6 +1090,25 @@ class Dhcp(ldapUserGroupControl):
             if host[1]["cn"][0] == hostname:
                 self.delRecursiveEntry(host[0])
                 break
+
+    def hostExistsInSubnet(self, subnet, hostname):
+        subnets = self.getSubnet(subnet)
+        ret = False
+        if subnets:
+            subnetDN = subnets[0][0]
+            result = self.l.search_s(subnetDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dhcpHost)(cn=%s))" % hostname, None)
+            ret = len(result) > 0
+        return ret
+
+    def ipExistsInSubnet(self, subnet, ip):
+        subnets = self.getSubnet(subnet)
+        ret = False
+        if subnets:
+            subnetDN = subnets[0][0]
+            result = self.l.search_s(subnetDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dhcpHost)(dhcpStatements=fixed-address %s))" % ip, None)
+            ret = len(result) > 0
+        return ret
+
 
 class DhcpLeases:
 
