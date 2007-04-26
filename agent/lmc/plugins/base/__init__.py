@@ -1982,7 +1982,6 @@ class LogView:
         except NoSectionError, NoOptionError: self.logfile = logfile
         try: self.maxElt = config.get("LogView", "maxElt")
         except NoSectionError, NoOptionError: self.maxElt= 200
-        self.file = open(self.logfile, 'r')
         if pattern:
             self.pattern = pattern
         else:
@@ -1991,19 +1990,42 @@ class LogView:
                 "fds-accesslog" : "^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$"
                 }
 
-    def getLog(self, filter=""):
-        log = self.file.readlines()
-        log.reverse()
-        elts = []
-        for line in log:
+    def revReadlines(self, arg, bufsize = 8192):
+        """
+        Reversed readlines
+        Taken from http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/496941/index_txt
+        """
+        f = open(arg.encode("utf-8"), "rb")
+        f.seek(0, 2) # go to the end
+        leftover = ""
+        while f.tell():
+            if f.tell() < bufsize: bufsize = f.tell()
+            f.seek(-bufsize, 1)
+            in_memory = f.read(bufsize) + leftover
+            f.seek(-bufsize, 1)
+            lines = in_memory.split("\n")
+            reversed = lines[1:]
+            reversed.reverse()
+            for i in reversed: yield i
+            leftover = lines[0]
+        yield leftover
+
+    def getLog(self, filter = ""):
+        """
+        Parse the log lines containing the filter string and matching the given patterns.
+        Try to return a list containing self.maxElt
+        """
+        ret = []
+        count = 0
+        for line in self.revReadlines(self.logfile):
             if filter in line:
-                elts.append(line)
-        res = []
-        for line in elts[0:self.maxElt]:
-           parsed = self.parseLine(line)
-           if parsed:
-               res.append(parsed)
-        return res
+                parsed = self.parseLine(line)
+                if parsed:
+                    ret.append(parsed)
+                    count = count + 1
+                    if count > self.maxElt:
+                        break
+        return ret
 
     def parseLine(self, line):
         ret = None
