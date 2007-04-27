@@ -48,7 +48,7 @@ function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
 
 function print_disk_info() {
   /* -l option to only get local filesystem occupation */
-  remote_exec("df -k", $df);
+  remote_exec("cat /tmp/out", $df);
 
   unset($df[0]);
 
@@ -79,7 +79,7 @@ function print_disk_info() {
 
       $disk = preg_split("/[ ]+/", $disk);
 
-      if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) & ($disk[2] != 0))
+      if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
           continue;
       
       echo "<tr><td class=\"statusPad\">$disk[5]</td><td class=\"statusPad\">($disk[0])</td><td class=\"statusPad\">[$disk[4]]</td></tr>\n";
