@@ -48,7 +48,7 @@ function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
 
 function print_disk_info() {
   /* -l option to only get local filesystem occupation */
-  remote_exec("cat /tmp/out", $df);
+  remote_exec("df -k", $df);
 
   unset($df[0]);
 
