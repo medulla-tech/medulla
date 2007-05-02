@@ -227,8 +227,8 @@ class ActionPopupItem extends ActionItem {
     function displayWithRight($param, $extraParams = array()) {
         $urlChunk = $this->buildUrlChunk($extraParams);
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param . $urlChunk . "\"";
-        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".$param . $urlChunk . "'); return false;\">&nbsp;</a>";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=" . rawurlencode($param) . $urlChunk . "\"";
+        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=" . rawurlencode($param) . $urlChunk . "'); return false;\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -395,23 +395,21 @@ class ListInfos {
         echo $this->name." <strong>".min(($this->start + 1), count($this->arrInfo))."</strong>\n ";
         echo _("to")." <strong>".min(($this->end + 1), count($this->arrInfo))."</strong>\n";
         printf (_(" - Total <b>%s </b>")."\n",count($this->arrInfo));
-        echo "("._("page")." ";
-        printf("%.0f", ($this->end + 1) / $this->maxperpage);
-        echo " / ";
-        $pages = intval((count($this->arrInfo) / $this->maxperpage)) ;
-        if ((count($this->arrInfo) % $this->maxperpage > 0) && (count($this->arrInfo) > $this->maxperpage))
-            {
+        /* Display page counter only when possible */
+        if ($this->maxperpage >= ($this->end - $this->start)) {
+            echo "("._("page")." ";
+            printf("%.0f", ($this->end + 1) / $this->maxperpage);
+            echo " / ";
+            $pages = intval((count($this->arrInfo) / $this->maxperpage)) ;
+            if ((count($this->arrInfo) % $this->maxperpage > 0) && (count($this->arrInfo) > $this->maxperpage))
                 $pages++;
-            }
-        if ((count($this->arrInfo) > 0) && ($pages < 1))
-            {
+            else if ((count($this->arrInfo) > 0) && ($pages < 1))
                 $pages = 1;
-            }
-        if ($pages<0) {
-                    $pages = 0;
-                }
-        printf("%.0f", $pages);
-        echo ")\n";
+            else if ($pages < 0)
+                $pages = 0;            
+            printf("%.0f", $pages);
+            echo ")\n";
+        }
         echo "</p>";
     }
 
