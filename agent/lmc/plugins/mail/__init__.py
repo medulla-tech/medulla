@@ -49,16 +49,22 @@ def activate():
     if config.disabled:
         logger.warning("Plugin mail: disabled by configuration.")
         return False
-    
-    schema = ldapObj.getSchema("mailAccount")
-    if len(schema) <= 0:
-        logger.error("mailAccount objectClass is not included in LDAP directory");
-        return False
-    
-    schema = ldapObj.getSchema("mailGroup")
-    if len(schema) <= 0:
-        logger.error("mailGroup objectClass is not included in LDAP directory");
-        return False
+
+    mailSchema = {
+        "mailAccount" : ["mail", "mailalias", "maildrop", "mailenable", "mailbox", "mailuserquota"],
+        "mailGroup" : ["mail"],
+        "mailDomain" : ["virtualdomain", "virtualdomaindescription", "mailuserquota"],
+        }
+
+    for objectClass in mailSchema:
+        schema = ldapObj.getSchema(objectClass)
+        if not len(schema):
+            logger.error("LDAP mail schema is not up to date: %s objectClass is not included in LDAP directory" % objectClass);
+            return False        
+        for attribute in mailSchema[objectClass]:
+            if not attribute in schema:
+                logger.error("LDAP mail schema is not up to date: %s attribute is not included in LDAP directory" % attribute);
+                return False
 
     if config.vDomainSupport:        
         # Create required OU
