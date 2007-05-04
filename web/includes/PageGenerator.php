@@ -162,8 +162,9 @@ class ActionItem {
      */
     function displayWithRight($param, $extraParams = array()) {
         echo "<li class=\"".$this->classCss."\">";
-        $urlChunk = $this->buildUrlChunk($extraParams);
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param) . $urlChunk . "\">&nbsp;</a>";
+        if (is_array($extraParams) & !empty($extraParams)) $urlChunk = $this->buildUrlChunk($extraParams);
+        else $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($extraParams);
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action. $urlChunk . "\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -179,9 +180,14 @@ class ActionItem {
     /**
      * transform $obj param in link for this action
      */
-    function encapsulate($obj, $param) {
+    function encapsulate($obj, $extraParams = Array()) {
         if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
-	    $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."\">";
+            if (is_array($extraParams) & !empty($extraParams)) {
+                $urlChunk = $this->buildUrlChunk($extraParams);
+            } else {
+                $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
+            }
+	    $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk ."\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -191,7 +197,6 @@ class ActionItem {
             $str.=" </a>";
             return $str;
         }
-
     }
 
     /**
@@ -225,16 +230,25 @@ class ActionItem {
  */
 class ActionPopupItem extends ActionItem {
     function displayWithRight($param, $extraParams = array()) {
-        $urlChunk = $this->buildUrlChunk($extraParams);
+        if (is_array($extraParams) & !empty($extraParams)) {
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        } else {
+            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($param);
+        }
         echo "<li class=\"".$this->classCss."\">";
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=" . rawurlencode($param) . $urlChunk . "\"";
-        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=" . rawurlencode($param) . $urlChunk . "'); return false;\">&nbsp;</a>";
+        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" . $this->action . $urlChunk . "\"";
+        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" .$this->action . $urlChunk . "'); return false;\">&nbsp;</a>";
         echo "</li>";
     }
 
-    function encapsulate($obj, $param) {
-        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."\" ";
-        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action."&amp;".$this->paramString."=".rawurlencode($param)."'); return false;\">";
+    function encapsulate($obj, $extraParams = array()) {
+        if (is_array($extraParams) & !empty($extraParams)) {
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        } else {
+            $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
+        }
+        $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "\" ";
+        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "'); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
@@ -244,7 +258,7 @@ class ActionPopupItem extends ActionItem {
 
 class EmptyActionItem extends ActionItem {
 
-    function EmptyActionItem() {
+    function EmptyActionItem() {        
     }
 
     function display($param = null) {
@@ -418,7 +432,12 @@ class ListInfos {
      */
     function drawMainAction($idx) {
         echo "<td class=\"".$this->cssClass."\">";
-        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
+        if (is_a($this->arrAction[0], 'ActionItem')) {
+            $firstAction = $this->arrAction[0];
+        } else if (is_array($this->arrAction[0])) {
+            $firstAction = $this->arrAction[0][0];
+        }
+        echo $firstAction->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         if ($this->_addInfo[$idx]) {
             print $this->_addInfo[$idx];
         }
