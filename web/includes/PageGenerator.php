@@ -435,7 +435,7 @@ class ListInfos {
         if (is_a($this->arrAction[0], 'ActionItem')) {
             $firstAction = $this->arrAction[0];
         } else if (is_array($this->arrAction[0])) {
-            $firstAction = $this->arrAction[0][0];
+            $firstAction = $this->arrAction[0][$idx];
         }
         echo $firstAction->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         if ($this->_addInfo[$idx]) {
