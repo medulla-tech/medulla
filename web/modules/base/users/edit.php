@@ -170,10 +170,6 @@ if ($_GET["user"]) {
 		 $maxwidth = 320;
 		 $maxheight = 320;
 		 if (($size[0] <= $maxwidth) && ($size[1] <= $maxheight)) {
-		   class Trans {
-		     var $scalar;
-		     var $xmlrpc_type;
-		   }
 		   $obj = new Trans();
 		   $obj->scalar = "";
 		   $obj->xmlrpc_type = "base64";
