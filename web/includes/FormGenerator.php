@@ -320,6 +320,17 @@ class DomainInputTpl extends InputTpl {
 }
 
 /**
+ * Input with a check for a valid numeric value
+ */
+class NumericInputTpl extends InputTpl {
+
+    function NumericInputTpl($name) {
+        $this->name = $name;
+        $this->regexp = '/^[0-9]*$/';
+    }
+}
+
+/**
  * simple add label with Hidden field
  */
 class HiddenTpl extends AbstractTpl{
