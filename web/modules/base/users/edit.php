@@ -60,6 +60,11 @@ $firstname = $_POST["firstname"];
 $confpass = $_POST["confpass"];
 $homedir = $_POST["homeDir"];
 $loginShell = $_POST["loginShell"];
+/*
+  This is needed else we have two elements with id "mail" in the page,
+  and javascript mail input validation don't work.
+*/
+$_POST["mail"] = $_POST["mailinput"];
 
 $detailArr["cn"][0]=$nlogin;
 $detailArr["givenName"][0]=$firstname;
@@ -308,8 +313,9 @@ $test->display(array("value"=>$detailArr["givenName"][0]));
 $test = new TrFormElement(_("Title"),new InputTpl("title"));
 $test->display(array("value"=>$detailArr["title"][0]));
 
-$test = new TrFormElement(_("Mail address"),new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/'));
-$test->setCssError("mail");
+$email = new InputTpl("mailinput",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');
+$test = new TrFormElement(_("Mail address"), $email);
+$test->setCssError("mailinput");
 $test->display(array("value"=>$detailArr["mail"][0]));
 
 $test = new TrFormElement(_("Telephone number"),new InputTpl("telephoneNumber"));
