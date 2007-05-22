@@ -740,4 +740,50 @@ class Form {
 
 }
 
+class Div {
+
+    function Div($id, $display = True) {
+        $this->id = $id;
+        $this->display = $display;
+        $this->bgcolor = "";
+    }
+
+    function begin() {
+        if (!$this->display) $displayStyle = 'style =" display: none;"';
+        else $displayStyle = "";
+        print '<div id="' . $this->id . '" ' . $displayStyle . '>';
+    }
+
+    function end() {
+        print "</div>";
+    }
+}
+
+class DivExpertMode extends Div {
+
+    function DivExpertMode() {
+    }
+
+    function begin() {
+        print '<div id="expertMode" ';
+        displayExpertCss();
+        print ' >';
+    }
+
+}
+
+class DivForm extends Div {
+
+    function DivForm($title, $bgcolor, $klass = "formblock") {
+        $this->title = $title;
+        $this->klass = $klass;
+        $this->bgcolor = $bgcolor;        
+    }
+
+    function begin() {
+        print '<div class="' . $this->klass . '" style="background-color: ' . $this->bgcolor . ';">';
+        print "<h3>" . $this->title . "</h3>";
+    }
+}
+
 ?>
