@@ -739,8 +739,9 @@ class PageGenerator {
     /**
      *	Constructor
      */
-    function PageGenerator() {
+    function PageGenerator($title = "") {
         $content=array();
+        $this->title = $title;
     }
 
     /**
@@ -750,6 +751,13 @@ class PageGenerator {
         $this->sidemenu=$objSideMenu;
     }
 
+    /**
+     * Set the page title
+     */
+    function setTitle($title) {        
+        $this->title = $title;
+    }
+
 
     /**
      *	display the whole page
@@ -757,6 +765,7 @@ class PageGenerator {
     function display() {
         $this->displayCss();
         $this->displaySideMenu();
+        $this->displayTitle();
     }
 
     function displayCss() {
@@ -776,6 +785,12 @@ class PageGenerator {
         $this->sidemenu->display();
     }
 
+    /**
+     *	display the page title
+     */
+    function displayTitle() {
+        if (isset($this->title)) print "<h2>" . $this->title . "</h2>";
+    }
 }
 
 /**
