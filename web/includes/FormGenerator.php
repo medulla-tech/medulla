@@ -347,8 +347,8 @@ class HiddenTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print $arrParam['value'].'<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'"/>';
-
+        if (!isset($arrParam["hide"])) print $arrParam['value'];
+        print '<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'"/>';
     }
 }
 
