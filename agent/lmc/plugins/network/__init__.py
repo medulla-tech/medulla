@@ -174,6 +174,9 @@ def hostExists(zone, hostname):
 def ipExists(zone, ip):
     return Dns().ipExists(zone, ip)
 
+def resolve(zone, hostname):
+    return Dns().resolve(zone, hostname)
+
 # DHCP exported call
 
 def addSubnet(network, netmask, name):
@@ -651,11 +654,12 @@ zone "%(zone)s" {
         Remove a host from a zone.
         Remove it from the reverse zone too.
         """
-        revzone = self.getReverseZone(zone)
         host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
-        revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
         if host: self.l.delete_s(host[0][0])
-        if revhost: self.l.delete_s(revhost[0][0])
+        revzones = self.getReverseZone(zone)
+        for revzone in revzones:
+            revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
+            if revhost: self.l.delete_s(revhost[0][0])
 
     def computeSerial(self, oldSerial = ""):
         format = "%Y%m%d"
@@ -723,6 +727,21 @@ zone "%(zone)s" {
             return len(search) > 0
         return False
 
+    def resolve(self, zone, hostname):
+        """
+        Return the IP address of a host inside a zone.
+        An empty string is returned if the host can't be resolved.
+
+        @rtype: str
+        """
+        ret = ""
+        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
+        if search:
+            try:
+                ret = search[0][1]["aRecord"][0]
+            except KeyError:
+                pass
+        return ret
 
 class Dhcp(ldapUserGroupControl):
 
