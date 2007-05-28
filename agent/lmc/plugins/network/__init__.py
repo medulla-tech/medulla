@@ -133,10 +133,10 @@ def getZones(f):
     return Dns().getZones(f)
 
 def addZone(zonename, network = None, netmask = None, reverse = False, description = None, nameserver = None, nameserverip = None):
-    return Dns().addZone(zonename, network, netmask, reverse, description, nameserver, nameserverip)
+    Dns().addZone(zonename, network, netmask, reverse, description, nameserver, nameserverip)
 
 def delZone(zone):
-    return Dns().delZone(zone)
+    Dns().delZone(zone)
 
 def zoneExists(zone):
     return Dns().zoneExists(zone)
@@ -153,11 +153,14 @@ def getZoneObjectsCount(zone):
 def getZoneObjects(zone, filt):
     return Dns().getZoneObjects(zone, filt)
 
-def addRecordA(hostname, ip, zone):
-    return Dns().addRecordA(hostname, ip, zone)
+def addRecordA(zone, hostname, ip):
+    Dns().addRecordA(zone, hostname, ip)
 
-def delRecord(hostname, zone):
-    return Dns().delRecord(hostname, zone)
+def delRecord(zone, hostname):
+    Dns().delRecord(zone, hostname)
+
+def modifyRecord(zone, hostname, ip):
+    Dns().modifyRecord(zone, hostname, ip)
 
 def getSOARecord(zone):
     return Dns().getSOARecord(zone)
@@ -609,7 +612,7 @@ zone "%(zone)s" {
         soa["serial"] = self.computeSerial(current)
         self.setSOARecord(zone, soa)        
 
-    def addRecordA(self, hostname, ip, zone, container = None, dnsClass = "IN"):
+    def addRecordA(self, zone, hostname, ip, container = None, dnsClass = "IN"):
         """
         Add an entry for a zone and its reverse zone
         """
@@ -649,7 +652,7 @@ zone "%(zone)s" {
             self.l.add_s(dn, attributes)
             self.updateZoneSerial(revZone)
 
-    def delRecord(self, hostname, zone):
+    def delRecord(self, zone, hostname):
         """
         Remove a host from a zone.
         Remove it from the reverse zone too.
@@ -660,6 +663,15 @@ zone "%(zone)s" {
         for revzone in revzones:
             revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
             if revhost: self.l.delete_s(revhost[0][0])
+
+    def modifyRecord(self, zone, hostname, ip):
+        """
+        Change the IP address of a host in a zone.
+        If the new IP already exists, an exception is raised.
+        """
+        if self.ipExists(zone, ip): raise "The IP %s has been already registered in zone %s" % (ip, zone)
+        self.delRecord(zone, hostname)
+        self.addRecordA(zone, hostname, ip)
 
     def computeSerial(self, oldSerial = ""):
         format = "%Y%m%d"
