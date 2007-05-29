@@ -535,7 +535,7 @@ class SelectItem extends AbstractTpl{
  * Simple Form Template encapsulator
  *
  */
-class FormElement {
+class FormElement extends HtmlElement {
     var $template;
     var $desc;
     var $cssErrorName;
@@ -545,7 +545,6 @@ class FormElement {
         $this->template=&$tpl;
     }
 
-
     function setCssError($name) {
         $this->cssErrorName=$name;
     }
@@ -554,8 +553,8 @@ class FormElement {
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
-
+    function display($arrParam = array()) {
+        if (empty($arrParam)) $arrParam = $this->options;
         $existACL=existAclAttr($this->template->name);
 
         //if not
@@ -613,7 +612,8 @@ class DeletableTrFormElement extends FormElement{
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
+    function display($arrParam = array()) {
+        if (empty($arrParam)) $arrParam = $this->options;
 
         if ($this->key==0) {
             $desc = $this->desc;
@@ -688,7 +688,9 @@ class TrFormElement extends FormElement{
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
+    function display($arrParam = array()) {
+        if (empty($arrParam)) $arrParam = $this->options;
+        if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
         print '<tr><td width="40%" ';
         print displayErrorCss($this->cssErrorName);
@@ -731,70 +733,5 @@ class TrFormElement extends FormElement{
     }
 }
 
-class Form {
-
-    function begin() {
-        print '<form method="POST">';
-    }
-
-    function beginTable() {
-        print '<table cellspacing="0">';
-    }
-
-    function endTable() {
-        print '</table>';
-    }
-
-    function end() {
-        print '</form>';
-    }
-
-}
-
-class Div {
-
-    function Div($id, $display = True) {
-        $this->id = $id;
-        $this->display = $display;
-        $this->bgcolor = "";
-    }
-
-    function begin() {
-        if (!$this->display) $displayStyle = 'style =" display: none;"';
-        else $displayStyle = "";
-        print '<div id="' . $this->id . '" ' . $displayStyle . '>';
-    }
-
-    function end() {
-        print "</div>";
-    }
-}
-
-class DivExpertMode extends Div {
-
-    function DivExpertMode() {
-    }
-
-    function begin() {
-        print '<div id="expertMode" ';
-        displayExpertCss();
-        print ' >';
-    }
-
-}
-
-class DivForm extends Div {
-
-    function DivForm($title, $bgcolor, $klass = "formblock") {
-        $this->title = $title;
-        $this->klass = $klass;
-        $this->bgcolor = $bgcolor;        
-    }
-
-    function begin() {
-        print '<div class="' . $this->klass . '" style="background-color: ' . $this->bgcolor . ';">';
-        print "<h3>" . $this->title . "</h3>";
-    }
-}
 
 ?>
