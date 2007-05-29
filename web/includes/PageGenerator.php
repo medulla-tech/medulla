@@ -988,4 +988,211 @@ function findFirstInSideBar($sidebar) {
     return $sidebar['content'][0]['text'];
 }
 
+
+class HtmlElement {
+    
+    var $options;
+
+    function HtmlElement() {
+        $this->options = array();
+    }
+
+    function setOptions($options) {
+        $this->options = $options;
+    }
+
+    function hasBeenPopped() {
+        return True;
+    }
+
+    function display() {
+        die("Must be implemented by the subclass");
+    }
+
+}
+
+class HtmlContainer {
+    
+    var $elements;
+    var $index;
+    var $popped;
+    var $debug;
+
+    function HtmlContainer() {
+        $this->elements = array();
+        $this->popped = False;
+        $this->index = -1;
+    }
+
+    function begin() {
+        die("Must be implemented by the subclass");        
+    }
+
+    function end() {
+        die("Must be implemented by the subclass");        
+    }
+    
+    function display() {
+        print "\n" . $this->begin() . "\n";
+        foreach($this->elements as $element) $element->display();
+        print "\n" . $this->end() . "\n";
+    }
+
+    function add($element, $options = array()) {
+        $element->setOptions($options);
+        $this->push($element);        
+    }
+
+    function push($element) {
+        if ($this->index == -1) {
+            /* Add first element to container */
+            $this->index++;
+            $this->elements[$this->index] = $element;
+            //print "pushing " . $element->options["id"] . " into " . $this->options["id"] . "<br>";
+        } else {
+            if ($this->elements[$this->index]->hasBeenPopped()) {
+                /* All the contained elements have been popped, so add the new element in the list */
+                $this->index++;
+                $this->elements[$this->index] = $element;            
+                //print "pushing " . $element->options["id"] . " into " . $this->options["id"] . "<br>";               
+            } else {
+                /* Recursively push a new element into the container */
+                $this->elements[$this->index]->push($element);
+            }
+        }
+    }
+
+    function hasBeenPopped() {
+        if ($this->popped) $ret = True;
+        else if ($this->index == -1) $ret = False;
+        return $ret;
+    }
+
+    function pop() {
+        if (!$this->popped) {
+            if ($this->index == -1)
+                $this->popped = True;
+            else if ($this->elements[$this->index]->hasBeenPopped())
+                $this->popped = True;
+            else $this->elements[$this->index]->pop();
+            //if ($this->popped) print "popping " . $this->options["id"] . "<br>";
+        } else die("Nothing more to pop");
+    }
+
+}
+
+
+class Div extends HtmlContainer {
+    
+    function Div($options = array()) {
+        $this->HtmlContainer();
+        $this->options = $options;
+        $this->display = True;
+    }
+
+    function begin() {
+        $str = "";
+        foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
+        if (!$this->display) $displayStyle = ' style =" display: none;"';
+        else $displayStyle = "";        
+        return "<div$str$displayStyle>";
+    }
+    
+    function end () {
+        return "</div>";
+    }
+
+    function setVisibility($flag) {
+        $this->display = $flag;
+    }
+
+}
+
+
+class Form extends HtmlContainer {
+
+    function Form($options = array()) {
+        $this->HtmlContainer();
+        if (!isset($options["method"])) $options["method"] = "post";        
+        $this->options = $options;
+        $this->buttons = array();
+    }
+    
+    function begin() {
+        $str = "";
+        foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
+        return "<form$str>";
+    }
+
+    function end() {
+        $str = "";
+        foreach($this->buttons as $button) $str .= "\n$button\n";
+        $str .= "\n</form>\n";
+        return $str;
+    }
+
+    function addButton($name, $value) {
+        $this->buttons[] = "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"btnPrimary\">";
+    }
+
+}
+
+class ValidatingForm extends Form {
+
+    function ValidatingForm($options = array()) {
+        $this->Form($options);
+        $this->options["id"] = "edit";
+        $this->options["onsubmit"] = "return validateForm();";
+    }
+
+    function end() {
+        $str = parent::end();
+        $str .= "<script type=\"text/javascript\">Form.focusFirstElement(" . "'" . $this->options["id"] . "'" . ")</script>\n";
+        return $str;
+    }
+}
+
+class Table extends HtmlContainer {
+
+    function Table($options = array()) {
+        $this->HtmlContainer();
+        $this->options = $options;
+    }
+
+    function begin() {
+        return '<table cellspacing="0">';
+    }
+
+    function end() {
+        return "</table>";
+    }
+
+}
+
+class DivForModule extends Div {
+    
+    function DivForModule($title, $color, $options = array()) {
+        $options["style"] = "background-color: " . $color;
+        $options["class"] = "formblock";
+        $this->Div($options);
+        $this->title = $title;
+        $this->color = $color;        
+    }
+
+    function begin() {
+        print parent::begin();
+        print "<h3>" . $this->title . "</h3>";
+    }
+}
+
+class DivExpertMode extends Div {
+
+    function begin() {
+        print '<div id="expertMode" ';
+        displayExpertCss();
+        print ' >';
+    }
+
+}
+
 ?>
