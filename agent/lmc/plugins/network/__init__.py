@@ -481,7 +481,7 @@ zone "%(zone)s" {
         """
         Return true if the given zone exists
         """
-        return len(self.getZones(zone)) > 0
+        return len(self.getZone(zone)) == 1
 
     def addZone(self, name, network = None, netmask = None, reverse = False, description = None, nameserver = "ns", nameserverip = None):
         """
