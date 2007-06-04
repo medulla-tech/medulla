@@ -176,12 +176,26 @@ def ipNext(network, netmask, startAt = None, boundaries = False):
     if next: return numToDottedQuad(next)
     else: return ""
 
+# Mixed DNS/DHCP methods
+
 def addZoneWithSubnet(zonename, network, netmask, reverse = False, description = None, nameserver = None, nameserverip = None):
     Dns().addZone(zonename, network, netmask, reverse, description, nameserver, nameserverip)
     d = Dhcp()
     d.addSubnet(network, netmask, zonename)
     d.setSubnetOption(network, "domain-name", '"' + zonename +'"')
     if nameserverip: d.setSubnetOption(network, "domain-name-servers", nameserverip)
+
+def getSubnetAndZoneFreeIp(subnet, zone, current = None):
+    ret = ""
+    dhcp = Dhcp()
+    dns = Dns()
+    ip = dhcp.getSubnetFreeIp(subnet, current)
+    while ip:
+        if not dns.ipExists(zone, ip):
+            ret = ip
+            break        
+        ip = dhcp.getSubnetFreeIp(subnet, ip)
+    return ret
 
 # DNS exported call
 
@@ -210,7 +224,7 @@ def getZoneObjects(zone, filt):
     return Dns().getZoneObjects(zone, filt)
 
 def addRecordA(zone, hostname, ip):
-    Dns().addRecordA(zone, hostname, ip)
+    return Dns().addRecordA(zone, hostname, ip)
 
 def delRecord(zone, hostname):
     Dns().delRecord(zone, hostname)
@@ -548,7 +562,7 @@ zone "%(zone)s" {
 
         if nameserverip:
             # Add a A record for the primary nameserver
-            self.addRecordA(nameserver, nameserverip, name)
+            self.addRecordA(name, nameserver, nameserverip)
 
     def delZone(self, zone):
         """
@@ -677,8 +691,12 @@ zone "%(zone)s" {
 
     def addRecordA(self, zone, hostname, ip, container = None, dnsClass = "IN"):
         """
-        Add an entry for a zone and its reverse zone
+        Add an entry for a zone and its reverse zone.
+
+        @return: 0 if the host has been added in a reverse zone too, 1 if not
+        @rtype: int
         """
+        ret = 1
         if not container: container = zone
         dn = "relativeDomainName=" + hostname + "," + "ou=" + zone + "," + "ou=" + container + "," + self.configDns.dnsDN
         entry = {
@@ -695,25 +713,30 @@ zone "%(zone)s" {
         revZone = self.getReverseZone(zone)
         # Add host to corresponding reverse zone if there is one
         if revZone:
-            # For now, we only manage a single revZone
+            # For now, we only manage a single reverse zone
             revZone = revZone[0]
             ipStart = self.translateReverse(revZone)
-            ipLast = ip.replace(ipStart, "")
-            elements = ipLast.split(".")
-            elements.reverse()
-            elements.pop() # Remove the last "."
-            relative = ".".join(elements)
-            dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + "ou=" + container + "," + self.configDns.dnsDN
-            entry = {
-                "relativeDomainName" : relative,
-                "objectClass" : ["top", "dNSZone"],
-                "zoneName" : revZone,
-                "dNSClass" : dnsClass,
-                "pTRRecord" : hostname + "." + zone + ".",
-            }
-            attributes=[ (k,v) for k,v in entry.items() ]
-            self.l.add_s(dn, attributes)
-            self.updateZoneSerial(revZone)
+            # Check that the given IP can fit into the reverse zone
+            if ip.startswith(ipStart):
+                # Ok, add it
+                ipLast = ip.replace(ipStart, "")
+                elements = ipLast.split(".")
+                elements.reverse()
+                elements.pop() # Remove the last "."
+                relative = ".".join(elements)
+                dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + "ou=" + container + "," + self.configDns.dnsDN
+                entry = {
+                    "relativeDomainName" : relative,
+                    "objectClass" : ["top", "dNSZone"],
+                    "zoneName" : revZone,
+                    "dNSClass" : dnsClass,
+                    "pTRRecord" : hostname + "." + zone + ".",
+                }
+                attributes=[ (k,v) for k,v in entry.items() ]
+                self.l.add_s(dn, attributes)
+                self.updateZoneSerial(revZone)
+                ret = 0
+        return ret
 
     def delRecord(self, zone, hostname):
         """
@@ -721,11 +744,15 @@ zone "%(zone)s" {
         Remove it from the reverse zone too.
         """
         host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
-        if host: self.l.delete_s(host[0][0])
+        if host:
+            self.l.delete_s(host[0][0])
+            self.updateZoneSerial(zone)
         revzones = self.getReverseZone(zone)
         for revzone in revzones:
             revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
-            if revhost: self.l.delete_s(revhost[0][0])
+            if revhost:
+                self.l.delete_s(revhost[0][0])
+                self.updateZoneSerial(revzone)
 
     def modifyRecord(self, zone, hostname, ip):
         """
