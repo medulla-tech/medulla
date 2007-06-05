@@ -343,8 +343,10 @@ class HiddenTpl extends AbstractTpl{
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
-        if ($arrParam=='') {
+    function display($arrParam = array()) {
+        if (empty($arrParam)) $arrParam = $this->options;
+        /* FIXME: ??? */
+        if ($arrParam=='') {            
             $arrParam = $_POST[$this->name];
         }
         if (!isset($arrParam["hide"])) print $arrParam['value'];
@@ -446,7 +448,7 @@ class MultipleInputTpl extends AbstractTpl {
 /**
  *  astract class template
  */
-class AbstractTpl {
+class AbstractTpl extends HtmlElement {
     var $name;
     /**
      *  display abstract Element
