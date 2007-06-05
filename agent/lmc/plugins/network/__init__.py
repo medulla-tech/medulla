@@ -457,7 +457,7 @@ zone "%(zone)s" {
         return count
 
     def getZone(self, zoneName):
-        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zoneName, zoneName), None)        
+        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zoneName, zoneName + "."), None)        
         
     def getZones(self, filt = "", reverse = False, base = None):
         """
@@ -470,7 +470,7 @@ zone "%(zone)s" {
         search = self.l.search_s(base, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (filt, filt), None)
         ret = []
         for result in search:
-            if result[1]["zoneName"] == result[1]["relativeDomainName"]:
+            if (result[1]["zoneName"][0] + ".") == result[1]["relativeDomainName"][0]:
                 if self.reversePrefix in result[1]["zoneName"][0]:
                     # Reverse zone
                     if reverse: ret.append(result)
@@ -599,7 +599,7 @@ zone "%(zone)s" {
         entry = {
             "zoneName" : zoneName,
             "objectClass" : ["top", "dNSZone"],
-            "relativeDomainName" : zoneName,
+            "relativeDomainName" : zoneName + ".",
             }
         if description: entry["tXTRecord"] = [description]
         attributes = [ (k,v) for k,v in entry.items() ]
@@ -634,6 +634,7 @@ zone "%(zone)s" {
         if soaRecord:
             soaRecord["nameserver"] = nameserver
             self.setSOARecord(zoneName, soaRecord)
+            self.updateZoneSerial(zoneName)
 
     def setZoneDescription(self, zoneName, description):
         """
@@ -647,6 +648,7 @@ zone "%(zone)s" {
             else:
                 # Just delete the txTRecord attribute
                 self.l.modify_s(zoneDN, [(ldap.MOD_DELETE, "tXTRecord", None)])
+            self.updateZoneSerial(zoneName)
 
     def getSOARecord(self, zoneName):
         """
