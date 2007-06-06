@@ -294,3 +294,48 @@ def progressBackup(self, data):
         if (group):
             self.progress = int(group)/int(self.volumeNumber) + ((int(self.currVolume)-1) *100/int(self.volumeNumber))
 
+
+class ServiceManager:
+    """
+    Class to know a service state, and start/stop/reload it
+    """
+
+    def __init__(self, pidfile, initfile):
+        self.pidfile = pidfile
+        self.initfile = initfile
+
+    def isRunning(self):
+        ret = False
+        if os.path.exists(self.pidfile):
+            f = open(self.pidfile)
+            pid = f.read()
+            f.close()
+            ret = os.path.isdir(os.path.join("/proc", pid.strip()))
+        return ret
+
+    def start(self):
+        shLaunch(self.initfile + " start")
+
+    def stop(self):
+        shLaunch(self.initfile + " stop")
+
+    def restart(self):
+        shLaunch(self.initfile + " restart")
+
+    def reLoad(self):
+        shLaunch(self.initfile + " reload")
+
+    def command(self, command):
+        ret = None
+        if command == "status":
+            ret = self.isRunning()
+        elif command == "start":
+            self.start()
+        elif command == "stop":
+            self.stop()
+        elif command == "restart":
+            self.restart()
+        elif command == "reload":
+            self.reLoad()
+        return ret
+
