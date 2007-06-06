@@ -244,23 +244,23 @@ def setPoolRange(poolname, start, end):
 def addHostToSubnet(subnet, hostname):
     Dhcp().addHostToSubnet(subnet, hostname)
 
-def delHost(hostname):
-    Dhcp().delHost(hostname)
+def delHost(subnet, hostname):
+    Dhcp().delHost(subnet, hostname)
 
-def setHostOption(host, option, value = None):
-    Dhcp().setHostOption(host, option, value)
+def setHostOption(subnet, host, option, value = None):
+    Dhcp().setHostOption(subnet, host, option, value)
 
-def setHostStatement(host, option, value = None):
-    Dhcp().setHostStatement(host, option, value)
+def setHostStatement(subnet, host, option, value = None):
+    Dhcp().setHostStatement(subnet, host, option, value)
 
-def setHostHWAddress(host, address):
-    Dhcp().setHostHWAddress(host, address)
+def setHostHWAddress(subnet, host, address):
+    Dhcp().setHostHWAddress(subnet, host, address)
 
-def getHostHWAddress(host, address):
-    Dhcp().getHostHWAddress(host, address)
+def getHostHWAddress(subnet, host, address):
+    Dhcp().getHostHWAddress(subnet, host, address)
 
-def getHost(host):
-    return Dhcp().getHost(host)
+def getHost(subnet, host):
+    return Dhcp().getHost(subnet, host)
 
 def hostExistsInSubnet(subnet, hostname):
     return Dhcp().hostExistsInSubnet(subnet, hostname)

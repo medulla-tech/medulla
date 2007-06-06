@@ -344,38 +344,39 @@ class Dhcp(ldapUserGroupControl):
 
     # DHCP host management
 
-    def getHost(self, host = None):
+    def getHost(self, subnet, host = None):
         if not host: host = "*"
-        return self.l.search_s(self.configDhcp.dhcpDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dhcpHost)(cn=%s))" % host, None)
+        subnetDN = self.getSubnet(subnet)[0][0]
+        return self.l.search_s(subnetDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dhcpHost)(cn=%s))" % host, None)
 
-    def getHostOptions(self, host):
+    def getHostOptions(self, subnet, host):
         try:
-            ret = self.getHost(host)[0][1]["dhcpOption"]
+            ret = self.getHost(subnet, host)[0][1]["dhcpOption"]
         except KeyError:
             ret = []
         return ret
 
-    def setHostOption(self, host, option, value = None):
-        hosts = self.getHost(host)
+    def setHostOption(self, subnet, host, option, value = None):
+        hosts = self.getHost(subnet, host)
         if hosts:
             hostDN = hosts[0][0]
             self.setObjectOption(hostDN, option, value)
 
-    def setHostStatement(self, host, option, value):
-        hosts = self.getHost(host)
+    def setHostStatement(self, subnet, host, option, value):
+        hosts = self.getHost(subnet, host)
         if hosts:
             hostDN = hosts[0][0]
             self.setObjectStatement(hostDN, option, value)
 
-    def setHostHWAddress(self, host, address):
-        hosts = self.getHost(host)
+    def setHostHWAddress(self, subnet, host, address):
+        hosts = self.getHost(subnet, host)
         if hosts:
             hostDN = hosts[0][0]
             self.l.modify_s(hostDN, [(ldap.MOD_REPLACE, "dhcpHWAddress", ["ethernet " + address])])
 
-    def getHostHWAddress(self, host, address):
+    def getHostHWAddress(self, subnet, host, address):
         try:
-            ret = self.getHost(host)[0][1]["dhcpHWAddress"][0]
+            ret = self.getHost(subnet, host)[0][1]["dhcpHWAddress"][0]
             ret = ret.split()[1]
         except KeyError:
             ret = None
@@ -401,8 +402,8 @@ class Dhcp(ldapUserGroupControl):
         attributes=[ (k,v) for k,v in entry.items() ]
         self.l.add_s(dn, attributes)    
 
-    def delHost(self, hostname):
-        hosts = self.getHost(hostname)
+    def delHost(self, subnet, hostname):
+        hosts = self.getHost(subnet, hostname)
         for host in hosts:
             if host[1]["cn"][0] == hostname:
                 self.delRecursiveEntry(host[0])
