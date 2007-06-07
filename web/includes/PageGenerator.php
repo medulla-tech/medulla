@@ -763,7 +763,6 @@ class PageGenerator {
      *	display the whole page
      */
     function display() {
-        $this->displayCss();
         $this->displaySideMenu();
         $this->displayTitle();
     }
@@ -772,7 +771,6 @@ class PageGenerator {
         echo'<style type="text/css">'."\n";
         echo '<!--'."\n";
         echo $this->sidemenu->getSideBarCss();
-        //echo SideMenu::getSideBarCss();
         echo '-->'."\n";
         echo '</style>'."\n\n";
     }
