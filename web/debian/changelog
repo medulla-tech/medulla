@@ -1,3 +1,9 @@
+lmc-web-base (2.0.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Linbox <info@linbox.com>  Fri,  8 Jun 2007 17:31:14 +0200
+
 lmc-web-base (1.1.4-1) unstable; urgency=low
 
   * New upstream release
