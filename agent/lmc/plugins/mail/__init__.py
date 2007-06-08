@@ -33,7 +33,7 @@ import copy
 import logging
 
 
-VERSION = "1.1.4"
+VERSION = "2.0.0"
 APIVERSION = "5:1:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
