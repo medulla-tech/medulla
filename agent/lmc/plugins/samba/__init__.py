@@ -53,7 +53,7 @@ from twisted.internet import reactor
 
 INI = "/etc/lmc/plugins/samba.ini"
 
-VERSION = "1.1.4"
+VERSION = "2.0.0"
 APIVERSION = "4:1:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 

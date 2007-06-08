@@ -34,7 +34,7 @@ import logging
 
 
 VERSION = "1.1.4"
-APIVERSION = "5:0:3"
+APIVERSION = "5:1:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION

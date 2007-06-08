@@ -34,7 +34,7 @@ import lmc
 
 INI = "/etc/lmc/plugins/network.ini"
 
-VERSION = "1.1.4"
+VERSION = "2.0.0"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
