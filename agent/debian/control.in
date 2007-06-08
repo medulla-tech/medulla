@@ -43,16 +43,6 @@ Description: Linbox Management Console base plugin
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-ox
-Architecture: all
-Depends: ${python:Depends}, python-lmc-base, python-psycopg
-Replaces: lmc-agent (<< 0.409), lmc-plugin-ox
-Description: Linbox Management Console Open-Xchange plugin
- Open-Xchange management plugin for the LMC.
- This plugin needs a working installation of Open-Xchange to be functional.
- .
- Homepage: http://lds.linbox.org
-
 Package: python-lmc-proxy
 Architecture: all
 Depends: ${python:Depends}, python-lmc-base, squidguard
