@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-11 18:00+0200\n"
-"PO-Revision-Date: 2007-06-11 18:02+0200\n"
+"PO-Revision-Date: 2007-06-11 18:26+0200\n"
 "Last-Translator: Cédric Delfosse <cedric.delfosse@linbox.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -920,7 +920,7 @@ msgstr "Déconnexion"
 
 #: logout/index.php:50
 msgid "Your session will be closed"
-msgstr "Votre session va être fermé"
+msgstr "Votre session va être fermée"
 
 #: index.php:82
 msgid "Login failed"
