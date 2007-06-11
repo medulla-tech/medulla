@@ -42,27 +42,13 @@ if (!function_exists('_T')) {
     }
 
     /**
-     * return locale on system
-     * create array
+     * return supported locales as an array
      */
     function getArrLocale() {
-        $res = array();	
-        $alias = array();
-        $aliasfiles = array("/etc/locale.alias", "/usr/share/gettext/intl/locale.alias", "/usr/share/locale/locale.alias");
-        foreach($aliasfiles as $file) {
-            if (file_exists($file)) {
-                $aliasfile = file_get_contents($file);
-                $alias = split("\n", $aliasfile);
-                break;
-            }
-        }        
-        foreach ($alias as $aliasline) {
-            if (!ereg("^#",$aliasline)) {
-                ereg("^(.*)[ \t]([^\.]*)",$aliasline,$regs); //truncate even if it's iso
-                $res[$regs[2].".utf8"]=$regs[1]; //add .utf8 at end key
-            }
-        }
-        $res['C'] = "english"; //add C <=> english link
+        $res = array("C" => "english",
+                     "fr_FR.utf8" => "french",
+                     "es_ES.utf8" => "spanish",
+                     "nb_NO.utf8" => "norwegian");
         return $res;
     }
 }
