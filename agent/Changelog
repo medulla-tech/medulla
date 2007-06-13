@@ -1,3 +1,13 @@
+lmc-agent 2.0.0
+---------------
+
+ * network plugin
+   o new module for DNS and DHCP management
+ * base plugin
+   o skelDir option bug fix
+ * ox plugin
+   o more provide the Open-Xchange plugin
+
 lmc-agent 1.1.4
 ---------------
 
