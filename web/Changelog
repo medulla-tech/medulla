@@ -1,3 +1,10 @@
+lmc-web-base 2.0.0
+------------------
+
+ * Some new HTML widgets and widget framework improvements
+ * Norwegian translation from Atle Johansen
+ * Code cleanup and bug fixes
+
 lmc-web-base 1.1.4
 ------------------
 
