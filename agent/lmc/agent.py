@@ -203,6 +203,9 @@ def daemon(config):
         sys.exit(1)
 
     # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
     os.chdir("/")
     os.setsid()
 
