@@ -38,6 +38,9 @@ LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
 SBINFILES = bin/lmc-agent
 
+# Extension for backuped configuration files
+BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
+
 all:
 
 # Cleaning target
@@ -49,6 +52,9 @@ clean:
 # Install everything
 install: 
 	@# Install directories
+	@echo ""
+	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
+	mv -f $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)$(BACKUP)
 	@echo ""
 	@echo "Creating directories..."
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
