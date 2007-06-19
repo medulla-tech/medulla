@@ -52,7 +52,7 @@ class TestMailControl(unittest.TestCase):
 
     def setUp(self):
         cleanLdap()
-        self.m = MailControl(conffilebase = "tests/basetest.ini")
+        self.m = MailControl(conffile = "tests/vdomaintest.ini", conffilebase = "tests/basetest.ini")
 
     def test_MailControl(self):
         self.m.addUser("usertest", "userpass", "test", "test")
