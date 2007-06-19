@@ -3,7 +3,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: testldap.py 543 2006-07-19 13:36:46Z cedric $
+# $Id$
 #
 # This file is part of LMC.
 #
