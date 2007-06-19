@@ -34,7 +34,8 @@ class PluginConfig(ConfigParser):
         if not conffile: self.conffile = lmctools.getConfigFile(name)
         else: self.conffile = conffile
         self.setDefault()
-        self.read(self.conffile)
+        fp = file(self.conffile, "r")
+        self.readfp(fp, self.conffile)
         self.readConf()
 
     def readConf(self):

@@ -261,7 +261,9 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None):
 def getConfigParser(module, path = "/etc/lmc/plugins/"):
     """return a configParser for a plugins"""
     config = ConfigParser.ConfigParser()
-    config.read(os.path.join(path, module) + ".ini")
+    inifile = os.path.join(path, module) + ".ini"
+    fp = file(inifile, "r")
+    config.readfp(fp, inifile)
     return config
 
 def getConfigFile(module, path = "/etc/lmc/plugins/"):

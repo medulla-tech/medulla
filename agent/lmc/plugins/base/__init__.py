@@ -507,10 +507,10 @@ class ldapUserGroupControl:
         """
         if conffile: configFile = conffile
         else: configFile = INI
-        self.conffile = conffile
+        self.conffile = configFile
         self.config = ConfigParser.ConfigParser()
-
-        self.config.read(configFile)
+        fp = file(configFile, "r")
+        self.config.readfp(fp, configFile)
 
         self.logger = logging.getLogger()
 
