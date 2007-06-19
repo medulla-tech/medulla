@@ -102,7 +102,9 @@ class TestManageUserGroup(unittest.TestCase):
         self.assertEqual(len(self.l.searchGroup("grouptest")), 1)
         self.assertEqual(len(self.l.searchGroup("grouptestfoo")), 0)
         self.assertEqual(self.l.getMembers("grouptest"), [])
-	self.assertEqual(self.l.delGroup("grouptest"), 0)
+	self.assertEqual(self.l.delGroup("grouptest"), None)
+        self.assertEqual(len(self.l.searchGroup("grouptest")), 0)
+        self.assertEqual(len(self.l.searchGroup()), 1)
 
     def test_addUserToGroup(self):
         self.assertEqual(self.l.addUser("usertest", "userpass", u"ùnïcôde", u"çàùôéé"), 0)
