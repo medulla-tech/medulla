@@ -115,8 +115,8 @@ p {
 }
 
 .fixheight {
-        float: left;
-        display:none;
+        float: right;
+        display: inline;
 	height: 350px;
 	width: 0px;
 	margin: 0;
