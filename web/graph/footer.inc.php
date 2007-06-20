@@ -111,6 +111,13 @@ var nodes = $A(inputList);
 
 focusStyler(nodes);
 
+<?
+if (isset($_SESSION["doeffect"])) {
+    print 'Element.hide("logo");';
+    Print 'new Effect.Appear("logo", {duration: 2.0});';
+    unset($_SESSION["doeffect"]);
+}
+?>
 
 //Event.observe(input, 'focus', ifocus, false);
 -->

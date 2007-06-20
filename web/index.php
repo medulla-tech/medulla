@@ -75,6 +75,9 @@ if (isset($_POST["bConnect"])) {
         $_SESSION["modListVersion"]['rev'] = xmlCall("getRevision",null);
         $_SESSION["modListVersion"]['ver'] = xmlCall("getVersion",null);
 
+        /* Make the comnpany logo effect */
+        $_SESSION["doeffect"] = True;
+
         /* Redirect to $goto */
         header("Location: ".$goto);
         exit;
@@ -98,6 +101,7 @@ if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 	<meta name="Description" content="" />
 	<meta name="Keywords" content="" />
         <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
+        <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
 </head>
 <body onload="Form.focusFirstElement('loginForm')">
 
@@ -246,6 +250,9 @@ if (isset($goto)) echo "<input name=\"goto\" type=\"hidden\" value=\"$goto\" />\
 </table>
 
 </div>
+
+<?if (isset($error)) print '<script type="text/javascript">new Effect.Shake($("alert"));</script>';?>
+
 </body>
 </html>
 <?
