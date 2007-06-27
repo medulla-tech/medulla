@@ -1131,8 +1131,17 @@ class Form extends HtmlContainer {
         return $str;
     }
 
+    function getButtonString($name, $value) {
+        return "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"btnPrimary\">";
+    }
+
     function addButton($name, $value) {
-        $this->buttons[] = "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"btnPrimary\">";
+        $this->buttons[] = $this->getButtonString($name, $value);
+    }
+
+    function addExpertButton($name, $value) {
+        $d = new DivExpertMode();
+        $this->buttons[] = $d->begin() . $this->getButtonString($name, $value) . $d->end();
     }
 
 }
@@ -1188,9 +1197,13 @@ class DivForModule extends Div {
 class DivExpertMode extends Div {
 
     function begin() {
-        print '<div id="expertMode" ';
-        displayExpertCss();
-        print ' >';
+        $str = '<div id="expertMode" ';
+        if ($_SESSION["expert_mode_var"] == 1) {
+            $str .= ' style="display: inline;"';
+        } else {
+            $str .= ' style="display: none;"';
+        }
+        return $str . ' >';
     }
 
 }
