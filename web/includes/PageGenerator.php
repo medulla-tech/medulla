@@ -765,6 +765,8 @@ class PageGenerator {
     function display() {
         $this->displaySideMenu();
         $this->displayTitle();
+        /* On IE, make the page have a minimal length, else the sidemenu may be cut */
+        print '<div class="fixheight"></div>';
     }
 
     function displayCss() {
@@ -787,7 +789,7 @@ class PageGenerator {
      *	display the page title
      */
     function displayTitle() {
-        if (isset($this->title)) print "<h2>" . $this->title . "</h2>";
+        if (isset($this->title)) print "<h2>" . $this->title . "</h2>\n";
     }
 }
 
