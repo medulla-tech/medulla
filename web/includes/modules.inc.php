@@ -181,51 +181,52 @@ function isNoHeader($pModules,$pSubmod,$pAction) {
 }
 
 /**
- * call all plugin function if possible
- * $function, function name
- * $paramArr, array of parameters
+ * Call the given function in all available plugins
+ * @param $function The function name to execute
+ * @param $paramArr The array of parameters for the function
+ * @param $reverse  If true, the plugins are considered in reverse priority
  *
- * this function will try to call all _$plugins_$functionName function
+ * This function will try to call all _$plugins_$functionName function
+ * The plugins are looked up according to their priority, and in reverse order if $reverse = True
  */
-function callPluginFunction($function,$paramArr = null) {
-  $list=$_SESSION["modulesList"];
+function callPluginFunction($function, $paramArr = null, $reverse = False) {
+    $list = $_SESSION["modulesList"];
 
-  $LMCApp =& LMCApp::getInstance();
-  foreach(getSorted($LMCApp->getModules()) as $key => $mod) { //fetch and order plugin
-        if (array_search($mod->getName(),$list)!==FALSE){
+    $LMCApp =& LMCApp::getInstance();
+    /* Fetch and order available plugins for the current logged user */
+    foreach(getSorted($LMCApp->getModules()) as $key => $mod) {
+        if (array_search($mod->getName(), $list) !== FALSE) {
             $ordered_list[] = $mod->getName();
         }
-  }
-
-  $list = $ordered_list; //set $ordered_list as $list;
-
-  // If the user try to change his/her password, we do it for each available
-  // module, and we bypass all ACL check
-  if (($function == "changeUserPasswd")||($function == "baseEdit")) {
-      /* Change password for all modules, even those where the user has no right. */
-      $list = $_SESSION["supportModList"];
-      global $conf;
-      foreach($list as $module) {
-          if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
-      }
-  }
-
-  $result = array();
-
-  foreach($list as $item) {
-
-    $functionName="_".$item."_".$function;
-
-    if(function_exists($functionName)) {
-      $result[$item] =  call_user_func_array($functionName,$paramArr);
     }
-    else {
-      // print "Call : \"".$functionName."\" not exist<br />";
+
+    $list = $ordered_list; 
+    if ($reverse) $list = array_reverse($list);
+
+    /*
+      If the user try to change his/her password, we do it for each available
+      module, and we bypass all ACL check
+    */
+    if (($function == "changeUserPasswd")||($function == "baseEdit")) {
+        /* Change password for all modules, even those where the user has no right. */
+        $list = $_SESSION["supportModList"];
+        global $conf;
+        foreach($list as $module) {
+            if (!function_exists("_" . $module . "_" . "changeUserPasswd")) includePublicFunc(array($conf["global"]["rootfsmodules"] . "/$module"));
+        }
     }
-  }
 
-  return $result;
+    $result = array();    
+    foreach($list as $item) {        
+        $functionName = "_" . $item . "_" . $function;        
+        if (function_exists($functionName)) {
+            $result[$item] = call_user_func_array($functionName, $paramArr);
+        } else {
+            // print "Call : \"".$functionName."\" not exist<br />";
+        }
+    }
 
+    return $result;
 }
 
 
