@@ -20,14 +20,11 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?
 
 function _base_infoUser($userObjClass) {
-  if (array_search("posixAccount",$userObjClass)!==false) {
-    print "posix ";
-  }
-  
+    if (array_search("posixAccount", $userObjClass)!==false) {
+        print "posix ";
+    }
 }
 
 function _base_enableUser($uid) {
@@ -39,12 +36,15 @@ function _base_disableUser($uid) {
 }
 
 function _base_changeUserPasswd($paramsArr) {
-  return xmlCall("base.changeUserPasswd", $paramsArr);
+    return xmlCall("base.changeUserPasswd", $paramsArr);
 } 
 
 function _base_changeUserPrimaryGroup($uid, $group) {
-    return xmlCall("base.changeUserPrimaryGroup",array($uid, $group));
+    return xmlCall("base.changeUserPrimaryGroup", array($uid, $group));
 }
- 
- 
+
+function _base_delGroup($group) {
+    xmlCall("base.delGroup", $group);
+}
+
 ?>
