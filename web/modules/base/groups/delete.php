@@ -26,7 +26,7 @@ require("modules/base/includes/groups.inc.php");
 
 if (isset($_POST["bconfirm"])) {
     $group = $_POST["groupname"];
-    del_group($group);
+    callPluginFunction("delGroup", array($group), True);
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("Group %s deleted"), $group));
         header("Location: " . urlStrRedirect("base/groups/index"));
