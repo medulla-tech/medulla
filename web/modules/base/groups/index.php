@@ -114,8 +114,8 @@ $n->addExtraInfo($arrComment,_("Comments"));
 $n->setAdditionalInfo($arrNb);
 
 
-$n->addActionItem(new ActionItem(_("Edit members"),"members","edit","group") );
-$n->addActionItem(new ActionItem(_("Edit group"),"edit", "afficher","group") );
+$n->addActionItem(new ActionItem(_("Edit members"),"members","afficher","group") );
+$n->addActionItem(new ActionItem(_("Edit group"),"edit", "edit","group") );
 $n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","group") );
 
 
