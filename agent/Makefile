@@ -54,7 +54,7 @@ install:
 	@# Install directories
 	@echo ""
 	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
-	[ -d $(DESTDIR)$(ETCDIR) ] && mv -f $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)$(BACKUP)
+	-[ -d $(DESTDIR)$(ETCDIR) ] && mv -f $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)$(BACKUP)
 	@echo ""
 	@echo "Creating directories..."
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
