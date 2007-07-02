@@ -43,7 +43,7 @@ import support.lmcException
 Fault = xmlrpclib.Fault
 __config = None #shared config object
 
-VERSION = "1.1.4"
+VERSION = "2.0.0"
 
 def getAvailablePlugins(path):
     """
