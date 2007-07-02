@@ -96,7 +96,7 @@ if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 <head>
 	<title>Linbox-Free&ALter Soft / Linbox Management Console</title>
 	<link href="<?php echo $root; ?>graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
 	<meta name="Description" content="" />
 	<meta name="Keywords" content="" />
