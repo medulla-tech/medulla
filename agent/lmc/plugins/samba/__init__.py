@@ -462,8 +462,8 @@ class sambaLdapControl(lmc.plugins.base.ldapUserGroupControl):
 
     def searchMachine(self, pattern = '', base = None):
         """return a list of machines"""
-        if (pattern==''): searchFilter = "cn=*"
-        else: searchFilter = "cn=" + pattern
+        if (pattern==''): searchFilter = "uid=*"
+        else: searchFilter = "uid=" + pattern
         if not base: base = self.baseComputersDN
         result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
 
