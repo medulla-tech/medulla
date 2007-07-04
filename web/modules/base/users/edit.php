@@ -81,11 +81,11 @@ if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin)) {
     $error.= _("User's name invalid !")."<br/>";
     setFormError("login");
 }
-
+/*
 if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))  {
     setFormError("telephoneNumber");
     $error.= _("This is not a valid telephone number.")."<br />";
-}
+}*/
 
 /* Check that the primary group name exists */
  $primary = $_POST["primary_autocomplete"];
@@ -156,7 +156,7 @@ if ($_GET["user"]) {
          if ($_POST["homeDir"]) move_home($nlogin, $_POST["homeDir"]);
 
          // Change user attributes
-         changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
+	 changeUserTelephoneNumbers($nlogin, $_POST['telephoneNumber']);
          changeUserAttributes($nlogin, 'title', $_POST['title']);
 	 if (strlen($_POST["cn"]) > 0) changeUserAttributes($nlogin, "cn", $_POST["cn"]);
 	 if ($newuser) {
@@ -318,9 +318,25 @@ $test = new TrFormElement(_("Mail address"), $email);
 $test->setCssError("mailinput");
 $test->display(array("value"=>$detailArr["mail"][0]));
 
-$test = new TrFormElement(_("Telephone number"),new InputTpl("telephoneNumber"));
-$test->setCssError("telephoneNumber");
-$test->display(array("value"=>$detailArr["telephoneNumber"][0]));
+print "</table>";
+if (!isset($detailArr['telephoneNumber'])) $detailArr['telephoneNumber'] = array('');
+$tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
+$tn->setRegexp('/^[a-zA-Z0-9(-/ ]*$/');
+$phone = new FormElement(_("Telephone Number"), $tn);
+$phone->display($detailArr['telephoneNumber']);
+print '<table cellspacing="0">';
+
+$test = new TrFormElement(_("Mobile number"), new InputTpl("mobile"));
+$test->setCssError("mobile");
+$test->display(array("value"=>$detailArr["mobile"][0]));
+
+$test = new TrFormElement(_("Fax number"), new InputTpl("facsimileTelephoneNumber"));
+$test->setCssError("facsimileTelephoneNumber");
+$test->display(array("value"=>$detailArr["facsimileTelephoneNumber"][0]));
+
+$test = new TrFormElement(_("Home phone number"), new InputTpl("homePhone"));
+$test->setCssError("homePnone");
+$test->display(array("value"=>$detailArr["homePhone"][0]));
 
 
 

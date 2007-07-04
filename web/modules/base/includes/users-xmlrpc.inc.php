@@ -172,4 +172,11 @@ function changeUserAttributes($uid,$attr,$attrval) {
     return xmlCall("base.changeUserAttributes", array($uid,$attr,$attrval));
 }
 
+function changeUserTelephoneNumbers($uid, $numbers) {
+    $update = array();
+    foreach($numbers as $number) if (strlen($number)) $update[] = $number;
+    if (empty($update)) $update = null;
+    xmlCall("base.changeUserAttributes", array($uid, "telephoneNumber", $update));
+}
+
 ?>
