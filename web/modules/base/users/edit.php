@@ -112,7 +112,6 @@ callPluginFunction("verifInfo",array($_POST));
                 setFormError("pass");
             } else {  //if no problem
                 $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $_POST["primary_autocomplete"]);
-                changeUserAttributes($nlogin, 'telephoneNumber', $_POST['telephoneNumber']);
                 if (strlen($_POST['mail']) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
 		if (strlen($loginShell) > 0) changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
@@ -156,8 +155,11 @@ if ($_GET["user"]) {
          if ($_POST["homeDir"]) move_home($nlogin, $_POST["homeDir"]);
 
          // Change user attributes
-	 changeUserTelephoneNumbers($nlogin, $_POST['telephoneNumber']);
-         changeUserAttributes($nlogin, 'title', $_POST['title']);
+	 changeUserTelephoneNumbers($nlogin, $_POST["telephoneNumber"]);
+         changeUserAttributes($nlogin, "title", $_POST["title"]);
+         changeUserAttributes($nlogin, "mobile", $_POST["mobile"]);
+         changeUserAttributes($nlogin, "facsimileTelephoneNumber", $_POST["facsimileTelephoneNumber"]);
+         changeUserAttributes($nlogin, "homePhone", $_POST["homePhone"]);
 	 if (strlen($_POST["cn"]) > 0) changeUserAttributes($nlogin, "cn", $_POST["cn"]);
 	 if ($newuser) {
 	     if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
@@ -319,22 +321,23 @@ $test->setCssError("mailinput");
 $test->display(array("value"=>$detailArr["mail"][0]));
 
 print "</table>";
+$phoneregexp = "/^[a-zA-Z0-9(-/ ]*$/";
 if (!isset($detailArr['telephoneNumber'])) $detailArr['telephoneNumber'] = array('');
 $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
-$tn->setRegexp('/^[a-zA-Z0-9(-/ ]*$/');
+$tn->setRegexp($phoneregexp);
 $phone = new FormElement(_("Telephone Number"), $tn);
 $phone->display($detailArr['telephoneNumber']);
 print '<table cellspacing="0">';
 
-$test = new TrFormElement(_("Mobile number"), new InputTpl("mobile"));
+$test = new TrFormElement(_("Mobile number"), new InputTpl("mobile", $phoneregexp));
 $test->setCssError("mobile");
 $test->display(array("value"=>$detailArr["mobile"][0]));
 
-$test = new TrFormElement(_("Fax number"), new InputTpl("facsimileTelephoneNumber"));
+$test = new TrFormElement(_("Fax number"), new InputTpl("facsimileTelephoneNumber", $phoneregexp));
 $test->setCssError("facsimileTelephoneNumber");
 $test->display(array("value"=>$detailArr["facsimileTelephoneNumber"][0]));
 
-$test = new TrFormElement(_("Home phone number"), new InputTpl("homePhone"));
+$test = new TrFormElement(_("Home phone number"), new InputTpl("homePhone", $phoneregexp));
 $test->setCssError("homePnone");
 $test->display(array("value"=>$detailArr["homePhone"][0]));
 
