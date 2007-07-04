@@ -71,7 +71,7 @@ def activate():
     try:
         schema = ldapObj.getSchema("dNSZone")
         if len(schema) <= 0:
-            logger.error("DHCP schema is not included in LDAP directory");
+            logger.error("DNS zone schema is not included in LDAP directory");
             return False
     except:
         logger.exception("invalid schema")
