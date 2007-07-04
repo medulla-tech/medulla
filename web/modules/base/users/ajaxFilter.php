@@ -121,11 +121,17 @@ for ($idx = 0; $idx < count($users); $idx++) {
     $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];;
     $homeDirArr[]=$users[$idx]['homeDirectory'];
     if (strlen($users[$idx]["mail"]) > 0) {
-      $mails[] = '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
+        $mails[] = '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
     } else {
-      $mails[] = $users[$idx]["mail"];
+        $mails[] = $users[$idx]["mail"];
     }
-    $phones[] = $users[$idx]["telephoneNumber"];
+    /* We display the smallest telephone number, hopefully it is the user phone extension */
+    $num = null;
+    foreach($users[$idx]["telephoneNumber"] as $number) {
+        if ($num == null) $num = $number;
+        else if (strlen($number) < strlen($num)) $num = $number;
+    }
+    $phones[] = $num;
 }
 
 
