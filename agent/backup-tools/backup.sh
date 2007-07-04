@@ -33,6 +33,7 @@ nbcd=$(tail -n 1 ${log})
 mkdir -p ${tmpdir}
 
 for i in $(seq 1 ${nbcd}); do
+    sed -i "s,=,\\\=," ${backupdest}/list${i}
     cat ${backupdest}/list${i} | sed -e "s,^[0-9]*[ ]*${sharepath}/\(.*\)$,\1=${sharepath}/\1," > ${tmpdir}/list${i}
     echo "FILELIST=${backupdest}/list${i}" >> ${tmpdir}/list${i}
 done
@@ -41,7 +42,7 @@ for i in $(seq 1 ${nbcd}); do
     echo ${login}-${share}-${stamp}/${stamp}-${share}-vol${i}.iso
     echo "Creation volume ${i}/${nbcd}"
 
-    mkisofs -v -graft-points -iso-level 4 \
+    mkisofs -v -graft-points -iso-level 4 -joliet-long \
 	-path-list ${tmpdir}/list${i} \
 	-J -r -A "Backup de ${sharepath} (date: ${stamp})" \
 	-o ${backupdest}/${stamp}-${share}-vol${i}.iso \
