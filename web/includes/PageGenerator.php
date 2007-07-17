@@ -547,10 +547,87 @@ class ListInfos {
     }
 }
 
+
+/**
+ * A modified version of Listinfos
+ */
+class OptimizedListInfos extends ListInfos {
+
+    /**
+     * Allow to set another item count
+     */
+    function setItemCount($count) {
+        $this->itemCount = $count;
+    }
+
+    function getItemCount() {
+        return $this->itemCount;
+    }
+
+    /**
+     *	init class' vars
+     */
+    function initVar() {        
+	$this->name="Elements";
+	global $conf;
+	if (!isset($_GET["start"]))
+            {
+                if (!isset($_POST["start"]))
+                    {
+                        $this->start = 0;
+                        if (count($this->arrInfo) > 0)      		{
+                            $this->end = $conf["global"]["maxperpage"] - 1;
+                        } else {
+                            $this->end = 0;
+      			}
+                    }
+            }
+	else		{
+            $this->start = $_GET["start"];
+            $this->end = $_GET["end"];
+	}
+	$this->maxperpage = $conf["global"]["maxperpage"];
+        $this->setItemCount(count($this->arrInfo));
+        $this->startreal = $this->start;
+        $this->endreal = $this->end;            
+    }
+
+    /**
+     *	draw number of page etc...
+     */
+    function drawHeader($navbar=1) {      
+        $count = $this->getItemCount();
+        if ($navbar) {
+            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
+        }
+        echo "<p class=\"listInfos\">";
+        echo $this->name." <strong>".min(($this->startreal + 1), $count) . "</strong>\n ";
+        echo _("to")." <strong>".min(($this->endreal + 1), $count)."</strong>\n";
+        printf (_(" - Total <b>%s </b>")."\n", $count);
+        /* Display page counter only when possible */
+        if ($this->maxperpage >= ($this->endreal - $this->startreal)) {
+            echo "("._("page")." ";
+            printf("%.0f", ($this->endreal + 1) / $this->maxperpage);
+            echo " / ";
+            $pages = intval(($count / $this->maxperpage)) ;
+            if (($count % $this->maxperpage > 0) && ($count > $this->maxperpage))
+                $pages++;
+            else if (($count > 0) && ($pages < 1))
+                $pages = 1;
+            else if ($pages < 0)
+                $pages = 0;            
+            printf("%.0f", $pages);
+            echo ")\n";
+        }
+        echo "</p>";
+    }
+    
+}
+
 /**
  * specific class for UserDisplay
  */
-class UserInfos extends ListInfos{
+class UserInfos extends OptimizedListInfos {
     var $css = array(); //css for first column
 
     function drawMainAction($idx) {
