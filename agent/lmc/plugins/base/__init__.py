@@ -175,7 +175,7 @@ def getUsersLdap(searchFilter = ""):
     searchFilter = cleanFilter(searchFilter)
     return ldapObj.searchUser(searchFilter)
 
-def searchUserAdvanced(searchFilter = ""):
+def searchUserAdvanced(searchFilter = "", start = None, end = None):
     """
     Used by the LMC web interface to get a user list
     """
@@ -183,7 +183,7 @@ def searchUserAdvanced(searchFilter = ""):
     searchFilter = cleanFilter(searchFilter)
     if searchFilter:
         searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s)(telephoneNumber=%s)(mail=%s))" % (searchFilter, searchFilter, searchFilter, searchFilter, searchFilter)
-    return ldapObj.searchUserAdvance(searchFilter)
+    return ldapObj.searchUserAdvance(searchFilter, None, start, end)
 
 def getGroupsLdap(searchFilter= ""):
     ldapObj = ldapUserGroupControl()
@@ -1355,7 +1355,7 @@ class ldapUserGroupControl:
         if (pattern==''): pattern = "*"
         return self.searchUserAdvance("uid="+pattern,base)
 
-    def searchUserAdvance(self, pattern = '', base = None):
+    def searchUserAdvance(self, pattern = '', base = None, start = None, end = None):
         """
         search a user in ldapdirectory
         @param pattern : pattern for search filter
@@ -1372,21 +1372,26 @@ class ldapUserGroupControl:
         if not base: base = self.baseUsersDN
         if (pattern==''): searchFilter = "uid=*"
         else: searchFilter = pattern
-        result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
+        monoattrs = ["uid", "sn", "givenName", "mail"]
+        result_set = self.search(searchFilter, base, monoattrs + ["telephoneNumber", "loginShell", "objectClass"], ldap.SCOPE_ONELEVEL)
 
         # prepare array for processing
-        resArr = []
+        resArr = {}
         uids = []
         for i in range(len(result_set)):
             for entry in result_set[i]:
                 localArr= {}
-                # FIXME: field list should not be hardcoded
-                for field in ["uid", "gecos", "homeDirectory", "sn", "givenName", "mail", "telephoneNumber"]:
+                for field in monoattrs:
                     try:
                         localArr[field] = entry[1][field][0]
                     except KeyError:
                         # If the field does not exist, put an empty value
                         localArr[field] = ""
+
+                try:
+                    localArr["telephoneNumber"] = entry[1]["telephoneNumber"]
+                except KeyError:
+                    localArr["telephoneNumber"] = []
 
                 localArr["obj"] = entry[1]['objectClass']
 
@@ -1395,20 +1400,20 @@ class ldapUserGroupControl:
                 if shell != "/bin/false": enabled = 1
                 localArr["enabled"] = enabled
 
-                #if user not contain "$" for first character
-                if (re.search('([^$])$',localArr["uid"])):
-                    resArr.append(localArr)
+                # Filter SAMBA machine account that ends with $
+                if localArr["uid"][-1] != "$":
+                    resArr[localArr["uid"]] = localArr
                     uids.append(localArr["uid"])
 
-        uids = cSort (uids)
+        uids = cSort(uids)
+        total = len(uids)
+        if start != None and end != None:
+            uids = uids[int(start):int(end)]
         ret = []
         for uid in uids:
-            for l in resArr:
-                if l["uid"] == uid:
-                    ret.append(l)
-                    break
+            ret.append(resArr[uid])
 
-        return ret
+        return (total, ret)
 
     def getMembers(self,group):
         """
@@ -1516,8 +1521,8 @@ class ldapUserGroupControl:
         @rtype: int
         """
         ret = []
-        ret.append(self.search("uid=*", self.baseUsersDN, None, ldap.SCOPE_ONELEVEL))
-        ret.append(self.search("uid=*", self.baseComputersDN, None, ldap.SCOPE_ONELEVEL))
+        ret.append(self.search("uid=*", self.baseUsersDN, ["uidNumber"], ldap.SCOPE_ONELEVEL))
+        ret.append(self.search("uid=*", self.baseComputersDN, ["uidNumber"], ldap.SCOPE_ONELEVEL))
 
         # prepare array for processing
         maxuid = 0
