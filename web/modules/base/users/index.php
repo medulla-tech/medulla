@@ -45,7 +45,7 @@ require("graph/navbar.inc.php");
     <div id="searchSpan" class="searchbox" style="float: right;">
     <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearchUser(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    onclick="document.getElementById('param').value =''; pushSearchUser(); return false;" />
     </span>
     </div>
 
