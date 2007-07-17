@@ -25,17 +25,17 @@
 
 require("modules/base/includes/users.inc.php");
 
+global $conf;
 $root = $conf["global"]["root"];
 $maxperpage = $conf["global"]["maxperpage"];
 
 require("graph/navbartools.inc.php");
 
-function print_ajax_nav($curstart, $curend, $items, $filter) {
+function print_ajax_nav($curstart, $curend, $totalcount, $items, $filter) {
   $_GET["action"] = "index";
   global $conf;
 
   $max = $conf["global"]["maxperpage"];
-  $encitems = urlencode(base64_encode(serialize($items)));
 
   echo '<form method="post" action="' . $PHP_SELF . '">';
   echo "<ul class=\"navList\">\n";
@@ -50,7 +50,7 @@ function print_ajax_nav($curstart, $curend, $items, $filter) {
           return false\";>"._("Previous")."</a></li>\n";
   }
 
-  if (($curend + 1) >= count($items)) {
+  if (($curend + 1) >= $totalcount) {
       echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
   } else {
       $start = $curend + 1;
@@ -66,51 +66,32 @@ function print_ajax_nav($curstart, $curend, $items, $filter) {
 
 
 
-if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
-
-if (!isset($_GET["items"])) {
-  $users = get_users_detailed($error, $_GET["filter"]);
-  $start = 0;
-
-  if (count($users) > 0) {
-    $end = $conf["global"]["maxperpage"] - 1;
-  } else {
-    $end = 0;
-  }
-} else {
-  $users = unserialize(base64_decode(urldecode($_GET["items"])));
-}
-
-if (isset($_GET["start"])) {
-    $start = $_GET["start"];
-    $end = $_GET["end"];
-}
-
-if (!$users) {
-    $start = 0;
-    $end = 0;
-}
-
-if (isset($_POST["filter"])) {
-    $start = 0;
-    $end = 9;
-}
-
+if (isset($_GET["start"])) $start = $_GET["start"];
+else $start = 0;
+if (isset($_GET["end"])) $end = $_GET["end"];
+else $end = 0;
 
 $filter = $_GET["filter"];
 
+list($usercount, $users) = get_users_detailed($error, $filter, $start, $start + $maxperpage);
 
+if (!$usercount) {
+    $start = 0;
+    $end = 0;
+}
 
-print_ajax_nav($start, $end, $users,$filter);
+if (($usercount > 0) && ($end == 0)) {
+    $end = $maxperpage - 1;
+} 
 
-global $maxperpage;
+print_ajax_nav($start, $end, $usercount, $users, $filter);
 
 $arrUser = array();
 $arrSnUser = array();
 $homeDirArr = array();
 $mails = array();
 $phones = array();
-$css =array();
+$css = array();
 
 for ($idx = 0; $idx < count($users); $idx++) {
     if ($users[$idx]["enabled"]) {
@@ -119,7 +100,7 @@ for ($idx = 0; $idx < count($users); $idx++) {
     $arrUser[]=$users[$idx]['uid'];
 
     $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];;
-    $homeDirArr[]=$users[$idx]['homeDirectory'];
+
     if (strlen($users[$idx]["mail"]) > 0) {
         $mails[] = '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
     } else {
@@ -134,9 +115,11 @@ for ($idx = 0; $idx < count($users); $idx++) {
     $phones[] = $num;
 }
 
-
 // $arrUser is the list of all Users
-$n = new UserInfos($arrUser,_("Login"));
+$n = new UserInfos($arrUser, _("Login"));
+$n->setItemCount($usercount);
+$n->start = 0;
+$n->end = count($users) - 1;
 
 $n->setCssClass("userName");
 
@@ -157,5 +140,5 @@ $n->display(0);
 ?>
 </table>
 <?php
-print_ajax_nav($start, $end, $users,$filter);
+print_ajax_nav($start, $end, $usercount, $users, $filter);
 ?>
