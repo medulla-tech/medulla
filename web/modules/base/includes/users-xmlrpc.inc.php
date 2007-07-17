@@ -75,11 +75,11 @@ function get_users(&$error)
  * @return get a detailled ldap users using cpu
  * @param &$error reference String error
  */
-function get_users_detailed(&$error, $filter = null)
+function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
 {
     if ($filter == "") $filter = null;
     else $filter = "*".$filter . "*";
-    return xmlCall("base.searchUserAdvanced", $filter);
+    return xmlCall("base.searchUserAdvanced", array($filter, $start, $end));
 }
 
 /**
