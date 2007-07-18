@@ -1349,11 +1349,11 @@ class ldapUserGroupControl:
 
         search begin at baseUsersDN (defines in INIFILE)
 
-        @return: list of all users correspond criteria
+        @return: sorted list by uid of all users corresponding to the search filter
         @rtype: list
         """
-        if (pattern==''): pattern = "*"
-        return self.searchUserAdvance("uid="+pattern,base)
+        if pattern == '': pattern = "*"
+        return self.searchUserAdvance("uid=" + pattern, base)[1]
 
     def searchUserAdvance(self, pattern = '', base = None, start = None, end = None):
         """
