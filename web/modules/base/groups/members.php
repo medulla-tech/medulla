@@ -71,82 +71,55 @@ require("localSidebar.php");
 
 require("graph/navbar.inc.php");
 
-if (isset($_GET["group"]))
-{
-  $group = urldecode($_GET["group"]);
-}
-else
-{
-  $group = $_POST["group"];
-}
+if (isset($_GET["group"])) $group = urldecode($_GET["group"]);
+else $group = $_POST["group"];
 
 $members = unserialize(base64_decode($_POST["lmembers"]));
 $users = unserialize(base64_decode($_POST["lusers"]));
 
 $forbidden = array();
 
-if (isset($_POST["bdeluser_x"]))
-{
-  foreach ($_POST["members"] as $member) {
-      if ($group == getUserPrimaryGroup($member)) {
-          /* A user can't be removed from his/her primary group */
-          $forbidden[] = $member;
-          continue;
-      }
-      $idx = array_search($member, $members);
-      if ($idx !== false)
-	{
-	  unset($members[$idx]);
+if (isset($_POST["bdeluser_x"])) {
+    foreach ($_POST["members"] as $member) {
+        if ($group == getUserPrimaryGroup($member)) {
+            /* A user can't be removed from his/her primary group */
+            $forbidden[] = $member;
+            continue;
+        }
+        $idx = array_search($member, $members);
+        if ($idx !== false) unset($members[$idx]);
+    }
+} else if (isset($_POST["badduser_x"])) {
+    foreach ($_POST["users"] as $user) {
+        $idx = array_search($user, $members);
+        if ($idx === false) {
+            $members[] = $user;
 	}
     }
-}
-else if (isset($_POST["badduser_x"]))
-{
-  foreach ($_POST["users"] as $user)
-    {
-      $idx = array_search($user, $members);
-      if ($idx === false)
-	{
-	  $members[] = $user;
-	}
+    sort($members);
+    reset($members);
+} else if (isset($_POST["bconfirm"])) {
+    $curmem = get_members($group);  
+    $newmem = array_diff($members, $curmem);
+    $delmem = array_diff($curmem, $members);
+
+    foreach ($newmem as $new) {
+        add_member($group, $new);
+        callPluginFunction("addUserToGroup", array($new, $group));
     }
-
-  sort($members);
-  reset($members);
-}
-else if (isset($_POST["bconfirm"]))
-{
-  $curmem = get_members($group);
-
-  $newmem = array_diff($members, $curmem);
-  $delmem = array_diff($curmem, $members);
-
-  foreach ($newmem as $new)
-    {
-      add_member($group, $new);
-      callPluginFunction("addUserToGroup", array($new, $group));
+    foreach ($delmem as $del) {
+        del_member($group, $del);
+        callPluginFunction("delUserFromGroup", array($del, $group));
     }
-  foreach ($delmem as $del)
-    {
-      del_member($group, $del);
-      callPluginFunction("delUserFromGroup", array($del, $group));
-    }
-  if (!isXMLRPCError()) {
-    $n = new NotifyWidget();
-    $n->add(_T("Group successfully modified"));
-  }
+    if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("Group successfully modified"));
 
-
-  $members = get_members($group);
-}
-else // breset
-{
-  $members = get_members($group);
-  $users = get_users($error);
-
+    $members = get_members($group);
+} else {
+    $members = get_members($group);
+    $users = get_users();
 }
 
- $diff = array_diff($users,$members);
+$diff = array_diff($users, $members);
 
 if (count($forbidden)) {
     $n = new NotifyWidget();
@@ -170,15 +143,12 @@ if (count($forbidden)) {
         <h3><?= _("All users");?></h3>
     <select multiple size="15" class="list" name="users[]">
 <?php
-foreach ($diff as $idx => $user)
-{
-  if ($user == "")
-  {
-    unset($users[$idx]);
-    continue;
-  }
-
-  echo "<option value=\"".$user."\">".$user."</option>\n";
+foreach ($diff as $idx => $user) {
+    if ($user == "") {
+        unset($users[$idx]);
+        continue;
+    }
+    echo "<option value=\"".$user."\">".$user."</option>\n";
 }
 ?>
     </select>
@@ -197,15 +167,13 @@ foreach ($diff as $idx => $user)
       <h3><?= _("Group members"); ?></h3>
     <select multiple size="15" class="list" name="members[]">
 <?php
-foreach ($members as $idx => $member)
-{
-  if ($member == "")
-  {
-    unset($members[$idx]);
-    continue;
-  }
+foreach ($members as $idx => $member) {
+    if ($member == "") {
+        unset($members[$idx]);
+        continue;
+    }
 
-  echo "<option value=\"".$member."\">".$member."</option>\n";
+    echo "<option value=\"".$member."\">".$member."</option>\n";
 }
 ?>
     </select>
