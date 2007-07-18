@@ -42,34 +42,15 @@ def cleanFilter(f):
 # All the command lines launched by this module will use the C locale
 os.environ["LANG"] = "C"
 
-def cSort(inlist, minisort=True):
+def cSort(stringList):
     """
-    Case insensitive sort.
-    """
-    sortlist = []
-    newlist = []
-    sortdict = {}
-    for entry in inlist:
-        try:
-            lentry = entry.lower()
-        except AttributeError:
-            sortlist.append(lentry)
-        else:
-            try:
-                sortdict[lentry].append(entry)
-            except KeyError:
-                sortdict[lentry] = [entry]
-                sortlist.append(lentry)
+    case-insensitive sort of list of strings
 
-    sortlist.sort()
-    for entry in sortlist:
-        try:
-            thislist = sortdict[entry]
-            if minisort: thislist.sort()
-            newlist = newlist + thislist
-        except KeyError:
-            newlist.append(entry)
-    return newlist
+    See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/170242
+    """
+    tupleList = [(x.lower(), x) for x in stringList]
+    tupleList.sort()
+    return [x[1] for x in tupleList]
 
 class Singleton(object):
     def __new__(type):
