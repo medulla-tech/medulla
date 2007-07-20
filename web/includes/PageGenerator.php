@@ -1185,7 +1185,6 @@ class Div extends HtmlContainer {
 
 }
 
-
 class Form extends HtmlContainer {
 
     function Form($options = array()) {
@@ -1208,12 +1207,20 @@ class Form extends HtmlContainer {
         return $str;
     }
 
-    function getButtonString($name, $value) {
-        return "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"btnPrimary\">";
+    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "") {
+        return "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
     }
 
     function addButton($name, $value) {
         $this->buttons[] = $this->getButtonString($name, $value);
+    }
+
+    function addValidateButton($name) {
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"));
+    }
+
+    function addCancelButton($name) {
+        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary");
     }
 
     function addExpertButton($name, $value) {
@@ -1236,6 +1243,50 @@ class ValidatingForm extends Form {
         $str .= "<script type=\"text/javascript\">Form.focusFirstElement(" . "'" . $this->options["id"] . "'" . ")</script>\n";
         return $str;
     }
+
+}
+
+/**
+ *
+ * Allow to easily build the little popup displayed when deleting a user for example
+ *
+ */
+class PopupForm extends Form {
+    
+    function PopupForm($title) {
+        $options = array("action" => $_SERVER["REQUEST_URI"]);
+        $this->Form($options);
+        $this->title = $title;
+        $this->text = array();
+        $this->ask = "";
+    }
+
+    function begin() {
+        $str = "<h2>" . $this->title . "</h2>\n";
+        $str .= parent::begin();
+        foreach($this->text as $text)
+            $str .= "<p>" . $text . "</p>";
+        return $str;
+    }
+
+    function end() {
+        $str = "<p>" . $this->ask . "</p>";
+        $str .= parent::end();
+        return $str;
+    }
+
+    function addText($msg) {
+        $this->text[] = $msg;
+    }
+
+    function setQuestion($msg) {
+        $this->ask = $ask;
+    }
+
+    function addCancelButton($name) {
+        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"new Effect.Fade('popup'); return false;\"" );
+    }
+
 }
 
 class Table extends HtmlContainer {
