@@ -67,10 +67,10 @@ def activate():
      @return: return True if this module can be activate
      @rtype: boolean
     """
-    configParser = lmctools.getConfigParser("samba")
+    config = SambaConfig("samba")
     logger = logging.getLogger()
 
-    if configParser.get("main","disable") == "1":
+    if config.disabled:
         logger.info("samba plugin disabled by configuration.")
         return False
 
@@ -91,7 +91,6 @@ def activate():
         return False
 
     # Verify if init script exist
-    config = SambaConfig("samba")
     init = config.samba_init_script
     if not os.path.exists(init):
         logger.error(init + " does not exist")
@@ -298,6 +297,7 @@ class SambaConfig(PluginConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
+        self.sharespath = self.get("main", "sharespath")
         try: self.samba_conf_file = self.get("main", "sambaConfFile")
         except: pass
         try: self.samba_init_script = self.get("main", "sambaInitScript")
@@ -797,18 +797,14 @@ class smbConf:
 
         In SAMBA source code, parameters are defined in param/loadparm.c
         """
-        if not conffile: configParser = lmctools.getConfigParser("samba")
-        else:
-            configParser = ConfigParser()
-            configParser.read(conffile)
-        self.sharespath = configParser.get("main", "sharespath")
-
+        config = SambaConfig("samba", conffile)
+        self.sharespath = config.sharespath
         self.conffilebase = conffilebase
         self.smbConfFile = smbconffile
+        # Parse SAMBA configuration files
         smbConfVerbose = self.getVerboseTestparmOutput()
-        smbConf = self.getTestparmOutput()
-
         self.contentArrVerbose = self._parseSmbConfFile(smbConfVerbose)
+        smbConf = self.getTestparmOutput()
         self.contentArr = self._parseSmbConfFile(smbConf)
 
     def _parseSmbConfFile(self, confString):
