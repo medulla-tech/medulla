@@ -33,8 +33,8 @@ includeInfoPackage(fetchModulesList($conf["global"]["rootfsmodules"]));
 
 session_start();
 
-echo "<h2>LMC components version</h2>";
-echo '<h3>LMC agent: version ' . $_SESSION["modListVersion"]['ver'] . ' / revision '.$_SESSION["modListVersion"]['rev'].'</h3>';
+echo "<h2>MMC components version</h2>";
+echo '<h3>MMC agent: version ' . $_SESSION["modListVersion"]['ver'] . ' / revision '.$_SESSION["modListVersion"]['rev'].'</h3>';
 foreach ($_SESSION["supportModList"] as $modName) {
     echo "<b>$modName plugin</b><br/>";
     $apirev = xmlCall($modName.".getApiVersion",null);

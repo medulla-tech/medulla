@@ -94,7 +94,7 @@ if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 
 <html>
 <head>
-	<title>Linbox-Free&ALter Soft / Linbox Management Console</title>
+	<title>Mandriva Linux / Mandriva Management Console</title>
 	<link href="<?php echo $root; ?>graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
@@ -150,7 +150,7 @@ if (isset($error))
 
 <!--Login content -->
 
-        <img src="<?php echo $root; ?>img/login/logo_linboxfas_small.gif" alt="" width="131" height="32">
+        <img src="<?php echo $root; ?>img/login/logo_mandriva_small.png" alt="">
 
 		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" id="loginForm" target="_self">
 

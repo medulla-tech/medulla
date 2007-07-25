@@ -50,9 +50,9 @@ $LMCApp->render();
 ?>
 
 <div id="footer">
-LMC Agent
+MMC Agent
 
-    <a href="#" onclick="showPopupUp(event,'version.php'); return false;">
+    <a href="#" style="color: #FFF;" onclick="showPopupUp(event,'version.php'); return false;">
         <?php  echo $_SESSION["modListVersion"]['ver'] ?>
     </a>
 

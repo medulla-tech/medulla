@@ -60,35 +60,30 @@ if (isExpertMode()) {
 
 <p class="path">
 <?php
-//new path automatic creation
-if ($_GET["module"]) {//if not main page
-        print '<a href="main.php">'._("Home").'</a>';
+  /* Path automatic creation */
+print '<a href="main.php">'._("Home").'</a>';
+if ($_GET["module"]) { /* if not main page */
         $LMCApp =&LMCApp::getInstance();
         $mod = $LMCApp->_modules[$_GET['module']];
         $submod = $mod->_submod[$_GET['submod']];
         print ' &gt; ';
-        if (($_GET["module"]."/".$_GET["submod"]."/".$_GET["action"])==$submod->_defaultpage) {
-            print $submod->getDescription();
-        } else {
             list($m,$s,$a) = split('/',$submod->_defaultpage,3);
             print '<a href="main.php?module='.$m.'&amp;submod='.$s.'&amp;action='.$a.'">'.$submod->getDescription().'</a>';
             print ' &gt; ';
             $action = $submod->_pages[$_GET["action"]];
 
             if (is_object($action)) {
-                print $action->getDescription();
+                print '<span style="color: #FFF">' . $action->getDescription() . "</span>";
             }
-        }
-} else {
-        print _("Home");
 }
+
 ?>
 </p>
 </div>
 
 
 <div id="navbar">
-<img src="<?php echo $root; ?>img/common/logoLinbox_navbar.gif" alt="Linbox" id="logo" style= "float: right;" width="180" height="44" />
+<img src="<?php echo $root; ?>img/common/logomandriva_navbar.gif" alt="Linbox" id="logo" style= "float: right;" />
 <ul>
 <?php
 
