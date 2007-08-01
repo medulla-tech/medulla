@@ -292,7 +292,7 @@ class ListInfos {
         $this->initVar();
         $this->col_width = array();
 	$this->extranavbar = $extranavbar;
-        $this->firstColumnActionLink = True;
+        $this->firstColumnActionLink = True;        
     }
 
     function setAdditionalInfo($addinfo) {
@@ -381,6 +381,8 @@ class ListInfos {
             $this->end = $_GET["end"];
 	}
 	$this->maxperpage = $conf["global"]["maxperpage"];
+        /* Set a basic navigation bar */
+        $this->setNavBar(new SimpleNavBar($this->start, $this->end, count($this->arrInfo), $this->extranavbar));
     }
 
 
@@ -399,12 +401,27 @@ class ListInfos {
     }
 
     /**
+     * Set the ListInfos navigation bar
+     */
+    function setNavBar($navbar) {
+        $this->navbar = $navbar;
+    }
+
+    /**
+     *
+     * Display the widget navigation bar if $navbar is True
+     *
+     * @param $navbar: if $navbar is true the navigation bar is displayed
+     */
+    function displayNavbar($navbar) {
+        if ($navbar) $this->navbar->display();
+    }
+
+    /**
      *	draw number of page etc...
      */
-    function drawHeader($navbar=1) {      
-        if ($navbar) {
-            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
-        }
+    function drawHeader($navbar = 1) {
+        $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
         echo $this->name." <strong>".min(($this->start + 1), count($this->arrInfo))."</strong>\n ";
         echo _("to")." <strong>".min(($this->end + 1), count($this->arrInfo))."</strong>\n";
@@ -516,9 +533,8 @@ class ListInfos {
 
 	echo "</table>\n";
 
-	if ($navbar) {
-            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
-        }
+        $this->displayNavbar($navbar);
+
         if (false) {
             /* Code disabled because not used and make javavascript errors */
             print '<script type="text/javascript"><!--';
@@ -636,6 +652,196 @@ class UserInfos extends OptimizedListInfos {
         echo "</td>";
     }
 
+}
+
+
+/**
+ *  
+ *  Display a previous/next navigation bar for ListInfos widget
+ *  
+ */
+class SimpleNavBar extends HtmlElement {
+
+    /**
+     * @param $curstart: the first item index to display
+     * @param $curent: the last item index 
+     * @param $itemcount: total number of item
+     * @param $filter: the current list filter
+     */
+    function SimpleNavBar($curstart, $curend, $itemcount, $extra = "") {
+        global $conf;
+        $this->max = $conf["global"]["maxperpage"];        
+        $this->curstart = $curstart;
+        $this->curend = $curend;
+        $this->itemcount = $itemcount;
+        $this->extra = $extra;
+    }
+   
+    function display() {
+        echo '<form method="post">';
+        echo "<ul class=\"navList\">\n";
+
+        if ($this->curstart == 0)
+            echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
+        else {
+            $start = $this->curstart - $this->max;
+            $end = $this->curstart - 1;
+            echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
+            /* FIXME: maybe we can get rid of $_GET["filter"] ? */
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+            echo "\">"._("Previous")."</a></li>\n";
+        }
+        
+        if (($this->curend + 1) >= $this->itemcount)
+            echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
+        else {
+            $start = $this->curend + 1;
+            $end = $this->curend + $this->max;
+            echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+            echo "\">"._("Next")."</a></li>\n";
+        }
+
+        echo "</ul>\n";        
+    }
+
+}
+
+/**
+ *  Display a previous/next navigation bar for ListInfos widget
+ *  The AjaxNavNar is useful when an Ajax Filter is set for a ListInfos widget
+ */
+class AjaxNavBar extends SimpleNavBar {
+
+    /**
+     *
+     * The AjaxNavBar start/end item are get from $_GET["start"] and $_GET["end"]
+     *
+     * @param $itemcount: total number of item
+     * @param $filter: the current list filter
+     * @param $extra: extra URL parameter to pass the next/list button
+     * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
+     */
+    function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam" ) {
+        global $conf;        
+        if (isset($_GET["start"])) {
+            $curstart = $_GET["start"];
+            $curend = $_GET["end"];
+        } else {
+            $curstart = 0;            
+            if ($itemcount > 0)
+                $curend = $conf["global"]["maxperpage"] - 1;
+            else 
+                $curend = 0;
+        }
+        $this->SimpleNavBar($curstart, $curend, $itemcount);
+        $this->filter = $filter;
+        $this->jsfunc = $jsfunc;
+    }
+    
+    function display() {
+        echo '<form method="post">';
+        echo "<ul class=\"navList\">\n";
+
+        if ($this->curstart == 0)
+            echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
+        else {
+            $start = $this->curstart - $this->max;
+            $end = $this->curstart - 1;
+            echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('$filter','$start','$end'); return false;\">" . _("Previous") . "</a></li>\n";
+        }
+
+        if (($this->curend + 1) >= $this->itemcount)
+            echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
+        else {
+            $start = $this->curend + 1;
+            $end = $this->curend + $this->max;
+            echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('$filter','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
+        }
+
+        echo "</ul>\n";
+    }
+
+}
+
+/**
+ *
+ * Create an AjaxFilter Form that updates a div according to an url output
+ *
+ */
+
+class AjaxFilter extends HtmlElement {
+
+    /** 
+     * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
+     * @param $divid: div ID which is updated by the URL output
+     */
+    function AjaxFilter($url, $divid = "container") {
+        if (strpos($url, "?") === False)
+            /* Add extra ? needed to build the URL */
+            $this->url = $url . "?";
+        else 
+            /* Add extra & needed to build the URL */
+            $this->url = $url . "&";
+        $this->divid = $divid;
+    }
+
+    function display() {
+        
+?>
+<form name="Form" id="Form" action="#">
+
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    </span>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('param').focus();
+
+
+        /**
+        * update div with user
+        */
+        function updateSearch() {
+            launch--;
+
+                if (launch==0) {
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
+                }
+            }
+
+        /**
+        * provide navigation in ajax for user
+        */
+
+        function updateSearchParam(filter, start, end) {
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            }
+
+        /**
+        * wait 500ms and update search
+        */
+
+        function pushSearch() {
+            launch++;
+            setTimeout("updateSearch()",500);
+        }
+         
+        pushSearch();
+    </script>
+
+</form>
+<?        
+          }
+
+    function displayDivToUpdate() {
+        print '<div id="' . $this->divid . '"></div>' . "\n";
+    }
 }
 
 /**
