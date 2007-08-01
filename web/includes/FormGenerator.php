@@ -509,7 +509,7 @@ class SelectItem extends AbstractTpl{
     function display($paramArray = null) {
       
         if (!isset($this->elementsVal)) {
-            $this->$elementsVal = $elements;
+            $this->elementsVal = $elements;
         }
       
         // if value... set it
