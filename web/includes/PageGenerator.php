@@ -748,7 +748,7 @@ class AjaxNavBar extends SimpleNavBar {
         else {
             $start = $this->curstart - $this->max;
             $end = $this->curstart - 1;
-            echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('$filter','$start','$end'); return false;\">" . _("Previous") . "</a></li>\n";
+            echo "<li class=\"previousList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Previous") . "</a></li>\n";
         }
 
         if (($this->curend + 1) >= $this->itemcount)
@@ -756,7 +756,7 @@ class AjaxNavBar extends SimpleNavBar {
         else {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
-            echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('$filter','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
+            echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
         }
 
         echo "</ul>\n";
