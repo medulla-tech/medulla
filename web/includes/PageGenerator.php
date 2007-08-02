@@ -270,7 +270,7 @@ class EmptyActionItem extends ActionItem {
 /**
  *	class who maintain array presentation of information
  */
-class ListInfos {
+class ListInfos extends HtmlElement {
     var $arrInfo; /**< main list */
     var $extraInfo;
     var $paramInfo;
