@@ -1,4 +1,5 @@
-#
+# -*- coding: utf-8; -*-
+##
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
 # $Id$
@@ -432,15 +433,31 @@ zone "%(zone)s" {
                 ret = 0
         return ret
 
+    def delCNAMEs(self, zone, hostname):
+        """
+        Remove all CNAME records that points to the given hostname
+        """
+        records = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
+        for record in records:
+            self.l.delete_s(record[0])
+
     def delRecord(self, zone, hostname):
         """
-        Remove a host from a zone.
+        Remove a resource record from a zone.
         Remove it from the reverse zone too.
+
+        If the RR is a A record where CNAME are linked in, the CNAME records
+        are also removed.
         """
         host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if host:
+            # If the deleted resource is a type A record, the aliases must be
+            # removed if they exist
+            if "aRecord" in host[0][1]:
+                self.delCNAMEs(zone, hostname)
             self.l.delete_s(host[0][0])
             self.updateZoneSerial(zone)
+        # Also remove reverse entry
         revzones = self.getReverseZone(zone)
         for revzone in revzones:
             revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
