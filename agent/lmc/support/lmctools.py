@@ -52,6 +52,25 @@ def cSort(stringList):
     tupleList.sort()
     return [x[1] for x in tupleList]
 
+def rchown(path, uid, gid):
+    """
+    Recursive chown.
+    Symbolic links are not followed.
+
+    @param path: path to traverse
+    @type path: str
+
+    @param uid: user id number
+    @type uid: int
+
+    @param gid: group id number
+    @type gid: int
+    """
+    for root, dirs, files in os.walk(path):
+        os.lchown(root, uid, gid)
+        for name in files:
+            os.lchown(os.path.join(root, name), uid, gid)
+
 class Singleton(object):
     def __new__(type):
         if not '_the_instance' in type.__dict__:
