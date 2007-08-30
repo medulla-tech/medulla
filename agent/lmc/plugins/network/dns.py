@@ -348,6 +348,41 @@ zone "%(zone)s" {
         soa["serial"] = self.computeSerial(current)
         self.setSOARecord(zone, soa)        
 
+    def addRecordCNAME(self, zone, alias, cname, dnsClass = "IN"):
+        """
+        Add a canonical name record.
+        The host name to which the alias is pointing must be a A record.
+        CNAME chaining is not supported.
+
+        @param zone: the DNS zone where the record is stored
+        @type zone: str
+
+        @param alias: alias pointing to the canonical name
+        @type alias: str
+
+        @param cname: CNAME to record (must be a registered A record
+        @type cname: str    
+        """
+        # Check that the given cname is a A record
+        record = self.getResourceRecord(zone, cname)
+        try:
+            if not "aRecord" in record[0][1]:
+                raise "%s in not a A record" % cname
+        except IndexError:                   
+            raise "'%s' A record does not exist in the DNS zone" % cname
+        # Add the CNAME record
+        dn = "relativeDomainName=" + alias + "," + "ou=" + zone + "," + "ou=" + zone + "," + self.configDns.dnsDN
+        entry = {
+            "relativeDomainName" : alias,
+            "objectClass" : ["top", "dNSZone"],
+            "zoneName" : zone,
+            "dNSClass" : dnsClass,
+            "CNAMERecord" : cname,
+        }
+        attributes=[ (k,v) for k,v in entry.items() ]
+        self.l.add_s(dn, attributes)
+        self.updateZoneSerial(zone)
+    
     def addRecordA(self, zone, hostname, ip, container = None, dnsClass = "IN"):
         """
         Add an entry for a zone and its reverse zone.
@@ -535,6 +570,14 @@ zone "%(zone)s" {
                 break
             ip = ipNext(network, netmask, ip)
         return ret
+
+    def getResourceRecord(self, zone, rr):
+        """
+        @return: a domain name resource record (RR)
+        @rtype: dict
+        """
+        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, rr), None)
+        
 
         
 class DnsService(ServiceManager):
