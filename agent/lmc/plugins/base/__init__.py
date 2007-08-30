@@ -23,7 +23,7 @@
 from lmc.support.errorObj import errorMessage
 from lmc.support.lmcException import lmcException
 from lmc.support import lmctools
-from lmc.support.lmctools import cSort
+from lmc.support.lmctools import cSort, rchown
 from lmc.support.config import *
 from time import time
 
@@ -684,7 +684,7 @@ class ldapUserGroupControl:
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(homeDir+"is not an authorized home dir.")
 
-        uidNumber=self.maxUID() + 1
+        uidNumber = self.maxUID() + 1
 
         # Get a gid number
         if not primaryGroup:
@@ -694,7 +694,7 @@ class ldapUserGroupControl:
                 primaryGroup = uid
                 if self.addGroup(uid) == -1:
                     raise Exception('group error: already exist or cannot instanciate')
-        gidNumber = self.getDetailedGroup(primaryGroup)["gidNumber"][0]
+        gidNumber = int(self.getDetailedGroup(primaryGroup)["gidNumber"][0])
 
         # Put default value in firstN and lastN
         if not firstN: firstN = uid
@@ -802,8 +802,14 @@ class ldapUserGroupControl:
 
         # creating home directory
         if self.userHomeAction:
-            shutil.copytree(self.skelDir, homeDir, symlinks = True)
-            lmctools.launch('chown', ['chown', '-R', str(uidNumber) + ':' + str(gidNumber), homeDir])
+            try:
+                shutil.copytree(self.skelDir, homeDir, symlinks = True)
+                rchown(homeDir, uidNumber, gidNumber)
+            except OSError:
+                # Problem when creating the user home directory,
+                # so we delete the user
+                self.delUser(uid, False)
+                raise
 
         # Run addUser hook
         self.runHook("base.adduser", uid, password)
