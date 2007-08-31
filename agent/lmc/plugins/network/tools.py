@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
@@ -21,6 +22,11 @@
 
 import socket
 import struct
+import glob
+import os.path
+from lmc.support.lmctools import shlaunch
+
+# IP manipulation stuff
 
 def dottedQuadToNum(ip):
     """Convert decimal dotted quad string to long integer"""
@@ -76,3 +82,54 @@ def ipNext(network, netmask, startAt = None, boundaries = False):
             next = ""            
     if next: return numToDottedQuad(next)
     else: return ""
+
+# Network related functions
+
+def getAllNetworkInterfaces():
+    """
+    Get all network device interfaces using /proc.
+    Linux only.
+    
+    @return: a list of ethernet interfaces
+    @rtype: list
+    """
+    ret = []
+    for f in glob.glob("/proc/sys/net/ipv4/conf/*"):
+        device = os.path.basename(f)
+        if device not in ["all", "default", "lo"]:
+            ret.append(device)
+    return ret
+
+def detectNetworkInterfaceRate(device, cmd = "/usr/sbin/ethtool"):
+    """
+    Use ethtool to detect network device rate.
+    We can use the given rate only if:
+     - the link is up on the device (if the link is down, the device is on low
+       speed mode, and this speed may change when the link is up again)
+     - auto-negociation is on (else the speed information can't be really
+       trusted)
+    
+    @return: interface rate in kbit/s, or None if the rate can't be detected
+    @rtype: int
+    """
+    # Speed rate in Mbit/s => kbit/s 
+    rates = { "10Mb/s": 10000, "100Mb/s": 100000, "1000Mb/s": 100000 }
+    # Run ethtool
+    data = shlaunch(cmd + " " + device)
+    auto = False
+    speed = None
+    link = False
+    for line in data:
+        if "Auto-negotiation: on" in line: auto = True
+        elif "Link detected: yes" in line: link = True
+        elif "Speed: " in line:
+            # Get the speed value, e.g. '10Mb/s'
+            value = line.split()[1]
+            try:
+                speed = rates[value]
+            except KeyError:
+                pass
+
+    if not (auto and link):
+        speed = None
+    return speed
