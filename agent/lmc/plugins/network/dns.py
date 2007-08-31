@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-##
+#
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
 # $Id$
@@ -433,12 +433,17 @@ zone "%(zone)s" {
                 ret = 0
         return ret
 
+    def getCNAMEs(self, zone, hostname):
+        """
+        Get all CNAME records that points to the given hostname
+        """
+        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
+
     def delCNAMEs(self, zone, hostname):
         """
         Remove all CNAME records that points to the given hostname
         """
-        records = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
-        for record in records:
+        for record in self.getCNAMEs(zone, hostname):
             self.l.delete_s(record[0])
 
     def delRecord(self, zone, hostname):
@@ -452,7 +457,7 @@ zone "%(zone)s" {
         host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if host:
             # If the deleted resource is a type A record, the aliases must be
-            # removed if they exist
+            # removed if they exist
             if "aRecord" in host[0][1]:
                 self.delCNAMEs(zone, hostname)
             self.l.delete_s(host[0][0])
