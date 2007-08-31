@@ -1413,12 +1413,16 @@ class Form extends HtmlContainer {
         return $str;
     }
 
-    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "") {
-        return "<input type=\"submit\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
+    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        return "<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
     }
 
     function addButton($name, $value) {
         $this->buttons[] = $this->getButtonString($name, $value);
+    }
+
+    function addOnClickButton($text, $url) {
+        $this->buttons[] = $this->getButtonString("onclick", $text, $klass = "btnPrimary", $extra = "onclick=\"location.href='" . $url . "';\"", $type = "button");
     }
 
     function addValidateButton($name) {
