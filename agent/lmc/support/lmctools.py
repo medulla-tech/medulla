@@ -25,6 +25,7 @@ from twisted.internet import defer, reactor
 from twisted.internet.utils import _BackRelay
 import os
 import os.path
+import shutil
 import logging
 import ConfigParser
 import re
@@ -70,6 +71,44 @@ def rchown(path, uid, gid):
         os.lchown(root, uid, gid)
         for name in files:
             os.lchown(os.path.join(root, name), uid, gid)
+
+def copytree(src, dst, symlinks=False):
+    """
+    Code taken from Python 2.5
+
+    Recursively copy a directory tree using copy2().
+
+    The destination directory must not already exist.
+    If exception(s) occur, an Error is raised with a list of reasons.
+
+    If the optional symlinks flag is true, symbolic links in the
+    source tree result in symbolic links in the destination tree; if
+    it is false, the contents of the files pointed to by symbolic
+    links are copied.
+    """
+    names = os.listdir(src)
+    os.makedirs(dst)
+    errors = []
+    for name in names:
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if symlinks and os.path.islink(srcname):
+                linkto = os.readlink(srcname)
+                os.symlink(linkto, dstname)
+            elif os.path.isdir(srcname):
+                copytree(srcname, dstname, symlinks)
+            else:
+                shutil.copy2(srcname, dstname)
+            # XXX What about devices, sockets etc.?
+        except (IOError, os.error), why:
+            errors.append((srcname, dstname, str(why)))
+        # catch the Error from the recursive copytree so that we can
+        # continue with other files
+        except Error, err:
+            errors.extend(err.args[0])
+    if errors:
+        raise Error, errors
 
 class Singleton(object):
     def __new__(type):
