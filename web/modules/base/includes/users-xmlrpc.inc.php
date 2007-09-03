@@ -87,9 +87,9 @@ function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
  * @param $name user's name
  * @param $homedir user home directory
  */
-function add_user($login, $pass, $firstname, $name, $homedir, $primaryGroup = "")
+function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $primaryGroup = "")
 {
-    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $primaryGroup);
+    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $primaryGroup);
     $ret = xmlCall("base.createUser", $param);    
     return sprintf(_("user %s created<br />"), $login);
 }
