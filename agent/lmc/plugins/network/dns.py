@@ -363,7 +363,12 @@ zone "%(zone)s" {
 
         @param aliases: host aliases to set
         @type aliases: list
+
+        @return: the alias that could not be set, because a resource record
+                 with this name already exist
+        @rtype: list
         """
+        ret = []
         oldaliases = []
         for record in self.getCNAMEs(zone, host):
             oldalias = record[1]["relativeDomainName"][0]
@@ -374,7 +379,11 @@ zone "%(zone)s" {
         for alias in aliases:
             if alias not in oldaliases:
                 # Add alias
-                self.addRecordCNAME(zone, alias, host)
+                try:
+                    self.addRecordCNAME(zone, alias, host)
+                except ldap.ALREADY_EXISTS:
+                    ret.append(alias)
+        return ret
 
     def addRecordCNAME(self, zone, alias, cname, dnsClass = "IN"):
         """
