@@ -23,7 +23,7 @@
 from lmc.support.errorObj import errorMessage
 from lmc.support.lmcException import lmcException
 from lmc.support import lmctools
-from lmc.support.lmctools import cSort, rchown
+from lmc.support.lmctools import cSort, rchown, copytree
 from lmc.support.config import *
 from time import time
 
@@ -803,7 +803,7 @@ class ldapUserGroupControl:
         # creating home directory
         if self.userHomeAction:
             try:
-                shutil.copytree(self.skelDir, homeDir, symlinks = True)
+                copytree(self.skelDir, homeDir, symlinks = True)
                 rchown(homeDir, uidNumber, gidNumber)
             except OSError:
                 # Problem when creating the user home directory,
