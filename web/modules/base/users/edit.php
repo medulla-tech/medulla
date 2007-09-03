@@ -111,7 +111,8 @@ callPluginFunction("verifInfo",array($_POST));
                 $error.= _("Password is empty.")."<br/>"; //refuse addition
                 setFormError("pass");
             } else {  //if no problem
-                $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $_POST["primary_autocomplete"]);
+                $createHomeDir = isset($_POST["createHomeDir"]);
+                $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $createHomeDir, $_POST["primary_autocomplete"]);
                 if (strlen($_POST['mail']) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
 		if (strlen($loginShell) > 0) changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
@@ -366,6 +367,11 @@ $test->display($param);
 
 $test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
 $test->display(array("value"=>$detailArr["homeDirectory"][0]));
+
+if ($_GET["action"] == "add") {
+    $test = new TrFormElement(_("Create home directory on filesystem"), new CheckboxTpl("createHomeDir"));
+    $test->display(array("value" => "CHECKED"));
+}
 
 $test = new TrFormElement(_("Login shell"),new InputTpl("loginShell"));
 $test->display(array("value" => $detailArr["loginShell"][0]));
