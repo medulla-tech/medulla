@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
@@ -196,6 +197,20 @@ def resolve(zone, hostname):
 def getZoneFreeIp(zone, startAt = None):
     return Dns().getZoneFreeIp(zone, startAt)
 
+def getResourceRecord(zone, rr):
+    return Dns().getResourceRecord(zone, rr)
+
+def getCNAMEs(zone, hostname):
+    return Dns().getCNAMEs(zone, hostname)
+
+def delCNAMEs(zone, hostname):
+    Dns().delCNAMEs(zone, hostname)
+
+def addRecordCNAME(zone, alias, cname, dnsClass = "IN"):
+    Dns().addRecordCNAME(zone, alias, cname, dnsClass)
+
+def setHostAliases(zone, host, aliases):
+    return Dns().setHostAliases(zone, host, aliases)
 
 # DHCP exported call
 
