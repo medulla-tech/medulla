@@ -211,9 +211,9 @@ def existGroup(groupName):
     return ldapUserGroupControl().existGroup(groupName)
 
 # create a user
-def createUser(login, passwd, firstname, surname, homedir, primaryGroup = None):
+def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
     ldapObj = ldapUserGroupControl()
-    return ldapObj.addUser(login, passwd, firstname, surname, homedir, primaryGroup)
+    return ldapObj.addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
 
 def addUserToGroup(cngroup,uiduser):
     ldapObj = ldapUserGroupControl()
@@ -655,7 +655,7 @@ class ldapUserGroupControl:
             ret = False
         return ret
 
-    def addUser(self, uid, password, firstN, lastN, homeDir = None, primaryGroup = None):
+    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, primaryGroup = None):
         """
         Add an user in ldap directory
 
@@ -678,6 +678,10 @@ class ldapUserGroupControl:
 
         @param primaryGroup: primary group of the user. If empty or None, default to defaultUserGroup
         @type primaryGroup: str
+
+        @param createHomeDir: Flag telling if the user home directory is
+                              created on the filesystem
+        @type createHomeDir: bool
         """
         # Make a homeDir string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
@@ -801,7 +805,7 @@ class ldapUserGroupControl:
             raise error
 
         # creating home directory
-        if self.userHomeAction:
+        if self.userHomeAction and createHomeDir:
             try:
                 copytree(self.skelDir, homeDir, symlinks = True)
                 rchown(homeDir, uidNumber, gidNumber)
