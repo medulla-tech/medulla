@@ -349,6 +349,33 @@ zone "%(zone)s" {
         soa["serial"] = self.computeSerial(current)
         self.setSOARecord(zone, soa)        
 
+    def setHostAliases(self, zone, host, aliases):
+        """
+        Set all aliases of a host.
+        The host must be a A record.
+        A CNAME record will be created for each alias
+
+        @param zone: DNS zone to modify
+        @type zone: str
+
+        @param host: host to which aliases are added
+        @type host: str
+
+        @param aliases: host aliases to set
+        @type aliases: list
+        """
+        oldaliases = []
+        for record in self.getCNAMEs(zone, host):
+            oldalias = record[1]["relativeDomainName"][0]
+            oldaliases.append(oldalias)
+            if oldalias not in aliases:
+                # Delete alias
+                self.l.delete_s(record[0])
+        for alias in aliases:
+            if alias not in oldaliases:
+                #Â Add alias
+                self.addRecordCNAME(zone, alias, host)
+
     def addRecordCNAME(self, zone, alias, cname, dnsClass = "IN"):
         """
         Add a canonical name record.
@@ -361,7 +388,7 @@ zone "%(zone)s" {
         @param alias: alias pointing to the canonical name
         @type alias: str
 
-        @param cname: CNAME to record (must be a registered A record
+        @param cname: CNAME to record (must be a registered A record)
         @type cname: str    
         """
         # Check that the given cname is a A record
@@ -371,7 +398,7 @@ zone "%(zone)s" {
                 raise "%s in not a A record" % cname
         except IndexError:                   
             raise "'%s' A record does not exist in the DNS zone" % cname
-        # Add the CNAME record
+        # Add the CNAME record
         dn = "relativeDomainName=" + alias + "," + "ou=" + zone + "," + "ou=" + zone + "," + self.configDns.dnsDN
         entry = {
             "relativeDomainName" : alias,
