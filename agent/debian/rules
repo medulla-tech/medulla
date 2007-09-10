@@ -6,11 +6,11 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PACKAGE=lmc-agent
+PACKAGE=mmc-agent
 
 # Set distribution name to decide if we'll use python-support or not
 # Can be sarge, etch, sid, dapper, edgy or feisty
-DISTRO = sarge
+DISTRO = etch
 
 # Let's turn python-support on by default
 DO_PYSUPPORT = true
@@ -59,7 +59,7 @@ install: build
 	$(MAKE) PREFIX=/usr DESTDIR=$(CURDIR)/debian/tmp install
 	# Delete upstream init script 
 	# (it'll be replaced by a debian specific one)
-	rm -f $(CURDIR)/debian/tmp/etc/init.d/lmc-agent
+	rm -f $(CURDIR)/debian/tmp/etc/init.d/mmc-agent
 	# Install all
 	dh_install -i --sourcedir=$(CURDIR)/debian/tmp
 	# Install lintian overrides for each package
@@ -72,19 +72,19 @@ install: build
 
 binary-arch: build install
 	# Nothing to do #
-	
+
 binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
 	dh_installchangelogs -i
 	dh_installdocs -i
-	dh_installdocs -ppython-lmc-base contrib
+	dh_installdocs -ppython-mmc-base contrib
 	# Remove svn directories
-	find $(CURDIR)/debian/python-lmc-base -name '.svn' | xargs rm -rf
+	find $(CURDIR)/debian/python-mmc-base -name '.svn' | xargs rm -rf
 	dh_link -i
 	dh_compress -i
-	# exclude files in /etc/lmc to keep 600 mode
-	dh_fixperms -X/etc/lmc/plugins -X/etc/lmc/agent
+	# exclude files in /etc/mmc to keep 600 mode
+	dh_fixperms -X/etc/mmc/plugins -X/etc/mmc/agent
 ifeq ($(DO_PYSUPPORT),true)
 	dh_pysupport
 else

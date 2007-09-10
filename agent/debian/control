@@ -1,83 +1,79 @@
-Source: lmc-agent
+Source: mmc-agent
 Section: admin
 Priority: optional
 Maintainer: Linbox FAS <infos@linbox.com>
-Build-Depends: debhelper (>= 4.0.0)
-Build-Depends-Indep: python-dev
+Build-Depends: debhelper (>= 5.0.37.2)
+Build-Depends-Indep: python-all-dev (>= 2.3.5-11), python-all, python-support (>= 0.5.3)
 Standards-Version: 3.7.2
 
-Package: lmc-agent
+Package: mmc-agent
 Architecture: all
-Depends: ${python:Depends}, python-twisted, python-pyopenssl, python-lmc-base
-Description: Linbox Management Console Agent
- XMLRPC server of the LMC API.
+Depends: ${python:Depends}, python-twisted-web, python-pyopenssl, python-mmc-base
+Description: Mandriva Management Console Agent
+ XMLRPC server of the MMC API.
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-base
+Package: python-mmc-base
 Architecture: all
-Depends: ${python:Depends}, python-ldap, python-twisted, python-lmc-plugins-tools
-Replaces: lmc-agent (<< 0.409), lmc-plugin-base
-Description: Linbox Management Console base plugin
- Contains the base infrastructure for all LMC plugins:
+Depends: ${python:Depends}, python-ldap, python-twisted-web, python-mmc-plugins-tools
+Replaces: python-lmc-base
+Conflicts: python-lmc-base
+Description: Mandriva Management Console base plugin
+ Contains the base infrastructure for all MMC plugins:
   * support classes
   * base LDAP management classes
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-samba
+Package: python-mmc-samba
 Architecture: all
-Depends: ${python:Depends}, python-pylibacl, acl, python-lmc-base, samba-common
-Replaces: lmc-agent (<< 0.409), lmc-plugin-samba
-Description: Linbox Management Console SAMBA plugin
- SAMBA management plugin for the LMC.
+Depends: ${python:Depends}, python-pylibacl, acl, python-mmc-base, samba-common
+Replaces: python-lmc-samba
+Conflicts: python-lmc-samba
+Description: Mandriva Management Console SAMBA plugin
+ SAMBA management plugin for the MMC.
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-mail
+Package: python-mmc-mail
 Architecture: all
-Depends: ${python:Depends}, python-lmc-base
-Replaces: lmc-agent (<< 0.409)
-Description: Linbox Management Console base plugin
- Mail account management plugin for the LMC.
+Depends: ${python:Depends}, python-mmc-base
+Replaces: python-lmc-mail
+Conflicts: python-lmc-mail
+Description: Mandriva Management Console base plugin
+ Mail account management plugin for the MMC.
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-ox
+Package: python-mmc-proxy
 Architecture: all
-Depends: ${python:Depends}, python-lmc-base, python-psycopg
-Replaces: lmc-agent (<< 0.409), lmc-plugin-ox
-Description: Linbox Management Console Open-Xchange plugin
- Open-Xchange management plugin for the LMC.
- This plugin needs a working installation of Open-Xchange to be functional.
+Depends: ${python:Depends}, python-mmc-base, squidguard
+Replaces: python-lmc-proxy
+Conflicts: python-lmc-proxy
+Description: Mandriva Management Console proxy plugin
+ Squidguard/Squid management plugin for the MMC.
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-proxy
+Package: python-mmc-network
 Architecture: all
-Depends: ${python:Depends}, python-lmc-base, squidguard
-Replaces: lmc-agent (<< 0.409), lmc-plugin-proxy
-Description: Linbox Management Console proxy plugin
- Squidguard/Squid management plugin for the LMC.
- .
- Homepage: http://lds.linbox.org
-
-Package: python-lmc-network
-Architecture: all
-Depends: ${python:Depends}, python-lmc-base
-Replaces: lmc-agent (<< 0.409), lmc-plugin-proxy
-Description: Linbox Management Console network plugin
- DNS/DHCP management plugin for the LMC.
+Depends: ${python:Depends}, python-mmc-base
+Replaces: python-lmc-network
+Conflicts: python-lmc-network
+Description: Mandriva Management Console network plugin
+ DNS/DHCP management plugin for the MMC.
  .
  This plugin requires a LDAP-patched version of ISC DHCPD and BIND9.
  .
  Homepage: http://lds.linbox.org
 
-Package: python-lmc-plugins-tools
+Package: python-mmc-plugins-tools
 Architecture: all
 Depends: ${python:Depends}, mkisofs
-Replaces: lmc-agent (<= 0.401), lmc-plugins-tools
-Description: Required tools for some LMC plugins
- Contains common tools needed by some plugins of lmc-agent package.
+Replaces: python-lmc-plugins-tools
+Conflicts: python-lmc-plugins-tools
+Description: Required tools for some MMC plugins
+ Contains common tools needed by some plugins of mmc-agent package.
  .
  Homepage: http://lds.linbox.org

@@ -18,7 +18,7 @@
 # Run linbox-config at the first boot
 
 ### BEGIN INIT INFO
-# Provides:          lmc-agent
+# Provides:          mmc-agent
 # Required-Start:    $local_fs $remote_fs $network
 # Required-Stop:     $local_fs $remote_fs $network
 # Default-Start:     2 3 4 5
@@ -28,8 +28,8 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DESC="Linbox Management Console XML-RPC Agent"
-NAME=lmc-agent
+DESC="Mandriva Management Console XML-RPC Agent"
+NAME=mmc-agent
 DAEMON=/usr/sbin/$NAME
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME

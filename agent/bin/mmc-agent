@@ -1,0 +1,38 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+
+import os
+import os.path
+import sys
+import getopt
+import ConfigParser
+
+import mmc.agent
+
+if __name__ == "__main__":
+    inifile = "/etc/mmc/agent/config.ini"
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+    except getopt.GetoptError:
+        sys.exit(2)
+    daemonize = True
+    for option, argument in opts:
+        if option == "-f":
+            inifile = argument
+        elif option == "-d":
+            daemonize = False
+
+    if not os.path.exists(inifile):
+        print "File '%s' does not exist." % inifile
+	sys.exit(3)
+ 
+    # Load configuration file
+    try:
+        cp = ConfigParser.ConfigParser()
+        cp.read(inifile)
+    except e:
+        print str(e)
+        sys.exit(3)
+    
+    # Start the daemon main loop
+    sys.exit(mmc.agent.agentService(cp, inifile, daemonize))

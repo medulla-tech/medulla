@@ -22,8 +22,8 @@
 DESTDIR = 
 PREFIX = /usr/local
 SBINDIR = $(PREFIX)/sbin
-LIBDIR = $(PREFIX)/lib/lmc
-ETCDIR = /etc/lmc
+LIBDIR = $(PREFIX)/lib/mmc
+ETCDIR = /etc/mmc
 INITDIR = /etc/init.d
 INSTALL = $(shell which install)
 SED = $(shell which sed)
@@ -36,7 +36,7 @@ PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 LIBFILES = bin/add_machine_script
 LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
-SBINFILES = bin/lmc-agent
+SBINFILES = bin/mmc-agent
 
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
@@ -89,43 +89,29 @@ install:
 	$(INSTALL) conf/agent/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/agent/keys
 	$(INSTALL) conf/plugins/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(INITDIR)
-	$(INSTALL) -m 755 -o root -g root init.d/lmc-agent $(DESTDIR)$(INITDIR)
+	$(INSTALL) -m 755 -o root -g root init.d/mmc-agent $(DESTDIR)$(INITDIR)
 	$(SED) -i 's!^path[ \t].*$$!path = $(LIBDIR)/backup-tools!' $(DESTDIR)$(ETCDIR)/plugins/base.ini
-	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/lmc-agent
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/mmc-agent
 
 # Linbox internal target. Will be updated soon.
 
 debian-package: revision
 	sed -i "s/##VERSION##/`cat revision`/" debian/changelog
-	sed -i "s/###SVN_VERSION###/`cat revision`/" lmc/agent.py
+	sed -i "s/###SVN_VERSION###/`cat revision`/" mmc/agent.py
 	dpkg-buildpackage -b -uc -rfakeroot
 	sed -i "s/`cat revision`/##VERSION##/" debian/changelog
-	sed -i "s/`cat revision`/###SVN_VERSION###/" lmc/agent.py
+	sed -i "s/`cat revision`/###SVN_VERSION###/" mmc/agent.py
 
 revision:
 	# fake SVN revision number if there is none
 	# else the revision number is found by BuildBot
 	echo -n 100 > "revision"
 
-move: debian-package docs
-	mv ../*.deb /var/www/portail/lmc-packages/
-	rm -fr /var/www/portail/lmc-docs/lmc-agent
-	mv -f html /var/www/portail/lmc-docs/lmc-agent
-	chmod -R 755 /var/www/portail/lmc-docs/lmc-agent
-
 docs:
-	epydoc lmc
+	epydoc mmc
 
 test:
 	PYTHONPATH=. python tests/testldap.py
 	PYTHONPATH=. python tests/testsamba.py
 	PYTHONPATH=. python tests/testproxy.py
 	PYTHONPATH=. python tests/testmail.py
-
-lint:
-	pylint --disable-all --html=y --enable-variables=y lmc/*.py lmc/support/*.py lmc/plugins/*.py > /var/www/portail/lmc-lint.html
-	chmod 755 /var/www/portail/lmc-lint.html
-
-fixmetodo:
-	grep -nir -e FIXME -e TODO * > /var/www/portail/lmc-fixmetodo.txt
-	chmod 755 /var/www/portail/lmc-fixmetodo.txt

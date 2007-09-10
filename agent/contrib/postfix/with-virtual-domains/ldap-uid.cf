@@ -1,6 +1,6 @@
 server_host = 127.0.0.1
 server_port = 389
-search_base = ou=Users,dc=linbox,dc=com
+search_base = ou=Users,dc=mandriva,dc=com
 query_filter = (&(objectClass=mailAccount)(mail=%s)(mailenable=OK))
 result_attribute = uidNumber
 version = 3

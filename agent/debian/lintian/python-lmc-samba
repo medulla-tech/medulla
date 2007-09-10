@@ -1,1 +1,0 @@
-python-lmc-samba: non-standard-file-perm etc/lmc/plugins/samba.ini 0600 != 0644

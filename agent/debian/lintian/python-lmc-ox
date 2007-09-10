@@ -1,1 +1,0 @@
-python-lmc-ox: non-standard-file-perm etc/lmc/plugins/ox.ini 0600 != 0644

@@ -1,0 +1,5 @@
+usr/lib/python2.?/site-packages/mmc/support
+usr/lib/python2.?/site-packages/mmc/__init__.py
+usr/lib/python2.?/site-packages/mmc/plugins/__init__.py
+usr/lib/python2.?/site-packages/mmc/plugins/base
+etc/mmc/plugins/base.ini

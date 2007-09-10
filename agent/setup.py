@@ -1,12 +1,12 @@
 from distutils.core import setup
 
 setup(
-    name = "lmc-agent",
+    name = "mmc-agent",
     version = "1.0",
-    url = "http://www.linbox.com",
+    url = "http://www.mandriva.com",
     author = "Cedric Delfosse",
-    author_email = "cedric.delfosse@linbox.com",
+    author_email = "cdelfosse@mandriva.com",
     maintainer = "Cedric Delfosse",
-    maintainer_email = "cedric.delfosse@linbox.com",
-    packages = ["lmc", "lmc.support", "lmc.plugins", "lmc.plugins.base", "lmc.plugins.samba", "lmc.plugins.proxy", "lmc.plugins.mail", "lmc.plugins.network"],
+    maintainer_email = "cdelfosse@mandriva.com",
+    packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base", "mmc.plugins.samba", "mmc.plugins.proxy", "mmc.plugins.mail", "mmc.plugins.network"],
 )

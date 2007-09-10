@@ -1,9 +1,0 @@
-# Defaults for lmc-agent initscript
-# sourced by /etc/init.d/lmc-agent
-# installed at /etc/default/lmc-agent by the maintainer scripts
-
-#
-# This is a POSIX shell fragment
-#
-
-ENABLE=yes

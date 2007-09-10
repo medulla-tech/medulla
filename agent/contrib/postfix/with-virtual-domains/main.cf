@@ -7,11 +7,11 @@ biff = no
 append_at_myorigin = yes
 append_dot_mydomain = no
 
-myhostname = mail.linbox.com
+myhostname = mail.mandriva.com
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
-mydestination = mail.linbox.com,mail,localhost.localdomain,localhost
+mydestination = mail.mandriva.com,mail,localhost.localdomain,localhost
 relayhost = 
 mynetworks = 127.0.0.0/8
 mailbox_size_limit = 0

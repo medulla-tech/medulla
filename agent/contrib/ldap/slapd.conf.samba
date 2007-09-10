@@ -15,7 +15,7 @@ include         /etc/ldap/schema/inetorgperson.schema
 # Printer schema
 include         /etc/ldap/schema/printer.schema 
 # LMC specific schema
-include         /etc/ldap/schema/lmc.schema
+include         /etc/ldap/schema/mmc.schema
 # Samba schema
 include         /etc/ldap/schema/samba.schema
 # If open-xchange
@@ -60,7 +60,7 @@ checkpoint 512 30
 database        bdb
 
 # The base of your directory in database #1
-suffix          "dc=linbox,dc=com"
+suffix          "dc=mandriva,dc=com"
 
 # Where the database file are physically stored for database #1
 directory       "/var/lib/ldap"
@@ -83,7 +83,7 @@ lastmod         on
 # admin entry below
 # These access lines apply to database #1 only
 access to attrs=userPassword,sambaLMPassword,sambaNTPassword
-        by dn="cn=admin,dc=linbox,dc=com" write
+        by dn="cn=admin,dc=mandriva,dc=com" write
         by anonymous auth
         by self write
         by * none
@@ -102,13 +102,13 @@ access to dn.base="" by * read
 # The admin dn has full write access, everyone else
 # can read everything.
 access to *
-        by dn="cn=admin,dc=linbox,dc=com" write
+        by dn="cn=admin,dc=mandriva,dc=com" write
         by * read
 
 # For Netscape Roaming support, each user gets a roaming
 # profile for which they have write access to
 #access to dn=".*,ou=Roaming,o=morsnet"
-#        by dn="cn=admin,dc=linbox,dc=com" write
+#        by dn="cn=admin,dc=mandriva,dc=com" write
 #        by dnattr=owner write
 
 #######################################################################

@@ -10,11 +10,11 @@ append_at_myorigin = yes
 # Uncomment the next line to generate "delayed mail" warnings
 #delay_warning_time = 4h
 
-myhostname = debian_sarge.linbox.com
+myhostname = debian_sarge.mandriva.com
 alias_maps = ldap:/etc/postfix/ldap-aliases.cf,  hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
-mydestination = linbox.com,localhost.localdomain,localhost
+mydestination = mandriva.com,localhost.localdomain,localhost
 relayhost = 
 mynetworks = 127.0.0.0/8
 mailbox_size_limit = 0
