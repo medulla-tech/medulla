@@ -1,7 +1,7 @@
 Source: mmc-web-base
 Section: admin
 Priority: optional
-Maintainer: Linbox FAS <infos@linbox.com>
+Maintainer: Cédric Delfosse <cdelfosse@mandriva.com>
 Build-Depends: debhelper (>= 4.0.0)
 Standards-Version: 3.7.2
 
