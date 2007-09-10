@@ -47,9 +47,9 @@ def cleanLdap():
     time.sleep(5)
     # Create Base OU
     l = ldapUserGroupControl("tests/basetest.ini")
-    l.addOu("Groups", "dc=linbox,dc=com")
-    l.addOu("Users",  "dc=linbox,dc=com")
-    l.addOu("Computers",  "dc=linbox,dc=com")
+    l.addOu("Groups", "dc=mandriva,dc=com")
+    l.addOu("Users",  "dc=mandriva,dc=com")
+    l.addOu("Computers",  "dc=mandriva,dc=com")
 
 class TestShares(unittest.TestCase):
 
@@ -84,7 +84,7 @@ class TestShares(unittest.TestCase):
         self.assertEqual(self.s.getSmbInfo()["homes"], True)
         self.assertEqual(self.s.getSmbInfo()["logons"], True)
         self.assertEqual(self.s.getSmbInfo()["master"], True)
-        self.assertEqual(self.s.getSmbInfo()["workgroup"], "LINBOX")
+        self.assertEqual(self.s.getSmbInfo()["workgroup"], "MANDRIVA")
         self.assertEqual(self.s.getSmbInfo()["netbios name"], "LINSRV")
         self.s.smbInfoSave(False, False, self.s.getSmbInfo())
         s2 = smbConf(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
@@ -106,7 +106,7 @@ class testSambaLdap(unittest.TestCase):
         self.l.addGroup("allusers")
         os.system("cp contrib/samba/smb.conf /etc/samba/smb.conf")
         os.system("/etc/init.d/samba stop")
-        os.system("/usr/bin/smbpasswd -w linbox")
+        os.system("/usr/bin/smbpasswd -w secret")
         os.system("/etc/init.d/samba start")
         self.s = sambaLdapControl(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
 

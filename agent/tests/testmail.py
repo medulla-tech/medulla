@@ -43,9 +43,9 @@ def cleanLdap():
     time.sleep(5)
     # Create Base OU
     l = ldapUserGroupControl("tests/basetest.ini")
-    l.addOu("Groups", "dc=linbox,dc=com")
-    l.addOu("Users",  "dc=linbox,dc=com")
-    l.addOu("mailDomains", "dc=linbox,dc=com")
+    l.addOu("Groups", "dc=mandriva,dc=com")
+    l.addOu("Users",  "dc=mandriva,dc=com")
+    l.addOu("mailDomains", "dc=mandriva,dc=com")
     l.addGroup("allusers")
 
 
@@ -78,20 +78,20 @@ class TestMailControlVDomain(unittest.TestCase):
 
     def test_VDomains(self):
         self.assertEqual(len(self.m.getVDomains("")), 0)
-        self.m.addVDomain("linbox.com")
+        self.m.addVDomain("mandriva.com")
         self.assertEqual(len(self.m.getVDomains("")), 1)
-        self.assertEqual(len(self.m.getVDomain("linbox.com")), 1)
-        self.assertEqual(self.m.getVDomain("linbox.com")[0][1]["virtualdomain"], ["linbox.com"])
-        self.m.setVDomainDescription("linbox.com", "test")
-        self.assertEqual(self.m.getVDomain("linbox.com")[0][1]["virtualdomaindescription"], ["test"])
-        self.assertEqual(self.m.getVDomainUsersCount("linbox.com"), 0)
+        self.assertEqual(len(self.m.getVDomain("mandriva.com")), 1)
+        self.assertEqual(self.m.getVDomain("mandriva.com")[0][1]["virtualdomain"], ["mandriva.com"])
+        self.m.setVDomainDescription("mandriva.com", "test")
+        self.assertEqual(self.m.getVDomain("mandriva.com")[0][1]["virtualdomaindescription"], ["test"])
+        self.assertEqual(self.m.getVDomainUsersCount("mandriva.com"), 0)
 
         self.m.addUser("usertest", "userpass", "test", "test")
         self.m.addMailObjectClass("usertest", "usertestmail")
-        self.assertEqual(self.m.getVDomainUsersCount("linbox.com"), 1)
-        self.assertEqual(self.m.getVDomainUsers("linbox.com", ""), [('uid=usertest,ou=Users,dc=linbox,dc=com', {'mail': ['TEST.TEST@linbox.com'], 'givenName': ['test'], 'uid': ['usertest'], 'sn': ['test']})])
+        self.assertEqual(self.m.getVDomainUsersCount("mandriva.com"), 1)
+        self.assertEqual(self.m.getVDomainUsers("mandriva.com", ""), [('uid=usertest,ou=Users,dc=mandriva,dc=com', {'mail': ['TEST.TEST@mandriva.com'], 'givenName': ['test'], 'uid': ['usertest'], 'sn': ['test']})])
 
-        self.m.delVDomain("linbox.com")
+        self.m.delVDomain("mandriva.com")
         self.assertEqual(len(self.m.getVDomains("")), 0)
 
 
