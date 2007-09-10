@@ -4,7 +4,7 @@
 case "$1" in
     purge)
 	webservers="apache apache2 apache-ssl"
-	includefile="/etc/lmc/apache.conf"
+	includefile="/etc/mmc/apache.conf"
 	
 	for server in $webservers ; do
 	    conffile="/etc/$server/httpd.conf"

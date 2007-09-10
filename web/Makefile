@@ -21,8 +21,8 @@
 # General Makefile variables
 DESTDIR = 
 PREFIX = /usr/local
-DATADIR = $(PREFIX)/share/lmc
-ETCDIR = /etc/lmc
+DATADIR = $(PREFIX)/share/mmc
+ETCDIR = /etc/mmc
 INSTALL = $(shell which install)
 CP = $(shell which cp)
 CHOWN = $(shell which chown)
@@ -30,7 +30,7 @@ CHGRP = $(shell which chgrp)
 HTTPDUSER = www-data
 SED = $(shell which sed)
 RM = $(shell which rm)
-APACHE_CONF = confs/apache/lmc.conf
+APACHE_CONF = confs/apache/mmc.conf
 
 FILESTOINSTALL = graph img includes index.php jsframework logout main_content.php main.php version.php modules
 
@@ -48,10 +48,6 @@ revision:
 	# fake SVN revision number if there is none
 	# else the revision number is found by BuildBot
 	echo -n 100 > "revision"
-
-move: debian-package
-	mv ../*.deb /var/www/portail/lmc-packages/
-
 
 generate-doc:
 	gen-doc/create.sh
@@ -73,13 +69,13 @@ clean: clean_mo
 
 install: build_mo apache_conf
 	@echo ""
-	@echo "Installing lmc-web in $(DESTDIR)$(DATADIR)"
+	@echo "Installing mmc-web in $(DESTDIR)$(DATADIR)"
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
 	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)
 	$(CHOWN) -R root $(DESTDIR)$(DATADIR)
 	$(CHGRP) -R root $(DESTDIR)$(DATADIR)
-	$(INSTALL) confs/lmc.ini -m 640 -o root -g $(HTTPDUSER) $(DESTDIR)$(ETCDIR)
-	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/lmc.ini
-	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/lmc.ini
+	$(INSTALL) confs/mmc.ini -m 640 -o root -g $(HTTPDUSER) $(DESTDIR)$(ETCDIR)
+	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/mmc.ini
+	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/mmc.ini
 	find $(DESTDIR)$(DATADIR) -type f -name *.po -exec rm -f {} \;

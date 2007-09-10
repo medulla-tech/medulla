@@ -4,7 +4,7 @@ case "$1" in
     configure)
 	webservers="apache apache2 apache-ssl"
 	for server in $webservers ; do	    
-	    includefile="/etc/lmc/apache.conf"
+	    includefile="/etc/mmc/apache.conf"
 	    . /usr/share/wwwconfig-common/apache-include_all.sh
 	    test "$status" = "uncomment" -o "$status" = "include" && restart="$server $restart"
 	done
@@ -12,8 +12,8 @@ case "$1" in
 	servers="apache apache2 apache-ssl"
 	. /usr/share/wwwconfig-common/restart.sh
 
-	chown www-data:root /etc/lmc/lmc.ini
-	chmod 660 /etc/lmc/lmc.ini
+	chown www-data:root /etc/mmc/mmc.ini
+	chmod 660 /etc/mmc/mmc.ini
 
 	;;
     

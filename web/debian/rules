@@ -6,7 +6,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PACKAGE=lmc-web-base
+PACKAGE=mmc-web-base
 CFLAGS = -Wall -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -53,12 +53,12 @@ install: build
 
 	# Add here commands to install the package into debian/$(PACKAGE).
 	$(MAKE) install PREFIX=/usr DESTDIR=$(CURDIR)/debian/$(PACKAGE)
-	install --mode=644 confs/apache/lmc.conf debian/$(PACKAGE)/etc/lmc/apache.conf
+	install --mode=644 confs/apache/mmc.conf debian/$(PACKAGE)/etc/mmc/apache.conf
 
 	# Remove Scripaculous license, readme and changelog
-	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/MIT-LICENSE
-	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/CHANGELOG
-	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/lmc/jsframework/README
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/mmc/jsframework/MIT-LICENSE
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/mmc/jsframework/CHANGELOG
+	rm -f $(CURDIR)/debian/$(PACKAGE)/usr/share/mmc/jsframework/README
 
 
 # Build architecture-independent files here.
@@ -73,8 +73,8 @@ binary-arch: build install
 	dh_installdocs
 	dh_link
 	dh_compress
-	# Keep /etc/lmc/ini as root:www-data and 640
-	dh_fixperms -X/etc/lmc/lmc.ini
+	# Keep /etc/mmc/ini as root:www-data and 640
+	dh_fixperms -X/etc/mmc/mmc.ini
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums

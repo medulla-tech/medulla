@@ -1,15 +1,16 @@
-Source: lmc-web-base
+Source: mmc-web-base
 Section: admin
 Priority: optional
 Maintainer: Linbox FAS <infos@linbox.com>
 Build-Depends: debhelper (>= 4.0.0)
 Standards-Version: 3.7.2
 
-Package: lmc-web-base
+Package: mmc-web-base
 Architecture: all
 Depends: libapache2-mod-php4 | libapache2-mod-php5, apache2 | apache2-mpm-prefork, wwwconfig-common, ${shlibs:Depends}
-Replaces: lmc-base
-Description: LMC web interface to interact with a LMC agent
- Linbox Management Console web interface designed by Linbox
+Replaces: lmc-web-base
+Conflicts: lmc-web-base
+Description: MMC web interface to interact with a MMC agent
+ Mandriva Management Console web interface designed by Mandriva
  .
- Homepage: http://lds.linbox.org/
+ Homepage: http://mds.mandriva.org

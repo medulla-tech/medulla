@@ -1,18 +1,17 @@
 #!/bin/bash
 
 
-rm -rf /tmp/lmc-base/
+rm -rf /tmp/mmc-base/
 TMPDIR=`mktemp -d`
 echo ${TMPDIR}
-svn export http://svn2/repo/lmc-base/trunk ${TMPDIR}/lmc/ --force
+svn export http://svn2/repo/mmc-base/trunk ${TMPDIR}/mmc/ --force
 
-svn export http://svn2/repo/lmc-ox/trunk/ox ${TMPDIR}/lmc/modules/ --force
-svn export http://svn2/repo/lmc-samba/trunk/samba ${TMPDIR}/lmc/modules/ --force
+svn export http://svn2/repo/mmc-samba/trunk/samba ${TMPDIR}/mmc/modules/ --force
 
-cp doxygen-lmc.conf ${TMPDIR}/
+cp doxygen-mmc.conf ${TMPDIR}/
 
 cd ${TMPDIR}
-doxygen doxygen-lmc.conf
+doxygen doxygen-mmc.conf
 
 rm -rf ${TMPDIR}
 

@@ -1,23 +1,24 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
+ * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
@@ -29,9 +30,9 @@
 
 
 /**
- * Singleton objet, register all main lmc data
+ * Singleton objet, register all main mmc data
  */
-class LMCApp {
+class MMCApp {
 
 
    var $_modules;
@@ -40,7 +41,7 @@ class LMCApp {
     * Constructor
     * private
     */
-   function LMCApp() {
+   function MMCApp() {
         $this->_modules = array();
         $this->_styleobj = new StyleGenerator();
    }
@@ -52,11 +53,11 @@ class LMCApp {
     */
    function &getInstance() {
 
-      if (!isset($GLOBALS["__INSTANCE_LMC_APP__"])) {
-         $GLOBALS["__INSTANCE_LMC_APP__"] = new LMCApp();
+      if (!isset($GLOBALS["__INSTANCE_MMC_APP__"])) {
+         $GLOBALS["__INSTANCE_MMC_APP__"] = new MMCApp();
       }
 
-      return $GLOBALS["__INSTANCE_LMC_APP__"];
+      return $GLOBALS["__INSTANCE_MMC_APP__"];
 
    }
 
@@ -72,7 +73,7 @@ class LMCApp {
    }
 
    /**
-    * add a module into LMCApp
+    * add a module into MMCApp
     * @param mod Module Object to add
     */
    function addModule($mod) {
@@ -265,7 +266,7 @@ class SubModule {
         foreach ($this->_pages as $page) {
             $page->process($module,$this->getName());
         }
-        $LMC =&LMCApp::getInstance();
+        $MMC =&MMCApp::getInstance();
 
         $selected = ($_GET['submod'] == $this->getName());
 
@@ -274,7 +275,7 @@ class SubModule {
 
                 $tmp = $_GET["submod"];
                 $_GET["submod"] = $this->_alias; //fake url
-                $parent = &$LMC->getModule($this->_parentname);
+                $parent = &$MMC->getModule($this->_parentname);
                 $submod = &$parent->getSubmod($this->_alias);
                 $submod->process($module);
 
@@ -308,7 +309,7 @@ class SubModule {
                                         background-position: 50% 8px	}';
             }
 
-            $style = &$LMC->getStyle();
+            $style = &$MMC->getStyle();
             $style->addCSS($css);
         }
 

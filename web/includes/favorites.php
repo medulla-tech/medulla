@@ -13,9 +13,9 @@ if ($_GET['lmodule']) {
 
 function getPage($uri) {
     list($modname,$subname,$actname) = explode('/',$uri,3);
-    $LMCApp =& LMCApp::getInstance();
+    $MMCApp =& MMCApp::getInstance();
 
-    $mod = $LMCApp->getModule($modname);
+    $mod = $MMCApp->getModule($modname);
     if (!$mod) return;
     $submod = $mod->getSubmod($subname);
     if (!$submod) return;
@@ -60,10 +60,10 @@ function delFavorite($uri) {
 
 function showFav($sort_a) {
 
-$LMCApp =& LMCApp::getInstance();
+$MMCApp =& MMCApp::getInstance();
 
 
-foreach(getSorted($LMCApp->getModules()) as $mkey => $mod) {
+foreach(getSorted($MMCApp->getModules()) as $mkey => $mod) {
     if (!$sort_a[$mod->getName()]) {
         continue;
     }

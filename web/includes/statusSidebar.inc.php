@@ -3,9 +3,9 @@ $sidemenu= new SideMenu();
 
 $sidemenu->setClass("status");
 
-$LMCApp =& LMCApp::getInstance();
+$MMCApp =& MMCApp::getInstance();
 
-$mod = $LMCApp->getModule('base');
+$mod = $MMCApp->getModule('base');
 $submod = $mod->getSubmod('status');
 
 foreach ($submod->getPages() as $page) {

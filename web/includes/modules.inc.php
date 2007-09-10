@@ -1,23 +1,24 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
+ * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
@@ -55,17 +56,18 @@ function fetchModulesList($dir) {
 }
 
 /**
- *	get all .ini file
- * 	in	/etc/lmc/ but lmc-agent.ini
+ *
+ * Read main ini file
+ *
  */
 function fetchIniFile() {
     global $conf;
-    $INI = "/etc/lmc/lmc.ini";
+    $INI = "/etc/mmc/mmc.ini";
     $conf = array();
     if (is_readable($INI)) {
         $conf = array_merge_recursive(parse_ini_file($INI, TRUE),$conf);
     } else {
-        print "LMC: Can't read $INI configuration file. Please check your installation.";
+        print "MMC: Can't read $INI configuration file. Please check your installation.";
 	exit();
     }
 }
@@ -94,8 +96,8 @@ foreach ($dirA as $path) {
 			}
 	       }
 
-    $LMCApp =& LMCApp::getInstance();
-    $LMCApp->process();
+    $MMCApp =& MMCApp::getInstance();
+    $MMCApp->process();
 }
 
 
@@ -119,11 +121,11 @@ function getSorted($objlist) {
 }
 
 function autoGenerateNavbar() {
-    $LMCApp =& LMCApp::getInstance();
+    $MMCApp =& MMCApp::getInstance();
 
     $prio = array();
 
-    foreach ($LMCApp->getModules() as $mod) {
+    foreach ($MMCApp->getModules() as $mod) {
         foreach ($mod->getSubmodules() as $submod) {
             $prio = insert_without_delete($prio,$submod->getPriority(),$submod);
         }
@@ -172,8 +174,8 @@ foreach ($dirA as $path) {
  * @return if action require noheader send
  */
 function isNoHeader($pModules,$pSubmod,$pAction) {
-    $LMCApp =&LMCApp::getInstance();
-    $mod = $LMCApp->getModule($pModules);
+    $MMCApp =&MMCApp::getInstance();
+    $mod = $MMCApp->getModule($pModules);
 
     $submodo = $mod->_submod[$pSubmod];
     $actiono = $submodo->_pages[$pAction];
@@ -192,9 +194,9 @@ function isNoHeader($pModules,$pSubmod,$pAction) {
 function callPluginFunction($function, $paramArr = null, $reverse = False) {
     $list = $_SESSION["modulesList"];
 
-    $LMCApp =& LMCApp::getInstance();
+    $MMCApp =& MMCApp::getInstance();
     /* Fetch and order available plugins for the current logged user */
-    foreach(getSorted($LMCApp->getModules()) as $key => $mod) {
+    foreach(getSorted($MMCApp->getModules()) as $key => $mod) {
         if (array_search($mod->getName(), $list) !== FALSE) {
             $ordered_list[] = $mod->getName();
         }
