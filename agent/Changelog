@@ -1,3 +1,9 @@
+mmc-agent 3.0.0
+---------------
+
+ * LMC to MMC rename
+ * configuration files have been relocated
+
 lmc-agent 2.0.0
 ---------------
 
