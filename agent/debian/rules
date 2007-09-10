@@ -10,7 +10,7 @@ PACKAGE=mmc-agent
 
 # Set distribution name to decide if we'll use python-support or not
 # Can be sarge, etch, sid, dapper, edgy or feisty
-DISTRO = etch
+DISTRO = sarge
 
 # Let's turn python-support on by default
 DO_PYSUPPORT = true
