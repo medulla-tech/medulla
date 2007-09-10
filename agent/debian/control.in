@@ -1,7 +1,7 @@
 Source: mmc-agent
 Section: admin
 Priority: optional
-Maintainer: Linbox FAS <infos@linbox.com>
+Maintainer: Cédric Delfosse <cdelfosse@mandriva.com>
 Build-Depends: ###BUILDDEPS###
 Build-Depends-Indep: ###BUILDDEPSINDEP###
 Standards-Version: 3.7.2
