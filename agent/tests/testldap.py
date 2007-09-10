@@ -46,8 +46,8 @@ def cleanLdap():
     time.sleep(5)
     # Create Base OU
     l = ldapUserGroupControl("tests/basetest.ini")
-    l.addOu("Groups", "dc=linbox,dc=com")
-    l.addOu("Users",  "dc=linbox,dc=com")
+    l.addOu("Groups", "dc=mandriva,dc=com")
+    l.addOu("Users",  "dc=mandriva,dc=com")
 
 class TestEmptyLdap(unittest.TestCase):
 
@@ -118,7 +118,7 @@ class TestManageUserGroup(unittest.TestCase):
     def test_userdefault(self):
         self.l.addUser("usertest", "userpass", u"Héléonôre", u"Rêve")
         d = self.l.getDetailedUser("usertest")
-        self.assertEqual(d["mail"][0], "HELEONORE.REVE@linbox.com")
+        self.assertEqual(d["mail"][0], "HELEONORE.REVE@mandriva.com")
         self.assertEqual(d["displayName"][0], u"héléonôre rêve".encode("utf-8"))
         self.assertEqual(d["cn"][0], u"Héléonôre Rêve".encode("utf-8"))
 
