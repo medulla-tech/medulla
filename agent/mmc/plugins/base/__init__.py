@@ -60,7 +60,7 @@ baseGroupsDN = ""
 
 modList= None
 
-VERSION = "3.0.0"
+VERSION = "2.1.0"
 APIVERSION = "4:2:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 

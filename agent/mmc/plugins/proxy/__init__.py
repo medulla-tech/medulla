@@ -32,7 +32,7 @@ import logging
 from mmc.support import mmctools
 from mmc.support.config import *
 
-VERSION = "3.0.0"
+VERSION = "2.1.0"
 APIVERSION = "1:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
