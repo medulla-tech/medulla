@@ -24,7 +24,7 @@
 from mmc.support.errorObj import errorMessage
 from mmc.support.mmcException import mmcException
 from mmc.support import mmctools
-from mmc.support.mmctools import cSort
+from mmc.support.mmctools import cSort, rchown, copytree
 from mmc.support.config import *
 from time import time
 
@@ -212,9 +212,8 @@ def existGroup(groupName):
     return ldapUserGroupControl().existGroup(groupName)
 
 # create a user
-def createUser(login, passwd, firstname, surname, homedir, primaryGroup = None):
-    ldapObj = ldapUserGroupControl()
-    return ldapObj.addUser(login, passwd, firstname, surname, homedir, primaryGroup)
+def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
+    return ldapObj.addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
 
 def addUserToGroup(cngroup,uiduser):
     ldapObj = ldapUserGroupControl()
@@ -656,7 +655,7 @@ class ldapUserGroupControl:
             ret = False
         return ret
 
-    def addUser(self, uid, password, firstN, lastN, homeDir = None, primaryGroup = None):
+    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, primaryGroup = None):
         """
         Add an user in ldap directory
 
@@ -679,13 +678,17 @@ class ldapUserGroupControl:
 
         @param primaryGroup: primary group of the user. If empty or None, default to defaultUserGroup
         @type primaryGroup: str
+   
+        @param createHomeDir: Flag telling if the user home directory is
+                              created on the filesystem
+        @type createHomeDir: bool
         """
         # Make a homeDir string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
             raise Exception(homeDir+"is not an authorized home dir.")
 
-        uidNumber=self.maxUID() + 1
+        uidNumber = self.maxUID() + 1
 
         # Get a gid number
         if not primaryGroup:
@@ -695,7 +698,7 @@ class ldapUserGroupControl:
                 primaryGroup = uid
                 if self.addGroup(uid) == -1:
                     raise Exception('group error: already exist or cannot instanciate')
-        gidNumber = self.getDetailedGroup(primaryGroup)["gidNumber"][0]
+        gidNumber = int(self.getDetailedGroup(primaryGroup)["gidNumber"][0])
 
         # Put default value in firstN and lastN
         if not firstN: firstN = uid
@@ -802,9 +805,15 @@ class ldapUserGroupControl:
             raise error
 
         # creating home directory
-        if self.userHomeAction:
-            shutil.copytree(self.skelDir, homeDir, symlinks = True)
-            mmctools.launch('chown', ['chown', '-R', str(uidNumber) + ':' + str(gidNumber), homeDir])
+        if self.userHomeAction and createHomeDir:
+            try:
+                copytree(self.skelDir, homeDir, symlinks = True)
+                rchown(homeDir, uidNumber, gidNumber)
+            except OSError:
+                # Problem when creating the user home directory,
+                # so we delete the user
+                self.delUser(uid, False)
+                raise
 
         # Run addUser hook
         self.runHook("base.adduser", uid, password)

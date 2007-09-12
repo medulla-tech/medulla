@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
@@ -349,6 +350,77 @@ zone "%(zone)s" {
         soa["serial"] = self.computeSerial(current)
         self.setSOARecord(zone, soa)        
 
+    def setHostAliases(self, zone, host, aliases):
+        """
+        Set all aliases of a host.
+        The host must be a A record.
+        A CNAME record will be created for each alias
+
+        @param zone: DNS zone to modify
+        @type zone: str
+
+        @param host: host to which aliases are added
+        @type host: str
+
+        @param aliases: host aliases to set
+        @type aliases: list
+        
+        @return: the alias that could not be set, because a resource record
+                 with this name already exist
+        @rtype: list
+        """
+        ret = []
+        oldaliases = []
+        for record in self.getCNAMEs(zone, host):
+            oldalias = record[1]["relativeDomainName"][0]
+            oldaliases.append(oldalias)
+            if oldalias not in aliases:
+                # Delete alias
+                self.l.delete_s(record[0])
+        for alias in aliases:
+            if alias not in oldaliases:
+                # Add alias                
+                try:
+                    self.addRecordCNAME(zone, alias, host)
+                except ldap.ALREADY_EXISTS:
+                    ret.append(alias)
+        return ret
+
+    def addRecordCNAME(self, zone, alias, cname, dnsClass = "IN"):
+        """
+        Add a canonical name record.
+        The host name to which the alias is pointing must be a A record.
+        CNAME chaining is not supported.
+
+        @param zone: the DNS zone where the record is stored
+        @type zone: str
+
+        @param alias: alias pointing to the canonical name
+        @type alias: str
+
+        @param cname: CNAME to record (must be a registered A record)
+        @type cname: str    
+        """
+        # Check that the given cname is a A record
+        record = self.getResourceRecord(zone, cname)
+        try:
+            if not "aRecord" in record[0][1]:
+                raise "%s in not a A record" % cname
+        except IndexError:                   
+            raise "'%s' A record does not exist in the DNS zone" % cname
+        # Add the CNAME record
+        dn = "relativeDomainName=" + alias + "," + "ou=" + zone + "," + "ou=" + zone + "," + self.configDns.dnsDN
+        entry = {
+            "relativeDomainName" : alias,
+            "objectClass" : ["top", "dNSZone"],
+            "zoneName" : zone,
+            "dNSClass" : dnsClass,
+            "CNAMERecord" : cname,
+        }
+        attributes=[ (k,v) for k,v in entry.items() ]
+        self.l.add_s(dn, attributes)
+        self.updateZoneSerial(zone)    
+
     def addRecordA(self, zone, hostname, ip, container = None, dnsClass = "IN"):
         """
         Add an entry for a zone and its reverse zone.
@@ -398,15 +470,36 @@ zone "%(zone)s" {
                 ret = 0
         return ret
 
+    def getCNAMEs(self, zone, hostname):
+        """
+        Get all CNAME records that points to the given hostname
+        """
+        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
+
+    def delCNAMEs(self, zone, hostname):
+        """
+        Remove all CNAME records that points to the given hostname
+        """        
+        for record in self.getCNAMEs(zone, hostname):
+            self.l.delete_s(record[0])
+
     def delRecord(self, zone, hostname):
         """
-        Remove a host from a zone.
+        Remove a resource record from a zone.
         Remove it from the reverse zone too.
+        
+        If the RR is a A record where CNAME are linked in, the CNAME records
+        are also removed.        
         """
         host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if host:
+            # If the deleted resource is a type A record, the aliases must be
+            # removed if they exist
+            if "aRecord" in host[0][1]:
+                self.delCNAMEs(zone, hostname)        
             self.l.delete_s(host[0][0])
             self.updateZoneSerial(zone)
+        # Also remove reverse entry
         revzones = self.getReverseZone(zone)
         for revzone in revzones:
             revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
@@ -536,8 +629,15 @@ zone "%(zone)s" {
                 break
             ip = ipNext(network, netmask, ip)
         return ret
-
         
+    def getResourceRecord(self, zone, rr):
+        """
+        @return: a domain name resource record (RR)
+        @rtype: dict
+        """
+        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, rr), None)
+
+
 class DnsService(ServiceManager):
 
     def __init__(self, conffile = None):
