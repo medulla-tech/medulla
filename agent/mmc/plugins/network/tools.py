@@ -25,7 +25,7 @@ import socket
 import struct
 import glob
 import os.path
-from lmc.support.lmctools import shlaunch
+from mmc.support.mmctools import shlaunch
 
 
 # IP manipulation stuff
