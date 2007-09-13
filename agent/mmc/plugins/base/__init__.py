@@ -213,7 +213,7 @@ def existGroup(groupName):
 
 # create a user
 def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, primaryGroup = None):
-    return ldapObj.addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
+    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, primaryGroup)
 
 def addUserToGroup(cngroup,uiduser):
     ldapObj = ldapUserGroupControl()
