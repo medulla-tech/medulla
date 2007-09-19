@@ -31,8 +31,9 @@ import logging
 import ConfigParser
 import re
 from new import instancemethod
-from time import time
-from mmc.support.mmcException import mmcException
+from time import time, struct_time
+import datetime
+#from mmc.support.mmcException import mmcException
 
 from twisted.internet import protocol
 
@@ -110,6 +111,35 @@ def copytree(src, dst, symlinks=False):
             errors.extend(err.args[0])
     if errors:
         raise Error, errors
+
+def xmlrpcCleanup(data):
+    """
+    Cleanup data content so that they can be send using XML-RPC.
+
+    For example, None is not accepted, and must be converted to False.
+    """
+    if type(data) == dict:
+        ret = {}
+        for key in data.keys():
+            # array keys must be string
+            ret[str(key)] = cleanup(data[key])
+    elif type(data) == list:
+        ret = []
+        for item in data:
+            ret.append(cleanup(item))
+        ret = tuple(data)
+    elif type(data) == datetime.date:
+        ret = tuple(data.timetuple())
+    elif type(data) == struct_time:
+        ret = tuple(data)
+    elif data == None:
+        ret = False
+    elif type(data) == long:
+        ret = str(data)
+    else:
+        ret = data
+    return ret
+
 
 class Singleton(object):
     def __new__(type):
