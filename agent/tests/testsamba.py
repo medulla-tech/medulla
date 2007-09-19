@@ -85,7 +85,7 @@ class TestShares(unittest.TestCase):
         self.assertEqual(self.s.getSmbInfo()["logons"], True)
         self.assertEqual(self.s.getSmbInfo()["master"], True)
         self.assertEqual(self.s.getSmbInfo()["workgroup"], "MANDRIVA")
-        self.assertEqual(self.s.getSmbInfo()["netbios name"], "LINSRV")
+        self.assertEqual(self.s.getSmbInfo()["netbios name"], "SRV-MANDRIVA")
         self.s.smbInfoSave(False, False, self.s.getSmbInfo())
         s2 = smbConf(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
         self.assertEqual(s2.isPdc(), False)
