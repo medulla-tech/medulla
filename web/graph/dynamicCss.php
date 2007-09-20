@@ -24,23 +24,12 @@
 ?>
 <?
 
-function printSidebarCss($submod,$action) {
-    echo "#sidebar ul.$submod li#$action a {\n"; 
-    echo "        background-color: #FFF;\n";
-    echo "        color: #666;\n";
-    echo "        border-right: 1px solid #FFF;\n";
-    echo "}\n";
-    echo "\n";
-    echo "#sidebar ul.$submod li#$action a:hover {\n"; 
-    echo "        color: #666;\n";
-    echo "}\n";
-}
-
 function printNavbarCss ($module)
 {
     $css = "modules/" . $_GET["module"] ."/graph/" . $_GET["submod"] . "/index.css";
     if (file_exists($css) && $_GET["module"] != "base" && $_GET["module"] != "samba") include($css);
     else {
+        echo "// printNavbarCss\n";
         echo "#navbar ul li#$module { width: 70px; }\n";
 
         echo "#navbar ul li#$module a {\n";
@@ -59,7 +48,11 @@ function printNavbarCss ($module)
     }
 }
 
+/* FIXME: Is this still needed ? */
+print '<style type="text/css"><!--';
 printNavbarCss($_GET["module"]);
 printNavbarCss($_GET["submod"]);
+print "--></style>";
+
 
 ?>
