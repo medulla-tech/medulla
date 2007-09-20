@@ -33,21 +33,22 @@
 
 <div id="sidebar">
 <?php
-echo "<ul class=\"".$sidebar["class"]."\">\n";
+echo "<ul class=\"" . $sidebar["class"] . "\">\n";
 
-foreach ($sidebar["content"] as $item)
-{
-  //verify acl before echoing
-  $arrUrl = parse_url($item["link"]);
-  foreach (split('&amp;',$arrUrl["query"]) as $arg) {
-    list($key,$value) = split('=',$arg);
-    //storing arg in an array
-    $arrArg[$key]=$value;
-  }
-  if (hasCorrectAcl($arrArg["module"],$arrArg["submod"],$arrArg["action"])) {
-    echo "<li id=\"".$item["id"]."\">";
-    echo "<a href=\"".$root.$item["link"]."\" target=\"_self\">".$item["text"]."</a></li>\n";
-  }
+foreach ($sidebar["content"] as $item) {
+    /* Verify ACL before making the sidebar item */
+    $arrUrl = parse_url($item["link"]);    
+    /* Replace ampersand entity char */
+    $arrUrl = str_replace("&amp;", "&", $arrUrl);
+    foreach(split('&amp;', $arrUrl["query"]) as $arg) {
+        list($key,$value) = split('=',$arg);
+        /* Storing arg in an array */
+        $arrArg[$key] = $value;
+    }
+    if (hasCorrectAcl($arrArg["module"], $arrArg["submod"], $arrArg["action"])) {
+        echo "<li id=\"" . $item["id"] . "\">";
+        echo "<a href=\"" . $root . $item["link"] . "\" target=\"_self\">" . $item["text"] . "</a></li>\n";
+    }
 }
 ?>
 
