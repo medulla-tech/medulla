@@ -26,6 +26,8 @@
 
 global $conf;
 
+ob_start();
+
 require("includes/session.inc.php");
 require("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
