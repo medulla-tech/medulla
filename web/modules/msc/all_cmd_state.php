@@ -41,13 +41,12 @@ $p->display();
 if ($_GET["id_command"]!="") { ############################ id_command
         require("modules/msc/includes/commands.php");
         tmpl_command_detail($_GET);
-        exit;
-}
-if ($_GET["id_command_on_host"]!="") { ################################ id_command_on_host
+        //exit;
+} elseif ($_GET["id_command_on_host"]!="") { ################################ id_command_on_host
         require("modules/msc/includes/commands.php");
         tmpl_command_on_host_detail($_GET, 'commands_states.cgi');
-        exit;
-}
+        //exit;
+} else {
 
 if ($_POST["apply_filter_submit"]) {
         $target_filter = $_POST["target_filter"];
@@ -275,9 +274,10 @@ if (count($commands)) {
 /*
  * Display
  */
-$template->set_var('IMAGE_PATH', '/lmc/modules/msc/graph/images/');
+$template->set_var('IMAGE_PATH', '/mmc/modules/msc/graph/images/');
 $template->pparse("out", "all_commands_states_page", "commands_states_page");
 
+}
 
 
 ?>

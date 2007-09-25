@@ -54,7 +54,6 @@ if ($_GET['mac'] != '') {
 			scheduler_dispatch_all_commands();
 			scheduler_start_all_commands();
 			$id_command_on_host = scheduler_get_id_command_on_host($id_command);
-				
 			print("<html><head><meta http-equiv=\"refresh\" content=\"0;url=" .
 				urlStr("msc/msc/cmd_state", array(
 							'mac'=>$_GET["mac"],
@@ -202,7 +201,7 @@ MSC_Widget_standard_host_actions($template, msc_script_list_file());
 /*
  * Display
  */
-$template->set_var('IMAGE_PATH', '/lmc/modules/msc/graph/images/');
+$template->set_var('IMAGE_PATH', '/mmc/modules/msc/graph/images/');
 $template->pparse("out", "home_page", "home_page");
 
 

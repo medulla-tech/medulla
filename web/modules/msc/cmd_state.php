@@ -41,13 +41,12 @@ $p->display();
 if ($_GET["id_command"]!="") { ############################ id_command
 	require("modules/msc/includes/commands.php");
 	tmpl_command_detail($_GET);
-	exit;
-}
-if ($_GET["id_command_on_host"]!="") { ################################ id_command_on_host
+	//exit;
+} elseif ($_GET["id_command_on_host"]!="") { ################################ id_command_on_host
 	require("modules/msc/includes/commands.php");
 	tmpl_command_on_host_detail($_GET, 'commands_states.cgi');
-	exit;
-}
+	//exit;
+} else {
 
 if ($_POST["apply_filter_submit"]) {
         $number_command_by_page = $_POST["number_command_by_page"];
@@ -239,7 +238,7 @@ if ($_GET["mac"] == "") { ########################################## GROUP
 	/*
 	 * Display
 	 */
-	$template->set_var('IMAGE_PATH', '/lmc/modules/msc/graph/images/');
+	$template->set_var('IMAGE_PATH', '/mmc/modules/msc/graph/images/');
 	$template->pparse("out", "commands_states_on_group_and_profile_page", "commands_states_on_group_and_profile_page");
 	
 } else { ########################################################### HOST
@@ -413,9 +412,10 @@ if ($_GET["mac"] == "") { ########################################## GROUP
 	/*
 	 * Display
 	 */
-	$template->set_var('IMAGE_PATH', '/lmc/modules/msc/graph/images/');
+	$template->set_var('IMAGE_PATH', '/mmc/modules/msc/graph/images/');
 	$template->pparse("out", "commands_states_on_host_page", "commands_states_on_host_page");
 	
+}
 }
 
 ?>
