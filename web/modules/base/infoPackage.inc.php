@@ -200,6 +200,9 @@ $mod->addACL("loginShell",_("Login shell"));
 $mod->addACL("title",_("User title"));
 $mod->addACL("mail",_("Mail address"));
 $mod->addACL("telephoneNumber",_("Telephone number"));
+$mod->addACL("mobile",_("Mobile phone number"));
+$mod->addACL("facsimileTelephoneNumber",_("Fax number"));
+$mod->addACL("homePhone",_("Home phone number"));
 $mod->addACL("cn",_("Common name"));
 $mod->addACL("displayName",_("Preferred name to be used"));
 
