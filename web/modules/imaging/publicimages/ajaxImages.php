@@ -56,7 +56,7 @@ $l->addExtraInfo($sizes, _T("Size"));
 
 $l->addActionItem(new ActionItem(_T("View Image", "imaging"), "view", "afficher", "name", "imaging", "publicimages"));
 $l->addActionItem(new ActionItem(_T("Edit Image", "imaging"), "edit", "edit", "name", "imaging", "publicimages"));
-$l->addActionItem(new ActionItem(_T("Duplicate Image", "imaging"), "copy", "copy", "name", "imaging", "publicimages"));
+$l->addActionItem(new ActionPopupItem(_T("Duplicate Image", "imaging"), "copy", "copy", "name", "imaging", "publicimages"));
 $l->addActionItem(new ActionPopupItem(_T("Delete Image", "imaging"), "delete", "supprimer", "name", "imaging", "publicimages"));
 
 $l->setName(_T("Images"));

@@ -34,4 +34,13 @@ function delPublicImage($imagename) {
     return xmlCall("imaging.deletePublicImage", array($imagename));
 }
 
+function dupPublicImage($imagename, $newimagename) {
+    if (!xmlCall("imaging.getPublicImageInfos", array($imagename))) {
+        return xmlCall("imaging.duplicatePublicImage", array($imagename, $newimagename));
+    } else { # the image already exists FIXME: should handle exception a better way
+        return False;
+    }
+        
+}
+
 ?>

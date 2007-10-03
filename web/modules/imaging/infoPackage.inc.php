@@ -48,7 +48,11 @@ $page->setFile("modules/imaging/publicimages/ajaxImages.php", array("AJAX" => Tr
 $submod->addPage($page);
 
 $page = new Page("delete");
-$page->setFile("modules/imaging/publicimages/delete.php", array("AJAX" => False, "visible" => False));
+$page->setFile("modules/imaging/publicimages/delete.php", array( "visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("copy");
+$page->setFile("modules/imaging/publicimages/copy.php", array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
