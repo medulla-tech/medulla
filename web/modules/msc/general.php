@@ -173,7 +173,8 @@ if ($_GET['mac'] != '') {
 			$template->set_var("MAC", $host["mac"]);
 			$template->set_var("MAC_AND_DOT", urlencode($host["mac"]));
 			$template->set_var("LINK", urlStr("msc/msc/general", array('mac'=>$host["mac"])));
-
+      $template->set_var('EXEC_LINK', urlStr("msc/msc/repository", array( 'mac'=>$host["mac"])));
+      $template->set_var('INV_LINK', urlStr("lrs-inventory/lrs-inventory/view", array('inventaire'=>$host['hostname'])));
 			$template->parse("rows", "HOSTS_LIST_ROW", true);
 			/*
 			 * Switch the row class
