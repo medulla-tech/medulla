@@ -47,9 +47,9 @@ if (!function_exists('_T')) {
      */
     function getArrLocale() {
         $res = array("C" => "english",
-                     "fr_FR.utf8" => "french",
-                     "es_ES.utf8" => "spanish",
-                     "nb_NO.utf8" => "norwegian");
+                     "fr_FR" => "french",
+                     "es_ES" => "spanish",
+                     "nb_NO" => "norwegian");
         return $res;
     }
 }
@@ -66,7 +66,7 @@ if (!$_SESSION['lang']) {
 
 
 
-setlocale(LC_ALL, $_SESSION['lang']);
+setlocale(LC_ALL, $_SESSION['lang'] . ".UTF-8");
 
 if (!is_array($_SESSION["supportModList"])) { //if supportModList not available
 					      //ex: not logged
