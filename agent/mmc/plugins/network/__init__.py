@@ -327,6 +327,10 @@ class NetworkConfig(PluginConfig):
         self.bindUser = self.get("dns", "binduser")
         self.bindLdap = os.path.join(self.bindRootPath, "named.conf.ldap")
         self.bindLdapDir = os.path.join(self.bindRootPath, "named.ldap")
+        try:
+            self.bindLdapChrootConfPath = os.path.join(self.get("dns", "bindchrootconfpath"), "named.ldap")
+        except NoOptionError:
+            self.bindLdapChrootConfPath = self.bindLdapDir
 
     def setDefault(self):
         PluginConfig.setDefault(self)

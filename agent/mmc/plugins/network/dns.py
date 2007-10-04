@@ -179,7 +179,7 @@ zone "%(zone)s" {
 
         f = open(self.configDns.bindLdap, "r")
         found = False
-        toadd = 'include "' + os.path.join(self.configDns.bindLdapDir, name) + '";\n'
+        toadd = 'include "' + os.path.join(self.configDns.bindLdapChrootConfPath, name) + '";\n'
         for line in f:
             if line == toadd:
                 found = True
