@@ -35,24 +35,24 @@ $p->display();
  * Define the current directory
  */
 if ($_GET["pwd"] == "") {
-        if ( $_COOKIE["pwd"] != "" ) {
-                $current_directory = $_COOKIE["pwd"];
-        } else {
-                $current_directory = "/";
-        }
+    if ( $_COOKIE["pwd"] != "" ) {
+        $current_directory = $_COOKIE["pwd"];
+    } else {
+        $current_directory = "/";
+    }
 } else {
-        $current_directory = $_GET["pwd"];
-        $current_directory = clean_path($current_directory);
-        setcookie("pwd", $current_directory);
+    $current_directory = $_GET["pwd"];
+    $current_directory = clean_path($current_directory);
+    setcookie("pwd", $current_directory);
 }
 
 /*
  * Handle user action
  */
 if ( $_GET["go_to_directory"] != "" ) {
-        $current_directory .= "/" .$_GET["go_to_directory"];
-        $current_directory = clean_path($current_directory);
-        setcookie("pwd", $current_directory);
+    $current_directory .= "/" .$_GET["go_to_directory"];
+    $current_directory = clean_path($current_directory);
+    setcookie("pwd", $current_directory);
 }
 
 
@@ -71,15 +71,15 @@ $mime_type_icons_data = array();
 $mime_types_data = array();
 
 MSC_load_mime_types($exticonsfile, $mime_type_icons_data, $mime_types_data);
-        
+
 /*              
  * explorer active ?
  */             
 if ($config['explorer'] == 0) {
-        $template = new MSC_Tmpl(array("dis" => "dis.tpl" ));
-        $template->header_param = array("msc explorer", $text{'explorer_title'});
-        $template->pparse("out", "dis", "dis");
-        exit;
+    $template = new MSC_Tmpl(array("dis" => "dis.tpl" ));
+    $template->header_param = array("msc explorer", $text{'explorer_title'});
+    $template->pparse("out", "dis", "dis");
+    exit;
 }
 
 /*
@@ -88,8 +88,4 @@ if ($config['explorer'] == 0) {
 
 include("modules/msc/includes/open_session.inc.php"); // set $session instance
 
-
-
-
 ?>
-

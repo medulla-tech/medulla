@@ -52,11 +52,11 @@ function action($action, $cible, $mac, $profile, $group) {
         $id_command_on_host = scheduler_get_id_command_on_host($id_command);
         new RedirectMSC(
             urlStr("msc/msc/cmd_state", array(
-                        'mac'=>$mac,
-                        'group'=>$profile,
-                        'profile'=>$group,
-                        'id_command_on_host'=>$id_command_on_host
-                    )
+                    'mac'=>$mac,
+                    'group'=>$profile,
+                    'profile'=>$group,
+                    'id_command_on_host'=>$id_command_on_host
+                )
             )
         );
     }

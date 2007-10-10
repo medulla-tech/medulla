@@ -40,15 +40,15 @@ ob_end_clean();
  * Define the current directory
  */
 if ($_GET["repository_pwd"] == "") {
-  if ( $_COOKIE["repository_pwd"] != "" ) {
-    $current_repository_directory = $_COOKIE["repository_pwd"];
-  } else {
-    $current_repository_directory = "";
-  }
+    if ( $_COOKIE["repository_pwd"] != "" ) {
+        $current_repository_directory = $_COOKIE["repository_pwd"];
+    } else {
+        $current_repository_directory = "";
+    }
 } else {
-  $current_repository_directory = $_GET["repository_pwd"];
-  $current_repository_directory = clean_path($current_repository_directory);
-  setcookie("repository_pwd", $current_repository_directory);
+    $current_repository_directory = $_GET["repository_pwd"];
+    $current_repository_directory = clean_path($current_repository_directory);
+    setcookie("repository_pwd", $current_repository_directory);
 }
 
 /**
@@ -63,14 +63,14 @@ MSC_load_mime_types(EXTICONSFILE, $mime_type_icons_data, $mime_types_data);
  * handle user action
  */
 if ($_GET["download"] != "") {
-  /*
-   * action = Download one file
-   */
-  debug(1, sprintf("User action - download this file : %s", clean_path($current_directory . "/" . $_GET["download"])));
+    /*
+     * action = Download one file
+     */
+    debug(1, sprintf("User action - download this file : %s", clean_path($current_directory . "/" . $_GET["download"])));
 
-  $file = new MSC_File(realpath($repository_home_directory . "/" . $current_repository_directory . "/" . $_GET["download"]));
+    $file = new MSC_File(realpath($repository_home_directory . "/" . $current_repository_directory . "/" . $_GET["download"]));
 
-  $file->download($mime_types_data);
+    $file->download($mime_types_data);
 }
 
 ?>

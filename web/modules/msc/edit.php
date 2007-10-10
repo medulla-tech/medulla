@@ -1,7 +1,7 @@
 <?php
 /*
  * Linbox Rescue Server - Secure Remote Control Module
- * Copyright (C) 2005  Linbox FAS
+ * Copyright (C) 2005    Linbox FAS
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -10,12 +10,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, US
  */
 
 /*
@@ -28,29 +28,28 @@
  * - content = if file edit formular is submited, this variable content file new data
  */
 if ($_POST["return_submit"] != "") {
-  if ($_GET["current_tab"] == "explorer") { // no longuer exists
-    printf(
-      "<html><head><meta http-equiv=\"refresh\" content=\"0;url=".
-        urlStr("msc/msc/explorer", array(
-              'mac'=>$_GET["mac"],
-              'group'=>$_GET["profile"],
-              'profile'=>$_GET["group"]
-            )
-        ).
-        "\"></head></html>");
-  } elseif ($_GET["current_tab"] == "repository") {
-    printf(
-      "<html><head><meta http-equiv=\"refresh\" content=\"0;url=".
-        urlStr("msc/msc/repository", array(
-              'mac'=>$_GET["mac"],
-              'group'=>$_GET["profile"],
-              'profile'=>$_GET["group"]
-            )
-        ).
-        "\"></head></html>");
-
-  }
-  exit();
+    if ($_GET["current_tab"] == "explorer") { // no longuer exists
+        printf(
+            "<html><head><meta http-equiv=\"refresh\" content=\"0;url=".
+            urlStr("msc/msc/explorer", array(
+                    'mac'=>$_GET["mac"],
+                    'group'=>$_GET["profile"],
+                    'profile'=>$_GET["group"]
+                )
+            ).
+            "\"></head></html>");
+    } elseif ($_GET["current_tab"] == "repository") {
+        printf(
+            "<html><head><meta http-equiv=\"refresh\" content=\"0;url=".
+            urlStr("msc/msc/repository", array(
+                    'mac'=>$_GET["mac"],
+                    'group'=>$_GET["profile"],
+                    'profile'=>$_GET["group"]
+                )
+            ).
+            "\"></head></html>");
+    }
+    exit();
 }
 
 require("localSidebar.php");
@@ -78,18 +77,18 @@ $OUTPUT_TYPE = "WEB";
  */
 
 if ($_GET["current_tab"] == "explorer") {
-  /*
-   * Open the session
-   */
-  include("modules/msc/includes/open_session.inc.php"); // set $session instance
+    /*
+     * Open the session
+     */
+    include("modules/msc/includes/open_session.inc.php"); // set $session instance
 }
 /*
  * Open the file
  */
 if ($_GET["current_tab"] == "explorer") {
-  $file_to_edit = new MSC_Distant_File($session, $_COOKIE["pwd"] . "/" . $_GET["edit"]);
+    $file_to_edit = new MSC_Distant_File($session, $_COOKIE["pwd"] . "/" . $_GET["edit"]);
 } elseif ($_GET["current_tab"] == "repository") {
-  $file_to_edit = new MSC_File(realpath($repository_home_directory . "/" . $_COOKIE["repository_pwd"] . "/" . $_GET["edit"]));
+    $file_to_edit = new MSC_File(realpath($repository_home_directory . "/" . $_COOKIE["repository_pwd"] . "/" . $_GET["edit"]));
 }
 
 /*
@@ -97,29 +96,29 @@ if ($_GET["current_tab"] == "explorer") {
  */
 if ($_POST["edit_save_submit"] != "")
 {
-  /*
-   * Write data to file
-   */
+    /*
+     * Write data to file
+     */
 
-  if ($file_to_edit->write_content(stripslashes($_POST["content"]))) {
-    // No error
-    $success_message = "Le fichier a 退t退 modifi退 avec succ耀s";
-  } else {
-    // Error
-    $error_message = "Erreur lors de l'退criture des donn退es dans le fichier";
-  }
+    if ($file_to_edit->write_content(stripslashes($_POST["content"]))) {
+        // No error
+        $success_message = "Le fichier a 退t退 modifi退 avec succ耀s";
+    } else {
+        // Error
+        $error_message = "Erreur lors de l'退criture des donn退es dans le fichier";
+    }
 } else {
-  /*
-   * Read data from file
-   */
+    /*
+     * Read data from file
+     */
 
-  if ($file_to_edit->get_content()) {
-    // No error
+    if ($file_to_edit->get_content()) {
+        // No error
 
-  } else {
-    // Error
-    $error_message = "Erreur de lecture du fichier";
-  }
+    } else {
+        // Error
+        $error_message = "Erreur de lecture du fichier";
+    }
 }
 
 
@@ -135,20 +134,20 @@ $template->header_param = array("msc repository", $text{'editor_title'});
  * Send user interface message to template
  */
 if (( $success_message != "" ) || ( $error_message != "" )) {
-  if ($success_message != "") {
-    MSC_Widget_action_message($template, $success_message, false); // false = error disable
-  } else {
-    MSC_Widget_action_message($template, $error_message, true); // true = error enable
-  }
+    if ($success_message != "") {
+        MSC_Widget_action_message($template, $success_message, false); // false = error disable
+    } else {
+        MSC_Widget_action_message($template, $error_message, true); // true = error enable
+    }
 } else {
-  $template->set_var("action_message", "");
+    $template->set_var("action_message", "");
 }
 
 $script = urlStr("msc/msc/edit", array(
-                 'mac'=>$_GET["mac"],
-                 'group'=>$_GET["profile"],
-                 'profile'=>$_GET["group"],
-                ));
+    'mac'=>$_GET["mac"],
+    'group'=>$_GET["profile"],
+    'profile'=>$_GET["group"],
+));
 $template->set_var("SCRIPT_NAME", $script);
 
 $template->set_var("MAC", urlencode($_GET["mac"]));
@@ -159,13 +158,12 @@ $template->set_var("CURRENT_TAB", $_GET["current_tab"]);
 
 
 if ($_GET["current_tab"] == "explorer") {
-  $template->set_var("COMPLETE_PATH_FILE_TO_EDIT", clean_path($_COOKIE["pwd"] . "/" . $_GET["edit"]));
+    $template->set_var("COMPLETE_PATH_FILE_TO_EDIT", clean_path($_COOKIE["pwd"] . "/" . $_GET["edit"]));
 } elseif ($_GET["current_tab"] == "repository") {
-  $template->set_var("COMPLETE_PATH_FILE_TO_EDIT", clean_path($_COOKIE["repository_pwd"] . "/" . $_GET["edit"]));
+    $template->set_var("COMPLETE_PATH_FILE_TO_EDIT", clean_path($_COOKIE["repository_pwd"] . "/" . $_GET["edit"]));
 }
 
 $template->set_var("CONTENT_DATA", $file_to_edit->content);
-
 
 /*
  * Display
