@@ -25,9 +25,9 @@ function print_ajax_nav($curstart, $curend, $items, $filter, $display, $label) {
     } else {
         $start = $curstart - $max;
         $end = $curstart - 1;
-        echo "<li class=\"previousList\"><a href=\"#\"
-            onClick=\"updateSearchMachineParam('$filter','$start','$end', '$display', '$label');
-        return false\";>"._T("Previous")."</a></li>\n";
+        echo "<li class=\"previousList\"><a href=\"#\" ".
+            "onClick=\"updateSearchMachineParam('$filter','$start','$end', '$display', '$label'); ".
+            "return false\";>"._T("Previous")."</a></li>\n";
     }
 
     $count = 0;
@@ -40,9 +40,9 @@ function print_ajax_nav($curstart, $curend, $items, $filter, $display, $label) {
         $start = $curend + 1;
         $end = $curend + $max;
 
-        echo "<li class=\"nextList\"><a href=\"#\"
-            onClick=\"updateSearchMachineParam('$filter','$start','$end', '$display', '$label');
-        return false\";>"._T("Next")."</a></li>\n";
+        echo "<li class=\"nextList\"><a href=\"#\" ".
+            "onClick=\"updateSearchMachineParam('$filter','$start','$end', '$display', '$label'); ".
+            "return false\";>"._T("Next")."</a></li>\n";
     }
 
     echo "</ul>\n";
@@ -52,10 +52,8 @@ function print_ajax_nav($curstart, $curend, $items, $filter, $display, $label) {
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
 if (!isset($_GET["items"])) {
     if (isset($_GET["filter"]) && $_GET["filter"] != '') {
-        //$machines = inventoryMachinesGetByNameFuzzy($display, $_GET["filter"]);
         $machines = getAllMachinesInventoryPart($display, $_GET["filter"]);
     } else {
-        //$machines = inventoryMachinesGetAll($display);
         $machines = getAllMachinesInventoryPart($display);
     }
     $start = 0;
@@ -109,7 +107,7 @@ foreach ($result as $head => $vals) {
     if (!in_array($head, $disabled_columns)) {
         if (in_array($head, $graph)) {
             $type = ucfirst($_GET['display']);
-            $head = "<a target='new' href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head&filter=$filter' alt='graph'>$head</a>";
+            $head = "<a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head&filter=$filter' alt='graph'>$head</a>";
         }
         if ($n == null) {
             $n = new ListInfos($vals, $head);
