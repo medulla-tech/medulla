@@ -24,187 +24,126 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-require("modules/msc/includes/tmpl.inc.php");
-require("modules/msc/includes/path.inc.php");
-require("modules/msc/includes/system.inc.php");
-require("modules/msc/includes/ssh.inc.php");
-require("modules/msc/includes/widget.inc.php");
 
-require_once("modules/msc/includes/xmlrpc.php");
+require("modules/msc/includes/widgets/html.php");
+require("modules/msc/includes/path.inc.php");
 
 $p = new PageGenerator(_T("General informations"));
 $p->setSideMenu($sidemenu);
 $p->display(); 
 
-if ($_GET['mac'] != '') {
-	require("modules/msc/includes/open_session.inc.php");
 
-	/*
-	 * Control action
-	 */
-	if ($_POST["action"] != "") {
-		$script_list = msc_script_list_file();
-	        if (array_key_exists($_POST["action"], $script_list)) {
-			require_once("modules/msc/includes/scheduler.php");
-			
-			$id_command = scheduler_add_command_quick(
-				$script_list[ $_POST["action"] ][ "command" ],
-				$session->hostname,
-				$script_list[ $_POST["action"] ]["title".$current_lang]);
-			scheduler_dispatch_all_commands();
-			scheduler_start_all_commands();
-			$id_command_on_host = scheduler_get_id_command_on_host($id_command);
-			print("<html><head><meta http-equiv=\"refresh\" content=\"0;url=" .
-				urlStr("msc/msc/cmd_state", array(
-							'mac'=>$_GET["mac"],
-							'group'=>$_GET["profile"],
-							'profile'=>$_GET["group"],
-							'id_command_on_host'=>$id_command_on_host
-						)
-				).
-				"\"></head></html>");
-			exit();
-		}
-	}
-	
-	/*
-	 * Initialise template engine
-	 */
-	$template = new MSC_Tmpl(array("home_page" => "home_one_host_page.tpl" ));
+require("modules/msc/includes/system.inc.php");
+require("modules/msc/includes/ssh.inc.php");
 
-	/*                      
-	 * Test ping            
-	 */                     
-	if (MSC_sysPing($session->ip)==0) {
-		// Host reachable
-		$host_reachable = true;
-	} else {
-		// Host not reachable
-		$host_reachable = false;
-	}
+require_once("modules/msc/includes/xmlrpc.php");
 
-	/*
-	 * Display debug informations
-	 */
-	debug(2, sprintf("MAC Address : %s", $_GET["mac"]));
-	debug(2, sprintf("IP Address : %s", $session->ip));
-	debug(2, sprintf("Hostname : %s", $session->hostname));
-	debug(2, sprintf("Profile name : %s", $session->profile));
-	debug(2, sprintf("Group name : %s", $session->group));
-	debug(2, sprintf("Operating system : %s", $session->platform));
-
-	/*                      
-	 * Transmission des paramètres vers le template
-	 */             
-
-	$template->set_var("HOST_INFO_MAC_ADDRESS", $_GET["mac"]);
-	$template->set_var("MAC", urlencode($_GET['mac']));
-	$template->set_var("HOST_INFO_IP_ADDRESS", $session->ip);
-	$template->set_var("HOST_INFO_HOSTNAME", $session->hostname);
-	$template->set_var("HOST_INFO_PROFILE", $session->profile);
-	$template->set_var("HOST_INFO_GROUP", $session->group);
-	$template->set_var("HOST_INFO_OPERATING_SYSTEM", $session->platform);
-	if ($host_reachable) {  
-		$template->set_var("HOST_INFO_REACHABLE", _("success"));
-	} else {                
-		$template->set_var("HOST_INFO_REACHABLE", _("failed"));
-	}               
-
-	$template->set_var("SCRIPT_PROFILE_URL", urlStr("msc/msc/general", array('profile'=>$session->profile)));
-	$template->set_var("SCRIPT_GROUP_URL", urlStr("msc/msc/general", array('group'=>$session->group)));
-} else {
-	/*
-	 * Control action
-	 */
-	if ($_POST["action"]!="") {
-		$script_list = msc_script_list_file();
-	        if (array_key_exists($_POST["action"], $script_list)) {
-			require_once("modules/msc/includes/scheduler.php");
-			
-			$id_command = scheduler_add_command_quick(
-				$script_list[ $_POST["action"] ][ "command" ],
-				$_GET["profile"].":".$_GET["group"]."/",
-				$script_list[ $_POST["action"] ]["title".$current_lang]);
-			scheduler_dispatch_all_commands();
-			scheduler_start_all_commands();
-			$id_command_on_host = scheduler_get_id_command_on_host($id_command);
-			
-			print("<html><head><meta http-equiv=\"refresh\" content=\"0;url=" .
-				urlStr("msc/msc/cmd_state", array(
-							'mac'=>$_GET["mac"],
-							'group'=>$_GET["profile"],
-							'profile'=>$_GET["group"],
-							'id_command_on_host'=>$id_command_on_host
-						)
-				).
-				"\"></head></html>");
-			exit();
-		}
-	}
-			  
-	/*
-	 * Initialise template engine
-	 */ 
-	$template = new MSC_Tmpl(array("home_page" => "home_group_and_profile_page.tpl" ));
-
-	/*      
-	 * Get host list of group or profile
-	 */     
-	$path = new MSC_Path($_GET["profile"].":".$_GET["group"]."/");
-
-	$hosts_array = $path->get_hosts_list();
-
-
-	/*              
-	 * Iterate all element of files_array
-	 */                     
-	$i = 0;         
-
-	if (count($hosts_array)>0) {
-		$template->set_block("home_page", "HOSTS_LIST_ROW", "rows");                                               $row_class = "row-odd";
-		foreach($hosts_array as $host) {
-			$i++;   
-			$template->set_var("INDEX", $i);
-
-			$template->set_var("ROW_CLASS", $row_class);
-
-			$template->set_var("HOSTNAME", $host["hostname"]);
-			$template->set_var("IP", $host["ip"]);
-			$template->set_var("MAC", $host["mac"]);
-			$template->set_var("MAC_AND_DOT", urlencode($host["mac"]));
-			$template->set_var("LINK", urlStr("msc/msc/general", array('mac'=>$host["mac"])));
-      $template->set_var('EXEC_LINK', urlStr("msc/msc/repository", array( 'mac'=>$host["mac"])));
-      $template->set_var('INV_LINK', urlStr("lrs-inventory/lrs-inventory/view", array('inventaire'=>$host['hostname'])));
-			$template->parse("rows", "HOSTS_LIST_ROW", true);
-			/*
-			 * Switch the row class
-			 */
-			if ($row_class == "row-odd") $row_class = "row-even";
-			else $row_class = "row-odd";
-		}
-		$template->set_block("home_page", "HOSTS_LIST_EMPTY");
-		$template->set_var("HOSTS_LIST_EMPTY", "");
-	} else {
-		$template->set_block("home_page", "HOSTS_LIST");                                   
-		$template->set_var("HOSTS_LIST", "");                                              
-	}
+function action($action, $cible, $mac, $profile, $group) {
+    $script_list = msc_script_list_file();
+    if (array_key_exists($action, $script_list)) {
+        require_once("modules/msc/includes/scheduler.php");
+        
+        $id_command = scheduler_add_command_quick(
+            $script_list[$action]["command"],
+            $cible,
+            $script_list[$action]["title".$current_lang]);
+        scheduler_dispatch_all_commands();
+        scheduler_start_all_commands();
+        $id_command_on_host = scheduler_get_id_command_on_host($id_command);
+        new RedirectMSC(
+            urlStr("msc/msc/cmd_state", array(
+                        'mac'=>$mac,
+                        'group'=>$profile,
+                        'profile'=>$group,
+                        'id_command_on_host'=>$id_command_on_host
+                    )
+            )
+        );
+    }
 }
-	/*      
-	 * Display widgets
-	 */             
-	$template->set_var("PROFILE", $_GET["profile"]);
-	$template->set_var("GROUP", $_GET["group"]);
-	$template->set_var("SCRIPT_NAME", urlStr("msc/msc/general", array()));
 
+if ($_GET['mac'] != '') {
+    require("modules/msc/includes/open_session.inc.php");
 
-MSC_Widget_standard_host_actions($template, msc_script_list_file());
+    // Control action
+    if ($_POST["action"] != "") {
+        action(
+            $_POST["action"],
+            $session->hostname,
+            $_GET["mac"],
+            $_GET["profile"],
+            $_GET["group"]
+        ); // WARNING : action exits
+    }
+    
+    // Display host informations
+    $label = new RenderedLabel(3, _('Remote control of :'));
+    $label->display();
+    
+    $msc_host = new RenderedMSCHost(
+        $_GET["mac"],
+        $session,
+        (MSC_sysPing($session->ip)==0),
+        'msc/msc/general'
+    );
+    $msc_host->display();
+    
+    // Display the actions list
+    $label = new RenderedLabel(3, sprintf(_T('Start action on "%s:%s/%s" host'), $session->profile, $session->group, $session->hostname));
+    $label->display();
+    
+    $msc_actions = new RenderedMSCActions(msc_script_list_file());
+    $msc_actions->display();
 
-/*
- * Display
- */
-$template->set_var('IMAGE_PATH', '/mmc/modules/msc/graph/images/');
-$template->pparse("out", "home_page", "home_page");
+} else {
+    // Control action
+    if ($_POST["action"]!="") {
+        action(
+            $_POST["action"],
+            $_GET["profile"].":".$_GET["group"]."/",
+            $_GET["mac"],
+            $_GET["profile"],
+            $_get["GRoup"]
+        ); // WARNING : action exits
+    }
+              
+    // Get host list of group or profile
+    $path = new MSC_Path($_GET["profile"].":".$_GET["group"]."/");
+    $hosts_array = $path->get_hosts_list();
 
+    $label = new RenderedLabel(3, _('Remote control these hosts :'));
+    $label->display();
+    
+    // Iterate all element of files_array
+    $i = 0;         
+
+    $macs = array();
+    $names = array();
+    $ips = array();
+
+    foreach ($hosts_array as $host) {
+        $macs[]= $host["mac"];
+        $names[]= $host["hostname"];
+        $ips[]= $host["ip"];
+    }
+
+    $n = new ListInfos($macs, _('MAC address'));
+    $n->addExtraInfo($names, _('Host name'));
+    $n->addExtraInfo($ips, _('IP address'));
+
+    $n->addActionItem(new ActionItem(_T("Detail"),"general","detail","mac"));
+    $n->addActionItem(new ActionItem(_T("Execute"),"repository","execute","mac", "msc", "msc"));
+    $n->addActionItem(new ActionItem(_T("Inventory"),"view","inventory","mac", "inventory", "inventory")); //TODO no good for the moment, because ActionItem only take first column as param, whereas here we need to take second one...
+
+    $n->display(0);
+
+    // Display the actions list
+    $label = new RenderedLabel(3, sprintf(_T('Start action on "%s:%s/%s" host'), $_GET["profile"], $_GET["group"], $_GET["mac"]));
+    $label->display();
+    
+    $msc_actions = new RenderedMSCActions(msc_script_list_file());
+    $msc_actions->display();
+}
 
 ?>
 
