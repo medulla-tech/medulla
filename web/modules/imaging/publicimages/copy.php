@@ -25,10 +25,18 @@
 if (isset($_POST["bconfirm"])) {
     $name = $_POST["name"];
     $newname = $_POST["newname"];
-    if (dupPublicImage($name, $newname) == False)
-        new NotifyWidgetFailure(_T("The image has not been duplicated to $newname, as $newname already exists"));
-    elseif (!isXMLRPCError())
+    
+    # FIXME: should do some check on $newname (not empty, no bad chars, ...)
+    
+    $ret = duplicatePublicImage($name, $newname);
+    if (isXMLRPCError())
+        new NotifyWidgetFailure(_T("The image has not been duplicated to $newname"));
+    elseif ($ret === 0)
         new NotifyWidgetSuccess(_T("The image has been duplicated to $newname."));
+    elseif ($ret === 1)
+        new NotifyWidgetFailure(_T("The image has not been duplicated to $newname, as $newname already exists"));
+    else
+        new NotifyWidgetFailure(_T("The image has not been duplicated to $newname"));
     header("Location: main.php?module=imaging&submod=publicimages&action=index");
 } else {
     $name = urldecode($_GET["name"]);
@@ -36,12 +44,12 @@ if (isset($_POST["bconfirm"])) {
 ?>
 
 <p>
-<?= sprintf(_T("You will duplicate the image %s"), "<strong>$name</strong>"); ?>
+<?= sprintf(_T("Name of the duplicate of « %s »:"), "<strong>$name</strong>"); ?>
 </p>
 
 <form action="main.php?module=imaging&submod=publicimages&action=copy" method="post">
 <input type="hidden" name="name" value="<? echo $name; ?>" />
-<input type="text" name="newname" value="<? echo sprintf(_("copy of %s"), $name); ?>" />
+<input type="text" name="newname" class="textfield" value="<? echo sprintf(_("copy of %s"), $name); ?>" /><br/>
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Duplicate Image"); ?>" />
 <input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;" />
 </form>
