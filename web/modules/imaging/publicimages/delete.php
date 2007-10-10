@@ -25,7 +25,10 @@
 if (isset($_POST["bconfirm"])) {
     $name = $_POST["name"];
     delPublicImage($name);
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The image has been deleted."));
+    if (!isXMLRPCError())
+        new NotifyWidgetSuccess(_T("The image has been deleted."));
+    else
+        new NotifyWidgetFailure(_T("The image has not been deleted."));
     header("Location: main.php?module=imaging&submod=publicimages&action=index");
 } else {
     $name = urldecode($_GET["name"]);
@@ -33,11 +36,11 @@ if (isset($_POST["bconfirm"])) {
 ?>
 
 <p>
-<?= sprintf(_T("You will delete the image %s"), "<strong>$name</strong>"); ?>
+<?= sprintf(_T("Do you want to delete the image « %s » ?"), "<strong>$name</strong>"); ?>
 </p>
 
 <form action="main.php?module=imaging&submod=publicimages&action=delete" method="post">
 <input type="hidden" name="name" value="<?php echo $name; ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Delete Image"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;" />
+<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Yes"); ?>" />
+<input type="submit" name="bback" class="btnSecondary" value="<?= _("No"); ?>" onClick="new Effect.Fade('popup'); return false;" />
 </form>
