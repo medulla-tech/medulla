@@ -37,7 +37,7 @@ $mod->setPriority(600);
 
 $submod = new SubModule("publicimages");
 $submod->setDescription(_T("Public Images", "publicimages"));
-$submod->setImg('modules/imaging/graph/img/imaging');
+$submod->setImg("modules/imaging/graph/img/imaging");
 $submod->setDefaultPage("imaging/publicimages/index");
 
 $page = new Page("index",_T("List public images","imaging"));
@@ -53,6 +53,18 @@ $submod->addPage($page);
 
 $page = new Page("copy");
 $page->setFile("modules/imaging/publicimages/copy.php", array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("edit");
+$page->setFile("modules/imaging/publicimages/edit.php", array("visible" => False));
+$submod->addPage($page);
+
+$page = new Page("view");
+$page->setFile("modules/imaging/publicimages/view.php", array("visible" => False));
+$submod->addPage($page);
+
+$page = new Page("mkiso");
+$page->setFile("modules/imaging/publicimages/mkiso.php", array( "visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

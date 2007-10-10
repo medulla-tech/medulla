@@ -44,8 +44,8 @@ foreach (getPublicImagesList() as $image){
         array_push($names, $data['name']);
         array_push($titles, $data['title']);
         array_push($descs, $data['desc']);
-        array_push($sizes, human_readable($data['size']));
-        array_push($actions, human_readable($data['size']));
+        array_push($sizes, humanReadable($data['size']));
+        array_push($actions, humanReadable($data['size']));
     }
 }
 
@@ -58,18 +58,10 @@ $l->addActionItem(new ActionItem(_T("View Image", "imaging"), "view", "afficher"
 $l->addActionItem(new ActionItem(_T("Edit Image", "imaging"), "edit", "edit", "name", "imaging", "publicimages"));
 $l->addActionItem(new ActionPopupItem(_T("Duplicate Image", "imaging"), "copy", "copy", "name", "imaging", "publicimages"));
 $l->addActionItem(new ActionPopupItem(_T("Delete Image", "imaging"), "delete", "supprimer", "name", "imaging", "publicimages"));
+$l->addActionItem(new ActionPopupItem(_T("Create autobootable CD", "imaging"), "mkiso", "cd", "name", "imaging", "publicimages"));
 
 $l->setName(_T("Images"));
 $l->setNavBar(new AjaxNavBar(count($titles), $filter));
 $l->display();
-
-function human_readable($num, $unit='B', $base=1024) {
-    foreach (array('', 'K', 'M', 'G', 'T') as $i) {
-        if ($num < $base) {
-            return sprintf("%3.1f %s%s", $num, $i, $unit);
-        }    
-        $num /= $base;
-    }    
-}
 
 ?>

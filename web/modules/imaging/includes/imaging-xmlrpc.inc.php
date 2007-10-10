@@ -34,13 +34,28 @@ function delPublicImage($imagename) {
     return xmlCall("imaging.deletePublicImage", array($imagename));
 }
 
-function dupPublicImage($imagename, $newimagename) {
-    if (!xmlCall("imaging.getPublicImageInfos", array($imagename))) {
-        return xmlCall("imaging.duplicatePublicImage", array($imagename, $newimagename));
-    } else { # the image already exists FIXME: should handle exception a better way
-        return False;
-    }
-        
+function isAPublicImage($imagename) {
+    return xmlCall("imaging.isAnImage", array($imagename));
 }
 
+function duplicatePublicImage($imagename, $newimagename) {
+    return xmlCall("imaging.duplicatePublicImage", array($imagename, $newimagename));
+}
+
+function setPublicImageData($imagename, $name, $title, $desc) {
+    return xmlCall("imaging.setPublicImageData", array($imagename, $name, $title, $desc));
+}
+
+function createIsoFromImage($imagename, $name, $size) {
+    return xmlCall("imaging.createIsoFromImage", array($imagename, $name, $size));
+}
+
+function humanReadable($num, $unit='B', $base=1024) {
+    foreach (array('', 'K', 'M', 'G', 'T') as $i) {
+        if ($num < $base) {
+            return sprintf("%3.1f %s%s", $num, $i, $unit);
+        }    
+        $num /= $base;
+    }    
+}
 ?>
