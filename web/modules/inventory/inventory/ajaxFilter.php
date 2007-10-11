@@ -126,4 +126,27 @@ if ($n != null) {
 
 print_ajax_nav($start, $end, $machines, $filter, $display, $label);
 
+?>
 
+<style>
+li.voir a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;                                            
+        background-image: url("modules/inventory/img/detail.gif");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;   
+        text-decoration: none;
+        color: #FFF;
+}              
+li.infos a {                 
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;                                           
+        background-image: url("modules/inventory/img/info.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+</style>
