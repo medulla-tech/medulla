@@ -143,6 +143,43 @@ if ($_GET['mac'] != '') {
     
     $msc_actions = new RenderedMSCActions(msc_script_list_file());
     $msc_actions->display();
+
+    ?>
+<style>
+li.detail a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/detail.gif");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+li.inventory a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/info.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+li.execute a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/run.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+</style>
+
+    
+    <?php
 }
 
 ?>
