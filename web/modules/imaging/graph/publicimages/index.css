@@ -8,3 +8,6 @@ li.copy a {
     text-decoration: none;
     color: #FFF;
 }
+#sectionContainer {
+        background-image: url(/mmc/modules/imaging/img/imaging_large.png);
+}

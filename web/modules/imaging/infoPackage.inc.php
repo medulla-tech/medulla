@@ -36,8 +36,8 @@ $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);
 
 $submod = new SubModule("publicimages");
-$submod->setDescription(_T("Public Images", "publicimages"));
-$submod->setImg("modules/imaging/graph/img/imaging");
+$submod->setDescription(_T("Imaging", "publicimages"));
+$submod->setImg("modules/imaging/img/imaging");
 $submod->setDefaultPage("imaging/publicimages/index");
 
 $page = new Page("index",_T("List public images","imaging"));
