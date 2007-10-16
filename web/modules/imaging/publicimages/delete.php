@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: delete.php 126 2007-09-10 09:47:40Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,6 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require("modules/imaging/includes/imaging-xmlrpc.inc.php");
+
 if (isset($_POST["bconfirm"])) {
     $name = $_POST["name"];
     delPublicImage($name);
@@ -33,14 +35,12 @@ if (isset($_POST["bconfirm"])) {
 } else {
     $name = urldecode($_GET["name"]);
 }
+
+$f = new PopupForm(_("Delete Image"));
+$f->addText(_T("Do you realy want to delete $name ?"));
+$f->add(new HiddenTpl("name"), array("value" => $name, "hide" => True));
+$f->addValidateButton("bconfirm");
+$f->addCancelButton("bback");
+$f->pop();
+$f->display();
 ?>
-
-<p>
-<?= sprintf(_T("Do you want to delete the image « %s » ?"), "<strong>$name</strong>"); ?>
-</p>
-
-<form action="main.php?module=imaging&submod=publicimages&action=delete" method="post">
-<input type="hidden" name="name" value="<?php echo $name; ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Yes"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("No"); ?>" onClick="new Effect.Fade('popup'); return false;" />
-</form>

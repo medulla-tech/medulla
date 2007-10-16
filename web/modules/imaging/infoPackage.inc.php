@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: infoPackage.inc.php 77 2007-09-12 08:39:03Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -30,7 +30,7 @@
 
 $mod = new Module("imaging");
 $mod->setVersion("1.0.0");
-$mod->setRevision("$Rev: 77 $");
+$mod->setRevision("$Rev$");
 $mod->setDescription(_T("Imaging service","imaging"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);

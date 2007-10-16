@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: delete.php 126 2007-09-10 09:47:40Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,12 +22,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require("modules/imaging/includes/imaging-xmlrpc.inc.php");
+
 if (isset($_POST["bconfirm"])) {
     $name = $_POST["name"];
     $newname = $_POST["newname"];
     
     # FIXME: should do some check on $newname (not empty, no bad chars, ...)
-    
     $ret = duplicatePublicImage($name, $newname);
     if (isXMLRPCError())
         new NotifyWidgetFailure(_T("The image has not been duplicated to $newname"));
@@ -41,15 +42,18 @@ if (isset($_POST["bconfirm"])) {
 } else {
     $name = urldecode($_GET["name"]);
 }
+
+$f = new PopupForm(_("Duplicate Image"));
+$f->push(new Table());
+$f->add(
+    new TrFormElement(_T("Copy image to"), new InputTpl("newname")),
+    array("value" => $name, "required" => True)
+);
+$f->pop();
+$f->add(new HiddenTpl("name"), array("value" => $name, "hide" => True));
+$f->addValidateButton("bconfirm");
+$f->addCancelButton("bback");
+$f->pop();
+$f->display();
 ?>
 
-<p>
-<?= sprintf(_T("Name of the duplicate of « %s »:"), "<strong>$name</strong>"); ?>
-</p>
-
-<form action="main.php?module=imaging&submod=publicimages&action=copy" method="post">
-<input type="hidden" name="name" value="<? echo $name; ?>" />
-<input type="text" name="newname" class="textfield" value="<? echo sprintf(_("copy of %s"), $name); ?>" /><br/>
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Duplicate Image"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;" />
-</form>

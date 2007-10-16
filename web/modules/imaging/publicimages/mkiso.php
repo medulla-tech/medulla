@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: delete.php 126 2007-09-10 09:47:40Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,30 +22,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require("modules/imaging/includes/imaging-xmlrpc.inc.php");
+
 if (isset($_POST["bconfirm"])) {
     $name = $_POST["name"];
     $filename = $_POST["filename"];
     $size = $_POST["media"] + 0;
     
     # FIXME: should do some check on $newname (not empty, no bad chars, ...)
-    
     $ret = createIsoFromImage($name, $filename, $size);
     if (isXMLRPCError()) {
         new NotifyWidgetFailure(_T("The ISO image creation has failed"));
     } else {
-        $str .=  '
-        <p>';
-        $str.=sprintf(_("CD creation is launched in background"),$user);
-        $str.="</p>
-        <p>";
-        $str.=sprintf(_("The ISO files will be stored as"));
-        $str.=" <b>$filename-??.iso</b> ";
-        $str.=sprintf(_("file on share « iso » at the end of the process"));
-        $str.="</p>
-        <p>";
-        $str.=_("Operation duration depend of the amount of data");
-        $str.="</p>";
-
+        $str = '';
+        $str .= _("<p>CD creation is launched in background</p>");
+        $str .= _("<p> The ISO files will be stored as <b>$filename-??.iso</b> on share « iso » at the end of the process</p>");
+        $str .= _("<p>Operation duration depend of the amount of data</p>");
         $n = new NotifyWidgetSuccess(_T("The ISO image creation is being done"));
         $n->add($str);
     }    
@@ -56,29 +48,40 @@ if (isset($_POST["bconfirm"])) {
 
 $infos = getPublicImageInfos($name);
 
-printf(_T("<H2>Autobootable deployment CD</H2>"));
+$f = new PopupForm(_("Autobootable deployment CD"));
+$f->push(new Table());
+$f->add(
+    new TrFormElement(_T("File name"), new InputTpl("filename")),
+    array("value" => $infos['title'], "required" => True)
+);
+
+$medialist = array(
+    _T("CD 74 mins"),
+    _T("CD 80 mins"),
+    _T("DVD SL (4.2 Go)"),
+    _T("DVD DL (8.4 Go)")
+);
+$mediavals = array(
+    640*1024*1024,
+    700*1024*1024,
+    4.2*1024*1024*1024,
+    8.4*1024*1024*1024
+);
+
+$listbox = new SelectItem("media");
+$listbox->setElements($medialist);
+$listbox->setElementsVal($mediavals);
+$listbox->setSelected($medialist[0]);
+
+$f->add(
+    new TrFormElement(_T("Media size"), $listbox)
+);
+$f->pop();
+$f->addText(_T("File name should not contain extension (ie 'foo', not 'foo.iso')"));
+$f->add(new HiddenTpl("name"), array("value" => $name, "hide" => True));
+$f->addValidateButton("bconfirm");
+$f->addCancelButton("bback");
+$f->pop();
+$f->display();
 
 ?>
-
-<form action="main.php?module=imaging&submod=publicimages&action=mkiso" method="post">
-<input type="hidden" name="name" value="<? echo $name; ?>" />
-
-<p>
-<? echo _T("Please input file name (without « .iso »):"); ?>
-</p>
-<input type="text" name="filename" class="textfield" value="<? echo sprintf("%s", $infos['title']); ?>"
-<br/><br/>
-
-<p>
-<? echo _T("Please select media size. If your data exceeds the volume size, several files of your media size will be created."); ?>
-</p>
-<select name="media" />
-<option value="<? echo 640*1024*1024; ?>"><?= sprintf(_T("CD 74 mins")) ?></option>
-<option value="<? echo 700*1024*1024; ?>"><?= sprintf(_T("CD 80 mins")) ?></option>
-<option value="<? echo 4.2*1024*1024*1024; ?>"><?= sprintf(_T("DVD SL (4.2 Go)")) ?></option>
-<option value="<? echo 8.4*1024*1024*1024; ?>"><?= sprintf(_T("DVD DL (8.4 Go)")) ?></option>
-</select>
-<br/><br/>
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _T("Create ISO File"); ?>" />
-<input type="submit" name="bback" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;" />
-</form>
