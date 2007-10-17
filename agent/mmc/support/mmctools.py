@@ -122,11 +122,11 @@ def xmlrpcCleanup(data):
         ret = {}
         for key in data.keys():
             # array keys must be string
-            ret[str(key)] = cleanup(data[key])
+            ret[str(key)] = xmlrpcCleanup(data[key])
     elif type(data) == list:
         ret = []
         for item in data:
-            ret.append(cleanup(item))
+            ret.append(xmlrpcCleanup(item))
         ret = tuple(data)
     elif type(data) == datetime.date:
         ret = tuple(data.timetuple())
