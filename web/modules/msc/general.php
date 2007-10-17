@@ -1,24 +1,25 @@
 <?
 
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
+ * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
@@ -27,16 +28,16 @@ require("graph/navbar.inc.php");
 
 require("modules/msc/includes/widgets/html.php");
 require("modules/msc/includes/path.inc.php");
+require("modules/msc/includes/system.inc.php");
+require("modules/msc/includes/ssh.inc.php");
+
+require_once("modules/msc/includes/xmlrpc.php");
 
 $p = new PageGenerator(_T("General informations"));
 $p->setSideMenu($sidemenu);
 $p->display(); 
 
 
-require("modules/msc/includes/system.inc.php");
-require("modules/msc/includes/ssh.inc.php");
-
-require_once("modules/msc/includes/xmlrpc.php");
 
 function action($action, $cible, $mac, $profile, $group) {
     $script_list = msc_script_list_file();
@@ -77,7 +78,7 @@ if ($_GET['mac'] != '') {
     }
     
     // Display host informations
-    $label = new RenderedLabel(3, _('Remote control of :'));
+    $label = new RenderedLabel(3, sprintf(_T('Remote control of <b>%s</b>'), $session->hostname));
     $label->display();
     
     $msc_host = new RenderedMSCHost(
@@ -89,7 +90,7 @@ if ($_GET['mac'] != '') {
     $msc_host->display();
     
     // Display the actions list
-    $label = new RenderedLabel(3, sprintf(_T('Start action on "%s:%s/%s" host'), $session->profile, $session->group, $session->hostname));
+    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $session->hostname));
     $label->display();
     
     $msc_actions = new RenderedMSCActions(msc_script_list_file());

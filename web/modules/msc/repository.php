@@ -1,25 +1,26 @@
 <?
 
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA    02110-1301    USA
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 require("localSidebar.php");
@@ -365,14 +366,15 @@ if ($_POST["repository_launch_action"] != "") {
 /*
  * Make Tree directory
  */
+
 debug(1, "Make tree repository directory");
-$tree_directory = new MSC_Tree($repository_home_directory, $current_repository_directory);
+$tree_directory = new MSC_Tree(mscGetRepositoryPath(), $current_repository_directory);
 
 /*
  * Make file list directory
  */
 debug(1, "Make file list repository directory");
-$list_directory = new MSC_Directory(realpath($repository_home_directory . "/" . $current_repository_directory));
+$list_directory = new MSC_Directory(realpath(join('/', array(mscGetRepositoryPath(), $current_repository_directory))));
 
 /*
  * Initialise template engine
