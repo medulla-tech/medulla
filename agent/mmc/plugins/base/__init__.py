@@ -1970,7 +1970,7 @@ class GpoManager:
 
 def launch(s):
     """
-     launch command and return the result
+     launch command and return the result in a Deferred
 
      @param s:command to launch
      @type s:list
@@ -1978,9 +1978,7 @@ def launch(s):
      @result: list with each elements of the list is a row "\n" of result
      @rtype: list
     """
-    ret = mmctools.shlaunch(s)
-
-    return ret
+    return mmctools.shlaunchDeferred(s)
 
 ################################################################################
 ###### LOG VIEW CLASS
