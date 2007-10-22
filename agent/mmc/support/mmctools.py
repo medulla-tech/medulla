@@ -23,7 +23,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from twisted.internet import defer, reactor
-from twisted.internet.utils import _BackRelay
 import os
 import os.path
 import shutil
@@ -233,6 +232,17 @@ class shProcessProtocol(protocol.ProcessProtocol):
             reactor.iterate()
         return self.exitCode
 
+class shProcessProtocolNonBlocking(shProcessProtocol):
+
+    def __init__(self, cmd):
+        shProcessProtocol.__init__(self, cmd)
+
+    def processEnded(self, status):
+        shProcessProtocol.processEnded(self, status)
+        self.deferred.callback(self)
+
+    def getExitCode(self):
+        return self.exitCode    
 
 class shSharedProcessProtocol(shProcessProtocol):
 
@@ -279,6 +289,18 @@ def launch(cmd, param):
         raise Exception('process not finished with exit code 0'+"\n"+shProcess.out)
     return shProcess.out
 
+def shlaunchDeferred(cmd):
+    """
+    Return a Deferred resulting in the stdout output of a shell command.
+    """
+    def cb(shprocess):
+        ret = shprocess.out.split("\n")
+        if ret: ret.pop()
+        return ret
+    sh = shLaunchDeferred(cmd)
+    sh.addCallback(cb)
+    return sh
+
 def shlaunch(cmd):
     """
     return direct (non stderr) output from cmd
@@ -286,6 +308,15 @@ def shlaunch(cmd):
     ret = shLaunch(cmd).out.split("\n")
     if ret: ret.pop()
     return ret
+
+def shLaunchDeferred(cmd):
+    """
+    Return a deferred resulting to a shProcessProtocolNonBlocking instance
+    """
+    shProcess = shProcessProtocolNonBlocking(cmd)
+    shProcess.deferred = defer.Deferred()
+    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+    return shProcess.deferred
 
 def shLaunch(cmd):
     shProcess = shProcessProtocol(cmd)
