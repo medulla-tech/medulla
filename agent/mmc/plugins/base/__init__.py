@@ -1112,7 +1112,7 @@ class ldapUserGroupControl:
 
         if home and self.userHomeAction:
             homedir = self.getDetailedUser(uid)['homeDirectory'][0]
-            mmctools.shlaunch('rm -rf ' + homedir)
+            shutil.rmtree(homedir)
 
         self.delRecursiveEntry('uid=' + uid + ',' + self.baseUsersDN)
 
@@ -1672,17 +1672,10 @@ class ldapUserGroupControl:
          @type newHome: str
         """
         oldHome = self.getDetailedUser(uid)['homeDirectory'][0]
-        if (newHome == oldHome):
-            return 0
-
-        if self.userHomeAction:
-            if not mmctools.shlaunch("mv "+oldHome+" "+newHome):
-                self.changeUserAttributes(uid,"homeDirectory",newHome)
-                return 0
-            # else, with got an error
-        else: self.changeUserAttributes(uid,"homeDirectory",newHome)
-
-        return 1
+        if newHome != oldHome:
+            self.changeUserAttributes(uid,"homeDirectory",newHome)
+            if self.userHomeAction:
+                shutil.move(oldHome, newHome)
 
     def addOu(self, ouname, ldappath):
         """
