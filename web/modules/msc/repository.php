@@ -42,7 +42,7 @@ require_once("modules/msc/includes/scheduler.php"); /**< Use MSC_Directory class
 
 $p = new PageGenerator(_T("Repository"));
 $p->setSideMenu($sidemenu);
-$p->display(); 
+$p->display();
 
 if ($_GET["download"] != "") {
     /*
@@ -77,7 +77,7 @@ if ($_GET["delete_file"] != "") {
     /*
      * action = Delete one file
      */
-    $full_path_file_to_delete = realpath($repository_home_directory . "/" . $current_repository_directory . "/" . $_GET["delete_file"]);                                                                                                                                                                        
+    $full_path_file_to_delete = realpath($repository_home_directory . "/" . $current_repository_directory . "/" . $_GET["delete_file"]);
     debug(1, sprintf("User action - delete this file : %s", $full_path_file_to_delete));
 
     $file = new MSC_File($full_path_file_to_delete);
@@ -88,8 +88,8 @@ if ($_GET["delete_file"] != "") {
     } else {
         // Error !
         $error_message = "Error when I delete file";
-    } 
-} 
+    }
+}
 
 if ($_GET["delete_directory"] != "") {
     /*
@@ -221,7 +221,7 @@ if ($_POST["repository_launch_action"] != "") {
     $i = 0;
 
     foreach($_POST["select_to_copy"] as $i) {
-        // push files even if they are directories since they will 
+        // push files even if they are directories since they will
         // be uploaded with a 'scp -r'
         $item = $_POST["filename"][$i];
         array_push($files, $item);
@@ -235,9 +235,9 @@ if ($_POST["repository_launch_action"] != "") {
 
     $parameters = $_POST['repository_parameters'];
 
-    //$path_destination = $_POST['repository_path_destination'];
-    $path_destination = $session->tmp_path;
-    if ($session->platform == "Windows") $path_destination = $config['path_destination'];
+    //$path_destination = $session->tmp_path;
+    //if ($session->platform == "Windows") $path_destination = $config['path_destination'];
+    $path_destination = "/"; # this should be the path *inside* our tmp rep on the client
 
     $create_directory_enable = $_POST['repository_create_directory'];
     if ($_POST["select_to_execute"]==-1) {
@@ -363,24 +363,16 @@ if ($_POST["repository_launch_action"] != "") {
     }
 }
 
-/*
- * Make Tree directory
- */
-
+# Summon Tree directory
 debug(1, "Make tree repository directory");
 $tree_directory = new MSC_Tree(mscGetRepositoryPath(), $current_repository_directory);
 
-/*
- * Make file list directory
- */
+# Summon file list directory
 debug(1, "Make file list repository directory");
 $list_directory = new MSC_Directory(realpath(join('/', array(mscGetRepositoryPath(), $current_repository_directory))));
 
-/*
- * Initialise template engine
- */
+# Initialise template engine
 $template = new MSC_Tmpl(array("repository_page" => "repository.tpl" ));
-
 $template->header_param = array("msc repository", $text{'repository_title'});
 
 $script = urlStr("msc/msc/edit", array(
@@ -401,7 +393,7 @@ $script = urlStr("msc/msc/repository", array(
     'mac'=>$_GET["mac"],
     'group'=>$_GET["profile"],
     'profile'=>$_GET["group"],
-));                                                                                                                                                                                                                                                                                                                                                                            
+));
 $template->set_var("SCRIPT_NAME", $script);
 
 $template->set_var("MAC", urlencode($_GET['mac']));
@@ -448,8 +440,6 @@ if (count($array_files) > 0) {
 } else {
     $template->set_var("file_list_directory", "");
 }
-
-/* */
 
 MSC_Widget_standard_file_list_directory_actions($template, $current_repository_directory);
 
