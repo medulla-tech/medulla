@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from twisted.web import xmlrpc, server
-from twisted.internet import ssl, reactor
+from twisted.internet import ssl, reactor, defer
 
 import re
 import imp
@@ -73,6 +73,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
     def __init__(self, modules, login, password):
         xmlrpc.XMLRPC.__init__(self)
         self.modules = modules
+        self.logger = logging.getLogger()
         self.login = login
         self.password = password
 
@@ -83,7 +84,6 @@ class MmcServer(xmlrpc.XMLRPC,object):
             mod, func = functionPath.split('.')
         else:
             func = functionPath
-        logger = logging.getLogger()
 
         try:
             if '.' in functionPath:
@@ -91,7 +91,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             else:
                 return getattr(self, func)
         except:
-            logger.error(functionPath+' not found')
+            self.logger.error(functionPath+' not found')
             raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
 
     def render(self, request):
@@ -103,7 +103,6 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
         @return: interpreted request
         """
-        logger = logging.getLogger()
         headers = request.getAllHeaders()
         args, functionPath = xmlrpclib.loads(request.content.read())
 
@@ -116,7 +115,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             decoded_auth = base64.decodestring(auth.split(":")[0]) + ":" + base64.decodestring(auth.split(":")[1])
             authorized = decoded_auth == real_auth
         if not authorized:
-            logger.error('Invalid login / password')
+            self.logger.error('Invalid login / password')
             request.setResponseCode(401)
             self._cbRender(
                 xmlrpc.Fault(401, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
@@ -124,34 +123,19 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 )
             return server.NOT_DONE_YET
 
-        logger.debug('Calling ' + functionPath + str(args))
+        self.logger.debug('Calling ' + functionPath + str(args))
         try:
             function = self._getFunction(functionPath)
         except Fault, f:
             self._cbRender(f, request)
         else:
             request.setHeader("content-type", "text/xml")
-            result = None
-            try:
-                result = apply(function, args)
-            except support.mmcException.mmcException, e:
-                result = {}
-                result['faultString'] = e.funcname
-                result['faultCode'] = str(e.__class__)+": "+str(e)
-                result['faultTraceback']= "";
-                for msg in traceback.format_tb(sys.exc_info()[2]):
-                    result['faultTraceback']+= "\n"+msg;
-            except Exception, e:
-                logger.exception("Error during render " + functionPath + ": " + str(e))
-                result = {}
-                result['faultString'] = functionPath
-                result['faultCode'] = str(e.__class__) + ": " + str(e) + " " + str(args)
-                result['faultTraceback']= "";
-                for msg in traceback.format_tb(sys.exc_info()[2]):
-                    result['faultTraceback']+= "\n"+msg;
+            defer.maybeDeferred(function, *args).addErrback(
+                self._ebRender, functionPath, args, request
+            ).addCallback(
+                self._cbRender, request
+            )
 
-            logger.debug('response ' + str(result))
-            self._cbRender(result, request)
         return server.NOT_DONE_YET
 
     def _cbRender(self, result, request):
@@ -166,13 +150,23 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 # Evil hack ! We need this to transport some data as binary instead of string
                 if "jpegPhoto" in result[0]:
                     result[0]["jpegPhoto"] = [xmlrpclib.Binary(result[0]["jpegPhoto"][0])]
-            s = xmlrpclib.dumps(result, methodresponse=1)
+            self.logger.debug('response ' + str(result))            
+            s = xmlrpclib.dumps(result, methodresponse=1)            
         except Exception, e:
             f = Fault(self.FAILURE, "can't serialize output")
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.write(s)
         request.finish()
+
+    def _ebRender(self, failure, functionPath, args, request):
+        self.logger.error("Error during render " + functionPath + ": " + failure.getTraceback())
+        # Prepare a Fault result to return
+        result = {}
+        result['faultString'] = functionPath + " " + str(args)
+        result['faultCode'] = str(failure.type) + ": " + str(failure.value) + " "
+        result['faultTraceback'] = failure.getTraceback()
+        return result
 
     def getRevision(self):
         return int("$Rev$".split(':')[1].strip(' $'))
