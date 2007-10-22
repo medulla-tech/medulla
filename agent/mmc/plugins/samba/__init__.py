@@ -23,6 +23,8 @@
 
 import os
 import os.path
+import shutil
+import stat
 import re
 import logging
 import ldap.modlist
@@ -1051,8 +1053,8 @@ class smbConf:
         f.write(self.outputSmbConfFile())
         f.close()
         if not self.validate(tmpfname): raise MmcException("smb.conf file is not valid")
-        mmctools.shlaunch("cp %s %s" % (tmpfname, self.smbConfFile))
-        mmctools.shlaunch("rm %s" % tmpfname)
+        shutil.copy(tmpfname, self.smbConfFile)
+        os.remove(tmpfname)
 
     def delShare(self, name, remove):
         """
@@ -1069,7 +1071,8 @@ class smbConf:
         except KeyError:
             raise mmcException('share "'+ name+'" does not exist')
 
-        if remove: mmctools.shlaunch('rm -fr '+ path)
+        if remove:
+            shutil.rmtree(path)
 
     def shareInfo(self, name):
         """
@@ -1123,21 +1126,20 @@ class smbConf:
 
         # create samba share directory
         path = os.path.join(self.sharespath, name)
-
-        # FIXME: we should test os.system return value, and in fact not use os.system !
-        os.system("mkdir -p '%s'" % path)
-        os.system("chown 'root:root' %s" % (path))
+        os.makedirs(path)
+        # Directory is owned by root
+        os.chown(path, 0, 0)
 
         # create table and fix permission
         tmpInsert = {}
         tmpInsert['comment'] = comment
         if permAll:
-            mmctools.shlaunch("setfacl -b "+path)
             tmpInsert['public'] = 'yes'
-            os.system("chmod 0777 '%s'" % path)
+            mmctools.shlaunch("setfacl -b " + path)
+            os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
         else:
             tmpInsert['public'] = 'no'
-            os.system("chmod 0770 '%s'" % path)
+            os.chmod(path, stat.S_IRWXU | stat.S_IRWXG)
             mmctools.shlaunch("setfacl -b "+path)
             acl1 = ACL(file=path)
             # Add and set default mask to rwx
