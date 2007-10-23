@@ -732,6 +732,7 @@ color: #95AABF;
 }
 
 li.afficher a {
+	/* Deprecated. Use li.display instead */
 	padding: 3px 0px 5px 20px;
 	margin: 0 0px 0 0px;
 	background-image: url("../img/common/icn_show.gif");
@@ -742,20 +743,47 @@ li.afficher a {
 }
 
 li.afficher a:hover {
+	/* Deprecated. Use li.display instead */
+	background-image: url("../img/common/icn_show_ro.gif");
+}
+
+li.display a {
+	padding: 3px 0px 5px 20px;
+	margin: 0 0px 0 0px;
+	background-image: url("../img/common/icn_show.gif");
+	background-repeat: no-repeat;
+	line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.display a:hover {
 	background-image: url("../img/common/icn_show_ro.gif");
 }
 
 li.supprimer a {
+	/* Deprecated. Use li.delete instead */
 	padding: 3px 0px 5px 20px;
 	margin: 0 0px 0 0px;
-	/*background-image: url("../img/common/icn_del.gif");*/
         background-image: url("../img/common/button_cancel.png");
 	background-repeat: no-repeat;
 	background-position: left top;
 	line-height: 18px;
-text-decoration: none;
+	text-decoration: none;
         color: #FFF;
 }
+
+li.delete a {
+	padding: 3px 0px 5px 20px;
+	margin: 0 0px 0 0px;
+        background-image: url("../img/common/button_cancel.png");
+	background-repeat: no-repeat;
+	background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+        color: #FFF;
+}
+
 
 li.editacl a {
 	padding: 3px 0px 5px 20px;
@@ -764,31 +792,41 @@ li.editacl a {
 	background-repeat: no-repeat;
 	background-position: left top;
 	line-height: 18px;
-text-decoration: none;
+	text-decoration: none;
         color: #FFF;
 }
 
 li.edit a {
 	padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
-        /*background-image: url("../img/common/icn_edit.gif");*/
         background-image: url("../img/common/edit2.png");
         background-repeat: no-repeat;
         background-position: left top;
 	line-height: 18px;
-text-decoration: none;
+	text-decoration: none;
         color: #FFF;
 }
 
 li.archiver a {
+	/* Deprecated. Use li.backup instead */
 	padding: 3px 0px 5px 20px;
 	margin: 0 0px 0 0px;
-    /*background-image: url("../img/common/icn_sav.gif");*/
-    background-image: url("../img/common/cd.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-text-decoration: none;
+	background-image: url("../img/common/cd.png");
+	background-repeat: no-repeat;
+	background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+        color: #FFF;
+}
+
+li.backup a {
+	padding: 3px 0px 5px 20px;
+	margin: 0 0px 0 0px;
+	background-image: url("../img/common/cd.png");
+	background-repeat: no-repeat;
+	background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
         color: #FFF;
 }
 
