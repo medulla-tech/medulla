@@ -1,5 +1,4 @@
 <?
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -213,16 +212,11 @@ if ($_POST["repository_launch_action"] != "") {
     /*
      * Add command to scheduler
      */
-    if ($current_repository_directory == "") $current_repository_directory = "/";
-    $path_source = clean_path("/".$config["repository"]."/".$current_repository_directory);
-
+    $path_source = clean_path(sprintf("/%s", $current_repository_directory));
     $start_file = "";
     $files = array();
-    $i = 0;
-
     foreach($_POST["select_to_copy"] as $i) {
-        // push files even if they are directories since they will
-        // be uploaded with a 'scp -r'
+        # push files even if they are directories since they will be uploaded with a 'scp -r'
         $item = $_POST["filename"][$i];
         array_push($files, $item);
         if ( $_POST["select_to_execute"] == $i ) {
@@ -234,18 +228,18 @@ if ($_POST["repository_launch_action"] != "") {
     debug(3, sprintf("Select to execute = %s", $start_file));
 
     $parameters = $_POST['repository_parameters'];
-
-    //$path_destination = $session->tmp_path;
-    //if ($session->platform == "Windows") $path_destination = $config['path_destination'];
     $path_destination = "/"; # this should be the path *inside* our tmp rep on the client
 
     $create_directory_enable = $_POST['repository_create_directory'];
+
     if ($_POST["select_to_execute"]==-1) {
         $start_script_enable = false;
     } else {
         $start_script_enable = $_POST['repository_start_script'];
     }
+
     $delete_file_after_execute_successful_enable = $_POST['repository_delete_file_after_execute_successful'];
+
     if ($repository_start_date!="d&egrave;s que possible" && $repository_start_date!="ASAP") {
         list($date, $time) = split(" [^ ]* ", $repository_start_date);
         list($day, $month, $year) = split("-", $date);
@@ -262,14 +256,12 @@ if ($_POST["repository_launch_action"] != "") {
         $end_date = "0000-00-00 00:00:00";
     }
 
-
     if ( $_GET["mac"] != "" ) {
         $target = $session->hostname;
     } elseif (( $_GET["profile"] != "" ) || ( $_GET["group"] != "" )) {
         $target = $_GET["profile"] . ":" . $_GET["group"]."/";
     }
-    $username = "root";
-    $title = $_POST["repository_command_title"];
+
     if ($_POST["repository_wake_on_lan"] == "1") {
         $wake_on_lan_enable = true;
     } else {
@@ -282,6 +274,10 @@ if ($_POST["repository_launch_action"] != "") {
         $next_connection_delay = 60;
     }
 
+    $username = "root";
+
+    $title = $_POST["repository_command_title"];
+
     if ($_POST["repository_max_connection_attempt"] != "") {
         $max_connection_attempt = $_POST["repository_max_connection_attempt"];
     } else {
@@ -293,6 +289,7 @@ if ($_POST["repository_launch_action"] != "") {
     } else {
         $start_inventory_enable = false;
     }
+
     if (!$_POST["repeat"]) {
         $repeat = 0;
     } else {
@@ -321,23 +318,16 @@ if ($_POST["repository_launch_action"] != "") {
         $start_inventory_enable,
         $repeat
     );
-    /*
-     * Dispatch all command
-     */
+
+    # Dispatch all command
     scheduler_dispatch_all_commands();
 
-    /*
-     * Start all command
-     */
+    # Start all command
     scheduler_start_all_commands();
 
-    /*
-     * Redirect to command state
-     */
-    if ($_GET["mac"]!="") {
-        // Redirect to command_on_host state page
+    # Redirect to command state
+    if ($_GET["mac"]!="") { # Redirect to command_on_host state page
         $id_command_on_host = scheduler_get_id_command_on_host($id_command);
-
         print("<html><head><meta http-equiv=\"refresh\" content=\"0;url=" .
             urlStr("msc/msc/cmd_state", array(
                         'mac'=>$_GET["mac"],
@@ -348,8 +338,7 @@ if ($_POST["repository_launch_action"] != "") {
             ).
             "\"></head></html>");
         exit();
-    } else {
-        // Redirect to command state page
+    } else { # Redirect to command state page
         print("<html><head><meta http-equiv=\"refresh\" content=\"0;url=" .
             urlStr("msc/msc/cmd_state", array(
                     'mac'=>$_GET["mac"],
