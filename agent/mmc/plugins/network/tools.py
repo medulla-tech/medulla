@@ -40,7 +40,9 @@ def numToDottedQuad(n):
 
 def makeMask(n):
     """Return a mask of n bits as a long integer"""
-    return 0xffffffff << (32 - n)
+    # ~0 is a 32 bits long with all bits set to 1
+    # (using 0xffffffff doesn't work well with python > 2.3)
+    return (~0) << (32 - n)
 
 def ipInRange(ipAddress, beginRange, endRange):
     """
