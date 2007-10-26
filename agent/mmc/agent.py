@@ -123,9 +123,18 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 )
             return server.NOT_DONE_YET
 
+        s = request.getSession()
+        try:
+            s.loggedin
+        except AttributeError:
+            s.loggedin = False
         self.logger.debug('Calling ' + functionPath + str(args))
         try:
-            function = self._getFunction(functionPath)
+            if not s.loggedin and functionPath != "base.ldapAuth":
+                self.logger.warning("Function can't be called because the user in not logged in")
+                raise Fault(self.FAILURE, "Can't use MMC agent server because you are not logged in")
+            else:
+                function = self._getFunction(functionPath)
         except Fault, f:
             self._cbRender(f, request)
         else:
@@ -133,12 +142,18 @@ class MmcServer(xmlrpc.XMLRPC,object):
             defer.maybeDeferred(function, *args).addErrback(
                 self._ebRender, functionPath, args, request
             ).addCallback(
-                self._cbRender, request
+                self._cbRender, request, functionPath, args
             )
 
         return server.NOT_DONE_YET
 
-    def _cbRender(self, result, request):
+    def _cbRender(self, result, request, functionPath = None, args = None):
+        s = request.getSession()
+        if functionPath == "base.ldapAuth":
+            if result:
+                s = request.getSession()
+                s.loggedin = True
+                s.userid = args[0]
         if result == None: result = 0
         if isinstance(result, xmlrpc.Handler):
             result = result.result
@@ -150,10 +165,16 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 # Evil hack ! We need this to transport some data as binary instead of string
                 if "jpegPhoto" in result[0]:
                     result[0]["jpegPhoto"] = [xmlrpclib.Binary(result[0]["jpegPhoto"][0])]
-            self.logger.debug('response ' + str(result))            
+        except IndexError:
+            pass
+        try:
+            if s.loggedin:
+                self.logger.debug('response ' + s.userid + " " + str(result))
+            else:
+                self.logger.debug('response ' + str(result))
             s = xmlrpclib.dumps(result, methodresponse=1)            
         except Exception, e:
-            f = Fault(self.FAILURE, "can't serialize output")
+            f = Fault(self.FAILURE, "can't serialize output: " + str(e))
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.write(s)
