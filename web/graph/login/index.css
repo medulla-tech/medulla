@@ -101,6 +101,8 @@ body {
 	margin: 0 5px 0 0;
 	height: 26px;
 	background: url(../../img/login/icn_lock.gif) no-repeat top right transparent;
+	color: #FFF;
+	font-weight: bold;
 }
 
 /* ---------------------------------------- */

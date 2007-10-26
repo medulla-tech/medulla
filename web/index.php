@@ -21,9 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
 
 ob_start();
 
@@ -118,7 +115,7 @@ if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 
 <!-- Put header content here  -->
 
-        <p class="lock"></p>
+        <p class="lock"><?= $conf["logintitle"][$_SESSION["lang"]] ;?></p>
 
         </div></div></div>
 
