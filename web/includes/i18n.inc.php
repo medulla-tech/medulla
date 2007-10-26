@@ -52,12 +52,35 @@ if (!function_exists('_T')) {
                      "nb_NO" => "norwegian");
         return $res;
     }
+
+    /**
+     * Link a supported locale to a supported locale string sent by a browser
+     * via HTTP_ACCEPT_LANGUAGE
+     */
+    function getArrLocaleShort() {
+        return array("en" => "C",
+                     "fr" => "fr_FR",
+                     "es" => "es_ES",
+                     "nb" => "nb_NO",
+                     "no" => "nb_NO");
+    }
 }
 
-// Set language
+/* Set language to use in the interface */
 if (!$_SESSION['lang']) {
     if (!$_COOKIE['lang']) {
-        $_SESSION['lang'] = 'C';
+        /*
+          If no cookie with the previously used language is found,
+          auto-detect it
+        */
+        $browserLanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $browserLanguage = strtolower(substr(rtrim($browserLanguage[0]),0,2));
+        $localeShort = getArrLocaleShort();
+        if (isset($localeShort[$browserLanguage])) {
+            $_SESSION["lang"] = $localeShort[$browserLanguage];
+        } else {
+            $_SESSION['lang'] = 'C';
+        }
     } else {
         $_SESSION['lang'] = $_COOKIE['lang'];
     }

@@ -129,21 +129,16 @@ if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
 
 
 $n = new NotifyWidget();
-//
-
 
 if (isset($_SESSION['__notify'])) {
     foreach ($_SESSION['__notify'] as $err){ //add notify widget error
         $error = $error . $err.'<br/>';
     }
-
     $n->flush();
 }
 
-
-if (isset($error))
-{
-  echo "<div id=\"alert\">".$error."</div>\n";
+if (isset($error)) {
+    echo "<div id=\"alert\">".$error."</div>\n";
 }
 ?>
 
@@ -220,12 +215,11 @@ if (isset($goto)) echo "<input name=\"goto\" type=\"hidden\" value=\"$goto\" />\
                         }
 
                         $listbox = new SelectItem("lang");
-
                         $listbox->setElements($descList);
                         $listbox->setElementsVal($urlList);
                         $listbox->setSelected($descList[0]);
-                        if ($_COOKIE['lang']) {
-                            $listbox->setSelected($langDesc[$_COOKIE['lang']]);
+                        if ($_SESSION['lang']) {
+                            $listbox->setSelected($_SESSION['lang']);
                         }
                         $listbox->display();
 

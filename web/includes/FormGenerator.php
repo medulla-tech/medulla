@@ -520,7 +520,6 @@ class SelectItem extends AbstractTpl{
 
         print "<select name=\"".$this->id."\">\n";
         foreach ($this->elements as $key => $item) {
-            
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected="selected";
             } else {
