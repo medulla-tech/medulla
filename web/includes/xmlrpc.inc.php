@@ -97,7 +97,13 @@ function xmlCall($method, $params = null) {
         $httpQuery .= "User-Agent: xmlrpc\r\n";
         $httpQuery .= "Host: ". $host ."\r\n";
         $httpQuery .= "Content-Type: text/xml\r\n";
-        $httpQuery .= "Content-Length: ". strlen($request) ."\r\n";
+        $httpQuery .= "Content-Length: ". strlen($request) . "\r\n";
+        /* Don't set the RPC session cookie if the user is on the login page */
+        if ($method == "base.ldapAuth") {
+            unset($_SESSION["RPCSESSION"]);
+        } else {
+            $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";            
+        }
         $httpQuery .= "Authorization: Basic ".base64_encode($conf["global"]["login"]).":".base64_encode($conf["global"]["password"]) . "\r\n\r\n";
         $httpQuery .= $request;
         $sock=null;
@@ -128,7 +134,7 @@ function xmlCall($method, $params = null) {
         fflush($sock);
         // We get the response from the server
         while ( !feof($sock) ) {
-                $xmlResponse .= fgets($sock);
+            $xmlResponse .= fgets($sock);
         }
         // Closing the connection
         fclose($sock);
@@ -142,7 +148,26 @@ function xmlCall($method, $params = null) {
             $errorStatus = 1;
             return FALSE;
         }
-    	$xmlResponse = substr($xmlResponse, strpos($xmlResponse, "\r\n\r\n") +4);
+        $pos = strpos($xmlResponse, "\r\n\r\n");
+        $httpHeader = substr($xmlResponse, 0, $pos);
+        if ($method == "base.ldapAuth") {
+            /* The RPC server must send us a session cookie */
+            if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
+                $_SESSION["RPCSESSION"] = $match[1];
+            } else {
+                /* Can't get a session from the Twisted XML-RPC server */
+                $errObj = new ErrorHandlingItem('');
+                $errObj->setMsg(_("MMC agent communication problem"));
+                $errObj->setAdvice(_("The MMC agent didn't give us a session number. Please check the MMC agent version."));
+                $errObj->setTraceBackDisplay(false);
+                $errObj->setSize(400);
+                $errObj->process('');
+                $errorStatus = 1;
+                return False;
+            }
+        }
+        
+    	$xmlResponse = substr($xmlResponse, $pos + 4);
 
 	/*****
          * To decode the XML into PHP, we use the (finaly a short function)

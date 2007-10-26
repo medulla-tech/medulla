@@ -45,14 +45,15 @@ if (isset($_POST["bConnect"])) {
     } else {
         $goto = $root."main.php";
     }
+    
+    /* Session creation */
+    $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
+    $sessionid = md5 (time() . $ip . mt_rand());
+    
+    session_id($sessionid);
+    session_start();
 
     if (auth_user($login, $pass, $error)) {
-        /* Session creation */
-        $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
-        $sessionid = md5 (time() . $ip . mt_rand());
-
-        session_id($sessionid);
-        session_start();
         $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
         $_SESSION["login"] = $login;
         $_SESSION["pass"] = $pass;
