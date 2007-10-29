@@ -21,8 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
 
 require_once("ErrorHandling.php");
 
@@ -53,225 +51,210 @@ function prepare_string($pass) {
  * of encoding
  */
 function decode_entities($text) {
-        $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
-        $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
-        $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
-        return $text;
+    $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
+    $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
+    $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
+    return $text;
 }
 
 /**
- * call an xmlrpc call for a method
- * via the xmlrpc server in python (mmc-agent)
+ * Make a XML-RPC call
+ * If the global variable $errorStatus is not zero, the XML-RPC call is not
+ * done, and this function returns nothing.
+ * 
  * @param $method name of the method
  * @param $params array with param
+ * @return the XML-RPC call result
  */
 function xmlCall($method, $params = null) {
-        global $errorStatus;
-        if ($errorStatus !=0) { //ignore XMLRPC call after one error
-            return;
-        }
+    global $errorStatus;
+    global $errorDesc;
+    global $conf;
 
-        global $conf;
+    if ($errorStatus) { // Don't do a XML-RPC call if a previous one failed
+        return;
+    }
 
-            //set defaut login/pass if not set
-            if (!isset($conf["global"]["login"])) {
-                $conf["global"]["login"] = "mmc";
-                $conf["global"]["password"] = "s3cr3t";
-            }
+    /*
+      Set defaut login/pass if not set.
+      The credentials are used to authenticate the web interface to the XML-RPC
+      server.
+    */
+    if (!isset($conf["global"]["login"])) {
+        $conf["global"]["login"] = "mmc";
+        $conf["global"]["password"] = "s3cr3t";
+    }
+    
+    $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-        $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
+    if ($params == null) {
+        $request = xmlrpc_encode_request($method, null, $output_options);
+    } else {
+        $request = xmlrpc_encode_request($method, $params, $output_options);
+        $request = decode_entities($request, ENT_QUOTES, "UTF-8");
+    }
 
-        if ($params==null) {
-                $request = xmlrpc_encode_request($method,null,$output_options);
-        }
-        else {
-                $request = xmlrpc_encode_request($method,$params,$output_options);
-                $request=decode_entities($request,ENT_QUOTES,"UTF-8");
-        }
+    /* We build the HTTP POST that will be sent */
+    $host= $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
+    $url = "/";
+    $httpQuery = "POST ". $url ." HTTP/1.0\r\n";
+    $httpQuery .= "User-Agent: xmlrpc\r\n";
+    $httpQuery .= "Host: ". $host ."\r\n";
+    $httpQuery .= "Content-Type: text/xml\r\n";
+    $httpQuery .= "Content-Length: ". strlen($request) . "\r\n";
+    /* Don't set the RPC session cookie if the user is on the login page */
+    if ($method == "base.ldapAuth") {
+        unset($_SESSION["RPCSESSION"]);
+    } else {
+        $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";
+    }
+    $httpQuery .= "Authorization: Basic ".base64_encode($conf["global"]["login"]).":".base64_encode($conf["global"]["password"]) . "\r\n\r\n";
+    $httpQuery .= $request;
+    $sock = null;
 
+    /* Connect to the XML-RPC server */
+    if ($_SESSION["XMLRPC_agent"]["scheme"] == "https") {
+        $prot = "ssl://";
+    }
+    $errLevel = error_reporting();
+    error_reporting(0);
+    $sock = fsockopen($prot.$_SESSION["XMLRPC_agent"]["host"], $_SESSION["XMLRPC_agent"]["port"], $errNo, $errString);
+    error_reporting($errLevel);
+    if (!$sock) {
+        /* Connection failure */
+        $errObj = new ErrorHandlingItem('');
+        $errObj->setMsg(_("Can't connect to MMC agent"));
+        $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.".'<br/> Error: '. $errNo . ' - '. $errString));
+        $errObj->setTraceBackDisplay(false);
+        $errObj->setSize(400);
+        $errObj->process('');        
+        $errorStatus = 1;        
+        return FALSE;
+    }
 
-        $host= $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
-        $url = "/";
+    /* Send the HTTP POST */
+    if ( !fwrite($sock, $httpQuery, strlen($httpQuery)) ) {
+        /* Failure */
+        $errObj = new ErrorHandlingItem('');
+        $errObj->setMsg(_("Can't send XML-RPC request to MMC agent"));
+        $errObj->setAdvice(_("MMC agent seems to be not correctly configured."));
+        $errObj->setTraceBackDisplay(false);
+        $errObj->setSize(400);
+        $errObj->process('');        
+        $errorStatus = 1;        
+        return FALSE;
+    }
+    fflush($sock);
 
-        $httpQuery = "POST ". $url ." HTTP/1.0\r\n";
-        $httpQuery .= "User-Agent: xmlrpc\r\n";
-        $httpQuery .= "Host: ". $host ."\r\n";
-        $httpQuery .= "Content-Type: text/xml\r\n";
-        $httpQuery .= "Content-Length: ". strlen($request) . "\r\n";
-        /* Don't set the RPC session cookie if the user is on the login page */
-        if ($method == "base.ldapAuth") {
-            unset($_SESSION["RPCSESSION"]);
+    /* Get the response from the server */
+    while (!feof($sock)) {
+        $xmlResponse .= fgets($sock);
+    }
+    fclose($sock);
+
+    /* Process the response */
+    if (!strlen($xmlResponse)) {
+        $errObj = new ErrorHandlingItem('');
+        $errObj->setMsg(_("MMC agent communication problem"));
+        $errObj->setAdvice(_("Can't communicate with MMC agent. Please check you're using the right TCP port and the right protocol."));
+        $errObj->setTraceBackDisplay(false);
+        $errObj->setSize(400);
+        $errObj->process('');
+        $errorStatus = 1;
+        return FALSE;
+    }
+
+    /* Process the received HTTP header */
+    $pos = strpos($xmlResponse, "\r\n\r\n");
+    $httpHeader = substr($xmlResponse, 0, $pos);
+    if ($method == "base.ldapAuth") {
+        /* The RPC server must send us a session cookie */
+        if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
+            $_SESSION["RPCSESSION"] = $match[1];
         } else {
-            $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";            
-        }
-        $httpQuery .= "Authorization: Basic ".base64_encode($conf["global"]["login"]).":".base64_encode($conf["global"]["password"]) . "\r\n\r\n";
-        $httpQuery .= $request;
-        $sock=null;
-
-        // if crypted connexion
-        if ($_SESSION["XMLRPC_agent"]["scheme"]=="https") { $prot="ssl://"; }
-        $errLevel = error_reporting();
-        error_reporting(0);
-        $sock = fsockopen($prot.$_SESSION["XMLRPC_agent"]["host"],$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString);
-        error_reporting($errLevel);
-
-        if ( !$sock ) {
-                $errObj = new ErrorHandlingItem('');
-                $errObj->setMsg(_("mmc-agent not responding"));
-                $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.".'<br/> Error: '. $errNo . ' - '. $errString));
-                $errObj->setTraceBackDisplay(false);
-                $errObj->setSize(400);
-                $errObj->process('');
-
-                $errorStatus = 1;
-
-                return FALSE;
-        }
-        if ( !fwrite($sock, $httpQuery, strlen($httpQuery)) ) {
-                echo 'Error while trying to send request';
-                return FALSE;
-        }
-        fflush($sock);
-        // We get the response from the server
-        while ( !feof($sock) ) {
-            $xmlResponse .= fgets($sock);
-        }
-        // Closing the connection
-        fclose($sock);
-        if (!strlen($xmlResponse)) {
+            /* Can't get a session from the Twisted XML-RPC server */
             $errObj = new ErrorHandlingItem('');
-            $errObj->setMsg(_("mmc-agent communication problem"));
-            $errObj->setAdvice(_("Can't communicate with mmc agent. Please check you're using the right TCP port and the right protocol."));
+            $errObj->setMsg(_("MMC agent communication problem"));
+            $errObj->setAdvice(_("The MMC agent didn't give us a session number. Please check the MMC agent version."));
             $errObj->setTraceBackDisplay(false);
             $errObj->setSize(400);
             $errObj->process('');
             $errorStatus = 1;
-            return FALSE;
+            return False;
         }
-        $pos = strpos($xmlResponse, "\r\n\r\n");
-        $httpHeader = substr($xmlResponse, 0, $pos);
-        if ($method == "base.ldapAuth") {
-            /* The RPC server must send us a session cookie */
-            if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
-                $_SESSION["RPCSESSION"] = $match[1];
-            } else {
-                /* Can't get a session from the Twisted XML-RPC server */
-                $errObj = new ErrorHandlingItem('');
-                $errObj->setMsg(_("MMC agent communication problem"));
-                $errObj->setAdvice(_("The MMC agent didn't give us a session number. Please check the MMC agent version."));
-                $errObj->setTraceBackDisplay(false);
-                $errObj->setSize(400);
-                $errObj->process('');
-                $errorStatus = 1;
-                return False;
-            }
+    }
+    
+    /* Process the XML response */
+    $xmlResponse = substr($xmlResponse, $pos + 4);
+    /* 
+       Test if the XMLRPC result is a boolean value set to False.
+       If it is the case, xmlrpc_decode will return an empty string.
+       So we need to test this special case.
+    */    
+    $booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
+    if ($xmlResponse == $booleanFalse) $xmlResponse = "0";
+    else {
+        $xmlResponseTmp = xmlrpc_decode($xmlResponse, "UTF-8");
+        /* if we cannot decode in UTF-8 */
+        if (!$xmlResponseTmp) {
+            /* Maybe we received data encoded in ISO latin 1, so convert them
+               to UTF8 first*/
+            $xmlResponse = iconv("ISO-8859-1", "UTF-8", $xmlResponse);
+            $xmlResponse = xmlrpc_decode($xmlResponse, "UTF-8");
+        } else {
+            $xmlResponse = $xmlResponseTmp;
         }
-        
-    	$xmlResponse = substr($xmlResponse, $pos + 4);
-
-	/*****
-         * To decode the XML into PHP, we use the (finaly a short function)
-         * xmlrpc_decode function. And that should've done the trick.
-         * We now have what ever the server function made in our $xmlResponse
-         * variable.
-         *****/
-
-        /* Test if the XMLRPC result is a boolean value set to False.
-           If it is the case, xmlrpc_decode will return an empty string.
-	   So we need to test this special case. */
-
-	$booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
-	if ($xmlResponse == $booleanFalse) $xmlResponse = "0";
-	else {
-                $xmlResponseTmp = xmlrpc_decode($xmlResponse,"UTF-8");
-
-                //if we cannot decode in UTF-8
-                if (!$xmlResponseTmp) {
-                        //conversion in UTF-8
-                        $xmlResponse = iconv("ISO-8859-1","UTF-8",$xmlResponse);
-                        $xmlResponse = xmlrpc_decode($xmlResponse,"UTF-8");
-                } else {
-                        $xmlResponse=$xmlResponseTmp;
-                }
-	}
-
-        /*
-         * When debug is on
-         */
-        global $conf;
-        if ($conf["debug"]["level"]!=0) {
-                $str = '<div id="debugCode">';
-                $str .= "&nbsp;&nbsp;debuginfo";
-                $str.= '<div id="debugCodeHeader">';
-                $str .= "XML RPC CALL FUNCTION: $method(";
-                if (!$params)
-                {
-                        $params="null";
-                }
-                if (is_array($params)) {
-                        $str.= implode (',',$params);
-                }
-
-                else
-                {
-                        $str.= $params;
-                }
-                $str.=')';
-                $str.= "</div>";
-
-                if (is_array($xmlResponse)) {
-                        $str.= "<pre>";
-                        $str.= "result : ";
-                        $str.= var_export($xmlResponse);
-                        $str.= "</pre>";
-                }
-                else
-                {
-                        $str.= "result : ".$xmlResponse;
-                }
-                $str.= '</div>';
-
-                echo $str;
+    }
+    
+    /* If debug is on, print the XML-RPC call and result */
+    if ($conf["debug"]["level"]!=0) {
+        $str = '<div id="debugCode">';
+        $str .= "&nbsp;&nbsp;debuginfo";
+        $str.= '<div id="debugCodeHeader">';
+        $str .= "XML RPC CALL FUNCTION: $method(";
+        if (!$params) {
+            $params = "null";
+        } else if (is_array($params)) {
+            $str .= implode (',',$params);
+        } else {
+            $str .= $params;
         }
-
-        /*
-         *  fin de cas de debug
-         */
-
-        /*
-         * if error
-         */
-        if (($xmlResponse["faultCode"])&&(is_array($xmlResponse))) {
-                $result = findErrorHandling($xmlResponse["faultCode"]); //try to find an error handler
-
-                if ($result==-1) { //if we not find an error handler
-                    $result = new ErrorHandlingItem('');
-                    $result->setMsg(_("unknown error"));
-                    $result->setAdvice(_("This exception is unknow. Please contact us to add an error handling on this error."));
-                }
-
-                $result->process($xmlResponse);
-
-                $errorStatus = 1;
-                global $errorDesc;
-                $errorDesc = $xmlResponse["faultCode"];
-
-                //cleanup $xmlresponse var
-                unset ($xmlResponse["faultCode"]);
-                unset ($xmlResponse["faultString"]);
-                unset ($xmlResponse["faultTraceback"]);
-                return array();
+        $str .=')';
+        $str .= "</div>";
+        if (is_array($xmlResponse)) {
+            $str .= "<pre>";
+            $str .= "result : ";
+            $str .= var_export($xmlResponse);
+            $str .= "</pre>";
+        } else {
+            $str .= "result : ".$xmlResponse;
         }
-        /*
-         * end error handling
-         */
+        $str .= '</div>';        
+        echo $str;
+    }
+    
+    /* If the XML-RPC server sent a fault, display an error */
+    if (($xmlResponse["faultCode"])&&(is_array($xmlResponse))) {
+        // Try to find an error handler
+        $result = findErrorHandling($xmlResponse["faultCode"]);
+        if ($result == -1) {
+            // We didn't find one
+            $result = new ErrorHandlingItem('');
+            $result->setMsg(_("unknown error"));
+            $result->setAdvice(_("This exception is unknow. Please contact us to add an error handling on this error."));
+        }        
+        $result->process($xmlResponse);        
+        $errorStatus = 1;
+        $errorDesc = $xmlResponse["faultCode"];
+        return False;
+    }
 
-        return $xmlResponse;
-
+    /* Return the result of the remote procedure call */
+    return $xmlResponse;
 }
 
 /**
- *  return if an XMLRPC exception has been raised
+ *  @return 1 if an XMLRPC exception has been raised, else 0
  */
 function isXMLRPCError() {
     global $errorStatus;
@@ -290,8 +273,8 @@ function agentLog($logline) {
  * remote execution of a command line
  */
 function remote_exec($cmd,&$ret) {
-        $ret = xmlCall("base.launch",$cmd);
-        return $ret;
+    $ret = xmlCall("base.launch",$cmd);
+    return $ret;
 }
 
 /**
