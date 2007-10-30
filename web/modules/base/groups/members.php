@@ -81,21 +81,25 @@ $users = unserialize(base64_decode($_POST["lusers"]));
 $forbidden = array();
 
 if (isset($_POST["bdeluser_x"])) {
-    foreach ($_POST["members"] as $member) {
-        if ($group == getUserPrimaryGroup($member)) {
-            /* A user can't be removed from his/her primary group */
-            $forbidden[] = $member;
-            continue;
+    if (isset($_POST["members"])) {
+        foreach ($_POST["members"] as $member) {
+            if ($group == getUserPrimaryGroup($member)) {
+                /* A user can't be removed from his/her primary group */
+                $forbidden[] = $member;
+                continue;
+            }
+            $idx = array_search($member, $members);
+            if ($idx !== false) unset($members[$idx]);
         }
-        $idx = array_search($member, $members);
-        if ($idx !== false) unset($members[$idx]);
     }
 } else if (isset($_POST["badduser_x"])) {
-    foreach ($_POST["users"] as $user) {
-        $idx = array_search($user, $members);
-        if ($idx === false) {
-            $members[] = $user;
-	}
+    if (isset($_POST["users"])) {
+        foreach ($_POST["users"] as $user) {
+            $idx = array_search($user, $members);
+            if ($idx === false) {
+                $members[] = $user;
+            }
+        }
     }
     sort($members);
     reset($members);
