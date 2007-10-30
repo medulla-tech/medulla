@@ -239,6 +239,9 @@ def setSubnetDescription(subnet, description):
 def setSubnetNetmask(subnet, netmask):
     Dhcp().setSubnetNetmask(subnet, netmask)
 
+def setSubnetAuthoritative(subnet, flag = True):
+    Dhcp().setSubnetAuthoritative(subnet, flag)
+
 def getSubnetHosts(network, filter):
     return Dhcp().getSubnetHosts(network, filter)
 

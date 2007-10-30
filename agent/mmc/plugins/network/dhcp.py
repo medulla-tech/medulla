@@ -76,7 +76,9 @@ class Dhcp(ldapUserGroupControl):
             if option in oldoption:
                 toremove = oldoption
         if toremove: options.remove(toremove)
-        if value: options.append(option + " " + str(value))
+        if value:
+            tmp = option + " " + str(value)
+            options.append(tmp.strip())
         if not options:
             try:
                 self.l.modify_s(dn, [(ldap.MOD_DELETE, "dhcpStatements", None)])
@@ -200,6 +202,30 @@ class Dhcp(ldapUserGroupControl):
         if subnets:
             subnetDN = subnets[0][0]
             self.l.modify_s(subnetDN, [(ldap.MOD_REPLACE, "dhcpNetMask", netmask)])
+
+    def setSubnetAuthoritative(self, subnet, flag = True):
+        """
+        Set the subnet as authoritative or 'not authoritative'
+
+        @param subnet: the network address of the subnet
+        @type subnet: str
+
+        @param flag: whether the subnet is authoritative or not
+        @type flag: bool
+        """
+        subnets = self.getSubnet(subnet)
+        if subnets:
+            subnetDN = subnets[0][0]
+            options = self.getObjectStatements(subnetDN)
+            newoptions = []
+            for option in options:
+                if not option in ["authoritative", "not authoritative"]:
+                    newoptions.append(option)
+            if flag:
+                newoptions.append("authoritative")
+            else:
+                newoptions.append("not authoritative")
+            self.l.modify_s(subnetDN, [(ldap.MOD_REPLACE, "dhcpStatements", newoptions)])
 
     def addSubnet(self, network, netmask, name = None):
         serviceDN = self.getServiceConfig()[0][0]
