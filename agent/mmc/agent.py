@@ -132,7 +132,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         try:
             if not s.loggedin and functionPath != "base.ldapAuth":
                 self.logger.warning("Function can't be called because the user in not logged in")
-                raise Fault(self.FAILURE, "Can't use MMC agent server because you are not logged in")
+                raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
                 function = self._getFunction(functionPath)
         except Fault, f:
