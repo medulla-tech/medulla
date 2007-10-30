@@ -108,7 +108,7 @@ function xmlCall($method, $params = null) {
     } else {
         $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";
     }
-    $httpQuery .= "Authorization: Basic ".base64_encode($conf["global"]["login"]).":".base64_encode($conf["global"]["password"]) . "\r\n\r\n";
+    $httpQuery .= "Authorization: Basic ".base64_encode($conf["global"]["login"].":".$conf["global"]["password"]) . "\r\n\r\n";
     $httpQuery .= $request;
     $sock = null;
 
