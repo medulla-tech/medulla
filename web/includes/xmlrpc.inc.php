@@ -235,10 +235,21 @@ function xmlCall($method, $params = null) {
     
     /* If the XML-RPC server sent a fault, display an error */
     if (($xmlResponse["faultCode"])&&(is_array($xmlResponse))) {
-        // Try to find an error handler
+        if ($xmlResponse["faultCode"] == "8003") {
+            /* 
+              Fault 8003 means the session with the XML-RPC server has expired.
+              So we make the current PHP session expire, so that the user is
+              redirected to the login page.
+            */
+            unset($_SESSION["expire"]);
+            $root = $conf["global"]["root"];
+            header("Location: $root" . "main.php");
+            exit;
+        }
+        /* Try to find an error handler */
         $result = findErrorHandling($xmlResponse["faultCode"]);
         if ($result == -1) {
-            // We didn't find one
+            /* We didn't find one */
             $result = new ErrorHandlingItem('');
             $result->setMsg(_("unknown error"));
             $result->setAdvice(_("This exception is unknow. Please contact us to add an error handling on this error."));
