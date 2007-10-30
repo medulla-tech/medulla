@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from twisted.web import xmlrpc, server
+from twisted.protocols import http
 from twisted.internet import ssl, reactor, defer
 
 import re
@@ -113,18 +114,13 @@ class MmcServer(xmlrpc.XMLRPC,object):
             s.loggedin = False
 
         # Check authorization using HTTP Basic
-        authorized = False
-        if headers.has_key("authorization"):
-            real_auth = '%s:%s' % (self.login, self.password)
-            auth = headers["authorization"]
-            auth = auth.replace("Basic ","")
-            decoded_auth = base64.decodestring(auth.split(":")[0]) + ":" + base64.decodestring(auth.split(":")[1])
-            authorized = decoded_auth == real_auth
-        if not authorized:
-            self.logger.error('Invalid login / password')
-            request.setResponseCode(401)
+        cleartext_token = self.login + ":" + self.password 
+        token = request.getUser() + ":" + request.getPassword()
+        if token != cleartext_token:
+            self.logger.error("Invalid login / password for HTTP basic authentication")
+            request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
-                xmlrpc.Fault(401, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
+                xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
                 request
                 )
             return server.NOT_DONE_YET
