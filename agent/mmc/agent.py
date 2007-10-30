@@ -106,6 +106,12 @@ class MmcServer(xmlrpc.XMLRPC,object):
         headers = request.getAllHeaders()
         args, functionPath = xmlrpclib.loads(request.content.read())
 
+        s = request.getSession()
+        try:
+            s.loggedin
+        except AttributeError:
+            s.loggedin = False
+
         # Check authorization using HTTP Basic
         authorized = False
         if headers.has_key("authorization"):
@@ -123,11 +129,6 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 )
             return server.NOT_DONE_YET
 
-        s = request.getSession()
-        try:
-            s.loggedin
-        except AttributeError:
-            s.loggedin = False
         self.logger.debug('Calling ' + functionPath + str(args))
         try:
             if not s.loggedin and functionPath != "base.ldapAuth":
@@ -149,7 +150,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
     def _cbRender(self, result, request, functionPath = None, args = None):
         s = request.getSession()
-        if functionPath == "base.ldapAuth":
+        if functionPath == "base.ldapAuth" and not isinstance(result, Fault):
             if result:
                 s = request.getSession()
                 s.loggedin = True
