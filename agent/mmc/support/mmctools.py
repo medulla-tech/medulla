@@ -126,7 +126,6 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-        ret = tuple(data)
     elif type(data) == datetime.date:
         ret = tuple(data.timetuple())
     elif type(data) == struct_time:
