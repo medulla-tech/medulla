@@ -501,9 +501,12 @@ class Page {
     function Page($action,$desc = "") {
         $this->_action = $action;
         $this->_noheader = 0;
-
         $this->setDescription($desc);
         $this->setFile();
+        $this->_options["visible"] = True;
+        $this->_options["noHeader"] = False;
+        $this->_options["AJAX"] = False;
+        $this->_options["noACL"] = False;	
     }
 
     function setDescription($desc) {
@@ -546,7 +549,7 @@ class Page {
      */
     function setFile($file = False,$options = array()) {
         $this->_file = $file;
-        $this->_options = $options;
+        $this->setOptions($options);
     }
 
     /**
@@ -554,7 +557,9 @@ class Page {
      * @param $options same as describe in setFile member
      */
     function setOptions($options = array()) {
-        $this->_options = $options;
+        foreach($options as $key => $value) {	  
+            $this->_options[$key] = $value;
+        }
     }
 
     //function for compatibility
