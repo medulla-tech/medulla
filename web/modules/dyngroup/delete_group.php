@@ -29,7 +29,7 @@ $group = new Dyngroup($id);
 
 if (quickGet('valid')) {
     $group->delete();
-    header("Location: " . urlStrRedirect("dyngroup/dyngroup/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list" ));
 }
 
 ?>
@@ -38,7 +38,7 @@ if (quickGet('valid')) {
 
 ?>
 
-<form action="<?= urlStr("dyngroup/dyngroup/delete_group", array('id'=>$id)) ?>" method="post">
+<form action="<?= urlStr("base/computers/delete_group", array('id'=>$id)) ?>" method="post">
 <p>
 
 <?  

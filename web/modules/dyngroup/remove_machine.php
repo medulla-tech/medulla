@@ -30,14 +30,14 @@ $machine = quickGet('name');
 
 if (quickGet('valid')) {
     $group->removeMachine($machine);
-    header("Location: " . urlStrRedirect("dyngroup/dyngroup/display", array('id'=>$id)));
+    header("Location: " . urlStrRedirect("base/computers/display", array('id'=>$id)));
 }
 
 ?> <h2><?= _T("Remove a machine") ?></h2> <?php
 
 ?>
 
-<form action="<?= urlStr("dyngroup/dyngroup/remove_machine", array('id'=>$id, 'name'=>$machine)) ?>" method="post">
+<form action="<?= urlStr("base/computers/remove_machine", array('id'=>$id, 'name'=>$machine)) ?>" method="post">
 <p>
 <?  
     printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>."), $machine, $group->getName());

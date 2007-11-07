@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
+require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 
@@ -63,7 +63,7 @@ print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
 $modules = getPossiblesModules();
 foreach ($modules as $name) {
     print "<td><a href='".
-        urlStr("dyngroup/dyngroup/creator", array(
+        urlStr("base/computers/creator", array(
                                                 'add_req'=>$name,
                                                 'request'=>$request->toURL(),
                                                 'id'=>$id
@@ -79,7 +79,7 @@ if (quickGet('add_req')) {
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
     foreach ($criterion as $param_name) {
         print "<td><a href='".
-            urlStr("dyngroup/dyngroup/creator", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
+            urlStr("base/computers/creator", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
             "'>$param_name</a></td>";
     }
     print "</tr></table>";
@@ -88,7 +88,7 @@ if (quickGet('add_req')) {
 // allow to select/write a value for the criterion
 //TODO put in class
 if (quickGet('add_param')) {
-    print "<form action='".  urlStr("dyngroup/dyngroup/creator", array()).  "' method='POST'><table>";
+    print "<form action='".  urlStr("base/computers/creator", array()).  "' method='POST'><table>";
     $param = getPossiblesValuesForCriterionInModule(quickGet('req'), quickGet('add_param'));
     if (!is_array($param)) { $param = array($param); }
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
@@ -138,11 +138,11 @@ if (!$request->isEmpty())  {
     print "<hr/>";
     print "<table>";
     print "<tr><td><a href='".
-        urlStr("dyngroup/dyngroup/display", array('id'=>$id, 'request'=>$request->toS())).
+        urlStr("base/computers/display", array('id'=>$id, 'request'=>$request->toS())).
         "'>"._T("Execute")."</a></td><td><a href='".
-        urlStr("dyngroup/dyngroup/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>0)).
+        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>0)).
         "'>"._T("Save result")."</a></td><td><a href='".
-        urlStr("dyngroup/dyngroup/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>1)).
+        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>1)).
         "'>"._T("Save query")."</a></td></tr>";
     print "</table>";
 }

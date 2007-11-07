@@ -31,20 +31,20 @@ $group = new Dyngroup($id);
 
 if ($_GET['bregen'] || $_POST['bregen']) {
     $group->reload();
-    header("Location: " . urlStrRedirect("dyngroup/dyngroup/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list" ));
 }
 if ($_GET['bshow'] || $_POST['bshow']) {
     $group->show();
-    header("Location: " . urlStrRedirect("dyngroup/dyngroup/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list" ));
 }
 if ($_GET['bhide'] || $_POST['bhide']) {
     $group->hide();
-    header("Location: " . urlStrRedirect("dyngroup/dyngroup/list" ));
+    header("Location: " . urlStrRedirect("base/computers/list" ));
 }
 
 //$group->prettyDisplay();
 
-?> <form action="<?= urlStr("dyngroup/dyngroup/details", array('id'=>$id)) ?>" method="post"> <?  
+?> <form action="<?= urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?  
 ?> <input name="bback" type="submit" class="btnPrimary" value="<?= _T("Close") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
 
 if ($group->isGroup()) {

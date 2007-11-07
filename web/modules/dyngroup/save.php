@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
+require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 
@@ -49,7 +49,7 @@ if ($name == '') {
     $r->parse($request);
     $r->displayReqListInfos();
     // TODO : put in class
-    print "<hr/><table><form method='POST' action='".urlStr("dyngroup/dyngroup/save", array('request'=>$request, 'id'=>$id)).  "' >".
+    print "<hr/><table><form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
         "<tr><td>Name : <input name='name' type='text' value='$name'/></td>".
         "<td>save as <select name='save'><option value='0' ".($save_type == 0 ? 'selected' : '').">group</option><option value='1' ".($save_type == 1 ? 'selected' : '').">query</option></select></td>".
         "<td>it should be <select name='visible'><option value='2'".($visible == 2 ? 'selected' : '').">hiden</option><option value='1' ".($visible == 1 ? 'selected' : '').">visible</option></select></td>";
