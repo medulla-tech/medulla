@@ -870,6 +870,7 @@ class SideMenuItem {
         $this->module = $module;
         $this->submod = $submod;
         $this->action = $action;
+        $this->cssId = $action;
         $this->activebg = $activebg;
         $this->inactivebg = $inactivebg;
     }
@@ -888,9 +889,19 @@ class SideMenuItem {
      */
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
-            echo '<li id="'.$this->action.'">';
+            echo '<li id="'.$this->cssId.'">';
 	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
         }
+    }
+    
+    /**
+     * Allows to set another CSS id then the default one which is the action
+     * string
+     *
+     * @param id: the CSS id to use
+     */
+    function setCssId($id) {
+        $this->cssId = $id;
     }
 
     /**
@@ -913,7 +924,7 @@ class SideMenuItem {
             $border = "#666";
         }
 
-        $ret = "#sidebar ul." . $this->submod . " li#" . $this->action . " a {
+        $ret = "#sidebar ul." . $this->submod . " li#" . $this->cssId . " a {
                     background-color: " . $color . ";
                     color: #666;
                     border-right: 1px solid ". $border . ";"
@@ -921,7 +932,7 @@ class SideMenuItem {
                 }";
         if (!$active)
                 $ret = $ret . "
-                #sidebar ul." . $this->submod . " li#" . $this->action ." a:hover {
+                #sidebar ul." . $this->submod . " li#" . $this->cssId ." a:hover {
                     color: #666;
                     background-color: #F7F7F7;"
                     . $bgi . "
