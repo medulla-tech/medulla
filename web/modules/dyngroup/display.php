@@ -30,7 +30,8 @@ $id = idGet();
 $group = new Dyngroup($id);
 
 $p = new PageGenerator(sprintf(_T("Display '%s' result list"), $group->getName()));
-$sidemenu->forceActiveItem($items[$id]);
+$item = $items[$id];
+$sidemenu->forceActiveItem($item->action);
 $p->setSideMenu($sidemenu);
 $p->display();
 

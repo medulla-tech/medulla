@@ -41,10 +41,12 @@ while ($i < $max) {
         $name = $group->getName();
 
         if ($group->canShow()) {
-        $items[$i] = new SideMenuItem(
-                    sprintf(_T("Display %s '%s'"), ($group->isGroup()?_T("group"):_T("request")), $name),
+            $s = new SideMenuItem(
+                     sprintf(_T("Display %s '%s'"), ($group->isGroup()?_T("group"):_T("request")), $name),
                     "base", "computers", "display&id=$i"
                 );
+            $s->setCssId("displayid$i");
+            $items[$i] = $s;
             $sidemenu->addSideMenuItem($items[$i]);
         }
     }
