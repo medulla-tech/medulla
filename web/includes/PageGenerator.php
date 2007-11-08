@@ -893,7 +893,7 @@ class SideMenuItem {
 	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
         }
     }
-    
+
     /**
      * Allows to set another CSS id then the default one which is the action
      * string
@@ -1049,10 +1049,9 @@ class PageGenerator {
     /**
      * Set the page title
      */
-    function setTitle($title) {        
+    function setTitle($title) {
         $this->title = $title;
     }
-
 
     /**
      *	display the whole page
@@ -1086,6 +1085,180 @@ class PageGenerator {
     function displayTitle() {
         if (isset($this->title)) print "<h2>" . $this->title . "</h2>\n";
     }
+}
+
+/**
+ * Little wrapper that just include a PHP file as a HtmlElement
+ */
+class DisplayFile extends HtmlElement {
+
+    function DisplayFile($file) {
+        $this->HtmlElement();
+        $this->file = $file;
+    }
+
+    function display() {
+        require($this->file);        
+    }
+}
+
+/**
+ * Class for a tab content
+ */ 
+class TabbedPage extends Div {
+    
+    function TabbedPage($title, $file) {
+        $this->Div(array("class" => "tabdiv"));
+        $this->title = $title;
+        $this->add(new DisplayFile($file));
+    }
+    
+    function displayTitle() {
+        return "<h2>" . $this->title . "</h2>\n";
+    }
+    
+    function begin() {
+        $s = Div::begin();
+        $s .= $this->displayTitle();       
+        return $s;
+    }
+
+}
+
+/**
+ * Class for tab displayed by TabSelector
+ */
+class Tab extends HtmlElement {
+
+    function Tab($id, $title, $params = array()) {
+        $this->id = $id;
+        $this->title = $title;
+        $this->params = $params;
+        $this->active = False;
+        $this->last = False;
+    }
+
+    function getLink() {
+        return urlStr($_GET["module"] . "/" . $_GET["submod"] . "/" . $_GET["action"], array_merge(array("tab" => $this->id), $this->params));
+    }
+
+    function setActive($flag) {
+        $this->active = $flag;
+    }
+
+    function display() {
+        if ($this->active)
+            $klass = ' class="tabactive"';
+        else
+            $klass = "";
+        print '<li id="' . $this->id . '"' . $klass . '"> '
+                . '<a href="' . $this->getLink() . '">' 
+            . $this->title . "</a></li>";
+    }
+    
+}
+
+/**
+ * This class allow to create a page with a tab selector
+ */
+class TabbedPageGenerator extends PageGenerator {
+
+    function TabbedPageGenerator() {
+        $this->PageGenerator();
+        $this->topfile = null;
+        $this->tabselector = new TabSelector();
+        $this->pages = array();
+        $this->firstTabActivated = False;        
+    }
+
+    /**
+     * add a header above the tab selector
+     */
+    function addTop($title, $file) {
+        $this->title = $title;
+        $this->topfile = $file;
+    }
+    
+
+    /**
+     * Add a new tab to a page
+     *
+     * @param name: the tab id
+     * @param title: the tab title in the tab selector
+     * @param pagetitle: the page title
+     * @param file: the file that renders the page
+     * @param params: an array of URL parameters
+     */
+    function addTab($id, $tabtitle, $pagetitle, $file, $params = array()) {
+        if (isset($_GET["tab"]) && $_GET["tab"] == $id) {
+            $this->tabselector->addActiveTab($id, $tabtitle, $params);
+        } else {
+            if (isset($_GET["tab"])) {
+                $this->tabselector->addTab($id, $tabtitle, $params);
+            } else {
+                if (!$this->firstTabActivated) {
+                    $this->tabselector->addActiveTab($id, $tabtitle, $params);
+                    $this->firstTabActivated = True;
+                } else {
+                    $this->tabselector->addTab($id, $tabtitle, $params);
+                }
+            }
+        }
+        $this->pages[$id] = array($pagetitle, $file);
+    }
+
+    function display() {
+        $this->displaySideMenu();
+        $this->displayTitle();
+        if ($this->topfile) require($this->topfile);
+        $this->tabselector->display();
+        if (isset($_GET["tab"]) && isset($this->pages[$_GET["tab"]])) {
+            list($title, $file) = $this->pages[$_GET["tab"]];
+            $this->page = new TabbedPage($title, $file);
+        } else {
+            /* Get the first tab page */
+            $tab = $this->tabselector->getDefaultTab();
+            list($title, $file) = $this->pages[$tab->id];
+            $this->page = new TabbedPage($title, $file);            
+        }        
+        $this->page->display();
+    }
+
+}
+
+/**
+ * Allow to draw a tab selector
+ */
+class TabSelector extends HtmlContainer {
+    
+    function TabSelector() {
+        $this->HtmlContainer();
+        $this->tabs = array();
+        $this->order = array();
+    }
+ 
+    function getDefaultTab() {
+        return $this->elements[0];
+    }
+
+    function addActiveTab($name, $title, $params = array()) {
+        $tab = new Tab($name, $title, $params);
+        $tab->setActive(True);
+        $this->add($tab);
+    }
+
+    function addTab($name, $title, $params = array()) {
+        $this->add(new Tab($name, $title, $params));
+    }
+
+    function begin() {
+        return '<div class="tabselector"><ul>';
+    }
+
+    function end() {
+        return "</ul></div>";
+    }
+
 }
 
 /**
