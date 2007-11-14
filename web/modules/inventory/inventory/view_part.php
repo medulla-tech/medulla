@@ -65,10 +65,7 @@ foreach ($h as $k => $v) {
     }
 }
 if ($max > 0 && $n != null) {
-    //TODO search box + next/previous
-    //$ajax = new AjaxFilter("modules/inventory/inventory/ajaxInvFilter.php");
-    //$ajax->display();
-    
+    $n->end = $max;
     $n->drawTable(0);
 }
 
