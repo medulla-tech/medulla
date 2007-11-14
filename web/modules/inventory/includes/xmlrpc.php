@@ -28,8 +28,8 @@ function getAllMachinesInventoryColumn($part, $column, $pattern = null) {
     return xmlCall("inventory.getAllMachinesInventoryColumn", array($part, $column, $pattern));
 }
 
-function getLastMachineInventoryPart($part, $name) {
-    return xmlCall("inventory.getLastMachineInventoryPart", array($part, $name));
+function getLastMachineInventoryPart($part, $name, $pattern = null) {
+    return xmlCall("inventory.getLastMachineInventoryPart", array($part, $name, $pattern));
 }
 
 function getMachines($pattern = null) {
@@ -54,6 +54,10 @@ function getInventoryEM($part) {
 
 function getInventoryGraph($part) {
     return xmlCall("inventory.getInventoryGraph", array($part));
+}
+
+function inventoryExists($name) {
+    return xmlCall("inventory.inventoryExists", array($name));
 }
 
 
