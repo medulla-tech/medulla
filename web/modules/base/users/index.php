@@ -21,20 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<style type="text/css">
-<!--
 
-<?php
-require("modules/base/graph/users/index.css");
-require("modules/base/includes/users.inc.php");
-
-?>
-
--->
-</style>
-
-<?php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 ?>
@@ -87,9 +74,13 @@ pushSearchUser();
 
 </form>
 
-<h2><?= _("User list");?></h2>
+<?
 
-<div class="fixheight"></div>
+$p = new PageGenerator(_("User list"));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+?>
 
 <div id="userContainer">
 </div>

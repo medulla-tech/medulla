@@ -21,33 +21,12 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<style type="text/css">
-<!--
 
-<?php
 global $conf;
 require("modules/base/includes/users.inc.php");
 require("includes/template.inc.php");
-
-?>
-
--->
-</style>
-
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?module=base&submod=users&action=index"),
-              array("name" => _("Edit ACL")));
-
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
-?>
-
-<?php
 
 //if we post information
 if ($_POST["buser"]) {
@@ -210,6 +189,11 @@ function createRedirectAclTemplate($module_name,$acl) {
     return $bidule;
 
 }
+
+$p = new PageGenerator(sprintf(_("Edit ACL of user %s"), $_GET["user"]));
+$sidemenu->forceActiveItem("index");
+$p->setSideMenu($sidemenu);
+$p->display();
 
 $tpl = new Template('.', 'keep');
 global $descArray;

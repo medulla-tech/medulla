@@ -21,50 +21,21 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
 
-
-if (isset($_POST["bback"]))
-{
+if (isset($_POST["bback"])) {
     header("Location: ".urlStrRedirect("base/users/index"));
     exit;
 }
 require("modules/base/includes/users.inc.php");
 require("graph/header.inc.php");
-
-?>
-
-
-<style type="text/css">
-<!--
-
-<?php
-require("modules/base/graph/users/passwd.css");
-?>
-
--->
-</style>
-
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Users"),
-                    "link" => "main.php?module=base&submod=users&action=index"),
-              array("name" => _("Change your password")));
-
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
 $user = $_SESSION["login"];
-?>
 
-<h2><?= _("Change your password") ?></h2>
-
-<div class="fixheight"></div>
-
-<?php
+$p = new PageGenerator(_("Change your password"));
+$p->setSideMenu($sidemenu);
+$p->display();
 
 if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error)))
 {

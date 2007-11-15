@@ -21,9 +21,16 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?
-if ($_SESSION["login"]!='root') {
+
+$sidemenu = new SideMenu();
+$sidemenu->setClass("users");
+$sidemenu->setBackgroundImage("img/users/icn_users_large.gif");
+$sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","users","index", "img/users/icn_global_active.gif", "img/users/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","users","add", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
+
+if ($_SESSION["login"] != "root") {
+    
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base","users","passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
 
 $sidebar = array("class" => "users",
                  "content" => array(array("id" => "global",
@@ -48,4 +55,5 @@ $sidebar = array("class" => "users",
 
 
 }
+unset($sidebar);
 ?>

@@ -209,14 +209,10 @@ td.statusPad {
 <?php
 require("graph/navbar.inc.php");
 require("includes/statusSidebar.inc.php");
+$p = new PageGenerator(_("Global view"));
+$p->displayTitle();
+
 ?>
-
-
-
-<h2><?= _("Global view")?></h2>
-
-
-<div class="fixheight"></div>
 
 <div class="left">
   <div class="statusPad">

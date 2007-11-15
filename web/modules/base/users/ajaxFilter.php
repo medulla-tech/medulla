@@ -132,8 +132,8 @@ $n->addExtraInfo($phones,_("Telephone"));
 
 $n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user"));
 $n->addActionItem(new ActionItem(_("MMC rights"),"editacl","editacl","user") );
-$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","user") );
-$n->addActionItem(new ActionPopupItem(_("Backup"),"backup","archiver","user") );
+$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","user") );
+$n->addActionItem(new ActionPopupItem(_("Backup"),"backup","backup","user") );
 
 $n->setName(_("Users"));
 $n->display(0);

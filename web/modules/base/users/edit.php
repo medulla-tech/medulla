@@ -21,35 +21,13 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<style type="text/css">
-<!--
 
-<?php
-
-global $result;
-
-if ($_GET["action"]=="add") {
-    require("modules/base/graph/users/add.css");
-}
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/groups.inc.php");
-
-?>
-
-#expertMode table {
-	background-color: #FEE;
-}
-
-
--->
-</style>
-<?php
-
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
 
+global $result;
 
 //verify validity of information
 if (isset($_POST["buser"])) {
@@ -260,14 +238,19 @@ if (isset($error)) {
 
 //title differ with action
 if ($_GET["action"]=="add") {
-    print "<h2>"._("Add user")."</h2>";
-  }
-  else {
-    print '<h2>'._("Edit user").'</h2>';
-  }
+    $title = _("Add user");
+    $activeItem = "add";
+} else {
+    $title = _("Edit user");
+    $activeItem = "index";
+}
+
+$p = new PageGenerator($title);
+$sidemenu->forceActiveItem($activeItem);
+$p->setSideMenu($sidemenu);
+$p->display();
 
 ?>
-<div class="fixheight"></div>
 
 <div>
 <form id="edit" enctype="multipart/form-data" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="selectAll(); return validateForm();">
