@@ -964,6 +964,7 @@ class SideMenuItem {
 class SideMenu {
     var $itemArray;
     var $className;
+    var $backgroundImage;
     var $activatedItem;
 
     /**
@@ -972,7 +973,8 @@ class SideMenu {
      */
     function SideMenu() {
         $this->itemArray = array();
-        $this->activatedItem = null;
+        $this->backgroundImage = null;
+        $this->activatedItem = null;        
     }
 
     /**
@@ -989,7 +991,7 @@ class SideMenu {
     function setClass($class) {
         $this->className=$class;
     }
-
+    
     /**
      * @return className for CSS
      */
@@ -997,6 +999,19 @@ class SideMenu {
         return $this->className;
     }
 
+    /**
+     * Set the sidemenu background image
+     */
+    function setBackgroundImage($bg) {
+        $this->backgroundImage = $bg;
+    }
+
+    /**
+     * Get the sidemenu background image
+     */
+    function getBackgroundImage() {
+        return $this->backgroundImage;
+    }
 
     /**
      *	print the SideMenu and the sideMenuItem
@@ -1020,6 +1035,9 @@ class SideMenu {
         foreach ($this->itemArray as $objSideMenuItem) {
             $active = (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem));
             $css = $css . $objSideMenuItem->getCss($active);
+        }
+        if ($this->backgroundImage) {
+            $css .= "#sectionContainer { background-image: url(" . $this->backgroundImage . ") }";
         }
         return $css;
     }
