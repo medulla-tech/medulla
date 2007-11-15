@@ -301,6 +301,16 @@ class ListInfos extends HtmlElement {
     }
 
     /**
+     * Set the number of rows to display per ListInfos page.
+     * It overrides the default value defined by $conf["global"]["maxperpage"].
+     *
+     * @param $value The number of rows
+     */
+    function setRowsPerPage($value) {
+        $this->end = $value;
+    }
+
+    /**
      *	add an ActionItem
      *  @param $objActionItem object ActionItem
      */
