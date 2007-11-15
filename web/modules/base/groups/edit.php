@@ -21,33 +21,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-
 
 require("modules/base/includes/groups.inc.php");
-
-?>
-
-<style type="text/css">
-<!--
-
-<?php
-require("modules/base/graph/groups/add.css");
-?>
-
--->
-</style>
-
-<?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Groups"),
-                    "link" => "main.php?module=base&submod=groups&action=index"),
-              array("name" => _("Add group")));
-
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
 
 if (isset($_POST["badd"])) {
@@ -80,11 +56,14 @@ if ($_GET["action"] == "add") {
     else $groupdesc = "";
 }
 
+$p = new PageGenerator($title);
+if ($_GET["action"] == "edit") {
+    $sidemenu->forceActiveItem("index");
+}
+$p->setSideMenu($sidemenu);
+$p->display();
+
 ?>
-
-<h2><?= $title ?> </h2>
-
-<div class="fixheight"></div>
 
 <? if ($_GET["action"] == "add") { ?>
 

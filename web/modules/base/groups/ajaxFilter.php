@@ -105,9 +105,9 @@ $n = new ListInfos($arrGroup,_("Groups"));
 $n->setCssClass("groupName");
 $n->addExtraInfo($arrComment,_("Comments"));
 $n->setAdditionalInfo($arrNb);
-$n->addActionItem(new ActionItem(_("Edit members"),"members","afficher","group") );
+$n->addActionItem(new ActionItem(_("Edit members"),"members","display","group") );
 $n->addActionItem(new ActionItem(_("Edit group"),"edit", "edit","group") );
-$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","group") );
+$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","group") );
 $n->setName(_("Groups management"));
 $n->display(0);
 

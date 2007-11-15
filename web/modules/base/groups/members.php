@@ -21,22 +21,14 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
 
 require("modules/base/includes/groups.inc.php");
 require("modules/base/includes/users.inc.php");
 
-require("graph/header.inc.php");
 ?>
 
 <style type="text/css">
 <!--
-
-<?php
-require("modules/base/graph/groups/index.css");
-?>
 
 #grouplist
 {
@@ -62,14 +54,8 @@ select.list
 </style>
 
 <?php
-$path = array(array("name" => _("Home"),
-                    "link" => "main.php"),
-              array("name" => _("Groups"),
-                    "link" => "main.php?module=base&submod=groups&action=index"),
-              array("name" => _("Group members")));
 
 require("localSidebar.php");
-
 require("graph/navbar.inc.php");
 
 if (isset($_GET["group"])) $group = urldecode($_GET["group"]);
@@ -133,11 +119,13 @@ if (count($forbidden)) {
     $n->setLevel(0);
     $n->setSize(600);
 }
+
+$p = new PageGenerator(sprintf(_("Group members %s"), $group));
+$sidemenu->forceActiveItem("index");
+$p->setSideMenu($sidemenu);
+$p->display();
+
 ?>
-
-<h2><?= _("Group members"); ?> <?php echo $group; ?></h2>
-
-<div class="fixheight"></div>
 
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 

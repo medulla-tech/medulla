@@ -21,27 +21,13 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
+
+
 require("modules/base/includes/groups.inc.php");
-?>
-
-<style type="text/css">
-<!--
-
-<?php
-require("modules/base/graph/groups/index.css");
-
-$root = $conf["global"]["root"];
-$maxperpage = $conf["global"]["maxperpage"];
-?>
-
--->
-</style>
-
-<?php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+
+$root = $conf["global"]["root"];
 
 if (!isset($_GET["items"])) {
   $groups = get_groups($error);
@@ -61,9 +47,6 @@ if (isset($_GET["start"])) {
 }
 
 ?>
-
-
-
 
 <form name="groupForm" id="groupForm" action="#" onSubmit="return false;">
 
@@ -86,15 +69,17 @@ if (isset($_GET["start"])) {
 
 </form>
 
+<?
 
-<h2><?= _("Group list"); ?></h2>
+$p = new PageGenerator(_("Group list"));
+$p->setSideMenu($sidemenu);
+$p->display();
 
-<div class="fixheight"></div>
+?>
 
 <div id="groupContainer">
 
 <?php
-
 
 $arrGroup = array();
 $arrComment = array();
@@ -106,26 +91,16 @@ for ($idx = 0; $idx < count($groups); $idx++) {
     $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';
 }
 
-
 $n = new ListInfos($arrGroup,_("Groups"));
-
 $n->setCssClass("groupName");
-
 $n->addExtraInfo($arrComment,_("Comments"));
 $n->setAdditionalInfo($arrNb);
-
-
-$n->addActionItem(new ActionItem(_("Edit members"),"members","afficher","group") );
+$n->addActionItem(new ActionItem(_("Edit members"),"members","display","group") );
 $n->addActionItem(new ActionItem(_("Edit group"),"edit", "edit","group") );
-$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","supprimer","group") );
-
-
+$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","group") );
 $n->setName(_("Group list"));
 $n->display();
 
-
-
-
-
 ?>
+
 </div>

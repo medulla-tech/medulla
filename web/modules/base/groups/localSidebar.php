@@ -21,16 +21,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?
-$sidebar = array("class" => "groups",
-                 "content" => array(
-				    array("id" => "global",
-					  "text" => _("List"),
-					  "link" => urlStr("base/groups/index")),
-				    array("id" => "addGroup",
-					  "text" => _("Add"),
-					  "link" => urlStr("base/groups/add"))
-				    )
-		 );
+
+$sidemenu= new SideMenu();
+$sidemenu->setClass("groups");
+$sidemenu->setBackgroundImage("img/groups/icn_groups_large.gif");
+$sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","groups","index", "img/groups/icn_global_active.gif", "img/groups/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","groups","add", "img/groups/icn_addGroup_active.gif", "img/groups/icn_addGroup.gif"));
+
 ?>
