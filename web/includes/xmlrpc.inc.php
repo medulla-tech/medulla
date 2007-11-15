@@ -242,6 +242,7 @@ function xmlCall($method, $params = null) {
               redirected to the login page.
             */
             unset($_SESSION["expire"]);
+            $_SESSION["agentsessionexpired"] = 1;
             $root = $conf["global"]["root"];
             header("Location: $root" . "main.php");
             exit;

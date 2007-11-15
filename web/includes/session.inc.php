@@ -21,10 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-
-/* $Id$ */
 
 /**
  * this file provide session registration
@@ -33,24 +29,27 @@
 session_start();
 session_cache_expire (30);
 
-
-if (!isset($_SESSION["expire"]) )
-{
-  if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"]))
-  {
-    session_destroy();
-    $goto = "";
-  }
-  else
-  {
-    $goto = "?goto=".$_SERVER["SCRIPT_NAME"];
-  }
-
-  $root = $conf["global"]["root"];
+if (!isset($_SESSION["expire"])) {
+    /* session has expired */
+    if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"])) {
+        session_destroy();
+        $goto = "";
+    } else {
+        $goto = "?goto=".$_SERVER["REQUEST_URI"];
+    }
+    $errorcode = "";
+    if (isset($_SESSION["agentsessionexpired"])) {
+        $errorcode = "agentsessionexpired=1";
+        if (!strlen($goto)) $errorcode = "?" . $errorcode;
+        else $errorcode = "&" . $errorcode;
+        unset($_SESSION["agentsessionexpired"]);
+    }
+    /* Redirect user to the login page */
+    $root = $conf["global"]["root"];
     echo "<script>\n";
-            echo "window.location = '".$root."index.php".$goto."';";
+    echo "window.location = '".$root."index.php".$goto. $errorcode."';";
     echo "</script>\n";
-  exit;
+    exit;
 }
 
 $_SESSION["expire"] = time() + 90 * 60;

@@ -85,7 +85,10 @@ if (isset($_POST["bConnect"])) {
     }
 }
 
-if ($_GET['error']) $error = urldecode($_GET['error']) . "<br/>" . $error;
+if ($_GET["error"]) $error = urldecode($_GET["error"]) . "<br/>" . $error;
+if ($_GET["agentsessionexpired"]) {
+    $error = _T("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
+}
 
 ?>
 
