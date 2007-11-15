@@ -151,7 +151,7 @@ function getDetailedUser($uid) {
 
 
 function change_user_main_attr($uid, $newuid, $firstname, $surname) {
-  return xmlCall("base.changeUserMainAttributes",array($uid, $newuid, $firstname, $surname));
+  return xmlCall("base.changeUserMainAttributes",array($uid, $newuid, stripslashes($firstname), stripslashes($surname)));
 }
 
 function isEnabled($uid) {
@@ -167,7 +167,7 @@ function disableUser($uid) {
 }
 
 function changeUserAttributes($uid,$attr,$attrval) {
-    return xmlCall("base.changeUserAttributes", array($uid,$attr,$attrval));
+    return xmlCall("base.changeUserAttributes", array($uid,$attr,stripslashes($attrval)));
 }
 
 function changeUserTelephoneNumbers($uid, $numbers) {
