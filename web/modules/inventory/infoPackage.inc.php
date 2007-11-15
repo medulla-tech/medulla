@@ -108,7 +108,7 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("tabs", _T("Inventory on machine"));
+$page = new Page("invtabs", _T("Inventory on machine"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $submod->addPage($page);
 
