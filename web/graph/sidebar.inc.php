@@ -21,10 +21,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
 
+/* This file should be removed once mmc-web-base/mmc-web-samba modules sidebars
+   use the new framework */
 ?>
 
 <div id="help">
@@ -38,10 +37,8 @@ echo "<ul class=\"" . $sidebar["class"] . "\">\n";
 foreach ($sidebar["content"] as $item) {
     /* Verify ACL before making the sidebar item */
     $arrUrl = parse_url($item["link"]);    
-    /* Replace ampersand entity char */
-    $arrUrl = str_replace("&amp;", "&", $arrUrl);
     foreach(split('&amp;', $arrUrl["query"]) as $arg) {
-        list($key,$value) = split('=',$arg);
+        list($key, $value) = split('=',$arg);
         /* Storing arg in an array */
         $arrArg[$key] = $value;
     }
