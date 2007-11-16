@@ -21,38 +21,17 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?
 
-function printNavbarCss ($module)
-{
+/**
+ * Try to include a CSS for the current displayed module and sub-module
+ */
+function autoIncludeCss() {
     $css = "modules/" . $_GET["module"] ."/graph/" . $_GET["submod"] . "/index.css";
     if (file_exists($css) && $_GET["module"] != "base" && $_GET["module"] != "samba") include($css);
-    else {
-        echo "// printNavbarCss\n";
-        echo "#navbar ul li#$module { width: 70px; }\n";
-
-        echo "#navbar ul li#$module a {\n";
-        echo "	border-top: 2px solid #D8D8D7;\n";
-        echo "	border-left: 1px solid #B2B2B2;\n";
-        echo "	border-right: 1px solid #B2B2B2;\n";
-        echo "	color: #EE5010;\n";
-        echo "	background-color: #F2F2F2;\n";
-        echo "	padding-top: 48px;\n";
-        echo "  background-position: 50% -132px;\n";
-        echo "	}\n\n";
-        
-        echo "#navbar ul li#$module a:hover {\n";
-        echo " color: #999;\n";
-        echo " background-position: 50% -132px;}\n";
-    }
 }
 
-/* FIXME: Is this still needed ? */
 print '<style type="text/css"><!--';
-printNavbarCss($_GET["module"]);
-printNavbarCss($_GET["submod"]);
+autoIncludeCss();
 print "--></style>";
-
 
 ?>
