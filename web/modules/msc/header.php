@@ -31,17 +31,21 @@ require("modules/msc/includes/openASession.inc.php");
 require_once("modules/msc/includes/xmlrpc.php");
 
 $params = etherLoadSingleByName($_GET['name']);
+if (!$params['mac'] || $params['mac'] == '') {
+    $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+    $msc_host->headerDisplay();
+} else {
+    $session = openASession($params['mac']);
 
-$session = openASession($params['mac']);
-
-// Display host informations
-$msc_host = new RenderedMSCHost(
-    $session->mac,
-    $session,
-    (MSC_sysPing($session->ip)==0),
-    'msc/msc/general'
-);
-$msc_host->headerDisplay();
+    // Display host informations
+    $msc_host = new RenderedMSCHost(
+        $session->mac,
+        $session,
+        (MSC_sysPing($session->ip)==0),
+        'msc/msc/general'
+    );
+    $msc_host->headerDisplay();
+}
 
 ?>
 

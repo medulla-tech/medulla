@@ -43,18 +43,24 @@ function action($action, $cible, $mac, $profile, $group) {
 }
 
 $params = etherLoadSingleByName($_GET['name']);
-$session = openASession($params['mac']);
 
-if ($_POST['action']) {
-    action($_POST['action'], $_GET['name'], $params['mac'], $params['profile'], $params['group']);
+if (!$params['mac'] || $params['mac'] == '') {
+    $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+    $msc_host->headerDisplay();
+} else {
+    $session = openASession($params['mac']);
+
+    if ($_POST['action']) {
+        action($_POST['action'], $_GET['name'], $params['mac'], $params['profile'], $params['group']);
+    }
+
+    // Display the actions list
+    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $session->hostname));
+    $label->display();
+
+    $msc_actions = new RenderedMSCActions(msc_script_list_file());
+    $msc_actions->display();
 }
-
-// Display the actions list
-$label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $session->hostname));
-$label->display();
-
-$msc_actions = new RenderedMSCActions(msc_script_list_file());
-$msc_actions->display();
 
 ?>
 
