@@ -131,13 +131,6 @@ if ($_SESSION["login"]=='root') {
 
 <div id="sectionContainer">
 
-<?php
-if (isset($sidebar))
-{
-  require("sidebar.inc.php");
-}
-?>
-
 <div id="sectionTopRight">
 <?php
 if (isset($topLeft))
@@ -155,7 +148,3 @@ echo "</div>";
 ?>
 
 <div id="section">
-
-<?php
-unset($sidebar);
-?>
