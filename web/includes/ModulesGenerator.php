@@ -287,14 +287,14 @@ class SubModule {
 
 
             if (!$selected) {
-                $css = '#navbar ul li#'.$this->getName().' { 				width: '.$this->_imgsize.'px; }
-                #navbar ul li#'.$this->getName().' a {         background: url("'.$this->_img.'.png") no-repeat transparent;
+                $css = '#navbar ul li#navbar'.$this->getName().' { 				width: '.$this->_imgsize.'px; }
+                #navbar ul li#navbar'.$this->getName().' a {         background: url("'.$this->_img.'.png") no-repeat transparent;
                                         background-position: 50% 10px;}
-                #navbar ul li#'.$this->getName().' a:hover {   background: url("'.$this->_img.'_hl.png") no-repeat transparent;
+                #navbar ul li#navbar'.$this->getName().' a:hover {   background: url("'.$this->_img.'_hl.png") no-repeat transparent;
                                         background-position: 50% 10px	}';
             } else {
-                $css = '#navbar ul li#'.$this->getName().' { 				width: '.$this->_imgsize.'px; }
-                #navbar ul li#'.$this->getName().' a {         background: url("'.$this->_img.'_select.png") no-repeat transparent;
+                $css = '#navbar ul li#navbar'.$this->getName().' { 				width: '.$this->_imgsize.'px; }
+                #navbar ul li#navbar'.$this->getName().' a {         background: url("'.$this->_img.'_select.png") no-repeat transparent;
                 border-top: 2px solid #D8D8D7;
                 border-left: 1px solid #B2B2B2;
                 border-right: 1px solid #B2B2B2;
@@ -302,7 +302,7 @@ class SubModule {
                 background-color: #F2F2F2;
                 color: #EE5010;
                                         background-position: 50% 8px;}
-                #navbar ul li#'.$this->getName().' a:hover {   background: url("'.$this->_img.'_select.png") no-repeat transparent;
+                #navbar ul li#navbar'.$this->getName().' a:hover {   background: url("'.$this->_img.'_select.png") no-repeat transparent;
                 background-color: #F2F2F2;
                 color: #EE5010;
 
@@ -321,7 +321,7 @@ class SubModule {
         }
         global $root;
         list($module,$submod,$action) = split('/',$this->_defaultpage,3);
-        print "<li id=\"".$this->getName()."\"><a href=\"".$root."main.php?module=$module&amp;submod=$submod&amp;action=$action\">\n";
+        print "<li id=\"navbar".$this->getName()."\"><a href=\"".$root."main.php?module=$module&amp;submod=$submod&amp;action=$action\">\n";
         print $this->_desc."</a></li>\n";
         //var_dump($this->_defaultpage);
     }
