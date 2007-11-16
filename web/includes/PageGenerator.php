@@ -1033,7 +1033,7 @@ class SideMenu {
     function getSideBarCss() {
         $css = "";
         foreach ($this->itemArray as $objSideMenuItem) {
-            $active = (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem));
+            $active = (($objSideMenuItem->submod == $_GET["submod"]) && (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem)));
             $css = $css . $objSideMenuItem->getCss($active);
         }
         if ($this->backgroundImage) {
