@@ -110,6 +110,7 @@ $submod = & $base->getSubmod('computers');
 
 $page = new Page("invtabs", _T("Inventory on machine"));
 $page->setFile("modules/inventory/inventory/tabs.php");
+$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
 unset($submod);
