@@ -161,6 +161,9 @@ def activate():
             if not os.path.exists(script):
                 logger.error("SAMBA 'add machine script' option is set to a non existing file: " + script)
                 return False
+        # Issue a warning if NSCD is running
+        if os.path.exists("/var/run/nscd.pid") or os.path.exists("/var/run/.nscd_socket") or os.path.exists("/var/run/nscd"):
+            logger.warning("Looks like NSCD is installed on your system. You should not run NSCD on a SAMBA server.")
     return True
 
 def isSmbAntiVirus():
