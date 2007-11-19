@@ -66,10 +66,10 @@ $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem('Failed to modify password entry');
 $errItem->setMsg(_("smbpasswd failed to change your password entry"));
-$errItem->setAdvice(_("Verify that your smbpasswd is correctly configures:
+$errItem->setAdvice(_("Verify that your smbpasswd is correctly configured:
                         <ul>
                             <li> Your Ldap server can be down</li>
-                            <li> Your Samba server is not properly configure</li>
+                            <li> Your Samba server is not properly configured</li>
                         </ul>"));
 
 $errObj->add($errItem);
