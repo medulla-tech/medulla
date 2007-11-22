@@ -334,6 +334,16 @@ class NetworkConfig(PluginConfig):
             self.bindLdapChrootConfPath = os.path.join(self.get("dns", "bindchrootconfpath"), "named.ldap")
         except NoOptionError:
             self.bindLdapChrootConfPath = self.bindLdapDir
+        try:
+            self.dnsReader = self.get("dns", "dnsreader")
+        except NoOptionError:
+            pass
+        try:
+            self.dnsReaderPassword = self.get("dns", "dnsreaderpassword")
+        except NoOptionError:
+            pass
 
     def setDefault(self):
         PluginConfig.setDefault(self)
+        self.dnsReader = None
+        self.dnsReaderPassword = None        
