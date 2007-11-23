@@ -38,13 +38,6 @@ $root = $conf["global"]["root"];
 if (isset($_POST["bConnect"])) {
     $login = $_POST["username"];
     $pass = $_POST["password"];
-
-    /* Suivre le goto si existant ... */
-    if (isset($_POST["goto"])) {
-            $goto = $_POST["goto"];
-    } else {
-        $goto = $root."main.php";
-    }
     
     /* Session creation */
     $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
@@ -77,8 +70,8 @@ if (isset($_POST["bConnect"])) {
         /* Make the comnpany logo effect */
         $_SESSION["doeffect"] = True;
 
-        /* Redirect to $goto */
-        header("Location: ".$goto);
+        /* Redirect to main page */
+        header("Location: " . $root . "main.php");
         exit;
     } else {
         if (!isXMLRPCError()) $error = _("Login failed");
@@ -151,14 +144,6 @@ if (isset($error)) {
 
 		<form action="<?php echo $root; ?>index.php" method="post" name="loginForm" id="loginForm" target="_self">
 
-<?php
-/* Send goto with POST */
-if (isset($_GET["goto"])) $goto = $_GET["goto"];
-
-/* Maybe already initialized if in previous POST */
-if (isset($goto)) echo "<input name=\"goto\" type=\"hidden\" value=\"$goto\" />\n";
-
-?>
 			<p><?= _("Login");?> :<br>
 			<input name="username" type="text" class="textfield" id="username" size="18"
 <?php

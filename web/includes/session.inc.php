@@ -33,21 +33,16 @@ if (!isset($_SESSION["expire"])) {
     /* session has expired */
     if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"])) {
         session_destroy();
-        $goto = "";
-    } else {
-        $goto = "?goto=".$_SERVER["REQUEST_URI"];
     }
     $errorcode = "";
     if (isset($_SESSION["agentsessionexpired"])) {
-        $errorcode = "agentsessionexpired=1";
-        if (!strlen($goto)) $errorcode = "?" . $errorcode;
-        else $errorcode = "&" . $errorcode;
+        $errorcode = "?agentsessionexpired=1";
         unset($_SESSION["agentsessionexpired"]);
     }
     /* Redirect user to the login page */
     $root = $conf["global"]["root"];
     echo "<script>\n";
-    echo "window.location = '".$root."index.php".$goto. $errorcode."';";
+    echo "window.location = '".$root."index.php". $errorcode."';";
     echo "</script>\n";
     exit;
 }
