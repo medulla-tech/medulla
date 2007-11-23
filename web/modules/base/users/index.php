@@ -24,67 +24,16 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-?>
 
-<form name="userForm" id="userForm" action="#">
-
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-
-    <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearchUser(); return false;" />
-    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearchUser(); return false;" />
-    </span>
-    </div>
-
-    <script type="text/javascript">
-document.getElementById('param').focus();
-
-
-/**
- * update div with user
- */
-function updateSearchUser() {
-    launch--;
-
-        if (launch==0) {
-            new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+document.userForm.param.value, { asynchronous:true, evalScripts: true});
-        }
-    }
-
-/**
- * provide navigation in ajax for user
- */
-
-function updateSearchUserParam(filter, start, end) {
-       new Ajax.Updater('userContainer','main.php?module=base&submod=users&action=ajaxFilter&filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
-    }
-
-/**
- * wait 500ms and update search
- */
-
-function pushSearchUser() {
-    launch++;
-    setTimeout("updateSearchUser()",500);
-}
-        
-pushSearchUser();
-    </script>
-
-</form>
-
-<?
+$ajax = new AjaxFilter(urlStrRedirect("base/users/ajaxFilter"));
+$ajax->display();
 
 $p = new PageGenerator(_("User list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+$ajax->displayDivToUpdate();
+
 ?>
-
-<div id="userContainer">
-</div>
-
-
 
 
