@@ -21,10 +21,8 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-require ("FormGenerator.php");
 
+require ("FormGenerator.php");
 
 /**
  * return an uniqId (use full for javascript auto generation
@@ -624,9 +622,7 @@ class OptimizedListInfos extends ListInfos {
      */
     function drawHeader($navbar=1) {      
         $count = $this->getItemCount();
-        if ($navbar) {
-            print_nav($this->start, $this->end, $this->arrInfo, 0, $this->extranavbar);
-        }
+        $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
         echo $this->name." <strong>".min(($this->startreal + 1), $count) . "</strong>\n ";
         echo _("to")." <strong>".min(($this->endreal + 1), $count)."</strong>\n";
