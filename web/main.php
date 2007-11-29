@@ -102,18 +102,10 @@ function autoInclude() {
         $__action = "default";
         global $acl_error;
         $acl_error = _("Error, you don't have correct rights !");
-        if (!$_SESSION['login']) {
-            echo "<script>\n";
-            echo "window.location = '".getDefaultPage()."';";
-            echo "</script>\n";
-            return;
-        } else {
-            echo "<script>\n";
-            echo "window.location = '".getDefaultPage()."';";
-            echo "</script>\n";
-            return;
-        }
-        exit;
+        echo "<script>\n";
+        echo "window.location = '".getDefaultPage()."';";
+        echo "</script>\n";
+        return;
     }
     
     if ($redirArray[$__module][$_GET["submod"]][$__action]) {
