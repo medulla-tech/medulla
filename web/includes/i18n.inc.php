@@ -64,7 +64,7 @@ if (!function_exists('_T')) {
                      "es" => "es_ES",
                      "nb" => "nb_NO",
                      "no" => "nb_NO",
-                     "pt-br" => "pb_BR");
+                     "pt-br" => "pt_BR");
     }
 }
 
@@ -76,9 +76,16 @@ if (!$_SESSION['lang']) {
           auto-detect it
         */
         $browserLanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        $browserLanguage = strtolower(substr(rtrim($browserLanguage[0]),0,2));
+        $browserLanguage = strtolower(rtrim($browserLanguage[0]));
         $localeShort = getArrLocaleShort();
-        if (isset($localeShort[$browserLanguage])) {
+        $found = isset($localeShort[$browserLanguage]);
+        if (!$found) {
+            /* Keep only the two first letters of a language, and try to match
+               again. */
+            $localeShort[$browserLanguage] = strtolower(substr(rtrim($browserLanguage[0]),0,2));
+            $found = isset($localeShort[$browserLanguage]);
+        }
+        if ($found) {
             $_SESSION["lang"] = $localeShort[$browserLanguage];
         } else {
             $_SESSION['lang'] = 'C';
