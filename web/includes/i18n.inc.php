@@ -49,7 +49,8 @@ if (!function_exists('_T')) {
         $res = array("C" => "english",
                      "fr_FR" => "french",
                      "es_ES" => "spanish",
-                     "nb_NO" => "norwegian");
+                     "nb_NO" => "norwegian",
+                     "pt_BR" => "brazilian portuguese");
         return $res;
     }
 
@@ -62,7 +63,8 @@ if (!function_exists('_T')) {
                      "fr" => "fr_FR",
                      "es" => "es_ES",
                      "nb" => "nb_NO",
-                     "no" => "nb_NO");
+                     "no" => "nb_NO",
+                     "pt-br" => "pb_BR");
     }
 }
 
