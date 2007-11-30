@@ -1,5 +1,5 @@
-mmc-web-base (2.1.0-1) unstable; urgency=low
+mmc-web-base (2.2.0-1) unstable; urgency=low
 
   * New upstream release
 
- -- Cedric Delfosse <cdelfosse@mandriva.com>  Mon, 10 Sep 2007 11:17:34 +0200
+ -- Cédric Delfosse <cdelfosse@mandriva.com>  Fri, 30 Nov 2007 10:56:05 +0100
