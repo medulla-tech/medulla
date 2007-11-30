@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-23 17:56+0100\n"
-"PO-Revision-Date: 2007-11-23 18:01+0100\n"
+"POT-Creation-Date: 2007-11-30 18:59+0100\n"
+"PO-Revision-Date: 2007-11-30 19:00+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,35 +12,46 @@ msgstr ""
 "X-Generator: KBabel 1.10\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/header.inc.php:203
 #: graph/header.inc.php:203
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 "Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:45
 #: graph/navbar.inc.php:45
 msgid "standard mode"
 msgstr "mode standard"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:47
 #: graph/navbar.inc.php:47
 msgid "expert mode"
 msgstr "mode expert"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:52
 #: graph/navbar.inc.php:52
 msgid "Click to switch to"
 msgstr "Cliquer pour passer en"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:53
 #: graph/navbar.inc.php:53
 msgid "logout"
 msgstr "déconnexion"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:55
+#: debian/mmc-web-base/usr/share/mmc/logout/index.php:49
+#: debian/mmc-web-base/usr/share/mmc/logout/index.php:54
 #: graph/navbar.inc.php:55 logout/index.php:49 logout/index.php:54
 msgid "Logout"
 msgstr "Déconnexion"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:65
+#: debian/mmc-web-base/usr/share/mmc/main_content.php:167
 #: graph/navbar.inc.php:65 main_content.php:167
 msgid "Home"
 msgstr "Page principale"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbar.inc.php:124
 #: graph/navbar.inc.php:124
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
@@ -48,6 +59,14 @@ msgid ""
 msgstr ""
 "Si cette phrase ne change pas, votre navigateur n'est pas supporté par la MMC"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbartools.inc.php:40
+#: debian/mmc-web-base/usr/share/mmc/graph/navbartools.inc.php:48
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:692
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:699
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:754
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:758
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:40
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:46
 #: graph/navbartools.inc.php:40 graph/navbartools.inc.php:48
 #: includes/PageGenerator.php:692 includes/PageGenerator.php:699
 #: includes/PageGenerator.php:754 includes/PageGenerator.php:758
@@ -55,6 +74,15 @@ msgstr ""
 msgid "Previous"
 msgstr "Précédent"
 
+#: debian/mmc-web-base/usr/share/mmc/graph/navbartools.inc.php:53
+#: debian/mmc-web-base/usr/share/mmc/graph/navbartools.inc.php:61
+#: debian/mmc-web-base/usr/share/mmc/includes/ajaxTools.php:74
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:703
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:709
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:762
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:766
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:51
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:59
 #: graph/navbartools.inc.php:53 graph/navbartools.inc.php:61
 #: includes/ajaxTools.php:74 includes/PageGenerator.php:703
 #: includes/PageGenerator.php:709 includes/PageGenerator.php:762
@@ -63,26 +91,32 @@ msgstr "Précédent"
 msgid "Next"
 msgstr "Suivant"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/ErrorHandling.php:75
 #: includes/ErrorHandling.php:75
 msgid "Show complete trackback"
 msgstr "Afficher la traceback complète"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/ErrorHandling.php:76
 #: includes/ErrorHandling.php:76
 msgid "Complete Traceback"
 msgstr "Traceback complète"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/favorites.php:4
 #: includes/favorites.php:4
 msgid "Root user cannot have favorites"
 msgstr "L'utilisateur root ne peut pas avoir de favoris"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/favorites.php:149
 #: includes/favorites.php:149
 msgid "Add this page to your favorite"
 msgstr "Ajouter cette page à vos favoris"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:30
 #: includes/commonErrorHandling.php:30
 msgid "This item already exists in your LDAP directory"
 msgstr "Cette entrée existe déjà dans l'annuaire LDAP"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:31
 #: includes/commonErrorHandling.php:31
 msgid ""
 "Solve the problem by:\n"
@@ -94,10 +128,12 @@ msgstr ""
 "Pour résoudre ce problème:        <ul>         <li>changez le nom de cette "
 "entrée</li>         <li>supprimer cette entrée avant de la recréer</li> </ul>"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:43
 #: includes/commonErrorHandling.php:43
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:44
 #: includes/commonErrorHandling.php:44
 msgid ""
 "Solve the problem by:\n"
@@ -111,10 +147,12 @@ msgstr ""
 "serveur LDAP est correctement configuré dans /etc/mmc/plugins/base.ini</"
 "li>        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:55
 #: includes/commonErrorHandling.php:55
 msgid "This items seems to not be in the index"
 msgstr "Cette entrée semble ne pas être indexé"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:56
 #: includes/commonErrorHandling.php:56
 msgid ""
 "This problem can appear if:\n"
@@ -126,10 +164,12 @@ msgstr ""
 "Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe "
 "plus</li>            <li> elle est mal orthographiée</li> </ul>"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:68
 #: includes/commonErrorHandling.php:68
 msgid "smbpasswd failed to change your password entry"
 msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/commonErrorHandling.php:69
 #: includes/commonErrorHandling.php:69
 msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
@@ -138,30 +178,47 @@ msgid ""
 "                            <li> Your Samba server is not properly "
 "configured</li>\n"
 "                        </ul>"
-msgstr "Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas correctement configuré</li> </ul>"
+msgstr ""
+"Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur "
+"LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
+"correctement configuré</li> </ul>"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/acl.inc.php:101
 #: includes/acl.inc.php:101
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:166
 #: includes/FormGenerator.php:166
 msgid "Delete photo"
 msgstr "Supprimer photo"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:198
 #: includes/FormGenerator.php:198
 msgid "yes"
 msgstr "oui"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:201
 #: includes/FormGenerator.php:201
 msgid "no"
 msgstr "non"
 
-#: includes/FormGenerator.php:210 includes/FormGenerator.php:423
-#: includes/FormGenerator.php:471 modules/base/views/norightGroups.tpl.php:31
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:210
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:427
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:475
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/norightGroups.tpl.php:31
+#: includes/FormGenerator.php:210 includes/FormGenerator.php:427
+#: includes/FormGenerator.php:475 modules/base/views/norightGroups.tpl.php:31
 msgid "unavailable"
 msgstr "indisponible"
 
-#: includes/FormGenerator.php:389 modules/base/groups/localSidebar.php:29
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:393
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/localSidebar.php:29
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:29
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:40
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:52
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:74
+#: includes/FormGenerator.php:393 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 #: modules/base/users/localSidebar.php:40
 #: modules/base/users/localSidebar.php:52
@@ -169,51 +226,71 @@ msgstr "indisponible"
 msgid "Add"
 msgstr "Ajout"
 
-#: includes/FormGenerator.php:637 modules/base/groups/ajaxFilter.php:110
+#: debian/mmc-web-base/usr/share/mmc/includes/FormGenerator.php:641
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:110
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:100
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:83
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:61
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:92
+#: includes/FormGenerator.php:641 modules/base/groups/ajaxFilter.php:110
 #: modules/base/groups/index.php:100 modules/base/users/ajaxFilter.php:83
 #: modules/base/views/editGroups.tpl.php:61
 #: modules/base/views/index.tpl.php:92
 msgid "Delete"
 msgstr "Suppression"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:126
 #: includes/xmlrpc.inc.php:126
 msgid "Can't connect to MMC agent"
 msgstr "Impossible de se connecter à l'agent MMC"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:127
 #: includes/xmlrpc.inc.php:127
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:139
 #: includes/xmlrpc.inc.php:139
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:140
 #: includes/xmlrpc.inc.php:140
 msgid "MMC agent seems to be not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:158
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:177
 #: includes/xmlrpc.inc.php:158 includes/xmlrpc.inc.php:177
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:159
 #: includes/xmlrpc.inc.php:159
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
-msgstr "Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré le bon port TCP et le bon protocole."
+msgstr ""
+"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
+"le bon port TCP et le bon protocole."
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:178
 #: includes/xmlrpc.inc.php:178
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
-msgstr "L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la version de l'agent MMC."
+msgstr ""
+"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
+"version de l'agent MMC."
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:255
 #: includes/xmlrpc.inc.php:255
 msgid "unknown error"
 msgstr "erreur inconnue"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/xmlrpc.inc.php:256
 #: includes/xmlrpc.inc.php:256
 msgid ""
 "This exception is unknow. Please contact us to add an error handling on this "
@@ -222,6 +299,14 @@ msgstr ""
 "Cette exception est inconnue. Veuillez nous contacter pour correctement "
 "gérer cette erreur."
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:104
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:1642
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:1706
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:186
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:52
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:56
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:97
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:407
 #: includes/PageGenerator.php:104 includes/PageGenerator.php:1642
 #: includes/PageGenerator.php:1706 modules/base/groups/members.php:186
 #: modules/base/groups/delete.php:52 modules/base/users/delete.php:56
@@ -229,32 +314,91 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:436
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:628
 #: includes/PageGenerator.php:436 includes/PageGenerator.php:628
 msgid "to"
 msgstr "à"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:437
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:629
 #: includes/PageGenerator.php:437 includes/PageGenerator.php:629
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:440
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:632
 #: includes/PageGenerator.php:440 includes/PageGenerator.php:632
 msgid "page"
 msgstr "page"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:1402
 #: includes/PageGenerator.php:1402
 msgid "Ok"
 msgstr "Ok"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/PageGenerator.php:1638
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:185
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:406
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:223
 #: includes/PageGenerator.php:1638 modules/base/groups/members.php:185
 #: modules/base/users/edit.php:406 modules/base/users/editacl.php:223
 msgid "Confirm"
 msgstr "Valider"
 
+#: debian/mmc-web-base/usr/share/mmc/includes/bgps_view.php:64
 #: includes/bgps_view.php:64
 msgid "No job."
 msgstr "Aucune action."
 
+#: debian/mmc-web-base/usr/share/mmc/index.php:77 index.php:77
+msgid "Login failed"
+msgstr "Échec de la connexion"
+
+#: debian/mmc-web-base/usr/share/mmc/index.php:147
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:66
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:272
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:78
+#: modules/base/users/ajaxFilter.php:66 modules/base/users/edit.php:272
+#: modules/base/views/index.tpl.php:78 index.php:147
+msgid "Login"
+msgstr "Identifiant"
+
+#: debian/mmc-web-base/usr/share/mmc/index.php:155
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:276
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:209
+#: modules/base/users/edit.php:276 modules/base/infoPackage.inc.php:209
+#: index.php:155
+msgid "Password"
+msgstr "Mot de passe"
+
+#: debian/mmc-web-base/usr/share/mmc/index.php:159 index.php:159
+msgid "Server"
+msgstr "Serveur"
+
+#: debian/mmc-web-base/usr/share/mmc/index.php:183 index.php:183
+msgid "Language"
+msgstr "Langue"
+
+#: debian/mmc-web-base/usr/share/mmc/index.php:214 index.php:214
+msgid "Connect"
+msgstr "Connecter"
+
+#: debian/mmc-web-base/usr/share/mmc/logout/index.php:51 logout/index.php:51
+msgid "Your session will be closed"
+msgstr "Votre session va être fermée"
+
+#: debian/mmc-web-base/usr/share/mmc/main.php:104 main.php:104
+msgid "Error, you don't have correct rights !"
+msgstr "Erreur, vous n'avez pas les droits requis !"
+
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:104
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:94
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/roGroups.tpl.php:37
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:52
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/norightGroups.tpl.php:28
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:155
 #: modules/base/groups/ajaxFilter.php:104 modules/base/groups/index.php:94
 #: modules/base/views/roGroups.tpl.php:37
 #: modules/base/views/editGroups.tpl.php:52
@@ -263,23 +407,32 @@ msgstr "Aucune action."
 msgid "Groups"
 msgstr "Groupes"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:106
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:96
 #: modules/base/groups/ajaxFilter.php:106 modules/base/groups/index.php:96
 msgid "Comments"
 msgstr "Commentaires"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:108
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:98
 #: modules/base/groups/ajaxFilter.php:108 modules/base/groups/index.php:98
 msgid "Edit members"
 msgstr "Édition des membres"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:109
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:52
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:99
 #: modules/base/groups/ajaxFilter.php:109 modules/base/groups/edit.php:52
 #: modules/base/groups/index.php:99
 msgid "Edit group"
 msgstr "Édition du groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/ajaxFilter.php:111
 #: modules/base/groups/ajaxFilter.php:111
 msgid "Groups management"
 msgstr "Gestion des groupes"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:118
 #: modules/base/groups/members.php:118
 msgid ""
 "Some users can't be removed from this group because this group is their "
@@ -288,36 +441,49 @@ msgstr ""
 "Certains utilisateurs n'ont pas pu être enlevés de ce groupe car ce groupe "
 "est leur groupe primaire."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:123
 #: modules/base/groups/members.php:123
 #, php-format
 msgid "Group members %s"
 msgstr "Membres du groupe %s"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:136
 #: modules/base/groups/members.php:136
 msgid "All users"
 msgstr "Tous les utilisateurs"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/members.php:160
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:178
 #: modules/base/groups/members.php:160 modules/base/infoPackage.inc.php:178
 msgid "Group members"
 msgstr "Membres du groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:32
 #: modules/base/groups/delete.php:32
 #, php-format
 msgid "Group %s deleted"
 msgstr "Groupe %s supprimé"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:40
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:51
 #: modules/base/groups/delete.php:40 modules/base/groups/delete.php:51
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:43
 #: modules/base/groups/delete.php:43
 msgid "You will delete group"
 msgstr "Vous allez supprimer un groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/delete.php:46
 #: modules/base/groups/delete.php:46
 msgid "This group will be deleted even though it is not empty"
 msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/localSidebar.php:28
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:28
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:37
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:49
 #: modules/base/groups/localSidebar.php:28
 #: modules/base/users/localSidebar.php:28
 #: modules/base/users/localSidebar.php:37
@@ -325,20 +491,24 @@ msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 msgid "List"
 msgstr "Gestion"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:35
 #: modules/base/groups/edit.php:35
 #, php-format
 msgid "Group %s successfully added"
 msgstr "Le groupe %s a été ajouté avec succès"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:43
 #: modules/base/groups/edit.php:43
 #, php-format
 msgid "Group %s successfully modified"
 msgstr "Le groupe %s a été modifié avec succès"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:48
 #: modules/base/groups/edit.php:48
 msgid "Add group"
 msgstr "Ajouter un groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:71
 #: modules/base/groups/edit.php:71
 msgid ""
 "The group name can only contain letters and numeric, and must begin with a "
@@ -347,147 +517,189 @@ msgstr ""
 "Le nom de groupe ne peut contenir que des lettres minuscules ou caractères "
 "numériques, et il doit commencer par une lettre"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:88
 #: modules/base/groups/edit.php:88
 msgid "Group name"
 msgstr "Nom du groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:91
 #: modules/base/groups/edit.php:91
 msgid "Description"
 msgstr "Description"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/edit.php:103
 #: modules/base/groups/edit.php:103
 msgid "Create"
 msgstr "Créer"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:74
+#: debian/mmc-web-base/usr/share/mmc/modules/base/groups/index.php:101
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:161
 #: modules/base/groups/index.php:74 modules/base/groups/index.php:101
 #: modules/base/infoPackage.inc.php:161
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: modules/base/users/ajaxFilter.php:66 modules/base/users/edit.php:272
-#: modules/base/views/index.tpl.php:78 index.php:147
-msgid "Login"
-msgstr "Identifiant"
-
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:77
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:289
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:84
 #: modules/base/users/ajaxFilter.php:77 modules/base/users/edit.php:289
 #: modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Nom"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:78
 #: modules/base/users/ajaxFilter.php:78
 msgid "Mail"
 msgstr "Courriel"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:79
 #: modules/base/users/ajaxFilter.php:79
 msgid "Telephone"
 msgstr "Téléphone"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:81
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:89
 #: modules/base/users/ajaxFilter.php:81 modules/base/views/index.tpl.php:89
 msgid "Edit"
 msgstr "Édition"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:82
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:91
 #: modules/base/users/ajaxFilter.php:82 modules/base/views/index.tpl.php:91
 msgid "MMC rights"
 msgstr "Droits MMC"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:84
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:93
 #: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:93
 msgid "Backup"
 msgstr "Sauvegarde"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/ajaxFilter.php:86
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:95
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:99
 #: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:95
 #: modules/base/infoPackage.inc.php:99
 msgid "Users"
 msgstr "Utilisateurs"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:36
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:72
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:33
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/localSidebar.php:43
 #: modules/base/users/passwd.php:36 modules/base/users/passwd.php:72
 #: modules/base/users/localSidebar.php:33
 #: modules/base/users/localSidebar.php:43
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:44
 #: modules/base/users/passwd.php:44
 msgid "Your password has been changed."
 msgstr "Votre mot de passe a été changé"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:49
 #: modules/base/users/passwd.php:49
 msgid "Change your user's password"
 msgstr "Changement du mot de passe utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:59
 #: modules/base/users/passwd.php:59
 msgid "You are going to change your password"
 msgstr "Vous allez changer votre mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:63
 #: modules/base/users/passwd.php:63
 msgid "Current password"
 msgstr "Mot de passe actuel"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:65
 #: modules/base/users/passwd.php:65
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:67
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:210
 #: modules/base/users/passwd.php:67 modules/base/infoPackage.inc.php:210
 msgid "Confirm your password"
 msgstr "Confirmation du mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:73
 #: modules/base/users/passwd.php:73
 msgid "Return"
 msgstr "Retour"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:78
 #: modules/base/users/passwd.php:78
 msgid "Invalid current password. Please retry."
 msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/passwd.php:80
 #: modules/base/users/passwd.php:80
 msgid "Passwords are mismatching. Please retry."
 msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:26
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:55
 #: modules/base/users/delete.php:26 modules/base/users/delete.php:55
 msgid "Delete user"
 msgstr "Supprimer un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:37
 #: modules/base/users/delete.php:37
 #, php-format
 msgid "User %s has been successfully deleted"
 msgstr "L'utilisateur %s a été supprimé avec succès"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:47
 #: modules/base/users/delete.php:47
 #, php-format
 msgid "You will delete user <b>%s</b>."
 msgstr "Vous allez supprimer l'utilisateur <b>%s</b>."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/delete.php:51
 #: modules/base/users/delete.php:51
 msgid "Delete all user's files"
 msgstr "Supprimer tous les fichiers de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:37
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:52
 #: modules/base/users/backup.php:37 modules/base/users/backup.php:52
 msgid "Backup a user's folder"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:55
 #: modules/base/users/backup.php:55
 #, php-format
 msgid "Backup of %s user's folder is launched in background"
 msgstr ""
 "La sauvegarde du répertoire de l'utilisateur %s a été lancée en arrière plan"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:58
 #: modules/base/users/backup.php:58
 #, php-format
 msgid "Your files will be stored in"
 msgstr "Vos fichiers seront stockés dans le fichier"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:60
 #: modules/base/users/backup.php:60
 #, php-format
 msgid "file on share %s at the end of the process"
 msgstr "dans le partage %s à la fin du processus"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:63
 #: modules/base/users/backup.php:63
 msgid "Operation duration depend of the amount of data"
 msgstr "La durée des opérations dépend du volume d'informations à traiter"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:80
 #: modules/base/users/backup.php:80
 #, php-format
 msgid "%s home directory will be archived."
 msgstr "Le répertoire %s va être archivé."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:85
 #: modules/base/users/backup.php:85
 #, php-format
 msgid ""
@@ -498,27 +710,33 @@ msgstr ""
 "volume des données dépasse la taille du médium choisi, un jeu de média sera "
 "créé."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:89
 #: modules/base/users/backup.php:89
 msgid "Media size"
 msgstr "Taille du médium"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/backup.php:96
 #: modules/base/users/backup.php:96
 msgid "Launch backup"
 msgstr "Lancement de la sauvegarde"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:50
 #: modules/base/users/edit.php:50
 msgid "The confirmation password does not match the new password."
 msgstr ""
 "Le mot de passe de confirmation n'est pas identique au nouveau mot de passe."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:55
 #: modules/base/users/edit.php:55
 msgid "User's name invalid !"
 msgstr "Nom de l'utilisateur invalide !"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:69
 #: modules/base/users/edit.php:69
 msgid "The primary group field can't be empty."
 msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:73
 #: modules/base/users/edit.php:73
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
@@ -526,101 +744,126 @@ msgstr ""
 "Le groupe %s n'existe pas, et ne peut donc pas être utilisé en tant que "
 "groupe primaire."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:85
 #: modules/base/users/edit.php:85
 msgid "Password is empty."
 msgstr "Le mot de passe est vide."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:97
 #: modules/base/users/edit.php:97
 msgid "This user already exists."
 msgstr "Cet utilisateur existe déjà."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:102
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:125
 #: modules/base/users/edit.php:102 modules/base/users/edit.php:125
 msgid "User enabled."
 msgstr "Utilisateur activé."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:105
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:121
 #: modules/base/users/edit.php:105 modules/base/users/edit.php:121
 msgid "User disabled."
 msgstr "Utilisateur désactivé."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:162
 #: modules/base/users/edit.php:162
 #, php-format
 msgid "The photo is too big. The max size is %s x %s."
 msgstr "La photo est trop grande. La taille maximale est %x x %s."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:163
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:164
 #: modules/base/users/edit.php:163 modules/base/users/edit.php:164
 msgid "The photo is not a JPG file."
 msgstr "La photo n'est pas un fichier au format JPG."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:168
 #: modules/base/users/edit.php:168
 msgid "Attributes updated."
 msgstr "Attributs mis à jour."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:179
 #: modules/base/users/edit.php:179
 msgid "Password updated."
 msgstr "Mot de passe mis à jour."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:210
 #: modules/base/users/edit.php:210
 #, php-format
 msgid "User %s has been successfully created."
 msgstr "L'utilisateur %s a été créé avec succès."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:236
 #: modules/base/users/edit.php:236
 msgid "Add user"
 msgstr "Ajout d'un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:239
 #: modules/base/users/edit.php:239
 msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
-#: modules/base/users/edit.php:276 modules/base/infoPackage.inc.php:209
-#: index.php:155
-msgid "Password"
-msgstr "Mot de passe"
-
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:280
 #: modules/base/users/edit.php:280
 msgid "Confirm password"
 msgstr "Confirmation du mot de passe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:285
 #: modules/base/users/edit.php:285
 msgid "Photo"
 msgstr "Photo"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:292
 #: modules/base/users/edit.php:292
 msgid "First name"
 msgstr "Prénom"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:295
 #: modules/base/users/edit.php:295
 msgid "Title"
 msgstr "Titre"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:299
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:201
 #: modules/base/users/edit.php:299 modules/base/infoPackage.inc.php:201
 msgid "Mail address"
 msgstr "Adresse de messagerie"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:306
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:202
 #: modules/base/users/edit.php:306 modules/base/infoPackage.inc.php:202
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:308
 #: modules/base/users/edit.php:308
 msgid "Telephone Number"
 msgstr "Numéro de téléphone"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:312
 #: modules/base/users/edit.php:312
 msgid "Mobile number"
 msgstr "Numéro de mobile"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:316
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:204
 #: modules/base/users/edit.php:316 modules/base/infoPackage.inc.php:204
 msgid "Fax number"
 msgstr "Numéro de fax"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:320
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:205
 #: modules/base/users/edit.php:320 modules/base/infoPackage.inc.php:205
 msgid "Home phone number"
 msgstr "Numéro de téléphone personnel"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:334
 #: modules/base/users/edit.php:334
 msgid "User is disabled, if checked"
 msgstr "Utilisateur désactivé, si cochée"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:335
 #: modules/base/users/edit.php:335
 msgid ""
 "A disabled user can't log in any UNIX services. <br/>\n"
@@ -631,22 +874,30 @@ msgstr ""
 ">\n"
 "Le shell de l'utilisateur est /bin/false."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:347
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:87
 #: modules/base/users/edit.php:347 modules/base/views/index.tpl.php:87
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:351
 #: modules/base/users/edit.php:351
 msgid "Create home directory on filesystem"
 msgstr "Créer le répertoire personnel sur le système de fichiers"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:355
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:198
 #: modules/base/users/edit.php:355 modules/base/infoPackage.inc.php:198
 msgid "Login shell"
 msgstr "Interpréteur de commande"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:358
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:206
 #: modules/base/users/edit.php:358 modules/base/infoPackage.inc.php:206
 msgid "Common name"
 msgstr "Nom commun"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:359
 #: modules/base/users/edit.php:359
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
@@ -655,10 +906,13 @@ msgstr ""
 "Ce champ est utilisé par des clients LDAP (par exemple l'annuaire de "
 "Thunderbird) pour afficher les utilisateurs."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:363
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:207
 #: modules/base/users/edit.php:363 modules/base/infoPackage.inc.php:207
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/edit.php:364
 #: modules/base/users/edit.php:364
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
@@ -666,117 +920,146 @@ msgstr ""
 "Ce champ est utilisé par SAMBA (et autres clients LDAP) pour afficher le nom "
 "de l'utilisateur."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:77
 #: modules/base/users/editacl.php:77
 msgid "hide"
 msgstr "caché"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:78
 #: modules/base/users/editacl.php:78
 msgid "description"
 msgstr "description"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:79
 #: modules/base/users/editacl.php:79
 msgid "read only"
 msgstr "lecture seule"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:80
 #: modules/base/users/editacl.php:80
 msgid "read/write"
 msgstr "lecture/écriture"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:133
 #: modules/base/users/editacl.php:133
 msgid "Select all"
 msgstr "Tout sélectionner"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:134
 #: modules/base/users/editacl.php:134
 msgid "Deselect all"
 msgstr "Tout desélectionner"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:135
 #: modules/base/users/editacl.php:135
 msgid "Function name"
 msgstr "Nom de la fonction"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:136
 #: modules/base/users/editacl.php:136
 msgid "Authorize"
 msgstr "Autorisation"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:172
 #: modules/base/users/editacl.php:172
 msgid "Warning no desc found in infoPackage.inc.php :"
 msgstr ""
 "Attention, aucune description n'a pu être trouvée dans le fichier "
 "infoPackage.inc.php :"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:193
 #: modules/base/users/editacl.php:193
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "Édition des ACLs de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/editacl.php:201
 #: modules/base/users/editacl.php:201
 msgid "Edit ACL of user"
 msgstr "Édition des ACLs de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/users/index.php:31
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/index.tpl.php:43
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:104
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:104
 msgid "User list"
 msgstr "Liste des utilisateurs"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:110
 #: modules/base/status/index.php:110
 msgid "Uptime: "
 msgstr "Démarré depuis: "
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:114
 #: modules/base/status/index.php:114
 msgid "day"
 msgstr "jour"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:119
 #: modules/base/status/index.php:119
 msgid "hour"
 msgstr "heure"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:122
 #: modules/base/status/index.php:122
 msgid "minute"
 msgstr "minute"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:127
 #: modules/base/status/index.php:127
 msgid "Memory"
 msgstr "Mémoire"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:129
 #: modules/base/status/index.php:129
 msgid "Swap"
 msgstr "Espace d'échange"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:212
 #: modules/base/status/index.php:212
 msgid "Global view"
 msgstr "Vue globale"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:219
 #: modules/base/status/index.php:219
 msgid "Server status"
 msgstr "Statut du serveur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:226
 #: modules/base/status/index.php:226
 msgid "Hard drive partitions"
 msgstr "Partitions sur le disque"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/status/index.php:234
 #: modules/base/status/index.php:234
 msgid "Background jobs"
 msgstr "Actions en arrière plan"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/includes/groups-xmlrpc.inc.php:91
 #: modules/base/includes/groups-xmlrpc.inc.php:91
 #, php-format
 msgid "Group %s already exist"
 msgstr "Le groupe %s existe déjà"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/includes/groups-xmlrpc.inc.php:105
 #: modules/base/includes/groups-xmlrpc.inc.php:105
 #, php-format
 msgid "Group %s created"
 msgstr "Groupe %s crée"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/includes/users-xmlrpc.inc.php:95
 #: modules/base/includes/users-xmlrpc.inc.php:95
 #, php-format
 msgid "user %s created<br />"
 msgstr "utilisateur %s créé <br/>"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/includes/errorHandling.php:28
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
 msgstr "Le journal LDAP n'existe pas."
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/includes/errorHandling.php:29
 #: modules/base/includes/errorHandling.php:29
 msgid ""
 "Please be sure you have:\n"
@@ -788,169 +1071,203 @@ msgid ""
 "                        </p>\n"
 "                        "
 msgstr ""
-"Vérifiez que vous avez:                       <p>Cette ligne dans le fichier /etc/ldap/slapd.conf ou /etc/openldap/slapd.conf:                         <pre>loglevel        256</pre></p>\n"
+"Vérifiez que vous avez:                       <p>Cette ligne dans le "
+"fichier /etc/ldap/slapd.conf ou /etc/openldap/slapd."
+"conf:                         <pre>loglevel        256</pre></p>\n"
 "                        <p>et cette ligne dans le fichier /etc/syslog.conf:\n"
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/ajax_showlog.php:42
 #: modules/base/logview/ajax_showlog.php:42
 msgid "Date"
 msgstr "Date"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/ajax_showlog.php:43
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
 msgstr "Connexion"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/ajax_showlog.php:44
 #: modules/base/logview/ajax_showlog.php:44
 msgid "Operation"
 msgstr "Opération"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/ajax_showlog.php:45
 #: modules/base/logview/ajax_showlog.php:45
 msgid "Actions"
 msgstr "Actions"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/ajax_showlog.php:46
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra informations"
 msgstr "Informations supplémentaires"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/logview/index.php:35
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
 msgstr "Journal des opérations LDAP"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/roGroups.tpl.php:32
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:38
 #: modules/base/views/roGroups.tpl.php:32
 #: modules/base/views/editGroups.tpl.php:38
 msgid "Primary group"
 msgstr "Groupe primaire"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:65
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:165
 #: modules/base/views/editGroups.tpl.php:65
 #: modules/base/infoPackage.inc.php:165
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/views/editGroups.tpl.php:110
 #: modules/base/views/editGroups.tpl.php:110
 msgid "This group doesn't exist"
 msgstr "Ce groupe n'existe pas"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:32
 #: modules/base/infoPackage.inc.php:32
 msgid "User and group"
 msgstr "Gestion des utilisateurs et des groupes"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:42
 #: modules/base/infoPackage.inc.php:42
 msgid "Home page"
 msgstr "Page d'accueil"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:48
 #: modules/base/infoPackage.inc.php:48
 msgid "Favorites page"
 msgstr "Favoris"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:57
 #: modules/base/infoPackage.inc.php:57
 msgid "Status"
 msgstr "Statut"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:62
 #: modules/base/infoPackage.inc.php:62
 msgid "Default status page"
 msgstr "Page de statut par défaut"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:71
 #: modules/base/infoPackage.inc.php:71
 msgid "Log view"
 msgstr "Journaux"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:76
 #: modules/base/infoPackage.inc.php:76
 msgid "LDAP log"
 msgstr "Journal LDAP"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:117
 #: modules/base/infoPackage.inc.php:117
 msgid "Add a user"
 msgstr "Ajout d'un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:120
 #: modules/base/infoPackage.inc.php:120
 msgid "Edit a user"
 msgstr "Édition d'un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:124
 #: modules/base/infoPackage.inc.php:124
 msgid "Edit ACL permissions on a user"
 msgstr "Éditez les ACL d'un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:128
 #: modules/base/infoPackage.inc.php:128
 msgid "Delete a user"
 msgstr "Supprimer un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:133
 #: modules/base/infoPackage.inc.php:133
 msgid "Backup user files"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:138
 #: modules/base/infoPackage.inc.php:138
 msgid "Change user password"
 msgstr "Changement du mot de passe utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:144
 #: modules/base/infoPackage.inc.php:144
 msgid "Get user photo"
 msgstr "Affichage de la photo d'un utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:168
 #: modules/base/infoPackage.inc.php:168
 msgid "Delete a group"
 msgstr "Supprimer un groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:182
 #: modules/base/infoPackage.inc.php:182
 msgid "Edit a group"
 msgstr "Éditer un groupe"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:192
 #: modules/base/infoPackage.inc.php:192
 msgid "User photo"
 msgstr "Photo de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:193
 #: modules/base/infoPackage.inc.php:193
 msgid "User login"
 msgstr "Identifiant de l'utilisateur "
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:194
 #: modules/base/infoPackage.inc.php:194
 msgid "User name"
 msgstr "Nom de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:195
 #: modules/base/infoPackage.inc.php:195
 msgid "User groups"
 msgstr "Groupes de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:196
 #: modules/base/infoPackage.inc.php:196
 msgid "User firstname"
 msgstr "Prénom de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:197
 #: modules/base/infoPackage.inc.php:197
 msgid "User home directory"
 msgstr "Répertoire de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:200
 #: modules/base/infoPackage.inc.php:200
 msgid "User title"
 msgstr "Titre de l'utilisateur"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:203
 #: modules/base/infoPackage.inc.php:203
 msgid "Mobile phone number"
 msgstr "Numéro de mobile"
 
+#: debian/mmc-web-base/usr/share/mmc/modules/base/infoPackage.inc.php:211
 #: modules/base/infoPackage.inc.php:211
 msgid "Enable/Disable user account"
 msgstr "Activer/Désactiver un compte"
 
-#: logout/index.php:51
-msgid "Your session will be closed"
-msgstr "Votre session va être fermée"
+#: includes/i18n.inc.php:49
+msgid "english"
+msgstr "anglais"
 
-#: index.php:77
-msgid "Login failed"
-msgstr "Échec de la connexion"
+#: includes/i18n.inc.php:50
+msgid "french"
+msgstr "français"
 
-#: index.php:159
-msgid "Server"
-msgstr "Serveur"
+#: includes/i18n.inc.php:51
+msgid "spanish"
+msgstr "espagnol"
 
-#: index.php:183
-msgid "Language"
-msgstr "Langue"
+#: includes/i18n.inc.php:52
+msgid "norwegian"
+msgstr "norvégien"
 
-#: index.php:214
-msgid "Connect"
-msgstr "Connecter"
-
-#: main.php:104
-msgid "Error, you don't have correct rights !"
-msgstr "Erreur, vous n'avez pas les droits requis !"
+#: includes/i18n.inc.php:53
+msgid "brazilian"
+msgstr "brésilien"
