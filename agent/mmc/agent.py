@@ -44,7 +44,7 @@ import support.mmcException
 Fault = xmlrpclib.Fault
 __config = None #shared config object
 
-VERSION = "2.1.0"
+VERSION = "2.2.0"
 
 def getAvailablePlugins(path):
     """
