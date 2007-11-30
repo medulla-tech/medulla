@@ -46,11 +46,11 @@ if (!function_exists('_T')) {
      * return supported locales as an array
      */
     function getArrLocale() {
-        $res = array("C" => "english",
-                     "fr_FR" => "french",
-                     "es_ES" => "spanish",
-                     "nb_NO" => "norwegian",
-                     "pt_BR" => "brazilian portuguese");
+        $res = array("C" => _("english"),
+                     "fr_FR" => _("french"),
+                     "es_ES" => _("spanish"),
+                     "nb_NO" => _("norwegian"),
+                     "pt_BR" => _("brazilian"));
         return $res;
     }
 
@@ -82,7 +82,7 @@ if (!$_SESSION['lang']) {
         if (!$found) {
             /* Keep only the two first letters of a language, and try to match
                again. */
-            $localeShort[$browserLanguage] = strtolower(substr(rtrim($browserLanguage[0]),0,2));
+            $browserLanguage = strtolower(substr($browserLanguage,0,2));
             $found = isset($localeShort[$browserLanguage]);
         }
         if ($found) {
