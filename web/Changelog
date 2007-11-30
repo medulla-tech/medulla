@@ -1,8 +1,13 @@
+mmc-web-base 2.2.0
+------------------
+
+ * get and use a cookie from the MMC agent for server-side session tracking
+ * ported a lot of old code to the new MMC framework 
+
 mmc-web-base 2.1.0
 ------------------
 
  * new Mandriva graphical theme
-
 
 lmc-web-base 2.0.0
 ------------------
