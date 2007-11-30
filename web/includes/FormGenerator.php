@@ -361,7 +361,11 @@ class MultipleInputTpl extends AbstractTpl {
 
     function MultipleInputTpl($name,$desc='') {
         $this->name = $name;
-        $this->desc = $desc;
+        /*
+          stripslashes is needed, because some characters may be backslashed
+          when adding/removing an input field.
+        */
+        $this->desc = stripslashes($desc);
         $this->regexp = '/.*/';
     }
 
