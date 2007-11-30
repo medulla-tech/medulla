@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: mmc-web-base
 Architecture: all
-Depends: libapache2-mod-php5, php5-xmlrpc, apache2 | apache2-mpm-prefork, wwwconfig-common, ${shlibs:Depends}
+Depends: ###PHPDEPS###, apache2 | apache2-mpm-prefork, wwwconfig-common, ${shlibs:Depends}
 Replaces: lmc-web-base
 Conflicts: lmc-web-base
 Description: MMC web interface to interact with a MMC agent
