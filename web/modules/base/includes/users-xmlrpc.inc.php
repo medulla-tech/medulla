@@ -166,8 +166,9 @@ function disableUser($uid) {
     return xmlCall("base.disableUser", $uid);
 }
 
-function changeUserAttributes($uid,$attr,$attrval) {
-    return xmlCall("base.changeUserAttributes", array($uid,$attr,stripslashes($attrval)));
+function changeUserAttributes($uid, $attr, $attrval, $sslashes = True) {
+    if ($sslashes) $attrval = stripslashes($attrval);
+    return xmlCall("base.changeUserAttributes", array($uid, $attr, $attrval));
 }
 
 function changeUserTelephoneNumbers($uid, $numbers) {

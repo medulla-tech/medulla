@@ -158,7 +158,7 @@ if ($_GET["user"]) {
 		   $f = fopen($_FILES["photofilename"]["tmp_name"], "r");
 		   while (!feof($f)) $obj->scalar .= fread($f, 4096);  
 		   fclose($f);
-                   changeUserAttributes($nlogin, "jpegPhoto", $obj);		 
+                   changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
 		 } else $error .= sprintf(_("The photo is too big. The max size is %s x %s."), $maxwidth, $maxheight) . "<br/>";
 	       } else $error .= _("The photo is not a JPG file.") . "<br/>";
 	   } else $error .= _("The photo is not a JPG file.") . "<br/>";
