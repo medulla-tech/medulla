@@ -2,7 +2,9 @@ mmc-web-base 2.2.0
 ------------------
 
  * get and use a cookie from the MMC agent for server-side session tracking
- * ported a lot of old code to the new MMC framework 
+ * a title can now be set to the MMC login page
+ * browser language auto-detection on the login page
+ * ported a lot of old code to the new MMC framework
 
 mmc-web-base 2.1.0
 ------------------
