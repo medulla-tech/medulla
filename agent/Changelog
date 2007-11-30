@@ -1,3 +1,17 @@
+mmc-agent 2.2.0
+---------------
+
+ * server-side session management with the MMC web interface
+ * a user must now be authenticated before any XML-RPC calls
+ * put back HTTP basic authentication between the agent and the interface
+ * SAMBA plugin:
+   o issue a warning if NSCD is detected 
+ * network plugin:
+   o Make "get next free IP address feature" works with Python 2.4
+   o DHCP: authoritative flag management for subnet
+   o DNS: allow to specify a DNS zone reader for BIND zone configuration files (initial patch by Josef Boleininger)
+   o DNS: chrooted bind support 
+
 mmc-agent 2.1.0
 ---------------
 
