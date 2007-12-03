@@ -68,6 +68,7 @@ if (!function_exists('_T')) {
     }
 }
 
+
 /* Set language to use in the interface */
 if (!$_SESSION['lang']) {
     if (!$_COOKIE['lang']) {
@@ -91,14 +92,15 @@ if (!$_SESSION['lang']) {
             $_SESSION['lang'] = 'C';
         }
     } else {
-        $_SESSION['lang'] = $_COOKIE['lang'];
+        $_SESSION['lang'] = $_COOKIE['lang'];        
     }
-
 }
 
-
-
-setlocale(LC_ALL, $_SESSION['lang'] . ".UTF-8");
+if ($_SESSION["lang"] == "C") {
+    setlocale(LC_ALL, $_SESSION['lang']);
+} else {
+    setlocale(LC_ALL, $_SESSION['lang'] . ".UTF-8");
+}
 
 if (!is_array($_SESSION["supportModList"])) { //if supportModList not available
 					      //ex: not logged

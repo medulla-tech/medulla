@@ -23,13 +23,12 @@
  */
 
 ob_start();
-
+session_start();
 require("includes/config.inc.php");
 
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/edit.inc.php");
 require("modules/base/includes/groups.inc.php");
-require("includes/i18n.inc.php");
 require("includes/PageGenerator.php");
 
 
@@ -43,6 +42,7 @@ if (isset($_POST["bConnect"])) {
     $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
     $sessionid = md5 (time() . $ip . mt_rand());
     
+    session_destroy();
     session_id($sessionid);
     session_start();
 
@@ -74,6 +74,8 @@ if (isset($_POST["bConnect"])) {
         header("Location: " . $root . "main.php");
         exit;
     } else {
+        $_SESSION['lang'] = $_POST['lang'];
+        require("includes/i18n.inc.php");
         if (!isXMLRPCError()) $error = _("Login failed");
     }
 }
@@ -152,11 +154,11 @@ if (isset($error)) {
 			/>
 			</p>
 
-			<p><?= _("Password");?><br>
+			<p><?= _("Password");?> :<br>
 			<input name="password" type="password" class="textfield" id="password" size="18">
 			</p>
 
-                        <p> <?= _("Server");?> : <br>
+                        <p> <?= _("Server");?> :<br>
 			<?php
 
                         global $conf;
@@ -204,6 +206,7 @@ if (isset($error)) {
                         $listbox->setElements($descList);
                         $listbox->setElementsVal($urlList);
                         $listbox->setSelected($descList[0]);
+
                         if ($_SESSION['lang']) {
                             $listbox->setSelected($_SESSION['lang']);
                         }
