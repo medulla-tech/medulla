@@ -441,3 +441,61 @@ class ServiceManager:
             self.reLoad()
         return ret
 
+
+class RpcProxyI:
+    """
+    This class allows to associate a request and a session object to a set of
+    methods.
+    This is useful to change methods behaviour according to the session content
+    (which user is logged, etc.)
+
+    @ivar request: the request associated to the XML-RPC call
+    @ivar session: the session associated to the XML-RPC call
+    @ivar userid: the user id (login) associated to the XML-RPC call
+    @ivar currentContext: the current module security context
+    """
+    def __init__(self, request, mod):
+        self.request = request
+        self.session = request.getSession()
+        self.userid = self.session.userid
+        try:
+            self.currentContext = self.session.contexts[mod]
+        except KeyError:
+            self.currentContext = None
+
+    def getFunction(self, funcname):
+        return getattr(self, funcname)
+
+class ContextMakerI:
+    """
+    This class should be used to build a context to attach to a session.
+
+    @ivar request: the request associated to the XML-RPC call
+    @ivar session: the session associated to the XML-RPC call
+    @ivar userid: the user id (login) associated to the XML-RPC call
+    """
+
+    def __init__(self, request, session, userid):
+        self.request = request
+        self.session = session
+        self.userid = userid
+    
+    def getContext(self):
+        """
+        Must return a SecurityContext object according to the request, the
+        session and the userid.
+
+        If no context should be returned, just return None
+
+        @return: a SecurityContext object, or None
+        """
+        raise "Must be implemented by the subclass"
+
+class SecurityContext:
+    """
+    Class for object that contains a security context.
+
+    Basically, it can be seen as a simple structure where attributes can be get
+    and set.
+    """
+    pass

@@ -28,10 +28,14 @@ from mmc.support.mmctools import cSort, rchown, copytree
 from mmc.support.config import *
 from time import time
 
+from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
+from mmc.plugins.base.provisioning import ProvisioningManager
+from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
 
 from mmc.support.mmctools import shProcessProtocol
 from mmc.support.mmctools import generateBackgroundProcess
 from mmc.support.mmctools import cleanFilter
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 import ldap
 import ldap.schema
@@ -129,7 +133,52 @@ def activate():
         except ldap.ALREADY_EXISTS:
             pass
 
+    # Register authenticators
+    AuthenticationManager().register("baseldap", BaseLdapAuthenticator)
+    AuthenticationManager().register("externalldap", ExternalLdapAuthenticator)
+
+    # Register provisioner
+    ProvisioningManager().register("externalldap", ExternalLdapProvisioner)
+    
     return True
+
+def validate():
+    """
+    This function is called by the MMC agent when all the plugins activate()
+    functions have been called.
+
+    This function configures and validates all the manager object.
+    """
+    ret = True
+    config = BasePluginConfig("base")
+    
+    AuthenticationManager().select(config.authmethod)
+    ret = AuthenticationManager().validate()
+    if ret:
+        ProvisioningManager().select(config.provmethod)
+        ret = ProvisioningManager().validate()
+    return ret
+
+class BasePluginConfig(PluginConfig):
+
+    def readConf(self):
+        PluginConfig.readConf(self)
+        # Selected authentication method
+        try:
+            self.authmethod = self.get("authentication", "method")
+        except:
+            pass
+        # Selected provisioning method
+        try:
+            self.provmethod = self.get("provisioning", "method")
+        except:
+            pass
+
+    def setDefault(self):
+        PluginConfig.setDefault(self)
+        self.authmethod = "baseldap"
+        self.provmethod = None
+
 
 def getModList():
     """
@@ -1703,8 +1752,28 @@ def ldapAuth(uiduser, passwd):
     Authenticate an user with her/his password against a LDAP server.
     Return true if the user has been successfully authenticated, else false.
     """
-    ldapObj = ldapAuthen(uiduser, passwd)
-    return ldapObj.isRightPass()
+    authToken = AuthenticationManager().authenticate(uiduser, passwd)
+    if authToken.isAuthenticated():
+        # Run provisioning process
+        ProvisioningManager().doProvisioning(authToken)
+    return authToken.isAuthenticated()
+
+
+class BaseLdapAuthenticator(AuthenticatorI):
+
+    def __init__(self, conffile = INI, name = "baseldap"):
+        AuthenticatorI.__init__(self, conffile, name)    
+    
+    def authenticate(self, user, password):
+        ldapObj = ldapAuthen(user, password)
+        if ldapObj.isRightPass():
+            ret = AuthenticationToken(True, user, password, ldapObj.getUserEntry())
+        else:
+            ret = AuthenticationToken()
+        return ret
+
+    def validate(self):
+        return True
 
 
 class ldapAuthen:
@@ -1735,7 +1804,8 @@ class ldapAuthen:
         config = ConfigParser.ConfigParser()
         config.read(conffile)
 
-        baseDN = config.get("ldap", "baseUsersDN")
+        self.baseDN = config.get("ldap", "baseUsersDN")
+        
         ldapHost = config.get("ldap", "host")
 
         l = ldap.open(ldapHost)
@@ -1745,7 +1815,8 @@ class ldapAuthen:
 
         # if login == root, try to connect as the LDAP manager
         if (login == 'root'): username = config.get("ldap", "rootName")
-        else: username = 'uid=' + login + ', ' + baseDN
+        else: username = 'uid=' + login + ', ' + self.baseDN
+        self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
         if isinstance(password, xmlrpclib.Binary):
@@ -1757,6 +1828,7 @@ class ldapAuthen:
             self.result = True
         except ldap.INVALID_CREDENTIALS:
             pass
+        self.l = l
 
     def isRightPass(self):
         """
@@ -1765,6 +1837,9 @@ class ldapAuthen:
         @rtype: bool
         """
         return self.result
+
+    def getUserEntry(self):
+        return self.l.search_s(self.userdn, ldap.SCOPE_BASE)
 
 
 class GpoManager:

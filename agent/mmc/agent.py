@@ -78,22 +78,25 @@ class MmcServer(xmlrpc.XMLRPC,object):
         self.login = login
         self.password = password
 
-    def _getFunction(self, functionPath):
+    def _getFunction(self, functionPath, request):
         """Overrided to use functions from our plugins"""
-
-        if ('.' in functionPath):
+        if '.' in functionPath:
             mod, func = functionPath.split('.')
         else:
             func = functionPath
-
         try:
             if '.' in functionPath:
-                return getattr(self.modules[mod], func)
+                try:
+                    ret = getattr(self.modules[mod], func)
+                except AttributeError:
+                    rpcProxy = getattr(self.modules[mod], "RpcProxy")
+                    ret = rpcProxy(request, mod).getFunction(func)
             else:
-                return getattr(self, func)
-        except:
+                ret = getattr(self, func)
+        except AttributeError:
             self.logger.error(functionPath+' not found')
             raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+        return ret
 
     def render(self, request):
         """
@@ -131,7 +134,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 self.logger.warning("Function can't be called because the user in not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
-                function = self._getFunction(functionPath)
+                function = self._getFunction(functionPath, request)
         except Fault, f:
             self._cbRender(f, request)
         else:
@@ -151,6 +154,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 s = request.getSession()
                 s.loggedin = True
                 s.userid = args[0]
+                self._associateContext(request, s, s.userid)
         if result == None: result = 0
         if isinstance(result, xmlrpc.Handler):
             result = result.result
@@ -186,6 +190,28 @@ class MmcServer(xmlrpc.XMLRPC,object):
         result['faultTraceback'] = failure.getTraceback()
         return result
 
+    def _associateContext(self, request, session, userid):
+        """
+        Ask to each activated Python plugin a context to attach to the user
+        session.
+
+        @param request: the current XML-RPC request
+        @param session: the current session object
+        @param userid: the user login
+        """
+        session.contexts = {}
+        for mod in self.modules:
+            try:
+                contextMaker = getattr(self.modules[mod], "ContextMaker")
+            except AttributeError:
+                # No context provided
+                continue
+            cm = contextMaker(request, session, userid)
+            context = cm.getContext()
+            if context:
+                self.logger.debug("Attaching module '%s' context to user session" % mod)
+                session.contexts[mod] = context
+    
     def getRevision(self):
         return int("$Rev$".split(':')[1].strip(' $'))
 
@@ -323,6 +349,12 @@ def agentService(config, conffile, daemonize):
         if plugin == "base" and not "base" in mod:
             logger.error("MMC agent can't run without the base plugin. Exiting.")
             return 4
+
+    # Activate all manager objects
+    func = getattr(mod["base"], "validate")
+    if not func():
+        logger.error("Error while activating manager objects")
+        return 4
 
     # Set module list
     setModList = getattr(mod["base"], "setModList")
