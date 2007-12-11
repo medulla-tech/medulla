@@ -23,44 +23,80 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/xmlrpc.php");
+require('modules/msc/includes/qactions.inc.php');
 
-function action($action, $cible, $mac, $profile, $group) {
+function action($action, $cible) {
     $script_list = msc_script_list_file();
     if (array_key_exists($action, $script_list)) {
-        require_once("modules/msc/includes/scheduler.php");
-        
-        $id_command = scheduler_add_command_quick(
+        require("modules/msc/includes/actions.inc.php");
+        $id_command = add_command_quick(
             $script_list[$action]["command"],
             $cible,
             $script_list[$action]["title".$current_lang]);
-        scheduler_dispatch_all_commands();
-        scheduler_start_all_commands();
-        $id_command_on_host = scheduler_get_id_command_on_host($id_command);
+        dispatch_all_commands();
+        // if machine 
+        $id_command_on_host = get_id_command_on_host($id_command);
 
         header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'name'=>$_GET['name'], 'coh_id'=>$id_command_on_host)));
+        //elseif groupe 
     }
 }
 
-$params = etherLoadSingleByName($_GET['name']);
 
-if (!$params['mac'] || $params['mac'] == '') {
+$machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+if ($machine->hostname != $_GET['name']) {
     $msc_host = new RenderedMSCHostDontExists($_GET['name']);
     $msc_host->headerDisplay();
 } else {
-    $session = openASession($params['mac']);
-
-    if ($_POST['action']) {
-        action($_POST['action'], $_GET['name'], $params['mac'], $params['profile'], $params['group']);
+    if ($_POST['launchAction']) {
+        action($_POST['launchAction'], $_GET['name']);
     }
 
     // Display the actions list
-    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $session->hostname));
+    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $machine->hostname));
     $label->display();
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file());
     $msc_actions->display();
+                
+    require("modules/msc/includes/package_api.php");
+    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s'), $machine->hostname));
+    $label->display();
+
+    
+    $a_packages = array();
+    $a_pversions = array();
+    $params = array();
+    foreach (getAllPackages() as $package) {
+        $a_packages[] = $package->label;
+        $a_pversions[] = $package->version;
+        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+    }
+    
+    $n = new ListInfos($a_packages, _T("Package"));
+    $n->addExtraInfo($a_pversions, _T("Version"));
+    $n->setParamInfo($params);
+    
+    $n->addActionItem(new ActionPopupItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
+    
+    $n->drawTable(0);
+    
 }
 
 ?>
+<style>
+li.detail a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/info.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+</style>
+
 

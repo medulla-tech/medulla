@@ -22,14 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/tmpl.inc.php");
-require_once("modules/msc/includes/path.inc.php");
-require_once("modules/msc/includes/system.inc.php");
-require_once("modules/msc/includes/ssh.inc.php");
-require_once("modules/msc/includes/widget.inc.php");
-require_once("modules/msc/includes/scheduler.php");
+require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
-require_once("modules/msc/includes/new_widget.inc.php");
+require_once("modules/msc/includes/command_history.php");
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 $hostname = $_GET['name'];
 $total_commands_number = count_all_commands_on_host($hostname);
@@ -52,7 +48,9 @@ $a_stop = array();
 $a_details = array();
 
 foreach ($cmds as $cmd) {
-    $coh_id = $cmd['id_command_on_host'];
+    $coh_id = $cmd[1];
+    $cho_status = $cmd[2];
+    $cmd = $cmd[0];
     if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
         $coh = get_commands_on_host($coh_id);
         if ($coh['current_state'] != 'done') {
@@ -76,6 +74,8 @@ foreach ($cmds as $cmd) {
         }
     }
 }
+
+
 
 
 $n = new ListInfos($a_cmd, _T("Command"));

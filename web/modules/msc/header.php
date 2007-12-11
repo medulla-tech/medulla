@@ -23,27 +23,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/widgets/html.php");
+require('modules/msc/includes/machines.inc.php');
+require('modules/msc/includes/widgets.inc.php');
+
+/*require_once("modules/msc/includes/widgets/html.php");
 require("modules/msc/includes/path.inc.php");
 require("modules/msc/includes/system.inc.php");
 require("modules/msc/includes/ssh.inc.php");
 require("modules/msc/includes/openASession.inc.php");
-require_once("modules/msc/includes/xmlrpc.php");
+require_once("modules/msc/includes/xmlrpc.php");*/
 
-$params = etherLoadSingleByName($_GET['name']);
-if (!$params['mac'] || $params['mac'] == '') {
+$machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+if ($machine->hostname != $_GET['name']) {
     $msc_host = new RenderedMSCHostDontExists($_GET['name']);
     $msc_host->headerDisplay();
 } else {
-    $session = openASession($params['mac']);
-
-    // Display host informations
-    $msc_host = new RenderedMSCHost(
-        $session->mac,
-        $session,
-        (MSC_sysPing($session->ip)==0),
-        'msc/msc/general'
-    );
+    $msc_host = new RenderedMSCHost($machine);
     $msc_host->headerDisplay();
 }
 

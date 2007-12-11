@@ -22,14 +22,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/tmpl.inc.php");
-require_once("modules/msc/includes/path.inc.php");
-require_once("modules/msc/includes/system.inc.php");
-require_once("modules/msc/includes/ssh.inc.php");
-require_once("modules/msc/includes/widget.inc.php");
-require_once("modules/msc/includes/scheduler.php");
+require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
-require_once("modules/msc/includes/new_widget.inc.php");
+require_once("modules/msc/includes/command_history.php");
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+
 
 $hostname = $_GET['name'];
 $total_commands_number = count_all_commands_on_host($hostname);
