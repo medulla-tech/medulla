@@ -30,91 +30,82 @@ require("graph/navbar.inc.php");
 
 //if we post information
 if ($_POST["buser"]) {
-  $acl=$_POST["acl"];
-  $aclattr=$_POST["aclattr"];
-}
-else {
-  $aclString=getAcl($_GET["user"]);
-  $aclArr=createAclArray($aclString);
-  $acl=$aclArr["acl"];
-  $aclattr=$aclArr["aclattr"];
+    $acl = $_POST["acl"];
+    $aclattr = $_POST["aclattr"];
+} else {
+    $aclString = getAcl($_GET["user"]);
+    $aclArr = createAclArray($aclString);
+    $acl = $aclArr["acl"];
+    $aclattr = $aclArr["aclattr"];
 }
 
 if ($_POST["buser"]) {
-
-  $aclString=getAcl($_GET["user"]);
-  $aclArr=createAclArray($aclString);
-  $acl=$aclArr["acl"];
-  unset($acl[0]);
-  $aclattr=$aclArr["aclattr"];
-  unset($aclattr[0]);
-
-  foreach ($_SESSION['supportModList'] as $mod) {
-    unset($acl[$mod]);
-  }
-    foreach ($_POST["acl"] as $key => $value) {
-        $acl[$key]=$value;
+    $aclString = getAcl($_GET["user"]);
+    $aclArr = createAclArray($aclString);
+    $acl = $aclArr["acl"];
+    unset($acl[0]);
+    $aclattr = $aclArr["aclattr"];
+    unset($aclattr[0]);    
+    foreach ($_SESSION['supportModList'] as $mod) {
+        unset($acl[$mod]);
     }
-
-  foreach ($_POST["aclattr"] as $key => $value) {
-    $aclattr[$key]=$value;
-  }
-
-  setAcl($_GET["user"],createAclString($acl,$aclattr));
+    foreach ($_POST["acl"] as $key => $value) {
+        $acl[$key] = $value;
+    }    
+    foreach ($_POST["aclattr"] as $key => $value) {
+        $aclattr[$key] = $value;
+    }    
+    setAcl($_GET["user"], createAclString($acl, $aclattr));
 }
 
-function createAclAttrTemplate($module_name,$aclattr) {
-  global $aclArray;
-  $rowNum=1;
+function createAclAttrTemplate($module_name, $aclattr) {
+    global $aclArray;
+    $rowNum=1;
 
-  //if not acl array
-  if (!$aclArray[$module_name]) { return ''; }
+    //if not acl array
+    if (!$aclArray[$module_name]) { return ''; }
 
-  $tpl = new Template('.', 'keep');
-  $tpl->set_file("main", "modules/base/templates/editacl_attr.html");
-  $tpl->set_block("main", "formacl", "formacls");
+    $tpl = new Template('.', 'keep');
+    $tpl->set_file("main", "modules/base/templates/editacl_attr.html");
+    $tpl->set_block("main", "formacl", "formacls");
 
-  $tpl->set_var("hide",_("hide"));
-  $tpl->set_var("description_dsc",_("description"));
-  $tpl->set_var("read_only",_("read only"));
-  $tpl->set_var("read_write",_("read/write"));
+    $tpl->set_var("hide",_("hide"));
+    $tpl->set_var("description_dsc",_("description"));
+    $tpl->set_var("read_only",_("read only"));
+    $tpl->set_var("read_write",_("read/write"));
 
-  //foreach $aclArray definition in infopackage
-  foreach ($aclArray[$module_name] as $key => $value) {
+    //foreach $aclArray definition in infopackage
+    foreach ($aclArray[$module_name] as $key => $value) {
 
-    //alternate class for display
-    if ($rowNum%2) {
-      $tr_class='class="alternate"';
+        //alternate class for display
+        if ($rowNum%2) {
+            $tr_class='class="alternate"';
+        }
+        else {
+            $tr_class="";
+        }
+        $rowNum++;
+
+        $tpl->set_var("tr_class",$tr_class);
+        $tpl->set_var("nom",$key);
+        $tpl->set_var("description",$value);
+        $tpl->set_var("checked_hide","");
+        $tpl->set_var("checked_ro","");
+        $tpl->set_var("checked_rw","");
+
+        if ($aclattr[$key]=="ro") {
+            $tpl->set_var("checked_ro","checked");
+        } else if ($aclattr[$key]=="rw"){
+            $tpl->set_var("checked_rw","checked");
+        } else {
+            $tpl->set_var("checked_hide","checked");
+        }
+
+        $tpl->parse('formacls', 'formacl', true);
     }
-    else {
-      $tr_class="";
-    }
-    $rowNum++;
 
-    $tpl->set_var("tr_class",$tr_class);
-
-
-
-    $tpl->set_var("nom",$key);
-    $tpl->set_var("description",$value);
-
-    $tpl->set_var("checked_hide","");
-    $tpl->set_var("checked_ro","");
-    $tpl->set_var("checked_rw","");
-
-    if ($aclattr[$key]=="ro") {
-      $tpl->set_var("checked_ro","checked");
-    } else if ($aclattr[$key]=="rw"){
-      $tpl->set_var("checked_rw","checked");
-    } else {
-      $tpl->set_var("checked_hide","checked");
-    }
-
-    $tpl->parse('formacls', 'formacl', true);
-  }
-
-  $bidule = $tpl->parse("bidule", "main");
-  return $bidule;
+    $tmp = $tpl->parse("tmp", "main");
+    return $tmp;
 }
 
 function createRedirectAclTemplate($module_name,$acl) {
@@ -140,54 +131,45 @@ function createRedirectAclTemplate($module_name,$acl) {
     foreach ($value as $subkey=> $subvalue) {
 
         //check if checked submodules
-            if ($acl[$key][$subkey]["right"]) {
+        if ($acl[$key][$subkey]["right"]) {
             $tpl->set_var("checkedsub","checked");
-            } else {
+        } else {
             $tpl->set_var("checkedsub","");
-            }
+        }
         $tpl->set_var("submodule_name",$subkey);
 
 
         foreach ($subvalue as $actionkey=> $actionvalue) {
             if ($rowNum%2) {
-            $tr_class='class="alternate"';
-            }
-            else {
-            $tr_class="";
+                $tr_class='class="alternate"';
+            } else {
+                $tr_class="";
             }
             $rowNum++;
 
             $tpl->set_var("tr_class",$tr_class);
             //check if checked action
             if ($acl[$key][$subkey][$actionkey]["right"]) {
-            $tpl->set_var("checked","checked");
+                $tpl->set_var("checked","checked");
             } else {
-            $tpl->set_var("checked","");
+                $tpl->set_var("checked","");
             }
 
 
             if ($descArray[$key][$subkey][$actionkey]) {
-            $tpl->set_var("desc_action",$descArray[$key][$subkey][$actionkey]);
+                $tpl->set_var("desc_action",$descArray[$key][$subkey][$actionkey]);
             } else {
-            $tpl->set_var("desc_action",_("Warning no desc found in infoPackage.inc.php :").$actionkey);
+                $tpl->set_var("desc_action",_("Warning no desc found in infoPackage.inc.php :").$actionkey);
             }
 
             $tpl->set_var("action_name", $actionkey);
-
             $tpl->parse('actions', 'action', true);
         }
-
-
         $tpl->parse('submodules', 'submodule', true);
         $tpl->set_var("actions","");
-
-
-
     }
-
-    $bidule = $tpl->parse("bidule", "ptable");
-    return $bidule;
-
+    $tmp = $tpl->parse("tmp", "ptable");
+    return $tmp;
 }
 
 $p = new PageGenerator(sprintf(_("Edit ACL of user %s"), $_GET["user"]));
@@ -208,14 +190,14 @@ foreach ($_SESSION["modulesList"] as $key) {
     $mod_name = $mod->getDescription();
     $tpl->set_var("module_name",$mod_name);
 
-            //check if plugin have information in redirArray
-            if ($redirArray[$key]) {
-            $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl));
-            } else {
-            $tpl->set_var("aclpage_template",'');
-            }
+    //check if plugin have information in redirArray
+    if ($redirArray[$key]) {
+        $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl));
+    } else {
+        $tpl->set_var("aclpage_template",'');
+    }
 
-            $tpl->set_var("aclattr_template",createAclAttrTemplate($key,$aclattr));
+    $tpl->set_var("aclattr_template",createAclAttrTemplate($key,$aclattr));
 
     $tpl->parse('modules', 'module', true);
 
