@@ -28,63 +28,79 @@
  *  convert an aclString to an aclArray
  */
 function createAclArray($aclString) {
-    list($acl,$aclattr) = split('/',$aclString);
+    list($acl, $aclattr) = split('/', $aclString);
 
-    //acl redir part
-    $arrayMod=split(':',$acl);
-    foreach ($arrayMod as $items) {
-
-      list($mod,$submod,$action) = split('#',$items);
-      $resArray["acl"][$mod][$submod][$action]["right"]="on";
-
+    /* get pages ACL */
+    $arrayMod = split(':', $acl);
+    foreach($arrayMod as $items) {
+        if (substr_count($items, "#") == 2) {
+            list($mod, $submod, $action) = split('#', $items);
+            $resArray["acl"][$mod][$submod][$action]["right"] = "on";
+        } else if (substr_count($items, "#") == 3) {
+            list($mod, $submod, $action, $tab) = split('#', $items);
+            $resArray["acltab"][$mod][$submod][$action][$tab]["right"] = "on";
+        }
     }
 
-    //acl attributes part
+    /* get attribute ACL */
     $arrayAttr=split(':',$aclattr);
     foreach($arrayAttr as $items) {
-     list($attrName,$value) = split('=',$items);
-     $resArray["aclattr"][$attrName]=$value;
+        list($attrName,$value) = split('=',$items);
+        $resArray["aclattr"][$attrName]=$value;
     }
-
-  return $resArray;
+    
+    return $resArray;
 }
 
 /**
  * convert an acl array to an acl String
  */
-function createAclString($arrAcl,$arrAclAttr) {
-$res="";
-  //fetch all modules in $arrAcl
-  foreach ($arrAcl as $modKey => $valKey ){
-    if ($arrAcl[$modKey]["right"]) {
-      $res.=":$modKey";
-    }
-    //fetch all submodules in $valKey
-    else foreach ($valKey as $submodKey => $submodvalKey ){
-        if ($arrAcl[$modKey][$submodKey]["right"]) {
-          $res.=":$modKey#$submodKey";
+function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
+    $res="";
+    //fetch all modules in $arrAcl
+    foreach ($arrAcl as $modKey => $valKey ){
+        if ($arrAcl[$modKey]["right"]) {
+            $res.=":$modKey";
         }
+        //fetch all submodules in $valKey
+        else foreach ($valKey as $submodKey => $submodvalKey ){
+            if ($arrAcl[$modKey][$submodKey]["right"]) {
+                $res.=":$modKey#$submodKey";
+            }
 
-      //fetch all action in
-      else foreach ($submodvalKey as $actionKey => $actionvalKey) {
-        if ($arrAcl[$modKey][$submodKey][$actionKey]["right"]) {
-          $res.=":$modKey#$submodKey#$actionKey";
+            //fetch all action in
+            else foreach ($submodvalKey as $actionKey => $actionvalKey) {
+                if ($arrAcl[$modKey][$submodKey][$actionKey]["right"]) {
+                    $res.=":$modKey#$submodKey#$actionKey";
+                }
+            }
         }
-      }
     }
-  }
-  if ($res=='') { $res = ':'; }
-
-  //partit attribut
-  $resAttr='';
-  foreach ($arrAclAttr as $attr => $value) {
-    if (($value=="ro")or($value=="rw")) {
-      $resAttr.=":$attr=$value";
+    foreach($arrAclTab as $modKey => $valKey ){
+        foreach ($valKey as $submodKey => $submodvalKey ){
+            foreach ($submodvalKey as $actionKey => $actionvalKey) {
+                foreach ($actionvalKey as $tabKey => $tabValue) {
+                    if ($arrAclTab[$modKey][$submodKey][$actionKey][$tabKey]["right"]) {
+                        $res.=":$modKey#$submodKey#$actionKey#$tabKey";
+                    }                    
+                }                
+            }
+        }
     }
-  }
-  $combineRes = $res."/".$resAttr;
 
-  return $combineRes;
+
+    if ($res=='') { $res = ':'; }
+
+    //partit attribut
+    $resAttr='';
+    foreach ($arrAclAttr as $attr => $value) {
+        if (($value=="ro")or($value=="rw")) {
+            $resAttr.=":$attr=$value";
+        }
+    }
+    $combineRes = $res."/".$resAttr;
+
+    return $combineRes;
 }
 
 function setFormError($name) {

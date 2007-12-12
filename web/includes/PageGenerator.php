@@ -1152,9 +1152,9 @@ class TabbedPage extends Div {
 /**
  * Class for tab displayed by TabSelector
  */
-class Tab extends HtmlElement {
+class TabWidget extends HtmlElement {
 
-    function Tab($id, $title, $params = array()) {
+    function TabWidget($id, $title, $params = array()) {
         $this->id = $id;
         $this->title = $title;
         $this->params = $params;
@@ -1214,24 +1214,28 @@ class TabbedPageGenerator extends PageGenerator {
      * @param params: an array of URL parameters
      */
     function addTab($id, $tabtitle, $pagetitle, $file, $params = array()) {
-        if (isset($_GET["tab"]) && $_GET["tab"] == $id) {
-            $this->tabselector->addActiveTab($id, $tabtitle, $params);
-        } else {
-            if (isset($_GET["tab"])) {
-                $this->tabselector->addTab($id, $tabtitle, $params);
+        global $tabAclArray;
+        if (hasCorrectTabAcl($_GET["module"], $_GET["submod"], $_GET["action"], $id)) {
+            if (isset($_GET["tab"]) && $_GET["tab"] == $id) {
+                $this->tabselector->addActiveTab($id, $tabtitle, $params);
             } else {
-                if (!$this->firstTabActivated) {
-                    $this->tabselector->addActiveTab($id, $tabtitle, $params);
-                    $this->firstTabActivated = True;
-                } else {
+                if (isset($_GET["tab"])) {
                     $this->tabselector->addTab($id, $tabtitle, $params);
+                } else {
+                    if (!$this->firstTabActivated) {
+                        $this->tabselector->addActiveTab($id, $tabtitle, $params);
+                        $this->firstTabActivated = True;
+                    } else {
+                        $this->tabselector->addTab($id, $tabtitle, $params);
+                    }
                 }
             }
+            $this->pages[$id] = array($pagetitle, $file);
         }
-        $this->pages[$id] = array($pagetitle, $file);
     }
 
     function display() {
+        $this->page = null;
         $this->displaySideMenu();
         $this->displayTitle();
         if ($this->topfile) require($this->topfile);
@@ -1242,10 +1246,12 @@ class TabbedPageGenerator extends PageGenerator {
         } else {
             /* Get the first tab page */
             $tab = $this->tabselector->getDefaultTab();
-            list($title, $file) = $this->pages[$tab->id];
-            $this->page = new TabbedPage($title, $file);            
+            if ($tab != null) {
+                list($title, $file) = $this->pages[$tab->id];
+                $this->page = new TabbedPage($title, $file);
+            }
         }        
-        $this->page->display();
+        if ($this->page != null) $this->page->display();
     }
 
 }
@@ -1262,17 +1268,20 @@ class TabSelector extends HtmlContainer {
     }
  
     function getDefaultTab() {
-        return $this->elements[0];
+        if (empty($this->elements))
+            return null;
+        else
+            return $this->elements[0];
     }
 
     function addActiveTab($name, $title, $params = array()) {
-        $tab = new Tab($name, $title, $params);
+        $tab = new TabWidget($name, $title, $params);
         $tab->setActive(True);
         $this->add($tab);
     }
 
     function addTab($name, $title, $params = array()) {
-        $this->add(new Tab($name, $title, $params));
+        $this->add(new TabWidget($name, $title, $params));
     }
 
     function begin() {

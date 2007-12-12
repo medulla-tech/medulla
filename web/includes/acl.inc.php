@@ -63,6 +63,11 @@ function hasCorrectAcl($module,$submod,$action) {
     return false;
 }
 
+function hasCorrectTabAcl($module, $submod, $action, $tab) {
+    return (($_SESSION["login"] == "root")
+            || (isset($_SESSION["acltab"][$module][$submod][$action][$tab]["right"])));
+}
+
 function hasCorrectModuleAcl($module) {
   global $redirArray;
   // if you are root

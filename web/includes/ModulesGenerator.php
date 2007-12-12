@@ -213,6 +213,7 @@ class SubModule {
     function getName() {
         return $this->_name;
     }
+
     function addPage($page) {
         $this->_pages[$page->_action] = $page;
     }
@@ -501,6 +502,7 @@ class Page {
     function Page($action,$desc = "") {
         $this->_action = $action;
         $this->_noheader = 0;
+        $this->_tab = array();
         $this->setDescription($desc);
         $this->setFile();
         $this->_options["visible"] = True;
@@ -562,44 +564,75 @@ class Page {
         }
     }
 
-    //function for compatibility
+    function addTab($tab) {
+        $this->_tab[] = $tab;
+    }
+
+    /**
+     * function for compatibility
+     * FIXME: still needed ?
+     */
     function process($module,$submod) {
         global $descArray;
+        global $noheaderArray;
+        global $redirAjaxArray;
+        global $redirArray;
+        global $noAclArray;
+        global $tabAclArray;
+        global $tabDescArray;
+
         $descArray[$module][$submod][$this->_action] = $this->_desc;
 
         $file = $this->_file;
         $options = $this->_options;
-
 
         if ($file == False) { //if we not set a file
             $file = 'modules/'.$module.'/'.$submod.'/'.$this->_action.'.php';
         }
 
         if ($options["noHeader"] == True) {
-            global $noheaderArray;
             $noheaderArray[$module][$submod][$this->_action] = 1;
-
         }
 
         if ($options["AJAX"] == True) {
-            global $noheaderArray;
             $noheaderArray[$module][$submod][$this->_action] = 1;
-
-            global $redirAjaxArray;
-            global $redirArray;
             $redirAjaxArray[$module][$submod][$this->_action] = $file;
             unset($redirArray[$module][$submod][$this->_action]);
         } else {
-            global $redirArray;
             $redirArray[$module][$submod][$this->_action] = $file;
         }
 
-
         if ($options["noACL"] == True || $options["AJAX"] == True) {
-
-            global $noAclArray;
             $noAclArray[$module][$submod][$this->_action] = 1;
         }
+
+        foreach($this->_tab as $tab) {
+            $tabAclArray[$module][$submod][$this->_action][$tab->getName()] = 1;
+            $tabDescArray[$module][$submod][$this->_action][$tab->getName()] = $tab->getDescription();
+        }
+    }
+
+}
+
+/**
+ * Class to declare a tab inside a page
+ */
+class Tab {
+
+    var $_name;
+    var $_desc;
+
+    function Tab($name, $description) {
+        $this->_name = $name;
+        $this->_desc = $description;
+    }
+
+    function getName() {
+        return $this->_name;
+    }
+
+    function getDescription() {
+        return $this->_desc;
     }
 
 }

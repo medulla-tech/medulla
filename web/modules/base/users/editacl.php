@@ -32,11 +32,13 @@ require("graph/navbar.inc.php");
 if ($_POST["buser"]) {
     $acl = $_POST["acl"];
     $aclattr = $_POST["aclattr"];
+    $acltab = $_POST["acltab"];
 } else {
     $aclString = getAcl($_GET["user"]);
     $aclArr = createAclArray($aclString);
     $acl = $aclArr["acl"];
     $aclattr = $aclArr["aclattr"];
+    $acltab = $aclArr["acltab"];
 }
 
 if ($_POST["buser"]) {
@@ -45,17 +47,22 @@ if ($_POST["buser"]) {
     $acl = $aclArr["acl"];
     unset($acl[0]);
     $aclattr = $aclArr["aclattr"];
-    unset($aclattr[0]);    
+    unset($aclattr[0]);
+    $acltab = $aclArr["acltab"];
+    unset($acltab[0]);
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }
     foreach ($_POST["acl"] as $key => $value) {
         $acl[$key] = $value;
     }    
+    foreach ($_POST["acltab"] as $key => $value) {
+        $acltab[$key] = $value;
+    }    
     foreach ($_POST["aclattr"] as $key => $value) {
         $aclattr[$key] = $value;
     }    
-    setAcl($_GET["user"], createAclString($acl, $aclattr));
+    setAcl($_GET["user"], createAclString($acl, $acltab, $aclattr));
 }
 
 function createAclAttrTemplate($module_name, $aclattr) {
@@ -108,42 +115,35 @@ function createAclAttrTemplate($module_name, $aclattr) {
     return $tmp;
 }
 
-function createRedirectAclTemplate($module_name,$acl) {
+function createRedirectAclTemplate($module_name, $acl, $acltab) {
     global $descArray;
     global $redirArray;
-    $key=$module_name;
-    $rowNum=1;
+    global $tabDescArray;
+    global $tabAclArray;
+    $key = $module_name;
+    $rowNum = 1;
 
     $tpl = new Template('.', 'keep');
 
     $tpl->set_file("ptable", "modules/base/templates/editacl_page.html");
+    $tpl->set_block("ptable", "actiontab", "actiontabs");
     $tpl->set_block("ptable", "action", "actions");
     $tpl->set_block("ptable", "submodule", "submodules");
-
     $tpl->set_var("module_name",$module_name);
     $tpl->set_var("select_all",_("Select all"));
     $tpl->set_var("unselect_all",_("Deselect all"));
     $tpl->set_var("function_name_desc",_("Function name"));
     $tpl->set_var("authorize",_("Authorize"));
 
-    $value=$redirArray[$module_name];
-    //print_r($value);
-    foreach ($value as $subkey=> $subvalue) {
-
-        //check if checked submodules
-        if ($acl[$key][$subkey]["right"]) {
-            $tpl->set_var("checkedsub","checked");
-        } else {
-            $tpl->set_var("checkedsub","");
-        }
+    $value = $redirArray[$module_name];
+    foreach ($value as $subkey => $subvalue) {
         $tpl->set_var("submodule_name",$subkey);
 
-
-        foreach ($subvalue as $actionkey=> $actionvalue) {
-            if ($rowNum%2) {
-                $tr_class='class="alternate"';
+        foreach ($subvalue as $actionkey => $actionvalue) {
+            if ($rowNum % 2) {
+                $tr_class = 'class="alternate"';
             } else {
-                $tr_class="";
+                $tr_class = "";
             }
             $rowNum++;
 
@@ -163,6 +163,26 @@ function createRedirectAclTemplate($module_name,$acl) {
             }
 
             $tpl->set_var("action_name", $actionkey);
+            
+            if (isset($tabAclArray[$key][$subkey][$actionkey])) {
+                foreach($tabAclArray[$key][$subkey][$actionkey] as $tabkey => $tabvalue) {
+                    if ($rowNum % 2) {
+                        $tr_class = 'class="alternate"';
+                    } else {
+                        $tr_class = "";
+                    }
+                    $rowNum++;
+                    if ($acltab[$key][$subkey][$actionkey][$tabkey]["right"]) {
+                        $tpl->set_var("checkedtab","checked");
+                    } else {
+                        $tpl->set_var("checkedtab","");
+                    }
+                    $tpl->set_var("tr_classtab",$tr_class);
+                    $tpl->set_var("tab_name", $tabkey);
+                    $tpl->set_var("desc_actiontab", $descArray[$key][$subkey][$actionkey] . " : " . $tabDescArray[$key][$subkey][$actionkey][$tabkey]);
+                    $tpl->parse('actiontabs', 'actiontab', true);
+                }
+            } else $tpl->set_var("actiontabs", "");
             $tpl->parse('actions', 'action', true);
         }
         $tpl->parse('submodules', 'submodule', true);
@@ -192,7 +212,7 @@ foreach ($_SESSION["modulesList"] as $key) {
 
     //check if plugin have information in redirArray
     if ($redirArray[$key]) {
-        $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl));
+        $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl, $acltab));
     } else {
         $tpl->set_var("aclpage_template",'');
     }

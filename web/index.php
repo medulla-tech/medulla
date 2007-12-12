@@ -60,6 +60,7 @@ if (isset($_POST["bConnect"])) {
         $_SESSION["XMLRPC_agent"] = $urlArr;
         $tmp = createAclArray(getAcl($login));
         $_SESSION["acl"] = $tmp["acl"];
+        $_SESSION["acltab"] = $tmp["acltab"];
         $_SESSION["aclattr"] = $tmp["aclattr"];
         $_SESSION["supportModList"] = xmlCall("base.getModList",null);
 
