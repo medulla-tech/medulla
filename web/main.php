@@ -48,25 +48,22 @@ function autoInclude() {
     if (isset($_GET["module"])) {
         $__module = $_GET["module"];
     } else {
-        $module = "default";
+        $__module = "default";
     }
 
     if (isset($_GET["submod"])) {
         $__submod = $_GET["submod"];
     } else {
-        $submod = "default";
+        $__submod = "default";
     }
     
     if (isset($_GET["action"])) {
         $__action = $_GET["action"];
     } else {
-        $action = "default";
+        $__action = "default";
     }
 
-    /*
-        Redirect user to a default page.
-        FIXME: Is this code useful ?
-    */
+    /* Redirect user to a default page. */
     if (
         (!isset($redirArray[$__module][$__submod][$__action]))
         && (!isset($redirAjaxArray[$__module][$__submod][$__action]))
@@ -78,20 +75,7 @@ function autoInclude() {
 
     if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/header.inc.php");
-        /*
-            include CSS code for mains navigation bar for module that are not defined in global.css
-            FIXME: still needed ?
-        */
-        foreach(fetchModulesList($conf["global"]["rootfsmodules"]) as $idx => $modroot) {
-            $css = $modroot . "/graph/navbar.css";
-            if (file_exists($css)) {
-                print '<style type="text/css"><!--';
-                include($css);
-                print '--></style>';
-            }
-        }
-        
-        /* FIXME: no more needed for new modules */
+        /* Include specific module CSS if there is one */
         require("graph/dynamicCss.php");
     }
 
