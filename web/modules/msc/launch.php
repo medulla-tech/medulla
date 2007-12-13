@@ -23,8 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require('modules/msc/includes/qactions.inc.php');
-require('modules/msc/includes/mirror_api.php');
+require_once('modules/msc/includes/qactions.inc.php');
+require_once('modules/msc/includes/mirror_api.php');
 
 function action($action, $cible) {
     $script_list = msc_script_list_file();
@@ -59,47 +59,13 @@ if ($machine->hostname != $_GET['name']) {
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file());
     $msc_actions->display();
-                
-    require("modules/msc/includes/package_api.php");
-    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s'), $machine->hostname));
-    $label->display();
 
     
-    $a_packages = array();
-    $a_pversions = array();
-    $a_css = array();
-    $params = array();
-    foreach (getAllPackages() as $package) {
-        $a_packages[] = $package->label;
-        $a_pversions[] = $package->version;
-        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
-        $a_css[] = 'primary_list';
-    }
-    
-    //#################
-    // local packages : should change the display style, not display new tables
-    //#################
-    $mirrors = getSubPackageMirror(&$machine);
-    
-    foreach ($mirrors as $mirror) {
-        foreach (getAllMirrorPackages($mirror) as $package) {
-            $a_packages[] = $package->label;
-            $a_pversions[] = $package->version;
-            $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
-            $a_css[] = 'secondary_list';
-        }
-    }
-    
-    $n = new ListInfos($a_packages, _T("Package"));
-    $n->addExtraInfo($a_pversions, _T("Version"));
-    $n->setCssClasses($a_css);
-    $n->setParamInfo($params);
-    
-    $n->addActionItem(new ActionPopupItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
-    $n->addActionItem(new ActionPopupItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
-    
-    $n->drawTable(0);
-       
+    $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
+    $ajax->display();
+    print "<br/>";
+    $ajax->displayDivToUpdate();
+                
 }
 
 ?>
