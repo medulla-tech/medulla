@@ -80,26 +80,32 @@ function hasCorrectModuleAcl($module) {
 
 function getDefaultPage() {
     $base = "";
-    foreach(array_keys($_SESSION["acl"]) as $key => $value) {
-        if ($value != "") {
-            $base = $value;
-            break;
+    if (isset($_SESSION["acl"])) {
+        foreach(array_keys($_SESSION["acl"]) as $key => $value) {
+            if ($value != "") {
+                $base = $value;
+                break;
+            }
         }
     }
 
     $submod = "";
-    foreach(array_keys($_SESSION["acl"][$base]) as $key => $value) {
-        if ($value != "") {
-            $submod = $value;
-            break;
+    if ((strlen($base)) && (isset($_SESSION["acl"][$base]))) {
+        foreach(array_keys($_SESSION["acl"][$base]) as $key => $value) {
+            if ($value != "") {
+                $submod = $value;
+                break;
+            }
         }
     }
 
     $action = "";
-    foreach(array_keys($_SESSION["acl"][$base][$submod]) as $key => $value) {
-        if ($value != "") {
-            $action = $value;
-            break;
+    if ((strlen($submod)) && (isset($_SESSION["acl"][$base][$submod]))) {
+        foreach(array_keys($_SESSION["acl"][$base][$submod]) as $key => $value) {
+            if ($value != "") {
+                $action = $value;
+                break;
+            }
         }
     }
 
