@@ -24,6 +24,7 @@
  */
 
 require('modules/msc/includes/qactions.inc.php');
+require('modules/msc/includes/mirror_api.php');
 
 function action($action, $cible) {
     $script_list = msc_script_list_file();
@@ -66,26 +67,47 @@ if ($machine->hostname != $_GET['name']) {
     
     $a_packages = array();
     $a_pversions = array();
+    $a_css = array();
     $params = array();
     foreach (getAllPackages() as $package) {
         $a_packages[] = $package->label;
         $a_pversions[] = $package->version;
         $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+        $a_css[] = 'primary_list';
+    }
+    
+    //#################
+    // local packages : should change the display style, not display new tables
+    //#################
+    $mirrors = getSubPackageMirror(&$machine);
+    
+    foreach ($mirrors as $mirror) {
+        foreach (getAllMirrorPackages($mirror) as $package) {
+            $a_packages[] = $package->label;
+            $a_pversions[] = $package->version;
+            $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+            $a_css[] = 'secondary_list';
+        }
     }
     
     $n = new ListInfos($a_packages, _T("Package"));
     $n->addExtraInfo($a_pversions, _T("Version"));
+    $n->setCssClasses($a_css);
     $n->setParamInfo($params);
     
     $n->addActionItem(new ActionPopupItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
-    $n->addActionItem(new ActionItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
+    $n->addActionItem(new ActionPopupItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
     
     $n->drawTable(0);
-    
+       
 }
 
 ?>
 <style>
+.primary_list { }
+.secondary_list {
+    background-color: #e1e5e6 !important;
+}
 li.detail a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
