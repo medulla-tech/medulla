@@ -56,7 +56,7 @@ function adv_action($post) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory') as $param) {
+    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'title', 'parameters', 'start_date', 'end_date') as $param) {
         $params[$param] = $post[$param];
     }
     
@@ -91,6 +91,9 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $pid, "hide" => True));
     
     #TODO : find a way to display it as an html table...
+    $input = new TrFormElement(_T('Command title'), new InputTpl('title'));
+    $f->add($input, array("value" => $name));
+    
     $check = new TrFormElement(_T('Create directory'), new CheckboxTpl("create_directory"));
     $f->add($check, array("value" => 'checked'));
     $check = new TrFormElement(_T('Start the script'), new CheckboxTpl("start_script"));
@@ -112,6 +115,14 @@ if (isset($_GET["badvanced"])) {
         $start_inventory = 'checked';
     }
     $f->add($check, array("value" => $start_inventory));
+
+    $input = new TrFormElement(_T('Command parameters'), new InputTpl('parameters'));
+    $f->add($input, array("value" => ''));
+    $input = new TrFormElement(_T('Start date'), new DateTpl('start_date'));
+    $f->add($input, array("value" => ''));
+    $input = new TrFormElement(_T('End date'), new DateTpl('end_date'));
+    $f->add($input, array("value" => ''));
+    
 
     ?>
         <div class="formblock" style="background-color: #F4F4F4;">
