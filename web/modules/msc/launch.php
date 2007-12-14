@@ -56,8 +56,8 @@ function adv_action($post) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory') as $param) {
-        $params[$param] = $_POST[$param];
+    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory') as $param) {
+        $params[$param] = $post[$param];
     }
     
     $hostname = $post["name"];
