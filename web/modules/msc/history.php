@@ -24,8 +24,8 @@
 
 require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
-require_once("modules/msc/includes/command_history.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("modules/msc/includes/command_history.php");
 
 
 $hostname = $_GET['name'];

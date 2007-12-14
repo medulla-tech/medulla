@@ -22,76 +22,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/widgets.inc.php");
-require_once("modules/msc/includes/functions.php");
-require_once("modules/msc/includes/command_history.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("modules/msc/includes/command_history.php");
 
-$hostname = $_GET['name'];
-$total_commands_number = count_all_commands_on_host($hostname);
-$cmds = get_all_commands_on_host($hostname, 0, $total_commands_number);
-$a_cmd = array();
-$a_uploaded = array();
-$a_executed = array();
-$a_deleted  = array();
-$a_current  = array();
-$params = array();
-
-$actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
-$actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
-$actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers");
-$actionempty = new EmptyActionItem();
-$a_start = array();
-$a_pause = array();
-$a_stop = array();
-$a_details = array();
-
-foreach ($cmds as $cmd) {
-    $coh_id = $cmd[1];
-    $cho_status = $cmd[2];
-    $cmd = $cmd[0];
-    if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
-        $coh = get_commands_on_host($coh_id);
-        if ($coh['current_state'] != 'done') {
-            $a_cmd[] = $cmd['title'];
-            $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> '.$coh['uploaded'];
-            $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> '.$coh['executed'];
-            $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> '.$coh['deleted'];
-            $a_current[] = $coh['current_state'];
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs');
-
-
-            $icons = state_tmpl($coh['current_state']);
-            if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-            if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-            if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-        }
-        if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
-            $a_details[] = $actionempty;
-        } else {
-            $a_details[] = $actiondetails;
-        }
-    }
-}
-
-
-
-
-$n = new ListInfos($a_cmd, _T("Command"));
-$n->addExtraInfo($a_current, _T("current_state"));
-$n->addExtraInfo($a_uploaded, _T("uploaded"));
-$n->addExtraInfo($a_executed, _T("executed"));
-$n->addExtraInfo($a_deleted, _T("deleted"));
-
-$n->setParamInfo($params);
-
-$n->addActionItemArray($a_details);
-$n->addActionItemArray($a_start);
-//$n->addActionItemArray($a_pause);
-$n->addActionItemArray($a_stop);
-
-$n->drawTable(0);
 
 // bottom of the page : details for the command if coh_id is specified
 if ($_GET['coh_id']) {
@@ -99,6 +32,11 @@ if ($_GET['coh_id']) {
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
+} else {
+    $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']);
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
 }
 ?>
 

@@ -25,6 +25,10 @@
 
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/mirror_api.php');
+require('modules/msc/includes/actions.inc.php');
+require('modules/msc/includes/commands_xmlrpc.inc.php');
+require('modules/msc/includes/package_api.php');
+
 
 function action($action, $cible) {
     $script_list = msc_script_list_file();
@@ -43,29 +47,110 @@ function action($action, $cible) {
     }
 }
 
+function adv_action($post) {
+    $from = $post['from'];
+    $path =  explode('|', $from);
+    $module = $path[0];
+    $submod = $path[1];
+    $page = $path[2];
+    $tab = $path[3];
 
-$machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
-if ($machine->hostname != $_GET['name']) {
-    $msc_host = new RenderedMSCHostDontExists($_GET['name']);
-    $msc_host->headerDisplay();
-} else {
-    if ($_POST['launchAction']) {
-        action($_POST['launchAction'], $_GET['name']);
+    $params = array();
+    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory') as $param) {
+        $params[$param] = $_POST[$param];
     }
-
-    // Display the actions list
-    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $machine->hostname));
-    $label->display();
-
-    $msc_actions = new RenderedMSCActions(msc_script_list_file());
-    $msc_actions->display();
-
     
-    $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
-    $ajax->display();
-    print "<br/>";
-    $ajax->displayDivToUpdate();
-                
+    $hostname = $post["name"];
+    $pid = $post["pid"];
+
+    // TODO activate this  : msc_command_set_pause($cmd_id);
+    add_command_api($pid, $hostname, $params);
+    dispatch_all_commands();
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
+}
+
+if (isset($_GET["badvanced"])) {
+    if ($_POST['bconfirm']) {
+        adv_action($_POST);
+    }
+    $from = $_GET['from'];
+    $hostname = $_GET["name"];
+    $pid = $_GET["pid"];
+    $name = getPackageLabel($_GET["pid"]);
+    
+    $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\""), $name, $hostname));
+    $label->display();
+    
+    $f = new Form();
+
+    $hidden = new HiddenTpl("name");
+    $f->add($hidden, array("value" => $hostname, "hide" => True));
+    $hidden = new HiddenTpl("from");
+    $f->add($hidden, array("value" => $from, "hide" => True));
+    $hidden = new HiddenTpl("pid");
+    $f->add($hidden, array("value" => $pid, "hide" => True));
+    
+    #TODO : find a way to display it as an html table...
+    $check = new TrFormElement(_T('Create directory'), new CheckboxTpl("create_directory"));
+    $f->add($check, array("value" => 'checked'));
+    $check = new TrFormElement(_T('Start the script'), new CheckboxTpl("start_script"));
+    $f->add($check, array("value" => 'checked'));
+    $check = new TrFormElement(_T('Delete files after a successful execution'), new CheckboxTpl("delete_file_after_execute_successful"));
+    $f->add($check, array("value" => 'checked'));
+    $check = new TrFormElement(_T('Wake on lan'), new CheckboxTpl("wake_on_lan"));
+    if ($_GET['wake_on_lan'] == 'on') {
+        $wake_on_lan = 'checked';
+    }
+    $f->add($check, array("value" => $wake_on_lan));
+    $check = new TrFormElement(_T("Delay betwen connections"), new InputTpl("next_connection_delay"));
+    $f->add($check, array("value" => 60));
+    $check = new TrFormElement(_T("Maximum number of connection attempt"), new InputTpl("max_connection_attempt"));
+    $f->add($check, array("value" => 3));
+    
+    $check = new TrFormElement(_T('Start inventory'), new CheckboxTpl("start_inventory"));
+    if ($_GET['start_inventory'] == 'on') {
+        $start_inventory = 'checked';
+    }
+    $f->add($check, array("value" => $start_inventory));
+
+    ?>
+        <div class="formblock" style="background-color: #F4F4F4;">
+        <table cellspacing="0">
+    <?php
+   
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
+
+    ?>
+        </table>
+        </div>
+    <?php
+
+} else {
+    $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+    if ($machine->hostname != $_GET['name']) {
+        $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+        $msc_host->headerDisplay();
+    } else {
+        if ($_POST['launchAction']) {
+            action($_POST['launchAction'], $_GET['name']);
+        }
+    
+        // Display the actions list
+        $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $machine->hostname));
+        $label->display();
+    
+        $msc_actions = new RenderedMSCActions(msc_script_list_file());
+        $msc_actions->display();
+    
+        
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
+        $ajax->display();
+        print "<br/>";
+        $ajax->displayDivToUpdate();
+                    
+    }
 }
 
 ?>

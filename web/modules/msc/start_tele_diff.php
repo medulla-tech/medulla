@@ -35,7 +35,6 @@ if (isset($_POST["bconfirm"])) {
     $tab = $path[3];
 
     $params = array();
-    #TODO : need to check that types are OK ...
     foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
         $params[$param] = $_POST[$param];
     }
@@ -47,6 +46,21 @@ if (isset($_POST["bconfirm"])) {
     add_command_api($pid, $hostname, $params);
     dispatch_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
+} elseif (isset($_POST["badvanced"])) {
+    $from = $_POST['from'];
+    $path =  explode('|', $from);
+    $module = $path[0];
+    $submod = $path[1];
+    $page = $path[2];
+    $tab = $path[3];
+
+    $params = array();
+    foreach (array('hostname', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
+        $params[$param] = $_POST[$param];
+    }
+    $params['tab'] = 'tablaunch';
+    $params['badvanced'] = True;
+    header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 } else {
     $from = $_GET['from'];
     $hostname = $_GET["name"];
@@ -54,37 +68,35 @@ if (isset($_POST["bconfirm"])) {
     $name = getPackageLabel($_GET["pid"]);
     $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $hostname));
    
-    ?><table><?php
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
     $hidden = new HiddenTpl("from");
     $f->add($hidden, array("value" => $from, "hide" => True));
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
+    $hidden = new HiddenTpl("create_directory");
+    $f->add($hidden, array("value" => 'on', "hide" => True));
+    $hidden = new HiddenTpl("start_script");
+    $f->add($hidden, array("value" => 'on', "hide" => True));
+    $hidden = new HiddenTpl("delete_file_after_execute_successful");
+    $f->add($hidden, array("value" => 'on', "hide" => True));
+    $hidden = new HiddenTpl("next_connection_delay");
+    $f->add($hidden, array("value" => 60, "hide" => True));
+    $hidden = new HiddenTpl("max_connection_attempt");
+    $f->add($hidden, array("value" => 3, "hide" => True));
     
     #TODO : find a way to display it as an html table...
-    $check = new TrFormElement(_T('Create directory'), new CheckboxTpl("create_directory"));
-    $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Start the script'), new CheckboxTpl("start_script"));
-    $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Delete files after a successful execution'), new CheckboxTpl("delete_file_after_execute_successful"));
-    $f->add($check, array("value" => 'checked'));
     $check = new TrFormElement(_T('Wake on lan'), new CheckboxTpl("wake_on_lan"));
     $f->add($check, array("value" => ''));
-    $check = new TrFormElement(_T("Delay betwen connections"), new InputTpl("next_connection_delay"));
-    $f->add($check, array("value" => 60));
-    $check = new TrFormElement(_T("Maximum number of connection attempt"), new InputTpl("max_connection_attempt"));
-    $f->add($check, array("value" => 3));
-    
     $check = new TrFormElement(_T('Start inventory'), new CheckboxTpl("start_inventory"));
     $f->add($check, array("value" => ''));
 
-    ?></table><?php
-
     $f->addValidateButton("bconfirm");
+    $f->addButton("badvanced", _("Advanced"));
     $f->addCancelButton("bback");
     $f->display();
 }
 
 
 ?>
+
