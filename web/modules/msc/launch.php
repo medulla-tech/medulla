@@ -82,6 +82,7 @@ if (isset($_GET["badvanced"])) {
     $label->display();
     
     $f = new Form();
+    $f->push(new Table());
 
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
@@ -123,20 +124,11 @@ if (isset($_GET["badvanced"])) {
     $input = new TrFormElement(_T('End date', 'msc'), new DateTpl('end_date'));
     $f->add($input, array("value" => ''));
     
-
-    ?>
-        <div class="formblock" style="background-color: #F4F4F4;">
-        <table cellspacing="0">
-    <?php
-   
+    $f->pop();   
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 
-    ?>
-        </table>
-        </div>
-    <?php
 
 } else {
     $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
