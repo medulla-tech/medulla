@@ -44,16 +44,31 @@ $prop = array();
 $val = array();
 
 foreach ($inv as $v) {
-    $prop[] = $v[0];
+    $prop[] = _T($v[0], 'glpi');
     $val[] = $v[1];
 }
 
 $conf["global"]["maxperpage"] += count($prop);
 
 
-$n = new ListInfos($prop, _T("Properties"));
-$n->addExtraInfo($val, _T("Value"));
+$n = new ListInfos($prop, _T("Properties", "glpi"));
+$n->addExtraInfo($val, _T("Value", "glpi"));
 $n->drawTable(0);
+
+/**  to get i18n labels... */
+ 
+_T('name', 'glpi');
+_T('comments', 'glpi');
+_T('name', 'glpi');
+_T('serial', 'glpi');
+_T('os', 'glpi');
+_T('os_version', 'glpi');
+_T('os_sp', 'glpi');
+_T('os_license_number', 'glpi');
+_T('os_license_id', 'glpi');
+_T('location', 'glpi');
+
+/* ****** */
 
 ?>
 
