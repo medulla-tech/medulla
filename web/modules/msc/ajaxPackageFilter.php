@@ -37,7 +37,7 @@ require_once('../../../modules/msc/includes/widgets.inc.php');
 $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
 
 require_once("../../../modules/msc/includes/package_api.php");
-$label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s'), $machine->hostname));
+$label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $machine->hostname));
 $label->display();
 
 $a_packages = array();
