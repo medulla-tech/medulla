@@ -78,7 +78,7 @@ if (isset($_GET["badvanced"])) {
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
     
-    $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'glpi'), $name, $hostname));
+    $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
     $label->display();
     
     $f = new Form();
@@ -91,36 +91,36 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $pid, "hide" => True));
     
     #TODO : find a way to display it as an html table...
-    $input = new TrFormElement(_T('Command title', 'glpi'), new InputTpl('title'));
+    $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('title'));
     $f->add($input, array("value" => $name));
     
-    $check = new TrFormElement(_T('Create directory', 'glpi'), new CheckboxTpl("create_directory"));
+    $check = new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory"));
     $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Start the script', 'glpi'), new CheckboxTpl("start_script"));
+    $check = new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script"));
     $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Delete files after a successful execution', 'glpi'), new CheckboxTpl("delete_file_after_execute_successful"));
+    $check = new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful"));
     $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Wake on lan', 'glpi'), new CheckboxTpl("wake_on_lan"));
+    $check = new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan"));
     if ($_GET['wake_on_lan'] == 'on') {
         $wake_on_lan = 'checked';
     }
     $f->add($check, array("value" => $wake_on_lan));
-    $check = new TrFormElement(_T("Delay betwen connections", 'glpi'), new InputTpl("next_connection_delay"));
+    $check = new TrFormElement(_T("Delay betwen connections", 'msc'), new InputTpl("next_connection_delay"));
     $f->add($check, array("value" => 60));
-    $check = new TrFormElement(_T("Maximum number of connection attempt", 'glpi'), new InputTpl("max_connection_attempt"));
+    $check = new TrFormElement(_T("Maximum number of connection attempt", 'msc'), new InputTpl("max_connection_attempt"));
     $f->add($check, array("value" => 3));
     
-    $check = new TrFormElement(_T('Start inventory', 'glpi'), new CheckboxTpl("start_inventory"));
+    $check = new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory"));
     if ($_GET['start_inventory'] == 'on') {
         $start_inventory = 'checked';
     }
     $f->add($check, array("value" => $start_inventory));
 
-    $input = new TrFormElement(_T('Command parameters', 'glpi'), new InputTpl('parameters'));
+    $input = new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('Start date', 'glpi'), new DateTpl('start_date'));
+    $input = new TrFormElement(_T('Start date', 'msc'), new DateTpl('start_date'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('End date', 'glpi'), new DateTpl('end_date'));
+    $input = new TrFormElement(_T('End date', 'msc'), new DateTpl('end_date'));
     $f->add($input, array("value" => ''));
     
 
@@ -149,7 +149,7 @@ if (isset($_GET["badvanced"])) {
         }
     
         // Display the actions list
-        $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'glpi'), $machine->hostname));
+        $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
         $label->display();
     
         $msc_actions = new RenderedMSCActions(msc_script_list_file());
