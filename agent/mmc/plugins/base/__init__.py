@@ -55,6 +55,7 @@ import shutil
 import xmlrpclib
 
 from time import mktime, strptime, strftime, localtime
+from twisted.internet import defer
 
 # global definition for ldapUserGroupControl
 INI = "/etc/mmc/plugins/base.ini"
@@ -151,12 +152,12 @@ def validate():
     """
     ret = True
     config = BasePluginConfig("base")
-    
-    AuthenticationManager().select(config.authmethod)
-    ret = AuthenticationManager().validate()
-    if ret:
-        ProvisioningManager().select(config.provmethod)
-        ret = ProvisioningManager().validate()
+
+    for manager, method in [(AuthenticationManager(), config.authmethod),
+                            (ProvisioningManager(), config.provmethod)]:
+        manager.select(method)
+        ret = manager.validate()
+        if not ret: break
     return ret
 
 class BasePluginConfig(PluginConfig):
@@ -178,6 +179,7 @@ class BasePluginConfig(PluginConfig):
         PluginConfig.setDefault(self)
         self.authmethod = "baseldap"
         self.provmethod = None
+        self.computersmethod = "baseldap"
 
 
 def getModList():
@@ -1750,14 +1752,13 @@ class ldapUserGroupControl:
 def ldapAuth(uiduser, passwd):
     """
     Authenticate an user with her/his password against a LDAP server.
-    Return true if the user has been successfully authenticated, else false.
+    Return a Deferred resulting to true if the user has been successfully
+    authenticated, else false.
     """
-    authToken = AuthenticationManager().authenticate(uiduser, passwd)
-    if authToken.isAuthenticated():
-        # Run provisioning process
-        ProvisioningManager().doProvisioning(authToken)
-    return authToken.isAuthenticated()
-
+    d = defer.maybeDeferred(AuthenticationManager().authenticate, uiduser, passwd)
+    d.addCallback(ProvisioningManager().doProvisioning)
+    d.addCallback(lambda token: token.isAuthenticated())
+    return d
 
 class BaseLdapAuthenticator(AuthenticatorI):
 

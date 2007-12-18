@@ -132,6 +132,8 @@ def xmlrpcCleanup(data):
         ret = tuple(data)
     elif data == None:
         ret = False
+    elif type(data) == tuple:
+        ret = map(lambda x: xmlrpcCleanup(x), data)
     elif type(data) == long:
         ret = str(data)
     else:

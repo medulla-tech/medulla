@@ -1,5 +1,29 @@
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import logging
 from ConfigParser import *
+from twisted.internet import defer
 from mmc.support.mmctools import Singleton
 
 
@@ -61,19 +85,31 @@ class ProvisioningManager(Singleton):
     
     def doProvisioning(self, authtoken):
         """
-        Loops on all the provisioner to do the provisioning
+        Loops on all the provisioners to perform the provisioning.
 
         @param authtoken: AuthenticationToken containing user informations
         @type authtoken: AuthenticationToken
+
+        @return; Deferred resulting to authtoken
         """
-        login = authtoken.getLogin()
-        for name, klass in self.components:
-            self.logger.debug("Provisioning user with %s / %s" % (name, str(klass)))
-            instance = klass()
-            if login.lower() in instance.config.exclude:
-                self.logger.debug("User %s is in the exclude list of this provisioner, so skipping it" % login)
-                continue
-            instance.doProvisioning(authtoken)
+        d = None
+        if authtoken.isAuthenticated():
+            login = authtoken.getLogin()
+            for name, klass in self.components:
+                self.logger.debug("Provisioning user with %s / %s" % (name, str(klass)))
+                instance = klass()
+                if login.lower() in instance.config.exclude:
+                    self.logger.debug("User %s is in the exclude list of this provisioner, so skipping it" % login)
+                    continue
+                if not d:
+                    d = defer.maybeDeferred(instance.doProvisioning, authtoken)
+                else:
+                    d.addCallback(lambda x: defer.maybeDeferred(instance.doProvisioning, authtoken))
+        if d:
+            ret = d.addCallback(lambda x:authtoken)
+        else:
+            ret = defer.succeed(authtoken)
+        return ret
 
 
 class ProvisionerConfig(ConfigParser):
