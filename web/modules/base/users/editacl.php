@@ -207,19 +207,19 @@ $tpl->set_block("main", "module", "modules");
 foreach ($_SESSION["modulesList"] as $key) {
     $MMCApp =&MMCApp::getInstance();
     $mod = $MMCApp->getModule($key);
-    $mod_name = $mod->getDescription();
-    $tpl->set_var("module_name",$mod_name);
-
-    //check if plugin have information in redirArray
-    if ($redirArray[$key]) {
-        $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl, $acltab));
-    } else {
-        $tpl->set_var("aclpage_template",'');
+    if ($mod != null) {
+        $mod_name = $mod->getDescription();
+        $tpl->set_var("module_name",$mod_name);
+        //check if plugin have information in redirArray
+        if ($redirArray[$key]) {
+            $tpl->set_var("aclpage_template",createRedirectAclTemplate($key,$acl, $acltab));
+        } else {
+            $tpl->set_var("aclpage_template",'');
+        }
+        
+        $tpl->set_var("aclattr_template",createAclAttrTemplate($key,$aclattr));
+        $tpl->parse('modules', 'module', true);
     }
-
-    $tpl->set_var("aclattr_template",createAclAttrTemplate($key,$aclattr));
-
-    $tpl->parse('modules', 'module', true);
 
 }
 $tpl->set_var("button", _("Confirm"));
