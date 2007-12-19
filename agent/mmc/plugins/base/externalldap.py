@@ -57,6 +57,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
 
     def authenticate(self, user, password):
         ret = False
+        userdn = None
         userentry = None
         try:
             l = self.connect()

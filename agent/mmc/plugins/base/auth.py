@@ -28,7 +28,8 @@ from mmc.support.mmctools import Singleton
 
 class AuthenticationManager(Singleton):
     """
-    Class that are able to authenticate users must register to this class.
+    Classes that are able to authenticate users by implementing the
+    AuthenticatorI interface must register to this class.
     """
     
     components = []
@@ -99,7 +100,11 @@ class AuthenticationManager(Singleton):
             if instance.config.exclude:
                 if user.lower() in instance.config.exclude:
                     self.logger.debug("User %s is in the exclude list of this authenticator, so we skip it" % user)
-            token = instance.authenticate(user, password)
+            try:
+                token = instance.authenticate(user, password)
+            except Exception, e:
+                self.logger.exception(e)
+                raise AuthenticationError
             self.logger.debug("Authentication result: " + str(token.authenticated) + str(token.infos))
             if token.authenticated:
                 # the authentication succeeded
@@ -180,7 +185,7 @@ class AuthenticatorI:
 
 class AuthenticationToken:
     """
-    Store a authentication result
+    Store an authentication result
 
     @ivar authenticated: True if the authenticated succeeded, else False
     @ivar login: the user login
@@ -203,3 +208,10 @@ class AuthenticationToken:
 
     def getPassword(self):
         return self.password
+
+
+class AuthenticationError(Exception):
+    """
+    Raised by the AuthenticationManager if the authentication process failed
+    """
+    pass

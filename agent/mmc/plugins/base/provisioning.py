@@ -92,6 +92,10 @@ class ProvisioningManager(Singleton):
 
         @return; Deferred resulting to authtoken
         """
+        def _cbError(failure):
+            self.logger.exception(failure.getTraceback())
+            raise ProvisioningError
+        
         d = None
         if authtoken.isAuthenticated():
             login = authtoken.getLogin()
@@ -106,7 +110,7 @@ class ProvisioningManager(Singleton):
                 else:
                     d.addCallback(lambda x: defer.maybeDeferred(instance.doProvisioning, authtoken))
         if d:
-            ret = d.addCallback(lambda x:authtoken)
+            ret = d.addCallback(lambda x:authtoken).addErrback(_cbError)
         else:
             ret = defer.succeed(authtoken)
         return ret
@@ -180,3 +184,10 @@ class ProvisionerI:
         @return: True if the provisioner can be used, else False
         """
         return False
+
+
+class ProvisioningError:
+    """
+    Raised by the ProvisioningManager if the provisioning process failed
+    """
+    pass
