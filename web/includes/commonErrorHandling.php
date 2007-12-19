@@ -49,6 +49,15 @@ $errItem->setAdvice(_("Solve the problem by:
 
 $errObj->add($errItem);
 
+$errItem = new ErrorHandlingItem("AuthenticationError");
+$errItem->setMsg(_("Error during authentication process"));
+$errItem->setAdvice(_("Please contact your administrator."));
+$errObj->add($errItem);
+
+$errItem = new ErrorHandlingItem("ProvisioningError");
+$errItem->setMsg(_("Error while provisioning your account"));
+$errItem->setAdvice(_("Please contact your administrator."));
+$errObj->add($errItem);
 
 
 $errItem = new ErrorHandlingItem('(exceptions.IndexError: list index out of range|ldap.NO_SUCH_OBJECT)');
