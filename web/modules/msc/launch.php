@@ -29,7 +29,6 @@ require('modules/msc/includes/actions.inc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 
-
 function action($action, $cible) {
     $script_list = msc_script_list_file();
     if (array_key_exists($action, $script_list)) {
@@ -39,11 +38,11 @@ function action($action, $cible) {
             $cible,
             $script_list[$action]["title".$current_lang]);
         dispatch_all_commands();
-        // if machine 
+        // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
 
         header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'name'=>$_GET['name'], 'coh_id'=>$id_command_on_host)));
-        //elseif groupe 
+        //elseif groupe
     }
 }
 
@@ -59,7 +58,7 @@ function adv_action($post) {
     foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'title', 'parameters', 'start_date', 'end_date') as $param) {
         $params[$param] = $post[$param];
     }
-    
+
     $hostname = $post["name"];
     $pid = $post["pid"];
 
@@ -77,10 +76,10 @@ if (isset($_GET["badvanced"])) {
     $hostname = $_GET["name"];
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
-    
+
     $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
     $label->display();
-    
+
     $f = new Form();
     $f->push(new Table());
 
@@ -90,11 +89,11 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $from, "hide" => True));
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
-    
+
     #TODO : find a way to display it as an html table...
     $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('title'));
     $f->add($input, array("value" => $name));
-    
+
     $check = new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory"));
     $f->add($check, array("value" => 'checked'));
     $check = new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script"));
@@ -110,7 +109,7 @@ if (isset($_GET["badvanced"])) {
     $f->add($check, array("value" => 60));
     $check = new TrFormElement(_T("Maximum number of connection attempt", 'msc'), new InputTpl("max_connection_attempt"));
     $f->add($check, array("value" => 3));
-    
+
     $check = new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory"));
     if ($_GET['start_inventory'] == 'on') {
         $start_inventory = 'checked';
@@ -119,12 +118,12 @@ if (isset($_GET["badvanced"])) {
 
     $input = new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('Start date', 'msc'), new DateTpl('start_date'));
+    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('End date', 'msc'), new DateTpl('end_date'));
+    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date'));
     $f->add($input, array("value" => ''));
-    
-    $f->pop();   
+
+    $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
@@ -139,20 +138,20 @@ if (isset($_GET["badvanced"])) {
         if ($_POST['launchAction']) {
             action($_POST['launchAction'], $_GET['name']);
         }
-    
+
         // Display the actions list
         $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
         $label->display();
-    
+
         $msc_actions = new RenderedMSCActions(msc_script_list_file());
         $msc_actions->display();
-    
-        
+
+
         $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();
-                    
+
     }
 }
 
