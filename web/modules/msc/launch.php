@@ -55,8 +55,16 @@ function adv_action($post) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'title', 'parameters', 'start_date', 'end_date') as $param) {
+    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'title', 'parameters') as $param) {
         $params[$param] = $post[$param];
+    }
+    foreach (array('start_date', 'end_date') as $param) {
+        if ($post[$param] === _('now')) {
+            $params[$param] = "0000-00-00 00:00:00";
+        } elseif ($post[$param] === _('never')) {
+            $params[$param] = "0000-00-00 00:00:00";
+        } else
+            $params[$param] = $post[$param];
     }
 
     $hostname = $post["name"];
@@ -118,10 +126,10 @@ if (isset($_GET["badvanced"])) {
 
     $input = new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateNowTpl('start_date'));
-    $f->add($input, array("value" => _('as soon as possible')));
-    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateNeverTpl('end_date'));
-    $f->add($input, array("value" => _('never')));
+    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date'));
+    $f->add($input, array('ask_for_now' => 1));
+    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date'));
+    $f->add($input, array('ask_for_never' => 1));
 
     $f->pop();
     $f->addValidateButton("bconfirm");
