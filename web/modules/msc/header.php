@@ -34,11 +34,11 @@ require("modules/msc/includes/openASession.inc.php");
 require_once("modules/msc/includes/xmlrpc.php");*/
 
 $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
-if ($machine->hostname != $_GET['name']) {
-    $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+if ($machine->hostname === $_GET['name']) {
+    $msc_host = new RenderedMSCHost($machine);
     $msc_host->headerDisplay();
 } else {
-    $msc_host = new RenderedMSCHost($machine);
+    $msc_host = new RenderedMSCHostDontExists($_GET['name']);
     $msc_host->headerDisplay();
 }
 

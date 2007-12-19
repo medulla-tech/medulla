@@ -41,11 +41,11 @@ if (isset($_POST["bconfirm"])) {
 
     $hostname = $_POST["name"];
     $pid = $_POST["pid"];
-    
-    // TODO activate this  : msc_command_set_pause($cmd_id);
+
+    // TODO: activate this  : msc_command_set_pause($cmd_id);
     add_command_api($pid, $hostname, $params);
     dispatch_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$_POST["name"])));
 } elseif (isset($_POST["badvanced"])) {
     $from = $_POST['from'];
     $path =  explode('|', $from);
@@ -67,7 +67,7 @@ if (isset($_POST["bconfirm"])) {
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
     $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $hostname));
-   
+
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
     $hidden = new HiddenTpl("from");
@@ -84,7 +84,7 @@ if (isset($_POST["bconfirm"])) {
     $f->add($hidden, array("value" => 60, "hide" => True));
     $hidden = new HiddenTpl("max_connection_attempt");
     $f->add($hidden, array("value" => 3, "hide" => True));
-    
+
     #TODO : find a way to display it as an html table...
     $check = new TrFormElement(_T('Wake on lan'), new CheckboxTpl("wake_on_lan"));
     $f->add($check, array("value" => ''));
