@@ -118,10 +118,10 @@ if (isset($_GET["badvanced"])) {
 
     $input = new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters'));
     $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date'));
-    $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date'));
-    $f->add($input, array("value" => ''));
+    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateNowTpl('start_date'));
+    $f->add($input, array("value" => _('as soon as possible')));
+    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateNeverTpl('end_date'));
+    $f->add($input, array("value" => _('never')));
 
     $f->pop();
     $f->addValidateButton("bconfirm");
@@ -145,7 +145,6 @@ if (isset($_GET["badvanced"])) {
 
         $msc_actions = new RenderedMSCActions(msc_script_list_file());
         $msc_actions->display();
-
 
         $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
         $ajax->display();
