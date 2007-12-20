@@ -32,19 +32,29 @@ from mmc.plugins.base.provisioning import *
 INI = "/etc/mmc/plugins/base.ini"
 
 class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
-
+    """
+    Read and store the configuration of ExternalLdapAuthenticator objects.
+    """
+    
     def readConf(self):
         AuthenticatorConfig.readConf(self)
-        for option in ["ldapurl", "suffix", "bindname", "bindpasswd", "filter", "attr"]:
+        for option in ["ldapurl", "suffix", "bindname", "bindpasswd", "attr"]:
             self.__dict__[option] = self.get(self.section, option)
+        try:
+            self.filter = self.get(self.section, "filter")
+        except NoOptionError:
+            pass
 
     def setDefault(self):
         AuthenticatorConfig.setDefault(self)
-        self.filter = "(objectClass=*)"
+        self.filter = "objectClass=*"
         
 
 class ExternalLdapAuthenticator(AuthenticatorI):
-
+    """
+    This authenticator connects to a LDAP server to authenticate users.
+    """
+    
     def __init__(self, conffile = INI, name = "externalldap"):
         AuthenticatorI.__init__(self, conffile, name, ExternalLdapAuthenticatorConfig)
 
@@ -109,7 +119,10 @@ class ExternalLdapAuthenticator(AuthenticatorI):
 
 
 class ExternalLdapProvisionerConfig(ProvisionerConfig):
-
+    """
+    Read and store the configuration of ExternalLdapProvisioner objects.
+    """
+    
     def readConf(self):
         ProvisionerConfig.readConf(self)
         for attr in ["uid", "givenName", "sn"]:
@@ -118,6 +131,10 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
 
 
 class ExternalLdapProvisioner(ProvisionerI):
+    """
+    This provisioner creates user accounts thanks to user informations given
+    by ExternalLdapAuthenticator objects.
+    """
     
     def __init__(self, conffile = INI, name = "externalldap"):
         ProvisionerI.__init__(self, conffile, name, ExternalLdapProvisionerConfig)
