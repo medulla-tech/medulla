@@ -59,9 +59,9 @@ function adv_action($post) {
         $params[$param] = $post[$param];
     }
     foreach (array('start_date', 'end_date') as $param) {
-        if ($post[$param] === _('now')) {
+        if ($post[$param] == _T("now", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
-        } elseif ($post[$param] === _('never')) {
+        } elseif ($post[$param] == _T("never", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
         } else
             $params[$param] = $post[$param];
