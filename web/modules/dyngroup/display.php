@@ -24,17 +24,10 @@
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
+require_once("modules/dyngroup/includes/includes.php");
+require_once("modules/glpi/includes/xmlrpc.php");
 
 $id = idGet();
-$group = new Dyngroup($id);
-
-$p = new PageGenerator(sprintf(_T("Display '%s' result list"), $group->getName()));
-$item = $items[$id];
-$sidemenu->forceActiveItem($item->action);
-$p->setSideMenu($sidemenu);
-$p->display();
-
 if (!$id) {
     $request = quickGet('request');
     $r = new Request();
@@ -43,18 +36,29 @@ if (!$id) {
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    $group = new Dyngroup($id);
-
-    $r = new Request();
-    $r->parse($group->getRequest());
-    $res = new Result($r, $group->getBool());
-
-    if ($group->isGroup()) {
-        $res->parse($group->getResult());
-        $res->displayResListInfos(true, array('id'=>$id), 'display');
+    $group = new Stagroup($id);
+    
+    $p = new PageGenerator(sprintf(_T("Display '%s' result list"), $group->getName()));
+    $item = $items[$id];
+    $sidemenu->forceActiveItem($item->action);
+    $p->setSideMenu($sidemenu);
+    $p->display();
+    
+    if ($group->isDyn()) {
+        $group = $group->toDyn();
+        $r = new Request();
+        $r->parse($group->getRequest());
+        $res = new Result($r, $group->getBool());
+    
+        if ($group->isGroup()) {
+            $res->parse($group->getResult());
+            $res->displayResListInfos(true, array('id'=>$id), 'display');
+        } else {
+            $res->replyToRequest();
+            $res->displayResListInfos();
+        }
     } else {
-        $res->replyToRequest();
-        $res->displayResListInfos();
+        $group->prettyDisplay();
     }
 }
 

@@ -22,27 +22,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
-/* Add new sidemenu item */
-
+require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups"), "base", "computers",  "list"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group"), "base", "computers", "creator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
-
-$items = array();
-$groups = getAllGroups(array('canShow'=>true));
-foreach ($groups as $group) {
-    $isA = "request";
-    if (!$group->isDyn()) { $isA = "group"; }
-    if ($group->isDyn() && $group->isGroup()) { $isA = "group"; }
-    $s = new SideMenuItem(
-             sprintf(_T("Display %s '%s'"), $isA, $group->getName()),
-             "base", "computers", "display&id=".$group->id
-    );
-    $s->setCssId("displayid".$group->id);
-    $items[$group->id] = $s;
-    $sidemenu->addSideMenuItem($items[$group->id]);
+if ($_GET["action"]=="creator") {
+    $title = _T("Add a static group", 'dyngroup');
+} else {
+    $title = _T("Edit a static group", 'dyngroup');
 }
+$p = new PageGenerator($title);
+$p->setSideMenu($sidemenu);
+$p->display();
+
+require("add_groups.php");
 
 ?>
+

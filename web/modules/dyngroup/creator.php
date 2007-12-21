@@ -22,13 +22,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/base/computers/localSidebar.php");
-require("graph/navbar.inc.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
+#require("modules/base/computers/localSidebar.php");
+#require("graph/navbar.inc.php");
+require_once("modules/dyngroup/includes/includes.php");
 
-$p = new PageGenerator(_T("Add a dynamic group"));
-$p->setSideMenu($sidemenu);
-$p->display();
+#$p = new PageGenerator(_T("Add a group"));
+#$p->setSideMenu($sidemenu);
+#$p->display();
 
 // getting request and id parameters
 $id = idGet();
@@ -53,24 +53,46 @@ if (quickGet('delete')) {
 
 // a new part has to be added to the request
 if (quickGet('req') && quickGet('param')) {
-    $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'));
+    $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'), quickGet('value2'));
     $request->addSub($sub);
+}
+
+/*if (isDynamicEnable()) {
+    print "<table><tr><td>"._T("What kind of group do you want to create: ")."</td>";
+    print "<td><a href='".
+            urlStr("base/computers/creator", array("add_sta"=>True)).
+            "'>"._T('A static group').'</td>';
+    print "<td><a href='".
+            urlStr("base/computers/creator", array("add_dyn"=>True)).
+            "'>"._T('A dynamic group').'</td></tr>';
+} else {
+    add_static_group();
+}
+
+if (quickGet('add_sta')) {
+    add_static_group();
+}*/
+
+function add_static_group() {
+    // need to do the same thing than groups and users...
 }
 
 // select the module in which a part of the request must be launch
 //TODO put in class
-print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
-$modules = getPossiblesModules();
-foreach ($modules as $name) {
-    print "<td><a href='".
-        urlStr("base/computers/creator", array(
-                                                'add_req'=>$name,
-                                                'request'=>$request->toURL(),
-                                                'id'=>$id
-        )).
-        "'>$name</a></td>";
-}
-print "</tr></table>";
+//if (quickGet('add_dyn')) {
+    print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
+    $modules = getPossiblesModules();
+    foreach ($modules as $name) {
+        print "<td><a href='".
+            urlStr("base/computers/creator", array(
+                                                    'add_req'=>$name,
+                                                    'request'=>$request->toURL(),
+                                                    'id'=>$id
+            )).
+            "'>$name</a></td>";
+    }
+    print "</tr></table>";
+//}
 
 // criterion selection
 //TODO put in class
@@ -89,6 +111,7 @@ if (quickGet('add_req')) {
 //TODO put in class
 if (quickGet('add_param')) {
     print "<form action='".  urlStr("base/computers/creator", array()).  "' method='POST'><table>";
+    // need to be changed in getCriterionType (we don't use the second part of the array...
     $param = getPossiblesValuesForCriterionInModule(quickGet('req'), quickGet('add_param'));
     if (!is_array($param)) { $param = array($param); }
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
@@ -102,6 +125,13 @@ if (quickGet('add_param')) {
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/autocomplete.php");
             $auto = new Autocomplete($module, $criterion);
+            $auto->display();
+            break;
+        case 'double':
+            $module = clean(quickGet('req'));
+            $criterion = clean(quickGet('add_param'));
+            include("modules/dyngroup/includes/double.php");
+            $auto = new DoubleAutocomplete($module, $criterion);
             $auto->display();
             break;
         case 'bool':

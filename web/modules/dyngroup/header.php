@@ -1,9 +1,10 @@
-<?php
-/**
+<?
+
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id$
+ * $Id: general.php 26 2007-10-17 14:48:41Z nrueff $
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,32 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/dyngroup/includes/includes.php");
-
-$id = idGet();
-$group = new Dyngroup($id);
-$machine = quickGet('name');
-
-if (quickGet('valid')) {
-    $group->removeMachine($machine);
-    header("Location: " . urlStrRedirect("base/computers/display", array('id'=>$id)));
-}
-
-?> <h2><?= _T("Remove a machine") ?></h2> <?php
+print "Please chose the type of group you want to create";
 
 ?>
-
-<form action="<?= urlStr("base/computers/remove_machine", array('id'=>$id, 'name'=>$machine)) ?>" method="post">
-<p>
-<?  
-    printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>."), $machine, $group->getName());
-?>
-</p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove Machine"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
-</form>
-    
-
-
-
 

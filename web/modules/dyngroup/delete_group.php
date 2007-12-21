@@ -22,10 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/dyngroup/includes/dyngroup.php");
+require_once("modules/dyngroup/includes/includes.php");
 
 $id = idGet();
-$group = new Dyngroup($id);
+$group = new Stagroup($id);
 
 if (quickGet('valid')) {
     $group->delete();

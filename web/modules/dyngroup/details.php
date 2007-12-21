@@ -22,10 +22,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/dyngroup/includes/dyngroup.php");
+require_once("modules/dyngroup/includes/includes.php");
 
 $id = idGet();
-$group = new Dyngroup($id);
+$group = new Stagroup($id);
+if ($group->isDyn()) {
+    $group = $group->toDyn();
+}
 
 ?> <h2><?= sprintf(_T('%s\'s details'), $group->getName()) ?></h2> <?php
 
@@ -47,7 +50,7 @@ if ($_GET['bhide'] || $_POST['bhide']) {
 ?> <form action="<?= urlStr("base/computers/details", array('id'=>$id)) ?>" method="post"> <?  
 ?> <input name="bback" type="submit" class="btnPrimary" value="<?= _T("Close") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
 
-if ($group->isGroup()) {
+if ($group->isDyn() && $group->isGroup()) {
     print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate").'"/>';
 }
 if ($group->canShow()) {

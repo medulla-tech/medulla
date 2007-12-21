@@ -24,47 +24,55 @@
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
+require_once("modules/dyngroup/includes/includes.php");
 
-$p = new PageGenerator(_T("Dynamic group list"));
+$p = new PageGenerator(_T("Group list", 'dyngroup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if (dyngroup_last_id()) {
-    $max = dyngroup_last_id();
-    $i = 0;
+$list = array();
+if (isDynamicEnable()) {
+    $list = getAllgroup();
+    //need to skin dyn and sta
+} else {
+    $list = getAllStagroup();
+}
+
+if (count($list) > 0) {
     $ids  = array();
     $name = array();
     $type = array();
     $show = array();
 
-    while ($i < $max) {
-        $group = new Dyngroup($i);
-        if ($group->getName()) {
-            $ids[]=  array("id"=>$i);
-            $name[]= $group->getName();
-            $type[]= ($group->isGroup() ? sprintf(_T('group (%s)'), $group->resultNum()) : _T('query'));
-            $show[]= ($group->canShow() ? _T('Visible') : _T('Hidden'));
+    foreach ($list as $group) {
+        $ids[]=  array("id"=>$group->id, "gid"=>$group->id);
+        $name[]= $group->getName();
+        if ($group->isDyn()) {
+            $type[]= ($group->isGroup() ? sprintf(_T('group (%s)', 'dyngroup'), $group->resultNum()) : _T('query', 'dyngroup'));
+        } else {
+            $type[]= _T('static group', 'dyngroup');
         }
-        $i++;
+        $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
     }
 
-    $n = new ListInfos($name, _T('Group name'));
-    $n->addExtraInfo($type, _T('Type'));
-    $n->addExtraInfo($show, _T('Display'));
+    $n = new ListInfos($name, _T('Group name', 'dyngroup'));
+    $n->addExtraInfo($type, _T('Type', 'dyngroup'));
+    $n->addExtraInfo($show, _T('Display', 'dyngroup'));
     $n->setParamInfo($ids);
-    $n->addActionItem(new ActionItem(_T("Execute"), "display", "execute", "id"));
-    $n->addActionItem(new ActionPopupItem(_T("Details"), "details", "afficher", "id"));
-    $n->addActionItem(new ActionItem(_T("Edit"), "creator", "edit", "id"));
-    $n->addActionItem(new ActionPopupItem(_T("Delete"), "delete_group", "supprimer", "id"));
+    $n->addActionItem(new ActionItem(_T("Software deployment", "dyngroup"),"msctabs","install","computer", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Display", 'dyngroup'), "display", "display", "id"));
+    $n->addActionItem(new ActionPopupItem(_T("Details", 'dyngroup'), "details", "afficher", "id"));
+    $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), "edit", "edit", "id"));
+    $n->addActionItem(new ActionPopupItem(_T("Delete", 'dyngroup'), "delete_group", "supprimer", "id"));
 
     $n->display();
 }
     
+# changer le style de li.display (pas bon icone)
 ?>
 
 <style>
-li.execute a {
+li.display a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/msc/graph/images/actions/run.png");

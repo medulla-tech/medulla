@@ -24,7 +24,7 @@
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
+require_once("modules/dyngroup/includes/includes.php");
 
 $p = new PageGenerator(_T("Request saver"));
 $p->setSideMenu($sidemenu);
