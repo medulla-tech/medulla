@@ -4,7 +4,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 208 2007-09-14 16:39:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse2.
 #
