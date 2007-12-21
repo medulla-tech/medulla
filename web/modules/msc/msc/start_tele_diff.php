@@ -42,9 +42,16 @@ if (isset($_POST["bconfirm"])) {
     $hostname = $_POST["name"];
     $gid = $_POST["gid"];
     $pid = $_POST["pid"];
+    $cible = $hostname;
+    if ($gid) {
+        $group = new Stagroup($_GET['gid']);
+        $res = new Result();
+        $res->parse($group->result->getValue());
+        $cible = $res->toA();
+    }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $hostname, $params, $gid);
+    add_command_api($pid, $cible, $params, $gid);
     dispatch_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 } elseif (isset($_POST["badvanced"])) {
@@ -67,8 +74,13 @@ if (isset($_POST["bconfirm"])) {
     $hostname = $_GET["name"];
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
+    $cible = $hostname;
+    if ($gid) {
+        $group = new Stagroup($_GET['gid']);
+        $cible = $group->getName();
+    }
     $name = getPackageLabel($_GET["pid"]);
-    $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $hostname));
+    $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $cible));
 
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
