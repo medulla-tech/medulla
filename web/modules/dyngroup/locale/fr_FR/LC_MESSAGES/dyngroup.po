@@ -1,0 +1,253 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: 2007-12-21 11:57+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: dyngroup/dyngroup/list.php:29
+msgid "Group list"
+msgstr "Liste des groupes"
+
+#: dyngroup/dyngroup/list.php:51
+#, php-format
+msgid "group (%s)"
+msgstr "Groupe (%s)"
+
+#: dyngroup/dyngroup/list.php:51
+msgid "query"
+msgstr "Requête"
+
+#: dyngroup/dyngroup/list.php:53
+msgid "static group"
+msgstr "Groupe statique"
+
+#: dyngroup/dyngroup/list.php:55
+msgid "Visible"
+msgstr "Visible"
+
+#: dyngroup/dyngroup/list.php:55
+msgid "Hidden"
+msgstr "Caché"
+
+#: dyngroup/dyngroup/list.php:58 dyngroup/dyngroup/add_groups.php:91
+msgid "Group name"
+msgstr "Nom du groupe"
+
+#: dyngroup/dyngroup/list.php:59
+msgid "Type"
+msgstr "Type"
+
+#: dyngroup/dyngroup/list.php:60 dyngroup/dyngroup/list.php:63
+#: dyngroup/infoPackage.inc.php:51
+msgid "Display"
+msgstr ""
+
+#: dyngroup/dyngroup/list.php:62
+msgid "Software deployment"
+msgstr "Déploiement de logiciels"
+
+#: dyngroup/dyngroup/list.php:64 dyngroup/infoPackage.inc.php:70
+msgid "Details"
+msgstr "Détails"
+
+#: dyngroup/dyngroup/list.php:65
+msgid "Edit"
+msgstr "Éditer"
+
+#: dyngroup/dyngroup/list.php:66 dyngroup/includes/request.php:97
+#: dyngroup/infoPackage.inc.php:65
+msgid "Delete"
+msgstr "Supprimer"
+
+#: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
+msgid "Delete group"
+msgstr "Supprimer le groupe"
+
+#: dyngroup/dyngroup/delete_group.php:45
+#, php-format
+msgid "You will delete group <b>%s</b>."
+msgstr "Vous allez supprimer le groupe <b>%s</b>."
+
+#: dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/dyngroup/remove_machine.php:47
+#: dyngroup/dyngroup/add_groups.php:150
+msgid "Cancel"
+msgstr "Annuler"
+
+#: dyngroup/dyngroup/save.php:29
+msgid "Request saver"
+msgstr ""
+
+#: dyngroup/dyngroup/save.php:59 dyngroup/infoPackage.inc.php:56
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: dyngroup/dyngroup/save.php:69
+#, php-format
+msgid "This request has been saved as %s (id=%s)"
+msgstr "Cette requête a été sauvée en tant que %s (id=%s)"
+
+#: dyngroup/dyngroup/save.php:78
+msgid "This request has no result."
+msgstr "Cette requête n'a pas de résultat."
+
+#: dyngroup/dyngroup/save.php:81
+#, php-format
+msgid "This result has been saved as %s (id=%s)"
+msgstr "Ce résultat a été sauvegardé en tant que %s (id=%s)"
+
+#: dyngroup/dyngroup/save.php:90
+msgid "Enter Boolean operator bewteen groups"
+msgstr "Spécifier un opérateur booléen entre les groupes"
+
+#: dyngroup/dyngroup/creator.php:83
+msgid "Choose the module you want to query : "
+msgstr "Sélectionner le module que vous désirez requêter : "
+
+#: dyngroup/dyngroup/creator.php:100
+msgid "Choose your field : "
+msgstr "Sélectionner votre champ : "
+
+#: dyngroup/dyngroup/creator.php:121 dyngroup/dyngroup/creator.php:142
+#: dyngroup/dyngroup/creator.php:146 dyngroup/includes/autocomplete.php:43
+msgid "Add"
+msgstr "Ajouter"
+
+#: dyngroup/dyngroup/creator.php:139 dyngroup/dyngroup/creator.php:145
+msgid "Yes"
+msgstr "Oui"
+
+#: dyngroup/dyngroup/creator.php:140
+msgid "No"
+msgstr "Non"
+
+#: dyngroup/dyngroup/creator.php:161
+msgid "The request is : "
+msgstr "La requête est : "
+
+#: dyngroup/dyngroup/creator.php:172
+msgid "Execute"
+msgstr "Exécuter"
+
+#: dyngroup/dyngroup/creator.php:174
+msgid "Save result"
+msgstr "Sauvegarder le résultat"
+
+#: dyngroup/dyngroup/creator.php:176
+msgid "Save query"
+msgstr "Sauvegarder la requête"
+
+#: dyngroup/dyngroup/groupshead.php:30
+msgid "Add a static group"
+msgstr "Ajouter un groupe statique"
+
+#: dyngroup/dyngroup/groupshead.php:32
+msgid "Edit a static group"
+msgstr "Éditer un groupe statique"
+
+#: dyngroup/dyngroup/remove_machine.php:36 dyngroup/infoPackage.inc.php:75
+msgid "Remove a machine"
+msgstr "Supprimer un ordinateur"
+
+#: dyngroup/dyngroup/remove_machine.php:43
+#, php-format
+msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
+msgstr "Vous allez supprimer l'ordinateur <b>%s</b> du groupe <b>%s</b>."
+
+#: dyngroup/dyngroup/remove_machine.php:46
+msgid "Remove Machine"
+msgstr "Supprimer l'ordinateur"
+
+#: dyngroup/dyngroup/localSidebar.php:30
+msgid "All groups"
+msgstr "Tous les groupes"
+
+#: dyngroup/dyngroup/localSidebar.php:31
+msgid "Add a group"
+msgstr "Ajouter un groupe"
+
+#: dyngroup/dyngroup/localSidebar.php:40
+#, php-format
+msgid "Display %s '%s'"
+msgstr "Afficher %s '%s'"
+
+#: dyngroup/dyngroup/details.php:33
+#, php-format
+msgid "%s's details"
+msgstr "Détails de %s"
+
+#: dyngroup/dyngroup/details.php:51
+msgid "Close"
+msgstr "Fermer"
+
+#: dyngroup/dyngroup/details.php:54
+msgid "Regenerate"
+msgstr "Re-générer"
+
+#: dyngroup/dyngroup/details.php:57
+msgid "Hide"
+msgstr "Cacher"
+
+#: dyngroup/dyngroup/details.php:59
+msgid "Show"
+msgstr "Afficher"
+
+#: dyngroup/dyngroup/display.php:41
+#, php-format
+msgid "Display '%s' result list"
+msgstr "Afficher la liste des résultats de '%s'"
+
+#: dyngroup/dyngroup/tab.php:8
+msgid "Group creation"
+msgstr "Création d'un groupe"
+
+#: dyngroup/dyngroup/add_groups.php:99
+msgid "All machines"
+msgstr "Tous les ordinateurs"
+
+#: dyngroup/dyngroup/add_groups.php:123
+msgid "Group members"
+msgstr "Membres du groupe"
+
+#: dyngroup/dyngroup/add_groups.php:149
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: dyngroup/includes/autocomplete.php:34
+msgid "Add a value"
+msgstr "Ajouter une valeur"
+
+#: dyngroup/includes/request.php:94
+msgid "Search part"
+msgstr "Rechercher de composant"
+
+#: dyngroup/includes/request.php:131
+#, php-format
+msgid "%s) Search %s = (%s) in module %s"
+msgstr "%s) Recherche %s = (%s) dans le module %s"
+
+#: dyngroup/includes/request.php:133
+#, php-format
+msgid "%s) Search %s = %s in module %s"
+msgstr "%s) Recherche %s = %s dans le module %s"
+
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:42
+msgid "Group Creator"
+msgstr "Créateur de groupe"
+
+#: dyngroup/infoPackage.inc.php:46
+msgid "Group Editor"
+msgstr "Éditeur de groupe"
+
+#: dyngroup/infoPackage.inc.php:61
+msgid "List all Groups"
+msgstr "Liste de tous les groupes"
