@@ -1,0 +1,214 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id: agent.py 298 2007-10-30 14:46:30Z cedric $
+#
+# This file is part of Pulse2.
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import twisted.web.xmlrpc
+import twisted.web.server
+import twisted.internet.defer
+import twisted.internet.reactor
+import optparse
+import os
+import logging
+import logging.config
+import ConfigParser
+import sys
+import xmlrpclib
+import datetime  # for xmlCleanUp
+from time import time, struct_time  # for xmlCleanUp
+import pulse2.launcher.remote_exec;
+
+VERSION = "0.0.0"
+
+def startService(id, config_file):
+    # Load configuration file
+    cp = ConfigParser.ConfigParser()
+    cp.read(config_file)
+
+    logger=logging.getLogger()
+
+    if cp.has_option(id, "port"):
+        port = cp.getint(id, "port")
+    else:
+        port = 8001 # FIXME: explain this to user
+
+    if cp.has_option(id, "host"):
+        host = cp.get(id, "host")
+    elif cp.has_option("launchers", "host"):
+        host = cp.get("launchers", "host")
+    else:
+        host = "127.0.0.1" # FIXME: explain this to user
+
+    logger.info('launcher "%s": listening on %s:%d' % (id, host, port))
+
+    if cp.has_option(id, "login"):
+        login = cp.get(id, "login")
+    elif cp.has_option("launchers", "login"):
+        login = cp.get("launchers", "login")
+    else:
+        login = "" # FIXME: explain this to user
+        logger.warn('launcher "%s": no username set !!' % (id))
+
+    if cp.has_option(id, "password"):
+        password = cp.get(id, "password")
+    elif cp.has_option("launchers", "password"):
+        password = cp.get("launchers", "password")
+    else:
+        password = "" # FIXME: explain this to user
+        logger.warn('launcher "%s": no password set !!' % (id))
+
+    # Starting XMLRPC server
+    launcher = Launcher(id, cp, login, password)
+    try:
+        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(launcher), interface = host)
+    except:
+        logger.error('launcher "%s": can\'t bind to %s:%d' % (id, host, port))
+        return False
+    twisted.internet.reactor.run()
+    return True
+
+def xmlrpcCleanup(data):
+    """
+    Cleanup data content so that they can be send using XML-RPC.
+
+    For example, None is not accepted, and must be converted to False.
+    """
+    if type(data) == dict:
+        ret = {}
+        for key in data.keys():
+            # array keys must be string
+            ret[str(key)] = xmlrpcCleanup(data[key])
+    elif type(data) == list:
+        ret = []
+        for item in data:
+            ret.append(xmlrpcCleanup(item))
+    elif type(data) == datetime.date:
+        ret = tuple(data.timetuple())
+    elif type(data) == struct_time:
+        ret = tuple(data)
+    elif data == None:
+        ret = False
+    elif type(data) == long:
+        ret = str(data)
+    else:
+        ret = data
+    return ret
+
+class Launcher(twisted.web.xmlrpc.XMLRPC):
+    """Our launcher
+    """
+
+    def __init__(self, id, config, login="", password=""):
+        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        self.id = id
+        self.logger = logging.getLogger()
+        self.login = login
+        self.password = password
+        self.cp = config
+        self.wrapper = self.cp.get('launchers', 'wrapper_path') # FIXME: check wrapper availability
+
+    def getRevision(self):
+        return int("$Rev: 298 $".split(':')[1].strip(' $'))
+
+    def getVersion(self):
+        return VERSION
+
+    def _ebRender(self, failure):
+        self.logger.error(failure)
+        if isinstance(failure.value, xmlrpclib.Fault):
+            return failure.value
+        return xmlrpclib.Fault(self.FAILURE, "error")
+
+    def _cbRender(self, result, request):
+        args, func = xmlrpclib.loads(request.content.getvalue())
+        if isinstance(result, Launcher):
+            result = result.result
+        if not isinstance(result, xmlrpclib.Fault):
+            result = (result,)
+        self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
+        try:
+            s = xmlrpclib.dumps(result, methodresponse=1)
+        except:
+            f = Fault(self.FAILURE, "can't serialize output")
+            s = xmlrpclib.dumps(f, methodresponse=1)
+        request.setHeader("content-length", str(len(s)))
+        request.write(s)
+        request.finish()
+
+    def xmlrpc_ping(self):
+        return xmlrpcCleanup("pong")
+
+    def xmlrpc_true(self):
+        return xmlrpcCleanup(True)
+
+    def xmlrpc_false(self):
+        return xmlrpcCleanup(False)
+
+    def xmlrpc_none(self):
+        return xmlrpcCleanup(None)
+
+    def xmlrpc_remote_exec(self, id, command, client=None, sync=True):
+        return pulse2.launcher.remote_exec.remote_exec(command, client, self.wrapper, sync)
+
+    def xmlrpc_sync_remote_exec(self, id, command, client=None):
+        return pulse2.launcher.remote_exec.sync_remote_exec(id, command, client, self.wrapper)
+
+    def xmlrpc_async_remote_exec(self, id, command, client=None):
+        return pulse2.launcher.remote_exec.async_remote_exec(id, command, client, self.wrapper)
+
+    def xmlrpc_get_background_process_count(self):
+        return pulse2.launcher.remote_exec.get_background_process_count()
+
+    def xmlrpc_get_background_process_list(self):
+        return pulse2.launcher.remote_exec.get_background_process_list()
+
+    def xmlrpc_get_background_running_process_count(self):
+        return pulse2.launcher.remote_exec.get_background_running_process_count()
+
+    def xmlrpc_get_background_running_process_list(self):
+        return pulse2.launcher.remote_exec.get_background_running_process_list()
+
+    def xmlrpc_is_background_process_done(self, id):
+        return pulse2.launcher.remote_exec.is_background_process_done(id)
+
+    def xmlrpc_purge_background_process(self, id):
+        return pulse2.launcher.remote_exec.purge_background_process(id)
+
+def main():
+    parser = optparse.OptionParser()
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers.ini')
+    parser.add_option("-i", "--id", help='id of this launcher')
+    (options, args) = parser.parse_args()
+
+    if not os.path.exists(options.config_file):
+        print "Config file '%s' does not exist." % options.config_file
+        sys.exit(3)
+
+    # start logger
+    logging.config.fileConfig(options.config_file)
+    logger= logging.getLogger()
+    logger.info('launcher %s: starting' % options.id);
+
+    # start service
+    sys.exit(startService(options.id, options.config_file))
+
+if __name__ == '__main__':
+    main()
