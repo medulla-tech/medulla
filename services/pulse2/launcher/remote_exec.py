@@ -25,6 +25,7 @@ import logging
 import os
 import sys
 import twisted.internet.reactor
+import mmc.support.mmctools
 
 def set_default_client_options(client):
     """
@@ -49,15 +50,15 @@ def set_default_client_options(client):
             'options': []
         }
 
-    if not client['protocol']: client['protocol'] = 'ssh'
-    if not client['host']: client['host'] = 'pulse2-win2k'
+    if not 'protocol' in client: client['protocol'] = 'ssh'
+    if not client['host']: client['host'] = '127.0.0.1'
 
     if client['protocol'] == 'ssh':
-        if not client['port']: client['port'] = 22
-        if not client['user']: client['user'] = 'root'
-        if not client['passwd']: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
-        if not client['cert']: client['passwd'] = '/root/.ssh/id_dsa'
-        if not client['options']: client['options'] = [
+        if not 'port' in client: client['port'] = 22
+        if not 'user' in client: client['user'] = 'root'
+        if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
+        if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
+        if not 'options' in client: client['options'] = [
             '-T',
             '-R30080:127.0.0.1:80',
             '-o StrictHostKeyChecking=no',
