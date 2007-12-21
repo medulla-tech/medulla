@@ -45,7 +45,7 @@ if ($_GET['name']) {
     require_once("../../../modules/dyngroup/includes/request.php");
     require_once("../../../modules/dyngroup/includes/result.php");
     require_once("../../../modules/dyngroup/includes/dyngroup.php");
-    
+
     $group = new Stagroup($_GET['gid']);
 }
 
@@ -95,13 +95,13 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end = $count;
-                        
+
 
 $n->addActionItem(new ActionPopupItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
-       
+
 
 ?>
 <style>
