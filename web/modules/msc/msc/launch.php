@@ -25,18 +25,18 @@
 
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/mirror_api.php');
-require('modules/msc/includes/actions.inc.php');
-require('modules/msc/includes/commands_xmlrpc.inc.php');
-require('modules/msc/includes/package_api.php');
+require_once('modules/msc/includes/actions.inc.php');
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once('modules/msc/includes/package_api.php');
 
 function action($action, $cible) {
     $script_list = msc_script_list_file();
     if (array_key_exists($action, $script_list)) {
-        require("modules/msc/includes/actions.inc.php");
         $id_command = add_command_quick(
             $script_list[$action]["command"],
             $cible,
-            $script_list[$action]["title".$current_lang]);
+            $script_list[$action]["title".$current_lang],
+            $_GET['gid']);
         dispatch_all_commands();
         // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
