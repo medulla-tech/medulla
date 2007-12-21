@@ -41,7 +41,7 @@ function action($action, $cible) {
         // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
 
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'name'=>$_GET['name'], 'coh_id'=>$id_command_on_host)));
+        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'name'=>$_GET['name'], 'coh_id'=>$id_command_on_host, 'gid'=>$_GET['gid'])));
         //elseif groupe
     }
 }
@@ -68,12 +68,21 @@ function adv_action($post) {
     }
 
     $hostname = $post["name"];
+    $gid = $post["gid"];
+    if ($hostname) {
+        $cible = $hostname;
+    } else {
+        $group = new Stagroup($gid);
+        $res = new Result();
+        $res->parse($group->result->getValue());
+        $cible = $res->toA();
+    }
     $pid = $post["pid"];
 
     // TODO activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $hostname, $params);
+    add_command_api($pid, $cible, $params, $gid);
     dispatch_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 }
 
 if (isset($_GET["badvanced"])) {
@@ -82,10 +91,16 @@ if (isset($_GET["badvanced"])) {
     }
     $from = $_GET['from'];
     $hostname = $_GET["name"];
+    $gid = $_GET['gid'];
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
-
-    $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
+    
+    if ($hostname) {
+        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
+    } else {
+        $group = new Stagroup($_GET['gid']);
+        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $group->getName()));
+    }
     $label->display();
 
     $f = new Form();
@@ -97,7 +112,9 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $from, "hide" => True));
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
-
+    $hidden = new HiddenTpl("gid");
+    $f->add($hidden, array("value" => $gid, "hide" => True));
+    
     #TODO : find a way to display it as an html table...
     $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('title'));
     $f->add($input, array("value" => $name));
@@ -137,7 +154,7 @@ if (isset($_GET["badvanced"])) {
     $f->display();
 
 
-} else {
+} elseif ($_GET['name']) {
     $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
     if ($machine->hostname != $_GET['name']) {
         $msc_host = new RenderedMSCHostDontExists($_GET['name']);
@@ -160,6 +177,25 @@ if (isset($_GET["badvanced"])) {
         $ajax->displayDivToUpdate();
 
     }
+} elseif ($_GET['gid']) {
+    $group = new Stagroup($_GET['gid']);
+    if ($_POST['launchAction']) {
+        $res = new Result();
+        $res->parse($group->result->getValue());
+        action($_POST['launchAction'], $res->toA());
+    }
+
+    // Display the actions list
+    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $group->getName()));
+    $label->display();
+
+    $msc_actions = new RenderedMSCActions(msc_script_list_file());
+    $msc_actions->display();
+
+    $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php", "container", array("gid"=>$_GET['gid']));
+    $ajax->display();
+    print "<br/>";
+    $ajax->displayDivToUpdate();
 }
 
 ?>

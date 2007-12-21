@@ -34,13 +34,27 @@ require_once('../../../modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("../../../modules/msc/includes/command_history.php");
 
 
-$hostname = $_GET['name'];
 if (!$_GET["start"]) { $_GET["start"] = 0; }
 if (!$_GET["end"]) { $_GET["end"] = 10; }
 $filter = $_GET["filter"];
 
-$count = count_all_commands_on_host($hostname, $filter);
-$cmds = get_all_commands_on_host($hostname, $_GET["start"], $_GET["end"], $filter);
+$hostname = $_GET['name'];
+$gid = $_GET['gid'];
+$areCommands = False;
+if ($hostname) {
+    $count = count_all_commands_on_host($hostname, $filter);
+    $cmds = get_all_commands_on_host($hostname, $_GET["start"], $_GET["end"], $filter);
+} elseif ($gid) {
+    if ($_GET['cmd_id']) {
+        $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter);
+        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $_GET["start"], $_GET["end"], $filter);
+    } else {
+        $areCommands = True;
+        $count = count_all_commands_on_group($gid, $filter);
+        $cmds = get_all_commands_on_group($gid, $_GET["start"], $_GET["end"], $filter);
+    }
+}
+
 $a_cmd = array();
 $a_uploaded = array();
 $a_executed = array();
@@ -58,46 +72,65 @@ $a_pause = array();
 $a_stop = array();
 $a_details = array();
 
-foreach ($cmds as $cmd) {
-    $coh_id = $cmd[1];
-    $cho_status = $cmd[2];
-    $cmd = $cmd[0];
-    if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
-        $coh = get_commands_on_host($coh_id);
-        if ($coh['current_state'] != 'done') {
-            $a_cmd[] = $cmd['title'];
-            $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> '.$coh['uploaded'];
-            $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> '.$coh['executed'];
-            $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> '.$coh['deleted'];
-            $a_current[] = $coh['current_state'];
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs');
+$n = null;
 
-
-            $icons = state_tmpl($coh['current_state']);
-            if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-            if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-            if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-        }
-        if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
+if ($areCommands) {
+    foreach ($cmds as $cmd) {
+        $a_cmd[] = $cmd['title'];
+        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
+        if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
         } else {
             $a_details[] = $actiondetails;
         }
+        $a_current[] = to_date($cmd['date_created']);
     }
-}
+    $n = new OptimizedListInfos($a_cmd, _T("Command"));
+    $n->addExtraInfo($a_current, _T('start_date'));
 
-$n = new OptimizedListInfos($a_cmd, _T("Command"));
-$n->addExtraInfo($a_current, _T("current_state"));
-$n->addExtraInfo($a_uploaded, _T("uploaded"));
-$n->addExtraInfo($a_executed, _T("executed"));
-$n->addExtraInfo($a_deleted, _T("deleted"));
+    $n->addActionItemArray($a_details);
+} else {
+    foreach ($cmds as $cmd) {
+        $coh_id = $cmd[1];
+        $cho_status = $cmd[2];
+        $cmd = $cmd[0];
+        if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
+            $coh = get_commands_on_host($coh_id);
+            if ($coh['current_state'] != 'done') {
+                $a_cmd[] = sprintf(_T("\"%s\" on \"%s\"", 'msc'), $cmd['title'], $coh['host']);
+                $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> '.$coh['uploaded'];
+                $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> '.$coh['executed'];
+                $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> '.$coh['deleted'];
+                $a_current[] = $coh['current_state'];
+                $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
+    
+    
+                $icons = state_tmpl($coh['current_state']);
+                if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
+                if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
+                if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
+            }
+            if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
+                $a_details[] = $actionempty;
+            } else {
+                $a_details[] = $actiondetails;
+            }
+        }
+    }
+    $n = new OptimizedListInfos($a_cmd, _T("Command"));
+    $n->addExtraInfo($a_current, _T("current_state"));
+    $n->addExtraInfo($a_uploaded, _T("uploaded"));
+    $n->addExtraInfo($a_executed, _T("executed"));
+    $n->addExtraInfo($a_deleted, _T("deleted"));
+
+    $n->addActionItemArray($a_details);
+    $n->addActionItemArray($a_start);
+    //$n->addActionItemArray($a_pause);
+    $n->addActionItemArray($a_stop);
+}
 
 $n->setParamInfo($params);
 
-$n->addActionItemArray($a_details);
-$n->addActionItemArray($a_start);
-//$n->addActionItemArray($a_pause);
-$n->addActionItemArray($a_stop);
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -106,6 +139,14 @@ $n->end = $count;
 
 $n->display();
 
+
+function to_date($list) {
+    if (count($list) != 9) {
+        return $list;
+    } else {
+        return $list[0].'/'.$list[1].'/'.$list[2].' '.$list[3].':'.$list[4].':'.$list[5];
+    }
+}
 ?>
 
 <style>

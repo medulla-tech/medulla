@@ -40,12 +40,13 @@ if (isset($_POST["bconfirm"])) {
     }
 
     $hostname = $_POST["name"];
+    $gid = $_POST["gid"];
     $pid = $_POST["pid"];
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $hostname, $params);
+    add_command_api($pid, $hostname, $params, $gid);
     dispatch_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$_POST["name"])));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 } elseif (isset($_POST["badvanced"])) {
     $from = $_POST['from'];
     $path =  explode('|', $from);
@@ -55,7 +56,7 @@ if (isset($_POST["bconfirm"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
+    foreach (array('hostname', 'gid', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
         $params[$param] = $_POST[$param];
     }
     $params['tab'] = 'tablaunch';
@@ -64,12 +65,15 @@ if (isset($_POST["bconfirm"])) {
 } else {
     $from = $_GET['from'];
     $hostname = $_GET["name"];
+    $gid = $_GET['gid'];
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
     $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $hostname));
 
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
+    $hidden = new HiddenTpl("gid");
+    $f->add($hidden, array("value" => $gid, "hide" => True));
     $hidden = new HiddenTpl("from");
     $f->add($hidden, array("value" => $from, "hide" => True));
     $hidden = new HiddenTpl("pid");

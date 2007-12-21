@@ -34,10 +34,27 @@ require_once('../../../modules/msc/includes/qactions.inc.php');
 require_once('../../../modules/msc/includes/mirror_api.php');
 require_once('../../../modules/msc/includes/machines.inc.php');
 require_once('../../../modules/msc/includes/widgets.inc.php');
-$machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+$machine = null;
+$group = null;
+if ($_GET['name']) {
+    $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+} elseif ($_GET['gid']) {
+    require_once("../../../modules/dyngroup/includes/data_access.php");
+    require_once("../../../modules/dyngroup/includes/utilities.php");
+    require_once("../../../modules/dyngroup/includes/xmlrpc.php");
+    require_once("../../../modules/dyngroup/includes/request.php");
+    require_once("../../../modules/dyngroup/includes/result.php");
+    require_once("../../../modules/dyngroup/includes/dyngroup.php");
+    
+    $group = new Stagroup($_GET['gid']);
+}
 
 require_once("../../../modules/msc/includes/package_api.php");
-$label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $machine->hostname));
+if ($machine) {
+    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $machine->hostname));
+} else {
+    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $group->getName()));
+}
 $label->display();
 
 $a_packages = array();
@@ -50,12 +67,17 @@ if (!$_GET["end"]) { $_GET["end"] = 10; }
 
 $filter = $_GET["filter"];
 
+# TODO : decide what we want to do with groups : do we only get the first machine local packages
 foreach (advGetAllPackages($machine->hostname, $filter, $_GET["start"], $_GET["end"]) as $c_package) {
     $package = to_packageApi($c_package[0]);
     $type = $c_package[1];
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
-    $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+    if ($machine) {
+        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+    } else {
+        $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|msctabs|tablogs');
+    }
     if ($type==0) {
         $a_css[] = 'primary_list';
     } else {
