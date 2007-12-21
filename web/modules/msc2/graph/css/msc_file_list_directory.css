@@ -1,0 +1,90 @@
+.msc-file-list-directory {
+
+}
+
+
+table.msc-file-list-directory {
+    width           : 100%;
+    font-size       : 10px;
+    border          : 0px;
+    margin          : 0px;
+    border-collapse : collapse;
+}
+
+
+table.msc-file-list-directory TH {
+    background-color: #21449C;
+    border:0;
+    color:white;
+}
+
+table.msc-file-list-directory TD {
+    text-align: left;
+}
+
+.msc-file-list-directory TR.row-odd {
+    /*background-color: #F0F0F0;*/
+    background-color: #E9EEF1;
+}
+
+.msc-file-list-directory TR.row-even {
+    /*background-color: #F9F9F9;*/
+    background-color: #D3DCE3;
+}
+
+.msc-file-list-directory TD {
+    /*border:1px solid #FCD3C2;*/
+    border:1px solid #90A6D4;
+    border-top: 0;
+    border-bottom: 0;
+    border-collapse : collapse;
+}
+
+.msc-file-list-directory .icon-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .filename-column {
+    width:100%;
+}
+.msc-file-list-directory .size-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .date-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .action-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-copy-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-execute-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .right-column {
+    text-align:right;
+}
+
+.msc-file-list-directory .center-column {
+    text-align:center;
+}
+
+.msc-file-list-directory .left-column {
+    text-align:left;
+}

@@ -1,0 +1,128 @@
+@import url("msc_tree.css");
+@import url("msc_files_list.css");
+@import url("msc_file_list_directory.css");
+@import url("msc_commands_states_list.css");
+@import url("msc_command_on_host_history.css");
+@import url("msc_states.css");
+
+.msc H2 {
+}
+
+.msc H3 {
+    margin-top:2em;
+    font-size : 1.1em;
+    border-bottom:1px solid #EA4F26;
+}
+
+H3.box-title {
+    padding:0;
+    margin:0;
+    font-weight: normal;
+    border-bottom: 0;
+}
+
+.msc .indent {
+    margin-left:2em;
+}
+
+table {
+    font-family         : Verdana, Arial, Helvetica, sans-serif;
+    font-size               : 12px;
+}
+
+table.vertical {
+}
+
+table.vertical TD {
+    border:0;
+}
+
+table.vertical TH {
+    text-align:right;
+    border:0;
+}
+
+table.form TD {
+    border: 0;
+}
+
+table.form INPUT {
+    vertical-align: middle;
+}
+
+table.form SELECT {
+    vertical-align: middle;
+}
+
+#left-panel {
+    width:20em;
+    float:left;
+    margin:0;
+    padding:0;
+}
+
+#left-panel H3 {
+    margin-top: 0;
+}
+
+#main-panel {
+    padding-left: 21em;
+}
+
+.box, #msc-tree-directory, #msc-what-is-current-directory {
+    /*background-color: #f9f3f2;*/
+    background-color: #E9EEF1;
+    /*border: 1px solid #E9EEF1;*/
+    border: 1px solid #21449C;
+    padding:1em;
+    margin:1em;
+}
+
+#msc-standard-file-list-directory-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions table.form td {
+    text-align: left;
+}
+
+#msc-tree-directory {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-standard-host-actions .box {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-where-I-connected {
+    float:right;
+    text-align:right;
+    font-size: x-small;
+}
+
+#msc-what-is-current-directory {
+    width:60%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+.clear {
+    clear:both;
+}
+
+table {
+    border:0;
+}
+
+table TD {
+    border:0;
+}
+
+

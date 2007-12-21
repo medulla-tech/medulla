@@ -1,0 +1,86 @@
+# Extention Mime type Icon
+
+# Images
+png   image/png image.png
+jpg   image/jpeg
+jpeg    image/jpeg
+gif   image/gif
+tif   image/tiff
+tiff    image/tif
+bmp   image/bmp
+xpm   image/x-xbitmap
+ico   image/x-icon
+
+# HTML files
+htm   text/html html.png
+html    text/html
+
+# Document
+doc   application/msword  doc.png
+sxw   application/vnd.sun.xml.writer  openoffice.png
+stw   application/vnd.sun.xml.writer.template
+sxg   application/vnd.sun.xml.writer.global
+rtf   text/rtf    doc.png
+
+# VIDEO
+avi   vidao/x-msvideo   video.png
+mov   video/quicktime   quicktime.png
+qt    video/quicktime
+mpg   video/mpeg    video.png
+mpeg    video/mpeg
+mpe   video/mpeg
+
+# SOUND
+mp3   audio/mpeg    sound.png
+wav   audio/x-wav
+ram   audio/x-pn-realaudio    real.png
+rm    audio/x-pn-realaudio
+
+# PHP
+php   application/x-httpd-php php.png
+php3    application/x-httpd-php
+php4    application/x-httpd-php
+php5    application/x-httpd-php
+phpx    application/x-httpd-php
+phtml   application/x-httpd-php
+
+# COMPRESSED
+zip   application/x-zip   tgz.png
+bz2   application/x-bzip2
+gz    application/x-gzip
+tgz   application/x-gzip
+tar   application/x-tar
+rar   application/x-rar-compressed
+7z    application/x-7z-compressed
+cab   application/cab
+sit   application/x-stuffit
+
+# TXT 
+txt   text/plain    txt.png
+
+# MIDI
+mid   audio/midi    midi.png
+midi    audio/midi
+
+# CD IMAGE 
+iso   application/x-iso cdimage.png
+cue   application/x-cue
+
+# PDF
+pdf             application/pdf   pdf.png
+
+# DEBIAN PACKAGE
+deb   application/x-deb   deb.png
+
+# LOG
+log   text/plain    log.png
+
+# SHELL SCRIPT 
+sh    application/x-sh  shell.png
+
+bat   application/octet-stream  make.png
+exe   application/octet-stream  make.png
+
+# OTHERs
+*   application/octet-stream  unknown.png
+

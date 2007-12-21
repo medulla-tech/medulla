@@ -1,0 +1,15 @@
+<?php
+
+function add_command_quick($cmd, $hosts, $desc) {
+    xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc));
+}
+
+function dispatch_all_commands() {
+    xmlCall('msc.dispatch_all_commands');
+}
+
+function get_id_command_on_host($id_command) {
+    xmlCall('msc.get_id_command_on_host', array($id_command));
+}
+
+?>

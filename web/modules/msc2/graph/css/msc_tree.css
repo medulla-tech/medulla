@@ -1,0 +1,31 @@
+#msc-tree-directory {
+
+}
+
+#msc-tree-directory A {
+  text-decoration: none;
+}
+
+#msc-tree-directory UL {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder.png");
+  margin-left: 7px;
+  padding-left: 7px;
+}
+
+#msc-tree-directory UL LI.open {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.open A {
+  font-weight: bold;
+}
+
+#msc-tree-directory UL LI.active {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.active A {
+  font-style: italic;
+  font-weight: bold;
+}
+
