@@ -896,7 +896,7 @@ class SideMenuItem {
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             echo '<li id="'.$this->cssId.'">';
-	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+	    echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
         }
     }
 
