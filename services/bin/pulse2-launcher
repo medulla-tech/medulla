@@ -165,8 +165,11 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_none(self):
         return xmlrpcCleanup(None)
 
-    def xmlrpc_remote_exec(self, id, command, client=None, sync=True):
-        return pulse2.launcher.remote_exec.remote_exec(command, client, self.wrapper, sync)
+    def xmlrpc_sync_remote_push(self, id, root_path, files_list, target_path, client=None):
+        return pulse2.launcher.remote_exec.sync_remote_push(id, root_path, files_list, target_path, client, self.wrapper)
+
+    def xmlrpc_async_remote_push(self, id, root_path, files_list, target_path, client=None):
+        return pulse2.launcher.remote_exec.async_remote_push(id, root_path, files_list, target_path, client, self.wrapper)
 
     def xmlrpc_sync_remote_exec(self, id, command, client=None):
         return pulse2.launcher.remote_exec.sync_remote_exec(id, command, client, self.wrapper)

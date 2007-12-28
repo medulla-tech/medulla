@@ -39,20 +39,6 @@ def set_default_client_options(client):
             options: array of strings to pass to the connexion initiator
     """
 
-    if not client:
-        client = {
-            'protocol': None,
-            'host': None,
-            'port': None,
-            'user': None,
-            'passwd': None,
-            'cert': None,
-            'options': []
-        }
-
-    if not 'protocol' in client: client['protocol'] = 'ssh'
-    if not client['host']: client['host'] = '127.0.0.1'
-
     if client['protocol'] == 'ssh':
         if not 'port' in client: client['port'] = 22
         if not 'user' in client: client['user'] = 'root'
@@ -65,14 +51,39 @@ def set_default_client_options(client):
             '-o Batchmode=yes',
             '-o PasswordAuthentication=no'
             ]
+
+    if client['protocol'] == 'scp':
+        if not 'port' in client: client['port'] = 22
+        if not 'user' in client: client['user'] = 'root'
+        if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
+        if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
+        if not 'options' in client: client['options'] = [
+            '-r',
+            '-p',
+            '-o StrictHostKeyChecking=no',
+            '-o Batchmode=yes',
+            '-o PasswordAuthentication=no'
+            ]
     return client
 
-def remote_exec(id, command, client, wrapper, sync = True):
-    if sync:
-        return sync_remote_exec(id, command, client, wrapper)
-    else:
-        return async_remote_exec(id, command, client, wrapper)
+def sync_remote_push(id, root_path, files_list, target_path, client, wrapper):
+    """
+        FIXME: check that root_path is authorized
+        FIXME: check that target is authorized
+    """
+
+    def cb(shprocess):
+        # The callback just return the process outputs
+        return shprocess.exitCode, shprocess.out, shprocess.err
+    client = set_default_client_options(client)
+    if client['protocol'] == "scp":
+        real_files_list = map(lambda(a): "%s/%s" % (root_path, a), files_list)
+        real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
+        d = mmc.support.mmctools.shLaunchDeferred(real_command)
+        d.addCallback(cb)
+        return d
     return None
+
 
 def sync_remote_exec(id, command, client, wrapper):
     """

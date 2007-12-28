@@ -23,13 +23,30 @@ $method = array_shift($params);
 
 $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
+$method="sync_remote_push";
+$params=array(
+    1,
+    '/tftpboot/revoboot/lsc',
+    array(
+        '/Exemples/Firefox/install.bat',
+        '/Exemples/Firefox/data'
+        ),
+    '/tmp',
+    array(
+        'host'=> 'pulse2-win2k',
+        'protocol'=> 'scp'
+    )
+    );
+
+$request = xmlrpc_encode_request($method, $params, $output_options);
+/*
 if ($params == null) {
     $request = xmlrpc_encode_request($method, null, $output_options);
 } else {
     $request = xmlrpc_encode_request($method, $params, $output_options);
     $request = decode_entities($request, ENT_QUOTES, "UTF-8");
 }
-
+*/
 /* We build the HTTP POST that will be sent */
 $host= $conf["host"].":".$conf["port"];
 $url = "/";
