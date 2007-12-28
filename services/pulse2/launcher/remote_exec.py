@@ -41,6 +41,7 @@ def set_default_client_options(client):
 
     if client['protocol'] == 'ssh':
         if not 'port' in client: client['port'] = 22
+        if not 'rootpath' in client: client['rootpath'] = '/tmp'
         if not 'user' in client: client['user'] = 'root'
         if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
         if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
@@ -54,6 +55,7 @@ def set_default_client_options(client):
 
     if client['protocol'] == 'scp':
         if not 'port' in client: client['port'] = 22
+        if not 'rootpath' in client: client['rootpath'] = '/tmp'
         if not 'user' in client: client['user'] = 'root'
         if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
         if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
@@ -99,7 +101,7 @@ def sync_remote_exec(id, command, client, wrapper):
     if client['protocol'] == "ssh":
         # FIXME: should use annotate_output and get_keychain
 #        command = "%s %s ssh %s %s@%s \"%s\"" % (mmc.plugins.msc.MscConfig("msc").annotatepath, mmc.plugins.msc.config.get_keychain(), opts, user, host, command)
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
+        real_command = '%s %s ssh %s %s@%s "cd %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], command)
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
         d.addCallback(cb)
         return d
