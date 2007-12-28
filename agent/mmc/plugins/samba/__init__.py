@@ -467,32 +467,26 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         return 0
 
     def searchMachine(self, pattern = '', base = None):
-        """return a list of machines"""
+        """
+        @return: a list of SAMBA computer accounts
+        @rtype: list
+        """
         if (pattern==''): searchFilter = "uid=*"
         else: searchFilter = "uid=" + pattern
+        # Always add $ to the search pattern, because a SAMBA computer account
+        # ends with a $.
+        searchFilter = searchFilter + "$"
         if not base: base = self.baseComputersDN
         result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
-
-        resArr=[]
+        resArr = []
         for i in range(len(result_set)):
             for entry in result_set[i]:
-                try:
-                    localArr= []
-
-                    uid = entry[1]['uid'][0]
-
-                    uidTmp=re.findall('(.*)[$]$',uid);
-
-                    for uid2 in uidTmp:
-                        uidParse=uid2
-
-                    # if name finished by an "$"
-                    if (re.search('(.*)[$]$',uid)):
-                        localArr.append(uidParse)
-                        resArr.append(localArr)
-                except:
-                    pass
-
+                localArr= []
+                uid = entry[1]['uid'][0]
+                displayName = entry[1]['displayName'][0]
+                localArr.append(uid[0:-1])
+                localArr.append(displayName)
+                resArr.append(localArr)
         resArr.sort()
         return resArr
 
