@@ -62,6 +62,7 @@ def set_default_client_options(client):
         if not 'options' in client: client['options'] = [
             '-r',
             '-p',
+            '-q',
             '-o StrictHostKeyChecking=no',
             '-o Batchmode=yes',
             '-o PasswordAuthentication=no'
@@ -86,6 +87,23 @@ def sync_remote_push(id, root_path, files_list, target_path, client, wrapper):
         return d
     return None
 
+def sync_remote_delete(id, files_list, target_path, client, wrapper):
+    """
+        FIXME: check that root_path is authorized
+        FIXME: check that target is authorized
+    """
+
+    def cb(shprocess):
+        # The callback just return the process outputs
+        return shprocess.exitCode, shprocess.out, shprocess.err
+    client = set_default_client_options(client)
+    if client['protocol'] == "ssh":
+        real_files_list = files_list
+        real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], ' '.join(real_files_list))
+        d = mmc.support.mmctools.shLaunchDeferred(real_command)
+        d.addCallback(cb)
+        return d
+    return None
 
 def sync_remote_exec(id, command, client, wrapper):
     """
@@ -99,8 +117,6 @@ def sync_remote_exec(id, command, client, wrapper):
 
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
-        # FIXME: should use annotate_output and get_keychain
-#        command = "%s %s ssh %s %s@%s \"%s\"" % (mmc.plugins.msc.MscConfig("msc").annotatepath, mmc.plugins.msc.config.get_keychain(), opts, user, host, command)
         real_command = '%s %s ssh %s %s@%s "cd %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], command)
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
         d.addCallback(cb)
@@ -132,8 +148,6 @@ def async_remote_exec(id, command, client, wrapper):
 
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
-        # FIXME: should use annotate_output and get_keychain
-#        command = "%s %s ssh %s %s@%s \"%s\"" % (mmc.plugins.msc.MscConfig("msc").annotatepath, mmc.plugins.msc.config.get_keychain(), opts, user, host, command)
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
         mmc.support.mmctools.shlaunchBackground(real_command, id, _progress_cb, _end_cb)
     return True

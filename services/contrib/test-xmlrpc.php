@@ -23,10 +23,9 @@ $method = array_shift($params);
 
 $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-$method="sync_remote_push";
+$method="sync_remote_delete";
 $params=array(
     1,
-    '/tftpboot/revoboot/lsc',
     array(
         '/Exemples/Firefox/install.bat',
         '/Exemples/Firefox/data'
@@ -34,7 +33,7 @@ $params=array(
     '/tmp',
     array(
         'host'=> 'pulse2-win2k',
-        'protocol'=> 'scp'
+        'protocol'=> 'ssh'
     )
     );
 
