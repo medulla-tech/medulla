@@ -56,19 +56,18 @@ $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
 
 
-$base = &$MMCApp->getModule('base');
-$computers = &$base->getSubmod('computers');
-
-$page = new Page("mscdetails", _T("General", "msc"));
-$page->setOptions(array("visible"=>False));
-$page->setFile("modules/msc/msc/mscdetails.php");
-$computers->addPage($page);
+/* put in base/computer */
 
 /* Get the base module instance */
 $base = &$MMCApp->getModule('base');
 
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
+
+$page = new Page("mscdetails", _T("General", "msc"));
+$page->setOptions(array("visible"=>False));
+$page->setFile("modules/msc/msc/mscdetails.php");
+$submod->addPage($page);
 
 $page = new Page("msctabs", _T("Secure Control on machine"));
 $page->setFile("modules/msc/msc/tabs.php");
@@ -97,6 +96,16 @@ $submod->addPage($page);
 
 $page = new Page("start_tele_diff");
 $page->setFile("modules/msc/msc/start_tele_diff.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("tablogs");
+$page->setFile("modules/msc/msc/logs.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("tablaunch");
+$page->setFile("modules/msc/msc/launch.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
