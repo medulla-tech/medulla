@@ -72,6 +72,13 @@ $submod->addPage($page);
 $page = new Page("msctabs", _T("Secure Control on machine"));
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
+
+$tab = new Tab("tablaunch", _("Msc launch tab"));
+$page->addTab($tab);
+
+$tab = new Tab("tablogs", _("Msc logs tab"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("msctabsplay");
@@ -96,16 +103,6 @@ $submod->addPage($page);
 
 $page = new Page("start_tele_diff");
 $page->setFile("modules/msc/msc/start_tele_diff.php");
-$page->setOptions(array("visible"=>False, "noHeader"=>True));
-$submod->addPage($page);
-
-$page = new Page("tablogs");
-$page->setFile("modules/msc/msc/logs.php");
-$page->setOptions(array("visible"=>False, "noHeader"=>True));
-$submod->addPage($page);
-
-$page = new Page("tablaunch");
-$page->setFile("modules/msc/msc/launch.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
