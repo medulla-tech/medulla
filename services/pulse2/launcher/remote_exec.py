@@ -98,7 +98,7 @@ def sync_remote_delete(id, files_list, target_path, client, wrapper):
         return shprocess.exitCode, shprocess.out, shprocess.err
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
-        real_files_list = files_list
+        real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
         real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], ' '.join(real_files_list))
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
         d.addCallback(cb)
