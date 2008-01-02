@@ -27,18 +27,29 @@ function getAllGroups($params = array()) {
     $max = dyngroup_last_id();
     $items = array();
     $i = 0;
-    while ($i < $max) {
-        $group = new Stagroup($i);
-        if ($group->getName()) {
-            $name = $group->getName();
-            if (($params['canShow'] && $group->canShow()) || !$params['canShow']) {
-                if ($group->isDyn()) {
-                    $group = $group->toDyn();
-                }
-                $items[] = $group;
+    if ($params['canShow']) {
+        $ids = getVisibleIds();
+        foreach ($ids as $i) {
+            $group = new Stagroup($i);
+            if ($group->isDyn()) {
+                $group = $group->toDyn();
             }
+            $items[] = $group;
         }
-        $i++;
+    } else {
+        while ($i < $max) {
+            $group = new Stagroup($i);
+            if ($group->getName()) {
+                $name = $group->getName();
+                if (($params['canShow'] && $group->canShow()) || !$params['canShow']) {
+                    if ($group->isDyn()) {
+                        $group = $group->toDyn();
+                    }
+                    $items[] = $group;
+                }
+            }
+            $i++;
+        }
     }
     return $items;
 }
@@ -70,26 +81,48 @@ function getAllStagroup($params = array()) {
     $max = dyngroup_last_id();
     $items = array();
     $i = 1;
-    
-    while ($i < $max) {
-        $group = new Stagroup($i);
-        if ($group->getName() && !$group->isDyn()) {
-            $name = $group->getName();
-            if ($params['canShow']) {
-                if ($group->canShow()) {
-                    $items[] = $group;
-                }
-            } else {
+
+    if ($params['canShow']) {
+        $ids = getVisibleIds();
+        foreach ($ids as $i) {
+            $group = new Stagroup($i);
+            if ($group->getName() && !$group->isDyn()) {
                 $items[] = $group;
             }
         }
+    } else {
+        while ($i < $max) {
+            $group = new Stagroup($i);
+            if ($group->getName() && !$group->isDyn()) {
+                $name = $group->getName();
+                if ($params['canShow']) {
+                    if ($group->canShow()) {
+                        $items[] = $group;
+                    }
+               } else {
+                    $items[] = $group;
+                }
+            }
+            $i++;
+        }
+    }
+    return $items;
+}
+
+function getVisibleIds() {
+    $max = dyngroup_last_id();
+    $items = array();
+    $i = 1;
+    while ($i < $max) {
+        $show = new DataAccess(array($i, 'show'));
+        if ($show->getValue() && $show->getValue() != -1) { $items[]= $i; }   
         $i++;
     }
     return $items;
 }
 
 function getStagroupById($id) {
-    $result = new DataAccess(array($id, 'result'));
+    $result = null; //new DataAccess(array($id, 'result'));
     $show = new DataAccess(array($id, 'show'));
     $n = new DataAccess(array($id, 'names'));
     $group = new Stagroup($id, $n, $result, $show);
@@ -234,24 +267,34 @@ class Stagroup {
     }
 
     function delete() {
-        $this->result->delete();
+        $res = $this->result();
+        $res->delete();
         $this->show->delete();
         $this->n->delete();
         $this->dyn->delete();
     }
     function toS() {
+        $res = $this->result();
         return "[name : ".$this->n->getValue().
-        ", result : ".$this->result->getValue().
+        ", result : ".$res->getValue().
         ", show : ".$this->show->getValue()."]";
     }
 
     function save($name, $result = null) {
         $this->n->setValue($name);
         if ($result) {
-            $this->result->setValue($result->toS());
+            $res = $this->result();
+            $res->setValue($result->toS());
         }
         $this->dyn->setValue(False);
         return True;
+    }
+
+    function result() {
+        if (!$this->res) { 
+            $this->res = new DataAccess(array($this->id, 'result'));
+        }
+        return $this->res;
     }
 
     function toDyn() {
@@ -270,11 +313,13 @@ class Stagroup {
     }
 
     function getResult() {
-        return $this->result->getValue();
+        $res = $this->result();
+        return $res->getValue();
     }
     function members() {
         $res = new Result();
-        $res->parse($this->result->getValue());
+        $res2 = $this->result();
+        $res->parse($res2->getValue());
         return $res->toA();
     }
     function addMember($member) {
@@ -288,11 +333,12 @@ class Stagroup {
     }
     function delMembers($members) {
         $result = new Result();
-        $result->parse($this->result->getValue());
+        $res = $this->result();
+        $result->parse($res->getValue());
         foreach ($members as $name) {
             $result->remove($name);
         }
-        $this->result->setValue($result->toS());
+        $res->setValue($result->toS());
     }
     
     function show() {
@@ -308,22 +354,25 @@ class Stagroup {
     }
     
     function resultNum() {
-        return count(explode('||', $this->result->getValue()));
+        $res = $this->result();
+        return count(explode('||', $res->getValue()));
     }
      
     function addMachines($a_machines) {
         $result = new Result();
-        $result->parse($this->result->getValue());
+        $res = $this->result();
+        $result->parse($res->getValue());
         foreach ($a_machines as $name) {
             $result->add($name);
         }
-        $this->result->setValue($result->toS());
+        $res->setValue($result->toS());
     }
     function removeMachine($name) {
         $result = new Result();
-        $result->parse($this->result->getValue());
+        $res = $this->result();
+        $result->parse($res->getValue());
         $result->remove($name);
-        $this->result->setValue($result->toS());
+        $res->setValue($result->toS());
     }
 
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
