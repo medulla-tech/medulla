@@ -46,7 +46,8 @@ if (isset($_POST["bconfirm"])) {
     if ($gid) {
         $group = new Stagroup($_GET['gid']);
         $res = new Result();
-        $res->parse($group->result->getValue());
+        $res2 = $group->result();
+        $res->parse($res2->getValue());
         $cible = $res->toA();
     }
 

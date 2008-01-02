@@ -74,7 +74,8 @@ function adv_action($post) {
     } else {
         $group = new Stagroup($gid);
         $res = new Result();
-        $res->parse($group->result->getValue());
+        $res2 = $group->result();
+        $res->parse($res2->getValue());
         $cible = $res->toA();
     }
     $pid = $post["pid"];
@@ -181,7 +182,8 @@ if (isset($_GET["badvanced"])) {
     $group = new Stagroup($_GET['gid']);
     if ($_POST['launchAction']) {
         $res = new Result();
-        $res->parse($group->result->getValue());
+        $res2 = $group->result();
+        $res->parse($res2->getValue());
         action($_POST['launchAction'], $res->toA());
     }
 
