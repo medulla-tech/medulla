@@ -4,19 +4,19 @@ function return_icon($state)
 {
     switch($state) {
         case "TODO":
-            return "led-grey.gif";
+            return "led_circle_grey.png";
             break;
         case "IGNORED":
-            return "led-black.gif";
+            return "led_circle_black.png";
             break;
         case "DONE":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "FAILED":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "WORK_IN_PROGRESS":
-            return "led-orange.gif";
+            return "led_circle_orange.png";
             break;
     }
 }
@@ -24,95 +24,95 @@ function return_icon($state)
 function state2icon($current_state) {
     switch ($current_state) {
         case "upload_in_progress" :
-            return "led-orange.gif";
+            return "led_circle_orange.png";
             break;
         case "upload_done" :
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "upload_failed" :
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "execution_in_progress":
-            return "led-orange.gif";
+            return "led_circle_orange.png";
             break;
         case "execution_done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "execution_failed":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "delete_in_progress":
-            return "led-orange.gif";
+            return "led_circle_orange.png";
             break;
         case "delete_done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "delete_failed":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "not_reachable":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "pause":
-            return "led-black.gif";
+            return "led_circle_black.png";
             break;
         case "stop":
-            return "led-black.gif";
+            return "led_circle_black.png";
             break;
         case "scheduled":
-            return "led-grey.gif";
+            return "led_circle_grey.png";
             break;
         default:
-            return "led-orange.gif";
+            return "led_circle_orange.png";
             break;
     }
 }
 function history_stat2icon($state) {
     switch ($state) {
         case "upload_in_progress" :
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "upload_done" :
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "upload_failed" :
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "execution_in_progress":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "execution_done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "execution_failed":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "delete_in_progress":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "delete_done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "delete_failed":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "not_reachable":
-            return "led-red.gif";
+            return "led_circle_red.png";
             break;
         case "done":
-            return "led-green.gif";
+            return "led_circle_green.png";
             break;
         case "pause":
-            return "led-black.gif";
+            return "led_circle_black.png";
             break;
         case "stop":
-            return "led-black.gif";
+            return "led_circle_black.png";
             break;
         case "scheduled":
-            return "led-gray.gif";
+            return "led_circle_gray.png";
             break;
     }
 }
