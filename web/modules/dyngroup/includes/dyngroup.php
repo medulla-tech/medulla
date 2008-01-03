@@ -291,10 +291,14 @@ class Stagroup {
     }
 
     function result() {
-        if (!$this->res) { 
+        if (!$this->res) {
             $this->res = new DataAccess(array($this->id, 'result'));
         }
         return $this->res;
+    }
+    
+    function reloadResult() {
+        $this->res = new DataAccess(array($this->id, 'result'));
     }
 
     function toDyn() {
@@ -339,6 +343,7 @@ class Stagroup {
             $result->remove($name);
         }
         $res->setValue($result->toS());
+        $this->reloadResult();
     }
     
     function show() {
@@ -366,6 +371,7 @@ class Stagroup {
             $result->add($name);
         }
         $res->setValue($result->toS());
+        $this->reloadResult();
     }
     function removeMachine($name) {
         $result = new Result();
