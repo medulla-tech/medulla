@@ -35,46 +35,47 @@ $submod = & $base->getSubmod('computers');
 /* groupes dynamiques */
 
 if (isDynamicEnable()) {
-    $page = new Page("creator",_T("Group Creator","dyngroup"));
+    $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/tab.php");
     $submod->addPage($page);
 } else {
-    $page = new Page("creator",_T("Group Creator","dyngroup"));
+    $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
     $submod->addPage($page);
     
-    $page = new Page("edit",_T("Group Editor","dyngroup"));
+    $page = new Page("edit",_T("Machines Group Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
+    $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
 }
 
-$page = new Page("display",_T("Display","dyngroup"));
+$page = new Page("display",_T("Display a groups of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/display.php");
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("save",_T("Save","dyngroup"));
+$page = new Page("save",_T("Save a group of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/save.php");
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("list",_T("List all Groups","dyngroup"));
+$page = new Page("list",_T("List all groups of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/list.php");
 $submod->addPage($page);
 
-$page = new Page("delete_group",_T("Delete","dyngroup"));
+$page = new Page("delete_group",_T("Delete a group of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/delete_group.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("details",_T("Details","dyngroup"));
+$page = new Page("details",_T("Group of machines details","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/details.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("remove_machine",_T("Remove a machine","dyngroup"));
+$page = new Page("remove_machine",_T("Remove a machine from a group","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/remove_machine.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible"=>False, "noHeader" =>True));
 $submod->addPage($page);
 
 $page = new Page("ajaxAutocompleteSearch");
