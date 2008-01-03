@@ -68,6 +68,6 @@ foreach ($names as $name) {
     $onames[$name] = array('comment'=>$comment, 'uuid'=>$uuid, 'name'=>$name);
 }
 
-list_computers($onames, array('name' => $filter), $count, true);
+list_computers($onames, array('name' => $filter), $count, true, true);
 
 ?>
