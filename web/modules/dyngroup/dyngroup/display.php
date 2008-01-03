@@ -23,12 +23,13 @@
  */
 
 require("modules/base/computers/localSidebar.php");
+require("modules/base/graph/computers/index.css");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 
-$id = idGet();
-if (!$id) {
+$gid = quickGet('gid');
+if (!$gid) {
     $request = quickGet('request');
     $r = new Request();
     $r->parse($request);
@@ -36,10 +37,10 @@ if (!$id) {
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    $group = new Stagroup($id);
+    $group = new Stagroup($gid);
     
     $p = new PageGenerator(sprintf(_T("Display '%s' result list"), $group->getName()));
-    $item = $items[$id];
+    $item = $items[$gid];
     $sidemenu->forceActiveItem($item->action);
     $p->setSideMenu($sidemenu);
     $p->display();
@@ -52,7 +53,7 @@ if (!$id) {
     
         if ($group->isGroup()) {
             $res->parse($group->getResult());
-            $res->displayResListInfos(true, array('id'=>$id), 'display');
+            $res->displayResListInfos(true, array('gid'=>$gid), 'display');
         } else {
             $res->replyToRequest();
             $res->displayResListInfos();

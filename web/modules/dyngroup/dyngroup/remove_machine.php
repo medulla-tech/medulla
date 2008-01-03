@@ -24,20 +24,20 @@
 
 require_once("modules/dyngroup/includes/includes.php");
 
-$id = idGet();
-$group = new Dyngroup($id);
+$gid = quickGet('gid');
+$group = new Dyngroup($gid);
 $machine = quickGet('name');
 
 if (quickGet('valid')) {
     $group->removeMachine($machine);
-    header("Location: " . urlStrRedirect("base/computers/display", array('id'=>$id)));
+    header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
 }
 
 ?> <h2><?= _T("Remove a machine") ?></h2> <?php
 
 ?>
 
-<form action="<?= urlStr("base/computers/remove_machine", array('id'=>$id, 'name'=>$machine)) ?>" method="post">
+<form action="<?= urlStr("base/computers/remove_machine", array('gid'=>$gid, 'name'=>$machine)) ?>" method="post">
 <p>
 <?  
     printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>."), $machine, $group->getName());

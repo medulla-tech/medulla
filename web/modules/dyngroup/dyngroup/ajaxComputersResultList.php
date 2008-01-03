@@ -65,7 +65,7 @@ foreach ($names as $name) {
     
     $comment = $computer['displayName'][0];
     $uuid = $computer['objectUUID'][0];
-    $onames[$name] = array('comment'=>$comment, 'uuid'=>$uuid, 'name'=>$name);
+    $onames[$name] = array('comment'=>$comment, 'uuid'=>$uuid, 'name'=>$name, 'gid'=>$gid);
 }
 
 list_computers($onames, array('name' => $filter), $count, true, true);

@@ -36,9 +36,9 @@ foreach ($groups as $group) {
     $isA = "request";
     if (!$group->isDyn()) { $isA = "group"; }
     if ($group->isDyn() && $group->isGroup()) { $isA = "group"; }
-    $s = new SideMenuItem(
+    $s = new SideMenuItemNoAclCheck( //SideMenuItem(
              sprintf(_T("Display %s '%s'"), $isA, $group->getName()),
-             "base", "computers", "display&id=".$group->id
+             "base", "computers", "display&gid=".$group->id
     );
     $s->setCssId("displayid".$group->id);
     $items[$group->id] = $s;
