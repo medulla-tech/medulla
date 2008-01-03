@@ -64,7 +64,7 @@ def startService(id, config_file):
     elif cp.has_option("launchers", "login"):
         login = cp.get("launchers", "login")
     else:
-        login = "" # FIXME: explain this to user
+        login = ""
         logger.warn('launcher "%s": no username set !!' % (id))
 
     if cp.has_option(id, "password"):
@@ -72,7 +72,7 @@ def startService(id, config_file):
     elif cp.has_option("launchers", "password"):
         password = cp.get("launchers", "password")
     else:
-        password = "" # FIXME: explain this to user
+        password = ""
         logger.warn('launcher "%s": no password set !!' % (id))
 
     # Starting XMLRPC server
@@ -135,12 +135,12 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         self.logger.error(failure)
         if isinstance(failure.value, xmlrpclib.Fault):
             return failure.value
-        return xmlrpclib.Fault(self.FAILURE, "error")
+        return xmlrpclib.Fault(self.FAILURE, "Internal Error")
 
     def _cbRender(self, result, request):
         args, func = xmlrpclib.loads(request.content.getvalue())
         if isinstance(result, Launcher):
-            result = result.result
+            result = xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
             result = (result,)
         self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
@@ -166,34 +166,34 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(None)
 
     def xmlrpc_sync_remote_push(self, id, root_path, files_list, target_path, client=None):
-        return pulse2.launcher.remote_exec.sync_remote_push(id, root_path, files_list, target_path, client, self.wrapper)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(id, root_path, files_list, target_path, client, self.wrapper))
 
     def xmlrpc_sync_remote_delete(self, id, files_list, target_path, client=None):
-        return pulse2.launcher.remote_exec.sync_remote_delete(id, files_list, target_path, client, self.wrapper)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(id, files_list, target_path, client, self.wrapper))
 
     def xmlrpc_sync_remote_exec(self, id, command, client=None):
-        return pulse2.launcher.remote_exec.sync_remote_exec(id, command, client, self.wrapper)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(id, command, client, self.wrapper))
 
     def xmlrpc_async_remote_exec(self, id, command, client=None):
-        return pulse2.launcher.remote_exec.async_remote_exec(id, command, client, self.wrapper)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(id, command, client, self.wrapper))
 
     def xmlrpc_get_background_process_count(self):
-        return pulse2.launcher.remote_exec.get_background_process_count()
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_count())
 
     def xmlrpc_get_background_process_list(self):
-        return pulse2.launcher.remote_exec.get_background_process_list()
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_list())
 
     def xmlrpc_get_background_running_process_count(self):
-        return pulse2.launcher.remote_exec.get_background_running_process_count()
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_running_process_count())
 
     def xmlrpc_get_background_running_process_list(self):
-        return pulse2.launcher.remote_exec.get_background_running_process_list()
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_running_process_list())
 
     def xmlrpc_is_background_process_done(self, id):
-        return pulse2.launcher.remote_exec.is_background_process_done(id)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.is_background_process_done(id))
 
     def xmlrpc_purge_background_process(self, id):
-        return pulse2.launcher.remote_exec.purge_background_process(id)
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.purge_background_process(id))
 
 def main():
     parser = optparse.OptionParser()
