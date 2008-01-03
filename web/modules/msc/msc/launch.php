@@ -38,6 +38,7 @@ function action($action, $cible) {
             $script_list[$action]["title".$current_lang],
             $_GET['gid']);
         dispatch_all_commands();
+        start_all_commands();
         // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
 
@@ -83,6 +84,7 @@ function adv_action($post) {
     // TODO activate this  : msc_command_set_pause($cmd_id);
     add_command_api($pid, $cible, $params, $gid);
     dispatch_all_commands();
+    start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 }
 
@@ -95,7 +97,7 @@ if (isset($_GET["badvanced"])) {
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
     $name = getPackageLabel($_GET["pid"]);
-    
+
     if ($hostname) {
         $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
     } else {
@@ -115,7 +117,7 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $pid, "hide" => True));
     $hidden = new HiddenTpl("gid");
     $f->add($hidden, array("value" => $gid, "hide" => True));
-    
+
     #TODO : find a way to display it as an html table...
     $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('title'));
     $f->add($input, array("value" => $name));

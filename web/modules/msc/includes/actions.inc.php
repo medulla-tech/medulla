@@ -12,4 +12,8 @@ function get_id_command_on_host($id_command) {
     xmlCall('msc.get_id_command_on_host', array($id_command));
 }
 
+function start_all_commands() {
+    xmlCall('msc.start_all_commands');
+}
+
 ?>

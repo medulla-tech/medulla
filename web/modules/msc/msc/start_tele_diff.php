@@ -54,6 +54,7 @@ if (isset($_POST["bconfirm"])) {
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     add_command_api($pid, $cible, $params, $gid);
     dispatch_all_commands();
+    start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 } elseif (isset($_POST["badvanced"])) {
     $from = $_POST['from'];
