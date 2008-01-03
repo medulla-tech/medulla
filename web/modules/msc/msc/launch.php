@@ -56,7 +56,7 @@ function adv_action($post) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'title', 'parameters') as $param) {
+    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters') as $param) {
         $params[$param] = $post[$param];
     }
     foreach (array('start_date', 'end_date') as $param) {
@@ -119,7 +119,7 @@ if (isset($_GET["badvanced"])) {
     $f->add($hidden, array("value" => $gid, "hide" => True));
 
     #TODO : find a way to display it as an html table...
-    $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('title'));
+    $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('ltitle'));
     $f->add($input, array("value" => $name));
 
     $check = new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory"));
