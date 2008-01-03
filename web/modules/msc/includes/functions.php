@@ -1,7 +1,7 @@
 <?php
 
 function return_icon($state)
-{     
+{
     switch($state) {
         case "TODO":
             return "led-grey.gif";
@@ -63,7 +63,7 @@ function state2icon($current_state) {
             return "led-black.gif";
             break;
         case "scheduled":
-            return "led-grey.gif";    
+            return "led-grey.gif";
             break;
         default:
             return "led-orange.gif";
@@ -111,7 +111,7 @@ function history_stat2icon($state) {
         case "stop":
             return "led-black.gif";
             break;
-        case "scheduled":                                     
+        case "scheduled":
             return "led-gray.gif";
             break;
     }
@@ -119,7 +119,7 @@ function history_stat2icon($state) {
 
 function state_tmpl($current_state) {
     $ret = array();
-    if (    
+    if (
         ($current_state != "pause") &&
         ($current_state != "not_reachable") &&
         ($current_state != "upload_failed") &&
@@ -127,7 +127,7 @@ function state_tmpl($current_state) {
         ($current_state != "delete_failed") &&
         ($current_state != "inventory_failed")
 
-    ) {     
+    ) {
         $ret['play'] = '';
     } else {
         $ret['play'] = 'BUTTON_PLAY';
@@ -170,7 +170,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_10_SELECTED", "page_10_selected");
         $template->set_var("page_10_selected", "");
     }
-    
+
     if ($number_command_by_page==20) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_20_SELECTED", "page_20_selected");
         $template->parse("page_20_selected", "NUMBER_BY_PAGE_20_SELECTED");
@@ -178,7 +178,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_20_SELECTED", "page_20_selected");
         $template->set_var("page_20_selected", "");
     }
-    
+
     if ($number_command_by_page==50) {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_50_SELECTED", "page_50_selected");
         $template->parse("page_50_selected", "NUMBER_BY_PAGE_50_SELECTED");
@@ -188,7 +188,7 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
     }
 
     if ($number_command_by_page==100) {
-        $template->set_block($tmpl_name, "NUMBER_BY_PAGE_100_SELECTED", "page_100_selected");                                                     
+        $template->set_block($tmpl_name, "NUMBER_BY_PAGE_100_SELECTED", "page_100_selected");
         $template->parse("page_100_selected", "NUMBER_BY_PAGE_100_SELECTED");
     } else {
         $template->set_block($tmpl_name, "NUMBER_BY_PAGE_100_SELECTED", "page_100_selected");

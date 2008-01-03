@@ -37,7 +37,7 @@ class CommandOnHost {
     function display() {
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
-        
+
         $n = new ListInfos($name, _('Name'));
         $n->addExtraInfo($value, _('Value'));
         $n->setRowsPerPage(count($this->values));
@@ -86,7 +86,7 @@ class Command {
     function display() {
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
-        
+
         $n = new ListInfos($name, _('Name'));
         $n->addExtraInfo($value, _('Value'));
         $n->setRowsPerPage(count($this->values));
@@ -111,7 +111,7 @@ class Command {
         $n->drawTable(0);
     }
 }
-    
+
 class CommandHistory {
     function CommandHistory($coh_id) {
         // TODO : ch is a list, we have to chose the good one (ie : the most recent date)
@@ -139,10 +139,10 @@ class CommandHistory {
             array('Command expiry date',_toDate($this->db_cmd['end_date'])),
             array('Command next run date',_toDate($this->db_coh['next_launch_date']))
         );
-        
+
         $name = array_map("_names", $values);
         $value = array_map("_values", $values);
-        
+
         $n = new ListInfos($name, _('Name'));
         $n->addExtraInfo($value, _('Value'));
         $n->setRowsPerPage(count($values));
@@ -161,7 +161,7 @@ class CommandHistory {
         $n = new ListInfos($files, _('Transferred files list'));
         print "<hr/><br/>";
         $n->drawTable(0);
-        
+
         # display command history
         # display log files
         foreach ($this->db_ch as $hist) {
@@ -185,12 +185,12 @@ function _colorise($line) {
         if ($matches[2][0] == "E") {
             $out .= '<font color=red>';
         } elseif ($matches[2][0] == "C") {
-            $out .= '<font color=blue>'; 
+            $out .= '<font color=blue>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=green>';
         } elseif ($matches[2][0] == "X") {
-            $out .= '<font color=blue>'; 
-        }   
+            $out .= '<font color=blue>';
+        }
         $out .= $matches[3][0];
         $out .= '</font><br/>';
     } else $out .=  "<font>$line</font>\n";

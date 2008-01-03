@@ -78,7 +78,7 @@ if ($_GET['coh_id']) {
     $ch = new CommandHistory($coh_id);
     $ch->display();
 }
-  
+
 ?>
 
 <style>
