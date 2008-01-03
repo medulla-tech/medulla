@@ -75,15 +75,12 @@ def sync_remote_push(id, root_path, files_list, target_path, client, wrapper):
         FIXME: check that target is authorized
     """
 
-    def cb(shprocess):
-        # The callback just return the process outputs
-        return shprocess.exitCode, shprocess.out, shprocess.err
     client = set_default_client_options(client)
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (root_path, a), files_list)
         real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(cb)
+        d.addCallback(_remote_sync_cb)
         return d
     return None
 
@@ -93,15 +90,12 @@ def sync_remote_delete(id, files_list, target_path, client, wrapper):
         FIXME: check that target is authorized
     """
 
-    def cb(shprocess):
-        # The callback just return the process outputs
-        return shprocess.exitCode, shprocess.out, shprocess.err
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
         real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], ' '.join(real_files_list))
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(cb)
+        d.addCallback(_remote_sync_cb)
         return d
     return None
 
@@ -111,36 +105,15 @@ def sync_remote_exec(id, command, client, wrapper):
         client is the method used to connect to the client (see set_default_client_options)
     """
 
-    def cb(shprocess):
-        # The callback just return the process outputs
-        return shprocess.exitCode, shprocess.out, shprocess.err
-
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "cd %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], command)
         d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(cb)
+        d.addCallback(_remote_sync_cb)
         return d
     return None
 
 def async_remote_exec(id, command, client, wrapper):
-
-    def _progress_cb(self, data):
-        try:
-            self.output
-        except: # if first loop
-            self.output = ""
-        self.output += data;
-        # FIXME: handle log flood
-
-    def _end_cb(self, reason):
-        self.done = True
-        self.exitCode = reason.value.exitCode
-        if self.exitCode == 0:
-            self.status = "job successfully finished"
-        else:
-            self.status = "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
-        self.progress = -1;
 
     # do not re-inject already running processes
     if (do_background_process_exists(id)):
@@ -149,7 +122,7 @@ def async_remote_exec(id, command, client, wrapper):
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
-        mmc.support.mmctools.shlaunchBackground(real_command, id, _progress_cb, _end_cb)
+        mmc.support.mmctools.shlaunchBackground(real_command, id, _remote_async_progress_cb, _remote_async_end_cb)
     return True
 
 def get_background_process_count():
@@ -196,3 +169,29 @@ def purge_background_process(id):
 def clean_background_process(id):
     mmc.support.mmctools.ProcessScheduler().rmProcess(id)
     return True;
+
+def _remote_sync_cb(shprocess):
+    # FIXME: have to find a bettre way to handle these stupid encodings ...
+    exitcode = shprocess.exitCode
+
+    stdout = unicode(shprocess.out, 'utf-8', 'strict')
+    stderr = unicode(shprocess.err, 'utf-8', 'strict')
+
+    return exitcode, stdout, stderr
+
+def _remote_async_progress_cb(self, data):
+    try:
+        self.output
+    except: # if first loop
+        self.output = ""
+    self.output += data;
+    # FIXME: handle log flood
+
+def _remote_async_end_cb(self, reason):
+    self.done = True
+    self.exitCode = reason.value.exitCode
+    if self.exitCode == 0:
+        self.status = "job successfully finished"
+    else:
+        self.status = "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
+    self.progress = -1;
