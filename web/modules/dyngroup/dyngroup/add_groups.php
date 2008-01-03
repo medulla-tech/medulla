@@ -28,10 +28,13 @@ if ($_POST['id'] || $_GET['id']) {
     if ($_GET['id']) {
         $group = new Stagroup($_GET['id']);
         if ($_POST['name']) { $group->save($_POST['name']); }
+        if ($_POST['visible'] == 'show') { $group->show(); } elseif ($_POST['visible'] == 'hide') { $group->hide(); }
+        
         $name = $group->getName();
     } elseif ($_POST['id']) {
         $group = new Stagroup($_POST['id']);
         if ($_POST['name']) { $group->save($_POST['name']); }
+        if ($_POST['visible'] == 'show') { $group->show(); } elseif ($_POST['visible'] == 'hide') { $group->hide(); }
         $name = $group->getName();
     }
 } else {
@@ -68,7 +71,6 @@ if (isset($_POST["bdelmachine_x"])) {
     $group->addMembers($newmem);
     $group->delMembers($delmem);
 
-    #$group->show();
     /*if ($group->save($name)) {
         new NotifyWidgetSuccess(_T("Group successfully modified"));
     }*/
@@ -89,6 +91,10 @@ $diff = array_diff($machines, $members);
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
 <tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name='name' value='<?= $group->getName() ?>' type='text'/></td></tr>
+<tr><td><?= _T('Is the group visible', 'dyngroup') ?></td><td></td><td>
+    <input name='visible' value='show' <? if ($group->canShow()) { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='hide' <? if (!$group->canShow()) { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
+</td></tr>
 <!-- add all group inupts -->
 </table>
 
