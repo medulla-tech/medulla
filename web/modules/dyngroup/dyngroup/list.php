@@ -25,6 +25,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
+require("modules/base/graph/computers/index.css");
 
 $p = new PageGenerator(_T("Group list", 'dyngroup'));
 $p->setSideMenu($sidemenu);
@@ -59,11 +60,12 @@ if (count($list) > 0) {
     $n->addExtraInfo($type, _T('Type', 'dyngroup'));
     $n->addExtraInfo($show, _T('Display', 'dyngroup'));
     $n->setParamInfo($ids);
-    $n->addActionItem(new ActionItem(_T("Software deployment", "dyngroup"),"msctabs","install","computer", "base", "computers"));
-    $n->addActionItem(new ActionItem(_T("Display", 'dyngroup'), "display", "display", "id"));
-    $n->addActionItem(new ActionPopupItem(_T("Details", 'dyngroup'), "details", "afficher", "id"));
-    $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), "edit", "edit", "id"));
-    $n->addActionItem(new ActionPopupItem(_T("Delete", 'dyngroup'), "delete_group", "supprimer", "id"));
+    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id"));
+    $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "edit", "edit", "id"));
+    $n->addActionItem(new ActionItem(_T("Read log"),"msctabs","logfile","computer", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
+    $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id"));
+    $n->disableFirstColumnActionLink();
 
     $n->display();
 }
