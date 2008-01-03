@@ -24,9 +24,16 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# FIXME: rewrite this (python ?) !
+# FIXME: check that iconv is available, or fallback to tr
+
 addtime () {
     while read line; do
-        echo "`date +%H:%M:%S.%N` $1: $line"
+	output=`echo $line | iconv -c -f utf-8 -t utf-8 -`
+	if [ "$?" -ne "0" ]; then
+		output=`echo $line | iconv -c -f 8859_1 -t utf-8 -`
+	fi
+	echo "`date +%H:%M:%S.%N` $1: $output"
     done    
 }       
 
