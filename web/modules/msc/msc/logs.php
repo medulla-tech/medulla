@@ -23,9 +23,8 @@
  */
 
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/msc/includes/command_history.php");
-require_once("modules/msc/includes/functions.php");
-
+require_once('modules/msc/includes/command_history.php');
+require_once('modules/msc/includes/functions.php');
 
 if ($_GET['name']) {
     // bottom of the page : details for the command if coh_id is specified
@@ -76,26 +75,6 @@ if ($_GET['name']) {
 ?>
 
 <style>
-li.detail a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/info.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.stop a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/stock_media-stop.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
 li.pause a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
@@ -107,15 +86,5 @@ li.pause a {
         color: #FFF;
 }
 
-li.start a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/stock_media-play.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
 
 </style>
