@@ -21,13 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-
-
-
-
-
 
 /**
  * Singleton objet, register all main mmc data
@@ -162,6 +155,7 @@ class SubModule {
     var $_visibility; /**< default is visible */
     var $_img; /**< img, help generation of css */
     var $_imgsize; /**< tab size */
+    var $_module; /**< Module parent */
     var $_parentname; /**< Module parent name */
     var $_alias; /**< alias icon if submod not appear */
     var $_priority; /**< specify order to show submod */
@@ -178,6 +172,13 @@ class SubModule {
         $this->_alias = Null;
         $this->_priority = 50; //default priority
     }
+
+    /**
+     * Set Module that owns this SubModule
+     */ 
+    function setModule($module) {
+        $this->_module = $module;
+    }    
 
     /**
      * provide alias to submod
@@ -316,15 +317,33 @@ class SubModule {
 
     }
 
+    /**
+     * Add the submodule icon and the URL link to the top navigation bar
+     */ 
     function generateNavBar() {
         if (($this->_visibility == False)||(!hasCorrectModuleAcl($this->_parentname))) {
             return;
         }
-        global $root;
         list($module,$submod,$action) = split('/',$this->_defaultpage,3);
+        /*
+           If the user has no right to access the default page, try to find
+           another page.
+        */
+        if (!hasCorrectAcl($module, $submod, $action)) {
+            $found = False;
+            foreach($this->getPages() as $page) {
+                if (($page->isVisible()) && (hasCorrectAcl($module, $submod, $page->getAction()))) {
+                    $found = True;
+                    $action = $page->getAction();
+                    break;
+                }
+            }
+            /* No page found, so don't display the submodule icon */
+            if (!$found) return;
+        }
+        global $root;
         print "<li id=\"navbar".$this->getName()."\"><a href=\"".$root."main.php?module=$module&amp;submod=$submod&amp;action=$action\">\n";
         print $this->_desc."</a></li>\n";
-        //var_dump($this->_defaultpage);
     }
 }
 
@@ -490,9 +509,11 @@ class Module {
 }
 
 /**
- * define Modules
+ * Page declaration
  */
 class Page {
+    var $_module;
+    var $_submod;
     var $_action;
 
     var $_desc;
@@ -511,6 +532,20 @@ class Page {
         $this->_options["noACL"] = False;	
     }
 
+    /**
+     * Set Module that owns this page
+     */ 
+    function setModule($module) {
+        $this->_module = $module;
+    }
+    
+    /**
+     * Set SubModule that owns this page
+     */ 
+    function setSubModule($submod) {
+        $this->_submod = $submod;
+    }
+
     function setDescription($desc) {
         $this->_desc = $desc;
     }
@@ -523,6 +558,26 @@ class Page {
         return $this->_options;
     }
 
+    /**
+     * Return true if the current user has access right to this page
+     */
+    function hasAccess($module, $submod) {
+        return ($_SESSION["login"]=="root")
+            || ($this->_options["noACL"])
+            || isset($_SESSION["acl"][$module->getName()][$submod->getName()][$this->_action]["right"]);
+    }
+        
+    /**
+     * Return true if the current user can access this page, and the page
+       shortcut can be displayed on the home page
+     */
+    function hasAccessAndVisible($module, $sudmod) {
+        return $this->isVisible() && $this->hasAccess($module, $sudmod);
+    }
+
+    /**
+     * Return true if the page shortcut can be displayed on the home page
+     */
     function isVisible() {
         $ret = true;
         if (isset($this->_options['visible'])) $ret = $this->_options['visible'];
@@ -572,7 +627,7 @@ class Page {
      * function for compatibility
      * FIXME: still needed ?
      */
-    function process($module,$submod) {
+    function process($module, $submod) {
         global $descArray;
         global $noheaderArray;
         global $redirAjaxArray;

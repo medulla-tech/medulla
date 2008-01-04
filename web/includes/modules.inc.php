@@ -108,6 +108,11 @@ function getSorted($objlist) {
     return $prio;
 }
 
+
+/**
+ * Build and Display the top navigation bar
+ * The top navigation bar is made of sub-modules icons.
+ */
 function autoGenerateNavbar() {
     $MMCApp =& MMCApp::getInstance();
 
@@ -115,7 +120,12 @@ function autoGenerateNavbar() {
 
     foreach ($MMCApp->getModules() as $mod) {
         foreach ($mod->getSubmodules() as $submod) {
-            $prio = insert_without_delete($prio,$submod->getPriority(),$submod);
+            $add = False;
+            foreach($submod->getPages() as $page) {
+                $add = $page->hasAccessAndVisible($mod, $submod);
+                if ($add) break;
+            }            
+            if ($add) $prio = insert_without_delete($prio,$submod->getPriority(),$submod);
         }
     }
 
