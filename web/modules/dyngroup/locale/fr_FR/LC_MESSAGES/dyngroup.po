@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-04 12:01+0100\n"
+"POT-Creation-Date: 2008-01-04 16:13+0100\n"
 "PO-Revision-Date: 2007-12-21 11:57+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,7 +122,7 @@ msgstr "Montrer le contenu de ce groupe"
 
 #: dyngroup/dyngroup/list.php:64
 msgid "Edit this group"
-msgstr "Editer ce groupe
+msgstr "Editer ce groupe"
 
 #: dyngroup/dyngroup/list.php:65
 msgid "Read log"
@@ -130,7 +130,7 @@ msgstr "Lire les logs"
 
 #: dyngroup/dyngroup/list.php:66
 msgid "Software deployment on this group"
-msgstr "Déploiement de logiciels sur ce groupe" 
+msgstr "Déploiement de logiciels sur ce groupe"
 
 #: dyngroup/dyngroup/list.php:67
 msgid "Delete this group"
@@ -303,6 +303,26 @@ msgstr "Détails du groupe de machines"
 #: dyngroup/infoPackage.inc.php:76
 msgid "Remove a machine from a group"
 msgstr "Supprimer une machine d'un groupe"
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "request"
+msgstr "requète"
+
+#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
+msgid "group"
+msgstr "groupe"
+
+#: dyngroup/dyngroup/tab.php:9
+msgid "Dynamic group creation"
+msgstr "Création d'un groupe dynamique"
+
+#: dyngroup/dyngroup/tab.php:10
+msgid "Static group creation"
+msgstr "Création d'un groupe statique"  
+
+#: dyngroup/dyngroup/header.php:26
+msgid "Please chose the type of group you want to create"
+msgstr "Choisissez le type de groupe que vous voulez créer"
 
 #~ msgid "Details"
 #~ msgstr "Détails"
