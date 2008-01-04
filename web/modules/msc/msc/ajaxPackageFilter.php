@@ -51,9 +51,9 @@ if ($_GET['name']) {
 
 require_once("../../../modules/msc/includes/package_api.php");
 if ($machine) {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $machine->hostname));
+    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on machine "%s"', 'msc'), $machine->hostname));
 } else {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on %s', 'msc'), $group->getName()));
+    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on group "%s"', 'msc'), $group->getName()));
 }
 $label->display();
 
@@ -65,10 +65,17 @@ $params = array();
 if (!$_GET["start"]) { $_GET["start"] = 0; }
 if (!$_GET["end"]) { $_GET["end"] = 10; }
 
-$filter = $_GET["filter"];
+$filter['filter'] = $_GET["filter"];
+if ($machine) {
+    $filter['machine'] = $machine->hostname;
+} else {
+    # for groups, we get local packages from first host :
+    $members = $group->members();
+    $filter['machine'] = $members[0];
+}
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
-foreach (advGetAllPackages($machine->hostname, $filter, $_GET["start"], $_GET["end"]) as $c_package) {
+foreach (advGetAllPackages($filter, $_GET["start"], $_GET["end"]) as $c_package) {
     $package = to_packageApi($c_package[0]);
     $type = $c_package[1];
     $a_packages[] = $package->label;
@@ -85,7 +92,7 @@ foreach (advGetAllPackages($machine->hostname, $filter, $_GET["start"], $_GET["e
     }
 }
 
-$count = advCountAllPackages($machine->hostname, $filter);
+$count = advCountAllPackages($filter);
 
 $n = new OptimizedListInfos($a_packages, _T("Package"));
 $n->addExtraInfo($a_pversions, _T("Version"));

@@ -102,12 +102,12 @@ function getPackageDetails($pid) {
     );
 }
 
-function advGetAllPackages($machine, $filter, $start, $end) {
-    return xmlCall("msc.pa_adv_getAllPackages", array($machine, $filter, $start, $end));
+function advGetAllPackages($filter, $start, $end) {
+    return xmlCall("msc.pa_adv_getAllPackages", array($filter, $start, $end));
 }
 
-function advCountAllPackages($machine, $filter) {
-    return xmlCall("msc.pa_adv_countAllPackages", array($machine, $filter));
+function advCountAllPackages($filter) {
+    return xmlCall("msc.pa_adv_countAllPackages", array($filter));
 }
 
 ?>
