@@ -770,8 +770,12 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
 
         @param group: the group name
         @type group: str
+
+        @return: a deferred object resulting to the SAMBA net process exit code
         """
-        mmctools.shLaunch("net groupmap add unixgroup='%s'" % group)
+        d = mmctools.shLaunchDeferred("net groupmap add unixgroup='%s'" % group)
+        d.addCallback(lambda p: p.exitCode)
+        return d
 
     def isSambaGroup(self, group):
         ret = False
