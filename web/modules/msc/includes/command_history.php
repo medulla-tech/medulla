@@ -38,8 +38,8 @@ class CommandOnHost {
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
 
-        $n = new ListInfos($name, _('Name'));
-        $n->addExtraInfo($value, _('Value'));
+        $n = new ListInfos($name, _T('Name', 'msc'));
+        $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($this->values));
 
         $n->drawTable(0);
@@ -67,28 +67,28 @@ class Command {
     function Command($cmd) {
         $this->db_cmd = command_detail($cmd);
         $this->values = array(
-            array('Command name',$this->db_cmd['title'], 1),
-            array('Creation date',_toDate($this->db_cmd['date_created']), 1),
-            array('User command creator',$this->db_cmd['webmin_username'], 0),
-            array('Execute file',$this->db_cmd['start_file'], 0),
-            array('Execution arguments',$this->db_cmd['parameters'], 0),
-            array('Destination directory',$this->db_cmd['path_destination'], 0),
-            array('Source directory (repository)',$this->db_cmd['path_source'], 0),
-            array('Create destination directory',$this->db_cmd['create_directory'], 0),
-            array('Start execute file',$this->db_cmd['start_script'], 0),
-            array('Start inventory agent',$this->db_cmd['start_inventory'], 0),
-            array('Start "Wake On Lan" query if connection fails',$this->db_cmd['wake_on_lan'], 0),
-            array('Delay between two connections',$this->db_cmd['next_connection_delay'], 0),
-            array('Command start date',_toDate($this->db_cmd['start_date']), 0),
-            array('Command expiry date',_toDate($this->db_cmd['end_date']), 0),
+            array(_T('Command name', 'msc'),$this->db_cmd['title'], 1),
+            array(_T('Creation date', 'msc'),_toDate($this->db_cmd['date_created']), 1),
+            array(_T('User command creator', 'msc'),$this->db_cmd['webmin_username'], 0),
+            array(_T('Execute file', 'msc'),$this->db_cmd['start_file'], 0),
+            array(_T('Execution arguments', 'msc'),$this->db_cmd['parameters'], 0),
+            array(_T('Destination directory', 'msc'),$this->db_cmd['path_destination'], 0),
+            array(_T('Source directory (repository)', 'msc'),$this->db_cmd['path_source'], 0),
+            array(_T('Create destination directory', 'msc'),$this->db_cmd['create_directory'], 0),
+            array(_T('Start execute file', 'msc'),$this->db_cmd['start_script'], 0),
+            array(_T('Start inventory agent', 'msc'),$this->db_cmd['start_inventory'], 0),
+            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['wake_on_lan'], 0),
+            array(_T('Delay between two connections', 'msc'),$this->db_cmd['next_connection_delay'], 0),
+            array(_T('Command start date', 'msc'),_toDate($this->db_cmd['start_date']), 0),
+            array(_T('Command expiry date', 'msc'),_toDate($this->db_cmd['end_date']), 0),
         );
     }
     function display() {
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
 
-        $n = new ListInfos($name, _('Name'));
-        $n->addExtraInfo($value, _('Value'));
+        $n = new ListInfos($name, _T('Name', 'msc'));
+        $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($this->values));
 
         $n->drawTable(0);
@@ -122,29 +122,29 @@ class CommandHistory {
     function display() {
         // display parameters
         $values = array(
-            array('Command name',$this->db_cmd['title']),
-            array('Creation date',_toDate($this->db_cmd['date_created'])),
-            array('User command creator',$this->db_cmd['webmin_username']),
-            array('Execute file',$this->db_cmd['start_file']),
-            array('Execution arguments',$this->db_cmd['parameters']),
-            array('Destination directory',$this->db_cmd['path_destination']),
-            array('Source directory (repository)',$this->db_cmd['path_source']),
-            array('Create destination directory',$this->db_cmd['create_directory']),
-            array('Start execute file',$this->db_cmd['start_script']),
-            array('Start inventory agent',$this->db_cmd['start_inventory']),
-            array('Start "Wake On Lan" query if connection fails',$this->db_cmd['wake_on_lan']),
-            array('Remaining attempts',$this->db_coh['number_attempt_connection_remains']),
-            array('Delay between two connections',$this->db_cmd['next_connection_delay']),
-            array('Command start date',_toDate($this->db_cmd['start_date'])),
-            array('Command expiry date',_toDate($this->db_cmd['end_date'])),
-            array('Command next run date',_toDate($this->db_coh['next_launch_date']))
+            array(_T('Command name', 'msc'),$this->db_cmd['title']),
+            array(_T('Creation date', 'msc'),_toDate($this->db_cmd['date_created'])),
+            array(_T('User command creator', 'msc'),$this->db_cmd['webmin_username']),
+            array(_T('Execute file', 'msc'),$this->db_cmd['start_file']),
+            array(_T('Execution arguments', 'msc'),$this->db_cmd['parameters']),
+            array(_T('Destination directory', 'msc'),$this->db_cmd['path_destination']),
+            array(_T('Source directory (repository)', 'msc'),$this->db_cmd['path_source']),
+            array(_T('Create destination directory', 'msc'),$this->db_cmd['create_directory']),
+            array(_T('Start execute file', 'msc'),$this->db_cmd['start_script']),
+            array(_T('Start inventory agent', 'msc'),$this->db_cmd['start_inventory']),
+            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['wake_on_lan']),
+            array(_T('Remaining attempts', 'msc'),$this->db_coh['number_attempt_connection_remains']),
+            array(_T('Delay between two connections', 'msc'),$this->db_cmd['next_connection_delay']),
+            array(_T('Command start date', 'msc'),_toDate($this->db_cmd['start_date'])),
+            array(_T('Command expiry date', 'msc'),_toDate($this->db_cmd['end_date'])),
+            array(_T('Command next run date', 'msc'),_toDate($this->db_coh['next_launch_date']))
         );
 
         $name = array_map("_names", $values);
         $value = array_map("_values", $values);
 
-        $n = new ListInfos($name, _('Name'));
-        $n->addExtraInfo($value, _('Value'));
+        $n = new ListInfos($name, _T('Name', 'msc'));
+        $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($values));
 
         $n->drawTable(0);
@@ -158,7 +158,7 @@ class CommandHistory {
                 $files = $this->db_cmd["files"];
             }
         }
-        $n = new ListInfos($files, _('Transferred files list'));
+        $n = new ListInfos($files, _T('Transferred files list', 'msc'));
         print "<hr/><br/>";
         $n->drawTable(0);
 

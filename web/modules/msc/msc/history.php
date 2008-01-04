@@ -60,11 +60,11 @@ foreach ($cmds as $cmd) {
 }
 
 
-$n = new ListInfos($a_cmd, _T("Command"));
-$n->addExtraInfo($a_current, _T("current_state"));
-$n->addExtraInfo($a_uploaded, _T("uploaded"));
-$n->addExtraInfo($a_executed, _T("executed"));
-$n->addExtraInfo($a_deleted, _T("deleted"));
+$n = new ListInfos($a_cmd, _T("Command", 'msc'));
+$n->addExtraInfo($a_current, _T("current_state", 'msc'));
+$n->addExtraInfo($a_uploaded, _T("uploaded", 'msc'));
+$n->addExtraInfo($a_executed, _T("executed", 'msc'));
+$n->addExtraInfo($a_deleted, _T("deleted", 'msc'));
 
 $n->setParamInfo($params);
 $n->start = 0;

@@ -4,7 +4,7 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require("modules/msc/includes/package_api.php");
 
-$p = new PageGenerator(_T("Packages"));
+$p = new PageGenerator(_T("Packages", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display(); 
 
@@ -15,8 +15,8 @@ foreach (getAllPackages() as $package) {
     $a_pversions[] = $package->version;
 }
 
-$n = new ListInfos($a_packages, _T("Package"));
-$n->addExtraInfo($a_pversions, _T("Version"));
+$n = new ListInfos($a_packages, _T("Package", 'msc'));
+$n->addExtraInfo($a_pversions, _T("Version", 'msc'));
 
 $n->addActionItem(new ActionItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));

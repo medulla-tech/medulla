@@ -30,11 +30,11 @@ $pid = $_GET["pid"];
 $details = getPackageDetails($_GET["pid"]);
 $name = $details['name'];
 
-$a_param = array(_T("Label"), _T("Version"), _T('Command'));
+$a_param = array(_T("Label", 'msc'), _T("Version", 'msc'), _T('Command', 'msc'));
 $a_value = array($details['name'], $details['version'], $details['command']['command']);
 
-$n = new ListInfos($a_param, _T("Name"));
-$n->addExtraInfo($a_value, _T("Value"));
+$n = new ListInfos($a_param, _T("Name", 'msc'));
+$n->addExtraInfo($a_value, _T("Value", 'msc'));
 $n->display(0);
 
 ?>

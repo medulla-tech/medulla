@@ -190,7 +190,7 @@ if (isset($_GET["badvanced"])) {
     }
 
     // Display the actions list
-    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s'), $group->getName()));
+    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));
     $label->display();
 
     $msc_actions = new RenderedMSCActions(msc_script_list_file());

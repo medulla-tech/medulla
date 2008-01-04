@@ -43,7 +43,7 @@ if (isset($_POST["bconfirm"])) {
     $cmd_id = $_GET["cmd_id"];
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
-    $f = new PopupForm(sprintf(_T("Pause action %s on host %s"), $name, $hostname));
+    $f = new PopupForm(sprintf(_T("Pause action %s on host %s", 'msc'), $name, $hostname));
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
     $hidden = new HiddenTpl("from");

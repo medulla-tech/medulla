@@ -2,6 +2,6 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("msc");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Repository"), "msc", "msc", "repository"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Repository", 'msc'), "msc", "msc", "repository"));
 
 ?>

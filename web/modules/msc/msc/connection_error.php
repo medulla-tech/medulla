@@ -21,7 +21,7 @@
 require_once("modules/msc/includes/widgets/html.php");
 
 // Display host informations
-$label = new RenderedLabel(3, _('Remote control of :'));
+$label = new RenderedLabel(3, _T('Remote control of :', 'msc'));
 $label->display();
 
 $msc_host = new RenderedMSCHost(
