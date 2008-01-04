@@ -74,18 +74,6 @@ function fetchIniFile() {
 
 
 /**
- * include navbar module
- * @param $dirA directory array returned by fetchModulesList
- */
-function includeNavbarModule($dirA) {
-	foreach ($dirA as $path) {
-            if (file_exists("$path/localNavbar.php")) {
-                include("$path/localNavbar.php");
-            }
-        }
-}
-
-/**
  * include infoPackage.inc.php from directory
  * @param $dirA directory array returned by fetchModulesList
  */

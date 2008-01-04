@@ -32,28 +32,4 @@ if ($_SESSION["login"] != "root") {
     
     $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base","users","passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
 
-$sidebar = array("class" => "users",
-                 "content" => array(array("id" => "global",
-                                    "text" => _("List"),
-                                    "link" => urlStr("base/users/index")),
-                              array("id" => "addUser",
-                                    "text" => _("Add"),
-                                    "link" => urlStr("base/users/add")),
-			      array("id" => "changePasswd",
-                                    "text" => _("Change your password"),
-                                    "link" => urlStr("base/users/passwd"))));
-} else {
-
-$sidebar = array("class" => "users",
-                 "content" => array(array("id" => "global",
-                                    "text" => _("List"),
-                                    "link" => urlStr("base/users/index")),
-                              array("id" => "addUser",
-                                    "text" => _("Add"),
-                                    "link" => urlStr("base/users/add")),
-			      ));
-
-
-}
-unset($sidebar);
 ?>

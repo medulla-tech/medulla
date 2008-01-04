@@ -21,11 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
-
-require_once("navbartools.inc.php");
 
 $root = $conf["global"]["root"];
 ?>
@@ -88,13 +83,7 @@ if ($_GET["module"]) { /* if not main page */
 <ul>
 <?php
 
-
-global $conf;
-
-
 autoGenerateNavbar(); //auto generation of navbar for new modules;
-
-includeNavbarModule(fetchModulesList($conf["global"]["rootfsmodules"]));
 
 if ($_SESSION["login"]=='root') {
     $favact = "_disabled";
