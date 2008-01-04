@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-18 12:16+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: infoPackage.inc.php:35
+msgid "Display locations"
+msgstr ""
+
+#: infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
+msgstr ""
+
+#: glpi/tabs.php:8
+#, php-format
+msgid "%s's inventory (GLPI)"
+msgstr ""
+
+#: glpi/view_hardware.php:54
+msgid "Properties"
+msgstr ""
+
+#: glpi/view_hardware.php:55
+msgid "Value"
+msgstr ""
+
+#: includes/autocomplete.php:53 includes/autocomplete.php:53
+msgid "Add"
+msgstr ""
+
+#: glpi/tabs.php:9
+msgid "Hardware"
+msgstr ""
+
+#: glpi/tabs.php:13
+msgid "Network"
+msgstr ""
+
+#: glpi/tabs.php:13
+msgid "Controller"
+msgstr ""
