@@ -165,13 +165,20 @@ class CommandHistory {
         # display command history
         # display log files
         foreach ($this->db_ch as $hist) {
-            $history = '<img alt="'.$hist['state'].'" src="modules/msc/graph/images/'.history_stat2icon($hist['state']).'"/> '.$hist['date'].' : '.$hist['state'];
-            if (gettype($hist["stdout"]) != 'array') $hist["stdout"] = split("\n", $hist["stdout"]);
-            if (gettype($hist["stderr"]) != 'array') $hist["stderr"] = split("\n", $hist["stderr"]);
-            if (count($hist["stdout"]) > 0 && !(count($hist["stdout"]) == 1 && $hist["stdout"][0] == '')) { $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]); }
+            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$hist['state'].'</b>';
+            if (gettype($hist["stdout"]) != 'array')
+                $hist["stdout"] = split("\n", $hist["stdout"]);
+            if (gettype($hist["stderr"]) != 'array')
+                $hist["stderr"] = split("\n", $hist["stderr"]);
+            if (count($hist["stdout"]) > 0 &&
+                !(count($hist["stdout"]) == 1 && $hist["stdout"][0] == '')
+               ) {
+                   $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
+            }
             $n = new ListInfos(array_map('_colorise', $hist["stderr"]), $history);
-            if (count($hist["stderr"]) > 0  && !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')) {
-                print "<hr/><br/>";
+            if (count($hist["stderr"]) > 0  &&
+                !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')
+               ) {
                 $n->drawTable(0);
             }
         }

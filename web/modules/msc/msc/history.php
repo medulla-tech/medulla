@@ -46,9 +46,9 @@ foreach ($cmds as $cmd) {
     if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
         $coh = get_commands_on_host($coh_id);
         $a_cmd[] = $cmd[0]['title'];
-        $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> '.$coh['uploaded'];
-        $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> '.$coh['executed'];
-        $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> '.$coh['deleted'];
+        $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/>';
+        $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/>';
+        $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/>';
         $a_current[] = $coh['current_state'];
         $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd[0]['id_command'], 'tab'=>'tabhistory', 'name'=>$hostname);
         if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
