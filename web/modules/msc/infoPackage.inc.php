@@ -79,6 +79,9 @@ $page->addTab($tab);
 $tab = new Tab("tablogs", _("Msc logs tab"));
 $page->addTab($tab);
 
+$tab = new Tab("tabhistory", _("Msc history tab"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("msctabsplay");
