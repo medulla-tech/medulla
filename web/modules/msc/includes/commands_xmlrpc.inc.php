@@ -24,6 +24,14 @@ function get_all_commands_on_host($hostname, $min, $max, $filter) {
     return xmlCall('msc.get_all_commands_on_host', array($hostname, $min, $max, $filter));
 }
 
+function count_unfinished_commands_on_host($hostname, $filter) {
+    return xmlCall('msc.count_unfinished_commands_on_host', array($hostname, $filter));
+}
+
+function get_unfinished_commands_on_host($hostname, $min, $max, $filter) {
+    return xmlCall('msc.get_unfinished_commands_on_host', array($hostname, $min, $max, $filter));
+}
+
 function get_commands_on_host($coh_id) {
     return xmlCall('msc.get_commands_on_host', array($coh_id));
 }

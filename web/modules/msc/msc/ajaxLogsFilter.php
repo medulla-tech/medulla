@@ -45,10 +45,9 @@ $hostname = $_GET['name'];
 $gid = $_GET['gid'];
 $areCommands = False;
 if ($hostname) {
-    $count = count_all_commands_on_host($hostname, $filter);
-//    $cmds = get_all_commands_on_host($hostname, $start, $start + $maxperpage - 1, $filter);
-    $cmds = get_all_commands_on_host($hostname, 0, $count, $filter);
-} elseif ($gid) {
+    $count = count_unfinished_commands_on_host($hostname, $filter);
+    $cmds = get_unfinished_commands_on_host($hostname, 0, $count, $filter);
+} elseif ($gid) { # FIXME: same think to do on groups
     if ($_GET['cmd_id']) {
         $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter);
         $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage - 1, $filter);
@@ -79,9 +78,7 @@ $a_details = array();
 $n = null;
 
 if ($areCommands) {
-    $number_of_valid_commands = 0;
     foreach ($cmds as $cmd) {
-        $number_of_valid_commands += 1;
         $a_cmd[] = $cmd['title'];
         $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
@@ -96,28 +93,24 @@ if ($areCommands) {
 
     $n->addActionItemArray($a_details);
 } else {
-    $number_of_valid_commands = 0;
     foreach ($cmds as $cmd) {
         $coh_id = $cmd[1];
         $cho_status = $cmd[2];
         $cmd = $cmd[0];
         if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
             $coh = get_commands_on_host($coh_id);
-            if ($coh['current_state'] != 'done') {
-                $number_of_valid_commands += 1;
-                $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
-                $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
-                $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
-                $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';//.$coh['deleted'];
-                $a_current[] = $coh['current_state'];
-                $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
+            $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
+            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
+            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';//.$coh['deleted'];
+            $a_current[] = $coh['current_state'];
+            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
 
 
-                $icons = state_tmpl($coh['current_state']);
-                if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-                if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-                if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-            }
+            $icons = state_tmpl($coh['current_state']);
+            if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
+            if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
+            if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
             if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
                 $a_details[] = $actionempty;
             } else {
@@ -139,11 +132,10 @@ if ($areCommands) {
 
 $n->setParamInfo($params);
 
-
-$n->setItemCount($number_of_valid_commands);
-$n->setNavBar(new AjaxNavBar($number_of_valid_commands, $filter));
+$n->setItemCount($count);
+$n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
-$n->end = $number_of_valid_commands;
+$n->end = $maxperpage;
 
 $n->display();
 
