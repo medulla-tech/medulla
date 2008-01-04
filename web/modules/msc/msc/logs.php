@@ -34,7 +34,7 @@ if ($_GET['name']) {
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else {
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']);
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']."&tab=tablogs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
@@ -58,13 +58,13 @@ if ($_GET['name']) {
         $cmd = new Command($_GET['cmd_id']);
         $cmd->quickDisplay();
         // display all the commands on hosts
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']);
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=tablogs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     } else {
         // display all commands
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']);
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=tablogs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();

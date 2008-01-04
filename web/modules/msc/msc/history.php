@@ -22,78 +22,69 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/msc/includes/widgets.inc.php");
-require_once("modules/msc/includes/functions.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/msc/includes/command_history.php");
+require_once('modules/msc/includes/command_history.php');
+require_once('modules/msc/includes/functions.php');
 
-
-$hostname = $_GET['name'];
-$total_commands_number = count_all_commands_on_host($hostname, '');
-$cmds = get_all_commands_on_host($hostname, 0, $total_commands_number, '');
-$a_cmd = array();
-$a_uploaded = array();
-$a_executed = array();
-$a_deleted  = array();
-$a_current  = array();
-$a_details  = array();
-$params = array();
-$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers");
-$actionempty = new EmptyActionItem();
-foreach ($cmds as $cmd) {
-//    $coh_id = $cmd['id_command_on_host'];
-    $coh_id = $cmd[1];
-    if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
-        $coh = get_commands_on_host($coh_id);
-        $a_cmd[] = $cmd[0]['title'];
-        $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/>';
-        $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/>';
-        $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/>';
-        $a_current[] = $coh['current_state'];
-        $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd[0]['id_command'], 'tab'=>'tabhistory', 'name'=>$hostname);
-        if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
-            $a_details[] = $actionempty;
-        } else {
-            $a_details[] = $actiondetails;
-        }
+if ($_GET['name']) {
+    // bottom of the page : details for the command if coh_id is specified
+    if ($_GET['coh_id']) {
+        print "<hr/><br/>";
+        $coh_id = $_GET['coh_id'];
+        $ch = new CommandHistory($coh_id);
+        $ch->display();
+    } else {
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']."&history=1&tab=tabhistory");
+        $ajax->display();
+        print "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
     }
+} elseif ($_GET['gid']) {
+    if ($_GET['coh_id']) {
+        $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
+        // display the selected command
+        $cmd = new Command($_GET['cmd_id']);
+        $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        // display the selected command on host
+        $coh = new CommandOnHost($_GET['coh_id']);
+        $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
+        // display the command on host details
+        print "<hr/><br/>";
+        $coh_id = $_GET['coh_id'];
+        $ch = new CommandHistory($coh_id);
+        $ch->display();
+    } elseif ($_GET['cmd_id']) {
+        // display just the selected command
+        $cmd = new Command($_GET['cmd_id']);
+        $cmd->quickDisplay();
+        // display all the commands on hosts
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&history=1&tab=tabhistory");
+        $ajax->display();
+        print "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    } else {
+        // display all commands
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=tabhistory");
+        $ajax->display();
+        print "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    }
+} else {
+    // Display an error message
 }
-
-
-$n = new ListInfos($a_cmd, _T("Command", 'msc'));
-$n->addExtraInfo($a_current, _T("current_state", 'msc'));
-$n->addExtraInfo($a_uploaded, _T("uploaded", 'msc'));
-$n->addExtraInfo($a_executed, _T("executed", 'msc'));
-$n->addExtraInfo($a_deleted, _T("deleted", 'msc'));
-
-$n->setParamInfo($params);
-$n->start = 0;
-$n->end = $total_commands_number-1;
-
-$n->addActionItemArray($a_details);
-
-$n->drawTable(0);
-
-// bottom of the page : details for the command if coh_id is specified
-if ($_GET['coh_id']) {
-    print "<hr/><br/>";
-    $coh_id = $_GET['coh_id'];
-    $ch = new CommandHistory($coh_id);
-    $ch->display();
-}
-
 ?>
 
 <style>
-li.detail a {
+li.pause a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/info.png");
+        background-image: url("modules/msc/graph/images/stock_media-pause.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
+
 
 </style>

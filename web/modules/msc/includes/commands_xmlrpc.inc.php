@@ -1,19 +1,19 @@
 <?php
 
-function count_all_commands_on_host_group($gid, $cmd_id, $filter) {
-    return xmlCall('msc.count_all_commands_on_host_group', array($gid, $cmd_id, $filter));
+function count_all_commands_on_host_group($gid, $cmd_id, $filter, $history = 0) {
+    return xmlCall('msc.count_all_commands_on_host_group', array($gid, $cmd_id, $filter, $history));
 }
 
-function get_all_commands_on_host_group($gid, $cmd_id, $min, $max, $filter) {
-    return xmlCall('msc.get_all_commands_on_host_group', array($gid, $cmd_id, $min, $max, $filter));
+function get_all_commands_on_host_group($gid, $cmd_id, $min, $max, $filter, $history = 0) {
+    return xmlCall('msc.get_all_commands_on_host_group', array($gid, $cmd_id, $min, $max, $filter, $history));
 }
 
-function count_all_commands_on_group($gid, $filter) {
-    return xmlCall('msc.count_all_commands_on_group', array($gid, $filter));
+function count_all_commands_on_group($gid, $filter, $history = 0) {
+    return xmlCall('msc.count_all_commands_on_group', array($gid, $filter, $history));
 }
 
-function get_all_commands_on_group($gid, $min, $max, $filter) {
-    return xmlCall('msc.get_all_commands_on_group', array($gid, $min, $max, $filter));
+function get_all_commands_on_group($gid, $min, $max, $filter, $history = 0) {
+    return xmlCall('msc.get_all_commands_on_group', array($gid, $min, $max, $filter, $history));
 }
 
 function count_all_commands_on_host($hostname, $filter) {
@@ -22,6 +22,14 @@ function count_all_commands_on_host($hostname, $filter) {
 
 function get_all_commands_on_host($hostname, $min, $max, $filter) {
     return xmlCall('msc.get_all_commands_on_host', array($hostname, $min, $max, $filter));
+}
+
+function count_finished_commands_on_host($hostname, $filter) {
+    return xmlCall('msc.count_finished_commands_on_host', array($hostname, $filter));
+}
+
+function get_finished_commands_on_host($hostname, $min, $max, $filter) {
+    return xmlCall('msc.get_finished_commands_on_host', array($hostname, $min, $max, $filter));
 }
 
 function count_unfinished_commands_on_host($hostname, $filter) {

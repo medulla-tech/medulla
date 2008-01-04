@@ -43,19 +43,31 @@ else $start = 0;
 
 $hostname = $_GET['name'];
 $gid = $_GET['gid'];
+$history = $_GET['history'];
+$tab = $_GET['tab'];
 $areCommands = False;
 if ($hostname) {
-    $count = count_unfinished_commands_on_host($hostname, $filter);
-    $cmds = get_unfinished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
-} elseif ($gid) { # FIXME: same think to do on groups
-    if ($_GET['cmd_id']) {
-        $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter);
-        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage, $filter);
+    if ($history) {
+        $count = count_finished_commands_on_host($hostname, $filter);
+        $cmds = get_finished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
     } else {
-        $areCommands = True;
-        $count = count_all_commands_on_group($gid, $filter);
-        $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage, $filter);
+        $count = count_unfinished_commands_on_host($hostname, $filter);
+        $cmds = get_unfinished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
     }
+} elseif ($gid) { # FIXME: same think to do on groups
+/*    if ($history) {
+        $count = 0;
+        $cmds = array();
+    } else {*/
+        if ($_GET['cmd_id']) {
+            $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter, $history);
+            $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage, $filter, $history);
+        } else {
+            $areCommands = True;
+            $count = count_all_commands_on_group($gid, $filter, $history);
+            $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage, $filter, $history);
+        }
+    //}
 }
 
 $a_cmd = array();
@@ -80,7 +92,7 @@ $n = null;
 if ($areCommands) {
     foreach ($cmds as $cmd) {
         $a_cmd[] = $cmd['title'];
-        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
+        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'name'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
         } else {
@@ -104,7 +116,7 @@ if ($areCommands) {
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';//.$coh['deleted'];
             $a_current[] = $coh['current_state'];
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
+            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'name'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
 
             $icons = state_tmpl($coh['current_state']);
