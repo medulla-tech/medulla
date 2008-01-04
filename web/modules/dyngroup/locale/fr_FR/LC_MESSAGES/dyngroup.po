@@ -310,7 +310,7 @@ msgstr "requète"
 
 #: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
 msgid "group"
-msgstr "groupe"
+msgstr "le groupe"
 
 #: dyngroup/dyngroup/tab.php:9
 msgid "Dynamic group creation"
