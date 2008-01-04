@@ -34,24 +34,28 @@ require_once('../../../modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("../../../modules/msc/includes/command_history.php");
 
 
-if (!$_GET["start"]) { $_GET["start"] = 0; }
-if (!$_GET["end"]) { $_GET["end"] = 9; }
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+
 $filter = $_GET["filter"];
+if (isset($_GET["start"])) $start = $_GET["start"];
+else $start = 0;
 
 $hostname = $_GET['name'];
 $gid = $_GET['gid'];
 $areCommands = False;
 if ($hostname) {
     $count = count_all_commands_on_host($hostname, $filter);
-    $cmds = get_all_commands_on_host($hostname, $_GET["start"], $_GET["end"], $filter);
+//    $cmds = get_all_commands_on_host($hostname, $start, $start + $maxperpage - 1, $filter);
+    $cmds = get_all_commands_on_host($hostname, 0, $count, $filter);
 } elseif ($gid) {
     if ($_GET['cmd_id']) {
         $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter);
-        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $_GET["start"], $_GET["end"], $filter);
+        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage - 1, $filter);
     } else {
         $areCommands = True;
         $count = count_all_commands_on_group($gid, $filter);
-        $cmds = get_all_commands_on_group($gid, $_GET["start"], $_GET["end"], $filter);
+        $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage - 1, $filter);
     }
 }
 
@@ -75,7 +79,9 @@ $a_details = array();
 $n = null;
 
 if ($areCommands) {
+    $number_of_valid_commands = 0;
     foreach ($cmds as $cmd) {
+        $number_of_valid_commands += 1;
         $a_cmd[] = $cmd['title'];
         $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>'tablogs', 'name'=>$hostname, 'from'=>'base|computers|msctabs|tablogs', 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
@@ -90,6 +96,7 @@ if ($areCommands) {
 
     $n->addActionItemArray($a_details);
 } else {
+    $number_of_valid_commands = 0;
     foreach ($cmds as $cmd) {
         $coh_id = $cmd[1];
         $cho_status = $cmd[2];
@@ -97,6 +104,7 @@ if ($areCommands) {
         if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
             $coh = get_commands_on_host($coh_id);
             if ($coh['current_state'] != 'done') {
+                $number_of_valid_commands += 1;
                 $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
                 $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
                 $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
@@ -132,10 +140,10 @@ if ($areCommands) {
 $n->setParamInfo($params);
 
 
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
+$n->setItemCount($number_of_valid_commands);
+$n->setNavBar(new AjaxNavBar($number_of_valid_commands, $filter));
 $n->start = 0;
-$n->end = $count;
+$n->end = $number_of_valid_commands;
 
 $n->display();
 

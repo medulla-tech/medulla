@@ -45,12 +45,12 @@ foreach ($cmds as $cmd) {
     $coh_id = $cmd[1];
     if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
         $coh = get_commands_on_host($coh_id);
-        $a_cmd[] = $cmd['title'];
+        $a_cmd[] = $cmd[0]['title'];
         $a_uploaded[] ='<img alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> '.$coh['uploaded'];
         $a_executed[] ='<img alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> '.$coh['executed'];
         $a_deleted[] = '<img alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> '.$coh['deleted'];
         $a_current[] = $coh['current_state'];
-        $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>'tabhistory', 'name'=>$hostname);
+        $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd[0]['id_command'], 'tab'=>'tabhistory', 'name'=>$hostname);
         if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
             $a_details[] = $actionempty;
         } else {
@@ -67,6 +67,8 @@ $n->addExtraInfo($a_executed, _T("executed"));
 $n->addExtraInfo($a_deleted, _T("deleted"));
 
 $n->setParamInfo($params);
+$n->start = 0;
+$n->end = $total_commands_number-1;
 
 $n->addActionItemArray($a_details);
 
