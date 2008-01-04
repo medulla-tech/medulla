@@ -32,7 +32,7 @@ $submod = & $base->getSubmod('computers');
 
 /* groupes dynamiques */
 
-$page = new Page("locations", _T('Display locations'));
+$page = new Page("locations", _T('Display locations', 'glpi'));
 $page->setFile("modules/glpi/glpi/locations.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
@@ -41,6 +41,24 @@ $page = new Page("ajaxLocationSearch");
 $page->setFile("modules/glpi/glpi/ajaxLocationSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
+
+
+$page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
+$page->setFile("modules/glpi/glpi/tabs.php");
+$page->setOptions(array("visible"=>False));
+
+$tab = new Tab("tab0", _("GLPI general tab"));
+$page->addTab($tab);
+
+$tab = new Tab("tab1", _("GLPI tab 1"));
+$page->addTab($tab);
+
+$tab = new Tab("tab2", _("GLPI tab 2"));
+$page->addTab($tab);
+
+
+$submod->addPage($page);
+
 
 unset($submod);
 /* groupes dynamiques end */
