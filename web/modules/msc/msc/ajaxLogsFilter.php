@@ -46,15 +46,15 @@ $gid = $_GET['gid'];
 $areCommands = False;
 if ($hostname) {
     $count = count_unfinished_commands_on_host($hostname, $filter);
-    $cmds = get_unfinished_commands_on_host($hostname, 0, $count, $filter);
+    $cmds = get_unfinished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
 } elseif ($gid) { # FIXME: same think to do on groups
     if ($_GET['cmd_id']) {
         $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter);
-        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage - 1, $filter);
+        $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage, $filter);
     } else {
         $areCommands = True;
         $count = count_all_commands_on_group($gid, $filter);
-        $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage - 1, $filter);
+        $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage, $filter);
     }
 }
 
