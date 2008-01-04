@@ -91,10 +91,10 @@ class Request {
             $p['request'] = $this->toS();
             array_push($parameters, $p);
         }
-        $n = new ListInfos($parts, _T('Search part'));
+        $n = new ListInfos($parts, _T('Search part', 'dyngroup'));
         if ($canbedeleted) {
             $n->setParamInfo($parameters);
-            $n->addActionItem(new ActionItem(_T("Delete"), "creator", "delete", "params"));
+            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), "creator", "delete", "params"));
         }
 
         $n->disableFirstColumnActionLink();
@@ -128,9 +128,9 @@ class SubRequest {
     }
     function display() {
         if (is_array($this->val)) {
-            return sprintf(_T("%s) Search %s = (%s) in module %s"), $this->id, $this->crit, implode(', ', $this->val), $this->module);
+            return sprintf(_T("%s) Search %s = (%s) in module %s", "dyngroup"), $this->id, $this->crit, implode(', ', $this->val), $this->module);
         } else {
-            return sprintf(_T("%s) Search %s = %s in module %s"), $this->id, $this->crit, $this->val, $this->module);
+            return sprintf(_T("%s) Search %s = %s in module %s", "dyngroup"), $this->id, $this->crit, $this->val, $this->module);
         }
     }
     function parse($str) {

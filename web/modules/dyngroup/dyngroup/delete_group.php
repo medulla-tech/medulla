@@ -33,7 +33,7 @@ if (quickGet('valid')) {
 }
 
 ?>
-<h2><?= _T("Delete group") ?></h2>
+<h2><?= _T("Delete group", "dyngroup") ?></h2>
 <?php
 
 ?>
@@ -42,12 +42,12 @@ if (quickGet('valid')) {
 <p>
 
 <?  
-    printf(_T("You will delete group <b>%s</b>."),$group->getName());
+    printf(_T("You will delete group <b>%s</b>.", "dyngroup"),$group->getName());
 ?>
 
 </p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete group"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete group", "dyngroup"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
     
 

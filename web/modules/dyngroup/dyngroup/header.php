@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-print "Please chose the type of group you want to create";
+print _T("Please chose the type of group you want to create", "dyngroup");
 
 ?>
 

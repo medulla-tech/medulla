@@ -26,7 +26,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
-$p = new PageGenerator(_T("Request saver"));
+$p = new PageGenerator(_T("Request saver", "dyngroup"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -56,7 +56,7 @@ if ($name == '') {
     if ($r->countPart() > 1) {
         drawBoolEquation($equ_bool);
     }
-    print "<td><input value='"._T('Save')."' class='btnPrimary' type='submit'/></td></tr>".
+    print "<td><input value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
         "</form></table>";
 } else {
     if (!$id) { $id = get_next_dyngroup_id(); $group = new Dyngroup($id); }
@@ -66,7 +66,7 @@ if ($name == '') {
         $r = new Request();
         $r->parse($request);
         $r->displayReqListInfos();
-        print sprintf(_T("This request has been saved as %s (id=%s)"), $name, $id);
+        print sprintf(_T("This request has been saved as %s (id=%s)", "dyngroup"), $name, $id);
         $group->save($name, $r, null, $equ_bool);
     } else { // result save
         $r = new Request();
@@ -75,10 +75,10 @@ if ($name == '') {
         $res->replyToRequest();
         if ($res->isEmpty()) {
             $r->displayReqListInfos();
-            print _T("This request has no result.");
+            print _T("This request has no result.", "dyngroup");
         } else {
             $res->displayResListInfos();
-            print sprintf(_T("This result has been saved as %s (id=%s)"), $name, $id);
+            print sprintf(_T("This result has been saved as %s (id=%s)", "dyngroup"), $name, $id);
             $group->save($name, $r, $res, $equ_bool);
         }
     }
@@ -87,7 +87,7 @@ if ($name == '') {
 
 
 function drawBoolEquation($equ_bool) {
-        print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator bewteen groups")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
+        print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator bewteen groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
 }
 
 ?>

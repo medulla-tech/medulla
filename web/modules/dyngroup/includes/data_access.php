@@ -23,6 +23,7 @@
  */
 class DataAccess {
     function DataAccess($key, $value = null) {
+        // for debug purpose // $this->uid = md5(uniqid(rand(),true));
         $type = $this->_getType();
         switch ($type) { // to see what are the possible values, read : plugins/dyngroup/__init__.py
             case 1:

@@ -39,7 +39,7 @@ if (!$gid) {
 } else {
     $group = new Stagroup($gid);
     
-    $p = new PageGenerator(sprintf(_T("Display '%s' result list"), $group->getName()));
+    $p = new PageGenerator(sprintf(_T("Display '%s' result list", "dyngroup"), $group->getName()));
     $item = $items[$gid];
     $sidemenu->forceActiveItem($item->action);
     $p->setSideMenu($sidemenu);

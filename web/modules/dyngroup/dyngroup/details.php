@@ -30,7 +30,7 @@ if ($group->isDyn()) {
     $group = $group->toDyn();
 }
 
-?> <h2><?= sprintf(_T('%s\'s details'), $group->getName()) ?></h2> <?php
+?> <h2><?= sprintf(_T("%s's details", 'dyngroup'), $group->getName()) ?></h2> <?php
 
 if ($_GET['bregen'] || $_POST['bregen']) {
     $group->reload();
@@ -51,12 +51,12 @@ if ($_GET['bhide'] || $_POST['bhide']) {
 ?> <input name="bback" type="submit" class="btnPrimary" value="<?= _T("Close") ?>" onClick="new Effect.Fade('popup'); return false;"/> <?
 
 if ($group->isDyn() && $group->isGroup()) {
-    print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate").'"/>';
+    print '<input name="bregen" type="submit" class="btnSecondary" value="'._T("Regenerate", "dyngroup").'"/>';
 }
 if ($group->canShow()) {
-    print '<input name="bhide" type="submit" class="btnSecondary" value="'._T("Hide").'"/>';
+    print '<input name="bhide" type="submit" class="btnSecondary" value="'._T("Hide", "dyngroup").'"/>';
 } else {
-    print '<input name="bshow" type="submit" class="btnSecondary" value="'._T("Show").'"/>';
+    print '<input name="bshow" type="submit" class="btnSecondary" value="'._T("Show", "dyngroup").'"/>';
 }
 
 ?>

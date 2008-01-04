@@ -62,7 +62,7 @@ if (count($list) > 0) {
     $n->setParamInfo($ids);
     $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id"));
     $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "edit", "edit", "id"));
-    $n->addActionItem(new ActionItem(_T("Read log"),"msctabs","logfile","computer", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"msctabs","logfile","computer", "base", "computers"));
     $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
     $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id"));
     $n->disableFirstColumnActionLink();

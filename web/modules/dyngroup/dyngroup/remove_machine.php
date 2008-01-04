@@ -33,18 +33,18 @@ if (quickGet('valid')) {
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
 }
 
-?> <h2><?= _T("Remove a machine") ?></h2> <?php
+?> <h2><?= _T("Remove a machine", "dyngroup") ?></h2> <?php
 
 ?>
 
 <form action="<?= urlStr("base/computers/remove_machine", array('gid'=>$gid, 'name'=>$machine)) ?>" method="post">
 <p>
 <?  
-    printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>."), $machine, $group->getName());
+    printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
 ?>
 </p>
-<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove Machine"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+<input name='valid' type="submit" class="btnPrimary" value="<?= _T("Remove Machine", "dyngroup"); ?>" />
+<input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "dyngroup"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
 </form>
     
 

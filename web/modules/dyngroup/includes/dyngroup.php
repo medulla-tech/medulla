@@ -322,6 +322,7 @@ class Stagroup {
     }
     function members() {
         $res = new Result();
+        $this->reloadResult();
         $res2 = $this->result();
         $res->parse($res2->getValue());
         return $res->toA();
@@ -379,6 +380,7 @@ class Stagroup {
         $result->parse($res->getValue());
         $result->remove($name);
         $res->setValue($result->toS());
+        $this->reloadResult();
     }
 
     function prettyDisplay($canbedeleted = false, $default_params = array()) {

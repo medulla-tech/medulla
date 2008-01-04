@@ -31,7 +31,7 @@ class Autocomplete {
     function display() {
     ?>
 
-    <td style="text-align:right;"><?= _T("Add a value");?></td><td>
+    <td style="text-align:right;"><?= _T("Add a value", "dyngroup");?></td><td>
 
     <input type="text" id="autocomplete" name="value" class="textfield" size="23" /> 
     <div id="autocomplete_choices" class="autocomplete">
@@ -40,7 +40,7 @@ class Autocomplete {
             <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add"); ?>" />   
+    <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>" />   
     </td></tr>
     </table>
     
