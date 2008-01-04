@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-18 14:35+0100\n"
+"POT-Creation-Date: 2008-01-04 11:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,75 +16,87 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: glpi/tabs.php:8
+#: infoPackage.inc.php:35 glpi/infoPackage.inc.php:35
+msgid "Display locations"
+msgstr "Montrer les localizations"
+
+#: infoPackage.inc.php:46 glpi/infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
+msgstr "Inventaire (GLPI) de la machine"
+
+#: glpi/tabs.php:8 glpi/glpi/tabs.php:8
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Inventaire de %s (GLPI)"
 
-#: glpi/tabs.php:9
-msgid "Hardware"
-msgstr "Materiel"
-
-#: glpi/tabs.php:13
-msgid "Network"
-msgstr "Reseau"
-
-#: glpi/tabs.php:13
-msgid "Controller"
-msgstr "Controlleur"
-
-#: glpi/view_hardware.php:54
+#: glpi/view_hardware.php:54 glpi/glpi/view_hardware.php:54
 msgid "Properties"
 msgstr "Propriétés"
 
-#: glpi/view_hardware.php:55
+#: glpi/view_hardware.php:55 glpi/glpi/view_hardware.php:55
 msgid "Value"
 msgstr "Valeur"
 
-#: infoPackage.inc.php:35
-msgid "Display locations"
-msgstr "Montrer les localizations"
-
-#: infoPackage.inc.php:46
-msgid "Inventory (GLPI) on machine"
-msgstr "Inventaire (GLPI) de la machine"
-
-#: includes/autocomplete.php:53
+#: includes/autocomplete.php:53 glpi/includes/autocomplete.php:53
 msgid "Add"
 msgstr "Ajouter"
 
-#: glpi/view_hardware.php:60 glpi/view_hardware.php:62
+#: glpi/tabs.php:9 glpi/glpi/tabs.php:9
+msgid "Hardware"
+msgstr "Materiel"
+
+#: glpi/tabs.php:13 glpi/glpi/tabs.php:13
+msgid "Network"
+msgstr "Reseau"
+
+#: glpi/tabs.php:13 glpi/glpi/tabs.php:13
+msgid "Controller"
+msgstr "Controlleur"
+
+#: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
 msgid "name"
 msgstr "Nom"
 
-#: glpi/view_hardware.php:61
+#: glpi/glpi/view_hardware.php:61
 msgid "comments"
 msgstr "Commentaires"
 
-#: glpi/view_hardware.php:63
+#: glpi/glpi/view_hardware.php:63
 msgid "serial"
 msgstr "Numero de série"
 
-#: glpi/view_hardware.php:64
+#: glpi/glpi/view_hardware.php:64
 msgid "os"
 msgstr "Système d'exploitation"
 
-#: glpi/view_hardware.php:65
+#: glpi/glpi/view_hardware.php:65
 msgid "os_version"
 msgstr "Version de l'OS"
 
-#: glpi/view_hardware.php:66
+#: glpi/glpi/view_hardware.php:66
 msgid "os_sp"
 msgstr "Sp de l'OS"
 
-#: glpi/view_hardware.php:67
+#: glpi/glpi/view_hardware.php:67
 msgid "os_license_number"
 msgstr "Numéro de licence de l'OS"
 
-#: glpi/view_hardware.php:68
+#: glpi/glpi/view_hardware.php:68
 msgid "os_license_id"
 msgstr "Id de licence de l'OS"
 
-#: glpi/view_hardware.php:69
+#: glpi/glpi/view_hardware.php:69
 msgid "location"
 msgstr "Localization"
+
+#: glpi/infoPackage.inc.php:50
+msgid "GLPI general tab"
+msgstr "GLPI tab général"
+
+#: glpi/infoPackage.inc.php:53
+msgid "GLPI tab 1"
+msgstr "GLPI tab reseau"
+
+#: glpi/infoPackage.inc.php:56
+msgid "GLPI tab 2"
+msgstr "GLPI tab controlleur"
