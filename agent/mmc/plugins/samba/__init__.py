@@ -762,6 +762,22 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         except KeyError:
             pass
         return ret
+
+    def _getMakeSambaGroupCommand(self, group):
+        return "net groupmap add unixgroup='%s'" % group
+
+    def makeSambaGroupBlocking(self, group):
+        """
+        Transform a POSIX group as a SAMBA group.
+        It adds in the LDAP the necessary attributes to the group.
+        This code blocks the twisted reactor until the command terminates.
+
+        @param group: the group name
+        @type group: str
+
+        @return: the SAMBA net process exit code
+        """
+        return mmctools.shLaunch(self._getMakeSambaGroupCommand(group)).exitCode
     
     def makeSambaGroup(self, group):
         """
@@ -773,7 +789,7 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
 
         @return: a deferred object resulting to the SAMBA net process exit code
         """
-        d = mmctools.shLaunchDeferred("net groupmap add unixgroup='%s'" % group)
+        d = mmctools.shLaunchDeferred(self._getMakeSambaGroupCommand(group))
         d.addCallback(lambda p: p.exitCode)
         return d
 
