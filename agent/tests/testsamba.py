@@ -131,7 +131,7 @@ class testSambaLdap(unittest.TestCase):
         self.assertEqual(self.s.isSmbUser("usertest"), False)
        
     def test_groups(self):
-        self.s.makeSambaGroup("allusers")
+        self.s.makeSambaGroupBlocking("allusers")
         self.assertEqual(self.s.isSambaGroup("allusers"), True)
 
     def test_machines(self):
