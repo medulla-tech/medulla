@@ -46,7 +46,12 @@ class Result {
         } else {
             $ret = $this->list;
         }
-        return array_slice($ret, $from, ($to-$from));
+        if ($to == -1) {
+            $ret = array_slice($ret, $from);
+        } else {
+            $ret = array_slice($ret, $from, ($to-$from));
+        }
+        return $ret;
     }
     function toS() {
         return implode('||', $this->list);
