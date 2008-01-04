@@ -29,8 +29,8 @@ require_once("modules/msc/includes/command_history.php");
 
 
 $hostname = $_GET['name'];
-$total_commands_number = count_all_commands_on_host($hostname);
-$cmds = get_all_commands_on_host($hostname, 0, $total_commands_number);
+$total_commands_number = count_all_commands_on_host($hostname, '');
+$cmds = get_all_commands_on_host($hostname, 0, $total_commands_number, '');
 $a_cmd = array();
 $a_uploaded = array();
 $a_executed = array();
@@ -41,7 +41,8 @@ $params = array();
 $actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers");
 $actionempty = new EmptyActionItem();
 foreach ($cmds as $cmd) {
-    $coh_id = $cmd['id_command_on_host'];
+//    $coh_id = $cmd['id_command_on_host'];
+    $coh_id = $cmd[1];
     if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
         $coh = get_commands_on_host($coh_id);
         $a_cmd[] = $cmd['title'];
