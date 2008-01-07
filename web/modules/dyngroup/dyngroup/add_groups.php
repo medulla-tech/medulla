@@ -38,7 +38,8 @@ if ($_POST['id'] || $_GET['id']) {
         $name = $group->getName();
     }
 } else {
-    $group = new Stagroup(get_next_dyngroup_id());
+    $id = get_next_dyngroup_id();
+    $group = new Stagroup($id); //get_next_dyngroup_id());
 }
 
 $members = unserialize(base64_decode($_POST["lmembers"]));
@@ -102,7 +103,7 @@ $diff = array_diff($machines, $members);
 <table style="border: none;" cellspacing="0">
 <tr><td style="border: none;">
   <div class="list">
-        <h3><?= _T("All machines");?></h3>
+        <h3><?= _T("All machines", "dyngroup");?></h3>
     <select multiple size="15" class="list" name="machines[]">
 <?php
 foreach ($diff as $idx => $machine) {
