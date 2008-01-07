@@ -33,6 +33,24 @@ require_once("../../../modules/msc/includes/functions.php");
 require_once('../../../modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("../../../modules/msc/includes/command_history.php");
 
+$statusTable = array("upload_in_progress" => _T("Upload in progress", "msc"),
+                     "upload_done" => _T("Upload done", "msc"),
+                     "upload_failed" => _T("Upload failed", "msc"),
+                     "execution_in_progress" => _T("Execution in progress", "msc"),
+                     "execution_done" => _T("Execution done", "msc"),
+                     "execution_failed" => _T("Execution failed", "msc"),
+                     "delete_in_progress" => _T("Delete in progress", "msc"),
+                     "delete_done" => _T("Delete done", "msc"),
+                     "delete_failed" => _T("Delete failed", "msc"),
+                     "inventory_in_progress" => _T("Inventory in progress", "msc"),
+                     "inventory_failed" => _T("Inventory failed", "msc"),
+                     "inventory_done" => _T("Inventory done", "msc"),
+                     "not_reachable" => _T("Not reachable", "msc"),
+                     "done" => _T("Done", "msc"),
+                     "pause" => _T("Pause", "msc"),
+                     "stop" => _T("Stop", "msc"),
+                     "scheduled" => _T("Scheduled", "msc")
+                     );
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -115,7 +133,11 @@ if ($areCommands) {
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';//.$coh['deleted'];
-            $a_current[] = $coh['current_state'];
+            if (isset($statusTable[$coh['current_state']])) {
+                $a_current[] = $statusTable[$coh['current_state']];
+            } else {
+                $a_current[] = $coh['current_state'];
+            }
             $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'name'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
 
