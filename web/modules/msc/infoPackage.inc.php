@@ -26,7 +26,7 @@
 /**
  * module declaration
  */
-
+/* hide msc module for the moment
 $mod = new Module("msc");
 $mod->setVersion("2.0.0");
 $mod->setRevision("$Rev$");
@@ -54,7 +54,7 @@ $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
+*/
 
 /* put in base/computer */
 
@@ -69,17 +69,17 @@ $page->setOptions(array("visible"=>False));
 $page->setFile("modules/msc/msc/mscdetails.php");
 $submod->addPage($page);
 
-$page = new Page("msctabs", _T("Secure Control on machine"));
+$page = new Page("msctabs", _T("Secure control on machine", "msc"));
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tablaunch", _("Msc launch tab"));
+$tab = new Tab("tablaunch", _T("MSC launch tab", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tablogs", _("Msc logs tab"));
+$tab = new Tab("tablogs", _T("MSC logs tab", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tabhistory", _("Msc history tab"));
+$tab = new Tab("tabhistory", _T("MSC history tab", "msc"));
 $page->addTab($tab);
 
 $submod->addPage($page);
