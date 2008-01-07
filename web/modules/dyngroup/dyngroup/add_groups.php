@@ -102,7 +102,7 @@ $diff = array_diff($machines, $members);
 <table style="border: none;" cellspacing="0">
 <tr><td style="border: none;">
   <div class="list">
-        <h3><?= _("All machines");?></h3>
+        <h3><?= _T("All machines");?></h3>
     <select multiple size="15" class="list" name="machines[]">
 <?php
 foreach ($diff as $idx => $machine) {
@@ -126,7 +126,7 @@ foreach ($diff as $idx => $machine) {
   </td><td style="border: none;">
 
   <div class="list" style="padding-left: 10px;">
-      <h3><?= _("Group members"); ?></h3>
+      <h3><?= _T("Group members"); ?></h3>
     <select multiple size="15" class="list" name="members[]">
 <?php
 foreach ($members as $idx => $member) {
