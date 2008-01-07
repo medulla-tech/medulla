@@ -27,7 +27,7 @@ class RenderedMSCHost extends HtmlElement {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
-        $this->ping = ($machine->ping ? _("success") : _("failed"));
+        $this->ping = ($machine->ping ? _T("success", "msc") : _T("failed", "msc"));
     }
 
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
@@ -82,8 +82,8 @@ class RenderedMSCHost extends HtmlElement {
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._('Running on').' : '.$this->platform.'</td>';
-        $buffer .= '<td>' . _('Ping status').' : ' . $this->ping . '</td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : '.$this->platform.'</td>';
+        $buffer .= '<td>' . _T('Ping status', "msc").' : ' . $this->ping . '</td>';
         $buffer .= '</tr>';
         $buffer .= '</table></div>';
         print $buffer;

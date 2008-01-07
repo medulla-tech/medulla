@@ -18,7 +18,7 @@ if ($_GET['name']) {
     $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid'=>$_GET['gid']));
     $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid'=>$_GET['gid']));
 } else {
-    print _T("Not enougth informations", "msc");
+    print _T("Not enough informations", "msc");
 }
 $p->display();
 
