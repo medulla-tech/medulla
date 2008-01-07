@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-07 12:19+0100\n"
-"PO-Revision-Date: 2008-01-07 12:21+0100\n"
+"POT-Creation-Date: 2008-01-07 14:48+0100\n"
+"PO-Revision-Date: 2008-01-07 14:58+0100\n"
 "Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -61,8 +61,8 @@ msgid "Advanced"
 msgstr "Avancé"
 
 #: msc/msc/history.php:47 msc/msc/logs.php:47
-#: msc/msc/ajaxPackageFilter.php:109 msc/msc/packages.php:22
-#: msc/msc/ajaxLogsFilter.php:83
+#: msc/msc/ajaxPackageFilter.php:115 msc/msc/packages.php:22
+#: msc/msc/ajaxLogsFilter.php:101
 msgid "Details"
 msgstr "Détails"
 
@@ -81,16 +81,16 @@ msgstr "Les packages suivants peuvent être installés sur l'ordinateur \"%s\""
 msgid "These packages can by installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
-#: msc/msc/ajaxPackageFilter.php:97 msc/msc/packages.php:18
+#: msc/msc/ajaxPackageFilter.php:103 msc/msc/packages.php:18
 msgid "Package"
 msgstr "Package"
 
-#: msc/msc/ajaxPackageFilter.php:98 msc/msc/package_detail.php:33
+#: msc/msc/ajaxPackageFilter.php:104 msc/msc/package_detail.php:33
 #: msc/msc/packages.php:19
 msgid "Version"
 msgstr "Version"
 
-#: msc/msc/ajaxPackageFilter.php:108 msc/msc/packages.php:21
+#: msc/msc/ajaxPackageFilter.php:114 msc/msc/packages.php:21
 msgid "Launch"
 msgstr "Démarrer"
 
@@ -156,8 +156,8 @@ msgstr "Actions rapides sur %s"
 msgid "Label"
 msgstr "Libellé"
 
-#: msc/msc/package_detail.php:33 msc/msc/ajaxLogsFilter.php:103
-#: msc/msc/ajaxLogsFilter.php:133
+#: msc/msc/package_detail.php:33 msc/msc/ajaxLogsFilter.php:121
+#: msc/msc/ajaxLogsFilter.php:155
 msgid "Command"
 msgstr "Commande"
 
@@ -175,49 +175,109 @@ msgstr "Valeur"
 msgid "Packages"
 msgstr "Packages"
 
-#: msc/msc/ajaxLogsFilter.php:80
-msgid "Start"
-msgstr "Démarrer"
+#: msc/msc/ajaxLogsFilter.php:36
+msgid "Upload in progress"
+msgstr "Envoi en cours"
 
-#: msc/msc/ajaxLogsFilter.php:81
+#: msc/msc/ajaxLogsFilter.php:37
+msgid "Upload done"
+msgstr "Envoi terminé"
+
+#: msc/msc/ajaxLogsFilter.php:38
+msgid "Upload failed"
+msgstr "Échec de l'envoi"
+
+#: msc/msc/ajaxLogsFilter.php:39
+msgid "Execution in progress"
+msgstr "Exécution en cours"
+
+#: msc/msc/ajaxLogsFilter.php:40
+msgid "Execution done"
+msgstr "Exécution terminée"
+
+#: msc/msc/ajaxLogsFilter.php:41
+msgid "Execution failed"
+msgstr "Échec de l'exécution"
+
+#: msc/msc/ajaxLogsFilter.php:42
+msgid "Delete in progress"
+msgstr "Suppression en cours"
+
+#: msc/msc/ajaxLogsFilter.php:43
+msgid "Delete done"
+msgstr "Supression terminée"
+
+#: msc/msc/ajaxLogsFilter.php:44
+msgid "Delete failed"
+msgstr "Échec de la suppression"
+
+#: msc/msc/ajaxLogsFilter.php:45
+msgid "Inventory in progress"
+msgstr "Inventaire en cours"
+
+#: msc/msc/ajaxLogsFilter.php:46
+msgid "Inventory failed"
+msgstr "Échec de l'inventaire"
+
+#: msc/msc/ajaxLogsFilter.php:47
+msgid "Inventory done"
+msgstr "Inventaire terminé"
+
+#: msc/msc/ajaxLogsFilter.php:48
+msgid "Not reachable"
+msgstr "Non atteignable"
+
+#: msc/msc/ajaxLogsFilter.php:49
+msgid "Done"
+msgstr "Terminé"
+
+#: msc/msc/ajaxLogsFilter.php:50 msc/msc/ajaxLogsFilter.php:99
 msgid "Pause"
-msgstr "Mettre en pause"
+msgstr "En pause"
 
-#: msc/msc/ajaxLogsFilter.php:82
+#: msc/msc/ajaxLogsFilter.php:51 msc/msc/ajaxLogsFilter.php:100
 msgid "Stop"
-msgstr "Arrêter"
+msgstr "Arrêté"
 
-#: msc/msc/ajaxLogsFilter.php:104
+#: msc/msc/ajaxLogsFilter.php:52
+msgid "Scheduled"
+msgstr "Programmé"
+
+#: msc/msc/ajaxLogsFilter.php:98
+msgid "Start"
+msgstr "Démarré"
+
+#: msc/msc/ajaxLogsFilter.php:122
 msgid "start_date"
-msgstr "date de démarrage"
+msgstr "Date de démarrage"
 
-#: msc/msc/ajaxLogsFilter.php:114
+#: msc/msc/ajaxLogsFilter.php:132
 #, php-format
 msgid "%s on %s"
 msgstr "%s sur %s"
 
-#: msc/msc/ajaxLogsFilter.php:134 msc/includes/command_history.php:31
+#: msc/msc/ajaxLogsFilter.php:156 msc/includes/command_history.php:31
 msgid "current_state"
-msgstr "état courant"
+msgstr "État"
 
-#: msc/msc/ajaxLogsFilter.php:135 msc/includes/command_history.php:32
+#: msc/msc/ajaxLogsFilter.php:157 msc/includes/command_history.php:32
 msgid "uploaded"
-msgstr "téléchargé"
+msgstr "Envoi"
 
-#: msc/msc/ajaxLogsFilter.php:136 msc/includes/command_history.php:33
+#: msc/msc/ajaxLogsFilter.php:158 msc/includes/command_history.php:33
 msgid "executed"
-msgstr "exécuté"
+msgstr "Exécution"
 
-#: msc/msc/ajaxLogsFilter.php:137 msc/includes/command_history.php:34
+#: msc/msc/ajaxLogsFilter.php:159 msc/includes/command_history.php:34
 msgid "deleted"
-msgstr "effacé"
+msgstr "Suppression"
 
 #: msc/msc/msctabsplay.php:46
 #, php-format
 msgid "Start action %s on host %s"
 msgstr "Démarrer l'action %s sur l'ordinateur %s"
 
-#: msc/msc/localSidebar.php:5 msc/infoPackage.inc.php:43
+#: msc/msc/localSidebar.php:5
 msgid "Repository"
 msgstr "Dépôt"
 
@@ -326,38 +386,22 @@ msgstr "Prochaine date de lancement de la commande"
 msgid "Transferred files list"
 msgstr "Liste des fichiers transférés"
 
-#: msc/infoPackage.inc.php:33
-msgid "Secure Control"
-msgstr "Contrôle sécurisé"
-
-#: msc/infoPackage.inc.php:39
-msgid "MSC"
-msgstr "MSC"
-
-#: msc/infoPackage.inc.php:46
-msgid "Download"
-msgstr "Téléchargement"
-
-#: msc/infoPackage.inc.php:49
-msgid "Edit"
-msgstr "Édition"
-
 #: msc/infoPackage.inc.php:67
 msgid "General"
 msgstr "Général"
 
 #: msc/infoPackage.inc.php:72
-msgid "Secure Control on machine"
+msgid "Secure control on machine"
 msgstr "Contrôle sécurisé de l'ordinateur"
 
 #: msc/infoPackage.inc.php:76
-msgid "Msc launch tab"
+msgid "MSC launch tab"
 msgstr "MSC onglet de lancement"
 
 #: msc/infoPackage.inc.php:79
-msgid "Msc logs tab"
+msgid "MSC logs tab"
 msgstr "MSC onglet des journaux"
 
 #: msc/infoPackage.inc.php:82
-msgid "Msc history tab"
+msgid "MSC history tab"
 msgstr "MSC onglet de l'historique"
