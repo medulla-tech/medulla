@@ -21,96 +21,132 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
+""" Pulse2 launcher, remote procedures definition
+    Pulse2 Launcher is basicaly a simple XMLRPC service which run
+    commands on remote hosts using (preferaly) encrypted and efficient
+    protocols, such as SSH, SCP, RSYNC ...
+"""
+
 import os
-import sys
-import twisted.internet.reactor
 import mmc.support.mmctools
 
 def set_default_client_options(client):
     """
         client i a simple dict, which should contain required connexion infos, for now:
-            protocol: which one to use for connexion, default to 'ssh' which is the only one supported for now
-            host: where to connect, default to 127.0.0.1, fqdn and ipv4/v6 authorized
+            protocol: which one to use for connexion, mandatory
+            host: where to connect, mandatory
             port: default depends on chosen protocol
             user: when auth is needed, default is root
             passwd: when auth is needed, default is "" (empty string)
             cert: when auth is needed, default depends on chosen protocol
             options: array of strings to pass to the connexion initiator
+            rootpath: used to know where to perform operations ('/' under Unix,
+            '/cygdrive/c' uner MS/Win, etc ...
     """
 
     if client['protocol'] == 'ssh':
-        if not 'port' in client: client['port'] = 22
-        if not 'rootpath' in client: client['rootpath'] = '/tmp'
-        if not 'user' in client: client['user'] = 'root'
-        if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
-        if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
-        if not 'options' in client: client['options'] = [
-            '-T',
-            '-R30080:127.0.0.1:80',
-            '-o StrictHostKeyChecking=no',
-            '-o Batchmode=yes',
-            '-o PasswordAuthentication=no'
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'rootpath' in client:
+            client['rootpath'] = '/tmp'
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'passwd' in client:
+            client['passwd'] = '' # unset as we should use RSA/DSA keys
+        if not 'cert' in client:
+            client['cert'] = '/root/.ssh/id_dsa'
+        if not 'options' in client:
+            client['options'] = [
+                '-T',
+                '-R30080:127.0.0.1:80',
+                '-o StrictHostKeyChecking=no',
+                '-o Batchmode=yes',
+                '-o PasswordAuthentication=no'
             ]
 
     if client['protocol'] == 'scp':
-        if not 'port' in client: client['port'] = 22
-        if not 'rootpath' in client: client['rootpath'] = '/tmp'
-        if not 'user' in client: client['user'] = 'root'
-        if not 'passwd' in client: client['passwd'] = '' # keeped unset as we should use RSA/DSA keys
-        if not 'cert' in client: client['cert'] = '/root/.ssh/id_dsa'
-        if not 'options' in client: client['options'] = [
-            '-r',
-            '-p',
-            '-q',
-            '-o StrictHostKeyChecking=no',
-            '-o Batchmode=yes',
-            '-o PasswordAuthentication=no'
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'rootpath' in client:
+            client['rootpath'] = '/'
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'passwd' in client:
+            client['passwd'] = '' # unset as we should use RSA/DSA keys
+        if not 'cert' in client:
+            client['cert'] = '/root/.ssh/id_dsa'
+        if not 'options' in client:
+            client['options'] = [
+                '-r',
+                '-p',
+                '-q',
+                '-o StrictHostKeyChecking=no',
+                '-o Batchmode=yes',
+                '-o PasswordAuthentication=no'
             ]
     return client
 
-def sync_remote_push(id, root_path, files_list, target_path, client, wrapper):
-    """
-        FIXME: check that root_path is authorized
-        FIXME: check that target is authorized
-    """
+def sync_remote_push(command_id, root_path, files_list, target_path, client, wrapper):
+    """ Handle remote copy on target, sync / push mode.
 
+    This function will simply send files_list on client:/target_path
+    from localhost:/root_path
+
+    TODO: check that root_path is authorized (using conf file)
+    TODO: check that target is authorized (using conf file)
+    TODO: it is useless to give wrapper as func arg, should be taken from
+    config file
+    TODO: handle URI for root_path / target_path (file://...)
+    TODO: args order should be command_id, client, root (aka "source"),
+    target, files_list[]
+
+    Return:
+        * deffered upon success
+        * None upon failure (mostly unsupported protocol given)
+    """
     client = set_default_client_options(client)
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (root_path, a), files_list)
         real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
-        d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(_remote_sync_cb)
-        return d
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
     return None
 
-def sync_remote_delete(id, files_list, target_path, client, wrapper):
-    """
-        FIXME: check that root_path is authorized
-        FIXME: check that target is authorized
-    """
+def sync_remote_delete(command_id, files_list, target_path, client, wrapper):
+    """ Handle remote deletion on target, sync mode
 
+    This function will simply delete files_list from client:/target_path
+
+    TODO: same as sync_remote_push
+
+    Return: same as sync_remote_push
+    """
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
         real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], ' '.join(real_files_list))
-        d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(_remote_sync_cb)
-        return d
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
     return None
 
-def sync_remote_exec(id, command, client, wrapper):
-    """
-        command is exactly the command line we want to perform on the other side
-        client is the method used to connect to the client (see set_default_client_options)
-    """
+def sync_remote_exec(command_id, command, client, wrapper):
+    """ Handle remote execution on target, sync mode
 
+    This function will simply run the command on the other side
+    client is the method used to connect to the client
+
+    TODO: same as sync_remote_push
+
+    Return: same as sync_remote_push
+    """
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "cd %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], client['rootpath'], command)
-        d = mmc.support.mmctools.shLaunchDeferred(real_command)
-        d.addCallback(_remote_sync_cb)
-        return d
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
     return None
 
 def async_remote_exec(id, command, client, wrapper):
@@ -171,7 +207,9 @@ def clean_background_process(id):
     return True;
 
 def _remote_sync_cb(shprocess):
-    # FIXME: have to find a bettre way to handle these stupid encodings ...
+    """
+    """
+    # TODO: have to find a bettre way to handle these stupid encodings ...
     exitcode = shprocess.exitCode
 
     stdout = unicode(shprocess.out, 'utf-8', 'strict')
@@ -194,4 +232,4 @@ def _remote_async_end_cb(self, reason):
         self.status = "job successfully finished"
     else:
         self.status = "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
-    self.progress = -1;
+    self.progress = -1

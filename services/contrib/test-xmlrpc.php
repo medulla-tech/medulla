@@ -23,14 +23,10 @@ $method = array_shift($params);
 
 $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-$method="sync_remote_delete";
+$method="sync_remote_exec";
 $params=array(
     1,
-    array(
-        '/Exemples/Firefox/install.bat',
-        '/Exemples/Firefox/data'
-        ),
-    '/tmp',
+    "cd /tmp; more.com OOo2.log.txt",
     array(
         'host'=> 'pulse2-win2k',
         'protocol'=> 'ssh'
