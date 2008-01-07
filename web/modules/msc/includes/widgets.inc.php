@@ -22,6 +22,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/* mark this string for translation */
+_T("Other/N.A.", "msc");
+
 class RenderedMSCHost extends HtmlElement {
     function RenderedMSCHost($machine) {
         $this->hostname = $machine->hostname;
