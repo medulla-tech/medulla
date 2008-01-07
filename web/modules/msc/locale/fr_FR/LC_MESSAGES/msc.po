@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-07 12:01+0100\n"
-"PO-Revision-Date: 2008-01-07 12:06+0100\n"
+"POT-Creation-Date: 2008-01-07 12:19+0100\n"
+"PO-Revision-Date: 2008-01-07 12:21+0100\n"
 "Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "Arrêt de l'action %s sur %s"
 #: msc/msc/ajaxPackageFilter.php:54
 #, php-format
 msgid "These packages can by installed on machine \"%s\""
-msgstr "Les packages suivants peuvent être installés sur la machine \"%s\""
+msgstr "Les packages suivants peuvent être installés sur l'ordinateur \"%s\""
 
 #: msc/msc/ajaxPackageFilter.php:56
 #, php-format
@@ -215,7 +215,7 @@ msgstr "effacé"
 #: msc/msc/msctabsplay.php:46
 #, php-format
 msgid "Start action %s on host %s"
-msgstr "Démarrer l'action %s sur la machine %s"
+msgstr "Démarrer l'action %s sur l'ordinateur %s"
 
 #: msc/msc/localSidebar.php:5 msc/infoPackage.inc.php:43
 msgid "Repository"
@@ -248,7 +248,7 @@ msgstr "Status du ping"
 #: msc/includes/widgets.inc.php:105
 #, php-format
 msgid "%s host is not defined in the MSC module"
-msgstr "La machine \"%s\" n'est pas définie dans le module MSC"
+msgstr "L'ordinateur \"%s\" n'est pas définie dans le module MSC"
 
 #: msc/includes/widgets.inc.php:147
 msgid "Execute action..."
@@ -256,7 +256,7 @@ msgstr "Lancer une action..."
 
 #: msc/includes/command_history.php:30
 msgid "Host"
-msgstr "Machine"
+msgstr "Ordinateur"
 
 #: msc/includes/command_history.php:70 msc/includes/command_history.php:125
 msgid "Command name"
@@ -348,7 +348,7 @@ msgstr "Général"
 
 #: msc/infoPackage.inc.php:72
 msgid "Secure Control on machine"
-msgstr "Contrôle sécurisé de la machine"
+msgstr "Contrôle sécurisé de l'ordinateur"
 
 #: msc/infoPackage.inc.php:76
 msgid "Msc launch tab"
