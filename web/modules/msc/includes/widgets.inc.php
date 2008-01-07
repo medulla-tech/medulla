@@ -85,7 +85,7 @@ class RenderedMSCHost extends HtmlElement {
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._T('Running on', "msc").' : '.$this->platform.'</td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : ' . _T($this->platform, "msc") .'</td>';
         $buffer .= '<td>' . _T('Ping status', "msc").' : ' . $this->ping . '</td>';
         $buffer .= '</tr>';
         $buffer .= '</table></div>';
