@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-07 14:48+0100\n"
-"PO-Revision-Date: 2008-01-07 14:58+0100\n"
+"PO-Revision-Date: 2008-01-07 15:12+0100\n"
 "Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -303,7 +303,7 @@ msgstr "Système d'exploitation"
 
 #: msc/includes/widgets.inc.php:89
 msgid "Ping status"
-msgstr "Status du ping"
+msgstr "Statut du ping"
 
 #: msc/includes/widgets.inc.php:105
 #, php-format
