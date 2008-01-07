@@ -94,12 +94,13 @@ foreach (advGetAllPackages($filter, $_GET["start"], $_GET["end"]) as $c_package)
 
 $count = advCountAllPackages($filter);
 
-$n = new OptimizedListInfos($a_packages, _T("Package"));
-$n->addExtraInfo($a_pversions, _T("Version"));
+$n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
+$n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->setCssClasses($a_css);
 $n->setParamInfo($params);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
+$n->setTableHeaderPadding(1);
 $n->start = 0;
 $n->end = $count;
 

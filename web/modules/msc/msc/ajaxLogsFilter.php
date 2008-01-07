@@ -100,8 +100,8 @@ if ($areCommands) {
         }
         $a_current[] = to_date($cmd['date_created']);
     }
-    $n = new OptimizedListInfos($a_cmd, _T("Command"));
-    $n->addExtraInfo($a_current, _T('start_date'));
+    $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
+    $n->addExtraInfo($a_current, _T("start_date", "msc"));
 
     $n->addActionItemArray($a_details);
 } else {
@@ -130,11 +130,11 @@ if ($areCommands) {
             }
         }
     }
-    $n = new OptimizedListInfos($a_cmd, _T("Command"));
-    $n->addExtraInfo($a_current, _T("current_state"));
-    $n->addExtraInfo($a_uploaded, _T("uploaded"));
-    $n->addExtraInfo($a_executed, _T("executed"));
-    $n->addExtraInfo($a_deleted, _T("deleted"));
+    $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
+    $n->addExtraInfo($a_current, _T("current_state", "msc"));
+    $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
+    $n->addExtraInfo($a_executed, _T("executed", "msc"));
+    $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
 
     $n->addActionItemArray($a_details);
     $n->addActionItemArray($a_start);
@@ -143,7 +143,7 @@ if ($areCommands) {
 }
 
 $n->setParamInfo($params);
-
+$n->setTableHeaderPadding(1);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
