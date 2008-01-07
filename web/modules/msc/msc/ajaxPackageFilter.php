@@ -99,7 +99,7 @@ $n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->setCssClasses($a_css);
 $n->setParamInfo($params);
 $n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
+$n->setNavBar(new AjaxNavBar($count, $filter['filter']));
 $n->setTableHeaderPadding(1);
 $n->start = 0;
 $n->end = $count;
