@@ -62,8 +62,14 @@ $a_pversions = array();
 $a_css = array();
 $params = array();
 
-if (!$_GET["start"]) { $_GET["start"] = 0; }
-if (!$_GET["end"]) { $_GET["end"] = 10; }
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+} else {
+    $start = 0;
+}
 
 $filter['filter'] = $_GET["filter"];
 if ($machine) {
@@ -75,7 +81,7 @@ if ($machine) {
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
-foreach (advGetAllPackages($filter, $_GET["start"], $_GET["end"]) as $c_package) {
+foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package) {
     $package = to_packageApi($c_package[0]);
     $type = $c_package[1];
     $a_packages[] = $package->label;
