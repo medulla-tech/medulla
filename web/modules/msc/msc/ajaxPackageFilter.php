@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: general.php 26 2007-10-17 14:48:41Z nrueff $
+ * $Id: ajaxPackageFilter.php,v 1.1 2008/01/08 14:02:59 root Exp $
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -51,9 +51,9 @@ if ($_GET['name']) {
 
 require_once("../../../modules/msc/includes/package_api.php");
 if ($machine) {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on machine "%s"', 'msc'), $machine->hostname));
+    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on machine "%s"', 'msc'), $machine->hostname));
 } else {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can by installed on group "%s"', 'msc'), $group->getName()));
+    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
 }
 $label->display();
 
