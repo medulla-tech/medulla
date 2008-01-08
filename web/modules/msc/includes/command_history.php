@@ -2,33 +2,35 @@
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: cmd_state.php 24 2007-10-17 08:23:42Z nrueff $
+ * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
+ * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 class CommandOnHost {
     function CommandOnHost($coh) {
+        $statusTable = getStatusTable();
         $this->db_coh = get_commands_on_host($coh);
         #$this->db_cmd = command_detail($this->db_coh['id_command']);
         $this->values = array(
             array(_T('Host', 'msc'), $this->db_coh['host'], 1),
-            array(_T('current_state', 'msc'), $this->db_coh['current_state'], 1),
+            array(_T('current_state', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
             array(_T('uploaded', 'msc'), _plusIcon($this->db_coh['uploaded']), 1),
             array(_T('executed', 'msc'), _plusIcon($this->db_coh['executed']), 1),
             array(_T('deleted', 'msc'), _plusIcon($this->db_coh['deleted']), 1)
