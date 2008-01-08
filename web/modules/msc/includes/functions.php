@@ -22,7 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$statusTable = array("upload_in_progress" => _T("Upload in progress", "msc"),
+function getStatusTable() {
+    return array("upload_in_progress" => _T("Upload in progress", "msc"),
                      "upload_done" => _T("Upload done", "msc"),
                      "upload_failed" => _T("Upload failed", "msc"),
                      "execution_in_progress" => _T("Execution in progress", "msc"),
@@ -40,6 +41,9 @@ $statusTable = array("upload_in_progress" => _T("Upload in progress", "msc"),
                      "stop" => _T("Stop", "msc"),
                      "scheduled" => _T("Scheduled", "msc")
                      );
+}
+
+$statusTable = getStatusTable();
 
 function return_icon($state)
 {
