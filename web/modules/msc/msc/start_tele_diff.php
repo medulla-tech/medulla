@@ -82,7 +82,7 @@ if (isset($_POST["bconfirm"])) {
         $cible = $group->getName();
     }
     $name = getPackageLabel($_GET["pid"]);
-    $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\""), $name, $cible));
+    $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\"", "msc"), $name, $cible));
 
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
@@ -104,13 +104,13 @@ if (isset($_POST["bconfirm"])) {
     $f->add($hidden, array("value" => 3, "hide" => True));
 
     #TODO : find a way to display it as an html table...
-    $check = new TrFormElement(_T('Wake on lan'), new CheckboxTpl("wake_on_lan"));
+    $check = new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan"));
     $f->add($check, array("value" => ''));
-    $check = new TrFormElement(_T('Start inventory'), new CheckboxTpl("start_inventory"));
+    $check = new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory"));
     $f->add($check, array("value" => ''));
 
     $f->addValidateButton("bconfirm");
-    $f->addButton("badvanced", _("Advanced"));
+    $f->addButton("badvanced", _T("Advanced", 'msc'));
     $f->addCancelButton("bback");
     $f->display();
 }
