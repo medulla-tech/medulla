@@ -2,23 +2,24 @@
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com/
  *
- * $Id: cmd_state.php 24 2007-10-17 08:23:42Z nrueff $
+ * $Id$
  *
- * This file is part of LMC.
+ * This file is part of Mandriva Management Console (MMC).
  *
- * LMC is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * LMC is distributed in the hope that it will be useful,
+ * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with LMC; if not, write to the Free Software
+ * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
@@ -32,25 +33,6 @@ require_once("../../../modules/msc/includes/widgets.inc.php");
 require_once("../../../modules/msc/includes/functions.php");
 require_once('../../../modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("../../../modules/msc/includes/command_history.php");
-
-$statusTable = array("upload_in_progress" => _T("Upload in progress", "msc"),
-                     "upload_done" => _T("Upload done", "msc"),
-                     "upload_failed" => _T("Upload failed", "msc"),
-                     "execution_in_progress" => _T("Execution in progress", "msc"),
-                     "execution_done" => _T("Execution done", "msc"),
-                     "execution_failed" => _T("Execution failed", "msc"),
-                     "delete_in_progress" => _T("Delete in progress", "msc"),
-                     "delete_done" => _T("Delete done", "msc"),
-                     "delete_failed" => _T("Delete failed", "msc"),
-                     "inventory_in_progress" => _T("Inventory in progress", "msc"),
-                     "inventory_failed" => _T("Inventory failed", "msc"),
-                     "inventory_done" => _T("Inventory done", "msc"),
-                     "not_reachable" => _T("Not reachable", "msc"),
-                     "done" => _T("Done", "msc"),
-                     "pause" => _T("Pause", "msc"),
-                     "stop" => _T("Stop", "msc"),
-                     "scheduled" => _T("Scheduled", "msc")
-                     );
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
