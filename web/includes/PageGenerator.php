@@ -791,6 +791,15 @@ class AjaxFilter extends HtmlElement {
             /* Add extra & needed to build the URL */
             $this->url = $url . "&";
         $this->divid = $divid;
+        $this->refresh= 0;
+    }
+
+    /**
+     * Allow the list to refresh
+     * @param $refresh: time in ms
+     */
+    function setRefresh($refresh) {
+        $this->refresh = $refresh;
     }
 
     function display() {
@@ -809,34 +818,58 @@ class AjaxFilter extends HtmlElement {
 
     <script type="text/javascript">
         document.getElementById('param').focus();
-
+        var refreshtimer = null;
+        var refreshparamtimer = null;
+        var refreshdelay = 5000;
+ 
+        /**
+         * Clear the timers set vith setTimeout
+         */
+        function clearTimers() {
+            if (refreshtimer != null) {
+                clearTimeout(refreshtimer);
+            }
+            if (refreshparamtimer != null) {
+                clearTimeout(refreshparamtimer);
+            }            
+        }
 
         /**
-        * update div with user
-        */
+         * Update div
+         */
         function updateSearch() {
-            launch--;
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
 
-                if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
-                }
-            }
+<?
+if ($this->refresh) {
+?>
+            refreshtimer = setTimeout("updateSearch()", refreshdelay)
+<?
+}
+?>
+        }
 
         /**
-        * provide navigation in ajax for user
-        */
-
+         * Update div when clicking previous / next
+         */
         function updateSearchParam(filter, start, end) {
+            clearTimers();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+<?
+if ($this->refresh) {
+?>
+            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
+<?
+}
+?>
             }
 
         /**
-        * wait 500ms and update search
-        */
-
+         * wait 500ms and update search
+         */
         function pushSearch() {
-            launch++;
-            setTimeout("updateSearch()",500);
+            clearTimers();
+            refreshtimer = setTimeout("updateSearch()", 500);
         }
          
         pushSearch();
