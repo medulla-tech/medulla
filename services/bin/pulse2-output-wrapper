@@ -1,15 +1,12 @@
-#! /bin/bash
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
 #
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
-# This file is part of Pulse 2.
+# This file is part of Pulse2.
 #
-# This file was freely inspired from the work of Jeroen van Wolffelaar
-# <jeroen@wolffelaar.nl> and originaly come from :
-# http://jeroen.a-eskwadraat.nl/sw/annotate 
-# 
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -24,34 +21,88 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# FIXME: rewrite this (python ?) !
-# FIXME: check that iconv is available, or fallback to tr
+""" A simple command line wrapper
+This tool expect a command line, run it, and output stdout and stderr
+in a demuxable-way.
+For exemple, "ls /mnt /nothing" whould give you:
+***************************************
+ls: /nothing: No such file or directory
+/mnt:
+nfs
+***************************************
+and "pulse2_output_wrapper ls /mnt /nothing" will give you:
+***************************************
+1199893195.42 C: ls /mnt /nothing
+1199893195.46 E: ls: /nothing: No such file or directory
+1199893195.46 E:
+1199893195.46 O: /mnt:
+1199893195.46 O: nfs
+1199893195.46 O:
+1199893195.46 X: 1
+***************************************
+Output lines are formatted like this:
+<timestamp><space><tag><column><space><output line>
+With <tag>:
+  C: the command line
+  S: something on stdout
+  E: something on stderr
+  X: the exit code
 
-addtime () {
-    while read line; do
-	output=`echo $line | iconv -c -f utf-8 -t utf-8 -`
-	if [ "$?" -ne "0" ]; then
-		output=`echo $line | iconv -c -f 8859_1 -t utf-8 -`
-	fi
-	echo "`date +%H:%M:%S.%N` $1: $output"
-    done    
-}       
+Lines are always parsed to be fully utf-8 compliant
+"""
+import twisted.internet.protocol
+import twisted.internet.reactor
+import os
+import time
 
-OUT=`mktemp /tmp/annotate.XXXXXX` || exit 1
-ERR=`mktemp /tmp/annotate.XXXXXX` || exit 1
+def format(line, tag):
+    """ Format a line as expected (see upper)
+    * attempt to guess encoding (currenlty try 'windows-1252', 'utf-8',
+     'cp850', 'latin-1' and fallback to ascii)
+    * convert to utf-8
+    * format line
+    """
+    for codec in ['windows-1252', 'utf-8', 'cp850', 'latin-1']:
+        try:
+            uline = unicode(line, codec)
+            break
+        except UnicodeDecodeError:
+            continue
+    else:
+        uline = unicode(line, 'ascii', 'replace')
 
-rm -f $OUT $ERR
-mkfifo $OUT $ERR || exit 1
+    try:
+        line = uline.encode('utf-8')
+    except:
+        line = uline.encode('utf-8', 'replace')
 
-addtime O < $OUT &
-addtime E < $ERR &
+    return "%s %s: %s" % (time.time(), tag, line)
 
-echo "`date +%H:%M:%S.%N` C: $@"
-"$@" > $OUT 2> $ERR ; EXIT=$?
-rm -f $OUT $ERR
-wait
+class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
+    """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
+    """
+    def outReceived(self, data):
+        """ Format stdout
+        """
+        for line in data.split('\n'):
+            print format(line, 'O')
+        return True
 
-echo "`date +%H:%M:%S.%N` X: exitcode $EXIT"
+    def errReceived(self, data):
+        """ Format stderr
+        """
+        for line in data.split('\n'):
+            print format(line, 'E')
+        return True
 
-exit $EXIT
+    def processEnded(self, reason):
+        """ Fired when process has finished
+        """
+        print format(str(reason.value.exitCode), 'X')
+        twisted.internet.reactor.stop()
 
+args = os.sys.argv
+del args[0]
+print format(' '.join(args), 'C')
+twisted.internet.reactor.spawnProcess(shOutputWrapper(), args[0], args)
+twisted.internet.reactor.run()
