@@ -148,7 +148,7 @@ class CommandHistory {
         $n = new ListInfos($name, _T('Name', 'msc'));
         $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($values));
-
+        $n->setTableHeaderPadding(1);
         $n->drawTable(0);
 
         // display files
@@ -161,13 +161,15 @@ class CommandHistory {
             }
         }
         $n = new ListInfos($files, _T('Transferred files list', 'msc'));
+        $n->setTableHeaderPadding(1);
         print "<hr/><br/>";
         $n->drawTable(0);
 
         # display command history
         # display log files
+        $statusTable = getStatusTable();
         foreach ($this->db_ch as $hist) {
-            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$hist['state'].'</b>';
+            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
             if (gettype($hist["stdout"]) != 'array')
                 $hist["stdout"] = split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
@@ -178,6 +180,7 @@ class CommandHistory {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
             $n = new ListInfos(array_map('_colorise', $hist["stderr"]), $history);
+            $n->setTableHeaderPadding(1);
             if (count($hist["stderr"]) > 0  &&
                 !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')
                ) {
