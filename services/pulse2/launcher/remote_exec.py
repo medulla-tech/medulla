@@ -209,7 +209,7 @@ def clean_background_process(id):
 def _remote_sync_cb(shprocess):
     """
     """
-    # TODO: have to find a bettre way to handle these stupid encodings ...
+    # TODO: have to find a better way to handle these stupid encodings ...
     exitcode = shprocess.exitCode
 
     stdout = unicode(shprocess.out, 'utf-8', 'strict')

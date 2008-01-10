@@ -22,8 +22,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """ A simple command line wrapper
-This tool expect a command line, run it, and output stdout and stderr
-in a demuxable-way.
+This tool expect a command line, run it, output stdout and stderr in a
+demuxable-way, and give-up with the command line exit code
 For exemple, "ls /mnt /nothing" whould give you:
 ***************************************
 ls: /nothing: No such file or directory
@@ -54,6 +54,7 @@ import twisted.internet.protocol
 import twisted.internet.reactor
 import os
 import time
+import sys
 
 def format(line, tag):
     """ Format a line as expected (see upper)
@@ -81,6 +82,10 @@ def format(line, tag):
 class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
     """
+
+    def __init__(self):
+        self.exitcode = 0
+
     def outReceived(self, data):
         """ Format stdout
         """
@@ -100,9 +105,13 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         """
         print format(str(reason.value.exitCode), 'X')
         twisted.internet.reactor.stop()
+        self.exitcode = reason.value.exitCode
 
 args = os.sys.argv
 del args[0]
 print format(' '.join(args), 'C')
-twisted.internet.reactor.spawnProcess(shOutputWrapper(), args[0], args)
+process = shOutputWrapper()
+twisted.internet.reactor.spawnProcess(process, args[0], args)
 twisted.internet.reactor.run()
+sys.exit(process.exitcode)
+
