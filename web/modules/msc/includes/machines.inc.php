@@ -1,7 +1,7 @@
 <?php
 
 function machineExists($h_params) { $machine = getMachine($h_params); return ($machine->hostname != ''); }
-function getMachine($h_params) { return new Machine(rpcGetMachine($h_params)); }
+function getMachine($h_params, $ping = true) { return new Machine(rpcGetMachine($h_params), $ping); }
 
 // Machine object
 class Machine {

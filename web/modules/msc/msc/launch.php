@@ -158,7 +158,7 @@ if (isset($_GET["badvanced"])) {
 
 
 } elseif ($_GET['name']) {
-    $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+    $machine = getMachine(array('hostname'=>$_GET['name']), False); // should be changed in uuid
     if ($machine->hostname != $_GET['name']) {
         $msc_host = new RenderedMSCHostDontExists($_GET['name']);
         $msc_host->headerDisplay();

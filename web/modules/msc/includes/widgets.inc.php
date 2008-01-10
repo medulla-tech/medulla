@@ -85,12 +85,29 @@ class RenderedMSCHost extends HtmlElement {
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._T('Running on', "msc").' : ' . _T($this->platform, "msc") .'</td>';
-        $buffer .= '<td>' . _T('Ping status', "msc").' : ' . $this->ping . '</td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : <div id="platform">' . _T($this->platform, "msc") .'</div></td>';
+        $buffer .= '<td>' . _T('Ping status', "msc").' : <div id="ping">' . $this->ping . '</div></td>';
         $buffer .= '</tr>';
         $buffer .= '</table></div>';
         print $buffer;
     }
+
+    function ajaxDisplay() {
+        $buffer = '
+<script type="text/javascript">
+new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '", { method: "get" });
+new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '", { method: "get" });
+</script>
+';
+        $buffer .= '<div class="indent"><table>';
+        $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : <span id="platform"></span></td>';
+        $buffer .= '<td>' . _T('Ping status', "msc").' : <span id="ping"></span></td>';
+        $buffer .= '</tr>';
+        $buffer .= '</table></div>';
+        print $buffer;
+    }
+
 }
 class RenderedMSCHostDontExists extends HtmlElement {
     function RenderedMSCHostDontExists($name) {

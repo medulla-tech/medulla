@@ -27,13 +27,13 @@ require('modules/msc/includes/machines.inc.php');
 require('modules/msc/includes/widgets.inc.php');
 
 if ($_GET['name']) {
-    $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+    $machine = getMachine(array('hostname'=>$_GET['name']), $ping = False); // should be changed in uuid
     if ($machine->hostname != $_GET['name']) {
         $msc_host = new RenderedMSCHostDontExists($_GET['name']);
         $msc_host->headerDisplay();
     } else {
         $msc_host = new RenderedMSCHost($machine);
-        $msc_host->headerDisplay();
+        $msc_host->ajaxDisplay();
     }
 } else {
     $group = new Stagroup($_GET['gid']);
