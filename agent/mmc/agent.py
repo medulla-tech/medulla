@@ -117,7 +117,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             s.loggedin = False
 
         # Check authorization using HTTP Basic
-        cleartext_token = self.login + ":" + self.password 
+        cleartext_token = self.login + ":" + self.password
         token = request.getUser() + ":" + request.getPassword()
         if token != cleartext_token:
             self.logger.error("Invalid login / password for HTTP basic authentication")
@@ -154,7 +154,14 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 s = request.getSession()
                 s.loggedin = True
                 s.userid = args[0]
-                self._associateContext(request, s, s.userid)
+                try:
+                    self._associateContext(request, s, s.userid)
+                except Exception, e:
+                    s.loggedin = False
+                    self.logger.exception(e)
+                    f = Fault(8004, "MMC agent can't provide a security context for this account")
+                    self._cbRender(f, request)
+                    return                    
         if result == None: result = 0
         if isinstance(result, xmlrpc.Handler):
             result = result.result
@@ -173,7 +180,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 self.logger.debug('response ' + s.userid + " " + str(result))
             else:
                 self.logger.debug('response ' + str(result))
-            s = xmlrpclib.dumps(result, methodresponse=1)            
+            s = xmlrpclib.dumps(result, methodresponse=1)
         except Exception, e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
             s = xmlrpclib.dumps(f, methodresponse=1)
@@ -211,7 +218,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             if context:
                 self.logger.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
-    
+
     def getRevision(self):
         return int("$Rev$".split(':')[1].strip(' $'))
 
@@ -330,7 +337,7 @@ def agentService(config, conffile, daemonize):
             continue
 
         # If is active
-	try:
+        try:
             if (func()):
                 version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
                 logger.info('Plugin ' + plugin + ' loaded, ' + version)
