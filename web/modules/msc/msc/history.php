@@ -36,6 +36,7 @@ if ($_GET['name']) {
         $ch->display();
     } else {
         $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']."&history=1&tab=tabhistory");
+        $ajax->setRefresh(5000);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
