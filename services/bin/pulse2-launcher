@@ -124,6 +124,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         self.password = password
         self.cp = config
         self.wrapper = self.cp.get('launchers', 'wrapper_path') # FIXME: check wrapper availability
+        self.source_path = self.cp.get('launchers', 'source_path') # FIXME: check source path existence
+        self.target_path = self.cp.get('launchers', 'target_path') # FIXME: check target path existence
 
     def getRevision(self):
         return int("$Rev: 298 $".split(':')[1].strip(' $'))
@@ -165,14 +167,18 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_none(self):
         return xmlrpcCleanup(None)
 
-    def xmlrpc_sync_remote_push(self, id, root_path, files_list, target_path, client=None):
-        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(id, root_path, files_list, target_path, client, self.wrapper))
+    def xmlrpc_sync_remote_push(self, command_id, client, files_list):
+        """
+        TODO: check that source_path is authorized (using conf file)
+        TODO: check that target_path is authorized (using conf file)
+        """
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, self.source_path, self.target_path, files_list, self.wrapper))
 
-    def xmlrpc_sync_remote_delete(self, id, files_list, target_path, client=None):
-        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(id, files_list, target_path, client, self.wrapper))
+    def xmlrpc_sync_remote_delete(self, command_id, client, files_list):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, self.target_path, files_list, self.wrapper))
 
-    def xmlrpc_sync_remote_exec(self, id, command, client=None):
-        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(id, command, client, self.wrapper))
+    def xmlrpc_sync_remote_exec(self, command_id, client, command):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(id, client, self.target_path, command, self.wrapper))
 
     def xmlrpc_async_remote_exec(self, id, command, client=None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(id, command, client, self.wrapper))
