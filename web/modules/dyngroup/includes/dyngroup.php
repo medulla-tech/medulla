@@ -93,7 +93,7 @@ function getAllStagroup($params = array()) {
     } else {
         while ($i < $max) {
             $group = new Stagroup($i);
-            if ($group->getName() && !$group->isDyn()) {
+            if ($group->getName()  && $group->getName() != '-1' && ! $group->isDyn()) {
                 $name = $group->getName();
                 if ($params['canShow']) {
                     if ($group->canShow()) {
@@ -214,7 +214,7 @@ class Dyngroup {
     }
     
     function isDyn() {
-        return $this->dyn->getValue();
+        return ($this->dyn->getValue() == 'True');
     }
     function isGroup() {
         return ($this->result->getValue() || false);
@@ -305,7 +305,7 @@ class Stagroup {
         return new Dyngroup($this->id);
     }
     function isDyn() {
-        return ($this->dyn->getValue() || false);
+        return ($this->dyn->getValue() == 'True');
     }
 
     function getName() {
