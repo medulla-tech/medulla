@@ -138,6 +138,24 @@ def sync_remote_exec(command_id, client, target_path, command, wrapper):
         return deffered
     return None
 
+def sync_remote_inventory(command_id, client, inventory_command, wrapper):
+    """ Handle remote inventoring on target, sync mode
+
+    This function will simply run the inventory on the othe side
+    client is the method used to connect to the client
+
+    TODO: same as sync_remote_push
+
+    Return: same as sync_remote_push
+    """
+    client = set_default_client_options(client)
+    if client['protocol'] == "ssh":
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
+    return None
+
 def async_remote_exec(id, command, client, wrapper):
 
     # do not re-inject already running processes

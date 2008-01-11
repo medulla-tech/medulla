@@ -126,6 +126,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         self.wrapper = self.cp.get('launchers', 'wrapper_path') # FIXME: check wrapper availability
         self.source_path = self.cp.get('launchers', 'source_path') # FIXME: check source path existence
         self.target_path = self.cp.get('launchers', 'target_path') # FIXME: check target path existence
+        self.inventory_command = self.cp.get('launchers', 'inventory_command')
 
     def getRevision(self):
         return int("$Rev: 298 $".split(':')[1].strip(' $'))
@@ -179,6 +180,9 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_sync_remote_exec(self, command_id, client, command):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(id, client, self.target_path, command, self.wrapper))
+
+    def xmlrpc_sync_remote_inventory(self, command_id, client):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(id, client, self.inventory_command, self.wrapper))
 
     def xmlrpc_async_remote_exec(self, id, command, client=None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(id, command, client, self.wrapper))
