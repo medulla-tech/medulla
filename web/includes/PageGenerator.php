@@ -131,7 +131,7 @@ class ActionItem {
      * 	  in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
-    function ActionItem($desc,$action,$classCss,$paramString, $module = null, $submod = null) {
+    function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null) {
         $this->desc=$desc;
         $this->action=$action;
         $this->classCss=$classCss;
@@ -140,7 +140,11 @@ class ActionItem {
 	else $this->module = $module;
 	if ($submod == null) $this->submod = $_GET["submod"];
 	else $this->submod = $submod;
-	
+        $this->tab = $tab;        
+        $this->path = $this->module . "/" . $this->submod . "/" . $this->action;
+        if ($this->tab != null) {
+            $this->path .= "/" . $this->tab;
+        } 
     }
 
     /**
@@ -163,7 +167,8 @@ class ActionItem {
         echo "<li class=\"".$this->classCss."\">";
         if (is_array($extraParams) & !empty($extraParams)) $urlChunk = $this->buildUrlChunk($extraParams);
         else $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($extraParams);
-        echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action. $urlChunk . "\">&nbsp;</a>";
+        //echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action. $urlChunk . "\">&nbsp;</a>";
+        echo "<a title=\"".$this->desc."\" href=\"" . urlStr($this->path) . $urlChunk . "\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -290,7 +295,7 @@ class ListInfos extends HtmlElement {
         $this->description[] = $description;
         $this->initVar();
         $this->col_width = array();
-	$this->extranavbar = $extranavbar;
+        $this->extranavbar = $extranavbar;
         $this->firstColumnActionLink = True;        
     }
 
@@ -324,7 +329,7 @@ class ListInfos extends HtmlElement {
     function addActionItemArray($objActionItemArray) {
         $this->arrAction[] = &$objActionItemArray;
     }
-    
+
 
     /**
      *	add an array String to display
@@ -366,30 +371,25 @@ class ListInfos extends HtmlElement {
      */
     function initVar() {
 
-	$this->name="Elements";
+        $this->name="Elements";
 
-	global $conf;
+        global $conf;
 
-	if (!isset($_GET["start"]))
-            {
-                if (!isset($_POST["start"]))
-                    {
-                        $this->start = 0;
+        if (!isset($_GET["start"])) {
+            if (!isset($_POST["start"])) {
+                $this->start = 0;
 
-                        if (count($this->arrInfo) > 0)      		{
-                            $this->end = $conf["global"]["maxperpage"] - 1;
-                        }
-
-                        else   					{
-                            $this->end = 0;
-      			}
-                    }
+                if (count($this->arrInfo) > 0) {
+                    $this->end = $conf["global"]["maxperpage"] - 1;
+                } else {
+                    $this->end = 0;
+                }
             }
-	else		{
+        } else {
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
-	}
-	$this->maxperpage = $conf["global"]["maxperpage"];
+        }
+        $this->maxperpage = $conf["global"]["maxperpage"];
         /* Set a basic navigation bar */
         $this->setNavBar(new SimpleNavBar($this->start, $this->end, count($this->arrInfo), $this->extranavbar));
     }
@@ -407,6 +407,13 @@ class ListInfos extends HtmlElement {
      */
     function setCssClass($name) {
         $this->cssClass=$name;
+    }
+
+    /**
+     * set a cssclass for each row
+     */
+    function setCssClasses($a_names) {
+        $this->cssClasses = $a_names;
     }
 
     /**
@@ -471,7 +478,7 @@ class ListInfos extends HtmlElement {
     }
 
     function drawTable($navbar = 1) {
-	echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
+        echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         echo "<thead><tr>";
         foreach ($this->description as $key => $desc) {
             if ($this->col_width[$key]) {
@@ -496,51 +503,55 @@ class ListInfos extends HtmlElement {
 
         echo "</tr></thead>";
 
-	for ( $idx = $this->start;
-             ($idx < count($this->arrInfo)) && ($idx <= $this->end);
-              $idx++)       {
-                if (($this->start - $idx) % 2) {
-                    echo "<tr>";
+        for ( $idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+            if (($this->start - $idx) % 2) {
+                echo "<tr";
+                if ($this->cssClasses[$idx] != '') {
+                    echo " class=\"".$this->cssClasses[$idx]."\"";
                 }
-                else
-                {
-                    echo "<tr class=\"alternate\">";
+                echo ">";
+            } else {
+                echo "<tr class=\"alternate";
+                if ($this->cssClasses[$idx] != '') {
+                    echo " ".$this->cssClasses[$idx];
                 }
-
-                //link to first action (if we have an action)
-                if (count($this->arrAction) && $this->firstColumnActionLink) {
-                    $this->drawMainAction($idx);
-                } else {
-                    echo "<td class=\"".$this->cssClass."\">";
-                    echo $this->arrInfo[$idx];
-                    echo "</td>";
-                }
-
-                if ($this->extraInfo)
-                    foreach ($this->extraInfo as $arrayTMP) {
-                        echo "<td>";
-                        echo_obj($arrayTMP[$idx]);
-                        echo "</td>";
-                    }
-                if (count($this->arrAction)!=0) {
-                    echo "<td class=\"action\">";
-                    echo "<ul class=\"action\">";
-                    foreach ($this->arrAction as $objActionItem) {
-                        if (is_a($objActionItem, 'ActionItem')) {
-                            $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
-                        } else if (is_array($objActionItem)) {
-                            $obj = $objActionItem[$idx];
-                            $obj->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
-                        }
-                    }
-                    echo "</ul>";
-                    echo "</td>";
-                }
-                echo "</tr>\n";
+                echo "\">";
             }
 
+            //link to first action (if we have an action)
+            if (count($this->arrAction) && $this->firstColumnActionLink) {
+                $this->drawMainAction($idx);
+            } else {
+                echo "<td class=\"".$this->cssClass."\">";
+                echo $this->arrInfo[$idx];
+                echo "</td>";
+            }
 
-	echo "</table>\n";
+            if ($this->extraInfo)
+                foreach ($this->extraInfo as $arrayTMP) {
+                    echo "<td>";
+                    echo_obj($arrayTMP[$idx]);
+                    echo "</td>";
+                }
+            if (count($this->arrAction)!=0) {
+                echo "<td class=\"action\">";
+                echo "<ul class=\"action\">";
+                foreach ($this->arrAction as $objActionItem) {
+                    if (is_a($objActionItem, 'ActionItem')) {
+                        $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
+                    } else if (is_array($objActionItem)) {
+                        $obj = $objActionItem[$idx];
+                        $obj->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
+                    }
+                }
+                echo "</ul>";
+                echo "</td>";
+            }
+            echo "</tr>\n";
+        }
+
+
+        echo "</table>\n";
 
         $this->displayNavbar($navbar);
 
@@ -562,8 +573,8 @@ class ListInfos extends HtmlElement {
 
     function display($navbar = 1, $header =1 ) {
         if (!isset($this->paramInfo)) {
-	  $this->paramInfo = $this->arrInfo;
-	}
+            $this->paramInfo = $this->arrInfo;
+        }
 
         if ($header == 1) {
             $this->drawHeader($navbar);
@@ -783,7 +794,7 @@ class AjaxFilter extends HtmlElement {
      * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
      * @param $divid: div ID which is updated by the URL output
      */
-    function AjaxFilter($url, $divid = "container") {
+    function AjaxFilter($url, $divid = "container", $params = array()) {
         if (strpos($url, "?") === False)
             /* Add extra ? needed to build the URL */
             $this->url = $url . "?";
@@ -792,6 +803,10 @@ class AjaxFilter extends HtmlElement {
             $this->url = $url . "&";
         $this->divid = $divid;
         $this->refresh= 0;
+        $this->params = '';
+        foreach ($params as $k => $v) {
+            $this->params .= "&".$k."=".$v;
+        }
     }
 
     /**
@@ -838,7 +853,7 @@ class AjaxFilter extends HtmlElement {
          * Update div
          */
         function updateSearch() {
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
@@ -854,7 +869,8 @@ if ($this->refresh) {
          */
         function updateSearchParam(filter, start, end) {
             clearTimers();
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
+
 <?
 if ($this->refresh) {
 ?>
@@ -862,7 +878,7 @@ if ($this->refresh) {
 <?
 }
 ?>
-            }
+        }
 
         /**
          * wait 500ms and update search
@@ -882,6 +898,86 @@ if ($this->refresh) {
     function displayDivToUpdate() {
         print '<div id="' . $this->divid . '"></div>' . "\n";
     }
+}
+
+class AjaxFilterLocation extends AjaxFilter {
+    function AjaxFilterLocation($url, $divid = "container") {
+        $this->AjaxFilter($url, $divid);
+        $this->location = new SelectItem('location', 'pushSearch', 'searchfieldreal noborder');
+    }
+
+    function setElements($elt) {
+        $this->location->setElements($elt);
+    }
+    
+    function setElementsVal($elt) {
+        $this->location->setElementsVal($elt);
+    }
+    
+    function setSelected($elemnt) {
+        $this->location->setSelected($elemnt);
+    }
+    
+    function display() {
+        
+?>
+<form name="Form" id="Form" action="#">
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+    <span class="searchfield">
+<?php
+        $this->location->display();
+?>
+    </span>&nbsp;
+    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    </span>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('param').focus();
+
+
+        /**
+        * update div with user
+        */
+        function updateSearch() {
+            launch--;
+
+                if (launch==0) {
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'&location='+document.Form.location.value, { asynchronous:true, evalScripts: true});
+                }
+            }
+
+        /**
+        * provide navigation in ajax for user
+        */
+
+        function updateSearchParam(filter, start, end) {
+            var reg = new RegExp("##", "g");
+            var tableau = filter.split(reg);
+            filter = tableau[0];
+            var location = tableau[1];
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&location='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            }
+
+        /**
+        * wait 500ms and update search
+        */
+
+        function pushSearch() {
+            launch++;
+            setTimeout("updateSearch()",500);
+        }
+         
+        pushSearch();
+    </script>
+
+</form>
+<?        
+          }
 }
 
 /**
@@ -980,6 +1076,15 @@ class SideMenuItem {
     }
 }
 
+class SideMenuItemNoAclCheck extends SideMenuItem {
+    /**
+     *	display the SideMenuItem on the screen
+     */
+    function display() {
+        echo '<li id="'.$this->cssId.'">';
+	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+    }
+}
 
 /**
  *	SideMenu class
@@ -1487,7 +1592,8 @@ class NotifyWidgetFailure extends NotifyWidget {
 /**
  * Create an URL
  *
- * @param $link string except format like "module/submod/action"
+ * @param $link string accept format like "module/submod/action" or
+ *              "module/submod/action/tab"
  * @param $param assoc array with param to add in GET method
  * @param $ampersandEncode bool defining if we want ampersand to be encoded in URL
  */
@@ -1502,8 +1608,16 @@ function urlStr($link, $param = array(), $ampersandEncode = True) {
     foreach ($param as $key=>$value) {
         $enc_param.= "$amp"."$key=$value";
     }
+    
+    if (count($arr) == 3) {
+        $ret = "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2].$enc_param;
+    } else if (count($arr) == 4) {
+        $ret = "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2]. "$amp" . "tab=" . $arr[3] . $enc_param;
+    } else {
+        die("Can't build URL");
+    }
 
-    return "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2].$enc_param;
+    return $ret;
 }
 
 function urlStrRedirect($link, $param = array()) {

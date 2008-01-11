@@ -33,17 +33,16 @@ $css = $conf["global"]["root"]."graph";
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Mandriva Management Console</title>
-	<link href="<?php echo $css; ?>/master.css" rel="stylesheet" media="screen" type="text/css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="imagetoolbar" content="false" />
-	<meta name="Description" content="" />
-	<meta name="Keywords" content="" />
-        <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
+    <title>Mandriva Management Console</title>
+    <link href="<?php echo $css; ?>/master.css" rel="stylesheet" media="screen" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="imagetoolbar" content="false" />
+    <meta name="Description" content="" />
+    <meta name="Keywords" content="" />
+    <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
 
-        <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
-        <script src="jsframework/common.js" type="text/javascript"></script>
-
+    <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
+    <script src="jsframework/common.js" type="text/javascript"></script>
 <?php
 unset($css);
 ?>
@@ -83,16 +82,16 @@ cbox=document.getElementsByTagName('INPUT');
 function getStyleObject(objectId) {
     // cross-browser function to get an object's style object given its id
     if(document.getElementById && document.getElementById(objectId)) {
-	// W3C DOM
-	return document.getElementById(objectId).style;
+    // W3C DOM
+    return document.getElementById(objectId).style;
     } else if (document.all && document.all(objectId)) {
-	// MSIE 4 DOM
-	return document.all(objectId).style;
+    // MSIE 4 DOM
+    return document.all(objectId).style;
     } else if (document.layers && document.layers[objectId]) {
-	// NN 4 DOM.. note: this won't find nested layers
-	return document.layers[objectId];
+    // NN 4 DOM.. note: this won't find nested layers
+    return document.layers[objectId];
     } else {
-	return false;
+    return false;
     }
 } // getStyleObject
 
@@ -100,11 +99,11 @@ function changeObjectDisplay(objectId, newVisibility) {
     // get a reference to the cross-browser style object and make sure the object exists
     var styleObject = getStyleObject(objectId);
     if(styleObject) {
-	styleObject.display = newVisibility;
-	return true;
+    styleObject.display = newVisibility;
+    return true;
     } else {
-	// we couldn't find the object, so we can't change its visibility
-	return false;
+    // we couldn't find the object, so we can't change its visibility
+    return false;
     }
 } // changeObjectVisibility
 
@@ -113,13 +112,13 @@ function toggleVisibility(layer_ref)
 {
         var state = getStyleObject(layer_ref).display;
 
-	if (state == 'none')
-	{
-		state = 'inline';
-	} else
-	{
-		state = 'none';
-	}
+    if (state == 'none')
+    {
+        state = 'inline';
+    } else
+    {
+        state = 'none';
+    }
 changeObjectDisplay(layer_ref, state)
 }
 
@@ -171,8 +170,8 @@ changeObjectDisplay(layer_ref, state)
 
     function displayPopupCenter () {
         obj = document.getElementById('popup')
-	var width = $('popup').style.width;
-	var widthreal = width.substr( 0, width.length - 2 );
+    var width = $('popup').style.width;
+    var widthreal = width.substr( 0, width.length - 2 );
         obj.style.left = ((screen.width-widthreal)/2)+"px";
         obj.style.top = 200+"px";
         getStyleObject('popup').display='inline';
@@ -186,8 +185,8 @@ function validateForm() {
     var inputlist;
     inputlist = document.getElementsByTagName('input');
     inputlist = $A(inputlist);
-	inputlist.each( function(input){
-			try {
+    inputlist.each( function(input){
+            try {
                             var result = input.validate()
                             if (result!=true) {
                                 resultbad++;
@@ -198,7 +197,7 @@ function validateForm() {
                         catch (ex) {
                             //do nothing... function not exist
                         }
-		});
+        });
     if (resultbad!=0) {
         alert('<?= _("Form cannot be submit. Input errors are highlighted in red.") ?>');
         return false;

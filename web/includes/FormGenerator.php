@@ -21,8 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
+
 /***********************************************************************
  *  Form generator class
  ***********************************************************************/
@@ -38,19 +37,19 @@ function displayErrorCss($name) {
 class TextareaTpl extends AbstractTpl {
     var $name;
     var $rows;
-    
+
     function TextareaTpl($name) {
         $this->name = $name;
         $this->rows = 3;
     }
-    
+
     function display($arrParam) {
         echo '<textarea name="'.$this->name.'" id="'.$this->name.'" class="textfield" rows="' . $this->rows . '" cols="21" />';
-        
+
         if (isset($arrParam["value"])) {
             echo $arrParam["value"];
         }
-        
+
         echo '</textarea>';
     }
 }
@@ -65,7 +64,7 @@ class FileTpl extends AbstractTpl {
     function display($arrParam) {
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="file" class="textfield" size="23" />';
     }
-    
+
     function displayRo($arrParam) {
     }
 }
@@ -77,11 +76,11 @@ class RadioTpl extends AbstractTpl {
     var $choiceVal;
     var $choiceWidget;
     var $selected;
-    
+
     function RadioTpl($name) {
         $this->name = $name;
     }
-    
+
     function setChoices($arrChoices) {
         $this->choices = $arrChoices;
     }
@@ -89,7 +88,7 @@ class RadioTpl extends AbstractTpl {
     function setValues($arrValues) {
         $this->choiceVal = $arrValues;
     }
-    
+
     function setWidgets($arrWidgets) {
         $this->choiceWidget = $arrWidgets;
     }
@@ -102,11 +101,11 @@ class RadioTpl extends AbstractTpl {
         if (!isset($this->choiceVal)) {
             $this->choiceVal = $this->choices;
         }
-        
+
         if (!isset($this->selected)) {
             $this->selected = $this->choiceVal[0];
         }
-        
+
         if (isset($this->choiceWidget)) {
             print '<table cellspacing="0" style="border: none; margin: 0px;">'."\n";
         }
@@ -159,17 +158,17 @@ class ImageTpl extends AbstractTpl {
     function ImageTpl($name) {
         $this->name=$name;
     }
-  
+
     function display($arrParam) {
         print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
-	print '</td></tr><tr><td>&nbsp;</td><td><input name="photofilename" type="file" size="23" />';
-	if ($arrParam["action"] == "edit") print '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
+    print '</td></tr><tr><td>&nbsp;</td><td><input name="photofilename" type="file" size="23" />';
+    if ($arrParam["action"] == "edit") print '<input name="deletephoto" type="submit" value="' . _("Delete photo") . '"/>';
     }
 
     function displayRo($arrParam) {
         print '<img src="main.php?module=base&submod=users&action=getPhoto&uid=' . $arrParam["value"] .'" '.$arrParam["extraArg"].' style="border-width: 1px; border-style: solid" />';
     }
-   
+
 }
 
 /**
@@ -222,6 +221,11 @@ class InputTpl extends AbstractTpl{
         $this->name = $name;
         $this->regexp = $regexp;
         $this->fieldType = "text";
+        $this->size = '23';
+    }
+
+    function setSize($size) {
+        $this->size = $size;
     }
 
     /**
@@ -232,7 +236,7 @@ class InputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="23" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
 
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
@@ -252,8 +256,12 @@ class InputTpl extends AbstractTpl{
                         new Element.scrollTo(\'container_input_'.$this->name.'\');
                         return 0;
                     }
-                }
-           </script>';
+                };';
+        if (isset($arrParam["onchange"])) {
+            print '$(\''.$this->name.'\').onchange = function() {' . $arrParam["onchange"] . '};';
+        }
+
+        print '</script>';
     }
 }
 
@@ -263,7 +271,7 @@ class InputTpl extends AbstractTpl{
 class PasswordTpl extends InputTpl{
 
     function PasswordTpl($name, $regexp = '/.+/') {
-        $this->fieldType = "password";        
+        $this->fieldType = "password";
         $this->name = $name;
         $this->regexp = $regexp;
     }
@@ -286,7 +294,7 @@ class IA5InputTpl extends InputTpl {
 
 /**
  * Input with IP address check
- */ 
+ */
 class IPInputTpl extends InputTpl {
 
     function IPInputTpl($name) {
@@ -298,7 +306,7 @@ class IPInputTpl extends InputTpl {
 
 /**
  * Input with MAC address check
- */ 
+ */
 class MACInputTpl extends InputTpl {
 
     function MACInputTpl($name) {
@@ -348,7 +356,7 @@ class HiddenTpl extends AbstractTpl{
     function display($arrParam = array()) {
         if (empty($arrParam)) $arrParam = $this->options;
         /* FIXME: ??? */
-        if ($arrParam=='') {            
+        if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
         if (!isset($arrParam["hide"])) print $arrParam['value'];
@@ -356,6 +364,114 @@ class HiddenTpl extends AbstractTpl{
     }
 }
 
+/**
+ * date input template
+ */
+class DateTpl extends InputTpl {
+    function DateTpl($name) {
+        $this->name = $name;
+    }
+    function display($arrParam) {
+        print '<div id="div'.$this->name.'">';
+        print '<table cellspacing="0">';
+
+        $i = 0;
+        foreach (array('year'=>array(_('Year: '), 4), 'month'=>array(_('Month: '), 2), 'day'=>array(_('Day: '), 2),
+                'hour'=>array(_('Hour: '), 2), 'min'=>array(_('Min.: '), 2), 'sec'=>array(_('Sec.: '), 2)) as $elem=>$a_params) {
+            $e = new InputTpl($this->name.'_'.$elem); //, array('value'=>$arrParam[$elem]));
+            $e->setSize($a_params[1]);
+            print $a_params[0];
+
+            $e->display(array('value'=>$arrParam[$elem], 'onchange'=>'
+                var elem = document.getElementById("'.$this->name.'");
+                var date = elem.value;
+                var part = '.$i.';
+                var value = document.getElementById("'.$this->name.'_'.$elem.'").value;
+                var newdate = changePartDate(date, part, value);
+                elem.value = newdate;
+            '));
+            $i += 1;
+        }
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="hidden" value="0000/00/00/00/00/00"/>';
+        print '</table>';
+        print '</div>';
+
+
+        print '<script type="text/javascript">
+                function changePartDate(date, part, value) {
+                    var re = new RegExp("/", "g");
+                    var adate = date.split(re);
+                    adate[part] = value;
+                    return adate.join("/");
+                }
+               </script>';
+
+    }
+}
+
+/**
+ * date input template
+ */
+class DynamicDateTpl extends InputTpl {
+    function DynamicDateTpl($name) {
+        $this->name = $name;
+    }
+    function display($arrParam) {
+        $e = new InputTpl($this->name);
+        if (!isset($GLOBALS["__JSCALENDAR_SOURCED__"])) { // to avoid double-sourcing
+            $GLOBALS["__JSCALENDAR_SOURCED__"] = 1;
+            print '
+            <script type="text/javascript" src="graph/jscalendar/js/calendar_stripped.js"></script>
+            <script type="text/javascript" src="graph/jscalendar/js/calendar-setup_stripped.js"></script>
+            <style type="text/css">@import url("graph/jscalendar/css/calendar-blue.css");</style>
+            <script type="text/javascript" src="graph/jscalendar/lang/calendar-en.js"></script>
+            ';
+
+            if (isset($_REQUEST["lang"])) { // EN calendar always read, as the next one may not exists
+                $extention = substr($_REQUEST["lang"], 0, 2); // transpose LANG, f.ex. fr_FR => fr
+                print '
+                <script type="text/javascript" src="graph/jscalendar/lang/calendar-'.$extention.'.js"></script>
+                ';
+            }
+        }
+
+        print '
+            <span id="container_input_'.$this->name.'">
+                <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="" readonly=1 />
+                <input
+                    type="image"
+                    style="vertical-align: bottom;"
+                    src="graph/jscalendar/img/calendar.png"
+                    id="'.$this->name.'_button"
+                />
+        ';
+
+        // ugly gettext workaround
+        if (isset($arrParam["ask_for_now"])) {
+            print _("or <a href='#'");
+            print " onclick='javascript:document.getElementById(\"".$this->name."\").";
+            print _("value=\"now\";'>now</a>");
+        } elseif (isset($arrParam["ask_for_never"])) {
+            print _("or <a href='#'");
+            print " onclick='javascript:document.getElementById(\"".$this->name."\").";
+            print _("value=\"never\";'>never</a>");
+        }
+        print '
+            </span>';
+        print '
+            <script type="text/javascript">
+            Calendar.setup({
+            inputField      :   "'.$this->name.'",
+            ifFormat        :   "%Y-%m-%d %H:%M:%S",       // format of the input field
+            showsTime       :   true,
+            timeFormat      :   "24",
+            button          :   "'.$this->name.'_button",
+            firstDay        :   1,
+            weekNumbers     :   false,
+            });
+            </script>';
+    }
+}
 
 class MultipleInputTpl extends AbstractTpl {
 
@@ -491,9 +607,11 @@ class SelectItem extends AbstractTpl{
     /**
      *constructor
      */
-    function SelectItem($idElt) {
+    function SelectItem($idElt, $jsFunc = null, $style = null) {
         $this->id=$idElt;
         $this->name=$idElt;
+        $this->jsFunc = $jsFunc;
+        $this->style = $style;
     }
 
     function setElements($elt) {
@@ -512,17 +630,24 @@ class SelectItem extends AbstractTpl{
      * $paramArray can be "null"
      */
     function display($paramArray = null) {
-      
+
         if (!isset($this->elementsVal)) {
             $this->elementsVal = $elements;
         }
-      
+
         // if value... set it
         if ($paramArray["value"]) {
             $this->setSelected($paramArray["value"]);
         }
 
-        print "<select name=\"".$this->id."\">\n";
+        print "<select";
+        if ($this->style) {
+            print " class=\"".$this->style."\"";
+        }
+        if ($this->jsFunc) {
+            print " onchange=\"".$this->jsFunc."(); return false;\"";
+        }
+        print " name=\"".$this->id."\">\n";
         foreach ($this->elements as $key => $item) {
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected="selected";
@@ -536,7 +661,6 @@ class SelectItem extends AbstractTpl{
     }
 
 }
-
 
 /**
  * Simple Form Template encapsulator
@@ -740,5 +864,5 @@ class TrFormElement extends FormElement{
     }
 }
 
-
 ?>
+

@@ -68,7 +68,7 @@ function fetchIniFile() {
         $conf = array_merge_recursive(parse_ini_file($INI, TRUE),$conf);
     } else {
         print "MMC: Can't read $INI configuration file. Please check your installation.";
-	exit();
+        exit();
     }
 }
 
@@ -78,12 +78,12 @@ function fetchIniFile() {
  * @param $dirA directory array returned by fetchModulesList
  */
 function includeInfoPackage($dirA) {
-foreach ($dirA as $path) {
-	if (file_exists("$path/infoPackage.inc.php")) {
-			   require_once("$path/infoPackage.inc.php");
-			}
-	       }
-
+    foreach ($dirA as $path) {
+        if (file_exists("$path/infoPackage.inc.php")) {
+            require_once("$path/infoPackage.inc.php");
+        }
+    }
+    
     $MMCApp =& MMCApp::getInstance();
     $MMCApp->process();
 }
@@ -157,12 +157,12 @@ function includePublicFunc($dirA) {
  * @param $dirA directory array returned by fetchModulesList
  */
 function includeLocalCss($dirA) {
-foreach ($dirA as $path) {
-	if (file_exists("$path/localCss.php")) {
-			   include("$path/localCss.php");
-			   print"\n";
-			}
-	       }
+    foreach ($dirA as $path) {
+        if (file_exists("$path/localCss.php")) {
+            include("$path/localCss.php");
+            print"\n";
+        }
+    }
 }
 
 /**
@@ -200,7 +200,7 @@ function callPluginFunction($function, $paramArr = null, $reverse = False) {
         }
     }
 
-    $list = $ordered_list; 
+    $list = $ordered_list;
     if ($reverse) $list = array_reverse($list);
 
     /*
@@ -216,9 +216,9 @@ function callPluginFunction($function, $paramArr = null, $reverse = False) {
         }
     }
 
-    $result = array();    
-    foreach($list as $item) {        
-        $functionName = "_" . $item . "_" . $function;        
+    $result = array();
+    foreach($list as $item) {
+        $functionName = "_" . $item . "_" . $function;
         if (function_exists($functionName)) {
             $result[$item] = call_user_func_array($functionName, $paramArr);
         } else {
@@ -290,21 +290,21 @@ function renderTPL($view,$module = null) {
  */
 function list_system_locales($dir){
    if(!$_SESSION['__locale']) {
-   $ret = array();
-   $ret[] = "C";
-   if (is_dir($dir)) {
-	   if ($dh = opendir($dir)) {
-	       while (($file = readdir($dh)) !== false) {
-                        if (file_exists("$dir/$file/LC_MESSAGES/base.mo")) {
-                            $ret[]=$file;
-                            }
-			}
-	       }
-	       closedir($dh);
-    }
-    $_SESSION['__locale'] = $ret;
-    }
-    return $_SESSION['__locale'];
+       $ret = array();
+       $ret[] = "C";
+       if (is_dir($dir)) {
+           if ($dh = opendir($dir)) {
+               while (($file = readdir($dh)) !== false) {
+                   if (file_exists("$dir/$file/LC_MESSAGES/base.mo")) {
+                       $ret[]=$file;
+                   }
+               }
+           }
+           closedir($dh);
+       }
+       $_SESSION['__locale'] = $ret;
+   }
+   return $_SESSION['__locale'];
 }
 
 ?>
