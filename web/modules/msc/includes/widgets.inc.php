@@ -101,8 +101,8 @@ new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") 
 ';
         $buffer .= '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._T('Running on', "msc").' : <span id="platform"></span></td>';
-        $buffer .= '<td>' . _T('Ping status', "msc").' : <span id="ping"></span></td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : <span id="platform"><img src="img/common/loader_p.gif" /></span></td>';
+        $buffer .= '<td>' . _T('Ping status', "msc").' : <span id="ping"><img src="img/common/loader_p.gif" /></span></td>';
         $buffer .= '</tr>';
         $buffer .= '</table></div>';
         print $buffer;
