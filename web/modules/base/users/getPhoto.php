@@ -15,6 +15,12 @@ if (!$data) {
   fclose($f);
 }
 
+/*
+ Erase the content of the current output buffer, so that the image data can't
+ be corrupted by the output buffer.
+*/
+ob_clean();
+
 header("Content-type: image/jpeg");
 print $data;
 ?>
