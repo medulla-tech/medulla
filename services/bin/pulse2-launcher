@@ -131,7 +131,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         try:
             s = xmlrpclib.dumps(result, methodresponse=1)
         except:
-            f = Fault(self.FAILURE, "can't serialize output")
+            f = xmlrpclib.Fault(self.FAILURE, "can't serialize output")
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.write(s)
