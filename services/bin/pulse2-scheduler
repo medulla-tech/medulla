@@ -1,26 +1,157 @@
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: scheduler-deamon.py 408 2008-01-04 13:02:20Z nrueff $
+# $Id: pulse2-launcher 21 2008-01-14 14:47:49Z nrueff $
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Pulse2.
 #
-# MMC is free software; you can redistribute it and/or modify
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# MMC is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
+# along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# Big modules
+import os
+import sys
+import optparse
+import xmlrpclib
+
+# Twisted
+import twisted.web.xmlrpc
+import twisted.web.server
+import twisted.internet.defer
+import twisted.internet.reactor
+
+# Misc
+import ConfigParser
+
+# MMC
+import mmc.support.mmctools
+
+# Logging
+import logging
+import logging.config
+
+VERSION = "0.0.0"
+
+def startService(config_file):
+    # Load configuration file
+    cp = ConfigParser.ConfigParser()
+    cp.read(config_file)
+
+    name = cp.get("scheduler", "id")
+    logger = logging.getLogger()
+    logger.info('scheduler %s: starting' % name)
+
+
+    if cp.has_option("scheduler", "port"):
+        port = cp.getint("scheduler", "port")
+    else:
+        port = 8000 # FIXME: explain this to user
+
+    if cp.has_option("scheduler", "listen"):
+        host = cp.get("scheduler", "listen")
+    else:
+        host = "127.0.0.1" # FIXME: explain this to user
+
+    logger.info('scheduler "%s": listening on %s:%d' % (name, host, port))
+
+    if cp.has_option("scheduler", "login"):
+        login = cp.get("scheduler", "login")
+    else:
+        login = ""
+        logger.warn('scheduler "%s": no username set !!' % (name))
+
+    if cp.has_option("scheduler", "password"):
+        password = cp.get("scheduler", "password")
+    else:
+        password = ""
+        logger.warn('scheduler "%s": no password set !!' % (name))
+
+    # Starting XMLRPC server
+    scheduler = Scheduler(name, cp, login, password)
+    try:
+        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(scheduler), interface = host)
+    except:
+        logger.error('scheduler "%s": can\'t bind to %s:%d' % (name, host, port))
+        return False
+    twisted.internet.reactor.run()
+    return True
+
+class Scheduler(twisted.web.xmlrpc.XMLRPC):
+    """Our Scheduler
+    """
+
+    def __init__(self, name, config, login="", password=""):
+        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        self.id = name
+        self.logger = logging.getLogger()
+        self.login = login
+        self.password = password
+        self.cp = config
+
+    def getRevision(self):
+        return int("$Rev: 298 $".split(':')[1].strip(' $'))
+
+    def getVersion(self):
+        return VERSION
+
+    def _ebRender(self, failure):
+        self.logger.error(failure)
+        if isinstance(failure.value, xmlrpclib.Fault):
+            return failure.value
+        return xmlrpclib.Fault(self.FAILURE, "Internal Error")
+
+    def _cbRender(self, result, request):
+        args, func = xmlrpclib.loads(request.content.getvalue())
+        if isinstance(result, Launcher):
+            result = mmc.support.mmctools.xmlrpcCleanup(result.result)
+        if not isinstance(result, xmlrpclib.Fault):
+            result = (result,)
+        self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
+        try:
+            s = xmlrpclib.dumps(result, methodresponse=1)
+        except:
+            f = Fault(self.FAILURE, "can't serialize output")
+            s = xmlrpclib.dumps(f, methodresponse=1)
+        request.setHeader("content-length", str(len(s)))
+        request.write(s)
+        request.finish()
+
+    def xmlrpc_ping(self):
+        return mmc.support.mmctools.xmlrpcCleanup("pong")
+
+def main():
+    parser = optparse.OptionParser()
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')
+    (options, args) = parser.parse_args()
+
+    if not os.path.exists(options.config_file):
+        print "Config file '%s' does not exist." % options.config_file
+        sys.exit(3)
+
+    # start logger
+    logging.config.fileConfig(options.config_file)
+    logger = logging.getLogger()
+
+    # start service
+    sys.exit(startService(options.config_file))
+
+if __name__ == '__main__':
+    main()
+
+"""
 import logging
 import logging.config
 import optparse
@@ -56,3 +187,4 @@ if __name__ == "__main__":
     dl = twisted.internet.defer.DeferredList(deffereds)
     dl.addCallback(quit)
     twisted.internet.reactor.run()
+"""
