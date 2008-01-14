@@ -26,11 +26,13 @@ import os
 import sys
 import optparse
 import xmlrpclib
+import time
 
 # Twisted
 import twisted.web.xmlrpc
 import twisted.web.server
 import twisted.internet.defer
+import twisted.internet.base
 import twisted.internet.reactor
 
 # Misc
@@ -47,6 +49,13 @@ import logging
 import logging.config
 
 VERSION = "0.0.0"
+
+def prepare_start_all_commands(modulo, name):
+    logger = logging.getLogger()
+    pulse2.scheduler.management.start_all_commands()
+    start_commands_in = int(time.time() % modulo) + 1
+    twisted.internet.reactor.callLater(start_commands_in, prepare_start_all_commands, modulo=modulo, name=name)
+    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (name, start_commands_in))
 
 def startService(config_file):
     # Load configuration file
@@ -82,6 +91,11 @@ def startService(config_file):
         password = ""
         logger.warn('scheduler "%s": no password set !!' % (name))
 
+    if cp.has_option("scheduler", "start_commands_modulo"):
+        start_commands_modulo = cp.getint("scheduler", "start_commands_modulo")
+    else:
+        start_commands_modulo = 600 # FIXME: explain this to user
+
     # Starting XMLRPC server
     scheduler = Scheduler(name, cp, login, password)
     try:
@@ -89,6 +103,12 @@ def startService(config_file):
     except:
         logger.error('scheduler "%s": can\'t bind to %s:%d' % (name, host, port))
         return False
+
+    # start periodic scheduler, called every start_commands_modulo seconds
+    start_commands_in = int(time.time() % start_commands_modulo) + 1
+    twisted.internet.reactor.callLater(start_commands_in, prepare_start_all_commands, modulo=start_commands_modulo, name=name)
+    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (name, start_commands_in))
+
     twisted.internet.reactor.run()
     return True
 
