@@ -1,0 +1,152 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id: pulse2-launchers-manager 2 2007-12-21 09:40:05Z nrueff $
+#
+# This file is part of Pulse 2.
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import os
+import os.path
+import sys
+import getopt
+import ConfigParser
+import re
+import logging
+import logging.config
+import optparse
+import signal
+
+def start_scheduler(cp):
+    """
+    daemonize a launcher
+    """
+    name = cp.get('scheduler', 'id')
+    logger=logging.getLogger()
+    logger.info('daemonization started: scheduler %s' % name)
+
+    pid_path = cp.get('scheduler', 'pid_path')
+    if not os.path.isdir(pid_path):
+        os.makedirs(pid_path)
+
+    pid_file = os.path.join(cp.get('scheduler', 'pid_path'), '%s.pid' % name)
+    scheduler_path = cp.get('scheduler', 'scheduler_path')
+    # Test if this scheduler already exists
+    if os.path.isfile(pid_file):
+        logger.warning('failed to start scheduler "%s": pid file "%s" already exist' % (name, pid_file))
+        print ('failed to start scheduler "%s": pid file "%s" already exist' % (name, pid_file))
+        return False
+
+    # do the UNIX double-fork magic, see Stevens' "Advanced
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # first parent stays alive
+            return True
+    except OSError, e:
+        logger.error('daemonization part #1 failed: %d (%s)' % (e.errno, e.strerror))
+        print >>sys.stderr, "daemonization part #1 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+    # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
+    os.chdir("/")
+    os.setsid()
+
+    # do second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit from second parent, print eventual PID before
+            logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
+            os.system("echo " + str(pid) + " > " + pid_file)
+            sys.exit(0)
+    except OSError, e:
+        logger.error('daemonization part #2 failed: %d (%s)' % (e.errno, e.strerror))
+        print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+    logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
+    os.execv(scheduler_path, (scheduler_path, '--id', name))
+
+def stop_scheduler(cp):
+    name = cp.get('scheduler', 'id')
+
+    logger=logging.getLogger()
+
+    pid_file = os.path.join(cp.get('scheduler', 'pid_path'), '%s.pid' % name)
+    f = open(pid_file)
+    try:
+        for line in f:
+            try:
+                logger.info('attempt to kill scheduler "%s" (pid %d)' % (name, int(line)))
+                os.kill(int(line), signal.SIGTERM)
+                logger.info('scheduler "%s" killed using SIGTERM' % name)
+            except OSError:
+                pass
+            os.unlink(pid_file)
+    finally:
+        f.close()
+    return True
+
+if __name__ == "__main__":
+    parser = optparse.OptionParser()
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')
+    parser.add_option("-o", "--id", help='id of this scheduler')
+    (options, args) = parser.parse_args()
+
+    if not os.path.exists(options.config_file):
+        print "Config file '%s' does not exist." % options.config_file
+        sys.exit(1)
+
+    if len(args)!=1:
+        print "command is missing"
+        sys.exit(2)
+
+    # start logger
+    logging.config.fileConfig(options.config_file)
+    logger=logging.getLogger()
+
+    # Load configuration file
+    cp = ConfigParser.ConfigParser()
+    cp.read(options.config_file)
+
+    if args[0] == "start":
+        logger.info('Starting Pulse2 Scheduler')
+        print('Starting Pulse2 Scheduler:')
+        # parse sections to keep launchers-specifics
+        if start_scheduler(cp):
+            logger.info('Scheduler started')
+            print('OK')
+        else:
+            logger.info('Failed to start scheduler')
+            print('FAILED')
+    elif args[0] == "stop":
+        logger.info('stopping Pulse2 Scheduler')
+        print('Stopping Pulse2 Scheduler:')
+        if stop_scheduler(cp):
+            logger.info('Scheduler stopped')
+            print('OK')
+        else:
+            logger.info('Failed to stop scheduler')
+            print('FAILED')
+
+
