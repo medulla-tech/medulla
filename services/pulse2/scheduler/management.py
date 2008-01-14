@@ -28,6 +28,7 @@ import mmc.plugins.msc
 import mmc.plugins.msc.database
 
 import logging
+
 def start_all_commands():
 
     # open Database connexion
@@ -40,7 +41,4 @@ def start_all_commands():
 
     # wait for commands to finish
     scheduler.logger.info("Scheduler: %d tasks to perform" % len(deffereds))
-#    dl = twisted.internet.defer.DeferredList(deffereds)
-#    return dl
-#    dl.addCallback(quit)
-    return len(deffereds)
+    return deffereds
