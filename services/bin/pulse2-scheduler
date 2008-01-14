@@ -39,6 +39,9 @@ import ConfigParser
 # MMC
 import mmc.support.mmctools
 
+# XMLRPC funcs
+import pulse2.scheduler.management
+
 # Logging
 import logging
 import logging.config
@@ -115,7 +118,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     def _cbRender(self, result, request):
         args, func = xmlrpclib.loads(request.content.getvalue())
-        if isinstance(result, Launcher):
+        if isinstance(result, Scheduler):
             result = mmc.support.mmctools.xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
             result = (result,)
@@ -123,7 +126,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         try:
             s = xmlrpclib.dumps(result, methodresponse=1)
         except:
-            f = Fault(self.FAILURE, "can't serialize output")
+            f = xmlrpclib.Fault(self.FAILURE, "can't serialize output")
             s = xmlrpclib.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.write(s)
@@ -131,6 +134,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_ping(self):
         return mmc.support.mmctools.xmlrpcCleanup("pong")
+
+    def xmlrpc_start_all_commands(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.management.start_all_commands())
 
 def main():
     parser = optparse.OptionParser()
