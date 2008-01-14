@@ -21,10 +21,16 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+    This is the Pulse2 launchers manager
+    The goal is to provide a helper to run launchers:
+    * start (fork)
+    * stop (kill)
+"""
+
 import os
 import os.path
 import sys
-import getopt
 import ConfigParser
 import re
 import logging
@@ -36,7 +42,7 @@ def start_launcher(name, cp):
     """
     daemonize a launcher
     """
-    logger=logging.getLogger()
+    logger = logging.getLogger()
     logger.info('daemonization started: launcher "%s"' % name)
 
     pid_path = cp.get('launchers', 'pid_path')
@@ -58,9 +64,9 @@ def start_launcher(name, cp):
         if pid > 0:
             # first parent stays alive
             return True
-    except OSError, e:
-        logger.error('daemonization part #1 failed: %d (%s)' % (e.errno, e.strerror))
-        print >>sys.stderr, "daemonization part #1 failed: %d (%s)" % (e.errno, e.strerror)
+    except OSError, error:
+        logger.error('daemonization part #1 failed: %d (%s)' % (error.errno, error.strerror))
+        print >> sys.stderr, "daemonization part #1 failed: %d (%s)" % (error.errno, error.strerror)
         sys.exit(1)
 
 
@@ -79,16 +85,16 @@ def start_launcher(name, cp):
             logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
             os.system("echo " + str(pid) + " > " + pid_file)
             sys.exit(0)
-    except OSError, e:
-        logger.error('daemonization part #2 failed: %d (%s)' % (e.errno, e.strerror))
-        print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
+    except OSError, error:
+        logger.error('daemonization part #2 failed: %d (%s)' % (error.errno, error.strerror))
+        print >> sys.stderr, "daemonization part #2 failed: %d (%s)" % (error.errno, error.strerror)
         sys.exit(1)
 
     logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
     os.execv(launcher_path, (launcher_path, '--id', name))
 
 def stop_launcher(name, cp):
-    logger=logging.getLogger()
+    logger = logging.getLogger()
     pid_file = os.path.join(cp.get('launchers', 'pid_path'), '%s.pid' % name)
     f = open(pid_file)
     try:
@@ -119,7 +125,7 @@ if __name__ == "__main__":
 
     # start logger
     logging.config.fileConfig(options.config_file)
-    logger=logging.getLogger()
+    logger = logging.getLogger()
 
     # Load configuration file
     cp = ConfigParser.ConfigParser()
@@ -140,9 +146,9 @@ if __name__ == "__main__":
         pid_path = cp.get('launchers', 'pid_path')
         if os.path.isdir(pid_path):
             for root, dirs, files in os.walk(pid_path):
-                for file in files:
-                    if re.compile('^launcher_[0-9]+\.pid$').match(file):
-                        name = re.search('^(launcher_[0-9]+)\.pid$', file).group(1)
+                for myfile in files:
+                    if re.compile('^launcher_[0-9]+\.pid$').match(myfile):
+                        name = re.search('^(launcher_[0-9]+)\.pid$', myfile).group(1)
                         print('\t%s' % name)
                         stop_launcher(name, cp)
         logger.info('Launchers stopped')
