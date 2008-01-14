@@ -152,10 +152,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, self.target_path, files_list, self.wrapper))
 
     def xmlrpc_sync_remote_exec(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(name, client, self.target_path, command, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, self.target_path, command, self.wrapper))
 
     def xmlrpc_sync_remote_inventory(self, command_id, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(name, client, self.inventory_command, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client, self.inventory_command, self.wrapper))
 
     def xmlrpc_async_remote_exec(self, name, command, client=None):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(name, command, client, self.wrapper))
