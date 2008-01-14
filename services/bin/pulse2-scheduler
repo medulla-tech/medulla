@@ -50,12 +50,27 @@ import logging.config
 
 VERSION = "0.0.0"
 
-def prepare_start_all_commands(modulo, name):
-    logger = logging.getLogger()
-    pulse2.scheduler.management.start_all_commands()
+def reschedule_start_all_commands((deffered), modulo, name):
     start_commands_in = int(time.time() % modulo) + 1
-    twisted.internet.reactor.callLater(start_commands_in, prepare_start_all_commands, modulo=modulo, name=name)
+
+    logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (name, start_commands_in))
+
+    twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands, modulo=modulo, name=name)
+
+def run_start_all_commands(modulo, name):
+    logger = logging.getLogger()
+    logger.info('scheduler "%s": startAllCommands started' % (name))
+
+    # start command, gather deffered
+    deffereds = pulse2.scheduler.management.start_all_commands()
+
+    print modulo
+    print name
+    # adds a end hook to reschedule prepare_start_all_commands
+    dl = twisted.internet.defer.DeferredList(deffereds)
+    dl.addCallback(reschedule_start_all_commands, modulo, name)
+
 
 def startService(config_file):
     # Load configuration file
@@ -105,9 +120,7 @@ def startService(config_file):
         return False
 
     # start periodic scheduler, called every start_commands_modulo seconds
-    start_commands_in = int(time.time() % start_commands_modulo) + 1
-    twisted.internet.reactor.callLater(start_commands_in, prepare_start_all_commands, modulo=start_commands_modulo, name=name)
-    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (name, start_commands_in))
+    reschedule_start_all_commands(None, start_commands_modulo, name)
 
     twisted.internet.reactor.run()
     return True
@@ -156,7 +169,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup("pong")
 
     def xmlrpc_start_all_commands(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.management.start_all_commands())
+        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))
 
 def main():
     parser = optparse.OptionParser()
