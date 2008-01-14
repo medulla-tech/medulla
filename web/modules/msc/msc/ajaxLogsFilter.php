@@ -71,6 +71,7 @@ if ($hostname) {
 }
 
 $a_cmd = array();
+$a_date = array();
 $a_uploaded = array();
 $a_executed = array();
 $a_deleted  = array();
@@ -111,6 +112,16 @@ if ($areCommands) {
         $cmd = $cmd[0];
         if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
             $coh = get_commands_on_host($coh_id);
+            if ($history) {
+                $d = $coh["end_date"];
+            } else {
+                $d = $coh["next_launch_date"];
+            }
+            if (empty($d)) {
+                $a_date[] = _T("As soon as possible", "msc");
+            } else {
+                $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
+            }
             $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
@@ -135,6 +146,13 @@ if ($areCommands) {
         }
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
+    # TODO: add the command end timestamp 
+    if ($history) {
+        $datelabel = _T("End date", "msc");
+    } else {
+        $datelabel = _T("Start date", "msc");
+        $n->addExtraInfo($a_date, $datelabel);            
+    }
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
     $n->addExtraInfo($a_executed, _T("executed", "msc"));
