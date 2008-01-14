@@ -1,0 +1,58 @@
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id: scheduler-deamon.py 408 2008-01-04 13:02:20Z nrueff $
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import logging
+import logging.config
+import optparse
+import twisted.web.xmlrpc
+import twisted.internet
+import mmc.plugins.msc
+
+import mmc.plugins.msc.database
+
+def quit(result):
+    twisted.internet.reactor.stop()
+
+if __name__ == "__main__":
+    parser = optparse.OptionParser()
+    # FIXME: check config file availability
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')
+    (options, args) = parser.parse_args()
+
+    # start logger
+    logging.config.fileConfig(options.config_file)
+    logger=logging.getLogger()
+
+    # open Database connexion
+    mmc.plugins.msc.activate()
+
+    # run relevant commands
+    scheduler = mmc.plugins.msc.database.MscDatabase()
+    scheduler.activate()
+    deffereds = scheduler.startAllCommands()
+
+    # wait for commands to finish
+    scheduler.logger.info("Scheduler: %d tasks to perform" % len(deffereds))
+    dl = twisted.internet.defer.DeferredList(deffereds)
+    dl.addCallback(quit)
+    twisted.internet.reactor.run()
