@@ -22,16 +22,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function add_command_quick($cmd, $hosts, $desc, $gid = null) {
-    xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
+function scheduler_start_all_commands($scheduler) {
+    return xmlCall('msc.scheduler_start_all_commands', array($scheduler));
 }
 
-function dispatch_all_commands() {
-    xmlCall('msc.dispatch_all_commands');
+function scheduler_ping_client($scheduler, $client) {
+    return xmlCall('msc.scheduler_ping_client', array($scheduler, $client));
 }
 
-function get_id_command_on_host($id_command) {
-    xmlCall('msc.get_id_command_on_host', array($id_command));
+function scheduler_probe_client($scheduler, $client) {
+    return xmlCall('msc.scheduler_probe_client', array($scheduler, $client));
 }
 
 ?>
