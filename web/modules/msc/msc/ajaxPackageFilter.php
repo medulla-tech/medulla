@@ -82,14 +82,16 @@ if ($machine) {
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
 foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package) {
-    $package = to_packageApi($c_package[0]);
+    $package = to_package($c_package[0]);
     $type = $c_package[1];
+    $p_api = new ServerAPI($c_package[2]);
+
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
     if ($machine) {
-        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs');
+        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
-        $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|msctabs|tablogs');
+        $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     }
     if ($type==0) {
         $a_css[] = 'primary_list';

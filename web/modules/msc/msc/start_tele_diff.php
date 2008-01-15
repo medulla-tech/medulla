@@ -34,6 +34,9 @@ if (isset($_POST["bconfirm"])) {
     $page = $path[2];
     $tab = $path[3];
 
+    $p_api = new ServerAPI();
+    $p_api->fromURI($_POST["papi"]);
+        
     $params = array();
     foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
         $params[$param] = $_POST[$param];
@@ -52,7 +55,7 @@ if (isset($_POST["bconfirm"])) {
     }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $cible, $params, $gid);
+    add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
@@ -65,7 +68,7 @@ if (isset($_POST["bconfirm"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
+    foreach (array('hostname', 'gid', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi') as $param) {
         $params[$param] = $_POST[$param];
     }
     $params['tab'] = 'tablaunch';
@@ -76,14 +79,19 @@ if (isset($_POST["bconfirm"])) {
     $hostname = $_GET["name"];
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
+    $p_api = new ServerAPI();
+    $p_api->fromURI($_GET["papi"]);
+
     $cible = $hostname;
     if ($gid) {
         $group = new Stagroup($_GET['gid']);
         $cible = $group->getName();
     }
-    $name = getPackageLabel($_GET["pid"]);
+    $name = getPackageLabel($p_api, $_GET["pid"]);
     $f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\"", "msc"), $name, $cible));
 
+    $hidden = new HiddenTpl("papi");
+    $f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
     $hidden = new HiddenTpl("gid");

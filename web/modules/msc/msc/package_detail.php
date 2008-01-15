@@ -27,7 +27,9 @@ require('modules/msc/includes/package_api.php');
 $from = $_GET['from'];
 $hostname = $_GET["name"];
 $pid = $_GET["pid"];
-$details = getPackageDetails($_GET["pid"]);
+$p_api = new ServerAPI();
+$p_api->fromURI($_GET["papi"]);
+$details = getPackageDetails($p_api, $_GET["pid"]);
 $name = $details['name'];
 
 $a_param = array(_T("Label", 'msc'), _T("Version", 'msc'), _T('Command', 'msc'));

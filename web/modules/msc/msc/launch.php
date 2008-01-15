@@ -55,8 +55,11 @@ function adv_action($post) {
     $page = $path[2];
     $tab = $path[3];
 
+    $p_api = new ServerAPI();
+    $p_api->fromURI($post["papi"]);
+        
     $params = array();
-    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters') as $param) {
+    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
         $params[$param] = $post[$param];
     }
     foreach (array('start_date', 'end_date') as $param) {
@@ -82,7 +85,7 @@ function adv_action($post) {
     $pid = $post["pid"];
 
     // TODO activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $cible, $params, $gid);
+    add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
@@ -96,7 +99,10 @@ if (isset($_GET["badvanced"])) {
     $hostname = $_GET["name"];
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
-    $name = getPackageLabel($_GET["pid"]);
+    $p_api = new ServerAPI();
+    $p_api->fromURI($_GET["papi"]);
+
+    $name = getPackageLabel($p_api, $_GET["pid"]);
 
     if ($hostname) {
         $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
@@ -109,6 +115,8 @@ if (isset($_GET["badvanced"])) {
     $f = new Form();
     $f->push(new Table());
 
+    $hidden = new HiddenTpl("papi");
+    $f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
     $hidden = new HiddenTpl("from");

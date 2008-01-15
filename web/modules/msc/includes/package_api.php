@@ -3,62 +3,57 @@
 # $Id:
 #
 
-function getAllPackages() {
-        $ret = xmlCall("msc.pa_getAllPackages");
-        return array_map('to_packageApi', $ret);
+function getAllPackages($p_api) {
+        $ret = xmlCall("msc.pa_getAllPackages", array($p_api));
+        return array_map('to_package', $ret);
 }
 
-function getAllMirrorPackages($mirror) {
-        $ret = xmlCall("msc.pa_getAllMirrorPackages", array($mirror));
-        return array_map('to_packageApi', $ret);
+function getPackageLabel($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageLabel", array($p_api, $pid));
 }
 
-function getPackageLabel($pid) {
-        return xmlCall("msc.pa_getPackageLabel", array($pid));
+function getPackageVersion($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageVersion", array($p_api, $pid));
 }
 
-function getPackageVersion($pid) {
-        return xmlCall("msc.pa_getPackageVersion", array($pid));
+function getPackageInstallInit($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageInstallInit", array($p_api, $pid));
 }
 
-function getPackageInstallInit($pid) {
-        return xmlCall("msc.pa_getPackageInstallInit", array($pid));
+function getPackagePreCommand($p_api, $pid) {
+        return xmlCall("msc.pa_getPackagePreCommand", array($p_api, $pid));
 }
 
-function getPackagePreCommand($pid) {
-        return xmlCall("msc.pa_getPackagePreCommand", array($pid));
+function getPackageCommand($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageCommand", array($p_api, $pid));
 }
 
-function getPackageCommand($pid) {
-        return xmlCall("msc.pa_getPackageCommand", array($pid));
+function getPackagePostCommandSuccess($p_api, $pid) {
+        return xmlCall("msc.pa_getPackagePostCommandSuccess", array($p_api, $pid));
 }
 
-function getPackagePostCommandSuccess($pid) {
-        return xmlCall("msc.pa_getPackagePostCommandSuccess", array($pid));
+function getPackagePostCommandFailure($p_api, $pid) {
+        return xmlCall("msc.pa_getPackagePostCommandFailure", array($p_api, $pid));
 }
 
-function getPackagePostCommandFailure($pid) {
-        return xmlCall("msc.pa_getPackagePostCommandFailure", array($pid));
+function getPackageFiles($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageFiles", array($p_api, $pid));
 }
 
-function getPackageFiles($pid) {
-        return xmlCall("msc.pa_getPackageFiles", array($pid));
+function getFileChecksum($p_api, $file) {
+        return xmlCall("msc.pa_getFileChecksum", array($p_api, $file));
 }
 
-function getFileChecksum($file) {
-        return xmlCall("msc.pa_getFileChecksum", array($file));
+function getPackagesIds($p_api, $label) {
+        return xmlCall("msc.pa_getPackagesIds", array($p_api, $label));
 }
 
-function getPackagesIds($label) {
-        return xmlCall("msc.pa_getPackagesIds", array($label));
+function getPackageId($p_api, $label, $version) {
+        return xmlCall("msc.pa_getPackageId", array($p_api, $label, $version));
 }
 
-function getPackageId($label, $version) {
-        return xmlCall("msc.pa_getPackageId", array($label, $version));
-}
-
-function isAvailable($pid, $mirror) {
-        return xmlCall("msc.pa_isAvailable", array($pid, $mirror));
+function isAvailable($p_api, $pid, $mirror) {
+        return xmlCall("msc.pa_isAvailable", array($p_api, $pid, $mirror));
 }
 
 class PackageFile {
@@ -71,11 +66,10 @@ class PackageCommand {
         $this->command = $h_cmd{'command'};
     }
 }
-class PackageApi {
-    function PackageApi($h_pkg) {
+class Package {
+    function Package($h_pkg) {
         $this->label = $h_pkg{'label'};
         $this->version = $h_pkg{'version'};
-        $this->checksum = $h_pkg{'checksum'};
         $this->precmd = new PackageCommand($h_pkg{'precmd'});
         $this->cmd = new PackageCommand($h_pkg{'cmd'});
         $this->postcmd_ok = new PackageCommand($h_pkg{'postcmd_ok'});
@@ -83,22 +77,41 @@ class PackageApi {
         $this->id = $h_pkg{'id'};
     }
 }
+class ServerAPI {
+    function ServerAPI($h = null) {
+        if ($h) {
+            $this->server = $h['server'];
+            $this->port = $h['port'];
+            $this->mountpoint = $h['mountpoint'];
+        }
+    }
+    function toURI() {
+        return base64_encode($this->server.'##'.$this->port.'##'.$this->mountpoint);
+    }
+    function fromURI($uri) {
+        $uri = base64_decode($uri);
+        $uri = split('##', $uri);
+        $this->server = $uri[0];
+        $this->port = $uri[1];
+        $this->mountpoint = $uri[2];
+    }
+}
 
-function to_packageApi($h) {
-    return new PackageApi($h);
+function to_package($h) {
+    return new Package($h);
 }
 
 /* advanced functions (not in the api) */
-function getPackageDetails($pid) {
+function getPackageDetails($p_api, $pid) {
     return array(
-        'name'=>getPackageLabel($pid),
-        'version'=>getPackageVersion($pid),
-        'init'=>getPackageInstallInit($pid),
-        'pre'=>getPackagePreCommand($pid),
-        'command'=>getPackageCommand($pid),
-        'success'=>getPackagePostCommandSuccess($pid),
-        'failure'=>getPackagePostCommandFailure($pid),
-        'files'=>getPackageFiles($pid)
+        'name'=>getPackageLabel($p_api, $pid),
+        'version'=>getPackageVersion($p_api, $pid),
+        'init'=>getPackageInstallInit($p_api, $pid),
+        'pre'=>getPackagePreCommand($p_api, $pid),
+        'command'=>getPackageCommand($p_api, $pid),
+        'success'=>getPackagePostCommandSuccess($p_api, $pid),
+        'failure'=>getPackagePostCommandFailure($p_api, $pid),
+        'files'=>getPackageFiles($p_api, $pid)
     );
 }
 
