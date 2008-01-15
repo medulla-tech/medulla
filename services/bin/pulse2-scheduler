@@ -35,14 +35,13 @@ import twisted.internet.defer
 import twisted.internet.base
 import twisted.internet.reactor
 
-# Misc
-import ConfigParser
-
 # MMC
 import mmc.support.mmctools
 
 # XMLRPC funcs
+from pulse2.scheduler.config import SchedulerConfig
 import pulse2.scheduler.management
+import pulse2.scheduler.network
 
 # Logging
 import logging
@@ -50,77 +49,49 @@ import logging.config
 
 VERSION = "0.0.0"
 
-def reschedule_start_all_commands((deffered), modulo, name):
-    start_commands_in = int(time.time() % modulo) + 1
+def reschedule_start_all_commands((deffered)):
+    start_commands_in = int(time.time() % SchedulerConfig().start_commands_modulo) + 1
 
     logger = logging.getLogger()
-    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (name, start_commands_in))
+    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (SchedulerConfig().name, start_commands_in))
 
-    twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands, modulo=modulo, name=name)
+    twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands)
 
-def run_start_all_commands(modulo, name):
+def run_start_all_commands():
     logger = logging.getLogger()
-    logger.info('scheduler "%s": startAllCommands started' % (name))
+    logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
 
     # start command, gather deffered
     deffereds = pulse2.scheduler.management.start_all_commands()
 
-    print modulo
-    print name
     # adds a end hook to reschedule prepare_start_all_commands
     dl = twisted.internet.defer.DeferredList(deffereds)
-    dl.addCallback(reschedule_start_all_commands, modulo, name)
+    dl.addCallback(reschedule_start_all_commands)
 
 
 def startService(config_file):
-    # Load configuration file
-    cp = ConfigParser.ConfigParser()
-    cp.read(config_file)
-
-    name = cp.get("scheduler", "id")
     logger = logging.getLogger()
-    logger.info('scheduler %s: starting' % name)
-
-
-    if cp.has_option("scheduler", "port"):
-        port = cp.getint("scheduler", "port")
-    else:
-        port = 8000 # FIXME: explain this to user
-
-    if cp.has_option("scheduler", "listen"):
-        host = cp.get("scheduler", "listen")
-    else:
-        host = "127.0.0.1" # FIXME: explain this to user
-
-    logger.info('scheduler "%s": listening on %s:%d' % (name, host, port))
-
-    if cp.has_option("scheduler", "login"):
-        login = cp.get("scheduler", "login")
-    else:
-        login = ""
-        logger.warn('scheduler "%s": no username set !!' % (name))
-
-    if cp.has_option("scheduler", "password"):
-        password = cp.get("scheduler", "password")
-    else:
-        password = ""
-        logger.warn('scheduler "%s": no password set !!' % (name))
-
-    if cp.has_option("scheduler", "start_commands_modulo"):
-        start_commands_modulo = cp.getint("scheduler", "start_commands_modulo")
-    else:
-        start_commands_modulo = 600 # FIXME: explain this to user
+    config = SchedulerConfig()
+    if not config.login:
+        logger.warn('scheduler "%s": no username set !!' % (config.name))
+    if not config.password:
+        logger.warn('scheduler "%s": no password set !!' % (config.name))
+    logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
 
     # Starting XMLRPC server
-    scheduler = Scheduler(name, cp, login, password)
+    logger.info('scheduler %s: starting' % config.name)
     try:
-        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(scheduler), interface = host)
+        twisted.internet.reactor.listenTCP(
+            config.port,
+            twisted.web.server.Site(Scheduler()),
+            interface = config.host
+        )
     except:
-        logger.error('scheduler "%s": can\'t bind to %s:%d' % (name, host, port))
+        logger.error('scheduler "%s": can\'t bind to %s:%d' % (config.name, config.host, config.port))
         return False
 
     # start periodic scheduler, called every start_commands_modulo seconds
-    reschedule_start_all_commands(None, start_commands_modulo, name)
+    reschedule_start_all_commands(None)
 
     twisted.internet.reactor.run()
     return True
@@ -129,13 +100,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
     """
 
-    def __init__(self, name, config, login="", password=""):
+    def __init__(self):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
-        self.id = name
         self.logger = logging.getLogger()
-        self.login = login
-        self.password = password
-        self.cp = config
 
     def getRevision(self):
         return int("$Rev: 298 $".split(':')[1].strip(' $'))
@@ -165,8 +132,11 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         request.write(s)
         request.finish()
 
-    def xmlrpc_ping(self):
-        return mmc.support.mmctools.xmlrpcCleanup("pong")
+    def xmlrpc_ping_client(self, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.ping_client(client))
+
+    def xmlrpc_probe_client(self, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probe_client(client))
 
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))
@@ -184,46 +154,11 @@ def main():
     logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
 
+    # parse conf
+    SchedulerConfig().setup(options.config_file)
+
     # start service
     sys.exit(startService(options.config_file))
 
 if __name__ == '__main__':
     main()
-
-"""
-import logging
-import logging.config
-import optparse
-import twisted.web.xmlrpc
-import twisted.internet
-import mmc.plugins.msc
-
-import mmc.plugins.msc.database
-
-def quit(result):
-    twisted.internet.reactor.stop()
-
-if __name__ == "__main__":
-    parser = optparse.OptionParser()
-    # FIXME: check config file availability
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')
-    (options, args) = parser.parse_args()
-
-    # start logger
-    logging.config.fileConfig(options.config_file)
-    logger=logging.getLogger()
-
-    # open Database connexion
-    mmc.plugins.msc.activate()
-
-    # run relevant commands
-    scheduler = mmc.plugins.msc.database.MscDatabase()
-    scheduler.activate()
-    deffereds = scheduler.startAllCommands()
-
-    # wait for commands to finish
-    scheduler.logger.info("Scheduler: %d tasks to perform" % len(deffereds))
-    dl = twisted.internet.defer.DeferredList(deffereds)
-    dl.addCallback(quit)
-    twisted.internet.reactor.run()
-"""
