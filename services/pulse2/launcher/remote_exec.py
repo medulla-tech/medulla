@@ -61,6 +61,23 @@ def set_default_client_options(client):
                 '-o PasswordAuthentication=no'
             ]
 
+    if client['protocol'] == 'wget': # FIXME: should handle both ssh and http auth
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'passwd' in client:
+            client['passwd'] = '' # unset as we should use RSA/DSA keys
+        if not 'cert' in client:
+            client['cert'] = '/root/.ssh/id_dsa'
+        if not 'options' in client:
+            client['options'] = [
+                '-T',
+                '-o StrictHostKeyChecking=no',
+                '-o Batchmode=yes',
+                '-o PasswordAuthentication=no'
+            ]
+
     if client['protocol'] == 'scp':
         if not 'port' in client:
             client['port'] = 22
@@ -102,6 +119,25 @@ def sync_remote_push(command_id, client, source_path, target_path, files_list, w
         return deffered
     return None
 
+def sync_remote_pull(command_id, client, target_path, files_list, wrapper):
+    """ Handle remote copy on target, sync / pull mode.
+
+    This function will simply get files_list on client:/target_path
+
+    Return:
+        * deffered upon success
+        * None upon failure (mostly unsupported protocol given)
+    """
+    client = set_default_client_options(client)
+    if client['protocol'] == "wget":
+        real_files_list = files_list
+        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
+    return None
+
+
 def sync_remote_delete(command_id, client, target_path, files_list, wrapper):
     """ Handle remote deletion on target, sync mode
 
@@ -132,7 +168,7 @@ def sync_remote_exec(command_id, client, target_path, command, wrapper):
     """
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "cd %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, command)
+        real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered

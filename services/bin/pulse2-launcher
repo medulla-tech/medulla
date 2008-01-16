@@ -144,6 +144,13 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         """
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, self.source_path, self.target_path, files_list, self.wrapper))
 
+    def xmlrpc_sync_remote_pull(self, command_id, client, files_list):
+        """
+        TODO: check that source_path is authorized (using conf file)
+        TODO: check that target_path is authorized (using conf file)
+        """
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, self.target_path, files_list, self.wrapper))
+
     def xmlrpc_sync_remote_delete(self, command_id, client, files_list):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, self.target_path, files_list, self.wrapper))
 
