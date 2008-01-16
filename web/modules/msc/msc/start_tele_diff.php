@@ -25,6 +25,7 @@
 require('modules/msc/includes/actions.inc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
+require('modules/msc/includes/scheduler_xmlrpc.php');
 
 if (isset($_POST["bconfirm"])) {
     $from = $_POST['from'];
@@ -36,7 +37,7 @@ if (isset($_POST["bconfirm"])) {
 
     $p_api = new ServerAPI();
     $p_api->fromURI($_POST["papi"]);
-        
+
     $params = array();
     foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
         $params[$param] = $_POST[$param];
@@ -57,7 +58,7 @@ if (isset($_POST["bconfirm"])) {
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
-    start_all_commands();
+    scheduler_start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 } elseif (isset($_POST["badvanced"])) {
     $from = $_POST['from'];

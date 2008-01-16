@@ -57,7 +57,7 @@ function adv_action($post) {
 
     $p_api = new ServerAPI();
     $p_api->fromURI($post["papi"]);
-        
+
     $params = array();
     foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
         $params[$param] = $post[$param];
