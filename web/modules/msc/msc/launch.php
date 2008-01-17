@@ -28,6 +28,7 @@ require_once('modules/msc/includes/mirror_api.php');
 require_once('modules/msc/includes/actions.inc.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/package_api.php');
+require_once('modules/msc/includes/scheduler_xmlrpc.php');
 
 function action($action, $cible) {
     $script_list = msc_script_list_file();
@@ -38,7 +39,7 @@ function action($action, $cible) {
             $script_list[$action]["title".$current_lang],
             $_GET['gid']);
         dispatch_all_commands();
-        start_all_commands();
+        scheduler_start_all_commands();
         // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
 
@@ -87,7 +88,7 @@ function adv_action($post) {
     // TODO activate this  : msc_command_set_pause($cmd_id);
     add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
-    start_all_commands();
+    scheduler_start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
 }
 
