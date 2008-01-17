@@ -33,7 +33,7 @@ $details = getPackageDetails($p_api, $_GET["pid"]);
 $name = $details['name'];
 
 $a_param = array(_T("Label", 'msc'), _T("Version", 'msc'), _T('Command', 'msc'));
-$a_value = array($details['name'], $details['version'], $details['command']['command']);
+$a_value = array($details['label'], $details['version'], $details['cmd']['command']);
 
 $n = new ListInfos($a_param, _T("Name", 'msc'));
 $n->addExtraInfo($a_value, _T("Value", 'msc'));
