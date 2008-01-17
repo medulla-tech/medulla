@@ -115,12 +115,12 @@ $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("ajaxPing", _T("Ping", "msc"));
-$page->setOptions(array("AJAX" => True));
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxPing.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxPlatform", _T("Platform", "msc"));
-$page->setOptions(array("AJAX" => True));
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxPlatform.php");
 $submod->addPage($page);
 
