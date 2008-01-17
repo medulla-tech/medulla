@@ -131,7 +131,7 @@ def sync_remote_pull(command_id, client, target_path, files_list, wrapper):
     client = set_default_client_options(client)
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
+        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
@@ -159,8 +159,9 @@ def sync_remote_delete(command_id, client, target_path, files_list, wrapper):
 def sync_remote_exec(command_id, client, target_path, command, wrapper):
     """ Handle remote execution on target, sync mode
 
-    This function will simply run the command on the other side
+    This function will simply exec the command on the other side
     client is the method used to connect to the client
+    The command script should have been uploaded earlier
 
     TODO: same as sync_remote_push
 
@@ -169,6 +170,23 @@ def sync_remote_exec(command_id, client, target_path, command, wrapper):
     client = set_default_client_options(client)
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
+    return None
+
+def sync_remote_quickaction(command_id, client, command, wrapper):
+    """ Handle remote quick action on target, sync mode
+
+    This function will simply run the command on the other side
+    client is the method used to connect to the client. Used to launch
+    qucik commands
+
+    Return: same as sync_remote_push
+    """
+    client = set_default_client_options(client)
+    if client['protocol'] == "ssh":
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
