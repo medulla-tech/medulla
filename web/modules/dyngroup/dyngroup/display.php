@@ -38,13 +38,8 @@ if (!$gid) {
     $result->displayResListInfos();
 } else {
     $group = new Stagroup($gid);
-    
-    $p = new PageGenerator(sprintf(_T("Display '%s' result list", "dyngroup"), $group->getName()));
     $item = $items[$gid];
-    $sidemenu->forceActiveItem($item->action);
-    $p->setSideMenu($sidemenu);
-    $p->display();
-    
+
     if ($group->isDyn()) {
         $group = $group->toDyn();
         $r = new Request();
@@ -52,15 +47,26 @@ if (!$gid) {
         $res = new Result($r, $group->getBool());
     
         if ($group->isGroup()) {
+            __my_header(sprintf(_T("Display '%s' content", "dyngroup"), $group->getName()), $sidemenu, $gid);
             $res->parse($group->getResult());
             $res->displayResListInfos(true, array('gid'=>$gid), 'display');
         } else {
+            __my_header(sprintf(_T("Display '%s' result list", "dyngroup"), $group->getName()), $sidemenu, $gid);
             $res->replyToRequest();
             $res->displayResListInfos();
         }
     } else {
+        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $gid);
         $group->prettyDisplay();
     }
+}
+
+function __my_header($label, $sidemenu, $item) {
+    $p = new PageGenerator($label);
+    $sidemenu->forceActiveItem($item->action);
+    $p->setSideMenu($sidemenu);
+    $p->display();
+    return $p;
 }
 
 ?>
