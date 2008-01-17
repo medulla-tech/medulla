@@ -179,7 +179,15 @@ class CommandHistory {
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
-            $n = new ListInfos(array_map('_colorise', $hist["stderr"]), $history);
+            $raw_errors = array_map('_colorise', $hist["stderr"]);
+            $purge_errors = array();
+
+            foreach ($raw_errors as $error)
+                if (isset($error))
+                    array_push($purge_errors, $error);
+
+            $n = new ListInfos($purge_errors, $history);
+
             $n->setTableHeaderPadding(1);
             if (count($hist["stderr"]) > 0  &&
                 !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')
@@ -193,6 +201,8 @@ function _values($a) { return $a[1]; }
 function _names($a) { return $a[0]; }
 function _colorise($line) {
     if (preg_match_all("|^(.*) ([ECOX]): (.*)$|", $line, $matches)) {
+        if (strlen($matches[3][0]) == 0)
+            return;
         $out .= '<font color=grey>' . $matches[1][0] . '</font>&nbsp;';
         if ($matches[2][0] == "E") {
             $out .= '<font color=red>';

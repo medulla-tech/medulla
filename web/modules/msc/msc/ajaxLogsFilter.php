@@ -31,7 +31,7 @@ require("../../../includes/session.inc.php");
 
 require_once("../../../modules/msc/includes/widgets.inc.php");
 require_once("../../../modules/msc/includes/functions.php");
-require_once('../../../modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("../../../modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("../../../modules/msc/includes/command_history.php");
 
 global $conf;
@@ -146,12 +146,12 @@ if ($areCommands) {
         }
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
-    # TODO: add the command end timestamp 
+    # TODO: add the command end timestamp
     if ($history) {
         $datelabel = _T("End date", "msc");
     } else {
         $datelabel = _T("Start date", "msc");
-        $n->addExtraInfo($a_date, $datelabel);            
+        $n->addExtraInfo($a_date, $datelabel);
     }
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
