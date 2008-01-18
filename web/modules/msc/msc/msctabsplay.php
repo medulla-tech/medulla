@@ -22,7 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require('modules/msc/includes/scheduler.php');
+require('modules/msc/includes/scheduler_xmlrpc.php');
+require('modules/msc/includes/commands_xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
     $from = $_POST['from'];
@@ -33,14 +34,15 @@ if (isset($_POST["bconfirm"])) {
     $tab = $path[3];
 
     $hostname = $_POST["name"];
-    $cmd_id = $_POST["cmd_id"];
-    
-    // TODO activate this  : msc_command_set_play($cmd_id);
+    $coh_id = $_POST["coh_id"];
+
+    start_command_on_host($coh_id);
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
 } else {
     $from = $_GET['from'];
     $hostname = $_GET["name"];
     $cmd_id = $_GET["cmd_id"];
+    $coh_id = $_GET["coh_id"];
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
     $f = new PopupForm(sprintf(_T("Start action %s on host %s", 'msc'), $name, $hostname));
@@ -50,6 +52,8 @@ if (isset($_POST["bconfirm"])) {
     $f->add($hidden, array("value" => $from, "hide" => True));
     $hidden = new HiddenTpl("cmd_id");
     $f->add($hidden, array("value" => $cmd_id, "hide" => True));
+    $hidden = new HiddenTpl("coh_id");
+    $f->add($hidden, array("value" => $coh_id, "hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();

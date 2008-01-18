@@ -165,6 +165,7 @@ function history_stat2icon($state) {
 function state_tmpl($current_state) {
     $ret = array();
     if (
+        ($current_state != "stop") &&
         ($current_state != "pause") &&
         ($current_state != "not_reachable") &&
         ($current_state != "upload_failed") &&

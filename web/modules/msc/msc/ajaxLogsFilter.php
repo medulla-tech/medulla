@@ -123,9 +123,9 @@ if ($areCommands) {
                 $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             }
             $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
-            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';//.$coh['uploaded'];
-            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';//.$coh['executed'];
-            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';//.$coh['deleted'];
+            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';
+            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';
+            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';
             if (isset($statusTable[$coh['current_state']])) {
                 $a_current[] = $statusTable[$coh['current_state']];
             } else {
