@@ -77,6 +77,16 @@ def activate():
         logger.info("samba plugin disabled by configuration.")
         return False
 
+    if config.defaultSharesPath:
+        if config.defaultSharesPath.endswith("/"):
+	    logger.error("Trailing / ist not allowed in defaultSharesPath")
+	    return False
+
+    for cpath in config.authorizedSharePaths:
+        if cpath.endswith("/"):
+            logger.error("Trailing / ist not allowed in authorizedSharePaths")
+            return False
+
     try:
         ldapObj = ldapUserGroupControl()
     except ldap.INVALID_CREDENTIALS:
@@ -169,6 +179,25 @@ def activate():
 def isSmbAntiVirus():
     return os.path.exists(SambaConfig("samba").clam_av_so)
 
+def isAuthorizedSharePath(path):
+    """
+    @return: True if the given path is authorized to create a SAMBA share
+    @rtype: bool
+    """
+    ret = False
+    for apath in SambaConfig("samba").authorizedSharePaths:
+        ret = apath + "/" in path
+        if ret:
+            break
+    return ret
+
+def getDefaultSharesPath():
+    """
+    @return: the default SAMBA share path
+    @rtype: str
+    """
+    return SambaConfig("samba").defaultSharesPath
+
 def getDetailedShares():
     """Get a complete array of information about all shares"""
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
@@ -188,9 +217,9 @@ def getDomainAdminsGroup():
 def isBrowseable(name):
     return smbConf(SambaConfig("samba").samba_conf_file).isBrowseable(name)
 
-def addShare(name, comment, usergroups, permAll, admingroups, browseable = True, av = 0):
+def addShare(name, path, comment, usergroups, permAll, admingroups, browseable = True, av = 0):
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
-    smbObj.addShare(name, comment, usergroups, permAll, admingroups, browseable, av)
+    smbObj.addShare(name, path, comment, usergroups, permAll, admingroups, browseable, av)
     smbObj.save()
 
 def delShare(name, file):
@@ -220,20 +249,22 @@ def isPdc():
     return smbObj.isPdc()
 
 def backupShare(share, media, login):
+    """
+    Launch as a background process the backup of a share
+    """
     smbObj = smbConf(SambaConfig("samba").samba_conf_file)
-
     configParser = mmctools.getConfigParser("base")
     path = configParser.get("backup-tools", "path")
     destpath = configParser.get("backup-tools", "destpath")
-
     cmd = os.path.join(path, "backup.sh")
-
-    if share == "homes": savedir = "/home/" # FIXME
-    else: savedir = os.path.join(smbObj.sharespath, share)
-
-    # FIXME: check for error
+    if share == "homes":
+        # FIXME: Maybe we should have a configuration directive to tell that
+        # all users home are stored into /home
+        savedir = "/home/"
+    else:
+        savedir = self.getContent(name, "path")
+    # Run backup process in background
     mmctools.shlaunchBackground(cmd+" "+share+" "+savedir+" "+destpath+" "+login+" "+media+" "+path,"backup share "+share, mmctools.progressBackup)
-    return 0
 
 def restartSamba():
     mmctools.shlaunchBackground(SambaConfig("samba").samba_init_script+' restart')
@@ -303,13 +334,27 @@ class SambaConfig(PluginConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        self.sharespath = self.get("main", "sharespath")
+        # Handle deprecated config option and correct the NoOptionError exception to the new option
+        try:
+            if self.has_option("main","defaultSharesPath"):
+                self.defaultSharesPath = self.get("main", "defaultSharesPath")
+            else:
+                self.defaultSharesPath = self.get("main", "sharespath")
+        except NoOptionError:
+            raise NoOptionError("defaultSharesPath", "main")
+
         try: self.samba_conf_file = self.get("main", "sambaConfFile")
         except: pass
         try: self.samba_init_script = self.get("main", "sambaInitScript")
         except: pass
         try: self.clam_av_so = self.get("main", "sambaClamavSo")
         except: pass
+
+        try:
+            listSharePaths = self.get("main", "authorizedSharePaths")
+            self.authorizedSharePaths = listSharePaths.replace(' ','').split(',')
+        except:
+            self.authorizedSharePaths = [self.defaultSharesPath]
 
     def setDefault(self):
         PluginConfig.setDefault(self)
@@ -799,10 +844,6 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         return ret
 
 
-##########################################################################
-# Class de gestion de smbConf
-##########################################################################
-
 class smbConf:
 
     def __init__(self, smbconffile = "/etc/samba/smb.conf", conffile = None, conffilebase = None):
@@ -818,7 +859,7 @@ class smbConf:
         In SAMBA source code, parameters are defined in param/loadparm.c
         """
         config = SambaConfig("samba", conffile)
-        self.sharespath = config.sharespath
+        self.defaultSharesPath = config.defaultSharesPath
         self.conffilebase = conffilebase
         self.smbConfFile = smbconffile
         # Parse SAMBA configuration files
@@ -1097,6 +1138,7 @@ class smbConf:
         """
         returnArr = {}
         returnArr['desc'] = self.getContent(name,'comment')
+        returnArr['sharePath'] = self.getContent(name,'path')
         if returnArr['desc'] == -1: returnArr['desc'] = ""
         if self.isValueTrue(self.getContent(name,'public')) == 1:
             returnArr['permAll'] = 1
@@ -1120,7 +1162,7 @@ class smbConf:
         # Get the directory group owner
         # FIXME: ???
         try:
-            path = os.path.join(self.sharespath, name)
+            path = self.getContent(name,'path')
             ps = os.popen('stat %s | grep Access: | head -n 1' % path, 'r')
             # more matching regex
             # 'Gid: *\( *[0-9]*/ *([^/]*)\)$'
@@ -1128,12 +1170,11 @@ class smbConf:
             for group in groupArr:
                 returnArr['group']=group
         except:
-            #raise mmcException('cannot retrieve group attribute')
             pass
         return returnArr
 
 
-    def addShare(self, name, comment, usergroups, permAll, admingroups, browseable = True, av = False):
+    def addShare(self, name, path, comment, usergroups, permAll, admingroups, browseable = True, av = False):
         """
         add a share in smb.conf
         and create it physicaly
@@ -1141,9 +1182,23 @@ class smbConf:
         if self.contentArr.has_key(name):
             raise Exception('This share already exist')
 
-        # create samba share directory
-        path = os.path.join(self.sharespath, name)
-        os.makedirs(path)
+        # If no path is given, create a default one
+        if not path:
+            path = os.path.join(self.defaultSharesPath, name)
+
+        # Check that the path is authorized
+        if not isAuthorizedSharePath(os.path.realpath(path)):
+            raise path + " is not an authorized share path."
+
+        # Create samba share directory, if it does not exist
+        try:
+            os.makedirs(path)
+        except OSError , (errno, strerror):
+            # Raise exception if error is not "File exists"
+            if errno != 17:
+                raise OSError(errno, strerror + ' ' + path)
+            else: pass
+        
         # Directory is owned by root
         os.chown(path, 0, 0)
 
@@ -1200,8 +1255,6 @@ class smbConf:
 
         self.contentArr[name] = tmpInsert
 
-        return 'partage ' + name +' ajoute' # FIXME: Should return 0
-
     def getACLOnShare(self, name):
         """
         Return a list with all the groups that have rwx access to the share.
@@ -1212,7 +1265,7 @@ class smbConf:
         @rtype: list
         @return: list of groups that have rwx access to the share.
         """
-        path = os.path.join(self.sharespath, name)
+        path = self.getContent(name, "path")
         ret= []
         ldapobj = mmc.plugins.base.ldapUserGroupControl(self.conffilebase)
         acl1 = ACL(file=path)
