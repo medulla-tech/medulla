@@ -37,8 +37,13 @@ import twisted.internet.reactor
 import ConfigParser
 
 # MMC
-import pulse2.launcher.remote_exec
 import mmc.support.mmctools
+
+# Other stuff
+from pulse2.launcher.config import LauncherConfig
+
+# XMLRPC funcs
+import pulse2.launcher.remote_exec
 
 # Logging
 import logging
@@ -46,68 +51,35 @@ import logging.config
 
 VERSION = "0.0.0"
 
-def startService(name, config_file):
-    # Load configuration file
-    cp = ConfigParser.ConfigParser()
-    cp.read(config_file)
-
+def startService():
     logger = logging.getLogger()
+    config = LauncherConfig()
 
-    if cp.has_option(name, "port"):
-        port = cp.getint(name, "port")
-    else:
-        port = 8001 # FIXME: explain this to user
+    name = config.name
+    port = int(config.launchers[config.name]['port'])
+    bind = config.launchers[config.name]['bind']
 
-    if cp.has_option(name, "host"):
-        host = cp.get(name, "host")
-    elif cp.has_option("launchers", "host"):
-        host = cp.get("launchers", "host")
-    else:
-        host = "127.0.0.1" # FIXME: explain this to user
-
-    logger.info('launcher "%s": listening on %s:%d' % (name, host, port))
-
-    if cp.has_option(name, "login"):
-        login = cp.get(name, "login")
-    elif cp.has_option("launchers", "login"):
-        login = cp.get("launchers", "login")
-    else:
-        login = ""
-        logger.warn('launcher "%s": no username set !!' % (name))
-
-    if cp.has_option(name, "password"):
-        password = cp.get(name, "password")
-    elif cp.has_option("launchers", "password"):
-        password = cp.get("launchers", "password")
-    else:
-        password = ""
-        logger.warn('launcher "%s": no password set !!' % (name))
+    logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
 
     # Starting XMLRPC server
-    launcher = Launcher(name, cp, login, password)
+    launcher = Launcher(name)
     try:
-        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(launcher), interface = host)
+        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(launcher), interface = bind)
     except:
-        logger.error('launcher "%s": can\'t bind to %s:%d' % (name, host, port))
-        return False
+        logger.error('launcher "%s": can\'t bind to %s:%d' % (name, bind, port))
+        return 1
     twisted.internet.reactor.run()
-    return True
+    return 0
 
 class Launcher(twisted.web.xmlrpc.XMLRPC):
     """Our launcher
     """
 
-    def __init__(self, name, config, login="", password=""):
+    def __init__(self, name):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
-        self.id = name
+        self.name = name
         self.logger = logging.getLogger()
-        self.login = login
-        self.password = password
-        self.cp = config
-        self.wrapper = self.cp.get('launchers', 'wrapper_path') # FIXME: check wrapper availability
-        self.source_path = self.cp.get('launchers', 'source_path') # FIXME: check source path existence
-        self.target_path = self.cp.get('launchers', 'target_path') # FIXME: check target path existence
-        self.inventory_command = self.cp.get('launchers', 'inventory_command')
+        self.config = LauncherConfig().launchers[name]
 
     def getRevision(self):
         return int("$Rev: 298 $".split(':')[1].strip(' $'))
@@ -119,7 +91,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         self.logger.error(failure)
         if isinstance(failure.value, xmlrpclib.Fault):
             return failure.value
-        return xmlrpclib.Fault(self.FAILURE, "Internal Error")
+        return xmlrpclib.Fault(self.FAILURE, "Internal Error on launcher %s" % self.name)
 
     def _cbRender(self, result, request):
         args, func = xmlrpclib.loads(request.content.getvalue())
@@ -127,7 +99,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
             result = mmc.support.mmctools.xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
             result = (result,)
-        self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
+        self.logger.debug('%s: xmlrpc: %s%s => %s' % (self.name, func, (args), (result)))
         try:
             s = xmlrpclib.dumps(result, methodresponse=1)
         except:
@@ -142,29 +114,32 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         TODO: check that source_path is authorized (using conf file)
         TODO: check that target_path is authorized (using conf file)
         """
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, self.source_path, self.target_path, files_list, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, files_list))
 
     def xmlrpc_sync_remote_pull(self, command_id, client, files_list):
         """
         TODO: check that source_path is authorized (using conf file)
         TODO: check that target_path is authorized (using conf file)
         """
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, self.target_path, files_list, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, files_list))
 
     def xmlrpc_sync_remote_delete(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, self.target_path, files_list, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, files_list))
 
     def xmlrpc_sync_remote_exec(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, self.target_path, command, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, command))
 
     def xmlrpc_sync_remote_quickaction(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command))
+
+    def xmlrpc_sync_remote_wol(self, client, command):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(command_id, client))
 
     def xmlrpc_sync_remote_inventory(self, command_id, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client, self.inventory_command, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client))
 
     def xmlrpc_async_remote_exec(self, name, command, client=None):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(name, command, client, self.wrapper))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(name, command, client))
 
     def xmlrpc_get_background_process_count(self):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_count())
@@ -199,8 +174,11 @@ def main():
     logger = logging.getLogger()
     logger.info('launcher %s: starting' % options.id)
 
+    # parse conf
+    LauncherConfig().setup(options.config_file, options.id)
+
     # start service
-    sys.exit(startService(options.id, options.config_file))
+    sys.exit(startService())
 
 if __name__ == '__main__':
     main()

@@ -29,6 +29,7 @@
 
 import os
 import mmc.support.mmctools
+from pulse2.launcher.config import LauncherConfig
 
 def set_default_client_options(client):
     """
@@ -98,7 +99,16 @@ def set_default_client_options(client):
             ]
     return client
 
-def sync_remote_push(command_id, client, source_path, target_path, files_list, wrapper):
+    if client['protocol'] == 'wol':
+        if not 'addr' in client:
+            client['addr'] = 'FF:FF:FF:FF:FF:FF'
+        if not 'bcast' in client:
+            client['bcast'] = '255.255.255.255'
+        if not 'port' in client:
+            client['port'] = '40000'
+    return client
+
+def sync_remote_push(command_id, client, files_list):
     """ Handle remote copy on target, sync / push mode.
 
     This function will simply send files_list on client:/target_path
@@ -110,16 +120,19 @@ def sync_remote_push(command_id, client, source_path, target_path, files_list, w
         * deffered upon success
         * None upon failure (mostly unsupported protocol given)
     """
+    source_path = LauncherConfig().source_path
+    target_path = LauncherConfig().target_path
+    wrapper_path = LauncherConfig().wrapper_path
     client = set_default_client_options(client)
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
-        real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
+        real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper_path, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
-def sync_remote_pull(command_id, client, target_path, files_list, wrapper):
+def sync_remote_pull(command_id, client, files_list):
     """ Handle remote copy on target, sync / pull mode.
 
     This function will simply get files_list on client:/target_path
@@ -129,16 +142,18 @@ def sync_remote_pull(command_id, client, target_path, files_list, wrapper):
         * None upon failure (mostly unsupported protocol given)
     """
     client = set_default_client_options(client)
+    target_path = LauncherConfig().target_path
+    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
+        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
 
-def sync_remote_delete(command_id, client, target_path, files_list, wrapper):
+def sync_remote_delete(command_id, client, files_list):
     """ Handle remote deletion on target, sync mode
 
     This function will simply delete files_list from client:/target_path
@@ -148,15 +163,17 @@ def sync_remote_delete(command_id, client, target_path, files_list, wrapper):
     Return: same as sync_remote_push
     """
     client = set_default_client_options(client)
+    target_path = LauncherConfig().target_path
+    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
+        real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
-def sync_remote_exec(command_id, client, target_path, command, wrapper):
+def sync_remote_exec(command_id, client, command):
     """ Handle remote execution on target, sync mode
 
     This function will simply exec the command on the other side
@@ -168,14 +185,16 @@ def sync_remote_exec(command_id, client, target_path, command, wrapper):
     Return: same as sync_remote_push
     """
     client = set_default_client_options(client)
+    target_path = LauncherConfig().target_path
+    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
+        real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
-def sync_remote_quickaction(command_id, client, command, wrapper):
+def sync_remote_quickaction(command_id, client, command):
     """ Handle remote quick action on target, sync mode
 
     This function will simply run the command on the other side
@@ -185,14 +204,30 @@ def sync_remote_quickaction(command_id, client, command, wrapper):
     Return: same as sync_remote_push
     """
     client = set_default_client_options(client)
+    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
-def sync_remote_inventory(command_id, client, inventory_command, wrapper):
+def sync_remote_wol(command_id, client, wrapper):
+    """ Handle remote WOL on target, sync mode
+
+    Return: same as sync_remote_push
+    """
+    client = set_default_client_options(client)
+    """
+    if client['protocol'] == "wol":
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
+        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered.addCallback(_remote_sync_cb)
+        return deffered
+        """
+    return None
+
+def sync_remote_inventory(command_id, client):
     """ Handle remote inventoring on target, sync mode
 
     This function will simply run the inventory on the othe side
@@ -203,22 +238,25 @@ def sync_remote_inventory(command_id, client, inventory_command, wrapper):
     Return: same as sync_remote_push
     """
     client = set_default_client_options(client)
+    wrapper_path = LauncherConfig().wrapper_path
+    inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
         return deffered
     return None
 
-def async_remote_exec(id, command, client, wrapper):
+def async_remote_exec(id, command, client):
 
     # do not re-inject already running processes
     if (do_background_process_exists(id)):
         return False
 
     client = set_default_client_options(client)
+    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
         mmc.support.mmctools.shlaunchBackground(real_command, id, _remote_async_progress_cb, _remote_async_end_cb)
     return True
 
