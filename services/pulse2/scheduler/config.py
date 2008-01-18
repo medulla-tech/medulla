@@ -22,6 +22,7 @@
 
 # Misc
 import ConfigParser
+import re
 
 # MMC
 import mmc.support.mmctools
@@ -38,6 +39,12 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     password = ""
     start_commands_modulo = 600
     prober_path = '/usr/sbin/pulse2-probe'
+    launchers = {
+        'launcher_01': {
+            'port': 8001,
+            'host': '127.0.0.1'
+        }
+    }
 
     def setup(self, config_file):
         # Load configuration file
@@ -45,6 +52,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         cp.read(config_file)
 
         self.name = cp.get("scheduler", "id")
+
         if cp.has_option("scheduler", "port"):
             self.port = cp.getint("scheduler", "port")
 
@@ -62,3 +70,10 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "prober_path"):
             self.prober_path = cp.get("scheduler", "prober_path")
+
+        for section in cp.sections():
+            if re.compile("^launcher_[0-9]+$").match(section):
+                self.launchers[section] = {
+                        'port': cp.get(section, "port"),
+                        'host': cp.get(section, "host")
+                    }

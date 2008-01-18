@@ -39,9 +39,11 @@ import twisted.internet.reactor
 import mmc.support.mmctools
 
 # XMLRPC funcs
-from pulse2.scheduler.config import SchedulerConfig
 import pulse2.scheduler.management
 import pulse2.scheduler.network
+
+# Other stuff
+from pulse2.scheduler.config import SchedulerConfig
 
 # Logging
 import logging
@@ -51,25 +53,20 @@ VERSION = "0.0.0"
 
 def reschedule_start_all_commands((deffered)):
     start_commands_in = int(time.time() % SchedulerConfig().start_commands_modulo) + 1
-
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (SchedulerConfig().name, start_commands_in))
-
     twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands)
 
 def run_start_all_commands():
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
-
     # start command, gather deffered
     deffereds = pulse2.scheduler.management.start_all_commands()
-
     # adds a end hook to reschedule prepare_start_all_commands
     dl = twisted.internet.defer.DeferredList(deffereds)
     dl.addCallback(reschedule_start_all_commands)
 
-
-def startService(config_file):
+def startService():
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.login:
@@ -77,6 +74,9 @@ def startService(config_file):
     if not config.password:
         logger.warn('scheduler "%s": no password set !!' % (config.name))
     logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
+
+    launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
+    logger.info('scheduler "%s": available launchers: %s' % (config.name, ' '.join(launchers)))
 
     # Starting XMLRPC server
     logger.info('scheduler %s: starting' % config.name)
@@ -158,7 +158,7 @@ def main():
     SchedulerConfig().setup(options.config_file)
 
     # start service
-    sys.exit(startService(options.config_file))
+    sys.exit(startService())
 
 if __name__ == '__main__':
     main()
