@@ -1840,8 +1840,13 @@ class ldapAuthen:
         return self.result
 
     def getUserEntry(self):
-        return self.l.search_s(self.userdn, ldap.SCOPE_BASE)
-
+        try:
+            ret = self.l.search_s(self.userdn, ldap.SCOPE_BASE)
+        except ldap.NO_SUCH_OBJECT:
+            # If the user is defined in OpenLDAP slapd.conf, we may bind even
+            # if the user has no LDAP entry.
+            ret = None
+        return ret
 
 class GpoManager:
 
