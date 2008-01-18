@@ -47,11 +47,12 @@ def probe_client(client):
             if re.compile(identification["pcre"]).search(ptype) or ptype == identification["platform"]:
                 logging.getLogger().debug('scheduler %s: found os |%s| for client \'%s\'' % (SchedulerConfig().name, identification["platform"], client))
                 return identification["platform"]
-        logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\'' % (SchedulerConfig().name, client))
+        logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got %s)' % (SchedulerConfig().name, client, ptype))
         return "Other/N.A."
 
     def _eb(result):
-        return "Other/N.A."
+        logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+        return "Can't connect"
 
     command = '%s %s' % (SchedulerConfig().prober_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
