@@ -25,7 +25,6 @@
 
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/mirror_api.php');
-require_once('modules/msc/includes/actions.inc.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');

@@ -78,4 +78,33 @@ function add_command_api($pid, $target, $params, $p_api, $gid = null) {
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $gid));
 }
 
+function add_command_quick($cmd, $hosts, $desc, $gid = null) {
+    xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
+}
+
+function dispatch_all_commands() {
+    xmlCall('msc.dispatch_all_commands');
+}
+
+function get_id_command_on_host($id_command) {
+    xmlCall('msc.get_id_command_on_host', array($id_command));
+}
+
+function start_command_on_host($coh_id) {
+    return xmlCall('msc.start_command_on_host', array($coh_id));
+}
+
+function pause_command_on_host($coh_id) {
+    return xmlCall('msc.pause_command_on_host', array($coh_id));
+}
+
+function restart_command_on_host($coh_id) {
+    return xmlCall('msc.restart_command_on_host', array($coh_id));
+}
+
+function stop_command_on_host($coh_id) {
+    return xmlCall('msc.stop_command_on_host', array($coh_id));
+}
+
+
 ?>

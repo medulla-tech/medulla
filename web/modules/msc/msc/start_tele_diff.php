@@ -22,7 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require('modules/msc/includes/actions.inc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
