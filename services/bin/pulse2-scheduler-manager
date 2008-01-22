@@ -34,7 +34,7 @@ import signal
 
 def start_scheduler(cp):
     """
-    daemonize a launcher
+    daemonize a scheduler
     """
     name = cp.get('scheduler', 'id')
     logger=logging.getLogger()
@@ -84,8 +84,8 @@ def start_scheduler(cp):
         print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
-    logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
-    os.execv(scheduler_path, (scheduler_path, '--id', name))
+    logger.info('daemonization ended: switching to %s' % [scheduler_path])
+    os.execv(scheduler_path, (scheduler_path,))
 
 def stop_scheduler(cp):
     name = cp.get('scheduler', 'id')
