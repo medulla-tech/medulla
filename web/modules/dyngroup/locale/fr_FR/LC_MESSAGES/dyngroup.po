@@ -6,22 +6,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-07 12:22+0100\n"
-"PO-Revision-Date: 2008-01-07 12:24+0100\n"
+"POT-Creation-Date: 2008-01-23 11:27+0100\n"
+"PO-Revision-Date: 2008-01-23 11:29+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: old/dyngroup/sav/groups.php:118 old/dyngroup/members.php:106
+#, php-format
+msgid "Group members %s"
+msgstr "Membres du groupe %s"
+
+#: old/dyngroup/sav/groups.php:130 old/dyngroup/members.php:118
+#: dyngroup/dyngroup/add_groups.php:105 dyngroup/dyngroup/add_groups.php:106
+msgid "All machines"
+msgstr "Tous les ordinateurs"
+
+#: old/dyngroup/sav/groups.php:154 old/dyngroup/members.php:142
+#: dyngroup/dyngroup/add_groups.php:129 dyngroup/dyngroup/add_groups.php:130
+msgid "Group members"
+msgstr "Membres du groupe"
+
+#: old/dyngroup/sav/groups.php:180 old/dyngroup/members.php:167
+#: dyngroup/dyngroup/add_groups.php:155 dyngroup/dyngroup/add_groups.php:156
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: old/dyngroup/sav/groups.php:181 old/dyngroup/members.php:168
+#: dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/dyngroup/remove_machine.php:47
+#: dyngroup/dyngroup/add_groups.php:156 dyngroup/dyngroup/add_groups.php:157
+msgid "Cancel"
+msgstr "Annuler"
+
+#: old/dyngroup/sav/add_groups.php:30 dyngroup/dyngroup/list.php:59
+#: dyngroup/dyngroup/add_groups.php:93 dyngroup/dyngroup/add_groups.php:94
+msgid "Group name"
+msgstr "Nom du groupe"
+
+#: old/dyngroup/members.php:96
+msgid "Group successfully modified"
+msgstr "Groupe modifié avec succès"
+
+#: old/includes/double.php:52
+msgid "->"
+msgstr ""
+
+#: old/includes/double.php:70 dyngroup/includes/autocomplete.php:43
+#: dyngroup/dyngroup/creator.php:121 dyngroup/dyngroup/creator.php:142
+#: dyngroup/dyngroup/creator.php:146
+msgid "Add"
+msgstr "Ajouter"
+
 #: dyngroup/includes/autocomplete.php:34
 msgid "Add a value"
 msgstr "Ajouter une valeur"
-
-#: dyngroup/includes/autocomplete.php:43 dyngroup/dyngroup/creator.php:121
-#: dyngroup/dyngroup/creator.php:142 dyngroup/dyngroup/creator.php:146
-msgid "Add"
-msgstr "Ajouter"
 
 #: dyngroup/includes/request.php:94
 msgid "Search part"
@@ -66,10 +107,6 @@ msgstr "Visible"
 msgid "Hidden"
 msgstr "Caché"
 
-#: dyngroup/dyngroup/list.php:59 dyngroup/dyngroup/add_groups.php:93
-msgid "Group name"
-msgstr "Nom du groupe"
-
 #: dyngroup/dyngroup/list.php:60
 msgid "Type"
 msgstr "Type"
@@ -107,12 +144,6 @@ msgstr "Supprimer le groupe"
 msgid "You will delete group <b>%s</b>."
 msgstr "Vous allez supprimer le groupe <b>%s</b>."
 
-#: dyngroup/dyngroup/delete_group.php:50
-#: dyngroup/dyngroup/remove_machine.php:47
-#: dyngroup/dyngroup/add_groups.php:156
-msgid "Cancel"
-msgstr "Annuler"
-
 #: dyngroup/dyngroup/save.php:29
 msgid "Request saver"
 msgstr "Sauvegarde de requête"
@@ -148,11 +179,12 @@ msgid "Choose your field : "
 msgstr "Sélectionner votre champ : "
 
 #: dyngroup/dyngroup/creator.php:139 dyngroup/dyngroup/creator.php:145
-#: dyngroup/dyngroup/add_groups.php:95
+#: dyngroup/dyngroup/add_groups.php:95 dyngroup/dyngroup/add_groups.php:96
 msgid "Yes"
 msgstr "Oui"
 
 #: dyngroup/dyngroup/creator.php:140 dyngroup/dyngroup/add_groups.php:96
+#: dyngroup/dyngroup/add_groups.php:97
 msgid "No"
 msgstr "Non"
 
@@ -201,14 +233,6 @@ msgstr "Tous les groupes"
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
-#: dyngroup/dyngroup/localSidebar.php:36
-msgid "request"
-msgstr "requête"
-
-#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
-msgid "group"
-msgstr "le groupe"
-
 #: dyngroup/dyngroup/localSidebar.php:40
 #, php-format
 msgid "Display %s '%s'"
@@ -235,7 +259,7 @@ msgstr "Cacher"
 msgid "Show"
 msgstr "Afficher"
 
-#: dyngroup/dyngroup/display.php:42
+#: dyngroup/dyngroup/display.php:42 dyngroup/dyngroup/display.php:54
 #, php-format
 msgid "Display '%s' result list"
 msgstr "Afficher la liste des résultats de '%s'"
@@ -244,33 +268,9 @@ msgstr "Afficher la liste des résultats de '%s'"
 msgid "Group creation"
 msgstr "Création d'un groupe"
 
-#: dyngroup/dyngroup/tab.php:9
-msgid "Dynamic group creation"
-msgstr "Création d'un groupe dynamique"
-
-#: dyngroup/dyngroup/tab.php:10
-msgid "Static group creation"
-msgstr "Création d'un groupe statique"
-
-#: dyngroup/dyngroup/add_groups.php:94
+#: dyngroup/dyngroup/add_groups.php:94 dyngroup/dyngroup/add_groups.php:95
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
-
-#: dyngroup/dyngroup/add_groups.php:105
-msgid "All machines"
-msgstr "Tous les ordinateurs"
-
-#: dyngroup/dyngroup/add_groups.php:129
-msgid "Group members"
-msgstr "Membres du groupe"
-
-#: dyngroup/dyngroup/add_groups.php:155
-msgid "Confirm"
-msgstr "Confirmer"
-
-#: dyngroup/dyngroup/header.php:26
-msgid "Please chose the type of group you want to create"
-msgstr "Choisissez le type de groupe que vous voulez créer"
 
 #: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:42
 msgid "Machines Group Creator"
@@ -303,3 +303,33 @@ msgstr "Détails du groupe d'ordinateurs"
 #: dyngroup/infoPackage.inc.php:76
 msgid "Remove a machine from a group"
 msgstr "Supprimer un ordinateur d'un groupe"
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "request"
+msgstr "requête"
+
+#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
+msgid "group"
+msgstr "le groupe"
+
+#: dyngroup/dyngroup/display.php:50
+#, php-format
+msgid "Display '%s' content"
+msgstr "Voir le contenu de %s"
+
+#: dyngroup/dyngroup/display.php:59
+#, php-format
+msgid "Display group '%s' content"
+msgstr "Voir le contenu du groupe %s"
+
+#: dyngroup/dyngroup/tab.php:9
+msgid "Dynamic group creation"
+msgstr "Création d'un groupe dynamique"
+
+#: dyngroup/dyngroup/tab.php:10
+msgid "Static group creation"
+msgstr "Création d'un groupe statique"
+
+#: dyngroup/dyngroup/header.php:26
+msgid "Please chose the type of group you want to create"
+msgstr "Choisissez le type de groupe que vous voulez créer"
