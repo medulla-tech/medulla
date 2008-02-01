@@ -26,7 +26,7 @@
 /**
  * module declaration
  */
-/* hide msc module for the moment
+// hide msc module for the moment
 $mod = new Module("msc");
 $mod->setVersion("2.0.0");
 $mod->setRevision("$Rev$");
@@ -35,11 +35,24 @@ $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
 
 
-$submod = new SubModule("msc");
+$submod = new SubModule("logs");
 $submod->setDescription(_T("MSC", "msc"));
-$submod->setImg('modules/msc/graph/img/msc');
-$submod->setDefaultPage("msc/msc/repository");
+#$submod->setImg('modules/msc/graph/img/msc');
+$submod->setDefaultPage("msc/logs/all");
 
+$page = new Page("all", _T('Show all logs', 'msc'));
+$submod->addPage($page);
+$page = new Page("pending", _T('Show pending task\'s logs', 'msc'));
+$submod->addPage($page);
+$page = new Page("running", _T('Show running task\'s logs', 'msc'));
+$submod->addPage($page);
+$page = new Page("finished", _T('Show finished task\'s logs', 'msc'));
+$submod->addPage($page);
+
+$page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
+$submod->addPage($page);
+
+/*
 $page = new Page("repository",_T("Repository","msc"));
 $submod->addPage($page);
 
@@ -49,12 +62,12 @@ $submod->addPage($page);
 $page = new Page("edit",_T("Edit","msc"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
-
+*/
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
-*/
+
 
 /* put in base/computer */
 

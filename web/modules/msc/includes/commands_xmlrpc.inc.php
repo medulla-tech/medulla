@@ -30,6 +30,26 @@ function get_all_commands_on_host_group($gid, $cmd_id, $min, $max, $filter, $his
     return xmlCall('msc.get_all_commands_on_host_group', array($gid, $cmd_id, $min, $max, $filter, $history));
 }
 
+function get_all_commandsonhost_currentstate() {
+    return xmlCall('msc.get_all_commandsonhost_currentstate');
+}
+
+function count_all_commandsonhost_by_currentstate($current_state, $filt = '') {
+    return xmlCall('msc.count_all_commandsonhost_by_currentstate', array($current_state, $filt));
+}
+
+function get_all_commandsonhost_by_currentstate($current_state, $min = 0, $max = 10, $filt = '') {
+    return xmlCall('msc.get_all_commandsonhost_by_currentstate', array($current_state, $min, $max, $filt));
+}
+
+function count_all_commandsonhost_by_type($type, $filter) {
+    return xmlCall('msc.count_all_commandsonhost_by_type', array($type, $filter));
+}
+
+function get_all_commandsonhost_by_type($type, $min, $max, $filter) {
+    return xmlCall('msc.get_all_commandsonhost_by_type', array($type, $min, $max, $filter));
+}
+
 function count_all_commands_on_group($gid, $filter, $history = 0) {
     return xmlCall('msc.count_all_commands_on_group', array($gid, $filter, $history));
 }
