@@ -77,7 +77,7 @@ if ($machine) {
 } else {
     # for groups, we get local packages from first host :
     $members = $group->members();
-    $filter['machine'] = $members[0];
+    $filter['group'] = join('##', $members);
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
