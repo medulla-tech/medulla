@@ -152,7 +152,7 @@ class CommandHistory {
         $n->drawTable(0);
 
         // display files
-        $files = array('Transferred files list empty.');
+        $files = array(_T('Transferred files list empty.', 'msc'));
         if ($this->db_cmd["files"]!="" && $this->db_cmd["files"]!=array()) {
             if (gettype($command["files"]) != 'array') {
                 $files = explode("\n", $this->db_cmd["files"]);
@@ -189,6 +189,7 @@ class CommandHistory {
             $n = new ListInfos($purge_errors, $history);
 
             $n->setTableHeaderPadding(1);
+            $n->setRowsPerPage(999); // FIXME: Ugly, should try to find another way to do this
             if (count($hist["stderr"]) > 0  &&
                 !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')
                ) {
