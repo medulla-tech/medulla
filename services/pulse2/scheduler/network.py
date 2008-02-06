@@ -58,4 +58,17 @@ def probe_client(client):
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
 def ping_client(client):
-    return True
+    # TODO: a cache system ?!
+    def _cb(result):
+        myresult = "\n".join(result)
+        if myresult == 'OK':
+            return True
+        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got %s)' % (SchedulerConfig().name, client, myresult))
+        return False
+
+    def _eb(result):
+        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+        return False
+
+    command = '%s %s' % (SchedulerConfig().ping_path, client)
+    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)

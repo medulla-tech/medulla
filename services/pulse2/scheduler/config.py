@@ -39,6 +39,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     password = ""
     start_commands_modulo = 600
     prober_path = '/usr/sbin/pulse2-probe'
+    ping_path = '/usr/sbin/pulse2-ping'
     launchers = {
         'launcher_01': {
             'port': 8001,
@@ -70,6 +71,9 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "prober_path"):
             self.prober_path = cp.get("scheduler", "prober_path")
+
+        if cp.has_option("scheduler", "ping_path"):
+            self.ping_path = cp.get("scheduler", "ping_path")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
