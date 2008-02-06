@@ -30,20 +30,20 @@ function displayLocalisationBar() {
     return xmlCall("glpi.displayLocalisationBar");
 }
 
-function glpiExists($name) {
-    return xmlCall("glpi.inventoryExists", array($name));
+function glpiExists($uuid) {
+    return xmlCall("glpi.inventoryExists", array($uuid));
 }
 
-function getLastMachineGlpiFull($name) {
-    return xmlCall("glpi.getLastMachineInventoryFull", array($name));
+function getLastMachineGlpiFull($uuid) {
+    return xmlCall("glpi.getLastMachineInventoryFull", array($uuid));
 }
 
 function getGlpiEM($part) {
     return xmlCall("glpi.getInventoryEM", array($part));
 }
 
-function getLastMachineGlpiPart($name, $part) {
-    return xmlCall("glpi.getLastMachineInventoryPart", array($name, $part));
+function getLastMachineGlpiPart($uuid, $part) {
+    return xmlCall("glpi.getLastMachineInventoryPart", array($uuid, $part));
 }
 
     
