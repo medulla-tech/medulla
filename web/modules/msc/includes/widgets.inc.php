@@ -30,58 +30,14 @@ class RenderedMSCHost extends HtmlElement {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
+        $this->uuid = $machine->uuid;
         $this->ping = ($machine->ping ? _T("success", "msc") : _T("failed", "msc"));
     }
 
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
         return "<tr> <th style='text-align: left' nowrap>$label :</th> <td style='width: 90%'>$text</td> </tr>";
     }
-
-/*    function display() {
-        $buffer =
-            '<div class="indent">'.
-                '<table class="vertical">'.
-                    '<tbody>';
-        $buffer .= $this->line(_('Host name'), $this->hostname);
-        $buffer .= $this->line(_('IP address'), $this->ip);
-        if (strlen($this->profile) > 0)
-            $buffer .= $this->line(_('Belongs to profile'), '<a href="'.$this->script_profile.'">'.$this->profile.'</a>');
-        else
-            $buffer .= $this->line(_('Belongs to profile'), '&nbsp;');
-        if (strlen($this->group) > 0)
-            $buffer .= $this->line(_('Belongs to group'), '<a href="'.$this->script_group.'">'.$this->group.'</a>');
-        else
-            $buffer .= $this->line(_('Belongs to group'), '&nbsp;');
-
-        if ($this->session->ping_error) {
-            $buffer .= $this->line(_('Ping'), _('failed'));
-            $buffer .= $this->line(_('SSH connection'), _('not_tested'));
-            $buffer .= $this->line(_('Autofs mount'), _('not_tested'));
-        } elseif ($this->session->error_ssh_failed) {
-            $buffer .= $this->line(_('Ping'), _('success'));
-            $buffer .= $this->line(_('SSH connection'), _('failed'));
-            $buffer .= $this->line(_('SSH command'), $this->session->ssh_test_command);
-            $buffer .= $this->line(_('SSH return value'), $this->session->ssh_return_var);
-            if (is_array($this->session->ssh_array_output)) {
-                $buffer .= $this->line(_('SSH output'), implode("<br/>", $this->session->ssh_array_output));
-            } else {
-                $buffer .= $this->line(_('SSH output'), $this->session->ssh_array_output);
-            }
-            $buffer .= $this->line(_('Autofs mount'), _('not_tested'));
-        } elseif ($this->session->error_autofs_failed) {
-            $buffer .= $this->line(_('Ping'), _('success'));
-            $buffer .= $this->line(_('SSH connection'), _('success'));
-            $buffer .= $this->line(_('Autofs mount'), _('failed'));
-        } else {
-            $buffer .= $this->line(_('Operating system'), $this->platform);
-            $buffer .= $this->line(_('Ping host'), $this->ping);
-        }
-        $buffer .=
-                    '</tbody>'.
-                '</table>'.
-            '</div>';
-        print $buffer;
-    }*/
+    
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
@@ -95,9 +51,9 @@ class RenderedMSCHost extends HtmlElement {
     function ajaxDisplay() {
         $buffer = '
 <script type="text/javascript">
-new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '", { method: "get" });
-new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '", { method: "get" });
-new Ajax.Updater("mac", "' . urlStrRedirect("base/computers/ajaxMac") . "&hostname=". $this->hostname . '", { method: "get" });
+new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+new Ajax.Updater("mac", "' . urlStrRedirect("base/computers/ajaxMac") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
 </script>
 ';
         $buffer .= '<div class="indent"><table>';

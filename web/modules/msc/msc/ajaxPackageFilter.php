@@ -36,8 +36,8 @@ require_once('../../../modules/msc/includes/machines.inc.php');
 require_once('../../../modules/msc/includes/widgets.inc.php');
 $machine = null;
 $group = null;
-if ($_GET['name']) {
-    $machine = getMachine(array('hostname'=>$_GET['name'])); // should be changed in uuid
+if ($_GET['uuid']) {
+    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), false); // should be changed in uuid
 } elseif ($_GET['gid']) {
     require_once("../../../modules/dyngroup/includes/data_access.php");
     require_once("../../../modules/dyngroup/includes/utilities.php");
@@ -74,6 +74,7 @@ if (isset($_GET["start"])) {
 $filter['filter'] = $_GET["filter"];
 if ($machine) {
     $filter['machine'] = $machine->hostname;
+    $filter['uuid'] = $machine->uuid;
 } else {
     # for groups, we get local packages from first host :
     $members = $group->members();
@@ -89,7 +90,7 @@ foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package)
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
     if ($machine) {
-        $params[] = array('pid'=>$package->id, 'name'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+        $params[] = array('pid'=>$package->id, 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
         $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     }

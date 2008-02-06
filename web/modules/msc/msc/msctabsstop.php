@@ -33,14 +33,16 @@ if (isset($_POST["bconfirm"])) {
     $page = $path[2];
     $tab = $path[3];
 
-    $hostname = $_POST["name"];
+    $hostname = $_POST["hostname"];
+    $uuid = $_POST["uuid"];
     $coh_id = $_POST["coh_id"];
 
     stop_command_on_host($coh_id);
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
 } else {
     $from = $_GET['from'];
-    $hostname = $_GET["name"];
+    $hostname = $_GET["hostname"];
+    $uuid = $_GET["uuid"];
     $cmd_id = $_GET["cmd_id"];
     $coh_id = $_GET["coh_id"];
     $cmd = command_detail($cmd_id);
@@ -54,6 +56,8 @@ if (isset($_POST["bconfirm"])) {
     $f->add($hidden, array("value" => $cmd_id, "hide" => True));
     $hidden = new HiddenTpl("coh_id");
     $f->add($hidden, array("value" => $coh_id, "hide" => True));
+    $hidden = new HiddenTpl("uuid");
+    $f->add($hidden, array("value" => $uuid, "hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();

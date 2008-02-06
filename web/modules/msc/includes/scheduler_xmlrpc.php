@@ -35,7 +35,7 @@ function scheduler_probe_client($scheduler, $client) {
 }
 
 function scheduler_wol_client($scheduler, $client) {
-    $maclist = xmlCall('glpi.getMachineMac', array($_GET["hostname"]));
+    $maclist = xmlCall('glpi.getMachineMac', array($_GET["uuid"]));
     return xmlCall('msc.scheduler_wol_client', array($scheduler, $maclist));
 }
 

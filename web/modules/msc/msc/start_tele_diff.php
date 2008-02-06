@@ -42,10 +42,11 @@ if (isset($_POST["bconfirm"])) {
         $params[$param] = $_POST[$param];
     }
 
-    $hostname = $_POST["name"];
+    $hostname = $_POST["hostname"];
+    $uuid = $_POST["uuid"];
     $gid = $_POST["gid"];
     $pid = $_POST["pid"];
-    $cible = $hostname;
+    $cible = array($uuid, $hostname);
     if ($gid) {
         $group = new Stagroup($_GET['gid']);
         $res = new Result();
@@ -58,7 +59,7 @@ if (isset($_POST["bconfirm"])) {
     add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));
 } elseif (isset($_POST["badvanced"])) {
     $from = $_POST['from'];
     $path =  explode('|', $from);
@@ -68,7 +69,7 @@ if (isset($_POST["bconfirm"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'name', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi') as $param) {
+    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi') as $param) {
         $params[$param] = $_POST[$param];
     }
     $params['tab'] = 'tablaunch';
@@ -76,13 +77,14 @@ if (isset($_POST["bconfirm"])) {
     header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 } else {
     $from = $_GET['from'];
-    $hostname = $_GET["name"];
+    $hostname = $_GET["hostname"];
+    $uuid = $_GET["uuid"];
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
     $p_api = new ServerAPI();
     $p_api->fromURI($_GET["papi"]);
 
-    $cible = $hostname;
+    $cible = array($uuid, $hostname);
     if ($gid) {
         $group = new Stagroup($_GET['gid']);
         $cible = $group->getName();
@@ -94,6 +96,8 @@ if (isset($_POST["bconfirm"])) {
     $f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
     $hidden = new HiddenTpl("name");
     $f->add($hidden, array("value" => $hostname, "hide" => True));
+    $hidden = new HiddenTpl("uuid");
+    $f->add($hidden, array("value" => $uuid, "hide" => True));
     $hidden = new HiddenTpl("gid");
     $f->add($hidden, array("value" => $gid, "hide" => True));
     $hidden = new HiddenTpl("from");

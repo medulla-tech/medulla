@@ -23,13 +23,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require('modules/msc/includes/machines.inc.php');
 require('modules/msc/includes/widgets.inc.php');
 
-if ($_GET['name']) {
-    $machine = getMachine(array('hostname'=>$_GET['name']), $ping = False); // should be changed in uuid
-    if ($machine->hostname != $_GET['name']) {
-        $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+if ($_GET['uuid']) {
+    $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False); // should be changed in uuid
+    if ($machine->uuid != $_GET['uuid']) {
+        $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
     } else {
         $msc_host = new RenderedMSCHost($machine);

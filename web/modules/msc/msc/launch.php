@@ -42,7 +42,7 @@ function action($action, $cible) {
         // if machine
         $id_command_on_host = get_id_command_on_host($id_command);
 
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'name'=>$_GET['name'], 'coh_id'=>$id_command_on_host, 'gid'=>$_GET['gid'])));
+        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'coh_id'=>$id_command_on_host, 'gid'=>$_GET['gid'])));
         //elseif groupe
     }
 }
@@ -71,10 +71,11 @@ function adv_action($post) {
             $params[$param] = $post[$param];
     }
 
-    $hostname = $post["name"];
+    $hostname = $post["hostname"];
+    $uuid = $post['uuid'];
     $gid = $post["gid"];
     if ($hostname) {
-        $cible = $hostname;
+        $cible = array($uuid, $hostname);
     } else {
         $group = new Stagroup($gid);
         $res = new Result();
@@ -88,7 +89,7 @@ function adv_action($post) {
     add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'name'=>$hostname, 'gid'=>$gid)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));
 }
 
 if (isset($_GET["badvanced"])) {
@@ -96,7 +97,8 @@ if (isset($_GET["badvanced"])) {
         adv_action($_POST);
     }
     $from = $_GET['from'];
-    $hostname = $_GET["name"];
+    $hostname = $_GET["hostname"];
+    $uuid = $_GET['uuid'];
     $gid = $_GET['gid'];
     $pid = $_GET["pid"];
     $p_api = new ServerAPI();
@@ -115,6 +117,8 @@ if (isset($_GET["badvanced"])) {
     $f = new Form();
     $f->push(new Table());
 
+    $hidden = new HiddenTpl("uuid");
+    $f->add($hidden, array("value" => $uuid, "hide" => True));
     $hidden = new HiddenTpl("papi");
     $f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
     $hidden = new HiddenTpl("name");
@@ -165,14 +169,14 @@ if (isset($_GET["badvanced"])) {
     $f->display();
 
 
-} elseif ($_GET['name']) {
-    $machine = getMachine(array('hostname'=>$_GET['name']), False); // should be changed in uuid
-    if ($machine->hostname != $_GET['name']) {
-        $msc_host = new RenderedMSCHostDontExists($_GET['name']);
+} elseif ($_GET['uuid']) {
+    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // should be changed in uuid
+    if ($machine->uuid != $_GET['uuid']) {
+        $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
     } else {
         if ($_POST['launchAction']) {
-            action($_POST['launchAction'], $_GET['name']);
+            action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
         }
 
         // Display the actions list
@@ -182,7 +186,7 @@ if (isset($_GET["badvanced"])) {
         $msc_actions = new RenderedMSCActions(msc_script_list_file());
         $msc_actions->display();
 
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?name=".$_GET['name']);
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();

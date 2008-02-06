@@ -26,7 +26,7 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 
-if ($_GET['name']) {
+if ($_GET['uuid']) {
     // bottom of the page : details for the command if coh_id is specified
     if ($_GET['coh_id']) {
         print "<hr/><br/>";
@@ -34,7 +34,7 @@ if ($_GET['name']) {
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else {
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?name=".$_GET['name']."&tab=tablogs");
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs");
         $ajax->setRefresh(5000);
         $ajax->display();
         print "<br/><br/><br/>";

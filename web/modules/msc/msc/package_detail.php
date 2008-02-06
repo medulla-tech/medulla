@@ -25,7 +25,8 @@
 require('modules/msc/includes/package_api.php');
     
 $from = $_GET['from'];
-$hostname = $_GET["name"];
+$hostname = $_GET["hostname"];
+$uuid = $_GET["uuid"];
 $pid = $_GET["pid"];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET["papi"]);

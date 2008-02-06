@@ -41,18 +41,19 @@ $filter = $_GET["filter"];
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
-$hostname = $_GET['name'];
+$hostname = $_GET['hostname'];
+$uuid = $_GET['uuid'];
 $gid = $_GET['gid'];
 $history = $_GET['history'];
 $tab = $_GET['tab'];
 $areCommands = False;
-if ($hostname) {
+if ($uuid) {
     if ($history) {
-        $count = count_finished_commands_on_host($hostname, $filter);
-        $cmds = get_finished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
+        $count = count_finished_commands_on_host($uuid, $filter);
+        $cmds = get_finished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
     } else {
-        $count = count_unfinished_commands_on_host($hostname, $filter);
-        $cmds = get_unfinished_commands_on_host($hostname, $start, $start + $maxperpage, $filter);
+        $count = count_unfinished_commands_on_host($uuid, $filter);
+        $cmds = get_unfinished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
     }
 } elseif ($gid) { # FIXME: same think to do on groups
 /*    if ($history) {
@@ -93,7 +94,7 @@ $n = null;
 if ($areCommands) {
     foreach ($cmds as $cmd) {
         $a_cmd[] = $cmd['title'];
-        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'name'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
         } else {
@@ -131,7 +132,7 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'name'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
 
             $icons = state_tmpl($coh['current_state']);

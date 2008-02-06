@@ -28,7 +28,7 @@ require("modules/msc/includes/command_history.php");
 
 require("modules/msc/includes/scheduler_xmlrpc.php");
 
-if (scheduler_ping_client('', $_GET["hostname"])) {
+if (scheduler_ping_client('', $_GET["uuid"])) {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon("DONE").'"/>';
 } else {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon("FAILED").'"/>';

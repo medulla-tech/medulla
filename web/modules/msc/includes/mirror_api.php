@@ -1,28 +1,28 @@
 <?php
 
 
-function getMirror($machine) {
-    return xmlCall('msc.ma_getMirror', array($machine));
+function getMirror($uuid) {
+    return xmlCall('msc.ma_getMirror', array($uuid));
 }
 
-function getMirrors($machines) {
-    return xmlCall('msc.ma_getMirrors', array($machines));
+function getMirrors($uuids) {
+    return xmlCall('msc.ma_getMirrors', array($uuids));
 }
 
-function getFallbackMirror($machine) {
-    return xmlCall('msc.ma_getFallbackMirror', array($machine));
+function getFallbackMirror($uuid) {
+    return xmlCall('msc.ma_getFallbackMirror', array($uuid));
 }
 
-function getFallbackMirrors($machines) {
-    return xmlCall('msc.ma_getFallbackMirrors', array($machines));
+function getFallbackMirrors($uuids) {
+    return xmlCall('msc.ma_getFallbackMirrors', array($uuids));
 }
 
-function getSubPackageMirror($machine) {
-    return xmlCall('msc.ma_getSubPackageMirror', array($machine));
+function getSubPackageMirror($uuid) {
+    return xmlCall('msc.ma_getSubPackageMirror', array($uuid));
 }
 
-function getSubPackageMirrors($machines) {
-    return xmlCall('msc.ma_getSubPackageMirrors', array($machines));
+function getSubPackageMirrors($uuids) {
+    return xmlCall('msc.ma_getSubPackageMirrors', array($uuids));
 }
 
 

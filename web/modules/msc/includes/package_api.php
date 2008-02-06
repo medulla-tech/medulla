@@ -105,17 +105,6 @@ function to_package($h) {
 function getPackageDetails($p_api, $pid) {
     return xmlCall("msc.pa_getPackageDetail", array($p_api, $pid));
 }
-/*    return array(
-        'name'=>getPackageLabel($p_api, $pid),
-        'version'=>getPackageVersion($p_api, $pid),
-        'init'=>getPackageInstallInit($p_api, $pid),
-        'pre'=>getPackagePreCommand($p_api, $pid),
-        'command'=>getPackageCommand($p_api, $pid),
-        'success'=>getPackagePostCommandSuccess($p_api, $pid),
-        'failure'=>getPackagePostCommandFailure($p_api, $pid),
-        'files'=>getPackageFiles($p_api, $pid)
-    );
-}*/
 
 function advGetAllPackages($filter, $start, $end) {
     return xmlCall("msc.pa_adv_getAllPackages", array($filter, $start, $end));

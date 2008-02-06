@@ -22,5 +22,5 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-print join(', ', xmlCall('glpi.getMachineMac', array($_GET["hostname"])));
+print join(', ', xmlCall('glpi.getMachineMac', array($_GET["uuid"])));
 ?>
