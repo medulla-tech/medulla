@@ -188,6 +188,7 @@ def sync_remote_exec(command_id, client, command):
     target_path = LauncherConfig().target_path
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
+        # TODO: chmod should be done upper
         real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
         deffered.addCallback(_remote_sync_cb)
