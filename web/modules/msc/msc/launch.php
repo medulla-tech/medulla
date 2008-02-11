@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once('modules/msc/includes/utilities.php');
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/mirror_api.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
@@ -77,7 +78,8 @@ function adv_action($post) {
     if ($hostname) {
         $cible = array($uuid, $hostname);
     } else {
-        $group = new Stagroup($gid);
+        $group = new Group($gid);
+
         $res = new Result();
         $res2 = $group->result();
         $res->parse($res2->getValue());
@@ -193,12 +195,10 @@ if (isset($_GET["badvanced"])) {
 
     }
 } elseif ($_GET['gid']) {
-    $group = new Stagroup($_GET['gid']);
+    $group = new Group($_GET['gid'], true);
     if ($_POST['launchAction']) {
-        $res = new Result();
-        $res2 = $group->result();
-        $res->parse($res2->getValue());
-        action($_POST['launchAction'], $res->toA());
+        $result = array_map("onlyValues", $group->getResult(0, -1));
+        action($_POST['launchAction'], $result);
     }
 
     // Display the actions list
@@ -213,6 +213,7 @@ if (isset($_GET["badvanced"])) {
     print "<br/>";
     $ajax->displayDivToUpdate();
 }
+
 
 ?>
 <style>

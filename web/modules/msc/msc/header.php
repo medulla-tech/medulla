@@ -35,7 +35,7 @@ if ($_GET['uuid']) {
         $msc_host->ajaxDisplay();
     }
 } else {
-    $group = new Stagroup($_GET['gid']);
+    $group = new Group($_GET['gid']);
 }
 
 ?>

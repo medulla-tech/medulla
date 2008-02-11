@@ -39,14 +39,12 @@ $group = null;
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), false); // should be changed in uuid
 } elseif ($_GET['gid']) {
-    require_once("../../../modules/dyngroup/includes/data_access.php");
     require_once("../../../modules/dyngroup/includes/utilities.php");
+    require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
     require_once("../../../modules/dyngroup/includes/xmlrpc.php");
-    require_once("../../../modules/dyngroup/includes/request.php");
-    require_once("../../../modules/dyngroup/includes/result.php");
     require_once("../../../modules/dyngroup/includes/dyngroup.php");
 
-    $group = new Stagroup($_GET['gid']);
+    $group = new Group($_GET['gid'], true);
 }
 
 require_once("../../../modules/msc/includes/package_api.php");
@@ -76,9 +74,7 @@ if ($machine) {
     $filter['machine'] = $machine->hostname;
     $filter['uuid'] = $machine->uuid;
 } else {
-    # for groups, we get local packages from first host :
-    $members = $group->members();
-    $filter['group'] = join('##', $members);
+    $filter['group'] = $group->id;
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages

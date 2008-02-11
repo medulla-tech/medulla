@@ -22,6 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require('modules/msc/includes/utilities.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
@@ -48,11 +49,8 @@ if (isset($_POST["bconfirm"])) {
     $pid = $_POST["pid"];
     $cible = array($uuid, $hostname);
     if ($gid) {
-        $group = new Stagroup($_GET['gid']);
-        $res = new Result();
-        $res2 = $group->result();
-        $res->parse($res2->getValue());
-        $cible = $res->toA();
+        $group = new Group($_GET['gid']);
+        $cible = array_map("onlyValues", $group->getResult(0, -1));
     }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
@@ -86,7 +84,7 @@ if (isset($_POST["bconfirm"])) {
 
     $cible = array($uuid, $hostname);
     if ($gid) {
-        $group = new Stagroup($_GET['gid']);
+        $group = new Group($_GET['gid'], true);
         $cible = $group->getName();
     }
     $name = getPackageLabel($p_api, $_GET["pid"]);
