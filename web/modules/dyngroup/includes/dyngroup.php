@@ -23,374 +23,127 @@
  */
 
 // return all dyngroups with matching params (for exemple : show = true)
-function getAllGroups($params = array()) {
-    $max = dyngroup_last_id();
-    $items = array();
-    $i = 0;
-    if ($params['canShow']) {
-        $ids = getVisibleIds();
-        foreach ($ids as $i) {
-            $group = new Stagroup($i);
-            if ($group->isDyn()) {
-                $group = $group->toDyn();
-            }
-            $items[] = $group;
-        }
-    } else {
-        while ($i < $max) {
-            $group = new Stagroup($i);
-            if ($group->getName()) {
-                $name = $group->getName();
-                if (($params['canShow'] && $group->canShow()) || !$params['canShow']) {
-                    if ($group->isDyn()) {
-                        $group = $group->toDyn();
-                    }
-                    $items[] = $group;
-                }
-            }
-            $i++;
-        }
-    }
-    return $items;
-}
-
-function getAllDyngroup($params = array()) {
-    $max = dyngroup_last_id();
-    $items = array();
-    $i = 0;
+function getAllGroups($params = array()) { # canShow
+    # xmlrpc call to get all groups
+    $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
+    $groups = __xmlrpc_getallgroups($params);
     
-    while ($i < $max) {
-        $group = new Stagroup($i);
-        if ($group->getName()) {
-            $name = $group->getName();
-            if ($group->isDyn()) {
-                $group = $group->toDyn();
-                if ($params['canShow'] && $group->canShow()) { # TODO check... there is a bug!!! this if does nothing!!
-                    $items[] = $group;
-                } else {
-                    $items[] = $group;
-                }
-            }
-        }
-        $i++;
+    # foreach to convert into Dyngroup
+    $ret = array();
+    foreach ($groups as $group) {
+        $g = new Group($group['id']);
+        $g->name = $group['name'];
+        $ret[] = $g;
     }
-    return $items;
+    return $ret;
 }
 
-function getAllStagroup($params = array()) {
-    $max = dyngroup_last_id();
-    $items = array();
-    $i = 1;
+function getAllDyngroup($params = array()) { # canShow
+    $params['dynamic'] = true;
+    return getAllGroups($params);
+}
 
-    if ($params['canShow']) {
-        $ids = getVisibleIds();
-        foreach ($ids as $i) {
-            $group = new Stagroup($i);
-            if ($group->getName() && !$group->isDyn()) {
-                $items[] = $group;
-            }
-        }
-    } else {
-        while ($i < $max) {
-            $group = new Stagroup($i);
-            if ($group->getName()  && $group->getName() != '-1' && ! $group->isDyn()) {
-                $name = $group->getName();
-                if ($params['canShow']) {
-                    if ($group->canShow()) {
-                        $items[] = $group;
-                    }
-               } else {
-                    $items[] = $group;
-                }
-            }
-            $i++;
-        }
-    }
-    return $items;
+function getAllStagroup($params = array()) { # canShow
+    $params['static'] = true;
+    return getAllGroups($params);
 }
 
 function getVisibleIds() {
-    $max = dyngroup_last_id();
-    $items = array();
-    $i = 1;
-    while ($i < $max) {
-        $show = new DataAccess(array($i, 'show'));
-        if ($show->getValue() && $show->getValue() != -1) { $items[]= $i; }   
-        $i++;
-    }
-    return $items;
+    $params = array('canShow' => true);
+    return getAllGroups($params);
 }
 
-function getStagroupById($id) {
-    $result = null; //new DataAccess(array($id, 'result'));
-    $show = new DataAccess(array($id, 'show'));
-    $n = new DataAccess(array($id, 'names'));
-    $group = new Stagroup($id, $n, $result, $show);
-    return $group;
-}
+function getGroupById($id) { return new Group($id); }
 
-function getDyngroupById($id) {
-    $request = new DataAccess(array($id, 'request'));
-    $result = new DataAccess(array($id, 'result'));
-    $show = new DataAccess(array($id, 'show'));
-    $n = new DataAccess(array($id, 'names'));
-    $bool = new DataAccess(array($id, 'equ_bool'));
-    $group = new Dyngroup($id, $request, $result, $show, $n, $bool);
-    return $group;
-}
-
-class Dyngroup {
-    function Dyngroup($id, $request = null, $result = null, $show = null, $n = null, $bool = null) {
-        if ($request == null && $result == null && $show == null && $n == null && $bool == null) {
-            $this = getDyngroupById($id);
-        } else {
+class Group {
+    function Group($id = null, $load = false) {
+        if ($id && $load) {
+            $params = __xmlrpc_get_group($id);
+            $this->id = $params['id'];
+            $this->name = $params['name'];
+        } elseif ($id) {
             $this->id = $id;
-            $this->request = $request;
-            $this->result = $result;
-            $this->show = $show;
-            $this->n = $n;
-            $this->bool = $bool;
-            $this->dyn = new DataAccess(array($id, 'is_dyn'));
+        }
+    }
+    function delete() { return __xmlrpc_delete_group($this->id); }
+    function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility); return $this->id; }
+    function toS() { return __xmlrpc_tos_group($this->id); }
+
+    function getName() { return $this->name; }
+    function setName($name) { $this->name = $name; return __xmlrpc_setname_group($this->id, $name); }
+    function getRequest() { return __xmlrpc_request_group($this->id); }
+    function setRequest($request) { return __xmlrpc_setrequest_group($this->id, $request); }
+    function getBool() { return __xmlrpc_bool_group($this->id); }
+    function setBool($bool) { return __xmlrpc_setbool_group($this->id, $bool); }
+
+    function reply($start = 0, $end = 10, $filter = '') { return __xmlrpc_requestresult_group($this->id, $start, $end, $filter); }
+    function countReply($filter = '') { return __xmlrpc_countrequestresult_group($this->id, $filter); }
+    
+    function getResult($start = 0, $end = 10, $filter = '') {
+        if ($this->isDyn()) {
+            if (!$this->isRequest()) { # dynamic group with static results
+                return __xmlrpc_result_group($this->id, $start, $end, $filter);
+            } else { # dynamic gropu with dynamic results
+                return $this->reply($start, $end, $filter);
+            }
+        } else { # static group with static result
+            return __xmlrpc_result_group($this->id, $start, $end, $filter); 
         }
     }
             
-    function delete() {
-        $this->request->delete();
-        $this->result->delete();
-        $this->show->delete();
-        $this->n->delete();
-        $this->bool->delete();
-        $this->dyn->delete();
-    }
-    function toS() {
-        return "[name : ".$this->n->getValue().
-        ", request : ".$this->request->getValue().
-        ", result : ".$this->result->getValue().
-        ", show : ".$this->show->getValue().
-        ", bool : ".$this->bool->getValue().
-        ", dyn : ".$this->dyn->getValue()."]";
-    }
+    function members() { return $this->getResult(0, -1, ''); }
+    function countResult($filter = '') { return __xmlrpc_countresult_group($this->id, $filter); }
 
-    function save($name, $request, $result = null, $equ_bool = null) {
-        $this->n->setValue($name);
-        $this->request->setValue($request->toS());
-        if ($result) {
-            $this->result->setValue($result->toS());
-        } else {
-            $this->result->delete();
-        }
-        if ($equ_bool) {
-            $this->bool->setValue($equ_bool);
-        } else {
-            $this->bool->delete();
-        }
-        $this->dyn->setValue(True);
-    }
+    function setVisibility($visibility) { return __xmlrpc_setvisibility_group($this->id, $visibility); }
+    function canShow() { return __xmlrpc_canshow_group($this->id); }
+    function show() { return __xmlrpc_show_group($this->id); } 
+    function hide() { return __xmlrpc_hide_group($this->id); } 
 
-    function getName() {
-        return $this->n->getValue();
-    }
+    function isDyn() { return __xmlrpc_isdyn_group($this->id); }
+    function toDyn() { return __xmlrpc_todyn_group($this->id); }
+    function isRequest() { return __xmlrpc_isrequest_group($this->id); }
+    function reload() {  return __xmlrpc_reload_group($this->id); }
 
-    function getRequest() {
-        return $this->request->getValue();
-    }
-    function getResult() {
-        return $this->result->getValue();
-    }
-    function getBool() {
-        return $this->bool->getValue();
-    }
-    
-    function show() {
-        $this->show->setValue(true);
-    }
-    
-    function hide() {
-        $this->show->delete();
-    }
- 
-    function canShow() {
-        return ($this->show->getValue() || false);
-    }
-    
-    function isDyn() {
-        return ($this->dyn->getValue() == 'True');
-    }
-    function isGroup() {
-        return ($this->result->getValue() || false);
-    }
-    
-    function resultNum() {
-        return count(explode('||', $this->result->getValue()));
-    }
-     
-    function reload() {
-        $this->request->load();
-        $req = new Request();
-        $req->parse($this->request->getValue());
-        $res = new Result($req);
-        $res->replyToRequest();
-        $this->result->setValue($res->toS());
-    }
-    
-    function removeMachine($name) {
-        $result = new Result();
-        $result->parse($this->result->getValue());
-        $result->remove($name);
-        $this->result->setValue($result->toS());
-    }
-
-    function prettyDisplay($canbedeleted = false, $default_params = array()) {
-        if ($this->isGroup()) {
-            $res = new Result();
-            $res->parse($this->getResult());
-            $res->displayResListInfos($canbedeleted, $default_params = array());
-        } else { 
-            $r = new Request();
-            $r->parse($this->getRequest());
-            $r->displayReqListInfos($canbedeleted, $default_params = array());
-        }
-    }
-}
-
-class Stagroup {
-    function Stagroup($id, $name = null, $result = null, $show = null) {
-        if ($result == null && $show == null && $name == null) {
-            $this = getStagroupById($id);
-        } else {
-            $this->id = $id;
-            $this->result = $result;
-            $this->show = $show;
-            $this->n = $name;
-            $this->dyn = new DataAccess(array($id, 'is_dyn'));
-        }
-    }
-
-    function delete() {
-        $res = $this->result();
-        $res->delete();
-        $this->show->delete();
-        $this->n->delete();
-        $this->dyn->delete();
-    }
-    function toS() {
-        $res = $this->result();
-        return "[name : ".$this->n->getValue().
-        ", result : ".$res->getValue().
-        ", show : ".$this->show->getValue()."]";
-    }
-
-    function save($name, $result = null) {
-        $this->n->setValue($name);
-        if ($result) {
-            $res = $this->result();
-            $res->setValue($result->toS());
-        }
-        $this->dyn->setValue(False);
-        return True;
-    }
-
-    function result() {
-        if (!$this->res) {
-            $this->res = new DataAccess(array($this->id, 'result'));
-        }
-        return $this->res;
-    }
-    
-    function reloadResult() {
-        $this->res = new DataAccess(array($this->id, 'result'));
-    }
-
-    function toDyn() {
-        return new Dyngroup($this->id);
-    }
-    function isDyn() {
-        return ($this->dyn->getValue() == 'True');
-    }
-
-    function getName() {
-        $ret = $this->n->getValue();
-        if ($ret == False) {
-            $ret = '';
-        }
-        return $ret;
-    }
-
-    function getResult() {
-        $res = $this->result();
-        return $res->getValue();
-    }
-    function members() {
-        $res = new Result();
-        $this->reloadResult();
-        $res2 = $this->result();
-        $res->parse($res2->getValue());
-        return $res->toA();
-    }
-    function addMember($member) {
-        return $this->addMachines(array($member));
-    }
-    function delMember($member) {
-        return $this->removeMachine($member);
-    }
-    function addMembers($members) {
-        return $this->addMachines($members);
-    }
-    function delMembers($members) {
-        $result = new Result();
-        $res = $this->result();
-        $result->parse($res->getValue());
-        foreach ($members as $name) {
-            $result->remove($name);
-        }
-        $res->setValue($result->toS());
-        $this->reloadResult();
-    }
-    
-    function show() {
-        $this->show->setValue(true);
-    }
-    
-    function hide() {
-        $this->show->delete();
-    }
- 
-    function canShow() {
-        return ($this->show->getValue() || false);
-    }
-    
-    function resultNum() {
-        $res = $this->result();
-        return count(explode('||', $res->getValue()));
-    }
-     
-    function addMachines($a_machines) {
-        $result = new Result();
-        $res = $this->result();
-        $result->parse($res->getValue());
-        foreach ($a_machines as $name) {
-            $result->add($name);
-        }
-        $res->setValue($result->toS());
-        $this->reloadResult();
-    }
-    function removeMachine($name) {
-        $result = new Result();
-        $res = $this->result();
-        $result->parse($res->getValue());
-        $result->remove($name);
-        $res->setValue($result->toS());
-        $this->reloadResult();
-    }
+    function addMember($uuid) { return $this->addMembers(array($uuid)); }
+    function delMember($uuid) { return $this->delMembers(array($uuid)); }
+    #function removeMachine($uuid) { }
+    function addMembers($uuids) { return __xmlrpc_addmembers_to_group($this->id, $uuids); }
+    #function addMachines($a_uuids) { }
+    function delMembers($uuids) { return __xmlrpc_delmembers_to_group($this->id, $uuids); }
 
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
         $ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxComputersResultList.php", "container", array('gid'=>$this->id));
-        # need to give $this->id to $ajax
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
 }
+
+function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
+function __xmlrpc_get_group($id) { return xmlCall("dyngroup.get_group", array($id)); }
+
+function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
+function __xmlrpc_create_group($name, $visibility) { return xmlCall("dyngroup.create_group", array($name, $visibility)); }
+function __xmlrpc_tos_group($id) { return xmlCall("dyngroup.tos_group", array($id)); }
+function __xmlrpc_setname_group($id, $name) { return xmlCall("dyngroup.setname_group", array($id, $name)); }
+function __xmlrpc_setvisibility_group($id, $visibility) { return xmlCall("dyngroup.setvisibility_group", array($id, $visibility)); }
+function __xmlrpc_request_group($id) { return xmlCall("dyngroup.request_group", array($id)); }
+function __xmlrpc_setrequest_group($id, $request) { return xmlCall("dyngroup.setrequest_group", array($id, $request)); }
+function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array($id)); }
+function __xmlrpc_setbool_group($id, $bool) { return xmlCall("dyngroup.setbool_group", array($id, $bool)); }
+function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }
+function __xmlrpc_countrequestresult_group($id, $filter) { return xmlCall("dyngroup.countrequestresult_group", array($id, $filter)); }
+function __xmlrpc_result_group($id, $start, $end, $filter) { return xmlCall("dyngroup.result_group", array($id, $start, $end, $filter)); }
+function __xmlrpc_countresult_group($id, $filter) { return xmlCall("dyngroup.countresult_group", array($id, $filter)); }
+function __xmlrpc_canshow_group($id) { return xmlCall("dyngroup.canshow_group", array($id)); }
+function __xmlrpc_show_group($id) { return xmlCall("dyngroup.show_group", array($id)); }
+function __xmlrpc_hide_group($id) { return xmlCall("dyngroup.hide_group", array($id)); }
+function __xmlrpc_isdyn_group($id) { return xmlCall("dyngroup.isdyn_group", array($id)); }
+function __xmlrpc_todyn_group($id) { return xmlCall("dyngroup.todyn_group", array($id)); }
+function __xmlrpc_isrequest_group($id) { return xmlCall("dyngroup.isrequest_group", array($id)); }
+function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", array($id)); }
+function __xmlrpc_addmembers_to_group($id, $uuids) { return xmlCall("dyngroup.addmembers_to_group", array($id, $uuids)); }
+function __xmlrpc_delmembers_to_group($id, $uuids) { return xmlCall("dyngroup.delmembers_to_group", array($id, $uuids)); }
 
 ?>
 

@@ -38,6 +38,11 @@ if (isDynamicEnable()) {
     $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/tab.php");
     $submod->addPage($page);
+    
+    $page = new Page("edit",_T("Machines Group Editor","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+    $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
 } else {
     $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");

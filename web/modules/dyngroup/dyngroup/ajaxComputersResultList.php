@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("../../../graph/navbartools.inc.php");
+#require("../../../graph/navbartools.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
@@ -35,12 +35,12 @@ require("../../../modules/glpi/includes/xmlrpc.php");
 ######
 require("../../../modules/base/includes/computers.inc.php");
 require("../../../modules/base/includes/computers_list.inc.php");
-require_once("../../../modules/dyngroup/includes/data_access.php");
 require_once("../../../modules/dyngroup/includes/utilities.php");
+require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/request.php");
-require_once("../../../modules/dyngroup/includes/result.php");
 require("../../../modules/dyngroup/includes/dyngroup.php");
+
 
 
 $onames = array();
@@ -53,21 +53,45 @@ if ($_GET['location']) {
 }
 $gid = $_GET['gid'];
 
-$group = getStagroupById($gid);
-$res = new Result();
-$res->parse($group->getResult());
-$names = $res->toA($filter, $_GET["start"], $_GET["end"]);
-$count = count($res->toA($filter));
+$group = getGroupById($gid);
 
-foreach ($names as $name) {
-    $computer = getComputer(array('hostname'=>$name));
-    $computer = $computer[1];
-    
-    $comment = $computer['displayName'][0];
-    $uuid = $computer['objectUUID'][0];
-    $onames[$name] = array('comment'=>$comment, 'uuid'=>$uuid, 'name'=>$name, 'gid'=>$gid);
+if ($group->isDyn()) {
+    if (!$group->isRequest()) { # dynamic group with static results
+        displayStatic($group, $_GET["start"], $_GET["end"], $filter, $gid);
+    } else { # dynamic gropu with dynamic results
+        $res = $group->reply($_GET["start"], $_GET["end"], $filter);
+        $len = $group->countReply($filter);
+        display($res, $len, $group, $_GET["start"], $_GET["end"], $filter, $gid);
+    }
+} else { # static group with static result
+    displayStatic($group, $_GET["start"], $_GET["end"], $filter, $gid);
 }
 
-list_computers($onames, array('name' => $filter), $count, true, true);
+
+function displayStatic($group, $start, $end, $filter, $gid) {
+    $res = $group->getResult($start, $end, $filter);
+    $len = $group->countResult($filter);
+    display($res, $len, $group, $start, $end, $filter, $gid);
+}
+
+function display($res, $len, $group, $start, $end, $filter, $gid) {
+    foreach ($res as $host) {
+        $hostname = $host['hostname'];
+        $uuid = $host['uuid'];
+        $p = $default_params;
+        $p['delete'] = $hostname;
+        $p['hostname'] = $hostname;
+        $p['uuid'] = $uuid;
+        $p['inventaire'] = $hostname;
+        $comp = getComputer(array('uuid'=>$uuid));
+        if ($comp) {
+            $p['comment'] = $comp[1]['displayName'][0];
+        }
+        $parameters[$hostname] = $p;
+    }
+    
+    list_computers($parameters, $filter, $len, false, $canbedeleted);
+    print "<br/>";
+}
 
 ?>

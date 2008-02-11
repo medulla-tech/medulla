@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-04 12:01+0100\n"
+"POT-Creation-Date: 2008-01-04 16:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -304,4 +304,24 @@ msgstr ""
 
 #: dyngroup/infoPackage.inc.php:76 dyngroup/infoPackage.inc.php:76
 msgid "Remove a machine from a group"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "request"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
+msgid "group"
+msgstr ""
+
+#: dyngroup/dyngroup/tab.php:9
+msgid "Dynamic group creation"
+msgstr ""
+
+#: dyngroup/dyngroup/tab.php:10
+msgid "Static group creation"
+msgstr ""
+
+#: dyngroup/dyngroup/header.php:26
+msgid "Please chose the type of group you want to create"
 msgstr ""

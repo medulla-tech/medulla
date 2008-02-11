@@ -29,7 +29,7 @@ require_once("modules/dyngroup/includes/includes.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 
 $gid = quickGet('gid');
-if (!$gid) {
+if (!$gid) { // TODO !!
     $request = quickGet('request');
     $r = new Request();
     $r->parse($request);
@@ -37,28 +37,10 @@ if (!$gid) {
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    $group = new Stagroup($gid);
+    $group = new Group($gid, true);
     $item = $items[$gid];
-
-    if ($group->isDyn()) {
-        $group = $group->toDyn();
-        $r = new Request();
-        $r->parse($group->getRequest());
-        $res = new Result($r, $group->getBool());
-    
-        if ($group->isGroup()) {
-            __my_header(sprintf(_T("Display '%s' content", "dyngroup"), $group->getName()), $sidemenu, $gid);
-            $res->parse($group->getResult());
-            $res->displayResListInfos(true, array('gid'=>$gid), 'display');
-        } else {
-            __my_header(sprintf(_T("Display '%s' result list", "dyngroup"), $group->getName()), $sidemenu, $gid);
-            $res->replyToRequest();
-            $res->displayResListInfos();
-        }
-    } else {
-        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $gid);
-        $group->prettyDisplay();
-    }
+    __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+    $group->prettyDisplay();
 }
 
 function __my_header($label, $sidemenu, $item) {

@@ -22,79 +22,108 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+$name = quickGet('name');
+$id = quickGet('id');
+$visibility = quickGet('visible');
 
-$name = '';
-if ($_POST['id'] || $_GET['id']) {
-    if ($_GET['id']) {
-        $group = new Stagroup($_GET['id']);
-        if ($_POST['name']) { $group->save($_POST['name']); }
-        if ($_POST['visible'] == 'show') { $group->show(); } elseif ($_POST['visible'] == 'hide') { $group->hide(); }
-        
-        $name = $group->getName();
-    } elseif ($_POST['id']) {
-        $group = new Stagroup($_POST['id']);
-        if ($_POST['name']) { $group->save($_POST['name']); }
-        if ($_POST['visible'] == 'show') { $group->show(); } elseif ($_POST['visible'] == 'hide') { $group->hide(); }
-        $name = $group->getName();
-    }
+if ($id) {
+    $group = new Group($id, true);
+    if (!$name) { $name = $group->getName(); }
+    if (!$visibility) { $visibility = $group->canShow(); }
 } else {
-    $id = get_next_dyngroup_id();
-    $group = new Stagroup($id); //get_next_dyngroup_id());
+    $group = new Group();
 }
 
 $members = unserialize(base64_decode($_POST["lmembers"]));
 $machines = unserialize(base64_decode($_POST["lmachines"]));
+$listOfMembers = unserialize(base64_decode($_POST["lsmembers"]));
 
 if (isset($_POST["bdelmachine_x"])) {
     if (isset($_POST["members"])) {
         foreach ($_POST["members"] as $member) {
-            $idx = array_search($member, $members);
-            if ($idx !== false) unset($members[$idx]);
+            $ma = preg_split("/##/", $member);
+            unset($members[$member]);
+            unset($listOfMembers[$ma[1]]);
         }
     }
 } else if (isset($_POST["baddmachine_x"])) {
     if (isset($_POST["machines"])) {
         foreach ($_POST["machines"] as $machine) {
-            $idx = array_search($machine, $members);
-            if ($idx === false) {
-                $members[] = $machine;
-            }
+            $ma = preg_split("/##/", $machine);
+            $members[$machine] = $ma[0];
+            $listOfMembers[$ma[1]] = array('hostname'=>$ma[0], 'uuid'=>$ma[1]);
         }
     }
-    sort($members);
-    reset($members);
 } else if (isset($_POST["bconfirm"])) {
-    $curmem = $group->members();
-    if (!$curmem) { $curmem = array(); }
-    $newmem = array_diff($members, $curmem);
-    $delmem = array_diff($curmem, $members);
-
-    $group->addMembers($newmem);
-    $group->delMembers($delmem);
-
-    /*if ($group->save($name)) {
-        new NotifyWidgetSuccess(_T("Group successfully modified"));
-    }*/
-    $members = $group->members();
-} else {
-    $members = $group->members();
-    if (!$members) {
-        $members = array();
+    $listOfCurMembers = $group->members();
+    $curmem = array();
+    foreach ($listOfCurMembers as $member) {
+        $curmem[$member['hostname']."##".$member['uuid']] = $member['hostname'];
     }
-    #$machines = getComputersName();
-    $machines = getRestrictedComputersName(0, 10000);
-}
 
-$diff = array_diff($machines, $members);
+    if (!$curmem) { $curmem = array(); }
+    if (!$listOfCurMembers) { $listOfCurMembers = array(); }
+
+    $listN = array();
+    $listC = array();
+    foreach ($listOfMembers as $member) { $listN[$member['uuid']] = $member; }
+    foreach ($listOfCurMembers as $member) { $listC[$member['uuid']] = $member; }
+
+    $newmem = array_diff_assoc($listN, $listC);
+    $delmem = array_diff_assoc($listC, $listN);
+
+    if ($group->id) {
+        $group->setName($name);
+        if ($visibility == 'show') { $group->show(); } else { $group->hide(); }
+    } else {
+        $group->create($name, ($visibility == 'show'));
+    }
+    
+    $res = $group->addMembers($newmem) && $group->delMembers($delmem);
+
+    if ($res) { //group->save($name)) {
+        new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+        $list = $group->members();
+        $members = array();
+        foreach ($list as $member) {
+            $listOfMembers[$member['uuid']] = $member['hostname'];
+            $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
+        }
+    } else {
+        new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
+    }
+} else {
+    $list = $group->members();
+    $members = array();
+    foreach ($list as $member) {
+        $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
+        $listOfMembers[$member['uuid']] = $member;
+    }
+    
+    if (!$members) { $members = array(); }
+    if (!$listOfMembers) { $listOfMembers = array(); }
+
+    #$machines = getComputersName();
+    $listOfMachines = getRestrictedComputersList(0, 10);
+    $machines = array();
+    foreach ($listOfMachines as $machine) {
+        $machines[$machine[1]['cn'][0]."##".$machine[1]['objectUUID'][0]] = $machine[1]['cn'][0];
+    }
+}
+ksort($members);
+reset($members);
+ksort($machines);
+
+$diff = array_diff_assoc($machines, $members);
 
 ?>
 
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
-<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name='name' value='<?= $group->getName() ?>' type='text'/></td></tr>
+<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name='name' value='<?= $name ?>' type='text'/></td></tr>
 <tr><td><?= _T('Is the group visible', 'dyngroup') ?></td><td></td><td>
-    <input name='visible' value='show' <? if ($group->canShow()) { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
-    <input name='visible' value='hide' <? if (!$group->canShow()) { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
+    <input name='visible' value='show' <? if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
+    <input name='visible' value='hide' <? if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
 </table>
@@ -111,7 +140,7 @@ foreach ($diff as $idx => $machine) {
         unset($machines[$idx]);
         continue;
     }
-    echo "<option value=\"".$machine."\">".$machine."</option>\n";
+    echo "<option value=\"".$idx."\">".$machine."</option>\n";
 }
 ?>
     </select>
@@ -136,7 +165,7 @@ foreach ($members as $idx => $member) {
         continue;
     }
 
-    echo "<option value=\"".$member."\">".$member."</option>\n";
+    echo "<option value=\"".$idx."\">".$member."</option>\n";
 }
 ?>
     </select>
@@ -151,6 +180,7 @@ foreach ($members as $idx => $member) {
 
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
+<input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
 <input type="hidden" name="id" value="<?php echo $group->id; ?>" />
 <!-- input type="hidden" name="name" value="< ?php echo $group->getName(); ?>" /-->
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Confirm"); ?>" />

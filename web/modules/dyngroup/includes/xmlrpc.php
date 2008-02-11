@@ -22,56 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function getQueryPossibilities() {
-    return myXmlCall("dyngroup.getQueryPossibilities");
-}
-
-function getPossiblesModules() {
-    return myXmlCall("dyngroup.getPossiblesModules");
-}
-
-function getPossiblesCriterionsInModule($moduleName) {
-    return myXmlCall("dyngroup.getPossiblesCriterionsInModule", array($moduleName));
-}
-
-function getPossiblesValuesForCriterionInModule($moduleName, $criterion) {
-    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModule", array($moduleName, $criterion));
-}
-
-function getPossiblesValuesForCriterionInModuleFuzzy($moduleName, $criterion, $search) {
-    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzy", array(urldecode($moduleName), urldecode($criterion), urldecode($search)));
-}
-
-function getPossiblesValuesForCriterionInModuleFuzzyWhere($moduleName, $criterion, $search, $value2) {
-    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzyWhere", array(urldecode($moduleName), urldecode($criterion), urldecode($search), urldecode($value2)));
-}
-
-function replyToQuery($request, $bool = null) {
-    return myXmlCall("dyngroup.replyToQuery", array($request->toRPC(), $bool));
-}
-
-function replyToQueryXML($request, $bool = null) {
-    return myXmlCall("dyngroup.replyToQueryXML", array($request->toRPC(), $bool));
-}
-
-function myXmlCall($func, $params = null) {
-    return xmlCall($func, convert($params));
-}
-
 function isDynamicEnable() {
     return myXmlCall("dyngroup.isDynamicEnable");
-}
-
-function convert($str) {
-    if ($str) {
-        if (is_array($str)) {
-            return array_map('convert', $str);
-        } else {
-            return preg_replace('`<`', '&lt;', preg_replace('`>`', '&gt;', $str));
-        }
-    } else {
-        return $str;
-    }
 }
 
 ?>

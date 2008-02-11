@@ -25,7 +25,7 @@
 require_once("modules/dyngroup/includes/includes.php");
 
 $id = idGet();
-$group = new Stagroup($id);
+$group = new Group($id);
 
 if (quickGet('valid')) {
     $group->delete();

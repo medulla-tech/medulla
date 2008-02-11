@@ -22,17 +22,29 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#TODO remove this include...
-require_once("modules/inventory/includes/xmlrpc.php");
-#require("modules/msc/includes/xmlrpc.php");
+require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
+require_once("modules/dyngroup/includes/includes.php");
 
-require_once("modules/base/includes/computers.inc.php");
-require_once("modules/base/includes/computers_list.inc.php");
+$gid = idGet();
+$group = new Group($gid);
+$edition = True;
 
-require_once("modules/dyngroup/includes/utilities.php");
-require_once("modules/dyngroup/includes/querymanager_xmlrpc.php");
-require_once("modules/dyngroup/includes/xmlrpc.php");
-require_once("modules/dyngroup/includes/request.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
+if ($group->isDyn()) {
+    $title = _T("Edit a dynamic group", 'dyngroup');
+    $p = new PageGenerator($title);
+    $p->setSideMenu($sidemenu);
+    $p->display();
+
+    require("creator.php");
+} else {
+    $title = _T("Edit a static group", 'dyngroup');
+    $p = new PageGenerator($title);
+    $p->setSideMenu($sidemenu);
+    $p->display();
+
+    require("add_groups.php");
+}
 
 ?>
+

@@ -28,30 +28,12 @@ function quickGet($name) {
     if ($_GET[$name]) { $res = $_GET[$name]; } elseif ($_POST[$name]) { $res = $_POST[$name]; } else { $res = null; }
     return urldecode($res);
 }
+
 function idGet() { return quickGet('id'); }
 
 function to_s($obj) { return $obj->toS(); }
 function to_rpc($obj) { return $obj->toRPC(); }
 function to_xml($obj) { return $obj->toXML(); }
-
-function dyngroup_last_id() {
-    $data = new DataAccess('id');
-    return $data->getValue();
-}
-function get_next_dyngroup_id() {
-    $data = new DataAccess('id');
-    if ($data->getValue() == Null) {
-        $data->setValue(2);
-    } else {
-        $data->setValue($data->getValue()+1);
-    }
-    return $data->getValue()-1;
-}
-
-function save_dyngroup_id($id) {
-    $data = new DataAccess('id', $id);
-    $data->save();
-}
 
 function getCookie($path) { // TODO generic!
     if (count($path) == 1) {
@@ -64,6 +46,22 @@ function getCookie($path) { // TODO generic!
         return $_COOKIE[$path[0]][$path[1]][$path[2]][$path[3]];
     }
     return false;
+}
+
+function myXmlCall($func, $params = null) {
+    return xmlCall($func, convert($params));
+}
+
+function convert($str) {
+    if ($str) {
+        if (is_array($str)) {
+            return array_map('convert', $str);
+        } else {
+            return preg_replace('`<`', '&lt;', preg_replace('`>`', '&gt;', $str));
+        }
+    } else {
+        return $str;
+    }
 }
 
 

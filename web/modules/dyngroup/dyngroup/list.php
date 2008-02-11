@@ -31,44 +31,36 @@ $p = new PageGenerator(_T("Group list", 'dyngroup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$list = array();
-if (isDynamicEnable()) {
-    $list = getAllgroup();
-    //need to skin dyn and sta
-} else {
-    $list = getAllStagroup();
-}
+$list = getAllGroups();
 
-if (count($list) > 0) {
-    $ids  = array();
-    $name = array();
-    $type = array();
-    $show = array();
+$ids  = array();
+$name = array();
+$type = array();
+$show = array();
 
-    foreach ($list as $group) {
-        $ids[]=  array("id"=>$group->id, "gid"=>$group->id);
-        $name[]= $group->getName();
-        if ($group->isDyn()) {
-            $type[]= ($group->isGroup() ? sprintf(_T('group (%s)', 'dyngroup'), $group->resultNum()) : _T('query', 'dyngroup'));
-        } else {
-            $type[]= _T('static group', 'dyngroup');
-        }
-        $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
+foreach ($list as $group) {
+    $ids[]=  array("id"=>$group->id, "gid"=>$group->id);
+    $name[]= $group->getName();
+    if ($group->isDyn()) {
+        $type[]= (!$group->isRequest() ? sprintf(_T('group (%s)', 'dyngroup'), $group->countResult()) : _T('query', 'dyngroup'));
+    } else {
+        $type[]= _T('static group', 'dyngroup');
     }
-
-    $n = new ListInfos($name, _T('Group name', 'dyngroup'));
-    $n->addExtraInfo($type, _T('Type', 'dyngroup'));
-    $n->addExtraInfo($show, _T('Display', 'dyngroup'));
-    $n->setParamInfo($ids);
-    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id"));
-    $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "edit", "edit", "id"));
-    $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"msctabs","logfile","computer", "base", "computers"));
-    $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
-    $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id"));
-    $n->disableFirstColumnActionLink();
-
-    $n->display();
+    $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
 }
+
+$n = new ListInfos($name, _T('Group name', 'dyngroup'));
+$n->addExtraInfo($type, _T('Type', 'dyngroup'));
+$n->addExtraInfo($show, _T('Display', 'dyngroup'));
+$n->setParamInfo($ids);
+$n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id"));
+$n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "edit", "edit", "id"));
+$n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"msctabs","logfile","computer", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id"));
+$n->disableFirstColumnActionLink();
+
+$n->display();
     
 # changer le style de li.display (pas bon icone)
 ?>

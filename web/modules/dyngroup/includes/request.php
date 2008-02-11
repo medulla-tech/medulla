@@ -82,6 +82,9 @@ class Request {
         return $ret;
     }
     function displayReqListInfos($canbedeleted = false, $default_params = array()) {
+        if (!$default_params['target']) {
+            $default_params['target'] = 'creator';
+        }
         $parameters = array();
         $parts = array();
         foreach ($this->subs as $id => $sub) {
@@ -94,7 +97,7 @@ class Request {
         $n = new ListInfos($parts, _T('Search part', 'dyngroup'));
         if ($canbedeleted) {
             $n->setParamInfo($parameters);
-            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), "creator", "delete", "params"));
+            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), $default_params['target'], "delete", "params"));
         }
 
         $n->disableFirstColumnActionLink();
@@ -140,7 +143,8 @@ class SubRequest {
         $this->id = $b[0];
         $this->module = $b[1];
         $this->crit = $c[0];
-        $this->val = explode(', ', rtrim(ltrim($c[1], '('), ')'));
+        #$this->val = explode(', ', rtrim(ltrim($c[1], '('), ')'));
+        $this->val = explode(', ', $c[1]);
         if (is_array($this->val) && count($this->val) == 1) {
             $this->val = $this->val[0];
         }

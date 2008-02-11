@@ -22,17 +22,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#require("modules/base/computers/localSidebar.php");
-#require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
-#$p = new PageGenerator(_T("Add a group"));
-#$p->setSideMenu($sidemenu);
-#$p->display();
+if ($edition) {
+    $target = 'edit';
+} else {
+    $target = 'creator';
+}
 
 // getting request and id parameters
 $id = idGet();
-$group = new DynGroup($id);
+$group = new Group($id, true);
 $request = quickGet('request');
 if ($request) {
     $r = new Request();
@@ -57,42 +57,21 @@ if (quickGet('req') && quickGet('param')) {
     $request->addSub($sub);
 }
 
-/*if (isDynamicEnable()) {
-    print "<table><tr><td>"._T("What kind of group do you want to create: ")."</td>";
-    print "<td><a href='".
-            urlStr("base/computers/creator", array("add_sta"=>True)).
-            "'>"._T('A static group').'</td>';
-    print "<td><a href='".
-            urlStr("base/computers/creator", array("add_dyn"=>True)).
-            "'>"._T('A dynamic group').'</td></tr>';
-} else {
-    add_static_group();
-}
-
-if (quickGet('add_sta')) {
-    add_static_group();
-}*/
-
-function add_static_group() {
-    // need to do the same thing than groups and users...
-}
-
 // select the module in which a part of the request must be launch
 //TODO put in class
-//if (quickGet('add_dyn')) {
-    print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
-    $modules = getPossiblesModules();
-    foreach ($modules as $name) {
-        print "<td><a href='".
-            urlStr("base/computers/creator", array(
-                                                    'add_req'=>$name,
-                                                    'request'=>$request->toURL(),
-                                                    'id'=>$id
-            )).
-            "'>$name</a></td>";
-    }
-    print "</tr></table>";
-//}
+print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
+$modules = getPossiblesModules();
+
+foreach ($modules as $name) {
+    print "<td><a href='".
+        urlStr("base/computers/$target", array(
+                                                'add_req'=>$name,
+                                                'request'=>$request->toURL(),
+                                                'id'=>$id
+        )).
+        "'>$name</a></td>";
+}
+print "</tr></table>";
 
 // criterion selection
 //TODO put in class
@@ -101,7 +80,7 @@ if (quickGet('add_req')) {
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
     foreach ($criterion as $param_name) {
         print "<td><a href='".
-            urlStr("base/computers/creator", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
+            urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
             "'>$param_name</a></td>";
     }
     print "</tr></table>";
@@ -110,7 +89,7 @@ if (quickGet('add_req')) {
 // allow to select/write a value for the criterion
 //TODO put in class
 if (quickGet('add_param')) {
-    print "<form action='".  urlStr("base/computers/creator", array()).  "' method='POST'><table>";
+    print "<form action='".  urlStr("base/computers/$target", array()).  "' method='POST'><table>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $param = getPossiblesValuesForCriterionInModule(quickGet('req'), quickGet('add_param'));
     if (!is_array($param)) { $param = array($param); }
@@ -159,7 +138,7 @@ if (quickGet('add_param')) {
 if (!$request->isEmpty()) {
     print "<hr/>";
     print "<h3>"._T("The request is : ")."</h3>";
-    $request->displayReqListInfos(true, array('id'=>$id));
+    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target));
 }
 
 // display action buttons in the bottom
