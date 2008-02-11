@@ -23,6 +23,12 @@
  */
 
 // return all dyngroups with matching params (for exemple : show = true)
+function countAllGroups($params = array()) {
+    $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
+    $count = __xmlrpc_countallgroups($params);
+    return $count;
+}
+
 function getAllGroups($params = array()) { # canShow
     # xmlrpc call to get all groups
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
@@ -119,6 +125,7 @@ class Group {
     }
 }
 
+function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgroups", array($params)); }
 function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
 function __xmlrpc_get_group($id) { return xmlCall("dyngroup.get_group", array($id)); }
 

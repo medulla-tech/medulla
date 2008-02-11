@@ -22,23 +22,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/base/computers/localSidebar.php");
-require("graph/navbar.inc.php");
-require_once("modules/dyngroup/includes/includes.php");
-require("modules/base/graph/computers/index.css");
+require("../../../includes/PageGenerator.php");
+require("../../../includes/config.inc.php");
+require("../../../includes/i18n.inc.php");
+require("../../../includes/acl.inc.php");
+require("../../../includes/session.inc.php");
+require_once("../../../modules/dyngroup/includes/utilities.php");
+require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
+require_once("../../../modules/dyngroup/includes/xmlrpc.php");
+require_once("../../../modules/dyngroup/includes/request.php");
+require("../../../modules/dyngroup/includes/dyngroup.php");
 
-$p = new PageGenerator(_T("Group list", 'dyngroup'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
+if (!$_GET["start"]) { $_GET["start"] = 0; }
+if (!$_GET["end"]) { $_GET["end"] = 10; }
 
-$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid'=>$this->id));
-$ajax->display();
-print "<br/><br/><br/>";
-$ajax->displayDivToUpdate();
-                                
-
-/*$list = getAllGroups();
+$params = array('min'=>$_GET["start"], 'max'=>$_GET["end"], 'filter'=>$_GET["filter"]);
+$list = getAllGroups($params);
+$count = countAllGroups($params);
+$filter = $_GET["filter"];
 
 $ids  = array();
 $name = array();
@@ -56,7 +58,13 @@ foreach ($list as $group) {
     $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
 }
 
-$n = new ListInfos($name, _T('Group name', 'dyngroup'));
+$n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
+$n->setItemCount($count);
+$n->setNavBar(new AjaxNavBar($count, $filter));
+$n->start = 0;
+$n->end = $conf["global"]["maxperpage"];
+
+
 $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
@@ -68,51 +76,7 @@ $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "dele
 $n->disableFirstColumnActionLink();
 
 $n->display();
-    */
+    
 # changer le style de li.display (pas bon icone)
 ?>
-
-<style>
-li.display a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.details a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/detail.gif");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.edit a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/edit.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.delete a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/delete.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-</style>
-
 
