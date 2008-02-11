@@ -35,7 +35,7 @@ $groups = getAllGroups(array('canShow'=>true));
 foreach ($groups as $group) {
     $isA = _T("request", "dyngroup");
     if (!$group->isDyn()) { $isA = _T("group", "dyngroup"); }
-    if ($group->isDyn() && $group->isGroup()) { $isA = _T("group", "dyngroup"); }
+    if ($group->isDyn() && !$group->isRequest()) { $isA = _T("group", "dyngroup"); }
     $s = new SideMenuItemNoAclCheck( //SideMenuItem(
              sprintf(_T("Display %s '%s'", "dyngroup"), $isA, $group->getName()),
              "base", "computers", "display&gid=".$group->id
