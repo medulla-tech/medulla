@@ -21,24 +21,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# Twisted
-import twisted.internet.defer
-
-import mmc.plugins.msc
-import mmc.plugins.msc.database
-
+# big modules
 import logging
+# Twisted
+import pulse2.scheduler.scheduling
 
 def start_all_commands():
 
-    # open Database connexion
-    mmc.plugins.msc.activate()
-
     # run relevant commands
-    scheduler = mmc.plugins.msc.database.MscDatabase()
-    scheduler.activate()
-    deffereds = scheduler.startAllCommands()
+    deffereds = pulse2.scheduler.scheduling.Scheduler().startAllCommands()
 
     # wait for commands to finish
-    scheduler.logger.info("Scheduler: %d tasks to perform" % len(deffereds))
+    logging.getLogger().info("Scheduler: %d tasks to perform" % len(deffereds))
     return deffereds
