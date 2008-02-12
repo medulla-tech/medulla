@@ -32,7 +32,7 @@ import twisted.web.xmlrpc
 import twisted.internet
 
 # MMC plugins
-import mmc.plugins.msc.database
+from mmc.plugins.msc.database import MscDatabase
 import mmc.plugins.msc.mirror_api
 
 # ORM mappings
@@ -65,11 +65,11 @@ class Scheduler(object):
     """
 
     def __init__(self):
-        mmc.plugins.msc.database.MscDatabase().activate()
+        MscDatabase().activate()
 
     def gatherStuff(self):
         session = sqlalchemy.create_session()
-        database = mmc.plugins.msc.database.MscDatabase()
+        database = MscDatabase()
         logger = logging.getLogger()
         return (session, database, logger)
 
@@ -86,7 +86,10 @@ class Scheduler(object):
     def startAllCommands(self): # maybe this should be put somewhere else ?
         # we return a list of deferred
         deffereds = [] # will hold all deferred
-        logging.getLogger().debug("MSC_Scheduler->startAllCommands()...")
+        session = sqlalchemy.create_session()
+        database = MscDatabase()
+        logger = logging.getLogger()
+        logger.debug("MSC_Scheduler->startAllCommands()...")
         # gather candidates:
         # ignore completed tasks
         # ignore paused tasks
@@ -97,7 +100,6 @@ class Scheduler(object):
         # take tasks with a pid not already set
         # take tasks with next launch time in the future
         # TODO: check command state integrity AND command_on_host state integrity in a separtseparate function
-        (session, database, logger) = self.gatherStuff()
         for q in session.query(CommandsOnHost).\
             filter(database.commands_on_host.c.current_state != 'done').\
             filter(database.commands_on_host.c.current_state != 'pause').\
@@ -123,37 +125,32 @@ class Scheduler(object):
     def runCommand(self, myCommandOnHostID):
         """ Just a simple start point, chain-load on Upload Pahse
         """
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
         logger.debug("command_on_host state is %s" % myCoH.toH())
         logger.debug("command state is %s" % myC.toH())
-        session.close()
         return self.runUploadPhase(myCommandOnHostID)
 
     def runUploadPhase(self, myCommandOnHostID):
         """ Handle first Phase: upload time
         """
         # First step : copy files
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
-        session.refresh(myCoH)
         if myCoH.isUploadRunning(): # upload still running, immediately returns
             logger.info("command_on_host #%s: still running" % myCoH.getId())
-            session.close()
             return None
         if myCoH.isUploadDone(): # upload already done, jump to next stage
             logger.info("command_on_host #%s: upload done" % myCoH.getId())
-            session.close()
             return self.runExecutionPhase(myCommandOnHostID)
         if myCoH.isUploadIgnored(): # upload has been ignored, jump to next stage
             logger.info("command_on_host #%s: upload ignored" % myCoH.getId())
-            session.close()
             return self.runExecutionPhase(myCommandOnHostID)
         if not myC.hasSomethingToUpload(): # nothing to upload here, jump to next stage
             logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
             myCoH.setUploadIgnored()
-            session.flush()
-            session.close()
             return self.runExecutionPhase(myCommandOnHostID)
         # if we are here, upload has either previously failed or never be done
         # do copy here
@@ -164,8 +161,7 @@ class Scheduler(object):
             files_list = map(lambda(a): os.path.join(myC.path_source, a), myC.files.split("\n"))
             launcher = chooseLauncher()
             myCoH.setUploadInProgress()
-            database.updateHistory(myCommandOnHostID, 'upload_in_progress')
-            session.flush()
+            MscDatabase().updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
@@ -175,7 +171,6 @@ class Scheduler(object):
             mydeffered.\
                 addCallback(self.parsePushResult, myCommandOnHostID).\
                 addErrback(self.parsePushError, myCommandOnHostID)
-            session.close()
             return mydeffered
         else: # remote pull
             mirrors = myT.mirrors.split('||')
@@ -189,8 +184,7 @@ class Scheduler(object):
                     files_list.append(m1.getFilePath(fid))
                 launcher = chooseLauncher()
                 myCoH.setUploadInProgress()
-                database.updateHistory(myCommandOnHostID, 'upload_in_progress')
-                session.flush()
+                MscDatabase().updateHistory(myCommandOnHostID, 'upload_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'sync_remote_pull',
                     myCommandOnHostID,
@@ -200,7 +194,6 @@ class Scheduler(object):
                 mydeffered.\
                     addCallback(self.parsePullResult, myCommandOnHostID).\
                     addErrback(self.parsePullError, myCommandOnHostID)
-                session.close()
                 return mydeffered
             elif re.compile('^smb://').match(mirror): # TODO: NET download
                 pass
@@ -215,38 +208,30 @@ class Scheduler(object):
             else: # do nothing
                 pass
         myCoH.setUploadIgnored() # can't guess what to do, jump to next phase
-        session.flush()
-        session.close()
         return self.runExecutionPhase(myCommandOnHostID)
 
     def runExecutionPhase(self, myCommandOnHostID):
         # Second step : execute file
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: execution phase" % myCommandOnHostID)
         if myCoH.isExecutionRunning(): # execution still running, immediately returns
             logger.info("command_on_host #%s: still running" % myCommandOnHostID)
-            session.close()
             return None
         if myCoH.isExecutionDone(): # execution already done, jump to next stage
             logger.info("command_on_host #%s: upload done" % myCommandOnHostID)
-            session.close()
             return self.runDeletePhase(myCommandOnHostID)
         if myCoH.isExecutionIgnored(): # execution previously ignored, jump to next stage
             logger.info("command_on_host #%s: upload ignored" % myCommandOnHostID)
-            session.close()
             return self.runDeletePhase(myCommandOnHostID)
         if not myC.hasSomethingToExecute(): # nothing to execute here, jump to next stage
             logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
             myCoH.setExecutionIgnored()
-            session.flush()
-            session.close()
             return self.runDeletePhase(myCommandOnHostID)
         # if we are here, execution has either previously failed or never be done
         launcher = chooseLauncher()
         myCoH.setExecutionInProgress()
-        database.updateHistory(myCommandOnHostID, 'execution_in_progress')
-        session.flush()
-        session.close()
+        MscDatabase().updateHistory(myCommandOnHostID, 'execution_in_progress')
         if myC.isQuickAction(): # should be a standard script
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_quickaction',
@@ -272,7 +257,8 @@ class Scheduler(object):
 
     def runDeletePhase(self, myCommandOnHostID):
         # Third step : delete file
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: delete phase" % myCommandOnHostID)
         if myCoH.isDeleteRunning(): # delete still running, immediately returns
             logging.getLogger().info("command_on_host #%s: still deleting" % myCommandOnHostID)
@@ -286,7 +272,6 @@ class Scheduler(object):
         if not myC.hasSomethingToDelete(): # nothing to delete here, jump to next stage
             logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
             myCoH.setDeleteIgnored()
-            session.flush()
             return self.runEndPhase(myCommandOnHostID)
         # if we are here, deletion has either previously failed or never be done
         if re.compile('^file://').match(myT.mirrors): # delete from remote push
@@ -294,8 +279,7 @@ class Scheduler(object):
             target_path = myC.path_destination
             launcher = chooseLauncher()
             myCoH.setDeleteInProgress()
-            database.updateHistory(myCommandOnHostID, 'deletion_in_progress')
-            session.flush()
+            MscDatabase().updateHistory(myCommandOnHostID, 'deletion_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_delete',
                 myCommandOnHostID,
@@ -313,8 +297,7 @@ class Scheduler(object):
                 files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
                 launcher = chooseLauncher()
                 myCoH.setDeleteInProgress()
-                database.updateHistory(myCommandOnHostID, 'deletion_in_progress')
-                session.flush()
+                MscDatabase().updateHistory(myCommandOnHostID, 'deletion_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'sync_remote_delete',
                     myCommandOnHostID,
@@ -338,12 +321,12 @@ class Scheduler(object):
             else: # do nothing
                 pass
         myCoH.setDeleteIgnored()
-        session.flush()
         return self.runEndPhase(myCommandOnHostID)
 
     def runInventoryPhase(self, myCommandOnHostID):
         # Run inventory if needed
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
         if myCoH.isInventoryRunning(): # inventory still running, immediately returns
             logger.info("command_on_host #%s: still inventoring" % myCommandOnHostID)
@@ -354,7 +337,7 @@ class Scheduler(object):
         # if we are here, inventory has either previously failed or never be done
         launcher = chooseLauncher()
         myCoH.setInventoryInProgress()
-        database.updateHistory(myCommandOnHostID, 'inventory_in_progress')
+        MscDatabase().updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
             'sync_remote_inventory',
             myCommandOnHostID,
@@ -367,160 +350,140 @@ class Scheduler(object):
 
     def runEndPhase(self, myCommandOnHostID):
         # Last step : end file
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: end phase" % myCommandOnHostID)
         myCoH.setDone()
-        session.flush()
         return None
 
     def parsePushResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         if exitcode == 0: # success
             logger.info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
             myCoH.setUploadDone()
-            database.updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
-            session.flush()
-            session.close()
+            MscDatabase().updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
             return self.runExecutionPhase(myCommandOnHostID)
         # failure: immediately give up
         logger.info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
+        MscDatabase().updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         myCoH.setUploadFailed()
-        database.updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         myCoH.reSchedule(myC.getNextConnectionDelay())
-        session.flush()
-        session.close()
         return None
 
     def parsePullResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         if exitcode == 0: # success
             logger.info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
             myCoH.setUploadDone()
-            database.updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
-            session.flush()
-            session.close()
+            MscDatabase().updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
             return self.runExecutionPhase(myCommandOnHostID)
         # failure: immediately give up
         logger.info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
         myCoH.setUploadFailed()
-        database.updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         myCoH.reSchedule(myC.getNextConnectionDelay())
-        session.flush()
-        session.close()
+        MscDatabase().updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
         return None
 
     def parseExecutionResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         if exitcode == 0: # success
             logger.info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
             myCoH.setExecutionDone()
-            database.updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
-            session.flush()
-            session.close()
+            MscDatabase().updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
             return self.runDeletePhase(myCommandOnHostID)
         # failure: immediately give up
         logger.info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
         myCoH.setExecutionFailed()
-        database.updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
         myCoH.reSchedule(myC.getNextConnectionDelay())
-        session.close()
-        session.flush()
+        MscDatabase().updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
         return None
 
     def parseDeleteResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         if exitcode == 0: # success
             logger.info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
             myCoH.setDeleteDone()
-            database.updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
-            session.flush()
-            session.close()
+            MscDatabase().updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
             return self.runInventoryPhase(myCommandOnHostID)
         # failure: immediately give up
         logger.info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
         myCoH.setDeleteFailed()
-        database.updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
         myCoH.reSchedule(myC.getNextConnectionDelay())
-        session.close()
-        session.flush()
+        MscDatabase().updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
         return None
 
     def parseInventoryResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         if exitcode == 0: # success
             logging.getLogger().info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
             myCoH.setInventoryDone()
-            database.updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
-            session.flush()
-            session.close()
+            MscDatabase().updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
             return self.runEndPhase(myCommandOnHostID)
         # failure: immediately give up (FIXME: should not care of this failure)
         logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
         myCoH.setInventoryFailed()
-        database.updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
         myCoH.reSchedule(myC.getNextConnectionDelay())
-        session.flush()
-        session.close()
+        MscDatabase().updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
         return None
 
     def parsePushError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
-        logger.info("command_on_host #%s: push failed, unattented reason: %s" % (mmyCommandOnHostID, reason))
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
+        logger.info("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
         myCoH.setUploadFailed()
-        database.updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
         myCoH.reSchedule(myC.getNextConnectionDelay())
+        MscDatabase().updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
-        session.flush()
-        session.close()
         return None
 
     def parsePullError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
         myCoH.setUploadFailed()
-        database.updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
         myCoH.reSchedule(myC.getNextConnectionDelay())
+        MscDatabase().updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
-        session.flush()
-        session.close()
         return None
 
     def parseExecutionError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
         myCoH.setExecutionFailed()
-        database.updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
         myCoH.reSchedule(myC.getNextConnectionDelay())
+        MscDatabase().updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
-        session.flush()
-        session.close()
         return None
 
     def parseDeleteError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
         myCoH.setDeleteFailed()
-        database.updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
         myCoH.reSchedule(myC.getNextConnectionDelay())
+        MscDatabase().updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
-        session.flush()
-        session.close()
         return None
 
     def parseInventoryError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up
-        (session, database, logger, myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
         logger.info("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
         myCoH.setInventoryFailed()
-        database.updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
         myCoH.reSchedule(myC.getNextConnectionDelay())
+        MscDatabase().updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
-        session.flush()
-        session.close()
         return None
 
 def chooseLauncher():
