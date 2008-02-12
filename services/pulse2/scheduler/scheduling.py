@@ -74,14 +74,13 @@ class Scheduler(object):
         return (session, database, logger)
 
     def gatherCoHStuff(self, idCommandOnHost):
-        (session, database, logger) = self.gatherStuff()
+        session = sqlalchemy.create_session()
+        database = MscDatabase()
         myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
         myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
         myTarget = session.query(Target).filter(database.target.c.id_command == myCommandOnHost.getIdCommand()).limit(1)[0]
-        session.refresh(myCommandOnHost)
-        session.refresh(myCommand)
-        session.refresh(myTarget)
-        return (session, database, logger, myCommandOnHost, myCommand, myTarget)
+        session.close()
+        return (myCommandOnHost, myCommand, myTarget)
 
     def startAllCommands(self): # maybe this should be put somewhere else ?
         # we return a list of deferred
@@ -485,6 +484,7 @@ class Scheduler(object):
         MscDatabase().updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
         # FIXME: should return a failure (but which one ?)
         return None
+
 
 def chooseLauncher():
     import pulse2.scheduler.config # done only here as only the scheduler should have to use it
