@@ -204,7 +204,9 @@ function _colorise($line) {
     if (preg_match_all("|^(.*) ([ECOX]): (.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;
-        $out .= '<font color=grey>' . $matches[1][0] . '</font>&nbsp;';
+
+        $date = date(_T("Y-m-d H:i:s", "msc"), $matches[1][0]);
+        $out .= '<font color=grey>' . $date . '</font>&nbsp;';
         if ($matches[2][0] == "E") {
             $out .= '<font color=red>';
         } elseif ($matches[2][0] == "C") {
