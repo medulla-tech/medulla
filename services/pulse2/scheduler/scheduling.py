@@ -41,6 +41,8 @@ from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
 from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
 
+import pulse2.scheduler.config
+
 class Scheduler(object):
     """
     This is our main class. A scheduler object can virtualy handle
@@ -486,17 +488,17 @@ class Scheduler(object):
         return None
 
 def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr=''):
+    encoding = pulse2.scheduler.config.SchedulerConfig().dbencoding
     history = CommandsHistory()
     history.id_command_on_host = id_command_on_host
     history.date = time.time()
     history.error_code = error_code
-    history.stdout = stdout.encode('ascii', 'ignore')
-    history.stderr = stderr.encode('ascii', 'ignore')
+    history.stdout = stdout.encode(encoding, 'replace')
+    history.stderr = stderr.encode(encoding, 'replace')
     history.state = state
     history.flush()
 
 def chooseLauncher():
-    import pulse2.scheduler.config # done only here as only the scheduler should have to use it
     import random
 
     launchers = pulse2.scheduler.config.SchedulerConfig().launchers

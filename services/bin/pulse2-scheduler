@@ -75,7 +75,16 @@ def startService():
         logger.warn('scheduler "%s": no username set !!' % (config.name))
     if not config.password:
         logger.warn('scheduler "%s": no password set !!' % (config.name))
-    logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
+
+    # check MySQLdb version
+    import MySQLdb
+    (v1, v2, v3, v4, v5) = MySQLdb.version_info
+    if v1 <= 1:
+        if v2 <= 2:
+            if v3 <= 1:
+                if v4 != 'final': # versions up to 1.2.1c??? are buggy => injetc using ascii convertion
+                    config.dbencoding = 'ascii'
+                    logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
 
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
     logger.info('scheduler "%s": available launchers: %s' % (config.name, ' '.join(launchers)))
@@ -94,6 +103,7 @@ def startService():
 
     # start periodic scheduler, called every start_commands_modulo seconds
     reschedule_start_all_commands(None)
+    logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
 
     twisted.internet.reactor.run()
     return True

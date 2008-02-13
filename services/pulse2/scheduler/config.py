@@ -48,6 +48,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
             'host': '127.0.0.1'
         }
     }
+    dbencoding = 'utf-8'
 
     def setup(self, config_file):
         # Load configuration file
@@ -76,6 +77,9 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "ping_path"):
             self.ping_path = cp.get("scheduler", "ping_path")
+
+        if cp.has_option("scheduler", "dbencoding"):
+            self.dbencoding = cp.get("scheduler", "dbencoding")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
