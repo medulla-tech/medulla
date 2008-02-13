@@ -59,7 +59,7 @@ if (quickGet('req') && quickGet('param')) {
 
 // select the module in which a part of the request must be launch
 //TODO put in class
-print "<table><tr><td>"._T("Choose the module you want to query : ")."</td>";
+print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
 $modules = getPossiblesModules();
 
 foreach ($modules as $name) {
@@ -76,7 +76,7 @@ print "</tr></table>";
 // criterion selection
 //TODO put in class
 if (quickGet('add_req')) {
-    print "<table><tr><td>"._T("Choose your field : ")."</td>";
+    print "<table><tr><td>"._T("Choose your field : ", "dyngroup")."</td>";
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
     foreach ($criterion as $param_name) {
         print "<td><a href='".
@@ -97,7 +97,7 @@ if (quickGet('add_param')) {
     switch ($param[0]) {
         case 'string':
             print "<input name='value' type='text'></input>";
-            print "<input class='btnPrimary' value='"._T("Add")."' name='Add' type='submit'/>";
+            print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
             break;
         case 'list':
             $module = clean(quickGet('req'));
@@ -115,14 +115,14 @@ if (quickGet('add_param')) {
             break;
         case 'bool':
             print "<select name='value'>";
-            print "<option name='True' value='True'>"._T("Yes")."</option>";
-            print "<option name='False' value='False'>"._T("No")."</option>";
+            print "<option name='True' value='True'>"._T("Yes", "dyngroup")."</option>";
+            print "<option name='False' value='False'>"._T("No", "dyngroup")."</option>";
             print "</select>";
-            print "<input class='btnPrimary' value='"._T("Add")."' name='Add' type='submit'/>";
+            print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
             break;
         case 'true':
-            print "<input type='hidden' value='True' name='value'/><input type='text' readonly value='"._T("Yes")."'/>";
-            print "<input class='btnPrimary' value='"._T("Add")."' name='Add' type='submit'/>";
+            print "<input type='hidden' value='True' name='value'/><input type='text' readonly value='"._T("Yes", "dyngroup")."'/>";
+            print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";
             break;
     } 
     print "</td><td>";
@@ -137,7 +137,7 @@ if (quickGet('add_param')) {
 // display the request in detail
 if (!$request->isEmpty()) {
     print "<hr/>";
-    print "<h3>"._T("The request is : ")."</h3>";
+    print "<h3>"._T("The request is : ", "dyngroup")."</h3>";
     $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target));
 }
 
@@ -148,11 +148,11 @@ if (!$request->isEmpty())  {
     print "<table>";
     print "<tr><td><a href='".
         urlStr("base/computers/display", array('id'=>$id, 'request'=>$request->toS())).
-        "'>"._T("Execute")."</a></td><td><a href='".
+        "'>"._T("Execute", "dyngroup")."</a></td><td><a href='".
         urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>0)).
-        "'>"._T("Save result")."</a></td><td><a href='".
+        "'>"._T("Save result", "dyngroup")."</a></td><td><a href='".
         urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>1)).
-        "'>"._T("Save query")."</a></td></tr>";
+        "'>"._T("Save query", "dyngroup")."</a></td></tr>";
     print "</table>";
 }
 ?>
