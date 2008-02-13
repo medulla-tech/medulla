@@ -75,15 +75,12 @@ function adv_action($post) {
     $hostname = $post["hostname"];
     $uuid = $post['uuid'];
     $gid = $post["gid"];
-    if ($hostname) {
-        $cible = array($uuid, $hostname);
+    $machine = getMachine(array('uuid'=>$uuid), True);
+    if ($machine->uuid == $uuid) {
+        $cible = array($uuid, $machine->hostname);
     } else {
         $group = new Group($gid);
-
-        $res = new Result();
-        $res2 = $group->result();
-        $res->parse($res2->getValue());
-        $cible = $res->toA();
+        $cible = array_map("onlyValues", $group->getResult(0, -1));
     }
     $pid = $post["pid"];
 
@@ -108,10 +105,12 @@ if (isset($_GET["badvanced"])) {
 
     $name = getPackageLabel($p_api, $_GET["pid"]);
 
-    if ($hostname) {
-        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $hostname));
+    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+    if ($machine->uuid == $_GET['uuid']) {
+        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $machine->hostname));
+        $hostname = $machine->hostname;
     } else {
-        $group = new Stagroup($_GET['gid']);
+        $group = new Group($_GET['gid'], true);
         $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $group->getName()));
     }
     $label->display();
