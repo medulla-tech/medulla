@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-30 22:32+0100\n"
+"POT-Creation-Date: 2008-01-30 23:50+0100\n"
 "PO-Revision-Date: 2008-01-23 11:27+0100\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -73,29 +73,32 @@ msgstr "Arrêt de l'action %s sur %s"
 #: msc/msc/logs.php:48 msc/msc/ajaxPackageFilter.php:114
 #: msc/msc/packages.php:22 msc/msc/ajaxLogsFilter.php:85
 #: msc/msc/history.php:49 msc/logs/ajaxLogsFilter.php:67
+#: msc/msc/ajaxPackageFilter.php:117
 msgid "Details"
 msgstr "Détails"
 
-#: msc/msc/ajaxPackageFilter.php:52
+#: msc/msc/ajaxPackageFilter.php:52 msc/msc/ajaxPackageFilter.php:53
 #, php-format
 msgid "These packages can be installed on machine \"%s\""
 msgstr "Les packages suivants peuvent être installés sur l'ordinateur \"%s\""
 
-#: msc/msc/ajaxPackageFilter.php:54
+#: msc/msc/ajaxPackageFilter.php:54 msc/msc/ajaxPackageFilter.php:55
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
 #: msc/msc/ajaxPackageFilter.php:102 msc/msc/packages.php:18
+#: msc/msc/ajaxPackageFilter.php:104
 msgid "Package"
 msgstr "Package"
 
 #: msc/msc/ajaxPackageFilter.php:103 msc/msc/package_detail.php:36
-#: msc/msc/packages.php:19
+#: msc/msc/packages.php:19 msc/msc/ajaxPackageFilter.php:105
 msgid "Version"
 msgstr "Version"
 
 #: msc/msc/ajaxPackageFilter.php:113 msc/msc/packages.php:21
+#: msc/msc/ajaxPackageFilter.php:116
 msgid "Launch"
 msgstr "Démarrer"
 
@@ -486,3 +489,27 @@ msgstr "Montrer toutes les actions"
 #: msc/logs/custom.php:33
 msgid "Show custom status task's logs"
 msgstr "Montrer les actions par état"
+
+#: msc/msc/ajaxPackageFilter.php:106
+msgid "Package size"
+msgstr "Taille du package"
+
+#: msc/includes/utilities.php:32
+#, php-format
+msgid "%s go"
+msgstr "%s Giga Octets"
+
+#: msc/includes/utilities.php:34
+#, php-format
+msgid "%s mo"
+msgstr "%s Mega Octets"
+
+#: msc/includes/utilities.php:36
+#, php-format
+msgid "%s ko"
+msgstr "%s Kilo Octets"
+
+#: msc/includes/utilities.php:38
+#, php-format
+msgid "%s octets"
+msgstr "%s Octets"
