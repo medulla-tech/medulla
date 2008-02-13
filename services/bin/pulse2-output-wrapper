@@ -64,7 +64,7 @@ def format(line, tag):
     * convert to utf-8
     * format line
     """
-    for codec in ['windows-1252', 'utf-8', 'cp850', 'latin-1']:
+    for codec in ['utf-8', 'cp850', 'latin-1', 'windows-1252']:
         try:
             uline = unicode(line, codec)
             break
