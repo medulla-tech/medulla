@@ -103,8 +103,12 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
 
-    #$machines = getComputersName();
-    $listOfMachines = getRestrictedComputersList(0, 10);
+    $truncate_limit = 2000;
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit);
+    $count = getRestrictedComputersListLen();
+    if (count($listOfMachines) < $count) {
+        new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
+    }
     $machines = array();
     foreach ($listOfMachines as $machine) {
         $machines[$machine[1]['cn'][0]."##".$machine[1]['objectUUID'][0]] = $machine[1]['cn'][0];
