@@ -27,4 +27,16 @@ function onlyValues($n) {
     return array($n['uuid'], $n['name']);
 }
 
+function prettyOctetDisplay($octets) {
+    if ($octets > 1024*1024*1024) {
+        return sprintf(_T("%s go", "msc"), $octets/(1024*1024*1024));
+    }elseif ($octets > 1024*1024) {
+        return sprintf(_T("%s mo", "msc"), $octets/(1024*1024));
+    }elseif ($octets > 1024) {
+        return sprintf(_T("%s ko", "msc"), $octets/1024);
+    }
+    return sprintf(_T("%s octets", "msc"), $octets);
+    
+}
+
 ?>

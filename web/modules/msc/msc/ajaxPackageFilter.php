@@ -34,6 +34,7 @@ require_once('../../../modules/msc/includes/qactions.inc.php');
 require_once('../../../modules/msc/includes/mirror_api.php');
 require_once('../../../modules/msc/includes/machines.inc.php');
 require_once('../../../modules/msc/includes/widgets.inc.php');
+require_once("../../../modules/msc/includes/utilities.php");
 $machine = null;
 $group = null;
 if ($_GET['uuid']) {
@@ -85,6 +86,7 @@ foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package)
 
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
+    $a_sizes[] = prettyOctetDisplay($package->size);
     if ($machine) {
         $params[] = array('pid'=>$package->id, 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
@@ -101,6 +103,7 @@ $count = advCountAllPackages($filter);
 
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
+$n->addExtraInfo($a_sizes, _T("Package size", "msc"));
 $n->setCssClasses($a_css);
 $n->setParamInfo($params);
 $n->setItemCount($count);

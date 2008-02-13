@@ -16,6 +16,10 @@ function getPackageVersion($p_api, $pid) {
         return xmlCall("msc.pa_getPackageVersion", array($p_api, $pid));
 }
 
+function getPackageSize($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageSize", array($p_api, $pid));
+}
+
 function getPackageInstallInit($p_api, $pid) {
         return xmlCall("msc.pa_getPackageInstallInit", array($p_api, $pid));
 }
@@ -70,6 +74,7 @@ class Package {
     function Package($h_pkg) {
         $this->label = $h_pkg{'label'};
         $this->version = $h_pkg{'version'};
+        $this->size = $h_pkg{'size'};
         $this->precmd = new PackageCommand($h_pkg{'precmd'});
         $this->cmd = new PackageCommand($h_pkg{'cmd'});
         $this->postcmd_ok = new PackageCommand($h_pkg{'postcmd_ok'});
