@@ -54,7 +54,6 @@ def probe_client(client):
     def _eb(result):
         logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
         return "Can't connect"
-
     command = '%s %s' % (SchedulerConfig().prober_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
@@ -70,6 +69,18 @@ def ping_client(client):
     def _eb(result):
         logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
         return False
-
     command = '%s %s' % (SchedulerConfig().ping_path, client)
+    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
+
+def wol_clients(mac_addrs):
+    def _cb(result):
+        myresult = "\n".join(result)
+        return myresult
+    def _eb(result):
+        logging.getLogger().debug('scheduler %s: can\'t wol client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+        return False
+    # "linear-i-fy" MAC adresses
+    if type(mac_addrs) == list:
+        mac_addrs = ' '.join(mac_addrs)
+    command = '%s --ipaddr=%s --port=%s %s' % (SchedulerConfig().wol_path, SchedulerConfig().wol_bcast, SchedulerConfig().wol_port, mac_addrs)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)

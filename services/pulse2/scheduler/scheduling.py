@@ -42,6 +42,7 @@ from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
 
 import pulse2.scheduler.config
+import pulse2.scheduler.network
 
 class Scheduler(object):
     """
@@ -70,12 +71,14 @@ class Scheduler(object):
         MscDatabase().activate()
 
     def gatherStuff(self):
+        """ handy function to gather wdely used objects """
         session = sqlalchemy.create_session()
         database = MscDatabase()
         logger = logging.getLogger()
         return (session, database, logger)
 
     def gatherCoHStuff(self, idCommandOnHost):
+        """ same as gatherStuff(), this time for a particular CommandOnHost """
         session = sqlalchemy.create_session()
         database = MscDatabase()
         myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
@@ -84,7 +87,7 @@ class Scheduler(object):
         session.close()
         return (myCommandOnHost, myCommand, myTarget)
 
-    def startAllCommands(self): # maybe this should be put somewhere else ?
+    def startAllCommands(self):
         # we return a list of deferred
         deffereds = [] # will hold all deferred
         session = sqlalchemy.create_session()
@@ -131,7 +134,22 @@ class Scheduler(object):
         logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
         logger.debug("command_on_host state is %s" % myCoH.toH())
         logger.debug("command state is %s" % myC.toH())
-        return self.runUploadPhase(myCommandOnHostID)
+        return self.runWOLPhase(myCommandOnHostID)
+
+    def runWOLPhase(self, myCommandOnHostID):
+        """ Attempt do see if a wake-on-lan should be done
+        """
+        (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
+        logger = logging.getLogger()
+        if not myC.hasToWOL(): # do not perform wake on lan
+            logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
+            return self.runUploadPhase(myCommandOnHostID)
+        logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
+        mydeffered = pulse2.scheduler.network.wol_clients(myT.target_macaddr.split('||'))
+        mydeffered.\
+            addCallback(self.parseWOLResult, myCommandOnHostID).\
+            addErrback(self.parseWOLError, myCommandOnHostID)
+        return mydeffered
 
     def runUploadPhase(self, myCommandOnHostID):
         """ Handle first Phase: upload time
@@ -357,6 +375,10 @@ class Scheduler(object):
         myCoH.setDone()
         return None
 
+    def parseWOLResult(self, output, myCommandOnHostID):
+        logging.getLogger().info("command_on_host #%s: WOL done" % myCommandOnHostID)
+        return self.runUploadPhase(myCommandOnHostID)
+
     def parsePushResult(self, (exitcode, stdout, stderr), myCommandOnHostID):
         (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
         logger = logging.getLogger()
@@ -431,6 +453,10 @@ class Scheduler(object):
         myCoH.reSchedule(myC.getNextConnectionDelay())
         updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
         return None
+
+    def parseWOLError(self, output, myCommandOnHostID):
+        logging.getLogger().info("command_on_host #%s: WOL failed" % myCommandOnHostID)
+        return self.runUploadPhase(myCommandOnHostID)
 
     def parsePushError(self, reason, myCommandOnHostID):
         # something goes really wrong: immediately give up

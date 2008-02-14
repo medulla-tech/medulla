@@ -40,8 +40,11 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     login = ""
     password = ""
     start_commands_modulo = 600
-    prober_path = '/usr/sbin/pulse2-probe'
-    ping_path = '/usr/sbin/pulse2-ping'
+    prober_path = '/usr/local/sbin/pulse2-probe'
+    ping_path = '/usr/local/sbin/pulse2-ping'
+    wol_path = '/usr/local/sbin/pulse2-wol'
+    wol_port = '40000'
+    wol_bcast = '255.255.255.255'
     launchers = {
         'launcher_01': {
             'port': 8001,
@@ -77,6 +80,15 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "ping_path"):
             self.ping_path = cp.get("scheduler", "ping_path")
+
+        if cp.has_option("scheduler", "wol_path"):
+            self.wol_path = cp.get("scheduler", "wol_path")
+
+        if cp.has_option("scheduler", "wol_port"):
+            self.wol_port = cp.get("scheduler", "wol_port")
+
+        if cp.has_option("scheduler", "wol_bcast"):
+            self.wol_bcast = cp.get("scheduler", "wol_bcast")
 
         if cp.has_option("scheduler", "dbencoding"):
             self.dbencoding = cp.get("scheduler", "dbencoding")
