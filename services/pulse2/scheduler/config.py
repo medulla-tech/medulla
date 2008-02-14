@@ -45,6 +45,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     wol_path = '/usr/local/sbin/pulse2-wol'
     wol_port = '40000'
     wol_bcast = '255.255.255.255'
+    resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     launchers = {
         'launcher_01': {
             'port': 8001,
@@ -92,6 +93,10 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "dbencoding"):
             self.dbencoding = cp.get("scheduler", "dbencoding")
+
+        if cp.has_option("scheduler", "resolv_order"):
+            # TODO: check resolvers availability !!!
+            self.resolv_order = cp.get("scheduler", "resolv_order").split(' ')
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):

@@ -525,8 +525,71 @@ def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr='')
     history.flush()
 
 def chooseLauncher():
+    """ Select a launcher """
     import random
-
     launchers = pulse2.scheduler.config.SchedulerConfig().launchers
     launcher = random.sample(launchers.keys(), 1).pop()
     return 'http://%s:%s' % (launchers[launcher]['host'], launchers[launcher]['port'])
+
+def chooseClientIP(myTarget):
+    """
+        Attempt to guess how to reach our client
+
+        Available informations:
+        - FQDN
+        - IP adresses, in order of interrest
+
+        Probes:
+        - FQDN resolution, then ping
+        - Netbios resolution, then ping
+        -
+    """
+    for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
+        if method == 'fqdn':
+            result = chooseClientIPperFQDN(myTarget)
+            if result:
+                return myTarget.target_name
+        if method == 'netbios':
+            result = chooseClientIPperNetbios(myTarget)
+            if result:
+                return myTarget.target_name # better return IP here :/
+        if method == 'hosts':
+            result = chooseClientIPperHosts(myTarget)
+            if result:
+                return myTarget.target_name
+        if method == 'ip':
+            result = chooseClientIPperIP(myTarget)
+            if result:
+                return myTarget.target_ipaddr.split('||')[0]
+    # (unfortunately) got nothing
+    return None
+
+def chooseClientIPperFQDN(myTarget):
+    import os
+    # FIXME: port to twisted
+    # FIXME: drop hardcoded path !
+    # FIXME: use deferred
+    command = "%s -s 1 -t a %s 2>/dev/null" % ('/usr/bin/host', myTarget.target_name)
+    result = os.system(command)
+    return result == 0
+
+def chooseClientIPperNetbios(myTarget):
+    # FIXME: todo
+    return False
+
+def chooseClientIPperHosts(myTarget):
+    import os
+    # FIXME: port to twisted
+    # FIXME: drop hardcoded path !
+    # FIXME: use deferred
+    # FIXME: should be merged with chooseClientIPperFQDN ?
+    command = "%s hosts %s 2>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
+    result = os.system(command)
+    return result == 0
+
+def chooseClientIPperIP(myTarget):
+    # TODO: weird, check only the first IP address :/
+    if len(myTarget.target_ipaddr) == 0:
+        return False
+    result = myTarget.target_ipaddr.split('||')
+    return len(result) > 0
