@@ -137,9 +137,14 @@ $page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxPlatform.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxMac", _T("Platform", "msc"));
+$page = new Page("ajaxMac", _T("MAC Addr.", "msc"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxMac.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxIpaddr", _T("IP Addr.", "msc"));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setFile("modules/msc/msc/ajaxIpaddr.php");
 $submod->addPage($page);
 
 unset($submod);

@@ -37,7 +37,7 @@ class RenderedMSCHost extends HtmlElement {
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
         return "<tr> <th style='text-align: left' nowrap>$label :</th> <td style='width: 90%'>$text</td> </tr>";
     }
-    
+
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
@@ -54,13 +54,15 @@ class RenderedMSCHost extends HtmlElement {
 new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
 new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
 new Ajax.Updater("mac", "' . urlStrRedirect("base/computers/ajaxMac") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+new Ajax.Updater("ipaddr", "' . urlStrRedirect("base/computers/ajaxIpaddr") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
 </script>
 ';
         $buffer .= '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._T('Running on', "msc").' : <span id="platform"><img src="img/common/loader_p.gif" /></span></td>';
         $buffer .= '<td>' . _T('Ping status', "msc").' : <span id="ping"><img src="img/common/loader_p.gif" /></span></td>';
+        $buffer .= '<td>'._T('Running on', "msc").' : <span id="platform"><img src="img/common/loader_p.gif" /></span></td>';
         $buffer .= '<td>' . _T('Mac Addr', "msc").' : <span id="mac"><img src="img/common/loader_p.gif" /></span></td>';
+        $buffer .= '<td>' . _T('IP Addr', "msc").' : <span id="ipaddr"><img src="img/common/loader_p.gif" /></span></td>';
         $buffer .= '</tr>';
         $buffer .= '</table></div>';
         print $buffer;
