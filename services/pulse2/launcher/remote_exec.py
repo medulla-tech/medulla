@@ -29,7 +29,9 @@
 """
 
 import os
-import mmc.support.mmctools
+
+# gather our modules
+import pulse2.launcher.process_control
 from pulse2.launcher.config import LauncherConfig
 
 def set_default_client_options(client):
@@ -137,7 +139,7 @@ def sync_remote_push(command_id, client, files_list):
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
         real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper_path, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -157,7 +159,7 @@ def sync_remote_pull(command_id, client, files_list):
     if client['protocol'] == "wget":
         real_files_list = files_list
         real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -178,7 +180,7 @@ def sync_remote_delete(command_id, client, files_list):
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
         real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -200,7 +202,7 @@ def sync_remote_exec(command_id, client, command):
     if client['protocol'] == "ssh":
         # TODO: chmod should be done upper
         real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -218,7 +220,7 @@ def sync_remote_quickaction(command_id, client, command):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -236,7 +238,7 @@ def async_remote_quickaction(command_id, client, command):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        mmc.support.mmctools.shlaunchBackground(real_command, command_id, __cb_async_process_progress, __cb_async_process_end)
+        pulse2.launcher.process_control.shlaunchBackground(real_command, command_id, __cb_async_process_progress, __cb_async_process_end)
     return True
 
 def sync_remote_wol(command_id, client, wrapper):
@@ -248,7 +250,7 @@ def sync_remote_wol(command_id, client, wrapper):
     """
     if client['protocol'] == "wol":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
         """
@@ -269,7 +271,7 @@ def sync_remote_inventory(command_id, client):
     inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
-        deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
+        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -284,9 +286,10 @@ def async_remote_exec(id, command, client):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        mmc.support.mmctools.shlaunchBackground(real_command, id, __cb_async_process_progress, __cb_async_process_end)
+        pulse2.launcher.process_control.shlaunchBackground(real_command, id, __cb_async_process_progress, __cb_async_process_end)
     return True
 
+"""
 def get_background_process_count():
     return len(mmc.support.mmctools.ProcessScheduler().listProcess())
 
@@ -331,7 +334,7 @@ def purge_background_process(id):
 def clean_background_process(id):
     mmc.support.mmctools.ProcessScheduler().rmProcess(id)
     return True;
-
+"""
 def __cb_sync_process_end(shprocess):
     """
         Handle sync process termination
