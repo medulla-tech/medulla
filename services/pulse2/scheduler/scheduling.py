@@ -145,7 +145,7 @@ class Scheduler(object):
             logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
             return self.runUploadPhase(myCommandOnHostID)
         logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
-        mydeffered = pulse2.scheduler.network.wol_clients(myT.target_macaddr.split('||'))
+        mydeffered = pulse2.scheduler.network.wolClients(myT.target_macaddr.split('||'))
         mydeffered.\
             addCallback(self.parseWOLResult, myCommandOnHostID).\
             addErrback(self.parseWOLError, myCommandOnHostID)
@@ -540,56 +540,27 @@ def chooseClientIP(myTarget):
         - IP adresses, in order of interrest
 
         Probes:
-        - FQDN resolution, then ping
-        - Netbios resolution, then ping
-        -
+        - FQDN resolution
+        - Netbios resolution
+        - Host resolution
+        - IP check
     """
     for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
         if method == 'fqdn':
-            result = chooseClientIPperFQDN(myTarget)
+            result = pulse2.scheduler.network.chooseClientIPperFQDN(myTarget)
             if result:
                 return myTarget.target_name
         if method == 'netbios':
-            result = chooseClientIPperNetbios(myTarget)
+            result = pulse2.scheduler.network.chooseClientIPperNetbios(myTarget)
             if result:
                 return myTarget.target_name # better return IP here :/
         if method == 'hosts':
-            result = chooseClientIPperHosts(myTarget)
+            result = pulse2.scheduler.network.chooseClientIPperHosts(myTarget)
             if result:
                 return myTarget.target_name
         if method == 'ip':
-            result = chooseClientIPperIP(myTarget)
+            result = pulse2.scheduler.network.chooseClientIPperIP(myTarget)
             if result:
                 return myTarget.target_ipaddr.split('||')[0]
     # (unfortunately) got nothing
     return None
-
-def chooseClientIPperFQDN(myTarget):
-    import os
-    # FIXME: port to twisted
-    # FIXME: drop hardcoded path !
-    # FIXME: use deferred
-    command = "%s -s 1 -t a %s 2>/dev/null" % ('/usr/bin/host', myTarget.target_name)
-    result = os.system(command)
-    return result == 0
-
-def chooseClientIPperNetbios(myTarget):
-    # FIXME: todo
-    return False
-
-def chooseClientIPperHosts(myTarget):
-    import os
-    # FIXME: port to twisted
-    # FIXME: drop hardcoded path !
-    # FIXME: use deferred
-    # FIXME: should be merged with chooseClientIPperFQDN ?
-    command = "%s hosts %s 2>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
-    result = os.system(command)
-    return result == 0
-
-def chooseClientIPperIP(myTarget):
-    # TODO: weird, check only the first IP address :/
-    if len(myTarget.target_ipaddr) == 0:
-        return False
-    result = myTarget.target_ipaddr.split('||')
-    return len(result) > 0

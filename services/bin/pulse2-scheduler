@@ -145,10 +145,10 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         request.finish()
 
     def xmlrpc_ping_client(self, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.ping_client(client))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingClient(client))
 
     def xmlrpc_probe_client(self, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probe_client(client))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(client))
 
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))

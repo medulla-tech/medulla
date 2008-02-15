@@ -31,7 +31,7 @@ from pulse2.scheduler.config import SchedulerConfig
 # MMC
 import mmc.support.mmctools
 
-def probe_client(client):
+def probeClient(client):
     idData = [
          { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},
          { 'platform': "GNU Linux", 'pcre': "Linux", "tmp_path": "/tmp/lsc", "root_path": "/"},
@@ -57,7 +57,7 @@ def probe_client(client):
     command = '%s %s' % (SchedulerConfig().prober_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def ping_client(client):
+def pingClient(client):
     # TODO: a cache system ?!
     def _cb(result):
         myresult = "\n".join(result)
@@ -72,7 +72,7 @@ def ping_client(client):
     command = '%s %s' % (SchedulerConfig().ping_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def wol_clients(mac_addrs):
+def wolClients(mac_addrs):
     def _cb(result):
         myresult = "\n".join(result)
         return myresult
@@ -84,3 +84,33 @@ def wol_clients(mac_addrs):
         mac_addrs = ' '.join(mac_addrs)
     command = '%s --ipaddr=%s --port=%s %s' % (SchedulerConfig().wol_path, SchedulerConfig().wol_bcast, SchedulerConfig().wol_port, mac_addrs)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
+
+def chooseClientIPperFQDN(myTarget):
+    import os
+    # FIXME: port to twisted
+    # FIXME: drop hardcoded path !
+    # FIXME: use deferred
+    command = "%s -s 1 -t a %s 2>/dev/null" % ('/usr/bin/host', myTarget.target_name)
+    result = os.system(command)
+    return result == 0
+
+def chooseClientIPperNetbios(myTarget):
+    # FIXME: todo
+    return False
+
+def chooseClientIPperHosts(myTarget):
+    import os
+    # FIXME: port to twisted
+    # FIXME: drop hardcoded path !
+    # FIXME: use deferred
+    # FIXME: should be merged with chooseClientIPperFQDN ?
+    command = "%s hosts %s 2>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
+    result = os.system(command)
+    return result == 0
+
+def chooseClientIPperIP(myTarget):
+    # TODO: weird, check only the first IP address :/
+    if len(myTarget.target_ipaddr) == 0:
+        return False
+    result = myTarget.target_ipaddr.split('||')
+    return len(result) > 0
