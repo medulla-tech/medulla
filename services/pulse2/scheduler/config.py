@@ -53,6 +53,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         }
     }
     dbencoding = 'utf-8'
+    mode = 'async'
 
     def setup(self, config_file):
         # Load configuration file
@@ -97,6 +98,9 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         if cp.has_option("scheduler", "resolv_order"):
             # TODO: check resolvers availability !!!
             self.resolv_order = cp.get("scheduler", "resolv_order").split(' ')
+
+        if cp.has_option("scheduler", "mode"):
+            self.mode = cp.get("scheduler", "mode")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):

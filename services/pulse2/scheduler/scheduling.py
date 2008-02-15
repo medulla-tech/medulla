@@ -41,7 +41,7 @@ from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
 from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
 
-import pulse2.scheduler.config
+from pulse2.scheduler.config import SchedulerConfig
 import pulse2.scheduler.network
 
 def gatherStuff():
@@ -230,15 +230,26 @@ def runExecutionPhase(myCommandOnHostID):
     myCoH.setExecutionInProgress()
     updateHistory(myCommandOnHostID, 'execution_in_progress')
     if myC.isQuickAction(): # should be a standard script
-        mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
-            'async_remote_quickaction',
-            myCommandOnHostID,
-            {'host': target_host, 'protocol': 'ssh'},
-            myC.start_file
-        )
-        mydeffered.\
-            addCallback(parseExecutionResult, myCommandOnHostID).\
-            addErrback(parseExecutionError, myCommandOnHostID)
+        if SchedulerConfig().mode == 'sync':
+            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                'sync_remote_quickaction',
+                myCommandOnHostID,
+                {'host': target_host, 'protocol': 'ssh'},
+                myC.start_file
+            )
+            mydeffered.\
+                addCallback(parseExecutionResult, myCommandOnHostID).\
+                addErrback(parseExecutionError, myCommandOnHostID)
+        elif SchedulerConfig().mode == 'async':
+            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                'async_remote_quickaction',
+                myCommandOnHostID,
+                {'host': target_host, 'protocol': 'ssh'},
+                myC.start_file
+            )
+            mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
+        else:
+            return None
         return mydeffered
     else:
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -277,7 +288,7 @@ def runDeletePhase(myCommandOnHostID):
         launcher = chooseLauncher()
         target_host = pulse2.scheduler.network.chooseClientIP(myT)
         myCoH.setDeleteInProgress()
-        updateHistory(myCommandOnHostID, 'deletion_in_progress')
+        updateHistory(myCommandOnHostID, 'delete_in_progress')
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
             'sync_remote_delete',
             myCommandOnHostID,
@@ -296,7 +307,7 @@ def runDeletePhase(myCommandOnHostID):
             launcher = chooseLauncher()
             target_host = pulse2.scheduler.network.chooseClientIP(myT)
             myCoH.setDeleteInProgress()
-            updateHistory(myCommandOnHostID, 'deletion_in_progress')
+            updateHistory(myCommandOnHostID, 'delete_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_delete',
                 myCommandOnHostID,
@@ -494,7 +505,7 @@ def parseInventoryError(reason, myCommandOnHostID):
     return None
 
 def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr=''):
-    encoding = pulse2.scheduler.config.SchedulerConfig().dbencoding
+    encoding = SchedulerConfig().dbencoding
     history = CommandsHistory()
     history.id_command_on_host = id_command_on_host
     history.date = time.time()
@@ -507,6 +518,6 @@ def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr='')
 def chooseLauncher():
     """ Select a launcher """
     import random
-    launchers = pulse2.scheduler.config.SchedulerConfig().launchers
+    launchers = SchedulerConfig().launchers
     launcher = random.sample(launchers.keys(), 1).pop()
     return 'http://%s:%s' % (launchers[launcher]['host'], launchers[launcher]['port'])
