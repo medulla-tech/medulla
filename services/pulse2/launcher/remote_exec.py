@@ -281,7 +281,7 @@ def async_remote_quickaction(command_id, client, command):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, __cb_async_process_progress)
+        pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end)
     return True
 
 def sync_remote_wol(command_id, client, wrapper):
@@ -393,16 +393,6 @@ def __cb_sync_process_end(shprocess):
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
-
-def __cb_async_process_progress(shprocess, id):
-    """
-        Handle async process progression
-    """
-    exitcode = shprocess.exitCode
-    stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
-    stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
-    print "P: |%s|, |%s|, |%s|, |%s|" % (exitcode, stdout, stderr, id)
-    return
 
 def __cb_async_process_end(shprocess, id):
     """

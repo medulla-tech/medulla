@@ -33,7 +33,7 @@ nfs
 ***************************************
 and "pulse2_output_wrapper ls /mnt /nothing" will give you:
 ***************************************
-1199893195.42 C: ls /mnt /nothing
+1199893195.42 C: ls·/mnt·/nothing
 1199893195.46 E: ls: /nothing: No such file or directory
 1199893195.46 E:
 1199893195.46 O: /mnt:
@@ -44,7 +44,7 @@ and "pulse2_output_wrapper ls /mnt /nothing" will give you:
 Output lines are formatted like this:
 <timestamp><space><tag><column><space><output line>
 With <tag>:
-  C: the command line
+  C: the command line, using '·' as separator
   S: something on stdout
   E: something on stderr
   X: the exit code
@@ -109,8 +109,9 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         self.exitcode = reason.value.exitCode
 
 args = os.sys.argv
+# first arg is us !!!
 del args[0]
-print format(' '.join(args), 'C')
+print format('·'.join(args), 'C')
 process = shOutputWrapper()
 twisted.internet.reactor.spawnProcess(process, args[0], args)
 twisted.internet.reactor.run()
