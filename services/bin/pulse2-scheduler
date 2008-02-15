@@ -41,12 +41,13 @@ import twisted.internet.reactor
 import mmc.support.mmctools
 
 # XMLRPC funcs
-import pulse2.scheduler.management
+import pulse2.scheduler.scheduling
 import pulse2.scheduler.network
 import pulse2.scheduler.launcher
 
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
+from mmc.plugins.msc.database import MscDatabase
 
 # Logging
 import logging
@@ -64,7 +65,7 @@ def run_start_all_commands():
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
     # start command, gather deffered
-    deferreds = pulse2.scheduler.management.start_all_commands()
+    deferreds = pulse2.scheduler.scheduling.startAllCommands()
     # FIXME: should perhaps be called without waiting for deferreds ?
     # adds a end hook to reschedule prepare_start_all_commands
     # dl = twisted.internet.defer.DeferredList(deferreds)
@@ -72,6 +73,8 @@ def run_start_all_commands():
     reschedule_start_all_commands(None)
 
 def startService():
+
+    MscDatabase().activate()
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.login:
@@ -158,7 +161,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(client))
 
     def xmlrpc_start_all_commands(self):
-        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))
+        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands()))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):
