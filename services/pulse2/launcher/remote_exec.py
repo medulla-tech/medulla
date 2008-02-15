@@ -29,9 +29,14 @@
 """
 
 import os
+import logging
+
+# Twisted stuf
+import twisted.web.xmlrpc
 
 # gather our modules
 import pulse2.launcher.process_control
+import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 
 def set_default_client_options(client):
@@ -398,9 +403,25 @@ def __cb_async_process_end(shprocess, id):
     """
         Handle async process termination
     """
+    def _cb(result):
+        pass
+    def _eb(reason):
+        logger = logging.getLogger()
+        logger.warn('launcher "%s": failed to send results to our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+        pass
+
     exitcode = shprocess.exitCode
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
 
-    print "E: |%s|, |%s|, |%s|, |%s|" % (exitcode, stdout, stderr, id)
+    scheduler = pulse2.launcher.utils.getScheduler()
+    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
+        'completed_quick_action',
+        LauncherConfig().name,
+        (exitcode, stdout, stderr),
+        id
+    )
+    mydeffered.\
+        addCallback(_cb).\
+        addErrback(_eb)
     return

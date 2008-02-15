@@ -64,7 +64,7 @@ def tellIAmAlive():
         pass
     def _eb(reason):
         logger = logging.getLogger()
-        logger.info('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+        logger.warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
         pass
 
     scheduler = pulse2.launcher.utils.getScheduler()
