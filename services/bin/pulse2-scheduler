@@ -170,6 +170,19 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_completed_quick_action(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_quick_action(launcher, (exitcode, stdout, stderr), id))
 
+    def xmlrpc_completed_push(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_push(launcher, (exitcode, stdout, stderr), id))
+
+    def xmlrpc_completed_pull(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_pull(launcher, (exitcode, stdout, stderr), id))
+
+    def xmlrpc_completed_execution(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_execution(launcher, (exitcode, stdout, stderr), id))
+
+    def xmlrpc_completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
+
+
 def main():
     parser = optparse.OptionParser()
     parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')

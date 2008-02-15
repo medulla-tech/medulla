@@ -30,8 +30,30 @@ def tell_i_am_alive(launcher):
     logging.getLogger().info("Scheduler: launcher %s tells us it is alive" % launcher)
     return True
 
+def completed_push(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that push of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parsePushResult((exitcode, stdout, stderr), id)
+    return True
+
+def completed_pull(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that pull of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parsePullResult((exitcode, stdout, stderr), id)
+    return True
+
 def completed_quick_action(launcher, (exitcode, stdout, stderr), id):
     """ A launcher tell us a quick action is finished """
-    logging.getLogger().info("Scheduler: launcher %s tells us that CoH #%s is done" % (launcher, id))
+    logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
     return True
+
+def completed_execution(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
+    return True
+
+def completed_deletion(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that deletion of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parseDeleteResult((exitcode, stdout, stderr), id)
+    return True
+
+
