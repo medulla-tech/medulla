@@ -40,20 +40,16 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
-def commandForker(cmd, id, cbCommandEnd, cbCommandProgress = None):
+def commandForker(cmd, id, cbCommandEnd, callbackName):
     """
     """
 
     process = commandProtocol(cmd)
     ProcessList().addProcess(process, id)
 
-    if cbCommandProgress:
-        process.cbCommandProgress = instancemethod(cbCommandProgress, process, commandProtocol)
-
     twisted.internet.reactor.spawnProcess(process, cmd[0], cmd, None)
     process.deferred = twisted.internet.defer.Deferred()
-    process.deferred.addCallback(cbCommandEnd, id)
-
+    process.deferred.addCallback(cbCommandEnd, id, callbackName)
 
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 

@@ -65,12 +65,12 @@ def set_default_client_options(client):
         if not 'options' in client:
             client['options'] = [
                 '-T',
-                '-o StrictHostKeyChecking=no',
-                '-o Batchmode=yes',
-                '-o PasswordAuthentication=no',
-                '-o SetupTimeOut=10',
-                '-o ServerAliveInterval=10',
-                '-o ConnectTimeout=10'
+                '-o', 'StrictHostKeyChecking=no',
+                '-o', 'Batchmode=yes',
+                '-o', 'PasswordAuthentication=no',
+                '-o', 'SetupTimeOut=10',
+                '-o', 'ServerAliveInterval=10',
+                '-o', 'ConnectTimeout=10'
             ]
 
     if client['protocol'] == 'wget': # FIXME: should handle both ssh and http auth
@@ -85,12 +85,12 @@ def set_default_client_options(client):
         if not 'options' in client:
             client['options'] = [
                 '-T',
-                '-o StrictHostKeyChecking=no',
-                '-o Batchmode=yes',
-                '-o PasswordAuthentication=no',
-                '-o SetupTimeOut=10',
-                '-o ServerAliveInterval=10',
-                '-o ConnectTimeout=10'
+                '-o', 'StrictHostKeyChecking=no',
+                '-o', 'Batchmode=yes',
+                '-o', 'PasswordAuthentication=no',
+                '-o', 'SetupTimeOut=10',
+                '-o', 'ServerAliveInterval=10',
+                '-o', 'ConnectTimeout=10'
             ]
 
     if client['protocol'] == 'scp':
@@ -107,12 +107,12 @@ def set_default_client_options(client):
                 '-r',
                 '-p',
                 '-q',
-                '-o StrictHostKeyChecking=no',
-                '-o Batchmode=yes',
-                '-o PasswordAuthentication=no',
-                '-o SetupTimeOut=10',
-                '-o ServerAliveInterval=10',
-                '-o ConnectTimeout=10'
+                '-o', 'StrictHostKeyChecking=no',
+                '-o', 'Batchmode=yes',
+                '-o', 'PasswordAuthentication=no',
+                '-o', 'SetupTimeOut=10',
+                '-o', 'ServerAliveInterval=10',
+                '-o', 'ConnectTimeout=10'
             ]
     return client
 
@@ -126,17 +126,15 @@ def set_default_client_options(client):
     return client
 
 def sync_remote_push(command_id, client, files_list):
-    """ Handle remote copy on target, sync / push mode.
+    """ Handle remote copy on target, sync mode """
+    return remote_push(command_id, client, files_list, 'sync')
 
-    This function will simply send files_list on client:/target_path
-    from localhost:/root_path
+def async_remote_push(command_id, client, files_list):
+    """ Handle remote copy on target, async mode """
+    return remote_push(command_id, client, files_list, 'async')
 
-    TODO: handle URI for root_path / target_path (file://...)
-
-    Return:
-        * deffered upon success
-        * None upon failure (mostly unsupported protocol given)
-    """
+def remote_push(command_id, client, files_list, mode):
+    """ Handle remote copy (push) """
     source_path = LauncherConfig().source_path
     target_path = LauncherConfig().target_path
     wrapper_path = LauncherConfig().wrapper_path
@@ -152,18 +150,23 @@ def sync_remote_push(command_id, client, files_list):
         command_list += [ \
             "%s@%s:%s" % (client['user'], client['host'], target_path),
         ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_push')
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_pull(command_id, client, files_list):
-    """ Handle remote copy on target, sync / pull mode.
+    """ Handle remote copy on target, sync mode """
+    return remote_pull(command_id, client, files_list, 'sync')
 
-    This function will simply get files_list on client:/target_path
+def async_remote_pull(command_id, client, files_list):
+    """ Handle remote copy on target, async mode """
+    return remote_pull(command_id, client, files_list, 'async')
 
-    Return:
-        * deffered upon success
-        * None upon failure (mostly unsupported protocol given)
-    """
+def remote_pull(command_id, client, files_list, mode):
+    """ Handle remote copy (pull) on target """
     client = set_default_client_options(client)
     target_path = LauncherConfig().target_path
     wrapper_path = LauncherConfig().wrapper_path
@@ -179,19 +182,23 @@ def sync_remote_pull(command_id, client, files_list):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_pull')
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
-
 def sync_remote_delete(command_id, client, files_list):
-    """ Handle remote deletion on target, sync mode
+    """ Handle remote deletion on target, sync mode """
+    return remote_delete(command_id, client, files_list, 'sync')
 
-    This function will simply delete files_list from client:/target_path
+def async_remote_delete(command_id, client, files_list):
+    """ Handle remote deletion on target, async mode """
+    return remote_delete(command_id, client, files_list, 'async')
 
-    TODO: same as sync_remote_push
-
-    Return: same as sync_remote_push
-    """
+def remote_delete(command_id, client, files_list, mode):
+    """ Handle remote deletion on target """
     client = set_default_client_options(client)
     target_path = LauncherConfig().target_path
     wrapper_path = LauncherConfig().wrapper_path
@@ -207,20 +214,23 @@ def sync_remote_delete(command_id, client, files_list):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_deletion')
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_exec(command_id, client, command):
-    """ Handle remote execution on target, sync mode
+    """ Handle remote execution on target, sync mode """
+    return remote_exec(command_id, client, command, 'sync')
 
-    This function will simply exec the command on the other side
-    client is the method used to connect to the client
-    The command script should have been uploaded earlier
+def async_remote_exec(command_id, client, command):
+    """ Handle remote execution on target, async mode """
+    return remote_exec(command_id, client, command, 'async')
 
-    TODO: same as sync_remote_push
-
-    Return: same as sync_remote_push
-    """
+def remote_exec(command_id, client, command, mode):
+    """ Handle remote execution on target """
     client = set_default_client_options(client)
     target_path = LauncherConfig().target_path
     wrapper_path = LauncherConfig().wrapper_path
@@ -236,43 +246,23 @@ def sync_remote_exec(command_id, client, command):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_execution')
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_quickaction(command_id, client, command):
-    """ Handle remote quick action on target, sync mode
-
-    This function will simply run the command on the other side
-    client is the method used to connect to the client. Used to launch
-    qucik commands
-
-    Return: same as sync_remote_push
-    """
-    client = set_default_client_options(client)
-    wrapper_path = LauncherConfig().wrapper_path
-    if client['protocol'] == "ssh":
-        real_command = command
-        command_list = [ \
-            wrapper_path,
-            '/usr/bin/ssh'
-        ]
-        command_list += client['options']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
-        ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
-    return None
+    """ Handle remote quick action on target, sync mode """
+    return remote_quickaction(command_id, client, command, 'sync')
 
 def async_remote_quickaction(command_id, client, command):
-    """ Handle remote quick action on target, async mode
+    """ Handle remote quick action on target, async mode """
+    return remote_quickaction(command_id, client, command, 'async')
 
-    This function will simply run the command on the other side
-    client is the method used to connect to the client. Used to launch
-    qucik commands
-
-    Return: same as sync_remote_quickaction
-    """
+def remote_quickaction(command_id, client, command, mode):
+    """ Handle remote quick action on target """
     client = set_default_client_options(client)
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
@@ -286,8 +276,12 @@ def async_remote_quickaction(command_id, client, command):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end)
-    return True
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_quick_action')
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+    return None
 
 def sync_remote_wol(command_id, client, wrapper):
     """ Handle remote WOL on target, sync mode
@@ -330,19 +324,6 @@ def sync_remote_inventory(command_id, client):
         ]
         return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
-
-def async_remote_exec(id, command, client):
-
-    # do not re-inject already running processes
-    if (do_background_process_exists(id)):
-        return False
-
-    client = set_default_client_options(client)
-    wrapper_path = LauncherConfig().wrapper_path
-    if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        pulse2.launcher.process_control.shlaunchBackground(real_command, id, __cb_async_process_progress, __cb_async_process_end)
-    return True
 
 """
 def get_background_process_count():
@@ -399,7 +380,7 @@ def __cb_sync_process_end(shprocess):
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
 
-def __cb_async_process_end(shprocess, id):
+def __cb_async_process_end(shprocess, id, return_callback):
     """
         Handle async process termination
     """
@@ -416,7 +397,7 @@ def __cb_async_process_end(shprocess, id):
 
     scheduler = pulse2.launcher.utils.getScheduler()
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
-        'completed_quick_action',
+        return_callback,
         LauncherConfig().name,
         (exitcode, stdout, stderr),
         id
