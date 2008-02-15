@@ -26,3 +26,9 @@ from pulse2.launcher.config import LauncherConfig
 def getScheduler():
     """ Get our referent scheduler """
     return 'http://%s:%s' % (LauncherConfig().scheduler_host, LauncherConfig().scheduler_port)
+
+class Singleton(object):
+    def __new__(type):
+        if not '_the_instance' in type.__dict__:
+            type._the_instance = object.__new__(type)
+        return type._the_instance

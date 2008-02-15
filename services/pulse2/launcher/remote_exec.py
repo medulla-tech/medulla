@@ -147,9 +147,7 @@ def sync_remote_push(command_id, client, files_list):
         command_list += [ \
             "%s@%s:%s" % (client['user'], client['host'], target_path),
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_pull(command_id, client, files_list):
@@ -176,9 +174,7 @@ def sync_remote_pull(command_id, client, files_list):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 
@@ -206,9 +202,7 @@ def sync_remote_delete(command_id, client, files_list):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_exec(command_id, client, command):
@@ -237,9 +231,7 @@ def sync_remote_exec(command_id, client, command):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def sync_remote_quickaction(command_id, client, command):
@@ -264,9 +256,7 @@ def sync_remote_quickaction(command_id, client, command):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def async_remote_quickaction(command_id, client, command):
@@ -281,8 +271,17 @@ def async_remote_quickaction(command_id, client, command):
     client = set_default_client_options(client)
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        pulse2.launcher.process_control.shlaunchBackground(real_command, command_id, __cb_async_process_progress, __cb_async_process_end)
+        real_command = command
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, __cb_async_process_progress)
     return True
 
 def sync_remote_wol(command_id, client, wrapper):
@@ -324,9 +323,7 @@ def sync_remote_inventory(command_id, client):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        deffered = pulse2.launcher.process_control.commandRunner(command_list)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
+        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
 def async_remote_exec(id, command, client):
@@ -397,14 +394,23 @@ def __cb_sync_process_end(shprocess):
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
 
-def __cb_async_process_progress(shprocess, output):
+def __cb_async_process_progress(shprocess, id):
     """
         Handle async process progression
     """
+    exitcode = shprocess.exitCode
+    stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
+    stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
+    print "P: |%s|, |%s|, |%s|, |%s|" % (exitcode, stdout, stderr, id)
     return
 
-def __cb_async_process_end(shprocess, reason):
+def __cb_async_process_end(shprocess, id):
     """
         Handle async process termination
     """
+    exitcode = shprocess.exitCode
+    stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
+    stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
+
+    print "E: |%s|, |%s|, |%s|, |%s|" % (exitcode, stdout, stderr, id)
     return
