@@ -179,12 +179,13 @@ class Scheduler(object):
             source_path = re.compile('^file://(.*)$').search(myT.mirrors).group(1)
             files_list = map(lambda(a): os.path.join(myC.path_source, a), myC.files.split("\n"))
             launcher = chooseLauncher()
+            target_host = chooseClientIP(myT)
             myCoH.setUploadInProgress()
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'protocol': 'scp'},
+                {'host': target_host, 'protocol': 'scp'},
                 files_list
             )
             mydeffered.\
@@ -202,12 +203,13 @@ class Scheduler(object):
                     fid = file.split('##')[0]
                     files_list.append(m1.getFilePath(fid))
                 launcher = chooseLauncher()
+                target_host = chooseClientIP(myT)
                 myCoH.setUploadInProgress()
                 updateHistory(myCommandOnHostID, 'upload_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'sync_remote_pull',
                     myCommandOnHostID,
-                    {'host': myT.target_name, 'protocol': 'wget'},
+                    {'host': target_host, 'protocol': 'wget'},
                     files_list
                 )
                 mydeffered.\
@@ -249,13 +251,14 @@ class Scheduler(object):
             return self.runDeletePhase(myCommandOnHostID)
         # if we are here, execution has either previously failed or never be done
         launcher = chooseLauncher()
+        target_host = chooseClientIP(myT)
         myCoH.setExecutionInProgress()
         updateHistory(myCommandOnHostID, 'execution_in_progress')
         if myC.isQuickAction(): # should be a standard script
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'protocol': 'ssh'},
+                {'host': target_host, 'protocol': 'ssh'},
                 myC.start_file
             )
             mydeffered.\
@@ -266,7 +269,7 @@ class Scheduler(object):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_exec',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'protocol': 'ssh'},
+                {'host': target_host, 'protocol': 'ssh'},
                 myC.start_file
             )
             mydeffered.\
@@ -297,6 +300,7 @@ class Scheduler(object):
             files_list = myC.files.split("\n")
             target_path = myC.path_destination
             launcher = chooseLauncher()
+            target_host = chooseClientIP(myT)
             myCoH.setDeleteInProgress()
             updateHistory(myCommandOnHostID, 'deletion_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -315,12 +319,13 @@ class Scheduler(object):
             if re.compile('^http://').match(mirror): # HTTP download
                 files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
                 launcher = chooseLauncher()
+                target_host = chooseClientIP(myT)
                 myCoH.setDeleteInProgress()
                 updateHistory(myCommandOnHostID, 'deletion_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'sync_remote_delete',
                     myCommandOnHostID,
-                    {'host': myT.target_name, 'protocol': 'ssh'},
+                    {'host': target_host, 'protocol': 'ssh'},
                     files_list
                 )
                 mydeffered.\
@@ -355,12 +360,13 @@ class Scheduler(object):
             return self.runEndPhase(myCommandOnHostID)
         # if we are here, inventory has either previously failed or never be done
         launcher = chooseLauncher()
+        target_host = chooseClientIP(myT)
         myCoH.setInventoryInProgress()
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
             'sync_remote_inventory',
             myCommandOnHostID,
-            {'host': myT.target_name, 'protocol': 'ssh'},
+            {'host': target_host, 'protocol': 'ssh'},
         )
         mydeffered.\
             addCallback(self.parseInventoryResult, myCommandOnHostID).\
@@ -370,8 +376,7 @@ class Scheduler(object):
     def runEndPhase(self, myCommandOnHostID):
         # Last step : end file
         (myCoH, myC, myT) = self.gatherCoHStuff(myCommandOnHostID)
-        logger = logging.getLogger()
-        logger.info("command_on_host #%s: end phase" % myCommandOnHostID)
+        logging.getLogger().info("command_on_host #%s: end phase" % myCommandOnHostID)
         myCoH.setDone()
         return None
 
@@ -545,22 +550,27 @@ def chooseClientIP(myTarget):
         - Host resolution
         - IP check
     """
+    logger = logging.getLogger()
     for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
         if method == 'fqdn':
             result = pulse2.scheduler.network.chooseClientIPperFQDN(myTarget)
             if result:
+                logger.debug("will connect to %s as %s using DNS resolver" % (myTarget.target_name, myTarget.target_name))
                 return myTarget.target_name
         if method == 'netbios':
             result = pulse2.scheduler.network.chooseClientIPperNetbios(myTarget)
             if result:
+                logger.debug("will connect to %s as %s using Netbios resolver" % (myTarget.target_name, myTarget.target_name))
                 return myTarget.target_name # better return IP here :/
         if method == 'hosts':
             result = pulse2.scheduler.network.chooseClientIPperHosts(myTarget)
             if result:
+                logger.debug("will connect to %s as %s using Hosts" % (myTarget.target_name, myTarget.target_name))
                 return myTarget.target_name
         if method == 'ip':
             result = pulse2.scheduler.network.chooseClientIPperIP(myTarget)
             if result:
+                logger.debug("will connect to %s as %s using IP given" % (myTarget.target_name, myTarget.target_ipaddr.split('||')[0]))
                 return myTarget.target_ipaddr.split('||')[0]
     # (unfortunately) got nothing
     return None

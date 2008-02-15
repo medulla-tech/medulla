@@ -90,7 +90,7 @@ def chooseClientIPperFQDN(myTarget):
     # FIXME: port to twisted
     # FIXME: drop hardcoded path !
     # FIXME: use deferred
-    command = "%s -s 1 -t a %s 2>/dev/null" % ('/usr/bin/host', myTarget.target_name)
+    command = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % ('/usr/bin/host', myTarget.target_name)
     result = os.system(command)
     return result == 0
 
@@ -104,7 +104,7 @@ def chooseClientIPperHosts(myTarget):
     # FIXME: drop hardcoded path !
     # FIXME: use deferred
     # FIXME: should be merged with chooseClientIPperFQDN ?
-    command = "%s hosts %s 2>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
+    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
     result = os.system(command)
     return result == 0
 
