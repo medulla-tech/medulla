@@ -138,7 +138,7 @@ def sync_remote_push(command_id, client, files_list):
         real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
         real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper_path, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
 
@@ -158,7 +158,7 @@ def sync_remote_pull(command_id, client, files_list):
         real_files_list = files_list
         real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
 
@@ -179,7 +179,7 @@ def sync_remote_delete(command_id, client, files_list):
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
         real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
 
@@ -201,7 +201,7 @@ def sync_remote_exec(command_id, client, command):
         # TODO: chmod should be done upper
         real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
 
@@ -219,9 +219,25 @@ def sync_remote_quickaction(command_id, client, command):
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
+
+def async_remote_quickaction(command_id, client, command):
+    """ Handle remote quick action on target, async mode
+
+    This function will simply run the command on the other side
+    client is the method used to connect to the client. Used to launch
+    qucik commands
+
+    Return: same as sync_remote_quickaction
+    """
+    client = set_default_client_options(client)
+    wrapper_path = LauncherConfig().wrapper_path
+    if client['protocol'] == "ssh":
+        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
+        mmc.support.mmctools.shlaunchBackground(real_command, command_id, __cb_async_process_progress, __cb_async_process_end)
+    return True
 
 def sync_remote_wol(command_id, client, wrapper):
     """ Handle remote WOL on target, sync mode
@@ -233,7 +249,7 @@ def sync_remote_wol(command_id, client, wrapper):
     if client['protocol'] == "wol":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
         """
     return None
@@ -254,7 +270,7 @@ def sync_remote_inventory(command_id, client):
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
         deffered = mmc.support.mmctools.shLaunchDeferred(real_command)
-        deffered.addCallback(_remote_sync_cb)
+        deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
 
@@ -268,7 +284,7 @@ def async_remote_exec(id, command, client):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        mmc.support.mmctools.shlaunchBackground(real_command, id, _remote_async_progress_cb, _remote_async_end_cb)
+        mmc.support.mmctools.shlaunchBackground(real_command, id, __cb_async_process_progress, __cb_async_process_end)
     return True
 
 def get_background_process_count():
@@ -316,29 +332,23 @@ def clean_background_process(id):
     mmc.support.mmctools.ProcessScheduler().rmProcess(id)
     return True;
 
-def _remote_sync_cb(shprocess):
+def __cb_sync_process_end(shprocess):
     """
+        Handle sync process termination
     """
-    # TODO: have to find a better way to handle these stupid encodings ...
     exitcode = shprocess.exitCode
-
     stdout = unicode(shprocess.out, 'utf-8', 'strict')
     stderr = unicode(shprocess.err, 'utf-8', 'strict')
-
     return exitcode, stdout, stderr
 
-def _remote_async_progress_cb(self, data):
-    try:
-        self.output
-    except: # if first loop
-        self.output = ""
-    self.output += data;
+def __cb_async_process_progress(shprocess, output):
+    """
+        Handle async process progression
+    """
+    return
 
-def _remote_async_end_cb(self, reason):
-    self.done = True
-    self.exitCode = reason.value.exitCode
-    if self.exitCode == 0:
-        self.status = "job successfully finished"
-    else:
-        self.status = "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
-    self.progress = -1
+def __cb_async_process_end(shprocess, reason):
+    """
+        Handle async process termination
+    """
+    return

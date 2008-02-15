@@ -27,6 +27,7 @@ import os
 import sys
 import optparse
 import xmlrpclib
+import time
 
 # Twisted
 import twisted.web.xmlrpc
@@ -42,6 +43,7 @@ import mmc.support.mmctools
 
 # Other stuff
 from pulse2.launcher.config import LauncherConfig
+import pulse2.launcher.utils
 
 # XMLRPC funcs
 import pulse2.launcher.remote_exec
@@ -52,6 +54,29 @@ import logging.config
 
 VERSION = "0.0.0"
 
+def scheduleTellIAmAlive():
+    """ periodicaly talk to our referent scheduler """
+    tell_in = int(time.time() % LauncherConfig().i_am_alive_modulo) + 1
+    twisted.internet.reactor.callLater(tell_in, tellIAmAlive)
+
+def tellIAmAlive():
+    def _cb(result):
+        pass
+    def _eb(reason):
+        logger = logging.getLogger()
+        logger.info('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+        pass
+
+    scheduler = pulse2.launcher.utils.getScheduler()
+    logger = logging.getLogger()
+    logger.info('launcher "%s": contacting our scheduler at %s' % (LauncherConfig().name, scheduler))
+
+    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
+    mydeffered.\
+        addCallback(_cb).\
+        addErrback(_eb)
+    scheduleTellIAmAlive()
+
 def startService():
     logger = logging.getLogger()
     config = LauncherConfig()
@@ -60,8 +85,6 @@ def startService():
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
 
-    logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
-
     # Starting XMLRPC server
     launcher = Launcher(name)
     try:
@@ -69,6 +92,11 @@ def startService():
     except:
         logger.error('launcher "%s": can\'t bind to %s:%d' % (name, bind, port))
         return 1
+
+    # start periodic scheduler probing, called every i_am_alive_modulo seconds
+    scheduleTellIAmAlive()
+    logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
+
     twisted.internet.reactor.run()
     return 0
 
@@ -132,6 +160,9 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_sync_remote_quickaction(self, command_id, client, command):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command))
+
+    def xmlrpc_async_remote_quickaction(self, command_id, client, command):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(command_id, client, command))
 
     def xmlrpc_sync_remote_wol(self, client, command):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(command_id, client))
