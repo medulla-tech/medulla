@@ -60,7 +60,10 @@ def set_default_client_options(client):
                 '-T',
                 '-o StrictHostKeyChecking=no',
                 '-o Batchmode=yes',
-                '-o PasswordAuthentication=no'
+                '-o PasswordAuthentication=no',
+                '-o SetupTimeOut=10',
+                '-o ServerAliveInterval=10',
+                '-o ConnectTimeout=10'
             ]
 
     if client['protocol'] == 'wget': # FIXME: should handle both ssh and http auth
@@ -77,7 +80,10 @@ def set_default_client_options(client):
                 '-T',
                 '-o StrictHostKeyChecking=no',
                 '-o Batchmode=yes',
-                '-o PasswordAuthentication=no'
+                '-o PasswordAuthentication=no',
+                '-o SetupTimeOut=10',
+                '-o ServerAliveInterval=10',
+                '-o ConnectTimeout=10'
             ]
 
     if client['protocol'] == 'scp':
@@ -96,7 +102,10 @@ def set_default_client_options(client):
                 '-q',
                 '-o StrictHostKeyChecking=no',
                 '-o Batchmode=yes',
-                '-o PasswordAuthentication=no'
+                '-o PasswordAuthentication=no',
+                '-o SetupTimeOut=10',
+                '-o ServerAliveInterval=10',
+                '-o ConnectTimeout=10'
             ]
     return client
 
@@ -324,7 +333,6 @@ def _remote_async_progress_cb(self, data):
     except: # if first loop
         self.output = ""
     self.output += data;
-    # FIXME: handle log flood
 
 def _remote_async_end_cb(self, reason):
     self.done = True
