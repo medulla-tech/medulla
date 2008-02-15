@@ -1,7 +1,6 @@
 <?
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2008 Mandriva, http://www.mandriva.com
  *
  * $Id: ajaxPackageFilter.php,v 1.1 2008/01/08 14:02:59 root Exp $
  *

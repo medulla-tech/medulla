@@ -209,15 +209,22 @@ function _colorise($line) {
         $out .= '<font color=grey>' . $date . '</font>&nbsp;';
         if ($matches[2][0] == "E") {
             $out .= '<font color=red>';
+            $out .= $matches[3][0];
+            $out .= '</font><br/>';
         } elseif ($matches[2][0] == "C") {
+            $split = split('·', $matches[3][0]);
             $out .= '<font color=blue>';
+            $out .= $split[count($split)-1];
+            $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=green>';
+            $out .= $matches[3][0];
+            $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
             $out .= '<font color=blue>';
+            $out .= $matches[3][0];
+            $out .= '</font><br/>';
         }
-        $out .= $matches[3][0];
-        $out .= '</font><br/>';
     } else $out .=  "<font>$line</font>\n";
     return $out;
 }
