@@ -145,7 +145,7 @@ class Scheduler(object):
             logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
             return self.runUploadPhase(myCommandOnHostID)
         logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
-        mydeffered = pulse2.scheduler.network.wolClients(myT.target_macaddr.split('||'))
+        mydeffered = pulse2.scheduler.network.wolClient(myT.target_macaddr.split('||'))
         mydeffered.\
             addCallback(self.parseWOLResult, myCommandOnHostID).\
             addErrback(self.parseWOLError, myCommandOnHostID)
@@ -179,7 +179,7 @@ class Scheduler(object):
             source_path = re.compile('^file://(.*)$').search(myT.mirrors).group(1)
             files_list = map(lambda(a): os.path.join(myC.path_source, a), myC.files.split("\n"))
             launcher = chooseLauncher()
-            target_host = chooseClientIP(myT)
+            target_host = pulse2.scheduler.network.chooseClientIP(myT)
             myCoH.setUploadInProgress()
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -203,7 +203,7 @@ class Scheduler(object):
                     fid = file.split('##')[0]
                     files_list.append(m1.getFilePath(fid))
                 launcher = chooseLauncher()
-                target_host = chooseClientIP(myT)
+                target_host = pulse2.scheduler.network.chooseClientIP(myT)
                 myCoH.setUploadInProgress()
                 updateHistory(myCommandOnHostID, 'upload_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -251,7 +251,7 @@ class Scheduler(object):
             return self.runDeletePhase(myCommandOnHostID)
         # if we are here, execution has either previously failed or never be done
         launcher = chooseLauncher()
-        target_host = chooseClientIP(myT)
+        target_host = pulse2.scheduler.network.chooseClientIP(myT)
         myCoH.setExecutionInProgress()
         updateHistory(myCommandOnHostID, 'execution_in_progress')
         if myC.isQuickAction(): # should be a standard script
@@ -300,7 +300,7 @@ class Scheduler(object):
             files_list = myC.files.split("\n")
             target_path = myC.path_destination
             launcher = chooseLauncher()
-            target_host = chooseClientIP(myT)
+            target_host = pulse2.scheduler.network.chooseClientIP(myT)
             myCoH.setDeleteInProgress()
             updateHistory(myCommandOnHostID, 'deletion_in_progress')
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -319,7 +319,7 @@ class Scheduler(object):
             if re.compile('^http://').match(mirror): # HTTP download
                 files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
                 launcher = chooseLauncher()
-                target_host = chooseClientIP(myT)
+                target_host = pulse2.scheduler.network.chooseClientIP(myT)
                 myCoH.setDeleteInProgress()
                 updateHistory(myCommandOnHostID, 'deletion_in_progress')
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -360,7 +360,7 @@ class Scheduler(object):
             return self.runEndPhase(myCommandOnHostID)
         # if we are here, inventory has either previously failed or never be done
         launcher = chooseLauncher()
-        target_host = chooseClientIP(myT)
+        target_host = pulse2.scheduler.network.chooseClientIP(myT)
         myCoH.setInventoryInProgress()
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -535,42 +535,3 @@ def chooseLauncher():
     launchers = pulse2.scheduler.config.SchedulerConfig().launchers
     launcher = random.sample(launchers.keys(), 1).pop()
     return 'http://%s:%s' % (launchers[launcher]['host'], launchers[launcher]['port'])
-
-def chooseClientIP(myTarget):
-    """
-        Attempt to guess how to reach our client
-
-        Available informations:
-        - FQDN
-        - IP adresses, in order of interrest
-
-        Probes:
-        - FQDN resolution
-        - Netbios resolution
-        - Host resolution
-        - IP check
-    """
-    logger = logging.getLogger()
-    for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
-        if method == 'fqdn':
-            result = pulse2.scheduler.network.chooseClientIPperFQDN(myTarget)
-            if result:
-                logger.debug("will connect to %s as %s using DNS resolver" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name
-        if method == 'netbios':
-            result = pulse2.scheduler.network.chooseClientIPperNetbios(myTarget)
-            if result:
-                logger.debug("will connect to %s as %s using Netbios resolver" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name # better return IP here :/
-        if method == 'hosts':
-            result = pulse2.scheduler.network.chooseClientIPperHosts(myTarget)
-            if result:
-                logger.debug("will connect to %s as %s using Hosts" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name
-        if method == 'ip':
-            result = pulse2.scheduler.network.chooseClientIPperIP(myTarget)
-            if result:
-                logger.debug("will connect to %s as %s using IP given" % (myTarget.target_name, myTarget.target_ipaddr.split('||')[0]))
-                return myTarget.target_ipaddr.split('||')[0]
-    # (unfortunately) got nothing
-    return None

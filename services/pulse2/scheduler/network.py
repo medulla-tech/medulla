@@ -72,7 +72,7 @@ def pingClient(client):
     command = '%s %s' % (SchedulerConfig().ping_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def wolClients(mac_addrs):
+def wolClient(mac_addrs):
     def _cb(result):
         myresult = "\n".join(result)
         return myresult
@@ -84,6 +84,45 @@ def wolClients(mac_addrs):
         mac_addrs = ' '.join(mac_addrs)
     command = '%s --ipaddr=%s --port=%s %s' % (SchedulerConfig().wol_path, SchedulerConfig().wol_bcast, SchedulerConfig().wol_port, mac_addrs)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
+
+def chooseClientIP(myTarget):
+    """
+        Attempt to guess how to reach our client
+
+        Available informations:
+        - FQDN
+        - IP adresses, in order of interrest
+
+        Probes:
+        - FQDN resolution
+        - Netbios resolution
+        - Host resolution
+        - IP check
+    """
+    logger = logging.getLogger()
+    for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
+        if method == 'fqdn':
+            result = chooseClientIPperFQDN(myTarget)
+            if result:
+                logger.debug("will connect to %s as %s using DNS resolver" % (myTarget.target_name, myTarget.target_name))
+                return myTarget.target_name
+        if method == 'netbios':
+            result = chooseClientIPperNetbios(myTarget)
+            if result:
+                logger.debug("will connect to %s as %s using Netbios resolver" % (myTarget.target_name, myTarget.target_name))
+                return myTarget.target_name # better return IP here :/
+        if method == 'hosts':
+            result = chooseClientIPperHosts(myTarget)
+            if result:
+                logger.debug("will connect to %s as %s using Hosts" % (myTarget.target_name, myTarget.target_name))
+                return myTarget.target_name
+        if method == 'ip':
+            result = chooseClientIPperIP(myTarget)
+            if result:
+                logger.debug("will connect to %s as %s using IP given" % (myTarget.target_name, myTarget.target_ipaddr.split('||')[0]))
+                return myTarget.target_ipaddr.split('||')[0]
+    # (unfortunately) got nothing
+    return None
 
 def chooseClientIPperFQDN(myTarget):
     import os

@@ -63,10 +63,12 @@ def run_start_all_commands():
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
     # start command, gather deffered
-    deffereds = pulse2.scheduler.management.start_all_commands()
+    deferreds = pulse2.scheduler.management.start_all_commands()
+    # FIXME: should perhaps be called without waiting for deferreds ?
     # adds a end hook to reschedule prepare_start_all_commands
-    dl = twisted.internet.defer.DeferredList(deffereds)
-    dl.addCallback(reschedule_start_all_commands)
+    # dl = twisted.internet.defer.DeferredList(deferreds)
+    # dl.addCallback(reschedule_start_all_commands)
+    reschedule_start_all_commands(None)
 
 def startService():
     logger = logging.getLogger()
@@ -76,7 +78,7 @@ def startService():
     if not config.password:
         logger.warn('scheduler "%s": no password set !!' % (config.name))
 
-    # check MySQLdb version
+    # check versus MySQLdb version
     import MySQLdb
     (v1, v2, v3, v4, v5) = MySQLdb.version_info
     if v1 <= 1:
@@ -149,6 +151,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_probe_client(self, client):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(client))
+
+    def xmlrpc_wol_client(self, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(client))
 
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))
