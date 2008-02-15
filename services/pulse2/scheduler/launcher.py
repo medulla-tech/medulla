@@ -28,3 +28,9 @@ def tell_i_am_alive(launcher):
     """ A launcher just contact us, log it """
     logging.getLogger().info("Scheduler: launcher %s tells us it is alive" % launcher)
     return True
+
+def completed_quick_action(launcher, (exitcode, stdout, stderr), id):
+    """ A launcher tell us a quick action is finished """
+    logging.getLogger().info("Scheduler: launcher %s tells us that CoH #%s is done" % (launcher, id))
+    print "GOT: |%s|%s|%s|" % (exitcode, stdout, stderr)
+    return True

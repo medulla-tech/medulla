@@ -256,7 +256,7 @@ class Scheduler(object):
         updateHistory(myCommandOnHostID, 'execution_in_progress')
         if myC.isQuickAction(): # should be a standard script
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
-                'sync_remote_quickaction',
+                'async_remote_quickaction',
                 myCommandOnHostID,
                 {'host': target_host, 'protocol': 'ssh'},
                 myC.start_file
