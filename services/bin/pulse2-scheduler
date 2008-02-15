@@ -43,6 +43,7 @@ import mmc.support.mmctools
 # XMLRPC funcs
 import pulse2.scheduler.management
 import pulse2.scheduler.network
+import pulse2.scheduler.launcher
 
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
@@ -91,7 +92,7 @@ def startService():
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
     logger.info('scheduler "%s": available launchers: %s' % (config.name, ' '.join(launchers)))
 
-    # Starting XMLRPC server
+    # Starts XMLRPC server
     logger.info('scheduler %s: starting' % config.name)
     try:
         twisted.internet.reactor.listenTCP(
@@ -146,6 +147,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         request.write(s)
         request.finish()
 
+    ### XMLRPC functions used from a MMC agent ###
     def xmlrpc_ping_client(self, client):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingClient(client))
 
@@ -157,6 +159,10 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.management.start_all_commands()))
+
+    ### XMLRPC functions used from a launcher ###
+    def xmlrpc_tell_i_am_alive(self, launcher):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.tell_i_am_alive(launcher))
 
 def main():
     parser = optparse.OptionParser()

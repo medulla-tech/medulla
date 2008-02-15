@@ -100,7 +100,7 @@ def chooseClientIP(myTarget):
         - IP check
     """
     logger = logging.getLogger()
-    for method in pulse2.scheduler.config.SchedulerConfig().resolv_order:
+    for method in SchedulerConfig().resolv_order:
         if method == 'fqdn':
             result = chooseClientIPperFQDN(myTarget)
             if result:
