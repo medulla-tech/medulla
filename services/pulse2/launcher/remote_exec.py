@@ -138,8 +138,16 @@ def sync_remote_push(command_id, client, files_list):
     client = set_default_client_options(client)
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
-        real_command = '%s %s scp %s %s %s@%s:%s' % (wrapper_path, '', ' '.join(client['options']), ' '.join(real_files_list), client['user'], client['host'], target_path)
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/scp'
+        ]
+        command_list += client['options']
+        command_list += real_files_list
+        command_list += [ \
+            "%s@%s:%s" % (client['user'], client['host'], target_path),
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -158,8 +166,17 @@ def sync_remote_pull(command_id, client, files_list):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = '%s %s ssh %s %s@%s "cd %s; wget -nv -N %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        real_command = 'cd %s; wget -nv -N %s' % (target_path, ' '.join(real_files_list))
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -179,8 +196,17 @@ def sync_remote_delete(command_id, client, files_list):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command = '%s %s ssh %s %s@%s "cd %s; rm -fr %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, ' '.join(real_files_list))
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        real_command = 'cd %s; rm -fr %s' % (target_path, ' '.join(real_files_list))
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -201,8 +227,17 @@ def sync_remote_exec(command_id, client, command):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         # TODO: chmod should be done upper
-        real_command = '%s %s ssh %s %s@%s "cd %s; chmod +x %s; %s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], target_path, command, command)
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        real_command = 'cd %s; chmod +x %s; %s' % (target_path, command, command)
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -219,8 +254,17 @@ def sync_remote_quickaction(command_id, client, command):
     client = set_default_client_options(client)
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], command)
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        real_command = command
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -270,8 +314,17 @@ def sync_remote_inventory(command_id, client):
     wrapper_path = LauncherConfig().wrapper_path
     inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper_path, '', ' '.join(client['options']), client['user'], client['host'], inventory_command)
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
+        real_command = inventory_command
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/ssh'
+        ]
+        command_list += client['options']
+        command_list += [ \
+            "%s@%s" % (client['user'], client['host']),
+            real_command
+        ]
+        deffered = pulse2.launcher.process_control.commandRunner(command_list)
         deffered.addCallback(__cb_sync_process_end)
         return deffered
     return None
@@ -340,8 +393,8 @@ def __cb_sync_process_end(shprocess):
         Handle sync process termination
     """
     exitcode = shprocess.exitCode
-    stdout = unicode(shprocess.out, 'utf-8', 'strict')
-    stderr = unicode(shprocess.err, 'utf-8', 'strict')
+    stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
+    stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
 
 def __cb_async_process_progress(shprocess, output):
