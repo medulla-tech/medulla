@@ -112,9 +112,8 @@ $n->setTableHeaderPadding(1);
 $n->start = 0;
 $n->end = $count;
 
-
-$n->addActionItem(new ActionPopupItem(_T("Launch", "msc"),"start_tele_diff", "start", "msc", "base", "computers"));
-$n->addActionItem(new ActionPopupItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Launch", "msc"), "start_tele_diff", "start", "msc", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
 

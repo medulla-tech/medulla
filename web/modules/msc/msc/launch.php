@@ -30,39 +30,42 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 
-function action($action, $cible) {
+function action($action, $target) {
+    /* Handle posting of quick actions */
     $script_list = msc_script_list_file();
     if (array_key_exists($action, $script_list)) {
         $id_command = add_command_quick(
             $script_list[$action]["command"],
-            $cible,
+            $target,
             $script_list[$action]["title".$current_lang],
-            $_GET['gid']);
+            $_GET['gid']
+        );
         dispatch_all_commands();
         scheduler_start_all_commands();
-        // if machine
+        // if on a single computer
         $id_command_on_host = get_id_command_on_host($id_command);
-
         header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'coh_id'=>$id_command_on_host, 'gid'=>$_GET['gid'])));
-        //elseif groupe
     }
 }
 
-function adv_action($post) {
+### Advanced actions handling ###
+/* Advanced action: post handling */
+if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
+    // Vars seeding
+    $post = $_POST;
     $from = $post['from'];
     $path =  explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
     $tab = $path[3];
-
-    $p_api = new ServerAPI();
-    $p_api->fromURI($post["papi"]);
-
     $params = array();
     foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
         $params[$param] = $post[$param];
     }
+    $p_api = new ServerAPI();
+    $p_api->fromURI($post['papi']);
+
     foreach (array('start_date', 'end_date') as $param) {
         if ($post[$param] == _T("now", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
@@ -72,134 +75,119 @@ function adv_action($post) {
             $params[$param] = $post[$param];
     }
 
-    $hostname = $post["hostname"];
+    $hostname = $post['hostname'];
     $uuid = $post['uuid'];
-    $gid = $post["gid"];
+    $gid = $post['gid'];
     $machine = getMachine(array('uuid'=>$uuid), True);
     if ($machine->uuid == $uuid) {
         $cible = array($uuid, $machine->hostname);
     } else {
         $group = new Group($gid);
-        $cible = array_map("onlyValues", $group->getResult(0, -1));
+        $cible = array_map('onlyValues', $group->getResult(0, -1));
     }
-    $pid = $post["pid"];
+    $pid = $post['pid'];
 
-    // TODO activate this  : msc_command_set_pause($cmd_id);
+    // record new command
     add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
+
+    // then redirect to the logs page
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));
 }
 
-if (isset($_GET["badvanced"])) {
-    if ($_POST['bconfirm']) {
-        adv_action($_POST);
-    }
+/* Advanced action: form display */
+if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
+    // Vars seeding
     $from = $_GET['from'];
-    $hostname = $_GET["hostname"];
+    $hostname = $_GET['hostname'];
     $uuid = $_GET['uuid'];
     $gid = $_GET['gid'];
-    $pid = $_GET["pid"];
+    $pid = $_GET['pid'];
     $p_api = new ServerAPI();
     $p_api->fromURI($_GET["papi"]);
-
-    $name = getPackageLabel($p_api, $_GET["pid"]);
-
+    $name = getPackageLabel($p_api, $_GET['pid']);
     $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-    if ($machine->uuid == $_GET['uuid']) {
-        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $machine->hostname));
+
+    // top label
+    if ($machine->uuid == $_GET['uuid']) { // Action on a single computer
         $hostname = $machine->hostname;
-    } else {
+        $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $machine->hostname));
+    } else { // action on a whole group
         $group = new Group($_GET['gid'], true);
-        $label = new RenderedLabel(3, sprintf(_T("Advanced launch action \"%s\" on \"%s\"", 'msc'), $name, $group->getName()));
+        $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
     }
     $label->display();
 
+    // form design
     $f = new Form();
     $f->push(new Table());
-
-    $hidden = new HiddenTpl("uuid");
-    $f->add($hidden, array("value" => $uuid, "hide" => True));
-    $hidden = new HiddenTpl("papi");
-    $f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
-    $hidden = new HiddenTpl("name");
-    $f->add($hidden, array("value" => $hostname, "hide" => True));
-    $hidden = new HiddenTpl("from");
-    $f->add($hidden, array("value" => $from, "hide" => True));
-    $hidden = new HiddenTpl("pid");
-    $f->add($hidden, array("value" => $pid, "hide" => True));
-    $hidden = new HiddenTpl("gid");
-    $f->add($hidden, array("value" => $gid, "hide" => True));
-
-    #TODO : find a way to display it as an html table...
-    $input = new TrFormElement(_T('Command title', 'msc'), new InputTpl('ltitle'));
-    $f->add($input, array("value" => $name));
-
-    $check = new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory"));
-    $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script"));
-    $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful"));
-    $f->add($check, array("value" => 'checked'));
-    $check = new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan"));
-    if ($_GET['wake_on_lan'] == 'on') {
-        $wake_on_lan = 'checked';
-    }
-    $f->add($check, array("value" => $wake_on_lan));
-    $check = new TrFormElement(_T("Delay betwen connections", 'msc'), new InputTpl("next_connection_delay"));
-    $f->add($check, array("value" => 60));
-    $check = new TrFormElement(_T("Maximum number of connection attempt", 'msc'), new InputTpl("max_connection_attempt"));
-    $f->add($check, array("value" => 3));
-
-    $check = new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory"));
-    if ($_GET['start_inventory'] == 'on') {
-        $start_inventory = 'checked';
-    }
-    $f->add($check, array("value" => $start_inventory));
-
-    $input = new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters'));
-    $f->add($input, array("value" => ''));
-    $input = new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date'));
-    $f->add($input, array('ask_for_now' => 1));
-    $input = new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date'));
-    $f->add($input, array('ask_for_never' => 1));
-
+    $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
+    $f->add(new HiddenTpl("papi"), array("value" => $_GET["papi"], "hide" => True));
+    $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
+    $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
+    $f->add(new TrFormElement(_T('Command title', 'msc'), new InputTpl('ltitle')), array("value" => $name));
+    $f->add(new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan")), array("value" => $_GET['wake_on_lan'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Delay betwen connections', 'msc'), new InputTpl("next_connection_delay")), array("value" => 60));
+    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'), new InputTpl("max_connection_attempt")), array("value" => 3));
+    $f->add(new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory")), array("value" => $_GET['start_inventory'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters')), array("value" => ''));
+    $f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
+    $f->add(new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
     $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 
+    // end processing here
+    exit();
+}
+### /Advanced actions handling ###
 
-} elseif ($_GET['uuid']) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // should be changed in uuid
-    if ($machine->uuid != $_GET['uuid']) {
+/* single target: form display */
+if ($_GET['uuid'] and !isset($_POST['launchAction'])) {
+    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // FIXME: should be changed in uuid
+    if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
-    } else {
-        if ($_POST['launchAction']) {
-            action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
-        }
-
-        // Display the actions list
+    } else { // We found a matching computer, display QActions and available packages
         $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
         $label->display();
+        foreach (array('module', 'submod', 'tab', 'uuid', 'hostname') as $param) {
+            $params[$param] = $_GET[$param];
+        }
+        $params['action'] = 'start_quick_action';
 
-        $msc_actions = new RenderedMSCActions(msc_script_list_file());
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), 'mscactions', $params);
         $msc_actions->display();
 
         $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
         $ajax->display();
-        print "<br/>";
         $ajax->displayDivToUpdate();
-
     }
-} elseif ($_GET['gid']) {
+}
+
+/* quick action on a single target */
+if (isset($_GET['uuid']) and isset($_POST['launchAction'])) {
+    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // FIXME: should be changed in uuid
+    action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
+}
+
+/* single action post on a group */
+if (isset($_GET['gid']) and isset($_POST['launchAction'])) {
     $group = new Group($_GET['gid'], true);
-    if ($_POST['launchAction']) {
-        $result = array_map("onlyValues", $group->getResult(0, -1));
-        action($_POST['launchAction'], $result);
-    }
+    $result = array_map("onlyValues", $group->getResult(0, -1));
+    action($_POST['launchAction'], $result);
+}
 
+/* group display */
+if (isset($_GET['gid']) and !isset($_POST['launchAction'])) {
+    $group = new Group($_GET['gid'], true);
     // Display the actions list
     $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));
     $label->display();
@@ -219,16 +207,6 @@ if (isset($_GET["badvanced"])) {
 .primary_list { }
 .secondary_list {
     background-color: #e1e5e6 !important;
-}
-li.detail a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/info.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
 }
 
 </style>

@@ -117,8 +117,15 @@ $page->setFile("modules/msc/msc/package_detail.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+/* Confirm popup when deploying something */
 $page = new Page("start_tele_diff");
 $page->setFile("modules/msc/msc/start_tele_diff.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+/* Confirm popup when attempting a quick action */
+$page = new Page("start_quick_action");
+$page->setFile("modules/msc/msc/start_quick_action.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 

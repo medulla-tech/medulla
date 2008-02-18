@@ -25,38 +25,28 @@
 /* mark this string for translation */
 _T("Other/N.A.", "msc");
 
+/* HTML display for known MSC host */
 class RenderedMSCHost extends HtmlElement {
     function RenderedMSCHost($machine) {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
         $this->uuid = $machine->uuid;
-        $this->ping = ($machine->ping ? _T("success", "msc") : _T("failed", "msc"));
     }
 
     function line($label, $text) { # FIXME: should use CSS instead of hard coded styles
         return "<tr> <th style='text-align: left' nowrap>$label :</th> <td style='width: 90%'>$text</td> </tr>";
     }
 
-    function headerDisplay() {
-        $buffer = '<div class="indent"><table>';
-        $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
-        $buffer .= '<td>'._T('Running on', "msc").' : <div id="platform">' . _T($this->platform, "msc") .'</div></td>';
-        $buffer .= '<td>' . _T('Ping status', "msc").' : <div id="ping">' . $this->ping . '</div></td>';
-        $buffer .= '</tr>';
-        $buffer .= '</table></div>';
-        print $buffer;
-    }
-
     function ajaxDisplay() {
         $buffer = '
-<script type="text/javascript">
-new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
-new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
-new Ajax.Updater("mac", "' . urlStrRedirect("base/computers/ajaxMac") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
-new Ajax.Updater("ipaddr", "' . urlStrRedirect("base/computers/ajaxIpaddr") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
-</script>
-';
+            <script type="text/javascript">
+            new Ajax.Updater("ping", "' . urlStrRedirect("base/computers/ajaxPing") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+            new Ajax.Updater("platform", "' . urlStrRedirect("base/computers/ajaxPlatform") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+            new Ajax.Updater("mac", "' . urlStrRedirect("base/computers/ajaxMac") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+            new Ajax.Updater("ipaddr", "' . urlStrRedirect("base/computers/ajaxIpaddr") . "&hostname=". $this->hostname . '&uuid='. $this->uuid .'", { method: "get" });
+            </script>
+        ';
         $buffer .= '<div class="indent"><table>';
         $buffer .= '<tr><td>'.$this->ip.'</td><td>'.$this->mac.'</td>';
         $buffer .= '<td>' . _T('Ping status', "msc").' : <span id="ping"><img src="img/common/loader_p.gif" /></span></td>';
@@ -69,6 +59,8 @@ new Ajax.Updater("ipaddr", "' . urlStrRedirect("base/computers/ajaxIpaddr") . "&
     }
 
 }
+
+/* HTML display for UNknown MSC host */
 class RenderedMSCHostDontExists extends HtmlElement {
     function RenderedMSCHostDontExists($name) {
         $this->name = $name;
@@ -93,6 +85,7 @@ class RedirectMSC extends HtmlElement {
     }
 }
 
+/* top label, with nav links */
 class RenderedLabel extends HtmlElement {
     function RenderedLabel($level, $text) {
         $this->level = $level;
@@ -104,10 +97,12 @@ class RenderedLabel extends HtmlElement {
     }
 }
 
+/* Quick actions dropdown list */
 class RenderedMSCActions extends HtmlElement {
     function RenderedMSCActions($script_list, $name = 'MSCActions') {
         $this->list = array();
         $this->name = $name;
+        $this->url = $_SERVER["REQUEST_URI"];
         foreach ($script_list as $script) {
             array_push($this->list, new RenderedMSCAction($script));
         }
@@ -120,14 +115,13 @@ class RenderedMSCActions extends HtmlElement {
                     <tr>
                     <td>
                         <form method="post" action="'.$this->url.'" name="'.$this->name.'" id="'.$this->name.'">
-                        <select name="launchAction">
+                        <select name="launchAction" style="border: 1px solid grey;">
                             <option value="">'._T('Execute action...', 'msc').'</option>';
         foreach ($this->list as $script) {
             $script->display();
         }
         print '</select>';
-
-        $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', 'vertical-align:bottom;border:0');
+        $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', 'vertical-align: middle; border:0;');
         $img->display();
         print '
                         </form>
@@ -135,6 +129,18 @@ class RenderedMSCActions extends HtmlElement {
                     </tr>
                 </table>
             </div>';
+    }
+}
+
+/* Quick action element */
+class RenderedMSCAction extends HtmlElement {
+    function RenderedMSCAction($script) {
+        $this->filename = $script['filename'];
+        $this->title = $script['title'];
+    }
+
+    function display() {
+        print '<option value="'.$this->filename.'">'.$this->title.'</option>';
     }
 }
 
@@ -153,20 +159,4 @@ class RenderedImgInput extends HtmlElement {
             />';
     }
 }
-
-class RenderedMSCAction extends HtmlElement {
-    function RenderedMSCAction($script) {
-        $this->filename = $script['filename'];
-        $this->title = $script['title'];
-    }
-
-    function display() {
-        print '<option value="'.$this->filename.'">'.$this->title.'</option>';
-    }
-}
-
-
-
-
-
 ?>

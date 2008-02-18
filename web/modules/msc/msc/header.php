@@ -26,7 +26,7 @@
 require('modules/msc/includes/widgets.inc.php');
 
 if ($_GET['uuid']) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False); // should be changed in uuid
+    $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
     if ($machine->uuid != $_GET['uuid']) {
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
