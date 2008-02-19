@@ -44,6 +44,7 @@ import mmc.support.mmctools
 import pulse2.scheduler.scheduling
 import pulse2.scheduler.network
 import pulse2.scheduler.launcher
+import pulse2.scheduler.launchers_driving
 
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
@@ -182,6 +183,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
 
+    def xmlrpc_get_pubkey(self, launcher, key_name):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
 
 def main():
     parser = optparse.OptionParser()

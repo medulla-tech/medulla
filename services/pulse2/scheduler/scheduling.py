@@ -41,7 +41,9 @@ from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
 from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
 
+# our modules
 from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.launchers_driving import chooseLauncher
 import pulse2.scheduler.network
 
 def gatherStuff():
@@ -576,9 +578,3 @@ def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr='')
     history.state = state
     history.flush()
 
-def chooseLauncher():
-    """ Select a launcher """
-    import random
-    launchers = SchedulerConfig().launchers
-    launcher = random.sample(launchers.keys(), 1).pop()
-    return 'http://%s:%s' % (launchers[launcher]['host'], launchers[launcher]['port'])

@@ -2,7 +2,7 @@
 #
 # (c) 2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: management.py 25 2008-02-11 16:11:18Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
