@@ -114,7 +114,7 @@ class RenderedMSCActions extends HtmlElement {
                 <table>
                     <tr>
                     <td>
-                        <form method="post" action="'.$this->url.'" name="'.$this->name.'" id="'.$this->name.'">
+                        <form onsubmit="javascript: return confirm(\'' ._T("Please confirm you really want to perform this action !").'\');" method="post" action="'.$this->url.'" name="'.$this->name.'" id="'.$this->name.'">
                         <select name="launchAction" style="border: 1px solid grey;">
                             <option value="">'._T('Execute action...', 'msc').'</option>';
         foreach ($this->list as $script) {
