@@ -70,6 +70,7 @@ def set_default_client_options(client):
                 '-o', 'PasswordAuthentication=no',
                 '-o', 'SetupTimeOut=10',
                 '-o', 'ServerAliveInterval=10',
+                '-o', 'CheckHostIP=no',
                 '-o', 'ConnectTimeout=10'
             ]
 
@@ -90,6 +91,7 @@ def set_default_client_options(client):
                 '-o', 'PasswordAuthentication=no',
                 '-o', 'SetupTimeOut=10',
                 '-o', 'ServerAliveInterval=10',
+                '-o', 'CheckHostIP=no',
                 '-o', 'ConnectTimeout=10'
             ]
 
@@ -112,6 +114,7 @@ def set_default_client_options(client):
                 '-o', 'PasswordAuthentication=no',
                 '-o', 'SetupTimeOut=10',
                 '-o', 'ServerAliveInterval=10',
+                '-o', 'CheckHostIP=no',
                 '-o', 'ConnectTimeout=10'
             ]
     return client
@@ -136,7 +139,7 @@ def async_remote_push(command_id, client, files_list):
 def remote_push(command_id, client, files_list, mode):
     """ Handle remote copy (push) """
     source_path = LauncherConfig().source_path
-    target_path = LauncherConfig().target_path
+    target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     client = set_default_client_options(client)
     if client['protocol'] == "scp":
@@ -168,11 +171,11 @@ def async_remote_pull(command_id, client, files_list):
 def remote_pull(command_id, client, files_list, mode):
     """ Handle remote copy (pull) on target """
     client = set_default_client_options(client)
-    target_path = LauncherConfig().target_path
+    target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = 'cd %s; wget -nv -N %s' % (target_path, ' '.join(real_files_list))
+        real_command = 'mkdir -p %s; cd %s; wget -nv -N %s' % (target_path, target_path, ' '.join(real_files_list))
         command_list = [ \
             wrapper_path,
             '/usr/bin/ssh'
@@ -200,11 +203,11 @@ def async_remote_delete(command_id, client, files_list):
 def remote_delete(command_id, client, files_list, mode):
     """ Handle remote deletion on target """
     client = set_default_client_options(client)
-    target_path = LauncherConfig().target_path
+    target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command = 'cd %s; rm -fr %s' % (target_path, ' '.join(real_files_list))
+        real_command = 'cd %s; rm -fr %s; rmdir %s' % (target_path, ' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
             '/usr/bin/ssh'
@@ -232,7 +235,7 @@ def async_remote_exec(command_id, client, command):
 def remote_exec(command_id, client, command, mode):
     """ Handle remote execution on target """
     client = set_default_client_options(client)
-    target_path = LauncherConfig().target_path
+    target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         # TODO: chmod should be done upper

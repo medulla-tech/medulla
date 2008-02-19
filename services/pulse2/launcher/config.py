@@ -81,14 +81,14 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         if cp.has_option("launchers", "wol_path"):
             self.wol_path = cp.get("launchers", "wol_path")
 
+        if cp.has_option("launchers", "temp_folder_prefix"):
+            self.temp_folder_prefix = cp.get("launchers", "temp_folder_prefix")
+
         if cp.has_option("scheduler", "host"):
             self.scheduler_host = cp.get("scheduler", "host")
 
         if cp.has_option("scheduler", "port"):
             self.scheduler_port = cp.get("scheduler", "port")
-
-        if cp.has_option("scheduler", "i_am_alive_modulo"):
-            self.i_am_alive_modulo = cp.getint("scheduler", "i_am_alive_modulo")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):

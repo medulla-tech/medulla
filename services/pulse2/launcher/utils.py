@@ -2,7 +2,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 31 2008-02-13 15:53:32Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -21,11 +21,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+import md5
+
 from pulse2.launcher.config import LauncherConfig
 
 def getScheduler():
     """ Get our referent scheduler """
     return 'http://%s:%s' % (LauncherConfig().scheduler_host, LauncherConfig().scheduler_port)
+
+def getTempFolderName(id_command, client_uuid):
+    """ Generate a temporary folder name which will contain our deployment stuff """
+    return LauncherConfig().temp_folder_prefix + md5.new('%s%s' % (id_command, client_uuid)).hexdigest()[len(LauncherConfig().temp_folder_prefix):]
 
 class Singleton(object):
     def __new__(type):
