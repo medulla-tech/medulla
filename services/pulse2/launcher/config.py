@@ -52,6 +52,27 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     scheduler_host = "127.0.0.1"
     scheduler_port = "9000"
     i_am_alive_modulo = 600
+    ssh_defaultkey = 'default'
+    ssh_keys = { 'default': '/root/.ssh/id_dsa.pub' }
+    ssh_options = [ \
+        'StrictHostKeyChecking=no',
+        'Batchmode=yes',
+        'PasswordAuthentication=no',
+        'SetupTimeOut=10',
+        'ServerAliveInterval=10',
+        'CheckHostIP=no',
+        'ConnectTimeout=10'
+    ]
+
+    scp_options = [ \
+        'StrictHostKeyChecking=no',
+        'Batchmode=yes',
+        'PasswordAuthentication=no',
+        'SetupTimeOut=10',
+        'ServerAliveInterval=10',
+        'CheckHostIP=no',
+        'ConnectTimeout=10'
+    ]
 
     def setup(self, config_file, name):
         # Load configuration file
@@ -62,33 +83,20 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("launchers", "pid_path"):
             self.pid_path = cp.get("launchers", "pid_path")
-
         if cp.has_option("launchers", "launcher_path"):
             self.launcher_path = cp.get("launchers", "launcher_path")
-
         if cp.has_option("launchers", "wrapper_path"):
             self.wrapper_path = cp.get("launchers", "wrapper_path")
-
         if cp.has_option("launchers", "source_path"):
             self.source_path = cp.get("launchers", "source_path")
-
         if cp.has_option("launchers", "target_path"):
             self.target_path = cp.get("launchers", "target_path")
-
         if cp.has_option("launchers", "inventory_command"):
             self.inventory_command = cp.get("launchers", "inventory_command")
-
         if cp.has_option("launchers", "wol_path"):
             self.wol_path = cp.get("launchers", "wol_path")
-
         if cp.has_option("launchers", "temp_folder_prefix"):
             self.temp_folder_prefix = cp.get("launchers", "temp_folder_prefix")
-
-        if cp.has_option("scheduler", "host"):
-            self.scheduler_host = cp.get("scheduler", "host")
-
-        if cp.has_option("scheduler", "port"):
-            self.scheduler_port = cp.get("scheduler", "port")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
@@ -97,3 +105,21 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                         'bind': cp.get(section, "bind"),
                         'slots': cp.get(section, "slots")
                     }
+        if cp.has_option("scheduler", "host"):
+            self.scheduler_host = cp.get("scheduler", "host")
+        if cp.has_option("scheduler", "port"):
+            self.scheduler_port = cp.get("scheduler", "port")
+
+        for option in cp.options('ssh'):
+            if re.compile("^sshkey_[0-9A-Za-z]+$").match(option):
+                keyname = re.compile("^sshkey_([0-9A-Za-z]+)$").match(option).group(1)
+                self.ssh_keys[keyname] = cp.get('ssh', option)
+        if cp.has_option("ssh", "default_key"):
+            self.ssh_defaultkey = cp.get("ssh", "default_key")
+        if cp.has_option("ssh", "ssh_options"):
+            self.ssh_options = cp.get("ssh", "ssh_options").split(' ')
+        if cp.has_option("ssh", "scp_options"):
+            self.scp_options = cp.get("ssh", "scp_options").split(' ')
+
+
+

@@ -61,18 +61,12 @@ def set_default_client_options(client):
         if not 'passwd' in client:
             client['passwd'] = '' # unset as we should use RSA/DSA keys
         if not 'cert' in client:
-            client['cert'] = '/root/.ssh/id_dsa'
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         if not 'options' in client:
-            client['options'] = [
-                '-T',
-                '-o', 'StrictHostKeyChecking=no',
-                '-o', 'Batchmode=yes',
-                '-o', 'PasswordAuthentication=no',
-                '-o', 'SetupTimeOut=10',
-                '-o', 'ServerAliveInterval=10',
-                '-o', 'CheckHostIP=no',
-                '-o', 'ConnectTimeout=10'
-            ]
+            client['options'] = ['-T']
+            client['options'] += ['-i', client['cert']]
+            for option in LauncherConfig().ssh_options:
+                client['options'] += ['-o', option]
 
     if client['protocol'] == 'wget': # FIXME: should handle both ssh and http auth
         if not 'port' in client:
@@ -82,18 +76,12 @@ def set_default_client_options(client):
         if not 'passwd' in client:
             client['passwd'] = '' # unset as we should use RSA/DSA keys
         if not 'cert' in client:
-            client['cert'] = '/root/.ssh/id_dsa'
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         if not 'options' in client:
-            client['options'] = [
-                '-T',
-                '-o', 'StrictHostKeyChecking=no',
-                '-o', 'Batchmode=yes',
-                '-o', 'PasswordAuthentication=no',
-                '-o', 'SetupTimeOut=10',
-                '-o', 'ServerAliveInterval=10',
-                '-o', 'CheckHostIP=no',
-                '-o', 'ConnectTimeout=10'
-            ]
+            client['options'] = ['-T']
+            client['options'] += ['-i', client['cert']]
+            for option in LauncherConfig().ssh_options:
+                client['options'] += ['-o', option]
 
     if client['protocol'] == 'scp':
         if not 'port' in client:
@@ -103,21 +91,12 @@ def set_default_client_options(client):
         if not 'passwd' in client:
             client['passwd'] = '' # unset as we should use RSA/DSA keys
         if not 'cert' in client:
-            client['cert'] = '/root/.ssh/id_dsa'
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         if not 'options' in client:
-            client['options'] = [
-                '-r',
-                '-p',
-                '-q',
-                '-o', 'StrictHostKeyChecking=no',
-                '-o', 'Batchmode=yes',
-                '-o', 'PasswordAuthentication=no',
-                '-o', 'SetupTimeOut=10',
-                '-o', 'ServerAliveInterval=10',
-                '-o', 'CheckHostIP=no',
-                '-o', 'ConnectTimeout=10'
-            ]
-    return client
+            client['options'] = ['-r', '-p', '-q']
+            client['options'] += ['-i', client['cert']]
+            for option in LauncherConfig().ssh_options:
+                client['options'] += ['-o', option]
 
     if client['protocol'] == 'wol':
         if not 'addr' in client:
