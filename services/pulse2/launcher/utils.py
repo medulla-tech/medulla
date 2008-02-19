@@ -33,6 +33,26 @@ def getTempFolderName(id_command, client_uuid):
     """ Generate a temporary folder name which will contain our deployment stuff """
     return LauncherConfig().temp_folder_prefix + md5.new('%s%s' % (id_command, client_uuid)).hexdigest()[len(LauncherConfig().temp_folder_prefix):]
 
+def getPubKey(key_name):
+    """
+        Handle remote download of this launcher's pubkey.
+        key_name is as define in the config file
+    """
+    try:
+        LauncherConfig().ssh_keys[key_name]
+    except KeyError:
+        key_name = LauncherConfig().ssh_defaultkey
+
+    if key_name == None or key_name == '':
+        key_name = LauncherConfig().ssh_defaultkey
+    try:
+        ssh_key = open(LauncherConfig().ssh_keys[key_name] + '.pub')
+    except IOError: # key does not exists, give up
+        return ''
+    ret = ' '.join(ssh_key)
+    ssh_key.close()
+    return ret
+
 class Singleton(object):
     def __new__(type):
         if not '_the_instance' in type.__dict__:
