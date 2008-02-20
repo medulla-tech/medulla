@@ -163,44 +163,78 @@ function history_stat2icon($state) {
 }
 
 function state_tmpl($current_state) {
-    $ret = array();
-    if (
-        ($current_state != "stop") &&
-        ($current_state != "pause") &&
-        ($current_state != "not_reachable") &&
-        ($current_state != "upload_failed") &&
-        ($current_state != "execution_failed") &&
-        ($current_state != "delete_failed") &&
-        ($current_state != "inventory_failed")
+    # based on http://pulse2.mandriva.org/ticket/29
+    $ret = array(
+        'play' => '',
+        'stop' => '',
+        'pause' => ''
+    );
 
-    ) {
-        $ret['play'] = '';
-    } else {
-        $ret['play'] = 'BUTTON_PLAY';
-    }
+    # task is scheduled
+    if (in_array(
+        $current_state,
+        array(
+            'scheduled',
+            'not_reachable',
+            'upload_done',
+            'upload_failed',
+            'execution_done',
+            'execution_failed',
+            'delete_done',
+            'delete_failed',
+            'inventory_failed',
+            'inventory_done'
+        )
+    ))
+        $ret = array(
+            'play' => 'BUTTON_START',
+            'stop' => 'BUTTON_STOP',
+            'pause' => 'BUTTON_PAUSE'
+        );
 
-    if ( ($current_state != "scheduled")) {
-        $ret['pause'] = '';
-    } else {
-        $ret['pause'] = 'BUTTON_PAUSE';
-    }
+    # task is running
+    if (in_array(
+        $current_state,
+        array(
+            'upload_in_progress',
+            'execution_in_progress',
+            'delete_in_progress',
+            'inventory_in_progress'
+        )
+    ))
+        $ret = array(
+            'play' => '',
+            'stop' => 'BUTTON_STOP',
+            'pause' => 'BUTTON_PAUSE'
+        );
 
-    if (
-        ($current_state != "scheduled") &&
-        ($current_state != "not_reachable") &&
-        ($current_state != "upload_failed") &&
-        ($current_state != "execution_failed") &&
-        ($current_state != "delete_failed") &&
-        ($current_state != "inventory_failed") &&
-        ($current_state != "upload_in_progress") &&
-        ($current_state != "execution_in_progress") &&
-        ($current_state != "delete_in_progress") &&
-        ($current_state != "inventory_in_progress")
-    ) {
-        $ret['stop'] = '';
-    } else {
-        $ret['stop'] = 'BUTTON_STOP';
-    }
+    # task is completed
+    if (in_array(
+        $current_state,
+        array(
+            'stop',
+            'done',
+            'failed'
+        )
+    ))
+        $ret = array(
+            'play' => 'BUTTON_START',
+            'stop' => '',
+            'pause' => ''
+        );
+
+    # task is paused
+    if (in_array(
+        $current_state,
+        array(
+            'pause',
+        )
+    ))
+        $ret = array(
+            'play' => 'BUTTON_START',
+            'stop' => 'BUTTON_STOP',
+            'pause' => 'BUTTON_PAUSE'
+        );
     return $ret;
 }
 

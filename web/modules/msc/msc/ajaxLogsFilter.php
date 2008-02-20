@@ -100,7 +100,7 @@ if ($areCommands) {
         } else {
             $a_details[] = $actiondetails;
         }
-        $a_current[] = to_date($cmd['date_created']);
+        $a_current[] = to_date($cmd['date_created']); // Brrr, seem really ugly, should we not use sprintf ?
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_current, _T("start_date", "msc"));
@@ -121,7 +121,7 @@ if ($areCommands) {
             if (empty($d)) {
                 $a_date[] = _T("As soon as possible", "msc");
             } else {
-                $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
+                $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             }
             $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';
@@ -134,12 +134,12 @@ if ($areCommands) {
             }
             $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
-
             $icons = state_tmpl($coh['current_state']);
-            if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-            if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-            if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-            if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
+            $icons['play'] == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
+            $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
+
+            if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {
                 $a_details[] = $actionempty;
             } else {
                 $a_details[] = $actiondetails;
@@ -161,7 +161,7 @@ if ($areCommands) {
 
     $n->addActionItemArray($a_details);
     $n->addActionItemArray($a_start);
-    //$n->addActionItemArray($a_pause);
+    $n->addActionItemArray($a_pause);
     $n->addActionItemArray($a_stop);
 }
 
@@ -188,7 +188,7 @@ function to_date($list) {
 li.pause a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/stock_media-pause.png");
+        background-image: url("img/common/pause.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;

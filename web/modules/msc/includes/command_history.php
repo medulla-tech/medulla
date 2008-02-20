@@ -206,24 +206,24 @@ function _colorise($line) {
             return;
 
         $date = date(_T("Y-m-d H:i:s", "msc"), $matches[1][0]);
-        $out .= '<font color=grey>' . $date . '</font>&nbsp;';
         if ($matches[2][0] == "E") {
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=red>';
             $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "C") {
             $split = split('·', $matches[3][0]);
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=blue>';
             $out .= $split[count($split)-1];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=green>';
             $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
-            $out .= '<font color=blue>';
-            $out .= $matches[3][0];
-            $out .= '</font><br/>';
+            $out .= '<font color=black>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
         }
     } else $out .=  "<font>$line</font>\n";
     return $out;
