@@ -160,7 +160,7 @@ def remote_pull(command_id, client, files_list, mode):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = 'mkdir -p %s; cd %s; wget -nv -N %s' % (target_path, target_path, ' '.join(real_files_list))
+        real_command = 'wget -nv -N %s -P %s' % (' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
             '/usr/bin/ssh'
