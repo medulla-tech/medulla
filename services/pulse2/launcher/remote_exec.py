@@ -198,7 +198,7 @@ def remote_delete(command_id, client, files_list, mode):
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command = 'cd %s; rm -fr %s; rmdir %s' % (target_path, ' '.join(real_files_list), target_path)
+        real_command = 'rm -fr %s; rmdir %s' % (' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
             '/usr/bin/ssh'
