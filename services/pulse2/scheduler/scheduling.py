@@ -412,14 +412,26 @@ def runInventoryPhase(myCommandOnHostID):
     target_uuid = myT.getUUID()
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
-    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
-        'sync_remote_inventory',
-        myCommandOnHostID,
-        {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-    )
-    mydeffered.\
-        addCallback(parseInventoryResult, myCommandOnHostID).\
-        addErrback(parseInventoryError, myCommandOnHostID)
+
+
+    if SchedulerConfig().mode == 'sync':
+        mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            'sync_remote_inventory',
+            myCommandOnHostID,
+            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}
+        )
+        mydeffered.\
+            addCallback(parseInventoryResult, myCommandOnHostID).\
+            addErrback(parseInventoryError, myCommandOnHostID)
+    elif SchedulerConfig().mode == 'async':
+        mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            'async_remote_inventory',
+            myCommandOnHostID,
+            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}
+        )
+        mydeffered.addErrback(parseInventoryError, myCommandOnHostID)
+    else:
+        return None
     return mydeffered
 
 def runEndPhase(myCommandOnHostID):

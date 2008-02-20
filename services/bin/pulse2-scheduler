@@ -57,9 +57,7 @@ import logging.config
 VERSION = "0.0.0"
 
 def reschedule_start_all_commands((deffered)):
-    start_commands_in = int(time.time() % SchedulerConfig().start_commands_modulo) + 1
-    logger = logging.getLogger()
-    logger.info('scheduler "%s": startAllCommands will be called in %s seconds' % (SchedulerConfig().name, start_commands_in))
+    start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands)
 
 def run_start_all_commands():
@@ -74,7 +72,6 @@ def run_start_all_commands():
     reschedule_start_all_commands(None)
 
 def startService():
-
     MscDatabase().activate()
     logger = logging.getLogger()
     config = SchedulerConfig()
@@ -108,7 +105,7 @@ def startService():
         logger.error('scheduler "%s": can\'t bind to %s:%d' % (config.name, config.host, config.port))
         return False
 
-    # start periodic scheduler, called every start_commands_modulo seconds
+    # start periodic scheduler, called every awake_time seconds
     reschedule_start_all_commands(None)
     logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
 
@@ -182,6 +179,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
+
+    def xmlrpc_completed_inventory(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
 
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))

@@ -56,4 +56,10 @@ def completed_deletion(launcher, (exitcode, stdout, stderr), id):
     pulse2.scheduler.scheduling.parseDeleteResult((exitcode, stdout, stderr), id)
     return True
 
+def completed_inventory(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that inventory after of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
+    return True
+
+
 

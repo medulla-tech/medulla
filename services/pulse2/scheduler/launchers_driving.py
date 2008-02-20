@@ -31,7 +31,7 @@ def getPubKey(launcher, key_name):
     def __cb(result):
         return result
     def __eb(reason):
-        return 'blablabla'
+        return ''
 
     if launcher == None or launcher == '':
         launcher = chooseLauncher()

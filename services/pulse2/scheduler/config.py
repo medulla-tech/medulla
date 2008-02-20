@@ -39,7 +39,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     host = "127.0.0.1"
     login = ""
     password = ""
-    start_commands_modulo = 600
+    awake_time = 600
     prober_path = '/usr/local/sbin/pulse2-probe'
     ping_path = '/usr/local/sbin/pulse2-ping'
     wol_path = '/usr/local/sbin/pulse2-wol'
@@ -74,8 +74,8 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         if cp.has_option("scheduler", "password"):
             self.password = cp.get("scheduler", "password")
 
-        if cp.has_option("scheduler", "start_commands_modulo"):
-            self.start_commands_modulo = cp.getint("scheduler", "start_commands_modulo")
+        if cp.has_option("scheduler", "awake_time"):
+            self.awake_time = cp.getint("scheduler", "awake_time")
 
         if cp.has_option("scheduler", "prober_path"):
             self.prober_path = cp.get("scheduler", "prober_path")
