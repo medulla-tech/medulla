@@ -51,7 +51,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     }
     scheduler_host = "127.0.0.1"
     scheduler_port = "9000"
-    i_am_alive_modulo = 600
+    awake_time = 600
+    defer_results = False
     ssh_defaultkey = 'default'
     ssh_keys = { 'default': '/root/.ssh/id_dsa.pub' }
     ssh_options = [ \
@@ -109,6 +110,10 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             self.scheduler_host = cp.get("scheduler", "host")
         if cp.has_option("scheduler", "port"):
             self.scheduler_port = cp.get("scheduler", "port")
+        if cp.has_option("scheduler", "awake_time"):
+            self.awake_time = cp.getint("scheduler", "awake_time")
+        if cp.has_option("scheduler", "defer_results"):
+            self.defer_results = cp.get("scheduler", "defer_results") == 'yes'
 
         for option in cp.options('ssh'):
             if re.compile("^sshkey_[0-9A-Za-z]+$").match(option):

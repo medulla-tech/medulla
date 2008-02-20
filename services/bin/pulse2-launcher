@@ -56,21 +56,20 @@ VERSION = "0.0.0"
 
 def scheduleTellIAmAlive():
     """ periodicaly talk to our referent scheduler """
-    tell_in = int(time.time() % LauncherConfig().i_am_alive_modulo) + 1
+    tell_in = LauncherConfig().awake_time - time.time() % LauncherConfig().awake_time
     twisted.internet.reactor.callLater(tell_in, tellIAmAlive)
 
 def tellIAmAlive():
-    def _cb(result):
-        pass
-    def _eb(reason):
-        logger = logging.getLogger()
-        logger.warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+    def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
+        if pulse2.launcher.process_control.ProcessList().getZombiesCount() > 0:
+            logging.getLogger().info('launcher "%s": sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
+            for p in pulse2.launcher.process_control.ProcessList().getZombiesList():
+                p.installEndBack()
+    def _eb(reason): # can't contact scheduler, log and continue
+        logging.getLogger().warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
         pass
 
     scheduler = pulse2.launcher.utils.getScheduler()
-    logger = logging.getLogger()
-    logger.info('launcher "%s": contacting our scheduler at %s' % (LauncherConfig().name, scheduler))
-
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
     mydeffered.\
         addCallback(_cb).\
@@ -93,7 +92,7 @@ def startService():
         logger.error('launcher "%s": can\'t bind to %s:%d' % (name, bind, port))
         return 1
 
-    # start periodic scheduler probing, called every i_am_alive_modulo seconds
+    # start periodic scheduler probing, called every awake_time seconds
     scheduleTellIAmAlive()
     logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
 
@@ -168,6 +167,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_sync_remote_inventory(self, command_id, client):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client))
+    def xmlrpc_async_remote_inventory(self, command_id, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(command_id, client))
 
     def xmlrpc_get_background_process_count(self):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_count())

@@ -40,30 +40,31 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
-def commandForker(cmd, id, cbCommandEnd, callbackName):
+def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     """
     """
-
     process = commandProtocol(cmd)
     ProcessList().addProcess(process, id)
-
     twisted.internet.reactor.spawnProcess(process, cmd[0], cmd, None)
-    process.deferred = twisted.internet.defer.Deferred()
-    process.deferred.addCallback(cbCommandEnd, id, callbackName)
+    process.returnxmlrpcfunc = callbackName
+    process.id = id
+    process.defer_results = defer_results
+    process.endback = cbCommandEnd
 
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def __init__(self, cmd):
         self.cmd = cmd
         self.done = False
-
         self.stdout = ""
         self.stderr = ""
         self.stdall = ""
-
         self.error_code = ""
-
         self.status = ""
+        self.returnxmlrpcfunc = None
+        self.id = id
+        self.endback = None
+        self.defer_results = False
 
     def write(self,data):
         self.transport.write(data)
@@ -81,6 +82,12 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         self.done = True
         self.exitCode = reason.value.exitCode
+        if not self.defer_results:
+            self.installEndBack()
+
+    def installEndBack(self):
+        self.deferred = twisted.internet.defer.Deferred()
+        self.deferred.addCallback(self.endback)
         self.deferred.callback(self)
 
     def getExitCode(self):
@@ -90,23 +97,33 @@ class ProcessList(Singleton):
     _processArr = dict()
     _event = list()
 
+    def listProcesses(self):
+        return self._processArr
+
+    def getProcessesCount(self):
+        return len(self.listProcesses())
+
+    def getProcessesList(self):
+        return self.listProcesses().values()
+
+    def listZombies(self):
+        ret={}
+        for k, v in self.listProcesses().iteritems():
+            if v.done:
+                ret[k] = v
+        return ret
+
+    def getZombiesCount(self):
+        return len(self.listZombies())
+
+    def getZombiesList(self):
+        return self.listZombies().values()
+
     def addProcess(self, obj, id):
         self._processArr[id] = obj
 
     def getProcess(self, id):
         return self._processArr[id]
 
-    def listProcess(self):
-        return self._processArr
-
     def rmProcess(self, id):
         del self._processArr[id]
-
-    def addEvent(self, obj):
-        self._event.append(obj)
-
-    def popEvent(self):
-        self._event.pop()
-
-    def listEvent(self):
-        return self._event

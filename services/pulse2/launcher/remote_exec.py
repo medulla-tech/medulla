@@ -133,7 +133,13 @@ def remote_push(command_id, client, files_list, mode):
             "%s@%s:%s" % (client['user'], client['host'], target_path),
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_push')
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_push'
+            )
             return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
@@ -165,7 +171,13 @@ def remote_pull(command_id, client, files_list, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_pull')
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_pull'
+            )
             return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
@@ -197,7 +209,13 @@ def remote_delete(command_id, client, files_list, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_deletion')
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_deletion'
+            )
             return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
@@ -229,7 +247,13 @@ def remote_exec(command_id, client, command, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_execution')
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_execution'
+            )
             return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
@@ -259,7 +283,13 @@ def remote_quickaction(command_id, client, command, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(command_list, command_id, __cb_async_process_end, 'completed_quick_action')
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_quick_action'
+            )
             return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
@@ -281,6 +311,14 @@ def sync_remote_wol(command_id, client, wrapper):
     return None
 
 def sync_remote_inventory(command_id, client):
+    """ Handle remote quick action on target, sync mode """
+    return remote_inventory(command_id, client, 'sync')
+
+def async_remote_inventory(command_id, client):
+    """ Handle remote quick action on target, async mode """
+    return remote_inventory(command_id, client, 'async')
+
+def remote_inventory(command_id, client, mode):
     """ Handle remote inventoring on target, sync mode
 
     This function will simply run the inventory on the othe side
@@ -304,55 +342,19 @@ def sync_remote_inventory(command_id, client):
             "%s@%s" % (client['user'], client['host']),
             real_command
         ]
-        return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+        if mode == 'async':
+            pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_inventory'
+            )
+            return True
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
 
-"""
-def get_background_process_count():
-    return len(mmc.support.mmctools.ProcessScheduler().listProcess())
-
-def get_background_process_list():
-    return mmc.support.mmctools.ProcessScheduler().listProcess().keys()
-
-def get_background_running_process_count():
-    count = 0
-    for i in mmc.support.mmctools.ProcessScheduler().listProcess().values():
-        if not i.done:
-            count += 1
-    return count
-
-def get_background_running_process_list():
-    ret = []
-    for i in mmc.support.mmctools.ProcessScheduler().listProcess().values():
-        if not i.done:
-            ret.append(i.desc)
-    return ret
-
-def do_background_process_exists(id):
-    return id in mmc.support.mmctools.ProcessScheduler().listProcess().keys()
-
-def is_background_process_done(id):
-    return mmc.support.mmctools.ProcessScheduler().listProcess()[id].done
-
-def purge_background_process(id):
-    try:
-        if is_background_process_done(id):
-            process = mmc.support.mmctools.ProcessScheduler().getProcess(id)
-            ret = {
-                'out': process.out,
-                'err': process.err,
-                'exitcode' : process.getExitCode()
-            }
-            clean_background_process(id)
-            return ret
-    except KeyError:
-        return False
-    return True;
-
-def clean_background_process(id):
-    mmc.support.mmctools.ProcessScheduler().rmProcess(id)
-    return True;
-"""
 def __cb_sync_process_end(shprocess):
     """
         Handle sync process termination
@@ -362,29 +364,30 @@ def __cb_sync_process_end(shprocess):
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
 
-def __cb_async_process_end(shprocess, id, return_callback):
+def __cb_async_process_end(shprocess):
     """
         Handle async process termination
     """
-    def _cb(result):
-        pass
-    def _eb(reason):
-        logger = logging.getLogger()
-        logger.warn('launcher "%s": failed to send results to our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
-        pass
+    def _cb(result, id):
+        # as we successfuly sent our result to our scheduler, command can be safely removed from our list
+        pulse2.launcher.process_control.ProcessList().rmProcess(id)
+    def _eb(reason, id):
+        # no result can be sent, log and keep our process in our list
+        logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s, reason: %s' % (LauncherConfig().name, id, scheduler, reason))
 
     exitcode = shprocess.exitCode
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
+    id = shprocess.id
 
     scheduler = pulse2.launcher.utils.getScheduler()
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
-        return_callback,
+        shprocess.returnxmlrpcfunc,
         LauncherConfig().name,
         (exitcode, stdout, stderr),
         id
     )
     mydeffered.\
-        addCallback(_cb).\
-        addErrback(_eb)
+        addCallback(_cb, id).\
+        addErrback(_eb, id)
     return
