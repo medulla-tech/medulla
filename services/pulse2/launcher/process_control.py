@@ -35,7 +35,8 @@ def commandRunner(cmd, cbCommandEnd):
     Return a Deferred resulting in the stdout output of a shell command.
     """
     process = commandProtocol(cmd)
-    twisted.internet.reactor.spawnProcess(process, cmd[0], cmd, None)
+    # FIXME: codec should be taken from conf file
+    twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
     process.deferred = twisted.internet.defer.Deferred()
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
@@ -45,7 +46,8 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     """
     process = commandProtocol(cmd)
     ProcessList().addProcess(process, id)
-    twisted.internet.reactor.spawnProcess(process, cmd[0], cmd, None)
+    # FIXME: codec should be taken from conf file
+    twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
     process.returnxmlrpcfunc = callbackName
     process.id = id
     process.defer_results = defer_results
