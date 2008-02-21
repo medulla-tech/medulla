@@ -74,18 +74,5 @@ if ($_GET['uuid']) {
     // Display an error message
 }
 ?>
-
-<style>
-li.pause a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/stock_media-pause.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-
-</style>
+<!-- inject styles -->
+<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />

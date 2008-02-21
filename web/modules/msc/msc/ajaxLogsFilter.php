@@ -79,10 +79,10 @@ $a_deleted  = array();
 $a_current  = array();
 $params = array();
 
-$actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
-$actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
-$actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers");
+$actionplay = new ActionPopupItem(_T("Start", "msc"),  "msctabsplay",  "start",   "msc", "base", "computers");
+$actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
+$actionstop = new ActionPopupItem(_T("Stop", "msc"),   "msctabsstop",  "stop",    "msc", "base", "computers");
+$actiondetails = new ActionItem(_T("Details", "msc"),  "msctabs",      "display",    "msc", "base", "computers");
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
@@ -124,9 +124,9 @@ if ($areCommands) {
                 $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             }
             $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
-            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/'.return_icon($coh['uploaded']).'"/> ';
-            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/'.return_icon($coh['executed']).'"/> ';
-            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/'.return_icon($coh['deleted']).'"/> ';
+            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
+            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
+            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
             if (isset($statusTable[$coh['current_state']])) {
                 $a_current[] = $statusTable[$coh['current_state']];
             } else {
@@ -183,18 +183,3 @@ function to_date($list) {
     }
 }
 ?>
-
-<style>
-li.pause a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("img/common/pause.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-
-</style>
