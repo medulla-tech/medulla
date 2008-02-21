@@ -22,8 +22,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from twisted.web import xmlrpc, server
-from twisted.protocols import http
 from twisted.internet import ssl, reactor, defer
+try:
+    from twisted.web import http
+except ImportError:
+    from twisted.protocols import http
 
 import re
 import imp
