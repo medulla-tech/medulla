@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-03 09:06+0100\n"
-"PO-Revision-Date: 2007-11-30 19:00+0100\n"
+"POT-Creation-Date: 2008-02-21 17:29+0100\n"
+"PO-Revision-Date: 2008-02-21 17:35+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,56 +12,41 @@ msgstr ""
 "X-Generator: KBabel 1.10\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
-#: graph/header.inc.php:203
+#: graph/header.inc.php:202
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 "Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
 
-#: graph/navbar.inc.php:45
+#: graph/navbar.inc.php:40
 msgid "standard mode"
 msgstr "mode standard"
 
-#: graph/navbar.inc.php:47
+#: graph/navbar.inc.php:42
 msgid "expert mode"
 msgstr "mode expert"
 
-#: graph/navbar.inc.php:52
+#: graph/navbar.inc.php:47
 msgid "Click to switch to"
 msgstr "Cliquer pour passer en"
 
-#: graph/navbar.inc.php:53
+#: graph/navbar.inc.php:48
 msgid "logout"
 msgstr "déconnexion"
 
-#: graph/navbar.inc.php:55 logout/index.php:49 logout/index.php:54
+#: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: graph/navbar.inc.php:65 main_content.php:167
+#: graph/navbar.inc.php:60 main_content.php:167
 msgid "Home"
 msgstr "Page principale"
 
-#: graph/navbar.inc.php:124
+#: graph/navbar.inc.php:113
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
 msgstr ""
 "Si cette phrase ne change pas, votre navigateur n'est pas supporté par la MMC"
-
-#: graph/navbartools.inc.php:40 graph/navbartools.inc.php:48
-#: includes/PageGenerator.php:692 includes/PageGenerator.php:699
-#: includes/PageGenerator.php:754 includes/PageGenerator.php:758
-#: modules/base/groups/ajaxFilter.php:40 modules/base/groups/ajaxFilter.php:46
-msgid "Previous"
-msgstr "Précédent"
-
-#: graph/navbartools.inc.php:53 graph/navbartools.inc.php:61
-#: includes/ajaxTools.php:74 includes/PageGenerator.php:703
-#: includes/PageGenerator.php:709 includes/PageGenerator.php:762
-#: includes/PageGenerator.php:766 modules/base/groups/ajaxFilter.php:51
-#: modules/base/groups/ajaxFilter.php:59
-msgid "Next"
-msgstr "Suivant"
 
 #: includes/ErrorHandling.php:75
 msgid "Show complete trackback"
@@ -78,6 +63,13 @@ msgstr "L'utilisateur root ne peut pas avoir de favoris"
 #: includes/favorites.php:149
 msgid "Add this page to your favorite"
 msgstr "Ajouter cette page à vos favoris"
+
+#: includes/ajaxTools.php:74 includes/PageGenerator.php:714
+#: includes/PageGenerator.php:720 includes/PageGenerator.php:773
+#: includes/PageGenerator.php:777 modules/base/groups/ajaxFilter.php:51
+#: modules/base/groups/ajaxFilter.php:59
+msgid "Next"
+msgstr "Suivant"
 
 #: includes/commonErrorHandling.php:30
 msgid "This item already exists in your LDAP directory"
@@ -111,11 +103,23 @@ msgstr ""
 "serveur LDAP est correctement configuré dans /etc/mmc/plugins/base.ini</"
 "li>        <li>Vérifiez que votre serveur LDAP est lancé</li> </ul> "
 
-#: includes/commonErrorHandling.php:55
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "Erreur pendant la phase d'authentification"
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "Veuillez contacter votre administrateur."
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "Erreur lors de la création ou du paramétrage de votre compte"
+
+#: includes/commonErrorHandling.php:64
 msgid "This items seems to not be in the index"
 msgstr "Cette entrée semble ne pas être indexé"
 
-#: includes/commonErrorHandling.php:56
+#: includes/commonErrorHandling.php:65
 msgid ""
 "This problem can appear if:\n"
 "                        <ul>\n"
@@ -126,11 +130,11 @@ msgstr ""
 "Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe "
 "plus</li>            <li> elle est mal orthographiée</li> </ul>"
 
-#: includes/commonErrorHandling.php:68
+#: includes/commonErrorHandling.php:77
 msgid "smbpasswd failed to change your password entry"
 msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
 
-#: includes/commonErrorHandling.php:69
+#: includes/commonErrorHandling.php:78
 msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
@@ -143,36 +147,71 @@ msgstr ""
 "LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
 "correctement configuré</li> </ul>"
 
-#: includes/acl.inc.php:101
+#: includes/acl.inc.php:112
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
 
-#: includes/FormGenerator.php:166
+#: includes/FormGenerator.php:165
 msgid "Delete photo"
 msgstr "Supprimer photo"
 
-#: includes/FormGenerator.php:198
+#: includes/FormGenerator.php:197
 msgid "yes"
 msgstr "oui"
 
-#: includes/FormGenerator.php:201
+#: includes/FormGenerator.php:200
 msgid "no"
 msgstr "non"
 
-#: includes/FormGenerator.php:210 includes/FormGenerator.php:427
-#: includes/FormGenerator.php:475 modules/base/views/norightGroups.tpl.php:31
+#: includes/FormGenerator.php:209 includes/FormGenerator.php:543
+#: includes/FormGenerator.php:591 modules/base/views/norightGroups.tpl.php:31
 msgid "unavailable"
 msgstr "indisponible"
 
-#: includes/FormGenerator.php:393 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:379
+msgid "Year: "
+msgstr ""
+
+#: includes/FormGenerator.php:379
+msgid "Month: "
+msgstr ""
+
+#: includes/FormGenerator.php:379
+msgid "Day: "
+msgstr ""
+
+#: includes/FormGenerator.php:380
+#, fuzzy
+msgid "Hour: "
+msgstr "heure"
+
+#: includes/FormGenerator.php:380
+msgid "Min.: "
+msgstr ""
+
+#: includes/FormGenerator.php:380
+msgid "Sec.: "
+msgstr ""
+
+#: includes/FormGenerator.php:451 includes/FormGenerator.php:455
+msgid "or <a href='#'"
+msgstr ""
+
+#: includes/FormGenerator.php:453
+msgid "value=\"now\";'>now</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:457
+msgid "value=\"never\";'>never</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:509 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
-#: modules/base/users/localSidebar.php:40
-#: modules/base/users/localSidebar.php:52
 #: modules/base/views/editGroups.tpl.php:74
 msgid "Add"
 msgstr "Ajout"
 
-#: includes/FormGenerator.php:641 modules/base/groups/ajaxFilter.php:110
+#: includes/FormGenerator.php:765 modules/base/groups/ajaxFilter.php:110
 #: modules/base/groups/index.php:100 modules/base/users/ajaxFilter.php:83
 #: modules/base/views/editGroups.tpl.php:61
 #: modules/base/views/index.tpl.php:92
@@ -229,32 +268,38 @@ msgstr ""
 "Cette exception est inconnue. Veuillez nous contacter pour correctement "
 "gérer cette erreur."
 
-#: includes/PageGenerator.php:104 includes/PageGenerator.php:1642
-#: includes/PageGenerator.php:1706 modules/base/groups/members.php:186
+#: includes/PageGenerator.php:104 includes/PageGenerator.php:1798
+#: includes/PageGenerator.php:1862 modules/base/groups/members.php:186
 #: modules/base/groups/delete.php:52 modules/base/users/delete.php:56
 #: modules/base/users/backup.php:97 modules/base/users/edit.php:407
 msgid "Cancel"
 msgstr "Annuler"
 
-#: includes/PageGenerator.php:436 includes/PageGenerator.php:628
+#: includes/PageGenerator.php:443 includes/PageGenerator.php:639
 msgid "to"
 msgstr "à"
 
-#: includes/PageGenerator.php:437 includes/PageGenerator.php:629
+#: includes/PageGenerator.php:444 includes/PageGenerator.php:640
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
 
-#: includes/PageGenerator.php:440 includes/PageGenerator.php:632
+#: includes/PageGenerator.php:447 includes/PageGenerator.php:643
 msgid "page"
 msgstr "page"
 
-#: includes/PageGenerator.php:1402
+#: includes/PageGenerator.php:703 includes/PageGenerator.php:710
+#: includes/PageGenerator.php:765 includes/PageGenerator.php:769
+#: modules/base/groups/ajaxFilter.php:40 modules/base/groups/ajaxFilter.php:46
+msgid "Previous"
+msgstr "Précédent"
+
+#: includes/PageGenerator.php:1549
 msgid "Ok"
 msgstr "Ok"
 
-#: includes/PageGenerator.php:1638 modules/base/groups/members.php:185
-#: modules/base/users/edit.php:406 modules/base/users/editacl.php:223
+#: includes/PageGenerator.php:1794 modules/base/groups/members.php:185
+#: modules/base/users/edit.php:406 modules/base/users/editacl.php:225
 msgid "Confirm"
 msgstr "Valider"
 
@@ -347,8 +392,6 @@ msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
 #: modules/base/groups/localSidebar.php:28
 #: modules/base/users/localSidebar.php:28
-#: modules/base/users/localSidebar.php:37
-#: modules/base/users/localSidebar.php:49
 msgid "List"
 msgstr "Gestion"
 
@@ -379,6 +422,7 @@ msgid "Group name"
 msgstr "Nom du groupe"
 
 #: modules/base/groups/edit.php:91
+#: modules/base/includes/computers_list.inc.php:68
 msgid "Description"
 msgstr "Description"
 
@@ -392,7 +436,7 @@ msgid "Group list"
 msgstr "Liste des groupes"
 
 #: modules/base/users/ajaxFilter.php:66 modules/base/users/edit.php:272
-#: modules/base/views/index.tpl.php:78 index.php:147
+#: modules/base/views/index.tpl.php:78 index.php:150
 msgid "Login"
 msgstr "Identifiant"
 
@@ -427,8 +471,7 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #: modules/base/users/passwd.php:36 modules/base/users/passwd.php:72
-#: modules/base/users/localSidebar.php:33
-#: modules/base/users/localSidebar.php:43
+#: modules/base/users/localSidebar.php:32
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
 
@@ -600,7 +643,7 @@ msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
 #: modules/base/users/edit.php:276 modules/base/infoPackage.inc.php:209
-#: index.php:155
+#: index.php:158
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -693,19 +736,19 @@ msgstr ""
 "Ce champ est utilisé par SAMBA (et autres clients LDAP) pour afficher le nom "
 "de l'utilisateur."
 
-#: modules/base/users/editacl.php:77
+#: modules/base/users/editacl.php:79
 msgid "hide"
 msgstr "caché"
 
-#: modules/base/users/editacl.php:78
+#: modules/base/users/editacl.php:80
 msgid "description"
 msgstr "description"
 
-#: modules/base/users/editacl.php:79
+#: modules/base/users/editacl.php:81
 msgid "read only"
 msgstr "lecture seule"
 
-#: modules/base/users/editacl.php:80
+#: modules/base/users/editacl.php:82
 msgid "read/write"
 msgstr "lecture/écriture"
 
@@ -725,18 +768,18 @@ msgstr "Nom de la fonction"
 msgid "Authorize"
 msgstr "Autorisation"
 
-#: modules/base/users/editacl.php:172
+#: modules/base/users/editacl.php:162
 msgid "Warning no desc found in infoPackage.inc.php :"
 msgstr ""
 "Attention, aucune description n'a pu être trouvée dans le fichier "
 "infoPackage.inc.php :"
 
-#: modules/base/users/editacl.php:193
+#: modules/base/users/editacl.php:195
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "Édition des ACLs de l'utilisateur"
 
-#: modules/base/users/editacl.php:201
+#: modules/base/users/editacl.php:203
 msgid "Edit ACL of user"
 msgstr "Édition des ACLs de l'utilisateur"
 
@@ -821,6 +864,42 @@ msgstr ""
 "                        <p>et cette ligne dans le fichier /etc/syslog.conf:\n"
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
+
+#: modules/base/includes/computers_list.inc.php:28
+msgid "Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:29
+msgid "Read log"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Software deployment"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:58
+#: modules/base/includes/computers_list.inc.php:64
+#, fuzzy
+msgid "Computer name"
+msgstr "Nom commun"
+
+#: modules/base/includes/computers_list.inc.php:69
+#, fuzzy
+msgid "Computers list"
+msgstr "Liste des utilisateurs"
+
+#: modules/base/includes/computers_list.inc.php:78
+#, fuzzy
+msgid "Delete computer"
+msgstr "Supprimer un utilisateur"
+
+#: modules/base/includes/computers_list.inc.php:81
+msgid "Remove machine from group"
+msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:42
 msgid "Date"
@@ -964,22 +1043,22 @@ msgstr "Activer/Désactiver un compte"
 msgid "Your session will be closed"
 msgstr "Votre session va être fermée"
 
-#: index.php:77
+#: index.php:80
 msgid "Login failed"
 msgstr "Échec de la connexion"
 
-#: index.php:159
+#: index.php:162
 msgid "Server"
 msgstr "Serveur"
 
-#: index.php:183
+#: index.php:186
 msgid "Language"
 msgstr "Langue"
 
-#: index.php:214
+#: index.php:218
 msgid "Connect"
 msgstr "Connecter"
 
-#: main.php:104
+#: main.php:88
 msgid "Error, you don't have correct rights !"
 msgstr "Erreur, vous n'avez pas les droits requis !"
