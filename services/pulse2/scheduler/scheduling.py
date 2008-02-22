@@ -104,7 +104,8 @@ def startAllCommands():
     return deffereds
 
 def runCommand(myCommandOnHostID):
-    """ Just a simple start point, chain-load on Upload Pahse
+    """
+        Just a simple start point, chain-load on Upload Pahse
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
@@ -114,7 +115,8 @@ def runCommand(myCommandOnHostID):
     return runWOLPhase(myCommandOnHostID)
 
 def runWOLPhase(myCommandOnHostID):
-    """ Attempt do see if a wake-on-lan should be done
+    """
+        Attempt do see if a wake-on-lan should be done
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
@@ -129,7 +131,8 @@ def runWOLPhase(myCommandOnHostID):
     return mydeffered
 
 def runUploadPhase(myCommandOnHostID):
-    """ Handle first Phase: upload time
+    """
+        Handle first Phase: upload time
     """
     # First step : copy files
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -137,6 +140,9 @@ def runUploadPhase(myCommandOnHostID):
     logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
     if myCoH.isUploadRunning(): # upload still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCoH.getId())
+        return None
+    if not myCoH.isUploadImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: nothing to upload right now" % myCommandOnHostID)
         return None
     if myCoH.isUploadDone(): # upload already done, jump to next stage
         logger.info("command_on_host #%s: upload done" % myCoH.getId())
@@ -159,6 +165,7 @@ def runUploadPhase(myCommandOnHostID):
         target_host = pulse2.scheduler.network.chooseClientIP(myT)
         target_uuid = myT.getUUID()
         myCoH.setUploadInProgress()
+        myCoH.setCommandStatut('upload_in_progress')
         updateHistory(myCommandOnHostID, 'upload_in_progress')
         if SchedulerConfig().mode == 'sync':
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -195,6 +202,7 @@ def runUploadPhase(myCommandOnHostID):
             target_host = pulse2.scheduler.network.chooseClientIP(myT)
             target_uuid = myT.getUUID()
             myCoH.setUploadInProgress()
+            myCoH.setCommandStatut('upload_in_progress')
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             if SchedulerConfig().mode == 'sync':
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -240,11 +248,14 @@ def runExecutionPhase(myCommandOnHostID):
     if myCoH.isExecutionRunning(): # execution still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCommandOnHostID)
         return None
+    if not myCoH.isExecutionImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: nothing to execute right now" % myCommandOnHostID)
+        return None
     if myCoH.isExecutionDone(): # execution already done, jump to next stage
-        logger.info("command_on_host #%s: upload done" % myCommandOnHostID)
+        logger.info("command_on_host #%s: execution done" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if myCoH.isExecutionIgnored(): # execution previously ignored, jump to next stage
-        logger.info("command_on_host #%s: upload ignored" % myCommandOnHostID)
+        logger.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
         return runDeletePhase(myCommandOnHostID)
     if not myC.hasSomethingToExecute(): # nothing to execute here, jump to next stage
         logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
@@ -255,6 +266,7 @@ def runExecutionPhase(myCommandOnHostID):
     target_host = pulse2.scheduler.network.chooseClientIP(myT)
     target_uuid = myT.getUUID()
     myCoH.setExecutionInProgress()
+    myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
     if myC.isQuickAction(): # should be a standard script
         if SchedulerConfig().mode == 'sync':
@@ -309,6 +321,9 @@ def runDeletePhase(myCommandOnHostID):
     if myCoH.isDeleteRunning(): # delete still running, immediately returns
         logging.getLogger().info("command_on_host #%s: still deleting" % myCommandOnHostID)
         return None
+    if not myCoH.isDeleteImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
+        return None
     if myCoH.isDeleteDone(): # delete has already be done, jump to next stage
         logger.info("command_on_host #%s: delete done" % myCommandOnHostID)
         return runEndPhase(myCommandOnHostID)
@@ -327,6 +342,7 @@ def runDeletePhase(myCommandOnHostID):
         target_host = pulse2.scheduler.network.chooseClientIP(myT)
         target_uuid = myT.getUUID()
         myCoH.setDeleteInProgress()
+        myCoH.setCommandStatut('delete_in_progress')
         updateHistory(myCommandOnHostID, 'delete_in_progress')
         if SchedulerConfig().mode == 'sync':
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -358,6 +374,7 @@ def runDeletePhase(myCommandOnHostID):
             target_host = pulse2.scheduler.network.chooseClientIP(myT)
             target_uuid = myT.getUUID()
             myCoH.setDeleteInProgress()
+            myCoH.setCommandStatut('delete_in_progress')
             updateHistory(myCommandOnHostID, 'delete_in_progress')
             if SchedulerConfig().mode == 'sync':
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
@@ -413,7 +430,6 @@ def runInventoryPhase(myCommandOnHostID):
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
 
-
     if SchedulerConfig().mode == 'sync':
         mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
             'sync_remote_inventory',
@@ -447,62 +463,62 @@ def parseWOLResult(output, myCommandOnHostID):
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == 0: # success
-        logger.info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
-        myCoH.setUploadDone()
+        logging.getLogger().info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
-        return runExecutionPhase(myCommandOnHostID)
+        if myCoH.switchToUploadDone():
+            return runExecutionPhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up
-    logger.info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
-    myCoH.setUploadFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
 
 def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == 0: # success
-        logger.info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
-        myCoH.setUploadDone()
+        logging.getLogger().info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
-        return runExecutionPhase(myCommandOnHostID)
+        if myCoH.switchToUploadDone():
+            return runExecutionPhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up
-    logger.info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
-    myCoH.setUploadFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
 
 def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == 0: # success
-        logger.info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
-        myCoH.setExecutionDone()
+        logging.getLogger().info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
-        return runDeletePhase(myCommandOnHostID)
+        if myCoH.switchToExecutionDone():
+            return runDeletePhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up
-    logger.info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
-    myCoH.setExecutionFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
+    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay())
     return None
 
 def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == 0: # success
-        logger.info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
-        myCoH.setDeleteDone()
+        logging.getLogger().info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
-        return runInventoryPhase(myCommandOnHostID)
+        if myCoH.switchToDeleteDone():
+            return runInventoryPhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up
-    logger.info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
-    myCoH.setDeleteFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
+    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay())
     return None
 
 def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -527,44 +543,34 @@ def parseWOLError(output, myCommandOnHostID):
 def parsePushError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.setUploadFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    # FIXME: should return a failure (but which one ?)
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
 
 def parsePullError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.setUploadFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    # FIXME: should return a failure (but which one ?)
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
 
 def parseExecutionError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.setExecutionFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
+    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
     return None
 
 def parseDeleteError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.setDeleteFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    logging.getLogger().info("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
+    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
     return None
 
