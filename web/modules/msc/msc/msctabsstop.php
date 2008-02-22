@@ -25,6 +25,7 @@
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
+/* Form handling */
 if (isset($_POST["bconfirm"])) {
     $from = $_POST['from'];
     $path =  explode('|', $from);
@@ -39,29 +40,25 @@ if (isset($_POST["bconfirm"])) {
 
     stop_command_on_host($coh_id);
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
-} else {
-    $from = $_GET['from'];
-    $hostname = $_GET["hostname"];
-    $uuid = $_GET["uuid"];
-    $cmd_id = $_GET["cmd_id"];
-    $coh_id = $_GET["coh_id"];
-    $cmd = command_detail($cmd_id);
-    $name = $cmd['title'];
-    $f = new PopupForm(sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname));
-    $hidden = new HiddenTpl("name");
-    $f->add($hidden, array("value" => $hostname, "hide" => True));
-    $hidden = new HiddenTpl("from");
-    $f->add($hidden, array("value" => $from, "hide" => True));
-    $hidden = new HiddenTpl("cmd_id");
-    $f->add($hidden, array("value" => $cmd_id, "hide" => True));
-    $hidden = new HiddenTpl("coh_id");
-    $f->add($hidden, array("value" => $coh_id, "hide" => True));
-    $hidden = new HiddenTpl("uuid");
-    $f->add($hidden, array("value" => $uuid, "hide" => True));
-    $f->addValidateButton("bconfirm");
-    $f->addCancelButton("bback");
-    $f->display();
 }
+
+/* Form displaying */
+$from = $_GET['from'];
+$hostname = $_GET["hostname"];
+$uuid = $_GET["uuid"];
+$cmd_id = $_GET["cmd_id"];
+$coh_id = $_GET["coh_id"];
+$cmd = command_detail($cmd_id);
+$name = $cmd['title'];
+$f = new PopupForm(sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname));
+$f->add(new HiddenTpl("name"),   array("value" => $hostname, "hide" => True));
+$f->add(new HiddenTpl("from"),   array("value" => $from,     "hide" => True));
+$f->add(new HiddenTpl("cmd_id"), array("value" => $cmd_id,   "hide" => True));
+$f->add(new HiddenTpl("coh_id"), array("value" => $coh_id,   "hide" => True));
+$f->add(new HiddenTpl("uuid"),   array("value" => $uuid,     "hide" => True));
+$f->addValidateButton("bconfirm");
+$f->addCancelButton("bback");
+$f->display();
 
 
 ?>

@@ -1,5 +1,6 @@
 <?
-/*
+
+/**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
  *
@@ -26,12 +27,16 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 
+// inject styles
+print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
+
 # Display a specific command_on_host for a specific host
 if (isset($_GET['uuid']) and isset($_GET['coh_id'])) {
     print "<hr/><br/>";
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
+    exit;
 }
 
 # Display history for a specific host
@@ -41,6 +46,7 @@ if (isset($_GET['uuid']) and !isset($_GET['coh_id'])) {
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
+    exit;
 }
 
 # Display a specific command_on_host for a specific group
@@ -57,6 +63,7 @@ if (isset($_GET['gid']) and isset($_GET['coh_id'])) {
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
+    exit;
 }
 
 # Display a specific command for a specific group
@@ -69,6 +76,7 @@ if (isset($_GET['gid']) and isset($_GET['cmd_id'])) {
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
+    exit;
 }
 
 # Display history for a specific group
@@ -78,10 +86,9 @@ if (isset($_GET['gid']) and (!isset($_GET['coh_id']) and !isset($_GET['cmd_id'])
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
+    exit;
 }
 
     // Whe should display an error message
 
 ?>
-<!-- inject styles -->
-<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />

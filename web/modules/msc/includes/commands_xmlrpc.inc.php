@@ -110,21 +110,21 @@ function get_id_command_on_host($id_command) {
     xmlCall('msc.get_id_command_on_host', array($id_command));
 }
 
+/* Command on host handling */
 function start_command_on_host($coh_id) {
     return xmlCall('msc.start_command_on_host', array($coh_id));
 }
-
-function pause_command_on_host($coh_id) {
-    return xmlCall('msc.pause_command_on_host', array($coh_id));
-}
-
-function restart_command_on_host($coh_id) {
-    return xmlCall('msc.restart_command_on_host', array($coh_id));
-}
-
 function stop_command_on_host($coh_id) {
     return xmlCall('msc.stop_command_on_host', array($coh_id));
 }
+function pause_command_on_host($coh_id) {
+    return xmlCall('msc.pause_command_on_host', array($coh_id));
+}
+function restart_command_on_host($coh_id) {
+    return xmlCall('msc.restart_command_on_host', array($coh_id));
+}
+/* /Command on host handling */
+
 
 
 ?>

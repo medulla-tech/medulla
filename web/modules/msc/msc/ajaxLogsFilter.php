@@ -79,11 +79,13 @@ $a_deleted  = array();
 $a_current  = array();
 $params = array();
 
-$actionplay = new ActionPopupItem(_T("Start", "msc"),  "msctabsplay",  "start",   "msc", "base", "computers");
-$actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
-$actionstop = new ActionPopupItem(_T("Stop", "msc"),   "msctabsstop",  "stop",    "msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),  "msctabs",      "display",    "msc", "base", "computers");
-$actionempty = new EmptyActionItem();
+/* available buttons */
+$actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start",   "msc", "base", "computers");
+$actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
+$actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
+$actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",      "display", "msc", "base", "computers");
+$actionempty   = new EmptyActionItem();
+
 $a_start = array();
 $a_pause = array();
 $a_stop = array();
@@ -135,8 +137,8 @@ if ($areCommands) {
             $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
             $icons = state_tmpl($coh['current_state']);
-            $icons['play'] == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
-            $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
+            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
 
             if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {

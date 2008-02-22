@@ -97,16 +97,19 @@ $page->addTab($tab);
 
 $submod->addPage($page);
 
+/* Confirm popup when starting a command */
 $page = new Page("msctabsplay");
 $page->setFile("modules/msc/msc/msctabsplay.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+/* Confirm popup when pausing a command */
 $page = new Page("msctabspause");
 $page->setFile("modules/msc/msc/msctabspause.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+/* Confirm popup when stopping a command */
 $page = new Page("msctabsstop");
 $page->setFile("modules/msc/msc/msctabsstop.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
