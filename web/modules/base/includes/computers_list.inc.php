@@ -23,10 +23,12 @@
  */
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false) {
-    ksort($names);
+    if (count($names) > 0) {
+        ksort($names); # arf... don't want to sort on uuid...
+    }
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-    $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers");
+    $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
     $actionInventory = array();
@@ -34,11 +36,13 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $actionMsc = array();
     $comments = array();
     $params = array();
+    $hostnames = array();
 
     foreach($names as $name=>$value) {
         $comments[] = $value['comment'];
+        $hostnames[] = $value['hostname'];
         $params[] = $value;
-        if (inventoryExists($name)) {
+        if (inventoryExists($value['uuid'])) {
             $actionInventory[] = $inventAction;
         } else { 
             $actionInventory[] = $glpiAction;
@@ -55,14 +59,14 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 
     $n = null;
     if ($count) {
-        $n = new OptimizedListInfos(array_keys($names), _("Computer name"));
+        $n = new OptimizedListInfos($hostnames, _("Computer name"));
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter));
         $n->start = 0;
         $n->end = $count - 1;
     } else {
-        $n = new ListInfos(array_keys($names), _("Computer name"));
-        $n->setNavBar(new AjaxNavBar(count($name), $filter));
+        $n = new ListInfos($hostnames, _("Computer name"));
+        $n->setNavBar(new AjaxNavBar(count($hostnames), $filter));
     }
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($comments, _("Description"));

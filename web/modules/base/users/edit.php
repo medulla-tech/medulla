@@ -51,7 +51,7 @@ if ($pass != $confpass) {
     setFormError("pass");
 }
 
-if (!preg_match("/^[a-zA-Z][A-Za-z0-9_.-]*$/", $nlogin)) {
+if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
     $error.= _("User's name invalid !")."<br/>";
     setFormError("login");
 }
@@ -264,7 +264,7 @@ $p->display();
 //display form
 
 if ($_GET["action"]=="add") {
-    $formElt = new InputTpl("nlogin",'/^[a-zA-Z][A-Za-z0-9_.-]*$/');
+    $formElt = new InputTpl("nlogin",'/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/');
 } else {
     $formElt = new HiddenTpl("nlogin");
 }

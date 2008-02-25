@@ -380,6 +380,20 @@ html>body #sidebar ul li a { width: auto; }
 
 }
 
+#warningCode {
+	font-size: 12px;
+	text-decoration: none;
+	padding: 12px 8px 12px 36px;
+	margin: 0;
+	background-color: #DDF;
+	color: #000;
+	width: 90%;
+	display: block;
+	border: 1px solid #00E;
+        -moz-border-radius: 10px;
+
+}
+
 .error {
     color : #D00;
 }

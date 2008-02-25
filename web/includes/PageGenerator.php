@@ -901,9 +901,10 @@ if ($this->refresh) {
 }
 
 class AjaxFilterLocation extends AjaxFilter {
-    function AjaxFilterLocation($url, $divid = "container") {
+    function AjaxFilterLocation($url, $divid = "container", $paramname = 'location') {
         $this->AjaxFilter($url, $divid);
-        $this->location = new SelectItem('location', 'pushSearch', 'searchfieldreal noborder');
+        $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+        $this->paramname = $paramname;
     }
 
     function setElements($elt) {
@@ -947,7 +948,7 @@ class AjaxFilterLocation extends AjaxFilter {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'&location='+document.Form.location.value, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -960,7 +961,7 @@ class AjaxFilterLocation extends AjaxFilter {
             var tableau = filter.split(reg);
             filter = tableau[0];
             var location = tableau[1];
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&location='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
         /**
@@ -1502,6 +1503,9 @@ class NotifyWidget {
      * private internal function
      */
     function getImgLevel() {
+        if ($this->getLevel()==3) {
+            return "img/common/icn_warn.gif";
+        }
         if ($this->getLevel()!=0) {
             return "img/common/icn_alert.gif";
         }
@@ -1587,6 +1591,20 @@ class NotifyWidgetFailure extends NotifyWidget {
         $this->setSize(600);
     }
 
+}
+
+/**
+ * display a popup window with a message for a warning
+ *
+ */
+class NotifyWidgetWarning extends NotifyWidget {
+
+    function NotifyWidgetWarning($message) {
+        $this->flush();
+        $this->add("<div id=\"warningCode\">$message</div>");
+        $this->setLevel(3);
+        $this->setSize(600);
+    }
 }
 
 /**

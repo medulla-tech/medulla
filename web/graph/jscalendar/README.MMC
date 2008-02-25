@@ -1,0 +1,10 @@
+Those files are part of js-calendar 1.0 .
+
+Some mods have been done:
+- docs and exemples were removed,
+- .js files have moved into "js" directory,
+- .css files are now in "css" dir,
+- images are in "img" dir.
+- "aqua" skin removed
+
+
