@@ -36,21 +36,13 @@ if (isset($_GET['uuid']) and isset($_GET['coh_id'])) {
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
-    exit;
-}
-
-# Display history for a specific host
-if (isset($_GET['uuid']) and !isset($_GET['coh_id'])) {
+} else if (isset($_GET['uuid']) and !isset($_GET['coh_id'])) { # Display history for a specific host
     $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
     $ajax->setRefresh(5000);
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
-    exit;
-}
-
-# Display a specific command_on_host for a specific group
-if (isset($_GET['gid']) and isset($_GET['coh_id'])) {
+} else if (isset($_GET['gid']) and isset($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
     $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
     // display the selected command
     $cmd = new Command($_GET['cmd_id']);
@@ -63,11 +55,7 @@ if (isset($_GET['gid']) and isset($_GET['coh_id'])) {
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
-    exit;
-}
-
-# Display a specific command for a specific group
-if (isset($_GET['gid']) and isset($_GET['cmd_id'])) {
+} else if (isset($_GET['gid']) and isset($_GET['cmd_id'])) { # Display a specific command for a specific group
     // display just the selected command
     $cmd = new Command($_GET['cmd_id']);
     $cmd->quickDisplay();
@@ -76,17 +64,12 @@ if (isset($_GET['gid']) and isset($_GET['cmd_id'])) {
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
-    exit;
-}
-
-# Display history for a specific group
-if (isset($_GET['gid']) and (!isset($_GET['coh_id']) and !isset($_GET['cmd_id']))) {
+} else if (isset($_GET['gid']) and (!isset($_GET['coh_id']) and !isset($_GET['cmd_id']))) { # Display history for a specific group
     // display all commands
     $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=tabhistory");
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
-    exit;
 }
 
     // Whe should display an error message
