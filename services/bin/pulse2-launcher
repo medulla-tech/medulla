@@ -65,6 +65,7 @@ def tellIAmAlive():
             logging.getLogger().info('launcher "%s": sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
             for p in pulse2.launcher.process_control.ProcessList().getZombiesList():
                 p.installEndBack()
+
     def _eb(reason): # can't contact scheduler, log and continue
         logging.getLogger().warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
         pass

@@ -133,14 +133,13 @@ def remote_push(command_id, client, files_list, mode):
             "%s@%s:%s" % (client['user'], client['host'], target_path),
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_push'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
@@ -171,14 +170,13 @@ def remote_pull(command_id, client, files_list, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_pull'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
@@ -209,14 +207,13 @@ def remote_delete(command_id, client, files_list, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_deletion'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
@@ -247,14 +244,13 @@ def remote_exec(command_id, client, command, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_execution'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
@@ -283,14 +279,13 @@ def remote_quickaction(command_id, client, command, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_quick_action'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None
@@ -343,14 +338,13 @@ def remote_inventory(command_id, client, mode):
             real_command
         ]
         if mode == 'async':
-            pulse2.launcher.process_control.commandForker(
+            return pulse2.launcher.process_control.commandForker(
                 command_list,
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_inventory'
             )
-            return True
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
     return None

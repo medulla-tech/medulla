@@ -45,13 +45,15 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     """
     """
     process = commandProtocol(cmd)
-    ProcessList().addProcess(process, id)
+    if not ProcessList().addProcess(process, id): # a process with the same ID already exists
+        return False
     # FIXME: codec should be taken from conf file
     twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
     process.returnxmlrpcfunc = callbackName
     process.id = id
     process.defer_results = defer_results
     process.endback = cbCommandEnd
+    return True
 
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
@@ -67,6 +69,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.id = id
         self.endback = None
         self.defer_results = False
+        self.deferred = None
 
     def write(self,data):
         self.transport.write(data)
@@ -84,8 +87,11 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         self.done = True
         self.exitCode = reason.value.exitCode
-        if not self.defer_results:
-            self.installEndBack()
+        if self.deferred:                   # if deffered exists, we should be in sync mode
+            self.deferred.callback(self)    # fire callback
+            return                          # and stop (will not go further)
+        if not self.defer_results:          # if we have to send results when available (ie defer_results == False)
+            self.installEndBack()           # install and fire callback immediately
 
     def installEndBack(self):
         self.deferred = twisted.internet.defer.Deferred()
@@ -122,7 +128,10 @@ class ProcessList(Singleton):
         return self.listZombies().values()
 
     def addProcess(self, obj, id):
+        if id in self._processArr.keys():
+            return False
         self._processArr[id] = obj
+        return True
 
     def getProcess(self, id):
         return self._processArr[id]
