@@ -28,40 +28,35 @@ require("includes/template.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-//if we post information
-if ($_POST["buser"]) {
-    $acl = $_POST["acl"];
-    $aclattr = $_POST["aclattr"];
-    $acltab = $_POST["acltab"];
-} else {
-    $aclString = getAcl($_GET["user"]);
-    $aclArr = createAclArray($aclString);
-    $acl = $aclArr["acl"];
-    $aclattr = $aclArr["aclattr"];
-    $acltab = $aclArr["acltab"];
-}
+$aclString = getAcl($_GET["user"]);
+$aclArr = createAclArray($aclString);
+$acl = $aclArr["acl"];
+$aclattr = $aclArr["aclattr"];
+$acltab = $aclArr["acltab"];
 
 if ($_POST["buser"]) {
-    $aclString = getAcl($_GET["user"]);
-    $aclArr = createAclArray($aclString);
-    $acl = $aclArr["acl"];
+    /* FIXME: Why is the unset needed ? */
     unset($acl[0]);
-    $aclattr = $aclArr["aclattr"];
     unset($aclattr[0]);
-    $acltab = $aclArr["acltab"];
     unset($acltab[0]);
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }
+    /* Set POST arrays as empty when not set */
+    foreach(array("acl", "aclattr", "acltab") as $postvar) {
+        if (!isset($_POST[$postvar])) {
+            $_POST[$postvar] = array();
+        }
+    }
     foreach ($_POST["acl"] as $key => $value) {
         $acl[$key] = $value;
-    }    
+    }
     foreach ($_POST["acltab"] as $key => $value) {
         $acltab[$key] = $value;
-    }    
+    }
     foreach ($_POST["aclattr"] as $key => $value) {
         $aclattr[$key] = $value;
-    }    
+    }
     setAcl($_GET["user"], createAclString($acl, $acltab, $aclattr));
 }
 
