@@ -25,5 +25,7 @@
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 
-print _T(scheduler_probe_client('', $_GET["uuid"]), "msc");
+$probe = scheduler_probe_client('', $_GET["uuid"]);
+isset($probe) and $probe != '' ? True : $probe = "N/A";
+print _T($probe, "msc");
 ?>
