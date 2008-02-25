@@ -37,7 +37,7 @@ $mod->setPriority(700);
 
 $submod = new SubModule("logs");
 $submod->setDescription(_T("MSC", "msc"));
-$submod->setImg('img/navbar/msc');
+$submod->setImg('modules/msc/img/navbar/msc');
 $submod->setDefaultPage("msc/logs/all");
 
 $page = new Page("all", _T('Show all logs', 'msc'));
