@@ -83,6 +83,7 @@ function display($res, $len, $group, $start, $end, $filter, $gid, $canbedeleted 
         $p['hostname'] = $hostname;
         $p['uuid'] = $uuid;
         $p['inventaire'] = $hostname;
+        $p['gid'] = $gid;
         $comp = getComputer(array('uuid'=>$uuid));
         if ($comp) {
             $p['comment'] = $comp[1]['displayName'][0];

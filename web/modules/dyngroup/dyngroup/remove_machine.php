@@ -25,12 +25,12 @@
 require_once("modules/dyngroup/includes/includes.php");
 
 $gid = quickGet('gid');
-$group = new Dyngroup($gid);
+$group = new Group($gid, true);
 $machine = quickGet('hostname');
 $uuid = quickGet('uuid');
 
 if (quickGet('valid')) {
-    $group->removeMachine($uuid);
+    $group->delMember($uuid);
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$gid)));
 }
 
