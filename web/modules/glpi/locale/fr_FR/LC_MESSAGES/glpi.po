@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-04 11:57+0100\n"
+"POT-Creation-Date: 2008-02-26 15:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr "Montrer les localizations"
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventaire (GLPI) de la machine"
 
-#: glpi/tabs.php:8 glpi/glpi/tabs.php:8
+#: glpi/tabs.php:8 glpi/glpi/tabs.php:8 glpi/glpi/tabs.php:11
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Inventaire de %s (GLPI)"
@@ -41,15 +41,15 @@ msgstr "Valeur"
 msgid "Add"
 msgstr "Ajouter"
 
-#: glpi/tabs.php:9 glpi/glpi/tabs.php:9
+#: glpi/tabs.php:9 glpi/glpi/tabs.php:9 glpi/glpi/tabs.php:12
 msgid "Hardware"
 msgstr "Materiel"
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13
+#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
 msgid "Network"
 msgstr "Reseau"
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13
+#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
 msgid "Controller"
 msgstr "Controlleur"
 
@@ -99,4 +99,16 @@ msgstr "GLPI tab reseau"
 
 #: glpi/infoPackage.inc.php:56
 msgid "GLPI tab 2"
+msgstr "GLPI tab controlleur"
+
+#: glpi/infoPackage.inc.php:50
+msgid "GLPI hardware tab"
+msgstr "GLPI tab général"
+
+#: glpi/infoPackage.inc.php:53
+msgid "GLPI network tab"
+msgstr "GLPI tab reseau"
+
+#: glpi/infoPackage.inc.php:56
+msgid "GLPI controller tab"
 msgstr "GLPI tab controlleur"
