@@ -215,7 +215,7 @@ function xmlCall($method, $params = null) {
         if (!$params) {
             $params = "null";
         } else if (is_array($params)) {
-            $str .= implode (',',$params);
+            $str .= var_export($params, True);
         } else {
             $str .= $params;
         }
@@ -224,7 +224,7 @@ function xmlCall($method, $params = null) {
         if (is_array($xmlResponse)) {
             $str .= "<pre>";
             $str .= "result : ";
-            $str .= var_export($xmlResponse);
+            $str .= var_export($xmlResponse, True);
             $str .= "</pre>";
         } else {
             $str .= "result : ".$xmlResponse;
