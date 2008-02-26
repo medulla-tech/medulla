@@ -41,7 +41,6 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     source_path = "/tftpboot/revoboot/msc"
     target_path = "/tmp"
     inventory_command = "echo Doing inventory"
-    wol_path = "/usr/sbin/pulse2-wol"
     launchers = {
         'launcher_01': {
             'port': 8001,
@@ -94,8 +93,6 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             self.target_path = cp.get("launchers", "target_path")
         if cp.has_option("launchers", "inventory_command"):
             self.inventory_command = cp.get("launchers", "inventory_command")
-        if cp.has_option("launchers", "wol_path"):
-            self.wol_path = cp.get("launchers", "wol_path")
         if cp.has_option("launchers", "temp_folder_prefix"):
             self.temp_folder_prefix = cp.get("launchers", "temp_folder_prefix")
 
