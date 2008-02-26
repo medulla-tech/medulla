@@ -98,36 +98,36 @@ $page->addTab($tab);
 $submod->addPage($page);
 
 /* Confirm popup when starting a command */
-$page = new Page("msctabsplay");
+$page = new Page("msctabsplay", _T("Play a command", "msc"));
 $page->setFile("modules/msc/msc/msctabsplay.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 /* Confirm popup when pausing a command */
-$page = new Page("msctabspause");
+$page = new Page("msctabspause", _T("Pause a command", "msc"));
 $page->setFile("modules/msc/msc/msctabspause.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 /* Confirm popup when stopping a command */
-$page = new Page("msctabsstop");
+$page = new Page("msctabsstop", _T("Stop a command", "msc"));
 $page->setFile("modules/msc/msc/msctabsstop.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("package_detail");
+$page = new Page("package_detail", _T("Show package's details", "msc"));
 $page->setFile("modules/msc/msc/package_detail.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 /* Confirm popup when deploying something */
-$page = new Page("start_tele_diff");
+$page = new Page("start_tele_diff", _T("Launch a command", "msc"));
 $page->setFile("modules/msc/msc/start_tele_diff.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 /* Confirm popup when attempting a quick action */
-$page = new Page("start_quick_action");
+$page = new Page("start_quick_action", _T("Launch a quick action command", "msc"));
 $page->setFile("modules/msc/msc/start_quick_action.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
