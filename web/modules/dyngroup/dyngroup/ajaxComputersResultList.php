@@ -71,10 +71,10 @@ if ($group->isDyn()) {
 function displayStatic($group, $start, $end, $filter, $gid) {
     $res = $group->getResult($start, $end, $filter);
     $len = $group->countResult($filter);
-    display($res, $len, $group, $start, $end, $filter, $gid);
+    display($res, $len, $group, $start, $end, $filter, $gid, true);
 }
 
-function display($res, $len, $group, $start, $end, $filter, $gid) {
+function display($res, $len, $group, $start, $end, $filter, $gid, $canbedeleted = false) {
     foreach ($res as $host) {
         $hostname = $host['hostname'];
         $uuid = $host['uuid'];
