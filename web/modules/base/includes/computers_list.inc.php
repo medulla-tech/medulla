@@ -24,7 +24,8 @@
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false) {
     if (count($names) > 0) {
-        ksort($names); # arf... don't want to sort on uuid...
+        $sorted_names = array_keys($names);
+        natcasesort($sorted_names);
     }
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
@@ -38,7 +39,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $params = array();
     $hostnames = array();
 
-    foreach($names as $name=>$value) {
+    foreach($sorted_names as $name) {
+        $value = $names[$name];
         $comments[] = $value['comment'];
         $hostnames[] = $value['hostname'];
         $params[] = $value;
@@ -89,3 +91,5 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 }
 
 ?>
+
+
