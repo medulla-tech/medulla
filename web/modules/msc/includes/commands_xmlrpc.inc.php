@@ -86,6 +86,10 @@ function get_commands_on_host($coh_id) {
     return xmlCall('msc.get_commands_on_host', array($coh_id));
 }
 
+function get_target_for_coh($coh_id) {
+    return xmlCall('msc.get_target_for_coh', array($coh_id));
+}
+
 function get_command_history($coh_id) {
     return xmlCall('msc.get_commands_history', array($coh_id));
 }

@@ -64,7 +64,7 @@ $params = array();
 $actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
 $actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers");
+$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tablogs');
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
@@ -77,6 +77,7 @@ foreach ($cmds as $coh) {
     $coh_id = $coh['id_command_on_host'];
     $cho_status = $coh['current_state'];
     $cmd = command_detail($coh['id_command']);
+    $target = get_target_for_coh($coh_id);
     
     if ($history) {
         $d = $coh["end_date"];
@@ -97,7 +98,7 @@ foreach ($cmds as $coh) {
     } else {
         $a_current[] = $coh['current_state'];
     }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command']);
+    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'uuid'=>$target['target_uuid']);
 
 
     $icons = state_tmpl($coh['current_state']);
@@ -128,6 +129,7 @@ $n->addActionItemArray($a_start);
 //$n->addActionItemArray($a_pause);
 $n->addActionItemArray($a_stop);
 
+$n->disableFirstColumnActionLink();
 $n->setParamInfo($params);
 $n->setTableHeaderPadding(1);
 $n->setItemCount($count);
