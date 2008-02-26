@@ -23,7 +23,10 @@
  */
 
 function isDynamicEnable() {
-    return myXmlCall("dyngroup.isDynamicEnable");
+    if (!isset($_SESSION["isDynamicEnable"])) {
+        $_SESSION["isDynamicEnable"] = xmlCall("dyngroup.isDynamicEnable", null);
+    }
+    return $_SESSION["isDynamicEnable"];
 }
 
 ?>
