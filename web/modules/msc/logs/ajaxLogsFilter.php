@@ -64,7 +64,8 @@ $params = array();
 $actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
 $actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tablogs');
+$actiondetails_logs = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tablogs');
+$actiondetails_hist = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tabhistory');
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
@@ -77,6 +78,7 @@ foreach ($cmds as $coh) {
     $coh_id = $coh['id_command_on_host'];
     $cho_status = $coh['current_state'];
     $cmd = command_detail($coh['id_command']);
+    $coh = get_commands_on_host($coh_id);
     $target = get_target_for_coh($coh_id);
     
     if ($history) {
@@ -107,8 +109,10 @@ foreach ($cmds as $coh) {
     if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
     if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
         $a_details[] = $actionempty;
-    } else {
-        $a_details[] = $actiondetails;
+    } elseif ($coh['current_state'] != 'done') {
+        $a_details[] = $actiondetails_logs;
+    } else { 
+        $a_details[] = $actiondetails_hist;
     }
 }
 $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
