@@ -289,22 +289,20 @@ function renderTPL($view,$module = null) {
  * list possible locale
  */
 function list_system_locales($dir){
-   if(!$_SESSION['__locale']) {
-       $ret = array();
-       $ret[] = "C";
-       if (is_dir($dir)) {
-           if ($dh = opendir($dir)) {
-               while (($file = readdir($dh)) !== false) {
-                   if (file_exists("$dir/$file/LC_MESSAGES/base.mo")) {
-                       $ret[]=$file;
-                   }
-               }
-           }
-           closedir($dh);
-       }
-       $_SESSION['__locale'] = $ret;
-   }
-   return $_SESSION['__locale'];
+    $ret = array();
+    $ret[] = "C";
+    if (is_dir($dir)) {
+        if ($dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                if ((file_exists("$dir/$file/LC_MESSAGES/base.mo")) && (setlocale(LC_ALL, $file . ".UTF-8"))) {
+                    $ret[]=$file;
+                }
+            }
+        }
+        closedir($dh);
+    }
+    $_SESSION['__locale'] = $ret;
+    return $_SESSION['__locale'];
 }
 
 ?>
