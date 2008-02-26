@@ -20,8 +20,8 @@ function getRestrictedComputersListLen($filt = null) {
     return xmlCall("base.getRestrictedComputersListLen", array($filt));
 }
 
-function getRestrictedComputersList($min = 0, $max = -1, $filt = null) {
-    return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt));
+function getRestrictedComputersList($min = 0, $max = -1, $filt = null, $adv = True) {
+    return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv));
 }
 
 function getComputerCount($filter = null) {
@@ -37,11 +37,17 @@ function getRestrictedComputersName($min = 0, $max = -1, $filt = null) {
 }
 
 function canAddComputer() {
-    return xmlCall("base.canAddComputer");
+    if (!isset($_SESSION["canAddComputer"])) {
+        $_SESSION["canAddComputer"] = xmlCall("base.canAddComputer", null);
+    }
+    return $_SESSION["canAddComputer"];
 }
 
 function canDelComputer() {
-    return xmlCall("base.canDelComputer");
+    if (!isset($_SESSION["canDelComputer"])) {
+        $_SESSION["canDelComputer"] = xmlCall("base.canDelComputer", null);
+    }
+    return $_SESSION["canDelComputer"];
 }
 
 ?>
