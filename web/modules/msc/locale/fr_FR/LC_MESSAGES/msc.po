@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-27 16:24+0100\n"
+"POT-Creation-Date: 2008-02-27 18:18+0100\n"
 "PO-Revision-Date: 2008-01-23 11:27+0100\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -471,15 +471,15 @@ msgstr "Contrôle sécurisé de l'ordinateur"
 
 #: msc/infoPackage.inc.php:89 msc/infoPackage.inc.php:84
 msgid "MSC launch tab"
-msgstr "MSC onglet de lancement"
+msgstr "Onglet de lancement"
 
 #: msc/infoPackage.inc.php:92 msc/infoPackage.inc.php:87
 msgid "MSC logs tab"
-msgstr "MSC onglet des journaux"
+msgstr "Onglet des journaux"
 
 #: msc/infoPackage.inc.php:95 msc/infoPackage.inc.php:90
 msgid "MSC history tab"
-msgstr "MSC onglet de l'historique"
+msgstr "Onglet de l'historique"
 
 #: msc/infoPackage.inc.php:130 msc/infoPackage.inc.php:140
 #: msc/infoPackage.inc.php:135
