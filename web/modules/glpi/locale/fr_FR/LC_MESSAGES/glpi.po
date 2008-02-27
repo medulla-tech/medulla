@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-26 15:05+0100\n"
+"POT-Creation-Date: 2008-02-27 18:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,24 +91,24 @@ msgstr "Localization"
 
 #: glpi/infoPackage.inc.php:50
 msgid "GLPI general tab"
-msgstr "GLPI tab général"
+msgstr "Onglet général"
 
 #: glpi/infoPackage.inc.php:53
 msgid "GLPI tab 1"
-msgstr "GLPI tab reseau"
+msgstr "Onglet reseau"
 
 #: glpi/infoPackage.inc.php:56
 msgid "GLPI tab 2"
-msgstr "GLPI tab controlleur"
+msgstr "Onglet controlleur"
 
 #: glpi/infoPackage.inc.php:50
 msgid "GLPI hardware tab"
-msgstr "GLPI tab général"
+msgstr "Onglet général"
 
 #: glpi/infoPackage.inc.php:53
 msgid "GLPI network tab"
-msgstr "GLPI tab reseau"
+msgstr "Onglet reseau"
 
 #: glpi/infoPackage.inc.php:56
 msgid "GLPI controller tab"
-msgstr "GLPI tab controlleur"
+msgstr "Onglet controlleur"
