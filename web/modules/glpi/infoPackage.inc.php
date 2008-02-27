@@ -47,13 +47,13 @@ $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tab0", _("GLPI hardware tab"));
+$tab = new Tab("tab0", _T("GLPI hardware tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab1", _("GLPI network tab"));
+$tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
 $page->addTab($tab);
 
-$tab = new Tab("tab2", _("GLPI controller tab"));
+$tab = new Tab("tab2", _T("GLPI controller tab", 'glpi'));
 $page->addTab($tab);
 
 
