@@ -151,7 +151,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
 /* single target: form display */
 if ($_GET['uuid'] and !isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // FIXME: should be changed in uuid
+    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
     if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
@@ -174,7 +174,7 @@ if ($_GET['uuid'] and !isset($_POST['launchAction'])) {
 
 /* quick action on a single target */
 if (isset($_GET['uuid']) and isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), False); // FIXME: should be changed in uuid
+    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
     action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
 }
 
@@ -186,7 +186,7 @@ if (isset($_GET['gid']) and isset($_POST['launchAction'])) {
 }
 
 /* group display */
-if (isset($_GET['gid']) and !isset($_POST['launchAction'])) {
+if (isset($_GET['gid']) and !isset($_POST['launchAction']) and !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
     // Display the actions list
     $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));
