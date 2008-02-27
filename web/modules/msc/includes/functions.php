@@ -98,6 +98,15 @@ function state2icon($current_state) {
         case "not_reachable":
             return "led_circle_red.png";
             break;
+        case "inventory_done";
+            return "led_circle_green.png";
+            break;
+        case "inventory_failed";
+            return "led_circle_red.png";
+            break;
+        case "inventory_progress";
+            return "led_circle_orange.png";
+            break;
         case "done":
             return "led_circle_green.png";
             break;
@@ -146,6 +155,15 @@ function history_stat2icon($state) {
             break;
         case "not_reachable":
             return "led_circle_red.png";
+            break;
+        case "inventory_done";
+            return "led_circle_green.png";
+            break;
+        case "inventory_failed";
+            return "led_circle_red.png";
+            break;
+        case "inventory_progress";
+            return "led_circle_orange.png";
             break;
         case "done":
             return "led_circle_green.png";

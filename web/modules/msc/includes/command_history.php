@@ -169,7 +169,7 @@ class CommandHistory {
         # display log files
         $statusTable = getStatusTable();
         foreach ($this->db_ch as $hist) {
-            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
+            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/status/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
             if (gettype($hist["stdout"]) != 'array')
                 $hist["stdout"] = split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
@@ -238,7 +238,7 @@ function _toDate($a) {
     }
 }
 function _plusIcon($a) {
-    return '<img alt="'.$a.'" src="modules/msc/graph/images/'.return_icon($a).'"/> '.$a;
+    return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> '.$a;
 }
 
 # CH :
