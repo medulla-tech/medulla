@@ -289,6 +289,8 @@ function renderTPL($view,$module = null) {
  * list possible locale
  */
 function list_system_locales($dir){
+    /* Save current locale */
+    $current = setlocale(LC_ALL, 0);
     $ret = array();
     $ret[] = "C";
     if (is_dir($dir)) {
@@ -302,6 +304,8 @@ function list_system_locales($dir){
         closedir($dh);
     }
     $_SESSION['__locale'] = $ret;
+    /* Restore current locale */
+    setlocale(LC_ALL, $current);
     return $_SESSION['__locale'];
 }
 
