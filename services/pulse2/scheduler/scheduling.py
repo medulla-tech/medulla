@@ -162,7 +162,7 @@ def runUploadPhase(myCommandOnHostID):
         source_path = re.compile('^file://(.*)$').search(myT.mirrors).group(1)
         files_list = map(lambda(a): os.path.join(myC.path_source, a), myC.files.split("\n"))
         launcher = chooseLauncher()
-        target_host = pulse2.scheduler.network.chooseClientIP(myT)
+        target_host = chooseClientIP(myT)
         target_uuid = myT.getUUID()
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
@@ -199,7 +199,7 @@ def runUploadPhase(myCommandOnHostID):
                 fid = file.split('##')[0]
                 files_list.append(m1.getFilePath(fid))
             launcher = chooseLauncher()
-            target_host = pulse2.scheduler.network.chooseClientIP(myT)
+            target_host = chooseClientIP(myT)
             target_uuid = myT.getUUID()
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
@@ -263,7 +263,7 @@ def runExecutionPhase(myCommandOnHostID):
         return runDeletePhase(myCommandOnHostID)
     # if we are here, execution has either previously failed or never be done
     launcher = chooseLauncher()
-    target_host = pulse2.scheduler.network.chooseClientIP(myT)
+    target_host = chooseClientIP(myT)
     target_uuid = myT.getUUID()
     myCoH.setExecutionInProgress()
     myCoH.setCommandStatut('execution_in_progress')
@@ -339,7 +339,7 @@ def runDeletePhase(myCommandOnHostID):
         files_list = myC.files.split("\n")
         target_path = myC.path_destination
         launcher = chooseLauncher()
-        target_host = pulse2.scheduler.network.chooseClientIP(myT)
+        target_host = chooseClientIP(myT)
         target_uuid = myT.getUUID()
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
@@ -371,7 +371,7 @@ def runDeletePhase(myCommandOnHostID):
         if re.compile('^http://').match(mirror): # HTTP download
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
             launcher = chooseLauncher()
-            target_host = pulse2.scheduler.network.chooseClientIP(myT)
+            target_host = chooseClientIP(myT)
             target_uuid = myT.getUUID()
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
@@ -425,7 +425,7 @@ def runInventoryPhase(myCommandOnHostID):
         return runEndPhase(myCommandOnHostID)
     # if we are here, inventory has either previously failed or never be done
     launcher = chooseLauncher()
-    target_host = pulse2.scheduler.network.chooseClientIP(myT)
+    target_host = chooseClientIP(myT)
     target_uuid = myT.getUUID()
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
@@ -596,3 +596,11 @@ def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr='')
     history.state = state
     history.flush()
 
+def chooseClientIP(myT):
+    return pulse2.scheduler.network.chooseClientIP({
+        'uuid': myT.getUUID(),
+        'fqdn': myT.getFQDN(),
+        'shortname': myT.getShortName(),
+        'ips': myT.getIps(),
+        'macs': myT.getMacs()
+    })

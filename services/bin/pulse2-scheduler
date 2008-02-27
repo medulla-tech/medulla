@@ -49,6 +49,7 @@ import pulse2.scheduler.launchers_driving
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
 from mmc.plugins.msc.database import MscDatabase
+from mmc.plugins.base.computers import ComputerManager
 
 # Logging
 import logging
@@ -92,7 +93,7 @@ def startService():
 	elif v2 <= 1: #handling of v. 1.1.x and 1.0.x
             config.dbencoding = 'ascii'
             logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
-		
+
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
     logger.info('scheduler "%s": available launchers: %s' % (config.name, ' '.join(launchers)))
 
@@ -152,14 +153,14 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         request.finish()
 
     ### XMLRPC functions used from a MMC agent ###
-    def xmlrpc_ping_client(self, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingClient(client))
+    def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingClient(uuid, fqdn, shortname, ips, macs))
 
-    def xmlrpc_probe_client(self, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(client))
+    def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(uuid, fqdn, shortname, ips, macs))
 
-    def xmlrpc_wol_client(self, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(client))
+    def xmlrpc_wol_client(self, macs):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(macs))
 
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands()))

@@ -31,7 +31,7 @@ from pulse2.scheduler.config import SchedulerConfig
 # MMC
 import mmc.support.mmctools
 
-def probeClient(client):
+def probeClient(uuid, fqdn, shortname, ips, macs):
     idData = [
          { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},
          { 'platform': "GNU Linux", 'pcre': "Linux", "tmp_path": "/tmp/lsc", "root_path": "/"},
@@ -40,7 +40,6 @@ def probeClient(client):
          { 'platform': "HP UX", 'pcre': "HP-UX", "tmp_path": "/tmp/lsc", "root_path": "/"},
          { 'platform': "Apple MacOS", 'pcre': "Darwin", "tmp_path": "/tmp/lsc", "root_path": "/"}
     ]
-
     # TODO: a cache system ?!
     def _cb(result):
         ptype = "\n".join(result)
@@ -50,14 +49,20 @@ def probeClient(client):
                 return identification["platform"]
         logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got %s)' % (SchedulerConfig().name, client, ptype))
         return "Other/N.A."
-
     def _eb(result):
         logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
         return "Can't connect"
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
     command = '%s %s' % (SchedulerConfig().prober_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def pingClient(client):
+def pingClient(uuid, fqdn, shortname, ips, macs):
     # TODO: a cache system ?!
     def _cb(result):
         myresult = "\n".join(result)
@@ -65,10 +70,16 @@ def pingClient(client):
             return True
         logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got %s)' % (SchedulerConfig().name, client, myresult))
         return False
-
     def _eb(result):
         logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
         return False
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
     command = '%s %s' % (SchedulerConfig().ping_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
@@ -85,7 +96,7 @@ def wolClient(mac_addrs):
     command = '%s --ipaddr=%s --port=%s %s' % (SchedulerConfig().wol_path, SchedulerConfig().wol_bcast, SchedulerConfig().wol_port, mac_addrs)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def chooseClientIP(myTarget):
+def chooseClientIP(target):
     """
         Attempt to guess how to reach our client
 
@@ -93,63 +104,75 @@ def chooseClientIP(myTarget):
         - FQDN
         - IP adresses, in order of interrest
 
+        Expected target struct:
+        {
+            'uuid': ,
+            'fqdn': ,
+            'shortname': ,
+            'ips': [],
+            'macs': []
+        }
+
         Probes:
         - FQDN resolution
         - Netbios resolution
         - Host resolution
         - IP check
     """
-    logger = logging.getLogger()
     for method in SchedulerConfig().resolv_order:
         if method == 'fqdn':
-            result = chooseClientIPperFQDN(myTarget)
+            result = chooseClientIPperFQDN(target)
             if result:
-                logger.debug("will connect to %s as %s using DNS resolver" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name
+                logging.getLogger().debug("will connect to %s as %s using DNS resolver" % (target, result))
+                return result
         if method == 'netbios':
-            result = chooseClientIPperNetbios(myTarget)
+            result = chooseClientIPperNetbios(target)
             if result:
-                logger.debug("will connect to %s as %s using Netbios resolver" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name # better return IP here :/
+                logging.getLogger().debug("will connect to %s as %s using Netbios resolver" % (target, result))
+                return result
         if method == 'hosts':
-            result = chooseClientIPperHosts(myTarget)
+            result = chooseClientIPperHosts(target)
             if result:
-                logger.debug("will connect to %s as %s using Hosts" % (myTarget.target_name, myTarget.target_name))
-                return myTarget.target_name
+                logging.getLogger().debug("will connect to %s as %s using Hosts" % (target, result))
+                return result
         if method == 'ip':
-            result = chooseClientIPperIP(myTarget)
+            result = chooseClientIPperIP(target)
             if result:
-                logger.debug("will connect to %s as %s using IP given" % (myTarget.target_name, myTarget.target_ipaddr.split('||')[0]))
-                return myTarget.target_ipaddr.split('||')[0]
+                logging.getLogger().debug("will connect to %s as %s using IP given" % (target, result))
+                return result
     # (unfortunately) got nothing
     return None
 
-def chooseClientIPperFQDN(myTarget):
+def chooseClientIPperFQDN(target):
     import os
     # FIXME: port to twisted
     # FIXME: drop hardcoded path !
     # FIXME: use deferred
-    command = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % ('/usr/bin/host', myTarget.target_name)
-    result = os.system(command)
-    return result == 0
+    command = "%s -s 1 -t a %s 2>/dev/null 1>/dev/null" % ('/usr/bin/host', target['fqdn'])
+    if not os.system(command):
+        return target['fqdn']
+    return False
 
-def chooseClientIPperNetbios(myTarget):
+def chooseClientIPperNetbios(target):
     # FIXME: todo
     return False
 
-def chooseClientIPperHosts(myTarget):
+def chooseClientIPperHosts(target):
     import os
     # FIXME: port to twisted
     # FIXME: drop hardcoded path !
     # FIXME: use deferred
     # FIXME: should be merged with chooseClientIPperFQDN ?
-    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', myTarget.target_name)
-    result = os.system(command)
-    return result == 0
+    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', target['fqdn'])
+    if not os.system(command):
+        return target['fqdn']
+    command = "%s hosts %s 2>/dev/null 1>/dev/null" % ('/usr/bin/getent', target['shortname'])
+    if not os.system(command):
+        return target['shortname']
+    return False
 
-def chooseClientIPperIP(myTarget):
+def chooseClientIPperIP(target):
     # TODO: weird, check only the first IP address :/
-    if len(myTarget.target_ipaddr) == 0:
-        return False
-    result = myTarget.target_ipaddr.split('||')
-    return len(result) > 0
+    if len(target['ips']) > 0:
+        return target['ips'][0]
+    return False
