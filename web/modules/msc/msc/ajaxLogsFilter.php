@@ -154,8 +154,8 @@ if ($areCommands) {
         $datelabel = _T("End date", "msc");
     } else {
         $datelabel = _T("Start date", "msc");
-        $n->addExtraInfo($a_date, $datelabel);
     }
+    $n->addExtraInfo($a_date, $datelabel);
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
     $n->addExtraInfo($a_executed, _T("executed", "msc"));
