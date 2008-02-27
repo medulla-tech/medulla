@@ -106,7 +106,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $truncate_limit = 2000;
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, null, False);
     $count = getRestrictedComputersListLen();
-    if (count($listOfMachines) < $count) {
+    if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
     }
     $machines = array();
@@ -119,6 +119,7 @@ reset($members);
 ksort($machines);
 
 $diff = array_diff_assoc($machines, $members);
+natcasesort($diff);
 
 ?>
 
