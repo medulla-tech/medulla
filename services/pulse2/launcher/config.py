@@ -58,7 +58,6 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         'StrictHostKeyChecking=no',
         'Batchmode=yes',
         'PasswordAuthentication=no',
-        'SetupTimeOut=10',
         'ServerAliveInterval=10',
         'CheckHostIP=no',
         'ConnectTimeout=10'
@@ -68,7 +67,6 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         'StrictHostKeyChecking=no',
         'Batchmode=yes',
         'PasswordAuthentication=no',
-        'SetupTimeOut=10',
         'ServerAliveInterval=10',
         'CheckHostIP=no',
         'ConnectTimeout=10'
