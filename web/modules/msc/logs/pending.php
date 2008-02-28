@@ -34,7 +34,7 @@ $p = new PageGenerator(_T("Show all pending task's logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter("modules/msc/logs/ajaxLogsFilter.php?type=1");
+$ajax = new AjaxFilter("modules/msc/logs/ajaxLogsFilter.php?type=1&from=pending");
 $ajax->setRefresh(5000);
 $ajax->display();
 print "<br/><br/><br/>";

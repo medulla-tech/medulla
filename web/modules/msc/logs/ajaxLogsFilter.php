@@ -43,6 +43,7 @@ else $start = 0;
 
 $type = $_GET['type'];
 $current_state = $_GET['currentstate'];
+$from = $_GET['from'];
 
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
@@ -100,7 +101,7 @@ foreach ($cmds as $coh) {
     } else {
         $a_current[] = $coh['current_state'];
     }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'uuid'=>$target['target_uuid']);
+    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from");
 
 
     $icons = state_tmpl($coh['current_state']);

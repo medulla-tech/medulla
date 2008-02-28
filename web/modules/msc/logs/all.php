@@ -34,7 +34,7 @@ $p = new PageGenerator(_T("Show all task's logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter("modules/msc/logs/ajaxLogsFilter.php?type=0");
+$ajax = new AjaxFilter("modules/msc/logs/ajaxLogsFilter.php?type=0&from=all");
 $ajax->setRefresh(5000);
 $ajax->display();
 print "<br/><br/><br/>";
