@@ -14,7 +14,7 @@ if ($_GET['uuid']) {
     $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
 } elseif ($_GET['gid']) {
     require("modules/dyngroup/includes/includes.php");
-    $group = new Group($_GET['gid']);
+    $group = new Group($_GET['gid'], true);
     $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
     $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid'=>$_GET['gid']));
     $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid'=>$_GET['gid']));
