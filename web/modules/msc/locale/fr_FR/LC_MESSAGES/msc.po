@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-27 18:18+0100\n"
-"PO-Revision-Date: 2008-01-23 11:27+0100\n"
+"PO-Revision-Date: 2008-02-18 20:10+0100\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -578,7 +578,7 @@ msgstr "Lancer une action"
 
 #: msc/infoPackage.inc.php:130 msc/infoPackage.inc.php:125
 msgid "Launch a quick action command"
-msgstr "Lancer un action rapide"
+msgstr "Lancer une action rapide"
 
 #: msc/infoPackage.inc.php:150 msc/infoPackage.inc.php:145
 msgid "MAC Addr."
