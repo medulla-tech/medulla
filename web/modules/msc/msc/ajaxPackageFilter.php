@@ -34,7 +34,7 @@ require_once('../../../modules/msc/includes/qactions.inc.php');
 require_once('../../../modules/msc/includes/mirror_api.php');
 require_once('../../../modules/msc/includes/machines.inc.php');
 require_once('../../../modules/msc/includes/widgets.inc.php');
-require_once("../../../modules/msc/includes/utilities.php");
+require_once('../../../modules/msc/includes/utilities.php');
 $machine = null;
 $group = null;
 if ($_GET['uuid']) {
