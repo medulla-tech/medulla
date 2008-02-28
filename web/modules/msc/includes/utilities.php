@@ -37,5 +37,4 @@ function prettyOctetDisplay($num, $base = 1024, $unit = '') {
     }
 }
 
-_T('', 'msc')
 ?>
