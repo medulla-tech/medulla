@@ -39,6 +39,4 @@ function scheduler_wol_client($scheduler, $client) {
     return xmlCall('msc.scheduler_wol_client', array($scheduler, $maclist));
 }
 
-
-
 ?>

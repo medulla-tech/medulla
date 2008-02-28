@@ -25,7 +25,6 @@
 require("modules/msc/includes/functions.php");
 require("modules/msc/includes/machines.inc.php");
 require("modules/msc/includes/command_history.php");
-
 require("modules/msc/includes/scheduler_xmlrpc.php");
 
 if (scheduler_ping_client('', $_GET["uuid"])) {

@@ -98,7 +98,7 @@ if ($gid) {
     $cible = $group->getName();
 }
 $name = getPackageLabel($p_api, $_GET["pid"]);
-$f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\"", "msc"), $name, $cible));
+$f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\"", "msc"), $name, $hostname));
 
 // form preseeding
 $hidden = new HiddenTpl("papi");
