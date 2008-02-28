@@ -153,9 +153,11 @@ function to_date($list) {
     }
 }
 ?>
+<!-- inject styles -->
+<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />
 
 <style>
-li.pause a {
+li.pause_old a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/msc/graph/images/stock_media-pause.png");
