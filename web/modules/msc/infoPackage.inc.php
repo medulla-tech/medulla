@@ -77,11 +77,6 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("mscdetails", _T("General", "msc"));
-$page->setOptions(array("visible"=>False));
-$page->setFile("modules/msc/msc/mscdetails.php");
-$submod->addPage($page);
-
 $page = new Page("msctabs", _T("Secure control on machine", "msc"));
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
