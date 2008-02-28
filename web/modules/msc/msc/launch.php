@@ -78,22 +78,29 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $hostname = $post['hostname'];
     $uuid = $post['uuid'];
     $gid = $post['gid'];
-    $machine = getMachine(array('uuid'=>$uuid), True);
-    if ($machine->uuid == $uuid) {
-        $cible = array($uuid, $machine->hostname);
+
+    if (isset($_GET['uuid']) && $_GET['uuid']) {
+        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+        if ($machine->uuid == $uuid) { // Action on a single computer
+                $cible = array($uuid, $machine->hostname);
+        } else { // action on a whole group
+                $group = new Group($gid);
+                $cible = array_map('onlyValues', $group->getResult(0, -1));
+        }
     } else {
         $group = new Group($gid);
         $cible = array_map('onlyValues', $group->getResult(0, -1));
     }
+
     $pid = $post['pid'];
 
     // record new command
-    add_command_api($pid, $cible, $params, $p_api, $gid);
+    $id_command = add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
 
     // then redirect to the logs page
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
 }
 
 /* Advanced action: form display */
@@ -107,13 +114,18 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $p_api = new ServerAPI();
     $p_api->fromURI($_GET["papi"]);
     $name = getPackageLabel($p_api, $_GET['pid']);
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
 
-    // top label
-    if ($machine->uuid == $_GET['uuid']) { // Action on a single computer
-        $hostname = $machine->hostname;
-        $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $machine->hostname));
-    } else { // action on a whole group
+    if (isset($_GET['uuid']) && $_GET['uuid']) {
+        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+        // top label
+        if ($machine->uuid == $_GET['uuid']) { // Action on a single computer
+                $hostname = $machine->hostname;
+                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $machine->hostname));
+        } else { // action on a whole group
+                $group = new Group($_GET['gid'], true);
+                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
+        }
+    } else {
         $group = new Group($_GET['gid'], true);
         $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
     }
@@ -144,13 +156,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->addCancelButton("bback");
     $f->display();
 
-    // end processing here
-    exit();
 }
 ### /Advanced actions handling ###
 
 /* single target: form display */
-if ($_GET['uuid'] and !isset($_POST['launchAction'])) {
+if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
     if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
@@ -173,20 +183,20 @@ if ($_GET['uuid'] and !isset($_POST['launchAction'])) {
 }
 
 /* quick action on a single target */
-if (isset($_GET['uuid']) and isset($_POST['launchAction'])) {
+if (!isset($_GET['badvanced']) && isset($_GET['uuid']) && isset($_POST['launchAction'])) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
     action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
 }
 
 /* single action post on a group */
-if (isset($_GET['gid']) and isset($_POST['launchAction'])) {
+if (!isset($_GET['badvanced']) && isset($_GET['gid']) && isset($_POST['launchAction'])) {
     $group = new Group($_GET['gid'], true);
     $result = array_map("onlyValues", $group->getResult(0, -1));
     action($_POST['launchAction'], $result);
 }
 
 /* group display */
-if (isset($_GET['gid']) and !isset($_POST['launchAction']) and !isset($_GET['uuid'])) {
+if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
     // Display the actions list
     $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));

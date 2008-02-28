@@ -103,15 +103,15 @@ function add_command_api($pid, $target, $params, $p_api, $gid = null) {
 }
 
 function add_command_quick($cmd, $hosts, $desc, $gid = null) {
-    xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
+    return xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
 }
 
 function dispatch_all_commands() {
-    xmlCall('msc.dispatch_all_commands');
+    return xmlCall('msc.dispatch_all_commands');
 }
 
 function get_id_command_on_host($id_command) {
-    xmlCall('msc.get_id_command_on_host', array($id_command));
+    return xmlCall('msc.get_id_command_on_host', array($id_command));
 }
 
 /* Command on host handling */
