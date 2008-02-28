@@ -43,8 +43,7 @@ function action($action, $target) {
         dispatch_all_commands();
         scheduler_start_all_commands();
         // if on a single computer
-        $id_command_on_host = get_id_command_on_host($id_command);
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'coh_id'=>$id_command_on_host, 'gid'=>$_GET['gid'])));
+        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id_command, 'gid'=>$_GET['gid'])));
     }
 }
 
