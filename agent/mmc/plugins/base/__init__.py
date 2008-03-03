@@ -138,7 +138,11 @@ def activate():
             logger.info("Created OU " + ou)
         except ldap.ALREADY_EXISTS:
             pass
-            
+
+    # Issue a warning if the default user group doesn't exist
+    if not ldapObj.existGroup(ldapObj.defaultUserGroup):
+        logger.warning("The default user group %s does not exist. Please create it before adding new users." % ldapObj.defaultUserGroup)
+    
     # Register authenticators
     AuthenticationManager().register("baseldap", BaseLdapAuthenticator)
     AuthenticationManager().register("externalldap", ExternalLdapAuthenticator)
