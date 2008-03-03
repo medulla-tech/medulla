@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007 Mandriva, http://www.mandriva.com/
+# (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
 # $Id: __init__.py 204 2007-09-13 07:07:19Z cedric $
 #
