@@ -23,23 +23,28 @@
 
 from mmc.support.errorObj import errorMessage
 from mmc.support.mmcException import mmcException
-from mmc.support import mmctools
-from mmc.support.mmctools import cSort, rchown, copytree
 from mmc.support.config import *
 from time import time
-
+from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
+from mmc.support.uuid import uuid1
+
+from mmc.support import mmctools
+from mmc.support.mmctools import cSort, rchown, copytree
 
 from mmc.support.mmctools import shProcessProtocol
 from mmc.support.mmctools import generateBackgroundProcess
 from mmc.support.mmctools import cleanFilter
+
+from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 import ldap
 import ldap.schema
 import ldap.modlist
+from ldap.modlist import addModlist
 import ldif
 import crypt
 import random
@@ -133,13 +138,16 @@ def activate():
             logger.info("Created OU " + ou)
         except ldap.ALREADY_EXISTS:
             pass
-
+            
     # Register authenticators
     AuthenticationManager().register("baseldap", BaseLdapAuthenticator)
     AuthenticationManager().register("externalldap", ExternalLdapAuthenticator)
 
     # Register provisioner
     ProvisioningManager().register("externalldap", ExternalLdapProvisioner)
+
+    # Register computer list manager
+    ComputerManager().register("baseldap", Computers)
     
     return True
 
@@ -154,7 +162,8 @@ def validate():
     config = BasePluginConfig("base")
 
     for manager, method in [(AuthenticationManager(), config.authmethod),
-                            (ProvisioningManager(), config.provmethod)]:
+                            (ProvisioningManager(), config.provmethod),
+                            (ComputerManager(), config.computersmethod)]:
         manager.select(method)
         ret = manager.validate()
         if not ret: break
@@ -172,6 +181,11 @@ class BasePluginConfig(PluginConfig):
         # Selected provisioning method
         try:
             self.provmethod = self.get("provisioning", "method")
+        except:
+            pass
+        # Selected computer management method
+        try:
+            self.computersmethod = self.get("computers", "method")
         except:
             pass
 
@@ -2036,7 +2050,162 @@ class GpoManager:
         return resources
 
 
+### Computer
 
+class Computers(ldapUserGroupControl, ComputerI):
+
+    def __init__(self, conffile = None):
+        ldapUserGroupControl.__init__(self, conffile)
+        
+    def getComputer(self, ctx, filt = None):
+        """
+        """
+        pass # TODO...
+
+    def getComputersList(self, ctx, filt = None):
+        """
+        Return a list of computers
+
+        @param filter: computer name filter
+        @type filter: str
+
+        @return: LDAP results
+        @rtype: 
+        """
+        # in ldap we only filter on names for the moment
+        filt = filt['name'] 
+        if filt:
+            filt = "*" + filt + "*"
+        else:
+            filt = "*"
+        search = self.l.search_s(self.baseComputersDN, ldap.SCOPE_SUBTREE, "(&(objectClass=computerObject)(|(cn=%s)(displayName=%s)))" % (filt, filt), None)
+        return search        
+
+    def getComputerCount(self, ctx, params):
+        """
+        Never return the number of computers, we are in a LDAP, so we can't acces to a limited host list
+        """
+        return 0
+
+    def getRestrictedComputersListLen(self, ctx, filt):
+        """
+        """
+        retour = self.getComputersList(filt)
+        return len(retour)
+        
+    def getRestrictedComputersList(self, ctx, min, max, filt, advanced):
+        """
+        we can't do that directly in ldap, so we do it in python, just to return less xml...
+        """
+        ret = []
+        retour = self.getComputersList(filt)
+        i = 0
+        for computer in retour:
+            if i >= min and i < max:
+                ret.append(computer)
+            if i == max:
+                break
+            i += 1
+        return ret
+
+    def canAddComputer(self):
+        return True
+        
+    def addComputer(self, ctx, params):
+        """
+        Add a computer in the main computer list
+
+        @param name: name of the computer. It should be a fqdn
+        @type name: str
+
+        @param comment: a comment for the computer list
+        @type comment: str
+        
+        @return: the machine uuuid
+        @rtype: str
+        """
+        name = params["computername"]
+        comment = params["computerdescription"].encode("utf-8")
+        uuid = str(uuid1())
+        data = {
+            "objectUUID" : [uuid],
+            "cn" : [name],
+            "objectClass" : ["computerObject"],
+            }
+        dn = "objectUUID=" + uuid + "," + self.baseComputersDN
+        if comment:
+            data["displayName"] = [comment]
+        logging.getLogger().info("adding a computer")
+        logging.getLogger().info(dn)
+        logging.getLogger().info(data)
+        self.l.add_s(dn, addModlist(data))
+        return uuid
+
+    def canDelComputer(self):
+        return True
+        
+    def delComputer(self, ctx, uuid):
+        """
+        Remove a computer, given its uuid
+        """
+        dn = "objectUUID=" + uuid + "," + self.baseComputersDN
+        self.l.delete_s(dn)
+
+class ContextMaker(ContextMakerI):
+    def getContext(self):
+        s = SecurityContext()
+        s.userid = self.userid
+        return s
+
+class RpcProxy(RpcProxyI):
+    def canAddComputer(self):
+        return ComputerManager().canAddComputer()
+        
+    def addComputer(self, params):
+        ctx = self.currentContext
+        ComputerManager().addComputer(ctx, params)
+
+    def canDelComputer(self):
+        return ComputerManager().canDelComputer()
+    
+    def delComputer(self, params):
+        ctx = self.currentContext
+        ComputerManager().delComputer(ctx, params)
+    
+    def getComputer(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt))
+        
+    def getComputersName(self, filt = None):
+        ctx = self.currentContext
+        ret = ComputerManager().getComputersList(ctx, filt)
+        ret = map(lambda x:ret[x][1]['cn'][0], ret)
+        ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
+        return xmlrpcCleanup(ret)
+
+    def getComputersList(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getComputersList(ctx, filt))
+
+    def getRestrictedComputersName(self, min = 0, max = -1, filt = None):
+        ctx = self.currentContext
+        ret = ComputerManager().getRestrictedComputersList(ctx, min, max, filt)
+        ret = map(lambda x:ret[x][1]['cn'][0], ret)
+        ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
+        return xmlrpcCleanup(ret)
+    
+    def getRestrictedComputersListLen(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
+
+    def getRestrictedComputersList(self, min = 0, max = -1, filt = None, advanced = True):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, advanced))
+    
+    def getComputerCount(self, filt = None):
+        ctx = self.currentContext
+        return ComputerManager().getComputerCount(ctx, filt)
+    
 
 ################################################################################
 ##########  command line section

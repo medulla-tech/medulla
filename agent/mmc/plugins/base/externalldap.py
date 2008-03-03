@@ -38,8 +38,9 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
     
     def readConf(self):
         AuthenticatorConfig.readConf(self)
-        for option in ["ldapurl", "suffix", "bindname", "bindpasswd", "attr"]:
+        for option in ["suffix", "bindname", "bindpasswd", "attr"]:
             self.__dict__[option] = self.get(self.section, option)
+        self.ldapurls = self.get(self.section, "ldapurl").split()
         try:
             self.filter = self.get(self.section, "filter")
         except NoOptionError:
@@ -88,11 +89,22 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         @return: a LDAPobject connected to the LDAP
         @rtype: LDAPObject
         """
-        l = ldap.initialize(self.config.ldapurl)
-        if self.config.bindname:
-            l.simple_bind_s(self.config.bindname, self.config.bindpasswd)
-        else:
-            l.simple_bind_s()
+        connected = False
+        for ldapurl in self.config.ldapurls:
+            try:
+                l = ldap.initialize(ldapurl)
+                if self.config.bindname:
+                    l.simple_bind_s(self.config.bindname, self.config.bindpasswd)
+                else:
+                    l.simple_bind_s()
+                connected = True
+            except ldap.LDAPError, e:
+                self.logger.info("Can't connect to LDAP server %s %s" % (ldapurl, e))
+            if connected:
+                # Exit loop, because we found a LDAP server to connect to
+                break
+        if not connected:
+            raise "Can't find a external LDAP server to connect to"
         return l
 
     def searchUser(self, l, user):

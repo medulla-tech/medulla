@@ -33,8 +33,14 @@ from new import instancemethod
 from time import time, struct_time
 import datetime
 from mmc.support.mmcException import mmcException
-
+import logging
 from twisted.internet import protocol
+
+try:
+    import mx.DateTime as mxDateTime
+except ImportError:
+    mxDateTime = None
+
 
 def cleanFilter(f):
     for char in "()&=":
@@ -128,6 +134,10 @@ def xmlrpcCleanup(data):
             ret.append(xmlrpcCleanup(item))
     elif type(data) == datetime.date:
         ret = tuple(data.timetuple())
+    elif type(data) == datetime.datetime:
+        ret = tuple(data.timetuple())
+    elif mxDateTime and type(data) == mxDateTime.DateTimeType:
+        ret = data.tuple()
     elif type(data) == struct_time:
         ret = tuple(data)
     elif data == None:
@@ -243,7 +253,7 @@ class shProcessProtocolNonBlocking(shProcessProtocol):
         self.deferred.callback(self)
 
     def getExitCode(self):
-        return self.exitCode    
+        return self.exitCode
 
 class shSharedProcessProtocol(shProcessProtocol):
 
@@ -332,7 +342,7 @@ def generateBackgroundProcess(cmd):
     return shProcess
 
 
-def shlaunchBackground(cmd, desc = None, progressFunc = None):
+def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     """
     follow backup process
     the progressFunc in param can follow processus via stdin and stdout.
@@ -353,10 +363,13 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None):
     else:
         shProcess.desc = desc
 
-    ProcessScheduler().addProcess(cmd, shProcess)
+    ProcessScheduler().addProcess(shProcess.desc, shProcess)
 
     if progressFunc:
-        shProcess.progressCalc = instancemethod(progressFunc,shProcess,shSharedProcessProtocol)
+        shProcess.progressCalc = instancemethod(progressFunc, shProcess, shSharedProcessProtocol)
+
+    if endFunc:
+        shProcess.processEnded = instancemethod(endFunc, shProcess, shSharedProcessProtocol)
     reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
 
 
