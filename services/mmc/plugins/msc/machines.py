@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 309 2007-11-15 15:34:44Z oroussy $
+# $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
 #

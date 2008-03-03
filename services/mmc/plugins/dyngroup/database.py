@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: database.py 476 2008-02-01 16:03:26Z oroussy $
+# $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
 #

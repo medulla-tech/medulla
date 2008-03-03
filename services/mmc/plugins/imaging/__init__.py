@@ -3,7 +3,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 551 2008-03-03 13:59:32Z cedric $
+# $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -31,7 +31,7 @@ from mmc.support.mmctools import *
 
 VERSION = "0.1"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev: 203 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

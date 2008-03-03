@@ -1,7 +1,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: __init__.py 163 2007-07-04 07:15:46Z cedric $
+# $Id$
 #
 # This file is part of MMC.
 #
@@ -30,7 +30,7 @@ import time
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
-REVISION = int("$Rev: 163 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

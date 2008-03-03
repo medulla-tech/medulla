@@ -23,7 +23,7 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 VERSION = '2.0.0'
 APIVERSION = '0:0:0'
-REVISION = int('$Rev: 149 $'.split(':')[1].strip(' $'))
+REVISION = int('$Rev$'.split(':')[1].strip(' $'))
 logger = None
 queryManager = None
 config = None
