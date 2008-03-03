@@ -84,7 +84,9 @@ def same_network(ip1, ip2, netmask):
 
 def complete_ctx(ctx):
     try:
-        ctx.locations
+        if ctx.locations == None:
+            logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
+            ctx.locations = ComputerLocationManager().getUserLocations(ctx.userid)
     except:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = ComputerLocationManager().getUserLocations(ctx.userid)

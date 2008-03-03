@@ -27,6 +27,7 @@ from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx
 from ConfigParser import NoOptionError
 from sqlalchemy import *
 import logging
+import re
 
 SA_MAYOR = 0
 SA_MINOR = 3
@@ -587,18 +588,27 @@ class Glpi(Singleton):
         @rtype: list
         """
         session = create_session()
-        plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
         ret = []
-        for ploc in plocs:
-            if ploc[1]:
-                # The user profile link to the location is recursive, and so
-                # the children locations should be added too
-                for l in self.__add_children(ploc[0]):
-                    ret.append(l)
-            else:
-                ret.append(ploc[0])
-        if len(ret) == 0:
-            ret = None
+        if user == 'root':
+            session = create_session()
+            query = session.query(Location)
+
+            q = query.group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
+            session.close()
+            for location in q:
+                ret.append(location)
+        else:
+            plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
+            for ploc in plocs:
+                if ploc[1]:
+                    # The user profile link to the location is recursive, and so
+                    # the children locations should be added too
+                    for l in self.__add_children(ploc[0]):
+                        ret.append(l)
+                else:
+                    ret.append(ploc[0])
+            if len(ret) == 0:
+                ret = None
         session.close()
         return ret
 
@@ -620,20 +630,13 @@ class Glpi(Singleton):
         Get the list of all entities that user can access
         """
         ret = []
-        # TODO one day, we should only display non empty locations that way
-        if ctx.userid == 'root':
-            session = create_session()
-            query = session.query(Location)
+        complete_ctx(ctx)
+        filtr = re.compile(filt)
+        for loc in ctx.locations:
             if filt:
-                query = query.filter(self.location.c.name.like('%'+filt+'%'))
-
-            q = query.group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
-            session.close()
-            for location in q:
-                ret.append(location.name)
-        else:
-            complete_ctx(ctx)
-            for loc in ctx.locations:
+                if filtr.search(loc.name):
+                    ret.append(loc.name)
+            else:
                 ret.append(loc.name)
 
         return ret
