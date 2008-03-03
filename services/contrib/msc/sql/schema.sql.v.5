@@ -1,0 +1,6 @@
+ALTER TABLE target ADD COLUMN (target_uuid TEXT NOT NULL);
+ALTER TABLE target ADD COLUMN (target_ipaddr TEXT NOT NULL);
+ALTER TABLE target ADD COLUMN (target_macaddr TEXT NOT NULL);
+
+DELETE FROM version;
+INSERT INTO version VALUES( '5' );

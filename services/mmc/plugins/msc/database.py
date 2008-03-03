@@ -1,0 +1,664 @@
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id: database.py 551 2008-03-03 13:59:32Z cedric $
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# standard modules
+import time
+import re
+import os.path
+
+# SqlAlchemy
+from sqlalchemy import *
+
+# MMC modules
+from mmc.plugins.base.computers import ComputerManager
+from mmc.plugins.msc.config import MscConfig
+from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
+from mmc.support.mmctools import Singleton
+
+# ORM mappings
+from mmc.plugins.msc.orm.commands import Commands
+from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
+from mmc.plugins.msc.orm.commands_history import CommandsHistory
+from mmc.plugins.msc.orm.target import Target
+
+# Imported last
+import logging
+
+SA_MAYOR = 0
+SA_MINOR = 3
+DATABASEVERSION = 5
+
+class MscDatabase(Singleton):
+    """
+    Singleton Class to query the msc database.
+
+    """
+    # TODO: scheduler algo should move somewhere else
+    is_activated = False
+
+    def db_check(self):
+        if not self.__checkSqlalchemy():
+            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
+            return False
+
+        conn = self.connected()
+        if conn:
+            if conn != DATABASEVERSION:
+                self.logger.error("Msc database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))
+                return False
+        else:
+            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check msc.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
+            return False
+
+        return True
+
+    def __checkSqlalchemy(self):
+        import sqlalchemy
+        a_version = sqlalchemy.__version__.split('.')
+        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+            return True
+        return False
+
+    def activate(self, conffile = None):
+        self.logger = logging.getLogger()
+        if self.is_activated:
+            return None
+
+        self.logger.info("Msc database is connecting")
+        self.config = MscConfig("msc", conffile)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True )
+        self.metadata = BoundMetaData(self.db)
+        self.initTables()
+        self.initMappers()
+        self.metadata.create_all()
+        # FIXME: should be removed
+        self.session = create_session()
+        self.is_activated = True
+        self.logger.debug("Msc database connected")
+
+    def makeConnectionPath(self):
+        """
+        Build and return the db connection path according to the plugin configuration
+
+        @rtype: str
+        """
+        if self.config.db_port:
+            port = ":" + str(self.config.db_port)
+        else:
+            port = ""
+        return "%s://%s:%s@%s%s/%s" % (self.config.db_driver, self.config.db_user, self.config.db_passwd, self.config.db_host, port, self.config.db_name)
+
+    def connected(self):
+        if (self.db != None):
+            return self.version.select().execute().fetchone()[0]
+        return False
+
+    def initTables(self):
+        """
+        Initialize all SQLalchemy tables
+        """
+        # commands
+        self.commands = Table("commands", self.metadata,
+                            Column('dispatched', String(32), default='NO'),
+                            autoload = True)
+        # commands_history
+        self.commands_history = Table(
+            "commands_history",
+            self.metadata,
+            autoload = True
+        )
+        # commands_on_host
+        self.commands_on_host = Table(
+            "commands_on_host",
+            self.metadata,
+            Column('id_command', Integer, ForeignKey('commands.id_command')),
+            autoload = True
+        )
+        # target
+        self.target = Table(
+            "target",
+            self.metadata,
+            Column('id_command_on_host', Integer, ForeignKey('commands_on_host.id_command_on_host')),
+            autoload = True
+        )
+        # version
+        self.version = Table(
+            "version",
+            self.metadata,
+            autoload = True
+        )
+
+    def initMappers(self):
+        """
+        Initialize all SQLalchemy mappers needed for the msc database
+        """
+        mapper(Commands, self.commands)
+        mapper(CommandsHistory, self.commands_history)
+        mapper(CommandsOnHost, self.commands_on_host)
+        mapper(Target, self.target)
+        # FIXME: Version is missing
+
+    def myfunctions(self):
+        pass
+
+    def enableLogging(self, level = None):
+        """
+        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
+        The SQL queries will be loggued.
+        """
+        if not level:
+            level = self.config.db_debug
+        logging.getLogger("sqlalchemy.engine").setLevel(level)
+
+    def disableLogging(self):
+        """
+        Disable log for sqlalchemy.engine module
+        """
+        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+
+    ####################################
+
+    def getIdCommandOnHost(self, ctx, id_command):
+        session = create_session()
+        query = session.query(CommandsOnHost).filter(self.commands.c.id_command == id_command).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).all()
+        if len(query) == 1:
+            ret = query.id_command_on_host
+        elif len(query) > 1:
+            ret = []
+            for q in query:
+                ret.append(q.id_command_on_host)
+        else:
+            ret = -1
+        session.close()
+        return ret
+
+    def doCommandOnHostExist(self, id_command_on_host):
+        session = create_session()
+        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).all()
+        # FIXME: use query.count() instead of len(query.all())
+        ret = len(query) > 0
+        session.close()
+        return ret
+
+    # FIXME: The four next methods can be factorized
+    # FIXME: The current_state test should be put in the SQL expression
+
+    def isCommandOnHostDone(self, id_command_on_host):
+        session = create_session()
+        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        if query:
+            ret = query.current_state == 'done'
+        else:
+            ret = None
+        session.close()
+        return ret
+
+    def isCommandOnHostPaused(self, id_command_on_host):
+        session = create_session()
+        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        if query:
+            ret = q.current_state == 'pause'
+        else:
+            ret= None
+        session.close()
+        return ret
+
+    def isCommandOnHostStopped(self, id_command_on_host):
+        session = create_session()
+        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        if query:
+            ret = q.current_state == 'stop'
+        else:
+            ret = None
+        session.close()
+        return ret
+
+    def dispatchAllCommands(self, ctx):
+        self.logger.debug("MSC_Scheduler->dispatchAllCommands()...")
+        session = create_session()
+        query = session.query(Commands).filter(self.commands.c.dispatched == 'NO').all()
+        session.close()
+        if query:
+            for q in query:
+                self.logger.debug("going to dispath %s" % (q.id_command))
+                q.dispatch(ctx)
+        else:
+            self.logger.debug("No command to dispatch")
+
+    def addCommand(self,
+                start_file,
+                parameters,
+                path_destination,
+                path_source,
+                files,
+                target,
+                gid = '',
+                create_directory = True,
+                start_script = True,
+                delete_file_after_execute_successful = True,
+                start_date = "0000-00-00 00:00:00",
+                end_date = "0000-00-00 00:00:00",
+                username = "root",
+                webmin_username = "root",
+                title = "",
+                wake_on_lan = False,
+                next_connection_delay = 60,
+                max_connection_attempt = 3,
+                start_inventory = False,
+                repeat = 0
+            ):
+        """ Main func to inject a new command in our MSC database """
+
+        # create (and save) the command itself
+        session = create_session()
+        cmd = Commands()
+        now = time.localtime()
+        cmd.date_created = "%s-%s-%s %s:%s:%s" % (now[0], now[1], now[2], now[3], now[4], now[5])
+        cmd.start_file = start_file
+        cmd.parameters = parameters
+        cmd.path_destination = path_destination
+        cmd.path_source = path_source
+        cmd.files = files
+        if type(cmd.files) == list:
+            cmd.files = "\n".join(cmd.files)
+        cmd.create_directory = create_directory
+        cmd.start_script = start_script
+        cmd.delete_file_after_execute_successful = delete_file_after_execute_successful
+        cmd.start_date = start_date
+        cmd.end_date = end_date
+        cmd.username = username
+        cmd.webmin_username = webmin_username
+        cmd.title = title
+        cmd.wake_on_lan = wake_on_lan
+        cmd.next_connection_delay = next_connection_delay
+        cmd.max_connection_attempt = max_connection_attempt
+        cmd.start_inventory = start_inventory
+        cmd.repeat = repeat
+        session.save(cmd)
+        session.flush()
+        session.close()
+
+        # create the corresponding target
+        if type(target[0]) == list:
+            for t in target:
+                targetUuid = t[0]
+                targetName = t[1]
+                computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+                targetMac = '||'.join(computer[1]['macAddress'])
+                targetIp = '||'.join(computer[1]['ipHostNumber'])
+                try:
+                    targetName = computer[1]['fullname']
+                except KeyError:
+                    pass
+
+                mirror = MirrorApi().getMirror(targetName)
+                fallback = MirrorApi().getFallbackMirror(targetName)
+                # TODO: add path
+                MscDatabase().addTarget(
+                    cmd.id_command,
+                    targetName,
+                    targetUuid,
+                    targetIp,
+                    targetMac,
+                    '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
+                    '||' + \
+                    '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
+                    gid
+                ) # TODO change mirrors...
+        else:
+            targetUuid = target[0]
+            targetName = target[1]
+            computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+            targetMac = '||'.join(computer[1]['macAddress'])
+            targetIp = '||'.join(computer[1]['ipHostNumber'])
+            try:
+                targetName = computer[1]['fullname']
+            except KeyError:
+                pass
+
+            mirror = MirrorApi().getMirror(targetName)
+            fallback = MirrorApi().getFallbackMirror(targetName)
+            # TODO: add path
+            MscDatabase().addTarget(
+                cmd.id_command,
+                targetName,
+                targetUuid,
+                targetIp,
+                targetMac,
+                '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
+                '||' + \
+                '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
+                gid
+            ) # TODO change mirrors...
+
+        self.logger.debug("addCommand : %s" % (str(cmd.id_command)))
+        return cmd.id_command
+
+    def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
+        self.logger.debug("add_command_quick : "+cmd+" on :")
+        self.logger.debug(targets)
+        path_source = ""
+        path_dest = "none"
+        files = []
+        create_delete = False
+
+        # run a built-in script
+        p1 = re.compile('^\/scripts\/')
+        if p1.match(cmd):
+            fullpath = basedir + '/msc.script/' + cmd
+            path_source = basedir + '/msc.script/'
+            path_dest = config['path_destination']
+            files.append(cmd)
+            create_delete = True
+
+        return self.addCommand(
+            cmd,
+            "",
+            path_dest,
+            path_source,
+            files,
+            targets,
+            gid,
+            create_delete,
+            'enable',
+            create_delete,
+            "0000-00-00 00:00:00",
+            "0000-00-00 00:00:00",
+            ctx.userid,
+            ctx.userid,
+            desc,
+            False,
+            60,
+            3,
+            False
+        )
+
+    def addTarget(self, commandID, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
+        """ Inject a new Target obect in our MSC database """
+        myTarget = Target()
+        myTarget.id_command = commandID
+        myTarget.target_name = targetName
+        myTarget.target_uuid = targetUuid
+        myTarget.target_ipaddr = targetIp
+        myTarget.target_macaddr = targetMac
+        myTarget.mirrors = mirror
+        myTarget.id_group = groupID
+        myTarget.flush()
+        return myTarget.id
+
+    def getAllCommandsonhostCurrentstate(self, ctx):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.current_state))
+        l = map(lambda x: x.current_state, ret.all())
+        session.close()
+        return l
+
+    def countAllCommandsonhostByCurrentstate(self, ctx, current_state, filt = ''):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+	ret = ret.filter(self.commands_on_host.c.current_state == current_state).filter(self.commands.c.username == ctx.userid)
+        # the join in itself is useless here, but we want to have exactly
+        # the same result as in getAllCommandsonhostByCurrentstate
+        if filt != '':
+            ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
+        c = ret.count()
+        session.close()
+        return c
+
+    def getAllCommandsonhostByCurrentstate(self, ctx, current_state, min = 0, max = 10, filt = ''):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+	ret = ret.filter(self.commands_on_host.c.current_state == current_state)
+        ret = ret.filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
+        ret = ret.offset(int(min))
+        ret = ret.limit(int(max)-int(min))
+        l = map(lambda x: x.toH(), ret.all())
+        session.close()
+        return l
+
+    def countAllCommandsonhostByType(self, ctx, type, filt = ''):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
+        if int(type) == 0: # all
+            pass
+        elif int(type) == 1: # pending
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled', 'failed'))
+        elif int(type) == 2: # running
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
+        elif int(type) == 3: # finished
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        c = ret.count()
+        session.close()
+        return c
+
+    def getAllCommandsonhostByType(self, ctx, type, min, max, filt = ''):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
+        if int(type) == 0: # all
+            pass
+        elif int(type) == 1: # pending
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled', 'failed'))
+        elif int(type) == 2: # running
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
+        elif int(type) == 3: # finished
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        ret = ret.offset(int(min))
+        ret = ret.limit(int(max)-int(min))
+        l = map(lambda x: x.toH(), ret.all())
+        session.close()
+        return l
+
+    def countAllCommandsOnHostGroup(self, ctx, gid, cmd_id, filt, history):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.username == ctx.userid)
+        ret = ret.filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host)
+        if cmd_id:
+            ret = ret.filter(self.commands_on_host.c.id_command == str(cmd_id))
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
+        c = ret.count()
+        session.close()
+        return c
+
+    def countAllCommandsOnGroup(self, ctx, gid, filt, history):
+        session = create_session()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
+        c = ret.distinct().count()
+        session.close()
+        return c
+
+    def countFinishedCommandsOnHost(self, ctx, uuid, filt):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state == 'done').filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        c = ret.count()
+        session.close()
+        return c
+
+    def countUnfinishedCommandsOnHost(self, ctx, uuid, filt):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state != 'done').filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        c = ret.count()
+        session.close()
+        return c
+
+    def countAllCommandsOnHost(self, ctx, uuid, filt):
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        c = ret.count()
+        session.close()
+        return c
+
+    def getAllCommandsOnHostGroup(self, ctx, gid, cmd_id, min, max, filt, history):
+        session = create_session()
+        query = session.query(Commands).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.username == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
+        query = query.filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host)
+        if cmd_id:
+            query = query.filter(self.commands_on_host.c.id_command == str(cmd_id))
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            query = query.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            query = query.filter(self.commands_on_host.c.current_state != 'done')
+
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+        ret = query.all()
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
+
+    def getAllCommandsOnGroup(self, ctx, gid, min, max, filt, history):
+        session = create_session()
+        query = session.query(Commands)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            query = query.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            query = query.filter(self.commands_on_host.c.current_state != 'done')
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+        ret = query.distinct().all()
+        l = map(lambda x: x.toH(), ret)
+        session.close()
+        return l
+
+    def getFinishedCommandsOnHost(self, ctx, uuid, min, max, filt):
+        """
+        Get the MSC commands that are flagged as 'done' for a host.
+        The last inserted commands are returned first.
+        """
+        session = create_session()
+        query = session.query(Commands).order_by(desc(Commands.c.id_command)).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state == 'done')
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+
+        self.enableLogging()
+        ret = query.all()
+        self.disableLogging()
+
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+
+    def getUnfinishedCommandsOnHost(self, ctx, uuid, min, max, filt):
+        """
+        Get the MSC commands that are flagged as not 'done' for a host.
+        The last inserted commands are returned first.
+        """
+        session = create_session()
+        query = session.query(Commands).order_by(desc(Commands.c.id_command)).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state != 'done')
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%' + filt + '%'))
+        query = query.offset(int(min))
+        query = query.limit(int(max) - int(min))
+
+        self.enableLogging()
+        ret = query.all()
+        self.disableLogging()
+
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+
+    def getAllCommandsOnHost(self, ctx, uuid, min, max, filt):
+        session = create_session()
+        query = session.query(Commands).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands.c.username == ctx.userid)
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+        self.enableLogging()
+        ret = query.all()
+        self.disableLogging()
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+
+    def getCommandsOnHost(self, ctx, coh_id): # FIXME should we use the ctx
+        session = create_session()
+        coh = session.query(CommandsOnHost).get(coh_id)
+        session.close()
+        return coh
+
+    def getTargetForCoh(self, ctx, coh_id): # FIXME should we use the ctx
+        session = create_session()
+        target = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.id_command_on_host == coh_id).first()
+        session.close()
+        return target
+
+    def getCommandsHistory(self, ctx, coh_id): # FIXME should we use the ctx
+        session = create_session()
+        ret = session.query(CommandsHistory).filter(self.commands_history.c.id_command_on_host == coh_id).all()
+        session.close()
+        return map(lambda x: x.toH(), ret)
+
+    def getCommands(self, ctx, cmd_id): 
+        session = create_session()
+        ret = session.query(Commands).filter(self.commands.c.id_command == cmd_id).filter(self.commands.c.username == ctx.userid).first()
+        session.close()
+        return ret
+
+    def getCommandsByGroup(self, gid):
+        session = create_session()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).all()
+        session.close()
+        return ret
+
+    def getTargetsByGroup(self, gid):
+        session = create_session()
+        ret = session.query(Target).filter(self.target.c.id_group == gid).all()
+        session.close()
+        return ret
+
+    def getTargets(self, cmd_id):
+        session = create_session()
+        ret = session.query(Target).filter(self.target.c.id_command == cmd_id).all()
+        session.close()
+        return ret

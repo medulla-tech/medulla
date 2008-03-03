@@ -1,0 +1,33 @@
+CREATE TABLE target (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_command INT NOT NULL ,
+    id_command_on_host INT,
+    target_name TEXT NOT NULL,
+    mirrors TEXT,
+    id_group TEXT,
+    scheduler TEXT,
+    INDEX cmd_ind (id_command),
+    FOREIGN KEY (id_command) REFERENCES commands(id_command),
+    INDEX coh_ind (id_command_on_host),
+    FOREIGN KEY (id_command_on_host) REFERENCES commands_on_host(id_command_on_host),
+    PRIMARY KEY (id));
+INSERT INTO target (id_command, target_name) SELECT id_command, target FROM commands;
+
+ALTER TABLE commands DROP COLUMN target;
+ALTER TABLE commands ADD COLUMN scheduler VARCHAR(255) DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN pre_command_hook TINYTEXT DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN post_command_hook TINYTEXT DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN pre_run_hook TINYTEXT DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN post_run_hook TINYTEXT DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN on_success_hook TINYTEXT DEFAULT NULL;
+ALTER TABLE commands ADD COLUMN on_failure_hook TINYTEXT DEFAULT NULL;
+
+ALTER TABLE commands_history ADD COLUMN error_code INT(11) DEFAULT 0;
+ALTER TABLE commands_history CHANGE COLUMN state state ENUM('upload_in_progress','upload_done','upload_failed','execution_in_progress','execution_done','execution_failed','delete_in_progress','delete_done','delete_failed','inventory_in_progress','inventory_failed','inventory_done','not_reachable','done','pause','stop','scheduled', 'failed') DEFAULT NULL;
+
+ALTER TABLE commands_on_host ADD COLUMN current_launcher VARCHAR(255) DEFAULT NULL;
+ALTER TABLE commands_on_host CHANGE COLUMN current_state current_state ENUM('upload_in_progress','upload_done','upload_failed','execution_in_progress','execution_done','execution_failed','delete_in_progress','delete_done','delete_failed','inventory_in_progress','inventory_failed','inventory_done','not_reachable','done','pause','stop','scheduled', 'failed') DEFAULT NULL;
+
+DELETE FROM version;
+INSERT INTO version VALUES( '4' );
+
