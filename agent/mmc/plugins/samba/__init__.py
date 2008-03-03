@@ -121,8 +121,16 @@ def activate():
         logger.error("SAMBA configuration file is not valid")
         return False
     if smbconf.isPdc():
-        # Check that a sambaDomainName entry is in LDAP directory
         samba = sambaLdapControl()
+        # Create SAMBA computers account OU if it doesn't exist
+        head, path = samba.baseComputersDN.split(",", 1)
+        ouName = head.split("=")[1]
+        try:
+            samba.addOu(ouName, path)
+            logger.info("Created OU " + samba.baseComputersDN)
+        except ldap.ALREADY_EXISTS:
+            pass
+        # Check that a sambaDomainName entry is in LDAP directory
         domainInfos = samba.getDomain()
         if not domainInfos:
             logger.error("Can't find sambaDomainName entry in LDAP for domain %s. Please check your SAMBA LDAP configuration." % smbconf.getContent("global", "workgroup"));
@@ -334,6 +342,7 @@ class SambaConfig(PluginConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
+        self.baseComputersDN = self.get("main", "baseComputersDN")
         # Handle deprecated config option and correct the NoOptionError exception to the new option
         try:
             if self.has_option("main","defaultSharesPath"):
@@ -382,6 +391,10 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         if cp.has_section("hooks"):
             for option in cp.options("hooks"):
                 self.hooks["samba." + option] = cp.get("hooks", option)
+
+        config = SambaConfig("samba", configFile)
+        self.baseComputersDN = config.baseComputersDN
+
 
     def getDomainAdminsGroup(self):
         """

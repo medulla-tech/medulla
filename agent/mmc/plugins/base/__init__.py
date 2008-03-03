@@ -129,7 +129,7 @@ def activate():
         return False
 
     # Create required OUs
-    ous = [ ldapObj.baseUsersDN, ldapObj.baseComputersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
+    ous = [ ldapObj.baseUsersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
     for ou in ous:
         head, path = ou.split(",", 1)
         ouName = head.split("=")[1]
@@ -589,7 +589,6 @@ class ldapUserGroupControl:
         baseGroupsDN = self.config.get("ldap", "baseGroupsDN")
 
         self.ldapHost = ldapHost
-        self.baseComputersDN = self.config.get("ldap", "baseComputersDN")
         self.baseUsersDN = self.config.get("ldap", "baseUsersDN").replace(" ", "")
         self.baseDN = baseDN.replace(" ", "")
         self.baseGroupsDN = baseGroupsDN.replace(" ", "")
@@ -890,62 +889,6 @@ class ldapUserGroupControl:
                 return True
         return False
 
-    def addMachine(self, uid, comment, addMachineScript = False):
-        """
-        Add a computer in the PDC control
-
-        @param uid: name of new machine (no space)
-        @type uid: str
-
-        @param comment: comment of machine (full string accept)
-        @type comment: str
-
-        """
-        # add '$' to be in accord with samba policy
-        origuid = uid
-        uid=uid+'$'
-        uidNumber=self.maxUID()+1;
-
-        if (comment==''):
-            comment="aucun";
-
-        # shadowAccount require an userPassword attribute
-        password="4r5t40e"
-        comment_UTF8=str(delete_diacritics((comment.encode("UTF-8"))))
-        # creating machine skel
-        user_info = {'shadowMin':'-1',
-                    'uid':uid,
-                    'uidNumber':str(uidNumber),
-                    'gidnumber':'100',
-                    'loginShell':'/bin/false',
-                    'shadowFlag':'134538308',
-                    'shadowExpire':'-1',
-                    'shadowMax':'99999',
-                    'objectclass':('account','posixAccount','shadowAccount','top'),
-                    'gecos':str(comment_UTF8),
-                    'shadowLastChange':'11192',
-                    'userPassWord':"{crypt}" + crypt.crypt(password, self.getSalt()),
-                    'cn':uid,
-                    'shadowInactive':'-1',
-                    'shadowWarning':'7',
-                    'homeDirectory':'/home/machine'
-                     }
-
-        ident = 'uid=' + uid + ',' + self.baseComputersDN
-        attributes=[ (k,v) for k,v in user_info.items() ]
-        self.l.add_s(ident,attributes)
-
-        if not addMachineScript:
-            cmd = 'smbpasswd -a -m '+uid
-            shProcess = generateBackgroundProcess(cmd)
-            ret = shProcess.getExitCode()
-
-            if ret != 0:
-                delMachine(origuid) #del machine we just create
-                raise Exception("Failed to add computer entry\n"+shProcess.stdall)
-
-        return 0
-
     def addGroup(self, cn):
         """
         Add a group in an ldap directory
@@ -1241,19 +1184,6 @@ class ldapUserGroupControl:
         resArr.sort()
 
         return resArr
-
-    def delMachine(self,uidUser):
-        """
-        Remove a computer in the PDC. (Just ldap action)
-
-         @param uidUser: computer name
-         @type  uidUser: str
-
-        """
-        uidUser = uidUser + "$"
-
-        self.l.delete_s('uid='+uidUser+','+ self.baseComputersDN)
-        return 0
 
     def delGroup(self, cnGroup):
         """
@@ -1595,9 +1525,7 @@ class ldapUserGroupControl:
         @return: maxUid in ldap directory
         @rtype: int
         """
-        ret = []
-        ret.append(self.search("uid=*", self.baseUsersDN, ["uidNumber"], ldap.SCOPE_ONELEVEL))
-        ret.append(self.search("uid=*", self.baseComputersDN, ["uidNumber"], ldap.SCOPE_ONELEVEL))
+        ret = [self.search("uid=*", self.baseDN, ["uidNumber"], ldap.SCOPE_SUBTREE)]
 
         # prepare array for processing
         maxuid = 0
