@@ -52,7 +52,7 @@ def activate():
         return False
 
     mailSchema = {
-        "mailAccount" : ["mail", "mailalias", "maildrop", "mailenable", "mailbox", "mailuserquota"],
+        "mailAccount" : ["mail", "mailalias", "maildrop", "mailenable", "mailbox", "mailuserquota", "mailhost"],
         "mailGroup" : ["mail"],
         "mailDomain" : ["virtualdomain", "virtualdomaindescription", "mailuserquota"],
         }
@@ -93,6 +93,9 @@ def changeMailalias(uid, mailaliaslist):
 
 def changeMailbox(uid, mailbox):
     MailControl().changeMailbox(uid, mailbox)
+
+def changeMailhost(uid, mailhost):
+    MailControl().changeMailhost(uid, mailhost)
 
 def removeMail(uid):
     MailControl().removeUserObjectClass(uid, 'mailAccount')
@@ -326,6 +329,18 @@ class MailControl(ldapUserGroupControl):
         """
         if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
         if mailbox: self.changeUserAttributes(uid, 'mailbox', mailbox)
+
+    def changeMailhost(self, uid, mailhost):
+        """
+        Change the user mailhost attribute (mail delivery server).
+
+        @param uid: user name
+        @type uid: str
+        @param mailhost: the FQDN or IP of the mail server
+        @type mailhost: str
+        """
+        if not self.hasMailObjectClass(uid): self.addMailObjectClass(uid)
+        self.changeUserAttributes(uid, 'mailhost', mailhost)
 
     def hasMailObjectClass(self, uid):
         """
