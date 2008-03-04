@@ -21,37 +21,28 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
 
-<h2><?= _("Delete user") ?></h2>
-
-<?php
 require("modules/base/includes/users.inc.php");
+
 if (isset($_GET["user"])) $user = urldecode($_GET["user"]);
 if (isset($_POST["user"])) $user = $_POST["user"];
 
 if (isset($_POST["bdeluser"])) {
     del_user($user, $_POST["delfiles"]);
     if (!isXMLRPCError()) {
-        $n = new NotifyWidget();
-        $n->add(sprintf(_("User %s has been successfully deleted"), $user));
+        new NotifyWidgetSuccess(sprintf(_("User %s has been successfully deleted"), $user));
         header("Location: " . urlStrRedirect("base/users/index" ));
     }
+} else {
+    $f = new PopupForm(_("Delete user"));
+    $f->addText(sprintf(_("You will delete user <b>%s</b>."),$user));
+    $cb = new CheckboxTpl("delfiles", _("Delete all user's files"));
+    $f->add($cb, array("value" => ""));
+    $hidden = new HiddenTpl("user");
+    $f->add($hidden, array("value" => $user, "hide" => True));
+    $f->addValidateButton("bdeluser");
+    $f->addCancelButton("bback");
+    $f->display();
 }
 
 ?>
-
-<form action="main.php?module=base&submod=users&action=delete" method="post">
-<p>
-<?
-    printf(_("You will delete user <b>%s</b>."),$user);
-?>
-</p>
-
-<input type="checkbox" name="delfiles" /> <?= _("Delete all user's files"); ?>
-<br>
-<br>
-<input name="user" type="hidden" value="<?php echo $user; ?>" />
-<input name="bdeluser" type="submit" class="btnPrimary" value="<?= _("Delete user"); ?>" />
-<input name="bback" type="submit" class="btnSecondary" value="<?= _("Cancel"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
-</form>
