@@ -27,12 +27,42 @@ require("modules/base/includes/groups.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
+/**
+ * Resize a jpg file if it is greater than $maxwidth or $maxheight
+ * 
+ * @returns: the file name of the resized JPG file
+ */
+function resizeJpg($source, $maxwidth, $maxheight) {
+    list($width, $height) = getimagesize($source);
+    if (($width > $maxwidth) || ($height > $maxheight)) {
+        if ($width > $height) {
+            $newwidth = $maxwidth;
+            $newheight = $newwidth * $height / $width;
+        } else {
+            $newheight = $maxheight;
+            $newwidth = $newheight * $width / $height;
+        }
+        $image = imagecreatefromjpeg($source);
+        $newimage = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresized($newimage, $image, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        $ret = tempnam("/notexist", ".jpg");
+        imagejpeg($newimage, $ret);
+        imagedestroy($image);
+        imagedestroy($newimage);
+    } else {
+        /* No resize needed */
+        $ret = $source; 
+    }
+    return $ret;
+}
+
+
 global $result;
+global $error;
 
 //verify validity of information
 if (isset($_POST["buser"])) {
 
-global $error;
 $nlogin = $_POST["nlogin"];
 $name = $_POST["name"];
 $firstname = $_POST["firstname"];
@@ -55,11 +85,6 @@ if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
     $error.= _("User's name invalid !")."<br/>";
     setFormError("login");
 }
-/*
-if (!preg_match('/^((\+){0,1}[a-zA-Z0-9 ]+){0,1}$/', $_POST["telephoneNumber"]))  {
-    setFormError("telephoneNumber");
-    $error.= _("This is not a valid telephone number.")."<br />";
-}*/
 
 /* Check that the primary group name exists */
  $primary = $_POST["primary_autocomplete"];
@@ -143,23 +168,30 @@ if ($_GET["user"]) {
 	     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
              changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
 	 }
-
 	 /* Change photo */
-	 if (!empty($_FILES["photofilename"]["name"])) {
+	 if (!empty($_FILES["photofilename"]["name"])) {            
+
 	   if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
-	       $size = getimagesize($_FILES["photofilename"]["tmp_name"]);
+               $pfile = $_FILES["photofilename"]["tmp_name"];
+	       $size = getimagesize($pfile);
                if ($size["mime"] == "image/jpeg") {
 		 $maxwidth = 320;
 		 $maxheight = 320;
-		 if (($size[0] <= $maxwidth) && ($size[1] <= $maxheight)) {
-		   $obj = new Trans();
-		   $obj->scalar = "";
-		   $obj->xmlrpc_type = "base64";
-		   $f = fopen($_FILES["photofilename"]["tmp_name"], "r");
-		   while (!feof($f)) $obj->scalar .= fread($f, 4096);  
-		   fclose($f);
-                   changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
-		 } else $error .= sprintf(_("The photo is too big. The max size is %s x %s."), $maxwidth, $maxheight) . "<br/>";
+                 if (in_array("gd", get_loaded_extensions())) {
+                     /* Resize file if GD extension is installed */
+                     $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"], $maxwidth, $maxheight);                         
+                 }
+                 list($width, $height) = getimagesize($pfile);
+		 if (($width <= $maxwidth) && ($height <= $maxheight)) {
+                     $obj = new Trans();
+                     $obj->scalar = "";
+                     $obj->xmlrpc_type = "base64";
+                     $f = fopen($pfile, "r");
+                     while (!feof($f)) $obj->scalar .= fread($f, 4096);  
+                     fclose($f);
+                     unlink($pfile);
+                     changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
+                 } else $error .= sprintf(_("The photo is too big. The max size is %s x %s."), $maxwidth, $maxheight) . "<br/>";
 	       } else $error .= _("The photo is not a JPG file.") . "<br/>";
 	   } else $error .= _("The photo is not a JPG file.") . "<br/>";
 	 }	 
@@ -211,24 +243,19 @@ if (strstr($_SERVER[HTTP_REFERER],'module=base&submod=users&action=add') && $_GE
     }
 
 //display result message
-if (isset($result)&&!isXMLRPCError())
-{
-    $n = new NotifyWidget();
-    $n->flush();
-    $n->add("<div id=\"validCode\">$result</div>");
-    $n->setLevel(0);
-    $n->setSize(600);
+if (isset($result)&&!isXMLRPCError()) {
+    new NotifyWidgetSuccess($result);
 }
 
 //display error message
 if (isset($error)) {
-    $n = new NotifyWidget();
-    $n->flush();
-    $n->add("<div id=\"errorCode\">$error</div>");
-    $n->setLevel(4);
-    $n->setSize(600);
+    new NotifyWidgetFailure($error);
 }
 
+if (isset($_SESSION["addusererror"])) {
+    new NotifyWidgetWarning("The user has not been completely created because of the following error(s):" . "<br/><br/>" .  $_SESSION["addusererror"]);
+    unset($_SESSION["addusererror"]);
+}
 
 
 //title differ with action
@@ -248,7 +275,7 @@ $p->display();
 ?>
 
 <div>
-<form id="edit" enctype="multipart/form-data" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="selectAll(); return validateForm();">
+<form id="edit" enctype="multipart/form-data" method="post" onsubmit="selectAll(); return validateForm();">
 <div class="formblock" style="background-color: #F4F4F4;">
 <table cellspacing="0">
 <?php
@@ -415,7 +442,11 @@ callPluginFunction("baseEdit",array($detailArr,$_POST));
 
 //if we create a new user redir in edition
 if ($newuser&&!isXMLRPCError()) {
-  header("Location: main.php?module=base&submod=users&action=edit&user=$nlogin");
+    if (isset($error)) {
+        /* We will use this variable to display a warning on the edit page */
+        $_SESSION["addusererror"] = $error;
+    }
+    header("Location: " . urlStrRedirect("base/users/edit", array("user" => $nlogin)));
 }
 
 
