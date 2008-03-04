@@ -271,9 +271,8 @@ class InputTpl extends AbstractTpl{
 class PasswordTpl extends InputTpl{
 
     function PasswordTpl($name, $regexp = '/.+/') {
+        $this->InputTpl($name, $regexp);
         $this->fieldType = "password";
-        $this->name = $name;
-        $this->regexp = $regexp;
     }
 
 }
@@ -285,8 +284,7 @@ class PasswordTpl extends InputTpl{
 class IA5InputTpl extends InputTpl {
 
     function IA5InputTpl($name) {
-        $this->name = $name;
-        $this->regexp = '/^[\x00-\x7f]*$/';
+        $this->InputTpl($name, '/^[\x00-\x7f]*$/');
     }
 
 }
@@ -298,8 +296,7 @@ class IA5InputTpl extends InputTpl {
 class IPInputTpl extends InputTpl {
 
     function IPInputTpl($name) {
-        $this->name = $name;
-        $this->regexp = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+        $this->InputTpl($name, '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/');
     }
 
 }
@@ -310,8 +307,7 @@ class IPInputTpl extends InputTpl {
 class MACInputTpl extends InputTpl {
 
     function MACInputTpl($name) {
-        $this->name = $name;
-        $this->regexp = '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i';
+        $this->InputTpl($name, '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i');
     }
 
 }
@@ -323,8 +319,7 @@ class MACInputTpl extends InputTpl {
 class DomainInputTpl extends InputTpl {
 
     function DomainInputTpl($name) {
-        $this->name = $name;
-        $this->regexp = '/^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$/';
+        $this->InputTpl($name, '/^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$/');
     }
 
 }
@@ -335,8 +330,7 @@ class DomainInputTpl extends InputTpl {
 class NumericInputTpl extends InputTpl {
 
     function NumericInputTpl($name) {
-        $this->name = $name;
-        $this->regexp = '/^[0-9]*$/';
+        $this->InputTpl($name, '/^[0-9]*$/');
     }
 }
 
