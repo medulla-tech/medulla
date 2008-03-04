@@ -17,8 +17,8 @@ Description: Mandriva Management Console Agent
 Package: python-mmc-base
 Architecture: all
 Depends: ${python:Depends}, python-ldap, ###TWISTEDDEP###, python-mmc-plugins-tools
-Replaces: python-lmc-base
-Conflicts: python-lmc-base
+Replaces: python-lmc-base, python-mmc-plugins-tools (<< 2.3.0)
+Conflicts: python-lmc-base, python-mmc-plugins-tools (<< 2.3.0)
 Description: Mandriva Management Console base plugin
  Contains the base infrastructure for all MMC plugins:
   * support classes
@@ -65,15 +65,5 @@ Description: Mandriva Management Console network plugin
  DNS/DHCP management plugin for the MMC.
  .
  This plugin requires a LDAP-patched version of ISC DHCPD and BIND9.
- .
- Homepage: http://lds.linbox.org
-
-Package: python-mmc-plugins-tools
-Architecture: all
-Depends: ${python:Depends}, mkisofs
-Replaces: python-lmc-plugins-tools
-Conflicts: python-lmc-plugins-tools
-Description: Required tools for some MMC plugins
- Contains common tools needed by some plugins of mmc-agent package.
  .
  Homepage: http://lds.linbox.org
