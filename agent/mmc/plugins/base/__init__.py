@@ -197,7 +197,7 @@ class BasePluginConfig(PluginConfig):
         PluginConfig.setDefault(self)
         self.authmethod = "baseldap"
         self.provmethod = None
-        self.computersmethod = "baseldap"
+        self.computersmethod = "none"
 
 
 def getModList():
@@ -2090,6 +2090,14 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
+
+    def hasComputerManagerWorking(self):
+        """
+        Returns True if the ComputerManager can effectively handle computers.
+        If the driver is none, it can't be use to manage computers.
+        """
+        return ComputerManager().main != "none"
+
     def canAddComputer(self):
         return ComputerManager().canAddComputer()
         

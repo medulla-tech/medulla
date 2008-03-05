@@ -87,7 +87,7 @@ class ComputerI:
 class ComputerManager(Singleton):
 
     components = {}
-    main = 'base'
+    main = "none"
 
     def __init__(self):
         Singleton.__init__(self)
@@ -100,7 +100,7 @@ class ComputerManager(Singleton):
     def register(self, name, klass):
         self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
         self.components[name] = klass
-
+        
     def validate(self):
         return True
 
