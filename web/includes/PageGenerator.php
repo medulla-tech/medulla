@@ -1781,12 +1781,17 @@ class Form extends HtmlContainer {
         if (!isset($options["method"])) $options["method"] = "post";        
         $this->options = $options;
         $this->buttons = array();
+        $this->summary = NULL;
     }
     
     function begin() {
         $str = "";
         foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
-        return "<form$str>";
+        $ret = "<form$str>";
+        if (isset($this->summary)) {
+            $ret = "<p>" . $this->summary . "</p>\n" . $ret;
+        }
+        return $ret;
     }
 
     function end() {
@@ -1819,6 +1824,10 @@ class Form extends HtmlContainer {
     function addExpertButton($name, $value) {
         $d = new DivExpertMode();
         $this->buttons[] = $d->begin() . $this->getButtonString($name, $value) . $d->end();
+    }
+
+    function addSummary($msg) {
+        $this->summary = $msg;
     }
 
 }
