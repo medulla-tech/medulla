@@ -32,7 +32,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid'=>$this->id));
+$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid'=>$_GET['gid']));
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
