@@ -50,4 +50,11 @@ function canDelComputer() {
     return $_SESSION["canDelComputer"];
 }
 
+function hasComputerManagerWorking() {
+    if (!isset($_SESSION["hasComputerManagerWorking"])) {
+        $_SESSION["hasComputerManagerWorking"] = xmlCall("base.hasComputerManagerWorking");
+    }
+    return $_SESSION["hasComputerManagerWorking"];
+}
+
 ?>

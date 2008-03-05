@@ -187,34 +187,37 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
+
 /* Computer management module */
 
-$submod = new SubModule("computers");
-$submod->setDescription(_("Computers"));
-$submod->setImg('img/navbar/computer');
-$submod->setDefaultPage("base/computers/index");
-$submod->setPriority(30);
+if (hasComputerManagerWorking()) {
+    $submod = new SubModule("computers");
+    $submod->setDescription(_("Computers"));
+    $submod->setImg('img/navbar/computer');
+    $submod->setDefaultPage("base/computers/index");
+    $submod->setPriority(30);
 
-$page = new Page("index", _("Computer list"));
-$submod->addPage($page);
+    $page = new Page("index", _("Computer list"));
+    $submod->addPage($page);
 
-$page = new Page("add", _("Add computer "));
-if (!canAddComputer()) {
+    $page = new Page("add", _("Add computer "));
+    if (!canAddComputer()) {
+        $page->setOptions(array("visible"=>False));
+    }
+    $submod->addPage($page);
+
+    $page = new Page("edit", _("Edit computer "));
     $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
+
+    $page = new Page("delete",_("Delete a computer"));
+    $page->setFile("modules/base/computers/delete.php",
+                   array("noHeader"=>True,"visible"=>False));
+    $submod->addPage($page);
+
+
+    $mod->addSubmod($submod);
 }
-$submod->addPage($page);
-
-$page = new Page("edit", _("Edit computer "));
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
-
-$page = new Page("delete",_("Delete a computer"));
-$page->setFile("modules/base/computers/delete.php",
-               array("noHeader"=>True,"visible"=>False));
-$submod->addPage($page);
-
-
-$mod->addSubmod($submod);
 
 
 /**
