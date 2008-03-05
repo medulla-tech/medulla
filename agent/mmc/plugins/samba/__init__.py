@@ -535,13 +535,16 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         # ends with a $.
         searchFilter = searchFilter + "$"
         if not base: base = self.baseComputersDN
-        result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
+        result_set = self.search(searchFilter, base, ["uid", "displayName"], ldap.SCOPE_ONELEVEL)
         resArr = []
         for i in range(len(result_set)):
             for entry in result_set[i]:
                 localArr= []
                 uid = entry[1]['uid'][0]
-                displayName = entry[1]['displayName'][0]
+                try:
+                    displayName = entry[1]['displayName'][0]
+                except KeyError:
+                    displayName = ""
                 localArr.append(uid[0:-1])
                 localArr.append(displayName)
                 resArr.append(localArr)
