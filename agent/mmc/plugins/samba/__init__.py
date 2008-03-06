@@ -862,6 +862,8 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
 
 class smbConf:
 
+    supportedGlobalOptions = ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script", "ldap passwd sync"]
+
     def __init__(self, smbconffile = "/etc/samba/smb.conf", conffile = None, conffilebase = None):
         """
         Constructor for object that read/write samba conf file.
@@ -982,7 +984,7 @@ class smbConf:
         $rtype: int
         """
         string = str(string).lower()
-        if string in ["yes", "true", "1"]: return 1
+        if string in ["yes", "true", "1", "on"]: return 1
         elif string in ["no", "false", "0"]: return 0
         else: return -1
 
@@ -1003,6 +1005,17 @@ class smbConf:
         """
         pass
 
+    def mapOptionValue(self, value):
+        """
+        Translate option value to SAMBA value
+        """
+        mapping = { "on" : "Yes", "off" : "No" }
+        try:
+            ret = mapping[value]
+        except KeyError:
+            ret = value
+        return ret
+
     def getSmbInfo(self):
         """
         return main information about global section
@@ -1014,7 +1027,7 @@ class smbConf:
             resArray["master"] = self.isValueAuto(self.getContent('global','domain master'))
         resArray['homes'] = self.contentArr.has_key('homes')
         resArray['pdc'] = (resArray['logons']) and (resArray['master'])
-        for option in ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script"]:
+        for option in self.supportedGlobalOptions:
             resArray[option] = self.getContent("global", option)
         return resArray
 
@@ -1062,13 +1075,18 @@ class smbConf:
             if not options[option]: options[option] = " "
 
         # We update only what has changed from the current configuration
-        for option in ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script"]:
-            if options[option]:
-                if options[option] != current[option]:
-                    self.setContent("global", option, options[option])
-                # else do nothing, the option is already set
-            else:
-                self.remove("global", option)
+        for option in self.supportedGlobalOptions:
+            try:
+                if options[option]:
+                    options[option] = self.mapOptionValue(options[option])
+                    if options[option] != current[option]:
+                        self.setContent("global", option, options[option])
+                    # else do nothing, the option is already set
+                else:
+                    self.remove("global", option)
+            except KeyError:
+                # Just ignore the option if it was not sent
+                pass
 
         if current["pdc"] != pdc:
             if pdc: self.setContent('global','domain logons','yes')
