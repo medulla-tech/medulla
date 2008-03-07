@@ -24,7 +24,7 @@
 from mmc.support.errorObj import errorMessage
 from mmc.support.mmcException import mmcException
 from mmc.support.config import *
-from time import time
+from time import time, strftime
 from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager
@@ -193,6 +193,9 @@ class BasePluginConfig(PluginConfig):
         except:
             pass
 
+        self.backuptools = self.get("backup-tools", "path")
+        self.backupdir = self.get("backup-tools", "destpath")
+
     def setDefault(self):
         PluginConfig.setDefault(self)
         self.authmethod = "baseldap"
@@ -324,21 +327,13 @@ def getUserGroups(pattern):
     return ldapObj.getUserGroups(pattern)
 
 # backup fonction
-def backupUser(user,media,login,configFile = "/etc/mmc/plugins/base.ini"):
-    import ConfigParser
-    config = ConfigParser.ConfigParser()
-    config.read(configFile)
-
-    path = config.get("backup-tools", "path")
-    destpath = config.get("backup-tools", "destpath")
-    cmd = path+"/"+"backup.sh"
-
+def backupUser(user, media, login, configFile = "/etc/mmc/plugins/base.ini"):
+    config = BasePluginConfig("base")    
+    cmd = os.path.join(config.backuptools, "backup.sh")
     ldapObj = ldapUserGroupControl()
-    homedir=ldapObj.getDetailedUser(user)['homeDirectory'][0]
-
-    mmctools.shlaunchBackground(cmd+" "+user+" "+homedir+" "+destpath+" "+login+" "+media+" "+path,"backup user "+user,mmctools.progressBackup)
-
-    return 0
+    homedir = ldapObj.getDetailedUser(user)["homeDirectory"][0]
+    mmctools.shlaunchBackground(cmd + " " + user + " " + homedir + " " + config.backupdir + " " + login + " " + media + " " + config.backuptools, "backup user " + user, mmctools.progressBackup)
+    return os.path.join(config.backupdir, "%s-%s-%s" % (login, user, strftime("%Y%m%d")))
 
 #return entire ldap info on uid user
 def getDetailedUser(uid):
