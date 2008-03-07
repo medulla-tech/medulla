@@ -113,11 +113,7 @@ if (isset($_POST["bdeluser_x"])) {
 $diff = array_diff($users, $members);
 
 if (count($forbidden)) {
-    $n = new NotifyWidget();
-    $n->flush();
-    $n->add("<div id=\"validCode\">" . _("Some users can't be removed from this group because this group is their primary group.") . "</div>");
-    $n->setLevel(0);
-    $n->setSize(600);
+    new NotifyWidgetWarning(_("Some users can't be removed from this group because this group is their primary group."));
 }
 
 $p = new PageGenerator(sprintf(_("Group members %s"), $group));
