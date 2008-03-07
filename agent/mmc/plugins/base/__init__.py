@@ -128,6 +128,11 @@ def activate():
         logger.error("Skeleton directory %s does not exist or is not a directory" % ldapObj.skelDir)
         return False
 
+    config = BasePluginConfig("base")
+    if not os.path.isdir(config.backupdir):
+        logger.error("Backup directory %s does not exist or is not a directory" % config.backupdir)
+        return False
+
     # Create required OUs
     ous = [ ldapObj.baseUsersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
     for ou in ous:
