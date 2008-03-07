@@ -13,9 +13,9 @@ build:
 
 build-control:
 ifeq ($(DISTRO),sarge)
-	sed 's!###PHPDEPS###!libapache2-mod-php4!' debian/control.in > debian/control
+	sed 's!###PHPDEPS###!libapache2-mod-php4, php4-gd!' debian/control.in > debian/control
 else
-	sed 's!###PHPDEPS###!libapache2-mod-php5 | libapache2-mod-php4, php5-xmlrc | php4-common!' debian/control.in > debian/control
+	sed 's!###PHPDEPS###!libapache2-mod-php5 | libapache2-mod-php4, php5-xmlrc | php4-common, php5-gd | php4-gd!' debian/control.in > debian/control
 endif
 
 
