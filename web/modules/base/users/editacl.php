@@ -58,6 +58,9 @@ if ($_POST["buser"]) {
         $aclattr[$key] = $value;
     }
     setAcl($_GET["user"], createAclString($acl, $acltab, $aclattr));
+    if (!isXMLRPCError()) {
+        new NotifyWidgetSuccess(_("User ACLs successfully modified."));
+    }
 }
 
 function createAclAttrTemplate($module_name, $aclattr) {
