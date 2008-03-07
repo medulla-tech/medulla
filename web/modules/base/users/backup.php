@@ -48,19 +48,20 @@ if (isset($_POST["user"])) {
 if (isset($_POST["bgo"])) {
     $backuppath = sched_backup($user, $_POST["media"]);
 
-    $str = "<h2>"._("Backup a user's folder")."</h2>";
-    $str .=  '
-<p>';
-    $str .= sprintf(_("Backup of %s user's folder has been launched in background"),$user);
-    $str .= "</p>
-<p>";
-    $str .= sprintf(_("Your files will be stored in the directory %s of the server at the end of the backup."), $backuppath);
-    $str .= "</p>
-<p>";
-    $str .= _("Operation duration depends of the amount of data");
-    $str .= "</p>";
+    if (!isXMLRPCError()) {
+        $str = "<h2>"._("Backup a user's home directory")."</h2>";
+        $str .= "<p>";
+        $str .= sprintf(_("Backup of <b>%s</b> user's folder has been launched in background."), $user);
+        $str .= "</p><p>";
+        $str .= sprintf(_("The files will be stored in the directory %s of the server at the end of the backup."), $backuppath);
+        $str .= "</p><p>";
+        $str .= _("Please go to the status page to check the backup status.");
+        $str .= "</p><p>";
+        $str .= _("This operation will last according to the amount of data to backup.");
+        $str .= "</p>";
 
-    new NotifyWidgetSuccess($str);
+        new NotifyWidgetSuccess($str);
+    }
 
     header("Location: ".urlStrRedirect("base/users/index"));
 }
