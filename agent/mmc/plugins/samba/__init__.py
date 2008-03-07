@@ -30,8 +30,8 @@ import logging
 import ldap.modlist
 import fileinput
 import tempfile
-from mmc.plugins.base import ldapUserGroupControl
-from time import mktime, strptime, time
+from mmc.plugins.base import ldapUserGroupControl, BasePluginConfig
+from time import mktime, strptime, time, strftime
 import xmlrpclib
 
 # Try to import module posix1e
@@ -260,19 +260,18 @@ def backupShare(share, media, login):
     """
     Launch as a background process the backup of a share
     """
-    smbObj = smbConf(SambaConfig("samba").samba_conf_file)
-    configParser = mmctools.getConfigParser("base")
-    path = configParser.get("backup-tools", "path")
-    destpath = configParser.get("backup-tools", "destpath")
-    cmd = os.path.join(path, "backup.sh")
+    config = BasePluginConfig("base")    
+    cmd = os.path.join(config.backuptools, "backup.sh")
     if share == "homes":
         # FIXME: Maybe we should have a configuration directive to tell that
         # all users home are stored into /home
         savedir = "/home/"
     else:
-        savedir = self.getContent(name, "path")
+        smbObj = smbConf(SambaConfig("samba").samba_conf_file)
+        savedir = smbObj.getContent(share, "path")
     # Run backup process in background
-    mmctools.shlaunchBackground(cmd+" "+share+" "+savedir+" "+destpath+" "+login+" "+media+" "+path,"backup share "+share, mmctools.progressBackup)
+    mmctools.shlaunchBackground(cmd + " " + share + " " + savedir + " " + config.backupdir + " " + login + " " + media + " " + config.backuptools, "backup share " + share, mmctools.progressBackup)    
+    return os.path.join(config.backupdir, "%s-%s-%s" % (login, share, strftime("%Y%m%d")))
 
 def restartSamba():
     mmctools.shlaunchBackground(SambaConfig("samba").samba_init_script+' restart')
