@@ -21,8 +21,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
+
+/* FIXME: this page needs to be cleaned up */
+
 function sched_backup($user, $media) {
     $param = array($user,$media,$_SESSION["login"]);
     return xmlCall("base.backupUser",$param);
@@ -45,33 +46,25 @@ if (isset($_POST["user"])) {
 }
 
 if (isset($_POST["bgo"])) {
-  sched_backup($user, $_POST["media"]);
-?>
+    $backuppath = sched_backup($user, $_POST["media"]);
 
-<?php
-$str = "<h2>"._("Backup a user's folder")."</h2>";
-$str .=  '
+    $str = "<h2>"._("Backup a user's folder")."</h2>";
+    $str .=  '
 <p>';
-$str.=sprintf(_("Backup of %s user's folder is launched in background"),$user);
-$str.="</p>
+    $str .= sprintf(_("Backup of %s user's folder has been launched in background"),$user);
+    $str .= "</p>
 <p>";
-$str.=sprintf(_("Your files will be stored in"));
-$str.=" <b>".$_SESSION["login"]."-".$user."-".date("Y-m-d")."</b> ";
-$str.=sprintf(_("file on share %s at the end of the process"),$conf["backup"]["share"]);
-$str.="</p>
+    $str .= sprintf(_("Your files will be stored in the directory %s of the server at the end of the backup."), $backuppath);
+    $str .= "</p>
 <p>";
-$str.=_("Operation duration depend of the amount of data");
-$str.="</p>";
+    $str .= _("Operation duration depends of the amount of data");
+    $str .= "</p>";
 
-$n = new NotifyWidget();
-$n->add($str);
+    new NotifyWidgetSuccess($str);
 
-header("Location: ".urlStrRedirect("base/users/index"));
-?>
-<?php
+    header("Location: ".urlStrRedirect("base/users/index"));
 }
-else
-{
+else {
 ?>
 
 <form action="main.php?module=base&submod=users&action=backup" method="post">
