@@ -28,9 +28,9 @@ require_once("modules/base/includes/computers.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("2.2.0");
+$mod->setVersion("2.3.0");
 $mod->setRevision("$Rev$");
-$mod->setAPIVersion('4:3:0');
+$mod->setAPIVersion("5:0:1");
 $mod->setDescription(_("User and group"));
 $mod->setPriority(1);
 
