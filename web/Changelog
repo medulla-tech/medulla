@@ -1,6 +1,7 @@
 mmc-web-base 2.3.0
 ------------------
  * New "Computers" sub-module for computer management
+ * Save inteface mode (standard or expert) between two MMC sessions
  * User photo auto-resize if too large
  * Support page with tabs in the widget framework
  * Lots of code cleanup and bug fixes
