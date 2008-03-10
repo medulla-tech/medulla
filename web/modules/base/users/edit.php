@@ -350,11 +350,15 @@ $test->display(array("value"=>$detailArr["homePhone"][0]));
 
 
 
-$checked="";
 if ($detailArr["uid"][0]) {
-if ($detailArr["loginShell"][0]=='/bin/false') {
-            $checked = "checked";
+    $checked = "CHECKED";
+    if (isset($detailArr["loginShell"])) {
+        if ($detailArr["loginShell"][0] != '/bin/false') {
+            $checked = "";
         }
+    }
+} else {
+    $checked = "";
 }
 $param = array ("value" => $checked);
 
