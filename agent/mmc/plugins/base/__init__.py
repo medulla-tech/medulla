@@ -706,10 +706,14 @@ class ldapUserGroupControl:
     def isEnabled(self, login):
         """
         Return True if the user is enabled, else False.
-        An user is enabled if his/her shell is not /bin/false
+        A user is enabled if his/her shell is not /bin/false.
+        A user is also disabled if the user has no loginShell attribute.
         """
         u = self.getDetailedUser(login)
-        return u["loginShell"] != ["/bin/false"]
+        try:
+            return u["loginShell"] != ["/bin/false"]
+        except KeyError:
+            return False
 
     def isLocked(self, login):
         """
@@ -1404,9 +1408,12 @@ class ldapUserGroupControl:
 
                 localArr["obj"] = entry[1]['objectClass']
 
-                shell = entry[1]["loginShell"][0]
                 enabled = 0
-                if shell != "/bin/false": enabled = 1
+                try:
+                    shell = entry[1]["loginShell"][0]
+                    if shell != "/bin/false": enabled = 1
+                except KeyError:
+                    pass
                 localArr["enabled"] = enabled
 
                 # Filter SAMBA machine account that ends with $
