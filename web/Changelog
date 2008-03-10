@@ -1,3 +1,10 @@
+mmc-web-base 2.3.0
+------------------
+ * New "Computers" sub-module for computer management
+ * User photo auto-resize if too large
+ * Support page with tabs in the widget framework
+ * Lots of code cleanup and bug fixes
+
 mmc-web-base 2.2.0
 ------------------
 
