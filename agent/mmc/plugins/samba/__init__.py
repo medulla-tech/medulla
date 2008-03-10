@@ -56,8 +56,8 @@ from twisted.internet import reactor
 
 INI = "/etc/mmc/plugins/samba.ini"
 
-VERSION = "2.2.0"
-APIVERSION = "4:2:3"
+VERSION = "2.3.0"
+APIVERSION = "5:0:4"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
@@ -79,12 +79,12 @@ def activate():
 
     if config.defaultSharesPath:
         if config.defaultSharesPath.endswith("/"):
-	    logger.error("Trailing / ist not allowed in defaultSharesPath")
+	    logger.error("Trailing / is not allowed in defaultSharesPath")
 	    return False
 
     for cpath in config.authorizedSharePaths:
         if cpath.endswith("/"):
-            logger.error("Trailing / ist not allowed in authorizedSharePaths")
+            logger.error("Trailing / is not allowed in authorizedSharePaths")
             return False
 
     try:

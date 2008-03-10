@@ -36,7 +36,7 @@ import mmc
 
 INI = "/etc/mmc/plugins/network.ini"
 
-VERSION = "2.2.0"
+VERSION = "2.3.0"
 APIVERSION = "1:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
