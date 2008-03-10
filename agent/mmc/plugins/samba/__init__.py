@@ -277,6 +277,10 @@ def restartSamba():
     mmctools.shlaunchBackground(SambaConfig("samba").samba_init_script+' restart')
     return 0;
 
+def reloadSamba():
+    mmctools.shlaunchBackground(SambaConfig("samba").samba_init_script+' reload')
+    return 0;
+
 def addSmbAttr(uid, password):
     return sambaLdapControl().addSmbAttr(uid, password)
 
@@ -861,7 +865,7 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
 
 class smbConf:
 
-    supportedGlobalOptions = ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script", "ldap passwd sync"]
+    supportedGlobalOptions = ["workgroup", "netbios name", "logon path", "logon drive", "logon home", "logon script", "ldap passwd sync", "wins support"]
 
     def __init__(self, smbconffile = "/etc/samba/smb.conf", conffile = None, conffilebase = None):
         """
@@ -1076,7 +1080,7 @@ class smbConf:
         # We update only what has changed from the current configuration
         for option in self.supportedGlobalOptions:
             try:
-                if options[option]:
+                if option in options:
                     options[option] = self.mapOptionValue(options[option])
                     if options[option] != current[option]:
                         self.setContent("global", option, options[option])
