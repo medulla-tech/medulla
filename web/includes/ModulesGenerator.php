@@ -349,7 +349,7 @@ class SubModule {
 
 class ExpertSubModule extends SubModule {
     function generateNavBar() {
-        if ($_SESSION["expert_mode_var"]) {
+        if (isExpertMode()) {
             parent::generateNavBar();
         }
 

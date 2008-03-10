@@ -113,20 +113,34 @@ function isFormError($name) {
   return $formErrorArray[$name];
 }
 
+
+/**
+ * Set the current interface mode.
+ * A cookie that expires in 30 days is used to keep user interface mode between
+ * two MMC sessions.
+ * 
+ * @param $value 0 to set standard mode, 1 to set expert mode
+ */
 function setExpertMode($value) {
-  $_SESSION["expert_mode_var"]=$value;
+    setcookie("expertMode", $value, time() + 3600 * 24 * 30, "/mmc");
 }
 
+/**
+ * Returns 0 if the interface is in standard mode, or 1 if in expert mode.
+ */
 function isExpertMode() {
-  return $_SESSION["expert_mode_var"];
+    $ret = 0;
+    if (isset($_COOKIE["expertMode"])) {
+        $ret = $_COOKIE["expertMode"];
+    }
+    return $ret;
 }
 
 function displayExpertCss() {
-  if ($_SESSION["expert_mode_var"]==1) {
-      print ' style="display: inline;"';
-    }
-    else {
-      print ' style="display: none;"';
+    if (isExpertMode()) {
+        print ' style="display: inline;"';
+    } else {
+        print ' style="display: none;"';
     }
 }
 ?>

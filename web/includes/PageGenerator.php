@@ -1928,7 +1928,7 @@ class DivExpertMode extends Div {
 
     function begin() {
         $str = '<div id="expertMode" ';
-        if ($_SESSION["expert_mode_var"] == 1) {
+        if (isExpertMode()) {
             $str .= ' style="display: inline;"';
         } else {
             $str .= ' style="display: none;"';
