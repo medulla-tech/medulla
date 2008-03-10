@@ -1503,9 +1503,6 @@ class NotifyWidget {
      * private internal function
      */
     function getImgLevel() {
-        if ($this->getLevel()==3) {
-            return "img/common/icn_warn.gif";
-        }
         if ($this->getLevel()!=0) {
             return "img/common/icn_alert.gif";
         }
@@ -1549,7 +1546,7 @@ class NotifyWidget {
         foreach ($_SESSION['__notify'] as $info) {
             echo "<p style=\"margin: auto;\">$info</p>";
         }
-        echo '<div style="text-align: center;">';
+        echo '<div style="text-align: center; padding-top: 10px">';
         echo '<input name="breset" type="reset" class="btnSecondary" onclick="getStyleObject(\'popup\').display=\'none\'; return false;" value="'._("Ok").'" />';
         echo '</div>';
         echo '</td></tr></table>';
