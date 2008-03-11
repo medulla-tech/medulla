@@ -60,12 +60,12 @@ class TestShares(unittest.TestCase):
         self.l.addGroup("grouptestB")
         os.system("cp contrib/samba/smb.conf /etc/samba/smb.conf")
         self.s = smbConf(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
-        os.system("rm -fr %s" % self.s.sharespath)
+        os.system("rm -fr %s" % self.s.defaultSharesPath)
 
     def test_shares(self):
         self.assertEqual(len(self.s.getDetailedShares()) > 0, True)
         self.s.addShare("sharetest", "sharetest comment", ["grouptestA"], False, [], True, True)
-        self.assertEqual(os.path.exists(os.path.join(self.s.sharespath, "sharetest")), True)
+        self.assertEqual(os.path.exists(os.path.join(self.s.defaultSharesPath, "sharetest")), True)
         self.s.save()
         s = smbConf(conffile = "tests/sambatest.ini", conffilebase = "tests/basetest.ini")
         self.assertEqual(s.getACLOnShare("sharetest"), ["grouptestA"])
@@ -76,7 +76,7 @@ class TestShares(unittest.TestCase):
         self.assertEqual(i["antivirus"], True)
         self.assertEqual(i["desc"], "sharetest comment")
         s.delShare("sharetest", True)
-        self.assertEqual(os.path.exists(os.path.join(self.s.sharespath, "sharetest")), False)
+        self.assertEqual(os.path.exists(os.path.join(self.s.defaultSharesPath, "sharetest")), False)
         s.save()
 
     def test_pdc(self):
