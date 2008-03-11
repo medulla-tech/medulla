@@ -5,8 +5,9 @@ mmc-agent 2.3.0
  * server-side session security context support
  * base plugin:
    o issue an error when the backup directory for user's home doesn't exist
+   o Fix loginShell attribute problem when getting users list (Manuel Zach)
  * SAMBA plugin:
-   o the path of a new a SAMBA share can now be specified instead of using a
+   o the path of a new SAMBA share can now be specified instead of using a
      default location
    o the OU that stores the SAMBA computer accounts is now read from samba.ini
  * mail plugin:
