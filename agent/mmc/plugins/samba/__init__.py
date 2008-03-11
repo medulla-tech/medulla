@@ -188,16 +188,7 @@ def isSmbAntiVirus():
     return os.path.exists(SambaConfig("samba").clam_av_so)
 
 def isAuthorizedSharePath(path):
-    """
-    @return: True if the given path is authorized to create a SAMBA share
-    @rtype: bool
-    """
-    ret = False
-    for apath in SambaConfig("samba").authorizedSharePaths:
-        ret = apath + "/" in path
-        if ret:
-            break
-    return ret
+    return smbConf(SambaConfig("samba")).isAuthorizedSharePath(path)
 
 def getDefaultSharesPath():
     """
@@ -881,6 +872,7 @@ class smbConf:
         """
         config = SambaConfig("samba", conffile)
         self.defaultSharesPath = config.defaultSharesPath
+        self.authorizedSharePaths = config.authorizedSharePaths
         self.conffilebase = conffilebase
         self.smbConfFile = smbconffile
         # Parse SAMBA configuration files
@@ -1222,9 +1214,10 @@ class smbConf:
         # If no path is given, create a default one
         if not path:
             path = os.path.join(self.defaultSharesPath, name)
+        path = os.path.realpath(path)
 
         # Check that the path is authorized
-        if not isAuthorizedSharePath(os.path.realpath(path)):
+        if not self.isAuthorizedSharePath(path):
             raise path + " is not an authorized share path."
 
         # Create samba share directory, if it does not exist
@@ -1406,6 +1399,17 @@ class smbConf:
             result.append(sessionsitem)
         return result
 
+    def isAuthorizedSharePath(self, path):
+        """
+        @return: True if the given path is authorized to create a SAMBA share
+        @rtype: bool
+        """
+        ret = False
+        for apath in self.authorizedSharePaths:
+            ret = apath + "/" in path
+            if ret:
+                break
+        return ret
 
 
 class sambaLog:
