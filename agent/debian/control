@@ -8,15 +8,16 @@ Standards-Version: 3.7.2
 
 Package: mmc-agent
 Architecture: all
-Depends: ${python:Depends}, python-twisted-web, python-pyopenssl, python-mmc-base
+Pre-Depends: python-mmc-base (= 2.3.0-1)
+Depends: ${python:Depends}, python-twisted-web, python-pyopenssl,
 Description: Mandriva Management Console Agent
  XMLRPC server of the MMC API.
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
 
 Package: python-mmc-base
 Architecture: all
-Depends: ${python:Depends}, python-ldap, python-twisted-web, python-mmc-plugins-tools
+Depends: ${python:Depends}, python-ldap, python-twisted-web
 Replaces: python-lmc-base, python-mmc-plugins-tools (<< 2.3.0)
 Conflicts: python-lmc-base, python-mmc-plugins-tools (<< 2.3.0)
 Description: Mandriva Management Console base plugin
@@ -24,41 +25,41 @@ Description: Mandriva Management Console base plugin
   * support classes
   * base LDAP management classes
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
 
 Package: python-mmc-samba
 Architecture: all
-Depends: ${python:Depends}, python-pylibacl, acl, python-mmc-base, samba-common
+Depends: ${python:Depends}, python-pylibacl, acl, python-mmc-base (= 2.3.0-1), samba-common
 Replaces: python-lmc-samba
 Conflicts: python-lmc-samba
 Description: Mandriva Management Console SAMBA plugin
  SAMBA management plugin for the MMC.
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
 
 Package: python-mmc-mail
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base
+Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1)
 Replaces: python-lmc-mail
 Conflicts: python-lmc-mail
 Description: Mandriva Management Console base plugin
  Mail account management plugin for the MMC.
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
 
 Package: python-mmc-proxy
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base, squidguard
+Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1), squidguard
 Replaces: python-lmc-proxy
 Conflicts: python-lmc-proxy
 Description: Mandriva Management Console proxy plugin
  Squidguard/Squid management plugin for the MMC.
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
 
 Package: python-mmc-network
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base
+Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1)
 Replaces: python-lmc-network
 Conflicts: python-lmc-network
 Description: Mandriva Management Console network plugin
@@ -66,4 +67,14 @@ Description: Mandriva Management Console network plugin
  .
  This plugin requires a LDAP-patched version of ISC DHCPD and BIND9.
  .
- Homepage: http://lds.linbox.org
+ Homepage: http://mds.mandriva.org
+
+Package: python-mmc-plugins-tools
+Architecture: all
+Replaces: python-lmc-plugins-tools
+Conflicts: python-lmc-plugins-tools
+Description: Required tools for some MMC plugins (transitional package)
+ This package has been merged into python-mmc-base.
+ You can safely uninstall it.
+ .
+ Homepage: http://mds.mandriva.org
