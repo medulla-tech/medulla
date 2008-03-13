@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-30 22:30+0100\n"
+"POT-Creation-Date: 2008-03-13 18:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,16 +23,19 @@ msgstr ""
 
 #: old/dyngroup/sav/groups.php:130 old/dyngroup/members.php:118
 #: dyngroup/dyngroup/add_groups.php:105 dyngroup/dyngroup/add_groups.php:139
+#: dyngroup/dyngroup/add_groups.php:140
 msgid "All machines"
 msgstr ""
 
 #: old/dyngroup/sav/groups.php:154 old/dyngroup/members.php:142
 #: dyngroup/dyngroup/add_groups.php:129 dyngroup/dyngroup/add_groups.php:163
+#: dyngroup/dyngroup/add_groups.php:164
 msgid "Group members"
 msgstr ""
 
 #: old/dyngroup/sav/groups.php:180 old/dyngroup/members.php:167
 #: dyngroup/dyngroup/add_groups.php:155 dyngroup/dyngroup/add_groups.php:190
+#: dyngroup/dyngroup/add_groups.php:191
 msgid "Confirm"
 msgstr ""
 
@@ -41,13 +44,14 @@ msgstr ""
 #: dyngroup/dyngroup/remove_machine.php:47
 #: dyngroup/dyngroup/add_groups.php:156
 #: dyngroup/dyngroup/remove_machine.php:48
-#: dyngroup/dyngroup/add_groups.php:191
+#: dyngroup/dyngroup/add_groups.php:191 dyngroup/dyngroup/add_groups.php:192
 msgid "Cancel"
 msgstr ""
 
 #: old/dyngroup/sav/add_groups.php:30 dyngroup/dyngroup/list.php:59
 #: dyngroup/dyngroup/add_groups.php:93 dyngroup/dyngroup/add_groups.php:127
 #: dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/add_groups.php:128
 msgid "Group name"
 msgstr ""
 
@@ -193,11 +197,13 @@ msgstr ""
 #: dyngroup/dyngroup/creator.php:139 dyngroup/dyngroup/creator.php:145
 #: dyngroup/dyngroup/add_groups.php:95 dyngroup/dyngroup/creator.php:118
 #: dyngroup/dyngroup/creator.php:124 dyngroup/dyngroup/add_groups.php:129
+#: dyngroup/dyngroup/add_groups.php:130
 msgid "Yes"
 msgstr ""
 
 #: dyngroup/dyngroup/creator.php:140 dyngroup/dyngroup/add_groups.php:96
 #: dyngroup/dyngroup/creator.php:119 dyngroup/dyngroup/add_groups.php:130
+#: dyngroup/dyngroup/add_groups.php:131
 msgid "No"
 msgstr ""
 
@@ -285,6 +291,7 @@ msgid "Group creation"
 msgstr ""
 
 #: dyngroup/dyngroup/add_groups.php:94 dyngroup/dyngroup/add_groups.php:128
+#: dyngroup/dyngroup/add_groups.php:129
 msgid "Is the group visible"
 msgstr ""
 
