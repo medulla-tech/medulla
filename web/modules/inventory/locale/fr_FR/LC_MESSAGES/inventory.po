@@ -1,164 +1,165 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# French translation of Pulse 2 - MMC Web Inventory.
+# Copyright (C) 2008 THE Pulse 2 - MMC Web Inventory'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Pulse 2 - MMC Web Inventory package.
+# Nicolas Rueff <nrueff@mandriva.com>, 2008.
+# , fuzzy
 #
-#, fuzzy
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Pulse 2 - MMC Web Inventory VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 11:14+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-03-14 11:42+0100\n"
+"PO-Revision-Date: 2008-03-14 11:40+0100\n"
+"Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: inventory/inventory/ajaxFilter.php:24 inventory/inventory/ajaxFilter.php:30
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: inventory/inventory/ajaxFilter.php:38 inventory/inventory/ajaxFilter.php:45
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: inventory/inventory/ajaxFilter.php:120 inventory/infoPackage.inc.php:74
 msgid "View"
-msgstr ""
+msgstr "Voir"
 
 #: inventory/inventory/ajaxFilter.php:121 inventory/infoPackage.inc.php:78
 msgid "Informations"
-msgstr ""
+msgstr "Informations"
 
 #: inventory/inventory/body.php:50
 msgid " list"
-msgstr ""
+msgstr "liste"
 
 #: inventory/inventory/controller.php:27
 #: inventory/inventory/localSidebar.php:9 inventory/infoPackage.inc.php:49
 msgid "Controller"
-msgstr ""
+msgstr "Contrôleur"
 
 #: inventory/inventory/drive.php:27 inventory/inventory/localSidebar.php:12
 #: inventory/infoPackage.inc.php:52
 msgid "Drive"
-msgstr ""
+msgstr "Disque"
 
 #: inventory/inventory/graphs.php:12 inventory/infoPackage.inc.php:83
 #: inventory/infoPackage.inc.php:87
 msgid "Graphique"
-msgstr ""
+msgstr "Graphique"
 
 #: inventory/inventory/graphs.php:19
 msgid "back"
-msgstr ""
+msgstr "retour"
 
 #: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
 #: inventory/infoPackage.inc.php:45
 msgid "Hardware"
-msgstr ""
+msgstr "Matériel"
 
 #: inventory/inventory/index.php:26
 msgid "Bios"
-msgstr ""
+msgstr "Bios"
 
 #: inventory/inventory/infos.php:33
 msgid "Informations supplementaires"
-msgstr ""
+msgstr "Informations supplémentaires"
 
 #: inventory/inventory/infos.php:43
 msgid "First apparition"
-msgstr ""
+msgstr "Première apparition"
 
 #: inventory/inventory/input.php:27 inventory/inventory/localSidebar.php:13
 #: inventory/infoPackage.inc.php:54
 msgid "Input"
-msgstr ""
+msgstr "Entrée"
 
 #: inventory/inventory/localSidebar.php:6 inventory/infoPackage.inc.php:43
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #: inventory/inventory/localSidebar.php:8 inventory/inventory/network.php:27
 #: inventory/infoPackage.inc.php:47
 msgid "Network"
-msgstr ""
+msgstr "Réseau"
 
 #: inventory/inventory/localSidebar.php:14 inventory/inventory/memory.php:27
 #: inventory/infoPackage.inc.php:56
 msgid "Memory"
-msgstr ""
+msgstr "Mémoire"
 
 #: inventory/inventory/localSidebar.php:15 inventory/inventory/monitor.php:27
 #: inventory/infoPackage.inc.php:58
 msgid "Monitor"
-msgstr ""
+msgstr "Écran"
 
 #: inventory/inventory/localSidebar.php:16 inventory/inventory/port.php:27
 #: inventory/infoPackage.inc.php:60
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #: inventory/inventory/localSidebar.php:17 inventory/inventory/printer.php:27
 #: inventory/infoPackage.inc.php:62
 msgid "Printer"
-msgstr ""
+msgstr "Imprimante"
 
 #: inventory/inventory/localSidebar.php:18 inventory/inventory/sound.php:27
 #: inventory/infoPackage.inc.php:64
 msgid "Sound"
-msgstr ""
+msgstr "Son"
 
 #: inventory/inventory/localSidebar.php:19 inventory/inventory/storage.php:27
 #: inventory/infoPackage.inc.php:66
 msgid "Storage"
-msgstr ""
+msgstr "Stockage"
 
 #: inventory/inventory/localSidebar.php:20
 #: inventory/inventory/videocard.php:27 inventory/infoPackage.inc.php:68
 msgid "VideoCard"
-msgstr ""
+msgstr "Carte vidéo"
 
 #: inventory/inventory/pci.php:27
 msgid "Pci"
-msgstr ""
+msgstr "Pci"
 
 #: inventory/inventory/slot.php:27
 msgid "Slot"
-msgstr ""
+msgstr "Emplacement"
 
 #: inventory/inventory/software.php:27 inventory/infoPackage.inc.php:71
 msgid "Software"
-msgstr ""
+msgstr "Logiciel"
 
 #: inventory/inventory/tabs.php:8
 #, php-format
 msgid "%s's inventory"
-msgstr ""
+msgstr "Inventaire de %s"
 
 #: inventory/inventory/view.php:48
 #, php-format
 msgid "Inventory of %s"
-msgstr ""
+msgstr "Inventaire de %s"
 
 #: inventory/inventory/view.php:78 inventory/inventory/view_hardware.php:65
 msgid "Properties"
-msgstr ""
+msgstr "Propriétés"
 
 #: inventory/inventory/view.php:79 inventory/inventory/view_hardware.php:66
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: inventory/infoPackage.inc.php:33 inventory/infoPackage.inc.php:39
 msgid "Inventory"
-msgstr ""
+msgstr "Inventaire"
 
 #: inventory/infoPackage.inc.php:95
 msgid "Header"
-msgstr ""
+msgstr "Entête"
 
 #: inventory/infoPackage.inc.php:111
 msgid "Inventory on machine"
-msgstr ""
+msgstr "Inventaire du client"
