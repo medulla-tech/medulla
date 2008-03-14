@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 10:45+0100\n"
+"POT-Creation-Date: 2008-03-14 11:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,42 +16,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: infoPackage.inc.php:35 glpi/infoPackage.inc.php:35
-msgid "Display locations"
-msgstr "Montrer les localizations"
-
-#: infoPackage.inc.php:46 glpi/infoPackage.inc.php:46
-msgid "Inventory (GLPI) on machine"
-msgstr "Inventaire (GLPI) de la machine"
-
-#: glpi/tabs.php:8 glpi/glpi/tabs.php:8 glpi/glpi/tabs.php:11
+#: glpi/glpi/tabs.php:11
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Inventaire de %s (GLPI)"
 
-#: glpi/view_hardware.php:54 glpi/glpi/view_hardware.php:54
-msgid "Properties"
-msgstr "Propriétés"
-
-#: glpi/view_hardware.php:55 glpi/glpi/view_hardware.php:55
-msgid "Value"
-msgstr "Valeur"
-
-#: includes/autocomplete.php:53 glpi/includes/autocomplete.php:53
-msgid "Add"
-msgstr "Ajouter"
-
-#: glpi/tabs.php:9 glpi/glpi/tabs.php:9 glpi/glpi/tabs.php:12
+#: glpi/glpi/tabs.php:12
 msgid "Hardware"
 msgstr "Materiel"
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
+#: glpi/glpi/tabs.php:16
 msgid "Network"
 msgstr "Reseau"
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
+#: glpi/glpi/tabs.php:16
 msgid "Controller"
 msgstr "Controlleur"
+
+#: glpi/glpi/view_hardware.php:54
+msgid "Properties"
+msgstr "Propriétés"
+
+#: glpi/glpi/view_hardware.php:55
+msgid "Value"
+msgstr "Valeur"
 
 #: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
 msgid "name"
@@ -89,17 +77,17 @@ msgstr "Id de licence de l'OS"
 msgid "location"
 msgstr "Localization"
 
-#: glpi/infoPackage.inc.php:50
-msgid "GLPI general tab"
-msgstr "Onglet général"
+#: glpi/includes/autocomplete.php:53
+msgid "Add"
+msgstr "Ajouter"
 
-#: glpi/infoPackage.inc.php:53
-msgid "GLPI tab 1"
-msgstr "Onglet reseau"
+#: glpi/infoPackage.inc.php:35
+msgid "Display locations"
+msgstr "Montrer les localizations"
 
-#: glpi/infoPackage.inc.php:56
-msgid "GLPI tab 2"
-msgstr "Onglet controlleur"
+#: glpi/infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
+msgstr "Inventaire (GLPI) de la machine"
 
 #: glpi/infoPackage.inc.php:50
 msgid "GLPI hardware tab"
@@ -112,3 +100,12 @@ msgstr "Onglet reseau"
 #: glpi/infoPackage.inc.php:56
 msgid "GLPI controller tab"
 msgstr "Onglet controlleur"
+
+#~ msgid "GLPI general tab"
+#~ msgstr "Onglet général"
+
+#~ msgid "GLPI tab 1"
+#~ msgstr "Onglet reseau"
+
+#~ msgid "GLPI tab 2"
+#~ msgstr "Onglet controlleur"

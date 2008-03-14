@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 10:45+0100\n"
+"POT-Creation-Date: 2008-03-14 11:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,41 +16,29 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: infoPackage.inc.php:35 glpi/infoPackage.inc.php:35
-msgid "Display locations"
-msgstr ""
-
-#: infoPackage.inc.php:46 glpi/infoPackage.inc.php:46
-msgid "Inventory (GLPI) on machine"
-msgstr ""
-
-#: glpi/tabs.php:8 glpi/glpi/tabs.php:8 glpi/glpi/tabs.php:11
+#: glpi/glpi/tabs.php:11
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr ""
 
-#: glpi/view_hardware.php:54 glpi/glpi/view_hardware.php:54
-msgid "Properties"
-msgstr ""
-
-#: glpi/view_hardware.php:55 glpi/glpi/view_hardware.php:55
-msgid "Value"
-msgstr ""
-
-#: includes/autocomplete.php:53 glpi/includes/autocomplete.php:53
-msgid "Add"
-msgstr ""
-
-#: glpi/tabs.php:9 glpi/glpi/tabs.php:9 glpi/glpi/tabs.php:12
+#: glpi/glpi/tabs.php:12
 msgid "Hardware"
 msgstr ""
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
+#: glpi/glpi/tabs.php:16
 msgid "Network"
 msgstr ""
 
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
+#: glpi/glpi/tabs.php:16
 msgid "Controller"
+msgstr ""
+
+#: glpi/glpi/view_hardware.php:54
+msgid "Properties"
+msgstr ""
+
+#: glpi/glpi/view_hardware.php:55
+msgid "Value"
 msgstr ""
 
 #: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
@@ -89,16 +77,16 @@ msgstr ""
 msgid "location"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:50
-msgid "GLPI general tab"
+#: glpi/includes/autocomplete.php:53
+msgid "Add"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:53
-msgid "GLPI tab 1"
+#: glpi/infoPackage.inc.php:35
+msgid "Display locations"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:56
-msgid "GLPI tab 2"
+#: glpi/infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
 msgstr ""
 
 #: glpi/infoPackage.inc.php:50
