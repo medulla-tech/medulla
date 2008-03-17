@@ -36,7 +36,7 @@
     </revhistory>
 
     <abstract>
-      <para>Documentation for Pulse2 MSC schema v.5</para>
+      <para>Documentation for Pulse2 MSC schema v.6</para>
     </abstract>
   </articleinfo>
 
@@ -53,7 +53,7 @@
 
     <variablelist>
       <varlistentry>
-        <term>id_command</term>
+        <term>id</term>
 
         <listitem>
           <para>The table primary key</para>
@@ -73,30 +73,6 @@
 
         <listitem>
           <para>The command line switches</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>path_source</term>
-
-        <listitem>
-          <para>Where to put files on client.</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>path_destination</term>
-
-        <listitem>
-          <para>From where to get files on server</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>create_directory</term>
-
-        <listitem>
-          <para>Whenever create destination directory on client</para>
         </listitem>
       </varlistentry>
 
@@ -222,7 +198,7 @@
 
     <variablelist>
       <varlistentry>
-        <term>id_command_on_host</term>
+        <term>id</term>
 
         <listitem>
           <para>The table primary key</para>
@@ -230,7 +206,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>id_command</term>
+        <term>fk_commands</term>
 
         <listitem>
           <para>A FK to the commands table</para>
@@ -339,7 +315,7 @@
 
     <variablelist>
       <varlistentry>
-        <term>id_command_history</term>
+        <term>id</term>
 
         <listitem>
           <para>The table primary key</para>
@@ -347,7 +323,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>id_command_on_host</term>
+        <term>fk_commands_on_host</term>
 
         <listitem>
           <para>A FK to the commands_on_host table</para>
@@ -407,7 +383,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>id_command_on_host</term>
+        <term>fk_commands_on_host</term>
 
         <listitem>
           <para>A FK to the commands_on_host table</para>
@@ -415,7 +391,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>id_command</term>
+        <term>fk_commands</term>
 
         <listitem>
           <para>A FK to the commands table</para>
