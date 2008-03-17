@@ -25,6 +25,10 @@
 """
 
 class Version(object):
-    """ Mappgin between msc.version and SA
+    """ Mapping between msc.version and SA
+        Well, nothing to map for
     """
+
+    def getDbVersion(self):
+        return self.version;
     pass

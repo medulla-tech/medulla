@@ -46,7 +46,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 5
+DATABASEVERSION = 6
 
 class MscDatabase(Singleton):
     """
@@ -131,14 +131,14 @@ class MscDatabase(Singleton):
         self.commands_on_host = Table(
             "commands_on_host",
             self.metadata,
-            Column('id_command', Integer, ForeignKey('commands.id_command')),
+            Column('fk_commands', Integer, ForeignKey('commands.id')),
             autoload = True
         )
         # target
         self.target = Table(
             "target",
             self.metadata,
-            Column('id_command_on_host', Integer, ForeignKey('commands_on_host.id_command_on_host')),
+            Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
             autoload = True
         )
         # version
@@ -178,23 +178,23 @@ class MscDatabase(Singleton):
 
     ####################################
 
-    def getIdCommandOnHost(self, ctx, id_command):
+    def getIdCommandOnHost(self, ctx, id):
         session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands.c.id_command == id_command).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).all()
+        query = session.query(CommandsOnHost).filter(self.commands.c.id == id).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).all()
         if len(query) == 1:
-            ret = query.id_command_on_host
+            ret = query.id
         elif len(query) > 1:
             ret = []
             for q in query:
-                ret.append(q.id_command_on_host)
+                ret.append(q.id)
         else:
             ret = -1
         session.close()
         return ret
 
-    def doCommandOnHostExist(self, id_command_on_host):
+    def doCommandOnHostExist(self, id):
         session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).all()
+        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).all()
         # FIXME: use query.count() instead of len(query.all())
         ret = len(query) > 0
         session.close()
@@ -203,9 +203,9 @@ class MscDatabase(Singleton):
     # FIXME: The four next methods can be factorized
     # FIXME: The current_state test should be put in the SQL expression
 
-    def isCommandOnHostDone(self, id_command_on_host):
+    def isCommandOnHostDone(self, id):
         session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
         if query:
             ret = query.current_state == 'done'
         else:
@@ -213,9 +213,9 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def isCommandOnHostPaused(self, id_command_on_host):
+    def isCommandOnHostPaused(self, id):
         session = create_session()
-        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
         if query:
             ret = q.current_state == 'pause'
         else:
@@ -223,9 +223,9 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def isCommandOnHostStopped(self, id_command_on_host):
+    def isCommandOnHostStopped(self, id):
         session = create_session()
-        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id_command_on_host == id_command_on_host).first()
+        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
         if query:
             ret = q.current_state == 'stop'
         else:
@@ -240,7 +240,7 @@ class MscDatabase(Singleton):
         session.close()
         if query:
             for q in query:
-                self.logger.debug("going to dispath %s" % (q.id_command))
+                self.logger.debug("going to dispath %s" % (q.id))
                 q.dispatch(ctx)
         else:
             self.logger.debug("No command to dispatch")
@@ -248,12 +248,9 @@ class MscDatabase(Singleton):
     def addCommand(self,
                 start_file,
                 parameters,
-                path_destination,
-                path_source,
                 files,
                 target,
                 gid = '',
-                create_directory = True,
                 start_script = True,
                 delete_file_after_execute_successful = True,
                 start_date = "0000-00-00 00:00:00",
@@ -276,12 +273,9 @@ class MscDatabase(Singleton):
         cmd.date_created = "%s-%s-%s %s:%s:%s" % (now[0], now[1], now[2], now[3], now[4], now[5])
         cmd.start_file = start_file
         cmd.parameters = parameters
-        cmd.path_destination = path_destination
-        cmd.path_source = path_source
         cmd.files = files
         if type(cmd.files) == list:
             cmd.files = "\n".join(cmd.files)
-        cmd.create_directory = create_directory
         cmd.start_script = start_script
         cmd.delete_file_after_execute_successful = delete_file_after_execute_successful
         cmd.start_date = start_date
@@ -315,7 +309,7 @@ class MscDatabase(Singleton):
                 fallback = MirrorApi().getFallbackMirror(targetName)
                 # TODO: add path
                 MscDatabase().addTarget(
-                    cmd.id_command,
+                    cmd.id,
                     targetName,
                     targetUuid,
                     targetIp,
@@ -340,7 +334,7 @@ class MscDatabase(Singleton):
             fallback = MirrorApi().getFallbackMirror(targetName)
             # TODO: add path
             MscDatabase().addTarget(
-                cmd.id_command,
+                cmd.id,
                 targetName,
                 targetUuid,
                 targetIp,
@@ -351,37 +345,28 @@ class MscDatabase(Singleton):
                 gid
             ) # TODO change mirrors...
 
-        self.logger.debug("addCommand : %s" % (str(cmd.id_command)))
-        return cmd.id_command
+        self.logger.debug("addCommand : %s" % (str(cmd.id)))
+        return cmd.id
 
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
         self.logger.debug("add_command_quick : "+cmd+" on :")
         self.logger.debug(targets)
-        path_source = ""
-        path_dest = "none"
         files = []
-        create_delete = False
 
         # run a built-in script
         p1 = re.compile('^\/scripts\/')
         if p1.match(cmd):
             fullpath = basedir + '/msc.script/' + cmd
-            path_source = basedir + '/msc.script/'
-            path_dest = config['path_destination']
             files.append(cmd)
-            create_delete = True
 
         return self.addCommand(
             cmd,
             "",
-            path_dest,
-            path_source,
             files,
             targets,
             gid,
-            create_delete,
             'enable',
-            create_delete,
+            True,
             "0000-00-00 00:00:00",
             "0000-00-00 00:00:00",
             ctx.userid,
@@ -396,7 +381,7 @@ class MscDatabase(Singleton):
     def addTarget(self, commandID, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
         """ Inject a new Target obect in our MSC database """
         myTarget = Target()
-        myTarget.id_command = commandID
+        myTarget.fk_commands = commandID
         myTarget.target_name = targetName
         myTarget.target_uuid = targetUuid
         myTarget.target_ipaddr = targetIp
@@ -416,7 +401,7 @@ class MscDatabase(Singleton):
     def countAllCommandsonhostByCurrentstate(self, ctx, current_state, filt = ''):
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
-	ret = ret.filter(self.commands_on_host.c.current_state == current_state).filter(self.commands.c.username == ctx.userid)
+        ret = ret.filter(self.commands_on_host.c.current_state == current_state).filter(self.commands.c.username == ctx.userid)
         # the join in itself is useless here, but we want to have exactly
         # the same result as in getAllCommandsonhostByCurrentstate
         if filt != '':
@@ -428,7 +413,7 @@ class MscDatabase(Singleton):
     def getAllCommandsonhostByCurrentstate(self, ctx, current_state, min = 0, max = 10, filt = ''):
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
-	ret = ret.filter(self.commands_on_host.c.current_state == current_state)
+        ret = ret.filter(self.commands_on_host.c.current_state == current_state)
         ret = ret.filter(self.commands.c.username == ctx.userid)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
@@ -477,9 +462,9 @@ class MscDatabase(Singleton):
     def countAllCommandsOnHostGroup(self, ctx, gid, cmd_id, filt, history):
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.username == ctx.userid)
-        ret = ret.filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host)
+        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if cmd_id:
-            ret = ret.filter(self.commands_on_host.c.id_command == str(cmd_id))
+            ret = ret.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
         if filt != '':
             ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
         if history:
@@ -505,7 +490,7 @@ class MscDatabase(Singleton):
 
     def countFinishedCommandsOnHost(self, ctx, uuid, filt):
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state == 'done').filter(self.commands.c.username == ctx.userid)
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state == 'done').filter(self.commands.c.username == ctx.userid)
         if filt != '':
             ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
         c = ret.count()
@@ -514,7 +499,7 @@ class MscDatabase(Singleton):
 
     def countUnfinishedCommandsOnHost(self, ctx, uuid, filt):
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state != 'done').filter(self.commands.c.username == ctx.userid)
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state != 'done').filter(self.commands.c.username == ctx.userid)
         if filt != '':
             ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
         c = ret.count()
@@ -523,7 +508,7 @@ class MscDatabase(Singleton):
 
     def countAllCommandsOnHost(self, ctx, uuid, filt):
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands.c.username == ctx.userid)
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands.c.username == ctx.userid)
         if filt != '':
             ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
         c = ret.count()
@@ -532,11 +517,11 @@ class MscDatabase(Singleton):
 
     def getAllCommandsOnHostGroup(self, ctx, gid, cmd_id, min, max, filt, history):
         session = create_session()
-        query = session.query(Commands).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.username == ctx.userid)
+        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.username == ctx.userid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
-        query = query.filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host)
+        query = query.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if cmd_id:
-            query = query.filter(self.commands_on_host.c.id_command == str(cmd_id))
+            query = query.filter(self.commands_on_host.c.id == str(cmd_id))
         if filt != '':
             query = query.filter(self.commands.c.title.like('%'+filt+'%'))
         if history:
@@ -573,8 +558,8 @@ class MscDatabase(Singleton):
         The last inserted commands are returned first.
         """
         session = create_session()
-        query = session.query(Commands).order_by(desc(Commands.c.id_command)).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state == 'done')
+        query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state == 'done')
         if filt != '':
             query = query.filter(self.commands.c.title.like('%'+filt+'%'))
         query = query.offset(int(min))
@@ -593,8 +578,8 @@ class MscDatabase(Singleton):
         The last inserted commands are returned first.
         """
         session = create_session()
-        query = session.query(Commands).order_by(desc(Commands.c.id_command)).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands_on_host.c.current_state != 'done')
+        query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).filter(self.commands.c.username == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state != 'done')
         if filt != '':
             query = query.filter(self.commands.c.title.like('%' + filt + '%'))
         query = query.offset(int(min))
@@ -609,8 +594,8 @@ class MscDatabase(Singleton):
 
     def getAllCommandsOnHost(self, ctx, uuid, min, max, filt):
         session = create_session()
-        query = session.query(Commands).add_column(self.commands_on_host.c.id_command_on_host).add_column(self.commands_on_host.c.current_state)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id_command_on_host == self.target.c.id_command_on_host).filter(self.commands.c.username == ctx.userid)
+        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands.c.username == ctx.userid)
         if filt != '':
             query = query.filter(self.commands.c.title.like('%'+filt+'%'))
         query = query.offset(int(min))
@@ -629,19 +614,19 @@ class MscDatabase(Singleton):
 
     def getTargetForCoh(self, ctx, coh_id): # FIXME should we use the ctx
         session = create_session()
-        target = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.id_command_on_host == coh_id).first()
+        target = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.id == coh_id).first()
         session.close()
         return target
 
     def getCommandsHistory(self, ctx, coh_id): # FIXME should we use the ctx
         session = create_session()
-        ret = session.query(CommandsHistory).filter(self.commands_history.c.id_command_on_host == coh_id).all()
+        ret = session.query(CommandsHistory).filter(self.commands_history.c.fk_commands_on_host == coh_id).all()
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def getCommands(self, ctx, cmd_id): 
+    def getCommands(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(Commands).filter(self.commands.c.id_command == cmd_id).filter(self.commands.c.username == ctx.userid).first()
+        ret = session.query(Commands).filter(self.commands.c.id == cmd_id).filter(self.commands.c.username == ctx.userid).first()
         session.close()
         return ret
 
@@ -659,6 +644,6 @@ class MscDatabase(Singleton):
 
     def getTargets(self, cmd_id):
         session = create_session()
-        ret = session.query(Target).filter(self.target.c.id_command == cmd_id).all()
+        ret = session.query(Target).filter(self.target.c.fk_commands == cmd_id).all()
         session.close()
         return ret

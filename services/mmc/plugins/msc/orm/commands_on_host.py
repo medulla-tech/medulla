@@ -32,10 +32,10 @@ class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
     """
     def getId(self):
-        return self.id_command_on_host
+        return self.id
 
     def getIdCommand(self):
-        return self.id_command
+        return self.fk_commands
 
 ### Handle upload states ###
     def isUploadImminent(self):
@@ -360,8 +360,8 @@ class CommandsOnHost(object):
 
     def toH(self):
         return {
-            'id_command_on_host': self.id_command_on_host,
-            'id_command': self.id_command,
+            'id': self.id,
+            'fk_commands': self.fk_commands,
             'host': self.host,
             'start_date': self.start_date,
             'end_date': self.end_date,
@@ -370,7 +370,6 @@ class CommandsOnHost(object):
             'executed': self.executed,
             'deleted': self.deleted,
             'next_launch_date': self.next_launch_date,
-            'current_pid': self.current_pid,
             'number_attempt_connection_remains': self.number_attempt_connection_remains,
             'next_attempt_date_time': self.next_attempt_date_time,
             'current_launcher': self.current_launcher

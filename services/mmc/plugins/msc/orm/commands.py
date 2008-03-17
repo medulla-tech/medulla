@@ -39,7 +39,7 @@ class Commands(object):
     """ Mapping between msc.commands and SA
     """
     def getId(self):
-        return self.id_command
+        return self.id
 
     def getNextConnectionDelay(self):
         return self.next_connection_delay
@@ -59,7 +59,7 @@ class Commands(object):
 
         logger.debug('Start dispatch...')
         # iterate over available target
-        for myTarget in database.getTargets(self.id_command):
+        for myTarget in database.getTargets(self.id):
             host = machines.getMachine(ctx, {'uuid': myTarget.target_uuid})
             if host == None:
                 logging.getLogger().warning("Cannot find hostname '%s'" % (myTarget.target_name))
@@ -68,7 +68,7 @@ class Commands(object):
             # Create (and save) a new commands_on_host row
             logging.getLogger().debug("Create new command on host : %s" % (host.hostname))
             myCommandOnHost = CommandsOnHost()
-            myCommandOnHost.id_command = self.id_command
+            myCommandOnHost.fk_commands = self.id
             myCommandOnHost.host = host.hostname[0] # maybe uuid ...
             myCommandOnHost.start_date = self.start_date or "0000-00-00 00:00:00"
             myCommandOnHost.end_date = self.end_date or "0000-00-00 00:00:00"
@@ -77,7 +77,6 @@ class Commands(object):
             myCommandOnHost.uploaded = 'TODO'
             myCommandOnHost.executed = 'TODO'
             myCommandOnHost.deleted = 'TODO'
-            myCommandOnHost.current_pid = -1
             myCommandOnHost.number_attempt_connection_remains = self.max_connection_attempt
             myCommandOnHost.next_attempt_date_time = 0
             session.save(myCommandOnHost)
@@ -86,7 +85,7 @@ class Commands(object):
             logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
 
             # update our target with the new command_on_host
-            myTarget.id_command_on_host = myCommandOnHost.getId()
+            myTarget.fk_commands_on_host = myCommandOnHost.getId()
             session.update(myTarget) # not session.save as myTarget was attached to another session
             session.flush()
 
@@ -97,10 +96,10 @@ class Commands(object):
         session.close()
 
     def isDispatched(self):
-        if self.id_command != -1:
+        if self.id != -1:
             return self.dispatched == 'YES'
         else:
-            logging.getLogger().debug("id_command = -1 then dispatched = false")
+            logging.getLogger().debug("id = -1 then dispatched = false")
             return False
 
     def setDispatched(self, dispatched = True):
@@ -111,10 +110,10 @@ class Commands(object):
         else:
             self.dispatched = 'NO'
 
-        if self.id_command != -1:
+        if self.id != -1:
             return 0
         else:
-            logging.getLogger().debug("id_command = -1 then dispatched = false")
+            logging.getLogger().debug("id = -1 then dispatched = false")
             return -1
 
     def hasToWOL(self):
@@ -122,7 +121,7 @@ class Commands(object):
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
-        logging.getLogger().debug("hasSomethingToUpload(%s): %s" % (self.id_command, result))
+        logging.getLogger().debug("hasSomethingToUpload(%s): %s" % (self.id, result))
         return result
 
     def hasSomethingToExecute(self):
@@ -138,24 +137,21 @@ class Commands(object):
     def isQuickAction(self):
         # TODO: a quick action is not only an action with nothing to upload
         result = (len(self.files) == 0)
-        logging.getLogger().debug("isQuickAction(%s): %s" % (self.id_command, result))
+        logging.getLogger().debug("isQuickAction(%s): %s" % (self.id, result))
         return result
 
     def toH(self):
         return {
-            'id_command': self.id_command,
+            'id': self.id,
             'date_created': self.date_created,
             'start_file': self.start_file,
             'parameters': self.parameters,
-            'path_destination': self.path_destination,
-            'path_source': self.path_source,
-            'create_directory': self.create_directory,
             'start_script': self.start_script,
             'delete_file_after_execute_successful': self.delete_file_after_execute_successful,
             'files': self.files,
             'start_date': self.start_date,
             'end_date': self.end_date,
-#            'target': map(lambda t: t.toH(), MscDatabase().getTargets(self.id_command)),
+#            'target': map(lambda t: t.toH(), MscDatabase().getTargets(self.id)),
             'target': '',
             'username': self.username,
             'webmin_username': self.webmin_username,

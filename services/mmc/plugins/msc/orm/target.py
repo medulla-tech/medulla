@@ -54,8 +54,8 @@ class Target(object):
     def toH(self):
         return {
             'id': self.id,
-            'id_command': self.id_command,
-            'id_command_on_host': self.id_command_on_host,
+            'fk_commands': self.fk_commands,
+            'fk_commands_on_host': self.fk_commands_on_host,
             'target_name': self.target_name,
             'target_uuid': self.target_uuid,
             'target_ipaddr': self.target_ipaddr,

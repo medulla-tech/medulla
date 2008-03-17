@@ -1,0 +1,18 @@
+ALTER TABLE `commands` \
+    DROP COLUMN `path_destination`,\
+    DROP COLUMN `path_source`,\
+    DROP COLUMN `create_directory`,\
+    CHANGE `id_command` `id` int(11) NOT NULL auto_increment;
+ALTER TABLE `commands_on_host` \
+    DROP COLUMN current_pid,\
+    CHANGE `id_command_on_host` `id` int(11) NOT NULL auto_increment,\
+    CHANGE `id_command` `fk_commands` int(11) NOT NULL default '0';
+ALTER TABLE `commands_history` \
+    CHANGE `id_command_history` `id` int(11) NOT NULL auto_increment,\
+    CHANGE `id_command_on_host` `fk_commands_on_host` int(11) NOT NULL default '0';
+ALTER TABLE `target` \
+    CHANGE `id_command` `fk_commands` int(11) NOT NULL default '0',\
+    CHANGE `id_command_on_host` `fk_commands_on_host` int(11) default NULL;
+
+DELETE FROM version;
+INSERT INTO version VALUES( '6' );

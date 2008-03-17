@@ -83,13 +83,10 @@ from mmc.plugins.msc.mirror_api import MirrorApi
 def send_package_command(ctx, pid, targets, params, p_api, gid = None):
     cmd = PackageA(p_api).getPackageCommand(pid)
     start_file = cmd['command']
-    path_destination = ''
-    path_source = ''
     a_files = PackageA(p_api).getPackageFiles(pid)
     #TODO : check that params has needed values, else put default one
     # as long as this method is called from the MSC php, the fileds should be
     # setted, but, if someone wants to call it from somewhere else...
-    create_directory = (params['create_directory'] == 'on' and 'enable' or 'disable')
     start_script = (params['start_script'] == 'on' and 'enable' or 'disable')
     delete_file_after_execute_successful = (params['delete_file_after_execute_successful'] == 'on' and 'enable' or 'disable')
     wake_on_lan = (params['wake_on_lan'] == 'on' and 'enable' or 'disable')
@@ -135,12 +132,9 @@ def send_package_command(ctx, pid, targets, params, p_api, gid = None):
     id_command = MscDatabase().addCommand(
         start_file,
         parameters,
-        path_destination, # TODO
-        path_source, # TODO
         files,
         targets, # TODO : need to convert array into something that we can get back ...
         gid,
-        create_directory,
         start_script,
         delete_file_after_execute_successful,
         start_date,

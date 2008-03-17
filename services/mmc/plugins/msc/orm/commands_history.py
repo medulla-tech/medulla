@@ -35,8 +35,8 @@ class CommandsHistory(object):
     """
     def toH(self):
         return {
-            'id_command_history': self.id_command_history,
-            'id_command_on_host': self.id_command_on_host,
+            'id': self.id,
+            'fk_commands_on_host': self.fk_commands_on_host,
             'date': self.date,
             'stderr': self.stderr,
             'stdout': self.stdout,
