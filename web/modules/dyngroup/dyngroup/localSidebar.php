@@ -28,7 +28,7 @@
 require_once("modules/dyngroup/includes/includes.php");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups", "dyngroup"), "base", "computers",  "list"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "creator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "computersgroupcreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
 
 $items = array();
 $groups = getAllGroups(array('canShow'=>true));
