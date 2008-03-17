@@ -47,7 +47,7 @@ from pulse2.scheduler.launchers_driving import chooseLauncher
 import pulse2.scheduler.network
 
 def gatherStuff():
-    """ handy function to gather wdely used objects """
+    """ handy function to gather widely used objects """
     session = sqlalchemy.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
@@ -59,7 +59,7 @@ def gatherCoHStuff(idCommandOnHost):
     database = MscDatabase()
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
     myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
-    myTarget = session.query(Target).filter(database.target.c.id_command == myCommandOnHost.getIdCommand()).limit(1)[0]
+    myTarget = session.query(Target).filter(database.target.c.fk_commands == myCommandOnHost.getIdCommand()).limit(1)[0]
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
@@ -92,11 +92,10 @@ def startAllCommands():
         filter(database.commands_on_host.c.current_state != 'execution_failed').\
         filter(database.commands_on_host.c.current_state != 'delete_failed').\
         filter(database.commands_on_host.c.current_state != 'inventory_failed').\
-        filter(database.commands_on_host.c.current_pid == -1).\
         filter(database.commands_on_host.c.next_launch_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
         all():
         # enter the maze: run command
-        deffered = runCommand(q.id_command_on_host)
+        deffered = runCommand(q.id)
         if deffered:
             deffereds.append(deffered)
     session.close()
@@ -585,10 +584,10 @@ def parseInventoryError(reason, myCommandOnHostID):
     # FIXME: should return a failure (but which one ?)
     return None
 
-def updateHistory(id_command_on_host, state, error_code=0, stdout='', stderr=''):
+def updateHistory(id, state, error_code=0, stdout='', stderr=''):
     encoding = SchedulerConfig().dbencoding
     history = CommandsHistory()
-    history.id_command_on_host = id_command_on_host
+    history.fk_commands_on_host = id
     history.date = time.time()
     history.error_code = error_code
     history.stdout = stdout.encode(encoding, 'replace')
