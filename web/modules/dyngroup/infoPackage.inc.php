@@ -35,20 +35,27 @@ $submod = & $base->getSubmod('computers');
 /* groupes dynamiques */
 
 if (isDynamicEnable()) {
-    $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
+    $page = new Page("computersgroupcreator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/tab.php");
     $submod->addPage($page);
     
-    $page = new Page("edit",_T("Machines Group Editor","dyngroup"));
+    $page = new Page("computersgroupedit",_T("Machines Group Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/edithead.php");
     $page->setOptions(array("visible"=>False));
+
+    $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
+    $page->addTab($tab);
+    
     $submod->addPage($page);
 } else {
-    $page = new Page("creator",_T("Machines Group Creator","dyngroup"));
+    $page = new Page("computersgroupcreator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
     $submod->addPage($page);
     
-    $page = new Page("edit",_T("Machines Group Editor","dyngroup"));
+    $page = new Page("computersgroupedit",_T("Machines Group Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
     $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
