@@ -110,22 +110,22 @@ function dispatch_all_commands() {
     return xmlCall('msc.dispatch_all_commands');
 }
 
-function get_id_command_on_host($id_command) {
-    return xmlCall('msc.get_id_command_on_host', array($id_command));
+function get_id_command_on_host($id) {
+    return xmlCall('msc.get_id_command_on_host', array($id));
 }
 
 /* Command on host handling */
-function start_command_on_host($coh_id) {
-    return xmlCall('msc.start_command_on_host', array($coh_id));
+function start_command_on_host($id) {
+    return xmlCall('msc.start_command_on_host', array($id));
 }
-function stop_command_on_host($coh_id) {
-    return xmlCall('msc.stop_command_on_host', array($coh_id));
+function stop_command_on_host($id) {
+    return xmlCall('msc.stop_command_on_host', array($id));
 }
-function pause_command_on_host($coh_id) {
-    return xmlCall('msc.pause_command_on_host', array($coh_id));
+function pause_command_on_host($id) {
+    return xmlCall('msc.pause_command_on_host', array($id));
 }
-function restart_command_on_host($coh_id) {
-    return xmlCall('msc.restart_command_on_host', array($coh_id));
+function restart_command_on_host($id) {
+    return xmlCall('msc.restart_command_on_host', array($id));
 }
 /* /Command on host handling */
 

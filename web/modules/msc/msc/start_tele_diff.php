@@ -74,7 +74,7 @@ if (isset($_POST["badvanced"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi') as $param) {
+    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi', 'copy_mode') as $param) {
         $params[$param] = $_POST[$param];
     }
     $params['tab'] = 'tablaunch';
@@ -98,7 +98,8 @@ if ($gid) {
     $cible = $group->getName();
 }
 $name = getPackageLabel($p_api, $_GET["pid"]);
-$f = new PopupForm(sprintf(_T("Launch action \"%s\" on \"%s\"", "msc"), $name, $hostname));
+$version = getPackageVersion($p_api, $_GET["pid"]);
+$f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $hostname));
 
 // form preseeding
 $hidden = new HiddenTpl("papi");
@@ -123,10 +124,16 @@ $hidden = new HiddenTpl("next_connection_delay");
 $f->add($hidden, array("value" => 60, "hide" => True));
 $hidden = new HiddenTpl("max_connection_attempt");
 $f->add($hidden, array("value" => 3, "hide" => True));
-$check = new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan"));
+$check = new TrFormElement(_T('awake', 'msc'), new CheckboxTpl("wake_on_lan"));
 $f->add($check, array("value" => ''));
-$check = new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory"));
+$check = new TrFormElement(_T('invent.', 'msc'), new CheckboxTpl("start_inventory"));
 $f->add($check, array("value" => ''));
+$rb = new RadioTpl("copy_mode");
+$rb->setChoices(array(_T('push', 'msc'), _T('p/p', 'msc')));
+$rb->setvalues(array('push', 'push_pull'));
+$check = new TrFormElement(_T('mode', 'msc'), $rb);
+$f->add($check, array("value" => ''));
+
 $f->addValidateButton("bconfirm");
 $f->addButton("badvanced", _T("Advanced", 'msc'));
 $f->addCancelButton("bback");

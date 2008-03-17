@@ -96,8 +96,8 @@ $n = null;
 if ($areCommands) {
     foreach ($cmds as $cmd) {
         $a_cmd[] = $cmd['title'];
-        $params[] = array('cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
-        if ($_GET['cmd_id'] && $cmd['id_command'] == $_GET['cmd_id']) {
+        $params[] = array('cmd_id'=>$cmd['id'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+        if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
         } else {
             $a_details[] = $actiondetails;
@@ -134,7 +134,7 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
 
             $icons = state_tmpl($coh['current_state']);
             $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;

@@ -34,7 +34,7 @@ function action($action, $target) {
     /* Handle posting of quick actions */
     $script_list = msc_script_list_file();
     if (array_key_exists($action, $script_list)) {
-        $id_command = add_command_quick(
+        $id = add_command_quick(
             $script_list[$action]["command"],
             $target,
             $script_list[$action]["title".$current_lang],
@@ -43,7 +43,7 @@ function action($action, $target) {
         dispatch_all_commands();
         scheduler_start_all_commands();
         // if on a single computer
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id_command, 'gid'=>$_GET['gid'])));
+        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
     }
 }
 
@@ -59,7 +59,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $page = $path[2];
     $tab = $path[3];
     $params = array();
-    foreach (array('create_directory', 'pid', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
+    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
         $params[$param] = $post[$param];
     }
     $p_api = new ServerAPI();
@@ -94,12 +94,12 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $pid = $post['pid'];
 
     // record new command
-    $id_command = add_command_api($pid, $cible, $params, $p_api, $gid);
+    $id = add_command_api($pid, $cible, $params, $p_api, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
 
     // then redirect to the logs page
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id)));
 }
 
 /* Advanced action: form display */
@@ -140,8 +140,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
     $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
     $f->add(new TrFormElement(_T('Command title', 'msc'), new InputTpl('ltitle')), array("value" => $name));
-    $f->add(new TrFormElement(_T('Create directory', 'msc'), new CheckboxTpl("create_directory")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
+     $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan")), array("value" => $_GET['wake_on_lan'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement(_T('Delay betwen connections', 'msc'), new InputTpl("next_connection_delay")), array("value" => 60));

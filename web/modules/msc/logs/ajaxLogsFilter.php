@@ -76,12 +76,12 @@ $a_details = array();
 $n = null;
 
 foreach ($cmds as $coh) {
-    $coh_id = $coh['id_command_on_host'];
+    $coh_id = $coh['id'];
     $cho_status = $coh['current_state'];
-    $cmd = command_detail($coh['id_command']);
+    $cmd = command_detail($coh['fk_commands']);
     $coh = get_commands_on_host($coh_id);
     $target = get_target_for_coh($coh_id);
-    
+
     if ($history) {
         $d = $coh["end_date"];
     } else {
@@ -101,7 +101,7 @@ foreach ($cmds as $coh) {
     } else {
         $a_current[] = $coh['current_state'];
     }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id_command'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from");
+    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from");
 
 
     $icons = state_tmpl($coh['current_state']);
@@ -112,7 +112,7 @@ foreach ($cmds as $coh) {
         $a_details[] = $actionempty;
     } elseif ($coh['current_state'] != 'done') {
         $a_details[] = $actiondetails_logs;
-    } else { 
+    } else {
         $a_details[] = $actiondetails_hist;
     }
 }

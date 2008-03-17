@@ -27,7 +27,7 @@ class CommandOnHost {
     function CommandOnHost($coh) {
         $statusTable = getStatusTable();
         $this->db_coh = get_commands_on_host($coh);
-        #$this->db_cmd = command_detail($this->db_coh['id_command']);
+        #$this->db_cmd = command_detail($this->db_coh['fk_commands']);
         $this->values = array(
             array(_T('Host', 'msc'), $this->db_coh['host'], 1),
             array(_T('current_state', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
@@ -74,9 +74,6 @@ class Command {
             array(_T('User command creator', 'msc'),$this->db_cmd['webmin_username'], 0),
             array(_T('Execute file', 'msc'),$this->db_cmd['start_file'], 0),
             array(_T('Execution arguments', 'msc'),$this->db_cmd['parameters'], 0),
-            array(_T('Destination directory', 'msc'),$this->db_cmd['path_destination'], 0),
-            array(_T('Source directory (repository)', 'msc'),$this->db_cmd['path_source'], 0),
-            array(_T('Create destination directory', 'msc'),$this->db_cmd['create_directory'], 0),
             array(_T('Start execute file', 'msc'),$this->db_cmd['start_script'], 0),
             array(_T('Start inventory agent', 'msc'),$this->db_cmd['start_inventory'], 0),
             array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['wake_on_lan'], 0),
@@ -119,7 +116,7 @@ class CommandHistory {
         // TODO : ch is a list, we have to chose the good one (ie : the most recent date)
         $this->db_ch = get_command_history($coh_id);
         $this->db_coh = get_commands_on_host($coh_id);
-        $this->db_cmd = command_detail($this->db_coh['id_command']);
+        $this->db_cmd = command_detail($this->db_coh['fk_commands']);
     }
     function display() {
         // display parameters
@@ -129,9 +126,6 @@ class CommandHistory {
             array(_T('User command creator', 'msc'),$this->db_cmd['webmin_username']),
             array(_T('Execute file', 'msc'),$this->db_cmd['start_file']),
             array(_T('Execution arguments', 'msc'),$this->db_cmd['parameters']),
-            array(_T('Destination directory', 'msc'),$this->db_cmd['path_destination']),
-            array(_T('Source directory (repository)', 'msc'),$this->db_cmd['path_source']),
-            array(_T('Create destination directory', 'msc'),$this->db_cmd['create_directory']),
             array(_T('Start execute file', 'msc'),$this->db_cmd['start_script']),
             array(_T('Start inventory agent', 'msc'),$this->db_cmd['start_inventory']),
             array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['wake_on_lan']),
@@ -240,12 +234,3 @@ function _toDate($a) {
 function _plusIcon($a) {
     return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> '.$a;
 }
-
-# CH :
-#Array ( [0] => Array ( [date] => 05-10-2007 23:34:47 [id_command_history] => 9 [state] => execution_in_progress [stderr] => [stdout] => ) [1] => Array ( [date] => 05-10-2007 23:34:47 [id_command_history] => 10 [state] => execution_failed [stderr] => /bin/sh: line 1: bin/annotate_output: No such file or directory *** Exit code: 127 *** [stdout] => ) )
-
-# COH :
-#Array ( [uploaded] => IGNORED [executed] => FAILED [next_launch_date] => 00-00-0000 00:00:00 [deleted] => TODO [id_command] => 3 [current_state] => execution_failed [host] => belial [number_attempt_connection_remains] => 3 )
-
-# CMD :
-#Array ( [files] => [next_connection_delay] => 60 [path_source] => [end_date] => [parameters] => [title] => list [max_connection_attempt] => 3 [webmin_username] => root@192.168.100. [start_script] => enable [start_file] => /bin/ls /tmp [create_directory] => disable [start_inventory] => disable [path_destination] => none [date_created] => 2007-10-05 23:34:42 [wake_on_lan] => disable [start_date] => [target] => belial )
