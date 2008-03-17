@@ -70,7 +70,7 @@ $submod->addPage($page);
 
 $page = new Page("delete_group",_T("Delete a group of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/delete_group.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible"=>False, "noHeader" =>True));
 $submod->addPage($page);
 
 $page = new Page("details",_T("Group of machines details","dyngroup"));
