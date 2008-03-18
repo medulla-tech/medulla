@@ -245,27 +245,7 @@ class MscDatabase(Singleton):
         else:
             self.logger.debug("No command to dispatch")
 
-    def addCommand(self,
-                start_file,
-                parameters,
-                files,
-                target,
-                gid = '',
-                start_script = True,
-                delete_file_after_execute_successful = True,
-                start_date = "0000-00-00 00:00:00",
-                end_date = "0000-00-00 00:00:00",
-                username = "root",
-                webmin_username = "root",
-                title = "",
-                wake_on_lan = False,
-                next_connection_delay = 60,
-                max_connection_attempt = 3,
-                start_inventory = False,
-                repeat = 0
-            ):
-        """ Main func to inject a new command in our MSC database """
-
+    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat):
         # create (and save) the command itself
         session = create_session()
         cmd = Commands()
@@ -274,8 +254,6 @@ class MscDatabase(Singleton):
         cmd.start_file = start_file
         cmd.parameters = parameters
         cmd.files = files
-        if type(cmd.files) == list:
-            cmd.files = "\n".join(cmd.files)
         cmd.start_script = start_script
         cmd.delete_file_after_execute_successful = delete_file_after_execute_successful
         cmd.start_date = start_date
@@ -291,62 +269,66 @@ class MscDatabase(Singleton):
         session.save(cmd)
         session.flush()
         session.close()
+        return cmd.id
+
+    def createTarget(self, target, cmd_id, group_id):
+        targetUuid = target[0]
+        targetName = target[1]
+        computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+        targetMac = '||'.join(computer[1]['macAddress'])
+        targetIp = '||'.join(computer[1]['ipHostNumber'])
+        try:
+            targetName = computer[1]['fullname']
+        except KeyError:
+            pass
+        mirror = MirrorApi().getMirror(targetName)
+        fallback = MirrorApi().getFallbackMirror(targetName)
+        # TODO: add path
+        MscDatabase().addTarget(
+            cmd_id,
+            targetName,
+            targetUuid,
+            targetIp,
+            targetMac,
+            '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
+            '||' + \
+            '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
+            group_id
+        ) # TODO change mirrors...
+
+    def addCommand(self,
+                start_file,
+                parameters,
+                files,
+                target,
+                group_id = '',
+                start_script = True,
+                delete_file_after_execute_successful = True,
+                start_date = "0000-00-00 00:00:00",
+                end_date = "0000-00-00 00:00:00",
+                username = "root",
+                webmin_username = "root",
+                title = "",
+                wake_on_lan = False,
+                next_connection_delay = 60,
+                max_connection_attempt = 3,
+                start_inventory = False,
+                repeat = 0
+            ):
+        """ Main func to inject a new command in our MSC database """
+
+        if type(files) == list:
+            files = "\n".join(files)
+        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat)
 
         # create the corresponding target
         if type(target[0]) == list:
             for t in target:
-                targetUuid = t[0]
-                targetName = t[1]
-                computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
-                targetMac = '||'.join(computer[1]['macAddress'])
-                targetIp = '||'.join(computer[1]['ipHostNumber'])
-                try:
-                    targetName = computer[1]['fullname']
-                except KeyError:
-                    pass
-
-                mirror = MirrorApi().getMirror(targetName)
-                fallback = MirrorApi().getFallbackMirror(targetName)
-                # TODO: add path
-                MscDatabase().addTarget(
-                    cmd.id,
-                    targetName,
-                    targetUuid,
-                    targetIp,
-                    targetMac,
-                    '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
-                    '||' + \
-                    '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
-                    gid
-                ) # TODO change mirrors...
+                self.createTarget(t, cmd_id, group_id)
         else:
-            targetUuid = target[0]
-            targetName = target[1]
-            computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
-            targetMac = '||'.join(computer[1]['macAddress'])
-            targetIp = '||'.join(computer[1]['ipHostNumber'])
-            try:
-                targetName = computer[1]['fullname']
-            except KeyError:
-                pass
-
-            mirror = MirrorApi().getMirror(targetName)
-            fallback = MirrorApi().getFallbackMirror(targetName)
-            # TODO: add path
-            MscDatabase().addTarget(
-                cmd.id,
-                targetName,
-                targetUuid,
-                targetIp,
-                targetMac,
-                '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
-                '||' + \
-                '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
-                gid
-            ) # TODO change mirrors...
-
-        self.logger.debug("addCommand : %s" % (str(cmd.id)))
-        return cmd.id
+            self.createTarget(target, cmd_id, group_id)
+        self.logger.debug("addCommand : %s" % (str(cmd_id)))
+        return cmd_id
 
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
         self.logger.debug("add_command_quick : "+cmd+" on :")
