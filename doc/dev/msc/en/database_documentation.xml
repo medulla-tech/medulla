@@ -410,7 +410,75 @@
         <term>mirror</term>
 
         <listitem>
-          <para>the packages location</para>
+          <para>the packages location. This field must be formatted as
+          follow:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>several tockens, separator is '<emphasis
+              role="bold">||</emphasis>' (<emphasis
+              role="bold">double-pipe</emphasis>)</para>
+            </listitem>
+
+            <listitem>
+              <para>tockens are URI formatted like this:</para>
+
+              <para>&lt;protocol&gt;://&lt;login&gt;:&lt;pass&gt;@&lt;server&gt;&lt;path&gt;</para>
+
+              <para>Protocol may be one of the following: ssh, http, ftp, smb,
+              file. Each protocol corresponds to a different way to gather a
+              package:</para>
+
+              <variablelist>
+                <varlistentry>
+                  <term>HTTP</term>
+
+                  <listitem>
+                    <para>Package is pulled by the client (using for exemple
+                    wget). the URI represents exacty the root place from where
+                    to download package components.</para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>FTP</term>
+
+                  <listitem>
+                    <para>Same as HTTP.</para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>SSH</term>
+
+                  <listitem>
+                    <para>Same as HTTP, using scp to dowload components.
+                    Password unsupported.</para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>SMB</term>
+
+                  <listitem>
+                    <para>Same as HTTP, using SAMBA (CIFS) protocol. Currently
+                    unsupported.</para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>FILE</term>
+
+                  <listitem>
+                    <para>Package is pushed on the client by the server, using
+                    scp. In this case, the rightmost part of the URI represent
+                    the full package root path <emphasis role="bold">on the
+                    server</emphasis>.</para>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </listitem>
+          </itemizedlist>
         </listitem>
       </varlistentry>
 
