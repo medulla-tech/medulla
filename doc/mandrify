@@ -23,7 +23,7 @@ replace_arr = [
 </body>"""],
 
 [ "<body>" , """<body>  <style type="text/css">
-@import url("http://mds.mandriva.org/custom/css/linbox.css");
+@import url("http://pulse2.mandriva.org/custom/css/linbox.css");
 
 .screen {
  background-color: #FFEEDD;
