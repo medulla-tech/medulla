@@ -122,7 +122,8 @@ function isFormError($name) {
  * @param $value 0 to set standard mode, 1 to set expert mode
  */
 function setExpertMode($value) {
-    setcookie("expertMode", $value, time() + 3600 * 24 * 30, "/mmc");
+    global $conf;
+    setcookie("expertMode", $value, time() + 3600 * 24 * 30, $conf["global"]["root"]);
 }
 
 /**

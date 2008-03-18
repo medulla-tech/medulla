@@ -24,6 +24,7 @@
 ?>
 <?php 
 
+require("config.inc.php");
 require("../modules/base/includes/edit.inc.php");
 
 session_start();
