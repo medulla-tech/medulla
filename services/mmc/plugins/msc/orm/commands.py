@@ -151,7 +151,6 @@ class Commands(object):
             'files': self.files,
             'start_date': self.start_date,
             'end_date': self.end_date,
-#            'target': map(lambda t: t.toH(), MscDatabase().getTargets(self.id)),
             'target': '',
             'username': self.username,
             'webmin_username': self.webmin_username,
@@ -168,6 +167,7 @@ class Commands(object):
             'pre_run_hook': self.pre_run_hook,
             'post_run_hook': self.post_run_hook,
             'on_success_hook': self.on_success_hook,
-            'on_failure_hook': self.on_failure_hook
+            'on_failure_hook': self.on_failure_hook,
+            'maxbw': self.maxbw
         }
 
