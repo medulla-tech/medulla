@@ -175,7 +175,7 @@ def runUploadPhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
                 files_list
             )
             mydeffered.\
@@ -185,7 +185,7 @@ def runUploadPhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'async_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
                 files_list
             )
             mydeffered.addErrback(parsePushError, myCommandOnHostID)
@@ -212,7 +212,7 @@ def runUploadPhase(myCommandOnHostID):
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'sync_remote_pull',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget'},
+                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
                     files_list
                 )
                 mydeffered.\
@@ -222,7 +222,7 @@ def runUploadPhase(myCommandOnHostID):
                 mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                     'async_remote_pull',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget'},
+                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
                     files_list
                 )
                 mydeffered.addErrback(parsePullError, myCommandOnHostID)
