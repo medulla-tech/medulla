@@ -529,6 +529,6 @@
   <section>
     <title>The "version" table</title>
 
-    <para>Used to hold the database veresion, in the table Number.</para>
+    <para>Used to hold the database version, in the table Number.</para>
   </section>
 </article>
