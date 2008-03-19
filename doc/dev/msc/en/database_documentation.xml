@@ -184,6 +184,15 @@
           field hold its name</para>
         </listitem>
       </varlistentry>
+
+      <varlistentry>
+        <term>maxbw</term>
+
+        <listitem>
+          <para>when we have something to send on the client, do not go over
+          this BW rate (b/s), default is 0</para>
+        </listitem>
+      </varlistentry>
     </variablelist>
   </section>
 

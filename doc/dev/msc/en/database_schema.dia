@@ -548,13 +548,13 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O1">
       <dia:attribute name="obj_pos">
-        <dia:point val="15.55,9.425"/>
+        <dia:point val="15.55,7.775"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="15.5,9.375;23.45,12.275"/>
+        <dia:rectangle val="15.5,7.725;23.45,10.625"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="15.55,9.425"/>
+        <dia:point val="15.55,7.775"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="7.8499999999999996"/>
@@ -679,19 +679,19 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O2">
       <dia:attribute name="obj_pos">
-        <dia:point val="-5.85,-3.975"/>
+        <dia:point val="-5.85,-6.425"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-5.9,-4.025;10.45,12.275"/>
+        <dia:rectangle val="-5.9,-6.475;10.45,10.625"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="-5.85,-3.975"/>
+        <dia:point val="-5.85,-6.425"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="16.25"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
-        <dia:real val="16.200000000000003"/>
+        <dia:real val="17.000000000000004"/>
       </dia:attribute>
       <dia:attribute name="name">
         <dia:string>#commands#</dia:string>
@@ -1155,6 +1155,29 @@
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="comment">
+            <dia:string>##</dia:string>
+          </dia:attribute>
+          <dia:attribute name="visibility">
+            <dia:enum val="0"/>
+          </dia:attribute>
+          <dia:attribute name="abstract">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+          <dia:attribute name="class_scope">
+            <dia:boolean val="false"/>
+          </dia:attribute>
+        </dia:composite>
+        <dia:composite type="umlattribute">
+          <dia:attribute name="name">
+            <dia:string>#maxbw#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="type">
+            <dia:string>#int(11)#</dia:string>
+          </dia:attribute>
+          <dia:attribute name="value">
+            <dia:string>#0#</dia:string>
           </dia:attribute>
           <dia:attribute name="comment">
             <dia:string>##</dia:string>
@@ -2112,14 +2135,14 @@
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O6">
       <dia:attribute name="obj_pos">
-        <dia:point val="-5.85,-3.275"/>
+        <dia:point val="-5.85,-5.725"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="-6.9,-9.875;15.6,-2.425"/>
+        <dia:rectangle val="-6.9,-9.875;15.6,-4.875"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="-5.85,-3.275"/>
-        <dia:point val="-6.85,-3.275"/>
+        <dia:point val="-5.85,-5.725"/>
+        <dia:point val="-6.85,-5.725"/>
         <dia:point val="-6.85,-9.825"/>
         <dia:point val="15.55,-9.825"/>
       </dia:attribute>
@@ -2150,14 +2173,14 @@
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O7">
       <dia:attribute name="obj_pos">
-        <dia:point val="10.4,-3.275"/>
+        <dia:point val="10.4,-5.725"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.35,-4.125;15.6,3.775"/>
+        <dia:rectangle val="10.35,-6.575;15.6,3.775"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="10.4,-3.275"/>
-        <dia:point val="12.975,-3.275"/>
+        <dia:point val="10.4,-5.725"/>
+        <dia:point val="12.975,-5.725"/>
         <dia:point val="12.975,3.725"/>
         <dia:point val="15.55,3.725"/>
       </dia:attribute>
