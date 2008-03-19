@@ -35,7 +35,6 @@ class MscConfig(PluginConfig):
         PluginConfig.readConf(self)
         self.qactionspath = self.get("msc", "qactionspath")
         self.repopath = self.get("msc", "repopath")
-
         self.db_driver = self.get("msc", "db_driver")
         self.db_host = self.get("msc", "db_host")
         self.db_port = int(self.get("msc", "db_port"))
@@ -50,9 +49,6 @@ class MscConfig(PluginConfig):
             self.dbpoolrecycle = self.getint("msc", "db_pool_recycle")
         except NoOptionError:
             pass
-#        self.pa_server = self.get('package_api', 'server')
-#        self.pa_port = self.get('package_api', 'port')
-#        self.pa_mountpoint = self.get('package_api', 'mountpoint')
 
         self.ma_server = self.get('package_api', 'mserver')
         self.ma_port = self.get('package_api', 'mport')
@@ -65,7 +61,6 @@ class MscConfig(PluginConfig):
         PluginConfig.setDefault(self)
         self.db_debug = logging.ERROR
         self.dbpoolrecycle = 60
-
 
 # static config ...
 COMMAND_STATES_LIST = {

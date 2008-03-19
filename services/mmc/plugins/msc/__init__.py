@@ -162,90 +162,90 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid))
 
-    def add_command_api(self, pid, target, params, p_api, gid = None):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None):
         ctx = self.currentContext
-        return xmlrpcCleanup(mmc.plugins.msc.package_api.send_package_command(ctx, pid, target, params, p_api, gid))
-        
+        return xmlrpcCleanup(mmc.plugins.msc.package_api.send_package_command(ctx, pid, target, params, p_api, mode, gid))
+
     def get_id_command_on_host(self, id_command):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
-    
+
     def count_all_commands_on_group(self, gid, filt = '', history = None):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsOnGroup(ctx, gid, filt, history))
-    
+
     def get_all_commands_on_group(self, gid, min, max, filt = '', history = None):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsOnGroup(ctx, gid, min, max, filt, history))
-    
+
     def count_all_commands_on_host_group(self, gid, cmd_id, filt = '', history = None):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsOnHostGroup(ctx, gid, cmd_id, filt, history))
-    
+
     def get_all_commands_on_host_group(self, gid, cmd_id, min, max, filt = '', history = None):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsOnHostGroup(ctx, gid, cmd_id, min, max, filt, history))
-    
+
     def get_all_commandsonhost_currentstate(self):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostCurrentstate(ctx))
-    
+
     def count_all_commandsonhost_by_currentstate(self, current_state, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsonhostByCurrentstate(ctx, current_state, filt))
-    
+
     def get_all_commandsonhost_by_currentstate(self, current_state, min = 0, max = 10, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostByCurrentstate(ctx, current_state, min, max, filt))
-    
+
     def count_all_commandsonhost_by_type(self, type = 0, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsonhostByType(ctx, type, filt))
-    
+
     def get_all_commandsonhost_by_type(self, type, min, max, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostByType(ctx, type, min, max, filt))
-    
+
     def count_all_commands_on_host(self, uuid, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsOnHost(ctx, uuid, filt))
-    
+
     def get_all_commands_on_host(self, uuid, min, max, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsOnHost(ctx, uuid, min, max, filt))
-    
+
     def count_finished_commands_on_host(self, uuid, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countFinishedCommandsOnHost(ctx, uuid, filt))
-    
+
     def get_finished_commands_on_host(self, uuid, min, max, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getFinishedCommandsOnHost(ctx, uuid, min, max, filt))
-    
+
     def count_unfinished_commands_on_host(self, uuid, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countUnfinishedCommandsOnHost(ctx, uuid, filt))
-    
+
     def get_unfinished_commands_on_host(self, uuid, min, max, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getUnfinishedCommandsOnHost(ctx, uuid, min, max, filt))
-    
+
     def get_commands_on_host(self, coh_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandsOnHost(ctx, coh_id))
-    
+
     def get_target_for_coh(self, coh_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getTargetForCoh(ctx, coh_id))
-    
+
     def get_commands_history(self, coh_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandsHistory(ctx, coh_id))
-    
+
     def get_commands(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommands(ctx, cmd_id))
-    
+
 ##
 # machines
 ##

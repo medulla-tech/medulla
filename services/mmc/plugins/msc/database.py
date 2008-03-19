@@ -246,7 +246,6 @@ class MscDatabase(Singleton):
             self.logger.debug("No command to dispatch")
 
     def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat):
-        # create (and save) the command itself
         session = create_session()
         cmd = Commands()
         now = time.localtime()
@@ -271,7 +270,7 @@ class MscDatabase(Singleton):
         session.close()
         return cmd.id
 
-    def createTarget(self, target, cmd_id, group_id):
+    def createTarget(self, target, mode, cmd_id, group_id):
         targetUuid = target[0]
         targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
@@ -281,8 +280,17 @@ class MscDatabase(Singleton):
             targetName = computer[1]['fullname']
         except KeyError:
             pass
-        mirror = MirrorApi().getMirror(targetName)
-        fallback = MirrorApi().getFallbackMirror(targetName)
+
+        # compute URI depending on selected mode
+        if (mode == 'push_pull'):
+            mirror = MirrorApi().getMirror(targetName)
+            fallback = MirrorApi().getFallbackMirror(targetName)
+            targetUri = '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
+                '||' + \
+                '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint'])
+        elif (mode == 'push'):
+            targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
+
         # TODO: add path
         MscDatabase().addTarget(
             cmd_id,
@@ -290,9 +298,7 @@ class MscDatabase(Singleton):
             targetUuid,
             targetIp,
             targetMac,
-            '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
-            '||' + \
-            '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint']),
+            targetUri,
             group_id
         ) # TODO change mirrors...
 
@@ -301,6 +307,7 @@ class MscDatabase(Singleton):
                 parameters,
                 files,
                 target,
+                mode = 'push',
                 group_id = '',
                 start_script = True,
                 delete_file_after_execute_successful = True,
@@ -319,15 +326,19 @@ class MscDatabase(Singleton):
 
         if type(files) == list:
             files = "\n".join(files)
+
+        # create (and save) the command itself
         cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat)
 
         # create the corresponding target
         if type(target[0]) == list:
             for t in target:
-                self.createTarget(t, cmd_id, group_id)
+                self.createTarget(t, mode, cmd_id, group_id)
         else:
-            self.createTarget(target, cmd_id, group_id)
-        self.logger.debug("addCommand : %s" % (str(cmd_id)))
+            self.createTarget(target, mode, cmd_id, group_id)
+
+        # log
+        self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))
         return cmd_id
 
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
