@@ -98,8 +98,8 @@ function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
 }
 
-function add_command_api($pid, $target, $params, $p_api, $gid = null) {
-    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $gid));
+function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null) {
+    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid));
 }
 
 function add_command_quick($cmd, $hosts, $desc, $gid = null) {

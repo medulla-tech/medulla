@@ -47,10 +47,12 @@ if (isset($_POST["bconfirm"])) {
         $params[$param] = $_POST[$param];
     }
 
-    $hostname = $_POST["hostname"];
-    $uuid = $_POST["uuid"];
-    $gid = $_POST["gid"];
-    $pid = $_POST["pid"];
+    $hostname = $_POST['hostname'];
+    $uuid = $_POST['uuid'];
+    $gid = $_POST['gid'];
+    $pid = $_POST['pid'];
+    $mode = $_POST['copy_mode'];
+
     $cible = array($uuid, $hostname);
     if ($gid) {
         $group = new Group($_GET['gid']);
@@ -58,7 +60,7 @@ if (isset($_POST["bconfirm"])) {
     }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $cible, $params, $p_api, $gid);
+    add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));

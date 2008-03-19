@@ -92,9 +92,10 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     }
 
     $pid = $post['pid'];
+    $mode = $post['copy_mode'];
 
     // record new command
-    $id = add_command_api($pid, $cible, $params, $p_api, $gid);
+    $id = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
 

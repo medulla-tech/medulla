@@ -206,10 +206,11 @@ function _colorise($line) {
             $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "C") {
-            $split = split('·', $matches[3][0]);
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=blue>';
-            $out .= $split[count($split)-1];
+            //$split = split('·', $matches[3][0]);
+            //$out .= $split[count($split)-1];
+            $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
