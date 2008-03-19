@@ -39,90 +39,6 @@ import pulse2.launcher.process_control
 import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 
-def set_default_client_options(client):
-    """
-        client i a simple dict, which should contain required connexion infos, for now:
-            protocol: which one to use for connexion, mandatory
-            host: where to connect, mandatory
-            port: default depends on chosen protocol
-            user: when auth is needed, default is root
-            passwd: when auth is needed, default is "" (empty string)
-            cert: when auth is needed, default depends on chosen protocol
-            options: array of strings to pass to the connexion initiator
-            rootpath: used to know where to perform operations ('/' under Unix,
-            '/cygdrive/c' uner MS/Win, etc ...
-    """
-
-    if client['protocol'] == 'ssh':
-        if not 'port' in client:
-            client['port'] = 22
-        if not 'user' in client:
-            client['user'] = 'root'
-        if not 'passwd' in client:
-            client['passwd'] = '' # unset as we should use RSA/DSA keys
-        if not 'cert' in client:
-            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        if not 'options' in client:
-            client['options'] = ['-T']
-            client['options'] += ['-i', client['cert']]
-            for option in LauncherConfig().ssh_options:
-                client['options'] += ['-o', option]
-
-    if client['protocol'] == 'wget': # FIXME: should handle both ssh and http auth
-        if not 'port' in client:
-            client['port'] = 22
-        if not 'user' in client:
-            client['user'] = 'root'
-        if not 'passwd' in client:
-            client['passwd'] = '' # unset as we should use RSA/DSA keys
-        if not 'cert' in client:
-            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        if not 'options' in client:
-            client['options'] = ['-T']
-            client['options'] += ['-i', client['cert']]
-            for option in LauncherConfig().ssh_options:
-                client['options'] += ['-o', option]
-
-    if client['protocol'] == 'scp':
-        if not 'port' in client:
-            client['port'] = 22
-        if not 'user' in client:
-            client['user'] = 'root'
-        if not 'passwd' in client:
-            client['passwd'] = '' # unset as we should use RSA/DSA keys
-        if not 'cert' in client:
-            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        if not 'options' in client:
-            client['options'] = ['-r', '-p', '-q']
-            client['options'] += ['-i', client['cert']]
-            for option in LauncherConfig().ssh_options:
-                client['options'] += ['-o', option]
-
-    if client['protocol'] == 'rsyncssh':
-        if not 'port' in client:
-            client['port'] = 22
-        if not 'user' in client:
-            client['user'] = 'root'
-        if not 'passwd' in client:
-            client['passwd'] = '' # unset as we should use RSA/DSA keys
-        if not 'cert' in client:
-            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        if not 'options' in client:
-            client['options'] = ['--archive', '--verbose']
-            sshoptions = ['/usr/bin/ssh', '-i', client['cert']]
-            for option in LauncherConfig().ssh_options:
-                sshoptions += ['-o', option]
-            client['options'] += ['--rsh', ' '.join(sshoptions)]
-
-    if client['protocol'] == 'wol':
-        if not 'addr' in client:
-            client['addr'] = 'FF:FF:FF:FF:FF:FF'
-        if not 'bcast' in client:
-            client['bcast'] = '255.255.255.255'
-        if not 'port' in client:
-            client['port'] = '40000'
-    return client
-
 def sync_remote_push(command_id, client, files_list):
     """ Handle remote copy on target, sync mode """
     return remote_push(command_id, client, files_list, 'sync')
@@ -135,38 +51,14 @@ def remote_push(command_id, client, files_list, mode):
     """ Handle remote copy (push) """
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
-    client = set_default_client_options(client)
-    """
-    if client['protocol'] == "scp":
-        real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
-        command_list = [ \
-            wrapper_path,
-            '/usr/bin/scp'
-        ]
-        command_list += client['options']
-        command_list += real_files_list
-        command_list += [ \
-            "%s@%s:%s" % (client['user'], client['host'], target_path),
-        ]
-        if mode == 'async':
-            return pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_push'
-            )
-        elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
-    return None
-    """
+    client = pulse2.launcher.utils.set_default_client_options(client)
     if client['protocol'] == "rsyncssh":
         real_files_list = files_list
         command_list = [ \
             wrapper_path,
             '/usr/bin/rsync'
         ]
-        command_list += client['options']
+        command_list += client['proto_args']
         command_list += real_files_list
         command_list += [ \
             "%s@%s:%s" % (client['user'], client['host'], target_path),
@@ -193,17 +85,17 @@ def async_remote_pull(command_id, client, files_list):
 
 def remote_pull(command_id, client, files_list, mode):
     """ Handle remote copy (pull) on target """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
         real_files_list = files_list
-        real_command = 'wget -nv -N %s -P %s' % (' '.join(real_files_list), target_path)
+        real_command = 'wget %s -N %s -P %s' % (' '.join(client['proto_args']), ' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
             '/usr/bin/ssh'
         ]
-        command_list += client['options']
+        command_list += client['transp_args']
         command_list += [ \
             "%s@%s" % (client['user'], client['host']),
             real_command
@@ -230,7 +122,7 @@ def async_remote_delete(command_id, client, files_list):
 
 def remote_delete(command_id, client, files_list, mode):
     """ Handle remote deletion on target """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
@@ -240,7 +132,7 @@ def remote_delete(command_id, client, files_list, mode):
             wrapper_path,
             '/usr/bin/ssh'
         ]
-        command_list += client['options']
+        command_list += client['transp_args']
         command_list += [ \
             "%s@%s" % (client['user'], client['host']),
             real_command
@@ -267,7 +159,7 @@ def async_remote_exec(command_id, client, command):
 
 def remote_exec(command_id, client, command, mode):
     """ Handle remote execution on target """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
@@ -277,7 +169,7 @@ def remote_exec(command_id, client, command, mode):
             wrapper_path,
             '/usr/bin/ssh'
         ]
-        command_list += client['options']
+        command_list += client['transp_args']
         command_list += [ \
             "%s@%s" % (client['user'], client['host']),
             real_command
@@ -304,7 +196,7 @@ def async_remote_quickaction(command_id, client, command):
 
 def remote_quickaction(command_id, client, command, mode):
     """ Handle remote quick action on target """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
         real_command = command
@@ -312,7 +204,7 @@ def remote_quickaction(command_id, client, command, mode):
             wrapper_path,
             '/usr/bin/ssh'
         ]
-        command_list += client['options']
+        command_list += client['transp_args']
         command_list += [ \
             "%s@%s" % (client['user'], client['host']),
             real_command
@@ -334,7 +226,7 @@ def sync_remote_wol(command_id, client, wrapper):
 
     Return: same as sync_remote_push
     """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     """
     if client['protocol'] == "wol":
         real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
@@ -362,7 +254,7 @@ def remote_inventory(command_id, client, mode):
 
     Return: same as sync_remote_push
     """
-    client = set_default_client_options(client)
+    client = pulse2.launcher.utils.set_default_client_options(client)
     wrapper_path = LauncherConfig().wrapper_path
     inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":
@@ -371,7 +263,7 @@ def remote_inventory(command_id, client, mode):
             wrapper_path,
             '/usr/bin/ssh'
         ]
-        command_list += client['options']
+        command_list += client['transp_args']
         command_list += [ \
             "%s@%s" % (client['user'], client['host']),
             real_command

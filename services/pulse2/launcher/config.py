@@ -25,6 +25,7 @@
 # Misc
 import ConfigParser
 import re
+import logging
 
 # MMC
 import mmc.support.mmctools
@@ -35,6 +36,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
 
     """
     name = None
+    cp = None
     pid_path = "/var/run/pulse2"
     launcher_path = "/usr/sbin/pulse2-launcher"
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
@@ -72,54 +74,45 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         'ConnectTimeout=10'
     ]
 
+    def setoption(self, section, key):
+        if self.cp.has_option(section, key):
+            setattr(self, key, self.cp.get(section, key))
+            logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, key)))
+        else:
+            logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, key)))
+
     def setup(self, config_file, name):
         # Load configuration file
-        cp = ConfigParser.ConfigParser()
-        cp.read(config_file)
+        self.cp = ConfigParser.ConfigParser()
+        self.cp.read(config_file)
 
         self.name = name
+        for key in ['pid_path', 'launcher_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
+            self.setoption("launchers", key)
 
-        if cp.has_option("launchers", "pid_path"):
-            self.pid_path = cp.get("launchers", "pid_path")
-        if cp.has_option("launchers", "launcher_path"):
-            self.launcher_path = cp.get("launchers", "launcher_path")
-        if cp.has_option("launchers", "wrapper_path"):
-            self.wrapper_path = cp.get("launchers", "wrapper_path")
-        if cp.has_option("launchers", "source_path"):
-            self.source_path = cp.get("launchers", "source_path")
-        if cp.has_option("launchers", "target_path"):
-            self.target_path = cp.get("launchers", "target_path")
-        if cp.has_option("launchers", "inventory_command"):
-            self.inventory_command = cp.get("launchers", "inventory_command")
-        if cp.has_option("launchers", "temp_folder_prefix"):
-            self.temp_folder_prefix = cp.get("launchers", "temp_folder_prefix")
+        for key in ['host', 'launcher_path', 'port', 'awake_time', 'defer_results']:
+            self.setoption("scheduler", key)
 
-        for section in cp.sections():
+        for section in self.cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
                 self.launchers[section] = {
-                        'port': cp.get(section, "port"),
-                        'bind': cp.get(section, "bind"),
-                        'slots': cp.get(section, "slots")
+                        'port': self.cp.get(section, "port"),
+                        'bind': self.cp.get(section, "bind"),
+                        'slots': self.cp.get(section, "slots")
                     }
-        if cp.has_option("scheduler", "host"):
-            self.scheduler_host = cp.get("scheduler", "host")
-        if cp.has_option("scheduler", "port"):
-            self.scheduler_port = cp.get("scheduler", "port")
-        if cp.has_option("scheduler", "awake_time"):
-            self.awake_time = cp.getint("scheduler", "awake_time")
-        if cp.has_option("scheduler", "defer_results"):
-            self.defer_results = cp.get("scheduler", "defer_results") == 'yes'
 
-        for option in cp.options('ssh'):
+        if self.cp.has_option("ssh", "default_key"):
+            self.ssh_defaultkey = self.cp.get("ssh", "default_key")
+        if self.cp.has_option("ssh", "ssh_options"):
+            self.ssh_options = self.cp.get("ssh", "ssh_options").split(' ')
+        if self.cp.has_option("ssh", "scp_options"):
+            self.scp_options = self.cp.get("ssh", "scp_options").split(' ')
+
+        for option in self.cp.options('ssh'):
             if re.compile("^sshkey_[0-9A-Za-z]+$").match(option):
                 keyname = re.compile("^sshkey_([0-9A-Za-z]+)$").match(option).group(1)
-                self.ssh_keys[keyname] = cp.get('ssh', option)
-        if cp.has_option("ssh", "default_key"):
-            self.ssh_defaultkey = cp.get("ssh", "default_key")
-        if cp.has_option("ssh", "ssh_options"):
-            self.ssh_options = cp.get("ssh", "ssh_options").split(' ')
-        if cp.has_option("ssh", "scp_options"):
-            self.scp_options = cp.get("ssh", "scp_options").split(' ')
+                self.ssh_keys[keyname] = self.cp.get('ssh', option)
 
+        self.awake_time=int(self.awake_time)
 
 

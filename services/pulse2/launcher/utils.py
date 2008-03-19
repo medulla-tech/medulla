@@ -53,6 +53,71 @@ def getPubKey(key_name):
     ssh_key.close()
     return ret
 
+def set_default_client_options(client):
+    """
+        client i a simple dict, which should contain required connexion infos, for now:
+            protocol: which one to use for connexion, mandatory
+            host: where to connect, mandatory
+            port: default depends on chosen protocol
+            user: when auth is needed, default is root
+            passwd: when auth is needed, default is "" (empty string)
+            cert: when auth is needed, default depends on chosen protocol
+            options: array of strings to pass to the connexion initiator
+            rootpath: used to know where to perform operations ('/' under Unix,
+            '/cygdrive/c' under MS/Win, etc ...
+    """
+
+    if client['protocol'] == 'ssh':
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'cert' in client:
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
+        client['transp_args'] = ['-T', '-i', client['cert']]
+        for option in LauncherConfig().ssh_options:
+            client['transp_args'] += ['-o', option]
+
+    if client['protocol'] == 'wget':
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'cert' in client:
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
+        if not 'proto_args' in client:
+            client['proto_args'] = ['-nv']
+        if 'maxbw' in client:
+            client['proto_args'] += ['--limit-rate', '%d' % client['maxbw'] ] # bwlimit arg in b/s
+        client['transp_args'] = ['-T', '-i', client['cert']]
+        for option in LauncherConfig().ssh_options:
+            client['transp_args'] += ['-o', option]
+
+    if client['protocol'] == 'rsyncssh':
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'cert' in client:
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
+        sshoptions = ['/usr/bin/ssh', '-i', client['cert']]
+        if not 'proto_args' in client:
+            client['proto_args'] = ['--archive', '--verbose']
+        for option in LauncherConfig().ssh_options:
+            sshoptions += ['-o', option]
+        client['proto_args'] += ['--rsh', ' '.join(sshoptions)]
+        if 'maxbw' in client:
+            client['proto_args'] += ['--bwlimit', '%d' % int(client['maxbw'] / (1024 * 8)) ] # bwlimit arg in kB/s
+
+    if client['protocol'] == 'wol':
+        if not 'addr' in client:
+            client['addr'] = 'FF:FF:FF:FF:FF:FF'
+        if not 'bcast' in client:
+            client['bcast'] = '255.255.255.255'
+        if not 'port' in client:
+            client['port'] = '40000'
+    return client
+
 class Singleton(object):
     def __new__(type):
         if not '_the_instance' in type.__dict__:
