@@ -26,6 +26,7 @@ import logging
 import sqlalchemy
 import time
 import re
+import os
 
 # Twisted modules
 import twisted.web.xmlrpc
@@ -159,7 +160,11 @@ def runUploadPhase(myCommandOnHostID):
     # local mirror starts by "file://"
     if re.compile('^file://').match(myT.mirrors): # prepare a remote_push
         source_path = re.compile('^file://(.*)$').search(myT.mirrors).group(1)
-        files_list = map(lambda(a): os.path.join(myC.path_source, a), myC.files.split("\n"))
+        files = myC.files.split("\n")
+        files_list = []
+        for file in files:
+            fname = file.split('##')[1]
+            files_list.append(os.path.join(source_path, fname))
         launcher = chooseLauncher()
         target_host = chooseClientIP(myT)
         target_uuid = myT.getUUID()
@@ -170,7 +175,7 @@ def runUploadPhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'scp'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh'},
                 files_list
             )
             mydeffered.\
@@ -180,7 +185,7 @@ def runUploadPhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'async_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'scp'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh'},
                 files_list
             )
             mydeffered.addErrback(parsePushError, myCommandOnHostID)
@@ -335,8 +340,7 @@ def runDeletePhase(myCommandOnHostID):
         return runEndPhase(myCommandOnHostID)
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
-        files_list = myC.files.split("\n")
-        target_path = myC.path_destination
+        files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
         launcher = chooseLauncher()
         target_host = chooseClientIP(myT)
         target_uuid = myT.getUUID()
@@ -347,7 +351,7 @@ def runDeletePhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_delete',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'protocol': 'ssh'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
                 files_list
             )
             mydeffered.\
