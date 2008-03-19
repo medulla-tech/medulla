@@ -98,6 +98,22 @@ def set_default_client_options(client):
             for option in LauncherConfig().ssh_options:
                 client['options'] += ['-o', option]
 
+    if client['protocol'] == 'rsyncssh':
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'passwd' in client:
+            client['passwd'] = '' # unset as we should use RSA/DSA keys
+        if not 'cert' in client:
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
+        if not 'options' in client:
+            client['options'] = ['--archive', '--verbose']
+            sshoptions = ['/usr/bin/ssh', '-i', client['cert']]
+            for option in LauncherConfig().ssh_options:
+                sshoptions += ['-o', option]
+            client['options'] += ['--rsh', ' '.join(sshoptions)]
+
     if client['protocol'] == 'wol':
         if not 'addr' in client:
             client['addr'] = 'FF:FF:FF:FF:FF:FF'
@@ -117,15 +133,38 @@ def async_remote_push(command_id, client, files_list):
 
 def remote_push(command_id, client, files_list, mode):
     """ Handle remote copy (push) """
-    source_path = LauncherConfig().source_path
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     client = set_default_client_options(client)
+    """
     if client['protocol'] == "scp":
         real_files_list = map(lambda(a): "%s/%s" % (source_path, a), files_list)
         command_list = [ \
             wrapper_path,
             '/usr/bin/scp'
+        ]
+        command_list += client['options']
+        command_list += real_files_list
+        command_list += [ \
+            "%s@%s:%s" % (client['user'], client['host'], target_path),
+        ]
+        if mode == 'async':
+            return pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_push'
+            )
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+    return None
+    """
+    if client['protocol'] == "rsyncssh":
+        real_files_list = files_list
+        command_list = [ \
+            wrapper_path,
+            '/usr/bin/rsync'
         ]
         command_list += client['options']
         command_list += real_files_list
