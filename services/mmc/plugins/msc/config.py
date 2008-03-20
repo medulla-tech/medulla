@@ -28,39 +28,85 @@ from mmc.support.config import PluginConfig
 
 class MscConfig(PluginConfig):
 
+    # default folder values
+    qactionspath = "/tftpboot/revoboot/qactions"
+    repopath = "/tftpboot/revoboot/msc"
+
+    # default DB options
+    db_driver = "mysql"
+    db_host = "127.0.0.1"
+    db_port = "3306"
+    db_name = "msc"
+    db_user = "msc"
+    db_passwd = "msc"
+    db_debug = "ERROR"
+    dbpoolrecycle = 60
+
+    # Mirror API stuff
+    ma_server = "127.0.0.1"
+    ma_port = "9990"
+    ma_mountpoint = "/rpc"
+
+    # WEB interface stuff
+    web_def_awake = 1
+    web_def_inventory = 1
+    web_def_mode = "push"
+    web_def_maxbw = "0"
+    web_def_delay = "60"
+    web_def_attempts = "3"
+
     def readConf(self):
         """
         Read the module configuration
         """
         PluginConfig.readConf(self)
-        self.qactionspath = self.get("msc", "qactionspath")
-        self.repopath = self.get("msc", "repopath")
-        self.db_driver = self.get("msc", "db_driver")
-        self.db_host = self.get("msc", "db_host")
-        self.db_port = int(self.get("msc", "db_port"))
-        self.db_name = self.get("msc", "db_name")
-        self.db_user = self.get("msc", "db_user")
-        self.db_passwd = self.get("msc", "db_passwd")
-        try:
-            self.db_debug = logging._levelNames[self.get("msc", "db_debug")]
-        except NoOptionError:
-            pass
-        try:
-            self.dbpoolrecycle = self.getint("msc", "db_pool_recycle")
-        except NoOptionError:
-            pass
 
-        self.ma_server = self.get('package_api', 'mserver')
-        self.ma_port = self.get('package_api', 'mport')
-        self.ma_mountpoint = self.get('package_api', 'mmountpoint')
+        # folders
+        if self.has_option("msc", "qactionspath"):
+            self.qactionspath = self.get("msc", "qactionspath")
+        if self.has_option("msc", "repopath"):
+            self.repopath = self.get("msc", "repopath")
 
-    def setDefault(self):
-        """
-        Set default values
-        """
-        PluginConfig.setDefault(self)
-        self.db_debug = logging.ERROR
-        self.dbpoolrecycle = 60
+        # DB connection
+        if self.has_option("msc", "db_driver"):
+            self.db_driver = self.get("msc", "db_driver")
+        if self.has_option("msc", "db_host"):
+            self.db_host = self.get("msc", "db_host")
+        if self.has_option("msc", "db_port"):
+            self.db_port = self.get("msc", "db_port")
+        if self.has_option("msc", "db_name"):
+            self.db_name = self.get("msc", "db_name")
+        if self.has_option("msc", "db_user"):
+            self.db_user = self.get("msc", "db_user")
+        if self.has_option("msc", "db_passwd"):
+            self.db_passwd = self.get("msc", "db_passwd")
+        if self.has_option("msc", "db_debug"):
+            self.db_debug = self.get("msc", "db_debug")
+        if self.has_option("msc", "db_pool_recycle"):
+            self.dbpoolrecycle = self.get("msc", "db_pool_recycle")
+
+        # some default web interface values
+        if self.has_option("web", "web_def_awake"):
+            self.web_def_awake = self.getint("web", "web_def_awake")
+        if self.has_option("web", "web_def_inventory"):
+            self.web_def_inventory = self.getint("web", "web_def_inventory")
+        if self.has_option("web", "web_def_mode"):
+            self.web_def_mode = self.get("web", "web_def_mode")
+        if self.has_option("web", "web_def_maxbw"):
+            self.web_def_maxbw = self.get("web", "web_def_maxbw")
+        if self.has_option("web", "web_def_delay"):
+            self.web_def_delay = self.get("web", "web_def_delay")
+        if self.has_option("web", "web_def_attempts"):
+            self.web_def_attempts = self.get("web", "web_def_attempts")
+
+        # API Package
+        if self.has_option("package_api", "mserver"):
+            self.ma_server = self.get("package_api", "mserver")
+        if self.has_option("package_api", "mport"):
+            self.ma_port = self.get("package_api", "mport")
+        if self.has_option("package_api", "mmountpoint"):
+            self.ma_mountpoint = self.get("package_api", "mmountpoint")
+
 
 # static config ...
 COMMAND_STATES_LIST = {
@@ -101,7 +147,6 @@ MAX_LOG_SIZE = 15000
 basedir = ''
 
 config = { 'path_destination':'/', 'explorer':0 } # FIXME: to put in msc.ini
-
 
 WINDOWS_SEPARATOR = "\\"
 LINUX_SEPARATOR = "/"
