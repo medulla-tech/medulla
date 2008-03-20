@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: general.php 26 2007-10-17 14:48:41Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

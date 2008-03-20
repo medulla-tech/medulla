@@ -3,7 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  *
- * $Id$
+ * $Id: functions.php 164 2008-02-27 14:55:36Z oroussy $
  *
  * This file is part of LMC.
  *

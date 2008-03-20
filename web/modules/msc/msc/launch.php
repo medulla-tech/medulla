@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: general.php 26 2007-10-17 14:48:41Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -29,6 +29,7 @@ require_once('modules/msc/includes/mirror_api.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
+require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 function action($action, $target) {
     /* Handle posting of quick actions */
@@ -59,7 +60,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $page = $path[2];
     $tab = $path[3];
     $params = array();
-    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi') as $param) {
+    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi', 'maxbw') as $param) {
         $params[$param] = $post[$param];
     }
     $p_api = new ServerAPI();
@@ -134,22 +135,30 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     // form design
     $f = new Form();
     $f->push(new Table());
-    $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
-    $f->add(new HiddenTpl("papi"), array("value" => $_GET["papi"], "hide" => True));
-    $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
-    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
-    $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
-    $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
-    $f->add(new TrFormElement(_T('Command title', 'msc'), new InputTpl('ltitle')), array("value" => $name));
-     $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
+    $f->add(new HiddenTpl("uuid"),  array("value" => $uuid,         "hide" => True));
+    $f->add(new HiddenTpl("papi"),  array("value" => $_GET["papi"], "hide" => True));
+    $f->add(new HiddenTpl("name"),  array("value" => $hostname,     "hide" => True));
+    $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
+    $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
+    $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
+    $f->add(new TrFormElement(_T('Command title', 'msc'),   new InputTpl('ltitle')), array("value" => $name));
     $f->add(new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan")), array("value" => $_GET['wake_on_lan'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Delay betwen connections', 'msc'), new InputTpl("next_connection_delay")), array("value" => 60));
-    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'), new InputTpl("max_connection_attempt")), array("value" => 3));
     $f->add(new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory")), array("value" => $_GET['start_inventory'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Delay betwen connections', 'msc'), new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
+    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'), new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
     $f->add(new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters')), array("value" => ''));
     $f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
     $f->add(new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
+
+    $f->add(new TrFormElement(_T('Max bandwidth', 'msc'),   new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
+    $rb = new RadioTpl("copy_mode");
+    $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+    $rb->setvalues(array('push', 'push_pull'));
+    $rb->setSelected($_GET['copy_mode']);
+    $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+
     $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
@@ -219,5 +228,3 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
 }
 
 </style>
-
-

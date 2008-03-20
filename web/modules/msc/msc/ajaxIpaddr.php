@@ -2,7 +2,7 @@
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
  *
- * $Id: ajaxPackageFilter.php,v 1.1 2008/01/08 14:02:59 root Exp $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

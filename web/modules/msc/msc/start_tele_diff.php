@@ -26,6 +26,7 @@ require('modules/msc/includes/utilities.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
+require('modules/msc/includes/mscoptions_xmlrpc.php');
 
 /* start_tele_diff.php is called when a user hit the "deploy button", rightmost of a package */
 
@@ -43,7 +44,7 @@ if (isset($_POST["bconfirm"])) {
     $p_api->fromURI($_POST["papi"]);
 
     $params = array();
-    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory') as $param) {
+    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw') as $param) {
         $params[$param] = $_POST[$param];
     }
 
@@ -104,35 +105,26 @@ $version = getPackageVersion($p_api, $_GET["pid"]);
 $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $hostname));
 
 // form preseeding
-$hidden = new HiddenTpl("papi");
-$f->add($hidden, array("value" => $_GET["papi"], "hide" => True));
-$hidden = new HiddenTpl("name");
-$f->add($hidden, array("value" => $hostname, "hide" => True));
-$hidden = new HiddenTpl("uuid");
-$f->add($hidden, array("value" => $uuid, "hide" => True));
-$hidden = new HiddenTpl("gid");
-$f->add($hidden, array("value" => $gid, "hide" => True));
-$hidden = new HiddenTpl("from");
-$f->add($hidden, array("value" => $from, "hide" => True));
-$hidden = new HiddenTpl("pid");
-$f->add($hidden, array("value" => $pid, "hide" => True));
-$hidden = new HiddenTpl("create_directory");
-$f->add($hidden, array("value" => 'on', "hide" => True));
-$hidden = new HiddenTpl("start_script");
-$f->add($hidden, array("value" => 'on', "hide" => True));
-$hidden = new HiddenTpl("delete_file_after_execute_successful");
-$f->add($hidden, array("value" => 'on', "hide" => True));
-$hidden = new HiddenTpl("next_connection_delay");
-$f->add($hidden, array("value" => 60, "hide" => True));
-$hidden = new HiddenTpl("max_connection_attempt");
-$f->add($hidden, array("value" => 3, "hide" => True));
+$f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],     "hide" => True));
+$f->add(new HiddenTpl("name"),                                  array("value" => $hostname,         "hide" => True));
+$f->add(new HiddenTpl("uuid"),                                  array("value" => $uuid,             "hide" => True));
+$f->add(new HiddenTpl("gid"),                                   array("value" => $gid,              "hide" => True));
+$f->add(new HiddenTpl("from"),                                  array("value" => $from,             "hide" => True));
+$f->add(new HiddenTpl("pid"),                                   array("value" => $pid,              "hide" => True));
+$f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',              "hide" => True));
+$f->add(new HiddenTpl("start_script"),                          array("value" => 'on',              "hide" => True));
+$f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',              "hide" => True));
+$f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),   "hide" => True));
+$f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),"hide" => True));
+$f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),   "hide" => True));
 $check = new TrFormElement(_T('awake', 'msc'), new CheckboxTpl("wake_on_lan"));
-$f->add($check, array("value" => ''));
+$f->add($check, array("value" => web_def_awake() ? "checked" : ""));
 $check = new TrFormElement(_T('invent.', 'msc'), new CheckboxTpl("start_inventory"));
-$f->add($check, array("value" => ''));
+$f->add($check, array("value" => web_def_inventory() ? "checked" : ""));
 $rb = new RadioTpl("copy_mode");
 $rb->setChoices(array(_T('push', 'msc'), _T('p/p', 'msc')));
 $rb->setvalues(array('push', 'push_pull'));
+$rb->setSelected(web_def_mode());
 $check = new TrFormElement(_T('mode', 'msc'), $rb);
 $f->add($check, array("value" => ''));
 
