@@ -245,7 +245,7 @@ class MscDatabase(Singleton):
         else:
             self.logger.debug("No command to dispatch")
 
-    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat):
+    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw):
         session = create_session()
         cmd = Commands()
         now = time.localtime()
@@ -265,6 +265,7 @@ class MscDatabase(Singleton):
         cmd.max_connection_attempt = max_connection_attempt
         cmd.start_inventory = start_inventory
         cmd.repeat = repeat
+        cmd.maxbw = maxbw
         session.save(cmd)
         session.flush()
         session.close()
@@ -320,7 +321,8 @@ class MscDatabase(Singleton):
                 next_connection_delay = 60,
                 max_connection_attempt = 3,
                 start_inventory = False,
-                repeat = 0
+                repeat = 0,
+                maxbw = 0
             ):
         """ Main func to inject a new command in our MSC database """
 
@@ -328,7 +330,7 @@ class MscDatabase(Singleton):
             files = "\n".join(files)
 
         # create (and save) the command itself
-        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat)
+        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw)
 
         # create the corresponding target
         if type(target[0]) == list:

@@ -93,6 +93,7 @@ def send_package_command(ctx, pid, targets, params, p_api, mode, gid = None):
     next_connection_delay = params['next_connection_delay']
     max_connection_attempt = params['max_connection_attempt']
     start_inventory = (params['start_inventory'] == 'on' and 'enable' or 'disable')
+    maxbw = params['maxbw']
 
     try:
         parameters = params['parameters']
@@ -146,7 +147,9 @@ def send_package_command(ctx, pid, targets, params, p_api, mode, gid = None):
         wake_on_lan,
         next_connection_delay,
         max_connection_attempt,
-        start_inventory
+        start_inventory,
+        0,
+        maxbw
     )
     return id_command
 

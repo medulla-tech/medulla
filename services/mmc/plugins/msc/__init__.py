@@ -156,7 +156,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(_adv_getAllPackages(ctx, filt)[int(start):int(end)])
 
     ##
-    # commands
+    # commands management
     ##
     def add_command_quick(self, cmd, target, desc, gid = None):
         ctx = self.currentContext
@@ -245,6 +245,27 @@ class RpcProxy(RpcProxyI):
     def get_commands(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommands(ctx, cmd_id))
+
+    #
+    # default WEB values handling
+    #
+    def get_web_def_awake(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_awake)
+
+    def get_web_def_inventory(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_inventory)
+
+    def get_web_def_mode(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_mode)
+
+    def get_web_def_maxbw(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_maxbw)
+
+    def get_web_def_delay(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_delay)
+
+    def get_web_def_attempts(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_attempts)
 
 ##
 # machines
