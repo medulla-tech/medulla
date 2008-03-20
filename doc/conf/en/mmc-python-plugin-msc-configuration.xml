@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>MMC MSC plugin configuration file</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+
+      <surname>Rueff</surname>
+
+      <email>nrueff@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 Nicolas Rueff - Mandriva</year>
+    </copyright>
+
+    <revhistory>
+      <revision>
+        <revnumber>$Revision: 93 $</revnumber>
+
+        <date>$Date: 2008-03-06 14:30:04 +0100 (jeu, 06 mar 2008) $</date>
+
+        <authorinitials>$Author: cedric $</authorinitials>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para>This document explains the content of the MMC MSC plugin
+      configuration file</para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The « MSC » plugin is the MMC plugin in charge of recording commands
+    in the MSC database, and gathering results from the database.</para>
+
+    <para>The plugin configuration file is
+    <filename>/etc/mmc/plugins/msc.ini</filename>.</para>
+
+    <para>Like all MMC related configuration file, its file format is INI
+    style. The file is made of sections, each one starting with a
+    « [sectionname] » header. In each section options can be defined like
+    this: « option = value ».</para>
+
+    <para>For example: <screen>[section1]
+option1 = 1
+option2 = 2
+
+[section2]
+option1 = foo
+option2 = plop      </screen></para>
+  </section>
+
+  <section>
+    <title>Configuration file sections</title>
+
+    <para>For now four sections are available in this configuration
+    file:</para>
+
+    <table>
+      <title>base.ini available sections</title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Section name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>main</entry>
+
+            <entry>Mostly MMC related behaviors</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>msc</entry>
+
+            <entry>MSC related options</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>package_api</entry>
+
+            <entry>Describe how to reach the API package service</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>schedulers</entry>
+
+            <entry>Describe how to reach the different MSC Schedulers</entry>
+
+            <entry>yes</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« main » section</title>
+
+    <para>This section is used to give directives to the MMC agent.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>disable</entry>
+
+            <entry>Whenever use this plugin (or not)</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« msc » section </title>
+
+    <para>This section defines some global options.</para>
+
+    <table>
+      <title>Available options for the "msc" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>qactionpath</entry>
+
+            <entry>Folder from where Quick Action scripts are tacken</entry>
+
+            <entry>yes</entry>
+
+            <entry>/tftpboot/revoboot/qactions</entry>
+          </row>
+
+          <row>
+            <entry>repopath</entry>
+
+            <entry>Folder from where packages will be copied (push
+            mode)</entry>
+
+            <entry>yes</entry>
+
+            <entry>/tftpboot/revoboot/msc</entry>
+          </row>
+
+          <row>
+            <entry>db_driver</entry>
+
+            <entry>DB driver to use</entry>
+
+            <entry>yes</entry>
+
+            <entry>mysql</entry>
+          </row>
+
+          <row>
+            <entry>db_host</entry>
+
+            <entry>Host which hosts the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>db_port</entry>
+
+            <entry>Port on which to connect to reach the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>3306 (aka "default MySQL port")</entry>
+          </row>
+
+          <row>
+            <entry>db_name</entry>
+
+            <entry>DB name</entry>
+
+            <entry>yes</entry>
+
+            <entry>msc</entry>
+          </row>
+
+          <row>
+            <entry>db_user</entry>
+
+            <entry>Username to give while conencting to the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>msc</entry>
+          </row>
+
+          <row>
+            <entry>db_passwd</entry>
+
+            <entry>Password to give while connecting to the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>msc</entry>
+          </row>
+
+          <row>
+            <entry>db_debug</entry>
+
+            <entry>Whenever log DB related exchanges</entry>
+
+            <entry>yes</entry>
+
+            <entry>ERROR</entry>
+          </row>
+
+          <row>
+            <entry>db_pool_recycle</entry>
+
+            <entry>DB connection time-to-live</entry>
+
+            <entry>yes</entry>
+
+            <entry>60 (seconds)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« package_api » section</title>
+
+    <para>This section is used to tell to the plugin where to find its Package
+    service.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>mserver</entry>
+
+            <entry>The service IP address</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>mport</entry>
+
+            <entry>The service TCP port</entry>
+
+            <entry>yes</entry>
+
+            <entry>9990</entry>
+          </row>
+
+          <row>
+            <entry>mmountpoint</entry>
+
+            <entry>The service path</entry>
+
+            <entry>yes</entry>
+
+            <entry>/rpc</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+</article>

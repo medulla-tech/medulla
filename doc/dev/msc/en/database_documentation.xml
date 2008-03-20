@@ -18,7 +18,7 @@
     </affiliation>
 
     <copyright>
-      <year>2008 Nicolas Rueff - Mandriva F&amp;AS</year>
+      <year>2008 Nicolas Rueff - Mandriva</year>
     </copyright>
 
     <legalnotice>
@@ -43,7 +43,17 @@
   <section>
     <title>The MSC database design</title>
 
-    <para>&lt;TODO&gt;</para>
+    <para></para>
+
+    <screenshot>
+      <screeninfo>The MSC database design</screeninfo>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="database_schema.png" />
+        </imageobject>
+      </mediaobject>
+    </screenshot>
   </section>
 
   <section>
