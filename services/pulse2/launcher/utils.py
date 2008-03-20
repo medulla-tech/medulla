@@ -88,7 +88,7 @@ def set_default_client_options(client):
         if not 'proto_args' in client:
             client['proto_args'] = ['-nv']
         if 'maxbw' in client:
-            client['proto_args'] += ['--limit-rate', '%d' % client['maxbw'] ] # bwlimit arg in b/s
+            client['proto_args'] += ['--limit-rate', '%d' % client['maxbw'] / 8 ] # bwlimit arg in B/s
         client['transp_args'] = ['-T', '-i', client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]

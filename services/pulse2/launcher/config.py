@@ -35,6 +35,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     Singleton Class to hold configuration directives
 
     """
+
+    # default values
     name = None
     cp = None
     pid_path = "/var/run/pulse2"
