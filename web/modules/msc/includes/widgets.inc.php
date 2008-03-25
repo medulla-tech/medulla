@@ -71,7 +71,7 @@ class RenderedMSCHostDontExists extends HtmlElement {
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td><span style="color:red;">';
-        $buffer .= sprintf(_T('%s host is not defined in the MSC module', 'msc'), $this->name);
+        $buffer .= sprintf(_T('%s host is not defined in the MSC module, or you don\'t have premissions to acces it', 'msc'), $this->name);
         $buffer .= '</span></td></tr>';
         $buffer .= '</table></div>';
         print $buffer;
