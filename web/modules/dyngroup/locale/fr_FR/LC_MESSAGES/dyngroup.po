@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-08 01:20+0100\n"
+"POT-Creation-Date: 2008-03-15 20:11+0100\n"
 "PO-Revision-Date: 2008-01-23 11:29+0100\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,8 @@ msgstr "Ajouter une valeur"
 
 #: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
 #: dyngroup/dyngroup/creator.php:100 dyngroup/dyngroup/creator.php:121
-#: dyngroup/dyngroup/creator.php:125
+#: dyngroup/dyngroup/creator.php:125 dyngroup/dyngroup/creator.php:109
+#: dyngroup/dyngroup/creator.php:130 dyngroup/dyngroup/creator.php:134
 msgid "Add"
 msgstr "Ajouter"
 
@@ -87,36 +88,38 @@ msgstr "Ce résultat a été sauvegardé en tant que %s (id=%s)"
 msgid "Enter Boolean operator bewteen groups"
 msgstr "Spécifier un opérateur booléen entre les groupes"
 
-#: dyngroup/dyngroup/creator.php:62
+#: dyngroup/dyngroup/creator.php:62 dyngroup/dyngroup/creator.php:67
 msgid "Choose the module you want to query : "
 msgstr "Sélectionner le module que vous désirez requêter : "
 
-#: dyngroup/dyngroup/creator.php:79
+#: dyngroup/dyngroup/creator.php:79 dyngroup/dyngroup/creator.php:88
 msgid "Choose your field : "
 msgstr "Sélectionner votre champ : "
 
 #: dyngroup/dyngroup/creator.php:118 dyngroup/dyngroup/creator.php:124
-#: dyngroup/dyngroup/add_groups.php:130
+#: dyngroup/dyngroup/add_groups.php:130 dyngroup/dyngroup/creator.php:127
+#: dyngroup/dyngroup/creator.php:133
 msgid "Yes"
 msgstr "Oui"
 
 #: dyngroup/dyngroup/creator.php:119 dyngroup/dyngroup/add_groups.php:131
+#: dyngroup/dyngroup/creator.php:128
 msgid "No"
 msgstr "Non"
 
-#: dyngroup/dyngroup/creator.php:140
+#: dyngroup/dyngroup/creator.php:140 dyngroup/dyngroup/creator.php:149
 msgid "The request is : "
 msgstr "La requête est : "
 
-#: dyngroup/dyngroup/creator.php:151
+#: dyngroup/dyngroup/creator.php:151 dyngroup/dyngroup/creator.php:160
 msgid "Execute"
 msgstr "Exécuter"
 
-#: dyngroup/dyngroup/creator.php:153
+#: dyngroup/dyngroup/creator.php:153 dyngroup/dyngroup/creator.php:162
 msgid "Save result"
 msgstr "Sauvegarder le résultat"
 
-#: dyngroup/dyngroup/creator.php:155
+#: dyngroup/dyngroup/creator.php:155 dyngroup/dyngroup/creator.php:164
 msgid "Save query"
 msgstr "Sauvegarder la requête"
 
@@ -330,6 +333,11 @@ msgstr "Détails du groupe d'ordinateurs"
 #: dyngroup/infoPackage.inc.php:88
 msgid "Remove a machine from a group"
 msgstr "Supprimer un ordinateur d'un groupe"
+
+#: dyngroup/dyngroup/creator.php:64
+#, php-format
+msgid "Only '%s' module to query"
+msgstr "Le seul module requétable est le module '%s'"
 
 #~ msgid "Group members %s"
 #~ msgstr "Membres du groupe %s"
