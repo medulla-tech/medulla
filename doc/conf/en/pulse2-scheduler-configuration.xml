@@ -171,7 +171,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>8000</entry>
+            <entry>9000</entry>
           </row>
 
           <row>
@@ -209,9 +209,9 @@ option2 = plop      </screen></para>
           <row>
             <entry>awake_time</entry>
 
-            <entry>The scheduler will periodicaly awake, with this key a
-            specific periodicity can be given. Field unit is the
-            "second".</entry>
+            <entry>The scheduler will periodicaly awake (for exemple to poll
+            the database), with this key a specific periodicity can be given.
+            Field unit is the "second".</entry>
 
             <entry>yes</entry>
 

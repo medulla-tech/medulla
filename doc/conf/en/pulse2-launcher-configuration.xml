@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Pulse 2 Launcher configuration file</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+
+      <surname>Rueff</surname>
+
+      <email>nrueff@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 Nicolas Rueff - Mandriva</year>
+    </copyright>
+
+    <revhistory>
+      <revision>
+        <revnumber>$Revision: 13 $</revnumber>
+
+        <date>$Date: 2008-03-20 16:53:29 +0100 (jeu, 20 mar 2008) $</date>
+
+        <authorinitials>$Author: nrueff $</authorinitials>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para>This document explains the content of the configuration file of
+      the launcher service from Pulse 2</para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The « Launcher » service is the Pulse 2 daemon in charge of doing
+    jobs on clients on scheduler orders.</para>
+
+    <para>The service configuration file is
+    <filename>/etc/mmc/pulse2/launchers.ini</filename> (please note the ending
+    "s").</para>
+
+    <para>Like all Pulse 2 related configuration file, its file format is INI
+    style. The file is made of sections, each one starting with a
+    « [sectionname] » header. In each section options can be defined like
+    this: « option = value ».</para>
+
+    <para>For example: <screen>[section1]
+option1 = 1
+option2 = 2
+
+[section2]
+option1 = foo
+option2 = plop      </screen></para>
+  </section>
+
+  <section>
+    <title>Configuration file sections</title>
+
+    <para>For now three sections are available in this configuration file.
+    Some sections describing the different available launchers may appear,
+    their name must begin with "launcher_". The idea behind this is that the
+    main section controls the common behavior of launchers, the others control
+    the specific behaviors.</para>
+
+    <table>
+      <title>launchers.ini available sections</title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Section name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>launchers</entry>
+
+            <entry>Common launchers configuration directives</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>ssh</entry>
+
+            <entry>ssh modus-operandi related section</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>scheduler</entry>
+
+            <entry>Referent scheduler location</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>launcher_XXX</entry>
+
+            <entry>Configuration for launcher_XXX</entry>
+
+            <entry>yes</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>All the other sections (loggers, handlers, ...) are related to
+    Python language logging framework. See <ulink
+    url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
+    .</para>
+  </section>
+
+  <section>
+    <title>« launchers » section</title>
+
+    <para>This section is used to give directives to the all launcher
+    services.</para>
+
+    <table>
+      <title>Available options for the "launchers" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>launcher_path</entry>
+
+            <entry>The Launcher main script location, used by
+            launchers-manager to start and daemonize the services.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/usr/local/sbin/pulse2-launcher</entry>
+          </row>
+
+          <row>
+            <entry>pid_path</entry>
+
+            <entry>The Launcher services PID, used by launchers-manager to
+            track the launcher services.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/var/run/pulse2</entry>
+          </row>
+
+          <row>
+            <entry>wrapper_path</entry>
+
+            <entry>Pulse 2 launcher wrapper (ie "job launcher")
+            location.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/usr/local/sbin/pulse2-output-wrapper</entry>
+          </row>
+
+          <row>
+            <entry>source_path</entry>
+
+            <entry>Packages source path target path (used for upload
+            purpose).</entry>
+
+            <entry>yes</entry>
+
+            <entry>/tftpboot/revoboot/msc</entry>
+          </row>
+
+          <row>
+            <entry>target_path</entry>
+
+            <entry>Client target path (used for upload purpose).</entry>
+
+            <entry>yes</entry>
+
+            <entry>/tmp</entry>
+          </row>
+
+          <row>
+            <entry>inventory_command</entry>
+
+            <entry>The inventory command to use on a client, after a
+            successful deployment.</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>temp_folder_prefix</entry>
+
+            <entry>During a deployment, if a folder has to be created, its
+            name will begin by this string.</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« ssh » section</title>
+
+    <para>This section define global ssh (and scp) options.</para>
+
+    <table>
+      <title>Available options for the "ssh" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>ssh_options</entry>
+
+            <entry>Options passed to OpenSSH binary (-o option).</entry>
+
+            <entry>yes</entry>
+
+            <entry>StrictHostKeyChecking=no Batchmode=yes
+            PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no
+            ConnectTimeout=10</entry>
+          </row>
+
+          <row>
+            <entry>scp_options</entry>
+
+            <entry>Options passed to OpenSCP binary (-o option).</entry>
+
+            <entry>yes</entry>
+
+            <entry>same as ssh_options</entry>
+          </row>
+
+          <row>
+            <entry>default_key</entry>
+
+            <entry>The default SSHv2 key to use, the config code will look for
+            an "ssh_&lt;default_key&gt;" entry in the config file.</entry>
+
+            <entry>yes</entry>
+
+            <entry>default</entry>
+          </row>
+
+          <row>
+            <entry>sshkey_default</entry>
+
+            <entry>The "default" ssh key path.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/root/.ssh/id_dsa.pub</entry>
+          </row>
+
+          <row>
+            <entry>sshkey_XXXX</entry>
+
+            <entry>the "XXXX" ssh key path (when more than one key may be
+            used).</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« scheduler » section</title>
+
+    <para>This section define how the launchers may reach their referent
+    scheduler.</para>
+
+    <table>
+      <title>Available options for the "scheduler" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>host</entry>
+
+            <entry>The referent scheduler IP address</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The referent scheduler TCP port</entry>
+
+            <entry>yes</entry>
+
+            <entry>9000</entry>
+          </row>
+
+          <row>
+            <entry>awake_time</entry>
+
+            <entry>The launcher will periodicaly awake (for exemple to send
+            results to is scheduler), with this key a specific periodicity can
+            be given. Field unit is the "second".</entry>
+
+            <entry>yes</entry>
+
+            <entry>600</entry>
+          </row>
+
+          <row>
+            <entry>defer_results</entry>
+
+            <entry>In async mode, whenever immedialetly send results to
+            referent scheduler upon job completion or wait for being waked up
+            (see above)</entry>
+
+            <entry>yes</entry>
+
+            <entry>no</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« launcher_XXX » section</title>
+
+    <para>This section define specific options for all launchers on the
+    server.</para>
+
+    <table>
+      <title>Available options for the "launcher_XXX" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>bind</entry>
+
+            <entry>The launcher binding IP address.</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The launcher binding TCP port.</entry>
+
+            <entry>yes</entry>
+
+            <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>slots</entry>
+
+            <entry>The number of available slots (ie. maximum number of
+            concurrent jobs)</entry>
+
+            <entry>yes</entry>
+
+            <entry>300</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>By default, a launcher is always defined: "launcher_01":
+    127.0.0.1:8001, with 300 slots.</para>
+  </section>
+</article>
