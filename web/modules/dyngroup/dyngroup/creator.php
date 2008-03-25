@@ -25,9 +25,9 @@
 require_once("modules/dyngroup/includes/includes.php");
 
 if ($edition) {
-    $target = 'edit';
+    $target = 'computersgroupedit';
 } else {
-    $target = 'creator';
+    $target = 'computersgroupcreator';
 }
 
 // getting request and id parameters
@@ -59,19 +59,28 @@ if (quickGet('req') && quickGet('param')) {
 
 // select the module in which a part of the request must be launch
 //TODO put in class
-print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
 $modules = getPossiblesModules();
-
-foreach ($modules as $name) {
-    print "<td><a href='".
-        urlStr("base/computers/$target", array(
-                                                'add_req'=>$name,
-                                                'request'=>$request->toURL(),
-                                                'id'=>$id
-        )).
-        "'>$name</a></td>";
+if (count($modules) == 1) {
+    print "<table><tr><td>".sprintf(_T("Only '%s' module to query", "dyngroup"), $modules[0])."</td></tr></table>";
+    quickSet('add_req', $modules[0]);
+} else {
+    print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
+    
+    foreach ($modules as $name) {
+        if ($name == quickGet('add_req')) {
+            print "<td>$name</td>";
+        } else {
+            print "<td><a href='".
+                urlStr("base/computers/$target", array(
+                                                    'add_req'=>$name,
+                                                    'request'=>$request->toURL(),
+                                                    'id'=>$id
+                )).
+                "'>$name</a></td>";
+        }
+    }
+    print "</tr></table>";
 }
-print "</tr></table>";
 
 // criterion selection
 //TODO put in class
@@ -79,9 +88,13 @@ if (quickGet('add_req')) {
     print "<table><tr><td>"._T("Choose your field : ", "dyngroup")."</td>";
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
     foreach ($criterion as $param_name) {
-        print "<td><a href='".
-            urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
-            "'>$param_name</a></td>";
+        if ($param_name == quickGet('add_param')) {
+            print "<td>$param_name</td>";
+        } else {
+            print "<td><a href='".
+                urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
+                "'>$param_name</a></td>";
+        }
     }
     print "</tr></table>";
 }
@@ -149,9 +162,9 @@ if (!$request->isEmpty())  {
     print "<tr><td><a href='".
         urlStr("base/computers/display", array('id'=>$id, 'request'=>$request->toS())).
         "'>"._T("Execute", "dyngroup")."</a></td><td><a href='".
-        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>0)).
+        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>0)).
         "'>"._T("Save result", "dyngroup")."</a></td><td><a href='".
-        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save'=>1)).
+        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>1)).
         "'>"._T("Save query", "dyngroup")."</a></td></tr>";
     print "</table>";
 }
