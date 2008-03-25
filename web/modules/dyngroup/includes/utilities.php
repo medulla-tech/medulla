@@ -29,6 +29,8 @@ function quickGet($name) {
     return urldecode($res);
 }
 
+function quickSet($name, $value) { $_GET[$name] = $value; }
+
 function idGet() { return quickGet('id'); }
 
 function to_s($obj) { return $obj->toS(); }
