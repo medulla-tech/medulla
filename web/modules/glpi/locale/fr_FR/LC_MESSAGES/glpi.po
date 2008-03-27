@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 11:22+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-03-27 11:57+0100\n"
+"PO-Revision-Date: 2008-03-27 11:57+0100\n"
+"Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +40,8 @@ msgstr "Propriétés"
 msgid "Value"
 msgstr "Valeur"
 
-#: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
+#: glpi/glpi/view_hardware.php:60
+#: glpi/glpi/view_hardware.php:62
 msgid "name"
 msgstr "Nom"
 
@@ -63,7 +63,7 @@ msgstr "Version de l'OS"
 
 #: glpi/glpi/view_hardware.php:66
 msgid "os_sp"
-msgstr "Sp de l'OS"
+msgstr "Révision de l'OS"
 
 #: glpi/glpi/view_hardware.php:67
 msgid "os_license_number"
@@ -103,9 +103,8 @@ msgstr "Onglet controlleur"
 
 #~ msgid "GLPI general tab"
 #~ msgstr "Onglet général"
-
 #~ msgid "GLPI tab 1"
 #~ msgstr "Onglet reseau"
-
 #~ msgid "GLPI tab 2"
 #~ msgstr "Onglet controlleur"
+
