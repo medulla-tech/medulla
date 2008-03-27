@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-14 11:18+0100\n"
+"POT-Creation-Date: 2008-03-27 12:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,31 +42,38 @@ msgstr ""
 
 #: msc/includes/command_history.php:43 msc/includes/command_history.php:92
 #: msc/includes/command_history.php:148 msc/msc/package_detail.php:39
+#: msc/includes/command_history.php:89 msc/includes/command_history.php:142
 msgid "Name"
 msgstr ""
 
 #: msc/includes/command_history.php:44 msc/includes/command_history.php:93
 #: msc/includes/command_history.php:149 msc/msc/package_detail.php:40
+#: msc/includes/command_history.php:90 msc/includes/command_history.php:143
 msgid "Value"
 msgstr ""
 
 #: msc/includes/command_history.php:72 msc/includes/command_history.php:127
+#: msc/includes/command_history.php:124
 msgid "Command name"
 msgstr ""
 
 #: msc/includes/command_history.php:73 msc/includes/command_history.php:128
+#: msc/includes/command_history.php:125
 msgid "Creation date"
 msgstr ""
 
 #: msc/includes/command_history.php:74 msc/includes/command_history.php:129
+#: msc/includes/command_history.php:126
 msgid "User command creator"
 msgstr ""
 
 #: msc/includes/command_history.php:75 msc/includes/command_history.php:130
+#: msc/includes/command_history.php:127
 msgid "Execute file"
 msgstr ""
 
 #: msc/includes/command_history.php:76 msc/includes/command_history.php:131
+#: msc/includes/command_history.php:128
 msgid "Execution arguments"
 msgstr ""
 
@@ -83,50 +90,56 @@ msgid "Create destination directory"
 msgstr ""
 
 #: msc/includes/command_history.php:80 msc/includes/command_history.php:135
+#: msc/includes/command_history.php:77 msc/includes/command_history.php:129
 msgid "Start execute file"
 msgstr ""
 
 #: msc/includes/command_history.php:81 msc/includes/command_history.php:136
+#: msc/includes/command_history.php:78 msc/includes/command_history.php:130
 msgid "Start inventory agent"
 msgstr ""
 
 #: msc/includes/command_history.php:82 msc/includes/command_history.php:137
+#: msc/includes/command_history.php:79 msc/includes/command_history.php:131
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 
 #: msc/includes/command_history.php:83 msc/includes/command_history.php:139
+#: msc/includes/command_history.php:80 msc/includes/command_history.php:133
 msgid "Delay between two connections"
 msgstr ""
 
 #: msc/includes/command_history.php:84 msc/includes/command_history.php:140
+#: msc/includes/command_history.php:81 msc/includes/command_history.php:134
 msgid "Command start date"
 msgstr ""
 
 #: msc/includes/command_history.php:85 msc/includes/command_history.php:141
+#: msc/includes/command_history.php:82 msc/includes/command_history.php:135
 msgid "Command expiry date"
 msgstr ""
 
-#: msc/includes/command_history.php:138
+#: msc/includes/command_history.php:138 msc/includes/command_history.php:132
 msgid "Remaining attempts"
 msgstr ""
 
-#: msc/includes/command_history.php:142
+#: msc/includes/command_history.php:142 msc/includes/command_history.php:136
 msgid "Command next run date"
 msgstr ""
 
-#: msc/includes/command_history.php:155
+#: msc/includes/command_history.php:155 msc/includes/command_history.php:149
 msgid "Transferred files list empty."
 msgstr ""
 
-#: msc/includes/command_history.php:163
+#: msc/includes/command_history.php:163 msc/includes/command_history.php:157
 msgid "Transferred files list"
 msgstr ""
 
-#: msc/includes/command_history.php:208
+#: msc/includes/command_history.php:208 msc/includes/command_history.php:202
 msgid "Y-m-d H:i:s"
 msgstr ""
 
-#: msc/includes/command_history.php:226
+#: msc/includes/command_history.php:226 msc/includes/command_history.php:221
 #, php-format
 msgid "Exit code was: %s"
 msgstr ""
@@ -268,12 +281,12 @@ msgid "Command"
 msgstr ""
 
 #: msc/logs/ajaxLogsFilter.php:122 msc/msc/ajaxLogsFilter.php:154
-#: msc/msc/launch.php:152
+#: msc/msc/launch.php:152 msc/msc/launch.php:153
 msgid "End date"
 msgstr ""
 
 #: msc/logs/ajaxLogsFilter.php:124 msc/msc/ajaxLogsFilter.php:156
-#: msc/msc/launch.php:151
+#: msc/msc/launch.php:151 msc/msc/launch.php:152
 msgid "Start date"
 msgstr ""
 
@@ -344,20 +357,21 @@ msgstr ""
 msgid "Remote control of :"
 msgstr ""
 
-#: msc/msc/launch.php:69
+#: msc/msc/launch.php:69 msc/msc/launch.php:70
 msgid "now"
 msgstr ""
 
-#: msc/msc/launch.php:71
+#: msc/msc/launch.php:71 msc/msc/launch.php:72
 msgid "never"
 msgstr ""
 
 #: msc/msc/launch.php:122 msc/msc/launch.php:125 msc/msc/launch.php:129
+#: msc/msc/launch.php:124 msc/msc/launch.php:127 msc/msc/launch.php:131
 #, php-format
 msgid "Advanced launch action \"%s\" on \"%s\""
 msgstr ""
 
-#: msc/msc/launch.php:142
+#: msc/msc/launch.php:142 msc/msc/launch.php:144
 msgid "Command title"
 msgstr ""
 
@@ -365,35 +379,38 @@ msgstr ""
 msgid "Create directory"
 msgstr ""
 
-#: msc/msc/launch.php:144
+#: msc/msc/launch.php:144 msc/msc/launch.php:147
 msgid "Start the script"
 msgstr ""
 
-#: msc/msc/launch.php:145
+#: msc/msc/launch.php:145 msc/msc/launch.php:148
 msgid "Delete files after a successful execution"
 msgstr ""
 
 #: msc/msc/launch.php:146 msc/msc/start_tele_diff.php:126
+#: msc/msc/launch.php:145
 msgid "Wake on lan"
 msgstr ""
 
-#: msc/msc/launch.php:147
+#: msc/msc/launch.php:147 msc/msc/launch.php:149
 msgid "Delay betwen connections"
 msgstr ""
 
-#: msc/msc/launch.php:148
+#: msc/msc/launch.php:148 msc/msc/launch.php:150
 msgid "Maximum number of connection attempt"
 msgstr ""
 
 #: msc/msc/launch.php:149 msc/msc/start_tele_diff.php:128
+#: msc/msc/launch.php:146
 msgid "Start inventory"
 msgstr ""
 
-#: msc/msc/launch.php:150
+#: msc/msc/launch.php:150 msc/msc/launch.php:151
 msgid "Command parameters"
 msgstr ""
 
-#: msc/msc/launch.php:168 msc/msc/launch.php:201
+#: msc/msc/launch.php:168 msc/msc/launch.php:201 msc/msc/launch.php:177
+#: msc/msc/launch.php:210
 #, php-format
 msgid "Quick action on %s"
 msgstr ""
@@ -430,33 +447,36 @@ msgstr ""
 msgid "Launch action \"%s\" on \"%s\""
 msgstr ""
 
-#: msc/msc/start_tele_diff.php:131
+#: msc/msc/start_tele_diff.php:131 msc/msc/start_tele_diff.php:132
 msgid "Advanced"
 msgstr ""
 
-#: msc/msc/tabs.php:11
+#: msc/msc/tabs.php:11 msc/msc/tabs.php:10 msc/msc/tabs.php:17
 #, php-format
 msgid "%s's machine secure control"
 msgstr ""
 
-#: msc/msc/tabs.php:12 msc/msc/tabs.php:19
+#: msc/msc/tabs.php:12 msc/msc/tabs.php:19 msc/msc/tabs.php:18
+#: msc/msc/tabs.php:29
 msgid "Launch Actions"
 msgstr ""
 
-#: msc/msc/tabs.php:13 msc/msc/tabs.php:20
+#: msc/msc/tabs.php:13 msc/msc/tabs.php:20 msc/msc/tabs.php:19
+#: msc/msc/tabs.php:30
 msgid "Logs"
 msgstr ""
 
-#: msc/msc/tabs.php:14 msc/msc/tabs.php:21
+#: msc/msc/tabs.php:14 msc/msc/tabs.php:21 msc/msc/tabs.php:20
+#: msc/msc/tabs.php:31
 msgid "History"
 msgstr ""
 
-#: msc/msc/tabs.php:18
+#: msc/msc/tabs.php:18 msc/msc/tabs.php:28
 #, php-format
 msgid "%s's group secure control"
 msgstr ""
 
-#: msc/msc/tabs.php:23
+#: msc/msc/tabs.php:23 msc/msc/tabs.php:37
 msgid "Not enough informations"
 msgstr ""
 
@@ -534,4 +554,48 @@ msgstr ""
 
 #: msc/infoPackage.inc.php:150
 msgid "IP Addr."
+msgstr ""
+
+#: msc/includes/widgets.inc.php:74
+#, php-format
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr ""
+
+#: msc/msc/launch.php:155
+msgid "Max bandwidth"
+msgstr ""
+
+#: msc/msc/launch.php:157 msc/msc/start_tele_diff.php:125
+msgid "push"
+msgstr ""
+
+#: msc/msc/launch.php:157
+msgid "push / pull"
+msgstr ""
+
+#: msc/msc/launch.php:160
+msgid "Copy Mode"
+msgstr ""
+
+#: msc/msc/start_tele_diff.php:105
+#, php-format
+msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
+msgstr ""
+
+#: msc/msc/start_tele_diff.php:120
+msgid "awake"
+msgstr ""
+
+#: msc/msc/start_tele_diff.php:122
+msgid "invent."
+msgstr ""
+
+#: msc/msc/start_tele_diff.php:125
+msgid "p/p"
+msgstr ""
+
+#: msc/msc/start_tele_diff.php:128
+msgid "mode"
 msgstr ""
