@@ -23,7 +23,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import mmctools
+
+import ldap
 from ConfigParser import *
+
 
 class ConfigException(Exception):
     pass
@@ -57,3 +60,13 @@ class PluginConfig(ConfigParser):
         fails.
         """
         pass
+
+    def getdn(self, section, option):
+        """
+        Like get, but interpret the value as a LDAP DN, and sanitize it by
+        removing the extra spaces.
+
+        If the value is not a valid DN, a ldap.LDAPError exception will be
+        raised.
+        """
+        return ",".join(ldap.explode_dn(self.get(section, option)))
