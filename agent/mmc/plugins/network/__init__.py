@@ -316,13 +316,13 @@ class NetworkConfig(PluginConfig):
     def readConf(self):
         PluginConfig.readConf(self)
         # DHCP conf
-        self.dhcpDN = self.get("dhcp", "dn")
+        self.dhcpDN = self.getdn("dhcp", "dn")
         self.dhcpPidFile = self.get("dhcp", "pidfile")
         self.dhcpInit = self.get("dhcp", "init")
         self.dhcpLogFile = self.get("dhcp", "logfile")
         self.dhcpLeases = self.get("dhcp", "leases")
         # DNS conf
-        self.dnsDN = self.get("dns", "dn")        
+        self.dnsDN = self.getdn("dns", "dn")        
         self.dnsPidFile = self.get("dns", "pidfile")
         self.dnsInit = self.get("dns", "init")
         self.dnsLogFile = self.get("dns", "logfile")
@@ -335,7 +335,7 @@ class NetworkConfig(PluginConfig):
         except NoOptionError:
             self.bindLdapChrootConfPath = self.bindLdapDir
         try:
-            self.dnsReader = self.get("dns", "dnsreader")
+            self.dnsReader = self.getdn("dns", "dnsreader")
         except NoOptionError:
             pass
         try:
