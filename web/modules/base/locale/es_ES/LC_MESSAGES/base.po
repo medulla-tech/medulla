@@ -5,16 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Linbox Spanish translate\n"
+"Project-Id-Version: MDS Spanish translation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 10:19+0100\n"
-"PO-Revision-Date: 2008-03-27 10:22+0100\n"
+"POT-Creation-Date: 2008-03-27 15:14+0100\n"
+"PO-Revision-Date: 2008-03-27 13:59+0100\n"
 "Last-Translator: Juan Asensio Sánchez <okelet@gmail.com>\n"
-"Language-Team: Aitire <info@aitire.es>\n"
+"Language-Team: Aitire / Juan Asensio Sánchez <info@aitire.es / okelet@gmail."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Country: Spain\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: graph/header.inc.php:202
 msgid "Form cannot be submit. Input errors are highlighted in red."
@@ -557,15 +560,15 @@ msgid "Backup a user's folder"
 msgstr "Copia de seguridad de las carpetas del usuario"
 
 #: modules/base/users/backup.php:52
-#, fuzzy
 msgid "Backup a user's home directory"
-msgstr "Copia de seguridad de las carpetas del usuario"
+msgstr "Realizar copia de seguridad de la carpeta de un usuario"
 
 #: modules/base/users/backup.php:54
-#, fuzzy, php-format
+#, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr ""
-"La copia de seguridad de la carpeta de %s ha sido lanzada en segundo plano."
+"La copia de seguridad de la carpeta de <b>%s</b> ha sido lanzada en segundo "
+"plano."
 
 #: modules/base/users/backup.php:56
 #, php-format
@@ -573,15 +576,18 @@ msgid ""
 "The files will be stored in the directory %s of the server at the end of the "
 "backup."
 msgstr ""
+"Los archivos serán almacenados en el directorio %s del servidor al final de "
+"la copia de seguridad."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
 msgstr ""
+"Por favor, acceda a la página de estado para comprobar el estado de la copia "
+"de seguridad."
 
 #: modules/base/users/backup.php:60
-#, fuzzy
 msgid "This operation will last according to the amount of data to backup."
-msgstr "La duración de la operación depende de la cantidad de datos"
+msgstr "La duración de la operación depende de la cantidad de datos."
 
 #: modules/base/users/backup.php:74
 #, php-format
@@ -764,9 +770,8 @@ msgstr ""
 "nombre de usuario."
 
 #: modules/base/users/editacl.php:62
-#, fuzzy
 msgid "User ACLs successfully modified."
-msgstr "El grupo %s ha sido modificado correctamente"
+msgstr "Las ACLs del usuario han sido modificadas correctamente."
 
 #: modules/base/users/editacl.php:77
 msgid "hide"
