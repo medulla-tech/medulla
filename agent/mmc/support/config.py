@@ -33,8 +33,12 @@ class ConfigException(Exception):
 
 class PluginConfig(ConfigParser):
 
+    USERDEFAULT = "userdefault"
+    HOOKS = "hooks"
+
     def __init__(self, name, conffile = None):
         ConfigParser.__init__(self)
+        self.name = name
         if not conffile: self.conffile = mmctools.getConfigFile(name)
         else: self.conffile = conffile
         self.setDefault()
@@ -46,6 +50,14 @@ class PluginConfig(ConfigParser):
         """Read the configuration file"""
         try: self.disabled = self.getboolean("main", "disable")
         except NoSectionError, NoOptionError: pass
+        self.userDefault = {}
+        if self.has_section(self.USERDEFAULT):
+            for option in self.options(self.USERDEFAULT):
+                self.userDefault[option] = self.get(self.USERDEFAULT, option)
+        self.hooks = {}
+        if self.has_section(self.HOOKS):
+            for option in self.options(self.HOOKS):
+                self.hooks[self.name + "." + option] = self.get(self.HOOKS, option)
 
     def setDefault(self):
         """Set reasonable default"""
