@@ -369,26 +369,11 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
 
     def __init__(self, conffile = None, conffilebase = None):
         mmc.plugins.base.ldapUserGroupControl.__init__(self, conffilebase)
-
         if conffile: configFile = conffile
         else: configFile = INI
-        cp = ConfigParser()
-        cp.read(configFile)
-
-        self.userDefault["samba"] = {}
-        USERDEFAULT = "userDefault"
-        if cp.has_section(USERDEFAULT):
-            for option in cp.options(USERDEFAULT):
-                self.userDefault["samba"][option] = cp.get(USERDEFAULT, option)
-
-        # Fill dictionnary of hooks from config
-        if cp.has_section("hooks"):
-            for option in cp.options("hooks"):
-                self.hooks["samba." + option] = cp.get("hooks", option)
-
-        config = SambaConfig("samba", configFile)
-        self.baseComputersDN = config.baseComputersDN
-
+        self.configSamba = SambaConfig("samba", configFile)
+        self.baseComputersDN = self.configSamba.baseComputersDN
+        self.hooks.update(self.configSamba.hooks)
 
     def getDomainAdminsGroup(self):
         """
@@ -565,19 +550,7 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
             dn = 'uid=' + uid + ',' + self.baseUsersDN
             s = self.l.search_s(dn, ldap.SCOPE_BASE)
             c, old = s[0]
-            new = old.copy()
-            # Modify attributes
-            for attribute, value in self.userDefault["samba"].items():
-                if value == "DELETE":
-                    for key in new.keys():
-                        if key.lower() == attribute:
-                            del new[key]
-                            break
-                else:
-                    for key in new.keys():
-                        if key.lower() == attribute:
-                            new[key] = value
-                            break
+            new = self._applyUserDefault(old.copy(), self.configSamba.userDefault)
             # Update LDAP
             modlist = ldap.modlist.modifyModlist(old, new)
             self.l.modify_s(dn, modlist)
@@ -585,6 +558,10 @@ class sambaLdapControl(mmc.plugins.base.ldapUserGroupControl):
         return 0
 
     def isSmbUser(self, uid):
+        """
+        @return: True if the user is a SAMBA user, else False
+        @rtype: bool
+        """
         ret = False
         if self.existUser(uid): ret = "sambaSamAccount" in self.getDetailedUser(uid)["objectClass"]
         return ret

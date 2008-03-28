@@ -159,11 +159,6 @@ class MailConfig(PluginConfig):
         except: pass
         if self.vDomainSupport:
             self.vDomainDN = self.get("main", "vDomainDN")
-        # FIXME: could be factorized
-        USERDEFAULT = "userDefault"            
-        if self.has_section(USERDEFAULT):
-            for option in self.options(USERDEFAULT):
-                self.userDefault[option] = self.get(USERDEFAULT, option)
 
     def setDefault(self):
         PluginConfig.setDefault(self)
@@ -371,21 +366,7 @@ class MailControl(ldapUserGroupControl):
         dn = 'uid=' + uid + ',' + self.baseUsersDN
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
-        new = copy.deepcopy(old)
-        # Modify attributes
-        for attribute, value in self.configMail.userDefault.items():
-            if "%" in value:
-                for a, v in old.items():
-                    v = v[0]
-                    if type(v) == str:
-                        value = value.replace("%" + a + "%", v)
-            found = False
-            for key in new.keys():
-                if key.lower() == attribute:
-                    new[key] = value
-                    found = True
-                    break
-            if not found: new[attribute] = value                
+        new = self._applyUserDefault(old, self.configMail.userDefault)
 
         if not "mailAccount" in new["objectClass"]:
             new["objectClass"].append("mailAccount")

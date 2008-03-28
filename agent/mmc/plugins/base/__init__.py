@@ -727,6 +727,58 @@ class ldapUserGroupControl:
             ret = False
         return ret
 
+    def _applyUserDefault(self, entry, default):
+        """
+        Prepare the modification of a user entry with default values.
+
+        @param entry: current user entry
+        @type entry: dict
+
+        @param default: default values to apply
+        @type default: dict
+
+        @return: new user entry
+        @rtype: dict
+        """
+        entry = copy.deepcopy(entry)
+        for attribute, value in default.items():
+            # Search if modifiers have been specified
+            s = re.search("^\[(.*)\]", value)
+            if s:
+                modifiers = s.groups()[0]
+                # Remove modifiers from the string
+                value = re.sub("^\[.*\]", "", value)
+            else: modifiers = ""
+            # Interpolate value
+            if "%" in value:
+                for a, v in entry.items():
+                    if type(v) == list:
+                        v = v[0]
+                    if type(v) == str:
+                        if "/" in modifiers: v = delete_diacritics(v)
+                        if "_" in modifiers: v = v.lower()
+                        if "|" in modifiers: v = v.upper()
+                        value = value.replace("%" + a + "%", v)
+            if value == "DELETE":
+                for key in entry.keys():
+                    if key.lower() == attribute:
+                        del entry[key]
+                        break
+            elif value.startswith("+"):
+                for key in entry.keys():
+                    if key.lower() == attribute:
+                        entry[key] = entry[key] + value[1:].split(",")
+                        break
+            else:
+                found = False
+                for key in entry.keys():
+                    if key.lower() == attribute:
+                        entry[key] = value
+                        found = True
+                        break
+                if not found: entry[attribute] = value
+        return entry
+
     def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, primaryGroup = None):
         """
         Add an user in ldap directory
@@ -795,7 +847,7 @@ class ldapUserGroupControl:
                      'userPassWord':"{crypt}" + crypt.crypt(password, self.getSalt()),
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
-                     'objectclass':('inetOrgPerson','posixAccount','shadowAccount','top','person'),
+                     'objectclass':['inetOrgPerson','posixAccount','shadowAccount','top','person'],
                      'uid':uid,
                      'gecos':gecos,
                      'cn': firstN + " " + lastN,
@@ -812,59 +864,24 @@ class ldapUserGroupControl:
                      'shadowLastChange':'11192',
                      }
 
+        user_info = self._applyUserDefault(user_info, self.userDefault["base"])
+
+        # Search Python unicode string and encode them to UTF-8
+        attributes = []
+        for k,v in user_info.items():
+            fields = []
+            if type(v) == list:
+                for item in v:
+                    if type(item) == unicode: item = item.encode("utf-8")
+                    fields.append(item)
+                attributes.append((k, fields))
+            elif type(v) == unicode:
+                attributes.append((k, v.encode("utf-8")))
+            else:
+                attributes.append((k, v))
+
+        ident = 'uid=' + uid + ',' + self.baseUsersDN
         try:
-            # Set default attributes
-            # FIXME: should be put elsewhere
-            for attribute, value in self.userDefault["base"].items():
-                # Search if modifiers have been specified
-                s = re.search("^\[(.*)\]", value)
-                if s:
-                    modifiers = s.groups()[0]
-                    # Remove modifiers from the string
-                    value = re.sub("^\[.*\]", "", value)
-		else: modifiers = ""
-                # Interpolate value
-                if "%" in value:
-                    for a, v in user_info.items():
-                        if type(v) == str:
-                            if "/" in modifiers: v = delete_diacritics(v)
-                            if "_" in modifiers: v = v.lower()
-                            if "|" in modifiers: v = v.upper()
-                            value = value.replace("%" + a + "%", v)
-                if value == "DELETE":
-                    for key in user_info.keys():
-                        if key.lower() == attribute:
-                            del user_info[key]
-                            break
-                elif value.startswith("+"):
-                    for key in user_info.keys():
-                        if key.lower() == attribute:
-                            user_info[key] = user_info[key] + tuple(value[1:].split(","))
-                            break
-                else:
-                    found = False
-                    for key in user_info.keys():
-                        if key.lower() == attribute:
-                            user_info[key] = value
-                            found = True
-                            break
-                    if not found: user_info[attribute] = value                
-
-            ident = 'uid=' + uid + ',' + self.baseUsersDN
-            # Search Python unicode string and encode them to UTF-8
-	    attributes = []
-	    for k,v in user_info.items():
-	        fields = []
-		if type(v) == list:
-                    for item in v:
-                        if type(item) == unicode: item = item.encode("utf-8")
-                        fields.append(item)
-                    attributes.append((k, fields))
-                elif type(v) == unicode:
-                    attributes.append((k, v.encode("utf-8")))
-                else:
-                    attributes.append((k, v))
-
             # Write into the directory
             self.l.add_s(ident, attributes)
             # Add user to her/his group primary group
