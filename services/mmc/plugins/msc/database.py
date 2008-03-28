@@ -291,6 +291,8 @@ class MscDatabase(Singleton):
                 '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint'])
         elif (mode == 'push'):
             targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
+        else:
+            targetUri = None
 
         # TODO: add path
         MscDatabase().addTarget(
