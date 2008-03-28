@@ -21,9 +21,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# big modules
 import logging
-from ConfigParser import NoOptionError
+import re
 
+from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
 
 class MscConfig(PluginConfig):
@@ -55,6 +57,15 @@ class MscConfig(PluginConfig):
     web_def_delay = "60"
     web_def_attempts = "3"
 
+    schedulers = {
+        'scheduler_01': {
+            'port': 8000,
+            'host': '127.0.0.1',
+            'username': 'username',
+            'password': 'password'
+        }
+    }
+
     def readConf(self):
         """
         Read the module configuration
@@ -84,6 +95,16 @@ class MscConfig(PluginConfig):
             self.db_debug = self.get("msc", "db_debug")
         if self.has_option("msc", "db_pool_recycle"):
             self.dbpoolrecycle = self.get("msc", "db_pool_recycle")
+
+        # schedulers
+        for section in self.sections():
+            if re.compile("^scheduler_[0-9]+$").match(section):
+                self.schedulers[section] = {
+                        'port': self.get(section, "port"),
+                        'host': self.get(section, "host"),
+                        'username': self.get(section, "username"),
+                        'password': self.get(section, "password")
+                    }
 
         # some default web interface values
         if self.has_option("web", "web_def_awake"):

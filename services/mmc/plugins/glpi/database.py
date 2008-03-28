@@ -211,7 +211,7 @@ class Glpi(Singleton):
             Column('license', Integer, ForeignKey('glpi_licenses.ID')),
             autoload = True)
         mapper(InstSoftware, self.inst_software)
-        
+
         # glpi_licenses
         self.licenses = Table("glpi_licenses", self.metadata,
             Column('sID', Integer, ForeignKey('glpi_software.ID')),
@@ -780,7 +780,7 @@ class Glpi(Singleton):
                 ret_gw.append(m.ifaddr)
             else:
                 ret_nogw.append(m.ifaddr)
-            
+
         ret_gw = unique(ret_gw)
         ret_gw.extend(unique(ret_nogw))
         session.close()

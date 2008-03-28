@@ -24,6 +24,7 @@
 # Big modules
 import logging
 import re
+import os
 
 # Twisted
 from twisted.web.xmlrpc import Proxy
@@ -291,119 +292,12 @@ def stop_command_on_host(coh_id):
     return xmlrpcCleanup(True)
 ### Command on host handling ###
 
-def start_all_commands():
-    # well, a little dry are we ?
-    MscDatabase().startAllCommands()
-    return xmlrpcCleanup(True)
-
 ##
 # common
 ##
 def get_keychain():
     return xmlrpcCleanup(mmc.plugins.msc.keychain.get_keychain())
 
-###
-## scheduler
-###
-#
-#def scheduler_add_command_quick(cmd, hosts, desc):
-#    scheduler = MSC_Scheduler(DATABASE)
-#    return scheduler.add_command_quick(cmd, hosts, desc)
-#
-#def scheduler_add_command(start_file, parameters, path_destination, path_source, files, target, create_directory_enable, start_script_enable, delete_file_after_execute_successful_enable, start_date, end_date, username, webmin_username, title, wake_on_lan_enable, next_connection_delay, max_connection_attempt, start_inventory_enable, repeat):
-#    scheduler = MSC_Scheduler(DATABASE)
-#    return scheduler.add_command(start_file, parameters, path_destination, path_source, files, target, create_directory_enable, start_script_enable, delete_file_after_execute_successful_enable, start_date, end_date, username, webmin_username, title, wake_on_lan_enable, next_connection_delay, max_connection_attempt, start_inventory_enable, repeat)
-#
-#def scheduler_dispatch_all_commands():
-#    scheduler = MSC_Scheduler(DATABASE)
-#    scheduler.dispatch_all_commands()
-#    return ''
-#
-#def scheduler_start_all_commands():
-#    scheduler = MSC_Scheduler(DATABASE)
-#    scheduler.start_all_commands()
-#    return ''
-#
-#def scheduler_get_id_command_on_host(id_command):
-#    scheduler = MSC_Scheduler(DATABASE)
-##    msc_exec('echo "`date` '+str(id_command)+'" > /tmp/log')
-#    return scheduler.get_id_command_on_host(id_command)
-#
-#def command_detail(id_command):
-#    command = MSC_Scheduler_Command(id_command, DATABASE)
-#    return xmlrpcCleanup(command.command_detail())
-#
-#def command_hosts(id_command):
-#    command = MSC_Scheduler_Command(id_command, DATABASE)
-#    return xmlrpcCleanup(command.command_hosts())
-#
-#def get_command(id_command):
-#    command = MSC_Scheduler_Command(id_command)
-#    return xmlrpcCleanup(command.to_h())
-#
-#def count_commands_filter(target_filter):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands.count_commands_filter(target_filter))
-#
-#def command_list_filter(target_filter, page, number_command_by_page):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands.command_list_filter(target_filter, page, number_command_by_page))
-#
-#def get_number_host_of_command(id_command):
-#    return xmlrpcCleanup(mmc.plugins.msc.scheduler.get_number_host_of_command(id_command))
-#
-#def get_state_of_command(id_command):
-#    return xmlrpcCleanup(mmc.plugins.msc.scheduler.get_state_of_command(id_command))
-#
-#def get_commands_on_host(id_command_on_host):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands_on_host_facade.get_commands_on_host(id_command_on_host))
-#
-#def get_command_history(id_command_on_host):
-#    command_on_host = commands_on_host.MSC_Scheduler_Command_on_Host(id_command_on_host)
-#    return xmlrpcCleanup(command_on_host.command_history())
-#
-#def count_all_commands_on_host(hostname):
-#    return mmc.plugins.msc.commands_on_host_facade.count_all_commands_on_host(hostname)
-#
-#def get_all_commands_on_host(hostname, page, number_command_by_page):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands_on_host_facade.get_all_commands_on_host(hostname, page, number_command_by_page))
-#
-#def get_targets():
-#    return xmlrpcCleanup(mmc.plugins.msc.commands.get_targets())
-#
-#def count_commands_with_filter(filter):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands.count_commands_with_filter(filter))
-#
-#def get_command_list(filter, page, number_command_by_page):
-#    return xmlrpcCleanup(mmc.plugins.msc.commands.get_command_list(filter, page, number_command_by_page))
-#
-##OLIVIERdef get_session(mac, user = "", ping_enable = True, os_type = "", home = ""):
-#def get_session(name, user = "", ping_enable = True, os_type = "", home = ""):
-##OLIVIER    session = mmc.plugins.msc.session.Session(mac, user, ping_enable, os_type, home)
-#    session = mmc.plugins.msc.session.Session(name, user, ping_enable, os_type, home)
-#    return xmlrpcCleanup(session.to_h())
-#
-#def getRepositoryPath():
-#    return xmlrpcCleanup(mmc.plugins.msc.MscConfig("msc").repopath)
-#
-#def msc_command_set_play(id_command_play):
-#    return xmlrpcCleanup(commands.msc_command_set_play(id_command_play))
-#
-#def msc_command_set_pause(id_command_pause):
-#    return xmlrpcCleanup(commands.msc_command_set_pause(id_command_pause))
-#
-#def msc_command_set_stop(id_command_stop):
-#    return xmlrpcCleanup(commands.msc_command_set_stop(id_command_stop))
-#
-#def msc_command_on_host_set_play(id_command_play):
-#    return xmlrpcCleanup(commands_on_host_facade.msc_command_on_host_set_play(id_command_play))
-#
-#def msc_command_on_host_set_pause(id_command_pause):
-#    return xmlrpcCleanup(commands_on_host_facade.msc_command_on_host_set_pause(id_command_pause))
-#
-#def msc_command_on_host_set_stop(id_command_stop):
-#    return xmlrpcCleanup(commands_on_host_facade.msc_command_on_host_set_stop(id_command_stop))
-#
-##############################
-import os
 def file_exists(filename):
     return os.path.exists(filename)
 
@@ -662,18 +556,6 @@ def file_exists(filename):
 
 def is_dir(filename):
     return os.path.isdir(filename)
-
-############# Scheduler driving
-#def scheduler_start_all_commands(scheduler):
-#    return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_all_commands(scheduler))
-#
-#def scheduler_ping_client(scheduler, client_uuid):
-#    return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.ping_client(scheduler, client))
-#
-#def scheduler_probe_client(scheduler, client):
-#    return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, client))
-#
-############ /Scheduler driving
 
 def xmlrpcCleanup2(obj):
     try:

@@ -25,11 +25,11 @@
 import twisted.web.xmlrpc
 import logging
 
+# our stuff
+from mmc.plugins.msc.config import MscConfig
+
 def start_all_commands(scheduler):
-    # TODO: check scheduler
-    if not scheduler:
-        scheduler = "http://127.0.0.1:8000"
-    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
+    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
         'start_all_commands'
     )
     return True
@@ -49,9 +49,6 @@ def ping_client(scheduler, computer):
             }
         ]
     """
-    # TODO: check scheduler
-    if not scheduler:
-        scheduler = "http://127.0.0.1:8000"
     def parseResult(result):
         logging.getLogger().debug('Ping computer %s: %s' % (computer, result))
         return result
@@ -64,7 +61,7 @@ def ping_client(scheduler, computer):
     # - cn[]
     # - ipHostNumber[]
     # - macAddress[]
-    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
+    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
         'ping_client',
         computer[1]['objectUUID'][0],
         computer[1]['fullname'],
@@ -76,9 +73,6 @@ def ping_client(scheduler, computer):
     return mydeffered
 
 def probe_client(scheduler, computer):
-    # TODO: check scheduler
-    if not scheduler:
-        scheduler = "http://127.0.0.1:8000"
     def parseResult(result):
         logging.getLogger().debug('Probe client %s: %s' % (computer, result))
         return result
@@ -91,7 +85,7 @@ def probe_client(scheduler, computer):
     # - cn[]
     # - ipHostNumber[]
     # - macAddress[]
-    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
+    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
         'probe_client',
         computer[1]['objectUUID'][0],
         computer[1]['fullname'],
@@ -101,3 +95,17 @@ def probe_client(scheduler, computer):
     )
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
+
+def select_scheduler(scheduler_name):
+    schedulers = MscConfig('msc').schedulers
+    if not scheduler_name:
+        scheduler = schedulers[schedulers.keys()[0]]
+    else:
+        scheduler = schedulers[scheduler_name]
+
+    uri = 'http://'
+    if scheduler['username'] != '':
+        uri += '%s:%s' % (scheduler['username'], scheduler['password'])
+    uri += '@%s:%d' % (scheduler['host'], scheduler['port'])
+
+    return uri

@@ -52,7 +52,7 @@ class DyngroupDatabase(Singleton):
         conn = self.connected()
         if conn:
             if conn != DATABASEVERSION:
-                self.logger.error("Dyngroup database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))    
+                self.logger.error("Dyngroup database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))
                 return False
             elif type(conn) != int and type(conn) != long:
                 self.logger.error("Dyngroup database version error: v.%s needeed, v.alpha found; please update your schema !" % (DATABASEVERSION))
@@ -110,32 +110,32 @@ class DyngroupDatabase(Singleton):
                             Column('FK_user', Integer, ForeignKey('Users.id')),
                             autoload = True)
         mapper(Groups, self.groups)
-        
+
         # Users
         self.users = Table("Users", self.metadata, autoload = True)
         mapper(Users, self.users)
-        
+
         # ShareGroup
         self.shareGroup = Table("ShareGroup", self.metadata,
                             Column('FK_group', Integer, ForeignKey('Groups.id')),
                             Column('FK_user', Integer, ForeignKey('Users.id')),
                             autoload = True)
         mapper(ShareGroup, self.shareGroup)
-        
+
         # Machines
         self.machines = Table("Machines", self.metadata, autoload = True)
         mapper(Machines, self.machines)
-        
+
         # Results
         self.results = Table("Results", self.metadata,
                             Column('FK_group', Integer, ForeignKey('Groups.id')),
                             Column('FK_machine', Integer, ForeignKey('Machines.id')),
                             autoload = True)
         mapper(Results, self.results)
-        
+
         # version
         self.version = Table("version", self.metadata, autoload = True)
-        
+
     def connected(self):
         try:
             if (self.db != None) and (self.session != None):
@@ -183,7 +183,7 @@ class DyngroupDatabase(Singleton):
     def __getMachines(self, gid, session = create_session()):
         machines = session.query(Machines).select_from(self.machines.join(self.results).join(self.groups)).filter(self.groups.c.id == gid).all()
         return machines
-        
+
     def __getMachine(self, uuid, session = create_session()):
         machine = session.query(Machines).filter(self.machines.c.uuid == uuid).first()
         return machine
@@ -219,13 +219,13 @@ class DyngroupDatabase(Singleton):
         for result in results:
             session.delete(result)
             session.flush()
-        
+
         still_linked = session.query(Results).filter(self.results.c.FK_machine == machine_id).count()
         if still_linked == 0:
             machine = session.query(Machines).filter(self.machines.c.id == machine_id).first()
             session.delete(machine)
             session.flush()
-            
+
         session.close()
         return still_linked
 
@@ -240,7 +240,7 @@ class DyngroupDatabase(Singleton):
         if filter:
             result = result.filter(self.machines.c.name.like('%'+filter+'%'))
         return result
- 
+
     def __allgroups_query(self, ctx, params, session = create_session()):
         user_id = self.__getOrCreateUser(ctx)
         groups = session.query(Groups).select_from(self.groups.join(self.users)).filter(self.users.c.login == ctx.userid)
@@ -257,7 +257,7 @@ class DyngroupDatabase(Singleton):
                 groups = groups.filter(self.groups.c.query != None)
         except KeyError:
             pass
-            
+
         try:
             if params['static']:
                 groups = groups.filter(self.groups.c.query == None)
@@ -269,16 +269,16 @@ class DyngroupDatabase(Singleton):
                  groups = groups.filter(self.groups.c.name.like('%'+params['filter']+'%'))
         except KeyError:
             pass
-            
+
         return groups
-   
+
     def countallgroups(self, ctx, params):
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session)
         count = groups.count()
         session.close()
         return count
-    
+
     def getallgroups(self, ctx, params):
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session)
@@ -296,11 +296,11 @@ class DyngroupDatabase(Singleton):
                 groups = groups.limit(max)
         except KeyError:
             pass
-                                                    
+
         ret = groups.all()
         session.close()
         return ret
-    
+
     def get_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
@@ -312,14 +312,14 @@ class DyngroupDatabase(Singleton):
 
     def delete_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
-        
+
         session = create_session()
         group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
         if not group:
             return False
 
         results = session.query(Results).filter(self.results.c.FK_group == group.id).all()
-        for result in results:  
+        for result in results:
             machine = session.query(Machines).filter(self.machines.c.id == result.FK_machine).first()
             # check if the machine is in other groups
             inside = session.query(Results).filter(self.results.c.FK_machine == machine.id).count()
@@ -330,7 +330,7 @@ class DyngroupDatabase(Singleton):
         session.flush()
         session.close()
         return True
-        
+
     def create_group(self, ctx, name, visibility):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
@@ -370,11 +370,11 @@ class DyngroupDatabase(Singleton):
             return True
         session.close()
         return False
-        
+
     def request_group(self, ctx, id):
         group = self.get_group(ctx, id)
         return group.query
-        
+
     def setrequest_group(self, ctx, gid, request):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
@@ -383,16 +383,16 @@ class DyngroupDatabase(Singleton):
         session.save(group)
         session.flush()
         session.close()
-        
+
         # remove all previous results
         self.__deleteResults(gid)
-        
+
         return group.id
 
     def bool_group(self, ctx, id):
         group = self.get_group(ctx, id)
         return group.bool
-        
+
     def setbool_group(self, ctx, id, bool):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
@@ -428,7 +428,7 @@ class DyngroupDatabase(Singleton):
         result = mmc.plugins.dyngroup.replyToQueryLen(ctx, query, group.bool)
         session.close()
         return result
-       
+
     def result_group(self, ctx, id, start, end, filter = ''):
         session = create_session()
         result = self.__result_group_query(ctx, session, id, filter)
@@ -444,11 +444,11 @@ class DyngroupDatabase(Singleton):
         ret = result.count()
         session.close()
         return ret
-        
+
     def canshow_group(self, ctx, id):
         group = self.get_group(ctx, id)
         return (group.display_in_menu == 1)
-        
+
     def show_group(self, ctx, id):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
@@ -477,7 +477,7 @@ class DyngroupDatabase(Singleton):
             pass
         session.close()
         return (q != None)
-        
+
     def isrequest_group(self, ctx, id):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
@@ -492,7 +492,7 @@ class DyngroupDatabase(Singleton):
     def reload_group(self, ctx, id, queryManager):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
-        
+
         query = queryManager.parse(group.query)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1)
 
@@ -501,7 +501,7 @@ class DyngroupDatabase(Singleton):
             self.__createResult(group.id, machine_id)
         session.close()
         return True
-    
+
     def addmembers_to_group(self, ctx, id, uuids):
         group = self.get_group(ctx, id)
         session = create_session()
