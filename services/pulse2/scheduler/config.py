@@ -37,23 +37,29 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     name = None
     port = 8000
     host = "127.0.0.1"
-    login = ""
-    password = ""
+    username = 'username'
+    password = 'password'
+
     awake_time = 600
+    dbencoding = 'utf-8'
+    mode = 'async'
+
     prober_path = '/usr/local/sbin/pulse2-probe'
     ping_path = '/usr/local/sbin/pulse2-ping'
     wol_path = '/usr/local/sbin/pulse2-wol'
+
     wol_port = '40000'
     wol_bcast = '255.255.255.255'
+
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     launchers = {
         'launcher_01': {
             'port': 8001,
-            'host': '127.0.0.1'
+            'host': '127.0.0.1',
+            'username': 'username',
+            'password': 'password'
         }
     }
-    dbencoding = 'utf-8'
-    mode = 'async'
 
     def setup(self, config_file):
         # Load configuration file
@@ -64,47 +70,41 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         if cp.has_option("scheduler", "port"):
             self.port = cp.getint("scheduler", "port")
-
         if cp.has_option("scheduler", "listen"):
             self.host = cp.get("scheduler", "listen")
-
-        if cp.has_option("scheduler", "login"):
-            self.login = cp.get("scheduler", "login")
-
+        if cp.has_option("scheduler", "username"):
+            self.username = cp.get("scheduler", "username")
         if cp.has_option("scheduler", "password"):
             self.password = cp.get("scheduler", "password")
 
         if cp.has_option("scheduler", "awake_time"):
             self.awake_time = cp.getint("scheduler", "awake_time")
+        if cp.has_option("scheduler", "dbencoding"):
+            self.dbencoding = cp.get("scheduler", "dbencoding")
+        if cp.has_option("scheduler", "mode"):
+            self.mode = cp.get("scheduler", "mode")
 
         if cp.has_option("scheduler", "prober_path"):
             self.prober_path = cp.get("scheduler", "prober_path")
-
         if cp.has_option("scheduler", "ping_path"):
             self.ping_path = cp.get("scheduler", "ping_path")
-
         if cp.has_option("scheduler", "wol_path"):
             self.wol_path = cp.get("scheduler", "wol_path")
 
         if cp.has_option("scheduler", "wol_port"):
             self.wol_port = cp.get("scheduler", "wol_port")
-
         if cp.has_option("scheduler", "wol_bcast"):
             self.wol_bcast = cp.get("scheduler", "wol_bcast")
-
-        if cp.has_option("scheduler", "dbencoding"):
-            self.dbencoding = cp.get("scheduler", "dbencoding")
 
         if cp.has_option("scheduler", "resolv_order"):
             # TODO: check resolvers availability !!!
             self.resolv_order = cp.get("scheduler", "resolv_order").split(' ')
-
-        if cp.has_option("scheduler", "mode"):
-            self.mode = cp.get("scheduler", "mode")
 
         for section in cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
                 self.launchers[section] = {
                         'port': cp.get(section, "port"),
                         'host': cp.get(section, "host")
+                        'username': cp.get(section, "username"),
+                        'password': cp.get(section, "password")
                     }
