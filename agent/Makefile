@@ -111,6 +111,7 @@ docs:
 	epydoc mmc
 
 test:
+	mkdir tmp
 	PYTHONPATH=. python tests/testldap.py
 	PYTHONPATH=. python tests/testsamba.py
 	PYTHONPATH=. python tests/testproxy.py

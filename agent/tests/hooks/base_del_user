@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Get the uid of the new user
+VALUE=`cat $1 | grep ^uid: | sed "s/uid: //"`
+
+echo "$1" > "tmp/base_del_user_$VALUE"
+
+exit 0

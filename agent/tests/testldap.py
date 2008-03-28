@@ -90,11 +90,14 @@ class TestManageUserGroup(unittest.TestCase):
         self.assertEqual(self.l.isEnabled("usertest"), True)
         self.assertEqual(self.l.getAllGroupsFromUser("usertest"), ["allusers"])
 
+        self.assertEqual(os.path.exists("tmp/base_add_user_usertestuserpass"), True)
+
         self.assertEqual(self.l.delUser("usertest", 1), 0)
         self.assertEqual(os.path.exists("/home/usertest"), False)
         self.assertEqual(len(self.l.searchUser()), 0)
 	self.l.delGroup("allusers")
         self.assertEqual(len(self.l.searchGroup()), 0)
+        self.assertEqual(os.path.exists("tmp/base_del_user_usertest"), True)
 
     def test_addDelGroup(self):
         self.assertEqual(self.l.addGroup("grouptest"), 10002)
