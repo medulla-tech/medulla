@@ -70,7 +70,7 @@ class TestMailControlVDomain(unittest.TestCase):
         self.m = MailControl(conffile = "tests/vdomaintest.ini", conffilebase = "tests/basetest.ini")
 
     def test_MailControl(self):
-        self.m.addUser("usertest", "userpass", "test", "test", "/srv/mail/usertest", False)
+        self.m.addUser("usertest", "userpass", "test", "test", "/home/mail/usertest", False)
         self.m.addMailObjectClass("usertest", "usertestmail")
         d = self.m.getDetailedUser("usertest")
         self.assertEqual(d["mailbox"][0], "/srv/mail/usertest/Maildir")
