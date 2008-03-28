@@ -123,7 +123,7 @@ class TestManageUserGroup(unittest.TestCase):
         self.assertEqual(d["cn"][0], u"Héléonôre Rêve".encode("utf-8"))
         self.assertEqual("shadowExpire" in d, False)
         self.assertEqual("lmcUserObject" in d["objectClass"], True)
-        self.assertEqual(d["lmcACL"][0], "base#users#passwd/")
+        self.assertEqual(d["lmcACL"][0], ":base#users#passwd/")
 
 if __name__ == "__main__":
     cleanLdap()
