@@ -113,6 +113,9 @@ class testSambaLdap(unittest.TestCase):
     def test_users(self):
         self.l.addUser("usertest", "userpass", "firstname", "sn")
         self.s.addSmbAttr("usertest", "userpass")
+        d = self.l.getDetailedUser("usertest")
+        self.assertEqual("sambaPwdMustChange" in d, False)
+        self.assertEqual(d["sambaLogonScript"][0], "usertest.bat")
         self.assertEqual(self.s.isSmbUser("usertest"), True)
         self.assertEqual(self.s.isEnabledUser("usertest"), True)
         self.assertEqual(self.s.isLockedUser("usertest"), False)
