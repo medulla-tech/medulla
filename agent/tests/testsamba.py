@@ -133,7 +133,7 @@ class testSambaLdap(unittest.TestCase):
         self.assertEqual(os.path.exists("tmp/samba_add_attr_usertestuserpass"), True)
         self.s.changeUserPasswd("usertest", "userpass2")
         self.assertEqual(os.path.exists("tmp/samba_change_pwd_usertestuserpass2"), True)
-        self.s.changeSambaAttributes("usertest", "sambaLogonScript", "logon.bat")
+        self.s.changeSambaAttributes("usertest", {"sambaLogonScript" : "logon.bat"})
         self.assertEqual(os.path.exists("tmp/samba_change_attr_usertest"), True)        
         # Delete samba attrs
         self.s.delSmbAttr("usertest")
