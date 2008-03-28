@@ -171,7 +171,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>9000</entry>
+            <entry>8000</entry>
           </row>
 
           <row>
@@ -185,14 +185,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>login</entry>
+            <entry>username</entry>
 
             <entry>The name to use when sending XMLRPC commands to this
             scheduler.</entry>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>username</entry>
           </row>
 
           <row>
@@ -203,7 +203,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>password</entry>
           </row>
 
           <row>
@@ -348,6 +348,28 @@ option2 = plop      </screen></para>
             <entry>yes</entry>
 
             <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The name to use when we send XMLRPC commands to this
+            launcher.</entry>
+
+            <entry>yes</entry>
+
+            <entry>username</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when we send XMLRPC commands to this
+            launcher.</entry>
+
+            <entry>yes</entry>
+
+            <entry>password</entry>
           </row>
         </tbody>
       </tgroup>

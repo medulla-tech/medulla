@@ -349,7 +349,29 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>9000</entry>
+            <entry>8000</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The login name to use when authenticating vs our referent
+            scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>username</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when authenticating vs our referent
+            scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>password</entry>
           </row>
 
           <row>
@@ -421,6 +443,28 @@ option2 = plop      </screen></para>
             <entry>yes</entry>
 
             <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The login name to use when authenticating vs this
+            launcher</entry>
+
+            <entry>yes</entry>
+
+            <entry>username</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when authenticating vs this
+            launcher</entry>
+
+            <entry>yes</entry>
+
+            <entry>password</entry>
           </row>
 
           <row>
