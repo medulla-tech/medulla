@@ -162,7 +162,7 @@ option2 = plop      </screen></para>
   </section>
 
   <section>
-    <title>« msc » section </title>
+    <title>« msc » section</title>
 
     <para>This section defines some global options.</para>
 
@@ -289,6 +289,78 @@ option2 = plop      </screen></para>
   </section>
 
   <section>
+    <title>« scheduler_XXX » section</title>
+
+    <para>This section define available schedulers (one per scheduler, "XXX"
+    must be an integer).</para>
+
+    <table>
+      <title>Available options for the "launcher_XXX" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>host</entry>
+
+            <entry>The scheduler IP address.</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The scheduler TCP port.</entry>
+
+            <entry>yes</entry>
+
+            <entry>8000</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The name to use when we send XMLRPC commands to this
+            scheduler.</entry>
+
+            <entry>yes</entry>
+
+            <entry>username</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when we send XMLRPC commands to this
+            scheduler.</entry>
+
+            <entry>yes</entry>
+
+            <entry>password</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>By default, a launcher is always defined: "launcher_01":
+    127.0.0.1:8001</para>
+  </section>
+
+  <section>
     <title>« web » section</title>
 
     <para>This section defined some default web fields.</para>
@@ -311,7 +383,7 @@ option2 = plop      </screen></para>
 
         <tbody>
           <row>
-            <entry> web_def_awake</entry>
+            <entry>web_def_awake</entry>
 
             <entry>Check "Do WOL on client" ?</entry>
 
