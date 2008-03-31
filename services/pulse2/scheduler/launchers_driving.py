@@ -46,5 +46,9 @@ def chooseLauncher():
     """ Select a launcher """
     import random
     launchers = SchedulerConfig().launchers
-    launcher = random.sample(launchers.keys(), 1).pop()
-    return 'http://%s:%s' % (launchers[launcher]['host'], launchers[launcher]['port'])
+    launcher = launchers[random.sample(launchers.keys(), 1).pop()]
+    uri = 'http://'
+    if launcher['username'] != '':
+        uri += '%s:%s' % (launcher['username'], launcher['password'])
+    uri += '@%s:%d' % (launcher['host'], launcher['port'])
+    return uri

@@ -82,7 +82,7 @@ def startService():
     config = SchedulerConfig()
     if not config.username:
         logger.warn('scheduler "%s": no username set !!' % (config.name))
-    if not config.username:
+    if not config.password:
         logger.warn('scheduler "%s": no password set !!' % (config.name))
 
     # check versus MySQLdb version
@@ -177,7 +177,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
         request.setHeader("content-type", "text/xml")
         twisted.internet.defer.maybeDeferred(function, *args).addErrback(
-            self._ebRender, functionPath, args, request
+            self._ebRender
         ).addCallback(
             self._cbRender, request
         )

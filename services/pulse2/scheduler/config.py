@@ -42,7 +42,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
     awake_time = 600
     dbencoding = 'utf-8'
-    mode = 'async'
+    mode = 'sync'
 
     prober_path = '/usr/local/sbin/pulse2-probe'
     ping_path = '/usr/local/sbin/pulse2-ping'
