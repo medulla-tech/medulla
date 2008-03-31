@@ -27,7 +27,11 @@ from pulse2.launcher.config import LauncherConfig
 
 def getScheduler():
     """ Get our referent scheduler """
-    return 'http://%s:%s' % (LauncherConfig().scheduler_host, LauncherConfig().scheduler_port)
+    config = LauncherConfig()
+    uri = 'http://'
+    if config.scheduler_username != '':
+        uri += '%s:%s' % (config.scheduler_username, config.scheduler_password)
+    uri += '@%s:%d' % (config.scheduler_host, config.scheduler_port)
 
 def getTempFolderName(id_command, client_uuid):
     """ Generate a temporary folder name which will contain our deployment stuff """

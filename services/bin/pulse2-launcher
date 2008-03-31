@@ -34,6 +34,10 @@ import twisted.web.xmlrpc
 import twisted.web.server
 import twisted.internet.defer
 import twisted.internet.reactor
+try:
+    from twisted.web import http
+except ImportError:
+    from twisted.protocols import http
 
 # Misc
 import ConfigParser
@@ -137,6 +141,33 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         request.setHeader("content-length", str(len(s)))
         request.write(s)
         request.finish()
+
+    def render(self, request):
+        """
+        override method of xmlrpc python twisted framework
+        """
+        headers = request.getAllHeaders()
+        args, functionPath = xmlrpclib.loads(request.content.read())
+        function = self._getFunction(functionPath)
+
+        cleartext_token = '%s:%s' % (self.config['username'], self.config['password'])
+        token = '%s:%s' % (request.getUser(), request.getPassword())
+        if token != cleartext_token:
+            self.logger.error("Invalid login / password for HTTP basic authentication")
+            request.setResponseCode(http.UNAUTHORIZED)
+            self._cbRender(
+                twisted.web.xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to this Pulse 2 Launcher, basic HTTP authentication is required"),
+                request
+                )
+            return twisted.web.server.NOT_DONE_YET
+
+        request.setHeader("content-type", "text/xml")
+        twisted.internet.defer.maybeDeferred(function, *args).addErrback(
+            self._ebRender
+        ).addCallback(
+            self._cbRender, request
+        )
+        return twisted.web.server.NOT_DONE_YET
 
     def xmlrpc_sync_remote_push(self, command_id, client, files_list):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, files_list))
