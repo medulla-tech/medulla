@@ -237,7 +237,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>async</entry>
+            <entry>sync</entry>
           </row>
 
           <row>
