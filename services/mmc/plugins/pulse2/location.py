@@ -49,10 +49,6 @@ class ComputerLocationManager(Singleton):
         klass = self.components[self.main]
         return klass().getUserLocations(userid)
 
-    def isdyn_group(self, ctx, gid):
-        klass = self.components[self.main]
-        return klass().isdyn_group(ctx, gid)
-
 class ComputerLocationI:
     def getUserProfile(self, userid):
         pass
@@ -60,9 +56,4 @@ class ComputerLocationI:
     def getUserLocations(self, userid):
         pass
     
-    def isdyn_group(self, ctx, gid):
-        """
-        do nothing!
-        """
-        pass
 
