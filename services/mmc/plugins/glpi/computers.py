@@ -43,7 +43,14 @@ class GlpiComputers(ComputerI):
         except exceptions.AttributeError:
             pass
             
-        return self.glpi.getComputer(filt)
+        try:
+            return self.glpi.getComputer(filt)
+        except Exception, e:
+            if len(e.args) > 0 and e.args[0].startswith('NOPERM##'):
+                machine = e.args[0].replace('NOPERM##', '')
+                self.logger.warn("User %s does not have good permissions to access machine '%s'" % (ctx.userid, machine))
+                return False
+            raise e
     
     def getComputersList(self, ctx, filt = None):
         """
