@@ -97,10 +97,13 @@ class Machines(Singleton):
             ret = ComputerManager().getComputer(ctx, h_params)
             self.logger.debug("getMachine: wanted |%s|, got |%s|" % (h_params, ret))
             if ret != None:
-                if type(ret) == list:
-                    return Machine(ret[1])
+                if ret != False:
+                    if type(ret) == list:
+                        return Machine(ret[1])
+                    else:
+                        return Machine(ret)
                 else:
-                    return Machine(ret)
+                    return None
         except KeyError:
             pass
             
