@@ -694,12 +694,12 @@ class Glpi(Singleton):
         """
         Check if the user has correct permissions to access more than one or to all machines
         """
-        a_locations = self.getUserLocation(userid)
+        a_locations = map(lambda loc:loc.name, self.getUserLocations(userid))
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.location))
         query = query.filter(self.location.c.name.in_(*a_locations))
         query = self.filterOnUUID(query, a_machine_uuid)
-        ret = query.group_by(self.machine.c.name)
+        ret = query.group_by(self.machine.c.name).all()
         size = 1
         if type(ret) == list:
             size = len(ret)
