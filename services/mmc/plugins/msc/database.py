@@ -528,7 +528,7 @@ class MscDatabase(Singleton):
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
         query = query.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if cmd_id:
-            query = query.filter(self.commands_on_host.c.id == str(cmd_id))
+            query = query.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
         if filt != '':
             query = query.filter(self.commands.c.title.like('%'+filt+'%'))
         if history:
