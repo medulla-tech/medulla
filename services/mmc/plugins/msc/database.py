@@ -30,6 +30,7 @@ import os.path
 from sqlalchemy import *
 
 # MMC modules
+from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
@@ -607,7 +608,11 @@ class MscDatabase(Singleton):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
         session.close()
-        return coh
+        target = self.getTargetForCoh(ctx, coh_id)
+        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, target.target_uuid):
+            return coh
+        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, target.target_name))
+        return False
 
     def getTargetForCoh(self, ctx, coh_id): # FIXME should we use the ctx
         session = create_session()
@@ -622,10 +627,15 @@ class MscDatabase(Singleton):
         return map(lambda x: x.toH(), ret)
 
     def getCommands(self, ctx, cmd_id):
-        session = create_session()
-        ret = session.query(Commands).filter(self.commands.c.id == cmd_id).filter(self.commands.c.username == ctx.userid).first()
-        session.close()
-        return ret
+        a_targets = map(lambda target: target.target_uuid, self.getTargets(cmd_id))
+        if ComputerLocationManager().doesUserHaveAccessToMachines(ctx.userid, a_targets):
+        target = target.target_uuid
+            session = create_session()
+            ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
+            session.close()
+            return ret
+        self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
+        return False
 
     def getCommandsByGroup(self, gid):
         session = create_session()
