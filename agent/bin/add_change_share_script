@@ -1,0 +1,81 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2008 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# Hook script for SAMBA "add share command" and "change share command" options
+
+from mmc.plugins.samba import smbConf
+import sys
+import os.path
+
+if len(sys.argv) !=  6:
+    sys.exit(1)
+
+# Global path prefix where the share can be added.
+# May be useful when using "net share migrate".
+PREFIX=None
+# Owner of the share.
+# If None the share will be owned by the user that opened the SAMBA connection.
+UID=None
+# Owner group of the share.
+# If None the share will be owned by the primary group of the user that opened
+# the SAMBA connection
+GID=None
+
+configFile = sys.argv[1]
+shareName = sys.argv[2]
+pathName = sys.argv[3]
+comment = sys.argv[4]
+maxconn = sys.argv[5]
+
+s = smbConf(configFile)
+mode = "add"
+if shareName in s.contentArr:
+    # The share already exists
+    mode = "change"
+
+if PREFIX and mode == "add":
+    pathName = os.path.join(PREFIX, pathName[1:])
+
+try:
+    os.makedirs(pathName)
+    os.chmod(pathName, 0777)
+except OSError , (errno, strerror):
+    # Raise exception if error is not "File exists"
+    if errno != 17:
+        raise OSError(errno, strerror + ' ' + pathName)
+    else: pass
+
+s.contentArr[shareName] = {"comment" : comment,
+                           "public" : "no",
+                           "writeable" : "yes",
+                           "path" : pathName
+                           }
+s.save()
+
+if UID and GID and mode == "add":
+    os.chown(pathName, UID, GID)
+
+os.chmod(configFile, 0644)
+
+sys.exit(0)
