@@ -64,17 +64,24 @@ class RenderedMSCHost extends HtmlElement {
 class RenderedMSCHostDontExists extends HtmlElement {
     function RenderedMSCHostDontExists($name) {
         $this->name = $name;
+        $this->str = sprintf(_T('%s host is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
     function display() {
-        headerDisplay();
+        $this->headerDisplay();
     }
     function headerDisplay() {
         $buffer = '<div class="indent"><table>';
         $buffer .= '<tr><td><span style="color:red;">';
-        $buffer .= sprintf(_T('%s host is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
+        $buffer .= $this->str;
         $buffer .= '</span></td></tr>';
         $buffer .= '</table></div>';
         print $buffer;
+    }
+}
+
+class RenderedMSCCommandDontExists extends RenderedMSCHostDontExists {
+    function RenderedMSCCommandDontExists() {
+        $this->str = _T("You don't have the good permissions to access this command");
     }
 }
 

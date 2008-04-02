@@ -68,6 +68,9 @@ class CommandOnHost {
 class Command {
     function Command($cmd) {
         $this->db_cmd = command_detail($cmd);
+        if (!$this->db_cmd) { # use does not have the good permissions
+            return;
+        }
         $this->values = array(
             array(_T('Command name', 'msc'),$this->db_cmd['title'], 1),
             array(_T('Creation date', 'msc'),_toDate($this->db_cmd['date_created']), 1),
@@ -83,6 +86,11 @@ class Command {
         );
     }
     function display() {
+        if (!$this->db_cmd) { # use does not have the good permissions
+            $widget = new RenderedMSCCommandDontExists();
+            $widget->display();
+            return;
+        }
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
 
@@ -120,6 +128,11 @@ class CommandHistory {
     }
     function display() {
         // display parameters
+        if (!$this->db_cmd) { # use does not have the good permissions
+            $widget = new RenderedMSCCommandDontExists();
+            $widget->display();
+            return;
+        }
         $values = array(
             array(_T('Command name', 'msc'),$this->db_cmd['title']),
             array(_T('Creation date', 'msc'),_toDate($this->db_cmd['date_created'])),
