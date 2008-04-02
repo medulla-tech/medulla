@@ -97,3 +97,17 @@ def complete_ctx(ctx):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)
         
+def onlyAddNew(obj, value):
+    if type(value) == list:
+        for i in value:
+            try:
+                obj.index(i)
+            except:
+                obj.append(i)
+    else:
+        try:
+            obj.index(value)
+        except:
+            obj.append(value)
+    return obj
+
