@@ -22,7 +22,7 @@
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
-from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx
+from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
 
 from ConfigParser import NoOptionError
 from sqlalchemy import *
@@ -149,7 +149,6 @@ class Glpi(Singleton):
 
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
-        #self.machine = Table("glpi_computers", self.metadata, autoload = True)
         self.machine = Table("glpi_computers", self.metadata,
             Column('ID', Integer, primary_key=True),
             Column('FK_entities', Integer, ForeignKey('glpi_entities.ID')),
@@ -265,6 +264,7 @@ class Glpi(Singleton):
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         if filt:
+            # filtering on machines (name or uuid)
             try:
                 query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
             except KeyError:
@@ -279,6 +279,17 @@ class Glpi(Singleton):
             except KeyError:
                 pass
 
+            # filtering on query
+            join_query = self.machine
+            query_filter = None
+            try:
+                query_filter, join_tables = self.__treatQueryLevel(filt['query'])
+                for table in join_tables:
+                    join_query = join_query.join(table)
+            except KeyError:
+                pass
+
+            # filtering on locations
             try:
                 location = filt['location']
             except KeyError:
@@ -293,42 +304,42 @@ class Glpi(Singleton):
                 locs = []
                 if type(ctxlocation) == list:
                     for loc in ctxlocation:
-                        if type(loc) == str or type(loc) == unicode:
-                            locs.append(loc)
-                        else:
-                            locs.append(loc.name)
-
-                query = query.select_from(self.machine.join(self.location))
+                        locs.append(self.__getName(loc))
+                join_query = join_query.join(self.location)
 
                 if location != None:
-                    if type(location) != str and type(location) != unicode:
-                        location = location.name
+                    location = self.__getName(location)
                     try:
-                        locs.index(location)
-                        query = query.filter(self.location.c.name == location)
+                        locs.index(location) # just check that location is in locs, or throw an exception
+                        query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
                     except ValueError:
+                        self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
                         session.close()
                         return {}
                 else:
-                    query = query.filter(self.location.c.name.in_(*locs))
+                    query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(*locs))
             elif location != None:
-                query = query.select_from(self.machine.join(self.location))
-                if type(location) != str and type(location) != unicode:
-                    location = location.name
-                query = query.filter(self.location.c.name == location)
+                join_query = join_query.join(self.location)
+                
+                location = self.__getName(location)
+                query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
 
-            try:
-                query_filter, join_tables = self.__treatQueryLevel(filt['query'])
-                join_query = self.machine
-                for table in join_tables.keys():
-                    join_query = join_query.join(table)
-                query = query.select_from(join_query).filter(query_filter)
-            except KeyError:
-                pass
-
+            query = query.select_from(join_query).filter(query_filter)
         return query
 
-    def __treatQueryLevel(self, queries, join_tables = {}, invert = False):
+    def __getName(self, obj):
+        if type(obj) != str and type(obj) != unicode:
+            return obj.name
+        return obj
+        
+    def __addQueryFilter(self, query_filter, eq):
+        if query_filter == None:
+            query_filter = eq
+        else:
+            query_filter = and_(query_filter, eq)
+        return query_filter
+    
+    def __treatQueryLevel(self, queries, join_tables = [], invert = False):
         """
         Use recursively by __getRestrictedComputersListQuery to build the query
         Used in the dyngroup context, to build AND, OR and NOT queries
@@ -352,7 +363,8 @@ class Glpi(Singleton):
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tables[self.__mappingTable(q)] = 0
+                join_tab = self.__mappingTable(q)
+                join_tables = onlyAddNew(join_tables, join_tab)
                 filter_on.append(self.__mapping(q, invert))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
@@ -367,8 +379,13 @@ class Glpi(Singleton):
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tables[self.__mappingTable(q)] = 0
-                filter_on.append(self.__mapping(q, invert))
+                join_tab = self.__mappingTable(q)
+                join_tables = onlyAddNew(join_tables, join_tab)
+                if type(join_tab) == list:
+                    join_tables.extend(join_tab)
+                else:
+                    join_tables.append(join_tab)
+                filter_on.extend(self.__mapping(q, invert))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
                 filter_on.append(query_filter)
@@ -382,7 +399,8 @@ class Glpi(Singleton):
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tables[self.__mappingTable(q)] = 0
+                join_tab = self.__mappingTable(q)
+                join_tables = onlyAddNew(join_tables, join_tab)
                 filter_on.append(self.__mapping(q, not invert))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(q, join_tables, not invert)
@@ -408,7 +426,9 @@ class Glpi(Singleton):
             return self.os
         elif query[2] == 'ENTITY':
             return self.location
-        return None
+        elif query[2] == 'SOFTWARE':
+            return [self.inst_software, self.licenses, self.software]
+        return []
 
     def __mapping(self, query, invert = False):
         """
@@ -425,6 +445,11 @@ class Glpi(Singleton):
                     return self.location.c.name != query[3]
                 else:
                     return self.location.c.name == query[3]
+            elif query[2] == 'SOFTWARE':
+                if invert:
+                    return self.software.c.name != query[3]
+                else:
+                    return self.software.c.name == query[3]
         else:
             return self.__treatQueryLevel(query)
 
@@ -435,6 +460,14 @@ class Glpi(Singleton):
         """
         ret = self.getRestrictedComputersList(0, 10, filt)
         if len(ret) != 1:
+            for i in ['location', 'ctxlocation']:
+                try:
+                    filt.pop(i)
+                except:
+                    pass
+            ret = self.getRestrictedComputersList(0, 10, filt)
+            if len(ret) > 0:
+                raise Exception("NOPERM##%s" % (ret[ret.keys()[0]][1]['fullname']))
             return False
         return ret[ret.keys()[0]]
 
@@ -444,7 +477,7 @@ class Glpi(Singleton):
         """
         session = create_session()
         query = self.__getRestrictedComputersListQuery(filt, session)
-        count = query.count()
+        count = query.group_by([self.machine.c.name, self.machine.c.domain]).count()
         session.close()
         return count
 
@@ -464,8 +497,7 @@ class Glpi(Singleton):
             query = query.limit(max)
 
         # TODO : need to find a way to remove group_by/order_by ...
-        for machine in query.group_by(self.machine.c.name).order_by(asc(self.machine.c.name)):
-            #ret[machine.name] = self.__formatMachine(machine)
+        for machine in query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)):
             machine = self.__formatMachine(machine, advanced)
             try:
                 self.logger.error("%s already exists" % (ret[machine[1]['fullname']][1]['fullname']))
@@ -510,7 +542,10 @@ class Glpi(Singleton):
         """
         Modify the given query to filter on the machine UUID
         """
-        return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
+        if type(uuid) == list:
+            return query.filter(self.machine.c.ID.in_(*map(lambda a:int(str(a).replace("UUID", "")), uuid)))
+        else:
+            return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
 
     ##################### Machine output format (for ldap compatibility)
     def __formatMachine(self, machine, advanced):
@@ -608,7 +643,7 @@ class Glpi(Singleton):
                 else:
                     ret.append(ploc[0])
             if len(ret) == 0:
-                ret = None
+                ret = []
         session.close()
         return ret
 
@@ -654,6 +689,31 @@ class Glpi(Singleton):
             ret[machine.name] = self.__formatMachine(machine)
         session.close()
         return ret
+
+    def doesUserHaveAccessToMachines(self, userid, a_machine_uuid, all = True):
+        """
+        Check if the user has correct permissions to access more than one or to all machines
+        """
+        a_locations = self.getUserLocation(userid)
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.location))
+        query = query.filter(self.location.c.name.in_(*a_locations))
+        query = self.filterOnUUID(query, a_machine_uuid)
+        ret = query.group_by(self.machine.c.name)
+        size = 1
+        if type(ret) == list:
+            size = len(ret)
+        if all and size == len(a_machine_uuid):
+            return True
+        elif (not all) and len(query.group_by(self.machine.c.name)) > 0:
+            return True
+        return False
+        
+    def doesUserHaveAccessToMachine(self, userid, machine_uuid):
+        """
+        Check if the user has correct permissions to access this machine
+        """
+        return self.doesUserHaveAccessToMachines(userid, [machine_uuid])
 
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
     def getLastMachineInventoryFull(self, uuid):
@@ -760,7 +820,7 @@ class Glpi(Singleton):
         """
         session = create_session()
         query = session.query(Network).select_from(self.machine.join(self.network))
-        query = self.filterOnUUID(query, uuid)
+        query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuid)
         ret = unique(map(lambda m: m.ifmac, query.all()))
         session.close()
         return ret
