@@ -47,10 +47,14 @@ if (!function_exists('_T')) {
      */
     function getArrLocale() {
         $res = array("C" => _("english"),
+                     "da_DK" => _("danish"),
+                     "de_DE" => _("german"),
                      "fr_FR" => _("french"),
                      "es_ES" => _("spanish"),
                      "nb_NO" => _("norwegian"),
-                     "pt_BR" => _("brazilian"));
+                     "pl_PL" => _("polish"),
+                     "pt_BR" => _("brazilian"),
+                     "ru_RU" => _("russian"));
         return $res;
     }
 
@@ -60,11 +64,15 @@ if (!function_exists('_T')) {
      */
     function getArrLocaleShort() {
         return array("en" => "C",
+                     "da" => "da_DK",
+                     "de" => "de_DE",
                      "fr" => "fr_FR",
                      "es" => "es_ES",
                      "nb" => "nb_NO",
                      "no" => "nb_NO",
-                     "pt-br" => "pt_BR");
+                     "pl" => "pl_PL",
+                     "pt-br" => "pt_BR",
+                     "ru" => "ru_RU");
     }
 }
 
