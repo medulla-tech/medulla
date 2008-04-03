@@ -26,6 +26,7 @@ import ldap
 import logging
 import os
 import os.path
+import grp
 
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.plugins.network.dhcp import Dhcp, DhcpService, DhcpLogView, DhcpLeases
@@ -108,8 +109,16 @@ def activate():
 
     # Create DNS config base structure
     try:
+        gidNumber = grp.getgrnam(config.bindGroup)
+    except KeyError:
+        logger.error('The group "%s" does not exist.' % config.bindGroup)
+        return False
+    gidNumber = gidNumber[2]
+    
+    try:
         os.mkdir(config.bindLdapDir)
         os.chmod(config.bindLdapDir, 02750)
+        os.chown(config.bindLdapDir, -1, gidNumber)
     except OSError, e:
         # errno = 17 is "File exists"
         if e.errno != 17: raise    
@@ -118,6 +127,7 @@ def activate():
         f = open(config.bindLdap, "w")
         f.close()
         os.chmod(config.bindLdap, 0640)
+        os.chown(config.bindLdap, -1, gidNumber)        
     
     return True
 
@@ -327,7 +337,7 @@ class NetworkConfig(PluginConfig):
         self.dnsInit = self.get("dns", "init")
         self.dnsLogFile = self.get("dns", "logfile")
         self.bindRootPath = self.get("dns", "bindroot")
-        self.bindUser = self.get("dns", "binduser")
+        self.bindGroup = self.get("dns", "bindgroup")
         self.bindLdap = os.path.join(self.bindRootPath, "named.conf.ldap")
         self.bindLdapDir = os.path.join(self.bindRootPath, "named.ldap")
         try:
