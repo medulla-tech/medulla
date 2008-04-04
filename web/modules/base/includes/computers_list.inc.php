@@ -26,6 +26,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if (count($names) > 0) {
         $sorted_names = array_keys($names);
         natcasesort($sorted_names);
+    } else {
+        $sorted_names = array();
     }
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
