@@ -297,12 +297,23 @@ option2 = plop      </screen></para>
           <row>
             <entry>sshkey_XXXX</entry>
 
-            <entry>the "XXXX" ssh key path (when more than one key may be
+            <entry>The "XXXX" ssh key path (when more than one key may be
             used).</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
+          </row>
+
+          <row>
+            <entry>forward_key</entry>
+
+            <entry>Should we perform key-forwarding (never, always, or let =
+            let the scheduler take its decision) </entry>
+
+            <entry>yes</entry>
+
+            <entry>let</entry>
           </row>
         </tbody>
       </tgroup>
