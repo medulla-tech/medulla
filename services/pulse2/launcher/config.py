@@ -59,6 +59,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         'CheckHostIP=no',
         'ConnectTimeout=10'
     ]
+    ssh_forward_key = 'let'
     scp_options = ssh_options
 
     scheduler_host = "127.0.0.1"
@@ -127,6 +128,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
                     keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
                     self.ssh_keys[keyname] = self.cp.get('ssh', option)
+            if self.cp.has_option('ssh', 'forward_key'):
+                self.ssh_forward_key = self.cp.get('ssh', 'forward_key')
 
         self.awake_time=int(self.awake_time)
 

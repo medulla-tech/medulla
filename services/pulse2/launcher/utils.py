@@ -30,8 +30,9 @@ def getScheduler():
     config = LauncherConfig()
     uri = 'http://'
     if config.scheduler_username != '':
-        uri += '%s:%s' % (config.scheduler_username, config.scheduler_password)
-    uri += '@%s:%d' % (config.scheduler_host, config.scheduler_port)
+        uri += '%s:%s@' % (config.scheduler_username, config.scheduler_password)
+    uri += '%s:%s' % (config.scheduler_host, config.scheduler_port)
+    return uri
 
 def getTempFolderName(id_command, client_uuid):
     """ Generate a temporary folder name which will contain our deployment stuff """
@@ -81,6 +82,11 @@ def set_default_client_options(client):
         client['transp_args'] = ['-T', '-i', client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
+        if LauncherConfig().ssh_forward_key == 'always' or \
+            LauncherConfig().ssh_forward_key == 'let' and 'forward_key' in client:
+            client['transp_args'] += ['-A']
+        else:
+            client['transp_args'] += ['-a']
 
     if client['protocol'] == 'wget':
         if not 'port' in client:
@@ -92,7 +98,7 @@ def set_default_client_options(client):
         if not 'proto_args' in client:
             client['proto_args'] = ['-nv']
         if 'maxbw' in client:
-            client['proto_args'] += ['--limit-rate', '%d' % client['maxbw'] / 8 ] # bwlimit arg in B/s
+            client['proto_args'] += ['--limit-rate', '%d' % int(client['maxbw'] / 8) ] # bwlimit arg in B/s
         client['transp_args'] = ['-T', '-i', client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
