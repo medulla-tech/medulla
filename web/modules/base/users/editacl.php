@@ -180,8 +180,9 @@ function createRedirectAclTemplate($module_name, $acl, $acltab) {
                     $tpl->set_var("desc_actiontab", $descArray[$key][$subkey][$actionkey] . " : " . $tabDescArray[$key][$subkey][$actionkey][$tabkey]);
                     $tpl->parse('actiontabs', 'actiontab', true);
                 }
-            } else $tpl->set_var("actiontabs", "");
+            }
             $tpl->parse('actions', 'action', true);
+            $tpl->set_var("actiontabs", "");
         }
         $tpl->parse('submodules', 'submodule', true);
         $tpl->set_var("actions","");
