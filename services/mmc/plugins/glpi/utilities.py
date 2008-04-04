@@ -83,20 +83,16 @@ def same_network(ip1, ip2, netmask):
     return True
 
 def complete_ctx(ctx):
-    try:
-        if ctx.locations == None:
-            logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
-            ctx.locations = ComputerLocationManager().getUserLocations(ctx.userid)
-    except:
+    """
+    Set GLPI user locations and profile in current security context.
+    """
+    if not hasattr(ctx, "locations") or ctx.locations == None:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = ComputerLocationManager().getUserLocations(ctx.userid)
-    
-    try:
-        ctx.profile
-    except:
+    if not hasattr(ctx, "profile"):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)
-        
+    
 def onlyAddNew(obj, value):
     if type(value) == list:
         for i in value:
