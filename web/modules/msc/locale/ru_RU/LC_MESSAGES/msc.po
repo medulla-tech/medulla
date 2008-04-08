@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 05:57+0100\n"
-"PO-Revision-Date: 2008-04-06 20:30+0300\n"
-"Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
+"POT-Creation-Date: 2008-03-28 05:51+0100\n"
+"PO-Revision-Date: 2008-04-08 12:13+0300\n"
+"Last-Translator: Igor Gorbounov <igorbounov@topazelectro.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -271,9 +271,8 @@ msgid "Repository"
 msgstr "Репозитарий"
 
 #: msc/msc/mscdetails.php:6
-#, fuzzy
 msgid "General informations"
-msgstr "Информации не достаточно "
+msgstr "Общая информация "
 
 #: msc/includes/widgets.inc.php:26
 msgid "Other/N.A."
@@ -281,12 +280,11 @@ msgstr "Другое/Отсутствует"
 
 #: msc/includes/widgets.inc.php:34
 msgid "success"
-msgstr ""
+msgstr "успешно"
 
 #: msc/includes/widgets.inc.php:34
-#, fuzzy
 msgid "failed"
-msgstr "Удаление не удалось"
+msgstr "не удалось"
 
 #: msc/includes/widgets.inc.php:44 msc/includes/widgets.inc.php:61
 #: msc/includes/widgets.inc.php:53
@@ -490,7 +488,7 @@ msgstr "Показать журналы заданий по настроенно
 
 #: msc/infoPackage.inc.php:80
 msgid "General"
-msgstr ""
+msgstr "Общее"
 
 #: msc/infoPackage.inc.php:85 msc/infoPackage.inc.php:80
 msgid "Secure control on machine"
@@ -545,22 +543,22 @@ msgstr "Размер пакета"
 #: msc/includes/utilities.php:32
 #, fuzzy, php-format
 msgid "%s go"
-msgstr "%s на %s"
+msgstr "%s go"
 
 #: msc/includes/utilities.php:34
 #, fuzzy, php-format
 msgid "%s mo"
-msgstr "%s на %s"
+msgstr "%s mo"
 
 #: msc/includes/utilities.php:36
 #, fuzzy, php-format
 msgid "%s ko"
-msgstr "%s на %s"
+msgstr "%s ko"
 
 #: msc/includes/utilities.php:38
 #, php-format
 msgid "%s octets"
-msgstr ""
+msgstr "%s октетов"
 
 #: msc/msc/ajaxLogsFilter.php:126
 msgid "%a %d %b %Y %T"
@@ -661,7 +659,7 @@ msgstr "Машина %s не определена в модуле MSC, или н
 
 #: msc/includes/widgets.inc.php:84
 msgid "You don't have the good permissions to access this command"
-msgstr ""
+msgstr "У Вас надостаточно прав для доступа к этой команде"
 
 #: msc/includes/utilities.php:32
 msgid "Bytes"
