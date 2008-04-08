@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 05:57+0100\n"
-"PO-Revision-Date: 2008-04-05 14:33+0300\n"
+"POT-Creation-Date: 2008-03-28 05:38+0100\n"
+"PO-Revision-Date: 2008-04-05 21:13+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "версия ОС"
 
 #: glpi/glpi/view_hardware.php:66
 msgid "os_sp"
-msgstr "редакция ОС"
+msgstr "сервис-пак ОС"
 
 #: glpi/glpi/view_hardware.php:67
 msgid "os_license_number"
