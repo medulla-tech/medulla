@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 11:46+0100\n"
+"POT-Creation-Date: 2008-04-08 16:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,106 +16,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: dyngroup/dyngroup/add_groups.php:85
-msgid "Group successfully modified"
-msgstr ""
-
-#: dyngroup/dyngroup/add_groups.php:93
-msgid "Group failed to modify"
-msgstr ""
-
-#: dyngroup/dyngroup/add_groups.php:110
+#: dyngroup/dyngroup/details.php:33
 #, php-format
-msgid "Machine list has been truncated at %d machines"
+msgid "%s's details"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:128
-#: dyngroup/dyngroup/ajaxListGroups.php:61
-msgid "Group name"
+#: dyngroup/includes/request.php:136
+#, php-format
+msgid "%s) Search %s = %s in module %s"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:129
-msgid "Is the group visible"
+#: dyngroup/includes/request.php:134
+#, php-format
+msgid "%s) Search %s = (%s) in module %s"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:130 dyngroup/dyngroup/creator.php:131
-#: dyngroup/dyngroup/creator.php:137
-msgid "Yes"
+#: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
+#: dyngroup/dyngroup/creator.php:138 dyngroup/includes/autocomplete.php:43
+msgid "Add"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:131 dyngroup/dyngroup/creator.php:132
-msgid "No"
+#: dyngroup/dyngroup/localSidebar.php:31
+msgid "Add a group"
+msgstr ""
+
+#: dyngroup/dyngroup/groupshead.php:30
+msgid "Add a static group"
+msgstr ""
+
+#: dyngroup/includes/autocomplete.php:34
+msgid "Add a value"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:30
+msgid "All groups"
 msgstr ""
 
 #: dyngroup/dyngroup/add_groups.php:140
 msgid "All machines"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:164
-msgid "Group members"
-msgstr ""
-
-#: dyngroup/dyngroup/add_groups.php:191
-msgid "Confirm"
-msgstr ""
-
 #: dyngroup/dyngroup/add_groups.php:192 dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
 msgid "Cancel"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:54
-#, php-format
-msgid "group (%s)"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:54
-msgid "query"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:56
-msgid "static group"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:58
-msgid "Visible"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:58
-msgid "Hidden"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:68
-msgid "Type"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:69
-msgid "Display"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:71
-msgid "Display this group's content"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:72
-msgid "Edit this group"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:73
-msgid "Read log"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:74
-msgid "Software deployment on this group"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:75
-msgid "Delete this group"
-msgstr ""
-
-#: dyngroup/dyngroup/creator.php:64
-#, php-format
-msgid "Only '%s' module to query"
 msgstr ""
 
 #: dyngroup/dyngroup/creator.php:67
@@ -126,60 +69,58 @@ msgstr ""
 msgid "Choose your field : "
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
-#: dyngroup/dyngroup/creator.php:138 dyngroup/includes/autocomplete.php:43
-msgid "Add"
+#: dyngroup/dyngroup/details.php:51
+msgid "Close"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:153
-msgid "The request is : "
+#: dyngroup/dyngroup/add_groups.php:191
+msgid "Confirm"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:164
-msgid "Execute"
+#: dyngroup/includes/request.php:100
+msgid "Delete"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:166
-msgid "Save result"
-msgstr ""
-
-#: dyngroup/dyngroup/creator.php:168
-msgid "Save query"
+#: dyngroup/infoPackage.inc.php:78
+msgid "Delete a group of machines"
 msgstr ""
 
 #: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
 msgid "Delete group"
 msgstr ""
 
-#: dyngroup/dyngroup/delete_group.php:45
+#: dyngroup/dyngroup/ajaxListGroups.php:75
+msgid "Delete this group"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:69
+msgid "Display"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:40
 #, php-format
-msgid "You will delete group <b>%s</b>."
+msgid "Display %s '%s'"
 msgstr ""
 
-#: dyngroup/dyngroup/details.php:33
-#, php-format
-msgid "%s's details"
-msgstr ""
-
-#: dyngroup/dyngroup/details.php:51
-msgid "Close"
-msgstr ""
-
-#: dyngroup/dyngroup/details.php:54
-msgid "Regenerate"
-msgstr ""
-
-#: dyngroup/dyngroup/details.php:57
-msgid "Hide"
-msgstr ""
-
-#: dyngroup/dyngroup/details.php:59
-msgid "Show"
+#: dyngroup/infoPackage.inc.php:64
+msgid "Display a groups of machines"
 msgstr ""
 
 #: dyngroup/dyngroup/display.php:42
 #, php-format
 msgid "Display group '%s' content"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:71
+msgid "Display this group's content"
+msgstr ""
+
+#: dyngroup/dyngroup/tab.php:9
+msgid "Dynamic group creation"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:46
+msgid "Dynamic group creation's tab"
 msgstr ""
 
 #: dyngroup/dyngroup/edithead.php:34
@@ -190,50 +131,107 @@ msgstr ""
 msgid "Edit a static group"
 msgstr ""
 
-#: dyngroup/dyngroup/groupshead.php:30
-msgid "Add a static group"
+#: dyngroup/dyngroup/ajaxListGroups.php:72
+msgid "Edit this group"
 msgstr ""
 
-#: dyngroup/dyngroup/header.php:26
-msgid "Please chose the type of group you want to create"
+#: dyngroup/dyngroup/save.php:94
+msgid "Enter Boolean operator bewteen groups"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:164
+msgid "Execute"
+msgstr ""
+
+#: dyngroup/dyngroup/tab.php:8
+msgid "Group creation"
+msgstr ""
+
+#: dyngroup/dyngroup/add_groups.php:93
+msgid "Group failed to modify"
 msgstr ""
 
 #: dyngroup/dyngroup/list.php:30
 msgid "Group list"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:30
-msgid "All groups"
+#: dyngroup/dyngroup/add_groups.php:164
+msgid "Group members"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:31
-msgid "Add a group"
+#: dyngroup/dyngroup/add_groups.php:128
+#: dyngroup/dyngroup/ajaxListGroups.php:61
+msgid "Group name"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:36
-msgid "request"
+#: dyngroup/infoPackage.inc.php:83
+msgid "Group of machines details"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
-msgid "group"
+#: dyngroup/dyngroup/add_groups.php:85
+msgid "Group successfully modified"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:40
+#: dyngroup/dyngroup/ajaxListGroups.php:58
+msgid "Hidden"
+msgstr ""
+
+#: dyngroup/dyngroup/details.php:57
+msgid "Hide"
+msgstr ""
+
+#: dyngroup/dyngroup/add_groups.php:129
+msgid "Is the group visible"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:74
+msgid "List all groups of machines"
+msgstr ""
+
+#: dyngroup/dyngroup/add_groups.php:110
 #, php-format
-msgid "Display %s '%s'"
+msgid "Machine list has been truncated at %d machines"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:54
+msgid "Machines Group Creator"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:42 dyngroup/infoPackage.inc.php:58
+msgid "Machines Group Editor"
+msgstr ""
+
+#: dyngroup/dyngroup/add_groups.php:131 dyngroup/dyngroup/creator.php:132
+msgid "No"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:64
+#, php-format
+msgid "Only '%s' module to query"
+msgstr ""
+
+#: dyngroup/dyngroup/header.php:26
+msgid "Please chose the type of group you want to create"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:73
+msgid "Read log"
+msgstr ""
+
+#: dyngroup/dyngroup/details.php:54
+msgid "Regenerate"
+msgstr ""
+
+#: dyngroup/dyngroup/remove_machine.php:47
+msgid "Remove Machine"
 msgstr ""
 
 #: dyngroup/dyngroup/remove_machine.php:37
 msgid "Remove a machine"
 msgstr ""
 
-#: dyngroup/dyngroup/remove_machine.php:44
-#, php-format
-msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
-msgstr ""
-
-#: dyngroup/dyngroup/remove_machine.php:47
-msgid "Remove Machine"
+#: dyngroup/infoPackage.inc.php:88
+msgid "Remove a machine from a group"
 msgstr ""
 
 #: dyngroup/dyngroup/save.php:30
@@ -242,6 +240,42 @@ msgstr ""
 
 #: dyngroup/dyngroup/save.php:62
 msgid "Save"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:69
+msgid "Save a group of machines"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:168
+msgid "Save query"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:166
+msgid "Save result"
+msgstr ""
+
+#: dyngroup/includes/request.php:97
+msgid "Search part"
+msgstr ""
+
+#: dyngroup/dyngroup/details.php:59
+msgid "Show"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:74
+msgid "Software deployment on this group"
+msgstr ""
+
+#: dyngroup/dyngroup/tab.php:10
+msgid "Static group creation"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:49
+msgid "Static group creation's tab"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:153
+msgid "The request is : "
 msgstr ""
 
 #: dyngroup/dyngroup/save.php:79
@@ -254,80 +288,46 @@ msgstr ""
 msgid "This result has been saved as %s (id=%s)"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:94
-msgid "Enter Boolean operator bewteen groups"
+#: dyngroup/dyngroup/ajaxListGroups.php:68
+msgid "Type"
 msgstr ""
 
-#: dyngroup/dyngroup/tab.php:8
-msgid "Group creation"
+#: dyngroup/dyngroup/ajaxListGroups.php:58
+msgid "Visible"
 msgstr ""
 
-#: dyngroup/dyngroup/tab.php:9
-msgid "Dynamic group creation"
+#: dyngroup/dyngroup/add_groups.php:130 dyngroup/dyngroup/creator.php:131
+#: dyngroup/dyngroup/creator.php:137
+msgid "Yes"
 msgstr ""
 
-#: dyngroup/dyngroup/tab.php:10
-msgid "Static group creation"
-msgstr ""
-
-#: dyngroup/includes/autocomplete.php:34
-msgid "Add a value"
-msgstr ""
-
-#: dyngroup/includes/request.php:97
-msgid "Search part"
-msgstr ""
-
-#: dyngroup/includes/request.php:100
-msgid "Delete"
-msgstr ""
-
-#: dyngroup/includes/request.php:134
+#: dyngroup/dyngroup/delete_group.php:45
 #, php-format
-msgid "%s) Search %s = (%s) in module %s"
+msgid "You will delete group <b>%s</b>."
 msgstr ""
 
-#: dyngroup/includes/request.php:136
+#: dyngroup/dyngroup/remove_machine.php:44
 #, php-format
-msgid "%s) Search %s = %s in module %s"
+msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:54
-msgid "Machines Group Creator"
+#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
+msgid "group"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:42 dyngroup/infoPackage.inc.php:58
-msgid "Machines Group Editor"
+#: dyngroup/dyngroup/ajaxListGroups.php:54
+#, php-format
+msgid "group (%s)"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:46
-msgid "Dynamic group creation's tab"
+#: dyngroup/dyngroup/ajaxListGroups.php:54
+msgid "query"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:49
-msgid "Static group creation's tab"
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "request"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:64
-msgid "Display a groups of machines"
-msgstr ""
-
-#: dyngroup/infoPackage.inc.php:69
-msgid "Save a group of machines"
-msgstr ""
-
-#: dyngroup/infoPackage.inc.php:74
-msgid "List all groups of machines"
-msgstr ""
-
-#: dyngroup/infoPackage.inc.php:78
-msgid "Delete a group of machines"
-msgstr ""
-
-#: dyngroup/infoPackage.inc.php:83
-msgid "Group of machines details"
-msgstr ""
-
-#: dyngroup/infoPackage.inc.php:88
-msgid "Remove a machine from a group"
+#: dyngroup/dyngroup/ajaxListGroups.php:56
+msgid "static group"
 msgstr ""
