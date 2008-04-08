@@ -5,89 +5,39 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Pulse 2 - GLPI web interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 11:57+0100\n"
-"PO-Revision-Date: 2008-03-27 11:57+0100\n"
-"Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"PO-Revision-Date: 2008-04-08 17:34+0100\n"
+"Last-Translator: Nicolas Rueff <n.rueff@mandriva.com>\n"
+"Language-Team: Mandriva <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: glpi/glpi/tabs.php:11
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Inventaire de %s (GLPI)"
 
-#: glpi/glpi/tabs.php:12
-msgid "Hardware"
-msgstr "Materiel"
-
-#: glpi/glpi/tabs.php:16
-msgid "Network"
-msgstr "Reseau"
+#: glpi/includes/autocomplete.php:53
+msgid "Add"
+msgstr "Ajouter"
 
 #: glpi/glpi/tabs.php:16
 msgid "Controller"
 msgstr "Controlleur"
 
-#: glpi/glpi/view_hardware.php:54
-msgid "Properties"
-msgstr "Propriétés"
-
-#: glpi/glpi/view_hardware.php:55
-msgid "Value"
-msgstr "Valeur"
-
-#: glpi/glpi/view_hardware.php:60
-#: glpi/glpi/view_hardware.php:62
-msgid "name"
-msgstr "Nom"
-
-#: glpi/glpi/view_hardware.php:61
-msgid "comments"
-msgstr "Commentaires"
-
-#: glpi/glpi/view_hardware.php:63
-msgid "serial"
-msgstr "Numero de série"
-
-#: glpi/glpi/view_hardware.php:64
-msgid "os"
-msgstr "Système d'exploitation"
-
-#: glpi/glpi/view_hardware.php:65
-msgid "os_version"
-msgstr "Version de l'OS"
-
-#: glpi/glpi/view_hardware.php:66
-msgid "os_sp"
-msgstr "Révision de l'OS"
-
-#: glpi/glpi/view_hardware.php:67
-msgid "os_license_number"
-msgstr "Numéro de licence de l'OS"
-
-#: glpi/glpi/view_hardware.php:68
-msgid "os_license_id"
-msgstr "Id de licence de l'OS"
-
-#: glpi/glpi/view_hardware.php:69
-msgid "location"
-msgstr "Localization"
-
-#: glpi/includes/autocomplete.php:53
-msgid "Add"
-msgstr "Ajouter"
-
 #: glpi/infoPackage.inc.php:35
 msgid "Display locations"
 msgstr "Montrer les localizations"
 
-#: glpi/infoPackage.inc.php:46
-msgid "Inventory (GLPI) on machine"
-msgstr "Inventaire (GLPI) de la machine"
+#: glpi/infoPackage.inc.php:56
+msgid "GLPI controller tab"
+msgstr "Onglet controlleur"
 
 #: glpi/infoPackage.inc.php:50
 msgid "GLPI hardware tab"
@@ -97,9 +47,62 @@ msgstr "Onglet général"
 msgid "GLPI network tab"
 msgstr "Onglet reseau"
 
-#: glpi/infoPackage.inc.php:56
-msgid "GLPI controller tab"
-msgstr "Onglet controlleur"
+#: glpi/glpi/tabs.php:12
+msgid "Hardware"
+msgstr "Materiel"
+
+#: glpi/infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
+msgstr "Inventaire (GLPI) de la machine"
+
+#: glpi/glpi/tabs.php:16
+msgid "Network"
+msgstr "Reseau"
+
+#: glpi/glpi/view_hardware.php:54
+msgid "Properties"
+msgstr "Propriétés"
+
+#: glpi/glpi/view_hardware.php:55
+msgid "Value"
+msgstr "Valeur"
+
+#: glpi/glpi/view_hardware.php:61
+msgid "comments"
+msgstr "Commentaires"
+
+#: glpi/glpi/view_hardware.php:69
+msgid "location"
+msgstr "Localization"
+
+#: glpi/glpi/view_hardware.php:60
+#: glpi/glpi/view_hardware.php:62
+msgid "name"
+msgstr "Nom"
+
+#: glpi/glpi/view_hardware.php:64
+msgid "os"
+msgstr "Système d'exploitation"
+
+#: glpi/glpi/view_hardware.php:68
+msgid "os_license_id"
+msgstr "Id de licence de l'OS"
+
+#: glpi/glpi/view_hardware.php:67
+msgid "os_license_number"
+msgstr "Numéro de licence de l'OS"
+
+#: glpi/glpi/view_hardware.php:66
+msgid "os_sp"
+msgstr "Révision de l'OS"
+
+#: glpi/glpi/view_hardware.php:65
+msgid "os_version"
+msgstr "Version de l'OS"
+
+#: glpi/glpi/view_hardware.php:63
+msgid "serial"
+msgstr "Numero de série"
 
 #~ msgid "GLPI general tab"
 #~ msgstr "Onglet général"

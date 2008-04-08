@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-28 05:38+0100\n"
+"POT-Creation-Date: 2008-04-08 16:52+0200\n"
 "PO-Revision-Date: 2008-04-05 21:13+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,93 +15,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: infoPackage.inc.php:35 glpi/infoPackage.inc.php:35
-msgid "Display locations"
-msgstr "Показать местоположение"
-
-#: infoPackage.inc.php:46 glpi/infoPackage.inc.php:46
-msgid "Inventory (GLPI) on machine"
-msgstr "Инвентаризация (GLPI) машины"
-
-#: glpi/tabs.php:8 glpi/glpi/tabs.php:8 glpi/glpi/tabs.php:11
+#: glpi/glpi/tabs.php:11
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Инвентаризация %s (GLPI)"
 
-#: glpi/view_hardware.php:54 glpi/glpi/view_hardware.php:54
-msgid "Properties"
-msgstr "Свойства"
-
-#: glpi/view_hardware.php:55 glpi/glpi/view_hardware.php:55
-msgid "Value"
-msgstr "Значение"
-
-#: includes/autocomplete.php:53 glpi/includes/autocomplete.php:53
+#: glpi/includes/autocomplete.php:53
 msgid "Add"
 msgstr "Добавить"
 
-#: glpi/tabs.php:9 glpi/glpi/tabs.php:9 glpi/glpi/tabs.php:12
-msgid "Hardware"
-msgstr "Оборудование"
-
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
-msgid "Network"
-msgstr "Сеть"
-
-#: glpi/tabs.php:13 glpi/glpi/tabs.php:13 glpi/glpi/tabs.php:16
+#: glpi/glpi/tabs.php:16
 msgid "Controller"
 msgstr "Контроллер"
 
-#: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
-msgid "name"
-msgstr "имя"
-
-#: glpi/glpi/view_hardware.php:61
-msgid "comments"
-msgstr "комментарий"
-
-#: glpi/glpi/view_hardware.php:63
-msgid "serial"
-msgstr "серийный номер"
-
-#: glpi/glpi/view_hardware.php:64
-msgid "os"
-msgstr "ОС"
-
-#: glpi/glpi/view_hardware.php:65
-msgid "os_version"
-msgstr "версия ОС"
-
-#: glpi/glpi/view_hardware.php:66
-msgid "os_sp"
-msgstr "сервис-пак ОС"
-
-#: glpi/glpi/view_hardware.php:67
-msgid "os_license_number"
-msgstr "номер лицензии ОС"
-
-#: glpi/glpi/view_hardware.php:68
-msgid "os_license_id"
-msgstr "идентификатор лицензии ОС"
-
-#: glpi/glpi/view_hardware.php:69
-msgid "location"
-msgstr "местоположение"
-
-#: glpi/infoPackage.inc.php:50
-#, fuzzy
-msgid "GLPI general tab"
-msgstr "Сетевая вкладка"
-
-#: glpi/infoPackage.inc.php:53
-#, fuzzy
-msgid "GLPI tab 1"
-msgstr "Сетевая вкладка"
+#: glpi/infoPackage.inc.php:35
+msgid "Display locations"
+msgstr "Показать местоположение"
 
 #: glpi/infoPackage.inc.php:56
-#, fuzzy
-msgid "GLPI tab 2"
-msgstr "Сетевая вкладка"
+msgid "GLPI controller tab"
+msgstr "Вкладка контроллеров"
 
 #: glpi/infoPackage.inc.php:50
 msgid "GLPI hardware tab"
@@ -111,6 +44,70 @@ msgstr "Вкладка оборудования"
 msgid "GLPI network tab"
 msgstr "Сетевая вкладка"
 
-#: glpi/infoPackage.inc.php:56
-msgid "GLPI controller tab"
-msgstr "Вкладка контроллеров"
+#: glpi/glpi/tabs.php:12
+msgid "Hardware"
+msgstr "Оборудование"
+
+#: glpi/infoPackage.inc.php:46
+msgid "Inventory (GLPI) on machine"
+msgstr "Инвентаризация (GLPI) машины"
+
+#: glpi/glpi/tabs.php:16
+msgid "Network"
+msgstr "Сеть"
+
+#: glpi/glpi/view_hardware.php:54
+msgid "Properties"
+msgstr "Свойства"
+
+#: glpi/glpi/view_hardware.php:55
+msgid "Value"
+msgstr "Значение"
+
+#: glpi/glpi/view_hardware.php:61
+msgid "comments"
+msgstr "комментарий"
+
+#: glpi/glpi/view_hardware.php:69
+msgid "location"
+msgstr "местоположение"
+
+#: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
+msgid "name"
+msgstr "имя"
+
+#: glpi/glpi/view_hardware.php:64
+msgid "os"
+msgstr "ОС"
+
+#: glpi/glpi/view_hardware.php:68
+msgid "os_license_id"
+msgstr "идентификатор лицензии ОС"
+
+#: glpi/glpi/view_hardware.php:67
+msgid "os_license_number"
+msgstr "номер лицензии ОС"
+
+#: glpi/glpi/view_hardware.php:66
+msgid "os_sp"
+msgstr "сервис-пак ОС"
+
+#: glpi/glpi/view_hardware.php:65
+msgid "os_version"
+msgstr "версия ОС"
+
+#: glpi/glpi/view_hardware.php:63
+msgid "serial"
+msgstr "серийный номер"
+
+#, fuzzy
+#~ msgid "GLPI general tab"
+#~ msgstr "Сетевая вкладка"
+
+#, fuzzy
+#~ msgid "GLPI tab 1"
+#~ msgstr "Сетевая вкладка"
+
+#, fuzzy
+#~ msgid "GLPI tab 2"
+#~ msgstr "Сетевая вкладка"
