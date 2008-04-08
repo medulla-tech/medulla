@@ -7,159 +7,185 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - MMC Web Inventory VERSION\n"
+"Project-Id-Version: Pulse 2 - MMC Web Inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-27 12:00+0100\n"
-"PO-Revision-Date: 2008-03-14 11:40+0100\n"
-"Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: French\n"
+"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"PO-Revision-Date: 2008-04-08 17:37+0100\n"
+"Last-Translator: Nicolas Rueff <n.rueff@mandriva.com>\n"
+"Language-Team: Mandriva <pulse2-i18n@mandrivalinux.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: inventory/inventory/ajaxFilter.php:24 inventory/inventory/ajaxFilter.php:30
-msgid "Previous"
-msgstr "Précédent"
-
-#: inventory/inventory/ajaxFilter.php:38 inventory/inventory/ajaxFilter.php:45
-msgid "Next"
-msgstr "Suivant"
-
-#: inventory/inventory/ajaxFilter.php:120 inventory/infoPackage.inc.php:74
-msgid "View"
-msgstr "Voir"
-
-#: inventory/inventory/ajaxFilter.php:121 inventory/infoPackage.inc.php:78
-msgid "Informations"
-msgstr "Informations"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: inventory/inventory/body.php:50
 msgid " list"
 msgstr "liste"
-
-#: inventory/inventory/controller.php:27
-#: inventory/inventory/localSidebar.php:9 inventory/infoPackage.inc.php:49
-msgid "Controller"
-msgstr "Contrôleur"
-
-#: inventory/inventory/drive.php:27 inventory/inventory/localSidebar.php:12
-#: inventory/infoPackage.inc.php:52
-msgid "Drive"
-msgstr "Disque"
-
-#: inventory/inventory/graphs.php:12 inventory/infoPackage.inc.php:83
-#: inventory/infoPackage.inc.php:87
-msgid "Graphique"
-msgstr "Graphique"
-
-#: inventory/inventory/graphs.php:19
-msgid "back"
-msgstr "retour"
-
-#: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/infoPackage.inc.php:45
-msgid "Hardware"
-msgstr "Matériel"
-
-#: inventory/inventory/index.php:26
-msgid "Bios"
-msgstr "Bios"
-
-#: inventory/inventory/infos.php:33
-msgid "Informations supplementaires"
-msgstr "Informations supplémentaires"
-
-#: inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "Première apparition"
-
-#: inventory/inventory/input.php:27 inventory/inventory/localSidebar.php:13
-#: inventory/infoPackage.inc.php:54
-msgid "Input"
-msgstr "Entrée"
-
-#: inventory/inventory/localSidebar.php:6 inventory/infoPackage.inc.php:43
-msgid "General"
-msgstr "Général"
-
-#: inventory/inventory/localSidebar.php:8 inventory/inventory/network.php:27
-#: inventory/infoPackage.inc.php:47
-msgid "Network"
-msgstr "Réseau"
-
-#: inventory/inventory/localSidebar.php:14 inventory/inventory/memory.php:27
-#: inventory/infoPackage.inc.php:56
-msgid "Memory"
-msgstr "Mémoire"
-
-#: inventory/inventory/localSidebar.php:15 inventory/inventory/monitor.php:27
-#: inventory/infoPackage.inc.php:58
-msgid "Monitor"
-msgstr "Écran"
-
-#: inventory/inventory/localSidebar.php:16 inventory/inventory/port.php:27
-#: inventory/infoPackage.inc.php:60
-msgid "Port"
-msgstr "Port"
-
-#: inventory/inventory/localSidebar.php:17 inventory/inventory/printer.php:27
-#: inventory/infoPackage.inc.php:62
-msgid "Printer"
-msgstr "Imprimante"
-
-#: inventory/inventory/localSidebar.php:18 inventory/inventory/sound.php:27
-#: inventory/infoPackage.inc.php:64
-msgid "Sound"
-msgstr "Son"
-
-#: inventory/inventory/localSidebar.php:19 inventory/inventory/storage.php:27
-#: inventory/infoPackage.inc.php:66
-msgid "Storage"
-msgstr "Stockage"
-
-#: inventory/inventory/localSidebar.php:20
-#: inventory/inventory/videocard.php:27 inventory/infoPackage.inc.php:68
-msgid "VideoCard"
-msgstr "Carte vidéo"
-
-#: inventory/inventory/pci.php:27
-msgid "Pci"
-msgstr "Pci"
-
-#: inventory/inventory/slot.php:27
-msgid "Slot"
-msgstr "Emplacement"
-
-#: inventory/inventory/software.php:27 inventory/infoPackage.inc.php:71
-msgid "Software"
-msgstr "Logiciel"
 
 #: inventory/inventory/tabs.php:8
 #, php-format
 msgid "%s's inventory"
 msgstr "Inventaire de %s"
 
-#: inventory/inventory/view.php:48
-#, php-format
-msgid "Inventory of %s"
-msgstr "Inventaire de %s"
+#: inventory/inventory/index.php:26
+msgid "Bios"
+msgstr "Bios"
 
-#: inventory/inventory/view.php:78 inventory/inventory/view_hardware.php:65
-msgid "Properties"
-msgstr "Propriétés"
+#: inventory/inventory/controller.php:27
+#: inventory/inventory/localSidebar.php:9
+#: inventory/infoPackage.inc.php:49
+msgid "Controller"
+msgstr "Contrôleur"
 
-#: inventory/inventory/view.php:79 inventory/inventory/view_hardware.php:66
-msgid "Value"
-msgstr "Valeur"
+#: inventory/inventory/drive.php:27
+#: inventory/inventory/localSidebar.php:12
+#: inventory/infoPackage.inc.php:52
+msgid "Drive"
+msgstr "Disque"
 
-#: inventory/infoPackage.inc.php:33 inventory/infoPackage.inc.php:39
-msgid "Inventory"
-msgstr "Inventaire"
+#: inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Première apparition"
+
+#: inventory/inventory/localSidebar.php:6
+#: inventory/infoPackage.inc.php:43
+msgid "General"
+msgstr "Général"
+
+#: inventory/inventory/graphs.php:12
+#: inventory/infoPackage.inc.php:83
+#: inventory/infoPackage.inc.php:87
+msgid "Graphique"
+msgstr "Graphique"
+
+#: inventory/inventory/hardware.php:27
+#: inventory/inventory/localSidebar.php:7
+#: inventory/infoPackage.inc.php:45
+msgid "Hardware"
+msgstr "Matériel"
 
 #: inventory/infoPackage.inc.php:95
 msgid "Header"
 msgstr "Entête"
 
+#: inventory/inventory/ajaxFilter.php:121
+#: inventory/infoPackage.inc.php:78
+msgid "Informations"
+msgstr "Informations"
+
+#: inventory/inventory/infos.php:33
+msgid "Informations supplementaires"
+msgstr "Informations supplémentaires"
+
+#: inventory/inventory/input.php:27
+#: inventory/inventory/localSidebar.php:13
+#: inventory/infoPackage.inc.php:54
+msgid "Input"
+msgstr "Entrée"
+
+#: inventory/infoPackage.inc.php:33
+#: inventory/infoPackage.inc.php:39
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: inventory/inventory/view.php:48
+#, php-format
+msgid "Inventory of %s"
+msgstr "Inventaire de %s"
+
 #: inventory/infoPackage.inc.php:111
 msgid "Inventory on machine"
 msgstr "Inventaire du client"
+
+#: inventory/inventory/localSidebar.php:14
+#: inventory/inventory/memory.php:27
+#: inventory/infoPackage.inc.php:56
+msgid "Memory"
+msgstr "Mémoire"
+
+#: inventory/inventory/localSidebar.php:15
+#: inventory/inventory/monitor.php:27
+#: inventory/infoPackage.inc.php:58
+msgid "Monitor"
+msgstr "Écran"
+
+#: inventory/inventory/localSidebar.php:8
+#: inventory/inventory/network.php:27
+#: inventory/infoPackage.inc.php:47
+msgid "Network"
+msgstr "Réseau"
+
+#: inventory/inventory/ajaxFilter.php:38
+#: inventory/inventory/ajaxFilter.php:45
+msgid "Next"
+msgstr "Suivant"
+
+#: inventory/inventory/pci.php:27
+msgid "Pci"
+msgstr "Pci"
+
+#: inventory/inventory/localSidebar.php:16
+#: inventory/inventory/port.php:27
+#: inventory/infoPackage.inc.php:60
+msgid "Port"
+msgstr "Port"
+
+#: inventory/inventory/ajaxFilter.php:24
+#: inventory/inventory/ajaxFilter.php:30
+msgid "Previous"
+msgstr "Précédent"
+
+#: inventory/inventory/localSidebar.php:17
+#: inventory/inventory/printer.php:27
+#: inventory/infoPackage.inc.php:62
+msgid "Printer"
+msgstr "Imprimante"
+
+#: inventory/inventory/view.php:78
+#: inventory/inventory/view_hardware.php:65
+msgid "Properties"
+msgstr "Propriétés"
+
+#: inventory/inventory/slot.php:27
+msgid "Slot"
+msgstr "Emplacement"
+
+#: inventory/inventory/software.php:27
+#: inventory/infoPackage.inc.php:71
+msgid "Software"
+msgstr "Logiciel"
+
+#: inventory/inventory/localSidebar.php:18
+#: inventory/inventory/sound.php:27
+#: inventory/infoPackage.inc.php:64
+msgid "Sound"
+msgstr "Son"
+
+#: inventory/inventory/localSidebar.php:19
+#: inventory/inventory/storage.php:27
+#: inventory/infoPackage.inc.php:66
+msgid "Storage"
+msgstr "Stockage"
+
+#: inventory/inventory/view.php:79
+#: inventory/inventory/view_hardware.php:66
+msgid "Value"
+msgstr "Valeur"
+
+#: inventory/inventory/localSidebar.php:20
+#: inventory/inventory/videocard.php:27
+#: inventory/infoPackage.inc.php:68
+msgid "VideoCard"
+msgstr "Carte vidéo"
+
+#: inventory/inventory/ajaxFilter.php:120
+#: inventory/infoPackage.inc.php:74
+msgid "View"
+msgstr "Voir"
+
+#: inventory/inventory/graphs.php:19
+msgid "back"
+msgstr "retour"
+
