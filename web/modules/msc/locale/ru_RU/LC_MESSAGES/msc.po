@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-28 05:51+0100\n"
-"PO-Revision-Date: 2008-04-08 12:13+0300\n"
+"POT-Creation-Date: 2008-03-28 06:09+0100\n"
+"PO-Revision-Date: 2008-04-08 12:40+0300\n"
 "Last-Translator: Igor Gorbounov <igorbounov@topazelectro.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -541,19 +541,19 @@ msgid "Package size"
 msgstr "Размер пакета"
 
 #: msc/includes/utilities.php:32
-#, fuzzy, php-format
+#, php-format
 msgid "%s go"
-msgstr "%s go"
+msgstr "%s гига-октет(ов)"
 
 #: msc/includes/utilities.php:34
-#, fuzzy, php-format
+#, php-format
 msgid "%s mo"
-msgstr "%s mo"
+msgstr "%s мега-октет(ов)"
 
 #: msc/includes/utilities.php:36
-#, fuzzy, php-format
+#, php-format
 msgid "%s ko"
-msgstr "%s ko"
+msgstr "%s кило-октет(ов)"
 
 #: msc/includes/utilities.php:38
 #, php-format
