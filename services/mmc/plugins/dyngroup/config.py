@@ -8,7 +8,6 @@ class DGConfig(PluginConfig):
         Read the module configuration
         """
         PluginConfig.readConf(self)
-        self.save_type = self.get("dg", "savetype")
         self.dbdriver = self.get("database", "dbdriver")
         self.dbuser = self.get("database", "dbuser")
         self.dbpasswd = self.get("database", "dbpasswd")
