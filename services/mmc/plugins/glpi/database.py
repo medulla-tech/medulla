@@ -42,7 +42,11 @@ class GlpiConfig(PluginConfig):
         self.dbpasswd = self.get("main", "dbpasswd")
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")
-        self.activeProfiles = self.get('main', 'active_profiles').split(' ')
+        try:
+            self.activeProfiles = self.get('main', 'active_profiles').split(' ')
+        except NoOptionError:
+            # put the GLPI default values for actives profiles
+            self.activeProfiles = ['admin', 'normal', 'post-only', 'super-admin']
         for option in ["dbport", "dbpoolrecycle"]:
             try:
                 self.__dict__[option] = self.getint("main", option)
