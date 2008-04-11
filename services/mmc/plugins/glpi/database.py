@@ -844,7 +844,7 @@ class Glpi(Singleton):
         ret_gw = unique(ret_gw)
         ret_gw.extend(unique(ret_nogw))
         session.close()
-        return unique(ret_gw)
+        return ret_gw
 
     def getIpFromMac(self, mac):
         """
