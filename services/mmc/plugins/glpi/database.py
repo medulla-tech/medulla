@@ -622,17 +622,21 @@ class Glpi(Singleton):
         @return: the list of user locations
         @rtype: list
         """
-        session = create_session()
         ret = []
         if user == 'root':
-            session = create_session()
-            query = session.query(Location)
-
-            q = query.group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
-            session.close()
-            for location in q:
-                ret.append(location)
+            ret = self.__get_all_locations()
         else:
+            # check if user is linked to the root entity 
+            # (which is not declared explicitly in glpi... 
+            # we have to emulate it...)
+            session = create_session()
+            entids = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
+            for entid in entids:
+                if entid.FK_entities == 0 and entid.recursive == 1:
+                    session.close()
+                    return self.__get_all_locations()
+            
+            # the normal case...
             plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
             for ploc in plocs:
                 if ploc[1]:
@@ -644,7 +648,16 @@ class Glpi(Singleton):
                     ret.append(ploc[0])
             if len(ret) == 0:
                 ret = []
+            session.close()
+        return ret
+
+    def __get_all_locations(self):
+        ret = []
+        session = create_session()
+        q = session.query(Location).group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
         session.close()
+        for location in q:
+            ret.append(location)
         return ret
 
     def __add_children(self, child):
