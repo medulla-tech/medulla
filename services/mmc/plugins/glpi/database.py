@@ -112,10 +112,13 @@ class Glpi(Singleton):
         return True
 
     def __checkSqlalchemy(self):
-        import sqlalchemy
-        a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
-            return True
+        try:
+            import sqlalchemy
+            a_version = sqlalchemy.__version__.split('.')
+            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+                return True
+        except: 
+            pass
         return False
 
     def activate(self, conffile = None):
@@ -418,7 +421,6 @@ class Glpi(Singleton):
                     filter_on.extend(filter_on_mapping)
                 else:
                     filter_on.append(filter_on_mapping)
-                self.logger.info(filter_on)
             else:
                 query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
                 filter_on.append(query_filter)
