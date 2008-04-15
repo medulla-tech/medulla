@@ -37,7 +37,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -67,7 +67,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -81,7 +81,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -94,7 +94,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -107,7 +107,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
