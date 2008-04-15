@@ -54,8 +54,11 @@ def create_method(m):
     return method
  
 for m in ['first', 'count', 'all']:
-    setattr(Query, '_old_'+m, getattr(Query, m))
-    setattr(Query, m, create_method(m))
+    try:
+        getattr(Query, '_old_'+m)
+    except AttributeError:
+        setattr(Query, '_old_'+m, getattr(Query, m))
+        setattr(Query, m, create_method(m))
 
 class GlpiConfig(PluginConfig):
     def readConf(self):
@@ -362,7 +365,7 @@ class Glpi(Singleton):
         return obj
         
     def __addQueryFilter(self, query_filter, eq):
-        if query_filter == None:
+        if str(query_filter) == None: # don't remove the str, sqlalchemy.sql._BinaryExpression == None return True!
             query_filter = eq
         else:
             query_filter = and_(query_filter, eq)
@@ -410,11 +413,12 @@ class Glpi(Singleton):
             if len(q) == 4:
                 join_tab = self.__mappingTable(q)
                 join_tables = onlyAddNew(join_tables, join_tab)
-                if type(join_tab) == list:
-                    join_tables.extend(join_tab)
+                filter_on_mapping = self.__mapping(q, invert)
+                if type(filter_on_mapping) == list:
+                    filter_on.extend(filter_on_mapping)
                 else:
-                    join_tables.append(join_tab)
-                filter_on.extend(self.__mapping(q, invert))
+                    filter_on.append(filter_on_mapping)
+                self.logger.info(filter_on)
             else:
                 query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
                 filter_on.append(query_filter)
