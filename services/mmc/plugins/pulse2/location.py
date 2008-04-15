@@ -42,28 +42,46 @@ class ComputerLocationManager(Singleton):
         return True
 
     def getUserProfile(self, userid):
-        klass = self.components[self.main]
-        return klass().getUserProfile(userid)
+        try:
+            klass = self.components[self.main]
+            return klass().getUserProfile(userid)
+        except KeyError:
+            return None
 
     def getUserLocations(self, userid):
-        klass = self.components[self.main]
-        return klass().getUserLocations(userid)
+        try:
+            klass = self.components[self.main]
+            return klass().getUserLocations(userid)
+        except KeyError:
+            return None
 
     def getMachinesInLocation(self, location, a_profile = []):
-        klass = self.components[self.main]
-        return klass().getMachinesInLocation(location, a_profile)
+        try:
+            klass = self.components[self.main]
+            return klass().getMachinesInLocation(location, a_profile)
+        except KeyError:
+            return None
         
     def getLocationsForMachine(self, machine_uuid, a_profile = []):
-        klass = self.components[self.main]
-        return klass().getLocationsForMachine(machine_uuid, a_profile)
+        try:
+            klass = self.components[self.main]
+            return klass().getLocationsForMachine(machine_uuid, a_profile)
+        except KeyError:
+            return None
         
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
-        klass = self.components[self.main]
-        return klass().doesUserHaveAccessToMachine(userid, machine_uuid)
+        try:
+            klass = self.components[self.main]
+            return klass().doesUserHaveAccessToMachine(userid, machine_uuid)
+        except KeyError:
+            return None
 
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True):
-        klass = self.components[self.main]
-        return klass().doesUserHaveAccessToMachines(userid, machine_uuid, all)
+        try:
+            klass = self.components[self.main]
+            return klass().doesUserHaveAccessToMachines(userid, machine_uuid, all)
+        except KeyError:
+            return None
 
 class ComputerLocationI:
     def getUserProfile(self, userid):
