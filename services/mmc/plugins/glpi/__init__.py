@@ -50,7 +50,8 @@ def activate():
                     
     ComputerManager().register("glpi", GlpiComputers)
     ProvisioningManager().register("glpi", GlpiProvisioner)
-    ComputerLocationManager().register("glpi", GlpiLocation)
+    if config.displayLocalisationBar:
+        ComputerLocationManager().register("glpi", GlpiLocation)
 
     return True
 
