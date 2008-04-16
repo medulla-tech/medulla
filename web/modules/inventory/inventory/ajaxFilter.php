@@ -1,6 +1,6 @@
 <?php
 require("localSidebar.php");
-require("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/includes/xmlrpc.php");
 
 
 $root = $conf["global"]["root"];
