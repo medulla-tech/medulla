@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/includes/xmlrpc.php");
 
 if (isset($_POST["inventaire"])) {
   $_GET["inventaire"] = $_POST["inventaire"];
