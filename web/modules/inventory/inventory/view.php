@@ -24,7 +24,7 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-require("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/includes/xmlrpc.php");
 
 
 if (isset($_POST["inventaire"])) {
