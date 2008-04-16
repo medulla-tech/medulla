@@ -36,8 +36,8 @@ function getMachines($pattern = null) {
     return xmlCall("inventory.getMachines", array($pattern));
 }
 
-function getLastMachineInventoryFull($name) {
-    return xmlCall("inventory.getLastMachineInventoryFull", array($name));
+function getLastMachineInventoryFull($uuid) {
+    return xmlCall("inventory.getLastMachineInventoryFull", array($uuid));
 }
 
 function getInventoryParts() {
@@ -56,8 +56,8 @@ function getInventoryGraph($part) {
     return xmlCall("inventory.getInventoryGraph", array($part));
 }
 
-function inventoryExists($name) {
-    return xmlCall("inventory.inventoryExists", array($name));
+function inventoryExists($uuid) {
+    return xmlCall("inventory.inventoryExists", array($uuid));
 }
 
 
