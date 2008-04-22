@@ -25,19 +25,53 @@
 import mmctools
 
 import ldap
+import re
 from ConfigParser import *
 
 
 class ConfigException(Exception):
     pass
 
-class PluginConfig(ConfigParser):
+class MMCConfigParser(ConfigParser):
+
+    def __init__(self):
+        ConfigParser.__init__(self)
+
+    def getdn(self, section, option):
+        """
+        Like get, but interpret the value as a LDAP DN, and sanitize it by
+        removing the extra spaces.
+
+        If the value is not a valid DN, a ldap.LDAPError exception will be
+        raised.
+        """
+        return ",".join(ldap.explode_dn(self.get(section, option)))
+
+    def getpassword(self, section, option):
+        """
+        Like get, but interpret the value as a obfuscated password if a
+        password scheme is specified.
+
+        For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
+        """
+        value = self.get(section, option)
+        m = re.search('^{(\w+)}(.+)$', value)
+        if m:
+            scheme = m.group(1)
+            obfuscated = m.group(2)
+            ret = obfuscated.decode(scheme)
+        else:
+            ret = value
+        return ret
+    
+
+class PluginConfig(MMCConfigParser):
 
     USERDEFAULT = "userdefault"
     HOOKS = "hooks"
 
     def __init__(self, name, conffile = None):
-        ConfigParser.__init__(self)
+        MMCConfigParser.__init__(self)
         self.name = name
         if not conffile: self.conffile = mmctools.getConfigFile(name)
         else: self.conffile = conffile
@@ -72,13 +106,3 @@ class PluginConfig(ConfigParser):
         fails.
         """
         pass
-
-    def getdn(self, section, option):
-        """
-        Like get, but interpret the value as a LDAP DN, and sanitize it by
-        removing the extra spaces.
-
-        If the value is not a valid DN, a ldap.LDAPError exception will be
-        raised.
-        """
-        return ",".join(ldap.explode_dn(self.get(section, option)))
