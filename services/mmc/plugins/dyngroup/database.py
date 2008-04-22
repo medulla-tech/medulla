@@ -413,7 +413,6 @@ class DyngroupDatabase(Singleton):
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, start, end)
 
         ret = []
-        self.logger.info(result)
         if type(result) == dict:
             for key in result:
                 machine = self.__getMachine(result[key][1]['objectUUID'][0], session)
