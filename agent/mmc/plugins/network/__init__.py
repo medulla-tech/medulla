@@ -349,7 +349,7 @@ class NetworkConfig(PluginConfig):
         except NoOptionError:
             pass
         try:
-            self.dnsReaderPassword = self.get("dns", "dnsreaderpassword")
+            self.dnsReaderPassword = self.getpassword("dns", "dnsreaderpassword")
         except NoOptionError:
             pass
 

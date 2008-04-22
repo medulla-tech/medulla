@@ -200,6 +200,8 @@ class BasePluginConfig(PluginConfig):
 
         self.backuptools = self.get("backup-tools", "path")
         self.backupdir = self.get("backup-tools", "destpath")
+        self.username = self.get("ldap", "rootName")
+        self.password = self.getpassword("ldap", "password")
 
     def setDefault(self):
         PluginConfig.setDefault(self)
@@ -581,6 +583,9 @@ class ldapUserGroupControl:
         fp = file(configFile, "r")
         self.config.readfp(fp, configFile)
 
+        # TODO: use the BasePluginConfig class for all options
+        pluginConf = BasePluginConfig("base", self.conffile)
+
         self.logger = logging.getLogger()
 
         # FIXME: get rid of this globals
@@ -639,11 +644,8 @@ class ldapUserGroupControl:
         # you should set this to ldap.VERSION2 if you're using a v2 directory
         self.l.protocol_version = ldap.VERSION3
 
-        username = self.config.get("ldap", "rootName")
-        password = self.config.get("ldap", "password")
-
         # Any errors will throw an ldap.LDAPError exception
-        self.l.simple_bind_s(username, password)
+        self.l.simple_bind_s(pluginConf.username, pluginConf.password)
 
     def runHook(self, hookName, uid = None, password = None):
         """
