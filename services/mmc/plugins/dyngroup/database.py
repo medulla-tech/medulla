@@ -23,6 +23,7 @@
 
 # SqlAlchemy
 from sqlalchemy import *
+from sqlalchemy.exceptions import NoSuchTableError
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager
@@ -412,12 +413,22 @@ class DyngroupDatabase(Singleton):
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, start, end)
 
         ret = []
-        for key in result:
-            machine = self.__getMachine(result[key][1]['objectUUID'][0], session)
-            id = None
-            if machine:
-                id = machine.id
-            ret.append({'uuid': result[key][1]['objectUUID'][0], 'hostname': result[key][1]['cn'][0], 'id': id})
+        self.logger.info(result)
+        if type(result) == dict:
+            for key in result:
+                machine = self.__getMachine(result[key][1]['objectUUID'][0], session)
+                id = None
+                if machine:
+                    id = machine.id
+                ret.append({'uuid': result[key][1]['objectUUID'][0], 'hostname': result[key][1]['cn'][0], 'id': id})
+        else:
+            for res in result:
+                machine = self.__getMachine(res[1]['objectUUID'][0], session)
+                id = None
+                if machine:
+                    id = machine.id
+                ret.append({'uuid': res[1]['objectUUID'][0], 'hostname': res[1]['cn'][0], 'id': id})
+            
         session.close()
         return ret
 
