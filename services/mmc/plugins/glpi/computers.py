@@ -52,6 +52,12 @@ class GlpiComputers(ComputerI):
                 return False
             raise e
     
+    def getMachineMac(self, ctx, params):
+        return self.getMachineMac(params['uuid'])
+
+    def getMachineIp(self, ctx, filt):
+        return self.getMachineIp(filt['uuid'])
+        
     def getComputersList(self, ctx, filt = None):
         """
         Return a list of computers
