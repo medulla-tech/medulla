@@ -12,8 +12,7 @@ def queryPossibilities():
     ret = {}
     p1 = re.compile('/')
     for possible in possibleQueries():
-        table, field = p1.split(possible)
-        ret[possible] = ['list', getValues(table, field)]
+        ret[possible] = ['list', funcGet(possible)]
     return ret
     
 def query(criterion, value):
@@ -21,3 +20,16 @@ def query(criterion, value):
     table, field = p1.split(criterion)
     return [getMachinesBy(table, field, value), True]
 
+def funcGet(couple):
+    if couple == 'Software/ProductName':
+        def getSoftwareProductName(value = ''):
+            return getValues('Software', 'ProductName')
+        return getSoftwareProductName
+    elif couple == 'Hardware/ProcessorType':
+        def getHardwareProcessorType(value = ''):
+            return getValues('Hardware', 'ProcessorType')
+        return getHardwareProcessorType
+    elif couple == 'Hardware/OperatingSystem':
+        def getHardwareOperatingSystem(value = ''):
+            return getValues('Hardware', 'OperatingSystem')
+        return getHardwareOperatingSystem
