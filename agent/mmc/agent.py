@@ -28,7 +28,6 @@ try:
 except ImportError:
     from twisted.protocols import http
 
-import re
 import imp
 import logging
 import logging.config
@@ -36,13 +35,10 @@ import xmlrpclib
 import os
 import sys
 import ConfigParser
-import base64
 import glob
-import traceback
 import time
 
 sys.path.append("plugins")
-import support.mmcException
 
 Fault = xmlrpclib.Fault
 __config = None #shared config object
@@ -110,7 +106,6 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
         @return: interpreted request
         """
-        headers = request.getAllHeaders()
         args, functionPath = xmlrpclib.loads(request.content.read())
 
         s = request.getSession()
@@ -420,14 +415,8 @@ def startService(config,logger,mod):
         logger.warning("SSL is disabled by configuration.")
 
     # HTTP authentication login/password
-    try:
-        login = config.get("main", "login")
-        password = config.get("main", "password")
-    except Exception, e:
-        # Default login/pass if not set
-        login = "mmc"
-        password = "s3cr3t"
-        logger.warning("Default login/password are used: your configuration is not secure. Please fix it.")
+    login = config.get("main", "login")
+    password = config.getpassword("main", "password")
 
     # Starting XMLRPC server
     ret = 0
