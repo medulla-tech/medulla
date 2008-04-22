@@ -223,13 +223,13 @@ class RpcProxy(RpcProxyI):
                 ret.append(r)
         return ret
     
-def __onlyGlpi(query):
+def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
-            if q[1] != 'glpi':
+            if q[1] != module:
                 return False
         else:
-            a = __onlyGlpi(q)
+            a = __onlyIn(q, module)
             if a == False:
                 return False
     return True
@@ -246,34 +246,21 @@ def __addCtxFilters(ctx, filt = {}):
     return filt
 
 def replyToQuery(ctx, query, bool = None, min = 0, max = 10):
-    # TODO : don't do it specifically for glpi, but call directly .getRestrictedComputersList on ComputerManager().main
-    # each time all the request are for ComputerManager().main
-    if ComputerManager().main == 'glpi':
-        # check that queried modules are only glpi
-        onlyGlpi = __onlyGlpi(query)
+    if __onlyIn(query, ComputerManager().main):
+        module = ComputerManager().main
         filt = __addCtxFilters(ctx)
-
-        # in this case, only call ComputerManager().getRestrictedComputersList with correct filters:
-        if onlyGlpi:
-            filt['query'] = query
-            return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt))
-        else:
-            return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
+        filt['query'] = query
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt))
     else:
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 
 def replyToQueryLen(ctx, query, bool = None):
-    if ComputerManager().main == 'glpi':
-        # check that queried modules are only glpi
-        onlyGlpi = __onlyGlpi(query)
+    if __onlyIn(query, ComputerManager().main):
+        module = ComputerManager().main
         filt = __addCtxFilters(ctx)
-
-        # in this case, only call ComputerManager().getRestrictedComputersList with correct filters:
-        if onlyGlpi:
-            filt['query'] = query
-            return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
-        else:
-            return xmlrpcCleanup(QueryManager().replyToQueryLen(ctx, query, bool))
+        filt['query'] = query
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
     else:
         return xmlrpcCleanup(QueryManager().replyToQueryLen(ctx, query, bool))
- 
+
+
