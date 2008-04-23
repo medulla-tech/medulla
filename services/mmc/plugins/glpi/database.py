@@ -371,7 +371,7 @@ class Glpi(DyngroupDatabaseHelper):
             query_filter = and_(query_filter, eq)
         return query_filter
     
-    def __mappingTable(self, query):
+    def mappingTable(self, query):
         """
         Map a table name on a table mapping
         """
@@ -383,7 +383,7 @@ class Glpi(DyngroupDatabaseHelper):
             return [self.inst_software, self.licenses, self.software]
         return []
 
-    def __mapping(self, query, invert = False):
+    def mapping(self, query, invert = False):
         """
         Map a name and request parameters on a sqlalchemy request
         """
