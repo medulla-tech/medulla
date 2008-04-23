@@ -5,7 +5,7 @@ import os
 import os.path
 import sys
 import getopt
-import ConfigParser
+from mmc.support.config import MMCConfigParser
 
 import mmc.agent
 
@@ -28,7 +28,7 @@ if __name__ == "__main__":
  
     # Load configuration file
     try:
-        cp = ConfigParser.ConfigParser()
+        cp = MMCConfigParser()
         cp.read(inifile)
     except e:
         print str(e)
