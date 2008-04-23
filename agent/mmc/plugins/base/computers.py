@@ -59,6 +59,18 @@ class ComputerI:
         """
         pass
     
+    def getMachineMac(self, ctx, params):
+        """
+        Get the computers mac adresses
+        """
+        pass
+        
+    def getMachineIp(self, ctx, params):
+        """
+        Get the computers ip addresses
+        """
+        pass
+    
     def getComputerList(ctx, params):
         """
         Get computer list
@@ -117,19 +129,42 @@ class ComputerManager(Singleton):
             klass = self.components[plugin]
             instance = klass()
             if klass().canAddComputer():
-                instance.addComputer(params)
+                try:
+                    instance.addComputer(ctx, params)
+                except TypeError:
+                    instance.addComputer(params)
 
     def delComputer(self, ctx, params):
         for plugin in self.components:
             klass = self.components[plugin]
             instance = klass()
             if klass().canDelComputer():
-                instance.delComputer(params)
+                try:
+                    instance.delComputer(ctx, params)
+                except TypeError:
+                    instance.delComputer(params)
+
+    def neededParamsAddComputer(self):
+        try:
+            klass = self.components[self.main]
+            return klass().neededParamsAddComputer()
+        except:
+            return []
 
     def getComputer(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputer(ctx, filt)
+        
+    def getMachineMac(self, ctx, filt = None):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getMachineMac(ctx, filt)
+
+    def getMachineIp(self, ctx, filt = None):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getMachineIp(ctx, filt)
 
     def getComputersList(self, ctx, filt = None):
         klass = self.components[self.main]

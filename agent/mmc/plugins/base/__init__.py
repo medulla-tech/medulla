@@ -156,7 +156,7 @@ def activate():
     ProvisioningManager().register("externalldap", ExternalLdapProvisioner)
 
     # Register computer list manager
-    ComputerManager().register("baseldap", Computers)
+    #ComputerManager().register("baseldap", Computers)
     
     return True
 
@@ -2020,6 +2020,12 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         pass # TODO...
 
+    def getMachineMac(self, ctx, filt = None):
+        pass # TODO...
+
+    def getMachineIP(self, ctx, filt = None):
+        pass # TODO...
+
     def getComputersList(self, ctx, filt = None):
         """
         Return a list of computers
@@ -2130,6 +2136,9 @@ class RpcProxy(RpcProxyI):
     def addComputer(self, params):
         ctx = self.currentContext
         ComputerManager().addComputer(ctx, params)
+        
+    def neededParamsAddComputer(self):
+        return ComputerManager().neededParamsAddComputer()
 
     def canDelComputer(self):
         return ComputerManager().canDelComputer()
@@ -2141,6 +2150,14 @@ class RpcProxy(RpcProxyI):
     def getComputer(self, filt = None):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt))
+
+    def getMachineMac(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getMachineMac(ctx, filt))
+
+    def getMachineIp(self, filt = None):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getMachineIp(ctx, filt))
         
     def getComputersName(self, filt = None):
         ctx = self.currentContext
