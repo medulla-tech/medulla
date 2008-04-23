@@ -23,6 +23,7 @@ from mmc.support.config import PluginConfig
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
+from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
 from ConfigParser import NoOptionError
 from sqlalchemy import *
@@ -92,7 +93,7 @@ class GlpiConfig(PluginConfig):
         self.dbpoolrecycle = 60
         self.dbport = None
 
-class Glpi(Singleton):
+class Glpi(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database.
 
@@ -317,12 +318,8 @@ class Glpi(Singleton):
             # filtering on query
             join_query = self.machine
             query_filter = None
-            try:
-                query_filter, join_tables = self.__treatQueryLevel(filt['query'])
-                for table in join_tables:
-                    join_query = join_query.join(table)
-            except KeyError:
-                pass
+
+            join_query, query_filter = self.filter(self.machine, filt)
 
             # filtering on locations
             try:
@@ -374,85 +371,6 @@ class Glpi(Singleton):
             query_filter = and_(query_filter, eq)
         return query_filter
     
-    def __treatQueryLevel(self, queries, join_tables = [], invert = False):
-        """
-        Use recursively by __getRestrictedComputersListQuery to build the query
-        Used in the dyngroup context, to build AND, OR and NOT queries
-        """
-        bool = queries[0]
-        level = queries[1]
-        if bool == 'OR':
-            query_filter, join_tables = self.__treatQueryLevelOR(level, join_tables, invert)
-        elif bool == 'AND':
-            query_filter, join_tables = self.__treatQueryLevelAND(level, join_tables, invert)
-        elif bool == 'NOT':
-            query_filter, join_tables = self.__treatQueryLevelNOT(level, join_tables, invert)
-        else:
-            self.logger.error("Don't know this kind of bool operation : %s" % (bool))
-        return (query_filter, join_tables)
-
-    def __treatQueryLevelOR(self, queries, join_tables, invert = False):
-        """
-        Build OR queries
-        """
-        filter_on = []
-        for q in queries:
-            if len(q) == 4:
-                join_tab = self.__mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on.append(self.__mapping(q, invert))
-            else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
-                filter_on.append(query_filter)
-        query_filter = or_(*filter_on)
-        return (query_filter, join_tables)
-
-    def __treatQueryLevelAND(self, queries, join_tables, invert = False):
-        """
-        Build AND queries
-        """
-        filter_on = []
-        for q in queries:
-            if len(q) == 4:
-                join_tab = self.__mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on_mapping = self.__mapping(q, invert)
-                if type(filter_on_mapping) == list:
-                    filter_on.extend(filter_on_mapping)
-                else:
-                    filter_on.append(filter_on_mapping)
-            else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
-                filter_on.append(query_filter)
-        query_filter = and_(*filter_on)
-        return (query_filter, join_tables)
-
-    def __treatQueryLevelNOT(self, queries, join_tables, invert = False):
-        """
-        Build NOT queries : it switches the invert flag
-        """
-        filter_on = []
-        for q in queries:
-            if len(q) == 4:
-                join_tab = self.__mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on.append(self.__mapping(q, not invert))
-            else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables, not invert)
-                filter_on.append(query_filter)
-        query_filter = and_(*filter_on)
-        return (query_filter, join_tables)
-
-    def __mappingTables(self, queries):
-        """
-        Map multiple tables (use __mappingTable)
-        """
-        ret = []
-        for query in queries:
-            if len(query) == 4:
-                self.__mappingTable(query)
-        return ret
-
     def __mappingTable(self, query):
         """
         Map a table name on a table mapping
