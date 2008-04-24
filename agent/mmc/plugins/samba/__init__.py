@@ -152,6 +152,11 @@ def activate():
             if ldap.explode_rdn(smbconfsuffix)[0].lower() != ldap.explode_rdn(option[2])[0].lower():
                 logger.error("SAMBA option '" + option[0] + "' is not equal to MMC '" + option[1] + "' option.")
                 return False
+        # Check that "ldap delete dn" SAMBA option is set to "No"
+        smbconfdeletedn = smbconf.isValueTrue(smbconf.getContent("global", "ldap delete dn"))
+        if smbconfdeletedn == 1:
+            logger.error("SAMBA option 'ldap delete dn' must be disabled.")
+            return False
         # Check that Domain Computers group exists
         # We need it to put a machine account in the right group when joigning it to the domain
         if not samba.getDomainComputersGroup():
