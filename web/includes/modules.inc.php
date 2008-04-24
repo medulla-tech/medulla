@@ -70,6 +70,19 @@ function fetchIniFile() {
         print "MMC: Can't read $INI configuration file. Please check your installation.";
         exit();
     }
+    /* If password is obfusctated, decode it */
+    if (isset($conf["global"]["password"])) {
+        $value = $conf["global"]["password"];
+        /* We only support base64 encoded password */
+        if (preg_match('/^{base64}(.+)$/', $value, $matches)) {
+            $value = base64_decode($matches[1]);
+            if ($value === False) {
+                print "MMC: Can't decode base64 encoded password. Please check your installation.";
+                exit();
+            }
+            $conf["global"]["password"] = $value;
+        }        
+    }
 }
 
 
