@@ -1,0 +1,187 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2008 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import sys
+
+from twisted.internet import reactor, defer
+
+from mmc.client import MMCProxy
+
+def usage():
+    print "MDS installation report"
+    print "This tool connects to a MMC agent and print some statistics."
+    print
+    print "usage:"
+    print "mds-report <url>"
+    print
+    print "Example:"
+    print "mds-report https://127.0.0.1:7080/XMLRPC"    
+
+try:
+    url = sys.argv[1]
+except IndexError:
+    sys.stderr.write("Not enough arguments.\n\n")
+    usage()
+    sys.exit(1)
+
+httpuser = raw_input("Enter HTTP login:\n")
+httppass = raw_input("Enter HTTP password:\n")
+
+username = "root"
+password = raw_input("Enter LDAP root password:\n")
+
+
+class Report:
+
+    """
+    Instance of this class connect to a MMC agent and print statistics about
+    MDS plugins.
+    """
+
+    def __init__(self, url, httpuser, httppass, username, password):
+        self.proxy = MMCProxy(url, httpuser, httppass)
+        self.username = username
+        self.password = password
+
+    def auth(self):
+        return self.proxy.callRemote("base.ldapAuth", self.username, self.password).addCallbacks(self.authOK, self.receiveError)
+
+    def authOK(self, value):
+        if value:
+            self.getVersion()
+        else:
+            sys.stderr.write("Bad credentials, can't connect to MMC agent.\n")
+            self.end()
+
+    def getVersion(self):
+        self.proxy.callRemote("getVersion").addCallbacks(self.printVersion, self.receiveError)
+
+    def printVersion(self, value):
+        print "MMC agent version:", value
+        self.getPlugins()
+
+    def getPlugins(self):
+        self.proxy.callRemote("base.getModList").addCallbacks(self.printPlugins, self.receiveError)
+
+    def printPlugins(self, plugins):
+        print "Enabled plugins:",
+        for plugin in plugins:
+            print plugin,
+        print
+        self.plugins = plugins
+        dlist = []
+        for plugin in plugins:
+            dlist.append(self.getPluginVersion(plugin))
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(self.getUsersCount)
+
+    def getPluginVersion(self, plugin):
+        return self.proxy.callRemote("%s.getVersion" % plugin).addCallbacks(self.printPluginVersion, self.receiveError, (plugin,))
+
+    def printPluginVersion(self, version, *args):
+        print "%s plugin version: %s" % (args[0], version)
+
+    def getUsersCount(self, value):
+        self.proxy.callRemote("base.getUsersLdap").addCallbacks(self.printUsersCount, self.receiveError)
+
+    def printUsersCount(self, value):
+        print
+        print "Users:", len(value)
+        self.proxy.callRemote("base.getGroupsLdap").addCallbacks(self.printGroupsCount, self.receiveError)
+
+    def printGroupsCount(self, value):
+        print "Groups:", len(value)
+        self.getSambaComputersCount()
+
+    def getSambaComputersCount(self):
+        if "samba" in self.plugins:
+            self.proxy.callRemote("samba.getMachinesLdap").addCallbacks(self.printSambaComputersCount, self.receiveError)
+        else:
+            self.getVDomainsCount()
+
+    def printSambaComputersCount(self, value):
+        print "SAMBA computers account:", len(value)
+        self.getVDomainsCount()
+
+    def getVDomainsCount(self):
+        if "mail" in self.plugins:
+            self.proxy.callRemote("mail.getVDomains", "").addCallbacks(self.printVDomainsCount, self.receiveError)
+        else:
+            self.getDNSZonesCount()
+
+    def printVDomainsCount(self, value):
+        print "Virtual mail domains:", len(value)
+        self.getDNSZonesCount()
+
+    def getDNSZonesCount(self):
+        if "network" in self.plugins:
+            self.proxy.callRemote("network.getZones", "").addCallbacks(self.printDNSZonesCount, self.receiveError)
+        else:
+            self.end()
+
+    def printDNSZonesCount(self, value):
+        print "DNS zones:", len(value)
+        self.getDNSHostsCount(value)
+
+    def getDNSHostsCount(self, value):
+        dlist = []
+        for item in value:
+            name = item[1]["zoneName"][0]
+            dlist.append(self.proxy.callRemote("network.getZoneObjectsCount", name).addCallbacks(self.printDNSHostsCount, self.receiveError))
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(self.getDHCPSubnetsCount)        
+
+    def printDNSHostsCount(self, value):
+        print "  RR in zone:", value
+
+    def getDHCPSubnetsCount(self, value):
+        self.proxy.callRemote("network.getSubnets", "").addCallbacks(self.printDHCPSubnetsCount, self.receiveError)
+
+    def printDHCPSubnetsCount(self, value):
+        print "DHCP subnets:", len(value)
+        self.getDHCPHostsCount(value)
+
+    def getDHCPHostsCount(self, value):
+        dlist = []
+        for item in value:
+            name = item[1]["cn"][0]
+            dlist.append(self.proxy.callRemote("network.getSubnetHostsCount", name).addCallbacks(self.printDHCPHostsCount, self.receiveError))
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(self.end)
+
+    def printDHCPHostsCount(self, value):
+        print "  Hosts in subnet:", value
+
+    def end(self, value = None):
+        reactor.stop()
+
+    def receiveError(self, error):
+        print error
+        reactor.stop()
+    
+report = Report(url, httpuser, httppass, username, password)
+report.auth()
+
+reactor.run()
+
