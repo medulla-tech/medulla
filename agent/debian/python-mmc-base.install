@@ -1,3 +1,4 @@
+usr/sbin/mds-report
 usr/lib/python2.?/site-packages/mmc/client.py
 usr/lib/python2.?/site-packages/mmc/support
 usr/lib/python2.?/site-packages/mmc/__init__.py
