@@ -1,7 +1,17 @@
+mmc-web-base 2.3.1
+------------------
+
+ * BASE64 obfuscated password support in /etc/mmc/mmc.ini
+ * New Russian translation by Vitaly Kolomeytsev
+ * Brazilian Portuguese translation update from Wanderlei Antonio Cavassin
+ * Spanish translation update from Juan Asensio Sánchez
+ * Fix bad path in expertMode cookie
+
 mmc-web-base 2.3.0
 ------------------
+
  * New "Computers" sub-module for computer management
- * Save inteface mode (standard or expert) between two MMC sessions
+ * Save interface mode (standard or expert) between two MMC sessions
  * User photo auto-resize if too large
  * Support page with tabs in the widget framework
  * Lots of code cleanup and bug fixes
