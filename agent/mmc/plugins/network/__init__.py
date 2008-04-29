@@ -37,8 +37,8 @@ import mmc
 
 INI = "/etc/mmc/plugins/network.ini"
 
-VERSION = "2.3.0"
-APIVERSION = "1:0:0"
+VERSION = "2.3.1"
+APIVERSION = "1:1:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION

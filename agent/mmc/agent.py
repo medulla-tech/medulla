@@ -43,7 +43,7 @@ sys.path.append("plugins")
 Fault = xmlrpclib.Fault
 __config = None #shared config object
 
-VERSION = "2.3.0"
+VERSION = "2.3.1"
 
 def getAvailablePlugins(path):
     """
