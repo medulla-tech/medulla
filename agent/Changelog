@@ -1,3 +1,10 @@
+mmc-agent 2.3.1
+---------------
+
+ * minor bug fix release
+ * obfuscated password support in configuration file
+ * hook scripts for SAMBA remote share and printer management
+
 mmc-agent 2.3.0
 ---------------
 
