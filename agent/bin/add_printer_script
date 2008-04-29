@@ -43,5 +43,4 @@ if not ":/" in location:
     location = "lpd://" + location
 
 ret = os.system('%s -p %s -D "%s" -E -v %s' % (LPADMIN, shareName, driverName, location))
-#print '%s -p %s -D "%s" -E -v %s' % (LPADMIN, shareName, driverName, location)
 sys.exit(ret)
