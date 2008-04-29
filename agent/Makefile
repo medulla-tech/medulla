@@ -36,7 +36,7 @@ PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 LIBFILES = bin/add_machine_script
 LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
-SBINFILES = bin/mmc-agent
+SBINFILES = bin/mmc-agent bin/mds-report
 
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)

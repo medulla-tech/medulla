@@ -34,7 +34,7 @@ ifeq ($(DO_PYSUPPORT),true)
 else
 	# Set legacy build depends to use dh_python
 	sed 's!###BUILDDEPS###!debhelper (>= 4.0.0)!' debian/control.in > debian/control
-	sed -i 's!###BUILDDEPSINDEP###!python-dev!' debian/control	
+	sed -i 's!###BUILDDEPSINDEP###!python-dev!' debian/control
 endif
 # Twisted has been splitted in several parts since etch
 ifeq ($(DISTRO),sarge)
