@@ -41,8 +41,16 @@ and without a tested and certified upgrade path from previous versions.
 </p>");
  ?>
 
+<?
+$url = "http://www.mandriva.com/enterprise/en/mds-subscription-c";
+if (isset($_SESSION["lang"])) {
+    if ($_SESSION["lang"] == "fr_FR")
+        $url = "http://www.mandriva.com/enterprise/fr/mds-subscription-c";
+}
+?>
+
 <p>
-<a href="http://www.mandriva.com/enterprise/en/products/mandriva-directory-server"><?= _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
+<a href="<?= $url; ?>"><?= _("Click here to get more information about our support and maintenance subscription plan."); ?></a>
 </p>
  </div>
 
