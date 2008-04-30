@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-03 11:27+0200\n"
-"PO-Revision-Date: 2008-04-03 11:29+0200\n"
+"POT-Creation-Date: 2008-04-30 17:24+0200\n"
+"PO-Revision-Date: 2008-04-30 17:32+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -298,7 +298,7 @@ msgid "Ok"
 msgstr "Ok"
 
 #: includes/PageGenerator.php:1814 modules/base/groups/members.php:181
-#: modules/base/users/edit.php:437 modules/base/users/editacl.php:223
+#: modules/base/users/edit.php:437 modules/base/users/editacl.php:224
 msgid "Confirm"
 msgstr "Valider"
 
@@ -437,7 +437,7 @@ msgid "Group name"
 msgstr "Nom du groupe"
 
 #: modules/base/groups/edit.php:91
-#: modules/base/includes/computers_list.inc.php:74
+#: modules/base/includes/computers_list.inc.php:76
 msgid "Description"
 msgstr "Description"
 
@@ -810,12 +810,12 @@ msgstr ""
 "Attention, aucune description n'a pu être trouvée dans le fichier "
 "infoPackage.inc.php :"
 
-#: modules/base/users/editacl.php:193
+#: modules/base/users/editacl.php:194
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "Édition des ACLs de l'utilisateur %s"
 
-#: modules/base/users/editacl.php:201
+#: modules/base/users/editacl.php:202
 msgid "Edit ACL of user"
 msgstr "Édition des ACLs de l'utilisateur"
 
@@ -901,36 +901,36 @@ msgstr ""
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
-#: modules/base/includes/computers_list.inc.php:31
+#: modules/base/includes/computers_list.inc.php:33
 msgid "Inventory"
 msgstr "Inventaire"
 
-#: modules/base/includes/computers_list.inc.php:32
+#: modules/base/includes/computers_list.inc.php:34
 msgid "Read log"
 msgstr "Consulter le journal"
 
-#: modules/base/includes/computers_list.inc.php:33
+#: modules/base/includes/computers_list.inc.php:35
 msgid "Software deployment"
 msgstr "Déploiement de logiciels"
 
-#: modules/base/includes/computers_list.inc.php:34
+#: modules/base/includes/computers_list.inc.php:36
 msgid "GLPI Inventory"
 msgstr "Inventaire GLPI"
 
-#: modules/base/includes/computers_list.inc.php:64
-#: modules/base/includes/computers_list.inc.php:70
+#: modules/base/includes/computers_list.inc.php:66
+#: modules/base/includes/computers_list.inc.php:72
 msgid "Computer name"
 msgstr "Nom de l'ordinateur"
 
-#: modules/base/includes/computers_list.inc.php:75
+#: modules/base/includes/computers_list.inc.php:77
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: modules/base/includes/computers_list.inc.php:84
+#: modules/base/includes/computers_list.inc.php:86
 msgid "Delete computer"
 msgstr "Supprimer un ordinateur"
 
-#: modules/base/includes/computers_list.inc.php:87
+#: modules/base/includes/computers_list.inc.php:89
 msgid "Remove machine from group"
 msgstr "Enlever un ordinateur du groupe"
 
@@ -1118,3 +1118,30 @@ msgstr "Connecter"
 #: main.php:88
 msgid "Error, you don't have correct rights !"
 msgstr "Erreur, vous n'avez pas les droits requis !"
+
+#: license.php:33
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the "
+"implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information "
+"system. This community version is distributed without professional support "
+"of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"La version communauté de ce produit est distribuée dans l'espoir qu'elle sera utilen, mais <string>sans aucune garantie</strong>; sans même une garantie implicite de commerciabilité ou de conformité à une utilisation particulière. Voir la Licence Publique Générale GNU pour plus de détails.</p>\n"
+"<p>\n"
+"Ce produit est un élément important et critique de votre système d'informations. La version communauté est distribuée sans aucun support professionnel, et sans un chemin de mis à jour testé et certifié depuis d'anciennes versions.\n"
+"</p>"
+
+#: license.php:45
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr "Cliquer ici pour avoir plus d'informations à propos de notre plan de maintenance et de souscription."
