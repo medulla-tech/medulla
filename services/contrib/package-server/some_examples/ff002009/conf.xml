@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE package SYSTEM "package_v1.dtd">
+ <package id='ff002009'>
+ 	<name>Firefox</name>
+ 	<version>
+ 		<numeric></numeric>
+ 		<label>2.0.0.9</label>
+ 	</version>
+ 	<commands>
+ 		<preCommand></preCommand>
+ 		<installInit></installInit>
+ 		<command name='install'>./install.bat</command>
+ 		<postCommandSuccess></postCommandSuccess>
+ 		<postCommandFailure></postCommandFailure>
+ 	</commands>
+ </package>
