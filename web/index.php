@@ -225,15 +225,19 @@ if (isset($error)) {
         <div id="footer">
         <div id="footerLeft"><div id="footerRight">
         </div></div></div>
-
-
   		</td>
       </tr>
     </table>
 	</td>
   </tr>
-</table>
+<?
 
+if (is_file("licence.php")) {
+    require("licence.php");
+}
+
+?>
+</table>
 </div>
 
 <?if (isset($error)) print '<script type="text/javascript">new Effect.Shake($("alert"));</script>';?>
