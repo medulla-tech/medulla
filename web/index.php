@@ -232,8 +232,8 @@ if (isset($error)) {
   </tr>
 <?
 
-if (is_file("licence.php")) {
-    require("licence.php");
+if (is_file("license.php")) {
+    require("license.php");
 }
 
 ?>

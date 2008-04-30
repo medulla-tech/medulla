@@ -641,7 +641,7 @@ class SelectItem extends AbstractTpl{
         if ($this->jsFunc) {
             print " onchange=\"".$this->jsFunc."(); return false;\"";
         }
-        print " name=\"".$this->id."\">\n";
+        print " id=\"".$this->id. "\" name=\"".$this->id."\">\n";
         foreach ($this->elements as $key => $item) {
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected="selected";
