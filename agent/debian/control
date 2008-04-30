@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 
 Package: mmc-agent
 Architecture: all
-Pre-Depends: python-mmc-base (= 2.3.0-1)
+Pre-Depends: python-mmc-base (= 2.3.1-1)
 Depends: ${python:Depends}, python-twisted-web, python-pyopenssl,
 Description: Mandriva Management Console Agent
  XMLRPC server of the MMC API.
@@ -29,7 +29,7 @@ Description: Mandriva Management Console base plugin
 
 Package: python-mmc-samba
 Architecture: all
-Depends: ${python:Depends}, python-pylibacl, acl, python-mmc-base (= 2.3.0-1), samba-common
+Depends: ${python:Depends}, python-pylibacl, acl, python-mmc-base (= 2.3.1-1), samba-common
 Replaces: python-lmc-samba
 Conflicts: python-lmc-samba
 Description: Mandriva Management Console SAMBA plugin
@@ -39,7 +39,7 @@ Description: Mandriva Management Console SAMBA plugin
 
 Package: python-mmc-mail
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1)
+Depends: ${python:Depends}, python-mmc-base (= 2.3.1-1)
 Replaces: python-lmc-mail
 Conflicts: python-lmc-mail
 Description: Mandriva Management Console base plugin
@@ -49,7 +49,7 @@ Description: Mandriva Management Console base plugin
 
 Package: python-mmc-proxy
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1), squidguard
+Depends: ${python:Depends}, python-mmc-base (= 2.3.1-1), squidguard
 Replaces: python-lmc-proxy
 Conflicts: python-lmc-proxy
 Description: Mandriva Management Console proxy plugin
@@ -59,7 +59,7 @@ Description: Mandriva Management Console proxy plugin
 
 Package: python-mmc-network
 Architecture: all
-Depends: ${python:Depends}, python-mmc-base (= 2.3.0-1)
+Depends: ${python:Depends}, python-mmc-base (= 2.3.1-1)
 Replaces: python-lmc-network
 Conflicts: python-lmc-network
 Description: Mandriva Management Console network plugin
