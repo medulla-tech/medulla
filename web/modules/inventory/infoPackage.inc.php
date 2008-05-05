@@ -88,6 +88,10 @@ $page = new Page("graph",_T("Graphique", "inventory"));
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("csv",_T("Csv's export", "inventory"));
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxFilter");
 $page->setFile("modules/inventory/inventory/ajaxFilter.php", array("AJAX" =>True,"visible"=>False));
 $submod->addPage($page);
