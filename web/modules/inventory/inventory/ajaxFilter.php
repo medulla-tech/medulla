@@ -52,7 +52,7 @@ function print_ajax_nav($curstart, $curend, $items, $filter, $display, $label) {
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
 if (!isset($_GET["items"])) {
     if (isset($_GET["filter"]) && $_GET["filter"] != '') {
-        $machines = getAllMachinesInventoryPart($display, $_GET["filter"]);
+        $machines = getAllMachinesInventoryPart($display, array('hostname'=>$_GET["filter"]));
     } else {
         $machines = getAllMachinesInventoryPart($display);
     }
@@ -90,6 +90,10 @@ $result = array();
 $index = 0;
 foreach ($machines as $machine) {
     $name = $machine[0];
+    if (count($machine[1]) == 0) {
+        $result['Machine'][$index] = $name;
+        $index += 1;
+    }
     foreach ($machine[1] as $element) {
         $result['Machine'][$index] = $name;
         foreach ($element as $head => $val) {
