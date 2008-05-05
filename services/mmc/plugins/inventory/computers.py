@@ -50,6 +50,8 @@ class InventoryComputers(ComputerI):
         return len(self.getRestrictedComputersList(ctx, 0, -1, filt))
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
+        filt['min'] = min
+        filt['max'] = max
         return map(lambda m: m.toDN(), self.inventory.getMachinesOnly(filt))
 
     def getComputerCount(self, ctx, filt = None):
