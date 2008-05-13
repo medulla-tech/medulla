@@ -28,24 +28,24 @@ function getAllMachinesInventoryColumn($part, $column, $pattern = null) {
     return xmlCall("inventory.getAllMachinesInventoryColumn", array($part, $column, $pattern));
 }
 
-function getLastMachineInventoryPart($part, $name, $pattern = null) {
-    return xmlCall("inventory.getLastMachineInventoryPart", array($part, $name, $pattern));
+function getLastMachineInventoryPart($part, $params) {
+    return xmlCall("inventory.getLastMachineInventoryPart", array($part, $params));
 }
 
-function getMachines($pattern = null) {
-    return xmlCall("inventory.getMachines", array($pattern));
+function countLastMachineInventoryPart($part, $params) {
+    return xmlCall("inventory.countLastMachineInventoryPart", array($part, $params));
 }
 
 function getLastMachineInventoryFull($uuid) {
     return xmlCall("inventory.getLastMachineInventoryFull", array($uuid));
 }
 
-function getInventoryParts() {
-    return xmlCall("inventory.getInventoryParts");
+function getMachines($pattern = null) {
+    return xmlCall("inventory.getMachines", array(array('hostname'=>$pattern)));
 }
 
-function getAllMachinesInventoryPart($part, $pattern = null) {
-    return xmlCall("inventory.getAllMachinesInventoryPart", array($part, $pattern));
+function getInventoryParts() {
+    return xmlCall("inventory.getInventoryParts");
 }
 
 function getInventoryEM($part) {

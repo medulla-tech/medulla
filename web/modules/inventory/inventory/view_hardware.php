@@ -38,35 +38,43 @@ require_once("modules/inventory/includes/xmlrpc.php");
 
 <?php
 
-$inv = getLastMachineInventoryFull($_GET["name"]);
-
+$n = null;
 $uniq = array('Bios', 'Hardware');
 
-$max = $conf["global"]["maxperpage"];
-
-/* display the first table, with all information that is uniq to a machine */
-$prop = array();
-$val = array();
-
-$conf["global"]["maxperpage"] = 0;
-foreach ($uniq as $table) {
-    $n = null;
-
-    $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
+if ($_GET["uuid"] != '') {
+    $inv = getLastMachineInventoryFull(array('uuid'=>$_GET["uuid"]));
     
-    foreach ($inv[$table][0] as $k => $v) {
-        if ($v != null && $v != '' && $k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-            $prop[] = $k;
-            $val[] = $v;
+    /* display the first table, with all information that is uniq to a machine */
+    $prop = array();
+    $val = array();
+    
+    $conf["global"]["maxperpage"] = 0;
+    foreach ($uniq as $table) {
+        $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
+        
+        foreach ($inv[$table][0][1][0] as $k => $v) {
+            if ($v != null && $v != '' && $k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
+                $prop[] = $k;
+                $val[] = $v;
+            }
         }
+        $conf["global"]["maxperpage"] += count($inv[$table][0]);
     }
-    $conf["global"]["maxperpage"] += count($inv[$table][0]);
-}
-$n = new ListInfos($prop, _T("Properties"));
-$n->addExtraInfo($val, _T("Value"));
-
-if ($n != null) {
-    $n->drawTable(0);
+    $n = new ListInfos($prop, _T("Properties"));
+    $n->addExtraInfo($val, _T("Value"));
+    if ($n != null) {
+        $n->drawTable(0);
+    }
+} else {
+    $url = 'modules/inventory/inventory/ajaxViewHard.php?';
+    foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
+        $url .= "&$get=".$_GET[$get];
+    }
+                                
+    $ajax = new AjaxFilter($url);
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
 }
 
 ?>

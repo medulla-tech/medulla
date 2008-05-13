@@ -24,52 +24,16 @@
 
 require_once("modules/inventory/includes/xmlrpc.php");
 
-?>
-
-<style type="text/css">
-
-#expertMode table {
-  background-color: #FEE;
+$url = 'modules/inventory/inventory/ajaxViewPart.php?';
+foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
+    $url .= "&$get=".$_GET[$get];
 }
-
-</style>
-
-<table>
-
-<?php
-
-$inv = getLastMachineInventoryFull($_GET["name"]);
-
-/* display everything else in separated tables */
-$table = $_GET['part'];
-$n = null;
-$h = array();
-$index = 0;
-foreach ($inv[$table] as $def) {
-    foreach ($def as $k => $v) {
-        $h[$k][$index] = $v;
-    }
-    $index+=1;
-}
-$max = 0;
-$disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
-foreach ($h as $k => $v) {
-    
-    if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-        if ($n == null) {
-            $n = new ListInfos($h[$k], $k);
-        } else {
-            $n->addExtraInfo($h[$k], $k);
-        }
-        if (count($h[$k]) > $max) { $max = count($h[$k]); }
-    }
-}
-if ($max > 0 && $n != null) {
-    $n->end = $max;
-    $n->drawTable(0);
-}
+$ajax = new AjaxFilter($url);
+                            
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
 
 ?>
 
-</table>
 

@@ -3,7 +3,7 @@
 require_once("modules/inventory/includes/xmlrpc.php");
 
 $table = $_GET['table'];
-$datum = getAllMachinesInventoryPart($table);
+$datum = getLastMachinesInventoryPart($table);
 
 ob_end_clean();
 

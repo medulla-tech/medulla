@@ -1,7 +1,7 @@
 <?php
 
-require("modules/inventory/includes/images.php");
-require("modules/inventory/includes/xmlrpc.php");
+require_once("modules/inventory/includes/images.php");
+require_once("modules/inventory/includes/xmlrpc.php");
 
 $type = $_GET['type'];
 $field = $_GET['field'];
