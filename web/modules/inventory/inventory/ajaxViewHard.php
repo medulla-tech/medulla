@@ -97,7 +97,7 @@ foreach ($sorted_result as $head => $vals) {
         $head = $nhead;
     }
     if ($n == null) {
-        $n = new ListInfos($vals, $head);
+        $n = new OptimizedListInfos($vals, $head);
     } else {
         $n->addExtraInfo($vals, $head);
     }
@@ -106,9 +106,16 @@ foreach ($sorted_result as $head => $vals) {
 $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
 #$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
 $n->setParamInfo($params);
+?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>implode('|', $uniq), 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 if ($n != null) {
-    $n->drawTable(0);
-}   
+    $n->setTableHeaderPadding(1);
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->start = 0;
+    $n->end = $maxperpage;
+    $n->display();
+}
+
 ?>
 
 </table>
