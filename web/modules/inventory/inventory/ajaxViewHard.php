@@ -89,11 +89,11 @@ foreach ($result as $name => $val) {
 foreach ($sorted_result as $head => $vals) {
     if (in_array($head, $graph)) {
         $type = ucfirst($types[$head]);
-        $nhead = "<a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
+        $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
         foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
             $nhead .= "&$get=".$_GET[$get];
         }
-        $nhead .= "' alt='graph'>$head</a>";
+        $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
         $head = $nhead;
     }
     if ($n == null) {
@@ -106,7 +106,6 @@ foreach ($sorted_result as $head => $vals) {
 $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
 #$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
 $n->setParamInfo($params);
-?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>implode('|', $uniq), 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 if ($n != null) {
     $n->setTableHeaderPadding(1);
     $n->setItemCount($count);
@@ -116,7 +115,8 @@ if ($n != null) {
     $n->display();
 }
 
-?>
+?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>implode('|', $uniq), 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
+
 
 </table>
 

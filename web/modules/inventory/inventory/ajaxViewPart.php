@@ -66,7 +66,6 @@ if ($_GET['uuid'] != '') {
             if (count($h[$k]) > $max) { $max = count($h[$k]); }
         }
     }
-    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
     if ($n != null) {
         $n->setTableHeaderPadding(1);
         $n->setItemCount($count);
@@ -75,6 +74,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
+    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 } else {
     $display = $_GET['part'];
     $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
@@ -105,11 +105,11 @@ if ($_GET['uuid'] != '') {
         if (!in_array($head, $disabled_columns)) {
             if (in_array($head, $graph)) {
                 $type = ucfirst($_GET['part']);
-                $nhead = "<a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
+                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
-                $nhead .= "' alt='graph'>$head</a>";
+                $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
                 $head = $nhead;
             }
             if ($n == null) {
@@ -120,7 +120,6 @@ if ($_GET['uuid'] != '') {
         }
     }
 
-    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
     if ($n != null) {
         $n->addActionItem(new ActionItem(_T("View"),"view","voir","inventaire", "inventory"));
         $n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire", "inventory"));
@@ -132,6 +131,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
+    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 }
 
 ?>

@@ -88,6 +88,7 @@ $filter = $_GET["filter"];
 print_ajax_nav($start, $end, $machines, $filter, $display, $label);
 $result = array();
 $index = 0;
+$params = array();
 foreach ($machines as $machine) {
     $name = $machine[0];
     if (count($machine[1]) == 0) {
@@ -103,6 +104,7 @@ foreach ($machines as $machine) {
         }
         $index += 1;
     }
+    $params[] = array('hostname'=>$name, 'uuid'=>$machine[2]);
 }
 $n = null;
 $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
@@ -111,7 +113,7 @@ foreach ($result as $head => $vals) {
     if (!in_array($head, $disabled_columns)) {
         if (in_array($head, $graph)) {
             $type = ucfirst($_GET['display']);
-            $head = "<a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head&filter=$filter' alt='graph'>$head</a>";
+            $head = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head&filter=$filter' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
         }
         if ($n == null) {
             $n = new ListInfos($vals, $head);
@@ -121,10 +123,11 @@ foreach ($result as $head => $vals) {
     }
 }
 
-$n->addActionItem(new ActionItem(_T("View"),"view","voir","inventaire"));
-$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
 
 if ($n != null) {
+    $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
+    $n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
+    $n->setParamInfo($params);
     $n->display(0);
 }
 
