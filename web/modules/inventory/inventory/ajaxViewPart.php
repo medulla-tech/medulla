@@ -39,14 +39,15 @@ if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
 if ($_GET['uuid'] != '') {
-    $inv = getLastMachineInventoryFull(array('uuid'=>$_GET["uuid"]));
+    $table = $_GET['part'];
+    $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
+    $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
     
     /* display everything else in separated tables */
-    $table = $_GET['part'];
     $n = null;
     $h = array();
     $index = 0;
-    foreach ($inv[$table][0][1] as $def) {
+    foreach ($inv[0][1] as $def) {
         foreach ($def as $k => $v) {
             $h[$k][$index] = $v;
         }
@@ -65,9 +66,14 @@ if ($_GET['uuid'] != '') {
             if (count($h[$k]) > $max) { $max = count($h[$k]); }
         }
     }
-    if ($max > 0 && $n != null) {
-        $n->end = $max;
-        $n->drawTable(0);
+    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table, 'uuid'=>$_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
+    if ($n != null) {
+        $n->setTableHeaderPadding(1);
+        $n->setItemCount($count);
+        $n->setNavBar(new AjaxNavBar($count, $filter));
+        $n->start = 0;
+        $n->end = $maxperpage;
+        $n->display();
     }
 } else {
     $display = $_GET['part'];
@@ -114,6 +120,7 @@ if ($_GET['uuid'] != '') {
         }
     }
 
+    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
     if ($n != null) {
         $n->addActionItem(new ActionItem(_T("View"),"view","voir","inventaire", "inventory"));
         $n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire", "inventory"));
