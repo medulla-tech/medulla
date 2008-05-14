@@ -52,9 +52,9 @@ function print_ajax_nav($curstart, $curend, $items, $filter, $display, $label) {
 if (isset($_POST["filter"])) $_GET["filter"] = $_POST["filter"];
 if (!isset($_GET["items"])) {
     if (isset($_GET["filter"]) && $_GET["filter"] != '') {
-        $machines = getLastMachinesInventoryPart($display, array('gid'=>$_GET['gid'], 'filter'=>$_GET["filter"]));
+        $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET['gid'], 'filter'=>$_GET["filter"]));
     } else {
-        $machines = getLastMachinesInventoryPart($display, array('gid'=>$_GET['gid']));
+        $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET['gid']));
     }
     $start = 0;
 
