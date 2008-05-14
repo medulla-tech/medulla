@@ -24,6 +24,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.pulse2.group import ComputerGroupManager
+from mmc.plugins.pulse2.location import ComputerLocationManager
 
 import logging
 import datetime
@@ -32,6 +33,8 @@ import time
 from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryConfig
 from mmc.plugins.inventory.database import Inventory
 from mmc.plugins.inventory.utilities import unique
+from mmc.plugins.inventory.computers import InventoryComputers
+from mmc.plugins.inventory.server import InventoryGetService
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -49,13 +52,16 @@ def activate():
         logger.warning("Plugin inventory: disabled by configuration.")
         return False
                                 
-    # When this module is used be the MMC agent, the global inventory variable is shared.
+    # When this module is used by the MMC agent, the global inventory variable is shared.
     # This means an Inventory instance is not created each time a XML-RPC call is done.
     Inventory().activate()
     if not Inventory().db_check():
         return False
         
     logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)
+
+    ComputerManager().register("inventory", InventoryComputers)
+        
     return True
             
 
@@ -66,70 +72,84 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
-    def getLastMachineInventoryPart(self, part, name, pattern = None):
+    def countLastMachineInventoryPart(self, part, params):
         ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().getLastMachineInventoryPart(part, name, pattern))
-    
+        return xmlrpcCleanup(Inventory().countLastMachineInventoryPart(ctx, part, params))
+
+    def getLastMachineInventoryPart(self, part, params):
+        ctx = self.currentContext
+#        uuid = name # TODO : get uuid from name, or something like that...
+#        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
+        return xmlrpcCleanup(Inventory().getLastMachineInventoryPart(ctx, part, params))
+      
+    def getLastMachineInventoryFull(self, params):
+        ctx = self.currentContext
+#        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+#            return False
+        return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(ctx, params))
+ 
     def getAllMachinesInventoryColumn(self, part, column, pattern = None):
         ctx = self.currentContext
-        ret = self.getAllMachinesInventoryPart(part, pattern)
+        ret = self.getLastMachineInventoryPart(part, {'filter':pattern})
+        # TODO : m.uuid doesn't exists and should do that in just one call
         retour = []
         for machine in ret:
             name = machine[0]
+            uuid = machine[2]
+#            if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+#                continue
             invents = []
             for invent in machine[1]:
                 invents.append(invent[column])
             retour.append([name, invents])
         return xmlrpcCleanup(retour)
-    
+
+    #############
     def getMachines(self, pattern = None):
         ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().getMachines(pattern))
+        return xmlrpcCleanup(Inventory().getMachines(ctx, pattern))
     
-    def inventoryExists(self, name):
+    def inventoryExists(self, uuid):
         ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().inventoryExists(name))
-    
-    def getLastMachineInventoryFull(self, name):
-        ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(name))
-    
-    def getAllMachinesInventoryPart(self, part, pattern = None):
-        ctx = self.currentContext
-        machines = self.getMachines(pattern)
-        result = []
-        for machine in machines:
-            result.append([machine[0], self.getLastMachineInventoryPart(part, machine[0])])
-        return result
-   
+#        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+#            return False
+        return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
+               
     def getInventoryEM(self, col):
-        ctx = self.currentContext
         conf = InventoryExpertModeConfig("inventory", None)
         return conf.expert_mode[col]
     
     def getInventoryGraph(self, col):
-        ctx = self.currentContext
         conf = InventoryExpertModeConfig("inventory", None)
         return conf.graph[col]
     
     def getMachinesBy(self, table, field, value):
         ctx = self.currentContext
-        return Inventory().getMachinesBy(table, field, value)
+        return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesBy(ctx, table, field, value)))
     
     def getMachinesByDict(self, table, params):
         ctx = self.currentContext
-        return Inventory().getMachinesByDict(table, params)
+        return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesByDict(ctx, table, params)))
     
     def getValues(self, table, field):
-        ctx = self.currentContext
         return Inventory().getValues(table, field)
     
     def getValuesWhere(self, table, field1, value1, field2):
-        ctx = self.currentContext
         return Inventory().getValuesWhere(table, field1, value1, field2)
-    
 
+    def getValuesFuzzy(self, table, field, fuzzy_value):
+        return Inventory().getValuesFuzzy(table, field, fuzzy_value)
+    
 def getValues(table, field):
     return Inventory().getValues(table, field)
+
+def getValuesWhere(table, field1, value1, field2):
+    return Inventory().getValuesWhere(table, field1, value1, field2)
+
+def getValuesFuzzy(table, field, fuzzy_value):
+    return Inventory().getValuesFuzzy(table, field, fuzzy_value)
+    
 def getMachinesBy(table, field, value):
-    return Inventory().getMachinesBy(table, field, value)
+    # TODO : ctx is missing....
+    ctx = None
+    return Inventory().getMachinesBy(ctx, table, field, value)

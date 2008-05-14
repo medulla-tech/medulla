@@ -32,10 +32,7 @@ class InventoryComputers(ComputerI):
         self.inventory = Inventory()
 
     def getComputer(self, ctx, filt = None):
-        #try:
-            return self.inventory.getMachinesOnly(filt)[0].toDN(True)
-        #except:
-        #    return False
+        return self.inventory.getMachinesOnly(filt)[0].toDN(True)
 
     def getMachineMac(self, ctx, filt):
         return map(lambda n: n['MACAddress'], self.inventory.getMachineNetwork(filt))
@@ -49,7 +46,9 @@ class InventoryComputers(ComputerI):
     def getRestrictedComputersListLen(self, ctx, filt = None):
         return len(self.getRestrictedComputersList(ctx, 0, -1, filt))
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True):
+        if filt == '':
+            filt = {}
         filt['min'] = min
         filt['max'] = max
         return map(lambda m: m.toDN(), self.inventory.getMachinesOnly(filt))

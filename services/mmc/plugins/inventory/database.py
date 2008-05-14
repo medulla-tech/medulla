@@ -21,6 +21,8 @@
 
 from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryConfig
 from mmc.plugins.inventory.utilities import unique, getInventoryParts
+from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
 from sqlalchemy import *
@@ -58,9 +60,11 @@ for m in ['first', 'count', 'all']:
         setattr(Query, '_old_'+m, getattr(Query, m))
         setattr(Query, m, create_method(m))
  
-class Inventory(Singleton):
+class Inventory(DyngroupDatabaseHelper):
     """
     Class to query the LRS/Pulse2 inventory database, populated by OCS inventory.
+
+    DyngroupDatabaseHelper is a Singleton, so is Inventory
 
     This class does not read the inventory files created by the LRS during a boot phase (/tftpboot/revoboot/log/*.ini)
     """
@@ -95,7 +99,7 @@ class Inventory(Singleton):
             return None
         self.logger.info("Inventory is activating")
         self.config = InventoryConfig("inventory", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
         self.metadata = BoundMetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -161,6 +165,21 @@ class Inventory(Singleton):
         mapper(Machine, self.machine)
         mapper(InventoryTable, self.inventory)
 
+    def enableLogging(self, level = None):
+        """
+        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
+        The SQL queries will be loggued.
+        """
+        if not level:
+            level = logging.INFO
+        logging.getLogger("sqlalchemy.engine").setLevel(level)
+
+    def disableLogging(self):
+        """
+        Disable log for sqlalchemy.engine module
+        """
+        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+
     def getInventoryDatabaseVersion(self):
         """
         Return the inventory database version.
@@ -170,7 +189,7 @@ class Inventory(Singleton):
         """
         return self.version.select().execute().fetchone()[0]
 
-    def inventoryExists(self, name):
+    def inventoryExists(self, ctx, uuid):
         """
         Return True or False depending on the existance of machine "name" in the inventory DB
 
@@ -181,13 +200,86 @@ class Inventory(Singleton):
         @rtype: bool
         """
         session = create_session()
-        result = session.query(Machine).filter(self.machine.c.Name == name).all()
+        result = session.query(Machine).filter(self.machine.c.id == fromUUID(uuid)).all()
         session.close()
         if result and len(result) == 1:
             return True
         return False
         
-    def getMachines(self, pattern = None):
+    def getMachinesOnly(self, ctx, pattern = None):
+        """
+        Return all available machines
+        """
+        session = create_session()
+        query = session.query(Machine)
+        try:
+            query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+        except:
+            pass
+
+        try:
+            query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+        except:
+            pass
+
+        try:
+            gid = pattern['gid']
+            machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+            query = query.filter(self.machine.c.id.in_(*machines))
+        except:
+            pass
+
+        try:
+            query = query.offset(pattern['min'])
+            query = query.limit(int(pattern['max']) - int(pattern['min']))
+        except:
+            pass
+
+        # doing dyngroups stuff
+        join_query, query_filter = self.filter(self.machine, pattern)
+        query = query.select_from(join_query).filter(query_filter)
+        # end of dyngroups
+
+        ret = query.order_by(asc(self.machine.c.Name))
+        session.close()
+        return ret
+
+    # needed by DyngroupDatabaseHelper
+    def mappingTable(self, query):
+        table, field = query[2].split('/')
+        partTable = self.table[table]
+        haspartTable = self.table["has" + table]
+        return [haspartTable, partTable]
+    
+    def mapping(self, query, invert = False):
+        table, field = query[2].split('/')
+        if query[2] == 'Software/Products': # double search
+            partKlass = self.klass[table]
+            return and_(
+                self.mapping([None, None, 'Software/ProductName', query[3][0].replace('(', '')]),
+                self.mapping([None, None, 'Software/ProductVersion', query[3][1].replace(')', '')])
+            )
+        elif query[2] == 'Drive/TotalSpace' or query[2] == 'Software/ProductVersion': # Numeric search : ie < > = are possible operators
+            partKlass = self.klass[table]
+            value = query[3]
+            if value.startswith('>') and not invert or value.startswith('<') and invert:
+                value = value.replace('>', '').replace('<', '')
+                return getattr(partKlass.c, field) > value
+            elif value.startswith('>') and invert or value.startswith('<') and not invert:
+                value = value.replace('>', '').replace('<', '')
+                return getattr(partKlass.c, field) < value
+            elif invert:
+                return getattr(partKlass.c, field) != value
+            else:
+                return getattr(partKlass.c, field) == value
+        else: # text search, only =
+            partKlass = self.klass[table]
+            if invert:
+                return getattr(partKlass.c, field) != query[3]
+            else:
+                return getattr(partKlass.c, field) == query[3]
+
+    def getMachines(self, ctx, pattern = None):
         """
         Return all available machines with their Bios and Hardware inventory informations
         
@@ -198,37 +290,31 @@ class Inventory(Singleton):
         @rtype: list
         """
         ret = []
-        session = create_session()
-        if pattern:
-            query = session.query(Machine).filter(self.machine.c.Name.like("%" + pattern + "%"))
-        else:
-            query = session.query(Machine)
-        session.close()
-
-        for machine in query.order_by(asc(self.machine.c.Name)):
+        for machine in self.getMachinesOnly(ctx, pattern):
             tmp = []
             tmp.append(machine.Name)
-            tmp.append(self.getLastMachineInventoryPart("Bios", machine.Name))
-            tmp.append(self.getLastMachineInventoryPart("Hardware", machine.Name))
+            tmp.append(self.getLastMachineInventoryPart(ctx, "Bios", {'hostname':machine.Name}))
+            tmp.append(self.getLastMachineInventoryPart(ctx, "Hardware", {'hostname':machine.Name}))
+            tmp.append(toUUID(machine.id))
             ret.append(tmp)
         return ret
 
-    def getLastMachineInventoryFull(self, name):
+    def getLastMachineInventoryFull(self, ctx, params):
         """
         Return the full and last inventory of a machine
 
         @param name: the name of the machine to get inventory
-        @type name: str
+        @type params: dict
 
         @return: Returns a dictionary where each key is an inventory part name
         @rtype: dict
         """
         ret = {}
         for part in getInventoryParts():
-            ret[part] = self.getLastMachineInventoryPart(part, name)
+            ret[part] = self.getLastMachineInventoryPart(ctx, part, params)
         return ret
 
-    def getMachinesByDict(self, table, params):
+    def getMachinesByDict(self, ctx, table, params):
         """
         Return a list of machine that correspond to the params "table.field = value"
         """
@@ -272,7 +358,7 @@ class Inventory(Singleton):
         
         return ret
     
-    def getMachinesBy(self, table, field, value):
+    def getMachinesBy(self, ctx, table, field, value):
         """
         Return a list of machine that correspond to the table.field = value
         """
@@ -312,6 +398,23 @@ class Inventory(Singleton):
             for res in result:
                 ret.append(res[1])
         return unique(ret)
+
+    def getValuesFuzzy(self, table, field, fuzzy_value):
+        """
+        return every possible values for a field in a table where the field is like fuzzy_value
+        """
+        ret = []
+        session = create_session()
+        partKlass = self.klass[table]
+        partTable = self.table[table]
+        
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%'))
+        session.close()
+
+        if result:
+            for res in result:
+                ret.append(res[1])
+        return unique(ret)
                 
     def getValuesWhere(self, table, field1, value1, field2):
         """
@@ -336,15 +439,30 @@ class Inventory(Singleton):
                 ret.append(res[1])
         return unique(ret)
     
+    def getMachineNetwork(self, ctx, params):
+        return self.getLastMachineInventoryPart(ctx, 'Network', params)
+
+    def getMachineCustom(self, ctx, params):
+        return self.getLastMachineInventoryPart(ctx, 'Custom', params)
         
-    def getLastMachineInventoryPart(self, part, name, pattern = None):
+    def countLastMachineInventoryPart(self, ctx, part, params):
+        session = create_session()
+        partKlass = self.klass[part]
+        partTable = self.table[part]
+        haspartTable = self.table["has" + part]
+        result = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
+        result = result.count()
+        session.close()
+        return result
+    
+    def getLastMachineInventoryPart(self, ctx, part, params):
         """
         Return a list where each item belongs to the last machine inventory.
         Each item is a dictionary of the inventory description.
         An extra key of the dictionary called 'timestamp' contains the inventory item first appearance.
 
-        @param name: the name of the machine to get inventory
-        @type name: str
+        @param params: parameters to get the machine in the inventory (hostname, uuid, ...)
+        @type name: dict
 
         @return: Returns a list of dictionary
         @type: list
@@ -354,35 +472,279 @@ class Inventory(Singleton):
         partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
-        # This SQL query has been built using the one from the LRS inventory module
-        result = session.query(partKlass).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(partTable.join(haspartTable.join(self.inventory).join(self.machine))).filter(Machine.c.Name==name).group_by(partTable.c.id).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+        result = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
+        
+        if params.has_key('min') and params.has_key('max'):
+            result = result.offset(int(params['min']))
+            result = result.limit(int(params['max']) - int(params['min']))
+ 
+        result = result.group_by(partTable.c.id).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
         session.close()
         if result:
             # Build the result as a simple dictionary
             # We return only the information from the latest inventory
             inventoryid = None
+            machine_inv = {}
+            machine_uuid = {}
             for res in result:
                 if inventoryid == None:
-                    inventoryid = res[1]
-                else:
-                    if inventoryid != res[1]: break
+                    inventoryid = res[3]
+                #else:
+                #    if inventoryid != res[3]: break
                 # Build the dictionary using the partTable column names as keys
                 tmp = {}                
                 for col in partTable.columns:
                     tmp[col.name] = eval("res[0]." + col.name)
                 # Build a time tuple for the appearance timestamp
-                d = res[2]
-                if type(res[2]) == str:
-                    y, m, day = res[2].split("-")
+                d = res[4]
+                if type(res[4]) == str:
+                    y, m, day = res[4].split("-")
                     d = datetime.datetime(int(y), int(m), int(day))
                 tmp["timestamp"] = d
-                ret.append(tmp)
+                if not machine_inv.has_key(res[1]):
+                    machine_inv[res[1]] = []
+                    machine_uuid[res[1]] = toUUID(res[2])
+                machine_inv[res[1]].append(tmp)
+            for name in machine_uuid:
+                ret.append([name, machine_inv[name], machine_uuid[name]])
         return ret
+        
+    def __lastMachineInventoryPartQuery(self, session, ctx, part, params):
+        partKlass = self.klass[part]
+        partTable = self.table[part]
+        haspartTable = self.table["has" + part]
+        haspartKlass = self.klass["has" + part]
+       
+        # This SQL query has been built using the one from the LRS inventory module
+        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.join(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
+        if params.has_key('hostname') and params['hostname'] != '':
+            result = result.filter(Machine.c.Name==params['hostname'])
+        if params.has_key('uuid') and params['uuid'] != '':
+            result = result.filter(Machine.c.id==fromUUID(params['uuid']))
+        if params.has_key('filter') and params['filter'] != '':
+            result = result.filter(Machine.c.Name.like('%'+params['filter']+'%'))
+        if params.has_key('gid') and params['gid'] != '':
+            machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
+            result = result.filter(self.machine.c.id.in_(*machines))
+        return result
+   
+    def __filterQuery(self, ctx, query, params):
+        if params.has_key('hostname') and params['hostname'] != '':
+            query = query.filter(Machine.c.Name==params['hostname'])
+        if params.has_key('filter') and params['filter'] != '':
+            query = query.filter(Machine.c.Name.like('%'+params['filter']+'%'))
+        if params.has_key('uuid') and params['uuid'] != '':
+            query = query.filter(Machine.c.id==fromUUID(params['uuid']))
+        if params.has_key('gid') and params['gid'] != '':
+            machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
+            query = query.filter(self.machine.c.id.in_(*machines))
+        return query
+       
+    def getIdInTable(self, tableName, values, session = None):
+        sessionCreator = False
+        if session == None:
+            sessionCreator = True
+            session = create_session()
+        klass = self.klass[tableName]
+        table = self.table[tableName]
 
+        result = session.query(klass)
+        for v in values:
+            if hasattr(table.c, v):
+                result = result.filter(getattr(table.c, v) == values[v])
+        res = result.first()
+        if sessionCreator:
+            session.close()
+        try:
+            return res.id
+        except:
+            return None
+            
+    def isElemInTable(self, tableName, values, session = None):
+        sessionCreator = False
+        if session == None:
+            sessionCreator = True
+            session = create_session()
+        klass = self.klass[tableName]
+        table = self.table[tableName]
 
+        result = session.query(klass)
+        for v in values:
+            if hasattr(table.c, v):
+                result = result.filter(getattr(table.c, v) == values[v])
+        res = result.count()
+        if sessionCreator:
+            session.close()
+        try:
+            return res
+        except:
+            return None
+               
+    def createNewInventory(self, hostname, inventory, date):
+        # TODO : check that inventory is not empty....
+        k = 0
+        for i in map(lambda x: len(inventory[x]), inventory):
+            k = i+k
+        if k == 0:
+            return False
+
+        date = date.split(' ')
+
+        session = create_session()
+        transaction = session.create_transaction()
+        try: 
+            m = self.getMachinesOnly(None, {'hostname':hostname}).all() # TODO uuids!
+            if len(m) == 0:
+                m = Machine()
+                m.Name = hostname
+                session.save(m)
+            elif len(m) > 1:
+                session.close() 
+                return False
+            else:
+                m = m[0]
+            result = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasHardware']).join(self.machine)).filter(self.machine.c.Name == hostname)
+            for inv in result:
+                inv.Last = 0
+                session.save(inv)
+            i = InventoryTable()
+            i.Date, i.Time = date
+            i.Last = 1
+            session.save(i)
+            session.flush()
+                
+            for table in inventory:
+                content = inventory[table]
+                tname = table.lower()
+                if len(content) == 0:
+                    continue
+                
+                klass = self.klass[table]
+                hasKlass = self.klass['has'+table]
+                hasTable = self.table['has'+table]
+
+                h = hasTable.insert()
+                for cols in content:
+                    if len(cols) == 0:
+                        continue
+                    id = self.getIdInTable(table, cols, session)
+                    if id == None:
+                        k = klass()
+                        for col in cols:
+                            setattr(k, col, cols[col])
+                        session.save(k)
+                        session.flush()
+                        id = k.id
+                
+                    has = self.isElemInTable('has'+table, {'machine':m.id, 'inventory':i.id, tname:id}, session)
+                    if has == None or has == 0:
+                        h.execute({'machine':m.id, 'inventory':i.id, tname:id})
+                        # we should flush the session, but as it is not absolutly needed here,
+                        # and it takes a lot of time, we will do it later.
+        except Exception, e:
+            transaction.rollback()
+            session.close()
+            logging.getLogger().error(dir(e))
+            logging.getLogger().error(e)
+            raise e
+
+        session.flush()
+        transaction.commit()
+        session.close()
+        return True
+
+    def addMachine(self, name, ip, mac, comment = None):
+        session = create_session()
+        m = Machine()
+        m.Name = name
+        session.save(m)
+        # TODO need to put all other Last to 0
+        query = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasHardware']).join(self.machine)).filter(self.machine.c.Name == name)
+        for inv in query:
+            inv.Last = 0
+            session.save(inv)
+        i = InventoryTable()
+        i.Last = 1
+        session.save(i)
+        session.flush()
+        net = self.klass['Network']
+        hasNet = self.klass['hasNetwork']
+        n = net()
+        n.MACAddress = mac
+        n.IP = ip
+        session.save(n)
+        session.flush()
+        h = hasNet()
+        h.machine = m.id
+        h.network = n.id
+        h.inventory = i.id
+        session.save(h)
+        session.flush()
+        if comment != None:
+            custom = self.klass['Custom']
+            hasCustom = self.klass['hasCustom']
+            c = custom()
+            c.Comments = comment
+            session.save(c)
+            session.flush()
+            h = hasCustom()
+            h.machine = m.id
+            h.custom = c.id
+            h.inventory = i.id
+            session.save(h)
+            session.flush()
+        session.close()
+        return toUUID(m.id)
+        
+    def delMachine(self, uuid):
+        uuid = fromUUID(uuid)
+        session = create_session()
+        for item in getInventoryParts():
+            tk = self.klass[item]
+            tt = self.table[item]
+            lk = self.klass['has'+item]
+            lt = self.table['has'+item]
+            ts = session.query(tk).select_from(tt.join(lt)).filter(lt.c.machine == uuid)
+            for t in ts:
+                session.delete(t)
+            ls = session.query(lk).filter(lt.c.machine == uuid)
+            for l in ls:
+                i = session.query(InventoryTable).filter(self.inventory.c.id == l.inventory).first()
+                session.delete(i)
+                session.delete(l)
+        m = session.query(Machine).filter(self.machine.c.id == uuid).first()
+        session.delete(m)
+        session.flush()
+        session.close()
+        return True
+
+def toUUID(id):
+    return "UUID%s" % (str(id))
+
+def fromUUID(uuid):
+    return int(uuid.replace('UUID', ''))
+    
 # Class for SQLalchemy mapping
 class Machine(object):
-    pass
+    def toH(self):
+        return { 'hostname':self.Name, 'uuid':toUUID(self.id) }
+        
+    def toDN(self, advanced = False):
+        ctx = None
+        ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
+        comment = Inventory().getMachineCustom(ctx, {'uuid':toUUID(self.id)})
+        if len(comment) != 0:
+            ret[1]['displayName'] = [comment[0][1][0]['Comments']]
+        if advanced:
+            net = Inventory().getMachineNetwork({'uuid':toUUID(self.id)})
+            if len(net) == 0:
+                ret[1]['ipHostNumber'] = ''
+                ret[1]['macAddress'] = ''
+            else:
+                net = net[0]
+                ret[1]['ipHostNumber'] = net['IP']
+                ret[1]['macAddress'] = net['MACAddress']
+        return ret
 
 class InventoryTable(object):
     pass
