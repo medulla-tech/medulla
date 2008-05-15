@@ -729,21 +729,23 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.Name, 'uuid':toUUID(self.id) }
         
-    def toDN(self, advanced = False):
-        ctx = None
+    def toDN(self, ctx, advanced = False):
         ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
         comment = Inventory().getMachineCustom(ctx, {'uuid':toUUID(self.id)})
         if len(comment) != 0:
             ret[1]['displayName'] = [comment[0][1][0]['Comments']]
         if advanced:
-            net = Inventory().getMachineNetwork({'uuid':toUUID(self.id)})
+            net = Inventory().getMachineNetwork(ctx, {'uuid':toUUID(self.id)})
             if len(net) == 0:
                 ret[1]['ipHostNumber'] = ''
                 ret[1]['macAddress'] = ''
             else:
                 net = net[0]
-                ret[1]['ipHostNumber'] = net['IP']
-                ret[1]['macAddress'] = net['MACAddress']
+                ret[1]['ipHostNumber'] = []
+                ret[1]['macAddress'] = []
+                for n in net[1]:
+                    ret[1]['ipHostNumber'].append(n['IP'])
+                    ret[1]['macAddress'].append(n['MACAddress'])
         return ret
 
 class InventoryTable(object):
