@@ -106,6 +106,6 @@ def select_scheduler(scheduler_name):
     uri = 'http://'
     if scheduler['username'] != '':
         uri += '%s:%s@' % (scheduler['username'], scheduler['password'])
-    uri += '%s:%d' % (scheduler['host'], scheduler['port'])
+    uri += '%s:%d' % (scheduler['host'], int(scheduler['port']))
 
     return uri
