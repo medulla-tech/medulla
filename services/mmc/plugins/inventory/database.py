@@ -206,11 +206,7 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
         
-    def getMachinesOnly(self, ctx, pattern = None):
-        """
-        Return all available machines
-        """
-        session = create_session()
+    def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session()):
         query = session.query(Machine)
         try:
             query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
@@ -229,21 +225,38 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             pass
 
+        # doing dyngroups stuff
+        join_query, query_filter = self.filter(self.machine, pattern)
+        query = query.select_from(join_query).filter(query_filter)
+        # end of dyngroups
+        return query
+        
+    def getMachinesOnly(self, ctx, pattern = None):
+        """
+        Return all available machines
+        """
+        session = create_session()
+        query = self.__machinesOnlyQuery(ctx, pattern, session)
+        query = query.order_by(asc(self.machine.c.Name))
         try:
             query = query.offset(pattern['min'])
             query = query.limit(int(pattern['max']) - int(pattern['min']))
         except:
             pass
 
-        # doing dyngroups stuff
-        join_query, query_filter = self.filter(self.machine, pattern)
-        query = query.select_from(join_query).filter(query_filter)
-        # end of dyngroups
-
-        ret = query.order_by(asc(self.machine.c.Name))
+        session.close()
+        return query
+    
+    def countMachinesOnly(self, ctx, pattern = None):
+        """
+        Return the number of available machines
+        """
+        session = create_session()
+        query = self.__machinesOnlyQuery(ctx, pattern, session)
+        ret = query.count()
         session.close()
         return ret
-
+        
     # needed by DyngroupDatabaseHelper
     def mappingTable(self, query):
         table, field = query[2].split('/')

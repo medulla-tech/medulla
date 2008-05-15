@@ -32,26 +32,38 @@ class InventoryComputers(ComputerI):
         self.inventory = Inventory()
 
     def getComputer(self, ctx, filt = None):
-        return self.inventory.getMachinesOnly(filt)[0].toDN(True)
+        return self.inventory.getMachinesOnly(ctx, filt)[0].toDN(ctx, True)
 
-    def getMachineMac(self, ctx, filt):
-        return map(lambda n: n['MACAddress'], self.inventory.getMachineNetwork(filt))
+    def getMachineMac(self, ctx, filt): # TODO : need to sort!
+        machines = self.inventory.getMachineNetwork(ctx, filt)
+        ret = []
+        for m in machines:
+            ret.append(map(lambda i: i['MACAddress'], m[1]))
+        if len(ret) == 1:
+            return ret[0]
+        return ret
 
-    def getMachineIp(self, ctx, filt):
-        return map(lambda n: n['IP'], self.inventory.getMachineNetwork(filt))
+    def getMachineIp(self, ctx, filt): # TODO : need to sort!
+        machines = self.inventory.getMachineNetwork(ctx, filt)
+        ret = []
+        for m in machines:
+            ret.append(map(lambda i: i['IP'], m[1]))
+        if len(ret) == 1:
+            return ret[0]
+        return ret
 
     def getComputersList(self, ctx, filt = None):
         return self.getRestrictedComputersList(ctx, 0, -1, filt)
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
-        return len(self.getRestrictedComputersList(ctx, 0, -1, filt))
+        return self.inventory.countMachinesOnly(ctx, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True):
         if filt == '':
             filt = {}
         filt['min'] = min
         filt['max'] = max
-        return map(lambda m: m.toDN(), self.inventory.getMachinesOnly(filt))
+        return map(lambda m: m.toDN(ctx), self.inventory.getMachinesOnly(ctx, filt))
 
     def getComputerCount(self, ctx, filt = None):
         return self.getRestrictedComputersListLen(ctx, filt)
