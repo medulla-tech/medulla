@@ -32,7 +32,7 @@ SED = $(shell which sed)
 RM = $(shell which rm)
 APACHE_CONF = confs/apache/mmc.conf
 
-FILESTOINSTALL = graph img includes index.php jsframework logout main_content.php main.php version.php modules
+FILESTOINSTALL = graph img includes index.php jsframework logout main_content.php main.php version.php license.php modules
 
 # Default target
 all:
