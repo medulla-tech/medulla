@@ -47,7 +47,10 @@ import ldap.modlist
 from ldap.modlist import addModlist
 import ldif
 import crypt
+import sha
+import base64
 import random
+import string
 import re
 import os
 from mmc.support import mmctools
@@ -64,9 +67,6 @@ from twisted.internet import defer
 
 # global definition for ldapUserGroupControl
 INI = "/etc/mmc/plugins/base.ini"
-ldapHost=""
-baseDN = ""
-baseGroupsDN = ""
 
 modList= None
 
@@ -197,10 +197,15 @@ class BasePluginConfig(PluginConfig):
             self.computersmethod = self.get("computers", "method")
         except:
             pass
+        # User password scheme
+        try:
+            self.passwordscheme = self.get("ldap", "passwordscheme")
+        except:
+            pass
 
         self.backuptools = self.get("backup-tools", "path")
         self.backupdir = self.get("backup-tools", "destpath")
-        self.username = self.get("ldap", "rootName")
+        self.username = self.getdn("ldap", "rootName")
         self.password = self.getpassword("ldap", "password")
 
     def setDefault(self):
@@ -208,6 +213,7 @@ class BasePluginConfig(PluginConfig):
         self.authmethod = "baseldap"
         self.provmethod = None
         self.computersmethod = "none"
+        self.passwordscheme = "ssha"
 
 
 def getModList():
@@ -544,20 +550,51 @@ class ldapUserGroupControl:
      - self.l: bind on ldap with admin privilege
     """
 
-    def getSalt(self):
-        """generate salt for password crypt"""
-        salt = ""
-        for j in range(2):
-            i = random.randint(0,9) % 3
-            if i == 0 :
-                i = (random.randint(0,9) % 11)
-            elif i == 1 :
-                i = (random.randint(0,9) % 25)
-            elif i == 2 :
-                i = (random.randint(0,9) % 25)
-            salt = salt + str(i)
-        return (salt)
+    def _getSalt(self, method):
+        """
+        Generate salt for password encryption, according to the wanted
+        encryption method.
 
+        @returns: if method is crypt, return a random two character string, else return a random twenty character string
+        @rtype: str
+        
+        """
+        if method == "crypt":
+            length = 2
+        else:
+            # Maybe 20 is too much or not enough. I can't find any
+            # documentation about how long the salt should be for SSHA scheme.
+            length = 20
+        ret = ""
+        for i in range(length):
+            ret = ret + random.choice(string.letters + string.digits)
+        return ret
+
+    def _generatePassword(self, password, scheme = None):
+        """
+        Generate a string suitable for the LDAP userPassword field
+
+        @param password: password to hash
+        @type password: str
+
+        @param scheme: LDAP password scheme to use (crypt or ssha)
+        @type scheme: str
+
+        @returns: string suitable for the LDAP userPassword field
+        @rtype: str
+        """
+        if not scheme:
+            scheme = self.config.passwordscheme
+        # If the passwd has been encoded in the XML-RPC stream, decode it
+        if isinstance(password, xmlrpclib.Binary):
+            password = str(password)
+        salt = self._getSalt(scheme)
+        if scheme == "crypt":
+            userpassword = "{crypt}" + crypt.crypt(password, salt)
+        else:
+            ctx = sha.new(password)
+            ctx.update(salt)
+            userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
 
     def _setDefaultConfig(self):
         """
@@ -579,35 +616,18 @@ class ldapUserGroupControl:
         if conffile: configFile = conffile
         else: configFile = INI
         self.conffile = configFile
-        self.config = ConfigParser.ConfigParser()
-        fp = file(configFile, "r")
-        self.config.readfp(fp, configFile)
-
-        # TODO: use the BasePluginConfig class for all options
-        pluginConf = BasePluginConfig("base", self.conffile)
+        self.config = BasePluginConfig("base", self.conffile)
 
         self.logger = logging.getLogger()
 
-        # FIXME: get rid of this globals
-        global ldapHost
-        global baseDN
-        global baseGroupsDN
-
-        ldapHost = self.config.get("ldap", "host")
-        baseDN = self.config.get("ldap", "baseDN")
-        baseGroupsDN = self.config.get("ldap", "baseGroupsDN")
-
-        self.ldapHost = ldapHost
-        self.baseUsersDN = self.config.get("ldap", "baseUsersDN").replace(" ", "")
-        self.baseDN = baseDN.replace(" ", "")
-        self.baseGroupsDN = baseGroupsDN.replace(" ", "")
-
+        self.ldapHost = self.config.get("ldap", "host")
+        self.baseDN = self.config.getdn("ldap", "baseDN")
+        self.baseGroupsDN = self.config.getdn("ldap", "baseGroupsDN")
+        self.baseUsersDN = self.config.getdn("ldap", "baseUsersDN").replace(" ", "")
         self.userHomeAction = self.config.getboolean("ldap", "userHomeAction")
-
         self._setDefaultConfig()
 
-        # FIXME: configuration should be put in a dictionary ...
-        try: self.gpoDN = self.config.get("ldap", "gpoDN")
+        try: self.gpoDN = self.config.getdn("ldap", "gpoDN")
         except: pass
         try: self.defaultUserGroup = self.config.get("ldap", "defaultUserGroup")
         except: pass
@@ -639,13 +659,13 @@ class ldapUserGroupControl:
             for option in self.config.options(USERDEFAULT):
                 self.userDefault["base"][option] = self.config.get(USERDEFAULT, option)
         
-        self.l = ldap.open(ldapHost)
+        self.l = ldap.open(self.ldapHost)
 
         # you should set this to ldap.VERSION2 if you're using a v2 directory
         self.l.protocol_version = ldap.VERSION3
 
         # Any errors will throw an ldap.LDAPError exception
-        self.l.simple_bind_s(pluginConf.username, pluginConf.password)
+        self.l.simple_bind_s(self.config.username, self.config.password)
 
     def runHook(self, hookName, uid = None, password = None):
         """
@@ -839,14 +859,12 @@ class ldapUserGroupControl:
         lastN = str(lastN.encode("utf-8"))
         firstN = str(firstN.encode("utf-8"))
 
-        # If the passwd has been encoded in the XML-RPC stream, decode it
-        if isinstance(password, xmlrpclib.Binary):
-            password = str(password)
-
+        userpassword = self._generatePassword(password)
+        
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
         user_info = {'loginShell':'/bin/bash',
-                     'userPassWord':"{crypt}" + crypt.crypt(password, self.getSalt()),
+                     'userPassWord': userpassword,
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
                      'objectclass':['inetOrgPerson','posixAccount','shadowAccount','top','person'],
@@ -1117,21 +1135,16 @@ class ldapUserGroupControl:
 
     def changeUserPasswd(self, uid, passwd):
         """
-         crypt user password and change it
+        Change LDAP user password (userPassword field)
 
-         @param uid: user name
-         @type  uid: str
-
-         @param passwd: non encrypted password
-         @type  passwd: str
-        """
-        # If the password has been encoded in the XML-RPC stream, decode it
-        if isinstance(passwd, xmlrpclib.Binary):
-            passwd = str(passwd)
+        @param uid: user id
+        @type  uid: str
         
-        passwdCrypt="{crypt}" + crypt.crypt(passwd, self.getSalt())
-        self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,'userPassWord',passwdCrypt)])
-        return 0
+        @param passwd: non encrypted password
+        @type  passwd: str
+        """
+        userpassword = self._generatePassword(passwd)
+        self.l.modify_s('uid=' + uid + ',' + self.baseUsersDN, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
 
     def delUser(self, uid, home):
         """
