@@ -868,23 +868,21 @@ class smbConf:
         Parse SAMBA configuration file content
         """
         contentArr = {}
-        for a in confString.split("["):
-            b = a.split("]")
-
-            for i in range(len(b)/2):
-                listArg = b.pop()
-                localArgArr = {}
-
-                sectionName = b.pop()
-                contentArr[sectionName] = {}
-                for c in listArg.split("\n"):
-
-                    if '=' in c:
-                        arg = c.split("=", 1)
-                        localArgArr[arg.pop().strip()] = arg.pop().strip()
-
-                contentArr[sectionName] = localArgArr
-
+        section = None
+        for line in confString.split("\n"):
+            line = line.strip()
+            s = re.search("^\[(.+?)\].*$", line)
+            if s:
+                # Get section
+                section = s.group(1)
+                contentArr[section] = {}
+            else:
+                # Get statement
+                stmt = re.search("^(.+?)=(.+)$", line)
+                if stmt:
+                    option = stmt.group(1).strip()
+                    value = stmt.group(2).strip()
+                    contentArr[section][option] = value            
         return contentArr
 
     def outputSmbConfFile(self):
