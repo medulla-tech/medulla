@@ -113,7 +113,8 @@ foreach ($result as $head => $vals) {
     if (!in_array($head, $disabled_columns)) {
         if (in_array($head, $graph)) {
             $type = ucfirst($_GET['display']);
-            $head = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head&filter=$filter' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
+            $page = strtolower($_GET['display']);
+            $head = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&from=inventory%2Finventory%2F$page&type=$type&field=$head&filter=$filter' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
         }
         if ($n == null) {
             $n = new ListInfos($vals, $head);

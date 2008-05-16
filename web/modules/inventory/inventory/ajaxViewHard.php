@@ -87,9 +87,10 @@ foreach ($result as $name => $val) {
     $params[] = array('hostname'=>$val['Machine'], 'uuid'=>$val['uuid']);
 }
 foreach ($sorted_result as $head => $vals) {
-    if (in_array($head, $graph)) {
+    if (in_array($head, $graph) && count($vals) > 1) {
         $type = ucfirst($types[$head]);
-        $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
+        # TODO should give the tab name in the from param
+        $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$head";
         foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
             $nhead .= "&$get=".$_GET[$get];
         }

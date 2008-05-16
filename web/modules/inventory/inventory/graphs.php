@@ -8,6 +8,7 @@ require_once("modules/inventory/includes/html.php");
 $type = $_GET['type'];
 $field = $_GET['field'];
 $filter = $_GET['filter'];
+$from = $_GET['from'];
 
 $p = new PageGenerator(_T("Graphique"));
 $p->setSideMenu($sidemenu);
@@ -21,7 +22,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
     $params[$get] = $_GET[$get];
 }
 
-$lnk = new RenderedLink(urlStr("base/computers/invtabs", $params), _T('back')); //array('tab'=>$_GET['tab'], 'filter'=>$filter));
+$lnk = new RenderedLink(urlStr($from, $params), _T('back')); //array('tab'=>$_GET['tab'], 'filter'=>$filter));
 $lnk->display();
 
 ?>

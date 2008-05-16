@@ -40,6 +40,7 @@ else $start = 0;
 
 if ($_GET['uuid'] != '') {
     $table = $_GET['part'];
+    $graph = getInventoryGraph($table);
     $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
     $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
     
@@ -53,17 +54,25 @@ if ($_GET['uuid'] != '') {
         }
         $index+=1;
     }
-    $max = 0;
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
     foreach ($h as $k => $v) {
-        
         if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-            if ($n == null) {
-                $n = new OptimizedListInfos($h[$k], $k);
-            } else {
-                $n->addExtraInfo($h[$k], $k);
+        if (in_array($k, $graph) && count($v) > 1) {
+            $type = ucfirst($_GET['part']);
+            # TODO should give the tab in the from param
+            $nhead = "$k <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$k";
+            foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
+                $nhead .= "&$get=".$_GET[$get];
             }
-            if (count($h[$k]) > $max) { $max = count($h[$k]); }
+            $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
+            $k = $nhead;
+        }
+       
+            if ($n == null) {
+                $n = new OptimizedListInfos($v, $k);
+            } else {
+                $n->addExtraInfo($v, $k);
+            }
         }
     }
     if ($n != null) {
@@ -103,9 +112,10 @@ if ($_GET['uuid'] != '') {
     $graph = getInventoryGraph($display);
     foreach ($result as $head => $vals) {
         if (!in_array($head, $disabled_columns)) {
-            if (in_array($head, $graph)) {
+            if (in_array($head, $graph) && count($vals) > 1) {
                 $type = ucfirst($_GET['part']);
-                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&field=$head";
+                # TODO should give the tab in the from param
+                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$head";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
