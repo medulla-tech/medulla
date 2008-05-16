@@ -24,8 +24,8 @@
 
 require_once("modules/inventory/includes/xmlrpc.php");
 
-if (isset($_POST["inventaire"])) {
-  $_GET["inventaire"] = $_POST["inventaire"];
+if (isset($_POST["uuid"])) {
+  $_GET["uuid"] = $_POST["uuid"];
 }
 
 ?>
@@ -35,8 +35,8 @@ if (isset($_POST["inventaire"])) {
 <?php
 
 $table = 'Hardware';
-$inv = getLastMachineInventoryPart($table, $_GET["inventaire"]);
-$date = $inv[0]['timestamp'];
+$inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"]));
+$date = $inv[0][1][0]['timestamp'];
 $date = $date[0] .'-'. $date[1] .'-'. $date[2]; // .' '. $date[3] .':'. $date[4] .':'. $date[4];
 
 ?>
