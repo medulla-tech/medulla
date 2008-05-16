@@ -21,75 +21,12 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-
-function print_ajax_nav($curstart, $curend, $items, $filter)
-{
-  $_GET["action"] = "index";
-  global $conf;
-
-  $max = $conf["global"]["maxperpage"];
-  $encitems = urlencode(base64_encode(serialize($items)));
-
-  echo '<form method="post" action="' . $PHP_SELF . '">';
-  echo "<ul class=\"navList\">\n";
-
-  if ($curstart == 0)
-    {
-      echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
-    }
-  else
-    {
-      $start = $curstart - $max;
-      $end = $curstart - 1;
-      echo "<li class=\"previousList\"><a href=\"#\" onClick=\"updateSearchGroupParam('$filter','$start','$end'); return false\";>"._("Previous")."</a></li>\n";
-    }
-
-  if (($curend + 1) >= count($items))
-    {
-      echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
-    }
-  else
-    {
-      $start = $curend + 1;
-      $end = $curend + $max;
-
-
-      echo "<li class=\"nextList\"><a href=\"#\" onClick=\"updateSearchGroupParam('$filter','$start','$end'); return false\";>"._("Next")."</a></li>\n";
-    }
-
-  echo "</ul>\n";
-}
 
 require("modules/base/includes/groups.inc.php");
 
-$filter=$_GET["filter"];
-
+$filter = $_GET["filter"];
 $groups = search_groups($filter);
-$start = 0;
-
-if (count($groups) > 0)
-{
-  $end = $conf["global"]["maxperpage"] - 1;
-}
-else
-{
-  $end = 0;
-}
-
-if (isset($_GET["start"]))
-{
-    $start = $_GET["start"];
-    $end = $_GET["end"];
-}
-
-
-?>
-
-
-<?php
-print_ajax_nav($start, $end, $groups,$filter);
+$groupcount = count($groups);
 
 $arrGroup = array();
 $arrComment = array();
@@ -105,11 +42,12 @@ $n = new ListInfos($arrGroup,_("Groups"));
 $n->setCssClass("groupName");
 $n->addExtraInfo($arrComment,_("Comments"));
 $n->setAdditionalInfo($arrNb);
+$n->setNavBar(new AjaxNavBar($groupcount, $filter));
 $n->addActionItem(new ActionItem(_("Edit members"),"members","display","group") );
 $n->addActionItem(new ActionItem(_("Edit group"),"edit", "edit","group") );
 $n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","group") );
 $n->setName(_("Groups management"));
-$n->display(0);
+$n->display();
 
-print_ajax_nav($start, $end, $groups,$filter);
+
 ?>
