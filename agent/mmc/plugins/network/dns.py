@@ -662,4 +662,5 @@ class DnsLogView(LogView):
         self.file = open(self.logfile, 'r')
         self.pattern = {
             "named-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named\[[0-9]+\]: (?P<extra>.*)$",
+            "named-syslog1" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named-sdb\[[0-9]+\]: (?P<extra>.*)$",
             }
