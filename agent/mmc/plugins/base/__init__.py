@@ -595,6 +595,7 @@ class ldapUserGroupControl:
             ctx = sha.new(password)
             ctx.update(salt)
             userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
+        return userpassword
 
     def _setDefaultConfig(self):
         """
