@@ -44,8 +44,8 @@ $result = array();
 $headers = array('Machine');
 $types = array();
 foreach ($uniq as $display) {
-    $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
-    $count = countLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'filter'=>$filter));
+    $machines = getLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'uuid'=>$_GET['uuid'], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
+    $count = countLastMachineInventoryPart($display, array('gid'=>$_GET["gid"], 'uuid'=>$_GET['uuid'], 'filter'=>$filter));
 
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
     $graph = getInventoryGraph($display);
