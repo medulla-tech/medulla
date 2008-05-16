@@ -954,7 +954,7 @@ class ldapUserGroupControl:
                     'objectclass':('posixGroup','top')
                      }
         try:
-            entry = 'cn=' + cn + ',' + baseGroupsDN
+            entry = 'cn=' + cn + ',' + self.baseGroupsDN
             attributes = [ (k,v) for k,v in group_info.items() ]
             self.l.add_s(entry, attributes)
         except ldap.LDAPError, error:
@@ -975,8 +975,7 @@ class ldapUserGroupControl:
         """
         cngroup = cngroup.encode("utf-8")
         uiduser = uiduser.encode("utf-8")
-        self.l.modify_s('cn='+cngroup+','+baseGroupsDN, [(ldap.MOD_DELETE,'memberUid',uiduser)])
-        return 0
+        self.l.modify_s('cn=' + cngroup + ',' + self.baseGroupsDN, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
 
     def delUserFromAllGroups(self, uid):
         """
@@ -1234,7 +1233,7 @@ class ldapUserGroupControl:
          @type  cnGroup: str
 
         """
-        self.l.delete_s('cn=' + cnGroup + ',' + baseGroupsDN)
+        self.l.delete_s('cn=' + cnGroup + ',' + self.baseGroupsDN)
 
     def getEntry(self, dn):
         """
@@ -1305,18 +1304,6 @@ class ldapUserGroupControl:
                 newattrs = copy.deepcopy(attrs)
                 return newattrs
 
-
-        #if not base: base = self.baseGroupsDN
-        #print "search group uid "+id
-#         pattern = 'gidNumber=' + str(id) + ', ' + base
-#         print "recherche pattern " + pattern
-#         attrs = []
-#         attrib = self.l.search_s(pattern, ldap.SCOPE_BASE)
-#
-#         c,attrs=attrib[0]
-#
-#         newattrs = copy.deepcopy(attrs)
-
         return newattrs
 
     def getUserGroups(self,pattern):
@@ -1335,7 +1322,7 @@ class ldapUserGroupControl:
         searchFilter = "memberUid=" + pattern
 
         try:
-            ldap_result_id = self.l.search(baseGroupsDN, searchScope, searchFilter, retrieveAttributes)
+            ldap_result_id = self.l.search(self.baseGroupsDN, searchScope, searchFilter, retrieveAttributes)
             result_set = []
             while 1:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
@@ -1474,7 +1461,7 @@ class ldapUserGroupControl:
         @return: return memberuid attribute.
         @rtype: list
         """
-        result_set = self.search("cn=" + group, baseGroupsDN, None, ldap.SCOPE_ONELEVEL)
+        result_set = self.search("cn=" + group, self.baseGroupsDN, None, ldap.SCOPE_ONELEVEL)
 
         # prepare array for processing
         resArr=[]
