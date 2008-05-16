@@ -51,9 +51,6 @@ $p = new PageGenerator($label._T(" list"));
 $p->setSideMenu($sidemenu);
 $p->display(); 
 
-?>
-<a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table)) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
-<?php
 
 require("javascript.php");
 
@@ -69,4 +66,5 @@ require("javascript.php");
 <div id="inventoryContainer">
 </div>
 
+<a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table)) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
 
