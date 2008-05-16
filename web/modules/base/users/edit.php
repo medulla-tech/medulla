@@ -203,8 +203,8 @@ if ($_GET["user"]) {
          // Create/modify user in all enabled MMC modules
          callPluginFunction("changeUser",array($_POST));
 
-          //if we change the password
-         if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "")) {
+          // If we change the password of an already existing user
+         if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
              callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
 
              //update result display
