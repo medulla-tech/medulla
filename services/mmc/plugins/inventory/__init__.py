@@ -88,9 +88,9 @@ class RpcProxy(RpcProxyI):
 #            return False
         return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(ctx, params))
  
-    def getAllMachinesInventoryColumn(self, part, column, pattern = None):
+    def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
         ctx = self.currentContext
-        ret = self.getLastMachineInventoryPart(part, {'filter':pattern})
+        ret = self.getLastMachineInventoryPart(part, pattern)
         # TODO : m.uuid doesn't exists and should do that in just one call
         retour = []
         for machine in ret:
