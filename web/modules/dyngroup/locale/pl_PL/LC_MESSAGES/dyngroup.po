@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"POT-Creation-Date: 2008-05-09 06:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,8 +31,13 @@ msgstr ""
 msgid "%s) Search %s = (%s) in module %s"
 msgstr ""
 
+#: dyngroup/includes/double.php:52
+msgid "->"
+msgstr ""
+
+#: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
 #: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
-#: dyngroup/dyngroup/creator.php:138 dyngroup/includes/autocomplete.php:43
+#: dyngroup/dyngroup/creator.php:138
 msgid "Add"
 msgstr ""
 
@@ -56,8 +61,9 @@ msgstr ""
 msgid "All machines"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:192 dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
+#: dyngroup/dyngroup/add_groups.php:192
 msgid "Cancel"
 msgstr ""
 
@@ -89,7 +95,7 @@ msgstr ""
 msgid "Delete group"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Delete this group"
 msgstr ""
 
@@ -127,11 +133,11 @@ msgstr ""
 msgid "Edit a dynamic group"
 msgstr ""
 
-#: dyngroup/dyngroup/edithead.php:41 dyngroup/dyngroup/groupshead.php:32
+#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
 msgid "Edit a static group"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:72
+#: dyngroup/dyngroup/ajaxListGroups.php:73
 msgid "Edit this group"
 msgstr ""
 
@@ -180,6 +186,10 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
+#: dyngroup/dyngroup/ajaxListGroups.php:72
+msgid "Inventory on this group"
+msgstr ""
+
 #: dyngroup/dyngroup/add_groups.php:129
 msgid "Is the group visible"
 msgstr ""
@@ -201,7 +211,7 @@ msgstr ""
 msgid "Machines Group Editor"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:131 dyngroup/dyngroup/creator.php:132
+#: dyngroup/dyngroup/creator.php:132 dyngroup/dyngroup/add_groups.php:131
 msgid "No"
 msgstr ""
 
@@ -214,7 +224,7 @@ msgstr ""
 msgid "Please chose the type of group you want to create"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:73
+#: dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "Read log"
 msgstr ""
 
@@ -262,7 +272,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Software deployment on this group"
 msgstr ""
 
@@ -296,8 +306,8 @@ msgstr ""
 msgid "Visible"
 msgstr ""
 
-#: dyngroup/dyngroup/add_groups.php:130 dyngroup/dyngroup/creator.php:131
-#: dyngroup/dyngroup/creator.php:137
+#: dyngroup/dyngroup/creator.php:131 dyngroup/dyngroup/creator.php:137
+#: dyngroup/dyngroup/add_groups.php:130
 msgid "Yes"
 msgstr ""
 

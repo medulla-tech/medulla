@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"POT-Creation-Date: 2008-05-09 06:23+0200\n"
 "PO-Revision-Date: 2008-04-05 10:53+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,8 +30,13 @@ msgstr "%s) Поиск %s = %s в модуле %s"
 msgid "%s) Search %s = (%s) in module %s"
 msgstr "%s) Поиск %s = (%s) в модуле %s"
 
+#: dyngroup/includes/double.php:52
+msgid "->"
+msgstr ""
+
+#: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
 #: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
-#: dyngroup/dyngroup/creator.php:138 dyngroup/includes/autocomplete.php:43
+#: dyngroup/dyngroup/creator.php:138
 msgid "Add"
 msgstr "Добавить"
 
@@ -55,8 +60,9 @@ msgstr "Все группы"
 msgid "All machines"
 msgstr "Все машины"
 
-#: dyngroup/dyngroup/add_groups.php:192 dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
+#: dyngroup/dyngroup/add_groups.php:192
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -88,7 +94,7 @@ msgstr "Удалить группу машин"
 msgid "Delete group"
 msgstr "Удалить группу"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Delete this group"
 msgstr "Удалить эту группу"
 
@@ -126,11 +132,11 @@ msgstr "Вкладка создания динамических групп"
 msgid "Edit a dynamic group"
 msgstr "Изменить динамическую группу"
 
-#: dyngroup/dyngroup/edithead.php:41 dyngroup/dyngroup/groupshead.php:32
+#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
 msgid "Edit a static group"
 msgstr "Изменить статическую группу"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:72
+#: dyngroup/dyngroup/ajaxListGroups.php:73
 msgid "Edit this group"
 msgstr "Изменить эту группу"
 
@@ -179,6 +185,11 @@ msgstr "Скрытая"
 msgid "Hide"
 msgstr "Скрыть"
 
+#: dyngroup/dyngroup/ajaxListGroups.php:72
+#, fuzzy
+msgid "Inventory on this group"
+msgstr "Удалить эту группу"
+
 #: dyngroup/dyngroup/add_groups.php:129
 msgid "Is the group visible"
 msgstr "Видима ли группа"
@@ -200,7 +211,7 @@ msgstr "Создание групп машин"
 msgid "Machines Group Editor"
 msgstr "Правка групп машин"
 
-#: dyngroup/dyngroup/add_groups.php:131 dyngroup/dyngroup/creator.php:132
+#: dyngroup/dyngroup/creator.php:132 dyngroup/dyngroup/add_groups.php:131
 msgid "No"
 msgstr "Нет"
 
@@ -213,7 +224,7 @@ msgstr "Запрашивать можно только модуль '%s'"
 msgid "Please chose the type of group you want to create"
 msgstr "Выберите тип группы, которую Вы хотите создать"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:73
+#: dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "Read log"
 msgstr "Прочитать журнал"
 
@@ -261,7 +272,7 @@ msgstr "Искать часть"
 msgid "Show"
 msgstr "Показать"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Software deployment on this group"
 msgstr "Развертывание программ в этой группе"
 
@@ -295,8 +306,8 @@ msgstr "Тип"
 msgid "Visible"
 msgstr "Видимая"
 
-#: dyngroup/dyngroup/add_groups.php:130 dyngroup/dyngroup/creator.php:131
-#: dyngroup/dyngroup/creator.php:137
+#: dyngroup/dyngroup/creator.php:131 dyngroup/dyngroup/creator.php:137
+#: dyngroup/dyngroup/add_groups.php:130
 msgid "Yes"
 msgstr "Да"
 

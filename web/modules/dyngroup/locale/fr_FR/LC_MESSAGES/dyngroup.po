@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup web interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"POT-Creation-Date: 2008-05-09 06:23+0200\n"
 "PO-Revision-Date: 2008-04-08 17:31+0100\n"
 "Last-Translator: Nicolas Rueff <n.rueff@mandriva.com>\n"
 "Language-Team: Mandriva <LL@li.org>\n"
@@ -32,10 +32,13 @@ msgstr "%s) Recherche %s = %s dans le module %s"
 msgid "%s) Search %s = (%s) in module %s"
 msgstr "%s) Recherche %s = (%s) dans le module %s"
 
-#: dyngroup/dyngroup/creator.php:113
-#: dyngroup/dyngroup/creator.php:134
+#: dyngroup/includes/double.php:52
+msgid "->"
+msgstr ""
+
+#: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
+#: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
 #: dyngroup/dyngroup/creator.php:138
-#: dyngroup/includes/autocomplete.php:43
 msgid "Add"
 msgstr "Ajouter"
 
@@ -59,9 +62,9 @@ msgstr "Tous les groupes"
 msgid "All machines"
 msgstr "Tous les ordinateurs"
 
-#: dyngroup/dyngroup/add_groups.php:192
 #: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
+#: dyngroup/dyngroup/add_groups.php:192
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -89,12 +92,11 @@ msgstr "Supprimer"
 msgid "Delete a group of machines"
 msgstr "Supprimer le groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/delete_group.php:36
-#: dyngroup/dyngroup/delete_group.php:49
+#: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
@@ -132,12 +134,11 @@ msgstr "Onglet de création d'un groupe dynamique"
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe statique"
 
-#: dyngroup/dyngroup/edithead.php:41
-#: dyngroup/dyngroup/groupshead.php:32
+#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:72
+#: dyngroup/dyngroup/ajaxListGroups.php:73
 msgid "Edit this group"
 msgstr "Éditer ce groupe"
 
@@ -186,6 +187,11 @@ msgstr "Caché"
 msgid "Hide"
 msgstr "Cacher"
 
+#: dyngroup/dyngroup/ajaxListGroups.php:72
+#, fuzzy
+msgid "Inventory on this group"
+msgstr "Supprimer ce groupe"
+
 #: dyngroup/dyngroup/add_groups.php:129
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
@@ -199,18 +205,15 @@ msgstr "Lister tous les groupes d'ordinateurs"
 msgid "Machine list has been truncated at %d machines"
 msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:38
-#: dyngroup/infoPackage.inc.php:54
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:54
 msgid "Machines Group Creator"
 msgstr "Créateur de groupe d'ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:42
-#: dyngroup/infoPackage.inc.php:58
+#: dyngroup/infoPackage.inc.php:42 dyngroup/infoPackage.inc.php:58
 msgid "Machines Group Editor"
 msgstr "Éditeur de groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/add_groups.php:131
-#: dyngroup/dyngroup/creator.php:132
+#: dyngroup/dyngroup/creator.php:132 dyngroup/dyngroup/add_groups.php:131
 msgid "No"
 msgstr "Non"
 
@@ -223,7 +226,7 @@ msgstr "Le seul module requétable est le module '%s'"
 msgid "Please chose the type of group you want to create"
 msgstr "Choisissez le type de groupe que vous voulez créer"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:73
+#: dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "Read log"
 msgstr "Lire les journaux"
 
@@ -271,7 +274,7 @@ msgstr "Recherche de composant"
 msgid "Show"
 msgstr "Afficher"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Software deployment on this group"
 msgstr "Déploiement de logiciels sur ce groupe"
 
@@ -305,9 +308,8 @@ msgstr "Type"
 msgid "Visible"
 msgstr "Visible"
 
+#: dyngroup/dyngroup/creator.php:131 dyngroup/dyngroup/creator.php:137
 #: dyngroup/dyngroup/add_groups.php:130
-#: dyngroup/dyngroup/creator.php:131
-#: dyngroup/dyngroup/creator.php:137
 msgid "Yes"
 msgstr "Oui"
 
@@ -321,8 +323,7 @@ msgstr "Vous allez supprimer le groupe <b>%s</b>."
 msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
-#: dyngroup/dyngroup/localSidebar.php:37
-#: dyngroup/dyngroup/localSidebar.php:38
+#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
 msgid "group"
 msgstr "le groupe"
 
@@ -345,10 +346,12 @@ msgstr "groupe statique"
 
 #~ msgid "Display '%s' content"
 #~ msgstr "Voir le contenu de %s"
+
 #~ msgid "Display '%s' result list"
 #~ msgstr "Afficher la liste des résultats de '%s'"
+
 #~ msgid "Group members %s"
 #~ msgstr "Membres du groupe %s"
+
 #~ msgid "This request has no result."
 #~ msgstr "Cette requête n'a pas de résultat."
-
