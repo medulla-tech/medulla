@@ -48,7 +48,7 @@ $type = array();
 $show = array();
 
 foreach ($list as $group) {
-    $ids[]=  array("id"=>$group->id, "gid"=>$group->id);
+    $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name);
     $name[]= $group->getName();
     if ($group->isDyn()) {
         $type[]= (!$group->isRequest() ? sprintf(_T('group (%s)', 'dyngroup'), $group->countResult()) : _T('query', 'dyngroup'));
@@ -69,6 +69,7 @@ $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
 $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"invtabs","inventory","inventory", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"msctabs","logfile","computer", "base", "computers", "tablogs"));
 $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
