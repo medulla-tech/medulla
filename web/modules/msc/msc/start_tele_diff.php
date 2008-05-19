@@ -61,10 +61,10 @@ if (isset($_POST["bconfirm"])) {
     }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
+    $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
     dispatch_all_commands();
     scheduler_start_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
 }
 
 /* User wants do do custom stuff => display the "advanced" form */
@@ -95,14 +95,14 @@ $gid = $_GET['gid'];
 $pid = $_GET['pid'];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET['papi']);
-$cible = array($uuid, $hostname);
+$cible = $hostname;
 if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
 $name = getPackageLabel($p_api, $_GET["pid"]);
 $version = getPackageVersion($p_api, $_GET["pid"]);
-$f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $hostname));
+$f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $cible));
 
 // form preseeding
 $f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],     "hide" => True));
