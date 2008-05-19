@@ -202,16 +202,9 @@ class RpcProxy(RpcProxyI):
         if not isDynamicEnable():
             return False
         retour = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, search)
-        p0 = re.compile('\*')
-        search = p0.sub('.*', search)
-        p1 = re.compile(search, re.IGNORECASE)
-        ret = []
-        for r in retour[1]:
-            if type(r) == str and p1.search(r):
-                ret.append(r)
-        return xmlrpcCleanup(ret)
+        return xmlrpcCleanup(retour[1])
     
-    def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, search, value2 = ''):
+    def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, search, value2 = ''): # not used anymore ?
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
