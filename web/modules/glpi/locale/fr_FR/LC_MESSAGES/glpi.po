@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - GLPI web interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-08 16:52+0200\n"
+"POT-Creation-Date: 2008-05-09 06:29+0200\n"
 "PO-Revision-Date: 2008-04-08 17:34+0100\n"
 "Last-Translator: Nicolas Rueff <n.rueff@mandriva.com>\n"
 "Language-Team: Mandriva <LL@li.org>\n"
@@ -75,8 +75,7 @@ msgstr "Commentaires"
 msgid "location"
 msgstr "Localization"
 
-#: glpi/glpi/view_hardware.php:60
-#: glpi/glpi/view_hardware.php:62
+#: glpi/glpi/view_hardware.php:60 glpi/glpi/view_hardware.php:62
 msgid "name"
 msgstr "Nom"
 
@@ -106,8 +105,9 @@ msgstr "Numero de série"
 
 #~ msgid "GLPI general tab"
 #~ msgstr "Onglet général"
+
 #~ msgid "GLPI tab 1"
 #~ msgstr "Onglet reseau"
+
 #~ msgid "GLPI tab 2"
 #~ msgstr "Onglet controlleur"
-
