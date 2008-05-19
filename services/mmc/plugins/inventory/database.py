@@ -29,11 +29,14 @@ from sqlalchemy import *
 import logging
 import datetime
 import time
+import re
 
 SA_MAYOR = 0
 SA_MINOR = 3
 
 NB_DB_CONN_TRY = 2
+
+# TODO need to check for useless function (there should be many unused one...)
 
 def create_method(m):
     def method(self, already_in_loop = False):
@@ -275,6 +278,7 @@ class Inventory(DyngroupDatabaseHelper):
         elif query[2] == 'Drive/TotalSpace' or query[2] == 'Software/ProductVersion': # Numeric search : ie < > = are possible operators
             partKlass = self.klass[table]
             value = query[3]
+            
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
                 return getattr(partKlass.c, field) > value
@@ -284,13 +288,20 @@ class Inventory(DyngroupDatabaseHelper):
             elif invert:
                 return getattr(partKlass.c, field) != value
             else:
+                if re.compile('\*').search(value):
+                    value = re.compile('\*').sub('%', value)
+                    return getattr(partKlass.c, field).like(value)
                 return getattr(partKlass.c, field) == value
         else: # text search, only =
             partKlass = self.klass[table]
+            value = query[3]
             if invert:
-                return getattr(partKlass.c, field) != query[3]
+                return getattr(partKlass.c, field) != value
             else:
-                return getattr(partKlass.c, field) == query[3]
+                if re.compile('\*').search(value):
+                    value = re.compile('\*').sub('%', value)
+                    return getattr(partKlass.c, field).like(value)
+                return getattr(partKlass.c, field) == value
 
     def getMachines(self, ctx, pattern = None):
         """
@@ -529,17 +540,10 @@ class Inventory(DyngroupDatabaseHelper):
         haspartKlass = self.klass["has" + part]
        
         # This SQL query has been built using the one from the LRS inventory module
-        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.join(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
-        if params.has_key('hostname') and params['hostname'] != '':
-            result = result.filter(Machine.c.Name==params['hostname'])
-        if params.has_key('uuid') and params['uuid'] != '':
-            result = result.filter(Machine.c.id==fromUUID(params['uuid']))
-        if params.has_key('filter') and params['filter'] != '':
-            result = result.filter(Machine.c.Name.like('%'+params['filter']+'%'))
-        if params.has_key('gid') and params['gid'] != '':
-            machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
-            result = result.filter(self.machine.c.id.in_(*machines))
-        return result
+        # TODO : this request has to be done on Machine and then add the columns so that the left join works...
+        #result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.outerjoin(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
+        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(self.machine.outerjoin(haspartTable.join(self.inventory).join(partTable))).filter(self.inventory.c.Last == 1)
+        return self.__filterQuery(ctx, result, params)
    
     def __filterQuery(self, ctx, query, params):
         if params.has_key('hostname') and params['hostname'] != '':
