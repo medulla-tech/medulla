@@ -230,7 +230,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(self.machine, pattern)
-        query = query.select_from(join_query).filter(query_filter)
+        query = query.select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
         # end of dyngroups
         return query
         
@@ -256,7 +256,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         session = create_session()
         query = self.__machinesOnlyQuery(ctx, pattern, session)
-        ret = query.count()
+        ret = len(query.all())
         session.close()
         return ret
         
@@ -475,6 +475,7 @@ class Inventory(DyngroupDatabaseHelper):
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
         result = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
+        result = result.group_by(partTable.c.id).group_by(haspartTable.c.machine)
         result = result.count()
         session.close()
         return result
