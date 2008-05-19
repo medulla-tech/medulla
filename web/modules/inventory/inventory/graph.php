@@ -6,7 +6,9 @@ require_once("modules/inventory/includes/xmlrpc.php");
 $type = $_GET['type'];
 $field = $_GET['field'];
 $filter = $_GET['filter'];
-$machines = getAllMachinesInventoryColumn($type, $field, $filter);
+$uuid = $_GET['uuid'];
+$gid = $_GET['gid'];
+$machines = getAllMachinesInventoryColumn($type, $field, array('filter'=>$filter, 'uuid'=>$uuid, 'gid'=>$gid));
 
 ob_end_clean();
 

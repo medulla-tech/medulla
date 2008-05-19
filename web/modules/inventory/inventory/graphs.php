@@ -14,7 +14,7 @@ $p = new PageGenerator(_T("Graphique"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$img = new RenderedImage(urlStr("inventory/inventory/graph", array("type"=>$type, "field"=>$field, "filter"=>$filter)), 'graph', 'center');
+$img = new RenderedImage(urlStr("inventory/inventory/graph", array("gid"=>$_GET['gid'], 'uuid'=>$_GET['uuid'], "type"=>$type, "field"=>$field, "filter"=>$filter)), 'graph', 'center');
 $img->display();
 
 $params = array();

@@ -24,7 +24,7 @@
 ?>
 <?php
 
-function getAllMachinesInventoryColumn($part, $column, $pattern = null) {
+function getAllMachinesInventoryColumn($part, $column, $pattern = array()) {
     return xmlCall("inventory.getAllMachinesInventoryColumn", array($part, $column, $pattern));
 }
 
