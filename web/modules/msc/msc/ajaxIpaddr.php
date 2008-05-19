@@ -21,7 +21,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$adresses = xmlCall('glpi.getMachineIp', array($_GET["uuid"]));
+if (!isset($_SESSION[$_GET["uuid"]]['getMachineIp'])) {
+    $_SESSION[$_GET["uuid"]]['getMachineIp'] = xmlCall('base.getMachineIp', array(array('uuid'=>$_GET["uuid"])));
+}
+$adresses = $_SESSION[$_GET["uuid"]]['getMachineIp'];
 
 if (count($adresses) > 0)
     $adresses[0] = "<b>" . $adresses[0] . "</b>";
