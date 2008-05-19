@@ -68,8 +68,9 @@ class CommandOnHost {
 class Command {
     function Command($cmd) {
         $this->db_cmd = command_detail($cmd);
+        $this->error = false;
         if (!$this->db_cmd) { # use does not have the good permissions
-            return;
+            return false;
         }
         $this->values = array(
             array(_T('Command name', 'msc'),$this->db_cmd['title'], 1),
@@ -89,7 +90,7 @@ class Command {
         if (!$this->db_cmd) { # use does not have the good permissions
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
-            return;
+            return false;
         }
         $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
@@ -99,8 +100,14 @@ class Command {
         $n->setRowsPerPage(count($this->values));
 
         $n->drawTable(0);
+        return true;
     }
     function quickDisplay($actions = array(), $params = array()) {
+        if (!$this->db_cmd) { # use does not have the good permissions
+            $widget = new RenderedMSCCommandDontExists();
+            $widget->display();
+            return false;
+        }
         $n = null;
         foreach ($this->values as $col) {
             if ($col[2]) {
@@ -116,6 +123,7 @@ class Command {
             $n->addActionItem($a);
         }
         $n->drawTable(0);
+        return true;
     }
 }
 

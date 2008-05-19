@@ -45,24 +45,28 @@ if ($_GET['uuid']) {
         $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
         // display the selected command
         $cmd = new Command($_GET['cmd_id']);
-        $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
-        // display the selected command on host
-        $coh = new CommandOnHost($_GET['coh_id']);
-        $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
-        // display the command on host details
-        print "<hr/><br/>";
-        $coh_id = $_GET['coh_id'];
-        $ch = new CommandHistory($coh_id);
-        $ch->display();
+        $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        if ($act) {
+            // display the selected command on host
+            $coh = new CommandOnHost($_GET['coh_id']);
+            $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
+            // display the command on host details
+            print "<hr/><br/>";
+            $coh_id = $_GET['coh_id'];
+            $ch = new CommandHistory($coh_id);
+            $ch->display();
+        }
     } elseif ($_GET['cmd_id']) {
         // display just the selected command
         $cmd = new Command($_GET['cmd_id']);
-        $cmd->quickDisplay();
-        // display all the commands on hosts
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=tablogs");
-        $ajax->display();
-        print "<br/><br/><br/>";
-        $ajax->displayDivToUpdate();
+        $act = $cmd->quickDisplay();
+        if ($act) {
+            // display all the commands on hosts
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=tablogs");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
     } else {
         // display all commands
         $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=tablogs");
