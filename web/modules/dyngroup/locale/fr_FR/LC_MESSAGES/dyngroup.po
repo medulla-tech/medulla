@@ -34,7 +34,7 @@ msgstr "%s) Recherche %s = (%s) dans le module %s"
 
 #: dyngroup/includes/double.php:52
 msgid "->"
-msgstr ""
+msgstr "->"
 
 #: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
 #: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
@@ -188,9 +188,8 @@ msgid "Hide"
 msgstr "Cacher"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:72
-#, fuzzy
 msgid "Inventory on this group"
-msgstr "Supprimer ce groupe"
+msgstr "Montrer l'inventaire de ce groupe"
 
 #: dyngroup/dyngroup/add_groups.php:129
 msgid "Is the group visible"
