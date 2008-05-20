@@ -1,0 +1,27 @@
+--- Makefile	2007-06-29 11:17:35.000000000 +0200
++++ Makefile.oden	2007-06-29 18:18:51.000000000 +0200
+@@ -20,7 +20,7 @@
+ 
+ # General Makefile variables
+ DESTDIR = 
+-PREFIX = /usr/local
++PREFIX = /usr
+ DATADIR = $(PREFIX)/share/mmc
+ ETCDIR = /etc/mmc
+ INSTALL = $(shell which install)
+@@ -74,12 +74,10 @@
+ install: build_mo apache_conf
+ 	@echo ""
+ 	@echo "Installing mmc-web in $(DESTDIR)$(DATADIR)"
+-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)
+-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
++	$(INSTALL) -d -m 755 $(DESTDIR)$(DATADIR)
++	$(INSTALL) -d -m 755 $(DESTDIR)$(ETCDIR)
+ 	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)
+-	$(CHOWN) -R root $(DESTDIR)$(DATADIR)
+-	$(CHGRP) -R root $(DESTDIR)$(DATADIR)
+-	$(INSTALL) confs/mmc.ini -m 640 -o root -g $(HTTPDUSER) $(DESTDIR)$(ETCDIR)
++	$(INSTALL) confs/mmc.ini -m 640 $(DESTDIR)$(ETCDIR)
+ 	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/mmc.ini
+ 	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/mmc.ini
+ 	find $(DESTDIR)$(DATADIR) -type f -name *.po -exec rm -f {} \;

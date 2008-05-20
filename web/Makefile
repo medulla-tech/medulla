@@ -79,3 +79,10 @@ install: build_mo apache_conf
 	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/mmc.ini
 	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/mmc.ini
 	find $(DESTDIR)$(DATADIR) -type f -name *.po -exec rm -f {} \;
+
+include common.mk
+
+$(RELEASES_DIR)/$(TARBALL_GZ):
+	mkdir -p $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) $(FILESTOINSTALL) Makefile common.mk scripts confs COPYING Changelog $(RELEASES_DIR)/$(TARBALL)
+	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
