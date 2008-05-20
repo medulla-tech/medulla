@@ -94,19 +94,13 @@ install:
 	$(SED) -i 's!^path[ \t].*$$!path = $(LIBDIR)/backup-tools!' $(DESTDIR)$(ETCDIR)/plugins/base.ini
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/mmc-agent
 
-# Linbox internal target. Will be updated soon.
+include common.mk
 
-debian-package: revision
-	sed -i "s/##VERSION##/`cat revision`/" debian/changelog
-	sed -i "s/###SVN_VERSION###/`cat revision`/" mmc/agent.py
-	dpkg-buildpackage -b -uc -rfakeroot
-	sed -i "s/`cat revision`/##VERSION##/" debian/changelog
-	sed -i "s/`cat revision`/###SVN_VERSION###/" mmc/agent.py
+$(RELEASES_DIR)/$(TARBALL_GZ):
+	mkdir -p $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) backup-tools bin Changelog common.mk conf contrib COPYING init.d Makefile mmc setup.py $(RELEASES_DIR)/$(TARBALL)
+	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
-revision:
-	# fake SVN revision number if there is none
-	# else the revision number is found by BuildBot
-	echo -n 100 > "revision"
 
 docs:
 	epydoc mmc
