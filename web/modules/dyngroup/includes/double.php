@@ -49,7 +49,7 @@ class DoubleAutocomplete {
         </div>
     </td>
     <td id='secondButton'>
-        <input name="next" type="button" class="btnPrimary" value="<?= _T("->"); ?>" onClick="addSlave('autocomplete'); return false;"/>
+        <input name="next" type="button" class="btnPrimary" value="<?= _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
     </td>
     </tr>
     </table>
@@ -67,7 +67,7 @@ class DoubleAutocomplete {
             </div>
         </td>
         <td id='secondPart3'>
-            <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add"); ?>" />   
+            <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>" />   
         </td>
         </tr></table>
     </div>

@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup web interface\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-09 06:23+0200\n"
+"POT-Creation-Date: 2008-05-09 10:32+0200\n"
 "PO-Revision-Date: 2008-04-08 17:31+0100\n"
-"Last-Translator: Nicolas Rueff <n.rueff@mandriva.com>\n"
+"Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: Mandriva <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -212,6 +212,10 @@ msgstr "Créateur de groupe d'ordinateurs"
 msgid "Machines Group Editor"
 msgstr "Éditeur de groupe d'ordinateurs"
 
+#: dyngroup/dyngroup/save.php:56
+msgid "Name :"
+msgstr "Nom:"
+
 #: dyngroup/dyngroup/creator.php:132 dyngroup/dyngroup/add_groups.php:131
 msgid "No"
 msgstr "Non"
@@ -331,7 +335,15 @@ msgstr "le groupe"
 msgid "group (%s)"
 msgstr "groupe (%s)"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/save.php:58
+msgid "hidden"
+msgstr "caché"
+
+#: dyngroup/dyngroup/save.php:58
+msgid "it should be"
+msgstr "le groupe sera"
+
+#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/ajaxListGroups.php:54
 msgid "query"
 msgstr "requête"
 
@@ -339,9 +351,21 @@ msgstr "requête"
 msgid "request"
 msgstr "requête"
 
+#: dyngroup/dyngroup/save.php:57
+msgid "result"
+msgstr "résultat"
+
+#: dyngroup/dyngroup/save.php:57
+msgid "save as"
+msgstr "sauver en tant que"
+
 #: dyngroup/dyngroup/ajaxListGroups.php:56
 msgid "static group"
 msgstr "groupe statique"
+
+#: dyngroup/dyngroup/save.php:58
+msgid "visible"
+msgstr "visible"
 
 #~ msgid "Display '%s' content"
 #~ msgstr "Voir le contenu de %s"
