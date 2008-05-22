@@ -37,7 +37,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
                 
     # default values
     bind = ''
-    port = 8000
+    port = 9999
     ocsmapping = '/etc/mmc/pulse2/OcsNGMap.xml'
 
     pidfile = '/var/run/pulse2-inventoryserver.pid'
@@ -45,7 +45,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
     dbdriver = 'mysql'
     dbhost = 'localhost'
-    dbport = 9999
+    dbport = None
     dbname = 'inventory'
     dbuser = ''
     dbpasswd = ''
