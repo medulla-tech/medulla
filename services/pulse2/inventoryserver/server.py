@@ -83,6 +83,7 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
                 ret = Inventory().createNewInventory(hostname, inventory, date)
                 # TODO if ret == False : reply something else
                 if not ret:
+                    self.logger.error("no inventory created!")
                     self.send_response(500)
                     self.end_headers()
                     return
@@ -92,7 +93,6 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(compress(resp))
         except Exception, e:
-            self.logger.error(e.message)
             self.send_response(500)
             self.end_headers()
 
@@ -101,12 +101,12 @@ class InventoryGetService(Singleton):
         Inventory().activate()
         self.config = config
         self.bind = config.bind
-        self.port = config.port
+        self.port = int(config.port)
         self.xmlmapping = config.ocsmapping
         OcsMapping().initialize(self.xmlmapping)
 
     def run(self, server_class=BaseHTTPServer.HTTPServer, handler_class=InventoryServer):
-        server_address = (self.bind, self.port)
+        server_address = (self.bind, int(self.port))
         httpd = server_class(server_address, handler_class)
         httpd.serve_forever()
         
