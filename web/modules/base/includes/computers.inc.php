@@ -8,6 +8,10 @@ function delComputer($params) {
     return xmlCall("base.delComputer", $params);
 }
 
+function neededParamsAddComputer() {
+    return xmlCall("base.neededParamsAddComputer");
+}
+
 function getComputer($filter = '') {
     return xmlCall("base.getComputer", array($filter));
 }

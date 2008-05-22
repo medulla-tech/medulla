@@ -32,7 +32,7 @@ require("../../../modules/inventory/includes/xmlrpc.php");
 require("../../../modules/glpi/includes/xmlrpc.php");
 #require("../../../modules/msc/includes/xmlrpc.php");
 ######
-require("../../../modules/base/includes/computers.inc.php");
+require_once("../../../modules/base/includes/computers.inc.php");
 require("../../../modules/base/includes/computers_list.inc.php");
 
 global $conf;

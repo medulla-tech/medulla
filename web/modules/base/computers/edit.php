@@ -25,7 +25,7 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-require("modules/base/includes/computers.inc.php");
+require_once("modules/base/includes/computers.inc.php");
 
 if (isset($_POST["bcreate"])) {
     addComputer($_POST);
@@ -64,6 +64,17 @@ $f->add(
         new TrFormElement(_T("Description"), new InputTpl("computerdescription")),
         array("value" => $computerdescription)
         );
+
+$addParams = neededParamsAddComputer();
+foreach ($addParams as $p) {
+    if ($p[1] == 'string') {
+        $f->add(
+            new TrFormElement(_T($p[2]), new InputTpl($p[0])),
+            array("value" => '')
+        );
+    }
+    
+}
 
 $f->pop();
 
