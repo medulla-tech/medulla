@@ -161,7 +161,7 @@ $submod->setPriority(20);
 
 
 $page = new Page("index",_("Group list"));
-$submod->addPage(&$page);
+$submod->addPage($page);
 
 
 $page = new Page("add",_("Add a group"));
