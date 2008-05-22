@@ -762,8 +762,10 @@ class Machine(object):
                 ret[1]['ipHostNumber'] = []
                 ret[1]['macAddress'] = []
                 for n in net[1]:
-                    ret[1]['ipHostNumber'].append(n['IP'])
-                    ret[1]['macAddress'].append(n['MACAddress'])
+                    if n['IP'] != None:
+                        ret[1]['ipHostNumber'].append(n['IP'])
+                    if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
+                        ret[1]['macAddress'].append(n['MACAddress'])
         return ret
 
 class InventoryTable(object):
