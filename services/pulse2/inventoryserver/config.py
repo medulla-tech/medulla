@@ -45,7 +45,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
     dbdriver = 'mysql'
     dbhost = 'localhost'
-    dbport = None
+    dbport = 9999
     dbname = 'inventory'
     dbuser = ''
     dbpasswd = ''
