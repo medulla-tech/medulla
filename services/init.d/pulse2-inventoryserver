@@ -54,6 +54,7 @@ stop () {
         return 0
     fi
     kill -9 `cat /var/run/pulse2-inventoryserver.pid`
+    rm -f /var/run/pulse2-inventoryserver.pid
     # If return code is 0, everything went fine
 	RETVAL=$?
     if [ ${RETVAL} -eq 0 ]
