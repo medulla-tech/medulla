@@ -1,0 +1,4 @@
+title=Reboot
+titlefr=Redémarrer
+command=/bin/shutdown.exe -r 0 || /sbin/shutdown -r now
+

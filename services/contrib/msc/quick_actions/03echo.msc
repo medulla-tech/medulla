@@ -1,0 +1,4 @@
+title=Test StdErr / StdOut
+titlefr=Test StdErr / StdOut
+command=echo STDERR >&2; echo STDOUT
+

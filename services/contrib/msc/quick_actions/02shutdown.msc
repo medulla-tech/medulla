@@ -1,0 +1,3 @@
+title=Shutdown
+titlefr=Arréter
+command=/bin/shutdown.exe -s 0 || /sbin/shutdown -h now
