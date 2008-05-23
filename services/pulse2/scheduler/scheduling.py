@@ -164,6 +164,8 @@ def runUploadPhase(myCommandOnHostID):
         files_list = []
         for file in files:
             fname = file.split('##')[1]
+            if re.compile('^/').search(fname):
+                fname = re.compile('^/(.*)$').search(fname).group(1)
             files_list.append(os.path.join(source_path, fname))
         launcher = chooseLauncher()
         target_host = chooseClientIP(myT)
