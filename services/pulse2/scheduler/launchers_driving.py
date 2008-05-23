@@ -49,6 +49,6 @@ def chooseLauncher():
     launcher = launchers[random.sample(launchers.keys(), 1).pop()]
     uri = 'http://'
     if launcher['username'] != '':
-        uri += '%s:%s' % (launcher['username'], launcher['password'])
-    uri += '@%s:%d' % (launcher['host'], launcher['port'])
+        uri += '%s:%s@' % (launcher['username'], launcher['password'])
+    uri += '%s:%d' % (launcher['host'], int(launcher['port']))
     return uri
