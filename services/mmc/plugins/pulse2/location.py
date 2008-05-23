@@ -74,14 +74,14 @@ class ComputerLocationManager(Singleton):
             klass = self.components[self.main]
             return klass().doesUserHaveAccessToMachine(userid, machine_uuid)
         except KeyError:
-            return None
+            return True
 
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True):
         try:
             klass = self.components[self.main]
             return klass().doesUserHaveAccessToMachines(userid, machine_uuid, all)
         except KeyError:
-            return None
+            return True
 
 class ComputerLocationI:
     def getUserProfile(self, userid):
