@@ -31,12 +31,12 @@ require_once('modules/msc/includes/functions.php');
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
 # Display a specific command_on_host for a specific host
-if (isset($_GET['uuid']) and isset($_GET['coh_id'])) {
+if (isset($_GET['uuid']) and $_GET['uuid'] != '' and isset($_GET['coh_id'])) {
     print "<hr/><br/>";
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
-} else if (isset($_GET['uuid']) and !isset($_GET['coh_id'])) { # Display history for a specific host
+} else if (isset($_GET['uuid']) and $_GET['uuid'] != '' and !isset($_GET['coh_id'])) { # Display history for a specific host
     $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
     $ajax->setRefresh(5000);
     $ajax->display();
