@@ -37,7 +37,7 @@ if (isset($_POST["uuid"])) {
 $table = 'Hardware';
 $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"]));
 $date = $inv[0][1][0]['timestamp'];
-$date = $date[0] .'-'. $date[1] .'-'. $date[2]; // .' '. $date[3] .':'. $date[4] .':'. $date[4];
+$date = $date[0] .'-'. $date[1] .'-'. $date[2]; 
 
 ?>
 <p><?= _T("First apparition") . " : " . $date ?></p>

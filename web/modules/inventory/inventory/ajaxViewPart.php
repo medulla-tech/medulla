@@ -92,6 +92,7 @@ if ($_GET['uuid'] != '') {
 
     $result = array();
     $index = 0;
+    $params = array();
     foreach ($machines as $machine) {
         $name = $machine[0];
         if (count($machine[1]) == 0) {
@@ -107,6 +108,7 @@ if ($_GET['uuid'] != '') {
             }
             $index += 1;
         }
+        $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
     }
     $n = null;
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
@@ -132,9 +134,9 @@ if ($_GET['uuid'] != '') {
     }
 
     if ($n != null) {
-        $n->addActionItem(new ActionItem(_T("View"),"view","voir","inventaire", "inventory"));
-        $n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire", "inventory"));
-        $n->disableFirstColumnActionLink();
+        $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
+        $n->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","infos","inventory", "inventory", "inventory"));
+        $n->setParamInfo($params);
         $n->setTableHeaderPadding(1);
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter));
