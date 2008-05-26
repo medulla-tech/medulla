@@ -5,6 +5,7 @@ $sidemenu= new SideMenu();
 $sidemenu->setClass("inventory");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("General"), "inventory", "inventory", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Hardware"), "inventory", "inventory", "hardware"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Software"), "inventory", "inventory", "software"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Network"), "inventory", "inventory", "network"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Controller"), "inventory", "inventory", "controller"));
 

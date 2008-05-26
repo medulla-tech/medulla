@@ -24,47 +24,24 @@
 
 global $table, $label, $filter;
 
+require_once("modules/inventory/includes/xmlrpc.php");
+
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-/**
- * provide navigation in ajax for user
- */
-
-?>
-
-<form name="inventoryForm" id="inventoryForm" action="#">
-
-	<div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-
-	<div id="searchSpan" class="searchbox" style="float: right;">
-		<img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> 
-		<span class="searchfield">
-			<input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearchMachine('<?php echo "$table', '$label', '$filter"; ?>'); return false;" />
-			<img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;" onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
-		</span>
-	</div>
-
-<?php
-
 $p = new PageGenerator($label._T(" list"));
 $p->setSideMenu($sidemenu);
-$p->display(); 
+$p->display();
 
+$url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table;
+foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
+    $url .= "&$get=".$_GET[$get];
+}
+$ajax = new AjaxFilter($url);
 
-require("javascript.php");
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
 
 ?>
-
-<script type="text/javascript">
-<?php
-	echo "pushSearchMachine('$table', '$label', '$filter');";
-?>
-</script>
-</form>
-
-<div id="inventoryContainer">
-</div>
-
-<a href='<?= urlStr("inventory/inventory/csv", array('table'=>$table)) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
 
