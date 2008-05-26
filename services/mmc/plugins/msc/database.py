@@ -362,6 +362,7 @@ class MscDatabase(Singleton):
             "",
             files,
             targets,
+            'push',
             gid,
             'enable',
             True,
