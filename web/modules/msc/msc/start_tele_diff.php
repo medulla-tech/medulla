@@ -107,6 +107,7 @@ $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"),
 // form preseeding
 $f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],     "hide" => True));
 $f->add(new HiddenTpl("name"),                                  array("value" => $hostname,         "hide" => True));
+$f->add(new HiddenTpl("hostname"),                              array("value" => $hostname,         "hide" => True));
 $f->add(new HiddenTpl("uuid"),                                  array("value" => $uuid,             "hide" => True));
 $f->add(new HiddenTpl("gid"),                                   array("value" => $gid,              "hide" => True));
 $f->add(new HiddenTpl("from"),                                  array("value" => $from,             "hide" => True));
