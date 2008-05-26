@@ -29,11 +29,11 @@ require_once("modules/inventory/includes/xmlrpc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$p = new PageGenerator($label._T(" list"));
+$p = new PageGenerator($label.' '._T(" list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table;
+$url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table.'&from=inventory%2Finventory%2F'.strtolower($table);
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
     $url .= "&$get=".$_GET[$get];
 }

@@ -24,7 +24,7 @@
 
 require_once("modules/inventory/includes/xmlrpc.php");
 
-$url = 'modules/inventory/inventory/ajaxViewPart.php?';
+$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
     $url .= "&$get=".$_GET[$get];
 }

@@ -35,6 +35,7 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
 $filter = $_GET["filter"];
+$from = $_GET['from'];
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
@@ -60,7 +61,7 @@ if ($_GET['uuid'] != '') {
         if (in_array($k, $graph) && count($v) > 1) {
             $type = ucfirst($_GET['part']);
             # TODO should give the tab in the from param
-            $nhead = "$k <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$k";
+            $nhead = "$k <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$k";
             foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                 $nhead .= "&$get=".$_GET[$get];
             }
@@ -115,7 +116,7 @@ if ($_GET['uuid'] != '') {
             if (in_array($head, $graph) && count($vals) > 1) {
                 $type = ucfirst($_GET['part']);
                 # TODO should give the tab in the from param
-                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$head";
+                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$head";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
