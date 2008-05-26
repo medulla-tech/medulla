@@ -25,7 +25,7 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
             self.logger.debug("%s start" % (time.time()))
             content = self.rfile.read(int(self.headers['Content-Length']))
             if self.headers['Content-Type'] == 'application/x-compress':
-                content = decompress(content)
+                content = decompressobj().decompress(content)
     
             self.logger.debug("%s decompressed" % (time.time()))
             try:
