@@ -33,7 +33,7 @@ msgstr "Inventaire de %s"
 #: inventory/inventory/body.php:32
 #, php-format
 msgid "%s's list"
-msgstr "liste des "
+msgstr "liste des %s"
 
 #: inventory/inventory/index.php:27
 msgid "Bios"
