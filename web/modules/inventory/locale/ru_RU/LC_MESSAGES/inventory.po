@@ -7,17 +7,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-09 06:30+0200\n"
+"POT-Creation-Date: 2008-05-11 15:27+0200\n"
 "PO-Revision-Date: 2008-04-05 21:38+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: inventory/inventory/body.php:50
-msgid " list"
-msgstr "список"
 
 #: inventory/inventory/tabs.php:11
 #, fuzzy, php-format
@@ -29,12 +25,17 @@ msgstr "Инвентаризация %s"
 msgid "%s's inventory"
 msgstr "Инвентаризация %s"
 
+#: inventory/inventory/body.php:32
+#, fuzzy, php-format
+msgid "%s's list"
+msgstr "список"
+
 #: inventory/inventory/index.php:27
 msgid "Bios"
 msgstr "BIOS"
 
 #: inventory/inventory/controller.php:27
-#: inventory/inventory/localSidebar.php:9 inventory/infoPackage.inc.php:49
+#: inventory/inventory/localSidebar.php:10 inventory/infoPackage.inc.php:49
 msgid "Controller"
 msgstr "Контроллер"
 
@@ -42,7 +43,7 @@ msgstr "Контроллер"
 msgid "Csv's export"
 msgstr ""
 
-#: inventory/inventory/drive.php:27 inventory/inventory/localSidebar.php:12
+#: inventory/inventory/drive.php:27 inventory/inventory/localSidebar.php:13
 #: inventory/infoPackage.inc.php:52
 msgid "Drive"
 msgstr "Привод"
@@ -60,8 +61,8 @@ msgstr "Общее"
 msgid "Graphique"
 msgstr "Графика"
 
-#: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/infoPackage.inc.php:45
+#: inventory/inventory/tabs.php:13 inventory/inventory/hardware.php:27
+#: inventory/inventory/localSidebar.php:7 inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr "Оборудование"
 
@@ -69,8 +70,7 @@ msgstr "Оборудование"
 msgid "Header"
 msgstr "Заголовок"
 
-#: inventory/inventory/ajaxFilter.php:130
-#: inventory/inventory/ajaxViewPart.php:135 inventory/infoPackage.inc.php:78
+#: inventory/inventory/ajaxViewPart.php:138 inventory/infoPackage.inc.php:78
 msgid "Informations"
 msgstr "Информация"
 
@@ -78,7 +78,7 @@ msgstr "Информация"
 msgid "Informations supplementaires"
 msgstr "Дополнительная информация"
 
-#: inventory/inventory/input.php:27 inventory/inventory/localSidebar.php:13
+#: inventory/inventory/input.php:27 inventory/inventory/localSidebar.php:14
 #: inventory/infoPackage.inc.php:54
 msgid "Input"
 msgstr "Ввод"
@@ -87,85 +87,64 @@ msgstr "Ввод"
 msgid "Inventory"
 msgstr "Инвентаризация"
 
-#: inventory/inventory/view.php:48
-#, php-format
-msgid "Inventory of %s"
-msgstr "Инвентаризация %s"
-
 #: inventory/infoPackage.inc.php:123
 msgid "Inventory on machine"
 msgstr "Инвентаризация машины"
 
-#: inventory/inventory/memory.php:27 inventory/inventory/localSidebar.php:14
+#: inventory/inventory/memory.php:27 inventory/inventory/localSidebar.php:15
 #: inventory/infoPackage.inc.php:56
 msgid "Memory"
 msgstr "Память"
 
-#: inventory/inventory/localSidebar.php:15 inventory/inventory/monitor.php:27
+#: inventory/inventory/localSidebar.php:16 inventory/inventory/monitor.php:27
 #: inventory/infoPackage.inc.php:58
 msgid "Monitor"
 msgstr "Монитор"
 
-#: inventory/inventory/network.php:27 inventory/inventory/localSidebar.php:8
+#: inventory/inventory/network.php:27 inventory/inventory/localSidebar.php:9
 #: inventory/infoPackage.inc.php:47
 msgid "Network"
 msgstr "Сеть"
-
-#: inventory/inventory/ajaxFilter.php:38 inventory/inventory/ajaxFilter.php:45
-msgid "Next"
-msgstr "Следующее"
 
 #: inventory/inventory/pci.php:27
 msgid "Pci"
 msgstr "PCI"
 
-#: inventory/inventory/localSidebar.php:16 inventory/inventory/port.php:27
+#: inventory/inventory/localSidebar.php:17 inventory/inventory/port.php:27
 #: inventory/infoPackage.inc.php:60
 msgid "Port"
 msgstr "Порт"
 
-#: inventory/inventory/ajaxFilter.php:24 inventory/inventory/ajaxFilter.php:30
-msgid "Previous"
-msgstr "Предыдущее"
-
-#: inventory/inventory/printer.php:27 inventory/inventory/localSidebar.php:17
+#: inventory/inventory/printer.php:27 inventory/inventory/localSidebar.php:18
 #: inventory/infoPackage.inc.php:62
 msgid "Printer"
 msgstr "Принтер"
-
-#: inventory/inventory/view.php:78
-msgid "Properties"
-msgstr "Свойства"
 
 #: inventory/inventory/slot.php:27
 msgid "Slot"
 msgstr "Слот"
 
-#: inventory/inventory/software.php:27 inventory/infoPackage.inc.php:71
+#: inventory/inventory/software.php:27 inventory/inventory/localSidebar.php:8
+#: inventory/infoPackage.inc.php:71
 msgid "Software"
 msgstr "Программное обеспечение"
 
-#: inventory/inventory/localSidebar.php:18 inventory/inventory/sound.php:27
+#: inventory/inventory/localSidebar.php:19 inventory/inventory/sound.php:27
 #: inventory/infoPackage.inc.php:64
 msgid "Sound"
 msgstr "Звук"
 
-#: inventory/inventory/storage.php:27 inventory/inventory/localSidebar.php:19
+#: inventory/inventory/storage.php:27 inventory/inventory/localSidebar.php:20
 #: inventory/infoPackage.inc.php:66
 msgid "Storage"
 msgstr "Накопители"
 
-#: inventory/inventory/view.php:79
-msgid "Value"
-msgstr "Значение"
-
 #: inventory/inventory/videocard.php:27
-#: inventory/inventory/localSidebar.php:20 inventory/infoPackage.inc.php:68
+#: inventory/inventory/localSidebar.php:21 inventory/infoPackage.inc.php:68
 msgid "VideoCard"
 msgstr "Видеокарта"
 
-#: inventory/inventory/ajaxFilter.php:129
-#: inventory/inventory/ajaxViewPart.php:134
+#: inventory/inventory/ajaxViewPart.php:137
 #: inventory/inventory/ajaxViewHard.php:107 inventory/infoPackage.inc.php:74
 msgid "View"
 msgstr "Вид"
@@ -173,3 +152,18 @@ msgstr "Вид"
 #: inventory/inventory/graphs.php:25
 msgid "back"
 msgstr "назад"
+
+#~ msgid "Inventory of %s"
+#~ msgstr "Инвентаризация %s"
+
+#~ msgid "Next"
+#~ msgstr "Следующее"
+
+#~ msgid "Previous"
+#~ msgstr "Предыдущее"
+
+#~ msgid "Properties"
+#~ msgstr "Свойства"
+
+#~ msgid "Value"
+#~ msgstr "Значение"
