@@ -30,7 +30,7 @@ if (isset($_POST["uuid"])) {
 
 ?>
 
-<h2><?= _T("Informations supplementaires") ?></h2>
+<h2><?= _T("Informations supplementaires", 'inventory') ?></h2>
 
 <?php
 
@@ -40,5 +40,5 @@ $date = $inv[0][1][0]['timestamp'];
 $date = $date[0] .'-'. $date[1] .'-'. $date[2]; 
 
 ?>
-<p><?= _T("First apparition") . " : " . $date ?></p>
+<p><?= _T("First apparition", 'inventory') . " : " . $date ?></p>
 

@@ -10,7 +10,7 @@ $field = $_GET['field'];
 $filter = $_GET['filter'];
 $from = $_GET['from'];
 
-$p = new PageGenerator(_T("Graphique"));
+$p = new PageGenerator(_T("Graphique", 'inventory'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -22,7 +22,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
     $params[$get] = $_GET[$get];
 }
 
-$lnk = new RenderedLink(urlStr($from, $params), _T('back')); //array('tab'=>$_GET['tab'], 'filter'=>$filter));
+$lnk = new RenderedLink(urlStr($from, $params), _T('back', 'inventory')); //array('tab'=>$_GET['tab'], 'filter'=>$filter));
 $lnk->display();
 
 ?>

@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'Sound';
-$label = _T('Sound');
+$label = _T('Sound', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

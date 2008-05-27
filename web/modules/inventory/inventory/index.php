@@ -24,7 +24,7 @@
 
 global $table, $label, $hardware;
 $table = 'Bios';
-$label = _T('Bios');
+$label = _T('Bios', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

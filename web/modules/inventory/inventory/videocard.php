@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'VideoCard';
-$label = _T('VideoCard');
+$label = _T('VideoCard', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

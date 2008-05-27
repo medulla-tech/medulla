@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'Pci';
-$label = _T('Pci');
+$label = _T('Pci', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

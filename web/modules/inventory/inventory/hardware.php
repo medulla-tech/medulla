@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'Hardware';
-$label = _T('Hardware');
+$label = _T('Hardware', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

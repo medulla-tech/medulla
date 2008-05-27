@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'Printer';
-$label = _T('Printer');
+$label = _T('Printer', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

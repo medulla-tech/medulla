@@ -29,7 +29,7 @@ require_once("modules/inventory/includes/xmlrpc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$p = new PageGenerator($label.' '._T(" list"));
+$p = new PageGenerator(sprintf(_T("%s's list", "inventory"), $label));
 $p->setSideMenu($sidemenu);
 $p->display();
 

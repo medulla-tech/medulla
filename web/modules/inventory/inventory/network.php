@@ -24,7 +24,7 @@
 
 global $table, $label, $filter;
 $table = 'Network';
-$label = _T('Network');
+$label = _T('Network', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");
