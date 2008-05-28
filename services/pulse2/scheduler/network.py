@@ -31,6 +31,42 @@ from pulse2.scheduler.config import SchedulerConfig
 # MMC
 import mmc.support.mmctools
 
+def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
+    # TODO: a cache system ?!
+    def _probecb(result):
+        ptype = "\n".join(result)
+        logging.getLogger().debug(result)
+        if ptype == 'FAILED':
+            logging.getLogger().debug('scheduler %s: can ping, but can\'t connect to client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+            return 1
+        logging.getLogger().debug('scheduler %s: can connect to client \'%s\' (got %s)' % (SchedulerConfig().name, client, ptype))
+        return 2
+    def _probeeb(result):
+        logging.getLogger().debug('scheduler %s: can ping, but can\'t connect to client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+        return 1
+    def _pingcb(result, client = client):
+        myresult = "\n".join(result)
+        if myresult == 'OK':
+            command = '%s %s' % (SchedulerConfig().prober_path, client)
+            logging.getLogger().debug(command)
+            return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_probecb).addErrback(_probeeb)
+        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got %s)' % (SchedulerConfig().name, client, myresult))
+        return 0
+    def _pingeb(result):
+        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
+        return 0
+    command = '%s %s' % (SchedulerConfig().ping_path, client)
+    logging.getLogger().debug(command)
+    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_pingcb).addErrback(_pingeb)
+
+
 def probeClient(uuid, fqdn, shortname, ips, macs):
     idData = [
          { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},

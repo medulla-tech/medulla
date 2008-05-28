@@ -21,17 +21,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+$ret = 0;
 $pid = open(PIPE, "ssh -tt -o StrictHostKeyChecking=no -o Batchmode=yes root@".$ARGV[0]." 'echo \$OS;uname' |") or die $!;
 eval {
     local $SIG{ALRM} = sub { die "TIMEDOUT" };
     alarm(20);
     while(<PIPE>) { print $_; };
-    close(PIPE);
+    $ret = close(PIPE);
     alarm(0);
 };
 if ($@) {
     die $@ unless $@ =~ /TIMEDOUT/;
     kill 9, $pid;
-    close(PIPE);  ## needed??
+    $ret = close(PIPE);  ## needed??
     $? ||= 9;
 }
+if (not $ret) {
+    print "FAILED\n";
+}
+exit not $ret;
