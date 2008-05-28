@@ -722,9 +722,10 @@ class Inventory(DyngroupDatabaseHelper):
             tt = self.table[item]
             lk = self.klass['has'+item]
             lt = self.table['has'+item]
-            ts = session.query(tk).select_from(tt.join(lt)).filter(lt.c.machine == uuid)
-            for t in ts:
-                session.delete(t)
+# TODO : check if more than one machine use this entry
+#            ts = session.query(tk).select_from(tt.join(lt)).filter(lt.c.machine == uuid)
+#            for t in ts:
+#                session.delete(t)
             ls = session.query(lk).filter(lt.c.machine == uuid)
             for l in ls:
                 i = session.query(InventoryTable).filter(self.inventory.c.id == l.inventory).first()
