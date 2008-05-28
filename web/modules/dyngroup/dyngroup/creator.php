@@ -61,7 +61,6 @@ if (quickGet('req') && quickGet('param')) {
 //TODO put in class
 $modules = getPossiblesModules();
 if (count($modules) == 1) {
-    print "<table><tr><td>".sprintf(_T("Only '%s' module to query", "dyngroup"), $modules[0])."</td></tr></table>";
     quickSet('add_req', $modules[0]);
 } else {
     print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
