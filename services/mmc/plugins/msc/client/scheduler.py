@@ -96,6 +96,30 @@ def probe_client(scheduler, computer):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
+def ping_and_probe_client(scheduler, computer):
+    def parseResult(result):
+        logging.getLogger().debug('Ping then probe client %s: %s' % (computer, result))
+        return result
+    def parseError(reason):
+        # FIXME: handle error
+        return False
+    # probe is done using available data:
+    # - uuid
+    # - fullname
+    # - cn[]
+    # - ipHostNumber[]
+    # - macAddress[]
+    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
+        'ping_and_probe_client',
+        computer[1]['objectUUID'][0],
+        computer[1]['fullname'],
+        computer[1]['cn'][0],
+        computer[1]['ipHostNumber'],
+        computer[1]['macAddress'],
+    )
+    mydeffered.addCallback(parseResult).addErrback(parseResult)
+    return mydeffered
+
 def select_scheduler(scheduler_name):
     schedulers = MscConfig('msc').schedulers
     if not scheduler_name:

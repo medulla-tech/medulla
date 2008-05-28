@@ -130,6 +130,15 @@ class RpcProxy(RpcProxyI):
     def scheduler_start_all_commands(self, scheduler):
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_all_commands(scheduler))
 
+    def scheduler_ping_and_probe_client(self, scheduler, uuid):
+        ctx = self.currentContext
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        try: # FIXME: dirty bugfix, should be factorized upstream
+            computer[1]['fullname']
+        except KeyError:
+            computer[1]['fullname'] = computer[1]['cn'][0]
+        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer))
+            
     def scheduler_ping_client(self, scheduler, uuid):
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
