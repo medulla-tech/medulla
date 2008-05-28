@@ -34,6 +34,10 @@ DAEMON="/usr/sbin/pulse2-inventoryserver"
 # Function to start daemon
 start () {
 	echo -n "Starting ${DESC} : "
+    if [ -f /var/run/pulse2-inventoryserver.pid ]; then
+        echo "already running"
+        return 0
+    fi
 	${DAEMON} >/dev/null 2>&1
 	RETVAL=$?
 	# If return code is 0, everything went fine
