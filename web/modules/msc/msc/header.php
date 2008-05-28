@@ -22,21 +22,5 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-require('modules/msc/includes/widgets.inc.php');
-
-if ($_GET['uuid']) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
-    if ($machine->uuid != $_GET['uuid']) {
-        $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
-        $msc_host->headerDisplay();
-    } else {
-        $msc_host = new RenderedMSCHost($machine);
-        $msc_host->ajaxDisplay();
-    }
-} else {
-    $group = new Group($_GET['gid']);
-}
-
 ?>
 

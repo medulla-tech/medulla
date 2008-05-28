@@ -26,6 +26,10 @@ function scheduler_start_all_commands($scheduler) {
     return xmlCall('msc.scheduler_start_all_commands', array($scheduler));
 }
 
+function scheduler_ping_and_probe_client($scheduler, $client) {
+    return xmlCall('msc.scheduler_ping_and_probe_client', array($scheduler, $client));
+}
+    
 function scheduler_ping_client($scheduler, $client) {
     return xmlCall('msc.scheduler_ping_client', array($scheduler, $client));
 }

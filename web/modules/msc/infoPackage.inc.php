@@ -132,6 +132,11 @@ $page->setFile("modules/msc/msc/packages.php");
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("ajaxPingProbe", _T("Ping and probe", "msc"));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setFile("modules/msc/msc/ajaxPingProbe.php");
+$submod->addPage($page);
+
 $page = new Page("ajaxPing", _T("Ping", "msc"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxPing.php");

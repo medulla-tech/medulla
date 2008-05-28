@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/mirror_api.php');
@@ -174,6 +175,10 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
     } else { // We found a matching computer, display QActions and available packages
+        $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
+        $msc_host = new RenderedMSCHost($machine);
+        $msc_host->ajaxDisplay();
+
         $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
         $label->display();
         foreach (array('module', 'submod', 'tab', 'uuid', 'hostname') as $param) {
