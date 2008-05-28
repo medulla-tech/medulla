@@ -58,16 +58,18 @@ if ($_GET['uuid'] != '') {
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
     foreach ($h as $k => $v) {
         if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
-        if (in_array($k, $graph) && count($v) > 1) {
-            $type = ucfirst($_GET['part']);
-            # TODO should give the tab in the from param
-            $nhead = "$k <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$k";
-            foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
-                $nhead .= "&$get=".$_GET[$get];
+            if (in_array($k, $graph) && count($v) > 1) {
+                $type = ucfirst($_GET['part']);
+                # TODO should give the tab in the from param
+                $nhead = _T($k, 'inventory')." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$k";
+                foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
+                    $nhead .= "&$get=".$_GET[$get];
+                }
+                $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
+                $k = $nhead;
+            } else {
+                $k = _T($k, 'inventory');
             }
-            $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
-            $k = $nhead;
-        }
        
             if ($n == null) {
                 $n = new OptimizedListInfos($v, $k);
@@ -118,12 +120,14 @@ if ($_GET['uuid'] != '') {
             if (in_array($head, $graph) && count($vals) > 1) {
                 $type = ucfirst($_GET['part']);
                 # TODO should give the tab in the from param
-                $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$head";
+                $nhead = _T($head, 'inventory')." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=$from&field=$head";
                 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
                     $nhead .= "&$get=".$_GET[$get];
                 }
                 $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
                 $head = $nhead;
+            } else {
+                $head = _T($head, 'inventory');
             }
             if ($n == null) {
                 $n = new OptimizedListInfos($vals, $head);

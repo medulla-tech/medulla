@@ -90,12 +90,14 @@ foreach ($sorted_result as $head => $vals) {
     if (in_array($head, $graph) && count($vals) > 1) {
         $type = ucfirst($types[$head]);
         # TODO should give the tab name in the from param
-        $nhead = "$head <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$head";
+        $nhead = _T($head, 'inventory')." <a href='main.php?module=inventory&submod=inventory&action=graphs&type=$type&from=base%2Fcomputers%2Finvtabs&field=$head";
         foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
             $nhead .= "&$get=".$_GET[$get];
         }
         $nhead .= "' alt='graph'><img src='modules/inventory/img/graph.png'/></a>";
         $head = $nhead;
+    } else {
+        $head = _T($head, 'inventory');
     }
     if ($n == null) {
         $n = new OptimizedListInfos($vals, $head);
