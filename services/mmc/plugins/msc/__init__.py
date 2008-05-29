@@ -365,10 +365,8 @@ def pa_isAvailable(p_api, pid, mirror):
 #############################
 def _p_apiuniq(list, x):
   try:
-    if list.index(x) == -1:
-      pass
+    list.index(x)
   except:
-    print "no "+str(x)+" in lis"
     list.append(x)
 
 def _merge_list(list, x):
@@ -416,46 +414,32 @@ def _adv_getAllPackages(ctx, filt):
                 machines = map(lambda m: m.uuid, ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
 
             # TODO split uuid and name
-            #machines = filt['group'].split("##")
-            logging.getLogger().debug("getApiPackages")
-            logging.getLogger().debug(machines)
             package_apis = ma_getApiPackages(machines)
-            logging.getLogger().debug("getMirrors")
             mirror = ma_getMirrors(machines)
-
-            # TODO check all the levels, not only the 2 first ones...
+            
             mergedlist = []
             for i in range(len(package_apis)):
-                mergedlist.insert(i, [(package_apis[i][0], mirror[i]), (package_apis[i][1],  mirror[i])])
+                tmpmerged = []
+                for papi in package_apis[i]:
+                    tmpmerged.append((papi, mirror[i]))
+                mergedlist.insert(i, tmpmerged)
 
-            plist0 = []
-            plist1 = []
-            map(lambda x: _p_apiuniq(plist0, x[0]), mergedlist)
-            map(lambda x: _p_apiuniq(plist1, x[1]), mergedlist)
+            plists = []
+            for i in range(len(mergedlist[0])): # all line must have the same size!
+                plists.insert(i, [])
+                map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
 
-            logging.getLogger().debug(plist0)
-            logging.getLogger().debug(plist1)
+            logging.getLogger().debug(plists)
+            
+            for x in range(len(plists)):
+                localepackages = []
+                for p_api in plists[x]:
+                    localepackages.append(pa_getAllPackages(p_api[0], p_api[1]))
 
-            x = 0
-            localepackages = []
-            for p_api in plist0:
-                localepackages.append(pa_getAllPackages(p_api[0], p_api[1]))
-
-            # HERE is a possible source of bugs... we only remember one of the p_api, so if they aren't synchrones, it can be a pb...
-            lp = localepackages[0]
-            map(lambda x: _merge_list(lp, x), localepackages)
-            packages.extend(map(lambda m: [m, x, plist0[0][0]], lp))
-
-            x += 1
-            localepackages = []
-            for p_api in plist1:
-                localepackages.append(pa_getAllPackages(p_api[0], p_api[1]))
-
-            logging.getLogger().debug(localepackages)
-            lp = localepackages[0]
-            map(lambda x: _merge_list(lp, x), localepackages)
-            packages.extend(map(lambda m: [m, x, plist1[0][0]], lp))
-
+                lp = localepackages[0]
+                map(lambda p: _merge_list(lp, p), localepackages)
+                packages.extend(map(lambda m: [m, x, plists[x][0][0]], lp))
+                
     except KeyError:
         pass
     try:
