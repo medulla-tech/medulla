@@ -22,54 +22,92 @@ class MirrorApi(Singleton):
             self.server = xmlrpclib.Server(self.server_addr)
             self.xmlrpc = self.server.xmlrpc
             self.initialized_failed = False
-        except Exception, e:
-            self.logger.error("MirrorApi cant connect to %s" % (self.server_addr))
-            self.logger.debug(e)
+        except:
+            self.logger.warn("MirrorApi cant connect to %s" % (self.server_addr))
             self.initialized_failed = True
 
     def getMirror(self, machine):
         if self.initialized_failed:
             return []
-        return self.xmlrpc.getMirror(machine)
+        try:
+            return self.xmlrpc.getMirror(machine)
+        except:
+            self.logger.warn("MirrorApi:getMirror %s fails"%(str(machine)))
+            return []
 
     def getMirrors(self, machines):
         if self.initialized_failed:
             return []
-        return self.xmlrpc.getMirrors(machines)
+        try:
+            return self.xmlrpc.getMirrors(machines)
+        except:
+            self.logger.warn("MirrorApi:getMirrors %s fails"%(str(machines)))
+            return []
 
     def getFallbackMirror(self, machine):
         if self.initialized_failed:
             return []
-        return self.xmlrpc.getFallbackMirror(machine)
+        try:
+            return self.xmlrpc.getFallbackMirror(machine)
+        except:
+            self.logger.warn("MirrorApi:getFallbackMirror %s fails"%(str(machine)))
+            return []
 
     def getFallbackMirrors(self, machines):
         if self.initialized_failed:
             return []
-        return self.xmlrpc.getFallbackMirrors(machines)
+        try:
+            return self.xmlrpc.getFallbackMirrors(machines)
+        except:
+            self.logger.warn("MirrorApi:getFallbackMirrors %s fails"%(str(machines)))
+            return []
 
     def getApiPackage(self, machine):
         self.logger.debug(machine)
         if self.initialized_failed:
             return []
-        ret = self.xmlrpc.getApiPackage(machine)
-        self.logger.debug(ret)
-        return ret
+        try:
+            return self.xmlrpc.getApiPackage(machine)
+        except:
+            self.logger.warn("MirrorApi:getApiPackage %s fails"%(str(machine)))
+            return []
 
     def getApiPackages(self, machines):
         if self.initialized_failed:
             return []
-        return self.xmlrpc.getApiPackages(machines)
+        try:
+            return self.xmlrpc.getApiPackages(machines)
+        except:
+            self.logger.warn("MirrorApi:getApiPackages %s fails"%(str(machines)))
+            return []
 
 class Mirror:
     def __init__(self, server):
         self.logger = logging.getLogger()
         self.logger.debug('Mirror will connect to %s' % (server))
-        self.server = xmlrpclib.Server(server)
-        self.xmlrpc = self.server.xmlrpc
+        try:
+            self.server = xmlrpclib.Server(server)
+            self.xmlrpc = self.server.xmlrpc
+            self.initialized_failed = False
+        except:
+            self.logger.warn("Mirror cant connect to %s" % (server))
+            self.initialized_failed = True
         
     def isAvailable(self, pid):
-        return self.xmlrpc.isAvailable(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.isAvailable(pid)
+        except: # when the api is not available, the package is also unavailable
+            self.logger.warn("Mirror:isAvailable %s fails"%(pid))
+            return False
 
     def getFilePath(self, fid):
-        return self.xmlrpc.getFilePath(fid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getFilePath(fid)
+        except:
+            self.logger.warn("Mirror:getFilePath %s fails"%(fid))
+            return False
    

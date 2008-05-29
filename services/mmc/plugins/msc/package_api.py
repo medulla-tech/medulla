@@ -22,23 +22,53 @@ class PackageA:
 
         self.server_addr = 'http://'+server+':'+str(port) + mountpoint
         self.logger.debug('PackageA will connect to %s' % (self.server_addr))
-        self.server = xmlrpclib.Server(self.server_addr)
-        self.xmlrpc = self.server.xmlrpc
+        try:
+            self.server = xmlrpclib.Server(self.server_addr)
+            self.xmlrpc = self.server.xmlrpc
+            self.initialized_failed = False
+        except:
+            self.logger.warn('PackageA failed to connect to %s' % (self.server_addr))
+            self.initialized_failed = True
 
     def getAllPackages(self, mirror = None):
-        pa = self.xmlrpc.getAllPackages(mirror)
-        return self.xmlrpc.getAllPackages(mirror)
+        if self.initialized_failed:
+            return []
+        try:
+            return self.xmlrpc.getAllPackages(mirror)
+        except:
+            self.logger.warn('PackageA:getAllPackages fails %s'%(str(mirror)))
+            return []
 
     def getPackageDetail(self, pid):
-        return self.xmlrpc.getPackageDetail(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageDetail(pid)
+        except:
+            self.logger.warn('PackageA:getPackageDetail fails %s'%(str(pid)))
+            return False
 
     def getPackageLabel(self, pid):
-        return self.xmlrpc.getPackageLabel(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageLabel(pid)
+        except:
+            self.logger.warn('PackageA:getPackageLabel fails %s'%(str(pid)))
+            return False
 
     def getPackageVersion(self, pid):
-        return self.xmlrpc.getPackageVersion(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageVersion(pid)
+        except:
+            self.logger.warn('PackageA:getPackageVersion fails %s'%(str(pid)))
+            return False
 
     def getPackageSize(self, pid):
+        if self.initialized_failed:
+            return 0
         size = 0
         try:
             size = self.xmlrpc.getPackageSize(pid)
@@ -47,34 +77,94 @@ class PackageA:
         return size
 
     def getPackageInstallInit(self, pid):
-        return self.xmlrpc.getPackageInstallInit(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageInstallInit(pid)
+        except:
+            self.logger.warn('PackageA:getPackageInstallInit fails %s'%(str(pid)))
+            return False
 
     def getPackagePreCommand(self, pid):
-        return self.xmlrpc.getPackagePreCommand(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackagePreCommand(pid)
+        except:
+            self.logger.warn('PackageA:getPackagePreCommand fails %s'%(str(pid)))
+            return False
 
     def getPackageCommand(self, pid):
-        return self.xmlrpc.getPackageCommand(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageCommand(pid)
+        except:
+            self.logger.warn('PackageA:getPackageCommand fails %s'%(str(pid)))
+            return False
 
     def getPackagePostCommandSuccess(self, pid):
-        return self.xmlrpc.getPackagePostCommandSuccess(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackagePostCommandSuccess(pid)
+        except:
+            self.logger.warn('PackageA:getPackagePostCommandSuccess fails %s'%(str(pid)))
+            return False
 
     def getPackagePostCommandFailure(self, pid):
-        return self.xmlrpc.getPackagePostCommandFailure(pid)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackagePostCommandFailure(pid)
+        except:
+            self.logger.warn('PackageA:getPackagePostCommandFailure fails %s'%(str(pid)))
+            return False
 
     def getPackageFiles(self, pid):
-        return self.xmlrpc.getPackageFiles(pid)
+        if self.initialized_failed:
+            return []
+        try:
+            return self.xmlrpc.getPackageFiles(pid)
+        except:
+            self.logger.warn('PackageA:getPackageFiles fails %s'%(str(pid)))
+            return []
 
     def getFileChecksum(self, file):
-        return self.xmlrpc.getFileChecksum(file)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getFileChecksum(file)
+        except:
+            self.logger.warn('PackageA:getFileChecksum fails %s'%(str(file)))
+            return False
 
     def getPackagesIds(self, label):
-        return self.xmlrpc.getPackagesIds(label)
+        if self.initialized_failed:
+            return []
+        try:
+            return self.xmlrpc.getPackagesIds(label)
+        except:
+            self.logger.warn('PackageA:getPackagesIds fails %s'%(str(label)))
+            return []
 
     def getPackageId(self, label, version):
-        return self.xmlrpc.getPackageId(label, version)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getPackageId(label, version)
+        except:
+            self.logger.warn('PackageA:getPackageId fails %s'%(str(label), str(version)))
+            return False
 
     def isAvailable(self, pid, mirror):
-        return self.xmlrpc.isAvailable(pid, mirror)
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.isAvailable(pid, mirror)
+        except:
+            self.logger.warn('PackageA:isAvailable fails %s %s'%(str(pid), str(mirror)))
+            return False
 
 
 
