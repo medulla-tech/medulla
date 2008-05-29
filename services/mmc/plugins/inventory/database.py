@@ -242,8 +242,9 @@ class Inventory(DyngroupDatabaseHelper):
         query = self.__machinesOnlyQuery(ctx, pattern, session)
         query = query.order_by(asc(self.machine.c.Name))
         try:
-            query = query.offset(pattern['min'])
-            query = query.limit(int(pattern['max']) - int(pattern['min']))
+            if pattern['max'] != -1:
+                query = query.offset(pattern['min'])
+                query = query.limit(int(pattern['max']) - int(pattern['min']))
         except:
             pass
 
