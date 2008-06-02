@@ -24,21 +24,8 @@
 
 require_once("modules/glpi/includes/xmlrpc.php");
 
-?>
-
-<style type="text/css">
-
-#expertMode table {
-  background-color: #FEE;
-}
-
-</style>
-
-<table>
-
-<?php
-
 $inv = getLastMachineGlpiPart($_GET["uuid"], $_GET['part']);
+if (!is_array($inv)) $inv = array();
 
 $all = array();
 $i = 0;
