@@ -36,6 +36,7 @@ import twisted.web.server
 import twisted.internet.defer
 import twisted.internet.base
 import twisted.internet.reactor
+import twisted.internet.ssl
 try:
     from twisted.web import http
 except ImportError:
@@ -104,13 +105,23 @@ def startService():
     # Starts XMLRPC server
     logger.info('scheduler %s: starting' % config.name)
     try:
-        twisted.internet.reactor.listenTCP(
-            config.port,
-            twisted.web.server.Site(Scheduler()),
-            interface = config.host
-        )
-    except:
+        if config.enablessl:
+            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
+            twisted.internet.reactor.listenSSL(
+                config.port,
+                twisted.web.server.Site(Scheduler()),
+                interface = config.host,
+                contextFactory = sslContext
+                )
+        else:
+            twisted.internet.reactor.listenTCP(
+                config.port,
+                twisted.web.server.Site(Scheduler()),
+                interface = config.host
+                )
+    except Exception, e:
         logger.error('scheduler "%s": can\'t bind to %s:%d' % (config.name, config.host, config.port))
+        logger.error(e)
         return False
 
     # start periodic scheduler, called every awake_time seconds
@@ -226,7 +237,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
     (options, args) = parser.parse_args()
 
     if not os.path.exists(options.config_file):
@@ -238,7 +249,13 @@ def main():
     logger = logging.getLogger()
 
     # parse conf
-    SchedulerConfig().setup(options.config_file)
+    try:
+        logger.info("Reading configuration file: %s" % options.config_file)
+        SchedulerConfig().setup(options.config_file)
+    except Exception, e:
+        logger.error(e)
+        logger.error("Please fix the configuration file")
+        sys.exit(1)
 
     # start service
     sys.exit(startService())

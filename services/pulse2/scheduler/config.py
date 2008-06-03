@@ -37,6 +37,9 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     name = None
     port = 8000
     host = "127.0.0.1"
+    enablessl = True
+    certfile = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
+    privkey = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     username = 'username'
     password = 'password'
 
@@ -76,6 +79,13 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
             self.username = cp.get("scheduler", "username")
         if cp.has_option("scheduler", "password"):
             self.password = cp.get("scheduler", "password")
+        if cp.has_option("scheduler", "enablessl"):
+            self.enablessl = cp.getboolean("scheduler", "enablessl")
+        if self.enablessl:
+            if cp.has_option("scheduler", "privkey"):
+                self.privkey = cp.get("scheduler", "privkey")
+            if cp.has_option("scheduler", "certfile"):
+                self.certfile = cp.get("scheduler", "certfile")
 
         if cp.has_option("scheduler", "awake_time"):
             self.awake_time = cp.getint("scheduler", "awake_time")
