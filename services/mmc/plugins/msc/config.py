@@ -62,7 +62,8 @@ class MscConfig(PluginConfig):
             'port': 8000,
             'host': '127.0.0.1',
             'username': 'username',
-            'password': 'password'
+            'password': 'password',
+            'enablessl': True
         }
     }
 
@@ -103,7 +104,8 @@ class MscConfig(PluginConfig):
                         'port': self.get(section, "port"),
                         'host': self.get(section, "host"),
                         'username': self.get(section, "username"),
-                        'password': self.get(section, "password")
+                        'password': self.get(section, "password"),
+                        'enablessl': self.getboolean(section, "enablessl")
                     }
 
         # some default web interface values

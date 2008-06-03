@@ -127,7 +127,11 @@ def select_scheduler(scheduler_name):
     else:
         scheduler = schedulers[scheduler_name]
 
-    uri = 'http://'
+    if scheduler['enablessl']:
+        uri = 'https://'
+    else:
+        uri = 'http://'
+        
     if scheduler['username'] != '':
         uri += '%s:%s@' % (scheduler['username'], scheduler['password'])
     uri += '%s:%d' % (scheduler['host'], int(scheduler['port']))
