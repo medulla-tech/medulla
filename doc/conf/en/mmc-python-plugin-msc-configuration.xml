@@ -295,7 +295,7 @@ option2 = plop      </screen></para>
     must be an integer).</para>
 
     <table>
-      <title>Available options for the "launcher_XXX" section</title>
+      <title>Available options for the "scheduler_XXX" section</title>
 
       <tgroup cols="4">
         <thead>
@@ -332,6 +332,16 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>enablessl</entry>
+
+            <entry>Flag that tells if SSL should be used to connect to the scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
             <entry>username</entry>
 
             <entry>The name to use when we send XMLRPC commands to this
@@ -356,8 +366,17 @@ option2 = plop      </screen></para>
       </tgroup>
     </table>
 
-    <para>By default, a launcher is always defined: "launcher_01":
-    127.0.0.1:8001</para>
+    <para>By default, a scheduler is always defined:</para>
+
+    <screen>
+[scheduler_01]
+host=127.0.0.1
+port=8000
+username = username
+password = password
+enablessl = 1
+    </screen>
+
   </section>
 
   <section>
