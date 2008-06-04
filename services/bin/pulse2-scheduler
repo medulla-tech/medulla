@@ -122,14 +122,14 @@ def startService():
     except Exception, e:
         logger.error('scheduler "%s": can\'t bind to %s:%d' % (config.name, config.host, config.port))
         logger.error(e)
-        return False
+        return 1
 
     # start periodic scheduler, called every awake_time seconds
     reschedule_start_all_commands(None)
     logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
 
     twisted.internet.reactor.run()
-    return True
+    return 0
 
 class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
@@ -249,8 +249,8 @@ def main():
     logger = logging.getLogger()
 
     # parse conf
+    logger.info("Reading configuration file: %s" % options.config_file)
     try:
-        logger.info("Reading configuration file: %s" % options.config_file)
         SchedulerConfig().setup(options.config_file)
     except Exception, e:
         logger.error(e)
