@@ -66,6 +66,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     scheduler_port = "8000"
     scheduler_username = "username"
     scheduler_password = "password"
+    scheduler_enablessl = True
     awake_time = 600
     defer_results = False
 
@@ -75,6 +76,9 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             'bind': '127.0.0.1',
             'username': 'username',
             'password': 'password',
+            'enablessl': True,
+            'certfile': '/etc/mmc/pulse2/launchers/keys/cacert.pem',
+            'privkey': "/etc/mmc/pulse2/launchers/keys/privkey.pem",
             'slots': 300
         }
     }
@@ -102,6 +106,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                 self.scheduler_host = self.cp.get('scheduler', 'host')
             if self.cp.has_option('scheduler', 'port'):
                 self.scheduler_port = self.cp.get('scheduler', 'port')
+            if self.cp.has_option('scheduler', 'enablessl'):
+                self.scheduler_enablessl = self.cp.getboolean('scheduler', 'enablessl')
             if self.cp.has_option('scheduler', 'username'):
                 self.scheduler_username = self.cp.get('scheduler', 'username')
             if self.cp.has_option('scheduler', 'password'):
@@ -112,10 +118,14 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                 self.launchers[section] = {
                         'port': self.cp.get(section, 'port'),
                         'bind': self.cp.get(section, 'bind'),
+                        'enablessl': self.cp.getboolean(section, 'enablessl'),
                         'slots': self.cp.get(section, 'slots'),
                         'username': self.cp.get(section, 'username'),
                         'password': self.cp.get(section, 'password')
                     }
+                if self.launchers[section]['enablessl']:
+                    self.launchers[section]['certfile'] = self.cp.get(section, 'certfile')
+                    self.launchers[section]['privkey'] = self.cp.get(section, 'privkey')
 
         if self.cp.has_section('ssh'):
             if self.cp.has_option('ssh', 'default_key'):

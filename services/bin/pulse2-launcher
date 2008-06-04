@@ -72,7 +72,6 @@ def tellIAmAlive():
 
     def _eb(reason): # can't contact scheduler, log and continue
         logging.getLogger().warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
-        pass
 
     scheduler = pulse2.launcher.utils.getScheduler()
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
@@ -88,17 +87,32 @@ def startService():
     name = config.name
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
+    enablessl = config.launchers[config.name]['enablessl']
 
     # Starting XMLRPC server
     launcher = Launcher(name)
     try:
-        twisted.internet.reactor.listenTCP(port, twisted.web.server.Site(launcher), interface = bind)
-    except:
+        if enablessl:
+            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.launchers[config.name]["privkey"], config.launchers[config.name]["certfile"])
+            twisted.internet.reactor.listenSSL(
+                port,
+                twisted.web.server.Site(launcher),
+                interface = bind,
+                contextFactory = sslContext
+                )
+        else:
+            twisted.internet.reactor.listenTCP(
+                port,
+                twisted.web.server.Site(launcher),
+                interface = bind
+                )
+    except Exception, e:
         logger.error('launcher "%s": can\'t bind to %s:%d' % (name, bind, port))
+        logger.error(e)
         return 1
 
-    # start periodic scheduler probing, called every awake_time seconds
-    scheduleTellIAmAlive()
+    # Start periodic scheduler probing, called every awake_time seconds
+    tellIAmAlive()
     logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
 
     twisted.internet.reactor.run()
@@ -225,12 +239,16 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers.ini')
+    parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers/launchers.ini')
     parser.add_option("-i", "--id", help='id of this launcher')
     (options, args) = parser.parse_args()
 
     if not os.path.exists(options.config_file):
         print "Config file '%s' does not exist." % options.config_file
+        sys.exit(3)
+
+    if not options.id:
+        print "The launcher id should be specified on the command line with --id option"
         sys.exit(3)
 
     # start logger
@@ -239,7 +257,13 @@ def main():
     logger.info('launcher %s: starting' % options.id)
 
     # parse conf
-    LauncherConfig().setup(options.config_file, options.id)
+    logger.info("launcher %s: Reading configuration file: %s" % (options.id, options.config_file))
+    try:
+        LauncherConfig().setup(options.config_file, options.id)
+    except Exception, e:
+        logger.error(e)
+        logger.error("Please fix the configuration file")
+        sys.exit(1)
 
     # start service
     sys.exit(startService())

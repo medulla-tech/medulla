@@ -28,7 +28,10 @@ from pulse2.launcher.config import LauncherConfig
 def getScheduler():
     """ Get our referent scheduler """
     config = LauncherConfig()
-    uri = 'http://'
+    if config.scheduler_enablessl:
+        uri = 'https://'
+    else:
+        uri = 'http://'
     if config.scheduler_username != '':
         uri += '%s:%s@' % (config.scheduler_username, config.scheduler_password)
     uri += '%s:%s' % (config.scheduler_host, config.scheduler_port)
