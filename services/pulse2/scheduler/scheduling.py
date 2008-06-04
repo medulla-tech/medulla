@@ -168,7 +168,12 @@ def runUploadPhase(myCommandOnHostID):
                 fname = re.compile('^/(.*)$').search(fname).group(1)
             files_list.append(os.path.join(source_path, fname))
         launcher = chooseLauncher()
+
         target_host = chooseClientIP(myT)
+        if target_host == None:
+            # We couldn't get an IP address for the target host
+            return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+
         target_uuid = myT.getUUID()
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
@@ -205,7 +210,12 @@ def runUploadPhase(myCommandOnHostID):
                 fid = file.split('##')[0]
                 files_list.append(m1.getFilePath(fid))
             launcher = chooseLauncher()
+
             target_host = chooseClientIP(myT)
+            if target_host == None:
+                # We couldn't get an IP address for the target host
+                return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+
             target_uuid = myT.getUUID()
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
@@ -269,13 +279,21 @@ def runExecutionPhase(myCommandOnHostID):
         return runDeletePhase(myCommandOnHostID)
     # if we are here, execution has either previously failed or never be done
     launcher = chooseLauncher()
+
     target_host = chooseClientIP(myT)
+    if target_host == None:
+        # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
+    
     target_uuid = myT.getUUID()
     myCoH.setExecutionInProgress()
     myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
     if myC.isQuickAction(): # should be a standard script
         if SchedulerConfig().mode == 'sync':
+            logger.info(myC.start_file)
+            logger.info(str(target_host))
+            logger.info(str(target_uuid))
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
@@ -344,7 +362,12 @@ def runDeletePhase(myCommandOnHostID):
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
         files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
         launcher = chooseLauncher()
+
         target_host = chooseClientIP(myT)
+        if target_host == None:
+            # We couldn't get an IP address for the target host
+            return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
+
         target_uuid = myT.getUUID()
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
@@ -376,7 +399,12 @@ def runDeletePhase(myCommandOnHostID):
         if re.compile('^http://').match(mirror): # HTTP download
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
             launcher = chooseLauncher()
+
             target_host = chooseClientIP(myT)
+            if target_host == None:
+                # We couldn't get an IP address for the target host
+                return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
+
             target_uuid = myT.getUUID()
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
@@ -430,7 +458,12 @@ def runInventoryPhase(myCommandOnHostID):
         return runEndPhase(myCommandOnHostID)
     # if we are here, inventory has either previously failed or never be done
     launcher = chooseLauncher()
+
     target_host = chooseClientIP(myT)
+    if target_host == None:
+        # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
+
     target_uuid = myT.getUUID()
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
