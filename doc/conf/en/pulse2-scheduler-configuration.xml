@@ -185,6 +185,36 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>enablessl</entry>
+
+            <entry>SSL mode support</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>certfile</entry>
+
+            <entry>path to the certificate file describing the certificate authority of the SSL server</entry>
+
+            <entry>yes</entry>
+
+            <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
+          </row>
+
+          <row>
+            <entry>privkey</entry>
+
+            <entry>path to the SSL serverprivate certificate</entry>
+
+            <entry>yes</entry>
+
+            <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
+          </row>
+
+          <row>
             <entry>username</entry>
 
             <entry>The name to use when sending XMLRPC commands to this
@@ -344,10 +374,20 @@ option2 = plop      </screen></para>
             <entry>port</entry>
 
             <entry>The launcher TCP port.</entry>
-
+	    
             <entry>yes</entry>
 
             <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>enablessl</entry>
+
+            <entry>Flag telling if SSL mode should be used to connect to the launcher.</entry>
+	    
+            <entry>yes</entry>
+
+            <entry>1</entry>
           </row>
 
           <row>
@@ -375,7 +415,15 @@ option2 = plop      </screen></para>
       </tgroup>
     </table>
 
-    <para>By default, a launcher is always defined: "launcher_01":
-    127.0.0.1:8001</para>
+    <para>By default, a launcher is always defined: "launcher_01":</para>
+
+    <screen>
+[launcher_01]
+host=127.0.0.1
+port=8001
+username = username
+password = password
+enablessl = 1
+    </screen>
   </section>
 </article>
