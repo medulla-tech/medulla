@@ -117,5 +117,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
                         'port': cp.get(section, "port"),
                         'host': cp.get(section, "host"),
                         'username': cp.get(section, "username"),
-                        'password': cp.get(section, "password")
+                        'password': cp.get(section, "password"),
+                        'enablessl': cp.get(section, "enablessl")
                     }
