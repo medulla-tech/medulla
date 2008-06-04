@@ -155,7 +155,7 @@ option2 = plop      </screen></para>
             <entry>The Launcher main script location, used by
             launchers-manager to start and daemonize the services.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>/usr/local/sbin/pulse2-launcher</entry>
           </row>
@@ -166,7 +166,7 @@ option2 = plop      </screen></para>
             <entry>The Launcher services PID, used by launchers-manager to
             track the launcher services.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>/var/run/pulse2</entry>
           </row>
@@ -364,6 +364,16 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>enable</entry>
+
+            <entry>Flag that tells if SSL should be used to connect to the scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
             <entry>username</entry>
 
             <entry>The login name to use when authenticating vs our referent
@@ -454,6 +464,36 @@ option2 = plop      </screen></para>
             <entry>yes</entry>
 
             <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>enablessl</entry>
+
+            <entry>SSL mode support</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>certfile</entry>
+
+            <entry>path to the certificate file describing the certificate authority of the SSL server</entry>
+
+            <entry>yes</entry>
+
+            <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
+          </row>
+
+          <row>
+            <entry>privkey</entry>
+
+            <entry>path to the SSL serverprivate certificate</entry>
+
+            <entry>yes</entry>
+
+            <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
           </row>
 
           <row>
