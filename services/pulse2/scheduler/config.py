@@ -60,7 +60,8 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
             'port': 8001,
             'host': '127.0.0.1',
             'username': 'username',
-            'password': 'password'
+            'password': 'password',
+            'enablessl': True
         }
     }
 

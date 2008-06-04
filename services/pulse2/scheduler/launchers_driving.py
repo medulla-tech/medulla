@@ -47,7 +47,10 @@ def chooseLauncher():
     import random
     launchers = SchedulerConfig().launchers
     launcher = launchers[random.sample(launchers.keys(), 1).pop()]
-    uri = 'http://'
+    if launcher["enablessl"]:
+        uri = "https://"
+    else:
+        uri = 'http://'
     if launcher['username'] != '':
         uri += '%s:%s@' % (launcher['username'], launcher['password'])
     uri += '%s:%d' % (launcher['host'], int(launcher['port']))
