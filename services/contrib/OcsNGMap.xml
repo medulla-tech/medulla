@@ -182,6 +182,11 @@
 		<MappedField from="TYPE" to="Type" />
 	</MappedObject>
 
+    <MappedObject name="REGISTRY" class="Registry">
+        <MappedField from="NAME" to="Path" type="nomenclature"/>
+        <MappedField from="REGVALUE" to="Value" />
+    </MappedObject>
+
 	<MappedObject name="ACCOUNTINFO" class="Null">
 	</MappedObject>
 

@@ -1,10 +1,12 @@
 from mmc.support.mmctools import Singleton
 from xml.dom.minidom import parse, parseString
+import logging
 
 class OcsMapping(Singleton):
     def initialize(self, xmlmapping):
         self.doc = parse(xmlmapping)
         self.tables = {}
+        self.nomenclatures = {}
 
         for table in self.doc.documentElement.getElementsByTagName("MappedObject"):
             xmlname = table.getAttribute('name')
@@ -14,6 +16,11 @@ class OcsMapping(Singleton):
                 xmlfrom = field.getAttribute('from')
                 xmlto = field.getAttribute('to')
                 self.tables[xmlname][1][xmlfrom] = xmlto
+                if field.hasAttribute('type') and field.getAttribute('type') == 'nomenclature':
+                    self.tables[xmlname][1][xmlfrom] = ('nom%s%s'%(xmlclass, xmlto), xmlto)
+                    if not self.nomenclatures.has_key(xmlclass):
+                        self.nomenclatures[xmlclass] = {}
+                    self.nomenclatures[xmlclass][xmlto] = True
 
     def parse(self, xmltext):
         inventory = {}

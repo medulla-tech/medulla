@@ -6,8 +6,8 @@ import logging
 import time
 import re
 
-from mmc.plugins.inventory.database import Inventory
 from pulse2.inventoryserver.mapping import OcsMapping
+from pulse2.inventoryserver.database import InventoryWrapper
 
 class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, *args):
@@ -36,10 +36,29 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
                 deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
             except AttributeError, e:
                 pass
-            self.logger.debug("%s regex" % (time.time()))
+            self.logger.debug("%s regex %s" % (time.time(), query))
     
+            a = 0
             if query == 'PROLOG':
-                resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>SEND</RESPONSE></REPLY>'
+                config = InventoryGetService().config
+                if len(config.options.keys()) == 0:
+                    resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>SEND</RESPONSE></REPLY>'
+                else:
+                    resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY>'
+                    for section in config.options:
+                        try:
+                            params = config.options[section]
+                            resp += '<OPTION><NAME>%s</NAME>' % (params['name'])
+                            resp_param = ""
+                            for p in params['param']:
+                                resp_param += '<PARAM '
+                                for attr in p['param']:
+                                    resp_param += '%s="%s" ' % (attr[0], attr[1])
+                                resp_param += '>%s</PARAM>' % (p['value'])
+                            resp += resp_param + '</OPTION>'
+                        except:
+                            self.logger.error('please check your %s config parameter' % (section))
+                    resp = resp + '<RESPONSE>SEND</RESPONSE></REPLY>'
             elif query == 'UPDATE':
                 resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_update</RESPONSE></REPLY>'
             elif query == 'INVENTORY':
@@ -80,7 +99,7 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
                 except:
                     pass
                     
-                ret = Inventory().createNewInventory(hostname, inventory, date)
+                ret = InventoryWrapper().createNewInventory(hostname, inventory, date)
                 # TODO if ret == False : reply something else
                 if not ret:
                     self.logger.error("no inventory created!")
@@ -92,13 +111,19 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(compress(resp))
+        except IOError, e:
+            self.logger.error(e)
+            self.logger.error(e.orig)
+            self.send_response(500)
+            self.end_headers()
         except Exception, e:
+            self.logger.error(e)
             self.send_response(500)
             self.end_headers()
 
 class InventoryGetService(Singleton):
     def initialise(self, config):
-        Inventory().activate()
+        InventoryWrapper().activate()
         self.config = config
         self.bind = config.bind
         self.port = int(config.port)

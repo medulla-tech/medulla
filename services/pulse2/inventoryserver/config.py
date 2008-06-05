@@ -50,6 +50,8 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     dbuser = ''
     dbpasswd = ''
 
+    options = {}
+
 
     def setup(self, config_file):
         # Load configuration file
@@ -77,3 +79,16 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
             self.dbuser = self.cp.get("main", 'dbuser')
         if self.cp.has_option('main', 'dbpasswd'):
             self.dbpasswd = self.cp.get("main", 'dbpasswd')
+
+        for section in self.cp.sections():
+            if re.compile('^option_[0-9]+$').match(section):
+                params = []
+                for param in self.cp.options('option_01'):
+                    if re.compile('^param_[0-9]+$').match(param):
+                         attrs, value = self.cp.get(section, param).split('##')
+                         params.append({'param':map(lambda x: x.split('::'), attrs.split('||')), 'value':value})
+                self.options[section] = {
+                    'name':self.cp.get(section, 'NAME'),
+                    'param':params
+                }
+
