@@ -67,10 +67,11 @@ $page = new Page("storage",_T("Storage","inventory"));
 $submod->addPage($page);
 $page = new Page("videocard",_T("VideoCard","inventory"));
 $submod->addPage($page);
-
 $page = new Page("software",_T("Software","inventory"));
-$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
+$page = new Page("registry",_T("Registry","inventory"));
+$submod->addPage($page);
+
 $page = new Page("view",_T("View", "inventory"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);

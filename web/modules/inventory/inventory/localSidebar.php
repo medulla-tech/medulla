@@ -8,6 +8,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Hardware", 'inventory'), "invent
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Software", 'inventory'), "inventory", "inventory", "software"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Network", 'inventory'), "inventory", "inventory", "network"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Controller", 'inventory'), "inventory", "inventory", "controller"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Registry", 'inventory'), "inventory", "inventory", "registry"));
 
 if (isExpertMode()) {
 	$sidemenu->addSideMenuItem(new SideMenuItem(_T("Drive", 'inventory'), "inventory", "inventory", "drive"));
