@@ -1,0 +1,42 @@
+ALTER TABLE Inventory ADD COLUMN Last int(2) NOT NULL DEFAULT 0;
+
+--
+-- Table structure for table `Registry`
+--
+
+CREATE TABLE Registry (
+  id int(11) unsigned NOT NULL auto_increment,
+  Value varchar(128) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `nomRegistryKey`
+--
+
+CREATE TABLE nomRegistryPath (
+  id int(11) unsigned NOT NULL auto_increment,
+  Value varchar(128) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `hasRegistry`
+--
+
+CREATE TABLE hasRegistry (
+  machine mediumint(9) unsigned NOT NULL default '0',
+  inventory mediumint(5) unsigned NOT NULL default '0',
+  registry int(11) unsigned NOT NULL default '0',
+  path int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (machine,inventory,registry,path)
+) TYPE=MyISAM;
+
+
+--
+-- Database version
+--
+TRUNCATE Version;
+INSERT INTO Version VALUES( '2' );
+
+
