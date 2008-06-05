@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>MMC-Pulse2 Inventory plugin configuration file</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Olivier</firstname>
+
+      <surname>Roussy</surname>
+
+      <email>oroussy@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 Olivier Roussy - Mandriva</year>
+    </copyright>
+
+    <revhistory>
+      <revision>
+        <revnumber>$Revision: 23 $</revnumber>
+
+        <date>$Date: 2008-06-04 10:02:58 +0200 (Wed, 04 Jun 2008) $</date>
+
+        <authorinitials>$Author: oroussy $</authorinitials>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para>This document explains the content of the MMC-Pulse2 Inventory
+      plugin configuration file</para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The « Inventory » plugin is the MMC-Pulse2 plugin in charge
+    displaying the content of the inventory database, and providing facilities
+    for dynamic group creation.</para>
+
+    <para>The plugin configuration file is
+    <filename>/etc/mmc/plugins/inventory.ini</filename>.</para>
+
+    <para>Like all MMC related configuration file, its file format is INI
+    style. The file is made of sections, each one starting with a
+    « [sectionname] » header. In each section options can be defined like
+    this: « option = value ».</para>
+
+    <para>For example: <screen>[section1]
+option1 = 1
+option2 = 2
+
+[section2]
+option1 = foo
+option2 = plop      </screen></para>
+  </section>
+
+  <section>
+    <title>Configuration file sections</title>
+
+    <para>For now five sections are available in this configuration
+    file:</para>
+
+    <table>
+      <title>inventory.ini available sections</title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Section name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>main</entry>
+
+            <entry>Mostly MMC related behaviors</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>inventory</entry>
+
+            <entry>Inventory related options</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>computer</entry>
+
+            <entry>Computers list's display content</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>expert_mode</entry>
+
+            <entry>Select which columns are only shown in expert mode</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>graph</entry>
+
+            <entry>Select which columns can be graphed</entry>
+
+            <entry>no</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« main » section</title>
+
+    <para>This section is used to give directives to the MMC agent.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>disable</entry>
+
+            <entry>Whenever use this plugin (or not)</entry>
+
+            <entry>no</entry>
+
+            <entry>0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« inventory » section</title>
+
+    <para>This section defines some global options.</para>
+
+    <table>
+      <title>Available options for the "inventory" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>dbdriver</entry>
+
+            <entry>DB driver to use</entry>
+
+            <entry>no</entry>
+
+            <entry>mysql</entry>
+          </row>
+
+          <row>
+            <entry>dbhost</entry>
+
+            <entry>Host which hosts the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>dbport</entry>
+
+            <entry>Port on which to connect to reach the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>3306 (aka "default MySQL port")</entry>
+          </row>
+
+          <row>
+            <entry>dbname</entry>
+
+            <entry>DB name</entry>
+
+            <entry>no</entry>
+
+            <entry>msc</entry>
+          </row>
+
+          <row>
+            <entry>dbuser</entry>
+
+            <entry>Username to give while conencting to the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>msc</entry>
+          </row>
+
+          <row>
+            <entry>dbpasswd</entry>
+
+            <entry>Password to give while connecting to the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>msc</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« computer » section</title>
+
+    <para>This section define what kind of informations will be displayed in
+    computers list.</para>
+
+    <table>
+      <title>Available options for the "computer" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>content</entry>
+
+            <entry>List of additional parameters for the Computer
+            object</entry>
+
+            <entry>yes</entry>
+
+            <entry>cn::Computer Name||displayName||Description</entry>
+          </row>
+
+          <row>
+            <entry>display</entry>
+
+            <entry>List of parameters that will be displayed in computers
+            list</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>For exemple :</para>
+
+    <screen>
+[computers]
+content = Registry::Value::regdn::Path==DisplayName||Registry::Value::srvcomment::Path==srvcomment
+display = cn::Computer Name||displayName::Description||srvcomment::Name||regdn::Display Name
+    </screen>
+  </section>
+
+  <section>
+    <title>« expert_mode » section</title>
+
+    <para>This section defined columns that will be only displayed when in
+    expert mode.</para>
+
+    <table>
+      <title>Available options for the "expert_mode" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>&lt;Table name&gt;</entry>
+
+            <entry>List of column in this Sql table that won't be displayed in
+            normal mode</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« graph » section</title>
+
+    <para>This section defined columns on which we will be able to draw
+    graphs.</para>
+
+    <table>
+      <title>Available options for the "graph" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>&lt;Table name&gt;</entry>
+
+            <entry>List of column in this Sql table we will be able to
+            draw</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+</article>
