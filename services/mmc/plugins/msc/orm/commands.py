@@ -45,31 +45,27 @@ class Commands(object):
         return self.next_connection_delay
 
     def dispatch(self, ctx):
-        """ Inject as many lines in CommandsOnHost as required (i.e. one per target)
         """
+        According to the current command (self), inject as many lines in
+        CommandsOnHost as required (i.e. one per target)
+        """
+        if self.isDispatched():
+            return None
 
         # gather usefull stuff ...
         database = mmc.plugins.msc.database.MscDatabase()
         machines = mmc.plugins.msc.machines.Machines()
-        session = sqlalchemy.create_session()
+
         logger = logging.getLogger()
+        logger.debug('Start dispatch of command %s' % self.id)
 
-        if self.isDispatched():
-            return None
-
-        logger.debug('Start dispatch...')
+        session = sqlalchemy.create_session()        
         # iterate over available target
         for myTarget in database.getTargets(self.id):
-            host = machines.getMachine(ctx, {'uuid': myTarget.target_uuid})
-            if host == None:
-                logging.getLogger().warning("Cannot find hostname '%s'" % (myTarget.target_name))
-                continue
-
-            # Create (and save) a new commands_on_host row
-            logging.getLogger().debug("Create new command on host : %s" % (host.hostname))
+            logger.debug("Create new command on host : %s" % (myTarget.target_name))
             myCommandOnHost = CommandsOnHost()
             myCommandOnHost.fk_commands = self.id
-            myCommandOnHost.host = host.hostname[0] # maybe uuid ...
+            myCommandOnHost.host = myTarget.target_name # maybe uuid ...
             myCommandOnHost.start_date = self.start_date or "0000-00-00 00:00:00"
             myCommandOnHost.end_date = self.end_date or "0000-00-00 00:00:00"
             myCommandOnHost.next_launch_date = self.start_date or "0000-00-00 00:00:00"
@@ -82,7 +78,7 @@ class Commands(object):
             session.save(myCommandOnHost)
             session.flush()
             session.refresh(myCommandOnHost)
-            logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
+            logger.debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
 
             # update our target with the new command_on_host
             myTarget.fk_commands_on_host = myCommandOnHost.getId()
@@ -90,7 +86,7 @@ class Commands(object):
             session.flush()
 
         self.setDispatched()
-        logging.getLogger().debug('End dispatch...')
+        logger.debug('End dispatch...')
         session.update(self)
         session.flush()
         session.close()
