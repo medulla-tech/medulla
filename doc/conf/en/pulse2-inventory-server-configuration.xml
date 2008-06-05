@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Pulse 2 Inventory server configuration file</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Olivier Roussy</firstname>
+
+      <email>oroussy@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 Olivier Roussy - Mandriva</year>
+    </copyright>
+
+    <revhistory>
+      <revision>
+        <revnumber>$Revision: 22 $</revnumber>
+
+        <date>$Date: 2008-06-04 10:00:07 +0200 (Wed, 04 Jun 2008) $</date>
+
+        <authorinitials>$Author: oroussy $</authorinitials>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para>This document explains the content of the configuration file of
+      the inventory server service from Pulse 2</para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The « inventory server » service is the Pulse 2 daemon in charge
+    importing inventory sent from ocs inventory agents.</para>
+
+    <para>The service configuration file is
+    <filename>/etc/mmc/pulse2/inventoryserver.ini</filename></para>
+
+    <para>Like all Pulse 2 related configuration file, its file format is INI
+    style. The file is made of sections, each one starting with a
+    « [sectionname] » header. In each section options can be defined like
+    this: « option = value ».</para>
+
+    <para>For example: <screen>[section1]
+option1 = 1
+option2 = 2
+
+[section2]
+option1 = foo
+option2 = plop      </screen></para>
+  </section>
+
+  <section>
+    <title>Configuration file sections</title>
+
+    <para>For now three sections are available in this configuration file.
+    Some sections describing the different available launchers may appear,
+    their name must begin with "launcher_". The idea behind this is that the
+    main section controls the common behavior of launchers, the others control
+    the specific behaviors.</para>
+
+    <table>
+      <title>inventoryserver.ini available sections</title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Section name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>main</entry>
+
+            <entry>Common inventory server configuration directives</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>database</entry>
+
+            <entry>Database connection parameters</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>scheduler</entry>
+
+            <entry>Referent scheduler location</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>option_XXX</entry>
+
+            <entry>Inventory agent option XXX</entry>
+
+            <entry>yes</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>All the other sections (loggers, handlers, ...) are related to
+    Python language logging framework. See <ulink
+    url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
+    .</para>
+  </section>
+
+  <section>
+    <title>« main » section</title>
+
+    <para>This section is used to configure the inventory server
+    services.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>server</entry>
+
+            <entry>The hostname or ip address where the inventory.</entry>
+
+            <entry>yes</entry>
+
+            <entry>localhost</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The port on which the inventory listen.</entry>
+
+            <entry>yes</entry>
+
+            <entry>9999</entry>
+          </row>
+
+          <row>
+            <entry>ocsmapping</entry>
+
+            <entry>The mapping file betwen ocs inventory agent xml output and
+            the database schema</entry>
+
+            <entry>yes</entry>
+
+            <entry>/etc/mmc/pulse2/OcsNGMap.xml</entry>
+          </row>
+
+          <row>
+            <entry>pidfile</entry>
+
+            <entry>The inventory server services PID, used to stop the
+            service.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/var/run/pulse2-inventoryserver.pid</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« database » section</title>
+
+    <para>This section defines some global options..</para>
+
+    <table>
+      <title>Available options for the "database" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>dbdriver</entry>
+
+            <entry>DB driver to use</entry>
+
+            <entry>no</entry>
+
+            <entry>mysql</entry>
+          </row>
+
+          <row>
+            <entry>dbhost</entry>
+
+            <entry>Host which hosts the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>dbport</entry>
+
+            <entry>Port on which to connect to reach the DB</entry>
+
+            <entry>yes</entry>
+
+            <entry>3306 (aka "default MySQL port")</entry>
+          </row>
+
+          <row>
+            <entry>dbname</entry>
+
+            <entry>DB name</entry>
+
+            <entry>no</entry>
+
+            <entry>inventory</entry>
+          </row>
+
+          <row>
+            <entry>dbuser</entry>
+
+            <entry>Username to give while conencting to the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>mmc</entry>
+          </row>
+
+          <row>
+            <entry>dbpasswd</entry>
+
+            <entry>Password to give while connecting to the DB</entry>
+
+            <entry>no</entry>
+
+            <entry>mmc</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« option_XXX » section</title>
+
+    <para>This section define options that has to be given to the ocs
+    inventory agent.</para>
+
+    <para>At the moment the only option which return will be inserted in the
+    database is REGISTRY. </para>
+
+    <para>Each PARAM_YYY is for an XML tag PARAM in the inventory request. It
+    is made of two values separated by ##. The first value is PARAM XML
+    attributes, the second one is the content of the PARAM XML tag. The
+    attributes are a list of couple attribute name, attribute value, the name
+    and the value are separated by ::, each couple is separated by ||.</para>
+
+    <table>
+      <title>Available options for the "option_XXX" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>NAME</entry>
+
+            <entry>The option name.</entry>
+
+            <entry>no</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>PARAM_YYY</entry>
+
+            <entry>The option params.</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>For example : </para>
+
+    <para><screen>
+[option_01]
+NAME = REGISTRY
+PARAM_01 = NAME::srvcomment||REGKEY::SYSTEM\CurrentControlSet\Services\lanmanserver\parameters||REGTREE::2##srvcomment
+PARAM_02 = NAME::DisplayName||REGKEY::SYSTEM\CurrentControlSet\Services\lanmanserver||REGTREE::2##DisplayName
+    </screen></para>
+  </section>
+</article>
