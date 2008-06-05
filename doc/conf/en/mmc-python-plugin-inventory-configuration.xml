@@ -221,7 +221,7 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
 
-            <entry>msc</entry>
+            <entry>inventory</entry>
           </row>
 
           <row>
@@ -231,7 +231,7 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
 
-            <entry>msc</entry>
+            <entry>mmc</entry>
           </row>
 
           <row>
@@ -241,7 +241,7 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
 
-            <entry>msc</entry>
+            <entry>mmc</entry>
           </row>
         </tbody>
       </tgroup>
