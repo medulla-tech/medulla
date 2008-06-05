@@ -57,6 +57,17 @@ class MscConfig(PluginConfig):
     web_def_delay = "60"
     web_def_attempts = "3"
 
+    # IP blacklists settings
+    # To filter out everything which is not a valid unicast address
+    ignore_non_rfc2780 = True
+    # To filter out everything which is not a valid private address
+    ignore_non_rfc1918 = False
+    # Always filtered IP addresses
+    exclude_ipaddr = ""
+    # Always accepted IP addresses
+    include_ipaddr = ""
+
+
     schedulers = {
         'scheduler_01': {
             'port': 8000,
@@ -96,6 +107,16 @@ class MscConfig(PluginConfig):
             self.db_debug = self.get("msc", "db_debug")
         if self.has_option("msc", "db_pool_recycle"):
             self.dbpoolrecycle = self.get("msc", "db_pool_recycle")
+
+        # Blacklists
+        if self.has_option("msc", "ignore_non_rfc2780"):
+            self.ignore_non_rfc2780 = self.getboolean("msc", "ignore_non_rfc2780")
+        if self.has_option("msc", "ignore_non_rfc1918"):
+            self.ignore_non_rfc1918 = self.getboolean("msc", "ignore_non_rfc1918")
+        if self.has_option("msc", "exclude_ipaddr"):
+            self.exclude_ipaddr = self.get("msc", "exclude_ipaddr")
+        if self.has_option("msc", "include_ipaddr"):
+            self.include_ipaddr = self.get("msc", "include_ipaddr")
 
         # schedulers
         for section in self.sections():

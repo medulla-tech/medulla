@@ -34,6 +34,7 @@ from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
+from mmc.plugins.msc import blacklist
 from mmc.support.mmctools import Singleton
 
 # ORM mappings
@@ -235,13 +236,20 @@ class MscDatabase(Singleton):
         return ret
 
     def dispatchAllCommands(self, ctx):
+        """
+        Dispatch all commands that have been put in database, but that have not
+        been dispatched.
+
+        Each command is dispatched, this means it it transformed to
+        one or multiple rows in the commands_on_host table.
+        """
         self.logger.debug("MSC_Scheduler->dispatchAllCommands()...")
         session = create_session()
         query = session.query(Commands).filter(self.commands.c.dispatched == 'NO').all()
         session.close()
         if query:
             for q in query:
-                self.logger.debug("going to dispath %s" % (q.id))
+                self.logger.debug("Going to dispatch %s" % q.id)
                 q.dispatch(ctx)
         else:
             self.logger.debug("No command to dispatch")
@@ -273,24 +281,52 @@ class MscDatabase(Singleton):
         return cmd.id
 
     def createTarget(self, target, mode, cmd_id, group_id):
+        """
+        Create a row in the target table.
+        
+        @param target: couple made of (uuid, hostname)
+        @type target: list
+
+        @param mode: target deployment mode
+        @type mode: str
+
+        @param cmd_id: id of the command that requires this target row
+        @type cmd_id: int
+
+        @param group_id: id of the machine group that requires this target row
+        @type group_id: str
+        """
         targetUuid = target[0]
         targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+
+        ipAddresses = computer[1]['ipHostNumber']
+        self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
+        # Apply IP addresses blacklist
+        if self.config.ignore_non_rfc2780:
+            ipAddresses = blacklist.rfc2780Filter(ipAddresses)        
+        if self.config.ignore_non_rfc1918:
+            ipAddresses = blacklist.rfc1918Filter(ipAddresses)
+        ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
+        ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
+        self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
+
+        # Multiple IP addresses or IP addresses may be separated by "||"
         targetMac = '||'.join(computer[1]['macAddress'])
-        targetIp = '||'.join(computer[1]['ipHostNumber'])
+        targetIp = '||'.join(ipAddresses)
         try:
             targetName = computer[1]['fullname']
         except KeyError:
             pass
 
         # compute URI depending on selected mode
-        if (mode == 'push_pull'):
+        if mode == 'push_pull':
             mirror = MirrorApi().getMirror(targetName)
             fallback = MirrorApi().getFallbackMirror(targetName)
             targetUri = '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
                 '||' + \
                 '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint'])
-        elif (mode == 'push'):
+        elif mode == 'push':
             targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
         else:
             targetUri = None
@@ -347,6 +383,23 @@ class MscDatabase(Singleton):
         return cmd_id
 
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
+        """
+        Schedule a command for immediate execution into database.
+        Multiple machines can be specified in the targets parameter.
+
+        @param cmd: command to start (e.g. '/sbin/shutdown -r now')
+        @type cmd: str
+
+        @param targets: couple with [UUID, machine name], or list of couples
+        @type targets: list
+
+        @param desc: Command description (e.g. 'reboot')
+        @type desc: str
+
+        @param gid: Machine group id if the command is started for a group of
+                    machines
+        @type gid: str
+        """
         self.logger.debug("add_command_quick : "+cmd+" on :")
         self.logger.debug(targets)
         files = []
@@ -378,7 +431,7 @@ class MscDatabase(Singleton):
         )
 
     def addTarget(self, commandID, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
-        """ Inject a new Target obect in our MSC database """
+        """ Inject a new Target object in our MSC database """
         myTarget = Target()
         myTarget.fk_commands = commandID
         myTarget.target_name = targetName
