@@ -2,18 +2,16 @@ import os
 import re
 import logging
 from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getMachinesBy, activate
+from mmc.plugins.inventory.tables_def import possibleQueries
 
 activate() # erk...
-
-def possibleQueries():
-    return ['Software/ProductName', 'Hardware/ProcessorType', 'Hardware/OperatingSystem', 'Drive/TotalSpace']
 
 def queryPossibilities():
     ret = {}
     p1 = re.compile('/')
-    for possible in possibleQueries():
-        ret[possible] = ['list', funcGet(possible)]
-    ret['Software/Products'] = ['double', funcGet('Software/Products')]
+    for type in ['list', 'double']:
+        for possible in possibleQueries()[type]:
+            ret[possible] = [type, funcGet(possible, type)]
     return ret
     
 def query(criterion, value):
@@ -21,29 +19,19 @@ def query(criterion, value):
     table, field = p1.split(criterion)
     return [getMachinesBy(table, field, value), True]
 
-def funcGet(couple):
-    if couple == 'Software/ProductName':
-        def getSoftwareProductName(value = ''):
+def funcGet(couple, type = 'list'):
+    if type == 'list':
+        table, col = re.compile('/').split(couple)
+        def getListValue(value = '', table = table, col = col):
             if value != '':
-                return getValuesFuzzy('Software', 'ProductName', value)
-            return getValues('Software', 'ProductName')
-        return getSoftwareProductName
-    elif couple == 'Hardware/ProcessorType':
-        def getHardwareProcessorType(value = ''):
-            return getValues('Hardware', 'ProcessorType')
-        return getHardwareProcessorType
-    elif couple == 'Hardware/OperatingSystem':
-        def getHardwareOperatingSystem(value = ''):
-            return getValues('Hardware', 'OperatingSystem')
-        return getHardwareOperatingSystem
-    elif couple == 'Software/Products':
-        def getSoftwareProduct(value = ''):
+                return getValuesFuzzy(table, col, value)
+            return getValues(table, col)
+        return getListValue
+    elif type == 'double':
+        table, col = re.compile('/').split('Software/ProductName')
+        def getListValue(value = '', table = table, col = col):
             if value != '':
-                return getValuesFuzzy('Software', 'ProductName', value)
-            return getValues('Software', 'ProductName')
-        return getSoftwareProduct
-    elif couple == 'Drive/TotalSpace':
-        def getDriveTotalSpace(value = 0):
-            return getValues('Drive', 'TotalSpace')
-        return getDriveTotalSpace
-    
+                return getValuesFuzzy(table, col, value)
+            return getValues(table, col)
+        return getListValue
+   

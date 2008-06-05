@@ -46,11 +46,11 @@ class InventoryConfig(PluginConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        self.dbdriver = self.get("main", "dbdriver")
-        self.dbhost = self.get("main", "dbhost")
-        self.dbname = self.get("main", "dbname")
-        self.dbuser = self.get("main", "dbuser")
-        self.dbpasswd = self.get("main", "dbpasswd")
+        self.dbdriver = self.get("inventory", "dbdriver")
+        self.dbhost = self.get("inventory", "dbhost")
+        self.dbname = self.get("inventory", "dbname")
+        self.dbuser = self.get("inventory", "dbuser")
+        self.dbpasswd = self.get("inventory", "dbpasswd")
         self.disable = (str(self.get("main", "disable")) == '1')
         try:
             self.dbpoolrecycle = self.getint("main", "dbpoolrecycle")
@@ -58,9 +58,29 @@ class InventoryConfig(PluginConfig):
             self.dbpoolrecycle = None
                                                                         
         try:
-            self.dbport = self.getint("main", "dbport")
+            self.dbport = self.getint("inventory", "dbport")
         except NoOptionError:
             # We will use the default db driver port
             self.dbport = None
 
+        try:
+            self.display = map(lambda x: x.split('::'), self.get("computers", "display").split('||'))
+        except NoOptionError:
+            self.display = [['cn', 'Computer Name'], ['displayName', 'Description']]
 
+        try:
+            self.content = {}
+            
+            # Registry::Path::path||Registry::Value::srvcomment::Path==srvcomment
+            for c in map(lambda x: x.split('::'), self.get("computers", "content").split('||')):
+                if not self.content.has_key(c[0]):
+                    self.content[c[0]] = []
+                self.content[c[0]].append( map(lambda x: desArrayIfUnic(x.split('==')), c[1:]))
+        except NoOptionError:
+            self.content = {}
+
+
+def desArrayIfUnic(x):
+    if len(x) == 1:
+        return x[0]
+    return x

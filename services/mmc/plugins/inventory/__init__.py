@@ -34,7 +34,6 @@ from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryCon
 from mmc.plugins.inventory.database import Inventory
 from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
-from mmc.plugins.inventory.server import InventoryGetService
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -111,6 +110,8 @@ class RpcProxy(RpcProxyI):
     
     def inventoryExists(self, uuid):
         ctx = self.currentContext
+        if uuid == '':
+            return False
 #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
 #            return False
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))

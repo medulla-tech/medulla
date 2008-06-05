@@ -32,7 +32,11 @@ class InventoryComputers(ComputerI):
         self.inventory = Inventory()
 
     def getComputer(self, ctx, filt = None):
-        return self.inventory.getMachinesOnly(ctx, filt)[0].toDN(ctx, True)
+        ret = self.inventory.getMachinesOnly(ctx, filt)
+        if type(ret) == list and len(ret) == 1:
+            return ret[0].toDN(ctx, True)
+        else:
+            return {}
 
     def getMachineMac(self, ctx, filt): # TODO : need to sort!
         machines = self.inventory.getMachineNetwork(ctx, filt)
@@ -89,5 +93,11 @@ class InventoryComputers(ComputerI):
 
     def delComputer(self, ctx, uuid):
         return self.inventory.delMachine(uuid)
+
+    def getComputersListHeaders(self, ctx):
+        """
+        Computers list header is just hostname as Computer Name and Description as Description 
+        """
+        return self.config.display 
 
 
