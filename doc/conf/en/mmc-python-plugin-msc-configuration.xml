@@ -283,6 +283,47 @@ option2 = plop      </screen></para>
 
             <entry>60 (seconds)</entry>
           </row>
+
+	  <row>
+            <entry>ignore_non_rfc2780</entry>
+
+            <entry>Enable filter for non unicast IP addresses when inserting computers IP address in MSC database</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+	  </row>
+
+	  <row>
+            <entry>ignore_non_rfc1918</entry>
+
+            <entry>Enable filter for non private IP addresses when inserting computers IP address in MSC database</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+	  </row>
+
+	  <row>
+            <entry>exclude_ipaddr</entry>
+
+            <entry>Enable filter made of comma separated values with filtered ip addresses or network ranges, used when inserting computers IP address in MSC database. For example: exclude_ipaddr = 192.168.0.1,10.0.0.0/10.255.255.255</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+	  </row>
+
+	  <row>
+            <entry>include_ipaddr</entry>
+
+            <entry>Disable filter made of comma separated values with accepted ip addresses or network ranges, used when inserting computers IP address in MSC database. The IP addresses matching this filter are always accepted and never take out by the other filters. For example: include_ipaddr = 192.168.0.1,10.0.0.0/10.255.255.255</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+	  </row>
+
         </tbody>
       </tgroup>
     </table>
