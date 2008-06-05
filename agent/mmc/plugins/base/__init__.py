@@ -203,6 +203,7 @@ class BasePluginConfig(PluginConfig):
         except:
             pass
 
+        self.baseComputersDN = self.get('ldap', 'baseComputersDN')
         self.backuptools = self.get("backup-tools", "path")
         self.backupdir = self.get("backup-tools", "destpath")
         self.username = self.getdn("ldap", "rootName")
@@ -2015,6 +2016,8 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def __init__(self, conffile = None):
         ldapUserGroupControl.__init__(self, conffile)
+        config = BasePluginConfig("base")
+        self.baseComputersDN = config.baseComputersDN
         
     def getComputer(self, ctx, filt = None):
         """
@@ -2114,8 +2117,8 @@ class Computers(ldapUserGroupControl, ComputerI):
         Remove a computer, given its uuid
         """
         dn = "objectUUID=" + uuid + "," + self.baseComputersDN
-        self.l.delete_s(dn)
-
+        return self.l.delete_s(dn)
+    
 class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
@@ -2189,6 +2192,10 @@ class RpcProxy(RpcProxyI):
     def getComputerCount(self, filt = None):
         ctx = self.currentContext
         return ComputerManager().getComputerCount(ctx, filt)
+
+    def getComputersListHeaders(self):
+        ctx = self.currentContext
+        return ComputerManager().getComputersListHeaders(ctx)
     
 
 ################################################################################

@@ -28,32 +28,32 @@ from mmc.support.mmctools import Singleton
 
 class ComputerI:
 
-    def canAddComputer():
+    def canAddComputer(self):
         """
         Does this module handle addition of computers 
         """
         pass
         
-    def addComputer(ctx, params):
+    def addComputer(self, ctx, params):
         """
         Add a new computer
         """
         pass
 
-    def canDelComputer():
+    def canDelComputer(self):
         """
         Does this module handle removal of computers
         """
         pass
 
-    def delComputer(ctx, params):
+    def delComputer(self, ctx, params):
         """
         Del a computer
         """
         pass
 
 
-    def getComputer(ctx, params):
+    def getComputer(self, ctx, params):
         """
         Get only one computer
         """
@@ -71,27 +71,33 @@ class ComputerI:
         """
         pass
     
-    def getComputerList(ctx, params):
+    def getComputerList(self, ctx, params):
         """
         Get computer list
         """
         pass
+    
+    def getComputerCount(self, ctx, params = None):
+        """
+        Get the number of computer
+        """
+        pass
 
-    def getRestrictedComputersListLen(ctx, params):
+    def getRestrictedComputersListLen(self, ctx, params):
         """
         Get a limited computer list size
         """
         pass
         
-    def getRestrictedComputersList(ctx, params):
+    def getRestrictedComputersList(self, ctx, params):
         """
         Get a limited computer list
         """
         pass
 
-    def getComputerCount(ctx, params = None):
+    def getComputersListHeaders(self, ctx):
         """
-        Get the number of computer
+        Get the headers of the computer list
         """
         pass
 
@@ -171,6 +177,11 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getComputersList(ctx, filt)
         
+    def getComputerCount(self, ctx, filt = None):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputerCount(ctx, filt)
+        
     def getRestrictedComputersListLen(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
@@ -183,8 +194,11 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getRestrictedComputersList(ctx, min, max, filt, advanced)
 
-    def getComputerCount(self, ctx, filt = None):
+    def getComputersListHeaders(self, ctx):
         klass = self.components[self.main]
         instance = klass()
-        return instance.getComputerCount(ctx, filt)
+        try:
+            return instance.getComputersListHeaders(ctx)
+        except:
+            return [['cn', 'Computer Name'], ['displayName', 'Description']]
 
