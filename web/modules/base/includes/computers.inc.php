@@ -40,6 +40,10 @@ function getRestrictedComputersName($min = 0, $max = -1, $filt = null) {
     return xmlCall("base.getRestrictedComputersName", array($min, $max, $filt));
 }
 
+function getComputersListHeaders() {
+    return xmlCall("base.getComputersListHeaders");
+}
+
 function canAddComputer() {
     if (!isset($_SESSION["canAddComputer"])) {
         $_SESSION["canAddComputer"] = xmlCall("base.canAddComputer", null);

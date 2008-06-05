@@ -45,15 +45,21 @@ if ($_GET['location']) {
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
-$names = array();
-foreach (getRestrictedComputersList($start, $start + $maxperpage, $filter) as $dn => $entry) {
-    $name = $entry[1]["cn"][0];
-    $comment = $entry[1]["displayName"][0];
-    $uuid = $entry[1]["objectUUID"][0];
-    $names[$name] = array('comment'=>$comment, 'uuid'=>$uuid, 'hostname'=>$name);
-}
-
+$names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter)));
 $count = getComputerCount($filter);
+
 list_computers($names, $filter, $count, true);
+
+function join_value($n) {
+    $ret = array();
+    foreach ($n[1] as $k=>$v) {
+        if (is_array($v)) {
+            $ret[$k] = join(", ", $v);
+        } else {
+            $ret[$k] = $v;
+        }
+    }
+    return $ret;
+}
 
 ?>

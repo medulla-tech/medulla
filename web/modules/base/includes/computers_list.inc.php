@@ -23,12 +23,6 @@
  */
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false) {
-    if (count($names) > 0) {
-        $sorted_names = array_keys($names);
-        natcasesort($sorted_names);
-    } else {
-        $sorted_names = array();
-    }
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
     $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
@@ -37,16 +31,22 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
-    $comments = array();
     $params = array();
-    $hostnames = array();
 
-    foreach($sorted_names as $name) {
-        $value = $names[$name];
-        $comments[] = $value['comment'];
-        $hostnames[] = $value['hostname'];
+    $headers = getComputersListHeaders();
+    $columns = array();
+    foreach ($headers as $header) {
+        $columns[$header[0]] = array();
+    }
+
+    foreach($names as $value) {
+        foreach ($headers as $header) {
+            $columns[$header[0]][]= $value[$header[0]];
+        }
+        $value['gid'] = $filter['gid'];
         $params[] = $value;
-        if (inventoryExists($value['uuid'])) {
+
+        if (inventoryExists($value['objectUUID'])) {
             $actionInventory[] = $inventAction;
         } else { 
             $actionInventory[] = $glpiAction;
@@ -63,17 +63,28 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 
     $n = null;
     if ($count) {
-        $n = new OptimizedListInfos($hostnames, _("Computer name"));
+        foreach ($headers as $header) {
+            if ($n == null) {
+                $n = new OptimizedListInfos($columns[$header[0]], _($header[1]));
+            } else {
+                $n->addExtraInfo($columns[$header[0]], _($header[1]));
+            }
+        }
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter));
         $n->start = 0;
         $n->end = $count - 1;
     } else {
-        $n = new ListInfos($hostnames, _("Computer name"));
-        $n->setNavBar(new AjaxNavBar(count($hostnames), $filter));
+        foreach ($headers as $header) {
+            if ($n == null) {
+                $n = new ListInfos($columns[$header[0]], _($header[1]));
+            } else {
+                $n->addExtraInfo($columns[$header[0]], _($header[1]));
+            }
+        }
+        $n->setNavBar(new AjaxNavBar(count($columns[$headers[0][0]]), $filter));
     }
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($comments, _("Description"));
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
     $n->setCssClass("machineName");

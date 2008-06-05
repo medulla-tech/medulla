@@ -25,14 +25,14 @@
 require_once("modules/base/includes/computers.inc.php");
 
 if (isset($_POST["bconfirm"])) {
-    $uuid = $_POST["uuid"];
+    $uuid = $_POST["objectUUID"];
     delComputer($uuid);
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The computer has been deleted."));
     header("Location: " . urlStrRedirect("base/computers/index"));
 } else {
-    $uuid = urldecode($_GET["uuid"]);
+    $uuid = urldecode($_GET["objectUUID"]);
     $f = new PopupForm(_T("Delete this computer"));
-    $hidden = new HiddenTpl("uuid");
+    $hidden = new HiddenTpl("objectUUID");
     $f->add($hidden, array("value" => $uuid, "hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
