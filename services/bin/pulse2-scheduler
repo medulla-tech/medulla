@@ -82,9 +82,9 @@ def startService():
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.username:
-        logger.warn('scheduler "%s": no username set !!' % (config.name))
+        logger.warn('scheduler %s: no username set !!' % (config.name))
     if not config.password:
-        logger.warn('scheduler "%s": no password set !!' % (config.name))
+        logger.warn('scheduler %s: no password set !!' % (config.name))
 
     # check versus MySQLdb version
     import MySQLdb
@@ -100,12 +100,18 @@ def startService():
             logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
 
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
-    logger.info('scheduler "%s": available launchers: %s' % (config.name, ' '.join(launchers)))
+    logger.info('scheduler %s: available launchers: %s' % (config.name, ' '.join(launchers)))
 
     # Starts XMLRPC server
     logger.info('scheduler %s: starting' % config.name)
     try:
         if config.enablessl:
+            if not os.path.isfile(config.privkey):
+                logger.error('scheduler "%s": can\'t read SSL key "%s"' % (config.name, config.privkey))
+                return 1
+            if not os.path.isfile(config.certfile):
+                logger.error('scheduler "%s": can\'t read SSL certificate "%s"' % (config.name, config.certfile))
+                return 1
             sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
             twisted.internet.reactor.listenSSL(
                 config.port,
@@ -113,6 +119,7 @@ def startService():
                 interface = config.host,
                 contextFactory = sslContext
                 )
+            logger.info('scheduler %s: activating SSL mode' % (config.name))
         else:
             twisted.internet.reactor.listenTCP(
                 config.port,
@@ -120,13 +127,12 @@ def startService():
                 interface = config.host
                 )
     except Exception, e:
-        logger.error('scheduler "%s": can\'t bind to %s:%d' % (config.name, config.host, config.port))
-        logger.error(e)
+        logger.error('scheduler %s: can\'t bind to %s:%d, reason is %s' % (config.name, config.host, config.port, e))
         return 1
 
     # start periodic scheduler, called every awake_time seconds
     reschedule_start_all_commands(None)
-    logger.info('scheduler "%s": listening on %s:%d' % (config.name, config.host, config.port))
+    logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
 
     twisted.internet.reactor.run()
     return 0
