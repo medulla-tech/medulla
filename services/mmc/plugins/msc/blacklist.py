@@ -21,6 +21,9 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import re
+import sre_constants
+
 def dottedQuadToNum(ip):
     """Convert decimal dotted quad string to long integer"""
     bytes = ip.split('.')
@@ -41,7 +44,6 @@ def ipInRange(ipAddress, beginRange, endRange):
     begin = dottedQuadToNum(beginRange)
     end = dottedQuadToNum(endRange)
     return (begin <= ip) and (ip <= end)
-
 
 def processIPListFromConfig(iplist):
     """
@@ -167,4 +169,57 @@ def mergeWithIncludeFilter(ips, filteredips, include):
                 if ipInRange(ip, inc[0], inc[1]) and ip not in ret:
                     ret.append(ip)
                     break
+    return ret
+
+def isFqdn(hostname):
+    """
+    @param hostname: computer host name
+    @type hostname: str
+
+    @returns: True if the hostname is a valid FQDN
+    @rtype: bool
+    """
+    # _ is accepted in the host name part of the FQDN because some AD managed
+    # DNS zones may have some host with _ in their name (they are accepted
+    # in NT4 netbios name).
+    ret = False
+    if re.compile("^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]\.){1,10}[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$").search(hostname):
+        ret = True
+    return ret
+
+def isValidHostname(hostname):
+    """
+    @param hostname: computer host name
+    @type hostname: str
+
+    @returns: True if the hostname is a valid host name
+    @rtype: bool
+    """
+    ret = False
+    if isFqdn(hostname) or re.compile("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$").search(hostname):
+        ret = True
+    return ret
+
+def checkHostnameWithRegexps(hostname, regexps):
+    """
+    Check if a host name is matching a regexp from a list of regexps
+    
+    @param hostname: host name to check
+    @type hostname: str
+
+    @param regexps: space separated regexps
+    @type regexps: str
+
+    @returns: True if the host name is matching at least one regexp
+    @rtype: boolean
+    """
+    ret = False
+    for regexp in regexps.split():
+        try:
+            if re.compile(regexp).search(hostname):
+                ret = True
+                break
+        except sre_constants.error:
+            # The regexp is malformed, ignore it
+            pass
     return ret

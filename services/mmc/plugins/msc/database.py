@@ -250,7 +250,7 @@ class MscDatabase(Singleton):
         if query:
             for q in query:
                 self.logger.debug("Going to dispatch %s" % q.id)
-                q.dispatch(ctx)
+                q.dispatch(ctx, self.config)
         else:
             self.logger.debug("No command to dispatch")
 
@@ -311,18 +311,19 @@ class MscDatabase(Singleton):
         ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
         self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
 
-        # Multiple IP addresses or IP addresses may be separated by "||"
-        targetMac = '||'.join(computer[1]['macAddress'])
-        targetIp = '||'.join(ipAddresses)
         try:
             targetName = computer[1]['fullname']
         except KeyError:
             pass
 
+        # Multiple IP addresses or IP addresses may be separated by "||"
+        targetMac = '||'.join(computer[1]['macAddress'])
+        targetIp = '||'.join(ipAddresses)
+
         # compute URI depending on selected mode
         if mode == 'push_pull':
-            mirror = MirrorApi().getMirror(targetName)
-            fallback = MirrorApi().getFallbackMirror(targetName)
+            mirror = MirrorApi().getMirror({"name": targetName, "uuid": targetUuid})
+            fallback = MirrorApi().getFallbackMirror({"name": targetName, "uuid": targetUuid})
             targetUri = '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
                 '||' + \
                 '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint'])

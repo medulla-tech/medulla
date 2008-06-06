@@ -31,6 +31,7 @@ import sqlalchemy
 # MSC modules
 import mmc.plugins.msc.database
 import mmc.plugins.msc.machines
+from mmc.plugins.msc import blacklist
 
 # ORM mappings
 from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
@@ -44,10 +45,16 @@ class Commands(object):
     def getNextConnectionDelay(self):
         return self.next_connection_delay
 
-    def dispatch(self, ctx):
+    def dispatch(self, ctx, config):
         """
         According to the current command (self), inject as many lines in
-        CommandsOnHost as required (i.e. one per target)
+        commands_on_host as required (i.e. one per target)
+
+        @param ctx: current security context
+        @type ctx: SecurityContext
+
+        @param config: current MscConfig to use
+        @type config: MscConfig        
         """
         if self.isDispatched():
             return None
@@ -62,10 +69,10 @@ class Commands(object):
         session = sqlalchemy.create_session()        
         # iterate over available target
         for myTarget in database.getTargets(self.id):
-            logger.debug("Create new command on host : %s" % (myTarget.target_name))
+            logger.debug("Create new command on host : %s with host name '%s'" % (myTarget.target_uuid, myTarget.target_name))
             myCommandOnHost = CommandsOnHost()
             myCommandOnHost.fk_commands = self.id
-            myCommandOnHost.host = myTarget.target_name # maybe uuid ...
+            myCommandOnHost.host = myTarget.target_name
             myCommandOnHost.start_date = self.start_date or "0000-00-00 00:00:00"
             myCommandOnHost.end_date = self.end_date or "0000-00-00 00:00:00"
             myCommandOnHost.next_launch_date = self.start_date or "0000-00-00 00:00:00"
@@ -82,6 +89,16 @@ class Commands(object):
 
             # update our target with the new command_on_host
             myTarget.fk_commands_on_host = myCommandOnHost.getId()
+
+            # Apply host name blacklist
+            if not blacklist.checkHostnameWithRegexps(myTarget.target_name, config.include_hostname):
+                # The host name is not in the whitelist
+                if (config.ignore_non_fqdn and not blacklist.isFqdn(myTarget.target_name)) or (config.ignore_invalid_hostname and not blacklist.isValidHostname(myTarget.target_name)) or blacklist.checkHostnameWithRegexps(myTarget.target_name, config.exclude_hostname):
+                    # The host name is not FQDN or invalid, so we don't put it the
+                    # database. This way the host name won't be use to resolve the
+                    # computer host name.
+                    logger.debug("Host name has been filtered because '%s' is not FQDN, invalid or matched an exclude regexp" % myTarget.target_name)
+                    myTarget.target_name = ""
             session.update(myTarget) # not session.save as myTarget was attached to another session
             session.flush()
 

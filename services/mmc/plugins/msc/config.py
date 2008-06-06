@@ -67,6 +67,16 @@ class MscConfig(PluginConfig):
     # Always accepted IP addresses
     include_ipaddr = ""
 
+    # Hostname blacklists setting
+    # To filter non FQDN computer host name
+    ignore_non_fqdn = True
+    # To filter invalid host name
+    ignore_invalid_hostname = False
+    # To filter with regexp
+    exclude_hostname = ""
+    # Whitelist using regexps
+    include_hostname = ""
+
 
     schedulers = {
         'scheduler_01': {
@@ -108,7 +118,7 @@ class MscConfig(PluginConfig):
         if self.has_option("msc", "db_pool_recycle"):
             self.dbpoolrecycle = self.get("msc", "db_pool_recycle")
 
-        # Blacklists
+        # IP address blacklists
         if self.has_option("msc", "ignore_non_rfc2780"):
             self.ignore_non_rfc2780 = self.getboolean("msc", "ignore_non_rfc2780")
         if self.has_option("msc", "ignore_non_rfc1918"):
@@ -117,6 +127,16 @@ class MscConfig(PluginConfig):
             self.exclude_ipaddr = self.get("msc", "exclude_ipaddr")
         if self.has_option("msc", "include_ipaddr"):
             self.include_ipaddr = self.get("msc", "include_ipaddr")
+
+        # Host name blacklists
+        if self.has_option("msc", "ignore_non_fqdn"):
+            self.ignore_non_fqdn = self.getboolean("msc", "ignore_non_fqdn")
+        if self.has_option("msc", "ignore_invalid_hostname"):
+            self.ignore_invalid_hostname = self.getboolean("msc", "ignore_invalid_hostname")
+        if self.has_option("msc", "exclude_hostname"):
+            self.exclude_hostname = self.get("msc", "exclude_hostname")
+        if self.has_option("msc", "include_hostname"):
+            self.include_hostname = self.get("msc", "include_hostname")
 
         # schedulers
         for section in self.sections():
