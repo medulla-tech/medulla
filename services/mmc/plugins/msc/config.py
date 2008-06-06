@@ -77,6 +77,8 @@ class MscConfig(PluginConfig):
     # Whitelist using regexps
     include_hostname = ""
 
+    # MAC address blacklist
+    wol_macaddr_blacklist = ""
 
     schedulers = {
         'scheduler_01': {
@@ -137,6 +139,10 @@ class MscConfig(PluginConfig):
             self.exclude_hostname = self.get("msc", "exclude_hostname")
         if self.has_option("msc", "include_hostname"):
             self.include_hostname = self.get("msc", "include_hostname")
+
+        # MAC address blacklist
+        if self.has_option("msc", "wol_macaddr_blacklist"):
+            self.wol_macaddr_blacklist = self.get("msc", "wol_macaddr_blacklist")
 
         # schedulers
         for section in self.sections():

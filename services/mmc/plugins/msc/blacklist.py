@@ -200,26 +200,43 @@ def isValidHostname(hostname):
         ret = True
     return ret
 
-def checkHostnameWithRegexps(hostname, regexps):
+def checkWithRegexps(string, regexps):
     """
-    Check if a host name is matching a regexp from a list of regexps
+    Check if a string is matching a regexp from a list of regexps
     
-    @param hostname: host name to check
+    @param hostname: string to check
     @type hostname: str
 
     @param regexps: space separated regexps
     @type regexps: str
 
-    @returns: True if the host name is matching at least one regexp
+    @returns: True if the string is matching at least one regexp
     @rtype: boolean
     """
     ret = False
     for regexp in regexps.split():
+        # Add ^ and $ to the regexp
+        if not regexp.startswith("^"):
+            regexp = "^" + regexp
+        if not regexp.endswith("$"):
+            regexp = regexp + "$"
         try:
-            if re.compile(regexp).search(hostname):
+            if re.compile(regexp).search(string):
                 ret = True
                 break
         except sre_constants.error:
             # The regexp is malformed, ignore it
             pass
+    return ret
+
+def macAddressesFilter(macs, regexps):
+    """
+    Filter a list of MAC addresses, removing those that are matching at least
+    on regexp in a list of regexps.
+    """
+    ret = macs[:]
+    for mac in macs:
+        if checkWithRegexps(mac, regexps):
+            ret.remove(mac)
+            continue
     return ret

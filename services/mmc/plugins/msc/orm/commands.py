@@ -91,9 +91,9 @@ class Commands(object):
             myTarget.fk_commands_on_host = myCommandOnHost.getId()
 
             # Apply host name blacklist
-            if not blacklist.checkHostnameWithRegexps(myTarget.target_name, config.include_hostname):
+            if not blacklist.checkWithRegexps(myTarget.target_name, config.include_hostname):
                 # The host name is not in the whitelist
-                if (config.ignore_non_fqdn and not blacklist.isFqdn(myTarget.target_name)) or (config.ignore_invalid_hostname and not blacklist.isValidHostname(myTarget.target_name)) or blacklist.checkHostnameWithRegexps(myTarget.target_name, config.exclude_hostname):
+                if (config.ignore_non_fqdn and not blacklist.isFqdn(myTarget.target_name)) or (config.ignore_invalid_hostname and not blacklist.isValidHostname(myTarget.target_name)) or blacklist.checkWithRegexps(myTarget.target_name, config.exclude_hostname):
                     # The host name is not FQDN or invalid, so we don't put it the
                     # database. This way the host name won't be use to resolve the
                     # computer host name.

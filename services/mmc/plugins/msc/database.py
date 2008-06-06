@@ -316,8 +316,12 @@ class MscDatabase(Singleton):
         except KeyError:
             pass
 
+        self.logger.debug("Computer known MAC addresses before filter: " + str(computer[1]['macAddress']))
+        macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
+        self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
+
         # Multiple IP addresses or IP addresses may be separated by "||"
-        targetMac = '||'.join(computer[1]['macAddress'])
+        targetMac = '||'.join(macAddresses)
         targetIp = '||'.join(ipAddresses)
 
         # compute URI depending on selected mode
