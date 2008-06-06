@@ -202,8 +202,13 @@ class BasePluginConfig(PluginConfig):
             self.passwordscheme = self.get("ldap", "passwordscheme")
         except:
             pass
-
-        self.baseComputersDN = self.get('ldap', 'baseComputersDN')
+        # Where LDAP computer objects are stored
+        # For now we ignore if the option does not exist, because it breaks
+        # all existing intallations
+        try:
+            self.baseComputersDN = self.get('ldap', 'baseComputersDN')
+        except:
+            pass
         self.backuptools = self.get("backup-tools", "path")
         self.backupdir = self.get("backup-tools", "destpath")
         self.username = self.getdn("ldap", "rootName")
