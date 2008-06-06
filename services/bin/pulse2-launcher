@@ -66,12 +66,12 @@ def scheduleTellIAmAlive():
 def tellIAmAlive():
     def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
         if pulse2.launcher.process_control.ProcessList().getZombiesCount() > 0:
-            logging.getLogger().info('launcher "%s": sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
+            logging.getLogger().info('launcher %s: sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
             for p in pulse2.launcher.process_control.ProcessList().getZombiesList():
                 p.installEndBack()
 
     def _eb(reason): # can't contact scheduler, log and continue
-        logging.getLogger().warn('launcher "%s": failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+        logging.getLogger().warn('launcher %s: failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
 
     scheduler = pulse2.launcher.utils.getScheduler()
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
@@ -93,6 +93,12 @@ def startService():
     launcher = Launcher(name)
     try:
         if enablessl:
+            if not os.path.isfile(config.launchers[config.name]["privkey"]):
+                logger.error('launcher %s: can\'t read SSL key "%s"' % (name, config.launchers[config.name]["privkey"]))
+                return 1
+            if not os.path.isfile(config.launchers[config.name]["certfile"]):
+                logger.error('launcher %s: can\'t read SSL certificate "%s"' % (name, config.launchers[config.name]["certfile"]))
+                return 1
             sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.launchers[config.name]["privkey"], config.launchers[config.name]["certfile"])
             twisted.internet.reactor.listenSSL(
                 port,
@@ -100,6 +106,7 @@ def startService():
                 interface = bind,
                 contextFactory = sslContext
                 )
+            logger.info('launcher %s: activating SSL mode' % (name))
         else:
             twisted.internet.reactor.listenTCP(
                 port,
@@ -107,13 +114,13 @@ def startService():
                 interface = bind
                 )
     except Exception, e:
-        logger.error('launcher "%s": can\'t bind to %s:%d' % (name, bind, port))
+        logger.error('launcher %s: can\'t bind to %s:%d' % (name, bind, port))
         logger.error(e)
         return 1
 
     # Start periodic scheduler probing, called every awake_time seconds
     tellIAmAlive()
-    logger.info('launcher "%s": listening on %s:%d' % (name, bind, port))
+    logger.info('launcher %s: listening on %s:%d' % (name, bind, port))
 
     twisted.internet.reactor.run()
     return 0
