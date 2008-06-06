@@ -324,6 +324,46 @@ option2 = plop      </screen></para>
             <entry></entry>
 	  </row>
 
+	  <row>
+            <entry>ignore_non_fqdn</entry>
+
+            <entry>Enable filter for host name that are not FQDN. If filtered, the host name won't be used by the scheduler to find the target IP address</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+	  </row>
+
+	  <row>
+            <entry>ignore_invalid_hostname</entry>
+
+            <entry>Enable filter for host name that are invalid (that contains forbidden characters). If filtered, the host name won't be used by the scheduler to find the target IP address.</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+	  </row>
+
+	  <row>
+            <entry>exclude_hostname</entry>
+
+            <entry>Enable filter for host name that are invalid if they match a  regexp from this list of regexp. If filtered, the host name won't be used by the scheduler to find the target IP address. For example: exclude_hostname = ^computer[0-9]*$ ^server[0-9]*</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+	  </row>
+
+	  <row>
+            <entry>include_hostname</entry>
+
+            <entry>The host names matching at least one regexp from this list of regexp will never be filtered. For example: For example: include_hostname = ^computer[0-9]*$ ^server[0-9]*</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+	  </row>
+
         </tbody>
       </tgroup>
     </table>
