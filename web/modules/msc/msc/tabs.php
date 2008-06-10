@@ -4,6 +4,9 @@ require('modules/msc/includes/machines.inc.php');
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 
+if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
+if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
+
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
     if ($machine->uuid != $_GET['uuid']) {
