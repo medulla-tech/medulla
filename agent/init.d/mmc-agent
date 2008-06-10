@@ -19,7 +19,7 @@
 
 
 # Redhat based distributions specific
-# chkconfig: 345 40 60
+# chkconfig: 345 99 60
 # description: MMC agent
 
 # Variables
