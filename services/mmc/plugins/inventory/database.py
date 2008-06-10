@@ -270,7 +270,7 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.offset(pattern['min'])
                 query = query.limit(int(pattern['max']) - int(pattern['min']))
         except KeyError, e:
-            pass
+            query = query.all()
 
         session.close()
         return query
