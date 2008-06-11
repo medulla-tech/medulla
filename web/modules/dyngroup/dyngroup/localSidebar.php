@@ -33,10 +33,9 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base
 $items = array();
 $groups = getAllGroups(array('canShow'=>true));
 foreach ($groups as $group) {
-    $isA = _T("request", "dyngroup");
-    if (!$group->isDyn()) { $isA = _T("group", "dyngroup"); }
-    if ($group->isDyn() && !$group->isRequest()) { $isA = _T("group", "dyngroup"); }
-    $s = new SideMenuItemNoAclCheck( //SideMenuItem(
+    $isA = ($group->isDyn() ? (!$group->isRequest() ? _T('group', 'dyngroup') : _T('query', 'dyngroup')) : (_T('static group', 'dyngroup')));
+    
+    $s = new SideMenuItemNoAclCheck(
              sprintf(_T("Display %s '%s'", "dyngroup"), $isA, $group->getName()),
              "base", "computers", "display&gid=".$group->id
     );
