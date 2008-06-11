@@ -477,6 +477,9 @@ class DyngroupDatabase(Singleton):
         session.close()
         return group.id
 
+    def todyn_group(self, ctx, id):
+        return self.__deleteResults(id)
+
     def isdyn_group(self, ctx, id):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)

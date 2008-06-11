@@ -152,8 +152,7 @@ class RpcProxy(RpcProxyI):
 
     def todyn_group(self, id):
         ctx = self.currentContext
-        self.logger.error("todyn_group is not implemented")
-        pass
+        return xmlrpcCleanup(DyngroupDatabase().todyn_group(ctx, id))
 
     def isrequest_group(self, id):
         ctx = self.currentContext
