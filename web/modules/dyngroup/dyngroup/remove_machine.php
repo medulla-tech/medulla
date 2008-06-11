@@ -27,7 +27,7 @@ require_once("modules/dyngroup/includes/includes.php");
 $gid = quickGet('gid');
 $group = new Group($gid, true);
 $machine = quickGet('hostname');
-$uuid = quickGet('uuid');
+$uuid = quickGet('objectUUID');
 
 if (quickGet('valid')) {
     $group->delMember($uuid);
@@ -38,7 +38,7 @@ if (quickGet('valid')) {
 
 ?>
 
-<form action="<?= urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'uuid'=>$uuid)) ?>" method="post">
+<form action="<?= urlStr("base/computers/remove_machine", array('gid'=>$gid, 'hostname'=>$machine, 'objectUUID'=>$uuid)) ?>" method="post">
 <p>
 <?  
     printf(_T("You will remove machine <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());
