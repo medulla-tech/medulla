@@ -39,7 +39,7 @@ if (!$request) { $request = $group->getRequest(); }
 if (!$request) { exit(0); }
 
 $save_type = quickGet('save_type');
-if (!$save_type && $group) { $save_type = ($group->isRequest() && 1 || 2); }
+if (!$save_type && $group) { $save_type = ($group->isRequest() ? 1 : 2); }
 $name = quickGet('name');
 $visible = quickGet('visible'); # TODO check all this!
 if (!$visible && $group) { $visible = $group->show; }
