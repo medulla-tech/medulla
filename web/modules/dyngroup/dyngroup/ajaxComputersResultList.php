@@ -47,52 +47,32 @@ $onames = array();
 if (!$_GET["start"]) { $_GET["start"] = 0; }
 if (!$_GET["end"]) { $_GET["end"] = 10; }
 
-$filter = $_GET["filter"];
+$filter = array('filter'=> $_GET["filter"], 'gid'=> $_GET['gid']);
 if ($_GET['location']) {
     $filter['location'] = $_GET['location'];
 }
-$gid = $_GET['gid'];
 
-$group = getGroupById($gid);
+$names = array_map("join_value", array_values(getRestrictedComputersList($_GET["start"], $_GET["end"], $filter)));
+$count = getComputerCount($filter);
 
-if ($group->isDyn()) {
-    if (!$group->isRequest()) { # dynamic group with static results
-        displayStatic($group, $_GET["start"], $_GET["end"], $filter, $gid);
-    } else { # dynamic gropu with dynamic results
-        $res = $group->reply($_GET["start"], $_GET["end"], $filter);
-        $len = $group->countReply($filter);
-        display($res, $len, $group, $_GET["start"], $_GET["end"], $filter, $gid);
-    }
-} else { # static group with static result
-    displayStatic($group, $_GET["start"], $_GET["end"], $filter, $gid);
+$canbedeleted = true;
+$group = getGroupById($_GET['gid']);
+if ($group->isDyn() && $group->isRequest()) {
+    $canbedeleted = false;
 }
 
+list_computers($names, $filter, $count, false, $canbedeleted);
 
-function displayStatic($group, $start, $end, $filter, $gid) {
-    $res = $group->getResult($start, $end, $filter);
-    $len = $group->countResult($filter);
-    display($res, $len, $group, $start, $end, $filter, $gid, true);
-}
-
-function display($res, $len, $group, $start, $end, $filter, $gid, $canbedeleted = false) {
-    foreach ($res as $host) {
-        $hostname = $host['hostname'];
-        $uuid = $host['uuid'];
-        $p = $default_params;
-        $p['delete'] = $hostname;
-        $p['hostname'] = $hostname;
-        $p['uuid'] = $uuid;
-        $p['inventaire'] = $hostname;
-        $p['gid'] = $gid;
-        $comp = getComputer(array('uuid'=>$uuid));
-        if ($comp) {
-            $p['comment'] = $comp[1]['displayName'][0];
+function join_value($n) {
+    $ret = array();
+    foreach ($n[1] as $k=>$v) {
+        if (is_array($v)) {
+            $ret[$k] = join(", ", $v);
+        } else {
+            $ret[$k] = $v;
         }
-        $parameters[$hostname] = $p;
     }
-    
-    list_computers($parameters, $filter, $len, false, $canbedeleted);
-    print "<br/>";
+    return $ret;
 }
 
 ?>
