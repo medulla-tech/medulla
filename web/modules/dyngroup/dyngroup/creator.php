@@ -159,8 +159,6 @@ if (!$request->isEmpty())  {
     print "<hr/>";
     print "<table>";
     print "<tr><td><a href='".
-        urlStr("base/computers/display", array('id'=>$id, 'request'=>$request->toS())).
-        "'>"._T("Execute", "dyngroup")."</a></td><td><a href='".
         urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>0)).
         "'>"._T("Save result", "dyngroup")."</a></td><td><a href='".
         urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>1)).
