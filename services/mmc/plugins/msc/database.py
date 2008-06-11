@@ -50,6 +50,33 @@ SA_MAYOR = 0
 SA_MINOR = 3
 DATABASEVERSION = 6
 
+# TODO need to check for useless function (there should be many unused one...)
+
+def create_method(m):
+    def method(self, already_in_loop = False):
+        ret = None
+        try:
+            old_m = getattr(Query, '_old_'+m)
+            ret = old_m(self)
+        except SQLError, e:
+            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
+                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
+                for i in range(0, NB_DB_CONN_TRY):
+                    new_m = getattr(Query, m)
+                    ret = new_m(self, True)
+            if ret:
+                return ret
+            raise e
+        return ret
+    return method
+
+for m in ['first', 'count', 'all']:
+    try:
+        getattr(Query, '_old_'+m)
+    except AttributeError:
+        setattr(Query, '_old_'+m, getattr(Query, m))
+        setattr(Query, m, create_method(m))
+
 class MscDatabase(Singleton):
     """
     Singleton Class to query the msc database.
