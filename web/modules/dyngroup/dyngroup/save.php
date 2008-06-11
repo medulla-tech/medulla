@@ -64,7 +64,7 @@ if ($name == '') {
 } else {
     if ($id) {
         $group = new Group($id, true);
-        $group->setVisibility($visibility);
+        $group->setVisibility($visible);
         $group->setName($name);
         $gid = $id;
     } else {
@@ -95,26 +95,11 @@ function drawBoolEquation($equ_bool) {
 }
 
 function displayStatic($group, $start, $end, $filter, $gid) {
-    $res = $group->getResult($start, $end, $filter);
-    $len = $group->countResult($filter);
+    $_GET['gid'] = $gid;
+    $_GET['start'] = $start;
+    $_GET['end'] = $end;
 
-    foreach ($res as $host) {
-        $hostname = $host['hostname'];
-        $uuid = $host['uuid'];
-        $p = $default_params;
-        $p['delete'] = $hostname;
-        $p['hostname'] = $hostname;
-        $p['uuid'] = $uuid;
-        $p['inventaire'] = $hostname;
-        $comp = getComputer(array('uuid'=>$uuid));
-        if ($comp) {
-            $p['comment'] = $comp[1]['displayName'][0];
-        }
-        $parameters[$hostname] = $p;
-    }
-    
-    list_computers($parameters, $filter, $len, false, $canbedeleted);
-    print "<br/>";
+    $group->prettyDisplay();
 }
 
 ?>
