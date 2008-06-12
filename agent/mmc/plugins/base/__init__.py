@@ -2062,9 +2062,8 @@ class Computers(ldapUserGroupControl, ComputerI):
 
     def getRestrictedComputersListLen(self, ctx, filt):
         """
-        """
-        retour = self.getComputersList(filt)
-        return len(retour)
+        """        
+        return len(self.getComputersList(filt))
         
     def getRestrictedComputersList(self, ctx, min, max, filt, advanced):
         """
