@@ -106,10 +106,6 @@ function add_command_quick($cmd, $hosts, $desc, $gid = null) {
     return xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
 }
 
-function dispatch_all_commands() {
-    return xmlCall('msc.dispatch_all_commands');
-}
-
 function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
 }

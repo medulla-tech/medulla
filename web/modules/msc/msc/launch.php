@@ -42,7 +42,6 @@ function action($action, $target) {
             $script_list[$action]["title".$current_lang],
             $_GET['gid']
         );
-        dispatch_all_commands();
         scheduler_start_all_commands();
         // if on a single computer
         header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
@@ -98,7 +97,6 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
 
     // record new command
     $id = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-    dispatch_all_commands();
     scheduler_start_all_commands();
 
     // then redirect to the logs page
