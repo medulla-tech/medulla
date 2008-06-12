@@ -60,7 +60,7 @@ def gatherCoHStuff(idCommandOnHost):
     database = MscDatabase()
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
     myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
-    myTarget = session.query(Target).filter(database.target.c.fk_commands == myCommandOnHost.getIdCommand()).limit(1)[0]
+    myTarget = session.query(Target).filter(database.target.c.fk_commands_on_host == idCommandOnHost).limit(1)[0]
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
