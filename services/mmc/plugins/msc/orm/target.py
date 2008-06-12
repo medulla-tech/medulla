@@ -36,6 +36,9 @@ class Target(object):
         session.flush()
         session.close()
 
+    def getId(self):
+        return self.id
+
     def getUUID(self):
         return self.target_uuid
 
@@ -54,8 +57,6 @@ class Target(object):
     def toH(self):
         return {
             'id': self.id,
-            'fk_commands': self.fk_commands,
-            'fk_commands_on_host': self.fk_commands_on_host,
             'target_name': self.target_name,
             'target_uuid': self.target_uuid,
             'target_ipaddr': self.target_ipaddr,

@@ -43,12 +43,15 @@ from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
 from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
 
+# blacklists
+from mmc.plugins.msc import blacklist
+
 # Imported last
 import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 6
+DATABASEVERSION = 7
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -148,7 +151,7 @@ class MscDatabase(Singleton):
         """
         # commands
         self.commands = Table("commands", self.metadata,
-                            Column('dispatched', String(32), default='NO'),
+                            Column('dispatched', String(32), default='YES'),
                             autoload = True)
         # commands_history
         self.commands_history = Table(
@@ -161,13 +164,14 @@ class MscDatabase(Singleton):
             "commands_on_host",
             self.metadata,
             Column('fk_commands', Integer, ForeignKey('commands.id')),
+            Column('fk_target', Integer, ForeignKey('target.id')),
             autoload = True
         )
         # target
         self.target = Table(
             "target",
             self.metadata,
-            Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
+        #    Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
             autoload = True
         )
         # version
@@ -262,25 +266,6 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def dispatchAllCommands(self, ctx):
-        """
-        Dispatch all commands that have been put in database, but that have not
-        been dispatched.
-
-        Each command is dispatched, this means it it transformed to
-        one or multiple rows in the commands_on_host table.
-        """
-        self.logger.debug("MSC_Scheduler->dispatchAllCommands()...")
-        session = create_session()
-        query = session.query(Commands).filter(self.commands.c.dispatched == 'NO').all()
-        session.close()
-        if query:
-            for q in query:
-                self.logger.debug("Going to dispatch %s" % q.id)
-                q.dispatch(ctx, self.config)
-        else:
-            self.logger.debug("No command to dispatch")
-
     def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw):
         session = create_session()
         cmd = Commands()
@@ -307,7 +292,29 @@ class MscDatabase(Singleton):
         session.close()
         return cmd.id
 
-    def createTarget(self, target, mode, cmd_id, group_id):
+    def createCommandsOnHost(self, cmd_id, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00"):
+        session = create_session()
+        logging.getLogger().debug("Create new command on host '%s'" % (target_name))
+        myCommandOnHost = CommandsOnHost()
+        myCommandOnHost.fk_commands = cmd_id
+        myCommandOnHost.fk_target = target_id
+        myCommandOnHost.host = target_name
+        myCommandOnHost.start_date = cmd_start_date
+        myCommandOnHost.end_date = cmd_end_date
+        myCommandOnHost.next_launch_date = cmd_start_date
+        myCommandOnHost.current_state = 'scheduled'
+        myCommandOnHost.uploaded = 'TODO'
+        myCommandOnHost.executed = 'TODO'
+        myCommandOnHost.deleted = 'TODO'
+        myCommandOnHost.number_attempt_connection_remains = cmd_max_connection_attempt
+        myCommandOnHost.next_attempt_date_time = 0
+        session.save(myCommandOnHost)
+        session.flush()
+        session.refresh(myCommandOnHost)
+        logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
+        return myCommandOnHost.getId()
+
+    def createTarget(self, target, mode, group_id):
         """
         Create a row in the target table.
         
@@ -316,9 +323,6 @@ class MscDatabase(Singleton):
 
         @param mode: target deployment mode
         @type mode: str
-
-        @param cmd_id: id of the command that requires this target row
-        @type cmd_id: int
 
         @param group_id: id of the machine group that requires this target row
         @type group_id: str
@@ -364,8 +368,7 @@ class MscDatabase(Singleton):
             targetUri = None
 
         # TODO: add path
-        MscDatabase().addTarget(
-            cmd_id,
+        return MscDatabase().addTarget(
             targetName,
             targetUuid,
             targetIp,
@@ -403,16 +406,37 @@ class MscDatabase(Singleton):
         # create (and save) the command itself
         cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw)
 
-        # create the corresponding target
+        # create the corresponding target and commands_on_host
+        session = create_session()
         if type(target[0]) == list:
             for t in target:
-                self.createTarget(t, mode, cmd_id, group_id)
+                target_id = self.createTarget(t, mode, group_id)
+                t = session.query(Target).get(target_id)
+                self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
+                self.blacklistTargetHostname(t, session)
         else:
-            self.createTarget(target, mode, cmd_id, group_id)
+            target_id = self.createTarget(target, mode, group_id)
+            target = session.query(Target).get(target_id)
+            self.createCommandsOnHost(cmd_id, target.getId(), target.getShortName(), max_connection_attempt, start_date, end_date)
+            self.blacklistTargetHostname(target, session)
 
         # log
         self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))
         return cmd_id
+
+
+    def blacklistTargetHostname(self, myTarget, session = create_session()):
+        # Apply host name blacklist
+        if not blacklist.checkWithRegexps(myTarget.target_name, self.config.include_hostname):
+            # The host name is not in the whitelist
+            if (self.config.ignore_non_fqdn and not blacklist.isFqdn(myTarget.target_name)) or (self.config.ignore_invalid_hostname and not blacklist.isValidHostname(myTarget.target_name)) or blacklist.checkWithRegexps(myTarget.target_name, self.config.exclude_hostname):
+                # The host name is not FQDN or invalid, so we don't put it the
+                # database. This way the host name won't be use to resolve the
+                # computer host name.
+                self.logger.debug("Host name has been filtered because '%s' is not FQDN, invalid or matched an exclude regexp" % myTarget.target_name)
+                myTarget.target_name = ""
+        session.update(myTarget) # not session.save as myTarget was attached to another session
+        session.flush()
 
     def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
         """
@@ -462,10 +486,9 @@ class MscDatabase(Singleton):
             False
         )
 
-    def addTarget(self, commandID, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
+    def addTarget(self, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
         """ Inject a new Target object in our MSC database """
         myTarget = Target()
-        myTarget.fk_commands = commandID
         myTarget.target_name = targetName
         myTarget.target_uuid = targetUuid
         myTarget.target_ipaddr = targetIp
@@ -546,7 +569,7 @@ class MscDatabase(Singleton):
     def countAllCommandsOnHostGroup(self, ctx, gid, cmd_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.username == ctx.userid)
-        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
+#        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if cmd_id:
             ret = ret.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
         if filt != '':
@@ -575,7 +598,8 @@ class MscDatabase(Singleton):
     def countFinishedCommandsOnHost(self, ctx, uuid, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state == 'done') #.filter(self.commands.c.username == ctx.userid)
+            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state == 'done')
+            #.filter(self.commands.c.username == ctx.userid)
             if filt != '':
                 ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
             c = ret.count()
@@ -587,7 +611,8 @@ class MscDatabase(Singleton):
     def countUnfinishedCommandsOnHost(self, ctx, uuid, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state != 'done') #.filter(self.commands.c.username == ctx.userid)
+            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done') 
+            #.filter(self.commands.c.username == ctx.userid)
             if filt != '':
                 ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
             c = ret.count()
@@ -599,7 +624,8 @@ class MscDatabase(Singleton):
     def countAllCommandsOnHost(self, ctx, uuid, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host) #.filter(self.commands.c.username == ctx.userid)
+            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid)
+            #.filter(self.commands.c.username == ctx.userid)
             if filt != '':
                 ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
             c = ret.count()
@@ -612,7 +638,6 @@ class MscDatabase(Singleton):
         session = create_session()
         query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.username == ctx.userid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
-        query = query.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if cmd_id:
             query = query.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
         if filt != '':
@@ -653,7 +678,7 @@ class MscDatabase(Singleton):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
             query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state) #.filter(self.commands.c.username == ctx.userid)
-            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state == 'done')
+            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state == 'done')
             if filt != '':
                 query = query.filter(self.commands.c.title.like('%'+filt+'%'))
             query = query.offset(int(min))
@@ -676,7 +701,7 @@ class MscDatabase(Singleton):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
             query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state) #.filter(self.commands.c.username == ctx.userid)
-            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host).filter(self.commands_on_host.c.current_state != 'done')
+            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done')
             if filt != '':
                 query = query.filter(self.commands.c.title.like('%' + filt + '%'))
             query = query.offset(int(min))
@@ -695,7 +720,8 @@ class MscDatabase(Singleton):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
             query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
-            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host) #.filter(self.commands.c.username == ctx.userid)
+            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid)
+            #.filter(self.commands.c.username == ctx.userid)
             if filt != '':
                 query = query.filter(self.commands.c.title.like('%'+filt+'%'))
             query = query.offset(int(min))
@@ -757,6 +783,6 @@ class MscDatabase(Singleton):
 
     def getTargets(self, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(Target).filter(self.target.c.fk_commands == cmd_id).all()
+        ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
         session.close()
         return ret

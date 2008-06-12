@@ -1,0 +1,9 @@
+ALTER TABLE `target` \
+    DROP COLUMN fk_commands_on_host,\
+    DROP COLUMN fk_commands;
+    
+ALTER TABLE `commands_on_host` \
+    ADD COLUMN `fk_target` int(11) NOT NULL default '0';
+
+DELETE FROM version;
+INSERT INTO version VALUES( '7' );

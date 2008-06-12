@@ -122,9 +122,6 @@ class RpcProxy(RpcProxyI):
     ##
     # commands
     ##
-    def dispatch_all_commands(self):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().dispatchAllCommands(ctx))
 
     ############ Scheduler driving
     def scheduler_start_all_commands(self, scheduler):
@@ -386,6 +383,15 @@ def _merge_list(list, x):
 
 def _adv_getAllPackages(ctx, filt):
     packages = []
+    try:
+        if filt['p_api']:
+            packages.extend(map(lambda m: [m, 0, p_api], pa_getAllPackages(p_api)))
+    except KeyError:
+        pass
+    except Exception, e:
+        logging.getLogger().error("Cant connect to mirror api")
+        logging.getLogger().debug(e)
+        return []
     try:
         if filt['uuid']:
             machine = filt['uuid'] # TODO : get machine from uuid

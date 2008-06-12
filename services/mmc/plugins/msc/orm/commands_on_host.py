@@ -37,6 +37,9 @@ class CommandsOnHost(object):
     def getIdCommand(self):
         return self.fk_commands
 
+    def getIdTarget(self):
+        return self.fk_target
+
 ### Handle upload states ###
     def isUploadImminent(self):
         result = (self.isScheduled() and self.isInTimeSlot())
