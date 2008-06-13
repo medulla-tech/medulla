@@ -32,22 +32,6 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
-function action($action, $target) {
-    /* Handle posting of quick actions */
-    $script_list = msc_script_list_file();
-    if (array_key_exists($action, $script_list)) {
-        $id = add_command_quick(
-            $script_list[$action]["command"],
-            $target,
-            $script_list[$action]["title".$current_lang],
-            $_GET['gid']
-        );
-        scheduler_start_all_commands();
-        // if on a single computer
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
-    }
-}
-
 ### Advanced actions handling ###
 /* Advanced action: post handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
@@ -179,31 +163,14 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 
         $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
         $label->display();
-        foreach (array('module', 'submod', 'tab', 'uuid', 'hostname') as $param) {
-            $params[$param] = $_GET[$param];
-        }
-        $params['action'] = 'start_quick_action';
 
-        $msc_actions = new RenderedMSCActions(msc_script_list_file(), 'mscactions', $params);
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), array('uuid'=>$_GET['uuid']));
         $msc_actions->display();
 
         $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
         $ajax->display();
         $ajax->displayDivToUpdate();
     }
-}
-
-/* quick action on a single target */
-if (!isset($_GET['badvanced']) && isset($_GET['uuid']) && isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-    action($_POST['launchAction'], array($machine->uuid, $machine->hostname));
-}
-
-/* single action post on a group */
-if (!isset($_GET['badvanced']) && isset($_GET['gid']) && isset($_POST['launchAction'])) {
-    $group = new Group($_GET['gid'], true);
-    $result = array_map("onlyValues", $group->getResult(0, -1));
-    action($_POST['launchAction'], $result);
 }
 
 /* group display */
@@ -213,7 +180,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));
     $label->display();
 
-    $msc_actions = new RenderedMSCActions(msc_script_list_file());
+    $msc_actions = new RenderedMSCActions(msc_script_list_file(), array("gid"=>$_GET['gid']));
     $msc_actions->display();
 
     $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php", "container", array("gid"=>$_GET['gid']));

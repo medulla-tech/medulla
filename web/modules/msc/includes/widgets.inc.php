@@ -98,30 +98,47 @@ class RenderedLabel extends HtmlElement {
 
 /* Quick actions dropdown list */
 class RenderedMSCActions extends HtmlElement {
-    function RenderedMSCActions($script_list, $name = 'MSCActions') {
+
+    function RenderedMSCActions($script_list, $params) {
         $this->list = array();
-        $this->name = $name;
+        $this->params = $params;
+        $this->name = "mscactions";
         $this->url = $_SERVER["REQUEST_URI"];
+        $this->module = "base";
+        $this->submod = "computers";
+        $this->action = "start_quick_action";
+        $this->enabled = hasCorrectAcl("base", "computers", "start_quick_action");
         foreach ($script_list as $script) {
             array_push($this->list, new RenderedMSCAction($script));
         }
     }
 
     function display() {
+        if (!$this->enabled) {
+            $selectDisabled = "DISABLED";
+            $onSubmit = "";
+        } else {
+            $selectDisabled = "";
+            $onSubmit = 'onsubmit="showPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + $(\'launchAction\').value); return false;"';
+        }
         print '
             <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
                 <table>
                     <tr>
                     <td>
-                        <form onsubmit="javascript: return confirm(\'' ._T("Please confirm you really want to perform this action !", "msc").'\');" method="post" action="'.$this->url.'" name="'.$this->name.'" id="'.$this->name.'">
-                        <select name="launchAction" style="border: 1px solid grey;">
+                        <form ' . $onSubmit . ' name="' . $this->name . '" id="'.$this->name . '">
+                        <select name="launchAction" id="launchAction" style="border: 1px solid grey;" ' . $selectDisabled . '>
                             <option value="">'._T('Execute action...', 'msc').'</option>';
         foreach ($this->list as $script) {
             $script->display();
         }
         print '</select>';
-        $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', 'vertical-align: middle; border:0;');
-        $img->display();
+        $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', $buttonStyle);
+        if ($this->enabled) {
+            $img->display();
+        } else {
+            $img->displayWithNoRight();
+        }
         print '
                         </form>
                     </td>
@@ -155,6 +172,14 @@ class RenderedImgInput extends HtmlElement {
                 type="image"
                 src="'.$this->path.'"
                 style="'.$this->style.'"
+            />';
+    }
+
+    function displayWithNoRight() {
+        print '
+             <img
+                src="'.$this->path.'"
+                style="'.$this->style.';opacity: 0.30;"
             />';
     }
 }
