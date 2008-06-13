@@ -37,11 +37,13 @@ import sys
 import ConfigParser
 import glob
 import time
+import pwd
+import grp
+import string
 
 sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
-__config = None #shared config object
 
 VERSION = "2.3.1"
 
@@ -237,18 +239,12 @@ def daemon(config):
     """
     daemonize mmc-agent
 
-    @param pidfile: path to pid file
-    @type pidfile: str
+    @param config: MMCConfigParser object
+    @type config: MMCConfigParser
     """
-    try:
-        pidfile = config.get("main", "pidfile")
-    except ConfigParser.NoOptionError:
-        # For compatibility with old version
-        pidfile = config.get("log", "pidfile")
-
     # Test if mmcagent has been already launched in daemon mode
-    if os.path.isfile(pidfile):
-        print pidfile+" pid already exist. Maybe mmc-agent is already running\n"
+    if os.path.isfile(config.pidfile):
+        print config.pidfile+" pid already exist. Maybe mmc-agent is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
         sys.exit(0)
 
@@ -276,20 +272,27 @@ def daemon(config):
         if pid > 0:
             # exit from second parent, print eventual PID before
             print "Daemon PID %d" % pid
-            os.system("echo " + str(pid) + " > " + pidfile)
+            os.seteuid(0)
+            os.setegid(0)
+            os.system("echo " + str(pid) + " > " + config.pidfile)
             sys.exit(0)
     except OSError, e:
         print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
 def agentService(config, conffile, daemonize):
-    # File will be rw for root user only
-    os.umask(0077)
-
-    # Create log dir if it doesn't exist
-    os.system('mkdir -p /var/log/mmc')
+    config = readConfig(config)
+    
+    # If umask = 0077, created files will be rw for effective user only
+    # If umask = 0007, they will be rw for effective user and group only
+    os.umask(config.umask)
+    os.setegid(config.egid)
+    os.seteuid(config.euid)
 
     # Initialize logging object
+    print conffile
+    print os.listdir("/etc/mmc/agent")
+    open(conffile)
     logging.config.fileConfig(conffile)
     logger = logging.getLogger()
 
@@ -297,10 +300,20 @@ def agentService(config, conffile, daemonize):
     hdlr2 = logging.StreamHandler()
     logger.addHandler(hdlr2)
 
+    # Create log dir if it doesn't exist
+    try:
+        os.mkdir("/var/log/mmc")
+    except OSError, (errno, strerror):
+        # Raise exception if error is not "File exists"
+        if errno != 17:
+            raise OSError(errno, strerror + ' ' + path)
+        else: pass
+
     # Changing path to probe and load plugins
     os.chdir(os.path.dirname(globals()["__file__"]))
 
     logger.info("mmc-agent starting...")
+    logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
 
     # Find available plugins
     mod = {}
@@ -365,76 +378,98 @@ def agentService(config, conffile, daemonize):
     setModList = getattr(mod["base"], "setModList")
     setModList(modList)
 
+    try:
+        startService(config, logger, mod)
+    except Exception, e:
+        # This is a catch all for all the exception that can happened
+        logger.exception("Program exception:")
+        return 1
+
+    # Become a daemon
+    if daemonize:
+        daemon(config)
+
     # No more log to stderr
     logger.removeHandler(hdlr2)
 
-    # Become a daemon
-    if daemonize: daemon(config)
+    reactor.run()
 
-    return startService(config,logger,mod)
-
-def cleanUp():
+def cleanUp(config):
     """
-    function call before shutdown of reaction
+    function call before shutdown of reactor
     """
     logger = logging.getLogger()
-    logger.info('MMC shutting down, cleaning up...')
-    # FIXME: do we really need this global __config ?
-    try:
-        pidfile = __config.get("main", "pidfile")
-    except ConfigParser.NoOptionError:
-        pidfile = __config.get("log", "pidfile")
+    logger.info('mmc-agent shutting down, cleaning up...')
 
-    # Test if mmcagent pidfile exist
-    if os.path.isfile(pidfile):
-        os.unlink(pidfile)
+    # Unlink pidfile if it exists
+    if os.path.isfile(config.pidfile):
+        os.seteuid(0)            
+        os.setegid(0)
+        os.unlink(config.pidfile)
 
+def startService(config, logger, mod):
+    # Starting XMLRPC server
+    r = MmcServer(mod, config.login, config.password)
+    if config.enablessl:
+        sslContext = ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
+        reactor.listenSSL(config.port, server.Site(r), interface = config.host, contextFactory = sslContext)
+    else:
+        logger.warning("SSL is disabled by configuration.")        
+        reactor.listenTCP(config.port, server.Site(r), interface = config.host)        
+    # Add event handler before shutdown
+    reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
+    logger.info("Listening to XML-RPC requests")
 
-def startService(config,logger,mod):
+def readConfig(config):
+    """
+    Read and check the MMC agent configuration file
+
+    @param config: a MMCConfigParser object reading the agent conf file
+    @type config: MMCConfigParser
+    
+    @return: MMCConfigParser object with extra attributes set
+    @rtype: MMCConfigParser
+    """
+    logger = logging.getLogger()
+
     # TCP/IP stuff
     try:
-        host = config.get("main", "host")
-        port = config.getint("main", "port")
+        config.host = config.get("main", "host")
+        config.port = config.getint("main", "port")
     except Exception,e:
         logger.error(e)
         return 1
 
+    if config.has_section("daemon"):
+        config.euid = pwd.getpwnam(config.get("daemon", "user"))[2]
+        config.egid = grp.getgrnam(config.get("daemon", "group"))[2]
+        config.umask = string.atoi(config.get("daemon", "umask"), 8)
+    else:
+        config.euid = 0
+        config.egid = 0
+        config.umask = 0077
+
+    # HTTP authentication login/password
+    config.login = config.get("main", "login")
+    config.password = config.getpassword("main", "password")
+
     # SSL stuff
     try:
-        enablessl = config.getboolean("main", "enablessl")
+        config.enablessl = config.getboolean("main", "enablessl")
     except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-        enablessl = 0
-    if enablessl:
+        config.enablessl = False
+    if config.enablessl:
         try:
-            privkey = config.get("main", "privkey")
-            certfile = config.get("main", "certfile")
+            config.privkey = config.get("main", "privkey")
+            config.certfile = config.get("main", "certfile")
         except Exception, e:
             logger.error(e)
             return 1
-    else:
-        logger.warning("SSL is disabled by configuration.")
 
-    # HTTP authentication login/password
-    login = config.get("main", "login")
-    password = config.getpassword("main", "password")
-
-    # Starting XMLRPC server
-    ret = 0
     try:
-        r = MmcServer(mod, login, password)
-        if enablessl:
-            sslContext = ssl.DefaultOpenSSLContextFactory(privkey, certfile)
-            reactor.listenSSL(port, server.Site(r), interface = host, contextFactory = sslContext)
-        else:
-            reactor.listenTCP(port, server.Site(r), interface = host)
-        # Add event handler before shutdown
-        global __config
-        __config = config #set shared config object
-        reactor.addSystemEventTrigger('before','shutdown',cleanUp)
-        reactor.run()
-    except Exception, e:
-        # This is a catch all for all the exception that can happened
-        logger.exception("Program exception:")
-        ret = 1
+        config.pidfile = config.get("daemon", "pidfile")
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        # For compatibility with old version
+        config.pidfile = config.get("log", "pidfile")
 
-    return ret
+    return config
