@@ -55,17 +55,17 @@ DATABASEVERSION = 7
 
 # TODO need to check for useless function (there should be many unused one...)
 
-def create_method(m):
+def create_method(obj, m):
     def method(self, already_in_loop = False):
         ret = None
         try:
-            old_m = getattr(Query, '_old_'+m)
+            old_m = getattr(obj, '_old_'+m)
             ret = old_m(self)
         except SQLError, e:
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
                 logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
                 for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(Query, m)
+                    new_m = getattr(obj, m)
                     ret = new_m(self, True)
             if ret:
                 return ret
@@ -78,7 +78,7 @@ for m in ['first', 'count', 'all']:
         getattr(Query, '_old_'+m)
     except AttributeError:
         setattr(Query, '_old_'+m, getattr(Query, m))
-        setattr(Query, m, create_method(m))
+        setattr(Query, m, create_method(Query, m))
 
 class MscDatabase(Singleton):
     """
@@ -500,7 +500,7 @@ class MscDatabase(Singleton):
 
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.current_state))
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.username == ctx.userid).group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
         l = map(lambda x: x.current_state, ret.all())
         session.close()
         return l
@@ -526,6 +526,7 @@ class MscDatabase(Singleton):
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
+        ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
         l = map(lambda x: x.toH(), ret.all())
         session.close()
         return l
@@ -562,6 +563,7 @@ class MscDatabase(Singleton):
             ret = ret.filter(self.commands_on_host.c.current_state == 'done')
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
+        ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
         l = map(lambda x: x.toH(), ret.all())
         session.close()
         return l
@@ -649,6 +651,7 @@ class MscDatabase(Singleton):
 
         query = query.offset(int(min))
         query = query.limit(int(max)-int(min))
+        query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
         ret = query.all()
         session.close()
         return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
@@ -665,6 +668,7 @@ class MscDatabase(Singleton):
             query = query.filter(self.commands_on_host.c.current_state != 'done')
         query = query.offset(int(min))
         query = query.limit(int(max)-int(min))
+        query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
         ret = query.distinct().all()
         l = map(lambda x: x.toH(), ret)
         session.close()
@@ -683,6 +687,7 @@ class MscDatabase(Singleton):
                 query = query.filter(self.commands.c.title.like('%'+filt+'%'))
             query = query.offset(int(min))
             query = query.limit(int(max)-int(min))
+            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
 
             self.enableLogging()
             ret = query.all()
@@ -706,6 +711,7 @@ class MscDatabase(Singleton):
                 query = query.filter(self.commands.c.title.like('%' + filt + '%'))
             query = query.offset(int(min))
             query = query.limit(int(max) - int(min))
+            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
 
             self.enableLogging()
             ret = query.all()
@@ -726,6 +732,7 @@ class MscDatabase(Singleton):
                 query = query.filter(self.commands.c.title.like('%'+filt+'%'))
             query = query.offset(int(min))
             query = query.limit(int(max)-int(min))
+            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
             self.enableLogging()
             ret = query.all()
             self.disableLogging()
