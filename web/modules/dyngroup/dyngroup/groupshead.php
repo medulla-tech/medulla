@@ -26,7 +26,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
-if ($_GET["action"]=="creator") {
+if ($_GET["action"]=="computersgroupcreator") {
     $title = _T("Add a static group", 'dyngroup');
 } else {
     $title = _T("Edit a static group", 'dyngroup');
