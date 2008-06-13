@@ -25,11 +25,13 @@
 $name = quickGet('name');
 $id = quickGet('id');
 $visibility = quickGet('visible');
+$already_exists = false;
 
 if ($id) {
     $group = new Group($id, true);
     if (!$name) { $name = $group->getName(); }
     if (!$visibility) { $visibility = $group->canShow(); }
+    $already_exists = true;
 } else {
     $group = new Group();
 }
@@ -82,7 +84,11 @@ if (isset($_POST["bdelmachine_x"])) {
     $res = $group->addMembers($newmem) && $group->delMembers($delmem);
 
     if ($res) { //group->save($name)) {
-        new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+        if ($already_exists) {
+            new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+        } else {
+            new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
+        }
         $list = $group->members();
         $members = array();
         foreach ($list as $member) {
