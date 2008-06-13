@@ -290,9 +290,6 @@ def agentService(config, conffile, daemonize):
     os.seteuid(config.euid)
 
     # Initialize logging object
-    print conffile
-    print os.listdir("/etc/mmc/agent")
-    open(conffile)
     logging.config.fileConfig(conffile)
     logger = logging.getLogger()
 
