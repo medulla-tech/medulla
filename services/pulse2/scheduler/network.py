@@ -32,6 +32,7 @@ from pulse2.scheduler.config import SchedulerConfig
 import mmc.support.mmctools
 
 def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
+    # TODO: a cache system ?!
     client = chooseClientIP({
             'uuid': uuid,
             'fqdn': fqdn,
@@ -39,7 +40,6 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    # TODO: a cache system ?!
     def _probecb(result):
         ptype = "\n".join(result)
         logging.getLogger().debug(result)
@@ -62,9 +62,12 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     def _pingeb(result):
         logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
         return 0
-    command = '%s %s' % (SchedulerConfig().ping_path, client)
-    logging.getLogger().debug(command)
-    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_pingcb).addErrback(_pingeb)
+    if client:
+        command = '%s %s' % (SchedulerConfig().ping_path, client)
+        logging.getLogger().debug("do probe using the following command: %s" % command)
+        return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_pingcb).addErrback(_pingeb)
+    else:
+        return 0
 
 
 def probeClient(uuid, fqdn, shortname, ips, macs):
@@ -161,21 +164,25 @@ def chooseClientIP(target):
             if result:
                 logging.getLogger().debug("will connect to %s as %s using DNS resolver" % (target, result))
                 return result
+            logging.getLogger().debug("won't connect to %s using DNS resolver" % (target))
         if method == 'netbios':
             result = chooseClientIPperNetbios(target)
             if result:
                 logging.getLogger().debug("will connect to %s as %s using Netbios resolver" % (target, result))
                 return result
+            logging.getLogger().debug("won't connect to %s using Netbios resolver" % (target))
         if method == 'hosts':
             result = chooseClientIPperHosts(target)
             if result:
                 logging.getLogger().debug("will connect to %s as %s using Hosts" % (target, result))
                 return result
+            logging.getLogger().debug("won't connect to %s using Hosts" % (target))
         if method == 'ip':
             result = chooseClientIPperIP(target)
             if result:
                 logging.getLogger().debug("will connect to %s as %s using IP given" % (target, result))
                 return result
+            logging.getLogger().debug("won't connect to %s using IP given" % (target))
     # (unfortunately) got nothing
     return None
 

@@ -25,7 +25,7 @@ $ret = 0;
 $pid = open(PIPE, "ssh -tt -o StrictHostKeyChecking=no -o Batchmode=yes root@".$ARGV[0]." 'echo \$OS;uname' |") or die $!;
 eval {
     local $SIG{ALRM} = sub { die "TIMEDOUT" };
-    alarm(20);
+    alarm(10);
     while(<PIPE>) { print $_; };
     $ret = close(PIPE);
     alarm(0);
