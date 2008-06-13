@@ -40,7 +40,7 @@ class InventoryWrapper(Inventory):
         session = create_session()
         transaction = session.create_transaction()
         try: 
-            m = self.getMachinesOnly(None, {'hostname':hostname}).all() # TODO uuids!
+            m = self.getMachinesOnly(None, {'hostname':hostname}) # TODO uuids!
             if len(m) == 0:
                 m = Machine()
                 m.Name = hostname
