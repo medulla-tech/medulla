@@ -314,7 +314,7 @@ def is_dir(filename):
 ################# Package API
 from mmc.plugins.msc.package_api import PackageA
 
-def pa_getAllPackages(p_api, mirror):
+def pa_getAllPackages(p_api, mirror = None):
     return PackageA(p_api).getAllPackages(mirror)
 
 def pa_getPackageDetail(p_api, pid):
@@ -384,12 +384,11 @@ def _merge_list(list, x):
 def _adv_getAllPackages(ctx, filt):
     packages = []
     try:
-        if filt['p_api']:
-            packages.extend(map(lambda m: [m, 0, p_api], pa_getAllPackages(p_api)))
+        packages.extend(map(lambda m: [m, 0, filt['packageapi']], pa_getAllPackages(filt['packageapi'], False)))
     except KeyError:
         pass
     except Exception, e:
-        logging.getLogger().error("Cant connect to mirror api")
+        logging.getLogger().error("Cant connect to package api")
         logging.getLogger().debug(e)
         return []
     try:
