@@ -106,10 +106,10 @@ foreach ($sorted_result as $head => $vals) {
     }
 }
         
-$n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
-#$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
-$n->setParamInfo($params);
 if ($n != null) {
+    $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
+    #$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
+    $n->setParamInfo($params);
     $n->setTableHeaderPadding(1);
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
