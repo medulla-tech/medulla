@@ -116,14 +116,14 @@ foreach ($cmds as $coh) {
         $a_details[] = $actiondetails_hist;
     }
 }
-$n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
 # TODO: add the command end timestamp
 if ($history) {
     $datelabel = _T("End date", "msc");
 } else {
     $datelabel = _T("Start date", "msc");
 }
-$n->addExtraInfo($a_date, $datelabel);
+$n = new OptimizedListInfos($a_date, $datelabel);
+$n->addExtraInfo($a_cmd, _T("Command", "msc"));
 $n->addExtraInfo($a_current, _T("current_state", "msc"));
 $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
 $n->addExtraInfo($a_executed, _T("executed", "msc"));
