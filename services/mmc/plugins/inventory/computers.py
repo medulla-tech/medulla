@@ -60,6 +60,8 @@ class InventoryComputers(ComputerI):
         return self.getRestrictedComputersList(ctx, 0, -1, filt)
 
     def getRestrictedComputersListLen(self, ctx, filt = {}):
+        if filt == '':
+            filt = {}
         return self.inventory.countMachinesOnly(ctx, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True):
