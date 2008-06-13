@@ -33,6 +33,11 @@ CREATE TABLE hasRegistry (
 ) TYPE=MyISAM;
 
 
+ALTER TABLE Software MODIFY ProductName VarChar(256) default NULL;
+ALTER TABLE Controller MODIFY StandardType VarChar(32) default NULL;
+ALTER TABLE Storage MODIFY StandardType VarChar(32) default NULL;
+ALTER TABLE Slot MODIFY PortType VarChar(32) default NULL;
+
 --
 -- Database version
 --
