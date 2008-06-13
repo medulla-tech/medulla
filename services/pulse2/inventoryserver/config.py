@@ -52,6 +52,8 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
     options = {}
 
+    hostname = ['HARDWARE', 'NAME']
+
 
     def setup(self, config_file):
         # Load configuration file
@@ -79,6 +81,13 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
             self.dbuser = self.cp.get("main", 'dbuser')
         if self.cp.has_option('main', 'dbpasswd'):
             self.dbpasswd = self.cp.get("main", 'dbpasswd')
+
+        if self.cp.has_option('main', 'hostname'):
+            path = self.cp.get("main", "hostname").split('|')
+            path = a.split('|')
+            self.hostname = path[0].split('/')
+            if len(path) == 2:
+                self.hostname.append(path[1].split(':'))
 
         for section in self.cp.sections():
             if re.compile('^option_[0-9]+$').match(section):

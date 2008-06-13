@@ -8,6 +8,7 @@ import re
 
 from pulse2.inventoryserver.mapping import OcsMapping
 from pulse2.inventoryserver.database import InventoryWrapper
+from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
 class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, *args):
@@ -91,7 +92,14 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.logger.debug("%s parsed" % (time.time()))
                 hostname = '-'.join(deviceid.split('-')[0:-6])
                 try:
-                    hostname = inventory['HARDWARE'][1]['NAME']
+                    path = Pulse2OcsserverConfigParser().hostname
+                    # WARNING : no fallback if the tag does not exists....
+                    if len(path) == 4:
+                        for tag in inventory[path[0]]:
+                            if tag[path[2]] == path[3]:
+                                hostname = tag[path[1]]
+                    else:
+                        hostname = inventory[path[0]][1][path[1]]
                 except:
                     pass
                 try:
