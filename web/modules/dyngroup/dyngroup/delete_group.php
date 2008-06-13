@@ -24,8 +24,8 @@
 
 require_once("modules/dyngroup/includes/includes.php");
 
-$id = idGet();
-$group = new Group($id);
+$id = quickGet('gid');
+$group = new Group($id, true);
 
 if (quickGet('valid')) {
     $group->delete();
@@ -38,7 +38,7 @@ if (quickGet('valid')) {
 
 ?>
 
-<form action="<?= urlStr("base/computers/delete_group", array('id'=>$id)) ?>" method="post">
+<form action="<?= urlStr("base/computers/delete_group", array('gid'=>$id)) ?>" method="post">
 <p>
 
 <?  
