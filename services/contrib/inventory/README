@@ -1,0 +1,11 @@
+mysqladmin create inventory
+
+mysql inventory < schema.sql
+
+mysql inventory < schema.sql.v.2
+
+mysql inventory <<EOF
+GRANT ALL PRIVILEGES ON inventory.* TO 'mmc'@'localhost'
+IDENTIFIED BY 'password' WITH GRANT OPTION;
+FLUSH PRIVILEGES
+EOF
