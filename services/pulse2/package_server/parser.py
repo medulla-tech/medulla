@@ -26,11 +26,13 @@
     Pulse2 package parser module
 """
 import logging
+import os
 from xml.dom import minidom
 from pulse2.package_server.types import Package
+from mmc.support.mmctools import Singleton
 
 class PackageParser(Singleton):
-    def __init__(self, config):
+    def init(self, config):
         self.logger = logging.getLogger()
         if config.parser == None or config.parser == 'XML':
             self.parser = PackageParserXML()
@@ -50,56 +52,56 @@ class PackageParser(Singleton):
 class PackageParserXML:
     def parse_str(self, file):
         xml = None
-        if os.path.exist(file):
+        if os.path.exists(file):
             xml = minidom.parse(file)
         else: 
             xml = minidom.parseString(file)
                 
         # parsing routines
-        root = xml.firstChild
+        self.logger = logging.getLogger()
+        root = xml.getElementsByTagName('package')
+        if len(root) != 1:
+            raise Exception('CANTPARSE')
+        root = root[0]
         pid = root.getAttribute('id')
         tmp = root.getElementsByTagName('name')[0]
         name = tmp.firstChild.wholeText
         version = root.getElementsByTagName('version')[0]
         tmp = version.getElementsByTagName('numeric')[0]
-        numeric = tmp.firstChild.wholeText
+        v_num = tmp.firstChild.wholeText
         tmp = version.getElementsByTagName('label')[0]
-        label = tmp.firstChild.wholeText
-        tmp = root.getElementsByTagName('description')[0]
-        desc = tmp.firstChild.wholeText
+        v_txt = tmp.firstChild.wholeText
+        tmp = root.getElementsByTagName('description')
+        if len(tmp) == 1:
+            tmp = tmp[0]
+            desc = tmp.firstChild.wholeText
+        else:
+            desc = ""
 
         cmd = root.getElementsByTagName('commands')[0]
-        tmp = cmd.getElementsByTagName('preCommand')[0]
-        pre = tmp.firstChild.wholeText
-        npre = tmp.getAttribute('name')
-        
-        tmp = cmd.getElementsByTagName('installInit')[0]
-        init = tmp.firstChild.wholeText
-        ninit = tmp.getAttribute('name')
 
-        tmp = cmd.getElementsByTagName('command')[0]
-        cmd = tmp.firstChild.wholeText
-        ncmd = tmp.getAttribute('name')
+        cmds = {}
+        for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
+            tmp = cmd.getElementsByTagName(c)
+            if len(tmp) != 1:
+                cmds[c] = ''
+            else:
+                cmd = tmp[0].firstChild.wholeText
+                ncmd = tmp.getAttribute('name')
+                cmds[c] = {'command':cmd, 'name':ncmd}
 
-        tmp = cmd.getElementsByTagName('postCommandSuccess')[0]
-        cmd = tmp.firstChild.wholeText
-        ncmd = tmp.getAttribute('name')
-
-        tmp = cmd.getElementsByTagName('postCommandFailure')[0]
-        postko = tmp.firstChild.wholeText
-        npostko = tmp.getAttribute('name')
-
-        p = Package().init(
+        p = Package()
+        p.init(
             pid,
             name,
             v_txt,
             0,
             desc,
-            {'command':cmd, 'name':ncmd},
-            {'command':init, 'name':ninit},
-            {'command':pre, 'name':npre},
-            {'command':postok, 'name':npostok},
-            {'command':postko, 'name':npostko}
+            cmds['command'],
+            cmds['installInit'],
+            cmds['preCommand'],
+            cmds['postCommandSuccess'],
+            cmds['postCommandFailure']
         )
 
         # TODO load files :

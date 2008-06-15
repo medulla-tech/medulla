@@ -42,6 +42,12 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     username = ''
     password = ''
 
+    parser = None
+    mirrors = []
+    package_api_get = []
+    package_api_put = []
+
+
     pidfile = '/var/run/pulse2-package-server.pid'
 
     def setup(self, config_file):
@@ -56,3 +62,18 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
                             
+
+        for section in self.cp.sections():
+            if re.compile('^mirror:[0-9]+$').match(section):
+                mount_point = self.cp.get(section, 'mount_point')
+                src = self.cp.get(section, 'src')
+                self.mirrors.append({'mount_point':mount_point, 'src':src})
+            if re.compile('^package_api_get:[0-9]+$').match(section):
+                mount_point = self.cp.get(section, 'mount_point')
+                src = self.cp.get(section, 'src')
+                self.package_api_get.append({'mount_point':mount_point, 'src':src})
+            if re.compile('^package_api_put:[0-9]+$').match(section):
+                mount_point = self.cp.get(section, 'mount_point')
+                src = self.cp.get(section, 'src')
+                self.package_api_put.append({'mount_point':mount_point, 'src':src})
+                

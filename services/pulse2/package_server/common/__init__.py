@@ -29,13 +29,18 @@ import twisted.web.html
 import twisted.web.xmlrpc
 import os
 import re
-import shutils
+import shutil
 import logging
+from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
+from pulse2.package_server.find import Find
+from pulse2.package_server.utilities import md5file, md5sum
+from mmc.support.mmctools import Singleton
 
 class Common(Singleton):
-    def __init__(self, config):
+    def init(self, config):
         self.logger = logging.getLogger()
+        self.logger.info("Loading PackageServer > Common")
         self.config = config
 
         self.file_properties = {}
@@ -44,7 +49,8 @@ class Common(Singleton):
         self.reverse = {}
         self.files = {}
         self.fid2file = {}
-        self.parser = PackageParser(config)
+        self.parser = PackageParser()
+        self.parser.init(config)
         proto = 'http'
         if self.config.enablessl:
             proto = 'https'
@@ -83,7 +89,7 @@ class Common(Singleton):
 
             self.logger.info("Common : finish loading %d packages" % (len(self.packages)))
         except Exception, e:
-            self.logger.error("Common : failed to finish loading packages"
+            self.logger.error("Common : failed to finish loading packages")
             raise e
     
     def checkPath4package(self, path): # TODO check if still used
@@ -93,7 +99,7 @@ class Common(Singleton):
     def associatePackage2mp(self, pid, mp):
         conf = self.h_desc(mp) # TODO move h_desc from server to common
         for desc in self.descBySrc(conf['src']): # TODO move descBySrc from server to common
-            if desc['type'] != 'mirror_files'
+            if desc['type'] != 'mirror_files':
                 self.mp2p[desc['mp']].append(pid)
 
     def addPackage(self, pid, pa):
@@ -136,7 +142,7 @@ class Common(Singleton):
         path = params['src']
 
         if os.path.exists("%s/%s/conf.xml" % (path, pid)):
-            shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.bkp" % (path, pid)
+            shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.bkp" % (path, pid))
         os.mkdir("%s/%s" % (path, pid))
         f = open("%s/%s/conf.xml" % (path, pid), 'w+')
         f.write(xml)
@@ -146,11 +152,10 @@ class Common(Singleton):
     def writeFileIntoPackage(self, pid, file):
         pass
 
-
     def package(self, pid):
         return self.packages[pid]
 
-    def packages(self, mp): #TODO check the clone memory impact
+    def getPackages(self, mp): #TODO check the clone memory impact
         ret = []
         try:
             for k in self.packages:
@@ -168,6 +173,7 @@ class Common(Singleton):
                     ret.append(k)
         except Exception, e:
             self.logger.error(e)
+            raise e
         return ret
 
 # private
@@ -183,20 +189,22 @@ class Common(Singleton):
             self._treatDir(os.path.dirname(file), mp, file_access_proto, file_access_uri, file_access_port, file_access_path)
 
     def _treatDir(self, file, mp, file_access_proto, file_access_uri, file_access_port, file_access_path):
+        pid = None
         try:
             if os.path.isdir(file):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
                 l_package = self.parser.parse("%s/conf.xml"%(file))
+                self.logger.debug("parsing finished")
                 pid = l_package.id
 
                 self.mp2p[mp].append(pid)
-                if self.packages.has_key(pi):
+                if self.packages.has_key(pid):
                     return false
 
                 toRelative = os.path.dirname(file)
                 size = 0
                 self.packages[pid] = self.parser.parse("%s/conf.xml"%(file))
-                if self.packages[pid].specifiedFiles.size > 0:
+                if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
                     for sfile in self.packages(pi).specifiedFiles:
                         f = "%s%s%s%s%s" % (toRelative, os.sep, pid, toRelative, sfile['filename'])
@@ -211,17 +219,25 @@ class Common(Singleton):
                     for f in files:
                         path = re.sub(toRelative, '', os.path.dirname(f))
                         size += self._treatFile(pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path)
+                self.logger.debug("003")
                 self.packages[pid].size = size
         except Exception, err:
-            if err.message == 'MISSINGFILE':
-                self.logger.error("package %s won't be loaded because one of the declared file is missing"% (pid))
+            if hasattr(err, 'message') and err.message == 'MISSINGFILE':
+                self.logger.error(err)
+                #"package %s won't be loaded because one of the declared file is missing"% (pid))
                 self.mp2p[mp][pid] = None
-            elif err.message == 'DBLFILE':
-                self.logger.error("package %s won't be loaded because one of its file is already declared in an other package"%(pid))
+            elif hasattr(err, 'message') and err.message == 'DBLFILE':
+                self.logger.error(err)
+                # :"package %s won't be loaded because one of its file is already declared in an other package"%(pid))
                 self.mp2p[mp][pid] = None
-            else:
+            elif hasattr(err, 'message'):
                 self.logger.error(err.message)
                 self.mp2p[mp][pid] = None
+            else:
+                self.logger.error(err)
+                if pid != None:
+                    self.mp2p[mp][pid] = None
+            raise err
 
     def _treatFile(self, pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
         (fsize, fmd5) = [0,0]
@@ -230,23 +246,23 @@ class Common(Singleton):
             fmd5 = md5file(f)
             self.file_properties[f] = [fsize, fmd5]
         else:
-            (fsize, fmd5) = @file_properties[f]
+            (fsize, fmd5) = self.file_properties[f]
 
-        file = type.File(os.path.basename(f), path, fmd5, fsize, file_access_proto, file_access_uri, file_access_port, file_access_path, fid)
+        file = File(os.path.basename(f), path, fmd5, fsize, file_access_proto, file_access_uri, file_access_port, file_access_path, fid)
         self.packages[pid].addFile(file)
         if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")
         self.fid2file[file.id] = file.checksum
         return fsize
 
-    def _getFiles(self, path)
+    def _getFiles(self, path):
         files = []
         for pfile in os.listdir(path):
             if os.path.isdir(pfile):
                 files.extend(self._getFiles(pfile))
             else:
                 if os.path.basename(pfile) != 'conf.xml':
-                    files.append(pfile)
+                    files.append("%s%s%s" % (path , os.sep, pfile))
         return files
 
     def _buildReverse(self):
