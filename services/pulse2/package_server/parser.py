@@ -68,11 +68,14 @@ class PackageParserXML:
         name = tmp.firstChild.wholeText
         version = root.getElementsByTagName('version')[0]
         tmp = version.getElementsByTagName('numeric')[0]
-        v_num = tmp.firstChild.wholeText
+        if tmp.firstChild != None:
+            v_num = tmp.firstChild.wholeText
+        else:
+            v_num = 0
         tmp = version.getElementsByTagName('label')[0]
         v_txt = tmp.firstChild.wholeText
         tmp = root.getElementsByTagName('description')
-        if len(tmp) == 1:
+        if len(tmp) == 1 and tmp[0].firstChild != None:
             tmp = tmp[0]
             desc = tmp.firstChild.wholeText
         else:
@@ -83,12 +86,15 @@ class PackageParserXML:
         cmds = {}
         for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
             tmp = cmd.getElementsByTagName(c)
-            if len(tmp) != 1:
-                cmds[c] = ''
+            if len(tmp) == 1 and tmp[0].firstChild != None:
+                command = tmp[0].firstChild.wholeText
+                if tmp[0].hasAttribute('name'):
+                    ncmd = tmp[0].getAttribute('name')
+                else:
+                    ncmd = ''
+                cmds[c] = {'command':command, 'name':ncmd}
             else:
-                cmd = tmp[0].firstChild.wholeText
-                ncmd = tmp.getAttribute('name')
-                cmds[c] = {'command':cmd, 'name':ncmd}
+                cmds[c] = ''
 
         p = Package()
         p.init(

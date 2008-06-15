@@ -194,7 +194,6 @@ class Common(Singleton):
             if os.path.isdir(file):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
                 l_package = self.parser.parse("%s/conf.xml"%(file))
-                self.logger.debug("parsing finished")
                 pid = l_package.id
 
                 self.mp2p[mp].append(pid)
@@ -219,7 +218,6 @@ class Common(Singleton):
                     for f in files:
                         path = re.sub(toRelative, '', os.path.dirname(f))
                         size += self._treatFile(pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path)
-                self.logger.debug("003")
                 self.packages[pid].size = size
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
