@@ -77,3 +77,30 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
                 src = self.cp.get(section, 'src')
                 self.package_api_put.append({'mount_point':mount_point, 'src':src})
                 
+
+def config_addons(config):
+    if len(config.mirrors) > 0:
+#        for mirror_params in config.mirrors:
+            map(lambda x: add_access(x, config), config.mirrors)
+    if len(config.package_api_get) > 0:
+#        for mirror_params in config.package_api_get:
+            map(lambda x: add_server(x, config), config.package_api_get)            
+    print config
+    return config
+
+def add_access(mirror_params, config):
+    mirror_params['port'] = config.port
+    mirror_params['server'] = config.bind
+    mirror_params['file_access_path'] = "%s_files" % (mirror_params['mount_point'])
+    mirror_params['file_access_uri'] = config.bind
+    mirror_params['file_access_port'] = config.port
+    return mirror_params
+
+def add_server(mirror_params, config):
+    mirror_params['port'] = config.port
+    mirror_params['server'] = config.bind
+    return mirror_params
+
+
+
+

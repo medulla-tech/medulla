@@ -159,8 +159,11 @@ class Common(Singleton):
         ret = []
         try:
             for k in self.packages:
-                if self.mp2p.has_key(k):
+                try:
+                    self.mp2p[mp].index(k)
                     ret.append(k)
+                except:
+                    pass
         except Exception, e:
             self.logger.error(e)
         return ret
@@ -175,6 +178,8 @@ class Common(Singleton):
             self.logger.error(e)
             raise e
         return ret
+
+   
 
 # private
     def _getPackages(self, mp, src, file_access_proto = '', file_access_uri = '', file_access_port = '', file_access_path = ''):
@@ -198,7 +203,7 @@ class Common(Singleton):
 
                 self.mp2p[mp].append(pid)
                 if self.packages.has_key(pid):
-                    return false
+                    return False
 
                 toRelative = os.path.dirname(file)
                 size = 0

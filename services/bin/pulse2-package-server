@@ -9,10 +9,11 @@ import logging
 import logging.config
 import twisted
 from pulse2.package_server.server import P2PServerService
+from pulse2.package_server.description import Description
+from pulse2.package_server.config import P2PServerCP, config_addons
+from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
 from pulse2.package_server.mirror import Mirror
-from pulse2.package_server.description import Description
-from pulse2.package_server.config import P2PServerCP
 
 def running(inifile):
     
@@ -33,17 +34,34 @@ def running(inifile):
     logger.addHandler(hdlr2)
         
     config = P2PServerCP()
+    config_addons(config)
+
+    Common().init(config)
     
     port = int(config.port)
             
     desc = Description('/')
-    m_api = MirrorApi('/mirror_api')
-    mirror = Mirror('/mirror', 'mirror')
-    
     server = P2PServerService(config, desc)
-    server.register(m_api, 'mirror_api')
+    if len(config.mirrors) > 0:
+        for mirror_params in config.mirrors:
+            m_api = Mirror(mirror_params['mount_point'], mirror_params['mount_point'])
+            server.register(m_api, mirror_params['mount_point'])
+            # TODO : add the file handler
+
+    if len(config.package_api_get) > 0:
+        for mirror_params in config.package_api_get:
+            # TODO : implement the p_api_get xmlrpc and register it
+            pass
+
+    if len(config.package_api_put) > 0:
+        for mirror_params in config.package_api_put:
+            # TODO : implement the p_api_put xmlrpc and register it
+            pass
+ 
+    # TODO : implement the user/mirror api
+    mirror = MirrorApi('/mirror')
     server.register(mirror, 'mirror')
-    
+ 
     try:
         if config.enablessl:
             if not os.path.isfile(config.privkey):
@@ -76,6 +94,7 @@ def running(inifile):
     twisted.internet.reactor.run()
     return 0
                                                                                 
+# TODO : make the deamon mode work
 #def daemon(config):
 #    """
 #    daemonize pulse2-package-server
