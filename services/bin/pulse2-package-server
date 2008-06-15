@@ -7,10 +7,14 @@ import sys
 import getopt
 import logging
 import logging.config
-from pulse2.package-server.server import *
-from pulse2.package-server.config import P2PServerCP
+import twisted
+from pulse2.package_server.server import P2PServerService
+from pulse2.package_server.mirror_api import MirrorApi
+from pulse2.package_server.mirror import Mirror
+from pulse2.package_server.description import Description
+from pulse2.package_server.config import P2PServerCP
 
-def running(daemonize, inifile):
+def running(inifile):
     
     P2PServerCP().setup(inifile)
 
@@ -28,59 +32,94 @@ def running(daemonize, inifile):
     hdlr2 = logging.StreamHandler()
     logger.addHandler(hdlr2)
         
-    config = Pulse2OcsserverConfigParser()
-    InventoryGetService().initialise(config)
-
-    if daemonize: daemon(config)
-    InventoryGetService().run()
-
-
-def daemon(config):
-    """
-    daemonize pulse2-package-server
-
-    @param pidfile: path to pid file
-    @type pidfile: str
-    """
-    pidfile = config.pidfile
-        
-    # Test if mmcagent has been already launched in daemon mode
-    if os.path.isfile(pidfile):
-        print pidfile+" pid already exist. Maybe pulse2-package-server is already running\n"
-        print "use /etc/init.d script to stop and relaunch it"
-        sys.exit(0)
-        
-    # do the UNIX double-fork magic, see Stevens' "Advanced
-    # Programming in the UNIX Environment" for details (ISBN 0201563177)
-    try:
-        pid = os.fork()
-        if pid > 0:
-            # exit first parent
-            sys.exit(0)
-    except OSError, e:
-        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
-        sys.exit(1)
-        
-    # decouple from parent environment
-    os.close(sys.stdin.fileno())
-    os.close(sys.stdout.fileno())
-    os.close(sys.stderr.fileno())
-    os.chdir("/")
-    os.setsid()
+    config = P2PServerCP()
     
-    # do second fork
+    port = int(config.port)
+            
+    desc = Description('/')
+    m_api = MirrorApi('/mirror_api')
+    mirror = Mirror('/mirror', 'mirror')
+    
+    server = P2PServerService(config, desc)
+    server.register(m_api, 'mirror_api')
+    server.register(mirror, 'mirror')
+    
     try:
-        pid = os.fork()
-        if pid > 0:
-            # exit from second parent, print eventual PID before
-            print "Daemon PID %d" % pid
-            os.system("echo " + str(pid) + " > " + pidfile)
-            sys.exit(0)
-    except OSError, e:
-        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
-        sys.exit(1)
+        if config.enablessl:
+            if not os.path.isfile(config.privkey):
+                logger.error('can\'t read SSL key "%s"' % (config.privkey))
+                return 1
+            if not os.path.isfile(config.certfile):
+                logger.error('can\'t read SSL certificate "%s"' % (config.certfile))
+                return 1
+            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
+            twisted.internet.reactor.listenSSL(
+                port,
+                twisted.web.server.Site(server),
+                interface = config.bind,
+                contextFactory = config.sslContext
+                )
+            logger.info('activating SSL mode')
+        else:
+            twisted.internet.reactor.listenTCP(
+                port,
+                twisted.web.server.Site(server),
+                interface = config.bind
+                )
+    except Exception, e:
+        logger.error('can\'t bind to %s:%d' % (config.bind, port))
+        logger.error(e)
+        return 1
 
+    logger.info('package server listening on %s:%d' % (config.bind, port))
 
+    twisted.internet.reactor.run()
+    return 0
+                                                                                
+#def daemon(config):
+#    """
+#    daemonize pulse2-package-server
+#
+#    @param pidfile: path to pid file
+#    @type pidfile: str
+#    """
+#    pidfile = config.pidfile
+#        
+#    # Test if mmcagent has been already launched in daemon mode
+#    if os.path.isfile(pidfile):
+#        print pidfile+" pid already exist. Maybe pulse2-package-server is already running\n"
+#        print "use /etc/init.d script to stop and relaunch it"
+#        sys.exit(0)
+#        
+#    # do the UNIX double-fork magic, see Stevens' "Advanced
+#    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+#    try:
+#        pid = os.fork()
+#        if pid > 0:
+#            # exit first parent
+#            sys.exit(0)
+#    except OSError, e:
+#        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+#        sys.exit(1)
+#        
+#    # decouple from parent environment
+#    os.close(sys.stdin.fileno())
+#    os.close(sys.stdout.fileno())
+#    os.close(sys.stderr.fileno())
+#    os.chdir("/")
+#    os.setsid()
+#    
+#    # do second fork
+#    try:
+#        pid = os.fork()
+#        if pid > 0:
+#            # exit from second parent, print eventual PID before
+#            print "Daemon PID %d" % pid
+#            os.system("echo " + str(pid) + " > " + pidfile)
+#            sys.exit(0)
+#    except OSError, e:
+#        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+#        sys.exit(1)
 
 if __name__ == "__main__":
     inifile = "/etc/mmc/pulse2/package-server.ini"
@@ -100,6 +139,6 @@ if __name__ == "__main__":
         sys.exit(3)
  
     # Start the daemon main loop
-    sys.exit(running(daemonize, inifile))
+    sys.exit(running(inifile))
 
 
