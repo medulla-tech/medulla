@@ -278,6 +278,6 @@ class Common(Singleton):
     def _buildFileList(self):
         for pid in self.packages:
             package = self.packages[pid]
-            for file in package.files:
+            for file in package.files.internals: # TODO dont access to internals ! 
                 self.files[file.id] = file.toURI()
 

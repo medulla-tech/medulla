@@ -44,8 +44,7 @@ class Mirror(twisted.web.xmlrpc.XMLRPC):
         self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(Common().getPackages(self.mp))))
     
     def xmlrpc_getServerDetails(self):
-        pkgs = Common().getPackages(self.m)
-        return map(lambda : pkgs[x].toH(), pkgs)
+        return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
     def xmlrpc_isAvailable(self, pid):
         return Common().getPackages(self.mp).has_key(pid)

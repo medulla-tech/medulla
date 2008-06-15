@@ -62,8 +62,8 @@ class P2PServerService(twisted.web.xmlrpc.XMLRPC):
         args, functionPath = xmlrpclib.loads(content)
 
         obj = self.root_path
-        if self.paths.has_key(request.postpath[0]):
-            obj = self.paths[request.postpath[0]]
+        if self.paths.has_key("/"+request.postpath[0]):
+            obj = self.paths["/"+request.postpath[0]]
 
         function = obj._getFunction(functionPath)
 

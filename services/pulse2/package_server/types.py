@@ -145,9 +145,13 @@ class Package:
         # TODO check files
         return True
 
-class AFiles(list):
+class AFiles:
+    internals = []
+    def append(self, elt):
+        self.internals.append(elt)
+
     def toH(self):
-        return map(lambda x: x.toH(), self.map)
+        return map(lambda x: x.toH(), self.internals)
 
     def to_h(self):
         return self.toH()
