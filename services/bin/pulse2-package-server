@@ -1,0 +1,105 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+
+import os
+import os.path
+import sys
+import getopt
+import logging
+import logging.config
+from pulse2.package-server.server import *
+from pulse2.package-server.config import P2PServerCP
+
+def running(daemonize, inifile):
+    
+    P2PServerCP().setup(inifile)
+
+    # File will be rw for root user only
+    os.umask(0077)
+
+    # Create log dir if it doesn't exist
+    os.system('mkdir -p /var/log/mmc')
+                                    
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+    logger.debug("Logger loaded")
+
+    # When starting mmcServer, we log to stderr too
+    hdlr2 = logging.StreamHandler()
+    logger.addHandler(hdlr2)
+        
+    config = Pulse2OcsserverConfigParser()
+    InventoryGetService().initialise(config)
+
+    if daemonize: daemon(config)
+    InventoryGetService().run()
+
+
+def daemon(config):
+    """
+    daemonize pulse2-package-server
+
+    @param pidfile: path to pid file
+    @type pidfile: str
+    """
+    pidfile = config.pidfile
+        
+    # Test if mmcagent has been already launched in daemon mode
+    if os.path.isfile(pidfile):
+        print pidfile+" pid already exist. Maybe pulse2-package-server is already running\n"
+        print "use /etc/init.d script to stop and relaunch it"
+        sys.exit(0)
+        
+    # do the UNIX double-fork magic, see Stevens' "Advanced
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit first parent
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+        
+    # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
+    os.chdir("/")
+    os.setsid()
+    
+    # do second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit from second parent, print eventual PID before
+            print "Daemon PID %d" % pid
+            os.system("echo " + str(pid) + " > " + pidfile)
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+
+
+if __name__ == "__main__":
+    inifile = "/etc/mmc/pulse2/package-server.ini"
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+    except getopt.GetoptError:
+        sys.exit(2)
+    daemonize = True
+    for option, argument in opts:
+        if option == "-f":
+            inifile = argument
+        elif option == "-d":
+            daemonize = False
+
+    if not os.path.exists(inifile):
+        print "File '%s' does not exist." % inifile
+        sys.exit(3)
+ 
+    # Start the daemon main loop
+    sys.exit(running(daemonize, inifile))
+
+
