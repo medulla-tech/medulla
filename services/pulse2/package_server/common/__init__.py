@@ -51,9 +51,6 @@ class Common(Singleton):
         self.fid2file = {}
         self.parser = PackageParser()
         self.parser.init(config)
-        proto = 'http'
-        if self.config.enablessl:
-            proto = 'https'
 
         try:
             if len(self.config.mirrors) > 0:
@@ -62,7 +59,7 @@ class Common(Singleton):
                         self._getPackages(
                             mirror_params['mount_point'],
                             mirror_params['src'],
-                            proto,
+                            config.proto,
                             mirror_params['file_access_uri'],
                             mirror_params['file_access_port'],
                             mirror_params['file_access_path']

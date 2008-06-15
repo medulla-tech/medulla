@@ -42,11 +42,14 @@ def running(inifile):
             
     desc = Description('/')
     server = P2PServerService(config, desc)
+    services = []
     if len(config.mirrors) > 0:
         for mirror_params in config.mirrors:
             m_api = Mirror(mirror_params['mount_point'], mirror_params['mount_point'])
             server.register(m_api, mirror_params['mount_point'])
+            services.append({'type':'mirror', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
             # TODO : add the file handler
+            #{'type'=>'mirror_files', 'mp'=>"#{mirror_params['mount_point']}_files", 'server'=>@conf['server'], 'port'=>@conf['port'], 'proto'=>proto, 'src'=>mirror_params['src']}
 
     if len(config.package_api_get) > 0:
         for mirror_params in config.package_api_get:
@@ -59,8 +62,8 @@ def running(inifile):
             pass
  
     # TODO : implement the user/mirror api
-    mirror = MirrorApi('/mirror')
-    server.register(mirror, 'mirror')
+    mirror = MirrorApi(services, '/mirror')
+    server.register(mirror, '/mirror')
  
     try:
         if config.enablessl:

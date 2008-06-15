@@ -28,14 +28,93 @@
 
 import twisted.web.xmlrpc
 import twisted.web.server
+import logging
+from pulse2.package_server.types import Mirror, Machine
 
 class MirrorApi(twisted.web.xmlrpc.XMLRPC):
     type = 'MirrorApi'
-    def __init__(self, name = ''):
-        self.name = name
+    def __init__(self, services = {}, name = ''):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
+        self.name = name
+        self.mirrors = {}
+        self.assign = {}
+        self.logger = logging.getLogger()
+        try:
+            for service in services:
+                if not self.mirrors.has_key(service['type']):
+                    self.mirrors[service['type']] = []
+                self.mirrors[service['type']].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
+            self.logger.debug("(%s)%s api machine/mirror server initialised"%(self.type, self.name))
+        except Exception, e:
+            self.logger.error("(%s)%s api machine/mirror server can't initialize correctly"%(self.type, self.name))
+            raise e
 
     def xmlrpc_getServerDetails(self):
-        return 'poeutpouet'
+        ret = {}
+        if self.mirrors.has_key('package_api_get'):
+            ret['package_api_get'] = map(lambda x: x.toH(), self.mirrors['package_api_get']) 
+        if self.mirrors.has_key('package_api_put'):
+            ret['package_api_put'] = map(lambda x: x.toH(), self.mirrors['package_api_put']) 
+        if self.mirrors.has_key('mirror'):
+            ret['mirror'] = map(lambda x: x.toH(), self.mirrors['mirror']) 
+        return ret
 
+    def xmlrpc_getMirror(self, m):
+        machine = Machine().from_h(m)
+        if not self.assign.has_key(machine.uuid):
+            self.assign[machine.uuid] = {}
+        if not self.assign[machine.uuid].has_key('getMirror'):
+            self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+        return self.assign[machine.uuid]['getMirror']
+        
+    def xmlrpc_getMirrors(self, machines):
+        machines = map(lambda m: Machine().from_h(m), machines)
+        ret = []
+        for machine in machines:
+            if not self.assign.has_key(machine.uuid):
+                self.assign[machine.uuid] = {}
+            if not self.assign[machine.uuid].has_key('getMirror'):
+                self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+            ret.append(self.assign[machine.uuid]['getMirror'])
+        return ret
+        
+    def xmlrpc_getFallbackMirror(self, m):
+        machine = Machine().from_h(m)
+        if not self.assign.has_key(machine.uuid):
+            self.assign[machine.uuid] = {}
+        if not self.assign[machine.uuid].has_key('getFallbackMirror'):
+            self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+        return self.assign[machine.uuid]['getFallbackMirror']
+        
+    def xmlrpc_getFallbackMirrors(self, machines):
+        machines = map(lambda m: Machine().from_h(m), machines)
+        ret = []
+        for machine in machines:
+            if not self.assign.has_key(machine.uuid):
+                self.assign[machine.uuid] = {}
+            if not self.assign[machine.uuid].has_key('getFallbackMirror'):
+                self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+            ret.append(self.assign[machine.uuid]['getFallbackMirror'])
+        return ret
+
+    def xmlrpc_getApiPackage(self, m):
+        machine = Machine().from_h(m)
+        ret = []
+        if self.mirrors.has_key('package_api_get'):
+            ret += map(lambda papi: papi.toH(), self.mirrors['package_api_get'])
+        if self.mirrors.has_key('package_api_put'):
+            ret += map(lambda papi: papi.toH(), self.mirrors['package_api_put'])
+        return ret
+        
+    def xmlrpc_getApiPackages(self, machines):
+        machines = map(lambda m: Machine().from_h(m), machines)
+        ret = []
+        for machine in machines:
+            ret1 = []
+            if self.mirrors.has_key('package_api_get'):
+                ret1 += map(lambda papi: papi.toH(), self.mirrors['package_api_get'])
+            if self.mirrors.has_key('package_api_put'):
+                ret1 += map(lambda papi: papi.toH(), self.mirrors['package_api_put'])
+            ret += ret1
+        return ret
 

@@ -138,6 +138,7 @@ class Package:
         self.cmd = getCommandFromH(h['command'])
         self.postcmd_ok = getCommandFromH(h['postCommandSuccess'])
         self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
+        return self
 
     def equal(self, p):
         if self.label != p.label or self.version != p.version or self.size != p.size or self.id != p.id or not(self.initcmd.equal(p.initcmd)) or not(self.precmd.equal(p.precmd)) or not(self.cmd.equal(p.cmd)) or not(self.postcmd_ok.equal(p.postcmd_ok)) or not(self.postcmd_ko.equal(p.postcmd_ko)) or self.description != p.description:

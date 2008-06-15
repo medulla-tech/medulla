@@ -46,7 +46,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     mirrors = []
     package_api_get = []
     package_api_put = []
-
+    proto = 'http'
 
     pidfile = '/var/run/pulse2-package-server.pid'
 
@@ -62,6 +62,8 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
                             
+        if self.enablessl:
+            self.proto = 'https'
 
         for section in self.cp.sections():
             if re.compile('^mirror:[0-9]+$').match(section):
