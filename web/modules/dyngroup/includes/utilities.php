@@ -25,7 +25,7 @@
 function clean($val) { return urlencode(urldecode($val)); }
 
 function quickGet($name) {
-    if ($_GET[$name]) { $res = $_GET[$name]; } elseif ($_POST[$name]) { $res = $_POST[$name]; } else { $res = null; }
+    if (isset($_GET[$name])) { $res = $_GET[$name]; } elseif (isset($_POST[$name])) { $res = $_POST[$name]; } else { $res = null; }
     return urldecode($res);
 }
 
