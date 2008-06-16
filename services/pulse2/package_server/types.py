@@ -130,14 +130,35 @@ class Package:
         self.label = h['label']
         self.version = h['version']
         self.id = h['id']
-        self.size = h['size']
-        self.description = h['description']
+        if h.has_key('size'):
+            self.size = h['size']
+        else:
+            self.size = 0
+        if h.has_key('description'):
+            self.description = h['description']
+        else:
+            self.description = ''
 
-        self.initcmd = getCommandFromH(h['installInit'])
-        self.precmd = getCommandFromH(h['preCommand'])
-        self.cmd = getCommandFromH(h['command'])
-        self.postcmd_ok = getCommandFromH(h['postCommandSuccess'])
-        self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
+        if h.has_key('installInit'):
+            self.initcmd = getCommandFromH(h['installInit'])
+        else:
+            self.initcmd = Command()
+        if h.has_key('preCommand'):
+            self.precmd = getCommandFromH(h['preCommand'])
+        else:
+            self.precmd = Command()
+        if h.has_key('command'):
+            self.cmd = getCommandFromH(h['command'])
+        else:
+            self.cmd = Command()
+        if h.has_key('postCommandSuccess'):
+            self.postcmd_ok = getCommandFromH(h['postCommandSuccess'])
+        else:
+            self.postcmd_ok = Command()
+        if h.has_key('postCommandFailure'):
+            self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
+        else:
+            self.postcmd_ko = Command()
         return self
 
     def equal(self, p):
