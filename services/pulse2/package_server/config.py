@@ -26,6 +26,9 @@
 import ConfigParser
 import re
 import logging
+import pwd
+import grp
+import string
 
 # MMC
 import mmc.support.mmctools
@@ -42,6 +45,11 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     username = ''
     password = ''
 
+    umask = 0077
+    daemon_user = 0
+    daemon_group = 0
+    pidfile = '/var/run/pulse2-package-server.pid'
+
     parser = None
     mirrors = []
     package_api_get = []
@@ -50,8 +58,6 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
 
     mirror_api = {}
     user_package_api = {}
-
-    pidfile = '/var/run/pulse2-package-server.pid'
 
     def setup(self, config_file):
         # Load configuration file
@@ -62,10 +68,17 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
             self.bind = self.cp.get("main", 'bind')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.get("main", 'port')
-        if self.cp.has_option('main', 'pidfile'):
-            self.pidfile = self.cp.get("main", 'pidfile')
-                            
-
+            
+        if self.cp.has_section('daemon'):
+            if self.cp.has_option('daemon', 'pidfile'):
+                self.pid_path = self.cp.get('daemon', 'pidfile')
+            if self.cp.has_option("daemon", "user"):
+                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+            if self.cp.has_option("daemon", "group"):
+                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+            if self.cp.has_option("daemon", "umask"):
+                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+    
         if self.cp.has_option('ssl', 'enablessl'):
             self.enablessl = (self.cp.get('ssl', 'enablessl') == 1)
             if self.enablessl:
@@ -75,7 +88,6 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
 
                 self.certfile = self.cp.get('ssl', 'certfile')
                 self.privkey = self.cp.get('ssl', 'privkey')
-
 
         if self.cp.has_option('mirror_api', 'mount_point'):
             self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
@@ -108,7 +120,6 @@ def config_addons(config):
     if len(config.package_api_get) > 0:
 #        for mirror_params in config.package_api_get:
             map(lambda x: add_server(x, config), config.package_api_get)            
-    print config
     return config
 
 def add_access(mirror_params, config):

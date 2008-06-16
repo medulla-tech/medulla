@@ -18,25 +18,26 @@ from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
 from pulse2.package_server.user_package_api import UserPackageApi
 
-def running(inifile, deamonize):
-    
-    P2PServerCP().setup(inifile)
+def running(inifile, deamonize):   
+    config = P2PServerCP()
+    config.setup(inifile)
 
-    # File will be rw for root user only
-    os.umask(0077)
-
-    # Create log dir if it doesn't exist
-    os.system('mkdir -p /var/log/mmc')
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
                                     
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
 
-    # When starting mmcServer, we log to stderr too
+    # When starting, we log to stderr too
     hdlr2 = logging.StreamHandler()
     logger.addHandler(hdlr2)
         
-    config = P2PServerCP()
+    # Create log dir if it doesn't exist
+    os.system('mkdir -p /var/log/mmc')
+
     config_addons(config)
 
     Common().init(config)
@@ -103,15 +104,29 @@ def running(inifile, deamonize):
         logger.error('can\'t bind to %s:%d' % (config.bind, port))
         logger.error(e)
         return 1
+    twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
 
     logger.info('package server listening on %s:%d' % (config.bind, port))
 
     # Become a daemon
     if daemonize: daemon(config)
 
+    # No more log to stderr
+    logger.removeHandler(hdlr2)
+
     twisted.internet.reactor.run()
     return 0
                                                                                 
+def cleanUp(config):
+    logger = logging.getLogger()
+    logger.info('Pulse package server shutting down, cleaning up...')
+
+    # Unlink pidfile if it exists
+    if os.path.isfile(config.pidfile):
+        os.seteuid(0)            
+        os.setegid(0)
+        os.unlink(config.pidfile)    
+
 def daemon(config):
     """
     daemonize pulse2-package-server
@@ -151,6 +166,8 @@ def daemon(config):
         if pid > 0:
             # exit from second parent, print eventual PID before
             print "Daemon PID %d" % pid
+            os.seteuid(0)            
+            os.setegid(0)            
             os.system("echo " + str(pid) + " > " + pidfile)
             sys.exit(0)
     except OSError, e:
