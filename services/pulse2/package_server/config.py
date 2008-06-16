@@ -83,7 +83,10 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
             if re.compile('^mirror:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
-                self.mirrors.append({'mount_point':mount_point, 'src':src})
+                mirror = {'mount_point':mount_point, 'src':src}
+                if self.cp.has_option(section, 'mirror'):
+                    mirror['mirror'] = self.cp.get(section, 'mirror')
+                self.mirrors.append(mirror)
             if re.compile('^package_api_get:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')

@@ -50,34 +50,34 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
     def xmlrpc_getPackageDetail(self, pid):
-        return Common().package(x, self.mp).toH()
+        return Common().package(pid, self.mp).toH()
 
     def xmlrpc_getPackageLabel(self, pid):
-        return Common().package(x, self.mp).label
+        return Common().package(pid, self.mp).label
 
     def xmlrpc_getPackageVersion(self, pid):
-        return Common().package(x, self.mp).version
+        return Common().package(pid, self.mp).version
 
     def xmlrpc_getPackageSize(self, pid):
-        return Common().package(x, self.mp).size
+        return Common().package(pid, self.mp).size
 
     def xmlrpc_getPackageInstallInit(self, pid):
-        return Common().package(x, self.mp).initcmd.toH()
+        return Common().package(pid, self.mp).initcmd.toH()
 
     def xmlrpc_getPackagePreCommand(self, pid):
-        return Common().package(x, self.mp).precmd.toH()
+        return Common().package(pid, self.mp).precmd.toH()
 
     def xmlrpc_getPackageCommand(self, pid):
-        return Common().package(x, self.mp).cmd.toH()
+        return Common().package(pid, self.mp).cmd.toH()
 
     def xmlrpc_getPackagePostCommandSuccess(self, pid):
-        return Common().package(x, self.mp).postcmd_ok.toH()
+        return Common().package(pid, self.mp).postcmd_ok.toH()
 
     def xmlrpc_getPackagePostCommandFailure(self, pid):
-        return Common().package(x, self.mp).postcmd_ko.toH()
+        return Common().package(pid, self.mp).postcmd_ko.toH()
 
-    def xmlrpc_getPackageFiles(self, pid):
-        return map(lambda x: x.toH(), Common().package(x, self.mp).files)
+    def xmlrpc_getPackageFiles(self, pid): # TODO remove the internals
+        return map(lambda x: x.toH(), Common().package(pid, self.mp).files.internals)
 
     def xmlrpc_getFileChecksum(self, file):
         return None

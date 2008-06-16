@@ -56,13 +56,24 @@ class Common(Singleton):
             if len(self.config.mirrors) > 0:
                 for mirror_params in self.config.mirrors:
                     try:
+                        access = {
+                            'proto':config.proto,
+                            'file_access_uri':mirror_params['file_access_uri'],
+                            'file_access_port':mirror_params['file_access_port'],
+                            'file_access_path':mirror_params['file_access_path']
+                        }
+                        if mirror_params.has_key('mirror'):
+                            access = {
+                                'proto':'',
+                                'file_access_uri':'',
+                                'file_access_port':'',
+                                'file_access_path':'',
+                                'mirror':mirror_params['mirror']
+                            }
                         self._getPackages(
                             mirror_params['mount_point'],
                             mirror_params['src'],
-                            config.proto,
-                            mirror_params['file_access_uri'],
-                            mirror_params['file_access_port'],
-                            mirror_params['file_access_path']
+                            access
                         )
                     except Exception, e:
                         self.logger.error(e)
@@ -185,18 +196,20 @@ class Common(Singleton):
    
 
 # private
-    def _getPackages(self, mp, src, file_access_proto = '', file_access_uri = '', file_access_port = '', file_access_path = ''):
+    def _getPackages(self, mp, src, access = {}): 
+    #file_access_proto = '', file_access_uri = '', file_access_port = '', file_access_path = ''):
         if not os.path.exists(src):
             raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
     
         self.mp2p[mp] = []
-        Find().find(src, self._treatConfFile, (mp, file_access_proto, file_access_uri, file_access_port, file_access_path))
+        Find().find(src, self._treatConfFile, (mp, access)) 
+        #file_access_proto, file_access_uri, file_access_port, file_access_path))
 
-    def _treatConfFile(self, file, mp, file_access_proto, file_access_uri, file_access_port, file_access_path):
+    def _treatConfFile(self, file, mp, access): #file_access_proto, file_access_uri, file_access_port, file_access_path):
         if os.path.basename(file) == 'conf.xml':
-            self._treatDir(os.path.dirname(file), mp, file_access_proto, file_access_uri, file_access_port, file_access_path)
+            self._treatDir(os.path.dirname(file), mp, access) #file_access_proto, file_access_uri, file_access_port, file_access_path)
 
-    def _treatDir(self, file, mp, file_access_proto, file_access_uri, file_access_port, file_access_path):
+    def _treatDir(self, file, mp, access): #file_access_proto, file_access_uri, file_access_port, file_access_path):
         pid = None
         try:
             if os.path.isdir(file):
@@ -213,19 +226,21 @@ class Common(Singleton):
                 self.packages[pid] = self.parser.parse("%s/conf.xml"%(file))
                 if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
-                    for sfile in self.packages(pi).specifiedFiles:
+                    for sfile in self.packages[pid].specifiedFiles:
                         f = "%s%s%s%s%s" % (toRelative, os.sep, pid, toRelative, sfile['filename'])
                         path = re.sub(os.path.basename(f) , '', "%s%s%s%s" % (os.sep, pid, os.sep, sfile['filename']))
                         if not os.exists(f):
                             self.logger.warn("the file %s is declared in the package configuration file, but is not in the package directory"%(sfile['filename']))
                             raise Exception("MISSINGFILE")
-                        size += self._treatFile(pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path, sfile['id'])
+                        size += self._treatFile(pid, f, path, access, sfile['id']) 
+                        #file_access_proto, file_access_uri, file_access_port, file_access_path, sfile['id'])
                 else:
                     # find all files and then get sizes and md5
                     files = self._getFiles(file)
                     for f in files:
                         path = re.sub(toRelative, '', os.path.dirname(f))
-                        size += self._treatFile(pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path)
+                        size += self._treatFile(pid, f, path, access)
+                        #file_access_proto, file_access_uri, file_access_port, file_access_path)
                 self.packages[pid].size = size
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
@@ -245,7 +260,7 @@ class Common(Singleton):
                     self.mp2p[mp][pid] = None
             raise err
 
-    def _treatFile(self, pid, f, path, file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
+    def _treatFile(self, pid, f, path, access = {}, fid = None): #file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
         (fsize, fmd5) = [0,0]
         if not self.file_properties.has_key(f):
             fsize = os.path.getsize(f)
@@ -254,7 +269,8 @@ class Common(Singleton):
         else:
             (fsize, fmd5) = self.file_properties[f]
 
-        file = File(os.path.basename(f), path, fmd5, fsize, file_access_proto, file_access_uri, file_access_port, file_access_path, fid)
+        file = File(os.path.basename(f), path, fmd5, fsize, access, fid) 
+        #file_access_proto, file_access_uri, file_access_port, file_access_path, fid)
         self.packages[pid].addFile(file)
         if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")

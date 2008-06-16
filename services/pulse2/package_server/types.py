@@ -147,7 +147,9 @@ class Package:
         return True
 
 class AFiles:
-    internals = []
+    def __init__(self):
+        self.internals = []
+
     def append(self, elt):
         self.internals.append(elt)
 
@@ -158,14 +160,23 @@ class AFiles:
         return self.toH()
 
 class File:
-    def __init__(self, name = None, path = '/', checksum = None, size = 0, proto = 'file', server_uri = '127.0.0.1', server_port = '80', server_mp = '', id = None):
+    def __init__(self, name = None, path = '/', checksum = None, size = 0, access = {}, id = None):
+        if access.has_key('mirror'):
+            self.where = access['mirror']
+        else:
+            if not access.has_key('proto'):
+                access['proto'] = 'http'
+            if not access.has_key('server_uri'):
+                access['server_uri'] = '127.0.0.1'
+            if not access.has_key('server_port'):
+                access['server_port'] = '80'
+            if not access.has_key('server_mp'):
+                access['server_mp'] = ''
+            self.where = "%s://%s:%s%s" % (access['proto'], access['server_uri'], str(access['server_port']), access['server_mp'])
+        
         self.name = name
         self.path = path
-        self.proto = proto
         self.checksum = checksum
-        self.server_uri = server_uri
-        self.server_port = server_port
-        self.server_mp = server_mp
         self.size = size
         if id == None:
             self.id = md5sum(self.toS())
@@ -173,7 +184,7 @@ class File:
             self.id = id
 
     def toURI(self):
-        return "%s://%s:%s%s%s/%s" % (self.proto, self.server_uri, str(self.server_port), self.server_mp, self.path, self.name)
+        return "%s%s/%s" % (self.where, self.path, self.name)
 
     def toS(self):
         return "%s/%s" % (self.path, self.name)
@@ -182,7 +193,7 @@ class File:
         return self.toS()
 
     def toH(self):
-        return { 'name':self.name, 'path':self.path, 'proto':self.proto, 'id':self.id }
+        return { 'name':self.name, 'path':self.path, 'id':self.id }
 
     def to_h(self):
         return self.toH()
