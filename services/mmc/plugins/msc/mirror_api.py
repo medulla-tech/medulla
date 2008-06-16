@@ -30,7 +30,8 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getMirror({'uuid':machine})
+            machine = self.convertMachineIntoH(machine)
+            return self.xmlrpc.getMirror(machine)
         except:
             self.logger.warn("MirrorApi:getMirror %s fails"%(str(machine)))
             return []
@@ -39,7 +40,8 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getMirrors(map(lambda m: {'uuid':m}, machines))
+            machines = map(lambda m: convertMachineIntoH(m), machines)
+            return self.xmlrpc.getMirrors(machines)
         except:
             self.logger.warn("MirrorApi:getMirrors %s fails"%(str(machines)))
             return []
@@ -48,7 +50,8 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getFallbackMirror({'uuid':machine})
+            machine = self.convertMachineIntoH(machine)
+            return self.xmlrpc.getFallbackMirror(machine)
         except:
             self.logger.warn("MirrorApi:getFallbackMirror %s fails"%(str(machine)))
             return []
@@ -57,17 +60,19 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getFallbackMirrors(map(lambda m: {'uuid':m}, machines))
+            machines = map(lambda m: convertMachineIntoH(m), machines)
+            return self.xmlrpc.getFallbackMirrors(machines)
         except:
             self.logger.warn("MirrorApi:getFallbackMirrors %s fails"%(str(machines)))
             return []
-
+        
     def getApiPackage(self, machine):
         self.logger.debug(machine)
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getApiPackage({'uuid':machine})
+            machine = self.convertMachineIntoH(machine)
+            return self.xmlrpc.getApiPackage(machine)
         except Exception, e:
             self.logger.warn("MirrorApi:getApiPackage %s fails"%(str(machine)))
             self.logger.warn(e)
@@ -77,11 +82,17 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            return self.xmlrpc.getApiPackages(map(lambda m: {'uuid':m}, machines))
+            machines = map(lambda m: convertMachineIntoH(m), machines)
+            return self.xmlrpc.getApiPackages(machines)
         except:
             self.logger.warn("MirrorApi:getApiPackages %s fails"%(str(machines)))
             return []
 
+    def convertMachineIntoH(self, machine):
+        if type(machine) != dict:
+            machine = {'uuid':machine}
+        return machine
+        
 class Mirror:
     def __init__(self, server):
         self.logger = logging.getLogger()
