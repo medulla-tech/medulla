@@ -34,20 +34,23 @@ import logging.config
 import optparse
 import signal
 
-def start_scheduler(cp):
+from pulse2.scheduler.config import SchedulerConfig
+
+def start_scheduler(config):
     """
     daemonize a scheduler
     """
-    name = cp.get('scheduler', 'id')
-    logger=logging.getLogger()
+    logger = logging.getLogger()
+    name = config.name
+    
     logger.info('daemonization started: scheduler %s' % name)
 
-    pid_path = cp.get('scheduler', 'pid_path')
+    pid_path = config.pid_path
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
 
-    pid_file = os.path.join(cp.get('scheduler', 'pid_path'), '%s.pid' % name)
-    scheduler_path = cp.get('scheduler', 'scheduler_path')
+    pid_file = os.path.join(pid_path, '%s.pid' % name)
+    scheduler_path = config.scheduler_path
     # Test if this scheduler already exists
     if os.path.isfile(pid_file):
         logger.warning('failed to start scheduler "%s": pid file "%s" already exist' % (name, pid_file))
@@ -79,6 +82,8 @@ def start_scheduler(cp):
         if pid > 0:
             # exit from second parent, print eventual PID before
             logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
+            os.seteuid(0)            
+            os.setegid(0)
             os.system("echo " + str(pid) + " > " + pid_file)
             sys.exit(0)
     except OSError, e:
@@ -86,15 +91,16 @@ def start_scheduler(cp):
         print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
+
     logger.info('daemonization ended: switching to %s' % [scheduler_path])
     os.execv(scheduler_path, (scheduler_path,))
 
-def stop_scheduler(cp):
-    name = cp.get('scheduler', 'id')
-
-    logger=logging.getLogger()
-
-    pid_file = os.path.join(cp.get('scheduler', 'pid_path'), '%s.pid' % name)
+def stop_scheduler(config):
+    name = config.name
+    logger = logging.getLogger()
+    os.seteuid(0)            
+    os.setegid(0)
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
     f = open(pid_file)
     try:
         for line in f:
@@ -123,19 +129,24 @@ if __name__ == "__main__":
         print "command is missing"
         sys.exit(2)
 
-    # start logger
-    logging.config.fileConfig(options.config_file)
-    logger=logging.getLogger()
-
     # Load configuration file
-    cp = ConfigParser.ConfigParser()
-    cp.read(options.config_file)
+    config = SchedulerConfig()
+    config.setup(options.config_file)
+
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+
+    # Start logger
+    logging.config.fileConfig(options.config_file)
+    logger = logging.getLogger()
 
     if args[0] == "start":
         logger.info('Starting Pulse2 Scheduler')
         print('Starting Pulse2 Scheduler:')
         # parse sections to keep launchers-specifics
-        if start_scheduler(cp):
+        if start_scheduler(config):
             logger.info('Scheduler started')
             print('OK')
         else:
@@ -144,7 +155,7 @@ if __name__ == "__main__":
     elif args[0] == "stop":
         logger.info('stopping Pulse2 Scheduler')
         print('Stopping Pulse2 Scheduler:')
-        if stop_scheduler(cp):
+        if stop_scheduler(config):
             logger.info('Scheduler stopped')
             print('OK')
         else:
