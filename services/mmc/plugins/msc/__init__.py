@@ -429,6 +429,9 @@ def _adv_getAllPackages(ctx, filt):
                     tmpmerged.append((papi, mirror[i]))
                 mergedlist.insert(i, tmpmerged)
 
+            if len(mergedlist) == 0:
+                return []
+
             plists = []
             for i in range(len(mergedlist[0])): # all line must have the same size!
                 plists.insert(i, [])
