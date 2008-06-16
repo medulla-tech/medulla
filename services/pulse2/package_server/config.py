@@ -49,6 +49,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     proto = 'http'
 
     mirror_api = {}
+    user_package_api = {}
 
     pidfile = '/var/run/pulse2-package-server.pid'
 
@@ -78,6 +79,9 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
 
         if self.cp.has_option('mirror_api', 'mount_point'):
             self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
+
+        if self.cp.has_option('user_packageapi_api', 'mount_point'):
+            self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
 
         for section in self.cp.sections():
             if re.compile('^mirror:[0-9]+$').match(section):
