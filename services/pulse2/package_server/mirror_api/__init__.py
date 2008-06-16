@@ -118,6 +118,6 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
                 ret1 += map(lambda papi: papi.toH(), self.mirrors['package_api_get'])
             if self.mirrors.has_key('package_api_put'):
                 ret1 += map(lambda papi: papi.toH(), self.mirrors['package_api_put'])
-            ret += ret1
+            ret.append(ret1)
         return ret
 
