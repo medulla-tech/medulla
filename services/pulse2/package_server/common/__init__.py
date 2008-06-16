@@ -149,8 +149,14 @@ class Common(Singleton):
     def writeFileIntoPackage(self, pid, file):
         pass
 
-    def package(self, pid):
-        return self.packages[pid]
+    def package(self, pid, mp = None):
+        if mp == None:
+            return self.packages[pid]
+        try:
+            self.mp2p[mp].index(pid)
+            return self.packages[pid]
+        except:
+            return None
 
     def getPackages(self, mp): #TODO check the clone memory impact
         ret = []
