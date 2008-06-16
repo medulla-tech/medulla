@@ -29,6 +29,7 @@
 import twisted.web.xmlrpc
 import twisted.web.server
 import logging
+import random
 from pulse2.package_server.types import Mirror, Machine
 
 class MirrorApi(twisted.web.xmlrpc.XMLRPC):
@@ -43,6 +44,8 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
             for service in services:
                 if not self.mirrors.has_key(service['type']):
                     self.mirrors[service['type']] = []
+                if service['server'] == '':
+                    service['server'] = 'localhost'
                 self.mirrors[service['type']].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
             self.logger.debug("(%s)%s api machine/mirror server initialised"%(self.type, self.name))
         except Exception, e:
@@ -64,7 +67,7 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
         if not self.assign.has_key(machine.uuid):
             self.assign[machine.uuid] = {}
         if not self.assign[machine.uuid].has_key('getMirror'):
-            self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+            self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'][random.randint(0,len(self.mirrors['mirror'])-1)].toH()
         return self.assign[machine.uuid]['getMirror']
         
     def xmlrpc_getMirrors(self, machines):
@@ -74,7 +77,7 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
             if not self.assign.has_key(machine.uuid):
                 self.assign[machine.uuid] = {}
             if not self.assign[machine.uuid].has_key('getMirror'):
-                self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+                self.assign[machine.uuid]['getMirror'] = self.mirrors['mirror'][random.randint(0,len(self.mirrors['mirror'])-1)].toH()
             ret.append(self.assign[machine.uuid]['getMirror'])
         return ret
         
@@ -83,7 +86,7 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
         if not self.assign.has_key(machine.uuid):
             self.assign[machine.uuid] = {}
         if not self.assign[machine.uuid].has_key('getFallbackMirror'):
-            self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+            self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'][random.randint(0,len(self.mirrors['mirror'])-1)].toH()
         return self.assign[machine.uuid]['getFallbackMirror']
         
     def xmlrpc_getFallbackMirrors(self, machines):
@@ -93,7 +96,7 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
             if not self.assign.has_key(machine.uuid):
                 self.assign[machine.uuid] = {}
             if not self.assign[machine.uuid].has_key('getFallbackMirror'):
-                self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'].values_at(rand(self.mirrors['mirror'].size))[0].toH()
+                self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors['mirror'][random.randint(0,len(self.mirrors['mirror'])-1)].toH()
             ret.append(self.assign[machine.uuid]['getFallbackMirror'])
         return ret
 
