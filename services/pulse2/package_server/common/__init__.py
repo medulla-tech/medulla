@@ -51,6 +51,7 @@ class Common(Singleton):
         self.fid2file = {}
         self.parser = PackageParser()
         self.parser.init(config)
+        self.desc = []
 
         try:
             if len(self.config.mirrors) > 0:
@@ -99,6 +100,22 @@ class Common(Singleton):
         except Exception, e:
             self.logger.error("Common : failed to finish loading packages")
             raise e
+
+    def setDesc(self, description):
+        self.desc = description
+
+    def h_desc(self, mp):
+        for d in self.desc:
+            if d['mp'] == mp:
+                return d
+        return None
+
+    def descBySrc(self, src):
+        ret = []
+        for d in self.desc:
+            if d['src'] == src:
+                ret.append(d)
+        return ret
     
     def checkPath4package(self, path): # TODO check if still used
         # TODO get conf.xml files in path, parse them, and fill the hashes
@@ -132,7 +149,7 @@ class Common(Singleton):
             if self.packages.has_key(pid):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
-            self.packages[pid] = ack
+            self.packages[pid] = pack
             if not self.reverse.has_key(pack.label):
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
@@ -142,7 +159,7 @@ class Common(Singleton):
         return pid
 
     def writePackageTo(self, pid, mp):
-        if self.packages.has_key(pid):
+        if not self.packages.has_key(pid):
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
         xml = self.parser.concat(self.packages[pid])
@@ -151,7 +168,8 @@ class Common(Singleton):
 
         if os.path.exists("%s/%s/conf.xml" % (path, pid)):
             shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.bkp" % (path, pid))
-        os.mkdir("%s/%s" % (path, pid))
+        if not os.path.exists("%s/%s" % (path, pid)):
+            os.mkdir("%s/%s" % (path, pid))
         f = open("%s/%s/conf.xml" % (path, pid), 'w+')
         f.write(xml)
         f.close()
