@@ -44,7 +44,7 @@ class GlpiComputers(ComputerI):
             pass
             
         try:
-            return self.glpi.getComputer(filt)
+            return self.glpi.getComputer(ctx, filt)
         except Exception, e:
             if len(e.args) > 0 and e.args[0].startswith('NOPERM##'):
                 machine = e.args[0].replace('NOPERM##', '')
@@ -79,7 +79,7 @@ class GlpiComputers(ComputerI):
         except exceptions.AttributeError:
             pass
             
-        return self.glpi.getComputersList(filt)
+        return self.glpi.getComputersList(ctx, filt)
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
         if filt == None or filt == '':
@@ -92,7 +92,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-        return self.glpi.getRestrictedComputersListLen(filt)
+        return self.glpi.getRestrictedComputersListLen(ctx, filt)
                     
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
         if filt == None or filt == '':
@@ -105,7 +105,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-        return self.glpi.getRestrictedComputersList(min, max, filt, advanced)
+        return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced)
 
     def getComputerCount(self, ctx, filt = None):
         if filt == None or filt == '':
@@ -118,7 +118,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-        return self.glpi.getComputerCount(filt)
+        return self.glpi.getComputerCount(ctx, filt)
 
     def canAddComputer(self):
         return False

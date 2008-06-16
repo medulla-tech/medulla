@@ -24,6 +24,7 @@ from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
 from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
 from sqlalchemy import *
@@ -292,7 +293,7 @@ class Glpi(DyngroupDatabaseHelper):
                 return query.filter(or_(*a_filter_on))
         return query
 
-    def __getRestrictedComputersListQuery(self, filt = None, session = create_session()):
+    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
         Get the sqlalchemy query to get a list of computers with some filters
         """
@@ -312,6 +313,18 @@ class Glpi(DyngroupDatabaseHelper):
 
             try:
                 query = self.filterOnUUID(query, filt['uuid'])
+            except KeyError:
+                pass
+
+            try:
+                gid = filt['gid']
+                machines = []
+                if ComputerGroupManager().isrequest_group(ctx, gid):
+                    machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                else:
+                    machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                query = query.filter(self.machine.c.ID.in_(*machines))
+
             except KeyError:
                 pass
 
@@ -407,41 +420,41 @@ class Glpi(DyngroupDatabaseHelper):
             return self.__treatQueryLevel(query)
 
     ##################### machine list management
-    def getComputer(self, filt):
+    def getComputer(self, ctx, filt):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(0, 10, filt)
+        ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
         if len(ret) != 1:
             for i in ['location', 'ctxlocation']:
                 try:
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(0, 10, filt)
+            ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[ret.keys()[0]][1]['fullname']))
             return False
         return ret[ret.keys()[0]]
 
-    def getRestrictedComputersListLen(self, filt = None):
+    def getRestrictedComputersListLen(self, ctx, filt = None):
         """
         Get the size of the computer list that match filters parameters
         """
         session = create_session()
-        query = self.__getRestrictedComputersListQuery(filt, session)
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         count = query.group_by([self.machine.c.name, self.machine.c.domain]).count()
         session.close()
         return count
 
-    def getRestrictedComputersList(self, min = 0, max = -1, filt = None, advanced = True):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
         """
         Get the computer list that match filters parameters between min and max
         """
         session = create_session()
         ret = {}
 
-        query = self.__getRestrictedComputersListQuery(filt, session)
+        query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
         if min != 0:
             query = query.offset(min)
@@ -460,25 +473,25 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getComputerCount(self, filt = None):
+    def getComputerCount(self, ctx, filt = None):
         """
         Same as getRestrictedComputersListLen
         TODO : remove this one
         """
-        return self.getRestrictedComputersListLen(filt)
+        return self.getRestrictedComputersListLen(ctx, filt)
 
-    def getComputersList(self, filt = None):
+    def getComputersList(self, ctx, filt = None):
         """
         Same as getRestrictedComputersList without limits
         """
-        return self.getRestrictedComputersList(0, -1, filt)
+        return self.getRestrictedComputersList(ctx, 0, -1, filt)
 
     ##################### UUID policies
     def getMachineUUID(self, machine):
         """
         Get this machine UUID
         """
-        return "UUID" + str(machine.ID)
+        return toUUID(str(machine.ID))
 
     def getMachineByUUID(self, uuid):
         """
@@ -840,6 +853,12 @@ class Glpi(DyngroupDatabaseHelper):
             return ret.name
         else:
             return ''
+
+def fromUUID(uuid):
+    return int(uuid.replace('UUID', ''))
+
+def toUUID(id):
+    return "UUID%s" % (str(id))
 
 # Class for SQLalchemy mapping
 class Machine(object):
