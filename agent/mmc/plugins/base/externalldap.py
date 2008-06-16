@@ -38,8 +38,13 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
     
     def readConf(self):
         AuthenticatorConfig.readConf(self)
-        for option in ["suffix", "bindname", "bindpasswd", "attr"]:
+        for option in ["suffix", "attr"]:
             self.__dict__[option] = self.get(self.section, option)
+        for option in ["bindname", "bindpasswd"]:
+            try:
+                self.__dict__[option] = self.get(self.section, option)
+            except NoOptionError:
+                pass                
         self.ldapurls = self.get(self.section, "ldapurl").split()
         try:
             self.filter = self.get(self.section, "filter")
@@ -49,7 +54,9 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
     def setDefault(self):
         AuthenticatorConfig.setDefault(self)
         self.filter = "objectClass=*"
-        
+        self.bindname = None
+        self.bindpasswd = None
+
 
 class ExternalLdapAuthenticator(AuthenticatorI):
     """
@@ -78,6 +85,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                     self.ldapBind(l, userdn, password)
                     ret = True
                 except ldap.INVALID_CREDENTIALS:
+                    self.logger.debug("Invalid credentials")
                     pass
         except Exception, e:
             self.logger.exception(e)
@@ -104,7 +112,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                 # Exit loop, because we found a LDAP server to connect to
                 break
         if not connected:
-            raise "Can't find a external LDAP server to connect to"
+            raise "Can't find an external LDAP server to connect to"
         return l
 
     def searchUser(self, l, user):
@@ -140,6 +148,17 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
         for attr in ["uid", "givenName", "sn"]:
             option = "ldap_" + attr
             self.__dict__[option] = self.get(self.section, option)
+        if self.has_option(self.section, "profile_attr"):
+            self.profileAttr = self.get(self.section, "profile_attr")
+            PROFILEACL = "profile_acl_"
+            for option in self.options(self.section):
+                if option.startswith(PROFILEACL):
+                    self.profilesAcl[option.replace(PROFILEACL, "").lower()] = self.get(self.section, option)
+
+    def setDefault(self):
+        ProvisionerConfig.setDefault(self)
+        self.profileAttr = None
+        self.profilesAcl = {}
 
 
 class ExternalLdapProvisioner(ProvisionerI):
@@ -163,6 +182,22 @@ class ExternalLdapProvisioner(ProvisionerI):
             givenName = userentry[self.config.ldap_givenName][0].decode("utf-8")
             sn = userentry[self.config.ldap_sn][0].decode("utf-8")
             l.addUser(uid, authtoken.getPassword(), givenName, sn)
+        if self.config.profileAttr and self.config.profilesAcl:
+            # Set or update the user right
+            try:
+                profile = userentry[self.config.profileAttr][0].lower()
+            except KeyError:
+                self.logger.info("No profile information for user %s in attribute %s" % (uid, self.config.profileAttr))
+                profile = None
+            if profile:
+                try:
+                    acls = self.config.profilesAcl[profile]
+                except KeyError:
+                    self.logger.info("No ACL defined in configuration file for profile %s" % profile)
+                    acls = None
+                if acls != None:
+                    self.logger.info("Setting MMC ACL corresponding to user profile %s: %s" % (profile, acls))
+                    l.changeUserAttributes(uid, "lmcAcl", acls)
 
     def validate(self):
         return True
