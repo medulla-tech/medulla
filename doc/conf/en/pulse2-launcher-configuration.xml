@@ -102,6 +102,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>daemon</entry>
+
+            <entry>Launchers services related behaviors</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
             <entry>scheduler</entry>
 
             <entry>Referent scheduler location</entry>
@@ -158,17 +166,6 @@ option2 = plop      </screen></para>
             <entry>no</entry>
 
             <entry>/usr/local/sbin/pulse2-launcher</entry>
-          </row>
-
-          <row>
-            <entry>pid_path</entry>
-
-            <entry>The Launcher services PID, used by launchers-manager to
-            track the launcher services.</entry>
-
-            <entry>no</entry>
-
-            <entry>/var/run/pulse2</entry>
           </row>
 
           <row>
@@ -318,6 +315,83 @@ option2 = plop      </screen></para>
         </tbody>
       </tgroup>
     </table>
+  </section>
+
+  <section>
+
+    <title>« daemon » section</title>
+
+    <para>
+      This section sets the pulse2-launchers-manager and pulse2-launchers service run-time options and privileges.
+    </para>
+
+    <table>
+      <title>Available options for the "daemon" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>pid_path</entry>
+
+            <entry>The launcher services PID, used by pulse2-launchers-manager to track the launchers services.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/var/run/pulse2</entry>
+
+          </row>
+
+          <row>
+            <entry>user</entry>
+
+            <entry>The pulse2-launchers-manager and pulse2-launchers service run as this specified user.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>group</entry>
+
+            <entry>The pulse2-launchers-manager and pulse2-launchers services run as this specified group.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>umask</entry>
+
+            <entry>The pulse2-launchers-manager and pulse2-launchers services umask defines the right of the new files they create (log files for example).</entry>
+
+            <entry>yes</entry>
+
+            <entry>0077</entry>
+
+          </row>
+	  
+	</tbody>
+
+      </tgroup>
+
+    </table>
+
   </section>
 
   <section>

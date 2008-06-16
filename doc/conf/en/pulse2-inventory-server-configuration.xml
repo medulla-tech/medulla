@@ -91,6 +91,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>daemon</entry>
+
+            <entry>Inventory server daemon related behaviors</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
             <entry>database</entry>
 
             <entry>Database connection parameters</entry>
@@ -177,19 +185,85 @@ option2 = plop      </screen></para>
             <entry>/etc/mmc/pulse2/OcsNGMap.xml</entry>
           </row>
 
-          <row>
-            <entry>pidfile</entry>
-
-            <entry>The inventory server services PID, used to stop the
-            service.</entry>
-
-            <entry>yes</entry>
-
-            <entry>/var/run/pulse2-inventoryserver.pid</entry>
-          </row>
         </tbody>
       </tgroup>
     </table>
+  </section>
+
+  <section>
+
+    <title>« daemon » section</title>
+
+    <para>
+      This section sets the inventory service run-time options and privileges.
+    </para>
+
+    <table>
+      <title>Available options for the "daemon" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>pidfile</entry>
+
+            <entry>The inventory service store its PID in the given file.</entry>
+            <entry>yes</entry>
+
+            <entry>/var/run/pulse2-inventoryserver.pid</entry>
+
+          </row>
+
+          <row>
+            <entry>user</entry>
+
+            <entry>The inventory service runs as this specified user.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>group</entry>
+
+            <entry>The inventory service runs as this specified group.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>umask</entry>
+
+            <entry>The inventory service umask defines the right of the new files it creates (log files for example).</entry>
+
+            <entry>yes</entry>
+
+            <entry>0077</entry>
+
+          </row>
+	  
+	</tbody>
+
+      </tgroup>
+
+    </table>
+
   </section>
 
   <section>

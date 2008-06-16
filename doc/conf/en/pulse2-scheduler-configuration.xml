@@ -92,6 +92,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>daemon</entry>
+
+            <entry>Scheduler service related behaviors</entry>
+
+            <entry>no</entry>
+          </row>
+
+          <row>
             <entry>launcher_XXX</entry>
 
             <entry>A way to talk to launcher_XXX</entry>
@@ -147,17 +155,6 @@ option2 = plop      </screen></para>
 
             <entry>The Scheduler main script location, used by
             scheduler-manager to start and daemonize the service.</entry>
-
-            <entry>no</entry>
-
-            <entry></entry>
-          </row>
-
-          <row>
-            <entry>pid_path</entry>
-
-            <entry>The Scheduler service PID, used by scheduler-manager to
-            track the scheduler service.</entry>
 
             <entry>no</entry>
 
@@ -335,6 +332,84 @@ option2 = plop      </screen></para>
         </tbody>
       </tgroup>
     </table>
+  </section>
+
+  <section>
+
+    <title>« daemon » section</title>
+
+    <para>
+      This section sets the scheduler service run-time options and privileges.
+    </para>
+
+    <table>
+      <title>Available options for the "daemon" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>pid_path</entry>
+
+            <entry>The scheduler service PID, used by scheduler-manager to
+            track the scheduler service.</entry>
+
+            <entry>yes</entry>
+
+            <entry>/var/run/pulse2</entry>
+
+          </row>
+
+          <row>
+            <entry>user</entry>
+
+            <entry>The scheduler service runs as this specified user.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>group</entry>
+
+            <entry>The scheduler service runs as this specified group.</entry>
+
+            <entry>yes</entry>
+
+            <entry>root</entry>
+
+          </row>
+
+          <row>
+            <entry>umask</entry>
+
+            <entry>The scheduler service umask defines the right of the new files it creates (log files for example).</entry>
+
+            <entry>yes</entry>
+
+            <entry>0077</entry>
+
+          </row>
+	  
+	</tbody>
+
+      </tgroup>
+
+    </table>
+
   </section>
 
   <section>
