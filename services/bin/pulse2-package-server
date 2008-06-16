@@ -15,6 +15,8 @@ from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
 from pulse2.package_server.mirror import Mirror
 from pulse2.package_server.package_api_get import PackageApiGet
+from pulse2.package_server.package_api_put import PackageApiPut
+from pulse2.package_server.user_package_api import UserPackageApi
 
 def running(inifile, deamonize):
     
@@ -60,16 +62,21 @@ def running(inifile, deamonize):
 
     if len(config.package_api_put) > 0:
         for mirror_params in config.package_api_put:
-            # TODO : implement the p_api_put xmlrpc and register it
-            pass
+            p_api = PackageApiPut(mirror_params['mount_point'], mirror_params['mount_point'])
+            server.register(p_api, mirror_params['mount_point'])
+            services.append({'type':'package_api_put', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
  
-    # TODO : implement the user/mirror api
+    if config.user_package_api.has_key('mount_point'):
+        mirror = UserPackageApi(services, config.user_package_api['mount_point'])
+        server.register(mirror, config.user_package_api['mount_point'])
+        
     if config.mirror_api.has_key('mount_point'):
         mirror = MirrorApi(services, config.mirror_api['mount_point'])
         server.register(mirror, config.mirror_api['mount_point'])
     else:
         self.logger.warn('package server initialized without mirror api')
  
+    Common().setDesc(services)
     try:
         if config.enablessl:
             if not os.path.isfile(config.privkey):
@@ -151,7 +158,7 @@ def daemon(config):
         sys.exit(1)
 
 if __name__ == "__main__":
-    inifile = "/etc/mmc/pulse2/package-server.ini"
+    inifile = "/etc/mmc/pulse2/pserver/package-server.ini"
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
     except getopt.GetoptError:
