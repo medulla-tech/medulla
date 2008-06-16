@@ -188,17 +188,25 @@ class File:
         return self.toH()
 
 class Machine:
-    def __init__(self, name = None):
+    def __init__(self, name = None, uuid = None):
         self.name = name
+        self.uuid = uuid
 
     def uuid(self):
-        return self.name
+        return self.uuid
 
     def to_h(self):
-        return { 'name' : self.name }
+        return { 'name' : self.name, 'uuid' : self.uuid }
 
     def from_h(self, h):
-        self.name = h['name']
+        if h.has_key('name'):
+            self.name = h['name']
+        else:
+            self.name = ''
+        try:
+            self.uuid = h['uuid']
+        except Exception, e:
+            raise Exception("machine must have an uuid")
         return self
 
     def equal(self, a):
@@ -213,8 +221,15 @@ class User:
         return { 'name' : self.name, 'uuid' : self.uuid }
 
     def from_h(self, h):
-        self.name = h['name']
-        self.uuid = h['uuid']
+        if h.has_key('name'):
+            self.name = h['name']
+        else:
+            self.name = ''
+        try:
+            self.uuid = h['uuid']
+        except Exception, e:
+            raise Exception("user must have an uuid")
+        return self
 
     def equal(self, a):
         return (self.name == a.name and self.uuid == a.uuid)
