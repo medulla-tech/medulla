@@ -39,19 +39,21 @@ import logging.config
 import optparse
 import signal
 
-def start_launcher(name, cp):
+from pulse2.launcher.config import LauncherConfig
+
+def start_launcher(name, config):
     """
     daemonize a launcher
     """
     logger = logging.getLogger()
     logger.info('daemonization started: launcher "%s"' % name)
 
-    pid_path = cp.get('launchers', 'pid_path')
+    pid_path = config.pid_path
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
 
-    pid_file = os.path.join(cp.get('launchers', 'pid_path'), '%s.pid' % name)
-    launcher_path = cp.get('launchers', 'launcher_path')
+    pid_file = os.path.join(pid_path, '%s.pid' % name)
+    launcher_path = config.launcher_path
     # Test if this launcher already exists
     if os.path.isfile(pid_file):
         logger.warning('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
@@ -70,7 +72,6 @@ def start_launcher(name, cp):
         print >> sys.stderr, "daemonization part #1 failed: %d (%s)" % (error.errno, error.strerror)
         sys.exit(1)
 
-
     # decouple from parent environment
     os.close(sys.stdin.fileno())
     os.close(sys.stdout.fileno())
@@ -84,6 +85,8 @@ def start_launcher(name, cp):
         if pid > 0:
             # exit from second parent, print eventual PID before
             logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
+            os.seteuid(0)            
+            os.setegid(0)
             os.system("echo " + str(pid) + " > " + pid_file)
             sys.exit(0)
     except OSError, error:
@@ -94,9 +97,11 @@ def start_launcher(name, cp):
     logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
     os.execv(launcher_path, (launcher_path, '--id', name))
 
-def stop_launcher(name, cp):
+def stop_launcher(name, config):
     logger = logging.getLogger()
-    pid_file = os.path.join(cp.get('launchers', 'pid_path'), '%s.pid' % name)
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    os.seteuid(0)            
+    os.setegid(0)
     f = open(pid_file)
     try:
         for line in f:
@@ -124,34 +129,39 @@ if __name__ == "__main__":
         print "command is missing"
         sys.exit(2)
 
-    # start logger
+    # Load configuration file
+    config = LauncherConfig()
+    config.setup(options.config_file)
+
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+
+    # Start logger
     logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
-
-    # Load configuration file
-    cp = ConfigParser.ConfigParser()
-    cp.read(options.config_file)
 
     if args[0] == "start":
         logger.info('starting Pulse2 Launchers')
         print('Starting Pulse2 Launchers:')
         # parse sections to keep launchers-specifics
-        for section in cp.sections():
-            if re.compile("^launcher_[0-9]+$").match(section):
-                print('\t%s' % section)
-                start_launcher(section, cp)
+        for section in config.launchers:
+            #if re.compile("^launcher_[0-9]+$").match(section):
+            print('\t%s' % section)
+            start_launcher(section, config)
         logger.info('Launchers started')
     elif args[0] == "stop":
         logger.info('stopping Pulse2 Launchers')
         print('Stopping Pulse2 Launchers:')
-        pid_path = cp.get('launchers', 'pid_path')
+        pid_path = config.pid_path
         if os.path.isdir(pid_path):
             for root, dirs, files in os.walk(pid_path):
                 for myfile in files:
                     if re.compile('^launcher_[0-9]+\.pid$').match(myfile):
                         name = re.search('^(launcher_[0-9]+)\.pid$', myfile).group(1)
                         print('\t%s' % name)
-                        stop_launcher(name, cp)
+                        stop_launcher(name, config)
         logger.info('Launchers stopped')
 
 

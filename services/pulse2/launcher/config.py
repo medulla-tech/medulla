@@ -26,6 +26,9 @@
 import ConfigParser
 import re
 import logging
+import pwd
+import grp
+import string
 
 # MMC
 import mmc.support.mmctools
@@ -70,6 +73,10 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     awake_time = 600
     defer_results = False
 
+    daemon_user = 0
+    daemon_group = 0
+    umask = 0077
+
     launchers = {
         'launcher_01': {
             'port': 8001,
@@ -90,7 +97,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         else:
             logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, key)))
 
-    def setup(self, config_file, name):
+    def setup(self, config_file, name = None):
         # Load configuration file
         self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
@@ -112,6 +119,16 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                 self.scheduler_username = self.cp.get('scheduler', 'username')
             if self.cp.has_option('scheduler', 'password'):
                 self.scheduler_password = self.cp.get('scheduler', 'password')
+
+        if self.cp.has_section("daemon"):
+            if self.cp.has_option("daemon", "pid_path"):
+                self.pid_path = self.cp.get("daemon", "pid_path")  
+            if self.cp.has_option("daemon", "user"):
+                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+            if self.cp.has_option("daemon", "group"):
+                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+            if self.cp.has_option("daemon", "umask"):
+                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)          
 
         for section in self.cp.sections():
             if re.compile('^launcher_[0-9]+$').match(section):
