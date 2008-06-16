@@ -64,8 +64,11 @@ def running(inifile):
             pass
  
     # TODO : implement the user/mirror api
-    mirror = MirrorApi(services, config.mirror_api['mount_point'])
-    server.register(mirror, config.mirror_api['mount_point'])
+    if config.mirror_api.has_key('mount_point'):
+        mirror = MirrorApi(services, config.mirror_api['mount_point'])
+        server.register(mirror, config.mirror_api['mount_point'])
+    else:
+        self.logger.warn('package server initialized without mirror api')
  
     try:
         if config.enablessl:
