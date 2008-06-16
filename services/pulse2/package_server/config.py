@@ -64,8 +64,17 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
                             
-        if self.enablessl:
-            self.proto = 'https'
+
+        if self.cp.has_option('ssl', 'enablessl'):
+            self.enablessl = (self.cp.get('ssl', 'enablessl') == 1)
+            if self.enablessl:
+                self.proto = 'https'
+                self.username = self.cp.get('ssl', 'username')
+                self.password = self.cp.get('ssl', 'password')
+
+                self.certfile = self.cp.get('ssl', 'certfile')
+                self.privkey = self.cp.get('ssl', 'privkey')
+
 
         if self.cp.has_option('mirror_api', 'mount_point'):
             self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
