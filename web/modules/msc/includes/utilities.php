@@ -24,7 +24,7 @@
  */
 
 function onlyValues($n) {
-    return array($n['uuid'], $n['name']);
+    return array($n['uuid'], $n['hostname']);
 }
 
 function prettyOctetDisplay($num, $base = 1024, $unit = '') {
