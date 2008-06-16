@@ -14,6 +14,7 @@ from pulse2.package_server.config import P2PServerCP, config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
 from pulse2.package_server.mirror import Mirror
+from pulse2.package_server.package_api_get import PackageApiGet
 
 def running(inifile):
     
@@ -53,8 +54,9 @@ def running(inifile):
 
     if len(config.package_api_get) > 0:
         for mirror_params in config.package_api_get:
-            # TODO : implement the p_api_get xmlrpc and register it
-            pass
+            p_api = PackageApiGet(mirror_params['mount_point'], mirror_params['mount_point'])
+            server.register(p_api, mirror_params['mount_point'])
+            services.append({'type':'package_api_get', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
 
     if len(config.package_api_put) > 0:
         for mirror_params in config.package_api_put:
@@ -62,8 +64,8 @@ def running(inifile):
             pass
  
     # TODO : implement the user/mirror api
-    mirror = MirrorApi(services, '/mirror')
-    server.register(mirror, '/mirror')
+    mirror = MirrorApi(services, config.mirror_api['mount_point'])
+    server.register(mirror, config.mirror_api['mount_point'])
  
     try:
         if config.enablessl:
