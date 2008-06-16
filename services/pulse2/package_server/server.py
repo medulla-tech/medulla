@@ -61,13 +61,18 @@ class P2PServerService(twisted.web.xmlrpc.XMLRPC):
         content = request.content.read()
         args, functionPath = xmlrpclib.loads(content)
 
-        self.logger.debug(self.paths)
-        self.logger.debug(request.postpath[0])
+        path = functionPath.split('.')
+        func = path.pop()
+        functionPath = '.'.join(path)
+
         obj = self.root_path
         if self.paths.has_key("/"+request.postpath[0]):
             obj = self.paths["/"+request.postpath[0]]
 
-        function = obj._getFunction(functionPath)
+        if functionPath != 'xmlrpc': # TODO raise an exception ?
+            return twisted.web.server.NOT_DONE_YET
+
+        function = obj._getFunction(func)
 
         cleartext_token = '%s:%s' % (self.config.username, self.config.password)
         token = '%s:%s' % (request.getUser(), request.getPassword())
