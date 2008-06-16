@@ -11,11 +11,13 @@ from pulse2.inventoryserver.server import InventoryGetService
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
 def running(daemonize, inifile):
-    
-    Pulse2OcsserverConfigParser().setup(inifile)
+    config = Pulse2OcsserverConfigParser()
+    config.setup(inifile)
 
-    # File will be rw for root user only
-    os.umask(0077)
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
 
     # Create log dir if it doesn't exist
     os.system('mkdir -p /var/log/mmc')
@@ -24,11 +26,6 @@ def running(daemonize, inifile):
     logger = logging.getLogger()
     logger.debug("Logger loaded")
 
-    # When starting mmcServer, we log to stderr too
-    hdlr2 = logging.StreamHandler()
-    logger.addHandler(hdlr2)
-        
-    config = Pulse2OcsserverConfigParser()
     InventoryGetService().initialise(config)
 
     if daemonize: daemon(config)
@@ -74,6 +71,8 @@ def daemon(config):
         if pid > 0:
             # exit from second parent, print eventual PID before
             print "Daemon PID %d" % pid
+            os.seteuid(0)
+            os.setegid(0)
             os.system("echo " + str(pid) + " > " + pidfile)
             sys.exit(0)
     except OSError, e:

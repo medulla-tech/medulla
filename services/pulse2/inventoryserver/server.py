@@ -5,6 +5,8 @@ from time import strftime
 import logging
 import time
 import re
+import signal
+import os
 
 from pulse2.inventoryserver.mapping import OcsMapping
 from pulse2.inventoryserver.database import InventoryWrapper
@@ -130,16 +132,31 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
             self.end_headers()
 
 class InventoryGetService(Singleton):
+
     def initialise(self, config):
         InventoryWrapper().activate()
         self.config = config
         self.bind = config.bind
         self.port = int(config.port)
         self.xmlmapping = config.ocsmapping
+        self.logger = logging.getLogger()        
         OcsMapping().initialize(self.xmlmapping)
 
     def run(self, server_class=BaseHTTPServer.HTTPServer, handler_class=InventoryServer):
         server_address = (self.bind, int(self.port))
         httpd = server_class(server_address, handler_class)
+        # Install SIGTERM handler
+        signal.signal(signal.SIGTERM, self.handler)
         httpd.serve_forever()
         
+    def handler(self, signum, frame):
+        """
+        SIGTERM handler
+        """
+        self.logger.info("Shutting down...")
+        os.seteuid(0)
+        os.setegid(0)
+        try:
+            os.unlink(self.config.pidfile)
+        except OSError:
+            pass

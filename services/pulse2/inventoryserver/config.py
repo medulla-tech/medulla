@@ -26,6 +26,9 @@
 import ConfigParser
 import re
 import logging
+import pwd
+import grp
+import string
 
 # MMC
 import mmc.support.mmctools
@@ -41,7 +44,9 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     ocsmapping = '/etc/mmc/pulse2/OcsNGMap.xml'
 
     pidfile = '/var/run/pulse2-inventoryserver.pid'
-
+    umask = 0007
+    daemon_user = 0
+    daemon_group = 0
 
     dbdriver = 'mysql'
     dbhost = 'localhost'
@@ -53,7 +58,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     options = {}
 
     hostname = ['HARDWARE', 'NAME']
-
+    
 
     def setup(self, config_file):
         # Load configuration file
@@ -88,6 +93,16 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
             self.hostname = path[0].split('/')
             if len(path) == 2:
                 self.hostname.append(path[1].split(':'))
+
+        if self.cp.has_section("daemon"):
+            if self.cp.has_option("daemon", "pid_path"):
+                self.pid_path = self.cp.get("daemon", "pid_path")  
+            if self.cp.has_option("daemon", "user"):
+                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+            if self.cp.has_option("daemon", "group"):
+                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+            if self.cp.has_option("daemon", "umask"):
+                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
         for section in self.cp.sections():
             if re.compile('^option_[0-9]+$').match(section):
