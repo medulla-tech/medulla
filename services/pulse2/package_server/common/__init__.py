@@ -211,7 +211,10 @@ class Common(Singleton):
             raise e
         return ret
 
-   
+    def getFile(self, fid):
+        if self.files.has_key(fid):
+            return self.files[fid]
+        return None
 
 # private
     def _getPackages(self, mp, src, access = {}): 

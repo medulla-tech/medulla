@@ -205,7 +205,7 @@ class File:
             self.id = id
 
     def toURI(self):
-        return "%s%s/%s" % (self.where, self.path, self.name)
+        return ("%s%s/%s" % (self.where, self.path, self.name)).replace(' ', '%20')
 
     def toS(self):
         return "%s/%s" % (self.path, self.name)

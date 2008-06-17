@@ -50,5 +50,9 @@ class Mirror(twisted.web.xmlrpc.XMLRPC):
         return Common().getPackages(self.mp).has_key(pid)
         
     def xmlrpc_getFilePath(self, fid):
-        return Common().getFile(fid).urlencode()
+        f = Common().getFile(fid)
+        if f == None:
+            return ''
+        else:
+            return f
 
