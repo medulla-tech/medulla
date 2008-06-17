@@ -131,11 +131,11 @@ class PackageParserXML:
     </version>
     <description>%s</description>
     <commands>
-        <preCommand name"%s">%s</preCommand>
-        <installInit name"%s">%s</installInit>
-        <command name"%s">%s</command>
-        <postCommandSuccess name"%s">%s</postCommandSuccess>
-        <postCommandFailure name"%s">%s</postCommandFailure>
+        <preCommand name="%s">%s</preCommand>
+        <installInit name="%s">%s</installInit>
+        <command name="%s">%s</command>
+        <postCommandSuccess name="%s">%s</postCommandSuccess>
+        <postCommandFailure name="%s">%s</postCommandFailure>
     </commands>
 </package>
         """ % (package.id, package.label, package.version, package.version, package.description, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
