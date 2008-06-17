@@ -122,10 +122,11 @@ class Common(Singleton):
         return False
 
     def associatePackage2mp(self, pid, mp):
-        conf = self.h_desc(mp) # TODO move h_desc from server to common
-        for desc in self.descBySrc(conf['src']): # TODO move descBySrc from server to common
+        conf = self.h_desc(mp)
+        for desc in self.descBySrc(conf['src']):
             if desc['type'] != 'mirror_files':
                 self.mp2p[desc['mp']].append(pid)
+        return True
 
     def addPackage(self, pid, pa):
         # return pid for success
