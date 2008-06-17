@@ -32,6 +32,7 @@ import string
 
 # MMC
 import mmc.support.mmctools
+from mmc.support.config import MMCConfigParser
 
 class P2PServerCP(mmc.support.mmctools.Singleton):
     """
@@ -61,7 +62,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
 
     def setup(self, config_file):
         # Load configuration file
-        self.cp = ConfigParser.ConfigParser()
+        self.cp = MMCConfigParser()
         self.cp.read(config_file)
 
         if self.cp.has_option('main', 'bind'):
@@ -84,7 +85,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
             if self.enablessl:
                 self.proto = 'https'
                 self.username = self.cp.get('ssl', 'username')
-                self.password = self.cp.get('ssl', 'password')
+                self.password = self.cp.getpassword('ssl', 'password')
 
                 self.certfile = self.cp.get('ssl', 'certfile')
                 self.privkey = self.cp.get('ssl', 'privkey')
