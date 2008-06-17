@@ -50,7 +50,7 @@ class InventoryConfig(PluginConfig):
         self.dbhost = self.get("inventory", "dbhost")
         self.dbname = self.get("inventory", "dbname")
         self.dbuser = self.get("inventory", "dbuser")
-        self.dbpasswd = self.get("inventory", "dbpasswd")
+        self.dbpasswd = self.getpassword("inventory", "dbpasswd")
         self.disable = (str(self.get("main", "disable")) == '1')
         try:
             self.dbpoolrecycle = self.getint("main", "dbpoolrecycle")

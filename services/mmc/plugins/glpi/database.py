@@ -69,7 +69,7 @@ class GlpiConfig(PluginConfig):
         self.dbhost = self.get("main", "dbhost")
         self.dbname = self.get("main", "dbname")
         self.dbuser = self.get("main", "dbuser")
-        self.dbpasswd = self.get("main", "dbpasswd")
+        self.dbpasswd = self.getpassword("main", "dbpasswd")
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")
         try:

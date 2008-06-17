@@ -10,7 +10,7 @@ class DGConfig(PluginConfig):
         PluginConfig.readConf(self)
         self.dbdriver = self.get("database", "dbdriver")
         self.dbuser = self.get("database", "dbuser")
-        self.dbpasswd = self.get("database", "dbpasswd")
+        self.dbpasswd = self.getpassword("database", "dbpasswd")
         self.dbhost = self.get("database", "dbhost")
         self.dbname = self.get("database", "dbname")
         self.disable = self.get("main", "disable")

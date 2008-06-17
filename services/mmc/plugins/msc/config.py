@@ -114,7 +114,7 @@ class MscConfig(PluginConfig):
         if self.has_option("msc", "db_user"):
             self.db_user = self.get("msc", "db_user")
         if self.has_option("msc", "db_passwd"):
-            self.db_passwd = self.get("msc", "db_passwd")
+            self.db_passwd = self.getpassword("msc", "db_passwd")
         if self.has_option("msc", "db_debug"):
             self.db_debug = self.get("msc", "db_debug")
         if self.has_option("msc", "db_pool_recycle"):
@@ -151,7 +151,7 @@ class MscConfig(PluginConfig):
                         'port': self.get(section, "port"),
                         'host': self.get(section, "host"),
                         'username': self.get(section, "username"),
-                        'password': self.get(section, "password"),
+                        'password': self.getpassword(section, "password"),
                         'enablessl': self.getboolean(section, "enablessl")
                     }
 
