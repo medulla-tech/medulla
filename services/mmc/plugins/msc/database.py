@@ -317,7 +317,7 @@ class MscDatabase(Singleton):
     def createTarget(self, target, mode, group_id):
         """
         Create a row in the target table.
-        
+
         @param target: couple made of (uuid, hostname)
         @type target: list
 
@@ -335,7 +335,7 @@ class MscDatabase(Singleton):
         self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
         # Apply IP addresses blacklist
         if self.config.ignore_non_rfc2780:
-            ipAddresses = blacklist.rfc2780Filter(ipAddresses)        
+            ipAddresses = blacklist.rfc2780Filter(ipAddresses)
         if self.config.ignore_non_rfc1918:
             ipAddresses = blacklist.rfc1918Filter(ipAddresses)
         ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
@@ -359,9 +359,10 @@ class MscDatabase(Singleton):
         if mode == 'push_pull':
             mirror = MirrorApi().getMirror({"name": targetName, "uuid": targetUuid})
             fallback = MirrorApi().getFallbackMirror({"name": targetName, "uuid": targetUuid})
-            targetUri = '%s://%s:%d%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']) + \
+            targetUri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
                 '||' + \
-                '%s://%s:%d%s' % (fallback['protocol'], fallback['server'], fallback['port'], fallback['mountpoint'])
+                '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
+                # FIXME: not sure we should cast to srt ...
         elif mode == 'push':
             targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
         else:
@@ -613,7 +614,7 @@ class MscDatabase(Singleton):
     def countUnfinishedCommandsOnHost(self, ctx, uuid, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done') 
+            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done')
             #.filter(self.commands.c.username == ctx.userid)
             if filt != '':
                 ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
