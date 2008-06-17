@@ -31,6 +31,7 @@ import string
 
 # MMC
 import mmc.support.mmctools
+from mmc.support.config import MMCConfigParser
 
 class SchedulerConfig(mmc.support.mmctools.Singleton):
     """
@@ -76,7 +77,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
     def setup(self, config_file):
         # Load configuration file
-        cp = ConfigParser.ConfigParser()
+        cp = MMCConfigParser()
         cp.read(config_file)
 
         self.name = cp.get("scheduler", "id")
@@ -88,7 +89,7 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         if cp.has_option("scheduler", "username"):
             self.username = cp.get("scheduler", "username")
         if cp.has_option("scheduler", "password"):
-            self.password = cp.get("scheduler", "password")
+            self.password = cp.getpassword("scheduler", "password")
         if cp.has_option("scheduler", "enablessl"):
             self.enablessl = cp.getboolean("scheduler", "enablessl")
         if self.enablessl:
@@ -138,6 +139,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
                         'port': cp.get(section, "port"),
                         'host': cp.get(section, "host"),
                         'username': cp.get(section, "username"),
-                        'password': cp.get(section, "password"),
+                        'password': cp.getpassword(section, "password"),
                         'enablessl': cp.get(section, "enablessl")
                     }
