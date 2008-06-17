@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Dyngroup web 1.1rc1\n"
+"Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-17 09:34+0200\n"
-"PO-Revision-Date: 2008-06-17 09:38+0200\n"
+"PO-Revision-Date: 2008-06-17 09:59+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -146,7 +146,7 @@ msgstr "Spécifier un opérateur booléen entre les groupes"
 
 #: dyngroup/dyngroup/creator.php:163
 msgid "Go to save step"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: dyngroup/dyngroup/tab.php:8
 msgid "Group creation"
