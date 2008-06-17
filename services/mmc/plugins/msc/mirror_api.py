@@ -40,7 +40,7 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            machines = map(lambda m: convertMachineIntoH(m), machines)
+            machines = map(lambda m: self.convertMachineIntoH(m), machines)
             return self.xmlrpc.getMirrors(machines)
         except:
             self.logger.warn("MirrorApi:getMirrors %s fails"%(str(machines)))
@@ -60,7 +60,7 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            machines = map(lambda m: convertMachineIntoH(m), machines)
+            machines = map(lambda m: self.convertMachineIntoH(m), machines)
             return self.xmlrpc.getFallbackMirrors(machines)
         except:
             self.logger.warn("MirrorApi:getFallbackMirrors %s fails"%(str(machines)))
@@ -82,7 +82,7 @@ class MirrorApi(Singleton):
         if self.initialized_failed:
             return []
         try:
-            machines = map(lambda m: convertMachineIntoH(m), machines)
+            machines = map(lambda m: self.convertMachineIntoH(m), machines)
             return self.xmlrpc.getApiPackages(machines)
         except:
             self.logger.warn("MirrorApi:getApiPackages %s fails"%(str(machines)))
