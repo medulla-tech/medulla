@@ -32,6 +32,7 @@ import string
 
 # MMC
 import mmc.support.mmctools
+from mmc.support.config import MMCConfigParser
 
 class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     """
@@ -62,7 +63,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
     def setup(self, config_file):
         # Load configuration file
-        self.cp = ConfigParser.ConfigParser()
+        self.cp = MMCConfigParser()
         self.cp.read(config_file)
 
         if self.cp.has_option('main', 'server'):
@@ -85,7 +86,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'dbuser'):
             self.dbuser = self.cp.get("main", 'dbuser')
         if self.cp.has_option('main', 'dbpasswd'):
-            self.dbpasswd = self.cp.get("main", 'dbpasswd')
+            self.dbpasswd = self.cp.getpassword("main", 'dbpasswd')
 
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
