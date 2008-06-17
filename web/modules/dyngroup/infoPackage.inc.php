@@ -37,6 +37,12 @@ $submod = & $base->getSubmod('computers');
 if (isDynamicEnable()) {
     $page = new Page("computersgroupcreator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/tab.php");
+     
+    $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
+    $page->addTab($tab);
     $submod->addPage($page);
     
     $page = new Page("computersgroupedit",_T("Machines Group Editor","dyngroup"));
