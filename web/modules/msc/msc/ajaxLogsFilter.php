@@ -120,8 +120,10 @@ if ($areCommands) {
             } else {
                 $d = $coh["next_launch_date"];
             }
-            if (empty($d)) {
+            if (empty($d) && !$history) {
                 $a_date[] = _T("As soon as possible", "msc");
+            } elseif (empty($d)) { # TODO find a label!
+                $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             } else {
                 $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             }
@@ -148,14 +150,14 @@ if ($areCommands) {
             }
         }
     }
-    $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     # TODO: add the command end timestamp
     if ($history) {
         $datelabel = _T("End date", "msc");
     } else {
         $datelabel = _T("Start date", "msc");
     }
-    $n->addExtraInfo($a_date, $datelabel);
+    $n = new OptimizedListInfos($a_date, $datelabel);
+    $n->addExtraInfo($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
     $n->addExtraInfo($a_executed, _T("executed", "msc"));
@@ -167,14 +169,16 @@ if ($areCommands) {
     $n->addActionItemArray($a_stop);
 }
 
-$n->setParamInfo($params);
-$n->setTableHeaderPadding(1);
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
-$n->start = 0;
-$n->end = $maxperpage;
+if ($n != null) {
+    $n->setParamInfo($params);
+    $n->setTableHeaderPadding(1);
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->start = 0;
+    $n->end = $maxperpage;
 
-$n->display();
+    $n->display();
+}
 
 
 function to_date($list) {
