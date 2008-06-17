@@ -245,10 +245,8 @@ function _colorise($line) {
     return $out;
 }
 function _toDate($a) {
-    if (is_array($a) && count($a) == 6) {
-        return $a[0]."/".$a[1].'/'.$a[2]." ".$a[3].":".$a[4].":".$a[5];
-    } elseif (is_array($a) && count($a) == 9) {
-        return $a[0]."/".$a[1].'/'.$a[2]." ".$a[3].":".$a[4].":".$a[5];
+    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
+	return sprintf("%04d/%02d/%02d %02d:%02d:%02d", $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
     } else {
         return $a;
     }
