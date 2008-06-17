@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - GLPI web interface 1.1rc1\n"
+"Project-Id-Version: Pulse 2 - GLPI Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-17 09:48+0200\n"
-"PO-Revision-Date: 2008-06-17 09:49+0200\n"
+"PO-Revision-Date: 2008-06-17 10:00+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
