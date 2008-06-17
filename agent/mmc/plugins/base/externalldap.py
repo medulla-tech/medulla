@@ -39,12 +39,15 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
     def readConf(self):
         AuthenticatorConfig.readConf(self)
         for option in ["suffix", "attr"]:
-            self.__dict__[option] = self.get(self.section, option)
-        for option in ["bindname", "bindpasswd"]:
-            try:
-                self.__dict__[option] = self.get(self.section, option)
-            except NoOptionError:
-                pass                
+            self.__dict__[option] = self.get(self.section, option)        
+        try:
+            self.__dict__["bindname"] = self.getdn(self.section, "bindname")
+        except NoOptionError:
+            pass                
+        try:
+            self.__dict__["bindpasswd"] = self.getpassword(self.section, "bindpasswd")
+        except NoOptionError:
+            pass                
         self.ldapurls = self.get(self.section, "ldapurl").split()
         try:
             self.filter = self.get(self.section, "filter")

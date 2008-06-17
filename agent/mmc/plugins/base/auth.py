@@ -24,6 +24,7 @@
 import logging
 from ConfigParser import *
 from mmc.support.mmctools import Singleton
+from mmc.support.config import MMCConfigParser
 
 
 class AuthenticationManager(Singleton):
@@ -112,7 +113,7 @@ class AuthenticationManager(Singleton):
         return token
 
 
-class AuthenticatorConfig(ConfigParser):
+class AuthenticatorConfig(MMCConfigParser):
     """
     Class to handle Authenticator object configuration
     """
