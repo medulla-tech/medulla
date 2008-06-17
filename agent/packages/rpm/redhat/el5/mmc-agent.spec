@@ -17,6 +17,7 @@ Patch1:		mmc-agent_mdv_conf.diff
 BuildRequires:	python-devel
 Requires:	python-mmc-base
 Requires:	pyOpenSSL
+BuildArch:      noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
