@@ -159,7 +159,7 @@ if (!$request->isEmpty())  {
     print "<hr/>";
     print "<table>";
     print "<tr><td><a href='".
-        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>0)).
+        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS())).
         "'>"._T("Go to save step", "dyngroup")."</a></td></tr>";
 #        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>0)).
 #        "'>"._T("Save result", "dyngroup")."</a></td><td><a href='".
