@@ -1,21 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Mandriva translation of Pulse 2 - Dyngroup web.
+# Copyright (C) 2008 Free Software Foundation, Inc.
+# Olivier Roussy <oroussy@mandriva.com>, 2008.
+# Olivier Roussy <oroussy@mandriva.com>, 2008.
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Dyngroup web interface\n"
+"Project-Id-Version: Pulse 2 - Dyngroup web 1.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-09 10:32+0200\n"
-"PO-Revision-Date: 2008-04-08 17:31+0100\n"
-"Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
-"Language-Team: Mandriva <LL@li.org>\n"
+"POT-Creation-Date: 2008-06-17 09:34+0200\n"
+"PO-Revision-Date: 2008-06-17 09:38+0200\n"
+"Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: dyngroup/dyngroup/details.php:33
 #, php-format
@@ -36,9 +35,9 @@ msgstr "%s) Recherche %s = (%s) dans le module %s"
 msgid "->"
 msgstr "->"
 
-#: dyngroup/includes/autocomplete.php:43 dyngroup/includes/double.php:70
-#: dyngroup/dyngroup/creator.php:113 dyngroup/dyngroup/creator.php:134
-#: dyngroup/dyngroup/creator.php:138
+#: dyngroup/dyngroup/creator.php:112 dyngroup/dyngroup/creator.php:133
+#: dyngroup/dyngroup/creator.php:137 dyngroup/includes/autocomplete.php:43
+#: dyngroup/includes/double.php:70
 msgid "Add"
 msgstr "Ajouter"
 
@@ -58,21 +57,20 @@ msgstr "Ajouter une valeur"
 msgid "All groups"
 msgstr "Tous les groupes"
 
-#: dyngroup/dyngroup/add_groups.php:140
+#: dyngroup/dyngroup/add_groups.php:146
 msgid "All machines"
 msgstr "Tous les ordinateurs"
 
-#: dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/dyngroup/add_groups.php:198 dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
-#: dyngroup/dyngroup/add_groups.php:192
 msgid "Cancel"
 msgstr "Annuler"
 
-#: dyngroup/dyngroup/creator.php:67
+#: dyngroup/dyngroup/creator.php:66
 msgid "Choose the module you want to query : "
 msgstr "Sélectionner le module que vous désirez requêter : "
 
-#: dyngroup/dyngroup/creator.php:88
+#: dyngroup/dyngroup/creator.php:87
 msgid "Choose your field : "
 msgstr "Sélectionner votre champ : "
 
@@ -80,7 +78,7 @@ msgstr "Sélectionner votre champ : "
 msgid "Close"
 msgstr "Fermer"
 
-#: dyngroup/dyngroup/add_groups.php:191
+#: dyngroup/dyngroup/add_groups.php:197
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -104,7 +102,7 @@ msgstr "Supprimer ce groupe"
 msgid "Display"
 msgstr "Montrer"
 
-#: dyngroup/dyngroup/localSidebar.php:40
+#: dyngroup/dyngroup/localSidebar.php:39
 #, php-format
 msgid "Display %s '%s'"
 msgstr "Afficher %s '%s'"
@@ -134,7 +132,7 @@ msgstr "Onglet de création d'un groupe dynamique"
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe statique"
 
-#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
+#: dyngroup/dyngroup/edithead.php:41 dyngroup/dyngroup/groupshead.php:32
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -146,15 +144,15 @@ msgstr "Éditer ce groupe"
 msgid "Enter Boolean operator bewteen groups"
 msgstr "Spécifier un opérateur booléen entre les groupes"
 
-#: dyngroup/dyngroup/creator.php:164
-msgid "Execute"
-msgstr "Exécuter"
+#: dyngroup/dyngroup/creator.php:163
+msgid "Go to save step"
+msgstr ""
 
 #: dyngroup/dyngroup/tab.php:8
 msgid "Group creation"
 msgstr "Création d'un groupe"
 
-#: dyngroup/dyngroup/add_groups.php:93
+#: dyngroup/dyngroup/add_groups.php:99
 msgid "Group failed to modify"
 msgstr "Erreur à la modification du groupe"
 
@@ -162,11 +160,11 @@ msgstr "Erreur à la modification du groupe"
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: dyngroup/dyngroup/add_groups.php:164
+#: dyngroup/dyngroup/add_groups.php:170
 msgid "Group members"
 msgstr "Membres du groupe"
 
-#: dyngroup/dyngroup/add_groups.php:128
+#: dyngroup/dyngroup/add_groups.php:134
 #: dyngroup/dyngroup/ajaxListGroups.php:61
 msgid "Group name"
 msgstr "Nom du groupe"
@@ -175,7 +173,11 @@ msgstr "Nom du groupe"
 msgid "Group of machines details"
 msgstr "Détails du groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/add_groups.php:85
+#: dyngroup/dyngroup/add_groups.php:90
+msgid "Group successfully created"
+msgstr "Groupe créé avec succès"
+
+#: dyngroup/dyngroup/add_groups.php:88
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
@@ -191,7 +193,7 @@ msgstr "Cacher"
 msgid "Inventory on this group"
 msgstr "Montrer l'inventaire de ce groupe"
 
-#: dyngroup/dyngroup/add_groups.php:129
+#: dyngroup/dyngroup/add_groups.php:135
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
@@ -199,7 +201,7 @@ msgstr "Ce groupe est-il visible"
 msgid "List all groups of machines"
 msgstr "Lister tous les groupes d'ordinateurs"
 
-#: dyngroup/dyngroup/add_groups.php:110
+#: dyngroup/dyngroup/add_groups.php:116
 #, php-format
 msgid "Machine list has been truncated at %d machines"
 msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
@@ -216,14 +218,9 @@ msgstr "Éditeur de groupe d'ordinateurs"
 msgid "Name :"
 msgstr "Nom:"
 
-#: dyngroup/dyngroup/creator.php:132 dyngroup/dyngroup/add_groups.php:131
+#: dyngroup/dyngroup/add_groups.php:137 dyngroup/dyngroup/creator.php:131
 msgid "No"
 msgstr "Non"
-
-#: dyngroup/dyngroup/creator.php:64
-#, php-format
-msgid "Only '%s' module to query"
-msgstr "Le seul module requétable est le module '%s'"
 
 #: dyngroup/dyngroup/header.php:26
 msgid "Please chose the type of group you want to create"
@@ -261,14 +258,6 @@ msgstr "Sauvegarder"
 msgid "Save a group of machines"
 msgstr "Sauvegarder un groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/creator.php:168
-msgid "Save query"
-msgstr "Sauvegarder la requête"
-
-#: dyngroup/dyngroup/creator.php:166
-msgid "Save result"
-msgstr "Sauvegarder le résultat"
-
 #: dyngroup/includes/request.php:97
 msgid "Search part"
 msgstr "Recherche de composant"
@@ -289,7 +278,7 @@ msgstr "Création d'un groupe statique"
 msgid "Static group creation's tab"
 msgstr "Onglet de création d'un groupe statique"
 
-#: dyngroup/dyngroup/creator.php:153
+#: dyngroup/dyngroup/creator.php:152
 msgid "The request is : "
 msgstr "La requête est : "
 
@@ -311,8 +300,8 @@ msgstr "Type"
 msgid "Visible"
 msgstr "Visible"
 
-#: dyngroup/dyngroup/creator.php:131 dyngroup/dyngroup/creator.php:137
-#: dyngroup/dyngroup/add_groups.php:130
+#: dyngroup/dyngroup/add_groups.php:136 dyngroup/dyngroup/creator.php:130
+#: dyngroup/dyngroup/creator.php:136
 msgid "Yes"
 msgstr "Oui"
 
@@ -326,7 +315,7 @@ msgstr "Vous allez supprimer le groupe <b>%s</b>."
 msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
-#: dyngroup/dyngroup/localSidebar.php:37 dyngroup/dyngroup/localSidebar.php:38
+#: dyngroup/dyngroup/localSidebar.php:36
 msgid "group"
 msgstr "le groupe"
 
@@ -343,12 +332,9 @@ msgstr "caché"
 msgid "it should be"
 msgstr "le groupe sera"
 
-#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/localSidebar.php:36 dyngroup/dyngroup/save.php:57
 msgid "query"
-msgstr "requête"
-
-#: dyngroup/dyngroup/localSidebar.php:36
-msgid "request"
 msgstr "requête"
 
 #: dyngroup/dyngroup/save.php:57
@@ -360,6 +346,7 @@ msgid "save as"
 msgstr "sauver en tant que"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:56
+#: dyngroup/dyngroup/localSidebar.php:36
 msgid "static group"
 msgstr "groupe statique"
 
@@ -373,8 +360,23 @@ msgstr "visible"
 #~ msgid "Display '%s' result list"
 #~ msgstr "Afficher la liste des résultats de '%s'"
 
+#~ msgid "Execute"
+#~ msgstr "Exécuter"
+
 #~ msgid "Group members %s"
 #~ msgstr "Membres du groupe %s"
 
+#~ msgid "Only '%s' module to query"
+#~ msgstr "Le seul module requétable est le module '%s'"
+
+#~ msgid "Save query"
+#~ msgstr "Sauvegarder la requête"
+
+#~ msgid "Save result"
+#~ msgstr "Sauvegarder le résultat"
+
 #~ msgid "This request has no result."
 #~ msgstr "Cette requête n'a pas de résultat."
+
+#~ msgid "request"
+#~ msgstr "requête"
