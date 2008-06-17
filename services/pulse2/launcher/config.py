@@ -32,6 +32,7 @@ import string
 
 # MMC
 import mmc.support.mmctools
+from mmc.support.config import MMCConfigParser
 
 class LauncherConfig(mmc.support.mmctools.Singleton):
     """
@@ -99,7 +100,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
 
     def setup(self, config_file, name = None):
         # Load configuration file
-        self.cp = ConfigParser.ConfigParser()
+        self.cp = MMCConfigParser()
         self.cp.read(config_file)
 
         self.name = name
@@ -118,7 +119,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             if self.cp.has_option('scheduler', 'username'):
                 self.scheduler_username = self.cp.get('scheduler', 'username')
             if self.cp.has_option('scheduler', 'password'):
-                self.scheduler_password = self.cp.get('scheduler', 'password')
+                self.scheduler_password = self.cp.getpassword('scheduler', 'password')
 
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "pid_path"):
@@ -138,7 +139,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                         'enablessl': self.cp.getboolean(section, 'enablessl'),
                         'slots': self.cp.get(section, 'slots'),
                         'username': self.cp.get(section, 'username'),
-                        'password': self.cp.get(section, 'password')
+                        'password': self.cp.getpassword(section, 'password')
                     }
                 if self.launchers[section]['enablessl']:
                     self.launchers[section]['certfile'] = self.cp.get(section, 'certfile')
