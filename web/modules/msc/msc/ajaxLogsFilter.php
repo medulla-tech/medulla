@@ -165,8 +165,10 @@ if ($areCommands) {
 
     $n->addActionItemArray($a_details);
     $n->addActionItemArray($a_start);
-    $n->addActionItemArray($a_pause);
-    $n->addActionItemArray($a_stop);
+    if (!$history) {
+        $n->addActionItemArray($a_pause);
+        $n->addActionItemArray($a_stop);
+    }
 }
 
 if ($n != null) {
