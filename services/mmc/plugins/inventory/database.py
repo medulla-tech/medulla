@@ -590,24 +590,17 @@ class Inventory(DyngroupDatabaseHelper):
         
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
         if params.has_key('where') and params['where'] != '':
-            self.logger.debug("1 %s"%(str(params)))
             for where in params['where']:
-                self.logger.debug("2 %s"%(str(where)))
                 if hasattr(partTable.c, where[0]):
-                    self.logger.debug("3 %s"%(str(where[0])))
                     result = result.filter(getattr(partTable.c, where[0]) == where[1])
                 else:
-                    self.logger.debug("4 %s"%(str(where[0])))
                     if noms.has_key(part):
-                        self.logger.debug("5")
                         try:
                             noms[part].index(where[0])
                             nomTableName = 'nom%s%s' % (part, where[0])
                             
-                            self.logger.debug("6 %s"%(str(nomTableName)))
                             nomTable = self.table[nomTableName]
                             if hasattr(nomTable.c, where[0]):
-                                self.logger.debug("7 %s"%(str(where[1])))
                                 result = result.filter(getattr(nomTable.c, where[0]) == where[1])
                             else:
                                 self.logger.warn("cant find the required field (%s) in table %s"%(where[0], nomTableName))
@@ -625,7 +618,10 @@ class Inventory(DyngroupDatabaseHelper):
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.c.id==fromUUID(params['uuid']))
         if params.has_key('gid') and params['gid'] != '':
-            machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
+            if ComputerGroupManager().isrequest_group(ctx, params['gid']):
+                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
+            else:
+                machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
         return query
        
@@ -736,7 +732,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return True
 
-def toUUID(id):
+def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
 
 def fromUUID(uuid):
@@ -756,20 +752,17 @@ class Machine(object):
             content = Inventory().config.content[table]
             for col in content:
                 params = {'uuid':toUUID(self.id)}
-                logging.getLogger().debug("00 1 %s"%(str(col)))
                 if len(col) > 2:
                     for p in col[2:]:
                         if not params.has_key('where'):
                             params['where'] = []
                         params['where'].append(p)
                 
-                logging.getLogger().debug("00 2 %s"%(str(params)))
                 part = Inventory().getLastMachineInventoryPart(ctx, table, params)
                 if len(part) == 0:
                     ret[1][col[1]] = ''
                 else:
                     part = part[0][1]
-                    logging.getLogger().debug("part : %s" %(str(part)))
                     ret[1][col[1]] = []
                     for n in part:
                         ret[1][col[1]].append(n[col[0]])
