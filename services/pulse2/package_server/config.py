@@ -42,9 +42,12 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     # default values
     bind = ''
     port = 9990
-    enablessl = False
+    enablessl = True
     username = ''
     password = ''
+    certfile = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
+    privkey = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
+    
 
     umask = 0077
     daemon_user = 0
@@ -82,12 +85,16 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
     
         if self.cp.has_option('ssl', 'enablessl'):
             self.enablessl = self.cp.getboolean('ssl', 'enablessl')
-            if self.enablessl:
-                self.proto = 'https'
+        if self.enablessl:
+            self.proto = 'https'
+            if self.cp.has_option('ssl', 'username'):
                 self.username = self.cp.get('ssl', 'username')
+            if self.cp.has_option('ssl', 'password'):
                 self.password = self.cp.getpassword('ssl', 'password')
 
+            if self.cp.has_option('ssl', 'certfile'):
                 self.certfile = self.cp.get('ssl', 'certfile')
+            if self.cp.has_option('ssl', 'privkey'):
                 self.privkey = self.cp.get('ssl', 'privkey')
 
         if self.cp.has_option('mirror_api', 'mount_point'):
