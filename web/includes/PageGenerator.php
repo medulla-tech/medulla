@@ -901,8 +901,8 @@ if ($this->refresh) {
 }
 
 class AjaxFilterLocation extends AjaxFilter {
-    function AjaxFilterLocation($url, $divid = "container", $paramname = 'location') {
-        $this->AjaxFilter($url, $divid);
+    function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
+        $this->AjaxFilter($url, $divid, $params);
         $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
     }
@@ -948,7 +948,7 @@ class AjaxFilterLocation extends AjaxFilter {
             launch--;
 
                 if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
                 }
             }
 
@@ -961,7 +961,7 @@ class AjaxFilterLocation extends AjaxFilter {
             var tableau = filter.split(reg);
             filter = tableau[0];
             var location = tableau[1];
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
         /**
