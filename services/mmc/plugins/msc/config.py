@@ -48,6 +48,9 @@ class MscConfig(PluginConfig):
     ma_server = "127.0.0.1"
     ma_port = "9990"
     ma_mountpoint = "/rpc"
+    ma_username = ''
+    ma_password = ''
+    ma_enablessl = True
 
     # WEB interface stuff
     web_def_awake = 1
@@ -176,6 +179,12 @@ class MscConfig(PluginConfig):
             self.ma_port = self.get("package_api", "mport")
         if self.has_option("package_api", "mmountpoint"):
             self.ma_mountpoint = self.get("package_api", "mmountpoint")
+        if self.has_option("package_api", "username"):
+            self.ma_username = self.get("package_api", "username")
+        if self.has_option("package_api", "password"):
+            self.ma_password = self.get("package_api", "password")
+        if self.has_option("package_api", "enablessl"):
+            self.ma_enablessl = self.getboolean("package_api", "enablessl")
 
 
 # static config ...

@@ -16,7 +16,18 @@ class MirrorApi(Singleton):
         self.logger = logging.getLogger()
         self.config = mmc.plugins.msc.MscConfig("msc")
 
-        self.server_addr = 'http://'+self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
+        if self.config.ma_enablessl:
+            self.server_addr = 'https://'
+        else:
+            self.server_addr = 'http://'
+
+        if self.config.ma_username != '':
+            self.server_addr += self.config.ma_username
+            if self.config.ma_password != '':
+                self.server_addr += ":"+self.config.ma_password 
+            self.server_addr += "@"
+
+        self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
         self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
         try:
             self.server = xmlrpclib.Server(self.server_addr)

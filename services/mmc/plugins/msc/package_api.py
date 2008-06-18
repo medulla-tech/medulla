@@ -12,15 +12,18 @@ from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.mirror_api import MirrorApi
 
 class PackageA:
-    def __init__(self, server, port = None, mountpoint = None):
+    def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
 
         if type(server) == dict:
             mountpoint = server['mountpoint']
             port = server['port']
-            server = server['server']
-
-        self.server_addr = 'http://'+server+':'+str(port) + mountpoint
+            proto = server['protocol']
+            bind = server['server']
+            if server.has_key('username') and server.has_key('password') and server['username'] != '':
+                login = "%s:%s@" % (server['username'], server['password'])
+            
+        self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.logger.debug('PackageA will connect to %s' % (self.server_addr))
         try:
             self.server = xmlrpclib.Server(self.server_addr)
