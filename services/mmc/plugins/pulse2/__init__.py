@@ -22,6 +22,9 @@
 import logging
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.plugins.pulse2.group import ComputerGroupManager
+from mmc.plugins.pulse2.location import ComputerLocationManager
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -51,4 +54,36 @@ class Pulse2Config(PluginConfig):
         logging.getLogger().info(self.disable)
 
 
+class ContextMaker(ContextMakerI):
+    def getContext(self):
+        s = SecurityContext()
+        s.userid = self.userid
+        return s
 
+
+class RpcProxy(RpcProxyI):
+    # groups
+    def isdyn_group(self, gid):
+        ctx = self.currentContext
+        return ComputerGroupManager().isdyn_group(ctx, gid)
+        
+    def isrequest_group(self, gid):
+        ctx = self.currentContext
+        return ComputerGroupManager().isrequest_group(ctx, gid)
+        
+    def requestresult_group(self, gid, min, max, filter):
+        ctx = self.currentContext
+        return ComputerGroupManager().requestresult_group(ctx, gid, min, max, filter)
+        
+    def result_group(self, gid, min, max, filter):
+        ctx = self.currentContext
+        return ComputerGroupManager().result_group(ctx, gid, min, max, filter)
+
+    # Locations
+    def getUserLocations(self):
+        ctx = self.currentContext
+        return ComputerLocationManager().getUserLocations(ctx.userid)
+
+
+def displayLocalisationBar():
+    return False
