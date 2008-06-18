@@ -26,26 +26,11 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/graph/computers/index.css");
 
-// glpi specific
-$MMCApp =& MMCApp::getInstance();
-$base = &$MMCApp->getModule('base');
-$computers = &$base->getSubmod('computers');
-$glpi = &$computers->getPage('locations');
-// end glpi specific
-    
-if ($glpi) {
-    require("modules/glpi/glpi/locations.php");
-} else {
-    $ajax = new AjaxFilter("modules/base/computers/ajaxComputersFilter.php");
-    $ajax->display();
-}
-
 $p = new PageGenerator(_T("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax->displayDivToUpdate();
+include("modules/pulse2/pulse2/computers_list.php");
 
 ?>
-
 
