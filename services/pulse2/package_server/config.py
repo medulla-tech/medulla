@@ -81,7 +81,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
                 self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
     
         if self.cp.has_option('ssl', 'enablessl'):
-            self.enablessl = (self.cp.get('ssl', 'enablessl') == 1)
+            self.enablessl = self.cp.getboolean('ssl', 'enablessl')
             if self.enablessl:
                 self.proto = 'https'
                 self.username = self.cp.get('ssl', 'username')
