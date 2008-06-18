@@ -91,7 +91,7 @@ def running(inifile, deamonize):
                 port,
                 twisted.web.server.Site(server),
                 interface = config.bind,
-                contextFactory = config.sslContext
+                contextFactory = sslContext
                 )
             logger.info('activating SSL mode')
         else:
