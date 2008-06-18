@@ -200,6 +200,10 @@ class ExternalLdapProvisioner(ProvisionerI):
                     acls = None
                 if acls != None:
                     self.logger.info("Setting MMC ACL corresponding to user profile %s: %s" % (profile, acls))
+                    entry = l.getDetailedUser(uid)
+                    if not "lmcUserObject" in entry["objectClass"]:
+                        entry["objectClass"].append("lmcUserObject")
+                        l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
                     l.changeUserAttributes(uid, "lmcAcl", acls)
 
     def validate(self):
