@@ -118,10 +118,7 @@ class Group {
     function delMembers($uuids) { return __xmlrpc_delmembers_to_group($this->id, $uuids); }
 
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
-        $ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxComputersResultList.php", "container", array('gid'=>$this->id));
-        $ajax->display();
-        print "<br/><br/><br/>";
-        $ajax->displayDivToUpdate();
+        include("modules/pulse2/pulse2/computers_list.php");
     }
 }
 
