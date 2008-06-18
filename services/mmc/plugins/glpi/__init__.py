@@ -62,9 +62,8 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
-    def getLocationsList(self, filt = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(GlpiLocation().getLocationsList(ctx, filt))
+    pass
+    # ctx = self.currentContext
 
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
