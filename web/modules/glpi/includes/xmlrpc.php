@@ -22,14 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function getLocationsList($pattern = null) {
-    return xmlCall("glpi.getLocationsList", array($pattern));
-}
-
-/*function displayLocalisationBar() {
-    return xmlCall("glpi.displayLocalisationBar");
-}*/
-
 function glpiExists($uuid) {
     return xmlCall("glpi.inventoryExists", array($uuid));
 }
