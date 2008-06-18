@@ -373,6 +373,8 @@ class Glpi(DyngroupDatabaseHelper):
         return query
 
     def __getName(self, obj):
+        if type(obj) == dict:
+            return obj['name']
         if type(obj) != str and type(obj) != unicode:
             return obj.name
         return obj
@@ -882,7 +884,14 @@ class Machine(object):
         ]
 
 class Location(object):
-    pass
+    def toH(self):
+        return {
+            'uuid':toUUID(self.ID),
+            'name':self.name,
+            'completename':self.completename,
+            'comments':self.comments,
+            'level':self.level
+        }
 
 class Processor(object):
     pass
