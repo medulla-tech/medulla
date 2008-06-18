@@ -41,6 +41,13 @@ class ComputerLocationManager(Singleton):
     def validate(self):
         return True
 
+    def displayLocalisationBar(self):
+        if self.components.has_key(self.main):
+            klass = self.components[self.main]
+            if hasattr(klass, "displayLocalisationBar"):
+                return klass().displayLocalisationBar()
+        return False
+
     def getUserProfile(self, userid):
         try:
             klass = self.components[self.main]
@@ -83,7 +90,11 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
-class ComputerLocationI:
+class ComputerLocationI(Singleton):
+    def displayLocalisationBar(self):
+        """ return True if the module want to display the location bar in computers lists """
+        return False
+        
     def getUserProfile(self, userid):
         """ return the linked profiles for one user """
         pass

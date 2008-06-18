@@ -86,4 +86,4 @@ class RpcProxy(RpcProxyI):
 
 
 def displayLocalisationBar():
-    return False
+    return ComputerLocationManager().displayLocalisationBar()
