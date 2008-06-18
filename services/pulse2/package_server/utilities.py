@@ -26,38 +26,6 @@
     Pulse2 Modules
 """
 
-#def encode(obj)
-#    if obj.class == Array
-#        return obj.map do |v|
-#            encode(v)
-#        end
-#    elsif obj.class == Hash
-#        ret = {}
-#        obj.each do |k,v|
-#            ret[encode(k)] = encode(v)
-#        end
-#        return ret
-#    elsif obj.class == String
-#        return obj
-#    elsif obj.class == NilClass
-#        return ''
-#    elsif obj.class == Fixnum
-#        return obj
-#    else
-#        return encode(obj.toH)
-#    end
-#end
-#
-#def decodePackages(pkgs)
-#    packages = []
-#    pkgs.each do |res|
-#        pkg = Mandriva::Package.new()
-#        pkg.fromH(res)
-#        packages << pkg
-#    end
-#    return packages
-#end
-
 import md5
 import sys
 
@@ -87,15 +55,10 @@ def md5file(fname):
 def md5sum(str):
     return md5.md5(str).hexdigest()
 
-#def humanSize(num)
-#    base = 1024
-#    unit = 'Bytes'
-#
-#    ['', 'k', 'M', 'G', 'T', 'P'].each do |i|
-#        if num < base then
-#            return sprintf('%3.1f %s%s', num, i, unit)
-#        end
-#        num /= base
-#    end
-#end
 
+class Singleton(object):
+
+    def __new__(type):
+        if not '_the_instance' in type.__dict__:
+            type._the_instance = object.__new__(type)
+        return type._the_instance
