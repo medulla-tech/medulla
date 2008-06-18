@@ -44,7 +44,7 @@ def activate():
         logger.warning("Plugin glpi: disabled by configuration.")
         return False
 
-    Glpi().activate()
+    GlpiLocation().init(config) # does Glpi().activate()
     if not Glpi().db_check():
         return False
                     
@@ -55,22 +55,6 @@ def activate():
 
     return True
 
-
-class GlpiLocations:
-    def __init__(self, conffile = None):
-        self.logger = logging.getLogger()
-        self.config = GlpiConfig("glpi")
-        self.glpi = Glpi()
-
-    def getLocationsList(self, session, filt = None):
-        """
-        Return all locations from glpi
-        """
-        return self.glpi.getLocationsList(session, filt)
-
-    def displayLocalisationBar(self):
-        return self.config.displayLocalisationBar
-
 class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
@@ -80,11 +64,7 @@ class ContextMaker(ContextMakerI):
 class RpcProxy(RpcProxyI):
     def getLocationsList(self, filt = None):
         ctx = self.currentContext
-        return xmlrpcCleanup(GlpiLocations().getLocationsList(ctx, filt))
-
-    def displayLocalisationBar(self):
-        return xmlrpcCleanup(GlpiLocations().displayLocalisationBar())
-
+        return xmlrpcCleanup(GlpiLocation().getLocationsList(ctx, filt))
 
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))

@@ -3,23 +3,32 @@ from mmc.plugins.pulse2.location import ComputerLocationI
 from mmc.plugins.glpi.database import Glpi
 
 class GlpiLocation(ComputerLocationI):
+    def init(self, config):
+        self.logger = logging.getLogger()
+        self.config = config
+        Glpi().activate()
+    
     def getUserProfile(self, userid):
-        glpi = Glpi()
-        glpi.activate()
-        return glpi.getUserProfile(userid)
+        return Glpi().getUserProfile(userid)
 
     def getUserLocations(self, userid):
-        glpi = Glpi()
-        glpi.activate()
-        return glpi.getUserLocations(userid)
+        return map(lambda l: l.toH(), Glpi().getUserLocations(userid))
 
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
-        glpi = Glpi()
-        glpi.activate()
-        return glpi.doesUserHaveAccessToMachine(userid, machine_uuid)
+        return Glpi().doesUserHaveAccessToMachine(userid, machine_uuid)
 
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True):
-        glpi = Glpi()
-        glpi.activate()
-        return glpi.doesUserHaveAccessToMachines(userid, machine_uuid, all)
+        return Glpi().doesUserHaveAccessToMachines(userid, machine_uuid, all)
+
+    def displayLocalisationBar(self):
+        return self.config.displayLocalisationBar
+
+
+# others
+    def getLocationsList(self, session, filt = None):
+        """
+        Return all locations from glpi
+        """
+        return Glpi().getLocationsList(session, filt)
+
 
