@@ -26,9 +26,9 @@ function getLocationsList($pattern = null) {
     return xmlCall("glpi.getLocationsList", array($pattern));
 }
 
-function displayLocalisationBar() {
+/*function displayLocalisationBar() {
     return xmlCall("glpi.displayLocalisationBar");
-}
+}*/
 
 function glpiExists($uuid) {
     return xmlCall("glpi.inventoryExists", array($uuid));
