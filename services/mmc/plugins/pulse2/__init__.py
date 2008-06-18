@@ -40,19 +40,23 @@ def activate():
     if config.disable:
         logger.warning("Plugin pulse2: disabled by configuration.")
         return False
+
+    if config.location != None:
+        ComputerLocationManager().select(config.location)
     
     return True
 
 
 class Pulse2Config(PluginConfig):
+    location = None
     def readConf(self):
         """
         Read the module configuration
         """
         PluginConfig.readConf(self)
-        self.disable = (self.get("main", "disable") == 1)
-        logging.getLogger().info(self.disable)
-
+        self.disable = self.getboolean("main", "disable")
+        if self.has_option("main", "location"):
+            self.location = self.get("main", "location")
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
