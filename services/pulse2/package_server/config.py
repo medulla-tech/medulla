@@ -25,34 +25,36 @@
 # Misc
 import ConfigParser
 import re
-import logging
-import pwd
-import grp
-import string
+import sys
+from pulse2.package_server.utilities import Singleton
 
-# MMC
-import mmc.support.mmctools
-from mmc.support.config import MMCConfigParser
+if sys.platform != "win32":
+    import pwd
+    import grp
+    import string
+    # MMC
+    from mmc.support.config import MMCConfigParser
 
-class P2PServerCP(mmc.support.mmctools.Singleton):
+
+class P2PServerCP(Singleton):
     """
-    Singleton Class to hold configuration directives
+    Class to hold configuration directives
     """
-                
+    certfile = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
+    privkey = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
+    
+
     # default values
     bind = ''
     port = 9990
     enablessl = True
     username = ''
     password = ''
-    certfile = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
-    privkey = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
-    
 
-    umask = 0077
-    daemon_user = 0
-    daemon_group = 0
-    pidfile = '/var/run/pulse2-package-server.pid'
+    if sys.platform != "win32":
+        umask = 0077
+        daemon_group = 0
+        pidfile = '/var/run/pulse2-package-server.pid'
 
     parser = None
     mirrors = []
@@ -62,26 +64,29 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
 
     mirror_api = {}
     user_package_api = {}
-
     def setup(self, config_file):
         # Load configuration file
-        self.cp = MMCConfigParser()
+        if sys.platform != "win32":
+            self.cp = MMCConfigParser()
+        else:
+            self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
 
         if self.cp.has_option('main', 'bind'):
             self.bind = self.cp.get("main", 'bind')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.get("main", 'port')
-            
-        if self.cp.has_section('daemon'):
-            if self.cp.has_option('daemon', 'pidfile'):
-                self.pid_path = self.cp.get('daemon', 'pidfile')
-            if self.cp.has_option("daemon", "user"):
-                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
-            if self.cp.has_option("daemon", "group"):
-                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
-            if self.cp.has_option("daemon", "umask"):
-                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+
+        if sys.platform != "win32":
+            if self.cp.has_section('daemon'):
+                if self.cp.has_option('daemon', 'pidfile'):
+                    self.pid_path = self.cp.get('daemon', 'pidfile')
+                if self.cp.has_option("daemon", "user"):
+                    self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+                if self.cp.has_option("daemon", "group"):
+                    self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+                if self.cp.has_option("daemon", "umask"):
+                    self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
     
         if self.cp.has_option('ssl', 'enablessl'):
             self.enablessl = self.cp.getboolean('ssl', 'enablessl')
@@ -89,9 +94,10 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
             self.proto = 'https'
             if self.cp.has_option('ssl', 'username'):
                 self.username = self.cp.get('ssl', 'username')
-            if self.cp.has_option('ssl', 'password'):
-                self.password = self.cp.getpassword('ssl', 'password')
-
+                if sys.platform != "win32":
+                    self.password = self.cp.getpassword('ssl', 'password')
+                else:
+                    self.password = self.cp.get('ssl', 'password')
             if self.cp.has_option('ssl', 'certfile'):
                 self.certfile = self.cp.get('ssl', 'certfile')
             if self.cp.has_option('ssl', 'privkey'):
@@ -104,7 +110,7 @@ class P2PServerCP(mmc.support.mmctools.Singleton):
             self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
 
         for section in self.cp.sections():
-            if re.compile('^mirror:[0-9]+$').match(section):
+            if re.compile('^mirror:[0-9]+$').match(section):                
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
                 mirror = {'mount_point':mount_point, 'src':src}
