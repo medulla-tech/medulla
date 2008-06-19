@@ -228,11 +228,26 @@ class ActionItem {
 }
 
 /**
- * dislay action in a popup
+ * display action in a JavaScript popup
+ *
  * @see ActionItem
  * @see showPopup (js)
  */
 class ActionPopupItem extends ActionItem {
+
+    function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300) {
+        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab);
+        $this->setWidth($width);
+    }
+
+    /**
+     * Set the JavaScript popup width.
+     * The default width value is 300px.
+     */
+    function setWidth($width) {
+        $this->width = $width;
+    }
+
     function displayWithRight($param, $extraParams = array()) {
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
@@ -241,7 +256,7 @@ class ActionPopupItem extends ActionItem {
         }
         echo "<li class=\"".$this->classCss."\">";
         echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" . $this->action . $urlChunk . "\"";
-        echo " onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" .$this->action . $urlChunk . "'); return false;\">&nbsp;</a>";
+        echo " onclick=\"PopupWindow(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=" .$this->action . $urlChunk . "', " . $this->width . "); return false;\">&nbsp;</a>";
         echo "</li>";
     }
 
@@ -252,7 +267,7 @@ class ActionPopupItem extends ActionItem {
             $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
         }
         $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "\" ";
-        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "'); return false;\">";
+        $str.= "  onclick=\"showPopup(event,'main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk . "', " . $this->width . "); return false;\">";
         $str.= "$obj";
         $str.=" </a>";
         return $str;
