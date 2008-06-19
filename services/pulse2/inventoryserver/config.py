@@ -33,6 +33,7 @@ import string
 # MMC
 import mmc.support.mmctools
 from mmc.support.config import MMCConfigParser
+from mmc.plugins.inventory.utilities import getInventoryNoms
 
 class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     """
@@ -93,7 +94,12 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
             self.hostname = path[0].split('/')
             if len(path) == 2:
                 self.hostname.append(path[1].split(':'))
-
+                
+            if len(self.hostname) == 3:
+                nom = getInventoryNoms()
+                if nom.has_key(self.hostname[0]):
+                    self.hostname[2][0] = ('nom%s%s' % (self.hostname[0], self.hostname[2][0]), self.hostname[2][0])
+        
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "pid_path"):
                 self.pid_path = self.cp.get("daemon", "pid_path")  

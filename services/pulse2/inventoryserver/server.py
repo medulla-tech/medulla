@@ -49,7 +49,6 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
         self.logger.info(format % args)
 
     def do_POST(self):
-        self.logger.debug("post on thread %s"%(threading.currentThread().getName()))
         content = self.rfile.read(int(self.headers['Content-Length']))
         cont = [content, self.headers['Content-Type']]
         if self.headers['Content-Type'] == 'application/x-compress':
@@ -157,14 +156,14 @@ class TreatInv(Thread):
                 # WARNING : no fallback if the tag does not exists....
                 if len(path) == 3:
                     for tag in inventory[path[0]]:
-                        if tag[path[2][0]] == path[2][1]:
+                        if tag.has_key(path[2][0]) and tag[path[2][0]] == path[2][1]:
                             hostname = tag[path[1]]
-                            self.logger.debug("hostname where %s"%hostname)
+                            self.logger.debug("hostname modified into %s"%hostname)
                 else:
                     hostname = inventory[path[0]][1][path[1]]
-                    self.logger.debug("hostname %s"%hostname)
-            except:
-                pass
+                    self.logger.debug("hostname modified into %s"%hostname)
+            except Exception, e:
+                self.logger.error(e)
             try:
                 date = inventory['ACCESSLOG'][1]['LOGDATE']
             except:
