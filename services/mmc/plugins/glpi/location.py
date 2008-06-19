@@ -24,11 +24,3 @@ class GlpiLocation(ComputerLocationI):
         return self.config.displayLocalisationBar
 
 
-# others
-    def getLocationsList(self, session, filt = None):
-        """
-        Return all locations from glpi
-        """
-        return Glpi().getLocationsList(session, filt)
-
-
