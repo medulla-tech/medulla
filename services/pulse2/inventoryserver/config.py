@@ -50,13 +50,6 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     daemon_user = 0
     daemon_group = 0
 
-    dbdriver = 'mysql'
-    dbhost = 'localhost'
-    dbport = None
-    dbname = 'inventory'
-    dbuser = ''
-    dbpasswd = ''
-
     options = {}
 
     hostname = ['HARDWARE', 'NAME']
@@ -76,19 +69,6 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
                             
-        if self.cp.has_option('main', 'dbdriver'):
-            self.dbdriver = self.cp.get("main", 'dbdriver')
-        if self.cp.has_option('main', 'dbhost'):
-            self.dbhost = self.cp.get("main", 'dbhost')
-        if self.cp.has_option('main', 'dbport'):
-            self.dbport = self.cp.get("main", 'dbport')
-        if self.cp.has_option('main', 'dbname'):
-            self.dbname = self.cp.get("main", 'dbname')
-        if self.cp.has_option('main', 'dbuser'):
-            self.dbuser = self.cp.get("main", 'dbuser')
-        if self.cp.has_option('main', 'dbpasswd'):
-            self.dbpasswd = self.cp.getpassword("main", 'dbpasswd')
-
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
             self.hostname = path[0].split('/')
