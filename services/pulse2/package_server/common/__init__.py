@@ -34,8 +34,8 @@ import logging
 from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
-from pulse2.package_server.utilities import md5file, md5sum
-from mmc.support.mmctools import Singleton
+from pulse2.package_server.utilities import md5file, md5sum, Singleton
+
 
 class Common(Singleton):
     def init(self, config):
@@ -174,14 +174,16 @@ class Common(Singleton):
         params = self.h_desc(mp)
         path = params['src']
 
-        if os.path.exists("%s/%s/conf.xml" % (path, pid)):
-            shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.bkp" % (path, pid))
-        if not os.path.exists("%s/%s" % (path, pid)):
-            os.mkdir("%s/%s" % (path, pid))
-        f = open("%s/%s/conf.xml" % (path, pid), 'w+')
+        confdir = os.path.join(path, pid)
+        confxml = os.path.join(confdir, "conf.xml")
+        if os.path.exists(confxml):
+            shutil.move(confxml, confxml + ".bkp")
+        if not os.path.exists(confdir):
+            os.mkdir(confdir)
+        f = open(confxml, 'w+')
         f.write(xml)
         f.close()
-        return [pid, "%s/%s" % (path, pid)]
+        return [pid, confdir]
 
     def dropPackage(self, pid, mp):
         if not self.packages.has_key(pid):
@@ -258,7 +260,8 @@ class Common(Singleton):
         try:
             if os.path.isdir(file):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
-                l_package = self.parser.parse("%s/conf.xml"%(file))
+                confxml = os.path.join(file, "conf.xml")
+                l_package = self.parser.parse(confxml)
                 pid = l_package.id
 
                 self.mp2p[mp].append(pid)
@@ -267,7 +270,7 @@ class Common(Singleton):
 
                 toRelative = os.path.dirname(file)
                 size = 0
-                self.packages[pid] = self.parser.parse("%s/conf.xml"%(file))
+                self.packages[pid] = self.parser.parse(confxml)
                 if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
                     for sfile in self.packages[pid].specifiedFiles:
@@ -286,6 +289,7 @@ class Common(Singleton):
                         size += self._treatFile(pid, f, path, access)
                         #file_access_proto, file_access_uri, file_access_port, file_access_path)
                 self.packages[pid].size = size
+                self.logger.debug("Package size = %d" % size)
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
                 self.logger.error(err)
