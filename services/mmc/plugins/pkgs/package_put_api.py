@@ -42,4 +42,12 @@ class PackagePutA:
         except:
             self.logger.warn("PackagePutA:putPackageDetail %s fails"%(str(package)))
             return -1
-    
+
+    def dropPackage(self, pid):
+        if self.initialized_failed:
+            return -1
+        try:
+            return self.xmlrpc.dropPackage(pid)
+        except:
+            self.logger.warn("PackagePutA:dropPackage %s fails"%(str(pid)))
+            return -1

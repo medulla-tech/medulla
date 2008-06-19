@@ -77,6 +77,13 @@ class RpcProxy(RpcProxyI):
                 return PackagePutA(upa).putPackageDetail(package)
         logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
         return False
+        
+    def ppa_dropPackage(self, pp_api_id, pid):
+        upas = self.upaa_getUserPackageApi()
+        for upa in upas:
+            if upa['uuid'] == pp_api_id:
+                return PackagePutA(upa).dropPackage(pid)
+        return False
 
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
