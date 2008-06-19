@@ -128,6 +128,13 @@ class Common(Singleton):
                 self.mp2p[desc['mp']].append(pid)
         return True
 
+    def desassociatePackage2mp(self, pid, mp):
+        conf = self.h_desc(mp)
+        for desc in self.descBySrc(conf['src']):
+            if desc['type'] != 'mirror_files':
+                self.mp2p[desc['mp']].remove(pid)
+        return True
+
     def addPackage(self, pid, pa):
         # return pid for success
         # raise ARYDEFPKG for already existing package
@@ -175,6 +182,21 @@ class Common(Singleton):
         f.write(xml)
         f.close()
         return [pid, "%s/%s" % (path, pid)]
+
+    def dropPackage(self, pid, mp):
+        if not self.packages.has_key(pid):
+            self.logger.error("package %s is not defined"%(pid))
+            raise Exception("UNDEFPKG")
+        params = self.h_desc(mp)
+        path = params['src']
+
+        if not os.path.exists("%s/%s/conf.xml" % (path, pid)):
+            self.logger.error("package %s does not exists"%(pid))
+            raise Exception("UNDEFPKG")
+
+        shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.rem" % (path, pid))
+        return pid
+        
 
     def writeFileIntoPackage(self, pid, file):
         pass

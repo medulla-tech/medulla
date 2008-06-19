@@ -50,6 +50,15 @@ class PackageApiPut(PackageApiGet):
 
         return package['id']
 
+    def xmlrpc_dropPackage(self, pid):
+        ret = Common().dropPackage(pid, self.mp)
+        if not ret: return Fals
+
+        ret = Common().desassociatePackage2mp(pid, self.mp)
+        if not ret: return False
+
+        return pid
+
     def xmlrpc_putPackageLabel(self, pid, label):
         self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
 
