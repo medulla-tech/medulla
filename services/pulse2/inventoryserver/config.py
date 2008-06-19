@@ -90,7 +90,6 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
-            path = a.split('|')
             self.hostname = path[0].split('/')
             if len(path) == 2:
                 self.hostname.append(path[1].split(':'))
