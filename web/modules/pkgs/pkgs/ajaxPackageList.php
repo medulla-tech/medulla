@@ -67,6 +67,7 @@ $n->start = 0;
 $n->end = $count - 1;
 
 $n->addActionItemArray(new ActionItem(_T("Edit package"),"edit","edit","pkgs", "pkgs", "pkgs"));
+$n->addActionItemArray(new ActionPopupItem(_T("Delete package"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/><br/>";
 $n->display();

@@ -46,6 +46,10 @@ $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
 $submod->addPage($page);
 
+$page = new Page("delete",_T("Delete a package", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("ajaxPackageList");
 $page->setFile("modules/pkgs/pkgs/ajaxPackageList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));

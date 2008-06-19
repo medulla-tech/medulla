@@ -38,4 +38,8 @@ function getPackageDetail($papiid, $pid) {
     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
 }
 
+function dropPackage($p_api, $pid) {
+    return xmlCall("pkgs.ppa_dropPackage", array($p_api, $pid));
+}
+
 ?>
