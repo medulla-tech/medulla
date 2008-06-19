@@ -29,9 +29,9 @@ import logging
 import os
 from xml.dom import minidom
 from pulse2.package_server.types import Package
-from mmc.support.mmctools import Singleton
 
-class PackageParser(Singleton):
+
+class PackageParser:
     def init(self, config):
         self.logger = logging.getLogger()
         if config.parser == None or config.parser == 'XML':
