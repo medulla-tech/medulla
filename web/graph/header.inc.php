@@ -110,72 +110,79 @@ function changeObjectDisplay(objectId, newVisibility) {
 
 function toggleVisibility(layer_ref)
 {
-        var state = getStyleObject(layer_ref).display;
-
-    if (state == 'none')
-    {
+    var state = getStyleObject(layer_ref).display;
+    if (state == 'none') {
         state = 'inline';
-    } else
-    {
+    } else {
         state = 'none';
     }
-changeObjectDisplay(layer_ref, state)
+    changeObjectDisplay(layer_ref, state)
 }
 
-    function showPopup(evt,url) {
-        $('popup').style.width='300px';
-        if (!evt) evt = window.event;
-        new Ajax.Updater('__popup_container',url,{onComplete: displayPopup(evt), evalScripts:true})
-    }
+function PopupWindow(evt, url, width) {
+    $('popup').style.width = width + "px";
+    if (!evt) evt = window.event;    
+    new Ajax.Updater('__popup_container', url, { onComplete: PopupWindowDisplay(evt, width), evalScripts:true});
+}
 
-    function showPopupFav(evt,url) {
-        $('popup').style.width='200px';
-        if (!evt) evt = window.event;
-        new Ajax.Updater('__popup_container',url,{onComplete: displayPopupFav(evt), evalScripts:true})
-    }
+function PopupWindowDisplay(evt, width) {
+    obj = document.getElementById('popup');
+    obj.style.left = parseInt(evt.clientX) + document.documentElement.scrollLeft - parseInt(width) + "px";
+    obj.style.top = (parseInt(evt.clientY) + document.documentElement.scrollTop) + "px";
+    getStyleObject('popup').display = 'inline';
+}
 
-    function displayPopupFav (evt) {
-        obj = document.getElementById('popup')
-        obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-100+"px"
-        obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px"
-        getStyleObject('popup').display='inline';
-    }
+function showPopup(evt,url) {
+    $('popup').style.width = '300px';
+    if (!evt) evt = window.event;
+    new Ajax.Updater('__popup_container',url,{onComplete: displayPopup(evt), evalScripts:true});
+}
 
-    function displayPopup (evt) {
-        obj = document.getElementById('popup')
-        obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-300+"px"
-        obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px"
-        getStyleObject('popup').display='inline';
-    }
+function showPopupFav(evt,url) {
+    $('popup').style.width='200px';
+    if (!evt) evt = window.event;
+    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupFav(evt), evalScripts:true});
+}
 
-    function showPopupUp(evt,url) {
-        $('popup').style.width='300px';
-        if (!evt) evt = window.event;
-        new Ajax.Updater('__popup_container',url,{onComplete: displayPopupUp(evt), evalScripts:true})
+function displayPopupFav (evt) {
+    obj = document.getElementById('popup');
+    obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-100+"px";
+    obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px";
+    getStyleObject('popup').display='inline';
+}
 
-    }
+function displayPopup (evt) {
+    obj = document.getElementById('popup');
+    obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft-300+"px";
+    obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop)+"px";
+    getStyleObject('popup').display='inline';
+}
 
-    function displayPopupUp (evt) {
-        obj = document.getElementById('popup')
-        obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft+"px"
-        obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop-350)+"px"
-        //new Effect.Appear('popup')
-        getStyleObject('popup').display='inline';
-    }
+function showPopupUp(evt,url) {
+    $('popup').style.width='300px';
+    if (!evt) evt = window.event;
+    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupUp(evt), evalScripts:true});
+}
 
-    function showPopupCenter(url) {
-        new Ajax.Updater('__popup_container',url,{onComplete: displayPopupCenter(), evalScripts:true})
+function displayPopupUp (evt) {
+    obj = document.getElementById('popup');
+    obj.style.left = parseInt(evt.clientX)+document.documentElement.scrollLeft+"px";
+    obj.style.top = (parseInt(evt.clientY)+document.documentElement.scrollTop-350)+"px";
+    getStyleObject('popup').display='inline';
+}
 
-    }
+function showPopupCenter(url) {
+    new Ajax.Updater('__popup_container',url,{onComplete: displayPopupCenter(), evalScripts:true});
+}
 
-    function displayPopupCenter () {
-        obj = document.getElementById('popup')
+function displayPopupCenter () {
+    obj = document.getElementById('popup');
     var width = $('popup').style.width;
     var widthreal = width.substr( 0, width.length - 2 );
-        obj.style.left = ((screen.width-widthreal)/2)+"px";
-        obj.style.top = 200+"px";
-        getStyleObject('popup').display='inline';
-    }
+    obj.style.left = ((screen.width-widthreal)/2)+"px";
+    obj.style.top = 200+"px";
+    getStyleObject('popup').display='inline';
+}
 
 function validateForm() {
     var resultok;
@@ -186,18 +193,18 @@ function validateForm() {
     inputlist = document.getElementsByTagName('input');
     inputlist = $A(inputlist);
     inputlist.each( function(input){
-            try {
-                            var result = input.validate()
-                            if (result!=true) {
-                                resultbad++;
-                            } else {
-                                resultok++;
-                            }
-                        }
-                        catch (ex) {
-                            //do nothing... function not exist
-                        }
-        });
+        try {
+            var result = input.validate()
+                if (result!=true) {
+                    resultbad++;
+                } else {
+                    resultok++;
+                }
+        }
+        catch (ex) {
+            //do nothing... function not exist
+        }
+    });
     if (resultbad!=0) {
         alert('<?= _("Form cannot be submit. Input errors are highlighted in red.") ?>');
         return false;
