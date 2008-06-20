@@ -39,6 +39,7 @@ import threading
 from pulse2.inventoryserver.mapping import OcsMapping
 from pulse2.inventoryserver.database import InventoryWrapper
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
+from pulse2.inventoryserver.ssl import *
 
 class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, *args):
@@ -225,7 +226,12 @@ class InventoryGetService(Singleton):
 
     def run(self, server_class=ThreadedHTTPServer, handler_class=InventoryServer):
         server_address = (self.bind, int(self.port))
-        httpd = server_class(server_address, handler_class)
+        if self.config.enablessl:
+            self.logger.info("Starting server in ssl mode")
+            server_class = SecureThreadedHTTPServer
+            httpd = server_class(server_address, handler_class, self.config)
+        else:
+            httpd = server_class(server_address, handler_class)
         # Install SIGTERM handler
         signal.signal(signal.SIGTERM, self.handler)
         signal.signal(signal.SIGINT, self.handler)

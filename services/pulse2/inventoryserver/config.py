@@ -44,6 +44,9 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     bind = ''
     port = 9999
     ocsmapping = '/etc/mmc/pulse2/OcsNGMap.xml'
+    enablessl = False
+    certfile = '/etc/mmc/pulse2/inventory_server/keys/cacert.pem'
+    privkey = '/etc/mmc/pulse2/inventory_server/keys/privkey.pem'
 
     pidfile = '/var/run/pulse2-inventoryserver.pid'
     umask = 0007
@@ -68,6 +71,14 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
             self.ocsmapping = self.cp.get("main", 'ocsmapping')
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
+
+        if self.cp.has_option('ssl', 'enablessl'):
+            self.enablessl = self.cp.getboolean('ssl', 'enablessl')
+        if self.cp.has_option('ssl', 'certfile'):
+            self.certfile = self.cp.get('ssl', 'certfile')
+        if self.cp.has_option('ssl', 'privkey'):
+            self.privkey = self.cp.get('ssl', 'privkey')
+
                             
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
