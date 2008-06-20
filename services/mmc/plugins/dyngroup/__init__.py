@@ -76,6 +76,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         groups = DyngroupDatabase().getallgroups(ctx, params)
         return xmlrpcCleanup(map(lambda g:g.toH(), groups))
+
+    def group_name_exists(self, name):
+        ctx = self.currentContext
+        return DyngroupDatabase().groupNameExists(ctx, name)
         
     def get_group(self, id):
         ctx = self.currentContext

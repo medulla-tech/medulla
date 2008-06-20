@@ -271,6 +271,12 @@ class DyngroupDatabase(Singleton):
         except KeyError:
             pass
 
+        try:
+            if params['name'] != None:
+                groups = groups.filter(self.groups.c.name == params['name'])
+        except KeyError:
+            pass
+
         return groups
 
     def countallgroups(self, ctx, params):
@@ -302,6 +308,9 @@ class DyngroupDatabase(Singleton):
         session.close()
         return ret
 
+    def groupNameExists(self, ctx, name):
+        return (self.countallgroups(ctx, {'name':name}) != 0)
+        
     def get_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
