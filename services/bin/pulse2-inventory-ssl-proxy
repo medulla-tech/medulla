@@ -1,0 +1,145 @@
+#!/usr/bin/python
+
+from httplib import *
+from zlib import *
+import re
+import os
+import socket
+import sys
+
+import ConfigParser
+
+class Pulse2InventoryProxyConfig:
+    server = ''
+    port = 9999
+    path = '/'
+    tmpdirname = '/tmp/Pulse2InventoryProxy'
+    command_name = '/usr/local/bin/ocsinventory-agent'
+    command_attr = '-l %s' % (tmpdirname)
+    enablessl = True
+    key_file = "conf/key/privkey.pem"
+    cert_file = "conf/key/cacert.pem"
+
+    def setup(self, config_file = 'conf/p2ipc.ini'):
+        # Load configuration file
+        self.cp = ConfigParser.ConfigParser()
+        self.cp.read(config_file)
+
+        if self.cp.has_option('main', 'server'):
+            self.server = self.cp.get('main', 'server')
+        if self.cp.has_option('main', 'port'):
+            self.port = self.cp.get('main', 'port')
+        if self.cp.has_option('main', 'path'):
+            self.path = self.cp.get('main', 'path')
+        if self.cp.has_option('main', 'tmpdirname'):
+            self.tmpdirname = self.cp.get('main', 'tmpdirname')
+        if self.cp.has_option('main', 'command_name'):
+            self.command_name = self.cp.get('main', 'command_name')
+        if self.cp.has_option('main', 'command_attr'):
+            self.command_attr = self.cp.get('main', 'command_attr')
+        if self.cp.has_option('main', 'enablessl'):
+            self.enablessl = self.cp.getboolean('main', 'enablessl')
+        if self.cp.has_option('main', 'key_file'):
+            self.key_file = self.cp.get('main', 'key_file')
+        if self.cp.has_option('main', 'cert_file'):
+            self.cert_file = self.cp.get('main', 'cert_file')
+    
+
+class Pulse2InventoryProxy:
+    def __init__(self, config):
+        self.config = config
+        self.server = self.config.server
+        self.port = self.config.port
+        self.path = self.config.path
+        self.tmpdirname = self.config.tmpdirname
+        if not os.path.exists(self.tmpdirname):
+            print "%s temporary directory does not exists, please check your configuration file" % (self.tmpdirname)
+            sys.exit(-1)
+        if not os.path.exists(self.config.command_name):
+            print "%s command does not exists, please check your configuration file" % (self.config.command_name)
+            sys.exit(-1)
+        self.command = '%s %s' % (self.config.command_name, self.config.command_attr)
+        self.enablessl = self.config.enablessl
+        self.key_file = self.config.key_file
+        self.cert_file = self.config.cert_file
+
+    def send(self, d):
+        data = compress(d)
+        if self.enablessl:
+            h = HTTPSConnection(self.server, self.port)
+            h.key_file = self.key_file
+            h.cert_file = self.cert_file
+        else:
+            h = HTTPConnection(self.server, self.port)
+        try:
+            h.request('POST', self.path, data, {'content-type':'application/x-compress'})
+        except socket.error, e:
+            if e.args == (111, 'Connection refused'):
+                print "Connection refused"
+            else:
+                print e.args
+            sys.exit(-1)
+                
+        return h.getresponse()
+
+    def prolog_str(self):
+        return "<QUERY>PROLOG</QUERY>"
+
+    def prolog_parse(self, content):
+        response = re.search(r'<RESPONSE>([\w-]+)</RESPONSE>', content).group(1)
+        if response == 'SEND':
+            return True
+        return False
+
+    def inventory_str(self, filename):
+        if not os.path.exists(filename):
+            raise Exception("file not found")
+        f = open(filename, 'r')
+        content = f.read()
+        f.close()
+        return content
+
+    def inv_parse(self, data):
+        # TODO maybe we should do something?
+        return data
+
+    def contact_server(self):
+        prolog = self.send(self.prolog_str())
+        if prolog.status != 200:
+            print "prolog failed : %s" % (prolog.reason)
+            return -1
+        data = decompress(prolog.read())
+        return self.prolog_parse(data)
+
+    def treat_inventory(self):
+        # TODO run inventory in a file and return the path of this file
+        os.popen(self.command)
+        files = os.listdir(self.tmpdirname)
+        if len(files) != 1:
+            raise Exception("too many inventory files")
+        return "%s%s%s" % (self.tmpdirname, os.sep, files[0])
+
+    def send_inventory(self, filename):
+        inv = self.send(self.inventory_str(filename))
+        if inv.status != 200:
+            print "inv send failed : %s" % (inv.reason)
+            return -1
+        data = decompress(inv.read())
+        return self.inv_parse(data)
+
+    def main(self):
+        should_send_invent = self.contact_server()
+        filename = self.treat_inventory()
+        if should_send_invent:
+            ret = self.send_inventory(filename)
+            print ret
+        os.unlink(filename)
+
+
+print "reading conf"
+config = Pulse2InventoryProxyConfig()
+print "creating proxy"
+p = Pulse2InventoryProxy(config)
+print "running proxy"
+p.main()
+
