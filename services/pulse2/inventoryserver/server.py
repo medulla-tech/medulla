@@ -41,11 +41,7 @@ from pulse2.inventoryserver.database import InventoryWrapper
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import *
 
-class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
-    def __init__(self, *args):
-        self.logger = logging.getLogger()
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
-
+class InventoryServer:
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
@@ -93,6 +89,16 @@ class InventoryServer(BaseHTTPServer.BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(compress(resp))
+
+class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
+    def __init__(self, *args):
+        self.logger = logging.getLogger()
+        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
+
+class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
+    def __init__(self, *args):
+        self.logger = logging.getLogger()
+        SecureHTTPRequestHandler.__init__(self, *args)
 
 class TreatInv(Thread):
     def __init__(self, config):
@@ -224,10 +230,11 @@ class InventoryGetService(Singleton):
         self.treatinv.start()
         self.logger.debug("Treat inventory thread started")
 
-    def run(self, server_class=ThreadedHTTPServer, handler_class=InventoryServer):
+    def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
         server_address = (self.bind, int(self.port))
-        if self.config.enablessl:
+        if self.config.enablessl: # warning if ssl is activated, given server and handler class will be override...
             self.logger.info("Starting server in ssl mode")
+            handler_class = HttpsInventoryServer
             server_class = SecureThreadedHTTPServer
             httpd = server_class(server_address, handler_class, self.config)
         else:
