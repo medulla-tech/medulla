@@ -149,5 +149,7 @@ function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", ar
 function __xmlrpc_addmembers_to_group($id, $uuids) { return xmlCall("dyngroup.addmembers_to_group", array($id, $uuids)); }
 function __xmlrpc_delmembers_to_group($id, $uuids) { return xmlCall("dyngroup.delmembers_to_group", array($id, $uuids)); }
 
+function xmlrpc_group_name_exists($name) { return xmlCall("dyngroup.group_name_exists", array($name)); }
+
 ?>
 

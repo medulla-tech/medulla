@@ -46,7 +46,7 @@ if (!$visible && $group) { $visible = $group->show; }
 $bool = quickGet('equ_bool');
 if (!$bool && $group) { $bool = $group->getBool(); }
 
-if ($name == '') {
+if ($name == '' || xmlrpc_group_name_exists($name)) {
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
     $r = new Request();
     $r->parse($request);
@@ -59,8 +59,13 @@ if ($name == '') {
     if ($r->countPart() > 1) {
         drawBoolEquation($bool);
     }
-    print "<td><input value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
+    print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
         "</form></table>";
+    if (xmlrpc_group_name_exists($name)) {
+        new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
+    } elseif (isset($_POST['btnPrimary'])) {
+        new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
+    }
 } else {
     if ($id) {
         $group = new Group($id, true);

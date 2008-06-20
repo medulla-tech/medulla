@@ -56,7 +56,7 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$ma[1]] = array('hostname'=>$ma[0], 'uuid'=>$ma[1]);
         }
     }
-} else if (isset($_POST["bconfirm"])) {
+} else if (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name)) {
     $listOfCurMembers = $group->members();
     $curmem = array();
     foreach ($listOfCurMembers as $member) {
@@ -98,6 +98,10 @@ if (isset($_POST["bdelmachine_x"])) {
     } else {
         new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
     }
+} elseif (isset($_POST["bconfirm"]) and $name == '') {
+    new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
+} elseif (isset($_POST["bconfirm"]) and xmlrpc_group_name_exists($name)) {
+    new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
 } else {
     $list = $group->members();
     $members = array();
