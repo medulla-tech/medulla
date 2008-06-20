@@ -32,8 +32,8 @@ if (displayLocalisationBar()) {
     $ajax = new AjaxFilterLocation("modules/pulse2/pulse2/ajaxComputersList.php", "container", 'location', $param);
 
     $list = array();
-    foreach (getUserLocations() as $name) {
-        $list[$name] = $name;
+    foreach (getUserLocations() as $loc) {
+        $list[$loc['uuid']] = $loc['name'];
     }
     $ajax->setElements($list);
     $ajax->setElementsVal($list);
