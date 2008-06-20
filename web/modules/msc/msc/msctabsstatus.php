@@ -67,5 +67,6 @@ foreach ($labels as $l) {
         }
         print "</td></tr>";
     }
+}
 
 ?> </table>
