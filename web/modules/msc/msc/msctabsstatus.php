@@ -53,7 +53,7 @@ $slabels = array(
 );
 
 print "<h3>".sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total'])."</h3>";
-?> <table> <?php
+?> <table width='100%'> <?php
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];
