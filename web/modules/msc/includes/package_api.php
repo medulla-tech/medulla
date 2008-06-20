@@ -88,10 +88,11 @@ class ServerAPI {
             $this->server = $h['server'];
             $this->port = $h['port'];
             $this->mountpoint = $h['mountpoint'];
+            $this->protocol = $h['protocol'];
         }
     }
     function toURI() {
-        return base64_encode($this->server.'##'.$this->port.'##'.$this->mountpoint);
+        return base64_encode($this->server.'##'.$this->port.'##'.$this->mountpoint.'##'.$this->protocol);
     }
     function fromURI($uri) {
         $uri = base64_decode($uri);
@@ -99,6 +100,7 @@ class ServerAPI {
         $this->server = $uri[0];
         $this->port = $uri[1];
         $this->mountpoint = $uri[2];
+        $this->protocol = $uri[3];
     }
 }
 
