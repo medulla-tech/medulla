@@ -360,7 +360,7 @@ class Glpi(DyngroupDatabaseHelper):
                     except ValueError:
                         self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
                         session.close()
-                        return {}
+                        return None
                 else:
                     query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(*locs))
             elif location != None:
@@ -445,6 +445,8 @@ class Glpi(DyngroupDatabaseHelper):
         """
         session = create_session()
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        if query == None:
+            return 0
         count = query.group_by([self.machine.c.name, self.machine.c.domain]).count()
         session.close()
         return count
@@ -457,6 +459,8 @@ class Glpi(DyngroupDatabaseHelper):
         ret = {}
 
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
+        if query == None:
+            return {}
 
         if min != 0:
             query = query.offset(min)
