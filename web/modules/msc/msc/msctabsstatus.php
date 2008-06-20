@@ -52,8 +52,10 @@ $slabels = array(
 
 );
 
-print "<h3>".sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total'])."</h3>";
-?> <table width='100%'> <?php
+?><h3><?= sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total'])?>&nbsp;
+<a href='<?= urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id)) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
+</h3>
+ <table width='100%'> <?php
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];

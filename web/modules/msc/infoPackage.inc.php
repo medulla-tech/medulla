@@ -163,6 +163,11 @@ $page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxIpaddr.php");
 $submod->addPage($page);
 
+$page = new Page("statuscsv",_T("Csv's export", "msc"));
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$page->setFile("modules/msc/msc/statuscsv.php");
+$submod->addPage($page);
+
 unset($submod);
 
 
