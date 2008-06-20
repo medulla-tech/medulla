@@ -794,3 +794,106 @@ class MscDatabase(Singleton):
         ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
         session.close()
         return ret
+
+    def getCommandOnHostTitle(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host)).filter(self.commands.c.id == cmd_id).first()
+        session.close()
+        return ret.title
+
+    def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        ret = {
+            'total':0,
+            'success':{
+                'total':[0]
+            },
+            'running':{
+                'total':[0],
+                'wait_up':[0],
+                'run_up':[0],
+                'wait_ex':[0],
+                'run_ex':[0],
+                'wait_rm':[0],
+                'run_rm':[0]
+            },
+            'failure':{
+                'total':[0],
+                'fail_up':[0],
+                'conn_up':[0],
+                'fail_ex':[0],
+                'conn_ex':[0],
+                'fail_rm':[0],
+                'conn_rm':[0]
+                
+            }
+        }
+        running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop'] #, 'scheduled']
+        failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable']
+        session = create_session()
+        for coh in session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id):
+            ret['total'] += 1
+            if coh.current_state == 'done': # success
+                ret['success']['total'][0] += 1
+            elif coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED': # failure
+                ret['failure']['total'][0] += 1
+                if coh.uploaded == 'FAILED':
+                    ret['failure']['fail_up'][0] += 1
+                    if coh.current_state == 'not_reachable':
+                        ret['failure']['conn_up'][0] += 1
+                elif coh.executed == 'FAILED':
+                    ret['failure']['fail_ex'][0] += 1
+                    if coh.current_state == 'not_reachable':
+                        ret['failure']['conn_ex'][0] += 1
+                elif coh.deleted == 'FAILED':
+                    ret['failure']['fail_rm'][0] += 1
+                    if coh.current_state == 'not_reachable':
+                        ret['failure']['conn_rm'][0] += 1
+            else: # running
+                ret['running']['total'][0] += 1
+                if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
+                    ret['running']['total'][0] -= 1
+                    ret['success']['total'][0] += 1
+                elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
+                    if coh.deleted == 'WORK_IN_PROGRESS':
+                        ret['running']['run_rm'][0] += 1
+                    else:
+                        ret['running']['wait_rm'][0] += 1
+                elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
+                    if coh.executed == 'WORK_IN_PROGRESS':
+                        ret['running']['run_ex'][0] += 1
+                    else:
+                        ret['running']['wait_ex'][0] += 1
+                else: # upload running
+                    if coh.uploaded == 'WORK_IN_PROGRESS':
+                        ret['running']['run_up'][0] += 1
+                    else:
+                        ret['running']['wait_up'][0] += 1
+            
+        for i in ['success', 'running', 'failure']:
+            ret[i]['total'].append(ret[i]['total'][0] * 100 / ret['total'])
+        for i in ['wait_up', 'run_up', 'wait_ex', 'run_ex', 'wait_rm', 'run_rm']:
+            ret['running'][i].append(ret['running'][i][0] * 100 / ret['total'])
+        for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm']:
+            ret['failure'][i].append(ret['failure'][i][0] * 100 / ret['total'])
+        session.close()
+        return ret
+
+        # nombre total de coh
+        # succes (nb, %)
+        # en cours (nb, %)
+        #   attente up (nb, %)
+        #   cours d'up (nb, %)
+        #   attente exec (nb, %)
+        #   cours d'ex (nb, %)
+        #   attente sup (nb, %)
+        #   cours sup (nb, %)
+        # non dep (nb, %)
+        #   echoué durant up (nb, %) coh.uploaded == 'FAILED'
+        #       dont injoignables (nb)
+        #   echoué durant ex (nb, %) coh.executed == 'FAILED'
+        #       dont injoignables (nb)
+        #   echoué durant sup (nb, %) coh.deleted == 'FAILED'
+        #       dont injoignables (nb)
+        
+        # coh.uploaded, coh.executed, coh.deleted
+            
