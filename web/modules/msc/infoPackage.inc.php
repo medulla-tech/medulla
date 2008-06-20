@@ -110,6 +110,12 @@ $page->setFile("modules/msc/msc/msctabsstop.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+/* Confirm popup when stopping a command */
+$page = new Page("msctabsstatus", _T("Command status", "msc"));
+$page->setFile("modules/msc/msc/msctabsstatus.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("package_detail", _T("Show package's details", "msc"));
 $page->setFile("modules/msc/msc/package_detail.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));

@@ -84,12 +84,14 @@ $actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start"
 $actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
 $actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
 $actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",      "display", "msc", "base", "computers");
+$actionstatus  = new ActionPopupItem(_T("Status", "msc"),"msctabsstatus","status",  "msc", "base", "computers");
 $actionempty   = new EmptyActionItem();
 
 $a_start = array();
 $a_pause = array();
 $a_stop = array();
 $a_details = array();
+$a_status = array();
 
 $n = null;
 
@@ -99,8 +101,10 @@ if ($areCommands) {
         $params[] = array('cmd_id'=>$cmd['id'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
+            $a_status[] = $actionempty;
         } else {
             $a_details[] = $actiondetails;
+            $a_status[] = $actionstatus;
         }
         $a_current[] = to_date($cmd['date_created']); // Brrr, seem really ugly, should we not use sprintf ?
     }
@@ -108,6 +112,7 @@ if ($areCommands) {
     $n->addExtraInfo($a_current, _T("start_date", "msc"));
 
     $n->addActionItemArray($a_details);
+    $n->addActionItemArray($a_status);
 } else {
     foreach ($cmds as $cmd) {
         $coh_id = $cmd[1];
