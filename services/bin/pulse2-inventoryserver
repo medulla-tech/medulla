@@ -34,7 +34,7 @@ def running(daemonize, inifile):
 
 def daemon(config):
     """
-    daemonize pulse2-ocsserver
+    daemonize pulse2-inventory-server
 
     @param pidfile: path to pid file
     @type pidfile: str
@@ -43,7 +43,7 @@ def daemon(config):
         
     # Test if mmcagent has been already launched in daemon mode
     if os.path.isfile(pidfile):
-        print pidfile+" pid already exist. Maybe pulse2-ocsserver is already running\n"
+        print pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
         sys.exit(0)
         

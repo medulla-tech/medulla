@@ -109,13 +109,7 @@ class TreatInv(Thread):
 
     def run(self):
         while 1:
-            if Common().shutdownRequest:
-                self.logger.debug("TreatInv :: shutdown requested")
-                break
             while Common().countInventories() > 0:
-                if Common().shutdownRequest:
-                    self.logger.debug("TreatInv :: shutdown requested")
-                    break
                 self.logger.debug("TreatInv :: there are %d inventories"%Common().countInventories())
                 deviceid, content = Common().popInventory()
                 if not self.treatinv(deviceid, content):
@@ -225,32 +219,35 @@ class InventoryGetService(Singleton):
         self.logger = logging.getLogger()        
         OcsMapping().initialize(self.xmlmapping)
 
+    def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
+        # Install SIGTERM handler
+        signal.signal(signal.SIGTERM, self.handler)
+        signal.signal(signal.SIGINT, self.handler)
+        
         self.logger.debug("Start launching of treat inventory thread")
         self.treatinv = TreatInv(self.config)
+        self.treatinv.setDaemon(True)
         self.treatinv.start()
         self.logger.debug("Treat inventory thread started")
 
-    def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
         server_address = (self.bind, int(self.port))
         if self.config.enablessl: # warning if ssl is activated, given server and handler class will be override...
             self.logger.info("Starting server in ssl mode")
             handler_class = HttpsInventoryServer
             server_class = SecureThreadedHTTPServer
-            httpd = server_class(server_address, handler_class, self.config)
+            self.httpd = server_class(server_address, handler_class, self.config)
         else:
-            httpd = server_class(server_address, handler_class)
-        # Install SIGTERM handler
-        signal.signal(signal.SIGTERM, self.handler)
-        signal.signal(signal.SIGINT, self.handler)
-        httpd.serve_forever()
+            server_class = HTTPServer
+            self.httpd = server_class(server_address, handler_class)
+        if hasattr(self.httpd, 'daemon_threads'):
+            self.httpd.daemon_threads = True
+        self.httpd.serve_forever()
         
     def handler(self, signum, frame):
         """
         SIGTERM handler
         """
         self.logger.info("Shutting down...")
-        Common().shutdownRequest = True
-        self.treatinv.join()
         os.seteuid(0)
         os.setegid(0)
         try:
@@ -258,4 +255,4 @@ class InventoryGetService(Singleton):
         except OSError:
             pass
 
-        sys.exit
+        sys.exit(0)
