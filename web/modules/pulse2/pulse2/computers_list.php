@@ -29,7 +29,7 @@ $param = array();
 if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }
 
 if (displayLocalisationBar()) {
-    $ajax = new AjaxFilterLocation("modules/pulse2/pulse2/ajaxComputersList.php", "container", 'location', $param);
+    $ajax = new AjaxFilterLocation("modules/base/computers/ajaxComputersList.php", "container", 'location', $param);
 
     $list = array();
     foreach (getUserLocations() as $loc) {
@@ -38,7 +38,7 @@ if (displayLocalisationBar()) {
     $ajax->setElements($list);
     $ajax->setElementsVal($list);
 } else {
-    $ajax = new AjaxFilter("modules/pulse2/pulse2/ajaxComputersList.php", "container", $param);
+    $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
 }
 
 $ajax->display();
