@@ -33,15 +33,18 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("ajaxComputersList", _T("Ajax part of computers list"));
+$page = new Page("ajaxComputersList", _T("Ajax part of computers list", "pulse2"));
 $page->setFile("modules/pulse2/pulse2/ajaxComputersList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("computers_list", _T("Computers list"));
+$page = new Page("computers_list", _T("Computers list", "pulse2"));
 $page->setFile("modules/pulse2/pulse2/computers_list.php");
 $submod->addPage($page);
 
+$page = new Page("select_location", _T("Location selection in computer edit", "pulse2"));
+$page->setFile("modules/pulse2/includes/select_location.php");
+$submod->addPage($page);
 
 unset($submod);
 
