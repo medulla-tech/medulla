@@ -5,7 +5,6 @@ import win32event
 import winerror
 import pywintypes
 import string
-import runningwindows
 import os
 import os.path
 import sys
