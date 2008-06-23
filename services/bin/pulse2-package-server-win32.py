@@ -25,7 +25,10 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         win32serviceutil.ServiceFramework.__init__(self,args)
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         curdir = os.path.dirname(__file__)
-        self.inifile = curdir + "\\package-server-windows.ini"
+        if curdir.endswith("library.zip"):
+            curdir = os.path.dirname(curdir)            
+        self.inifile = os.path.join(curdir, "package-server.ini")
+        os.chdir(curdir)
         if not os.path.exists(self.inifile):
             print "File '%s' does not exist." % self.inifile
             sys.exit(3)		
