@@ -2,12 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2008-06-20 14:33+0200\n"
+"PO-Revision-Date: \n"
 "Last-Translator: Marcel haase <mha@x-source.de>\n"
-"Language-Team: \n"
+"Language-Team: X-SOURCE TechnikService <info@x-source.de>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: index.php:80
 msgid "Login failed"
@@ -52,7 +55,7 @@ msgstr "Experten-Modus"
 
 #: graph/navbar.inc.php:47
 msgid "Click to switch to"
-msgstr "Klicken zum umschalten zu"
+msgstr "umschalten zu"
 
 #: graph/navbar.inc.php:48
 msgid "logout"
@@ -62,7 +65,7 @@ msgstr "abmelden"
 #: logout/index.php:49
 #: logout/index.php:54
 msgid "Logout"
-msgstr "Logout"
+msgstr "abmelden"
 
 #: graph/navbar.inc.php:60
 #: main_content.php:167
@@ -418,12 +421,12 @@ msgstr "Kommentare"
 
 #: modules/base/groups/ajaxFilter.php:46
 msgid "Edit members"
-msgstr "Bearbeite Mitglieder"
+msgstr "Mitglieder bearbeiten"
 
 #: modules/base/groups/ajaxFilter.php:47
 #: modules/base/groups/edit.php:52
 msgid "Edit group"
-msgstr "Bearbeite Gruppe"
+msgstr "Gruppe bearbeiten"
 
 #: modules/base/groups/ajaxFilter.php:49
 msgid "Groups management"
@@ -521,7 +524,7 @@ msgstr "Name"
 
 #: modules/base/users/ajaxFilter.php:78
 msgid "Mail"
-msgstr "Mail"
+msgstr "E-Mail"
 
 #: modules/base/users/ajaxFilter.php:79
 msgid "Telephone"
@@ -540,7 +543,7 @@ msgstr "MMC Rechte"
 #: modules/base/users/ajaxFilter.php:84
 #: modules/base/views/index.tpl.php:93
 msgid "Backup"
-msgstr "Sicherung"
+msgstr "archivieren"
 
 #: modules/base/users/ajaxFilter.php:86
 #: modules/base/infoPackage.inc.php:101
@@ -611,11 +614,11 @@ msgstr "alle Benutzer-Dateien löschen"
 
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
-msgstr "Backup eines Benutzer-Verzeichnis"
+msgstr "Benutzer Verzeichnis archivieren"
 
 #: modules/base/users/backup.php:52
 msgid "Backup a user's home directory"
-msgstr "Backup eines Benutzer Home-Verzeichnis"
+msgstr "Benutzer Home-Verzeichnis archivieren"
 
 #: modules/base/users/backup.php:54
 #, php-format
@@ -625,11 +628,11 @@ msgstr "Backup von <b>%s</b> Benutzer-Verzeichnis wurde im Hintergrund gestartet
 #: modules/base/users/backup.php:56
 #, php-format
 msgid "The files will be stored in the directory %s of the server at the end of the backup."
-msgstr "Die Dateien werden nach Ende des Backup's in das Verzeichnis %s auf dem Server gespeichert."
+msgstr "Die Dateien werden zum Abschluß des Backups in das Verzeichnis %s auf dem Server gespeichert."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
-msgstr "Bitte begeben Sie sich auf die Status-Seite zur Überprüfung des Backup-Status."
+msgstr "Bitte begeben Sie sich auf die System Status Seite zur Überprüfung des Backup-Status."
 
 #: modules/base/users/backup.php:60
 msgid "This operation will last according to the amount of data to backup."
@@ -643,15 +646,15 @@ msgstr "%s Home-Verzeichnis wird archiviert."
 #: modules/base/users/backup.php:79
 #, php-format
 msgid "Please select media size. If your data exceeds the volume size, several files of your media size will be created."
-msgstr "Bitte wählen Sie die Medien Größe. Wenn Ihre Daten das Volumen überschreiten, werden mehrere Dateien von der gewählten Datenträgerngröße erstellt. werden."
+msgstr "Bitte wählen Sie die Medienkapazität. Wenn Ihr Datenvolumen diese Kapazität überschreitet, werden mehrere Dateien mit diesem Format erstellt werden."
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
-msgstr "Datenträgergröße"
+msgstr "Datenträgerkapazität"
 
 #: modules/base/users/backup.php:90
 msgid "Launch backup"
-msgstr "Backup starten"
+msgstr "Sicherung starten"
 
 #: modules/base/users/edit.php:80
 msgid "The confirmation password does not match the new password."
@@ -717,7 +720,7 @@ msgstr "Benutzer hinzufügen"
 
 #: modules/base/users/edit.php:266
 msgid "Edit user"
-msgstr "bearbeite Benutzer"
+msgstr "Benutzer bearbeiten"
 
 #: modules/base/users/edit.php:307
 msgid "Confirm password"
@@ -801,7 +804,7 @@ msgstr "Dieses Feld wird von einigen LDAP-Clients (z.B. Thunderbird-Adressbuch) 
 #: modules/base/users/edit.php:394
 #: modules/base/infoPackage.inc.php:242
 msgid "Preferred name to be used"
-msgstr ""
+msgstr "bevorzugter Name der genutzt werden soll"
 
 #: modules/base/users/edit.php:395
 msgid "This field is used by SAMBA (and other LDAP clients) to display user name."
@@ -850,11 +853,11 @@ msgstr "Warnung - keine Beschreibung gefunden in infoPackage.inc.php :"
 #: modules/base/users/editacl.php:194
 #, php-format
 msgid "Edit ACL of user %s"
-msgstr "bearbeite ACL des Benutzer %s"
+msgstr "ACL des Benutzer %s bearbeiten"
 
 #: modules/base/users/editacl.php:202
 msgid "Edit ACL of user"
-msgstr "Benutzer-ACL's bearbeiten"
+msgstr "Benutzer-ACLs bearbeiten"
 
 #: modules/base/users/index.php:31
 #: modules/base/infoPackage.inc.php:106
@@ -864,7 +867,7 @@ msgstr "Benutzerliste"
 
 #: modules/base/status/index.php:110
 msgid "Uptime: "
-msgstr "Laufzeit:"
+msgstr "Laufzeit: "
 
 #: modules/base/status/index.php:114
 msgid "day"
@@ -892,7 +895,7 @@ msgstr "globale Ansicht"
 
 #: modules/base/status/index.php:219
 msgid "Server status"
-msgstr "Server-Status"
+msgstr "Server Status"
 
 #: modules/base/status/index.php:226
 msgid "Hard drive partitions"
@@ -920,7 +923,7 @@ msgstr "Status"
 
 #: modules/base/infoPackage.inc.php:64
 msgid "Default status page"
-msgstr "Standard-Status-Seite"
+msgstr "System Status"
 
 #: modules/base/infoPackage.inc.php:73
 msgid "Log view"
@@ -1122,7 +1125,7 @@ msgstr "primäre Gruppe"
 
 #: modules/base/views/editGroups.tpl.php:65
 msgid "Add user to group"
-msgstr "Hinzufügen eines Benutzers zur Gruppe"
+msgstr "hinzufügen des Benutzers zur Gruppe"
 
 #: modules/base/views/editGroups.tpl.php:110
 msgid "This group doesn't exist"
