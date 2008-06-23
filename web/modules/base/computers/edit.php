@@ -76,24 +76,17 @@ foreach ($addParams as $p) {
     
 }
 
-$f->pop();
-
-/*
-if ($_GET["action"] != "add") {
-    $f->push(new Table());
-    $f->add(
-            new TrFormElement(_T("Samba access"),new CheckboxTpl("sambaaccess")),
-            array("value"=> $hasSamba, "extraArg"=>'onclick="toggleVisibility(\'sambadiv\');"')
-            );
-    
-    $f->pop();
-    
-    $sambadiv = new DivForModule(_T("SAMBA access"), "#EEEEEE", array("id" => "sambadiv"));
-    $sambadiv->setVisibility($hasSamba);
-    $f->push($sambadiv);
-    $f->pop();
+if (canAssociateComputer2Location()) {
+    if (in_array("pulse2", $_SESSION["modulesList"])) {
+        require('modules/pulse2/includes/select_location.php');
+        $f->add(
+            new TrFormElement(_T("Location"), select_locations(null)), # TODO when edit, should get the locations in GET or POST
+            array("value" => '')
+        );
+    }
 }
-*/
+
+$f->pop();
 
 $f->addValidateButton("bcreate");
 

@@ -58,6 +58,13 @@ function canDelComputer() {
     return $_SESSION["canDelComputer"];
 }
 
+function canAssociateComputer2Location() {
+    if (!isset($_SESSION["canAssociateComputer2Location"])) {
+        $_SESSION["canAssociateComputer2Location"] = xmlCall("base.canAssociateComputer2Location");
+    }
+    return $_SESSION["canAssociateComputer2Location"];
+}
+
 function hasComputerManagerWorking() {
     if (!isset($_SESSION["hasComputerManagerWorking"])) {
         $_SESSION["hasComputerManagerWorking"] = xmlCall("base.hasComputerManagerWorking");
