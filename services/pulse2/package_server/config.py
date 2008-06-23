@@ -54,6 +54,8 @@ class P2PServerCP(Singleton):
     if sys.platform != "win32":
         umask = 0077
         daemon_group = 0
+        daemon_user = pwd.getpwnam('root')[2]
+        umask = string.atoi('0077', 8)
         pidfile = '/var/run/pulse2-package-server.pid'
 
     parser = None
