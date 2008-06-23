@@ -30,7 +30,17 @@ $p = new PageGenerator(_T("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-include("modules/pulse2/pulse2/computers_list.php");
+if (in_array("pulse2", $_SESSION["modulesList"])) {
+    include("modules/pulse2/pulse2/computers_list.php");
+} else {
+    $param = array();
+    if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }
+
+    $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
+}
 
 ?>
 

@@ -215,6 +215,10 @@ if (hasComputerManagerWorking()) {
                    array("noHeader"=>True,"visible"=>False));
     $submod->addPage($page);
 
+    $page = new Page("ajaxComputersList", _("Ajax part of computers list"));
+    $page->setFile("modules/base/computers/ajaxComputersList.php");
+    $page->setOptions(array("visible"=>False, "AJAX" =>True));
+    $submod->addPage($page);
 
     $mod->addSubmod($submod);
 }

@@ -46,7 +46,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $value['gid'] = $filter['gid'];
         $params[] = $value;
 
-        if (inventoryExists($value['objectUUID'])) {
+        if (in_array("inventory", $_SESSION["modulesList"])) {
             $actionInventory[] = $inventAction;
         } else { 
             $actionInventory[] = $glpiAction;
