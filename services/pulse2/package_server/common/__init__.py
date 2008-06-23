@@ -213,12 +213,12 @@ class Common(Singleton):
             return None
 
     def getPackages(self, mp): #TODO check the clone memory impact
-        ret = []
+        ret = {}
         try:
             for k in self.packages:
                 try:
                     self.mp2p[mp].index(k)
-                    ret.append(k)
+                    ret[k] = self.packages[k]
                 except:
                     pass
         except Exception, e:
