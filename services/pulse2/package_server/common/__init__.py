@@ -285,11 +285,12 @@ class Common(Singleton):
                     # find all files and then get sizes and md5
                     files = self._getFiles(file)
                     for f in files:
-                        path = re.sub(toRelative, '', os.path.dirname(f))
+                        path = '/'+re.sub(re.escape(toRelative+os.sep), '', os.path.dirname(f))
                         size += self._treatFile(pid, f, path, access)
                         #file_access_proto, file_access_uri, file_access_port, file_access_path)
                 self.packages[pid].size = size
                 self.logger.debug("Package size = %d" % size)
+                self.logger.info("path = %s" % path)
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
                 self.logger.error(err)
