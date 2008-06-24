@@ -22,6 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require("modules/dyngroup/includes/groups.inc.php");
+
 $name = quickGet('name');
 $id = quickGet('id');
 $visibility = quickGet('visible');
@@ -48,7 +50,19 @@ if (isset($_POST["bdelmachine_x"])) {
             unset($listOfMembers[$ma[1]]);
         }
     }
-} else if (isset($_POST["baddmachine_x"])) {
+} elseif (isset($_POST['bfiltmachine_x'])) {
+    $truncate_limit = 2000;
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
+    $count = getRestrictedComputersListLen();
+    if ($truncate_limit < $count) {
+        new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
+    }
+    $machines = array();
+    foreach ($listOfMachines as $machine) {
+        $machines[$machine['cn']."##".$machine['objectUUID']] = $machine['cn'];
+    }
+
+} elseif (isset($_POST["baddmachine_x"])) {
     if (isset($_POST["machines"])) {
         foreach ($_POST["machines"] as $machine) {
             $ma = preg_split("/##/", $machine);
@@ -56,7 +70,7 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$ma[1]] = array('hostname'=>$ma[0], 'uuid'=>$ma[1]);
         }
     }
-} else if (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name)) {
+} elseif (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name)) {
     $listOfCurMembers = $group->members();
     $curmem = array();
     foreach ($listOfCurMembers as $member) {
@@ -83,7 +97,7 @@ if (isset($_POST["bdelmachine_x"])) {
     
     $res = $group->addMembers($newmem) && $group->delMembers($delmem);
 
-    if ($res) { //group->save($name)) {
+    if ($res) {
         if ($already_exists) {
             new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
         } else {
@@ -114,14 +128,15 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$listOfMembers) { $listOfMembers = array(); }
 
     $truncate_limit = 2000;
-    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, null, False);
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID')), False);
     $count = getRestrictedComputersListLen();
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {
-        $machines[$machine[1]['cn'][0]."##".$machine[1]['objectUUID'][0]] = $machine[1]['cn'][0];
+        $machines[$machine['cn']."##".$machine['objectUUID']] = $machine['cn'];
+#        $machines[$machine[1]['cn'][0]."##".$machine[1]['objectUUID'][0]] = $machine[1]['cn'][0];
     }
 }
 ksort($members);
@@ -131,101 +146,7 @@ ksort($machines);
 $diff = array_diff_assoc($machines, $members);
 natcasesort($diff);
 
+drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, $_POST['filter']);
+
 ?>
-
-<form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-<table style="border: none;" cellspacing="0">
-<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name='name' value='<?= $name ?>' type='text'/></td></tr>
-<tr><td><?= _T('Is the group visible', 'dyngroup') ?></td><td></td><td>
-    <input name='visible' value='show' <? if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
-    <input name='visible' value='hide' <? if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
-</td></tr>
-<!-- add all group inupts -->
-</table>
-
-<div id="grouplist">
-<table style="border: none;" cellspacing="0">
-<tr><td style="border: none;">
-  <div class="list">
-        <h3><?= _T("All machines", "dyngroup");?></h3>
-    <select multiple size="15" class="list" name="machines[]">
-<?php
-foreach ($diff as $idx => $machine) {
-    if ($machine == "") {
-        unset($machines[$idx]);
-        continue;
-    }
-    echo "<option value=\"".$idx."\">".$machine."</option>\n";
-}
-?>
-    </select>
-
-    <br>
-
-  </div>
-  </td><td style="border: none;">
-  <div>
-  <input type="image" name="bdelmachine" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
-  <input type="image" name="baddmachine" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
-  </div>
-  </td><td style="border: none;">
-
-  <div class="list" style="padding-left: 10px;">
-      <h3><?= _T("Group members", "dyngroup"); ?></h3>
-    <select multiple size="15" class="list" name="members[]">
-<?php
-foreach ($members as $idx => $member) {
-    if ($member == "") {
-        unset($members[$idx]);
-        continue;
-    }
-
-    echo "<option value=\"".$idx."\">".$member."</option>\n";
-}
-?>
-    </select>
-
-    <br>
-
-  </div>
-  <div class="clearer"></div>
-  </td></tr>
-</table>
-</div>
-
-<input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
-<input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
-<input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
-<input type="hidden" name="id" value="<?php echo $group->id; ?>" />
-<!-- input type="hidden" name="name" value="< ?php echo $group->getName(); ?>" /-->
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?= _("Confirm"); ?>" />
-<input type="submit" name="breset" class="btnSecondary" value="<?= _("Cancel"); ?>" />
-</form>
-
-<style type="text/css">
-<!--
-
-#grouplist
-{
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        padding: 10px 5px 5px 10px;
-        margin: 0 5px 20px 0;
-        width: 632px;
-}
-
-#grouplist div.list
-{
-        float: left;
-}
-
-select.list
-{
-        width: 250px;
-}
-
--->
-</style>
-
 
