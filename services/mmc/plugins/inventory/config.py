@@ -43,6 +43,7 @@ class InventoryExpertModeConfig(PluginConfig):
                 self.expert_mode[i] = []
 
 class InventoryConfig(PluginConfig):
+    displayLocalisationBar = False
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -51,7 +52,7 @@ class InventoryConfig(PluginConfig):
         self.dbname = self.get("inventory", "dbname")
         self.dbuser = self.get("inventory", "dbuser")
         self.dbpasswd = self.getpassword("inventory", "dbpasswd")
-        self.disable = (str(self.get("main", "disable")) == '1')
+        self.disable = self.getboolean("main", "disable")
         try:
             self.dbpoolrecycle = self.getint("main", "dbpoolrecycle")
         except NoOptionError:
@@ -68,6 +69,9 @@ class InventoryConfig(PluginConfig):
         except NoOptionError:
             self.display = [['cn', 'Computer Name'], ['displayName', 'Description']]
 
+        if self.has_option('main', 'displayLocalisationBar'):
+            self.displayLocalisationBar = self.getboolean('main', 'displayLocalisationBar')
+            
         try:
             self.content = {}
             
