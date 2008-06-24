@@ -1,7 +1,7 @@
 import os
 import re
 import logging
-from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getMachinesBy, activate
+from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy, activate
 from mmc.plugins.inventory.tables_def import possibleQueries
 
 activate() # erk...
@@ -9,7 +9,7 @@ activate() # erk...
 def queryPossibilities():
     ret = {}
     p1 = re.compile('/')
-    for type in ['list', 'double']:
+    for type in ['list', 'double', 'halfstatic']:
         for possible in possibleQueries()[type]:
             ret[possible] = [type, funcGet(possible, type)]
     return ret
@@ -34,4 +34,14 @@ def funcGet(couple, type = 'list'):
                 return getValuesFuzzy(table, col, value)
             return getValues(table, col)
         return getListValue
-   
+    elif type == 'halfstatic':
+        table, col = re.compile('/').split(couple)
+        logging.getLogger().info('funcGet halfstatic:')
+        dummy, f, v = possibleQueries()['halfstatic'][couple]
+        logging.getLogger().info("%s - %s" % (f,v))
+        def getListValue(value = '', table = table, col = col, f = f, v = v):
+            if value != '':
+                return getValueFuzzyWhere(table, f, v, col, value)
+            return getValuesWhere(table, f, v, col)
+        return getListValue
+  

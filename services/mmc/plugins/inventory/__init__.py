@@ -34,6 +34,7 @@ from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryCon
 from mmc.plugins.inventory.database import Inventory
 from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
+from mmc.plugins.inventory.locations import InventoryLocation
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -42,6 +43,7 @@ REVISION = int("$Rev$".split(':')[1].strip(' $'))
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION
+
 
 def activate():
     logger = logging.getLogger()
@@ -53,13 +55,15 @@ def activate():
                                 
     # When this module is used by the MMC agent, the global inventory variable is shared.
     # This means an Inventory instance is not created each time a XML-RPC call is done.
-    Inventory().activate()
+    InventoryLocation().init(config) # does Inventory().activate()
     if not Inventory().db_check():
         return False
         
     logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)
 
     ComputerManager().register("inventory", InventoryComputers)
+    if config.displayLocalisationBar:
+        ComputerLocationManager().register('inventory', InventoryLocation)
         
     return True
             
@@ -138,6 +142,9 @@ class RpcProxy(RpcProxyI):
     def getValuesWhere(self, table, field1, value1, field2):
         return Inventory().getValuesWhere(table, field1, value1, field2)
 
+    def getValueFuzzyWhere(self, table, field1, value1, field2, fuzzy_value):
+        return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
+
     def getValuesFuzzy(self, table, field, fuzzy_value):
         return Inventory().getValuesFuzzy(table, field, fuzzy_value)
     
@@ -149,6 +156,9 @@ def getValuesWhere(table, field1, value1, field2):
 
 def getValuesFuzzy(table, field, fuzzy_value):
     return Inventory().getValuesFuzzy(table, field, fuzzy_value)
+
+def getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value):
+    return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
     
 def getMachinesBy(table, field, value):
     # TODO : ctx is missing....

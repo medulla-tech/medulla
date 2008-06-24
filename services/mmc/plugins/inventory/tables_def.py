@@ -14,6 +14,9 @@ def possibleQueries(): # TODO : need to put this in the conf file
         },
         'doubledetail' : {
             'Software/ProductVersion' : 'int'
+        },
+        'halfstatic' : {
+            'Registry/Value' : ['string', 'Path', 'DisplayName']
         }
         
     }
