@@ -93,14 +93,21 @@ def getInventoryParts():
     @return: Return all available inventory parts
     @rtype: list
     """
-    return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry" ]
+    return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
 
 
-def getInventoryNoms():
+def getInventoryNoms(table = None):
     """
     @return: Return all available nomenclatures tables
     @rtype: dict
     """
-    return {
+    noms = {
         'Registry':['Path']
     }
+
+    if table == None:
+        return noms
+    if noms.has_key(table):
+        return noms[table]
+    return None
+    
