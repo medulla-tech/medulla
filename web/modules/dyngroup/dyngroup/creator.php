@@ -125,6 +125,13 @@ if (quickGet('add_param')) {
             $auto = new DoubleAutocomplete($module, $criterion);
             $auto->display();
             break;
+        case 'halfstatic':
+            $module = clean(quickGet('req'));
+            $criterion = clean(quickGet('add_param'));
+            include("modules/dyngroup/includes/autocomplete.php");
+            $auto = new Autocomplete($module, $criterion);
+            $auto->display();
+            break;
         case 'bool':
             print "<select name='value'>";
             print "<option name='True' value='True'>"._T("Yes", "dyngroup")."</option>";
