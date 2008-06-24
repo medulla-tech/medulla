@@ -63,7 +63,23 @@ for m in ['first', 'count', 'all']:
     except AttributeError:
         setattr(Query, '_old_'+m, getattr(Query, m))
         setattr(Query, m, create_method(m))
- 
+
+def toH(w):
+    ret = {}
+    for i in filter(lambda f: not f.startswith('__'), dir(w)):
+        ret[i] = getattr(w, i)
+    return ret
+
+class DbObject(object):
+    def toH(self):
+        ret = {}
+        for i in filter(lambda f: not f.startswith('_'), dir(self)):
+            t = type(getattr(self, i))
+            if t == str or t == dict or t == unicode or t == tuple or t == int or t == long:
+                ret[i] = getattr(self, i)
+        ret['uuid'] = toUUID(getattr(self, 'id'))
+        return ret
+        
 class Inventory(DyngroupDatabaseHelper):
     """
     Class to query the LRS/Pulse2 inventory database, populated by OCS inventory.
@@ -149,7 +165,7 @@ class Inventory(DyngroupDatabaseHelper):
             self.table[item] = Table(item, self.metadata, autoload = True)
             # Create the class that will be mapped
             # This will create the Bios, BootDisk, etc. classes
-            exec "class %s(object): pass" % item
+            exec "class %s(DbObject): pass" % item
             self.klass[item] = eval(item)
             # Map the python class to the SQL table
             mapper(self.klass[item], self.table[item])
@@ -231,6 +247,11 @@ class Inventory(DyngroupDatabaseHelper):
         query = session.query(Machine)
         try:
             query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+        except KeyError, e:
+            pass
+
+        try:
+            query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
         except KeyError, e:
             pass
 
@@ -465,34 +486,79 @@ class Inventory(DyngroupDatabaseHelper):
                 ret.append(res[1])
         return unique(ret)
                 
-    def getValuesWhere(self, table, field1, value1, field2):
+    def getValueFuzzyWhere(self, table, field1, value1, field2, fuzzy_value):
         """
-        return every possible values for a field (field2) in a table, where field1 = value1
+        return every possible values for a field (field2) in a table, where field1 = value1 and field2 like fuzzy_value
         """
         ret = []
-        session = create_session()
         partKlass = self.klass[table]
-        partTable = self.table[table]
-
-        import re
-        p1 = re.compile('\*')
-        if p1.search(value1):
-            value1 = p1.sub('%', value1)
-            result = session.query(partKlass).add_column(getattr(partKlass.c, field2)).filter( getattr(partKlass.c, field1).like(value1))
-        else:
-            result = session.query(partKlass).add_column(getattr(partKlass.c, field2)).filter( getattr(partKlass.c, field1) == value1)
+        session = create_session()
+        result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
+        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%'))
         session.close()
 
         if result:
             for res in result:
                 ret.append(res[1])
         return unique(ret)
+
+        
+    def getValuesWhere(self, table, field1, value1, field2):
+        """
+        return every possible values for a field (field2) in a table, where field1 = value1
+        """
+        ret = []
+        session = create_session()
+        result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
+        session.close()
+
+        if result:
+            for res in result:
+                ret.append(res[1])
+        return unique(ret)
+
+    def __getValuesWhereQuery(self, table, field1, value1, field2, session = create_session()):
+        partKlass = self.klass[table]
+        partTable = self.table[table]
+        query = session.query(partKlass).add_column(getattr(partKlass.c, field2))
+        filterDone = False
+        
+        if getInventoryNoms(table) != None:
+            for nom in getInventoryNoms(table):
+                hasTable = self.table['has%s'%(table)]
+                nomTableName = 'nom%s%s' % (table, nom)
+                nomKlass = self.klass[nomTableName]
+                if hasattr(nomKlass.c, field1):
+                    nomTable = self.table[nomTableName]
+                    query = query.select_from(partTable.join(hasTable).join(nomTable))
+                    query = query.filter(self.__filterOn(nomKlass, field1, value1))
+                    filterDone = True
+
+        if not filterDone:
+            query = query.filter(self.__filterOn(partKlass, field1, value1))
+        return query
+
+    def __filterOn(self, partKlass, field, value):
+        import re
+        p1 = re.compile('\*')
+        self.logger.debug("%s %s"%(field, value))
+        if p1.search(value):
+            value = p1.sub('%', value)
+            return getattr(partKlass.c, field).like(value)
+        else:
+            return getattr(partKlass.c, field) == value
     
     def getMachineNetwork(self, ctx, params):
         return self.getLastMachineInventoryPart(ctx, 'Network', params)
 
     def getMachineCustom(self, ctx, params):
         return self.getLastMachineInventoryPart(ctx, 'Custom', params)
+
+    def doesUserHaveAccessToMachine(self, userid, machine_uuid): # TODO implement ...
+        return True
+
+    def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True): # TODO implement ...
+        return True
         
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
@@ -666,7 +732,7 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
-    def addMachine(self, name, ip, mac, comment = None):
+    def addMachine(self, name, ip, mac, comment = None, location = None): # TODO add the location association
         session = create_session()
         m = Machine()
         m.Name = name
@@ -731,6 +797,12 @@ class Inventory(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return True
+        
+    def getUserLocations(self, userid):
+        session = create_session()
+        m = session.query(self.klass['Entity']).all()
+        session.close()
+        return m
 
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
@@ -782,6 +854,17 @@ class Machine(object):
                     if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
                         ret[1]['macAddress'].append(n['MACAddress'])
         return ret
+
+    def toCustom(self, get):
+        ma = {}
+        for field in get:
+            if hasattr(self, field):
+                ma[field] = getattr(self, field)
+            if field == 'uuid' or field == 'objectUUID':
+                ma[field] = toUUID(self.id)
+            if field == 'cn':
+                ma[field] = self.Name
+        return ma
 
 class InventoryTable(object):
     pass
