@@ -45,6 +45,7 @@ function prepare_string($pass) {
 }
 
 /**
+ * FIXME: to remove
  * function wich decode UTF-8 Entity with ref
  * &#03; for example
  * need because XMLRPC server doest not like this sort
@@ -85,14 +86,9 @@ function xmlCall($method, $params = null) {
         $conf["global"]["password"] = "s3cr3t";
     }
     
-    $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
+    $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-    if ($params == null) {
-        $request = xmlrpc_encode_request($method, null, $output_options);
-    } else {
-        $request = xmlrpc_encode_request($method, $params, $output_options);
-        $request = decode_entities($request, ENT_QUOTES, "UTF-8");
-    }
+    $request = xmlrpc_encode_request($method, $params, $output_options);
 
     /* We build the HTTP POST that will be sent */
     $host= $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
