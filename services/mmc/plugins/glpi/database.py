@@ -310,6 +310,10 @@ class Glpi(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.name.like(filt['name']+'%'))
             except KeyError:
                 pass
+            try:
+                query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
+            except KeyError:
+                pass
 
             try:
                 query = self.filterOnUUID(query, filt['uuid'])
@@ -469,13 +473,10 @@ class Glpi(DyngroupDatabaseHelper):
             query = query.limit(max)
 
         # TODO : need to find a way to remove group_by/order_by ...
-        for machine in query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)):
-            machine = self.__formatMachine(machine, advanced)
-            try:
-                self.logger.error("%s already exists" % (ret[machine[1]['fullname']][1]['fullname']))
-            except:
-                pass
-            ret[machine[1]['fullname']] = machine
+        if filt.has_key('get'):
+            ret = map(lambda m: self.__formatMachine(m, advanced, filt['get']), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+        else:
+            ret = map(lambda m: self.__formatMachine(m, advanced), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
         session.close()
         return ret
 
@@ -520,14 +521,28 @@ class Glpi(DyngroupDatabaseHelper):
             return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
 
     ##################### Machine output format (for ldap compatibility)
-    def __formatMachine(self, machine, advanced):
+    def __formatMachine(self, machine, advanced, get = None):
         """
         Give an LDAP like version of the machine
         """
-        domain = self.getMachineDomain(machine.ID)
+
         uuid = self.getMachineUUID(machine)
+        domain = self.getMachineDomain(machine.ID)
+
         if domain != '':
             domain = '.'+domain
+            
+        if get != None:
+            ma = {}
+            for field in get:
+                if hasattr(machine, field):
+                    ma[field] = getattr(machine, field)
+                if field == 'uuid' or field == 'objectUUID':
+                    ma[field] = uuid
+                if field == 'cn':
+                    ma[field] = machine.name
+            return ma
+         
         ret = {
             'cn': [machine.name],
             'displayName': [machine.comments],
