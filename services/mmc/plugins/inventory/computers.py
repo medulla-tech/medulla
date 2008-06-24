@@ -69,12 +69,18 @@ class InventoryComputers(ComputerI):
             filt = {}
         filt['min'] = min
         filt['max'] = max
-        return map(lambda m: m.toDN(ctx), self.inventory.getMachinesOnly(ctx, filt))
+        if filt.has_key('get'):
+            return map(lambda m:m.toCustom(filt['get']), self.inventory.getMachinesOnly(ctx, filt))
+        else:
+            return map(lambda m: m.toDN(ctx), self.inventory.getMachinesOnly(ctx, filt))
 
     def getComputerCount(self, ctx, filt = None):
         return self.getRestrictedComputersListLen(ctx, filt)
 
     def canAddComputer(self):
+        return True
+
+    def canAssociateComputer2Location(self):
         return True
         
     def addComputer(self, ctx, params):
@@ -82,7 +88,13 @@ class InventoryComputers(ComputerI):
         comment = params["computerdescription"].encode("utf-8")
         ip = params['computerip']
         mac = params['computermac']
-        return self.inventory.addMachine(name, ip, mac, comment)
+        location = None
+        if params.has_key('location_uuid'):
+            location = params['location_uuid']
+        ret = self.inventory.addMachine(name, ip, mac, comment, location)
+            
+
+        return ret
     
     def neededParamsAddComputer(self):
         return [
