@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: members.php 273 2007-11-23 15:25:32Z cedric $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
