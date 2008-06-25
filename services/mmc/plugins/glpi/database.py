@@ -439,9 +439,9 @@ class Glpi(DyngroupDatabaseHelper):
                     pass
             ret = self.getRestrictedComputersList(ctx, 0, 10, filt)
             if len(ret) > 0:
-                raise Exception("NOPERM##%s" % (ret[ret.keys()[0]][1]['fullname']))
+                raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
-        return ret[ret.keys()[0]]
+        return ret[0]
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
         """
