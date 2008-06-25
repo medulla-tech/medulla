@@ -48,7 +48,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     certfile = '/etc/mmc/pulse2/inventory_server/keys/cacert.pem'
     privkey = '/etc/mmc/pulse2/inventory_server/keys/privkey.pem'
 
-    pidfile = '/var/run/pulse2-inventoryserver.pid'
+    pidfile = '/var/run/pulse2-inventory-server.pid'
     umask = 0007
     daemon_user = 0
     daemon_group = 0

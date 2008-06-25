@@ -29,12 +29,12 @@
 
 # Variables
 DESC="Pulse2 inventoryserver"
-DAEMON="/usr/sbin/pulse2-inventoryserver"
+DAEMON="/usr/sbin/pulse2-inventory-server"
 
 # Function to start daemon
 start () {
 	echo -n "Starting ${DESC} : "
-    if [ -f /var/run/pulse2-inventoryserver.pid ]; then
+    if [ -f /var/run/pulse2-inventory-server.pid ]; then
         echo "already running"
         return 0
     fi
@@ -53,12 +53,12 @@ start () {
 # Function to stop daemon
 stop () {
 	echo -n $"Stopping ${DESC} : "
-    if [ ! -f /var/run/pulse2-inventoryserver.pid ]; then
+    if [ ! -f /var/run/pulse2-inventory-server.pid ]; then
         echo "no pid"
         return 0
     fi
-    kill -9 `cat /var/run/pulse2-inventoryserver.pid`
-    rm -f /var/run/pulse2-inventoryserver.pid
+    kill -9 `cat /var/run/pulse2-inventory-server.pid`
+    rm -f /var/run/pulse2-inventory-server.pid
     # If return code is 0, everything went fine
 	RETVAL=$?
     if [ ${RETVAL} -eq 0 ]
