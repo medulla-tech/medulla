@@ -33,6 +33,12 @@ class ComputerI:
         Does this module handle addition of computers 
         """
         pass
+
+    def canAssociateComputer2Location(self):
+        """
+        Does this module handle association between computers and locations
+        """
+        pass
         
     def addComputer(self, ctx, params):
         """
@@ -129,6 +135,13 @@ class ComputerManager(Singleton):
     def canDelComputer(self):
         klass = self.components[self.main]
         return klass().canDelComputer()
+
+    def canAssociateComputer2Location(self):
+        klass = self.components[self.main]
+        instance = klass()
+        if hasattr(instance, 'canAssociateComputer2Location'):
+            return instance.canAssociateComputer2Location()
+        return False
         
     def addComputer(self, ctx, params):
         for plugin in self.components:

@@ -2140,6 +2140,9 @@ class RpcProxy(RpcProxyI):
 
     def canAddComputer(self):
         return ComputerManager().canAddComputer()
+
+    def canAssociateComputer2Location(self):
+        return ComputerManager().canAssociateComputer2Location()
         
     def addComputer(self, params):
         ctx = self.currentContext
