@@ -137,7 +137,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                         'port': self.cp.get(section, 'port'),
                         'bind': self.cp.get(section, 'bind'),
                         'enablessl': self.cp.getboolean(section, 'enablessl'),
-                        'slots': self.cp.get(section, 'slots'),
+                        'slots': self.cp.getint(section, 'slots'),
                         'username': self.cp.get(section, 'username'),
                         'password': self.cp.getpassword(section, 'password')
                     }
