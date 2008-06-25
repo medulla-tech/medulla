@@ -202,7 +202,7 @@ def runUploadPhase(myCommandOnHostID):
     else: # remote pull
         mirrors = myT.mirrors.split('||')
         mirror = mirrors[0] # TODO: handle when several mirrors are available
-        if re.compile('^http://').match(mirror): # HTTP download
+        if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
             m1 = mmc.plugins.msc.mirror_api.Mirror(mirror)
             files = myC.files.split("\n")
             files_list = []
@@ -396,7 +396,7 @@ def runDeletePhase(myCommandOnHostID):
     else: # delete from remote pull
         mirrors = myT.mirrors.split('||')
         mirror = mirrors[0] # TODO: handle when several mirrors are available
-        if re.compile('^http://').match(mirror): # HTTP download
+        if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
             launcher = chooseLauncher()
 
