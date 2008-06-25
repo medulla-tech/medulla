@@ -21,7 +21,7 @@
 
 from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryConfig
 from mmc.plugins.inventory.utilities import unique, getInventoryParts, getInventoryNoms
-from mmc.plugins.inventory.tables_def import possibleQueries
+from mmc.plugins.inventory.tables_def import PossibleQueries
 from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
@@ -311,18 +311,26 @@ class Inventory(DyngroupDatabaseHelper):
         table, field = query[2].split('/')
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
-        return [haspartTable, partTable]
+        if getInventoryNoms(table) == None:
+            return [haspartTable, partTable]
+
+        ret = [haspartTable, partTable]
+        for nom in getInventoryNoms(table):
+            nomTableName = 'nom%s%s' % (table, nom)
+            nomTable = self.table[nomTableName]
+            ret.append(nomTable)
+        return ret
     
     def mapping(self, query, invert = False):
         table, field = query[2].split('/')
-        if possibleQueries()['double'].has_key(query[2]): # double search
-            value = possibleQueries()['double'][query[2]]
+        if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
+            value = PossibleQueries().possibleQueries('double')[query[2]]
             partKlass = self.klass[table]
             return and_(
                 self.mapping([None, None, value[0][0], query[3][0].replace('(', '')]),
                 self.mapping([None, None, value[1][0], query[3][1].replace(')', '')])
             )
-        elif possibleQueries()['list'].has_key(query[2]) and possibleQueries()['list'][query[2]][0] == 'int': # Numeric search : ie < > = are possible operators
+        elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             partKlass = self.klass[table]
             value = query[3]
             if value.startswith('>') and not invert or value.startswith('<') and invert:
@@ -338,17 +346,39 @@ class Inventory(DyngroupDatabaseHelper):
                     value = re.compile('\*').sub('%', value)
                     return getattr(partKlass.c, field).like(value)
                 return getattr(partKlass.c, field) == value
-        elif possibleQueries()['list'].has_key(query[2]): # text search, only = 
+        elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             partKlass = self.klass[table]
             value = query[3]
-            if invert:
-                return getattr(partKlass.c, field) != value
+
+            hs = PossibleQueries().possibleQueries('halfstatic')[query[2]]
+            condition = 1
+            if getInventoryNoms(table) == None:
+                condition = (getattr(partKlass.c, hs[1]) == hs[2])
+            else:
+                noms = getInventoryNoms(table)
+                try:
+                    noms.index(hs[1])
+                    nomTableName = 'nom%s%s' % (table, hs[1])
+                    nomKlass = self.klass[nomTableName]
+                    if hasattr(nomKlass.c, hs[1]):
+                        condition = (getattr(nomKlass.c, hs[1]) == hs[2])
+                except ValueError, e:
+                    condition = (getattr(partKlass.c, hs[1]) == hs[2])
+
+            if value.startswith('>') and not invert or value.startswith('<') and invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass.c, field) > value, condition)
+            elif value.startswith('>') and invert or value.startswith('<') and not invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass.c, field) < value, condition)
+            elif invert:
+                return and_(getattr(partKlass.c, field) != value, condition)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return getattr(partKlass.c, field).like(value)
-                return getattr(partKlass.c, field) == value
-
+                    return and_(getattr(partKlass.c, field).like(value), condition)
+                return and_(getattr(partKlass.c, field) == value, condition)
+          
     def getMachines(self, ctx, pattern = None):
         """
         Return all available machines with their Bios and Hardware inventory informations

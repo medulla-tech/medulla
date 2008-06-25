@@ -44,6 +44,24 @@ class InventoryExpertModeConfig(PluginConfig):
 
 class InventoryConfig(PluginConfig):
     displayLocalisationBar = False
+    list = {
+            'Software/ProductName':['string'],
+            'Hardware/ProcessorType':['string'],
+            'Hardware/OperatingSystem':['string'],
+            'Drive/TotalSpace':['int']
+    }
+    double = {
+            'Software/Products': [
+                ['Software/ProductName', 'string'],
+                ['Software/ProductVersion', 'int']
+            ]
+    }
+    doubledetail = {
+            'Software/ProductVersion' : 'int'
+    }
+    halfstatic = {
+            'Registry/Value' : ['string', 'Path', 'DisplayName']
+    }
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -82,6 +100,27 @@ class InventoryConfig(PluginConfig):
                 self.content[c[0]].append( map(lambda x: desArrayIfUnic(x.split('==')), c[1:]))
         except NoOptionError:
             self.content = {}
+
+        if self.has_option('querymanager', 'list'):
+            # Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace
+            self.list = {}
+            for l in self.get('querymanager', 'list').split('||'):
+                self.list[l] = ['string'] # TODO also int...
+
+        if self.has_option('querymanager', 'double'):
+            # Software/Products::Software/ProductName##Software/ProductVersion
+            self.double = {}
+            for l in self.get('querymanager', 'double').split('||'):
+                name, vals = l.split('::')
+                val1, val2 = vals.split('##')
+                self.double[name] = [[val1, 'string'], [val2, 'string']]
+                
+        if self.has_option('querymanager', 'halfstatic'):
+            # Registry/Value::Path##DisplayName
+            for l in self.get('querymanager', 'halfstatic').split('||'):
+                name, vals = l.split('::')
+                k, v = vals.split('##')
+                self.halfstatic[name] = ['string', k, v]
 
 
 def desArrayIfUnic(x):

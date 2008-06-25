@@ -35,6 +35,7 @@ from mmc.plugins.inventory.database import Inventory
 from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
 from mmc.plugins.inventory.locations import InventoryLocation
+from mmc.plugins.inventory.tables_def import PossibleQueries
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"
@@ -65,6 +66,7 @@ def activate():
     if config.displayLocalisationBar:
         ComputerLocationManager().register('inventory', InventoryLocation)
         
+    PossibleQueries().init(config)
     return True
             
 
