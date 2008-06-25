@@ -527,10 +527,6 @@ class Glpi(DyngroupDatabaseHelper):
         """
 
         uuid = self.getMachineUUID(machine)
-        domain = self.getMachineDomain(machine.ID)
-
-        if domain != '':
-            domain = '.'+domain
             
         if get != None:
             ma = {}
@@ -546,12 +542,15 @@ class Glpi(DyngroupDatabaseHelper):
         ret = {
             'cn': [machine.name],
             'displayName': [machine.comments],
-            'objectUUID': [uuid],
-            'fullname': machine.name + domain,
+            'objectUUID': [uuid]
         }
         if advanced:
             ret['macAddress'] = self.getMachineMac(uuid)
             ret['ipHostNumber'] = self.getMachineIp(uuid)
+            domain = self.getMachineDomain(machine.ID)
+            if domain != '':
+                domain = '.'+domain
+            ret['fullname'] = machine.name + domain
         return [None, ret]
 
     ##################### entities, profiles and user rigths management
