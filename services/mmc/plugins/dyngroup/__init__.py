@@ -246,7 +246,7 @@ def replyToQuery(ctx, query, bool = None, min = 0, max = 10):
         module = ComputerManager().main
         filt = __addCtxFilters(ctx)
         filt['query'] = query
-        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt))
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, False))
     else:
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 
