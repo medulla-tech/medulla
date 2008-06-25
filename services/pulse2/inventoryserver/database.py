@@ -128,11 +128,15 @@ class InventoryWrapper(Inventory):
                     except Exception, e:
                         logging.getLogger().error(e)
                         pass
+        except KeyError, e:
+            transaction.rollback()
+            session.close()
+            logging.getLogger().error(e.args)
+            raise e
         except Exception, e:
             transaction.rollback()
             session.close()
             logging.getLogger().error(e)
-            logging.getLogger().error(e.orig)
             raise e
 
         session.flush()

@@ -34,6 +34,8 @@ class OcsMapping(Singleton):
         for table in self.doc.documentElement.getElementsByTagName("MappedObject"):
             xmlname = table.getAttribute('name')
             xmlclass = table.getAttribute('class')
+            if xmlclass == 'Null':
+                continue
             self.tables[xmlname] = [xmlclass, {}]
             for field in table.getElementsByTagName('MappedField'):
                 xmlfrom = field.getAttribute('from')

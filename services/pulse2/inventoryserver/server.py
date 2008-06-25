@@ -48,6 +48,7 @@ class InventoryServer:
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
         cont = [content, self.headers['Content-Type']]
+        resp = ''
         if self.headers['Content-Type'] == 'application/x-compress':
             content = decompressobj().decompress(content)
 
