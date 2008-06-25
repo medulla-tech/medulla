@@ -61,6 +61,45 @@ def getPubKey(key_name):
     ssh_key.close()
     return ret
 
+def getHealth(config):
+    """
+    Compute a health indicator as a dict with this keys:
+     - usedmem : the used memory in kBytes
+     - freemem : the free memory in kBytes
+     - avgload : the average load (1 minute)
+     
+    @rtype: dict
+    @returns: a dict containing the indicators
+    """
+    def getLoadAvg():
+        f = open("/proc/loadavg")
+        data = f.read()
+        f.close()
+        loadavg = float(data.split()[0])
+        return loadavg
+
+    def getMem():
+        total = 0
+        free = 0
+        meminfo = open("/proc/meminfo")
+        for line in meminfo:
+            if line.startswith("MemTotal:"):
+                total = int(line.split()[1])
+            elif line.startswith("MemFree:"):
+                free = int(line.split()[1])
+        meminfo.close()
+        return total, free
+
+    from pulse2.launcher.process_control import ProcessList
+    total, free = getMem()
+    return {
+        "loadavg" : getLoadAvg(),
+        "memfree" : free,
+        "memused" : total - free,
+        "slottotal" : config["slots"],
+        "slotused" : ProcessList().getProcessesCount()
+        }
+
 def set_default_client_options(client):
     """
         client i a simple dict, which should contain required connexion infos, for now:

@@ -244,6 +244,9 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
 
+    def xmlrpc_get_health(self):
+        return pulse2.launcher.utils.getHealth(self.config)
+
 def main():
     parser = optparse.OptionParser()
     parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/launchers/launchers.ini')
