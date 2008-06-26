@@ -274,7 +274,7 @@ class Inventory(DyngroupDatabaseHelper):
             pass
 
         # doing dyngroups stuff
-        join_query, query_filter = self.filter(self.machine, pattern)
+        join_query, query_filter = self.filter(self.machine, pattern, session.query(Machine), self.machine.c.id)
         query = query.select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
         # end of dyngroups
         return query
