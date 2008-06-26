@@ -23,7 +23,6 @@
 
 from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryConfig
 from mmc.plugins.inventory.utilities import unique, getInventoryParts, getInventoryNoms
-from mmc.plugins.inventory.tables_def import possibleQueries
 from mmc.plugins.inventory.database import *
 from pulse2.inventoryserver.mapping import OcsMapping
 
