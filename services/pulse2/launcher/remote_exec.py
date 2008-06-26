@@ -56,6 +56,7 @@ def remote_push(command_id, client, files_list, mode):
         real_files_list = files_list
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/rsync'
         ]
         command_list += client['proto_args']
@@ -97,6 +98,7 @@ def remote_pull(command_id, client, files_list, mode):
         real_command = 'wget %s -N %s -P %s' % (' '.join(client['proto_args']), ' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/ssh'
         ]
         command_list += client['transp_args']
@@ -134,6 +136,7 @@ def remote_delete(command_id, client, files_list, mode):
         real_command = 'rm -fr %s; rmdir %s' % (' '.join(real_files_list), target_path)
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/ssh'
         ]
         command_list += client['transp_args']
@@ -171,6 +174,7 @@ def remote_exec(command_id, client, command, mode):
         real_command = 'cd %s; chmod +x %s; %s' % (target_path, command, command)
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/ssh'
         ]
         command_list += client['transp_args']
@@ -206,6 +210,7 @@ def remote_quickaction(command_id, client, command, mode):
         real_command = command
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/ssh'
         ]
         command_list += client['transp_args']
@@ -265,6 +270,7 @@ def remote_inventory(command_id, client, mode):
         real_command = inventory_command
         command_list = [ \
             wrapper_path,
+            LauncherConfig().limit_output,
             '/usr/bin/ssh'
         ]
         command_list += client['transp_args']

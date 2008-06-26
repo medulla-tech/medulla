@@ -31,7 +31,7 @@ ls: /nothing: No such file or directory
 /mnt:
 nfs
 ***************************************
-and "pulse2_output_wrapper ls /mnt /nothing" will give you:
+and "pulse2_output_wrapper 0 ls /mnt /nothing" will give you:
 ***************************************
 1199893195.42 C: ls·/mnt·/nothing
 1199893195.46 E: ls: /nothing: No such file or directory
@@ -84,20 +84,35 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
     """
 
-    def __init__(self):
+    def __init__(self, limit = 0):
         self.exitcode = 0
+        self.limit = int(limit)
+        self.size = 0
+        self.end = False
 
     def outReceived(self, data):
         """ Format stdout
         """
+        if self.end:
+            return True
         for line in data.split('\n'):
+            if (self.size + len(line) > self.limit) and (self.limit):
+                self.end = True
+                line = line[0:self.limit-self.size]
+            self.size += len(line)
             print format(line, 'O')
         return True
 
     def errReceived(self, data):
         """ Format stderr
         """
+        if self.end:
+            return True
         for line in data.split('\n'):
+            if (self.size + len(line) > self.limit) and (self.limit):
+                self.end = True
+                line = line[0:self.limit-self.size]
+            self.size += len(line)
             print format(line, 'E')
         return True
 
@@ -111,8 +126,10 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
 args = os.sys.argv
 # first arg is us !!!
 del args[0]
+limit = args[0]
+del args[0]
 print format('·'.join(args), 'C')
-process = shOutputWrapper()
+process = shOutputWrapper(limit)
 twisted.internet.reactor.spawnProcess(process, args[0], args)
 twisted.internet.reactor.run()
 sys.exit(process.exitcode)

@@ -50,6 +50,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     source_path = "/tftpboot/revoboot/msc"
     target_path = "/tmp"
 
+    limit_output = 0
+
     inventory_command = "echo Doing inventory"
     temp_folder_prefix = "MDVPLS"
 
@@ -106,6 +108,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         self.name = name
         for key in ['pid_path', 'launcher_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
             self.setoption('launchers', key)
+        if self.cp.has_option('launchers', 'limit_output'):
+            self.limit_output = self.cp.get('launchers', 'limit_output')
 
         if self.cp.has_section('scheduler'):
             for key in ['launcher_path', 'awake_time', 'defer_results']:
