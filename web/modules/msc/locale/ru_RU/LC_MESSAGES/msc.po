@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-17 09:34+0200\n"
+"POT-Creation-Date: 2008-06-26 12:59+0200\n"
 "PO-Revision-Date: 2008-04-08 12:40+0300\n"
 "Last-Translator: Igor Gorbounov <igorbounov@topazelectro.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
 
-#: msc/msc/ajaxLogsFilter.php:126
+#: msc/msc/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:134
 msgid "%a %d %b %Y %T"
 msgstr "%a %d %b %Y %T"
 
@@ -31,7 +31,7 @@ msgid ""
 "access it"
 msgstr "Машина %s не определена в модуле MSC, или нет прав доступа к ней"
 
-#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:128
+#: msc/msc/ajaxLogsFilter.php:136 msc/logs/ajaxLogsFilter.php:95
 #, php-format
 msgid "%s on %s"
 msgstr "%s на %s"
@@ -51,6 +51,12 @@ msgstr "Защищенное управление группой %s"
 msgid "%s's machine secure control"
 msgstr "защищенное управление машиной %s"
 
+#: msc/msc/msctabsstatus.php:48 msc/msc/msctabsstatus.php:49
+#: msc/msc/msctabsstatus.php:50
+#, php-format
+msgid "(with %s beeing unreachable)"
+msgstr ""
+
 #: msc/msc/start_tele_diff.php:132
 msgid "Advanced"
 msgstr "С опережением"
@@ -60,7 +66,7 @@ msgstr "С опережением"
 msgid "Advanced launch action \"%s\" on \"%s\""
 msgstr "Опережающий запуск действия \"%s\" на \"%s\""
 
-#: msc/logs/ajaxLogsFilter.php:91 msc/msc/ajaxLogsFilter.php:124
+#: msc/msc/ajaxLogsFilter.php:130 msc/logs/ajaxLogsFilter.php:91
 msgid "As soon as possible"
 msgstr "Как можно быстрее"
 
@@ -68,10 +74,15 @@ msgstr "Как можно быстрее"
 msgid "Bytes"
 msgstr "байт"
 
-#: msc/logs/ajaxLogsFilter.php:126 msc/msc/ajaxLogsFilter.php:107
-#: msc/msc/ajaxLogsFilter.php:151 msc/msc/package_detail.php:36
+#: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
+#: msc/msc/ajaxLogsFilter.php:166 msc/logs/ajaxLogsFilter.php:126
 msgid "Command"
 msgstr "Команда"
+
+#: msc/msc/msctabsstatus.php:55
+#, php-format
+msgid "Command '%s' state concerning <b>%s</b> computers"
+msgstr ""
 
 #: msc/includes/command_history.php:86 msc/includes/command_history.php:156
 msgid "Command expiry date"
@@ -93,6 +104,11 @@ msgstr "Параметры команды"
 msgid "Command start date"
 msgstr "Дата запуска команды"
 
+#: msc/infoPackage.inc.php:114
+#, fuzzy
+msgid "Command status"
+msgstr "Дата запуска команды"
+
 #: msc/msc/launch.php:127
 msgid "Command title"
 msgstr "Название команды"
@@ -104,6 +120,10 @@ msgstr "Режим копирования"
 #: msc/includes/command_history.php:77 msc/includes/command_history.php:146
 msgid "Creation date"
 msgstr "Дата создания"
+
+#: msc/infoPackage.inc.php:166
+msgid "Csv's export"
+msgstr ""
 
 #: msc/includes/command_history.php:84 msc/includes/command_history.php:154
 msgid "Delay between two connections"
@@ -134,9 +154,10 @@ msgstr "Идет удаление"
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Установить <b>%s v.%s</b><br/> на <b>%s</b>"
 
-#: msc/logs/ajaxLogsFilter.php:68 msc/logs/ajaxLogsFilter.php:69
-#: msc/msc/ajaxLogsFilter.php:86 msc/msc/ajaxPackageFilter.php:116
-#: msc/msc/history.php:49 msc/msc/logs.php:48 msc/msc/packages.php:22
+#: msc/msc/logs.php:48 msc/msc/ajaxPackageFilter.php:116
+#: msc/msc/packages.php:22 msc/msc/ajaxLogsFilter.php:86
+#: msc/msc/history.php:49 msc/logs/ajaxLogsFilter.php:68
+#: msc/logs/ajaxLogsFilter.php:69
 msgid "Details"
 msgstr "Сведения"
 
@@ -144,8 +165,8 @@ msgstr "Сведения"
 msgid "Done"
 msgstr "Завершено"
 
-#: msc/logs/ajaxLogsFilter.php:121 msc/msc/ajaxLogsFilter.php:154
-#: msc/msc/launch.php:136
+#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:161
+#: msc/logs/ajaxLogsFilter.php:121
 msgid "End date"
 msgstr "Дата окончания"
 
@@ -186,7 +207,7 @@ msgstr "История"
 msgid "Host"
 msgstr "Машина"
 
-#: msc/infoPackage.inc.php:155
+#: msc/infoPackage.inc.php:161
 msgid "IP Addr."
 msgstr "IP-адрес"
 
@@ -214,11 +235,11 @@ msgstr "Запустить"
 msgid "Launch Actions"
 msgstr "Запустить действие"
 
-#: msc/infoPackage.inc.php:119
+#: msc/infoPackage.inc.php:125
 msgid "Launch a command"
 msgstr "Запустить команду"
 
-#: msc/infoPackage.inc.php:125
+#: msc/infoPackage.inc.php:131
 msgid "Launch a quick action command"
 msgstr "Запустить быстрое действие"
 
@@ -226,7 +247,7 @@ msgstr "Запустить быстрое действие"
 msgid "Logs"
 msgstr "Журналы"
 
-#: msc/infoPackage.inc.php:150
+#: msc/infoPackage.inc.php:156
 msgid "MAC Addr."
 msgstr "MAC-адрес"
 
@@ -254,8 +275,8 @@ msgstr "Максимальная пропускная способность"
 msgid "Maximum number of connection attempt"
 msgstr "Максимальное число попыток соединения"
 
-#: msc/includes/command_history.php:43 msc/includes/command_history.php:98
-#: msc/includes/command_history.php:163 msc/msc/package_detail.php:39
+#: msc/msc/package_detail.php:39 msc/includes/command_history.php:43
+#: msc/includes/command_history.php:98 msc/includes/command_history.php:163
 msgid "Name"
 msgstr "Имя"
 
@@ -279,12 +300,12 @@ msgstr "Пакет"
 msgid "Package size"
 msgstr "Размер пакета"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:130
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:136
 msgid "Packages"
 msgstr "Пакеты"
 
-#: msc/includes/functions.php:40 msc/logs/ajaxLogsFilter.php:66
-#: msc/msc/ajaxLogsFilter.php:84
+#: msc/msc/ajaxLogsFilter.php:84 msc/includes/functions.php:40
+#: msc/logs/ajaxLogsFilter.php:66
 msgid "Pause"
 msgstr "Приостановить"
 
@@ -297,15 +318,15 @@ msgstr "Приостановить команду"
 msgid "Pause action %s on host %s"
 msgstr "Приостановить действие %s на машине %s"
 
-#: msc/infoPackage.inc.php:140
+#: msc/infoPackage.inc.php:146
 msgid "Ping"
 msgstr "Пинг"
 
-#: msc/infoPackage.inc.php:135
+#: msc/infoPackage.inc.php:141
 msgid "Ping and probe"
 msgstr ""
 
-#: msc/infoPackage.inc.php:145
+#: msc/infoPackage.inc.php:151
 msgid "Platform"
 msgstr "Платформа"
 
@@ -347,11 +368,11 @@ msgstr "Безопасное управление"
 msgid "Secure control on machine"
 msgstr "Безопасное управление машиной"
 
-#: msc/logs/finished.php:33 msc/logs/localSidebar.php:8
+#: msc/logs/localSidebar.php:8 msc/logs/finished.php:33
 msgid "Show all finished task's logs"
 msgstr "Показать журналы всех завершенных заданий"
 
-#: msc/logs/localSidebar.php:5 msc/infoPackage.inc.php:43
+#: msc/infoPackage.inc.php:43 msc/logs/localSidebar.php:5
 msgid "Show all logs"
 msgstr "Показать все журналы"
 
@@ -367,7 +388,7 @@ msgstr "показать журналы всех работающих задан
 msgid "Show all task's logs"
 msgstr "Показать журналы всех заданий"
 
-#: msc/logs/localSidebar.php:9 msc/infoPackage.inc.php:52
+#: msc/infoPackage.inc.php:52 msc/logs/localSidebar.php:9
 msgid "Show custom state task's logs"
 msgstr "Показать журналы заданий по настроенному состоянию"
 
@@ -379,7 +400,7 @@ msgstr "Показать журналы заданий по настроенно
 msgid "Show finished task's logs"
 msgstr "Показать журналы завершенных заданий"
 
-#: msc/infoPackage.inc.php:113
+#: msc/infoPackage.inc.php:119
 msgid "Show package's details"
 msgstr "Показать сведения о пакете"
 
@@ -391,7 +412,7 @@ msgstr "Показать журналы ожидающих заданий"
 msgid "Show running task's logs"
 msgstr "Показать журналы работающих заданий"
 
-#: msc/logs/ajaxLogsFilter.php:65 msc/msc/ajaxLogsFilter.php:83
+#: msc/msc/ajaxLogsFilter.php:83 msc/logs/ajaxLogsFilter.php:65
 msgid "Start"
 msgstr "Запустить"
 
@@ -405,8 +426,8 @@ msgstr ""
 msgid "Start action %s on host %s"
 msgstr "Начать действие %s на машине %s"
 
-#: msc/logs/ajaxLogsFilter.php:123 msc/msc/ajaxLogsFilter.php:156
-#: msc/msc/launch.php:135
+#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:163
+#: msc/logs/ajaxLogsFilter.php:123
 msgid "Start date"
 msgstr "Дата запуска"
 
@@ -426,8 +447,13 @@ msgstr "Запустить агент репозитария"
 msgid "Start the script"
 msgstr "Запустить скрипт"
 
-#: msc/includes/functions.php:41 msc/logs/ajaxLogsFilter.php:67
-#: msc/msc/ajaxLogsFilter.php:85
+#: msc/msc/ajaxLogsFilter.php:87
+#, fuzzy
+msgid "Status"
+msgstr "Запустить"
+
+#: msc/msc/ajaxLogsFilter.php:85 msc/includes/functions.php:41
+#: msc/logs/ajaxLogsFilter.php:67
 msgid "Stop"
 msgstr "Остановить"
 
@@ -474,8 +500,8 @@ msgstr "Идет загрузка"
 msgid "User command creator"
 msgstr "Создание команды"
 
-#: msc/includes/command_history.php:44 msc/includes/command_history.php:99
-#: msc/includes/command_history.php:164 msc/msc/package_detail.php:40
+#: msc/msc/package_detail.php:40 msc/includes/command_history.php:44
+#: msc/includes/command_history.php:99 msc/includes/command_history.php:164
 msgid "Value"
 msgstr "Значение"
 
@@ -500,20 +526,44 @@ msgstr "У Вас надостаточно прав для доступа к э�
 msgid "awake"
 msgstr "включить"
 
-#: msc/includes/command_history.php:33 msc/logs/ajaxLogsFilter.php:127
-#: msc/msc/ajaxLogsFilter.php:159
+#: msc/msc/msctabsstatus.php:33
+msgid "computers are running a deploiement"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:34
+msgid "computers failed to deploy"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:32
+msgid "computers were successfully deployed"
+msgstr ""
+
+#: msc/msc/ajaxLogsFilter.php:167 msc/includes/command_history.php:33
+#: msc/logs/ajaxLogsFilter.php:127
 msgid "current_state"
 msgstr "текущее состояние"
 
-#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:130
-#: msc/msc/ajaxLogsFilter.php:162
+#: msc/msc/ajaxLogsFilter.php:170 msc/includes/command_history.php:36
+#: msc/logs/ajaxLogsFilter.php:130
 msgid "deleted"
 msgstr "удалено"
 
-#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:129
-#: msc/msc/ajaxLogsFilter.php:161
+#: msc/msc/ajaxLogsFilter.php:169 msc/includes/command_history.php:35
+#: msc/logs/ajaxLogsFilter.php:129
 msgid "executed"
 msgstr "выполнено"
+
+#: msc/msc/msctabsstatus.php:49
+msgid "failed during execution"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:50
+msgid "failed during suppression"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:48
+msgid "failed during upload"
+msgstr ""
 
 #: msc/msc/start_tele_diff.php:122
 msgid "invent."
@@ -535,7 +585,7 @@ msgstr "сейчас"
 msgid "p/p"
 msgstr "p/p"
 
-#: msc/msc/launch.php:140 msc/msc/start_tele_diff.php:125
+#: msc/msc/start_tele_diff.php:125 msc/msc/launch.php:140
 msgid "push"
 msgstr "push"
 
@@ -543,14 +593,41 @@ msgstr "push"
 msgid "push / pull"
 msgstr "push / pull"
 
-#: msc/msc/ajaxLogsFilter.php:108
+#: msc/msc/msctabsstatus.php:43
+#, fuzzy
+msgid "running execution"
+msgstr "Работает на ОС"
+
+#: msc/msc/msctabsstatus.php:45
+#, fuzzy
+msgid "running suppression"
+msgstr "Работает на ОС"
+
+#: msc/msc/msctabsstatus.php:41
+#, fuzzy
+msgid "running upload"
+msgstr "Работает на ОС"
+
+#: msc/msc/ajaxLogsFilter.php:113
 msgid "start_date"
 msgstr "дата запуска"
 
-#: msc/includes/command_history.php:34 msc/logs/ajaxLogsFilter.php:128
-#: msc/msc/ajaxLogsFilter.php:160
+#: msc/msc/ajaxLogsFilter.php:168 msc/includes/command_history.php:34
+#: msc/logs/ajaxLogsFilter.php:128
 msgid "uploaded"
 msgstr "загружено"
+
+#: msc/msc/msctabsstatus.php:42
+msgid "waiting to execute"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:44
+msgid "waiting to suppress"
+msgstr ""
+
+#: msc/msc/msctabsstatus.php:40
+msgid "waiting to upload"
+msgstr ""
 
 #~ msgid "%s go"
 #~ msgstr "%s гига-октет(ов)"
@@ -590,9 +667,6 @@ msgstr "загружено"
 
 #~ msgid "Mac Addr"
 #~ msgstr "MAC-адрес"
-
-#~ msgid "Running on"
-#~ msgstr "Работает на ОС"
 
 #~ msgid "Source directory (repository)"
 #~ msgstr "Исходный каталог (репозитарий)"
