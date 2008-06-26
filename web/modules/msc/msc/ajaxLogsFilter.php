@@ -184,6 +184,7 @@ if ($n != null) {
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->start = 0;
     $n->end = $maxperpage;
+    $n->disableFirstColumnActionLink();
 
     $n->display();
 }
