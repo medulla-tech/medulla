@@ -1,0 +1,102 @@
+# translation of msc.po to Français
+# Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
+# Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Pulse 2 - pkgs Web Interface 1.1.0rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-26 13:11+0200\n"
+"PO-Revision-Date: 2008-06-17 10:03+0200\n"
+"Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:53
+#: pkgs/infoPackage.inc.php:44
+msgid "Add a package"
+msgstr "Ajouter un package"
+
+#: pkgs/pkgs/edit.php:105
+msgid "Command : "
+msgstr "Commande : "
+
+#: pkgs/pkgs/edit.php:105
+msgid "Command's name : "
+msgstr "Nom de la commande : "
+
+#: pkgs/pkgs/ajaxPackageList.php:70 pkgs/infoPackage.inc.php:49
+msgid "Delete a package"
+msgstr "Supprimer un package"
+
+#: pkgs/pkgs/remove.php:37
+msgid "Delete this package"
+msgstr "Supprimer ce package"
+
+#: pkgs/pkgs/edit.php:101
+msgid "Description"
+msgstr "Description"
+
+#: pkgs/pkgs/ajaxPackageList.php:62
+msgid "Descriptions"
+msgstr "Descriptions"
+
+#: pkgs/pkgs/ajaxPackageList.php:69 pkgs/pkgs/edit.php:69
+#: pkgs/infoPackage.inc.php:46
+msgid "Edit a package"
+msgstr "Editer un package"
+
+#: pkgs/pkgs/ajaxPackageList.php:60
+msgid "Names"
+msgstr "Noms"
+
+#: pkgs/pkgs/edit.php:89
+msgid "Package API"
+msgstr "Api de package"
+
+#: pkgs/pkgs/edit.php:94
+msgid "Package Id"
+msgstr "Identifiant du package"
+
+#: pkgs/pkgs/edit.php:45
+msgid "Package failed to save"
+msgstr "La sauvegarde du package a échoué"
+
+#: pkgs/pkgs/edit.php:99
+msgid "Package label"
+msgstr "Libellé du package"
+
+#: pkgs/pkgs/edit.php:42
+#, php-format
+msgid "Package successfully added in %s"
+msgstr "Le package a été ajouté dans %s"
+
+#: pkgs/pkgs/edit.php:100
+msgid "Package version"
+msgstr "Version du package"
+
+#: pkgs/infoPackage.inc.php:32 pkgs/infoPackage.inc.php:38
+msgid "Packages"
+msgstr "Packages"
+
+#: pkgs/pkgs/index.php:29 pkgs/pkgs/localSidebar.php:5
+msgid "Packages list"
+msgstr "List des packages"
+
+#: pkgs/infoPackage.inc.php:42
+msgid "Show all packages"
+msgstr "Montrer tous les packages"
+
+#: pkgs/pkgs/remove.php:32
+msgid "The package has been deleted."
+msgstr "Le package a été détruit."
+
+#: pkgs/pkgs/ajaxPackageList.php:61
+msgid "Versions"
+msgstr "Versions"
+

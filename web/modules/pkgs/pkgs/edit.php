@@ -37,12 +37,12 @@ if (isset($_POST["bcreate"])) {
     foreach (array('command') as $post) {
         $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>$_POST[$post.'cmd']);
     }
-    $ret = putPackageDetail($p_api_id, $package);
+    $ret = putPackageDetail(base64_decode($p_api_id), $package);
     if (!isXMLRPCError() and $ret) {
-        new NotifyWidgetSuccess(_T("Package successfully added"));
+        new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
     } else {
-        new NotifyWidgetFailure(_T("Package failed to save"));
+        new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
     }
 }
 $p_api_id = base64_decode($_GET['p_api']);
@@ -50,7 +50,7 @@ $p_api_id = base64_decode($_GET['p_api']);
 
 //title differ with action
 if ($_GET["action"]=="add") {
-    $title = _("Add package");
+    $title = _T("Add a package", "pkgs");
     $activeItem = "add";
     $formElt = new DomainInputTpl("id");
     
@@ -66,7 +66,7 @@ if ($_GET["action"]=="add") {
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
 } else {
-    $title = _("Edit package");
+    $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
     # get existing package
     $pid = base64_decode($_GET['pid']);
@@ -86,12 +86,12 @@ $f = new ValidatingForm();
 $f->push(new Table());
 
 $f->add(
-        new TrFormElement(_T("Package API"), $selectpapi),
+        new TrFormElement(_T("Package API", "pkgs"), $selectpapi),
         array("value" => $p_api_id, "required" => True)
         );
 
 $f->add(
-        new TrFormElement(_T("Package Id"), $formElt),
+        new TrFormElement(_T("Package Id", "pkgs"), $formElt),
         array("value" => $package['id'], "required" => True)
         );
 
