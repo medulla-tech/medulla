@@ -336,7 +336,7 @@ class Glpi(DyngroupDatabaseHelper):
             join_query = self.machine
             query_filter = None
 
-            join_query, query_filter = self.filter(self.machine, filt)
+            join_query, query_filter = self.filter(self.machine, filt, session.query(Machine), self.machine.c.ID)
 
             # filtering on locations
             try:
@@ -407,24 +407,34 @@ class Glpi(DyngroupDatabaseHelper):
         Map a name and request parameters on a sqlalchemy request
         """
         if len(query) == 4:
-            if query[2] == 'OS':
-                if invert:
-                    return self.os.c.name != query[3]
+            r1 = re.compile('\*')
+            like = False
+            if r1.search(query[3]):
+                like = True
+                query[3] = r1.sub('%', query[3])
+                
+            if invert:
+                if like:
+                    return not_(self.__getTable(query[2]).like(query[3]))
                 else:
-                    return self.os.c.name == query[3]
-            elif query[2] == 'ENTITY':
-                if invert:
-                    return self.location.c.name != query[3]
+                    return self.__getTable(query[2]) != query[3]
+            else:
+                if like:
+                    return self.__getTable(query[2]).like(query[3])
                 else:
-                    return self.location.c.name == query[3]
-            elif query[2] == 'SOFTWARE':
-                if invert:
-                    return self.software.c.name != query[3]
-                else:
-                    return self.software.c.name == query[3]
+                    return self.__getTable(query[2]) == query[3]
         else:
             return self.__treatQueryLevel(query)
 
+    def __getTable(self, table):
+        if table == 'OS':
+            return self.os.c.name
+        elif table == 'ENTITY':
+            return self.location.c.name
+        elif table == 'SOFTWARE':
+            return self.software.c.name
+        raise Exception("dont know table for %s"%(table))
+        
     ##################### machine list management
     def getComputer(self, ctx, filt):
         """
