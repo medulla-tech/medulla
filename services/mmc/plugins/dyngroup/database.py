@@ -308,8 +308,19 @@ class DyngroupDatabase(Singleton):
         session.close()
         return ret
 
-    def groupNameExists(self, ctx, name):
-        return (self.countallgroups(ctx, {'name':name}) != 0)
+    def groupNameExists(self, ctx, name, id = None): 
+        """
+        return True if a group with this name exists and does not have the same id
+        """
+        if self.countallgroups(ctx, {'name':name}) == 0:
+            return False
+        if id == None:
+            return True
+        grps = self.getallgroups(ctx, {'name':name})
+        for grp in grps:
+            if str(grp.id) != str(id):
+                return True
+        return False
         
     def get_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
