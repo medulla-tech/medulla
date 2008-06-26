@@ -64,7 +64,7 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
-def startAllCommands():
+def startAllCommands(scheduler_name):
     # we return a list of deferred
     deffereds = [] # will hold all deferred
     session = sqlalchemy.create_session()
@@ -82,6 +82,7 @@ def startAllCommands():
     # take tasks with next launch time in the future
     # TODO: check command state integrity AND command_on_host state integrity in a separtseparate function
     for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
         filter(database.commands_on_host.c.current_state != 'pause').\
         filter(database.commands_on_host.c.current_state != 'stop').\
@@ -94,6 +95,7 @@ def startAllCommands():
         filter(database.commands_on_host.c.current_state != 'delete_failed').\
         filter(database.commands_on_host.c.current_state != 'inventory_failed').\
         filter(database.commands_on_host.c.next_launch_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
+        filter(sqlalchemy.or_(database.commands.c.scheduler == '', database.commands.c.scheduler == scheduler_name, database.commands.c.scheduler == None)).\
         all():
         # enter the maze: run command
         deffered = runCommand(q.id)

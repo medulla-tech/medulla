@@ -70,7 +70,7 @@ def run_start_all_commands():
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
     # start command, gather deffered
-    deferreds = pulse2.scheduler.scheduling.startAllCommands()
+    deferreds = pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
     # FIXME: should perhaps be called without waiting for deferreds ?
     # adds a end hook to reschedule prepare_start_all_commands
     # dl = twisted.internet.defer.DeferredList(deferreds)
@@ -115,7 +115,7 @@ def startService():
             sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
             twisted.internet.reactor.listenSSL(
                 config.port,
-                twisted.web.server.Site(Scheduler()),
+                twisted.web.server.Site(Scheduler(config.name)),
                 interface = config.host,
                 contextFactory = sslContext
                 )
@@ -123,7 +123,7 @@ def startService():
         else:
             twisted.internet.reactor.listenTCP(
                 config.port,
-                twisted.web.server.Site(Scheduler()),
+                twisted.web.server.Site(Scheduler(config.name)),
                 interface = config.host
                 )
     except Exception, e:
@@ -141,9 +141,10 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
     """
 
-    def __init__(self):
+    def __init__(self, name):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
         self.logger = logging.getLogger()
+        self.name = name
 
     def getRevision(self):
         return int("$Rev: 298 $".split(':')[1].strip(' $'))
@@ -214,7 +215,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(macs))
 
     def xmlrpc_start_all_commands(self):
-        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands()))
+        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):
