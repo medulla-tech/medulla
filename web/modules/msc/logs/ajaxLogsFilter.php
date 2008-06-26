@@ -37,6 +37,7 @@ require_once("../../../modules/msc/includes/command_history.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
+$history = $_GET['history'];
 $filter = $_GET["filter"];
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
@@ -88,7 +89,11 @@ foreach ($cmds as $coh) {
         $d = $coh["next_launch_date"];
     }
     if (empty($d)) {
-        $a_date[] = _T("As soon as possible", "msc");
+        if ($type == -1 || $type == 0 || $history) {
+            $a_date[] = _T("N/A", "msc");
+        } else {
+            $a_date[] = _T("As soon as possible", "msc");
+        }
     } else {
         $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
     }
@@ -117,7 +122,10 @@ foreach ($cmds as $coh) {
     }
 }
 # TODO: add the command end timestamp
-if ($history) {
+
+if ($type == -1 || $type == 0) {
+    $datelabel = _T("Date", "msc");
+} elseif ($history) {
     $datelabel = _T("End date", "msc");
 } else {
     $datelabel = _T("Start date", "msc");
