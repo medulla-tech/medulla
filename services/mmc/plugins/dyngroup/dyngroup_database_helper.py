@@ -37,10 +37,10 @@ class DyngroupDatabaseHelper(Singleton):
     def init(self):
         self.logger = logging.getLogger()
 
-    def filter(self, join_query, filt):
+    def filter(self, join_query, filt, query, grpby):
         query_filter = None
         try:
-            query_filter, join_tables = self.__treatQueryLevel(filt['query'])
+            query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, filt['query'])
             for table in join_tables:
                 join_query = join_query.join(table)
         except KeyError:
@@ -50,7 +50,7 @@ class DyngroupDatabaseHelper(Singleton):
        
         return (join_query, query_filter)
 
-    def __treatQueryLevel(self, queries, join_tables = [], invert = False):
+    def __treatQueryLevel(self, query, grpby, join_query, queries, join_tables = [], invert = False):
         """
         Use recursively by getAllMachines to build the query
         Used in the dyngroup context, to build AND, OR and NOT queries
@@ -58,16 +58,16 @@ class DyngroupDatabaseHelper(Singleton):
         bool = queries[0]
         level = queries[1]
         if bool == 'OR':
-            query_filter, join_tables = self.__treatQueryLevelOR(level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelOR(query, grpby, join_query, level, join_tables, invert)
         elif bool == 'AND':
-            query_filter, join_tables = self.__treatQueryLevelAND(level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelAND(query, grpby, join_query, level, join_tables, invert)
         elif bool == 'NOT':
-            query_filter, join_tables = self.__treatQueryLevelNOT(level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelNOT(query, grpby, join_query, level, join_tables, invert)
         else:
             self.logger.error("Don't know this kind of bool operation : %s" % (bool))
         return (query_filter, join_tables)
 
-    def __treatQueryLevelOR(self, queries, join_tables, invert = False):
+    def __treatQueryLevelOR(self, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build OR queries
         """
@@ -78,12 +78,12 @@ class DyngroupDatabaseHelper(Singleton):
                 join_tables = onlyAddNew(join_tables, join_tab)
                 filter_on.append(self.mapping(q, invert))
             else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
         query_filter = or_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelAND(self, queries, join_tables, invert = False):
+    def __treatQueryLevelAND(self, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build AND queries
         """
@@ -98,12 +98,12 @@ class DyngroupDatabaseHelper(Singleton):
                 else:
                     filter_on.append(filter_on_mapping)
             else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
         query_filter = and_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelNOT(self, queries, join_tables, invert = False):
+    def __treatQueryLevelNOT(self, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build NOT queries : it switches the invert flag
         """
@@ -111,10 +111,16 @@ class DyngroupDatabaseHelper(Singleton):
         for q in queries:
             if len(q) == 4:
                 join_tab = self.mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on.append(self.mapping(q, not invert))
+                filt = self.mapping(q, invert)
+                join_q = join_query
+                for table in join_tab:
+                    join_q = join_q.join(table)
+                                            
+                query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                res = map(lambda x: x[1], query)
+                filter_on.append(not_(grpby.in_(*res)))
             else:
-                query_filter, join_tables = self.__treatQueryLevel(q, join_tables, not invert)
+                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables, not invert)
                 filter_on.append(query_filter)
         query_filter = and_(*filter_on)
         return (query_filter, join_tables)
