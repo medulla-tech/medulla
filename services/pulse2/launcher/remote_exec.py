@@ -60,6 +60,10 @@ def remote_push(command_id, client, files_list, mode):
         ]
         command_list += client['proto_args']
         command_list += real_files_list
+        if len(real_files_list) == 1: 
+            # only one file so we must create the destination dir
+            if not re.compile('/$').search(target_path):
+                target_path += '/'
         command_list += [ \
             "%s@%s:%s" % (client['user'], client['host'], target_path),
         ]
