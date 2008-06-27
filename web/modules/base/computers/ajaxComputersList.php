@@ -48,7 +48,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         }
     }
 }             
-$names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter)));
+$names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter, False)));
 $count = getComputerCount($filter);
     
 list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup);
