@@ -558,7 +558,9 @@ class Glpi(DyngroupDatabaseHelper):
             ret['macAddress'] = self.getMachineMac(uuid)
             ret['ipHostNumber'] = self.getMachineIp(uuid)
             domain = self.getMachineDomain(machine.ID)
-            if domain != '':
+            if domain == None:
+                domain = ''
+            elif domain != '':
                 domain = '.'+domain
             ret['fullname'] = machine.name + domain
         return [None, ret]
