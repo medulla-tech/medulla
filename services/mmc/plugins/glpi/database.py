@@ -70,6 +70,14 @@ class GlpiConfig(PluginConfig):
         self.dbname = self.get("main", "dbname")
         self.dbuser = self.get("main", "dbuser")
         self.dbpasswd = self.getpassword("main", "dbpasswd")
+
+        if self.has_option("main", "dbsslenable"):
+            self.dbsslenable = self.getboolean("main", "dbsslenable")
+            if self.dbsslenable:
+                self.dbsslca = self.get("main", "dbsslca")
+                self.dbsslcert = self.get("main", "dbsslcert")
+                self.dbsslkey = self.get("main", "dbsslkey")
+
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")
         try:
@@ -93,6 +101,7 @@ class GlpiConfig(PluginConfig):
         PluginConfig.setDefault(self)
         self.dbpoolrecycle = 60
         self.dbport = None
+        self.dbsslenable = False
 
 class Glpi(DyngroupDatabaseHelper):
     """
@@ -155,7 +164,10 @@ class Glpi(DyngroupDatabaseHelper):
             port = ":" + str(self.config.dbport)
         else:
             port = ""
-        return "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        if self.config.dbsslenable:
+            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
+        return url
 
     def initMappers(self):
         """
