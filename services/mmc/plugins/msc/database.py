@@ -138,7 +138,10 @@ class MscDatabase(Singleton):
             port = ":" + str(self.config.db_port)
         else:
             port = ""
-        return "%s://%s:%s@%s%s/%s" % (self.config.db_driver, self.config.db_user, self.config.db_passwd, self.config.db_host, port, self.config.db_name)
+        url = "%s://%s:%s@%s%s/%s" % (self.config.db_driver, self.config.db_user, self.config.db_passwd, self.config.db_host, port, self.config.db_name)
+        if self.config.db_ssl_enable:
+            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.db_ssl_ca, self.config.db_ssl_key, self.config.db_ssl_cert)
+        return url
 
     def connected(self):
         if (self.db != None):
@@ -457,7 +460,7 @@ class MscDatabase(Singleton):
                     machines
         @type gid: str
         """
-        self.logger.debug("add_command_quick : "+cmd+" on :")
+        self.logger.debug("add_command_quick: " + cmd + " on :")
         self.logger.debug(targets)
         files = []
 
