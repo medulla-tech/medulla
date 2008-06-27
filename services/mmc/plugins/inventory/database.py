@@ -145,7 +145,10 @@ class Inventory(DyngroupDatabaseHelper):
             port = ":" + str(self.config.dbport)
         else:
             port = ""
-        return "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        if self.config.dbsslenable:
+            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
+        return url
 
     def initMappers(self):
         """

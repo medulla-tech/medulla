@@ -82,6 +82,15 @@ class InventoryConfig(PluginConfig):
             # We will use the default db driver port
             self.dbport = None
 
+        if self.has_option("inventory", "dbsslenable"):
+            self.dbsslenable = self.getboolean("inventory", "dbsslenable")
+            if self.dbsslenable:
+                self.dbsslca = self.get("inventory", "dbsslca")
+                self.dbsslcert = self.get("inventory", "dbsslcert")
+                self.dbsslkey = self.get("inventory", "dbsslkey")
+        else:
+            self.dbsslenable = False
+
         try:
             self.display = map(lambda x: x.split('::'), self.get("computers", "display").split('||'))
         except NoOptionError:
