@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 12:45+0200\n"
+"POT-Creation-Date: 2008-06-27 13:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "(with %s beeing unreachable)"
 msgstr ""
 
-#: msc/msc/start_command.php:132
+#: msc/msc/start_command.php:134
 msgid "Advanced"
 msgstr ""
 
@@ -76,7 +76,7 @@ msgid "Bytes"
 msgstr ""
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:166 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
 msgid "Command"
 msgstr ""
 
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:161
+#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
 #: msc/logs/ajaxLogsFilter.php:129
 msgid "End date"
 msgstr ""
@@ -372,6 +372,10 @@ msgstr ""
 msgid "Repository"
 msgstr ""
 
+#: msc/includes/functions.php:43
+msgid "Rescheduled"
+msgstr ""
+
 #: msc/includes/functions.php:42
 msgid "Scheduled"
 msgstr ""
@@ -441,7 +445,7 @@ msgstr ""
 msgid "Start action %s on host %s"
 msgstr ""
 
-#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:163
+#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
 #: msc/logs/ajaxLogsFilter.php:131
 msgid "Start date"
 msgstr ""
@@ -536,7 +540,7 @@ msgstr ""
 msgid "You don't have the good permissions to access this command"
 msgstr ""
 
-#: msc/msc/start_command.php:120
+#: msc/msc/start_command.php:122
 msgid "awake"
 msgstr ""
 
@@ -552,17 +556,17 @@ msgstr ""
 msgid "computers were successfully deployed"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:167 msc/includes/command_history.php:33
+#: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
 #: msc/logs/ajaxLogsFilter.php:135
 msgid "current_state"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:170 msc/includes/command_history.php:36
+#: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
 #: msc/logs/ajaxLogsFilter.php:138
 msgid "deleted"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:169 msc/includes/command_history.php:35
+#: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
 #: msc/logs/ajaxLogsFilter.php:137
 msgid "executed"
 msgstr ""
@@ -579,11 +583,11 @@ msgstr ""
 msgid "failed during upload"
 msgstr ""
 
-#: msc/msc/start_command.php:122
+#: msc/msc/start_command.php:124
 msgid "invent."
 msgstr ""
 
-#: msc/msc/start_command.php:128
+#: msc/msc/start_command.php:130
 msgid "mode"
 msgstr ""
 
@@ -595,11 +599,11 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: msc/msc/start_command.php:125
+#: msc/msc/start_command.php:127
 msgid "p/p"
 msgstr ""
 
-#: msc/msc/launch.php:140 msc/msc/start_command.php:125
+#: msc/msc/launch.php:140 msc/msc/start_command.php:127
 msgid "push"
 msgstr ""
 
@@ -623,7 +627,7 @@ msgstr ""
 msgid "start_date"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:168 msc/includes/command_history.php:34
+#: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
 #: msc/logs/ajaxLogsFilter.php:136
 msgid "uploaded"
 msgstr ""

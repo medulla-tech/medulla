@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 12:45+0200\n"
+"POT-Creation-Date: 2008-06-27 13:04+0200\n"
 "PO-Revision-Date: 2008-06-17 10:03+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -61,7 +61,7 @@ msgstr "Contrôle sécurisé de %s"
 msgid "(with %s beeing unreachable)"
 msgstr "(dont %s sont injoingnables)"
 
-#: msc/msc/start_command.php:132
+#: msc/msc/start_command.php:134
 msgid "Advanced"
 msgstr "Avancé"
 
@@ -79,7 +79,7 @@ msgid "Bytes"
 msgstr "Octets"
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:166 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
 msgid "Command"
 msgstr "Commande"
 
@@ -172,7 +172,7 @@ msgstr "Détails"
 msgid "Done"
 msgstr "Terminé"
 
-#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:161
+#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
 #: msc/logs/ajaxLogsFilter.php:129
 msgid "End date"
 msgstr "Date de fin"
@@ -375,6 +375,10 @@ msgstr "Contrôle à distance de : "
 msgid "Repository"
 msgstr "Dépôt"
 
+#: msc/includes/functions.php:43
+msgid "Rescheduled"
+msgstr "Re-programmé"
+
 #: msc/includes/functions.php:42
 msgid "Scheduled"
 msgstr "Programmé"
@@ -444,7 +448,7 @@ msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 msgid "Start action %s on host %s"
 msgstr "Démarrer l'action %s sur l'ordinateur %s"
 
-#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:163
+#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
 #: msc/logs/ajaxLogsFilter.php:131
 msgid "Start date"
 msgstr "Date de démarrage"
@@ -539,7 +543,7 @@ msgstr "Y-m-d H:i:s"
 msgid "You don't have the good permissions to access this command"
 msgstr "Vous n'avez pas le droit d'accéder à cette commande"
 
-#: msc/msc/start_command.php:120
+#: msc/msc/start_command.php:122
 msgid "awake"
 msgstr "réveil"
 
@@ -555,17 +559,17 @@ msgstr "machines ont échoué lors du déploiement"
 msgid "computers were successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
-#: msc/msc/ajaxLogsFilter.php:167 msc/includes/command_history.php:33
+#: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
 #: msc/logs/ajaxLogsFilter.php:135
 msgid "current_state"
 msgstr "État"
 
-#: msc/msc/ajaxLogsFilter.php:170 msc/includes/command_history.php:36
+#: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
 #: msc/logs/ajaxLogsFilter.php:138
 msgid "deleted"
 msgstr "Suppression"
 
-#: msc/msc/ajaxLogsFilter.php:169 msc/includes/command_history.php:35
+#: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
 #: msc/logs/ajaxLogsFilter.php:137
 msgid "executed"
 msgstr "Exécution"
@@ -582,11 +586,11 @@ msgstr "ont échoué durant la suppression"
 msgid "failed during upload"
 msgstr "ont échoué durant le téléchargement"
 
-#: msc/msc/start_command.php:122
+#: msc/msc/start_command.php:124
 msgid "invent."
 msgstr "invent."
 
-#: msc/msc/start_command.php:128
+#: msc/msc/start_command.php:130
 msgid "mode"
 msgstr "mode"
 
@@ -598,11 +602,11 @@ msgstr "jamais"
 msgid "now"
 msgstr "maintenant"
 
-#: msc/msc/start_command.php:125
+#: msc/msc/start_command.php:127
 msgid "p/p"
 msgstr "p/p"
 
-#: msc/msc/launch.php:140 msc/msc/start_command.php:125
+#: msc/msc/launch.php:140 msc/msc/start_command.php:127
 msgid "push"
 msgstr "push"
 
@@ -626,7 +630,7 @@ msgstr "en cours de téléchargement"
 msgid "start_date"
 msgstr "Date de démarrage"
 
-#: msc/msc/ajaxLogsFilter.php:168 msc/includes/command_history.php:34
+#: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
 #: msc/logs/ajaxLogsFilter.php:136
 msgid "uploaded"
 msgstr "Envoi"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 12:45+0200\n"
+"POT-Creation-Date: 2008-06-27 13:04+0200\n"
 "PO-Revision-Date: 2008-04-08 12:40+0300\n"
 "Last-Translator: Igor Gorbounov <igorbounov@topazelectro.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,7 +57,7 @@ msgstr "защищенное управление машиной %s"
 msgid "(with %s beeing unreachable)"
 msgstr ""
 
-#: msc/msc/start_command.php:132
+#: msc/msc/start_command.php:134
 msgid "Advanced"
 msgstr "С опережением"
 
@@ -75,7 +75,7 @@ msgid "Bytes"
 msgstr "байт"
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:166 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
 msgid "Command"
 msgstr "Команда"
 
@@ -169,7 +169,7 @@ msgstr "Сведения"
 msgid "Done"
 msgstr "Завершено"
 
-#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:161
+#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
 #: msc/logs/ajaxLogsFilter.php:129
 msgid "End date"
 msgstr "Дата окончания"
@@ -374,6 +374,11 @@ msgstr "Удаленное управление для :"
 msgid "Repository"
 msgstr "Репозитарий"
 
+#: msc/includes/functions.php:43
+#, fuzzy
+msgid "Rescheduled"
+msgstr "Запланировано"
+
 #: msc/includes/functions.php:42
 msgid "Scheduled"
 msgstr "Запланировано"
@@ -444,7 +449,7 @@ msgstr ""
 msgid "Start action %s on host %s"
 msgstr "Начать действие %s на машине %s"
 
-#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:163
+#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
 #: msc/logs/ajaxLogsFilter.php:131
 msgid "Start date"
 msgstr "Дата запуска"
@@ -540,7 +545,7 @@ msgstr "Y-m-d H:i:s"
 msgid "You don't have the good permissions to access this command"
 msgstr "У Вас надостаточно прав для доступа к этой команде"
 
-#: msc/msc/start_command.php:120
+#: msc/msc/start_command.php:122
 msgid "awake"
 msgstr "включить"
 
@@ -556,17 +561,17 @@ msgstr ""
 msgid "computers were successfully deployed"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:167 msc/includes/command_history.php:33
+#: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
 #: msc/logs/ajaxLogsFilter.php:135
 msgid "current_state"
 msgstr "текущее состояние"
 
-#: msc/msc/ajaxLogsFilter.php:170 msc/includes/command_history.php:36
+#: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
 #: msc/logs/ajaxLogsFilter.php:138
 msgid "deleted"
 msgstr "удалено"
 
-#: msc/msc/ajaxLogsFilter.php:169 msc/includes/command_history.php:35
+#: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
 #: msc/logs/ajaxLogsFilter.php:137
 msgid "executed"
 msgstr "выполнено"
@@ -583,11 +588,11 @@ msgstr ""
 msgid "failed during upload"
 msgstr ""
 
-#: msc/msc/start_command.php:122
+#: msc/msc/start_command.php:124
 msgid "invent."
 msgstr "инвент."
 
-#: msc/msc/start_command.php:128
+#: msc/msc/start_command.php:130
 msgid "mode"
 msgstr "режим"
 
@@ -599,11 +604,11 @@ msgstr "никогда"
 msgid "now"
 msgstr "сейчас"
 
-#: msc/msc/start_command.php:125
+#: msc/msc/start_command.php:127
 msgid "p/p"
 msgstr "p/p"
 
-#: msc/msc/launch.php:140 msc/msc/start_command.php:125
+#: msc/msc/launch.php:140 msc/msc/start_command.php:127
 msgid "push"
 msgstr "push"
 
@@ -630,7 +635,7 @@ msgstr "Работает на ОС"
 msgid "start_date"
 msgstr "дата запуска"
 
-#: msc/msc/ajaxLogsFilter.php:168 msc/includes/command_history.php:34
+#: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
 #: msc/logs/ajaxLogsFilter.php:136
 msgid "uploaded"
 msgstr "загружено"
