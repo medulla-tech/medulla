@@ -21,16 +21,23 @@ class DGConfig(PluginConfig):
             # We will use the default db driver port
             self.dbport = None
 
-        try:
-            self.dbdebug = logging._levelNames[self.get("msc", "dbdebug")]
-        except:
-            self.dbdebug = logging.DEBUG
+        if self.has_option("database", "dbsslenable"):
+            self.dbsslenable = self.getboolean("database", "dbsslenable")
+            if self.dbsslenable:
+                self.dbsslca = self.get("database", "dbsslca")
+                self.dbsslcert = self.get("database", "dbsslcert")
+                self.dbsslkey = self.get("database", "dbsslkey")
 
+        try:
+            self.dbdebug = logging._levelNames[self.get("database", "dbdebug")]
+        except:
+            self.dbdebug = logging.ERROR
 
     def setDefault(self):
         """
         Set default values
         """
         PluginConfig.setDefault(self)
+        self.dbsslenable = False
 
 
