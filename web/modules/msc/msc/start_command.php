@@ -103,6 +103,8 @@ $name = getPackageLabel($p_api, $_GET["pid"]);
 $version = getPackageVersion($p_api, $_GET["pid"]);
 $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $cible));
 
+$f->push(new Table());
+
 // form preseeding
 $f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],     "hide" => True));
 $f->add(new HiddenTpl("name"),                                  array("value" => $hostname,         "hide" => True));
