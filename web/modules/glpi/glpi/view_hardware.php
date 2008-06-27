@@ -38,7 +38,13 @@ require_once("modules/glpi/includes/xmlrpc.php");
 
 <?php
 
-$inv = getLastMachineGlpiFull($_GET["uuid"]);
+$uuid = '';
+if (isset($_GET['uuid'])) {
+    $uuid = $_GET['uuid'];
+} elseif (isset($_GET['objectUUID'])) {
+    $uuid = $_GET['objectUUID'];
+}
+$inv = getLastMachineGlpiFull($uuid);
 
 $prop = array();
 $val = array();
