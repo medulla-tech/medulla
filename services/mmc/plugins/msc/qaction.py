@@ -60,6 +60,8 @@ class Qaction:
 
 def qa_list_files():
     path = MscConfig("msc").qactionspath
+    if not os.path.exists(path):
+        return [False, "Quick action path don't exists", path]
 
     result = {}
     d = dircache.listdir(path)
@@ -69,5 +71,5 @@ def qa_list_files():
         if filename != '..' and filename != '.' and os.path.exists(os.path.join(path, filename)) and re.compile('\.msc$').search(filename):
             result[filename] = Qaction(filename).read()
 
-    return result
+    return [True, result]
 
