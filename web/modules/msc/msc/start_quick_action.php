@@ -31,8 +31,8 @@ require_once('modules/msc/includes/utilities.php');
 
 function action($action, $target) {
     /* Handle posting of quick actions */
-    $script_list = msc_script_list_file();
-    if (array_key_exists($action, $script_list)) {
+    $script_list = msc_script_list_file(); 
+    if ($script_list[0] && array_key_exists($action, $script_list[1])) {
         $id = add_command_quick(
             $script_list[$action]["command"],
             $target,

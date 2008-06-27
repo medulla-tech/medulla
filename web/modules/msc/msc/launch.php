@@ -161,10 +161,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
         $msc_host = new RenderedMSCHost($machine);
         $msc_host->ajaxDisplay();
 
-        $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $machine->hostname));
-        $label->display();
-
-        $msc_actions = new RenderedMSCActions(msc_script_list_file(), array('uuid'=>$_GET['uuid']));
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
         $msc_actions->display();
 
         $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
@@ -177,10 +174,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
     // Display the actions list
-    $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $group->getName()));
-    $label->display();
-
-    $msc_actions = new RenderedMSCActions(msc_script_list_file(), array("gid"=>$_GET['gid']));
+    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid"=>$_GET['gid']));
     $msc_actions->display();
 
     $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php", "container", array("gid"=>$_GET['gid']));

@@ -22,6 +22,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+function msg_err_qa($msg) {
+    $msgs = array(
+        "Quick action path don't exists" => sprintf(_T("Quick action path %s don't exists", "msc"), $msg[2])
+    );
+    return $msgs[$msg[1]];
+}
+
 /* mark this string for translation */
 _T("Other/N.A.", "msc");
 
@@ -99,8 +106,9 @@ class RenderedLabel extends HtmlElement {
 /* Quick actions dropdown list */
 class RenderedMSCActions extends HtmlElement {
 
-    function RenderedMSCActions($script_list, $params) {
+    function RenderedMSCActions($script_list, $qa_on_name, $params) {
         $this->list = array();
+        $this->qa_on_name = $qa_on_name;
         $this->params = $params;
         $this->name = "mscactions";
         $this->url = $_SERVER["REQUEST_URI"];
@@ -108,8 +116,14 @@ class RenderedMSCActions extends HtmlElement {
         $this->submod = "computers";
         $this->action = "start_quick_action";
         $this->enabled = hasCorrectAcl("base", "computers", "start_quick_action");
-        foreach ($script_list as $script) {
-            array_push($this->list, new RenderedMSCAction($script));
+
+        $this->error = !$script_list[0];
+        if (!$this->error) {
+            foreach ($script_list[1] as $script) {
+                array_push($this->list, new RenderedMSCAction($script));
+            }
+        } else {
+            $this->errmsg = msg_err_qa($script_list);
         }
     }
 
@@ -117,34 +131,65 @@ class RenderedMSCActions extends HtmlElement {
         if (!$this->enabled) {
             $selectDisabled = "DISABLED";
             $onSubmit = "";
-        } else {
+        } elseif (!$this->error) {
             $selectDisabled = "";
             $onSubmit = 'onsubmit="showPopup(event,\'' . urlStrRedirect($this->module . "/" . $this->submod . "/" . $this->action, $this->params) . '&launchAction=\' + $(\'launchAction\').value); return false;"';
-        }
-        print '
-            <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
-                <table>
-                    <tr>
-                    <td>
-                        <form ' . $onSubmit . ' name="' . $this->name . '" id="'.$this->name . '">
-                        <select name="launchAction" id="launchAction" style="border: 1px solid grey;" ' . $selectDisabled . '>
-                            <option value="">'._T('Execute action...', 'msc').'</option>';
-        foreach ($this->list as $script) {
-            $script->display();
-        }
-        print '</select>';
-        $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', $buttonStyle);
-        if ($this->enabled) {
-            $img->display();
         } else {
-            $img->displayWithNoRight();
+            $selectDisabled = "DISABLED";
+            $onSubmit = "";
         }
-        print '
-                        </form>
-                    </td>
-                    </tr>
-                </table>
-            </div>';
+        
+        if (!$this->error && count($this->list) > 0) {
+            $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $this->qa_on_name));
+            $label->display();
+                        
+            print '
+                <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
+                    <table>
+                        <tr>
+                        <td>
+                            <form ' . $onSubmit . ' name="' . $this->name . '" id="'.$this->name . '">
+                            <select name="launchAction" id="launchAction" style="border: 1px solid grey;" ' . $selectDisabled . '>
+                                <option value="">'._T('Execute action...', 'msc').'</option>';
+            foreach ($this->list as $script) {
+                $script->display();
+            }
+            print '</select>';
+            $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', $buttonStyle);
+            if ($this->enabled) {
+                $img->display();
+            } else {
+                $img->displayWithNoRight();
+            }
+            print '
+                            </form>
+                        </td>
+                        </tr>
+                    </table>
+                </div>';
+        } elseif (!$this->error) {
+            print '
+                <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
+                    <table>
+                        <tr>
+                        <td>
+                            '._T('Quick action list is empty', 'msc').'
+                        </td>
+                        </tr>
+                    </table>
+                </div>';
+        } else {
+            print '
+                <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
+                    <table>
+                        <tr>
+                        <td>
+                            '.$this->errmsg.'
+                        </td>
+                        </tr>
+                    </table>
+                </div>';
+        }
     }
 }
 
