@@ -117,6 +117,7 @@ function state2icon($current_state) {
         case "stop":
             return "led_circle_black.png";
             break;
+        case "rescheduled":
         case "scheduled":
             return "led_circle_grey.png";
             break;
@@ -175,6 +176,7 @@ function history_stat2icon($state) {
         case "stop":
             return "led_circle_black.png";
             break;
+        case "rescheduled":
         case "scheduled":
             return "led_circle_gray.png";
             break;
@@ -194,6 +196,7 @@ function state_tmpl($current_state) {
         $current_state,
         array(
             'scheduled',
+            'rescheduled',
             'not_reachable',
             'upload_done',
             'upload_failed',
