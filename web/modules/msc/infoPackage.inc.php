@@ -122,8 +122,8 @@ $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 /* Confirm popup when deploying something */
-$page = new Page("start_tele_diff", _T("Launch a command", "msc"));
-$page->setFile("modules/msc/msc/start_tele_diff.php");
+$page = new Page("start_command", _T("Launch a command", "msc"));
+$page->setFile("modules/msc/msc/start_command.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
