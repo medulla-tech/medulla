@@ -305,15 +305,6 @@ msgstr ""
 msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:36
-msgid "group"
-msgstr ""
-
-#: dyngroup/dyngroup/ajaxListGroups.php:54
-#, php-format
-msgid "group (%s)"
-msgstr ""
-
 #: dyngroup/dyngroup/save.php:58
 msgid "hidden"
 msgstr ""
@@ -322,8 +313,7 @@ msgstr ""
 msgid "it should be"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/localSidebar.php:36
-#: dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/ajaxListGroups.php:54
 msgid "query"
 msgstr ""
 
@@ -331,13 +321,29 @@ msgstr ""
 msgid "result"
 msgstr ""
 
+#: dyngroup/dyngroup/ajaxListGroups.php:54
+#, php-format
+msgid "result (%s)"
+msgstr ""
+
 #: dyngroup/dyngroup/save.php:57
 msgid "save as"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:36
 #: dyngroup/dyngroup/ajaxListGroups.php:56
 msgid "static group"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "the query"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "the result"
+msgstr ""
+
+#: dyngroup/dyngroup/localSidebar.php:36
+msgid "the static group"
 msgstr ""
 
 #: dyngroup/dyngroup/save.php:58

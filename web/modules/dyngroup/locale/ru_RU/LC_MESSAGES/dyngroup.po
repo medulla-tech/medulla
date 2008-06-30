@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-26 12:55+0200\n"
+"POT-Creation-Date: 2008-06-30 15:36+0200\n"
 "PO-Revision-Date: 2008-04-05 10:53+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -324,15 +324,6 @@ msgstr "Вы собираетесь удалить группу <b>%s</b>."
 msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
 msgstr "Вы собираетесь удалить машину <b>%s</b> из группы <b>%s</b>."
 
-#: dyngroup/dyngroup/localSidebar.php:36
-msgid "group"
-msgstr "группа"
-
-#: dyngroup/dyngroup/ajaxListGroups.php:54
-#, php-format
-msgid "group (%s)"
-msgstr "группа (%s)"
-
 #: dyngroup/dyngroup/save.php:58
 #, fuzzy
 msgid "hidden"
@@ -342,8 +333,7 @@ msgstr "Скрытая"
 msgid "it should be"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/localSidebar.php:36
-#: dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/ajaxListGroups.php:54
 msgid "query"
 msgstr "запрос"
 
@@ -352,13 +342,32 @@ msgstr "запрос"
 msgid "result"
 msgstr "Сохранить результат"
 
+#: dyngroup/dyngroup/ajaxListGroups.php:54
+#, fuzzy, php-format
+msgid "result (%s)"
+msgstr "Сохранить результат"
+
 #: dyngroup/dyngroup/save.php:57
 msgid "save as"
 msgstr ""
 
-#: dyngroup/dyngroup/localSidebar.php:36
 #: dyngroup/dyngroup/ajaxListGroups.php:56
 msgid "static group"
+msgstr "статическая группа"
+
+#: dyngroup/dyngroup/localSidebar.php:36
+#, fuzzy
+msgid "the query"
+msgstr "Сохранить запрос"
+
+#: dyngroup/dyngroup/localSidebar.php:36
+#, fuzzy
+msgid "the result"
+msgstr "Сохранить результат"
+
+#: dyngroup/dyngroup/localSidebar.php:36
+#, fuzzy
+msgid "the static group"
 msgstr "статическая группа"
 
 #: dyngroup/dyngroup/save.php:58
@@ -372,11 +381,11 @@ msgstr "Видимая"
 #~ msgid "Only '%s' module to query"
 #~ msgstr "Запрашивать можно только модуль '%s'"
 
-#~ msgid "Save query"
-#~ msgstr "Сохранить запрос"
+#~ msgid "group"
+#~ msgstr "группа"
 
-#~ msgid "Save result"
-#~ msgstr "Сохранить результат"
+#~ msgid "group (%s)"
+#~ msgstr "группа (%s)"
 
 #~ msgid "request"
 #~ msgstr "запрос"
