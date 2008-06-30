@@ -17,7 +17,7 @@ $p->addTab("tab0", _T("Hardware", 'inventory'), "", "modules/inventory/inventory
 
 $i = 1;
 // TODO get the list with trads from agent (conf file...)
-foreach (array('Network', 'Controller', 'Software') as $tab) {
+foreach (array('Software', 'Network', 'Controller', 'Registry') as $tab) {
     $p->addTab("tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$_GET['gid'], 'groupname'=>$_GET['groupname']));
     $i++;
 }
