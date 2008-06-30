@@ -70,7 +70,7 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$ma[1]] = array('hostname'=>$ma[0], 'uuid'=>$ma[1]);
         }
     }
-} elseif (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name)) {
+} elseif (isset($_POST["bconfirm"]) and $name != '' and !xmlrpc_group_name_exists($name, $id)) {
     $listOfCurMembers = $group->members();
     $curmem = array();
     foreach ($listOfCurMembers as $member) {
@@ -84,7 +84,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listC = array();
     foreach ($listOfMembers as $member) { $listN[$member['uuid']] = $member; }
     foreach ($listOfCurMembers as $member) { $listC[$member['uuid']] = $member; }
-
+    
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
 
@@ -106,7 +106,7 @@ if (isset($_POST["bdelmachine_x"])) {
         $list = $group->members();
         $members = array();
         foreach ($list as $member) {
-            $listOfMembers[$member['uuid']] = $member['hostname'];
+            $listOfMembers[$member['uuid']] = $member;
             $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
         }
     } else {
@@ -114,7 +114,7 @@ if (isset($_POST["bdelmachine_x"])) {
     }
 } elseif (isset($_POST["bconfirm"]) and $name == '') {
     new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
-} elseif (isset($_POST["bconfirm"]) and xmlrpc_group_name_exists($name)) {
+} elseif (isset($_POST["bconfirm"]) and xmlrpc_group_name_exists($name, $id)) {
     new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
 } else {
     $list = $group->members();
@@ -146,7 +146,7 @@ ksort($machines);
 $diff = array_diff_assoc($machines, $members);
 natcasesort($diff);
 
-drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, $_POST['filter']);
+drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, $name, $_POST['filter']);
 
 ?>
 

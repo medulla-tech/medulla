@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $filter = '') {
+function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '') {
 ?>
 
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
