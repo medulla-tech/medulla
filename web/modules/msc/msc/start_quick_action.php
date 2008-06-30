@@ -34,9 +34,9 @@ function action($action, $target) {
     $script_list = msc_script_list_file(); 
     if ($script_list[0] && array_key_exists($action, $script_list[1])) {
         $id = add_command_quick(
-            $script_list[$action]["command"],
+            $script_list[1][$action]["command"],
             $target,
-            $script_list[$action]["title".$current_lang],
+            $script_list[1][$action]["title".$current_lang],
             $_GET['gid']
         );
         scheduler_start_all_commands();
@@ -47,9 +47,6 @@ function action($action, $target) {
 
 
 if (isset($_POST["bconfirm"])) {
-    print_r( $_POST);
-    print_r( $_GET);
-
     /* quick action on a single target */
     if (isset($_GET['uuid'])) {
         $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
