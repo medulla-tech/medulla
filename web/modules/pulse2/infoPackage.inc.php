@@ -38,6 +38,7 @@ $page->setFile("modules/pulse2/pulse2/computers_list.php");
 $submod->addPage($page);
 
 $page = new Page("select_location", _T("Location selection in computer edit", "pulse2"));
+$page->setOptions(array("visible"=>False));
 $page->setFile("modules/pulse2/includes/select_location.php");
 $submod->addPage($page);
 
