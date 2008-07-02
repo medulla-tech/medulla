@@ -50,7 +50,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     source_path = "/tftpboot/revoboot/msc"
     target_path = "/tmp"
 
-    limit_output = 0
+    limit_output = "0"
 
     inventory_command = "echo Doing inventory"
     temp_folder_prefix = "MDVPLS"
