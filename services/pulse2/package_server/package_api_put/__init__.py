@@ -44,11 +44,12 @@ class PackageApiPut(PackageApiGet):
 
         ret = Common().writePackageTo(package['id'], self.mp)
         if not ret: return False
+        pid, confdir = ret
 
         ret = Common().associatePackage2mp(package['id'], self.mp)
         if not ret: return False
 
-        return package['id']
+        return (package['id'], confdir)
 
     def xmlrpc_dropPackage(self, pid):
         ret = Common().dropPackage(pid, self.mp)
