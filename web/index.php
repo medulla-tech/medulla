@@ -46,8 +46,15 @@ if (isset($_POST["bConnect"])) {
     session_id($sessionid);
     session_start();
 
-    if (auth_user($login, $pass, $error)) {
-        $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
+    $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
+    if (isset($conf[$_POST["server"]])) {
+        $_SESSION["XMLRPC_agent"] = parse_url($conf[$_POST["server"]]["url"]);
+        $_SESSION["agent"] = $_POST["server"];
+    } else {
+        $error = sprintf(_T("The server %s does not exist"), $_POST["server"]);
+    }
+
+    if (!isset($error) && auth_user($login, $pass, $error)) {
         $_SESSION["login"] = $login;
         $_SESSION["pass"] = $pass;
         /* Set session expiration time */
@@ -56,8 +63,6 @@ if (isset($_POST["bConnect"])) {
         $_SESSION['lang'] = $_POST['lang'];
         setcookie('lang', $_POST['lang'], time() + 3600 * 24 * 30);
 
-        $urlArr = parse_url($_POST["server"]);
-        $_SESSION["XMLRPC_agent"] = $urlArr;
         $tmp = createAclArray(getAcl($login));
         $_SESSION["acl"] = $tmp["acl"];
         $_SESSION["acltab"] = $tmp["acltab"];
@@ -168,16 +173,15 @@ if (isset($error)) {
                         $servList = array();
 
                         foreach ($conf as $key => $value) {
-                          if (strstr($key,"server")) {
-                            $descList[$key]=$conf[$key]["description"];
-                            $urlList[$key]=$conf[$key]["url"];
-                          }
+                            if (strstr($key,"server_")) {
+                                $descList[$key]=$conf[$key]["description"];
+                                $labelList[$key]=$key;
+                            }
                         }
 
                         $listbox = new SelectItem("server");
-
                         $listbox->setElements($descList);
-                        $listbox->setElementsVal($urlList);
+                        $listbox->setElementsVal($labelList);
                         $listbox->setSelected($descList[0]);
                         $listbox->display();
 

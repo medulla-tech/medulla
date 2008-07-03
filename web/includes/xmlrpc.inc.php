@@ -59,6 +59,36 @@ function decode_entities($text) {
 }
 
 /**
+ * Return a socket object
+ */
+function openSocket($proto, $conf) {
+    $errLevel = error_reporting();
+    error_reporting(0);
+    if (($proto != "ssl://")
+        || ($conf[$_SESSION["agent"]]["verifypeer"] != 1)
+        || !function_exists("stream_socket_client")) {
+        /* 
+           Not a SSL connection,
+           or simple SSL connection without client certificate and server
+           certificate check
+           or stream_socket_client function not available (PHP 5 only),
+        */
+        $sock = fsockopen($proto.$_SESSION["XMLRPC_agent"]["host"], $_SESSION["XMLRPC_agent"]["port"], $errNo, $errString);
+        $ret = array($sock, $errNo, $errString);
+    } else {
+        $context = stream_context_create();
+        stream_context_set_option($context, "ssl", "allow_self_signed", False);
+        stream_context_set_option($context, "ssl", "verify_peer", True);
+        stream_context_set_option($context, "ssl", "cafile", $conf[$_SESSION["agent"]]["cacert"]);
+        stream_context_set_option($context, "ssl", "local_cert", $conf[$_SESSION["agent"]]["localcert"]);
+        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, 30, STREAM_CLIENT_CONNECT, $context);
+        $ret = array($sock, $errNo, $errString);
+    }
+    error_reporting($errLevel);
+    return $ret;
+}
+
+/**
  * Make a XML-RPC call
  * If the global variable $errorStatus is not zero, the XML-RPC call is not
  * done, and this function returns nothing.
@@ -112,15 +142,13 @@ function xmlCall($method, $params = null) {
     if ($_SESSION["XMLRPC_agent"]["scheme"] == "https") {
         $prot = "ssl://";
     }
-    $errLevel = error_reporting();
-    error_reporting(0);
-    $sock = fsockopen($prot.$_SESSION["XMLRPC_agent"]["host"], $_SESSION["XMLRPC_agent"]["port"], $errNo, $errString);
-    error_reporting($errLevel);
+
+    list($sock, $errNo, $errString) = openSocket($prot, $conf);
     if (!$sock) {
         /* Connection failure */
         $errObj = new ErrorHandlingItem('');
         $errObj->setMsg(_("Can't connect to MMC agent"));
-        $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.".'<br/> Error: '. $errNo . ' - '. $errString));
+        $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.") . '<br/> Error: '. $errNo . ' - '. $errString);
         $errObj->setTraceBackDisplay(false);
         $errObj->setSize(400);
         $errObj->process('');        

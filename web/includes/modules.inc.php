@@ -81,8 +81,32 @@ function fetchIniFile() {
                 exit();
             }
             $conf["global"]["password"] = $value;
-        }        
+        }
     }
+    /* Set default option for MMC agent access */
+    foreach ($conf as $key => $value) {
+        if (strstr($key, "server_")) {
+            if (!isset($conf[$key]["verifypeer"])) {
+                $conf[$key]["verifypeer"] = 0;
+                $conf[$key]["cacert"] = "";
+                $conf[$key]["localcert"] = "";
+            }
+            if (!isset($conf[$key]["cacert"])) {
+                $conf[$key]["cacert"] = "";
+            }
+            if (!isset($conf[$key]["localcert"])) {
+                $conf[$key]["localcert"] = "";
+            }
+            if (($conf[$key]["verifypeer"] == 1)
+                && ($conf[$key]["cacert"] == "")
+                && ($conf[$key]["localcert"] == "")) {
+                printf("The entry %s is missing the cacert and localcert options.", $key);
+                exit;
+            }
+        }
+    }
+
+
 }
 
 

@@ -39,10 +39,6 @@ function auth_user ($login, $pass, $error)
     $param = array();
     $param[] = $login;
     $param[] = prepare_string($pass);
-
-    //put server selected in $_SESSION
-    $urlArr = parse_url($_POST["server"]);
-    $_SESSION["XMLRPC_agent"] = $urlArr;
     
     $ret = xmlCall("base.ldapAuth",$param);    
     if ($ret != "1") {
