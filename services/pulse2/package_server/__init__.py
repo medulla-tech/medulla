@@ -25,6 +25,10 @@
 import os.path
 import logging
 import twisted
+import re
+import SimpleHTTPServer
+from twisted.web import xmlrpc, resource, static, server
+from twisted.internet import reactor
 
 from pulse2.package_server.server import P2PServerService
 from pulse2.package_server.description import Description
@@ -40,6 +44,11 @@ from pulse2.package_server.config import config_addons
     Pulse2 PackageServer
 """
 
+class MyServer(resource.Resource):
+    def register(self, klass, mp):
+        mp = re.compile('^/').sub('', mp)
+        return self.putChild(mp, klass)
+
 def initialize(config):
     logger = logging.getLogger()
     config_addons(config)
@@ -48,16 +57,15 @@ def initialize(config):
     
     port = int(config.port)
             
-    desc = Description('/')
-    server = P2PServerService(config, desc)
+    server = MyServer()
     services = []
     if len(config.mirrors) > 0:
         for mirror_params in config.mirrors:
             m_api = Mirror(mirror_params['mount_point'], mirror_params['mount_point'])
             server.register(m_api, mirror_params['mount_point'])
             services.append({'type':'mirror', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
-            # TODO : add the file handler
-            #{'type'=>'mirror_files', 'mp'=>"#{mirror_params['mount_point']}_files", 'server'=>@conf['server'], 'port'=>@conf['port'], 'proto'=>proto, 'src'=>mirror_params['src']}
+            server.register(static.File(mirror_params['src']), mirror_params['mount_point']+'_files')
+            services.append({'type':'mirror_files', 'mp':mirror_params['mount_point']+'_files', 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src']})
 
     if len(config.package_api_get) > 0:
         for mirror_params in config.package_api_get:
@@ -74,14 +82,18 @@ def initialize(config):
     if config.user_package_api.has_key('mount_point'):
         mirror = UserPackageApi(services, config.user_package_api['mount_point'])
         server.register(mirror, config.user_package_api['mount_point'])
+        services.append({'type':'user_package_api', 'mp':config.user_package_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         
     if config.mirror_api.has_key('mount_point'):
         mirror = MirrorApi(services, config.mirror_api['mount_point'])
         server.register(mirror, config.mirror_api['mount_point'])
+        services.append({'type':'mirror_api', 'mp':config.mirror_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
     else:
         logger.warn('package server initialized without mirror api')
  
+    server.register(Description(services), 'desc')
     Common().setDesc(services)
+    
     try:
         if config.enablessl:
             if not os.path.isfile(config.privkey):
