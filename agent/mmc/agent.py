@@ -21,6 +21,7 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import twisted.internet.error
 from twisted.web import xmlrpc, server
 from twisted.internet import ssl, reactor, defer
 try:
@@ -40,11 +41,12 @@ import time
 import pwd
 import grp
 import string
+import OpenSSL
 
 sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
-
+ctx = None
 VERSION = "2.3.1"
 
 def getAvailablePlugins(path):
@@ -309,7 +311,10 @@ def agentService(config, conffile, daemonize):
     # Changing path to probe and load plugins
     os.chdir(os.path.dirname(globals()["__file__"]))
 
-    logger.info("mmc-agent starting...")
+    logger.info("mmc-agent %s starting..." % VERSION)
+    logger.info("Using Python %s" % sys.version.split("\n")[0])
+    logger.info("Using Python Twisted %s" % twisted.version.short())
+
     logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
 
     # Find available plugins
@@ -385,9 +390,8 @@ def agentService(config, conffile, daemonize):
     # Become a daemon
     if daemonize:
         daemon(config)
-
-    # No more log to stderr
-    logger.removeHandler(hdlr2)
+        # No more log to stderr
+        logger.removeHandler(hdlr2)
 
     reactor.run()
 
@@ -404,14 +408,66 @@ def cleanUp(config):
         os.setegid(0)
         os.unlink(config.pidfile)
 
+class MMCHTTPChannel(http.HTTPChannel):
+    """
+    We inherit from http.HTTPChannel to log incoming connections when the MMC
+    agent is in DEBUG mode, and to log connection errors.
+    """
+    
+    def connectionMade(self):
+        logger = logging.getLogger()
+        logger.debug("Connection from %s" % (self.transport.getHost().host,))
+        http.HTTPChannel.connectionMade(self)
+
+    def connectionLost(self, reason):
+        if not reason.check(twisted.internet.error.ConnectionDone):
+            logger = logging.getLogger()
+            logger.error(reason)
+        http.HTTPChannel.connectionLost(self, reason)        
+
+class MMCSite(server.Site):
+    protocol = MMCHTTPChannel
+
+def makeSSLContext(config):
+    """
+    Make the SSL context for the server, according to the configuration.
+
+    @returns: a SSL context
+    @rtype: twisted.internet.ssl.ContextFactory
+    """
+    logger = logging.getLogger()    
+    if config.verifypeer:
+        fd = open(config.localcert)
+        localcert = ssl.PrivateCertificate.loadPEM(fd.read())
+        fd.close()
+        fd = open(config.cacert)
+        cacert = ssl.Certificate.loadPEM(fd.read())
+        fd.close()
+        ctx = localcert.options(cacert)
+        ctx.verify = True
+        ctx.verifyDepth = 9
+        ctx.requireCertification = True
+        ctx.verifyOnce = True
+        ctx.enableSingleUseKeys = True
+        ctx.enableSessions = True
+        ctx.fixBrokenPeers = False
+        logger.debug("CA certificate informations: %s" % config.cacert)
+        logger.debug(cacert.inspect())
+        logger.debug("MMC agent certificate: %s" % config.localcert)
+        logger.debug(localcert.inspect())
+    else:
+        logger.warning("SSL enabled, but peer verification is disabled.")
+        ctx = ssl.DefaultOpenSSLContextFactory(config.localcert, config.cacert)
+    return ctx
+
 def startService(config, logger, mod):
     # Starting XMLRPC server
     r = MmcServer(mod, config.login, config.password)
     if config.enablessl:
-        sslContext = ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
-        reactor.listenSSL(config.port, server.Site(r), interface = config.host, contextFactory = sslContext)
+        sslContext = makeSSLContext(config)
+        reactor.listenSSL(config.port, MMCSite(r), interface = config.host, contextFactory = sslContext)
     else:
-        logger.warning("SSL is disabled by configuration.")        
+        logger.warning("SSL is disabled by configuration.")
         reactor.listenTCP(config.port, server.Site(r), interface = config.host)        
     # Add event handler before shutdown
     reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
@@ -455,13 +511,21 @@ def readConfig(config):
         config.enablessl = config.getboolean("main", "enablessl")
     except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
         config.enablessl = False
+    try:
+        config.verifypeer = config.getboolean("main", "verifypeer")
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        config.verifypeer = False
+
     if config.enablessl:
+        # For old version compatibility, we try to get the old options name
         try:
-            config.privkey = config.get("main", "privkey")
-            config.certfile = config.get("main", "certfile")
-        except Exception, e:
-            logger.error(e)
-            return 1
+            config.localcert = config.get("main", "localcert")
+        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+            config.localcert = config.get("main", "privkey")
+        try:
+            config.cacert = config.get("main", "cacert")
+        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+            config.cacert = config.get("main", "certfile")
 
     try:
         config.pidfile = config.get("daemon", "pidfile")
