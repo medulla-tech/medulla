@@ -42,6 +42,20 @@ $page->setFile("modules/glpi/glpi/ajaxLocationSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("groupglpitabs", _T("Inventory (GLPI) on a groups of machines", "glpi"));
+$page->setFile("modules/glpi/glpi/tabs.php");
+$page->setOptions(array("visible"=>False));
+
+$tab = new Tab("tab0", _T("GLPI hardware tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab1", _T("GLPI network tab", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab2", _T("GLPI controller tab", 'glpi'));
+$page->addTab($tab);
+
+$submod->addPage($page);
 
 $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
@@ -55,7 +69,6 @@ $page->addTab($tab);
 
 $tab = new Tab("tab2", _T("GLPI controller tab", 'glpi'));
 $page->addTab($tab);
-
 
 $submod->addPage($page);
 
