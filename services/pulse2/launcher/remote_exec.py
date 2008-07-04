@@ -39,6 +39,8 @@ import pulse2.launcher.process_control
 import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 
+SEPARATOR = u'·'
+
 def sync_remote_push(command_id, client, files_list):
     """ Handle remote copy on target, sync mode """
     return remote_push(command_id, client, files_list, 'sync')
@@ -53,21 +55,24 @@ def remote_push(command_id, client, files_list, mode):
     wrapper_path = LauncherConfig().wrapper_path
     client = pulse2.launcher.utils.set_default_client_options(client)
     if client['protocol'] == "rsyncssh":
+        # command is issued though our wrapper, time to build it
         real_files_list = files_list
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/rsync'
+
+        # Build "exec" command
+        real_command  = ['/usr/bin/rsync']
+        real_command += client['proto_args']
+        real_command += real_files_list
+        real_command += [ "%s@%s:%s/" % (client['user'], client['host'], target_path)]
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--exec',
+            SEPARATOR.join(real_command),
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
-        command_list += client['proto_args']
-        command_list += real_files_list
-        if len(real_files_list) == 1: 
-            # only one file so we must create the destination dir
-            if not re.compile('/$').search(target_path):
-                target_path += '/'
-        command_list += [ \
-            "%s@%s:%s" % (client['user'], client['host'], target_path),
-        ]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -77,7 +82,10 @@ def remote_push(command_id, client, files_list, mode):
                 'completed_push'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def sync_remote_pull(command_id, client, files_list):
@@ -94,18 +102,32 @@ def remote_pull(command_id, client, files_list, mode):
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
-        real_files_list = files_list
-        real_command = 'wget %s -N %s -P %s' % (' '.join(client['proto_args']), ' '.join(real_files_list), target_path)
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/ssh'
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
+        real_command  = ['wget']
+        real_command  += client['proto_args']
+        real_command  += ['-N']
+        real_command  += files_list
+        real_command  += ['-P']
+        real_command  += [target_path]
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            SEPARATOR.join(real_command),
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
-        command_list += client['transp_args']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
-        ]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -115,7 +137,10 @@ def remote_pull(command_id, client, files_list, mode):
                 'completed_pull'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def sync_remote_delete(command_id, client, files_list):
@@ -132,18 +157,29 @@ def remote_delete(command_id, client, files_list, mode):
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
-        real_files_list = map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command = 'rm -fr %s; rmdir %s' % (' '.join(real_files_list), target_path)
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/ssh'
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
+        real_command  = ['rm', '-fr']
+        real_command  += map(lambda(a): os.path.join(target_path, a), files_list)
+        real_command  += [';', 'rmdir', target_path]
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            SEPARATOR.join(real_command),
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
-        command_list += client['transp_args']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
-        ]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -153,7 +189,10 @@ def remote_delete(command_id, client, files_list, mode):
                 'completed_deletion'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def sync_remote_exec(command_id, client, command):
@@ -170,18 +209,28 @@ def remote_exec(command_id, client, command, mode):
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
         # TODO: chmod should be done upper
-        real_command = 'cd %s; chmod +x %s; %s' % (target_path, command, command)
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/ssh'
+        real_command  = ['cd', target_path, ';', 'chmod', '+x', command, ';', command ]
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            SEPARATOR.join(real_command),
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
-        command_list += client['transp_args']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
-        ]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -191,7 +240,10 @@ def remote_exec(command_id, client, command, mode):
                 'completed_execution'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def sync_remote_quickaction(command_id, client, command):
@@ -205,18 +257,26 @@ def async_remote_quickaction(command_id, client, command):
 def remote_quickaction(command_id, client, command, mode):
     """ Handle remote quick action on target """
     client = pulse2.launcher.utils.set_default_client_options(client)
-    wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
         real_command = command
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/ssh'
-        ]
-        command_list += client['transp_args']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
@@ -227,7 +287,10 @@ def remote_quickaction(command_id, client, command, mode):
                 'completed_quick_action'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def sync_remote_wol(command_id, client, wrapper):
@@ -267,17 +330,27 @@ def remote_inventory(command_id, client, mode):
     wrapper_path = LauncherConfig().wrapper_path
     inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
         real_command = inventory_command
-        command_list = [ \
-            wrapper_path,
-            LauncherConfig().limit_output,
-            '/usr/bin/ssh'
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            '--max_log_size',
+            LauncherConfig().wrapper_max_log_size
         ]
-        command_list += client['transp_args']
-        command_list += [ \
-            "%s@%s" % (client['user'], client['host']),
-            real_command
-        ]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -287,7 +360,10 @@ def remote_inventory(command_id, client, mode):
                 'completed_inventory'
             )
         elif mode == 'sync':
-            return pulse2.launcher.process_control.commandRunner(command_list, __cb_sync_process_end)
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
     return None
 
 def __cb_sync_process_end(shprocess):

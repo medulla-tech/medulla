@@ -50,7 +50,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     source_path = "/tftpboot/revoboot/msc"
     target_path = "/tmp"
 
-    limit_output = "0"
+    wrapper_max_log_size = "0"
 
     inventory_command = "echo Doing inventory"
     temp_folder_prefix = "MDVPLS"
@@ -108,8 +108,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         self.name = name
         for key in ['pid_path', 'launcher_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
             self.setoption('launchers', key)
-        if self.cp.has_option('launchers', 'limit_output'):
-            self.limit_output = self.cp.get('launchers', 'limit_output')
+        if self.cp.has_option('launchers', 'wrapper_max_log_size'):
+            self.wrapper_max_log_size = self.cp.get('launchers', 'wrapper_max_log_size')
 
         if self.cp.has_section('scheduler'):
             for key in ['launcher_path', 'awake_time', 'defer_results']:
@@ -127,13 +127,13 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
 
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "pid_path"):
-                self.pid_path = self.cp.get("daemon", "pid_path")  
+                self.pid_path = self.cp.get("daemon", "pid_path")
             if self.cp.has_option("daemon", "user"):
                 self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
             if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option("daemon", "umask"):
-                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)          
+                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
         for section in self.cp.sections():
             if re.compile('^launcher_[0-9]+$').match(section):
