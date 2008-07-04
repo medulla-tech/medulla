@@ -22,12 +22,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false) {
+function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false) {
     $emptyAction = new EmptyActionItem();
-    $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-    $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
-    $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
-    $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
+    if ($is_group) {
+        $inventAction = new ActionItem(_("Inventory"),"groupinvtabs","inventory","inventory", "base", "computers");
+        $glpiAction = new ActionItem(_("GLPI Inventory"),"groupglpitabs","inventory","inventory", "base", "computers");
+        $logAction = new ActionItem(_("Read log"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs");
+        $mscAction = new ActionItem(_("Software deployment"),"groupmsctabs","install","computer", "base", "computers");
+    } else {
+        $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
+        $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
+        $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+        $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+    }
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();

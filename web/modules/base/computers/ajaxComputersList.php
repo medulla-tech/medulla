@@ -21,9 +21,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+require("../../../includes/i18n.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../modules/base/includes/computers.inc.php");
@@ -33,6 +33,7 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $canbedeletedfromgroup = null;
 $canbedeleted = true;
+$is_group = false;
 
 $filter = array('hostname'=> $_GET["filter"]);
 if (isset($_GET["start"])) { $start = $_GET["start"]; } else { $start = 0; }
@@ -43,6 +44,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $filter['gid'] = $_GET['gid'];
         $canbedeletedfromgroup = true;
         $canbedeleted = false;
+        $is_group = true;
         if (isrequest_group($_GET['gid'])) {
             $canbedeletedfromgroup = false;
         }
@@ -51,7 +53,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
 $names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter, False)));
 $count = getComputerCount($filter);
     
-list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup);
+list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group);
     
 function join_value($n) {
     $ret = array();
