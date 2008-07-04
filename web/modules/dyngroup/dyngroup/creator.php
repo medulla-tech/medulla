@@ -167,11 +167,9 @@ if (!$request->isEmpty())  {
     print "<table>";
     print "<tr><td><a href='".
         urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS())).
-        "'>"._T("Go to save step", "dyngroup")."</a></td></tr>";
-#        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>0)).
-#        "'>"._T("Save result", "dyngroup")."</a></td><td><a href='".
-#        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS(), 'save_type'=>1)).
-#        "'>"._T("Save query", "dyngroup")."</a></td></tr>";
+        "'>"._T("Go to save step", "dyngroup")."</a></td><td><a href='".
+        urlStr("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$request->toS())).
+        "'>"._T("Display content", "dyngroup")."</a></td></tr>";
     print "</table>";
 }
 ?>

@@ -56,6 +56,11 @@ if (isDynamicEnable()) {
     $page->addTab($tab);
     
     $submod->addPage($page);
+
+    $page = new Page("tmpdisplay",_T("Temporary result display","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/tmpdisplay.php");
+    $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
 } else {
     $page = new Page("computersgroupcreator",_T("Machines Group Creator","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/groupshead.php");
