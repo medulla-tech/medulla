@@ -121,9 +121,45 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("invtabs", _T("Inventory on machine"));
+$page = new Page("groupinvtabs", _T("Inventory on a group of machines", "inventory"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $page->setOptions(array("visible"=>False));
+$tab = new Tab("tab0",  _T("Hardware tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab1",  _T("Software tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab2",  _T("Network tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab3",  _T("Controller tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab4",  _T("Registry tab", "inventory"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
+$page = new Page("invtabs", _T("Inventory on machine", "inventory"));
+$page->setFile("modules/inventory/inventory/tabs.php");
+$page->setOptions(array("visible"=>False));
+
+$tab = new Tab("tab0",  _T("Hardware tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab1",  _T("Software tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab2",  _T("Network tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab3",  _T("Controller tab", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab4",  _T("Registry tab", "inventory"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 unset($submod);
