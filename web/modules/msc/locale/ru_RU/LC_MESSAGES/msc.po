@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 13:04+0200\n"
+"POT-Creation-Date: 2008-07-02 19:51+0200\n"
 "PO-Revision-Date: 2008-04-08 12:40+0300\n"
 "Last-Translator: Igor Gorbounov <igorbounov@topazelectro.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgid "Bytes"
 msgstr "байт"
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:137
 msgid "Command"
 msgstr "Команда"
 
@@ -104,7 +104,7 @@ msgstr "Параметры команды"
 msgid "Command start date"
 msgstr "Дата запуска команды"
 
-#: msc/infoPackage.inc.php:114
+#: msc/infoPackage.inc.php:129
 #, fuzzy
 msgid "Command status"
 msgstr "Дата запуска команды"
@@ -121,11 +121,11 @@ msgstr "Режим копирования"
 msgid "Creation date"
 msgstr "Дата создания"
 
-#: msc/infoPackage.inc.php:166
+#: msc/infoPackage.inc.php:181
 msgid "Csv's export"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:130
 msgid "Date"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgid "Done"
 msgstr "Завершено"
 
 #: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
-#: msc/logs/ajaxLogsFilter.php:129
+#: msc/logs/ajaxLogsFilter.php:132
 msgid "End date"
 msgstr "Дата окончания"
 
@@ -211,7 +211,7 @@ msgstr "История"
 msgid "Host"
 msgstr "Машина"
 
-#: msc/infoPackage.inc.php:161
+#: msc/infoPackage.inc.php:176
 msgid "IP Addr."
 msgstr "IP-адрес"
 
@@ -239,11 +239,11 @@ msgstr "Запустить"
 msgid "Launch Actions"
 msgstr "Запустить действие"
 
-#: msc/infoPackage.inc.php:125
+#: msc/infoPackage.inc.php:140
 msgid "Launch a command"
 msgstr "Запустить команду"
 
-#: msc/infoPackage.inc.php:131
+#: msc/infoPackage.inc.php:146
 msgid "Launch a quick action command"
 msgstr "Запустить быстрое действие"
 
@@ -251,7 +251,7 @@ msgstr "Запустить быстрое действие"
 msgid "Logs"
 msgstr "Журналы"
 
-#: msc/infoPackage.inc.php:156
+#: msc/infoPackage.inc.php:171
 msgid "MAC Addr."
 msgstr "MAC-адрес"
 
@@ -259,15 +259,15 @@ msgstr "MAC-адрес"
 msgid "MSC"
 msgstr "MSC"
 
-#: msc/infoPackage.inc.php:90
+#: msc/infoPackage.inc.php:90 msc/infoPackage.inc.php:105
 msgid "MSC history tab"
 msgstr "Вкладка истории MSC"
 
-#: msc/infoPackage.inc.php:84
+#: msc/infoPackage.inc.php:84 msc/infoPackage.inc.php:99
 msgid "MSC launch tab"
 msgstr "Вкладка запуска MSC"
 
-#: msc/infoPackage.inc.php:87
+#: msc/infoPackage.inc.php:87 msc/infoPackage.inc.php:102
 msgid "MSC logs tab"
 msgstr "Вкладка журналов MSC"
 
@@ -308,7 +308,7 @@ msgstr "Пакет"
 msgid "Package size"
 msgstr "Размер пакета"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:136
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:151
 msgid "Packages"
 msgstr "Пакеты"
 
@@ -317,7 +317,7 @@ msgstr "Пакеты"
 msgid "Pause"
 msgstr "Приостановить"
 
-#: msc/infoPackage.inc.php:102
+#: msc/infoPackage.inc.php:117
 msgid "Pause a command"
 msgstr "Приостановить команду"
 
@@ -326,23 +326,23 @@ msgstr "Приостановить команду"
 msgid "Pause action %s on host %s"
 msgstr "Приостановить действие %s на машине %s"
 
-#: msc/infoPackage.inc.php:146
+#: msc/infoPackage.inc.php:161
 msgid "Ping"
 msgstr "Пинг"
 
-#: msc/infoPackage.inc.php:141
+#: msc/infoPackage.inc.php:156
 msgid "Ping and probe"
 msgstr ""
 
-#: msc/infoPackage.inc.php:151
+#: msc/infoPackage.inc.php:166
 msgid "Platform"
 msgstr "Платформа"
 
-#: msc/infoPackage.inc.php:96
+#: msc/infoPackage.inc.php:111
 msgid "Play a command"
 msgstr "Воспроизвести команду"
 
-#: msc/msc/start_quick_action.php:66
+#: msc/msc/start_quick_action.php:63
 #, fuzzy
 msgid "Please confirm you really want to perform this action"
 msgstr "Подтвердите, что Вы действительно хотите совершить это действие !"
@@ -388,6 +388,11 @@ msgid "Secure Control"
 msgstr "Безопасное управление"
 
 #: msc/infoPackage.inc.php:80
+#, fuzzy
+msgid "Secure control on a group of machines"
+msgstr "Безопасное управление машиной"
+
+#: msc/infoPackage.inc.php:95
 msgid "Secure control on machine"
 msgstr "Безопасное управление машиной"
 
@@ -423,7 +428,7 @@ msgstr "Показать журналы заданий по настроенно
 msgid "Show finished task's logs"
 msgstr "Показать журналы завершенных заданий"
 
-#: msc/infoPackage.inc.php:119
+#: msc/infoPackage.inc.php:134
 msgid "Show package's details"
 msgstr "Показать сведения о пакете"
 
@@ -450,7 +455,7 @@ msgid "Start action %s on host %s"
 msgstr "Начать действие %s на машине %s"
 
 #: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
-#: msc/logs/ajaxLogsFilter.php:131
+#: msc/logs/ajaxLogsFilter.php:134
 msgid "Start date"
 msgstr "Дата запуска"
 
@@ -480,7 +485,7 @@ msgstr "Запустить"
 msgid "Stop"
 msgstr "Остановить"
 
-#: msc/infoPackage.inc.php:108
+#: msc/infoPackage.inc.php:123
 msgid "Stop a command"
 msgstr "Остановить команду"
 
@@ -562,17 +567,17 @@ msgid "computers were successfully deployed"
 msgstr ""
 
 #: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:138
 msgid "current_state"
 msgstr "текущее состояние"
 
 #: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
-#: msc/logs/ajaxLogsFilter.php:138
+#: msc/logs/ajaxLogsFilter.php:141
 msgid "deleted"
 msgstr "удалено"
 
 #: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
-#: msc/logs/ajaxLogsFilter.php:137
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "executed"
 msgstr "выполнено"
 
@@ -636,7 +641,7 @@ msgid "start_date"
 msgstr "дата запуска"
 
 #: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
-#: msc/logs/ajaxLogsFilter.php:136
+#: msc/logs/ajaxLogsFilter.php:139
 msgid "uploaded"
 msgstr "загружено"
 

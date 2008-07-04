@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 13:04+0200\n"
+"POT-Creation-Date: 2008-07-02 19:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgid "Bytes"
 msgstr ""
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:137
 msgid "Command"
 msgstr ""
 
@@ -105,7 +105,7 @@ msgstr ""
 msgid "Command start date"
 msgstr ""
 
-#: msc/infoPackage.inc.php:114
+#: msc/infoPackage.inc.php:129
 msgid "Command status"
 msgstr ""
 
@@ -121,11 +121,11 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
-#: msc/infoPackage.inc.php:166
+#: msc/infoPackage.inc.php:181
 msgid "Csv's export"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:130
 msgid "Date"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgid "Done"
 msgstr ""
 
 #: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
-#: msc/logs/ajaxLogsFilter.php:129
+#: msc/logs/ajaxLogsFilter.php:132
 msgid "End date"
 msgstr ""
 
@@ -211,7 +211,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: msc/infoPackage.inc.php:161
+#: msc/infoPackage.inc.php:176
 msgid "IP Addr."
 msgstr ""
 
@@ -239,11 +239,11 @@ msgstr ""
 msgid "Launch Actions"
 msgstr ""
 
-#: msc/infoPackage.inc.php:125
+#: msc/infoPackage.inc.php:140
 msgid "Launch a command"
 msgstr ""
 
-#: msc/infoPackage.inc.php:131
+#: msc/infoPackage.inc.php:146
 msgid "Launch a quick action command"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgstr ""
 msgid "Logs"
 msgstr ""
 
-#: msc/infoPackage.inc.php:156
+#: msc/infoPackage.inc.php:171
 msgid "MAC Addr."
 msgstr ""
 
@@ -259,15 +259,15 @@ msgstr ""
 msgid "MSC"
 msgstr ""
 
-#: msc/infoPackage.inc.php:90
+#: msc/infoPackage.inc.php:90 msc/infoPackage.inc.php:105
 msgid "MSC history tab"
 msgstr ""
 
-#: msc/infoPackage.inc.php:84
+#: msc/infoPackage.inc.php:84 msc/infoPackage.inc.php:99
 msgid "MSC launch tab"
 msgstr ""
 
-#: msc/infoPackage.inc.php:87
+#: msc/infoPackage.inc.php:87 msc/infoPackage.inc.php:102
 msgid "MSC logs tab"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgstr ""
 msgid "Package size"
 msgstr ""
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:136
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:151
 msgid "Packages"
 msgstr ""
 
@@ -317,7 +317,7 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: msc/infoPackage.inc.php:102
+#: msc/infoPackage.inc.php:117
 msgid "Pause a command"
 msgstr ""
 
@@ -326,23 +326,23 @@ msgstr ""
 msgid "Pause action %s on host %s"
 msgstr ""
 
-#: msc/infoPackage.inc.php:146
+#: msc/infoPackage.inc.php:161
 msgid "Ping"
 msgstr ""
 
-#: msc/infoPackage.inc.php:141
+#: msc/infoPackage.inc.php:156
 msgid "Ping and probe"
 msgstr ""
 
-#: msc/infoPackage.inc.php:151
+#: msc/infoPackage.inc.php:166
 msgid "Platform"
 msgstr ""
 
-#: msc/infoPackage.inc.php:96
+#: msc/infoPackage.inc.php:111
 msgid "Play a command"
 msgstr ""
 
-#: msc/msc/start_quick_action.php:66
+#: msc/msc/start_quick_action.php:63
 msgid "Please confirm you really want to perform this action"
 msgstr ""
 
@@ -385,6 +385,10 @@ msgid "Secure Control"
 msgstr ""
 
 #: msc/infoPackage.inc.php:80
+msgid "Secure control on a group of machines"
+msgstr ""
+
+#: msc/infoPackage.inc.php:95
 msgid "Secure control on machine"
 msgstr ""
 
@@ -420,7 +424,7 @@ msgstr ""
 msgid "Show finished task's logs"
 msgstr ""
 
-#: msc/infoPackage.inc.php:119
+#: msc/infoPackage.inc.php:134
 msgid "Show package's details"
 msgstr ""
 
@@ -446,7 +450,7 @@ msgid "Start action %s on host %s"
 msgstr ""
 
 #: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
-#: msc/logs/ajaxLogsFilter.php:131
+#: msc/logs/ajaxLogsFilter.php:134
 msgid "Start date"
 msgstr ""
 
@@ -475,7 +479,7 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: msc/infoPackage.inc.php:108
+#: msc/infoPackage.inc.php:123
 msgid "Stop a command"
 msgstr ""
 
@@ -557,17 +561,17 @@ msgid "computers were successfully deployed"
 msgstr ""
 
 #: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:138
 msgid "current_state"
 msgstr ""
 
 #: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
-#: msc/logs/ajaxLogsFilter.php:138
+#: msc/logs/ajaxLogsFilter.php:141
 msgid "deleted"
 msgstr ""
 
 #: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
-#: msc/logs/ajaxLogsFilter.php:137
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "executed"
 msgstr ""
 
@@ -628,7 +632,7 @@ msgid "start_date"
 msgstr ""
 
 #: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
-#: msc/logs/ajaxLogsFilter.php:136
+#: msc/logs/ajaxLogsFilter.php:139
 msgid "uploaded"
 msgstr ""
 

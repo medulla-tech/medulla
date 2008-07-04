@@ -77,6 +77,21 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
+$page = new Page("groupmsctabs", _T("Secure control on a group of machines", "msc"));
+$page->setFile("modules/msc/msc/tabs.php");
+$page->setOptions(array("visible"=>False));
+
+$tab = new Tab("tablaunch", _T("MSC launch tab", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tablogs", _T("MSC logs tab", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tabhistory", _T("MSC history tab", "msc"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
 $page = new Page("msctabs", _T("Secure control on machine", "msc"));
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-27 13:04+0200\n"
+"POT-Creation-Date: 2008-07-02 19:51+0200\n"
 "PO-Revision-Date: 2008-06-17 10:03+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -79,7 +79,7 @@ msgid "Bytes"
 msgstr "Octets"
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:137
 msgid "Command"
 msgstr "Commande"
 
@@ -108,7 +108,7 @@ msgstr "Paramètres du script"
 msgid "Command start date"
 msgstr "Date de démarrage de la commande"
 
-#: msc/infoPackage.inc.php:114
+#: msc/infoPackage.inc.php:129
 msgid "Command status"
 msgstr "Status de la commande"
 
@@ -124,13 +124,13 @@ msgstr "Mode de transfert"
 msgid "Creation date"
 msgstr "Date de création"
 
-#: msc/infoPackage.inc.php:166
+#: msc/infoPackage.inc.php:181
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:130
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: msc/includes/command_history.php:84 msc/includes/command_history.php:154
 msgid "Delay between two connections"
@@ -173,7 +173,7 @@ msgid "Done"
 msgstr "Terminé"
 
 #: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
-#: msc/logs/ajaxLogsFilter.php:129
+#: msc/logs/ajaxLogsFilter.php:132
 msgid "End date"
 msgstr "Date de fin"
 
@@ -214,7 +214,7 @@ msgstr "Historique"
 msgid "Host"
 msgstr "Ordinateur"
 
-#: msc/infoPackage.inc.php:161
+#: msc/infoPackage.inc.php:176
 msgid "IP Addr."
 msgstr "Adresse IP"
 
@@ -242,11 +242,11 @@ msgstr "Démarrer"
 msgid "Launch Actions"
 msgstr "Lancer une action"
 
-#: msc/infoPackage.inc.php:125
+#: msc/infoPackage.inc.php:140
 msgid "Launch a command"
 msgstr "Lancer une action"
 
-#: msc/infoPackage.inc.php:131
+#: msc/infoPackage.inc.php:146
 msgid "Launch a quick action command"
 msgstr "Lancer une action rapide"
 
@@ -254,7 +254,7 @@ msgstr "Lancer une action rapide"
 msgid "Logs"
 msgstr "Journaux"
 
-#: msc/infoPackage.inc.php:156
+#: msc/infoPackage.inc.php:171
 msgid "MAC Addr."
 msgstr "Adresse MAC"
 
@@ -262,15 +262,15 @@ msgstr "Adresse MAC"
 msgid "MSC"
 msgstr "MSC"
 
-#: msc/infoPackage.inc.php:90
+#: msc/infoPackage.inc.php:90 msc/infoPackage.inc.php:105
 msgid "MSC history tab"
 msgstr "Onglet de l'historique"
 
-#: msc/infoPackage.inc.php:84
+#: msc/infoPackage.inc.php:84 msc/infoPackage.inc.php:99
 msgid "MSC launch tab"
 msgstr "Onglet de lancement"
 
-#: msc/infoPackage.inc.php:87
+#: msc/infoPackage.inc.php:87 msc/infoPackage.inc.php:102
 msgid "MSC logs tab"
 msgstr "Onglet des journaux"
 
@@ -311,7 +311,7 @@ msgstr "Package"
 msgid "Package size"
 msgstr "Taille du package"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:136
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:151
 msgid "Packages"
 msgstr "Packages"
 
@@ -320,7 +320,7 @@ msgstr "Packages"
 msgid "Pause"
 msgstr "Mettre en pause"
 
-#: msc/infoPackage.inc.php:102
+#: msc/infoPackage.inc.php:117
 msgid "Pause a command"
 msgstr "Mettre une commande en pause"
 
@@ -329,23 +329,23 @@ msgstr "Mettre une commande en pause"
 msgid "Pause action %s on host %s"
 msgstr "Mise en pause de l'action %s sur %s"
 
-#: msc/infoPackage.inc.php:146
+#: msc/infoPackage.inc.php:161
 msgid "Ping"
 msgstr "Ping"
 
-#: msc/infoPackage.inc.php:141
+#: msc/infoPackage.inc.php:156
 msgid "Ping and probe"
 msgstr "Ping et Probe"
 
-#: msc/infoPackage.inc.php:151
+#: msc/infoPackage.inc.php:166
 msgid "Platform"
 msgstr "Système d'exploitation"
 
-#: msc/infoPackage.inc.php:96
+#: msc/infoPackage.inc.php:111
 msgid "Play a command"
 msgstr "Jouer une commande"
 
-#: msc/msc/start_quick_action.php:66
+#: msc/msc/start_quick_action.php:63
 msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
@@ -388,6 +388,10 @@ msgid "Secure Control"
 msgstr "Contrôle sécurisé de"
 
 #: msc/infoPackage.inc.php:80
+msgid "Secure control on a group of machines"
+msgstr "Contrôle sécurisé du groupe de machines"
+
+#: msc/infoPackage.inc.php:95
 msgid "Secure control on machine"
 msgstr "Contrôle sécurisé de l'ordinateur"
 
@@ -423,7 +427,7 @@ msgstr "Montrer les actions par état"
 msgid "Show finished task's logs"
 msgstr "Montrer les actions finies"
 
-#: msc/infoPackage.inc.php:119
+#: msc/infoPackage.inc.php:134
 msgid "Show package's details"
 msgstr "Montrer les détails pour ce package"
 
@@ -449,7 +453,7 @@ msgid "Start action %s on host %s"
 msgstr "Démarrer l'action %s sur l'ordinateur %s"
 
 #: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
-#: msc/logs/ajaxLogsFilter.php:131
+#: msc/logs/ajaxLogsFilter.php:134
 msgid "Start date"
 msgstr "Date de démarrage"
 
@@ -478,7 +482,7 @@ msgstr "Status"
 msgid "Stop"
 msgstr "Arrêter"
 
-#: msc/infoPackage.inc.php:108
+#: msc/infoPackage.inc.php:123
 msgid "Stop a command"
 msgstr "Stopper une commande"
 
@@ -560,17 +564,17 @@ msgid "computers were successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
 #: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:138
 msgid "current_state"
 msgstr "État"
 
 #: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
-#: msc/logs/ajaxLogsFilter.php:138
+#: msc/logs/ajaxLogsFilter.php:141
 msgid "deleted"
 msgstr "Suppression"
 
 #: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
-#: msc/logs/ajaxLogsFilter.php:137
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "executed"
 msgstr "Exécution"
 
@@ -631,7 +635,7 @@ msgid "start_date"
 msgstr "Date de démarrage"
 
 #: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
-#: msc/logs/ajaxLogsFilter.php:136
+#: msc/logs/ajaxLogsFilter.php:139
 msgid "uploaded"
 msgstr "Envoi"
 
