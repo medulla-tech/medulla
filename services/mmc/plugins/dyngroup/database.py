@@ -427,13 +427,17 @@ class DyngroupDatabase(Singleton):
         session.close()
         return group.id
 
+    def request(self, ctx, query, bool, min, max, filter, queryManager):
+        return self.__request(ctx, query, bool, min, max, filter, queryManager)
+    
     def requestresult_group(self, ctx, id, start, end, filter, queryManager):
         session = create_session()
-
         group = self.__getGroupInSession(ctx, session, id)
+        return self.__request(ctx, group.query, group.bool, min, max, filter, queryManager, session)
 
-        query = queryManager.getQueryTree(group.query, group.bool)
-        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, start, end)
+    def __request(self, ctx, query, bool, start, end, filter, queryManager, session = create_session()):
+        query = queryManager.getQueryTree(query, bool)
+        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end)
 
         ret = []
         if type(result) == dict:

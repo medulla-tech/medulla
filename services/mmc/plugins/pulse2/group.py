@@ -57,6 +57,10 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().result_group(ctx, gid, min, max, filter)
 
+    def request(self, ctx, query, bool, min, max, filter):
+        klass = self.components[self.main]
+        return klass().request(ctx, query, bool, min, max, filter)
+
 class ComputerGroupI:
     def isdyn_group(self, ctx, gid):
         """
@@ -81,5 +85,11 @@ class ComputerGroupI:
         Send the group content
         """
         pass
+
+    def request(self, ctx, query, bool, min, max, filter):
+        """
+        Reply to this query
+        """
+        return []
 
 

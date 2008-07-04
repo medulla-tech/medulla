@@ -264,6 +264,16 @@ class Inventory(DyngroupDatabaseHelper):
             pass
 
         try:
+            request = pattern['request']
+            bool = None
+            if pattern.has_key('equ_bool'):
+                bool = pattern['equ_bool']
+            machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+            query = query.filter(self.machine.c.id.in_(*machines))
+        except KeyError, e:
+            pass
+            
+        try:
             gid = pattern['gid']
             machines = []
             if ComputerGroupManager().isrequest_group(ctx, gid):

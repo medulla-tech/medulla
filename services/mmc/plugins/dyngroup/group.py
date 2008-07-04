@@ -29,5 +29,10 @@ class DyngroupGroup(ComputerGroupI):
         """
         return DyngroupDatabase().result_group(ctx, gid, min, max, filter)
 
-
+    def request(self, ctx, query, bool, min, max, filter):
+        """
+        Reply to this query
+        """
+        return DyngroupDatabase().request(ctx, query, bool, min, max, filter, QueryManager())
+    
 
