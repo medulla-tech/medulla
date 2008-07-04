@@ -29,16 +29,9 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 
 $aclString = getAcl($_GET["user"]);
-$aclArr = createAclArray($aclString);
-$acl = $aclArr["acl"];
-$aclattr = $aclArr["aclattr"];
-$acltab = $aclArr["acltab"];
+list($acl, $acltab, $aclattr) = createAclArray($aclString);
 
 if ($_POST["buser"]) {
-    /* FIXME: Why is the unset needed ? */
-    unset($acl[0]);
-    unset($aclattr[0]);
-    unset($acltab[0]);
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }
@@ -57,10 +50,13 @@ if ($_POST["buser"]) {
     foreach ($_POST["aclattr"] as $key => $value) {
         $aclattr[$key] = $value;
     }
+
     setAcl($_GET["user"], createAclString($acl, $acltab, $aclattr));
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(_("User ACLs successfully modified."));
     }
+    $aclString = getAcl($_GET["user"]);
+    list($acl, $acltab, $aclattr) = createAclArray($aclString);
 }
 
 function createAclAttrTemplate($module_name, $aclattr) {

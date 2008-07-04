@@ -30,33 +30,39 @@
 function createAclArray($aclString) {
     list($acl, $aclattr) = split('/', $aclString);
 
+    $retacl = array();
+    $retacltab = array();
+    $retaclattr = array();
+
     /* get pages ACL */
     $arrayMod = split(':', $acl);
     foreach($arrayMod as $items) {
         if (substr_count($items, "#") == 2) {
             list($mod, $submod, $action) = split('#', $items);
-            $resArray["acl"][$mod][$submod][$action]["right"] = "on";
+            $retacl[$mod][$submod][$action]["right"] = "on";
         } else if (substr_count($items, "#") == 3) {
             list($mod, $submod, $action, $tab) = split('#', $items);
-            $resArray["acltab"][$mod][$submod][$action][$tab]["right"] = "on";
+            $retacltab[$mod][$submod][$action][$tab]["right"] = "on";
         }
     }
 
     /* get attribute ACL */
-    $arrayAttr=split(':',$aclattr);
-    foreach($arrayAttr as $items) {
-        list($attrName,$value) = split('=',$items);
-        $resArray["aclattr"][$attrName]=$value;
+    if (strlen($aclattr)) {
+        $arrayAttr=split(':',$aclattr);
+        foreach($arrayAttr as $items) {
+            list($attrName,$value) = split('=',$items);
+            $retaclattr[$attrName]=$value;
+        }
     }
     
-    return $resArray;
+    return array($retacl, $retacltab, $retaclattr);
 }
 
 /**
  * convert an acl array to an acl String
  */
 function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
-    $res="";
+    $res = "";
     //fetch all modules in $arrAcl
     foreach ($arrAcl as $modKey => $valKey ){
         if ($arrAcl[$modKey]["right"]) {
@@ -79,10 +85,14 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
     foreach($arrAclTab as $modKey => $valKey ){
         foreach ($valKey as $submodKey => $submodvalKey ){
             foreach ($submodvalKey as $actionKey => $actionvalKey) {
-                foreach ($actionvalKey as $tabKey => $tabValue) {
-                    if ($arrAclTab[$modKey][$submodKey][$actionKey][$tabKey]["right"]) {
-                        $res.=":$modKey#$submodKey#$actionKey#$tabKey";
-                    }                    
+                /* Only set tabs access if the corresponding page access is
+                   set too */
+                if (isset($arrAcl[$modKey][$submodKey][$actionKey])) {
+                    foreach ($actionvalKey as $tabKey => $tabValue) {
+                        if ($arrAclTab[$modKey][$submodKey][$actionKey][$tabKey]["right"]) {
+                            $res.=":$modKey#$submodKey#$actionKey#$tabKey";
+                        }
+                    }
                 }                
             }
         }
@@ -99,7 +109,6 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
         }
     }
     $combineRes = $res."/".$resAttr;
-
     return $combineRes;
 }
 
