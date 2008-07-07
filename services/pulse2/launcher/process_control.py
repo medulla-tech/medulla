@@ -258,10 +258,7 @@ class ProcessList(Singleton):
         return ret
 
     def getZombieIds(self):
-        ret=[]
-        for process in self.listZombies().values():
-            ret.append(process.id)
-        return ret
+        return self.listZombies().keys()
 
     def getZombiesCount(self):
         return len(self.listZombies())
@@ -276,10 +273,7 @@ class ProcessList(Singleton):
         return ret
 
     def getRunningIds(self):
-        ret=[]
-        for process in self.listRunning():
-            ret.append(process.id)
-        return ret
+        return self.listRunning().keys()
 
     def getRunningCount(self):
         return len(self.listRunning())
@@ -312,21 +306,46 @@ def get_process_times(id):
 def stop_process(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.sendSigStop()
-
+        process.sendSigStop()
+    return True
 def cont_process(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.sendSigCont()
+        process.sendSigCont()
+    return True
 def int_process(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.sendSigInt()
+        process.sendSigInt()
+    return True
 def kill_process(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.sendSigKill()
+        process.sendSigKill()
+    return True
 def hup_process(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.sendSigHup()
+        process.sendSigHup()
+    return True
+
+def stop_all_process():
+    for id in ProcessList().getRunningIds():
+        stop_process(id)
+    return True
+def cont_all_process():
+    for id in ProcessList().getRunningIds():
+        cont_process(id)
+    return True
+def int_all_process():
+    for id in ProcessList().getRunningIds():
+        int_process(id)
+    return True
+def kill_all_process():
+    for id in ProcessList().getRunningIds():
+        kill_process(id)
+    return True
+def hup_all_process():
+    for id in ProcessList().getRunningIds():
+        hup_process(id)
+    return True

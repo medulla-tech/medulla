@@ -68,7 +68,7 @@ def tellIAmAlive():
     def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
         if pulse2.launcher.process_control.ProcessList().getZombiesCount() > 0:
             logging.getLogger().info('launcher %s: sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
-            for p in pulse2.launcher.process_control.ProcessList().getZombiesList():
+            for p in pulse2.launcher.process_control.ProcessList().listZombies():
                 p.installEndBack()
 
     def _eb(reason): # can't contact scheduler, log and continue
@@ -252,6 +252,17 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_process(command_id))
     def xmlrpc_hup_process(self, command_id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_process(command_id))
+
+    def xmlrpc_stop_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stop_all_process())
+    def xmlrpc_cont_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.cont_all_process())
+    def xmlrpc_int_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.int_all_process())
+    def xmlrpc_kill_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_all_process())
+    def xmlrpc_hup_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_all_process())
 
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
