@@ -31,7 +31,8 @@ class MirrorApi(Singleton):
         self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
         try:
             self.server = xmlrpclib.Server(self.server_addr)
-            self.xmlrpc = self.server.xmlrpc
+            #self.xmlrpc = self.server.xmlrpc # TODO fallback if no xmlrpc
+            self.xmlrpc = self.server
             self.initialized_failed = False
         except:
             self.logger.warn("MirrorApi cant connect to %s" % (self.server_addr))
@@ -110,7 +111,8 @@ class Mirror:
         self.logger.debug('Mirror will connect to %s' % (server))
         try:
             self.server = xmlrpclib.Server(server)
-            self.xmlrpc = self.server.xmlrpc
+            #self.xmlrpc = self.server.xmlrpc
+            self.xmlrpc = self.server
             self.initialized_failed = False
         except:
             self.logger.warn("Mirror cant connect to %s" % (server))

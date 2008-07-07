@@ -27,7 +27,8 @@ class PackageA:
         self.logger.debug('PackageA will connect to %s' % (self.server_addr))
         try:
             self.server = xmlrpclib.Server(self.server_addr)
-            self.xmlrpc = self.server.xmlrpc
+            #self.xmlrpc = self.server.xmlrpc
+            self.xmlrpc = self.server
             self.initialized_failed = False
         except:
             self.logger.warn('PackageA failed to connect to %s' % (self.server_addr))
