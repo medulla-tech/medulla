@@ -242,6 +242,17 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_process_times(self, command_id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_times(command_id))
 
+    def xmlrpc_stop_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stop_process(command_id))
+    def xmlrpc_cont_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.cont_process(command_id))
+    def xmlrpc_int_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.int_process(command_id))
+    def xmlrpc_kill_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_process(command_id))
+    def xmlrpc_hup_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_process(command_id))
+
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
 

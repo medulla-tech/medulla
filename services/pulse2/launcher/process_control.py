@@ -24,6 +24,8 @@
 # classical Python modules
 import os
 import time
+import signal
+import logging
 from new import instancemethod
 
 # Twisted stuff
@@ -40,7 +42,7 @@ def commandRunner(cmd, cbCommandEnd):
     """
     process = commandProtocol(cmd)
     # FIXME: codec should be taken from conf file
-    twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
+    process.handler = twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
     process.deferred = twisted.internet.defer.Deferred()
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
@@ -50,10 +52,10 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     """
     process = commandProtocol(cmd)
     if not ProcessList().addProcess(process, id): # a process with the same ID already exists
-        logger.warn('Attempt to add command %d twice' % id)
+        logging.getLogger().warn('Attempt to add command %d twice' % id)
         return False
     # FIXME: codec should be taken from conf file
-    twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
+    process.handler = twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
     process.returnxmlrpcfunc = callbackName
     process.id = id
     process.defer_results = defer_results
@@ -68,6 +70,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.done = False
         self.id = id
         self.status = ""
+        self.handler = None
 
         # command output
         self.stdout = ""
@@ -128,6 +131,46 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def getExitCode(self):
         return self.exitCode
 
+    def getPID(self):
+        return self.hanlder.pid
+
+    def sendSignal(self, signal):
+        # signal is posix signal ID, see kill -l
+        logging.getLogger().debug('Send signal %s to command %s' % (signal, self.id) )
+        try:
+            self.handler.signalProcess(signal)
+        except:
+            logging.getLogger().warn('Send signal %s to command %s which is already finished' % (signal, self.id) )
+        return True
+
+    def sendSigCont(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGCONT)
+
+    def sendSigStop(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGSTOP)
+
+    def sendSigHup(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGHUP)
+
+    def sendSigKill(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGKILL)
+
+    def sendSigInt(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGINT)
+
+    def sendSigUsr1(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGUSR1)
+
+    def sendSigUsr2(self):
+        # signal is posix signal ID
+        self.sendSignal(signal.SIGUSR2)
+
     def getElapsedTime(self):
         return self.last_see_time - self.start_time
 
@@ -146,7 +189,9 @@ class ProcessList(Singleton):
         return True
 
     def getProcess(self, id):
-        return self._processArr[id]
+        if id in self._processArr:
+            return self._processArr[id]
+        return None
 
     def existsProcess(self, id):
         return id in self.listProcesses()
@@ -267,3 +312,25 @@ def get_process_exitcode(id):
     return ProcessList().getProcessExitcode(id)
 def get_process_times(id):
     return ProcessList().getProcessTimes(id)
+
+def stop_process(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigStop()
+
+def cont_process(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigCont()
+def int_process(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigInt()
+def kill_process(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigKill()
+def hup_process(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigHup()
