@@ -75,7 +75,6 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         # command output
         self.stdout = ""
         self.stderr = ""
-        self.stdall = ""
         self.exit_code = None
 
         # command stats
@@ -94,11 +93,9 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def write(self,data):
         self.transport.write(data)
-        self.stdall += "<<" + data
 
     def outReceived(self, data):
         self.stdout += data
-        self.stdall += ">>" + data
         self.lastout = data
         timestamp = time.time()
         self.last_see_time = timestamp
@@ -106,7 +103,6 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def errReceived(self, data):
         self.stderr += data
-        self.stdall += ">>" + data
         timestamp = time.time()
         self.last_see_time = timestamp
         self.last_stderr_time = timestamp
