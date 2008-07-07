@@ -21,13 +21,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# classical Python modules
 import os
+import time
 from new import instancemethod
 
+# Twisted stuff
 import twisted.internet.defer
 import twisted.internet.reactor
 import twisted.internet.protocol
 
+# Launcher stuff
 from pulse2.launcher.utils import Singleton
 
 def commandRunner(cmd, cbCommandEnd):
@@ -59,15 +63,28 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def __init__(self, cmd):
+        # command data
         self.cmd = cmd
         self.done = False
+        self.id = id
+        self.status = ""
+
+        # command output
         self.stdout = ""
         self.stderr = ""
         self.stdall = ""
         self.exit_code = None
-        self.status = ""
+
+        # command stats
+        timestamp = time.time()
+        self.start_time = timestamp
+        self.last_see_time = timestamp
+        self.last_stdout_time = 0
+        self.last_stderr_time = 0
+        self.end_time = 0
+
+        # command handling
         self.returnxmlrpcfunc = None
-        self.id = id
         self.endback = None
         self.defer_results = False
         self.deferred = None
@@ -80,14 +97,23 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.stdout += data
         self.stdall += ">>" + data
         self.lastout = data
+        timestamp = time.time()
+        self.last_see_time = timestamp
+        self.last_stdout_time = timestamp
 
     def errReceived(self, data):
         self.stderr += data
         self.stdall += ">>" + data
+        timestamp = time.time()
+        self.last_see_time = timestamp
+        self.last_stderr_time = timestamp
 
     def processEnded(self, reason):
         self.done = True
         self.exit_code = reason.value.exitCode
+        timestamp = time.time()
+        self.last_see_time = timestamp
+        self.end_time = timestamp
         if self.deferred:                   # if deffered exists, we should be in sync mode
             self.deferred.callback(self)    # fire callback
             return                          # and stop (will not go further)
@@ -101,6 +127,9 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def getExitCode(self):
         return self.exitCode
+
+    def getElapsedTime(self):
+        return self.last_see_time - self.start_time
 
 class ProcessList(Singleton):
     """
@@ -146,8 +175,23 @@ class ProcessList(Singleton):
     def getProcessExitcode(self, id):
         if self.existsProcess(id):
             return self.getProcess(id).getExitCode();
-        else:
-            return None
+        return None
+
+    def getProcessExitcode(self, id):
+        if self.existsProcess(id):
+            return self.getProcess(id).getExitCode();
+        return None
+
+    def getProcessTimes(self, id):
+        if self.existsProcess(id):
+            return {
+                'start': self.getProcess(id).start_time,
+                'last': self.getProcess(id).last_see_time,
+                'end': self.getProcess(id).end_time,
+                'now': time.time(),
+                'elaped': self.getProcess(id).last_see_time - self.getProcess(id).start_time
+            }
+        return None
 
     """ Massive process handling """
     def listProcesses(self):
@@ -198,3 +242,28 @@ class ProcessList(Singleton):
 
     def getRunningCount(self):
         return len(self.listRunning())
+
+""" XMLRPC functions """
+def get_process_count():
+    return ProcessList().getProcessCount()
+def get_running_count():
+    return ProcessList().getRunningCount()
+def get_zombie_count():
+    return ProcessList().getZombieCount()
+
+def get_process_ids():
+    return ProcessList().getProcessIds()
+def get_running_ids():
+    return ProcessList().getRunningIds()
+def get_zombie_ids():
+    return ProcessList().getZombieIds()
+
+
+def get_process_stderr(id):
+    return ProcessList().getProcessStderr(id)
+def get_process_stdout(id):
+    return ProcessList().getProcessStdout(id)
+def get_process_exitcode(id):
+    return ProcessList().getProcessExitcode(id)
+def get_process_times(id):
+    return ProcessList().getProcessTimes(id)
