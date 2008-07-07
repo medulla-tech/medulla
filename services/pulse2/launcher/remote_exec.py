@@ -402,3 +402,25 @@ def __cb_async_process_end(shprocess):
         addCallback(_cb, id).\
         addErrback(_eb, id)
     return
+
+def get_process_count():
+    return pulse2.launcher.process_control.ProcessList().getProcessCount()
+def get_running_count():
+    return pulse2.launcher.process_control.ProcessList().getRunningCount()
+def get_zombie_count():
+    return pulse2.launcher.process_control.ProcessList().getZombieCount()
+
+def get_process_ids():
+    return pulse2.launcher.process_control.ProcessList().getProcessIds()
+def get_running_ids():
+    return pulse2.launcher.process_control.ProcessList().getRunningIds()
+def get_zombie_ids():
+    return pulse2.launcher.process_control.ProcessList().getZombieIds()
+
+
+def get_process_stderr(id):
+    return pulse2.launcher.process_control.ProcessList().getProcessStderr(id)
+def get_process_stdout(id):
+    return pulse2.launcher.process_control.ProcessList().getProcessStdout(id)
+def get_process_exitcode(id):
+    return pulse2.launcher.process_control.ProcessList().getProcessExitcode(id)

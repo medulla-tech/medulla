@@ -64,10 +64,10 @@ def getPubKey(key_name):
 def getHealth(config):
     """
     Compute a health indicator as a dict with this keys:
-     - usedmem : the used memory in kBytes
-     - freemem : the free memory in kBytes
+     - usedmem : the used memory in Bytes
+     - freemem : the free memory in Bytes
      - avgload : the average load (1 minute)
-     
+
     @rtype: dict
     @returns: a dict containing the indicators
     """
@@ -88,7 +88,7 @@ def getHealth(config):
             elif line.startswith("MemFree:"):
                 free = int(line.split()[1])
         meminfo.close()
-        return total, free
+        return total*1024, free*1024 # return is always in B (not kB)
 
     from pulse2.launcher.process_control import ProcessList
     total, free = getMem()
@@ -113,6 +113,7 @@ def set_default_client_options(client):
             rootpath: used to know where to perform operations ('/' under Unix,
             '/cygdrive/c' under MS/Win, etc ...
     """
+    # FIXME: handle missing keys
 
     if client['protocol'] == 'ssh':
         if not 'port' in client:

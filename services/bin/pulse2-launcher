@@ -192,54 +192,52 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_sync_remote_push(self, command_id, client, files_list):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, files_list))
-    def xmlrpc_async_remote_push(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_push(command_id, client, files_list))
-
     def xmlrpc_sync_remote_pull(self, command_id, client, files_list):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, files_list))
-    def xmlrpc_async_remote_pull(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_pull(command_id, client, files_list))
-
     def xmlrpc_sync_remote_delete(self, command_id, client, files_list):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, files_list))
-    def xmlrpc_async_remote_delete(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_delete(command_id, client, files_list))
-
     def xmlrpc_sync_remote_exec(self, command_id, client, command):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, command))
-    def xmlrpc_async_remote_exec(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(command_id, client, command))
-
     def xmlrpc_sync_remote_quickaction(self, command_id, client, command):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command))
-    def xmlrpc_async_remote_quickaction(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(command_id, client, command))
-
+    def xmlrpc_sync_remote_inventory(self, command_id, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client))
     def xmlrpc_sync_remote_wol(self, client, command):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(command_id, client))
 
-    def xmlrpc_sync_remote_inventory(self, command_id, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client))
+    def xmlrpc_async_remote_push(self, command_id, client, files_list):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_push(command_id, client, files_list))
+    def xmlrpc_async_remote_pull(self, command_id, client, files_list):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_pull(command_id, client, files_list))
+    def xmlrpc_async_remote_delete(self, command_id, client, files_list):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_delete(command_id, client, files_list))
+    def xmlrpc_async_remote_exec(self, command_id, client, command):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(command_id, client, command))
+    def xmlrpc_async_remote_quickaction(self, command_id, client, command):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(command_id, client, command))
     def xmlrpc_async_remote_inventory(self, command_id, client):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(command_id, client))
 
-    def xmlrpc_get_background_process_count(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_count())
+    # Background process management
+    def xmlrpc_get_process_count(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_process_count())
+    def xmlrpc_get_running_count(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_running_count())
+    def xmlrpc_get_zombie_count(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_zombie_count())
+    def xmlrpc_get_process_ids(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_process_ids())
+    def xmlrpc_get_running_ids(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_running_ids())
+    def xmlrpc_get_zombie_ids(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_zombie_ids())
 
-    def xmlrpc_get_background_process_list(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_process_list())
-
-    def xmlrpc_get_background_running_process_count(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_running_process_count())
-
-    def xmlrpc_get_background_running_process_list(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_background_running_process_list())
-
-    def xmlrpc_is_background_process_done(self, name):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.is_background_process_done(name))
-
-    def xmlrpc_purge_background_process(self, name):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.purge_background_process(name))
+    def xmlrpc_get_process_stdout(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_process_stdout(command_id))
+    def xmlrpc_get_process_stderr(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_process_stderr(command_id))
+    def xmlrpc_get_process_exitcode(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.get_process_exitcode(command_id))
 
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
