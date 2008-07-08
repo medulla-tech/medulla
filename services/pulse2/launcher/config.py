@@ -43,14 +43,15 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     # default values
     name = None
     cp = None
-    pid_path = "/var/run/pulse2"
-    launcher_path = "/usr/local/sbin/pulse2-launcher"
 
-    wrapper_path = "/usr/local/sbin/pulse2-output-wrapper"
-    source_path = "/tftpboot/revoboot/msc"
+    pid_path = "/var/run/pulse2"
+    launcher_path = "/usr/sbin/pulse2-launcher"
+    wrapper_path = "/usr/sbin/pulse2-output-wrapper"
+    source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
 
     wrapper_max_log_size = "0"
+    wrapper_max_exec_time = 0
 
     inventory_command = "echo Doing inventory"
     temp_folder_prefix = "MDVPLS"
@@ -110,6 +111,8 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             self.setoption('launchers', key)
         if self.cp.has_option('launchers', 'wrapper_max_log_size'):
             self.wrapper_max_log_size = self.cp.get('launchers', 'wrapper_max_log_size')
+        if self.cp.has_option('launchers', 'wrapper_max_exec_time'):
+            self.wrapper_max_exec_time = self.cp.getint('launchers', 'wrapper_max_exec_time')
 
         if self.cp.has_section('scheduler'):
             for key in ['launcher_path', 'awake_time', 'defer_results']:
