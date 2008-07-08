@@ -363,6 +363,8 @@ class Glpi(DyngroupDatabaseHelper):
             # filtering on locations
             try:
                 location = filt['location']
+                if location == '' or location == u'':
+                    location = None
             except KeyError:
                 location = None
 
