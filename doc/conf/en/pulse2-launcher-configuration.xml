@@ -122,7 +122,7 @@ option2 = plop      </screen></para>
 
             <entry>Configuration for launcher_XXX</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
           </row>
         </tbody>
       </tgroup>
@@ -165,7 +165,7 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
 
-            <entry>/usr/local/sbin/pulse2-launcher</entry>
+            <entry>/usr/sbin/pulse2-launcher</entry>
           </row>
 
           <row>
@@ -176,7 +176,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/usr/local/sbin/pulse2-output-wrapper</entry>
+            <entry>/usr/sbin/pulse2-output-wrapper</entry>
           </row>
 
           <row>
@@ -206,9 +206,9 @@ option2 = plop      </screen></para>
             <entry>The inventory command to use on a client, after a
             successful deployment.</entry>
 
-            <entry></entry>
+            <entry>yes</entry>
 
-            <entry></entry>
+            <entry>echo Doing inventory</entry>
           </row>
 
           <row>
@@ -217,9 +217,19 @@ option2 = plop      </screen></para>
             <entry>During a deployment, if a folder has to be created, its
             name will begin by this string.</entry>
 
-            <entry></entry>
+            <entry>yes</entry>
 
-            <entry></entry>
+            <entry>MDVPLS</entry>
+          </row>
+
+          <row>
+            <entry>wrapper_max_log_size</entry>
+
+            <entry>Cap generated logs to this value</entry>
+
+            <entry>yes</entry>
+
+            <entry>0 ("no limit")</entry>
           </row>
         </tbody>
       </tgroup>
@@ -306,7 +316,7 @@ option2 = plop      </screen></para>
             <entry>forward_key</entry>
 
             <entry>Should we perform key-forwarding (never, always, or let =
-            let the scheduler take its decision) </entry>
+            let the scheduler take its decision)</entry>
 
             <entry>yes</entry>
 
@@ -318,12 +328,10 @@ option2 = plop      </screen></para>
   </section>
 
   <section>
-
     <title>« daemon » section</title>
 
-    <para>
-      This section sets the pulse2-launchers-manager and pulse2-launchers service run-time options and privileges.
-    </para>
+    <para>This section sets the pulse2-launchers-manager and pulse2-launchers
+    service run-time options and privileges.</para>
 
     <table>
       <title>Available options for the "daemon" section</title>
@@ -345,53 +353,50 @@ option2 = plop      </screen></para>
           <row>
             <entry>pid_path</entry>
 
-            <entry>The launcher services PID, used by pulse2-launchers-manager to track the launchers services.</entry>
+            <entry>The launcher services PID, used by pulse2-launchers-manager
+            to track the launchers services.</entry>
 
             <entry>yes</entry>
 
             <entry>/var/run/pulse2</entry>
-
           </row>
 
           <row>
             <entry>user</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers service run as this specified user.</entry>
+            <entry>The pulse2-launchers-manager and pulse2-launchers service
+            run as this specified user.</entry>
 
             <entry>yes</entry>
 
             <entry>root</entry>
-
           </row>
 
           <row>
             <entry>group</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers services run as this specified group.</entry>
+            <entry>The pulse2-launchers-manager and pulse2-launchers services
+            run as this specified group.</entry>
 
             <entry>yes</entry>
 
             <entry>root</entry>
-
           </row>
 
           <row>
             <entry>umask</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers services umask defines the right of the new files they create (log files for example).</entry>
+            <entry>The pulse2-launchers-manager and pulse2-launchers services
+            umask defines the right of the new files they create (log files
+            for example).</entry>
 
             <entry>yes</entry>
 
             <entry>0077</entry>
-
           </row>
-	  
-	</tbody>
-
+        </tbody>
       </tgroup>
-
     </table>
-
   </section>
 
   <section>
@@ -438,9 +443,10 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>enable</entry>
+            <entry>enablessl</entry>
 
-            <entry>Flag that tells if SSL should be used to connect to the scheduler</entry>
+            <entry>Flag that tells if SSL should be used to connect to the
+            scheduler</entry>
 
             <entry>yes</entry>
 
@@ -553,7 +559,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>certfile</entry>
 
-            <entry>path to the certificate file describing the certificate authority of the SSL server</entry>
+            <entry>path to the certificate file describing the certificate
+            authority of the SSL server</entry>
 
             <entry>yes</entry>
 
