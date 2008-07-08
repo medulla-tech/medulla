@@ -88,7 +88,7 @@ def getHealth(config):
             elif line.startswith("MemFree:"):
                 free = int(line.split()[1])
         meminfo.close()
-        return total*1024, free*1024 # return is always in B (not kB)
+        return total * 1024, free * 1024 # return is always in B (not kB)
 
     from pulse2.launcher.process_control import ProcessList
     total, free = getMem()
@@ -97,7 +97,7 @@ def getHealth(config):
         "memfree" : free,
         "memused" : total - free,
         "slottotal" : config["slots"],
-        "slotused" : ProcessList().getProcessesCount()
+        "slotused" : ProcessList().getProcessCount()
         }
 
 def set_default_client_options(client):

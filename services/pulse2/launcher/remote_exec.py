@@ -384,7 +384,7 @@ def __cb_async_process_end(shprocess):
         pulse2.launcher.process_control.ProcessList().rmProcess(id)
     def _eb(reason, id):
         # no result can be sent, log and keep our process in our list
-        logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s, reason: %s' % (LauncherConfig().name, id, scheduler, reason))
+        logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s: %s' % (LauncherConfig().name, id, scheduler, reason.value))
 
     exitcode = shprocess.exit_code
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')

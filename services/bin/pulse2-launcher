@@ -73,7 +73,7 @@ def tellIAmAlive():
                 pulse2.launcher.process_control.ProcessList().getProcess(id).installEndBack()
 
     def _eb(reason): # can't contact scheduler, log and continue
-        logging.getLogger().warn('launcher %s: failed to contact our scheduler at %s, reason: %s' % (LauncherConfig().name, scheduler, reason))
+        logging.getLogger().error('launcher %s: failed to contact our scheduler at %s: %s' % (LauncherConfig().name, scheduler, reason.value))
 
     # retrieve referent scheduler
     scheduler = pulse2.launcher.utils.getScheduler()
@@ -101,6 +101,7 @@ def startService():
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']
+    slots = config.launchers[config.name]['slots']
 
     # Starting XMLRPC server
     launcher = Launcher(name)
@@ -132,8 +133,9 @@ def startService():
         return 1
 
     # Start periodic scheduler probing, called every awake_time seconds
+    pulse2.launcher.process_control.ProcessList().setup(slots)
     tellIAmAlive()
-    logger.info('launcher %s: listening on %s:%d' % (name, bind, port))
+    logger.info('launcher %s: %d slots, listening on %s:%d' % (name, slots, bind, port))
 
     twisted.internet.reactor.run()
     return 0

@@ -189,10 +189,16 @@ class ProcessList(Singleton):
     """
     _processArr = dict()
     _event = list()
+    slots = 0
+
+    def setup(self, slots):
+        self.slots = slots
 
     """ Process handling """
     def addProcess(self, obj, id):
         if id in self._processArr.keys():
+            return False
+        if self.getProcessCount() >= self.slots:
             return False
         self._processArr[id] = obj
         return True
