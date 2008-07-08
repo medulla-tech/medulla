@@ -52,7 +52,7 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     """
     process = commandProtocol(cmd)
     if not ProcessList().addProcess(process, id): # a process with the same ID already exists
-        logging.getLogger().warn('Attempt to add command %d twice' % id)
+        logging.getLogger().warn('Attempt to add command %s twice' % id)
         return False
     # FIXME: codec should be taken from conf file
     process.handler = twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
@@ -69,13 +69,16 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.cmd = cmd
         self.done = False
         self.id = id
-        self.status = ""
+
+        # comman process handling
         self.handler = None
+        self.status = ""
+        self.exit_code = ""
+        self.signal = ""
 
         # command output
         self.stdout = ""
         self.stderr = ""
-        self.exit_code = None
 
         # command stats
         timestamp = time.time()
@@ -109,10 +112,20 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def processEnded(self, reason):
         self.done = True
-        self.exit_code = reason.value.exitCode
+        # reason.value contain:
+        # exitCode
+        # signal
+        # status
+        # as we leave under unix, error code is <exit status>, or <sig> + 128)
+
+        self.status = reason.value.status
+        self.exit_code = reason.value.exitCode or reason.value.signal + 128 # # no exit code => POSIX compatibility
+        self.signal = reason.value.signal or 0  # no signal => force signal to zero
+
         timestamp = time.time()
         self.last_see_time = timestamp
         self.end_time = timestamp
+
         if self.deferred:                   # if deffered exists, we should be in sync mode
             self.deferred.callback(self)    # fire callback
             return                          # and stop (will not go further)
@@ -125,10 +138,10 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.deferred.callback(self)
 
     def getExitCode(self):
-        return self.exitCode
+        return self.exit_code
 
     def getPID(self):
-        return self.hanlder.pid
+        return self.handler.pid
 
     def sendSignal(self, signal):
         # signal is posix signal ID, see kill -l
@@ -225,12 +238,14 @@ class ProcessList(Singleton):
 
     def getProcessTimes(self, id):
         if self.existsProcess(id):
+            now = time.time()
             return {
                 'start': self.getProcess(id).start_time,
                 'last': self.getProcess(id).last_see_time,
                 'end': self.getProcess(id).end_time,
-                'now': time.time(),
-                'elaped': self.getProcess(id).last_see_time - self.getProcess(id).start_time
+                'now': now,
+                'age': now - self.getProcess(id).start_time,
+                'elapsed': self.getProcess(id).last_see_time - self.getProcess(id).start_time
             }
         return None
 
@@ -249,34 +264,32 @@ class ProcessList(Singleton):
         return self.listProcesses().values()
 
     """ Zombies handling """
-    def listZombies(self):
-        """ a zombie is a command already finished which has not been processed yet """
-        ret={}
-        for k, v in self.listProcesses().iteritems():
-            if v.done:
-                ret[k] = v
-        return ret
+    def isZombie(self, id):
+        return self.getProcess(id).done
 
     def getZombieIds(self):
-        return self.listZombies().keys()
-
-    def getZombiesCount(self):
-        return len(self.listZombies())
-
-    """ Running handling """
-    def listRunning(self):
-        """ a running process is a command not yet finished """
-        ret={}
-        for k, v in self.listProcesses().iteritems():
-            if not v.done:
-                ret[k] = v
+        ret = []
+        for i in self.listProcesses().keys():
+            if self.isZombie(i):
+                ret.append(i)
         return ret
 
+    def getZombiesCount(self):
+        return len(self.getZombieIds())
+
+    """ Running handling """
+    def isRunning(self, id):
+        return not self.isZombie(id)
+
     def getRunningIds(self):
-        return self.listRunning().keys()
+        ret = []
+        for i in self.listProcesses().keys():
+            if self.isRunning(i):
+                ret.append(i)
+        return ret
 
     def getRunningCount(self):
-        return len(self.listRunning())
+        return len(self.getRunningIds())
 
 """ XMLRPC functions """
 def get_process_count():
@@ -292,7 +305,6 @@ def get_running_ids():
     return ProcessList().getRunningIds()
 def get_zombie_ids():
     return ProcessList().getZombieIds()
-
 
 def get_process_stderr(id):
     return ProcessList().getProcessStderr(id)

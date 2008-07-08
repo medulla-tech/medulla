@@ -370,7 +370,7 @@ def __cb_sync_process_end(shprocess):
     """
         Handle sync process termination
     """
-    exitcode = shprocess.exitCode
+    exitcode = shprocess.exit_code
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     return exitcode, stdout, stderr
@@ -386,7 +386,7 @@ def __cb_async_process_end(shprocess):
         # no result can be sent, log and keep our process in our list
         logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s, reason: %s' % (LauncherConfig().name, id, scheduler, reason))
 
-    exitcode = shprocess.exitCode
+    exitcode = shprocess.exit_code
     stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
     stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
     id = shprocess.id
