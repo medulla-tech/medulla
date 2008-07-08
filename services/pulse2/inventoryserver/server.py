@@ -95,11 +95,15 @@ class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer
     def __init__(self, *args):
         self.logger = logging.getLogger()
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
+    def log_message(self, format, *args):
+        self.logger.info(format % args)
 
 class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
         self.logger = logging.getLogger()
         SecureHTTPRequestHandler.__init__(self, *args)
+    def log_message(self, format, *args):
+        self.logger.info(format % args)
 
 class TreatInv(Thread):
     def __init__(self, config):
@@ -107,6 +111,9 @@ class TreatInv(Thread):
         self.status = -1
         self.logger = logging.getLogger()
         self.config = config
+
+    def log_message(self, format, *args):
+        self.logger.info(format % args)
 
     def run(self):
         while 1:
