@@ -119,7 +119,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         # as we leave under unix, error code is <exit status>, or <sig> + 128)
 
         self.status = reason.value.status
-        self.exit_code = reason.value.exitCode or reason.value.signal + 128 # # no exit code => POSIX compatibility
+        self.exit_code = reason.value.exitCode or (reason.value.signal and reason.value.signal + 128) or 0 # # no exit code => POSIX compatibility
         self.signal = reason.value.signal or 0  # no signal => force signal to zero
 
         timestamp = time.time()
@@ -231,11 +231,6 @@ class ProcessList(Singleton):
             return self.getProcess(id).getExitCode();
         return None
 
-    def getProcessExitcode(self, id):
-        if self.existsProcess(id):
-            return self.getProcess(id).getExitCode();
-        return None
-
     def getProcessTimes(self, id):
         if self.existsProcess(id):
             now = time.time()
@@ -247,6 +242,25 @@ class ProcessList(Singleton):
                 'age': now - self.getProcess(id).start_time,
                 'elapsed': self.getProcess(id).last_see_time - self.getProcess(id).start_time
             }
+        return None
+
+    def getProcessState(self, id):
+        if self.existsProcess(id):
+            return {
+                'command': self.getProcess(id).cmd,
+                'exit_code': self.getProcess(id).exit_code,
+                'status': self.getProcess(id).status,
+                'signal': self.getProcess(id).signal,
+                'pid': self.getProcess(id).handler.pid
+            }
+        return None
+
+    def getProcessStatistics(self, id):
+        if self.existsProcess(id):
+            ret = {}
+            ret.update(self.getProcessState(id))
+            ret.update(self.getProcessTimes(id))
+            return ret
         return None
 
     """ Massive process handling """
@@ -314,6 +328,10 @@ def get_process_exitcode(id):
     return ProcessList().getProcessExitcode(id)
 def get_process_times(id):
     return ProcessList().getProcessTimes(id)
+def get_process_state(id):
+    return ProcessList().getProcessState(id)
+def get_process_statistics(id):
+    return ProcessList().getProcessStatistics(id)
 
 def stop_process(id):
     process = ProcessList().getProcess(id)
