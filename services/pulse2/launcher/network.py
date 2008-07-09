@@ -23,6 +23,7 @@
 
 # Python stuff
 import logging
+import re
 
 # Other stuff
 from pulse2.launcher.config import LauncherConfig
@@ -64,13 +65,45 @@ def icmpClient(client):
             return False
         logging.getLogger().debug("launcher %s: ICMP succeeded" % (LauncherConfig().name))
         return True
-
     command_list = [
         LauncherConfig().ping_path,
         client
     ]
-
     return pulse2.launcher.process_control.commandRunner(
         command_list,
         __cb_wol_end
     )
+
+def probeClient(client):
+    def __cb_probe_end(result):
+        (exitcode, stdout, stderr) = result
+        idData = [
+             { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},
+             { 'platform': "GNU Linux", 'pcre': "Linux", "tmp_path": "/tmp/lsc", "root_path": "/"},
+             { 'platform': "Sun Solaris", 'pcre': "SunOS", "tmp_path": "/tmp/lsc", "root_path": "/"},
+             { 'platform': "IBM AIX", 'pcre': "AIX", "tmp_path": "/tmp/lsc", "root_path": "/"},
+             { 'platform': "HP UX", 'pcre': "HP-UX", "tmp_path": "/tmp/lsc", "root_path": "/"},
+             { 'platform': "Apple MacOS", 'pcre': "Darwin", "tmp_path": "/tmp/lsc", "root_path": "/"}
+        ]
+        if not exitcode == 0:
+            logging.getLogger().warn("launcher %s: PROBE execution failed: %s, %s" % (LauncherConfig().name, stdout, stderr))
+            return "Not available"
+        for identification in idData:
+            if re.compile(identification["pcre"]).search(stdout) or stdout == identification["platform"]:
+                logging.getLogger().debug("launcher %s: PROBE identification succeded: %s" % (LauncherConfig().name, identification["platform"]))
+                return identification["platform"]
+        logging.getLogger().debug("launcher %s: PROBE identification failed: %s, %s" % (LauncherConfig().name, stdout, stderr))
+        return "Other"
+
+    client = {
+        'protocol': 'ssh',
+        'host': 'pulse2-win2k',
+        'uuid': None
+    }
+    mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
+        None,
+        client,
+        "echo $OS; uname"
+    )
+    mydeffered.addCallback(__cb_probe_end)
+    return mydeffered

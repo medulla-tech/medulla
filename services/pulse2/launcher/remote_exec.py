@@ -298,6 +298,57 @@ def remote_quickaction(command_id, client, command, mode):
             )
     return None
 
+def sync_remote_direct(command_id, client, command):
+    """ Handle remote direct stuff on target, sync mode """
+    return remote_direct(command_id, client, command, 'sync')
+
+def async_remote_direct(command_id, client, command):
+    """ Handle remote direct stuff on target, async mode """
+    return remote_direct(command_id, client, command, 'async')
+
+
+def remote_direct(command_id, client, command, mode):
+    """ Handle remote direct stuff on target """
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
+        real_command = command
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            '--no-wrap',
+            'yes',
+            '--only-stdout',
+            'yes',
+        ]
+        if mode == 'async':
+            return pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_direct',
+                LauncherConfig().wrapper_max_exec_time
+            )
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
+    return None
+
 def sync_remote_inventory(command_id, client):
     """ Handle remote quick action on target, sync mode """
     return remote_inventory(command_id, client, 'sync')
