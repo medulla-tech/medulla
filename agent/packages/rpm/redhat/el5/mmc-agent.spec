@@ -1,4 +1,4 @@
-%define python_sitelib %(%{__python} -c 'from distutils import sysconfig; print sysconfig.get_python_lib()')
+%define python_sitelib %(%{__python} -c 'from distutils import sysconfig; print sysconfig.get_python_lib(1)')
 
 %define _enable_debug_packages %{nil}
 %define debug_package          %{nil}
