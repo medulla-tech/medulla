@@ -396,7 +396,7 @@ def runDeletePhase(myCommandOnHostID):
             mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
                 'async_remote_delete',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'protocol': 'ssh'},
+                {'host': myT.target_name, 'uuid': target_uuid, 'protocol': 'ssh'},
                 files_list
             )
             mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
