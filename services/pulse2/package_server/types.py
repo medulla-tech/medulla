@@ -181,19 +181,20 @@ class AFiles:
         return self.toH()
 
 class File:
-    def __init__(self, name = None, path = '/', checksum = None, size = 0, access = {}, id = None):
+    def __init__(self, name = None, path = '/', checksum = None, size = 0, acc = {}, id = None):
+        access = acc
         if access.has_key('mirror'):
             self.where = access['mirror']
         else:
             if not access.has_key('proto'):
                 access['proto'] = 'http'
-            if not access.has_key('server_uri'):
-                access['server_uri'] = '127.0.0.1'
-            if not access.has_key('server_port'):
-                access['server_port'] = '80'
-            if not access.has_key('server_mp'):
-                access['server_mp'] = ''
-            self.where = "%s://%s:%s%s" % (access['proto'], access['server_uri'], str(access['server_port']), access['server_mp'])
+            if not access.has_key('file_access_uri'):
+                access['file_access_uri'] = '127.0.0.1'
+            if not access.has_key('file_access_port'):
+                access['file_access_port'] = '80'
+            if not access.has_key('file_access_path'):
+                access['file_access_path'] = ''
+            self.where = "%s://%s:%s%s" % (access['proto'], access['file_access_uri'], str(access['file_access_port']), access['file_access_path'])
         
         self.name = name
         self.path = path
