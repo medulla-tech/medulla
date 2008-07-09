@@ -205,9 +205,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingClient(uuid, fqdn, shortname, ips, macs))
     def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(uuid, fqdn, shortname, ips, macs))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.probeClient(uuid, fqdn, shortname, ips, macs))
     def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
 

@@ -23,83 +23,9 @@
 
 # regular modules
 import logging
-import re
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
-
-# MMC
-import mmc.support.mmctools
-
-def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
-    # TODO: a cache system ?!
-    client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs
-    })
-    def _probecb(result):
-        ptype = "\n".join(result)
-        logging.getLogger().debug(result)
-        if ptype == 'FAILED':
-            logging.getLogger().debug('scheduler %s: can ping, but can\'t connect to client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
-            return 1
-        logging.getLogger().debug('scheduler %s: can connect to client \'%s\' (got %s)' % (SchedulerConfig().name, client, ptype))
-        return 2
-    def _probeeb(result):
-        logging.getLogger().debug('scheduler %s: can ping, but can\'t connect to client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
-        return 1
-    def _pingcb(result, client = client):
-        myresult = "\n".join(result)
-        if myresult == 'OK':
-            command = '%s %s' % (SchedulerConfig().prober_path, client)
-            logging.getLogger().debug(command)
-            return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_probecb).addErrback(_probeeb)
-        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got %s)' % (SchedulerConfig().name, client, myresult))
-        return 0
-    def _pingeb(result):
-        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
-        return 0
-    if client:
-        command = '%s %s' % (SchedulerConfig().ping_path, client)
-        logging.getLogger().debug("do probe using the following command: %s" % command)
-        return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_pingcb).addErrback(_pingeb)
-    else:
-        return 0
-
-
-def probeClient(uuid, fqdn, shortname, ips, macs):
-    idData = [
-         { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},
-         { 'platform': "GNU Linux", 'pcre': "Linux", "tmp_path": "/tmp/lsc", "root_path": "/"},
-         { 'platform': "Sun Solaris", 'pcre': "SunOS", "tmp_path": "/tmp/lsc", "root_path": "/"},
-         { 'platform': "IBM AIX", 'pcre': "AIX", "tmp_path": "/tmp/lsc", "root_path": "/"},
-         { 'platform': "HP UX", 'pcre': "HP-UX", "tmp_path": "/tmp/lsc", "root_path": "/"},
-         { 'platform': "Apple MacOS", 'pcre': "Darwin", "tmp_path": "/tmp/lsc", "root_path": "/"}
-    ]
-    # TODO: a cache system ?!
-    def _cb(result):
-        ptype = "\n".join(result)
-        for identification in idData:
-            if re.compile(identification["pcre"]).search(ptype) or ptype == identification["platform"]:
-                logging.getLogger().debug('scheduler %s: found os |%s| for client \'%s\'' % (SchedulerConfig().name, identification["platform"], client))
-                return identification["platform"]
-        logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got %s)' % (SchedulerConfig().name, client, ptype))
-        return "Other/N.A."
-    def _eb(result):
-        logging.getLogger().debug('scheduler %s: can\'t probe os for client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
-        return "Can't connect"
-    client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs
-    })
-    command = '%s %s' % (SchedulerConfig().prober_path, client)
-    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
 def chooseClientIP(target):
     """

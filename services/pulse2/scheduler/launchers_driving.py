@@ -58,10 +58,8 @@ def chooseLauncher():
     return uri
 
 def pingClient(uuid, fqdn, shortname, ips, macs):
-
     # choose launcher
     launcher = chooseLauncher()
-
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -70,10 +68,44 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-
     # perform call
     mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
         'icmp',
-        client
+        client,
+        2
     )
+    return mydeffered
+
+def probeClient(uuid, fqdn, shortname, ips, macs):
+    # choose launcher
+    launcher = chooseLauncher()
+    # choose a way to perform the operation
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
+    # perform call
+    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+        'probe',
+        client,
+        4
+    )
+    return mydeffered
+
+def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
+    def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
+        def _probecb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
+            if not result == "Not available":
+                return 2
+            return 1
+        if result:
+            mydeffered = probeClient(uuid, fqdn, shortname, ips, macs)
+            mydeffered.addCallback(_probecb)
+            return mydeffered
+        return 0
+    mydeffered = pingClient(uuid, fqdn, shortname, ips, macs)
+    mydeffered.addCallback(_pingcb)
     return mydeffered

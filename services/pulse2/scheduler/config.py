@@ -55,7 +55,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     mode = 'sync'
 
     scheduler_path = '/usr/sbin/pulse2-scheduler'
-    prober_path = '/usr/sbin/pulse2-probe'
 
     daemon_user = 0
     daemon_group = 0
@@ -104,7 +103,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         self.awake_time = int(self.awake_time)
 
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
-        self.setoption("scheduler", "prober_path", "prober_path")
 
         self.setoption("scheduler", "resolv_order", "resolv_order")
         if not type(self.resolv_order) == type([]):
