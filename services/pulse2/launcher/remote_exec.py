@@ -53,7 +53,7 @@ def remote_push(command_id, client, files_list, mode):
     """ Handle remote copy (push) """
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "rsyncssh":
         # command is issued though our wrapper, time to build it
         real_files_list = files_list
@@ -99,7 +99,7 @@ def async_remote_pull(command_id, client, files_list):
 
 def remote_pull(command_id, client, files_list, mode):
     """ Handle remote copy (pull) on target """
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "wget":
@@ -155,7 +155,7 @@ def async_remote_delete(command_id, client, files_list):
 
 def remote_delete(command_id, client, files_list, mode):
     """ Handle remote deletion on target """
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
@@ -208,7 +208,7 @@ def async_remote_exec(command_id, client, command):
 
 def remote_exec(command_id, client, command, mode):
     """ Handle remote execution on target """
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     wrapper_path = LauncherConfig().wrapper_path
     if client['protocol'] == "ssh":
@@ -260,7 +260,7 @@ def async_remote_quickaction(command_id, client, command):
 
 def remote_quickaction(command_id, client, command, mode):
     """ Handle remote quick action on target """
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
@@ -316,7 +316,7 @@ def remote_inventory(command_id, client, mode):
 
     Return: same as sync_remote_push
     """
-    client = pulse2.launcher.utils.set_default_client_options(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
     wrapper_path = LauncherConfig().wrapper_path
     inventory_command = LauncherConfig().inventory_command
     if client['protocol'] == "ssh":

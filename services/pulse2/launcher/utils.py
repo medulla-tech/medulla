@@ -100,7 +100,7 @@ def getHealth(config):
         "slotused" : ProcessList().getProcessCount()
         }
 
-def set_default_client_options(client):
+def setDefaultClientOptions(client):
     """
         client i a simple dict, which should contain required connexion infos, for now:
             protocol: which one to use for connexion, mandatory
