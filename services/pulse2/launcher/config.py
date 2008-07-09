@@ -49,6 +49,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
+    ping_path = "/usr/sbin/pulse2-ping"
 
     # WOL stuff
     wol_path = '/usr/sbin/pulse2-wol'
@@ -114,7 +115,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         self.name = name
 
         # Parse "launchers" section
-        for key in ['pid_path', 'launcher_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
+        for key in ['pid_path', 'launcher_path', 'ping_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
             self.setoption('launchers', key, key)
         self.setoption('launchers', 'wrapper_max_log_size', 'wrapper_max_log_size')
         self.setoption('launchers', 'wrapper_max_exec_time', 'wrapper_max_exec_time')

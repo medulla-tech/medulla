@@ -32,27 +32,43 @@ import mmc.support.mmctools
 def wolClient(mac_addrs):
     """ Send a BCast WOL packet to mac_addrs """
     def __cb_wol_end(shprocess):
-        exitcode = shprocess.exit_code
-        stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
-        stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
-        if not exitcode == 0:
-            logging.getLogger().warn("launcher %s: WOL failed: %s" % (LauncherConfig().name, stdout))
+        if not shprocess.exit_code == 0:
+            logging.getLogger().warn("launcher %s: WOL failed: %s, %s" % (LauncherConfig().name, shprocess.stdout, shprocess.stderr))
             return False
         logging.getLogger().debug("launcher %s: WOL succeeded" % (LauncherConfig().name))
         return True
-
-    # clean empty macs
-    purged_mac_addrs = []
-    for i in mac_addrs:
-        if i:
-            purged_mac_addrs.append(i)
 
     command_list = [
         LauncherConfig().wol_path,
         '--ipaddr=%s' % LauncherConfig().wol_bcast,
         '--port=%s' % LauncherConfig().wol_port,
     ]
+
+    # clean empty macs
+    purged_mac_addrs = []
+    for i in mac_addrs:
+        if i:
+            purged_mac_addrs.append(i)
     command_list += purged_mac_addrs
+
+    return pulse2.launcher.process_control.commandRunner(
+        command_list,
+        __cb_wol_end
+    )
+
+def icmpClient(client):
+    """ Send a Ping to our client """
+    def __cb_wol_end(shprocess):
+        if not shprocess.exit_code == 0:
+            logging.getLogger().warn("launcher %s: ICMP failed: %s, %s" % (LauncherConfig().name, shprocess.stdout, shprocess.stderr))
+            return False
+        logging.getLogger().debug("launcher %s: ICMP succeeded" % (LauncherConfig().name))
+        return True
+
+    command_list = [
+        LauncherConfig().ping_path,
+        client
+    ]
 
     return pulse2.launcher.process_control.commandRunner(
         command_list,

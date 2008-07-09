@@ -285,6 +285,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     # Network stuff handling
     def xmlrpc_wol(self, mac_addrs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.wolClient(mac_addrs))
+    def xmlrpc_icmp(self, client):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.icmpClient(client))
 
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
