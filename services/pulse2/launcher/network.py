@@ -41,13 +41,18 @@ def wolClient(mac_addrs):
         logging.getLogger().debug("launcher %s: WOL succeeded" % (LauncherConfig().name))
         return True
 
-    # "linear-i-fy" MAC adresses
+    # clean empty macs
+    purged_mac_addrs = []
+    for i in mac_addrs:
+        if i:
+            purged_mac_addrs.append(i)
+
     command_list = [
         LauncherConfig().wol_path,
         '--ipaddr=%s' % LauncherConfig().wol_bcast,
         '--port=%s' % LauncherConfig().wol_port,
     ]
-    command_list += mac_addrs
+    command_list += purged_mac_addrs
 
     return pulse2.launcher.process_control.commandRunner(
         command_list,

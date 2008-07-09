@@ -122,7 +122,7 @@ def set_default_client_options(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['-T', '-i', client['cert']]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         if LauncherConfig().ssh_forward_key == 'always' or \
@@ -142,7 +142,7 @@ def set_default_client_options(client):
             client['proto_args'] = ['-nv']
         if 'maxbw' in client: # FIXME: handle low values of BWLimit (see mechanism below for rsync)
             client['proto_args'] += ['--limit-rate', '%d' % int(client['maxbw'] / 8) ] # bwlimit arg in B/s
-        client['transp_args'] = ['-T', '-i', client['cert']]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
 
@@ -153,7 +153,7 @@ def set_default_client_options(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        sshoptions = ['/usr/bin/ssh', '-i', client['cert']]
+        sshoptions = ['/usr/bin/ssh', '-o', 'IdentityFile=%s' % client['cert']]
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
         for option in LauncherConfig().ssh_options:
