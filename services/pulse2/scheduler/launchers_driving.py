@@ -25,6 +25,7 @@ import twisted.web.xmlrpc
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.network import chooseClientIP
 
 def getPubKey(launcher, key_name):
     """ returns a pubkey from launcher "launcher" """
@@ -55,3 +56,24 @@ def chooseLauncher():
         uri += '%s:%s@' % (launcher['username'], launcher['password'])
     uri += '%s:%d' % (launcher['host'], int(launcher['port']))
     return uri
+
+def pingClient(uuid, fqdn, shortname, ips, macs):
+
+    # choose launcher
+    launcher = chooseLauncher()
+
+    # choose a way to perform the operation
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
+
+    # perform call
+    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+        'icmp',
+        client
+    )
+    return mydeffered

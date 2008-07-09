@@ -203,42 +203,29 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
 
     ### XMLRPC functions used from a MMC agent ###
     def xmlrpc_ping_client(self, uuid, fqdn, shortname, ips, macs):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingClient(uuid, fqdn, shortname, ips, macs))
-
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingClient(uuid, fqdn, shortname, ips, macs))
     def xmlrpc_probe_client(self, uuid, fqdn, shortname, ips, macs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.probeClient(uuid, fqdn, shortname, ips, macs))
-
     def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
-
-    def xmlrpc_wol_client(self, macs):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.network.wolClient(macs))
-
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.tell_i_am_alive(launcher))
-
     def xmlrpc_completed_quick_action(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_quick_action(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_completed_push(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_push(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_completed_pull(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_pull(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_completed_execution(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_execution(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_completed_inventory(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
-
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
 

@@ -101,27 +101,6 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
     command = '%s %s' % (SchedulerConfig().prober_path, client)
     return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
 
-def pingClient(uuid, fqdn, shortname, ips, macs):
-    # TODO: a cache system ?!
-    def _cb(result):
-        myresult = "\n".join(result)
-        if myresult == 'OK':
-            return True
-        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got %s)' % (SchedulerConfig().name, client, myresult))
-        return False
-    def _eb(result):
-        logging.getLogger().debug('scheduler %s: can\'t ping client \'%s\' (got error: %s)' % (SchedulerConfig().name, client, result))
-        return False
-    client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs
-    })
-    command = '%s %s' % (SchedulerConfig().ping_path, client)
-    return mmc.support.mmctools.shlaunchDeferred(command).addCallback(_cb).addErrback(_eb)
-
 def chooseClientIP(target):
     """
         Attempt to guess how to reach our client

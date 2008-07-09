@@ -56,7 +56,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
     scheduler_path = '/usr/sbin/pulse2-scheduler'
     prober_path = '/usr/sbin/pulse2-probe'
-    ping_path = '/usr/sbin/pulse2-ping'
 
     daemon_user = 0
     daemon_group = 0
@@ -106,7 +105,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "prober_path", "prober_path")
-        self.setoption("scheduler", "ping_path", "ping_path")
 
         self.setoption("scheduler", "resolv_order", "resolv_order")
         if not type(self.resolv_order) == type([]):
