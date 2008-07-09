@@ -61,8 +61,11 @@ for arg in args: # parse args
 
     if type(items) == type({}):
         parsedargs.append(items)
+    elif type(items) == type([]):
+        parsedargs += items
     else:
         parsedargs += items
+    del(items)
 
 twisted.web.xmlrpc.Proxy(config["server"]).callRemote(method, *parsedargs).addCallback(_cb).addErrback(_eb)
 twisted.internet.reactor.run()
