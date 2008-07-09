@@ -223,6 +223,17 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>wrapper_max_exec_time</entry>
+
+            <entry>Default max exec time in seconds, older process are killed
+            using SIGKILL</entry>
+
+            <entry>yes</entry>
+
+            <entry>0 ("no limit")</entry>
+          </row>
+
+          <row>
             <entry>wrapper_max_log_size</entry>
 
             <entry>Cap generated logs to this value</entry>
@@ -298,7 +309,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/root/.ssh/id_dsa.pub</entry>
+            <entry>/root/.ssh/id_dsa</entry>
           </row>
 
           <row>
