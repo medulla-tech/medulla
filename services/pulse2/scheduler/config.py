@@ -51,13 +51,9 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
     dbencoding = 'utf-8'
     mode = 'sync'
 
-    scheduler_path = '/usr/local/sbin/pulse2-scheduler'
-    prober_path = '/usr/local/sbin/pulse2-probe'
-    ping_path = '/usr/local/sbin/pulse2-ping'
-    wol_path = '/usr/local/sbin/pulse2-wol'
-
-    wol_port = '40000'
-    wol_bcast = '255.255.255.255'
+    scheduler_path = '/usr/sbin/pulse2-scheduler'
+    prober_path = '/usr/sbin/pulse2-probe'
+    ping_path = '/usr/sbin/pulse2-ping'
 
     daemon_user = 0
     daemon_group = 0
@@ -111,13 +107,6 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
             self.prober_path = cp.get("scheduler", "prober_path")
         if cp.has_option("scheduler", "ping_path"):
             self.ping_path = cp.get("scheduler", "ping_path")
-        if cp.has_option("scheduler", "wol_path"):
-            self.wol_path = cp.get("scheduler", "wol_path")
-
-        if cp.has_option("scheduler", "wol_port"):
-            self.wol_port = cp.get("scheduler", "wol_port")
-        if cp.has_option("scheduler", "wol_bcast"):
-            self.wol_bcast = cp.get("scheduler", "wol_bcast")
 
         if cp.has_option("scheduler", "resolv_order"):
             # TODO: check resolvers availability !!!

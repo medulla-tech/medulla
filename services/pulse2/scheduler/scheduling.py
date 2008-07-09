@@ -126,7 +126,15 @@ def runWOLPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
         return runUploadPhase(myCommandOnHostID)
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
-    mydeffered = pulse2.scheduler.network.wolClient(myT.target_macaddr.split('||'))
+
+    # choose launcher
+    launcher = chooseLauncher()
+
+    # perform call
+    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+        'wol',
+        myT.target_macaddr.split('||')
+    )
     mydeffered.\
         addCallback(parseWOLResult, myCommandOnHostID).\
         addErrback(parseWOLError, myCommandOnHostID)
@@ -286,7 +294,7 @@ def runExecutionPhase(myCommandOnHostID):
     if target_host == None:
         # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
-    
+
     target_uuid = myT.getUUID()
     myCoH.setExecutionInProgress()
     myCoH.setCommandStatut('execution_in_progress')
