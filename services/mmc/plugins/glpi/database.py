@@ -363,13 +363,15 @@ class Glpi(DyngroupDatabaseHelper):
             # filtering on locations
             try:
                 location = filt['location']
-                if location == '' or location == u'':
+                if location == '' or location == u'' or not self.displayLocalisationBar:
                     location = None
             except KeyError:
                 location = None
 
             try:
                 ctxlocation = filt['ctxlocation']
+                if not self.displayLocalisationBar:
+                    ctxlocation = None
             except KeyError:
                 ctxlocation = None
 
@@ -729,6 +731,8 @@ class Glpi(DyngroupDatabaseHelper):
         """
         Check if the user has correct permissions to access more than one or to all machines
         """
+        if not self.displayLocalisationBar:
+            return True
         a_locations = map(lambda loc:loc.name, self.getUserLocations(userid))
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.location))
