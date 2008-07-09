@@ -35,7 +35,11 @@ def wolClient(mac_addrs):
         exitcode = shprocess.exit_code
         stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
         stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
-        return exitcode == 0
+        if not exitcode == 0:
+            logging.getLogger().warn("launcher %s: WOL failed: %s" % (LauncherConfig().name, stdout))
+            return False
+        logging.getLogger().debug("launcher %s: WOL succeeded" % (LauncherConfig().name))
+        return True
 
     # "linear-i-fy" MAC adresses
     command_list = [
@@ -44,6 +48,7 @@ def wolClient(mac_addrs):
         '--port=%s' % LauncherConfig().wol_port,
     ]
     command_list += mac_addrs
+
     return pulse2.launcher.process_control.commandRunner(
         command_list,
         __cb_wol_end
