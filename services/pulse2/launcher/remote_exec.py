@@ -79,7 +79,8 @@ def remote_push(command_id, client, files_list, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_push'
+                'completed_push',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -134,7 +135,8 @@ def remote_pull(command_id, client, files_list, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_pull'
+                'completed_pull',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -186,7 +188,8 @@ def remote_delete(command_id, client, files_list, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_deletion'
+                'completed_deletion',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -237,7 +240,8 @@ def remote_exec(command_id, client, command, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_execution'
+                'completed_execution',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -284,7 +288,8 @@ def remote_quickaction(command_id, client, command, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_quick_action'
+                'completed_quick_action',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -357,7 +362,8 @@ def remote_inventory(command_id, client, mode):
                 __cb_async_process_end,
                 command_id,
                 LauncherConfig().defer_results,
-                'completed_inventory'
+                'completed_inventory',
+                LauncherConfig().wrapper_max_exec_time
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(

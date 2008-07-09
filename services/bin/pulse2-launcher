@@ -78,14 +78,6 @@ def tellIAmAlive():
     # retrieve referent scheduler
     scheduler = pulse2.launcher.utils.getScheduler()
 
-    # attempt to kill out-of-time commands
-    if pulse2.launcher.process_control.ProcessList().getRunningCount() > 0:
-        for id in pulse2.launcher.process_control.ProcessList().getRunningIds():
-            times = pulse2.launcher.process_control.ProcessList().getProcessTimes(id)
-            if not LauncherConfig().wrapper_max_exec_time == 0 and times['age'] > LauncherConfig().wrapper_max_exec_time:
-                logging.getLogger().warn('launcher %s: killing %s (out of time: current %s, max %s)' % (LauncherConfig().name, id, times['age'], LauncherConfig().wrapper_max_exec_time))
-                pulse2.launcher.process_control.kill_process(id)
-
     # salute our referent scheduler
     mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
     mydeffered.\
@@ -102,6 +94,7 @@ def startService():
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']
     slots = config.launchers[config.name]['slots']
+    wrapper_max_exec_time = config.wrapper_max_exec_time
 
     # Starting XMLRPC server
     launcher = Launcher(name)
@@ -132,8 +125,9 @@ def startService():
         logger.error(e)
         return 1
 
+    pulse2.launcher.process_control.ProcessList().setup(slots, wrapper_max_exec_time)
+
     # Start periodic scheduler probing, called every awake_time seconds
-    pulse2.launcher.process_control.ProcessList().setup(slots)
     tellIAmAlive()
     logger.info('launcher %s: %d slots, listening on %s:%d' % (name, slots, bind, port))
 

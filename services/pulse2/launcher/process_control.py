@@ -47,7 +47,7 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
-def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
+def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time):
     """
     """
     process = commandProtocol(cmd)
@@ -60,6 +60,7 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName):
     process.id = id
     process.defer_results = defer_results
     process.endback = cbCommandEnd
+    process.max_age = max_exec_time
     return True
 
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
@@ -75,6 +76,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.status = ""
         self.exit_code = ""
         self.signal = ""
+        self.max_age = 0
 
         # command output
         self.stdout = ""
@@ -140,8 +142,39 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def getExitCode(self):
         return self.exit_code
 
+    def getStdOut(self):
+        return self.stdout
+
+    def getStdErr(self):
+        return self.stderr
+
     def getPID(self):
         return self.handler.pid
+
+    def getTimes(self):
+        return {
+            'start': self.start_time,
+            'last': self.last_see_time,
+            'end': self.end_time,
+            'now': time.time(),
+            'age': self.getAge(),
+            'elapsed': self.getElapsedTime()
+        }
+
+    def getState(self):
+        return {
+            'command': self.cmd,
+            'exit_code': self.exit_code,
+            'status': self.status,
+            'signal': self.signal,
+            'pid': self.handler.pid
+        }
+
+    def getStatistics(self):
+        ret = {}
+        ret.update(self.getState())
+        ret.update(self.getTimes())
+        return ret
 
     def sendSignal(self, signal):
         # signal is posix signal ID, see kill -l
@@ -183,16 +216,51 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def getElapsedTime(self):
         return self.last_see_time - self.start_time
 
+    def getAge(self):
+        return time.time() - self.start_time
+
 class ProcessList(Singleton):
     """
         Launcher core: kep a track of launched commands
     """
     _processArr = dict()
     _event = list()
-    slots = 0
+    slots = 0           # max number of commands
+    sleepperiod = 1     # amount of second between two wake-up
+    default_timeout = 0 # number of second above which we kill a process
 
-    def setup(self, slots):
+    """ Singleton Setup """
+    def setup(self, slots, default_timeout):
         self.slots = slots
+        self.default_timeout = default_timeout
+        self.scheduleWakeUp()
+
+    """ Periodical wake-up stuff """
+    def wakeUp(self):
+        # do things here
+        self.killOldCommands()
+        # reschedule
+        self.scheduleWakeUp()
+
+    def scheduleWakeUp(self):
+        twisted.internet.reactor.callLater(self.sleepperiod, self.wakeUp)
+
+    """ Administrative tasks """
+    def killOldCommands(self):
+        """ attempt to kill out-of-time commands """
+        if self.getRunningCount() > 0:
+            for id in self.getRunningIds():
+                process = self.getProcess(id)
+                times = process.getTimes()
+                # priority check order: use process.max_age if not 0, else use self.default_timeout if not 0
+                if not process.max_age == 0:
+                    if times['age'] > process.max_age: # kill time
+                        logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], process.max_age))
+                        kill_process(id)
+                elif not self.default_timeout == 0:
+                    if times['age'] > self.default_timeout: # kill time
+                        logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], self.default_timeout))
+                        kill_process(id)
 
     """ Process handling """
     def addProcess(self, obj, id):
@@ -209,65 +277,10 @@ class ProcessList(Singleton):
         return None
 
     def existsProcess(self, id):
-        return id in self.listProcesses()
+        return id in self._processArr
 
     def removeProcess(self, id):
         del self._processArr[id]
-
-    def getProcessStdout(self, id, purge = False):
-        if self.existsProcess(id):
-            ret = self.getProcess(id).stdout;
-        else:
-            return None
-        if purge:
-            self.getProcess(id).stdout = '';
-        return ret
-
-    def getProcessStderr(self, id, purge = False):
-        if self.existsProcess(id):
-            ret = self.getProcess(id).stderr;
-        else:
-            return None
-        if purge:
-            self.getProcess(id).stderr = '';
-        return ret
-
-    def getProcessExitcode(self, id):
-        if self.existsProcess(id):
-            return self.getProcess(id).getExitCode();
-        return None
-
-    def getProcessTimes(self, id):
-        if self.existsProcess(id):
-            now = time.time()
-            return {
-                'start': self.getProcess(id).start_time,
-                'last': self.getProcess(id).last_see_time,
-                'end': self.getProcess(id).end_time,
-                'now': now,
-                'age': now - self.getProcess(id).start_time,
-                'elapsed': self.getProcess(id).last_see_time - self.getProcess(id).start_time
-            }
-        return None
-
-    def getProcessState(self, id):
-        if self.existsProcess(id):
-            return {
-                'command': self.getProcess(id).cmd,
-                'exit_code': self.getProcess(id).exit_code,
-                'status': self.getProcess(id).status,
-                'signal': self.getProcess(id).signal,
-                'pid': self.getProcess(id).handler.pid
-            }
-        return None
-
-    def getProcessStatistics(self, id):
-        if self.existsProcess(id):
-            ret = {}
-            ret.update(self.getProcessState(id))
-            ret.update(self.getProcessTimes(id))
-            return ret
-        return None
 
     """ Massive process handling """
     def listProcesses(self):
@@ -327,17 +340,35 @@ def get_zombie_ids():
     return ProcessList().getZombieIds()
 
 def get_process_stderr(id):
-    return ProcessList().getProcessStderr(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getStderr()
+    return None
 def get_process_stdout(id):
-    return ProcessList().getProcessStdout(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getStdOut()
+    return None
 def get_process_exitcode(id):
-    return ProcessList().getProcessExitcode(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getExitCode()
+    return None
 def get_process_times(id):
-    return ProcessList().getProcessTimes(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getTimes()
+    return None
 def get_process_state(id):
-    return ProcessList().getProcessState(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getState()
+    return None
 def get_process_statistics(id):
-    return ProcessList().getProcessStatistics(id)
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.getStatistics()
+    return None
 
 def stop_process(id):
     process = ProcessList().getProcess(id)
