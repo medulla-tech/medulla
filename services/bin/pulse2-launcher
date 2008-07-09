@@ -232,55 +232,55 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
     # Background process lists
     def xmlrpc_get_process_count(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_count())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessCount())
     def xmlrpc_get_running_count(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_running_count())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getRunning_count())
     def xmlrpc_get_zombie_count(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_zombie_count())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getZombiesCount())
     def xmlrpc_get_process_ids(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_ids())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessIds())
     def xmlrpc_get_running_ids(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_running_ids())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getRunningIds())
     def xmlrpc_get_zombie_ids(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_zombie_ids())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getZombieIds())
 
     # Background process statistics
     def xmlrpc_get_process_stdout(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_stdout(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessStdout(command_id))
     def xmlrpc_get_process_stderr(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_stderr(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessStderr(command_id))
     def xmlrpc_get_process_exitcode(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_exitcode(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessExitcode(command_id))
     def xmlrpc_get_process_times(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_times(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessTimes(command_id))
     def xmlrpc_get_process_state(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_state(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessState(command_id))
     def xmlrpc_get_process_statistics(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.get_process_statistics(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.getProcessStatistics(command_id))
 
     # Background process handling
     def xmlrpc_stop_process(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stop_process(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stopProcess(command_id))
     def xmlrpc_cont_process(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.cont_process(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.contProcess(command_id))
     def xmlrpc_int_process(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.int_process(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.intProcess(command_id))
     def xmlrpc_kill_process(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_process(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.killProcess(command_id))
     def xmlrpc_hup_process(self, command_id):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_process(command_id))
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hupProcess(command_id))
 
     # Massive background process lists
     def xmlrpc_stop_all_process(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stop_all_process())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.stopAllProcess())
     def xmlrpc_cont_all_process(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.cont_all_process())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.contAllProcess())
     def xmlrpc_int_all_process(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.int_all_process())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.intAllProcess())
     def xmlrpc_kill_all_process(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_all_process())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.killAllProcess())
     def xmlrpc_hup_all_process(self):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_all_process())
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hupAllProcess())
 
     # Network stuff handling
     def xmlrpc_wol(self, mac_addrs):

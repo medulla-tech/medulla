@@ -256,11 +256,11 @@ class ProcessList(Singleton):
                 if not process.max_age == 0:
                     if times['age'] > process.max_age: # kill time
                         logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], process.max_age))
-                        kill_process(id)
+                        killProcess(id)
                 elif not self.default_timeout == 0:
                     if times['age'] > self.default_timeout: # kill time
                         logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], self.default_timeout))
-                        kill_process(id)
+                        killProcess(id)
 
     """ Process handling """
     def addProcess(self, obj, id):
@@ -325,94 +325,94 @@ class ProcessList(Singleton):
         return len(self.getRunningIds())
 
 """ XMLRPC functions """
-def get_process_count():
+def getProcessCount():
     return ProcessList().getProcessCount()
-def get_running_count():
+def getRunningCount():
     return ProcessList().getRunningCount()
-def get_zombie_count():
+def getZombiesCount():
     return ProcessList().getZombieCount()
 
-def get_process_ids():
+def getProcessIds():
     return ProcessList().getProcessIds()
-def get_running_ids():
+def getRunningIds():
     return ProcessList().getRunningIds()
-def get_zombie_ids():
+def getZombieIds():
     return ProcessList().getZombieIds()
 
-def get_process_stderr(id):
+def getProcessStderr(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getStderr()
     return None
-def get_process_stdout(id):
+def getProcessStdout(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getStdOut()
     return None
-def get_process_exitcode(id):
+def getProcessExitcode(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getExitCode()
     return None
-def get_process_times(id):
+def getProcessTimes(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getTimes()
     return None
-def get_process_state(id):
+def getProcessState(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getState()
     return None
-def get_process_statistics(id):
+def getProcessStatistics(id):
     process = ProcessList().getProcess(id)
     if process:
         return process.getStatistics()
     return None
 
-def stop_process(id):
+def stopProcess(id):
     process = ProcessList().getProcess(id)
     if process:
         process.sendSigStop()
     return True
-def cont_process(id):
+def contProcess(id):
     process = ProcessList().getProcess(id)
     if process:
         process.sendSigCont()
     return True
-def int_process(id):
+def intProcess(id):
     process = ProcessList().getProcess(id)
     if process:
         process.sendSigInt()
     return True
-def kill_process(id):
+def killProcess(id):
     process = ProcessList().getProcess(id)
     if process:
         process.sendSigKill()
     return True
-def hup_process(id):
+def hupProcess(id):
     process = ProcessList().getProcess(id)
     if process:
         process.sendSigHup()
     return True
 
-def stop_all_process():
+def stopAllProcess():
     for id in ProcessList().getRunningIds():
-        stop_process(id)
+        stopProcess(id)
     return True
-def cont_all_process():
+def contAllProcess():
     for id in ProcessList().getRunningIds():
-        cont_process(id)
+        contProcess(id)
     return True
-def int_all_process():
+def intAllProcess():
     for id in ProcessList().getRunningIds():
-        int_process(id)
+        intProcess(id)
     return True
-def kill_all_process():
+def killAllProcess():
     for id in ProcessList().getRunningIds():
-        kill_process(id)
+        killProcess(id)
     return True
-def hup_all_process():
+def hupAllProcess():
     for id in ProcessList().getRunningIds():
-        hup_process(id)
+        hupProcess(id)
     return True
