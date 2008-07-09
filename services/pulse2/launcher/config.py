@@ -50,6 +50,11 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
 
+    # WOL stuff
+    wol_path = '/usr/sbin/pulse2-wol'
+    wol_port = '40000'
+    wol_bcast = '255.255.255.255'
+
     wrapper_max_log_size = "0"
     wrapper_max_exec_time = 0
 
@@ -94,12 +99,12 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         }
     }
 
-    def setoption(self, section, key):
+    def setoption(self, section, key, attrib):
         if self.cp.has_option(section, key):
-            setattr(self, key, self.cp.get(section, key))
-            logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, key)))
+            setattr(self, attrib, self.cp.get(section, key))
+            logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
         else:
-            logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, key)))
+            logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
 
     def setup(self, config_file, name = None):
         # Load configuration file
@@ -107,30 +112,31 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         self.cp.read(config_file)
 
         self.name = name
+
+        # Parse "launchers" section
         for key in ['pid_path', 'launcher_path', 'wrapper_path', 'source_path', 'target_path', 'inventory_command', 'temp_folder_prefix']:
-            self.setoption('launchers', key)
-        if self.cp.has_option('launchers', 'wrapper_max_log_size'):
-            self.wrapper_max_log_size = self.cp.get('launchers', 'wrapper_max_log_size')
-        if self.cp.has_option('launchers', 'wrapper_max_exec_time'):
-            self.wrapper_max_exec_time = self.cp.getint('launchers', 'wrapper_max_exec_time')
+            self.setoption('launchers', key, key)
+        self.setoption('launchers', 'wrapper_max_log_size', 'wrapper_max_log_size')
+        self.setoption('launchers', 'wrapper_max_exec_time', 'wrapper_max_exec_time')
 
-        if self.cp.has_section('scheduler'):
-            for key in ['launcher_path', 'awake_time', 'defer_results']:
-                self.setoption('scheduler', key)
-            if self.cp.has_option('scheduler', 'host'):
-                self.scheduler_host = self.cp.get('scheduler', 'host')
-            if self.cp.has_option('scheduler', 'port'):
-                self.scheduler_port = self.cp.get('scheduler', 'port')
-            if self.cp.has_option('scheduler', 'enablessl'):
-                self.scheduler_enablessl = self.cp.getboolean('scheduler', 'enablessl')
-            if self.cp.has_option('scheduler', 'username'):
-                self.scheduler_username = self.cp.get('scheduler', 'username')
-            if self.cp.has_option('scheduler', 'password'):
-                self.scheduler_password = self.cp.getpassword('scheduler', 'password')
+        # Parse "scheduler" section
+        for key in ['awake_time', 'defer_results']:
+            self.setoption('scheduler', key, key)
+        self.setoption('scheduler', 'host', 'scheduler_host')
+        self.setoption('scheduler', 'port', 'scheduler_port')
+        self.setoption('scheduler', 'enablessl', 'scheduler_enablessl')
+        self.setoption('scheduler', 'username', 'scheduler_username')
+        self.setoption('scheduler', 'password', 'scheduler_password')
+        self.awake_time=int(self.awake_time)
 
+        # Parse "wol" section
+        self.setoption('wol', 'wol_port', 'wol_port')
+        self.setoption('wol', 'wol_bcast', 'wol_bcast')
+        self.setoption('wol', 'wol_path', 'wol_path')
+
+        # Parse "daemon" section
+        self.setoption('daemon', 'pid_path', 'pid_path')
         if self.cp.has_section("daemon"):
-            if self.cp.has_option("daemon", "pid_path"):
-                self.pid_path = self.cp.get("daemon", "pid_path")
             if self.cp.has_option("daemon", "user"):
                 self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
             if self.cp.has_option("daemon", "group"):
@@ -138,6 +144,7 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
             if self.cp.has_option("daemon", "umask"):
                 self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
+        # Parse "launcher_XXXX" sections
         for section in self.cp.sections():
             if re.compile('^launcher_[0-9]+$').match(section):
                 self.launchers[section] = {
@@ -152,9 +159,10 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                     self.launchers[section]['certfile'] = self.cp.get(section, 'certfile')
                     self.launchers[section]['privkey'] = self.cp.get(section, 'privkey')
 
+        # Parse "ssh" sections
+        self.setoption('ssh', 'default_key', 'ssh_defaultkey')
+        self.setoption('ssh', 'forward_key', 'ssh_forward_key')
         if self.cp.has_section('ssh'):
-            if self.cp.has_option('ssh', 'default_key'):
-                self.ssh_defaultkey = self.cp.get('ssh', 'default_key')
             if self.cp.has_option('ssh', 'ssh_options'):
                 self.ssh_options = self.cp.get('ssh', 'ssh_options').split(' ')
             if self.cp.has_option('ssh', 'scp_options'):
@@ -163,9 +171,6 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
                     keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
                     self.ssh_keys[keyname] = self.cp.get('ssh', option)
-            if self.cp.has_option('ssh', 'forward_key'):
-                self.ssh_forward_key = self.cp.get('ssh', 'forward_key')
 
-        self.awake_time=int(self.awake_time)
 
 

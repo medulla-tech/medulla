@@ -52,6 +52,7 @@ import pulse2.launcher.utils
 # XMLRPC funcs
 import pulse2.launcher.remote_exec
 import pulse2.launcher.process_control
+import pulse2.launcher.network
 
 # Logging
 import logging
@@ -280,6 +281,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.kill_all_process())
     def xmlrpc_hup_all_process(self):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.hup_all_process())
+
+    # Network stuff handling
+    def xmlrpc_wol(self, mac_addrs):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.wolClient(mac_addrs))
 
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))

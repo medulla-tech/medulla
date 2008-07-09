@@ -298,21 +298,6 @@ def remote_quickaction(command_id, client, command, mode):
             )
     return None
 
-def sync_remote_wol(command_id, client, wrapper):
-    """ Handle remote WOL on target, sync mode
-
-    Return: same as sync_remote_push
-    """
-    client = pulse2.launcher.utils.set_default_client_options(client)
-    """
-    if client['protocol'] == "wol":
-        real_command = '%s %s ssh %s %s@%s "%s"' % (wrapper, '', ' '.join(client['options']), client['user'], client['host'], command)
-        deffered = pulse2.launcher.process_control.shLaunchDeferred(real_command)
-        deffered.addCallback(__cb_sync_process_end)
-        return deffered
-        """
-    return None
-
 def sync_remote_inventory(command_id, client):
     """ Handle remote quick action on target, sync mode """
     return remote_inventory(command_id, client, 'sync')
