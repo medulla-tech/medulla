@@ -28,6 +28,7 @@ import re
 import pwd
 import grp
 import string
+import logging
 
 # MMC
 import mmc.support.mmctools
@@ -39,6 +40,8 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
 
     """
     name = None
+    cp = None
+
     port = 8000
     host = "127.0.0.1"
     enablessl = True
@@ -71,63 +74,59 @@ class SchedulerConfig(mmc.support.mmctools.Singleton):
         }
     }
 
+    def setoption(self, section, key, attrib):
+        if self.cp.has_option(section, key):
+            setattr(self, attrib, self.cp.get(section, key))
+            logging.getLogger().info("scheduler %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+        else:
+            logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+
     def setup(self, config_file):
         # Load configuration file
-        cp = MMCConfigParser()
-        cp.read(config_file)
+        self.cp = MMCConfigParser()
+        self.cp.read(config_file)
 
-        self.name = cp.get("scheduler", "id")
+        self.name = self.cp.get("scheduler", "id")
 
-        if cp.has_option("scheduler", "port"):
-            self.port = cp.getint("scheduler", "port")
-        if cp.has_option("scheduler", "listen"):
-            self.host = cp.get("scheduler", "listen")
-        if cp.has_option("scheduler", "username"):
-            self.username = cp.get("scheduler", "username")
-        if cp.has_option("scheduler", "password"):
-            self.password = cp.getpassword("scheduler", "password")
-        if cp.has_option("scheduler", "enablessl"):
-            self.enablessl = cp.getboolean("scheduler", "enablessl")
+        self.setoption("scheduler", "port", "port")
+        self.setoption("scheduler", "listen", "host")
+        self.setoption("scheduler", "username", "username")
+        if self.cp.has_option("scheduler", "password"):
+            self.password =self.cp.getpassword("scheduler", "password")
+        if self.cp.has_option("scheduler", "enablessl"):
+            self.enablessl =self.cp.getboolean("scheduler", "enablessl")
         if self.enablessl:
-            if cp.has_option("scheduler", "privkey"):
-                self.privkey = cp.get("scheduler", "privkey")
-            if cp.has_option("scheduler", "certfile"):
-                self.certfile = cp.get("scheduler", "certfile")
+            self.setoption("scheduler", "privkey", "privkey")
+            self.setoption("scheduler", "certfile", "certfile")
 
-        if cp.has_option("scheduler", "awake_time"):
-            self.awake_time = cp.getint("scheduler", "awake_time")
-        if cp.has_option("scheduler", "dbencoding"):
-            self.dbencoding = cp.get("scheduler", "dbencoding")
-        if cp.has_option("scheduler", "mode"):
-            self.mode = cp.get("scheduler", "mode")
+        self.setoption("scheduler", "awake_time", "awake_time")
+        self.setoption("scheduler", "dbencoding", "dbencoding")
+        self.setoption("scheduler", "mode", "mode")
+        self.awake_time = int(self.awake_time)
 
-        if cp.has_option("scheduler", "scheduler_path"):
-            self.scheduler_path = cp.get("scheduler", "scheduler_path")
-        if cp.has_option("scheduler", "prober_path"):
-            self.prober_path = cp.get("scheduler", "prober_path")
-        if cp.has_option("scheduler", "ping_path"):
-            self.ping_path = cp.get("scheduler", "ping_path")
+        self.setoption("scheduler", "scheduler_path", "scheduler_path")
+        self.setoption("scheduler", "prober_path", "prober_path")
+        self.setoption("scheduler", "ping_path", "ping_path")
 
-        if cp.has_option("scheduler", "resolv_order"):
-            # TODO: check resolvers availability !!!
-            self.resolv_order = cp.get("scheduler", "resolv_order").split(' ')
+        self.setoption("scheduler", "resolv_order", "resolv_order")
+        if not type(self.resolv_order) == type([]):
+            self.resolv_order = [self.resolv_order]
 
-        if cp.has_section("daemon"):
-            if cp.has_option("daemon", "pid_path"):
-                self.pid_path = cp.get("daemon", "pid_path")
-            if cp.has_option("daemon", "user"):
+        self.setoption("daemon", "pid_path", "pid_path")
+        if self.cp.has_section("daemon"):
+            if self.cp.has_option("daemon", "user"):
                 self.daemon_user = pwd.getpwnam(cp.get("daemon", "user"))[2]
-            if cp.has_option("daemon", "group"):
+            if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(cp.get("daemon", "group"))[2]
-            if cp.has_option("daemon", "umask"):
+            if self.cp.has_option("daemon", "umask"):
                 self.umask = string.atoi(cp.get("daemon", "umask"), 8)
 
-        for section in cp.sections():
+        for section in self.cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
                 self.launchers[section] = {
-                        'port': cp.get(section, "port"),
-                        'host': cp.get(section, "host"),
-                        'username': cp.get(section, "username"),
-                        'password': cp.getpassword(section, "password"),
-                        'enablessl': cp.getboolean(section, "enablessl")
+                        'port':self.cp.get(section, "port"),
+                        'host':self.cp.get(section, "host"),
+                        'username':self.cp.get(section, "username"),
+                        'password':self.cp.getpassword(section, "password"),
+                        'enablessl':self.cp.getboolean(section, "enablessl")
                     }
