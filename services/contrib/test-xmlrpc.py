@@ -36,7 +36,7 @@ except twisted.python.usage.UsageError, errortext:
 args=[]
 method = config["func"]
 if config["args"]:
-    args = config["args"].split(',')
+    args = config["args"].split(';')
 
 parsedargs = []
 for arg in args: # parse args
@@ -48,6 +48,11 @@ for arg in args: # parse args
                 items[key] = val
             except:
                 items = {key: val}
+	elif token.count(',') > 0:		   # found a list token
+            try:
+                items += [token.split(',')]
+            except:
+                items = [token.split(',')]
         else:                                      # found something else (simple value ?)
             try:
                 items += token
