@@ -49,7 +49,7 @@ Output lines are formatted like this:
 With <tag>:
   W: the wrapper line, using '·' as separator
   C: the command line, using '·' as separator
-  S: something on stdout
+  O: something on stdout
   E: something on stderr
   X: the exit code
 
@@ -71,6 +71,8 @@ class Options(twisted.python.usage.Options):
     optParameters = [
         ["exec", None, None, "The command to be executed, arg separator is '%s' " % SEPARATOR],
         ["thru", None, None, "The command to wrap the execution, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
+        ["no-wrap", None, None, "Do not wrap output"],
+        ["only-stdout", None, None, "Only write stdout on the output"],
         ["max_log_size", None, None, "Keeps the first max_log_size bytes of the output"],
         ]
     def __init__(self):
@@ -95,6 +97,9 @@ def format(line, tag):
     * convert to utf-8
     * format line
     """
+
+    if config["only-stdout"] and not tag == 'O':
+        return
     for codec in ['utf-8', 'cp850', 'latin-1', 'windows-1252']:
         try:
             uline = unicode(line, codec)
@@ -108,7 +113,10 @@ def format(line, tag):
     except:
         line = uline.encode('utf-8', 'replace')
 
-    return "%.2f %s: %s" % (time.time(), tag, line)
+    if not config["no-wrap"]:
+        print "%.2f %s: %s" % (time.time(), tag, line)
+    else:
+        print line
 
 class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
@@ -138,7 +146,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         if self.end:
             return True
         for line in data.split('\n'):
-            print format(self.truncate_to_max_log_size(line), 'O')
+            format(self.truncate_to_max_log_size(line), 'O')
         return True
 
     def errReceived(self, data):
@@ -147,13 +155,13 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         if self.end:
             return True
         for line in data.split('\n'):
-            print format(self.truncate_to_max_log_size(line), 'E')
+            format(self.truncate_to_max_log_size(line), 'E')
         return True
 
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-        print format(str(reason.value.exitCode), 'X')
+        format(str(reason.value.exitCode), 'X')
         twisted.internet.reactor.stop()
         self.exitcode = reason.value.exitCode
 
@@ -170,11 +178,11 @@ except twisted.python.usage.UsageError, errortext:
 
 process = shOutputWrapper(config['max_log_size'])
 if config.thru_string:
-    print format(SEPARATOR.join(config.thru_string), 'T')
-    print format(SEPARATOR.join(config.exec_string), 'C')
+    format(SEPARATOR.join(config.thru_string), 'T')
+    format(SEPARATOR.join(config.exec_string), 'C')
     twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
 else:
-    print format(SEPARATOR.join(config.exec_string), 'C')
+    format(SEPARATOR.join(config.exec_string), 'C')
     twisted.internet.reactor.spawnProcess(process, config.exec_string[0], config.exec_string)
 twisted.internet.reactor.run()
 sys.exit(process.exitcode)
