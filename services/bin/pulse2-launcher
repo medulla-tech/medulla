@@ -66,7 +66,6 @@ def scheduleTellIAmAlive():
     twisted.internet.reactor.callLater(tell_in, tellIAmAlive)
 
 def tellIAmAlive():
-    """ Function wich became more and more large """
     def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
         if pulse2.launcher.process_control.ProcessList().getZombiesCount() > 0:
             logging.getLogger().info('launcher %s: sending available results to our scheduler at %s' % (LauncherConfig().name, scheduler))
@@ -95,7 +94,7 @@ def startService():
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']
     slots = config.launchers[config.name]['slots']
-    wrapper_max_exec_time = config.wrapper_max_exec_time
+    max_command_age = config.max_command_age
 
     # Starting XMLRPC server
     launcher = Launcher(name)
@@ -126,7 +125,7 @@ def startService():
         logger.error(e)
         return 1
 
-    pulse2.launcher.process_control.ProcessList().setup(slots, wrapper_max_exec_time)
+    pulse2.launcher.process_control.ProcessList().setup(slots, max_command_age)
 
     # Start periodic scheduler probing, called every awake_time seconds
     tellIAmAlive()
@@ -285,10 +284,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     # Network stuff handling
     def xmlrpc_wol(self, mac_addrs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.wolClient(mac_addrs))
-    def xmlrpc_icmp(self, client, timeout):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.icmpClient(client, timeout))
-    def xmlrpc_probe(self, client, timeout):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.probeClient(client, timeout))
+    def xmlrpc_icmp(self, client, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.icmpClient(client, timeout or LauncherConfig().max_ping_time))
+    def xmlrpc_probe(self, client, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.network.probeClient(client, timeout or LauncherConfig().max_probe_time))
 
     def xmlrpc_get_pubkey(self, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
