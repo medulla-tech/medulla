@@ -39,6 +39,7 @@ from pulse2.launcher.utils import Singleton
 def commandRunner(cmd, cbCommandEnd):
     """
     Return a Deferred resulting in the stdout output of a shell command.
+    Only used in sync mode.
     """
     process = commandProtocol(cmd)
     # FIXME: codec should be taken from conf file
@@ -71,7 +72,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.done = False
         self.id = id
 
-        # comman process handling
+        # command process handling
         self.handler = None
         self.status = ""
         self.exit_code = ""
