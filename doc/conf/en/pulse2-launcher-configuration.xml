@@ -118,6 +118,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>wget</entry>
+
+            <entry>Wget related options</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
             <entry>scheduler</entry>
 
             <entry>Referent scheduler location</entry>
@@ -532,6 +540,60 @@ option2 = plop      </screen></para>
 
             <entry>40000</entry>
           </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>«wget » section</title>
+
+    <para>This section sets the pulse2-launchers wget options (for the
+    pull part of the push/pull mode</para>
+
+    <table>
+      <title>Available options for the "wget" section</title>
+
+      <tgroup cols="5">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Type</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>wget_options</entry>
+
+            <entry>Options passed to wget binary.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>check_certs</entry>
+
+            <entry>Put the check certificate flag.</entry>
+
+            <entry>yes</entry>
+
+            <entry>boolean</entry>
+
+            <entry>1</entry>
+          </row>
+
         </tbody>
       </tgroup>
     </table>
