@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-""" A simple command line wrapper.
+""" A (not so) simple command line wrapper.
 """
 
 """
@@ -61,6 +61,7 @@ import twisted.python.usage
 
 import time
 import sys
+import signal
 SEPARATOR = '·'
 
 class Options(twisted.python.usage.Options):
@@ -71,9 +72,14 @@ class Options(twisted.python.usage.Options):
     optParameters = [
         ["exec", None, None, "The command to be executed, arg separator is '%s' " % SEPARATOR],
         ["thru", None, None, "The command to wrap the execution, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
-        ["no-wrap", None, None, "Do not wrap output"],
-        ["only-stdout", None, None, "Only write stdout on the output"],
-        ["max_log_size", None, None, "Keeps the first max_log_size bytes of the output"],
+        ["max_log_size", None, None, "Keeps the only first bytes of the output", int],
+        ["max_exec_time", None, None, "Kill command above this number of seconds", int],
+        ]
+
+    optFlags = [
+        ["no-wrap", None, "Do not wrap output"],
+        ["only-stdout", None, "Only write stdout on the output"],
+        ["remove-empty-lines", None, "Do not write empty lines"],
         ]
     def __init__(self):
         twisted.python.usage.Options.__init__(self)
@@ -89,34 +95,6 @@ class Options(twisted.python.usage.Options):
         else:
             self.thru_string = None
         self.exec_string = self['exec'].split(SEPARATOR)
-
-def format(line, tag):
-    """ Format a line as expected (see upper)
-    * attempt to guess encoding (currenlty try 'windows-1252', 'utf-8',
-     'cp850', 'latin-1' and fallback to ascii)
-    * convert to utf-8
-    * format line
-    """
-
-    if config["only-stdout"] and not tag == 'O':
-        return
-    for codec in ['utf-8', 'cp850', 'latin-1', 'windows-1252']:
-        try:
-            uline = unicode(line, codec)
-            break
-        except UnicodeDecodeError:
-            continue
-    else:
-        uline = unicode(line, 'ascii', 'replace')
-    try:
-        line = uline.encode('utf-8')
-    except:
-        line = uline.encode('utf-8', 'replace')
-
-    if not config["no-wrap"]:
-        print "%.2f %s: %s" % (time.time(), tag, line)
-    else:
-        print line
 
 class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
@@ -161,9 +139,59 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-        format(str(reason.value.exitCode), 'X')
+        if reason.value.exitCode:
+            exitcode = reason.value.exitCode
+        else:
+            exitcode = reason.value.signal + 128
+
+        format(str(exitcode), 'X')
         twisted.internet.reactor.stop()
-        self.exitcode = reason.value.exitCode
+        try:
+            sys.exit(exitcode)
+        except:
+            pass
+
+def format(line, tag):
+    """ Format a line as expected (see upper)
+    * attempt to guess encoding (currenlty try 'windows-1252', 'utf-8',
+     'cp850', 'latin-1' and fallback to ascii)
+    * convert to utf-8
+    * format line
+    """
+
+    if config["only-stdout"] and not tag == 'O':
+        return
+    if config["remove-empty-lines"] and not len(line):
+        return
+    for codec in ['utf-8', 'cp850', 'latin-1', 'windows-1252']:
+        try:
+            uline = unicode(line, codec)
+            break
+        except UnicodeDecodeError:
+            continue
+    else:
+        uline = unicode(line, 'ascii', 'replace')
+    try:
+        line = uline.encode('utf-8')
+    except:
+        line = uline.encode('utf-8', 'replace')
+
+    if not config["no-wrap"]:
+        print "%.2f %s: %s" % (time.time(), tag, line)
+    else:
+        print line
+
+def runCommand(config):
+    process = shOutputWrapper(config['max_log_size'])
+    if config.thru_string:
+        format(SEPARATOR.join(config.thru_string), 'T')
+        format(SEPARATOR.join(config.exec_string), 'C')
+        handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
+    else:
+        format(SEPARATOR.join(config.exec_string), 'C')
+        handler = twisted.internet.reactor.spawnProcess(process, config.exec_string[0], config.exec_string)
+    if config['max_exec_time']:
+        twisted.internet.reactor.callLater(config['max_exec_time'], handler.signalProcess, signal.SIGKILL) # max_exec_time handlinng
 
 
 # Parse command line
@@ -173,17 +201,9 @@ try:
 except twisted.python.usage.UsageError, errortext:
     print '%s: %s' % (sys.argv[0], errortext)
     print '%s: Try --help for usage details.' % (sys.argv[0])
-    sys.exit(1)
+    sys.exit(0)
 
 
-process = shOutputWrapper(config['max_log_size'])
-if config.thru_string:
-    format(SEPARATOR.join(config.thru_string), 'T')
-    format(SEPARATOR.join(config.exec_string), 'C')
-    twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
-else:
-    format(SEPARATOR.join(config.exec_string), 'C')
-    twisted.internet.reactor.spawnProcess(process, config.exec_string[0], config.exec_string)
+twisted.internet.reactor.callLater(0, runCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
 twisted.internet.reactor.run()
-sys.exit(process.exitcode)
 
