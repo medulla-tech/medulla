@@ -401,14 +401,16 @@ def existUser(uid):
 
 #change main UserAttributes
 def changeUserMainAttributes(uid,newuid,name,surname):
+    l = logging.getLogger()
     ldapObj = ldapUserGroupControl()
+    gecos = name + " " + surname
+    l.debug(type(name))
+    l.debug(repr(name))
+    gecos = delete_diacritics(gecos)
+    name = name
+    surname = surname
 
-    gecos=name+" "+surname
-    gecos=str(delete_diacritics(gecos.encode("utf-8")))
-    name=str(name.encode("utf-8"))
-    surname=str(surname.encode("utf-8"))
-
-    if surname: ldapObj.changeUserAttributes(uid,"sn",surname)
+    if surname: ldapObj.changeUserAttributes(uid, "sn", surname)
     if name: ldapObj.changeUserAttributes(uid,"givenName",name)
     ldapObj.changeUserAttributes(uid,"gecos",gecos)
     if newuid != uid:
@@ -1151,6 +1153,8 @@ class ldapUserGroupControl:
         """
         userpassword = self._generatePassword(passwd)
         self.l.modify_s('uid=' + uid + ',' + self.baseUsersDN, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
+        # Run ChangeUserPassword hook
+        self.runHook("base.changeuserpassword", uid, passwd)
 
     def delUser(self, uid, home):
         """
