@@ -329,9 +329,7 @@ def remote_direct(command_id, client, command, mode):
             '--exec',
             real_command, # we do not use the SEPARATOR here, as the command is send "as is"
             '--no-wrap',
-            'yes',
-            '--only-stdout',
-            'yes',
+            '--only-stdout'
         ]
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
