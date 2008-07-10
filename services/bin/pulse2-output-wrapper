@@ -64,6 +64,18 @@ import sys
 import signal
 SEPARATOR = '·'
 
+class ExitCode(object): # the only way I found to exit with the right exit code
+    value = 0
+
+    def __new__(type):
+        if not '_the_instance' in type.__dict__:
+            type._the_instance = object.__new__(type)
+        return type._the_instance
+    def set(self, value):
+        self.value = value
+    def get(self):
+        return self.value
+
 class Options(twisted.python.usage.Options):
 
     exec_string = []
@@ -72,8 +84,8 @@ class Options(twisted.python.usage.Options):
     optParameters = [
         ["exec", None, None, "The command to be executed, arg separator is '%s' " % SEPARATOR],
         ["thru", None, None, "The command to wrap the execution, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
-        ["max_log_size", None, None, "Keeps the only first bytes of the output", int],
-        ["max_exec_time", None, None, "Kill command above this number of seconds", int],
+        ["max-log-size", None, None, "Keeps the only first bytes of the output"],
+        ["max-exec-time", None, None, "Kill command above this number of seconds"],
         ]
 
     optFlags = [
@@ -139,21 +151,18 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-        if reason.value.exitCode:
-            exitcode = reason.value.exitCode
+        if reason.value.exitCode != None:
+            exitcode = int(reason.value.exitCode)
         else:
-            exitcode = reason.value.signal + 128
+            exitcode = int(reason.value.signal) + 128
 
         format(str(exitcode), 'X')
+        ExitCode().set(exitcode)
         twisted.internet.reactor.stop()
-        try:
-            sys.exit(exitcode)
-        except:
-            pass
 
 def format(line, tag):
     """ Format a line as expected (see upper)
-    * attempt to guess encoding (currenlty try 'windows-1252', 'utf-8',
+    * attempt to guess encoding (currently try 'windows-1252', 'utf-8',
      'cp850', 'latin-1' and fallback to ascii)
     * convert to utf-8
     * format line
@@ -182,7 +191,7 @@ def format(line, tag):
         print line
 
 def runCommand(config):
-    process = shOutputWrapper(config['max_log_size'])
+    process = shOutputWrapper(config['max-log-size'])
     if config.thru_string:
         format(SEPARATOR.join(config.thru_string), 'T')
         format(SEPARATOR.join(config.exec_string), 'C')
@@ -190,8 +199,8 @@ def runCommand(config):
     else:
         format(SEPARATOR.join(config.exec_string), 'C')
         handler = twisted.internet.reactor.spawnProcess(process, config.exec_string[0], config.exec_string)
-    if config['max_exec_time']:
-        twisted.internet.reactor.callLater(config['max_exec_time'], handler.signalProcess, signal.SIGKILL) # max_exec_time handlinng
+    if config['max-exec-time']:
+        twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handlinng
 
 
 # Parse command line
@@ -206,4 +215,4 @@ except twisted.python.usage.UsageError, errortext:
 
 twisted.internet.reactor.callLater(0, runCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
 twisted.internet.reactor.run()
-
+sys.exit(ExitCode().get())
