@@ -71,8 +71,7 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
     # perform call
     mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
         'icmp',
-        client,
-        2
+        client
     )
     return mydeffered
 
@@ -90,8 +89,7 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
     # perform call
     mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
         'probe',
-        client,
-        4
+        client
     )
     return mydeffered
 
