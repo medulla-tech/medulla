@@ -115,6 +115,9 @@ def setDefaultClientOptions(client):
     """
     # FIXME: handle missing keys
 
+    if not 'timeout' in client:
+        client['timeout'] = LauncherConfig().wrapper_max_exec_time
+
     if client['protocol'] == 'ssh':
         if not 'port' in client:
             client['port'] = 22
@@ -172,13 +175,6 @@ def setDefaultClientOptions(client):
                     bwlimit = 1 # as bwlimit =0 imply no limit, min bwlimit set to 1
                 client['proto_args'] += ['--bwlimit', '%d' %  bwlimit] # bwlimit arg in kB/s
 
-    if client['protocol'] == 'wol':
-        if not 'addr' in client:
-            client['addr'] = 'FF:FF:FF:FF:FF:FF'
-        if not 'bcast' in client:
-            client['bcast'] = '255.255.255.255'
-        if not 'port' in client:
-            client['port'] = '40000'
     return client
 
 class Singleton(object):
