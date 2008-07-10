@@ -291,7 +291,7 @@ option2 = plop      </screen></para>
 
             <entry>path</entry>
 
-            <entry></entry>
+            <entry>/usr/sbin/pulse2-scheduler</entry>
           </row>
 
           <row>
