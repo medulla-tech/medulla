@@ -47,6 +47,8 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
     inventory_command = "echo Doing inventory"
     launcher_path = "/usr/sbin/pulse2-launcher"
     max_command_age = 86400
+    max_ping_time = 2
+    max_probe_time = 5
     ping_path = "/usr/sbin/pulse2-ping"
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
@@ -130,6 +132,10 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         self.setoption('launchers', 'launcher_path', 'launcher_path')
         self.setoption('launchers', 'max_command_age', 'max_command_age')
         self.max_command_age = int(self.max_command_age)
+        self.setoption('launchers', 'max_ping_time', 'max_ping_time')
+        self.max_ping_time = int(self.max_ping_time)
+        self.setoption('launchers', 'max_probe_time', 'max_probe_time')
+        self.max_probe_time = int(self.max_probe_time)
         self.setoption('launchers', 'ping_path', 'ping_path')
         self.setoption('launchers', 'source_path', 'source_path')
         self.setoption('launchers', 'target_path', 'target_path')
