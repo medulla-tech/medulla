@@ -57,7 +57,7 @@ def wolClient(mac_addrs):
         __cb_wol_end
     )
 
-def icmpClient(client):
+def icmpClient(client, timeout):
     """ Send a Ping to our client """
     def __cb_wol_end(shprocess):
         if not shprocess.exit_code == 0:
@@ -74,7 +74,7 @@ def icmpClient(client):
         __cb_wol_end
     )
 
-def probeClient(client):
+def probeClient(client, timeout):
     def __cb_probe_end(result):
         (exitcode, stdout, stderr) = result
         idData = [
@@ -97,7 +97,7 @@ def probeClient(client):
 
     client = {
         'protocol': 'ssh',
-        'host': 'pulse2-win2k',
+        'host': client,
         'uuid': None
     }
     mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
