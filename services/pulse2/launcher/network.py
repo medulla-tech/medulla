@@ -69,9 +69,10 @@ def icmpClient(client, timeout):
         LauncherConfig().ping_path,
         client
     ]
+    # FIXME: use timeout
     return pulse2.launcher.process_control.commandRunner(
         command_list,
-        __cb_wol_end
+        __cb_wol_end,
     )
 
 def probeClient(client, timeout):
@@ -98,7 +99,8 @@ def probeClient(client, timeout):
     client = {
         'protocol': 'ssh',
         'host': client,
-        'uuid': None
+        'uuid': None,
+        'timeout': timeout
     }
     mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
         None,
