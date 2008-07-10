@@ -75,6 +75,10 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
     ssh_forward_key = 'let'
     scp_options = ssh_options
 
+    # WGET stuff
+    wget_options = ''
+    wget_check_certs = True
+
     scheduler_host = "127.0.0.1"
     scheduler_port = "8000"
     scheduler_username = "username"
@@ -134,6 +138,13 @@ class LauncherConfig(mmc.support.mmctools.Singleton):
         self.setoption('wol', 'wol_port', 'wol_port')
         self.setoption('wol', 'wol_bcast', 'wol_bcast')
         self.setoption('wol', 'wol_path', 'wol_path')
+
+        # Parse "wget" section
+        if self.cp.has_section("wget"):
+            if self.cp.has_option("wget", "wget_options"):
+                self.wget_options = self.cp.get("wget", "wget_options").split(' ')
+            if self.cp.has_option("wget", "check_certs"):
+                self.wget_check_certs = self.cp.getboolean("wget", "check_certs")
 
         # Parse "daemon" section
         self.setoption('daemon', 'pid_path', 'pid_path')

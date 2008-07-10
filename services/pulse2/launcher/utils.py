@@ -140,6 +140,10 @@ def setDefaultClientOptions(client):
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         if not 'proto_args' in client:
             client['proto_args'] = ['-nv']
+        if not LauncherConfig().wget_check_certs:
+            client['proto_args'] += ['--no-check-certificate']
+        if LauncherConfig().wget_options != '':
+            client['proto_args'] += LauncherConfig().wget_options
         if 'maxbw' in client: # FIXME: handle low values of BWLimit (see mechanism below for rsync)
             client['proto_args'] += ['--limit-rate', '%d' % int(client['maxbw'] / 8) ] # bwlimit arg in B/s
         client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
