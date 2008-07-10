@@ -51,7 +51,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
     certfile = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     privkey = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     host = "127.0.0.1"
-    mode = 'sync'
+    mode = 'async'
     password = 'password'
     port = 8000
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
