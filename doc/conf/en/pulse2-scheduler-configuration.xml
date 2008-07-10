@@ -240,7 +240,7 @@ option2 = plop      </screen></para>
 
             <entry>string</entry>
 
-            <entry>sync</entry>
+            <entry>async</entry>
           </row>
 
           <row>
