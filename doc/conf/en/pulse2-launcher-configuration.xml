@@ -110,6 +110,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>wol</entry>
+
+            <entry>WOL related behaviors</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
             <entry>scheduler</entry>
 
             <entry>Referent scheduler location</entry>
@@ -143,7 +151,7 @@ option2 = plop      </screen></para>
     <table>
       <title>Available options for the "launchers" section</title>
 
-      <tgroup cols="4">
+      <tgroup cols="5">
         <thead>
           <row>
             <entry>Option name</entry>
@@ -152,11 +160,26 @@ option2 = plop      </screen></para>
 
             <entry>Optional</entry>
 
+            <entry>Type</entry>
+
             <entry>Default value</entry>
           </row>
         </thead>
 
         <tbody>
+          <row>
+            <entry>inventory_command</entry>
+
+            <entry>The inventory command to use on a client, after a
+            successful deployment.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>echo Doing inventory</entry>
+          </row>
+
           <row>
             <entry>launcher_path</entry>
 
@@ -165,18 +188,21 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
 
+            <entry>path</entry>
+
             <entry>/usr/sbin/pulse2-launcher</entry>
           </row>
 
           <row>
-            <entry>wrapper_path</entry>
+            <entry>ping_path</entry>
 
-            <entry>Pulse 2 launcher wrapper (ie "job launcher")
-            location.</entry>
+            <entry>Path to Pulse 2 PIng tool</entry>
 
             <entry>yes</entry>
 
-            <entry>/usr/sbin/pulse2-output-wrapper</entry>
+            <entry>path</entry>
+
+            <entry>/usr/sbin/pulse2-ping</entry>
           </row>
 
           <row>
@@ -187,7 +213,9 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/tftpboot/revoboot/msc</entry>
+            <entry>path</entry>
+
+            <entry>/var/lib/pulse2/packages</entry>
           </row>
 
           <row>
@@ -197,18 +225,9 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>path</entry>
+
             <entry>/tmp</entry>
-          </row>
-
-          <row>
-            <entry>inventory_command</entry>
-
-            <entry>The inventory command to use on a client, after a
-            successful deployment.</entry>
-
-            <entry>yes</entry>
-
-            <entry>echo Doing inventory</entry>
           </row>
 
           <row>
@@ -219,6 +238,8 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>string</entry>
+
             <entry>MDVPLS</entry>
           </row>
 
@@ -226,9 +247,11 @@ option2 = plop      </screen></para>
             <entry>wrapper_max_exec_time</entry>
 
             <entry>Default max exec time in seconds, older process are killed
-            using SIGKILL</entry>
+            using SIGKILL, only works in ASYNC mode</entry>
 
             <entry>yes</entry>
+
+            <entry>int, in seconds</entry>
 
             <entry>0 ("no limit")</entry>
           </row>
@@ -240,7 +263,22 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>int, in bytes</entry>
+
             <entry>0 ("no limit")</entry>
+          </row>
+
+          <row>
+            <entry>wrapper_path</entry>
+
+            <entry>Pulse 2 launcher wrapper (ie "job launcher")
+            location.</entry>
+
+            <entry>yes</entry>
+
+            <entry>path</entry>
+
+            <entry>/usr/sbin/pulse2-output-wrapper</entry>
           </row>
         </tbody>
       </tgroup>
@@ -255,7 +293,7 @@ option2 = plop      </screen></para>
     <table>
       <title>Available options for the "ssh" section</title>
 
-      <tgroup cols="4">
+      <tgroup cols="5">
         <thead>
           <row>
             <entry>Option name</entry>
@@ -264,21 +302,37 @@ option2 = plop      </screen></para>
 
             <entry>Optional</entry>
 
+            <entry>Type</entry>
+
             <entry>Default value</entry>
           </row>
         </thead>
 
         <tbody>
           <row>
-            <entry>ssh_options</entry>
+            <entry>default_key</entry>
 
-            <entry>Options passed to OpenSSH binary (-o option).</entry>
+            <entry>The default SSHv2 key to use, the config code will look for
+            an "ssh_&lt;default_key&gt;" entry in the config file.</entry>
 
             <entry>yes</entry>
 
-            <entry>StrictHostKeyChecking=no Batchmode=yes
-            PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no
-            ConnectTimeout=10</entry>
+            <entry>string</entry>
+
+            <entry>default</entry>
+          </row>
+
+          <row>
+            <entry>forward_key</entry>
+
+            <entry>Should we perform key-forwarding (never, always, or let =
+            let the scheduler take its decision)</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>let</entry>
           </row>
 
           <row>
@@ -288,18 +342,23 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>list of space separated strings</entry>
+
             <entry>same as ssh_options</entry>
           </row>
 
           <row>
-            <entry>default_key</entry>
+            <entry>ssh_options</entry>
 
-            <entry>The default SSHv2 key to use, the config code will look for
-            an "ssh_&lt;default_key&gt;" entry in the config file.</entry>
+            <entry>Options passed to OpenSSH binary (-o option).</entry>
 
             <entry>yes</entry>
 
-            <entry>default</entry>
+            <entry>list of space separated strings</entry>
+
+            <entry>StrictHostKeyChecking=no Batchmode=yes
+            PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no
+            ConnectTimeout=10</entry>
           </row>
 
           <row>
@@ -308,6 +367,8 @@ option2 = plop      </screen></para>
             <entry>The "default" ssh key path.</entry>
 
             <entry>yes</entry>
+
+            <entry>path</entry>
 
             <entry>/root/.ssh/id_dsa</entry>
           </row>
@@ -320,18 +381,9 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>string</entry>
+
             <entry></entry>
-          </row>
-
-          <row>
-            <entry>forward_key</entry>
-
-            <entry>Should we perform key-forwarding (never, always, or let =
-            let the scheduler take its decision)</entry>
-
-            <entry>yes</entry>
-
-            <entry>let</entry>
           </row>
         </tbody>
       </tgroup>
@@ -347,7 +399,7 @@ option2 = plop      </screen></para>
     <table>
       <title>Available options for the "daemon" section</title>
 
-      <tgroup cols="4">
+      <tgroup cols="5">
         <thead>
           <row>
             <entry>Option name</entry>
@@ -356,33 +408,13 @@ option2 = plop      </screen></para>
 
             <entry>Optional</entry>
 
+            <entry>Type</entry>
+
             <entry>Default value</entry>
           </row>
         </thead>
 
         <tbody>
-          <row>
-            <entry>pid_path</entry>
-
-            <entry>The launcher services PID, used by pulse2-launchers-manager
-            to track the launchers services.</entry>
-
-            <entry>yes</entry>
-
-            <entry>/var/run/pulse2</entry>
-          </row>
-
-          <row>
-            <entry>user</entry>
-
-            <entry>The pulse2-launchers-manager and pulse2-launchers service
-            run as this specified user.</entry>
-
-            <entry>yes</entry>
-
-            <entry>root</entry>
-          </row>
-
           <row>
             <entry>group</entry>
 
@@ -391,7 +423,22 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>group</entry>
+
             <entry>root</entry>
+          </row>
+
+          <row>
+            <entry>pid_path</entry>
+
+            <entry>The launcher services PID, used by pulse2-launchers-manager
+            to track the launchers services.</entry>
+
+            <entry>yes</entry>
+
+            <entry>path</entry>
+
+            <entry>/var/run/pulse2</entry>
           </row>
 
           <row>
@@ -403,7 +450,87 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>octal</entry>
+
             <entry>0077</entry>
+          </row>
+
+          <row>
+            <entry>user</entry>
+
+            <entry>The pulse2-launchers-manager and pulse2-launchers service
+            run as this specified user.</entry>
+
+            <entry>yes</entry>
+
+            <entry>user</entry>
+
+            <entry>root</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« wol » section</title>
+
+    <para>This section sets the pulse2-launchers-manager and pulse2-launchers
+    service run-time options and privileges.</para>
+
+    <table>
+      <title>Available options for the "daemon" section</title>
+
+      <tgroup cols="5">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Type</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>wol_bcast</entry>
+
+            <entry>WOL IP BCast adress.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>255.255.255.255</entry>
+          </row>
+
+          <row>
+            <entry>wol_path</entry>
+
+            <entry>Pulse 2 scheduler awaker (via WOL "magic packet").</entry>
+
+            <entry>yes</entry>
+
+            <entry>path</entry>
+
+            <entry>/usr/sbin/pulse2-wol</entry>
+          </row>
+
+          <row>
+            <entry>wol_port</entry>
+
+            <entry>WOL TCP port.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>40000</entry>
           </row>
         </tbody>
       </tgroup>
@@ -419,7 +546,7 @@ option2 = plop      </screen></para>
     <table>
       <title>Available options for the "scheduler" section</title>
 
-      <tgroup cols="4">
+      <tgroup cols="5">
         <thead>
           <row>
             <entry>Option name</entry>
@@ -428,64 +555,13 @@ option2 = plop      </screen></para>
 
             <entry>Optional</entry>
 
+            <entry>Type</entry>
+
             <entry>Default value</entry>
           </row>
         </thead>
 
         <tbody>
-          <row>
-            <entry>host</entry>
-
-            <entry>The referent scheduler IP address</entry>
-
-            <entry>yes</entry>
-
-            <entry>127.0.0.1</entry>
-          </row>
-
-          <row>
-            <entry>port</entry>
-
-            <entry>The referent scheduler TCP port</entry>
-
-            <entry>yes</entry>
-
-            <entry>8000</entry>
-          </row>
-
-          <row>
-            <entry>enablessl</entry>
-
-            <entry>Flag that tells if SSL should be used to connect to the
-            scheduler</entry>
-
-            <entry>yes</entry>
-
-            <entry>1</entry>
-          </row>
-
-          <row>
-            <entry>username</entry>
-
-            <entry>The login name to use when authenticating vs our referent
-            scheduler</entry>
-
-            <entry>yes</entry>
-
-            <entry>username</entry>
-          </row>
-
-          <row>
-            <entry>password</entry>
-
-            <entry>The password to use when authenticating vs our referent
-            scheduler</entry>
-
-            <entry>yes</entry>
-
-            <entry>password</entry>
-          </row>
-
           <row>
             <entry>awake_time</entry>
 
@@ -494,6 +570,8 @@ option2 = plop      </screen></para>
             be given. Field unit is the "second".</entry>
 
             <entry>yes</entry>
+
+            <entry>int</entry>
 
             <entry>600</entry>
           </row>
@@ -507,7 +585,72 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>string</entry>
+
             <entry>no</entry>
+          </row>
+
+          <row>
+            <entry>enablessl</entry>
+
+            <entry>Flag that tells if SSL should be used to connect to the
+            scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>boolean</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>host</entry>
+
+            <entry>The referent scheduler IP address</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when authenticating vs our referent
+            scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>string or base64</entry>
+
+            <entry>password</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The referent scheduler TCP port</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>8000</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The login name to use when authenticating vs our referent
+            scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>username</entry>
           </row>
         </tbody>
       </tgroup>
@@ -523,7 +666,7 @@ option2 = plop      </screen></para>
     <table>
       <title>Available options for the "launcher_XXX" section</title>
 
-      <tgroup cols="4">
+      <tgroup cols="5">
         <thead>
           <row>
             <entry>Option name</entry>
@@ -531,6 +674,8 @@ option2 = plop      </screen></para>
             <entry>Description</entry>
 
             <entry>Optional</entry>
+
+            <entry>Type</entry>
 
             <entry>Default value</entry>
           </row>
@@ -544,17 +689,9 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>string</entry>
+
             <entry>127.0.0.1</entry>
-          </row>
-
-          <row>
-            <entry>port</entry>
-
-            <entry>The launcher binding TCP port.</entry>
-
-            <entry>yes</entry>
-
-            <entry>8001</entry>
           </row>
 
           <row>
@@ -563,6 +700,8 @@ option2 = plop      </screen></para>
             <entry>SSL mode support</entry>
 
             <entry>yes</entry>
+
+            <entry>boolean</entry>
 
             <entry>1</entry>
           </row>
@@ -575,6 +714,8 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>path</entry>
+
             <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
           </row>
 
@@ -585,18 +726,9 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>path</entry>
+
             <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
-          </row>
-
-          <row>
-            <entry>username</entry>
-
-            <entry>The login name to use when authenticating vs this
-            launcher</entry>
-
-            <entry>yes</entry>
-
-            <entry>username</entry>
           </row>
 
           <row>
@@ -607,7 +739,21 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>string or base64</entry>
+
             <entry>password</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The launcher binding TCP port.</entry>
+
+            <entry>yes</entry>
+
+            <entry>int</entry>
+
+            <entry>8001</entry>
           </row>
 
           <row>
@@ -618,7 +764,22 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
+            <entry>int</entry>
+
             <entry>300</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The login name to use when authenticating vs this
+            launcher</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>username</entry>
           </row>
         </tbody>
       </tgroup>
