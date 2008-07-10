@@ -38,7 +38,6 @@ import pulse2.scheduler.utils
 class LauncherConfig(pulse2.scheduler.utils.Singleton):
     """
     Singleton Class to hold configuration directives
-
     """
 
     # default values
@@ -47,12 +46,15 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
 
     inventory_command = "echo Doing inventory"
     launcher_path = "/usr/sbin/pulse2-launcher"
+    max_command_age = 86400
     ping_path = "/usr/sbin/pulse2-ping"
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
     temp_folder_prefix = "MDVPLS"
-    wrapper_max_exec_time = 0
-    wrapper_max_log_size = "0"
+
+    # wrapper stuff
+    wrapper_max_exec_time = 21600
+    wrapper_max_log_size = 512000
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
 
     # ssh stuff
@@ -126,13 +128,19 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         # Parse "launchers" section
         self.setoption('launchers', 'inventory_command', 'inventory_command')
         self.setoption('launchers', 'launcher_path', 'launcher_path')
+        self.setoption('launchers', 'max_command_age', 'max_command_age')
+        self.max_command_age = int(self.max_command_age)
         self.setoption('launchers', 'ping_path', 'ping_path')
         self.setoption('launchers', 'source_path', 'source_path')
         self.setoption('launchers', 'target_path', 'target_path')
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
-        self.setoption('launchers', 'wrapper_max_log_size', 'wrapper_max_log_size')
-        self.setoption('launchers', 'wrapper_max_exec_time', 'wrapper_max_exec_time')
-        self.setoption('launchers', 'wrapper_path', 'wrapper_path')
+
+        # Parse "wrapper" section
+        self.setoption('wrapper', 'max_log_size', 'wrapper_max_log_size')
+        self.wrapper_max_log_size = int(self.wrapper_max_log_size)
+        self.setoption('wrapper', 'max_exec_time', 'wrapper_max_exec_time')
+        self.wrapper_max_exec_time = int(self.wrapper_max_exec_time)
+        self.setoption('wrapper', 'path', 'wrapper_path')
 
         # Parse "ssh" sections
         self.setoption('ssh', 'default_key', 'ssh_defaultkey')
