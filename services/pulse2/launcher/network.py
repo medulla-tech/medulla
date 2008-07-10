@@ -59,11 +59,11 @@ def wolClient(mac_addrs):
 
 def icmpClient(client, timeout):
     """ Send a Ping to our client """
-    def __cb_wol_end(shprocess):
+    def __cb_wol_end(shprocess, client=client):
         if not shprocess.exit_code == 0:
-            logging.getLogger().warn("launcher %s: ICMP failed: %s, %s" % (LauncherConfig().name, shprocess.stdout, shprocess.stderr))
+            logging.getLogger().warn("launcher %s: ICMP failed on %s: %s, %s" % (LauncherConfig().name, client, shprocess.stdout, shprocess.stderr))
             return False
-        logging.getLogger().debug("launcher %s: ICMP succeeded" % (LauncherConfig().name))
+        logging.getLogger().debug("launcher %s: ICMP succeeded on %s" % (LauncherConfig().name, client))
         return True
     command_list = [
         LauncherConfig().ping_path,
@@ -75,7 +75,7 @@ def icmpClient(client, timeout):
     )
 
 def probeClient(client, timeout):
-    def __cb_probe_end(result):
+    def __cb_probe_end(result, client=client):
         (exitcode, stdout, stderr) = result
         idData = [
              { 'platform': "Microsoft Windows", 'pcre': "Windows", "tmp_path": "/lsc", "root_path": "/cygdrive/c"},
@@ -86,13 +86,13 @@ def probeClient(client, timeout):
              { 'platform': "Apple MacOS", 'pcre': "Darwin", "tmp_path": "/tmp/lsc", "root_path": "/"}
         ]
         if not exitcode == 0:
-            logging.getLogger().warn("launcher %s: PROBE execution failed: %s, %s" % (LauncherConfig().name, stdout, stderr))
+            logging.getLogger().warn("launcher %s: PROBE execution failed o %s: %s, %s" % (LauncherConfig().name, client, stdout, stderr))
             return "Not available"
         for identification in idData:
             if re.compile(identification["pcre"]).search(stdout) or stdout == identification["platform"]:
-                logging.getLogger().debug("launcher %s: PROBE identification succeded: %s" % (LauncherConfig().name, identification["platform"]))
+                logging.getLogger().debug("launcher %s: PROBE identification succeded on %s: %s" % (LauncherConfig().name, client, identification["platform"]))
                 return identification["platform"]
-        logging.getLogger().debug("launcher %s: PROBE identification failed: %s, %s" % (LauncherConfig().name, stdout, stderr))
+        logging.getLogger().debug("launcher %s: PROBE identification failed on %s: %s, %s" % (LauncherConfig().name, client, stdout, stderr))
         return "Other"
 
     client = {
