@@ -94,6 +94,14 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>wrapper</entry>
+
+            <entry>wrapper related options</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
             <entry>ssh</entry>
 
             <entry>ssh modus-operandi related section</entry>
@@ -202,6 +210,47 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>max_command_age</entry>
+
+            <entry>The parameter which limits a command's time lenght. Above
+            this amount of seconds the command will automatically be killed.
+            Only works for ASYNC commands.</entry>
+
+            <entry>yes</entry>
+
+            <entry>int, seconds</entry>
+
+            <entry>86400 (1 day)</entry>
+          </row>
+
+          <row>
+            <entry>max_ping_time</entry>
+
+            <entry>Timeout when attempting to ping a client: above this value
+            a computer will be considered as unreachable.</entry>
+
+            <entry>yes</entry>
+
+            <entry>int, seconds</entry>
+
+            <entry>2</entry>
+          </row>
+
+          <row>
+            <entry>max_probe_time</entry>
+
+            <entry>Timeout when attempting to probe a client: above this value
+            a computer will be considered as without SSH agent
+            installed.</entry>
+
+            <entry>yes</entry>
+
+            <entry>int, seconds</entry>
+
+            <entry>5</entry>
+          </row>
+
+          <row>
             <entry>ping_path</entry>
 
             <entry>Path to Pulse 2 PIng tool</entry>
@@ -278,6 +327,73 @@ option2 = plop      </screen></para>
 
           <row>
             <entry>wrapper_path</entry>
+
+            <entry>Pulse 2 launcher wrapper (ie "job launcher")
+            location.</entry>
+
+            <entry>yes</entry>
+
+            <entry>path</entry>
+
+            <entry>/usr/sbin/pulse2-output-wrapper</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« wrapper » section</title>
+
+    <para>This section define the wrapper flags.</para>
+
+    <table>
+      <title>Available options for the "wrapper" section</title>
+
+      <tgroup cols="5">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Type</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>max_exec_time</entry>
+
+            <entry>Default max exec time in seconds, older process are killed
+            using SIGKILL. Different from max_command_age as beeing handled by
+            the wrapper itself, so it also works for SYNC commandS.</entry>
+
+            <entry>yes</entry>
+
+            <entry>int, in seconds</entry>
+
+            <entry>21600 (6 hours)</entry>
+          </row>
+
+          <row>
+            <entry>max_log_size</entry>
+
+            <entry>Cap generated logs to this value</entry>
+
+            <entry>yes</entry>
+
+            <entry>int, in bytes</entry>
+
+            <entry>512000 (500 kB)</entry>
+          </row>
+
+          <row>
+            <entry>path</entry>
 
             <entry>Pulse 2 launcher wrapper (ie "job launcher")
             location.</entry>
@@ -548,8 +664,8 @@ option2 = plop      </screen></para>
   <section>
     <title>«wget » section</title>
 
-    <para>This section sets the pulse2-launchers wget options (for the
-    pull part of the push/pull mode</para>
+    <para>This section sets the pulse2-launchers wget options (for the pull
+    part of the push/pull mode</para>
 
     <table>
       <title>Available options for the "wget" section</title>
@@ -593,7 +709,6 @@ option2 = plop      </screen></para>
 
             <entry>1</entry>
           </row>
-
         </tbody>
       </tgroup>
     </table>
