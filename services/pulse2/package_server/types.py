@@ -93,7 +93,7 @@ class Package:
         self.files = AFiles()
         self.specifiedFiles = []
 
-    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = ''):
+    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0):
         self.label = label
         self.version = version
         self.size = size
@@ -103,6 +103,7 @@ class Package:
         self.cmd = getCommandFromH(cmd)
         self.postcmd_ok = getCommandFromH(postcmd_ok)
         self.postcmd_ko = getCommandFromH(postcmd_ko)
+        self.reboot = reboot
         self.id = id
 
     def addFile(self, file):
@@ -120,6 +121,7 @@ class Package:
             'command':self.cmd.toH(),
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
+            'reboot':self.reboot,
             'files':self.files.toH()
         }
 
@@ -159,6 +161,9 @@ class Package:
             self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
         else:
             self.postcmd_ko = Command()
+        self.reboot = 0
+        if h.has_key('reboot'):
+            self.reboot = h['reboot']
         return self
 
     def equal(self, p):

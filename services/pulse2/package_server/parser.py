@@ -52,63 +52,70 @@ class PackageParser:
 class PackageParserXML:
     def parse_str(self, file):
         xml = None
-        if os.path.exists(file):
-            xml = minidom.parse(file)
-        else: 
-            xml = minidom.parseString(file)
-                
-        # parsing routines
-        self.logger = logging.getLogger()
-        root = xml.getElementsByTagName('package')
-        if len(root) != 1:
-            raise Exception('CANTPARSE')
-        root = root[0]
-        pid = root.getAttribute('id')
-        tmp = root.getElementsByTagName('name')[0]
-        name = tmp.firstChild.wholeText
-        version = root.getElementsByTagName('version')[0]
-        tmp = version.getElementsByTagName('numeric')[0]
-        if tmp.firstChild != None:
-            v_num = tmp.firstChild.wholeText
-        else:
-            v_num = 0
-        tmp = version.getElementsByTagName('label')[0]
-        v_txt = tmp.firstChild.wholeText
-        tmp = root.getElementsByTagName('description')
-        if len(tmp) == 1 and tmp[0].firstChild != None:
-            tmp = tmp[0]
-            desc = tmp.firstChild.wholeText
-        else:
-            desc = ""
-
-        cmd = root.getElementsByTagName('commands')[0]
-
-        cmds = {}
-        for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
-            tmp = cmd.getElementsByTagName(c)
-            if len(tmp) == 1 and tmp[0].firstChild != None:
-                command = tmp[0].firstChild.wholeText
-                if tmp[0].hasAttribute('name'):
-                    ncmd = tmp[0].getAttribute('name')
-                else:
-                    ncmd = ''
-                cmds[c] = {'command':command, 'name':ncmd}
+        try:
+            if os.path.exists(file):
+                xml = minidom.parse(file)
+            else: 
+                xml = minidom.parseString(file)
+                    
+            # parsing routines
+            self.logger = logging.getLogger()
+            root = xml.getElementsByTagName('package')
+            if len(root) != 1:
+                raise Exception('CANTPARSE')
+            root = root[0]
+            pid = root.getAttribute('id')
+            tmp = root.getElementsByTagName('name')[0]
+            name = tmp.firstChild.wholeText
+            version = root.getElementsByTagName('version')[0]
+            tmp = version.getElementsByTagName('numeric')[0]
+            if tmp.firstChild != None:
+                v_num = tmp.firstChild.wholeText
             else:
-                cmds[c] = ''
-
-        p = Package()
-        p.init(
-            pid,
-            name,
-            v_txt,
-            0,
-            desc,
-            cmds['command'],
-            cmds['installInit'],
-            cmds['preCommand'],
-            cmds['postCommandSuccess'],
-            cmds['postCommandFailure']
-        )
+                v_num = 0
+            tmp = version.getElementsByTagName('label')[0]
+            v_txt = tmp.firstChild.wholeText
+            tmp = root.getElementsByTagName('description')
+            if len(tmp) == 1 and tmp[0].firstChild != None:
+                tmp = tmp[0]
+                desc = tmp.firstChild.wholeText
+            else:
+                desc = ""
+    
+            cmd = root.getElementsByTagName('commands')[0]
+            reboot = 0
+            if cmd.hasAttribute('reboot'):
+                reboot = cmd.getAttribute('reboot')
+    
+            cmds = {}
+            for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
+                tmp = cmd.getElementsByTagName(c)
+                if len(tmp) == 1 and tmp[0].firstChild != None:
+                    command = tmp[0].firstChild.wholeText
+                    if tmp[0].hasAttribute('name'):
+                        ncmd = tmp[0].getAttribute('name')
+                    else:
+                        ncmd = ''
+                    cmds[c] = {'command':command, 'name':ncmd}
+                else:
+                    cmds[c] = ''
+    
+            p = Package()
+            p.init(
+                pid,
+                name,
+                v_txt,
+                0,
+                desc,
+                cmds['command'],
+                cmds['installInit'],
+                cmds['preCommand'],
+                cmds['postCommandSuccess'],
+                cmds['postCommandFailure'],
+                reboot
+            )
+        except:
+            p = None
 
         # TODO load files :
         #root.each_element('//files/file') do |file_node|
@@ -130,7 +137,7 @@ class PackageParserXML:
         <label>%s</label>
     </version>
     <description>%s</description>
-    <commands>
+    <commands reboot="%s">
         <preCommand name="%s">%s</preCommand>
         <installInit name="%s">%s</installInit>
         <command name="%s">%s</command>
@@ -138,7 +145,7 @@ class PackageParserXML:
         <postCommandFailure name="%s">%s</postCommandFailure>
     </commands>
 </package>
-        """ % (package.id, package.label, package.version, package.version, package.description, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
+        """ % (package.id, package.label, package.version, package.version, package.description, package.reboot, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
 
         # TODO add files informations
         #if not package.files.nil? and package.files.size > 0 then
