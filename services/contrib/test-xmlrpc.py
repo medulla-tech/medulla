@@ -1,5 +1,27 @@
 #!/usr/bin/python
 
+""" A XMLRPC Client
+
+Arguments must follow this convention:
+ - args are splitted over ';' (we call it an arg)
+
+  => use --func myfunc --args "a;b;c" to request func('a', 'b', 'c')
+
+ - in one arg, array/dict component are splitted over '|' (we call it a token)
+
+  => use --func myfunc --args "a|b" to request func(['a', 'b'])
+
+ - if an token contain '=', it is interpreted as a tuple
+
+  => use --func myfunc --args "a=b|c=d" to request func(['a': 'b', 'c': 'd'])
+
+ - if an token contain ',', it is interpreted as a list
+
+  => use --func myfunc --args "a,b,c,d" to request func('a', 'b', 'c', 'd')
+
+  => use --func myfunc --args "a,b|c,d" to request func(['a', 'b'], ['c', 'd'])
+"""
+ 
 import twisted.python.usage
 import twisted.internet.reactor
 import twisted.web.xmlrpc
@@ -9,7 +31,7 @@ class Options(twisted.python.usage.Options):
 
     optParameters = [
         ["func", None, None, "The XML RPC Function to use"],
-        ["args", None, None, "The XML RPC Arguments to use"],
+        ["args", None, None, "The XML RPC Arguments to use, see below"],
         ["server", None, None, "The XML RPC server to contact, URI format"],
         ]
 
