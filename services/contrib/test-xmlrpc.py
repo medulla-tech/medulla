@@ -53,6 +53,11 @@ for arg in args: # parse args
                 items += [token.split(',')]
             except:
                 items = [token.split(',')]
+	elif token.count('~') == 1:		   # found a number
+            try:
+                items += int(token.split('~')[1])
+            except:
+                items = [int(token.split('~')[1])]
         else:                                      # found something else (simple value ?)
             try:
                 items += token
