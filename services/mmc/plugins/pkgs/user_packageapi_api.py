@@ -28,7 +28,7 @@ class UserPackageApiApi(Singleton):
         self.logger.debug('UserPackageApiApi will connect to %s' % (self.server_addr))
         try:
             self.server = xmlrpclib.Server(self.server_addr)
-            self.xmlrpc = self.server.xmlrpc
+            self.xmlrpc = self.server
             self.initialized_failed = False
         except:
             self.logger.warn("UserPackageApiApi cant connect to %s" % (self.server_addr))
