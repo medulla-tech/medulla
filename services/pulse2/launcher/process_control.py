@@ -182,37 +182,38 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         logging.getLogger().debug('Send signal %s to command %s' % (signal, self.id) )
         try:
             self.handler.signalProcess(signal)
+            return True
         except:
             logging.getLogger().warn('Send signal %s to command %s which is already finished' % (signal, self.id) )
-        return True
+            return False
 
     def sendSigCont(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGCONT)
+        return self.sendSignal(signal.SIGCONT)
 
     def sendSigStop(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGSTOP)
+        return self.sendSignal(signal.SIGSTOP)
 
     def sendSigHup(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGHUP)
+        return self.sendSignal(signal.SIGHUP)
 
     def sendSigKill(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGKILL)
+        return self.sendSignal(signal.SIGKILL)
 
     def sendSigInt(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGINT)
+        return self.sendSignal(signal.SIGINT)
 
     def sendSigUsr1(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGUSR1)
+        return self.sendSignal(signal.SIGUSR1)
 
     def sendSigUsr2(self):
         # signal is posix signal ID
-        self.sendSignal(signal.SIGUSR2)
+        return self.sendSignal(signal.SIGUSR2)
 
     def getElapsedTime(self):
         return self.last_see_time - self.start_time
@@ -374,28 +375,28 @@ def getProcessStatistics(id):
 def stopProcess(id):
     process = ProcessList().getProcess(id)
     if process:
-        process.sendSigStop()
-    return True
+        return process.sendSigStop()
+    return False
 def contProcess(id):
     process = ProcessList().getProcess(id)
     if process:
-        process.sendSigCont()
-    return True
+        return process.sendSigCont()
+    return False
 def intProcess(id):
     process = ProcessList().getProcess(id)
     if process:
-        process.sendSigInt()
-    return True
+        return process.sendSigInt()
+    return False
 def killProcess(id):
     process = ProcessList().getProcess(id)
     if process:
-        process.sendSigKill()
-    return True
+        return process.sendSigKill()
+    return False
 def hupProcess(id):
     process = ProcessList().getProcess(id)
     if process:
-        process.sendSigHup()
-    return True
+        return process.sendSigHup()
+    return False
 
 def stopAllProcess():
     for id in ProcessList().getRunningIds():
