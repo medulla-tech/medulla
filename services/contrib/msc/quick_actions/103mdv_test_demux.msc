@@ -1,0 +1,4 @@
+title=Mandriva Test : StdErr / StdOut demux
+titlefr=Test Mandriva : demux StdErr / StdOut
+command=echo STDERR >&2; echo STDOUT
+

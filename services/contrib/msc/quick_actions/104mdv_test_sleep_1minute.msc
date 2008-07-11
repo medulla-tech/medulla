@@ -1,0 +1,4 @@
+title=Mandriva Test : One minute pause
+titlefr=Test Mandriva : Pause d'une minute
+command=sleep 60
+
