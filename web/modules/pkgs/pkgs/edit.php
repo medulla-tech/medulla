@@ -31,16 +31,28 @@ $package = array();
 
 if (isset($_POST["bcreate"])) {
     $p_api_id = $_POST['p_api'];
+    if ($_GET["action"]=="add") {
+        $p_api_id = base64_decode($p_api_id);
+    }
     foreach (array('id', 'label', 'version', 'description') as $post) {
         $package[$post] = $_POST[$post];
+    }
+    foreach (array('reboot') as $post) {
+        $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
     foreach (array('command') as $post) {
         $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>$_POST[$post.'cmd']);
     }
-    $ret = putPackageDetail(base64_decode($p_api_id), $package);
-    if (!isXMLRPCError() and $ret) {
-        new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
-        header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+    print_r($p_api_id);
+    $ret = putPackageDetail($p_api_id, $package);
+    print_r($ret);
+    if (!isXMLRPCError() and $ret and $ret != -1) {
+        if ($_GET["action"]=="add") {
+            new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
+            header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+        } else {
+            new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+        }
     } else {
         new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
     }
@@ -109,10 +121,21 @@ $cmds = array(
     array('postCommandSuccess', _T('', 'pkgs'))*/
 );
 
+$options = array(
+    array('reboot', _T('Need a reboot ?', 'pkgs'))
+);
+
 foreach ($fields as $p) {
     $f->add(
         new TrFormElement($p[1], new InputTpl($p[0])),
         array("value" => $package[$p[0]])
+    );
+}
+
+foreach ($options as $p) {
+    $f->add(
+        new TrFormElement($p[1], new CheckboxTpl($p[0])),
+        array("value" => ($package[$p[0]] == 1 ? 'checked' : ''))
     );
 }
 

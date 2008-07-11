@@ -28,8 +28,9 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
-    dropPackage(base64_decode($p_api), base64_decode($pid));
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The package has been deleted."));
+    $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
+    if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
+    if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
     header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('p_api'=>$p_api)));
 } else {
     $p_api = $_GET["p_api"];
