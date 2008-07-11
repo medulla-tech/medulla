@@ -113,7 +113,7 @@ class Common(Singleton):
     def descBySrc(self, src):
         ret = []
         for d in self.desc:
-            if d['src'] == src:
+            if 'src' in d and d['src'] == src:
                 ret.append(d)
         return ret
     
@@ -262,6 +262,9 @@ class Common(Singleton):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
                 confxml = os.path.join(file, "conf.xml")
                 l_package = self.parser.parse(confxml)
+                if l_package == None:
+                    return False
+                    
                 pid = l_package.id
 
                 self.mp2p[mp].append(pid)
@@ -290,7 +293,6 @@ class Common(Singleton):
                         #file_access_proto, file_access_uri, file_access_port, file_access_path)
                 self.packages[pid].size = size
                 self.logger.debug("Package size = %d" % size)
-                self.logger.info("path = %s" % path)
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
                 self.logger.error(err)

@@ -43,8 +43,8 @@ class PackageApiPut(PackageApiGet):
         if not ret: return False
 
         ret = Common().writePackageTo(package['id'], self.mp)
+        ret, confdir = ret
         if not ret: return False
-        pid, confdir = ret
 
         ret = Common().associatePackage2mp(package['id'], self.mp)
         if not ret: return False
