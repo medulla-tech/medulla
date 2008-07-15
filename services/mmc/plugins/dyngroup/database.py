@@ -497,7 +497,7 @@ class DyngroupDatabase(Singleton):
     def requestresult_group(self, ctx, id, start, end, filter, queryManager):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
-        return self.__request(ctx, group.query, group.bool, min, max, filter, queryManager, session)
+        return self.__request(ctx, group.query, group.bool, start, end, filter, queryManager, session)
 
     def __request(self, ctx, query, bool, start, end, filter, queryManager, session = create_session()):
         query = queryManager.getQueryTree(query, bool)
