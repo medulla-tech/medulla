@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - pkgs Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-26 13:11+0200\n"
+"POT-Creation-Date: 2008-07-13 22:35+0200\n"
 "PO-Revision-Date: 2008-06-17 10:03+0200\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: French\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:53
+#: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:65
 #: pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Ajouter un package"
 
-#: pkgs/pkgs/edit.php:105
+#: pkgs/pkgs/edit.php:117
 msgid "Command : "
 msgstr "Commande : "
 
-#: pkgs/pkgs/edit.php:105
+#: pkgs/pkgs/edit.php:117
 msgid "Command's name : "
 msgstr "Nom de la commande : "
 
@@ -34,11 +34,11 @@ msgstr "Nom de la commande : "
 msgid "Delete a package"
 msgstr "Supprimer un package"
 
-#: pkgs/pkgs/remove.php:37
+#: pkgs/pkgs/remove.php:38
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: pkgs/pkgs/edit.php:101
+#: pkgs/pkgs/edit.php:113
 msgid "Description"
 msgstr "Description"
 
@@ -46,7 +46,7 @@ msgstr "Description"
 msgid "Descriptions"
 msgstr "Descriptions"
 
-#: pkgs/pkgs/ajaxPackageList.php:69 pkgs/pkgs/edit.php:69
+#: pkgs/pkgs/ajaxPackageList.php:69 pkgs/pkgs/edit.php:81
 #: pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Editer un package"
@@ -55,28 +55,36 @@ msgstr "Editer un package"
 msgid "Names"
 msgstr "Noms"
 
-#: pkgs/pkgs/edit.php:89
+#: pkgs/pkgs/edit.php:125
+msgid "Need a reboot ?"
+msgstr "Besoin de rebooter?"
+
+#: pkgs/pkgs/edit.php:101
 msgid "Package API"
 msgstr "Api de package"
 
-#: pkgs/pkgs/edit.php:94
+#: pkgs/pkgs/edit.php:106
 msgid "Package Id"
 msgstr "Identifiant du package"
 
-#: pkgs/pkgs/edit.php:45
+#: pkgs/pkgs/edit.php:57
 msgid "Package failed to save"
 msgstr "La sauvegarde du package a échoué"
 
-#: pkgs/pkgs/edit.php:99
+#: pkgs/pkgs/edit.php:111
 msgid "Package label"
 msgstr "Libellé du package"
 
-#: pkgs/pkgs/edit.php:42
+#: pkgs/pkgs/edit.php:51
 #, php-format
 msgid "Package successfully added in %s"
 msgstr "Le package a été ajouté dans %s"
 
-#: pkgs/pkgs/edit.php:100
+#: pkgs/pkgs/edit.php:54
+msgid "Package successfully edited"
+msgstr "Le package a été correctement édité"
+
+#: pkgs/pkgs/edit.php:112
 msgid "Package version"
 msgstr "Version du package"
 
@@ -92,6 +100,10 @@ msgstr "List des packages"
 msgid "Show all packages"
 msgstr "Montrer tous les packages"
 
+#: pkgs/pkgs/remove.php:33
+msgid "The package failed to delete"
+msgstr "La destruction du package a échoué."
+
 #: pkgs/pkgs/remove.php:32
 msgid "The package has been deleted."
 msgstr "Le package a été détruit."
@@ -99,4 +111,3 @@ msgstr "Le package a été détruit."
 #: pkgs/pkgs/ajaxPackageList.php:61
 msgid "Versions"
 msgstr "Versions"
-
