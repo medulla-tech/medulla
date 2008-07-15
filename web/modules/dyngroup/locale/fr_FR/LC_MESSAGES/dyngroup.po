@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-30 15:36+0200\n"
+"POT-Creation-Date: 2008-07-13 19:25+0200\n"
 "PO-Revision-Date: 2008-06-17 09:59+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -62,11 +62,16 @@ msgstr "Ajouter une valeur"
 msgid "All groups"
 msgstr "Tous les groupes"
 
-#: dyngroup/includes/groups.inc.php:43
+#: dyngroup/includes/groups.inc.php:130
 msgid "All machines"
 msgstr "Tous les ordinateurs"
 
-#: dyngroup/includes/groups.inc.php:88 dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/includes/groups.inc.php:34
+msgid "All share entities"
+msgstr "Partager avec"
+
+#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
+#: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
 msgid "Cancel"
 msgstr "Annuler"
@@ -83,7 +88,7 @@ msgstr "Sélectionner votre champ : "
 msgid "Close"
 msgstr "Fermer"
 
-#: dyngroup/includes/groups.inc.php:87
+#: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -91,7 +96,7 @@ msgstr "Confirmer"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: dyngroup/infoPackage.inc.php:84
+#: dyngroup/infoPackage.inc.php:94
 msgid "Delete a group of machines"
 msgstr "Supprimer le groupe d'ordinateurs"
 
@@ -99,7 +104,7 @@ msgstr "Supprimer le groupe d'ordinateurs"
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:76
+#: dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
@@ -112,9 +117,13 @@ msgstr "Montrer"
 msgid "Display %s '%s'"
 msgstr "Afficher %s '%s'"
 
-#: dyngroup/infoPackage.inc.php:70
+#: dyngroup/infoPackage.inc.php:75
 msgid "Display a groups of machines"
 msgstr "Montrer un groupe d'ordinateurs"
+
+#: dyngroup/dyngroup/creator.php:172
+msgid "Display content"
+msgstr "Voir le contenu"
 
 #: dyngroup/dyngroup/display.php:42
 #, php-format
@@ -161,21 +170,30 @@ msgstr "Création d'un groupe"
 msgid "Group failed to modify"
 msgstr "Erreur à la modification du groupe"
 
+#: dyngroup/dyngroup/edit_share.php:98
+msgid "Group failed to share"
+msgstr "Erreur à la modification des partages du groupe"
+
 #: dyngroup/dyngroup/list.php:30
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: dyngroup/includes/groups.inc.php:66
+#: dyngroup/includes/groups.inc.php:153
 msgid "Group members"
 msgstr "Membres du groupe"
 
-#: dyngroup/includes/groups.inc.php:30 dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/includes/groups.inc.php:117
+#: dyngroup/dyngroup/ajaxListGroups.php:61
 msgid "Group name"
 msgstr "Nom du groupe"
 
-#: dyngroup/infoPackage.inc.php:89
+#: dyngroup/infoPackage.inc.php:99
 msgid "Group of machines details"
 msgstr "Détails du groupe d'ordinateurs"
+
+#: dyngroup/includes/groups.inc.php:57
+msgid "Group share"
+msgstr "Partage du groupe"
 
 #: dyngroup/dyngroup/add_groups.php:104
 msgid "Group successfully created"
@@ -184,6 +202,10 @@ msgstr "Groupe créé avec succès"
 #: dyngroup/dyngroup/add_groups.php:102
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
+
+#: dyngroup/dyngroup/edit_share.php:90
+msgid "Group successfully shared"
+msgstr "Groupe partagé avec succès"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:58
 msgid "Hidden"
@@ -197,11 +219,11 @@ msgstr "Cacher"
 msgid "Inventory on this group"
 msgstr "Montrer l'inventaire de ce groupe"
 
-#: dyngroup/includes/groups.inc.php:31
+#: dyngroup/includes/groups.inc.php:118
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
-#: dyngroup/infoPackage.inc.php:80
+#: dyngroup/infoPackage.inc.php:90
 msgid "List all groups of machines"
 msgstr "Lister tous les groupes d'ordinateurs"
 
@@ -210,11 +232,11 @@ msgstr "Lister tous les groupes d'ordinateurs"
 msgid "Machine list has been truncated at %d machines"
 msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:60
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:65
 msgid "Machines Group Creator"
 msgstr "Créateur de groupe d'ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:64
+#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:69
 msgid "Machines Group Editor"
 msgstr "Éditeur de groupe d'ordinateurs"
 
@@ -222,7 +244,7 @@ msgstr "Éditeur de groupe d'ordinateurs"
 msgid "Name :"
 msgstr "Nom:"
 
-#: dyngroup/includes/groups.inc.php:33 dyngroup/dyngroup/creator.php:138
+#: dyngroup/includes/groups.inc.php:120 dyngroup/dyngroup/creator.php:138
 msgid "No"
 msgstr "Non"
 
@@ -230,7 +252,7 @@ msgstr "Non"
 msgid "Please chose the type of group you want to create"
 msgstr "Choisissez le type de groupe que vous voulez créer"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Read log"
 msgstr "Lire les journaux"
 
@@ -246,7 +268,7 @@ msgstr "Enlever l'ordinateur"
 msgid "Remove a machine"
 msgstr "Enlever un ordinateur"
 
-#: dyngroup/infoPackage.inc.php:94
+#: dyngroup/infoPackage.inc.php:104
 msgid "Remove a machine from a group"
 msgstr "Supprimer un ordinateur d'un groupe"
 
@@ -258,7 +280,7 @@ msgstr "Sauvegarde de requête"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: dyngroup/infoPackage.inc.php:75
+#: dyngroup/infoPackage.inc.php:85
 msgid "Save a group of machines"
 msgstr "Sauvegarder un groupe d'ordinateurs"
 
@@ -266,11 +288,24 @@ msgstr "Sauvegarder un groupe d'ordinateurs"
 msgid "Search part"
 msgstr "Recherche de composant"
 
+#: dyngroup/infoPackage.inc.php:80
+msgid "Share a group of machines"
+msgstr "Partager un groupe d'ordinateurs"
+
+#: dyngroup/dyngroup/edit_share.php:38
+#, php-format
+msgid "Share groupe '%s' with"
+msgstr "Partager le groupe '%s' avec"
+
+#: dyngroup/dyngroup/ajaxListGroups.php:74
+msgid "Share this group"
+msgstr "Partager ce groupe"
+
 #: dyngroup/dyngroup/details.php:59
 msgid "Show"
 msgstr "Afficher"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Software deployment on this group"
 msgstr "Déploiement de logiciels sur ce groupe"
 
@@ -281,6 +316,10 @@ msgstr "Création d'un groupe statique"
 #: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:55
 msgid "Static group creation's tab"
 msgstr "Onglet de création d'un groupe statique"
+
+#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:60
+msgid "Temporary result display"
+msgstr "Affichage temporaire du resultat"
 
 #: dyngroup/dyngroup/creator.php:159
 msgid "The request is : "
@@ -304,7 +343,7 @@ msgstr "Type"
 msgid "Visible"
 msgstr "Visible"
 
-#: dyngroup/includes/groups.inc.php:32 dyngroup/dyngroup/creator.php:137
+#: dyngroup/includes/groups.inc.php:119 dyngroup/dyngroup/creator.php:137
 #: dyngroup/dyngroup/creator.php:143
 msgid "Yes"
 msgstr "Oui"
@@ -367,9 +406,6 @@ msgstr "le groupe statique"
 #: dyngroup/dyngroup/save.php:58
 msgid "visible"
 msgstr "visible"
-
-#~ msgid "Display '%s' content"
-#~ msgstr "Voir le contenu de %s"
 
 #~ msgid "Display '%s' result list"
 #~ msgstr "Afficher la liste des résultats de '%s'"

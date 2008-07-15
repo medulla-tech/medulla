@@ -117,6 +117,21 @@ class Group {
     #function addMachines($a_uuids) { }
     function delMembers($uuids) { return __xmlrpc_delmembers_to_group($this->id, $uuids); }
 
+    function shareWith() { return __xmlrpc_share_with($this->id); }
+    function addShares($share) {
+        $sha = array();
+        foreach (array_values($share) as $s) {
+            $sha[] = array($s['user']['login'], $s['user']['type']);
+        }
+        return __xmlrpc_add_share($this->id, $sha);
+    }
+    function delShares($share) {
+        $sha = array();
+        foreach (array_values($share) as $s) {
+            $sha[] = array($s['user']['login'], $s['user']['type']);
+        }
+        return __xmlrpc_del_share($this->id, $sha);
+    }
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
         include("modules/pulse2/pulse2/computers_list.php");
     }
@@ -148,6 +163,10 @@ function __xmlrpc_isrequest_group($id) { return xmlCall("dyngroup.isrequest_grou
 function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", array($id)); }
 function __xmlrpc_addmembers_to_group($id, $uuids) { return xmlCall("dyngroup.addmembers_to_group", array($id, $uuids)); }
 function __xmlrpc_delmembers_to_group($id, $uuids) { return xmlCall("dyngroup.delmembers_to_group", array($id, $uuids)); }
+
+function __xmlrpc_share_with($id) { return xmlCall("dyngroup.share_with", array($id)); }
+function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", array($id, $share)); }
+function __xmlrpc_del_share($id, $share) { return xmlCall("dyngroup.del_share", array($id, $share)); }
 
 function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-30 15:36+0200\n"
+"POT-Creation-Date: 2008-07-13 19:25+0200\n"
 "PO-Revision-Date: 2008-04-05 10:53+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,11 +61,16 @@ msgstr "Добавить значение"
 msgid "All groups"
 msgstr "Все группы"
 
-#: dyngroup/includes/groups.inc.php:43
+#: dyngroup/includes/groups.inc.php:130
 msgid "All machines"
 msgstr "Все машины"
 
-#: dyngroup/includes/groups.inc.php:88 dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/includes/groups.inc.php:34
+msgid "All share entities"
+msgstr ""
+
+#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
+#: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
 msgid "Cancel"
 msgstr "Отменить"
@@ -82,7 +87,7 @@ msgstr "Выберите Ваше поле :"
 msgid "Close"
 msgstr "Закрыть"
 
-#: dyngroup/includes/groups.inc.php:87
+#: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -90,7 +95,7 @@ msgstr "Подтвердить"
 msgid "Delete"
 msgstr "Удалить"
 
-#: dyngroup/infoPackage.inc.php:84
+#: dyngroup/infoPackage.inc.php:94
 msgid "Delete a group of machines"
 msgstr "Удалить группу машин"
 
@@ -98,7 +103,7 @@ msgstr "Удалить группу машин"
 msgid "Delete group"
 msgstr "Удалить группу"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:76
+#: dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "Delete this group"
 msgstr "Удалить эту группу"
 
@@ -111,9 +116,14 @@ msgstr "Показать"
 msgid "Display %s '%s'"
 msgstr "Показать %s '%s'"
 
-#: dyngroup/infoPackage.inc.php:70
+#: dyngroup/infoPackage.inc.php:75
 msgid "Display a groups of machines"
 msgstr "Показать группу машин"
+
+#: dyngroup/dyngroup/creator.php:172
+#, fuzzy
+msgid "Display content"
+msgstr "Показать содержимое группы '%s'"
 
 #: dyngroup/dyngroup/display.php:42
 #, php-format
@@ -160,21 +170,32 @@ msgstr "Создание группы"
 msgid "Group failed to modify"
 msgstr "Группу не удалось изменить"
 
+#: dyngroup/dyngroup/edit_share.php:98
+#, fuzzy
+msgid "Group failed to share"
+msgstr "Группу не удалось изменить"
+
 #: dyngroup/dyngroup/list.php:30
 msgid "Group list"
 msgstr "Список групп"
 
-#: dyngroup/includes/groups.inc.php:66
+#: dyngroup/includes/groups.inc.php:153
 msgid "Group members"
 msgstr "Члены группы"
 
-#: dyngroup/includes/groups.inc.php:30 dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/includes/groups.inc.php:117
+#: dyngroup/dyngroup/ajaxListGroups.php:61
 msgid "Group name"
 msgstr "Имя группы"
 
-#: dyngroup/infoPackage.inc.php:89
+#: dyngroup/infoPackage.inc.php:99
 msgid "Group of machines details"
 msgstr "Сведения о группе машин"
+
+#: dyngroup/includes/groups.inc.php:57
+#, fuzzy
+msgid "Group share"
+msgstr "Имя группы"
 
 #: dyngroup/dyngroup/add_groups.php:104
 #, fuzzy
@@ -183,6 +204,11 @@ msgstr "Группа успешно изменена"
 
 #: dyngroup/dyngroup/add_groups.php:102
 msgid "Group successfully modified"
+msgstr "Группа успешно изменена"
+
+#: dyngroup/dyngroup/edit_share.php:90
+#, fuzzy
+msgid "Group successfully shared"
 msgstr "Группа успешно изменена"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:58
@@ -198,11 +224,11 @@ msgstr "Скрыть"
 msgid "Inventory on this group"
 msgstr "Удалить эту группу"
 
-#: dyngroup/includes/groups.inc.php:31
+#: dyngroup/includes/groups.inc.php:118
 msgid "Is the group visible"
 msgstr "Видима ли группа"
 
-#: dyngroup/infoPackage.inc.php:80
+#: dyngroup/infoPackage.inc.php:90
 msgid "List all groups of machines"
 msgstr "Перечислить все группы машин"
 
@@ -211,11 +237,11 @@ msgstr "Перечислить все группы машин"
 msgid "Machine list has been truncated at %d machines"
 msgstr "Список машин урезан до %d"
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:60
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:65
 msgid "Machines Group Creator"
 msgstr "Создание групп машин"
 
-#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:64
+#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:69
 msgid "Machines Group Editor"
 msgstr "Правка групп машин"
 
@@ -223,7 +249,7 @@ msgstr "Правка групп машин"
 msgid "Name :"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:33 dyngroup/dyngroup/creator.php:138
+#: dyngroup/includes/groups.inc.php:120 dyngroup/dyngroup/creator.php:138
 msgid "No"
 msgstr "Нет"
 
@@ -231,7 +257,7 @@ msgstr "Нет"
 msgid "Please chose the type of group you want to create"
 msgstr "Выберите тип группы, которую Вы хотите создать"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Read log"
 msgstr "Прочитать журнал"
 
@@ -247,7 +273,7 @@ msgstr "Удалить машину"
 msgid "Remove a machine"
 msgstr "Удалить машину"
 
-#: dyngroup/infoPackage.inc.php:94
+#: dyngroup/infoPackage.inc.php:104
 msgid "Remove a machine from a group"
 msgstr "Удалить машину из группы"
 
@@ -259,7 +285,7 @@ msgstr "Сохранение запроса"
 msgid "Save"
 msgstr "Сохранить"
 
-#: dyngroup/infoPackage.inc.php:75
+#: dyngroup/infoPackage.inc.php:85
 msgid "Save a group of machines"
 msgstr "Сохранить группу машин"
 
@@ -267,11 +293,26 @@ msgstr "Сохранить группу машин"
 msgid "Search part"
 msgstr "Искать часть"
 
+#: dyngroup/infoPackage.inc.php:80
+#, fuzzy
+msgid "Share a group of machines"
+msgstr "Сохранить группу машин"
+
+#: dyngroup/dyngroup/edit_share.php:38
+#, php-format
+msgid "Share groupe '%s' with"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:74
+#, fuzzy
+msgid "Share this group"
+msgstr "Удалить эту группу"
+
 #: dyngroup/dyngroup/details.php:59
 msgid "Show"
 msgstr "Показать"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Software deployment on this group"
 msgstr "Развертывание программ в этой группе"
 
@@ -282,6 +323,10 @@ msgstr "Создание статической группы"
 #: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:55
 msgid "Static group creation's tab"
 msgstr "Вкладка создания статических групп"
+
+#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:60
+msgid "Temporary result display"
+msgstr ""
 
 #: dyngroup/dyngroup/creator.php:159
 msgid "The request is : "
@@ -305,7 +350,7 @@ msgstr "Тип"
 msgid "Visible"
 msgstr "Видимая"
 
-#: dyngroup/includes/groups.inc.php:32 dyngroup/dyngroup/creator.php:137
+#: dyngroup/includes/groups.inc.php:119 dyngroup/dyngroup/creator.php:137
 #: dyngroup/dyngroup/creator.php:143
 msgid "Yes"
 msgstr "Да"

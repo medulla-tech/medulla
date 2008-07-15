@@ -77,6 +77,11 @@ $page->setFile("modules/dyngroup/dyngroup/display.php");
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("edit_share",_T("Share a group of machines","dyngroup"));
+$page->setFile("modules/dyngroup/dyngroup/edit_share.php");
+$page->setOptions(array("visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("save",_T("Save a group of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/save.php");
 $page->setOptions(array("visible"=>False));

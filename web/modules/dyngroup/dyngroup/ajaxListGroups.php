@@ -69,10 +69,11 @@ $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
 $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"invtabs","inventory","inventory", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"msctabs","logfile","computer", "base", "computers", "tablogs"));
-$n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"msctabs","install","computer", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "edit", "id", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs"));
+$n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers"));
 $n->disableFirstColumnActionLink();
 

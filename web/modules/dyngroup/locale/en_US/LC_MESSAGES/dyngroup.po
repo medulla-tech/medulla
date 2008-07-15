@@ -44,11 +44,16 @@ msgstr ""
 msgid "All groups"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:43
+#: dyngroup/includes/groups.inc.php:130
 msgid "All machines"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:88 dyngroup/dyngroup/delete_group.php:50
+#: dyngroup/includes/groups.inc.php:34
+msgid "All share entities"
+msgstr ""
+
+#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
+#: dyngroup/dyngroup/delete_group.php:50
 #: dyngroup/dyngroup/remove_machine.php:48
 msgid "Cancel"
 msgstr ""
@@ -65,7 +70,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:87
+#: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr ""
 
@@ -73,7 +78,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:84
+#: dyngroup/infoPackage.inc.php:94
 msgid "Delete a group of machines"
 msgstr ""
 
@@ -81,7 +86,7 @@ msgstr ""
 msgid "Delete group"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:76
+#: dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "Delete this group"
 msgstr ""
 
@@ -94,8 +99,12 @@ msgstr ""
 msgid "Display %s '%s'"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:70
+#: dyngroup/infoPackage.inc.php:75
 msgid "Display a groups of machines"
+msgstr ""
+
+#: dyngroup/dyngroup/creator.php:172
+msgid "Display content"
 msgstr ""
 
 #: dyngroup/dyngroup/display.php:42
@@ -143,20 +152,29 @@ msgstr ""
 msgid "Group failed to modify"
 msgstr ""
 
+#: dyngroup/dyngroup/edit_share.php:98
+msgid "Group failed to share"
+msgstr ""
+
 #: dyngroup/dyngroup/list.php:30
 msgid "Group list"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:66
+#: dyngroup/includes/groups.inc.php:153
 msgid "Group members"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:30 dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/includes/groups.inc.php:117
+#: dyngroup/dyngroup/ajaxListGroups.php:61
 msgid "Group name"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:89
+#: dyngroup/infoPackage.inc.php:99
 msgid "Group of machines details"
+msgstr ""
+
+#: dyngroup/includes/groups.inc.php:57
+msgid "Group share"
 msgstr ""
 
 #: dyngroup/dyngroup/add_groups.php:104
@@ -165,6 +183,10 @@ msgstr ""
 
 #: dyngroup/dyngroup/add_groups.php:102
 msgid "Group successfully modified"
+msgstr ""
+
+#: dyngroup/dyngroup/edit_share.php:90
+msgid "Group successfully shared"
 msgstr ""
 
 #: dyngroup/dyngroup/ajaxListGroups.php:58
@@ -179,11 +201,11 @@ msgstr ""
 msgid "Inventory on this group"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:31
+#: dyngroup/includes/groups.inc.php:118
 msgid "Is the group visible"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:80
+#: dyngroup/infoPackage.inc.php:90
 msgid "List all groups of machines"
 msgstr ""
 
@@ -192,11 +214,11 @@ msgstr ""
 msgid "Machine list has been truncated at %d machines"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:60
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:65
 msgid "Machines Group Creator"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:64
+#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:69
 msgid "Machines Group Editor"
 msgstr ""
 
@@ -204,7 +226,7 @@ msgstr ""
 msgid "Name :"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:33 dyngroup/dyngroup/creator.php:138
+#: dyngroup/includes/groups.inc.php:120 dyngroup/dyngroup/creator.php:138
 msgid "No"
 msgstr ""
 
@@ -212,7 +234,7 @@ msgstr ""
 msgid "Please chose the type of group you want to create"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Read log"
 msgstr ""
 
@@ -228,7 +250,7 @@ msgstr ""
 msgid "Remove a machine"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:94
+#: dyngroup/infoPackage.inc.php:104
 msgid "Remove a machine from a group"
 msgstr ""
 
@@ -240,7 +262,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:75
+#: dyngroup/infoPackage.inc.php:85
 msgid "Save a group of machines"
 msgstr ""
 
@@ -248,11 +270,24 @@ msgstr ""
 msgid "Search part"
 msgstr ""
 
+#: dyngroup/infoPackage.inc.php:80
+msgid "Share a group of machines"
+msgstr ""
+
+#: dyngroup/dyngroup/edit_share.php:38
+#, php-format
+msgid "Share groupe '%s' with"
+msgstr ""
+
+#: dyngroup/dyngroup/ajaxListGroups.php:74
+msgid "Share this group"
+msgstr ""
+
 #: dyngroup/dyngroup/details.php:59
 msgid "Show"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "Software deployment on this group"
 msgstr ""
 
@@ -262,6 +297,10 @@ msgstr ""
 
 #: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:55
 msgid "Static group creation's tab"
+msgstr ""
+
+#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:60
+msgid "Temporary result display"
 msgstr ""
 
 #: dyngroup/dyngroup/creator.php:159
@@ -286,7 +325,7 @@ msgstr ""
 msgid "Visible"
 msgstr ""
 
-#: dyngroup/includes/groups.inc.php:32 dyngroup/dyngroup/creator.php:137
+#: dyngroup/includes/groups.inc.php:119 dyngroup/dyngroup/creator.php:137
 #: dyngroup/dyngroup/creator.php:143
 msgid "Yes"
 msgstr ""
