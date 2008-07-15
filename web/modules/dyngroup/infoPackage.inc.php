@@ -116,6 +116,11 @@ $page->setFile("modules/dyngroup/dyngroup/ajaxAutocompleteSearchWhere.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("csv",_T("Csv's export", "dyngroup"));
+$page->setFile("modules/dyngroup/dyngroup/csv.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 unset($submod);
 /* groupes dynamiques end */
 ?>
