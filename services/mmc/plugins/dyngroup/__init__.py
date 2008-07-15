@@ -174,6 +174,18 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().delmembers_to_group(ctx, id, uuids))
 
+    def share_with(self, id):
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().share_with(ctx, id))
+
+    def add_share(self, id, shares):
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().add_share(ctx, id, shares))
+
+    def del_share(self, id, shares):
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().del_share(ctx, id, shares))
+
     ################## dyngroup part
     def getQueryPossibilities(self):
         ctx = self.currentContext

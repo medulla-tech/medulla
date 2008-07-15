@@ -26,6 +26,7 @@ from sqlalchemy import *
 from sqlalchemy.exceptions import NoSuchTableError
 
 # MMC modules
+from mmc.plugins.base import getUserGroups
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.dyngroup
@@ -36,7 +37,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 1
+DATABASEVERSION = 2
 
 class DyngroupDatabase(Singleton):
     """
@@ -173,16 +174,41 @@ class DyngroupDatabase(Singleton):
     def doThings(self):
         pass
 
-    def __getOrCreateUser(self, ctx):
+    def getUser(self, id):
         session = create_session()
-        user = session.query(Users).filter(self.users.c.login == ctx.userid).first()
+        user = session.query(Users).get(id)
+        session.close()
+        return user
+
+    def __getOrCreateUser(self, ctx, user_id = None, type = 0):
+        session = create_session()
+        if user_id == None:
+            user_id = ctx.userid
+        user = self.__getUser(user_id, type)
         if not user:
             user = Users()
-            user.login = ctx.userid
+            user.login = user_id
+            user.type = type
             session.save(user)
             session.flush()
         session.close()
         return user.id
+        
+    def __getUser(self, login, type = 0, session = create_session()):
+        user = session.query(Users).filter(self.users.c.login == login).filter(self.users.c.type == type).first()
+        return user
+
+    def __getUsers(self, logins, type = 0, session = create_session()):
+        users = session.query(Users)
+        if type == None:
+            users = users.filter(self.users.c.login.in_(*logins))
+        else:
+            users = users.filter(self.users.c.login.in_(*logins)).filter(self.users.c.type == type)
+        return users
+
+    def __getUsersInGroup(self, gid, session = create_session()):
+        users = session.query(Users).select_from(self.users.join(self.share).join(self.groups)).filter(self.groups.c.id == gid).all()
+        return users
 
     def __getMachines(self, gid, session = create_session()):
         machines = session.query(Machines).select_from(self.machines.join(self.results).join(self.groups)).filter(self.groups.c.id == gid).all()
@@ -202,6 +228,36 @@ class DyngroupDatabase(Singleton):
             session.flush()
         session.close()
         return machine.id
+
+    def __createShare(self, group_id, user_id):
+        session = create_session()
+        share = ShareGroup()
+        share.FK_group = group_id
+        share.FK_user = user_id
+        session.save(share)
+        session.flush()
+        session.close()
+        return share.id
+
+    def __deleteShares(self, group_id, session = create_session()):
+        users = self.__getUsersInGroup(group_id, session)
+        for user in users:
+            self.__deleteShare(group_id, user.id, session)
+
+    def __deleteShare(self, group_id, user_id, session = create_session()):
+        shares = session.query(ShareGroup).filter(self.shareGroup.c.FK_user == user_id).filter(self.shareGroup.c.FK_group == group_id).all()
+        for share in shares:
+            session.delete(share)
+            session.flush()
+
+        still_linked = session.query(ShareGroup).filter(self.shareGroup.c.FK_user == user_id).count()
+        if still_linked == 0:
+            user = session.query(Users).get(user_id)
+            session.delete(user)
+            session.flush()
+
+        session.close()
+        return still_linked
 
     def __createResult(self, group_id, machine_id):
         session = create_session()
@@ -235,8 +291,13 @@ class DyngroupDatabase(Singleton):
 
     def __getGroupInSession(self, ctx, session, id):
         user_id = self.__getOrCreateUser(ctx)
-        return session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
-
+        ug_ids = self.__getUsers(getUserGroups(ctx.userid), 1, session) # get all usergroups ids
+        
+        group = session.query(Groups).select_from(self.groups.outerjoin(self.shareGroup))
+        group = group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        group = group.filter(self.groups.c.id == id).first()
+        return group
+        
     def __result_group_query(self, ctx, session, id, filter = ''):
         result = session.query(Machines).select_from(self.machines.join(self.results))
         result = result.filter(self.results.c.FK_group == id)
@@ -247,7 +308,10 @@ class DyngroupDatabase(Singleton):
 
     def __allgroups_query(self, ctx, params, session = create_session()):
         user_id = self.__getOrCreateUser(ctx)
-        groups = session.query(Groups).select_from(self.groups.join(self.users)).filter(self.users.c.login == ctx.userid)
+        ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
+
+        groups = session.query(Groups).select_from(self.groups.join(self.users, self.users.c.id == self.groups.c.FK_user).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_group))
+        groups = groups.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
         try:
             if params['canShow']:
                 groups = groups.filter(self.groups.c.display_in_menu == 1)
@@ -563,6 +627,33 @@ class DyngroupDatabase(Singleton):
         session.close()
         return True
 
+    def share_with(self, ctx, id):
+        session = create_session()
+        ret = session.query(ShareGroup).filter(self.shareGroup.c.FK_group == id).all()
+        session.close()
+        return map(lambda x: x.toH(), ret)
+
+    def add_share(self, ctx, id, shares):
+        group = self.get_group(ctx, id)
+        session = create_session()
+        for login, type in shares:
+            user_id = self.__getOrCreateUser(ctx, login, type)
+            self.__createShare(group.id, user_id)
+        session.close()
+        return True
+
+    def del_share(self, ctx, id, shares):
+        group = self.get_group(ctx, id)
+        session = create_session()
+        for login, type in shares:
+            user = self.__getUser(login, type, session) 
+            if user:
+                self.__deleteShare(group.id, user.id, session)
+            else:
+                self.logger.debug("no share to delete! ('%s')" % (login))
+        session.close()
+        return True
+
 class Groups(object):
     def toH(self):
         return {
@@ -577,13 +668,18 @@ class Users(object):
     def toH(self):
         return {
             'id':self.id,
-            'login':self.login
+            'login':self.login,
+            'type':self.type
         }
 
 class ShareGroup(object):
     def toH(self):
         return {
-            'id':self.id
+            'id':self.id,
+            'group_id':self.FK_group,
+            'sharedwith_id':self.FK_user,
+            'type':self.FK_type,
+            'user':DyngroupDatabase().getUser(self.FK_user).toH()
         }
 
 class Machines(object):

@@ -1,0 +1,26 @@
+
+CREATE TABLE ShareGroupType (
+    id INT NOT NULL,
+    value TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+CREATE INDEX dyngroup_sharegrouptype_value_idx ON ShareGroupType (value(10));
+
+ALTER TABLE ShareGroup ADD COLUMN FK_type INT default 0;
+
+INSERT INTO ShareGroupType values (0, 'View');
+INSERT INTO ShareGroupType values (1, 'Edit');
+
+create taBLE UsersType (
+    id INT NOT NULL,
+    value TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+CREATE INDEX dyngroup_userstype_value_idx ON UsersType (value(10));
+
+ALTER TABLE Users ADD COLUMN FK_type INT default 0;
+INSERT INTO UsersType values (0, 'user');
+INSERT INTO UsersType values (1, 'group');
+
+UPDATE version set Number = 2;
+
