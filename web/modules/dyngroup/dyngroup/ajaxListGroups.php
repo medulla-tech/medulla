@@ -75,6 +75,7 @@ $n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share
 $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs"));
 $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
 $n->disableFirstColumnActionLink();
 
 $n->display();
