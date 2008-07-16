@@ -29,6 +29,8 @@ try:
 except ImportError:
     from twisted.protocols import http
 
+from mmc.client import makeSSLContext
+
 import imp
 import logging
 import logging.config
@@ -428,43 +430,11 @@ class MMCHTTPChannel(http.HTTPChannel):
 class MMCSite(server.Site):
     protocol = MMCHTTPChannel
 
-def makeSSLContext(config):
-    """
-    Make the SSL context for the server, according to the configuration.
-
-    @returns: a SSL context
-    @rtype: twisted.internet.ssl.ContextFactory
-    """
-    logger = logging.getLogger()    
-    if config.verifypeer:
-        fd = open(config.localcert)
-        localcert = ssl.PrivateCertificate.loadPEM(fd.read())
-        fd.close()
-        fd = open(config.cacert)
-        cacert = ssl.Certificate.loadPEM(fd.read())
-        fd.close()
-        ctx = localcert.options(cacert)
-        ctx.verify = True
-        ctx.verifyDepth = 9
-        ctx.requireCertification = True
-        ctx.verifyOnce = True
-        ctx.enableSingleUseKeys = True
-        ctx.enableSessions = True
-        ctx.fixBrokenPeers = False
-        logger.debug("CA certificate informations: %s" % config.cacert)
-        logger.debug(cacert.inspect())
-        logger.debug("MMC agent certificate: %s" % config.localcert)
-        logger.debug(localcert.inspect())
-    else:
-        logger.warning("SSL enabled, but peer verification is disabled.")
-        ctx = ssl.DefaultOpenSSLContextFactory(config.localcert, config.cacert)
-    return ctx
-
 def startService(config, logger, mod):
     # Starting XMLRPC server
     r = MmcServer(mod, config.login, config.password)
     if config.enablessl:
-        sslContext = makeSSLContext(config)
+        sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
         reactor.listenSSL(config.port, MMCSite(r), interface = config.host, contextFactory = sslContext)
     else:
         logger.warning("SSL is disabled by configuration.")

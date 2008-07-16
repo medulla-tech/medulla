@@ -36,9 +36,50 @@ reactor.run()
 """
 
 import xmlrpclib
+import logging
 
-from twisted.web.xmlrpc import Proxy, QueryProtocol, QueryFactory, payloadTemplate
-from twisted.internet import reactor, defer
+from twisted.web.xmlrpc import Proxy, QueryProtocol, payloadTemplate
+
+try:
+    from twisted.web.xmlrpc import QueryFactory
+except ImportError:
+    from twisted.web.xmlrpc import _QueryFactory
+    QueryFactory = _QueryFactory 
+from twisted.internet import reactor, defer, ssl
+
+def makeSSLContext(verifypeer, cacert, localcert, log = True):
+    """
+    Make the SSL context for the server, according to the parameters
+
+    @returns: a SSL context
+    @rtype: twisted.internet.ssl.ContextFactory
+    """
+    logger = logging.getLogger()    
+    if verifypeer:
+        fd = open(localcert)
+        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
+        fd.close()
+        fd = open(cacert)
+        caCertificate = ssl.Certificate.loadPEM(fd.read())
+        fd.close()
+        ctx = localCertificate.options(caCertificate)
+        ctx.verify = True
+        ctx.verifyDepth = 9
+        ctx.requireCertification = True
+        ctx.verifyOnce = True
+        ctx.enableSingleUseKeys = True
+        ctx.enableSessions = True
+        ctx.fixBrokenPeers = False
+        if log:
+            logger.debug("CA certificate informations: %s" % cacert)
+            logger.debug(caCertificate.inspect())
+            logger.debug("MMC agent certificate: %s" % localcert)
+            logger.debug(localCertificate.inspect())
+    else:
+        if log:
+            logger.warning("SSL enabled, but peer verification is disabled.")
+        ctx = ssl.DefaultOpenSSLContextFactory(localcert, cacert)
+    return ctx
 
 class MMCQueryProtocol(QueryProtocol):
 
@@ -87,6 +128,10 @@ class MMCProxy(Proxy):
     def __init__(self, url, user=None, password=None):
         Proxy.__init__(self, url, user, password)
         self.session = None
+        self.SSLClientContext = None
+
+    def setSSLClientContext(self, SSLClientContext):
+        self.SSLClientContext = SSLClientContext
 
     def callRemote(self, method, *args):
         factory = MMCQueryFactory(self.path, self.host, method, self.user,
@@ -95,8 +140,33 @@ class MMCProxy(Proxy):
         factory.session = self.session
         if self.secure:
             from twisted.internet import ssl
+            if not self.SSLClientContext:
+                self.SSLClientContext = ssl.ClientContextFactory()
             reactor.connectSSL(self.host, self.port or 443,
-                               factory, ssl.ClientContextFactory())
+                               factory, self.SSLClientContext)
         else:
             reactor.connectTCP(self.host, self.port or 80, factory)
         return factory.deferred
+
+class XmlrpcSslProxy(Proxy):
+
+    def __init__(self, url, user=None, password=None):
+        Proxy.__init__(self, url, user, password)
+        self.SSLClientContext = None
+
+    def setSSLClientContext(self, SSLClientContext):
+        self.SSLClientContext = SSLClientContext
+
+    def callRemote(self, method, *args):
+        factory = self.queryFactory(
+            self.path, self.host, method, self.user,
+            self.password, self.allowNone, args)
+        if self.secure:
+            if not self.SSLClientContext:
+                self.SSLClientContext = ssl.ClientContextFactory()
+            reactor.connectSSL(self.host, self.port or 443,
+                               factory, self.SSLClientContext)
+        else:
+            reactor.connectTCP(self.host, self.port or 80, factory)
+        return factory.deferred
+    
