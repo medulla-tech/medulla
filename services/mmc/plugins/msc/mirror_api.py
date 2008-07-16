@@ -5,9 +5,10 @@ import logging
 
 import xmlrpclib
 
-#from mmc.plugins.msc import MscConfig
 import mmc.plugins.msc
 from mmc.support.mmctools import Singleton
+
+from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror 
 # defined in the conf file.
@@ -15,7 +16,7 @@ class MirrorApi(Singleton):
     def __init__(self):
         self.logger = logging.getLogger()
         self.config = mmc.plugins.msc.MscConfig("msc")
-
+        
         if self.config.ma_enablessl:
             self.server_addr = 'https://'
         else:
@@ -29,82 +30,74 @@ class MirrorApi(Singleton):
 
         self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
         self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
-        try:
-            self.server = xmlrpclib.Server(self.server_addr)
-            #self.xmlrpc = self.server.xmlrpc # TODO fallback if no xmlrpc
-            self.xmlrpc = self.server
-            self.initialized_failed = False
-        except:
-            self.logger.warn("MirrorApi cant connect to %s" % (self.server_addr))
-            self.initialized_failed = True
+
+        self.maserver = XmlrpcSslProxy(self.server_addr)
+        if self.config.ma_verifypeer:
+            self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)
+            self.maserver.setSSLClientContext(self.sslctx)
+        # FIXME: still needed ?
+        self.initialized_failed = False
+
+    def onError(self, error, funcname, args):
+        self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
+        return []
 
     def getMirror(self, machine):
         if self.initialized_failed:
             return []
-        try:
-            machine = self.convertMachineIntoH(machine)
-            return self.xmlrpc.getMirror(machine)
-        except:
-            self.logger.warn("MirrorApi:getMirror %s fails"%(str(machine)))
-            return []
+        machine = self.convertMachineIntoH(machine)
+        d = self.maserver.callRemote("getMirror", machine)
+        d.addErrback(self.onError, "MirrorApi:getMirror", machine)
+        return d
 
     def getMirrors(self, machines):
         if self.initialized_failed:
             return []
-        try:
-            machines = map(lambda m: self.convertMachineIntoH(m), machines)
-            return self.xmlrpc.getMirrors(machines)
-        except:
-            self.logger.warn("MirrorApi:getMirrors %s fails"%(str(machines)))
-            return []
+        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        d = self.maserver.callRemote("getMirrors", machines)
+        d.addErrback(self.onError, "MirrorApi:getMirrors", machines)
+        return d
 
     def getFallbackMirror(self, machine):
         if self.initialized_failed:
             return []
-        try:
-            machine = self.convertMachineIntoH(machine)
-            return self.xmlrpc.getFallbackMirror(machine)
-        except:
-            self.logger.warn("MirrorApi:getFallbackMirror %s fails"%(str(machine)))
-            return []
+        machine = self.convertMachineIntoH(machine)
+        d = self.maserver.callRemote("getFallbackMirror", machine)
+        d.addErrback(self.onError, "MirrorApi:getFallbackMirror", machine)
+        return d
 
     def getFallbackMirrors(self, machines):
         if self.initialized_failed:
             return []
-        try:
-            machines = map(lambda m: self.convertMachineIntoH(m), machines)
-            return self.xmlrpc.getFallbackMirrors(machines)
-        except:
-            self.logger.warn("MirrorApi:getFallbackMirrors %s fails"%(str(machines)))
-            return []
+        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        d = self.maserver.callRemote("getFallbackMirrors", machines)
+        d.addErrback(self.onError, "MirrorApi:getFallbackMirrors", machines)
+        return d
         
     def getApiPackage(self, machine):
         self.logger.debug(machine)
         if self.initialized_failed:
             return []
-        try:
-            machine = self.convertMachineIntoH(machine)
-            return self.xmlrpc.getApiPackage(machine)
-        except Exception, e:
-            self.logger.warn("MirrorApi:getApiPackage %s fails"%(str(machine)))
-            self.logger.warn(e)
-            return []
+        machine = self.convertMachineIntoH(machine)
+        d = self.maserver.callRemote("getApiPackage", machine)
+        d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
+        return d
 
     def getApiPackages(self, machines):
         if self.initialized_failed:
             return []
-        try:
-            machines = map(lambda m: self.convertMachineIntoH(m), machines)
-            return self.xmlrpc.getApiPackages(machines)
-        except:
-            self.logger.warn("MirrorApi:getApiPackages %s fails"%(str(machines)))
-            return []
+        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        d = self.maserver.callRemote("getApiPackages", machines)
+        d.addErrback(self.onError, "MirrorApi:getApiPackages", machines)
+        return d
 
     def convertMachineIntoH(self, machine):
         if type(machine) != dict:
             machine = {'uuid':machine}
         return machine
-        
+
+# FIMXE: Looks like the following class Mirror is unused
+
 class Mirror:
     def __init__(self, server):
         self.logger = logging.getLogger()

@@ -134,7 +134,7 @@ class RpcProxy(RpcProxyI):
             computer[1]['fullname']
         except KeyError:
             computer[1]['fullname'] = computer[1]['cn'][0]
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer))
+        return mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer)
             
     def scheduler_ping_client(self, scheduler, uuid):
         ctx = self.currentContext
@@ -154,13 +154,25 @@ class RpcProxy(RpcProxyI):
             computer[1]['fullname'] = computer[1]['cn'][0]
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer))
 
+
+    def _range(self, result, start, end):
+        return result[start:end]
+
     def pa_adv_countAllPackages(self, filt):
         ctx = self.currentContext
-        return len(_adv_getAllPackages(ctx, filt))
+        g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
+        g.deferred = defer.Deferred()
+        g.get()
+        g.deferred.addCallback(lambda x: len(x))
+        return g.deferred
 
     def pa_adv_getAllPackages(self, filt, start, end):
         ctx = self.currentContext
-        return xmlrpcCleanup(_adv_getAllPackages(ctx, filt)[int(start):int(end)])
+        g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
+        g.deferred = defer.Deferred()
+        g.get()
+        g.deferred.addCallback(self._range, start, end)
+        return g.deferred
 
     ##
     # commands management
@@ -368,106 +380,6 @@ def pa_isAvailable(p_api, pid, mirror):
     return PackageA(p_api).isAvailable(pid, mirror)
 
 #############################
-def _p_apiuniq(list, x):
-  try:
-    list.index(x)
-  except:
-    list.append(x)
-
-def _merge_list(list, x):
-    for i in x:
-      try:
-        list.index(i)
-      except:
-        pass
-    rem = []
-    for i in list:
-      try:
-        x.index(i)
-      except:
-        rem.append(i)
-    for i in rem:
-      list.remove(i)
-
-def _adv_getAllPackages(ctx, filt):
-    packages = []
-    try:
-        packages.extend(map(lambda m: [m, 0, filt['packageapi']], pa_getAllPackages(filt['packageapi'], False)))
-    except KeyError:
-        pass
-    except Exception, e:
-        logging.getLogger().error("Cant connect to package api")
-        logging.getLogger().debug(e)
-        return []
-    try:
-        if filt['uuid']:
-            machine = filt['uuid'] # TODO : get machine from uuid
-            package_apis = ma_getApiPackage(machine)
-            mirror = ma_getMirror(machine)
-            x = 0
-            for p_api in package_apis:
-                packages.extend(map(lambda m: [m, x, p_api], pa_getAllPackages(p_api, mirror)))
-                x += 1
-    except KeyError:
-        pass
-    except Exception, e:
-        logging.getLogger().error("Cant connect to mirror api")
-        logging.getLogger().debug(e)
-        return []
-    try:
-        if filt['group']: # TODO : manage groups with objects
-            gid = filt['group']
-            machines = []
-            if ComputerGroupManager().isdyn_group(ctx, gid):
-                if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: m['uuid'], ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
-                else:
-                    machines = map(lambda m: m.uuid, ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
-            else:
-                machines = map(lambda m: m.uuid, ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
-
-            # TODO split uuid and name
-            package_apis = ma_getApiPackages(machines)
-            mirror = ma_getMirrors(machines)
-            
-            mergedlist = []
-            for i in range(len(package_apis)):
-                tmpmerged = []
-                for papi in package_apis[i]:
-                    tmpmerged.append((papi, mirror[i]))
-                mergedlist.insert(i, tmpmerged)
-
-            if len(mergedlist) == 0:
-                return []
-
-            plists = []
-            for i in range(len(mergedlist[0])): # all line must have the same size!
-                plists.insert(i, [])
-                map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
-
-            logging.getLogger().debug(plists)
-            
-            for x in range(len(plists)):
-                localepackages = []
-                for p_api in plists[x]:
-                    localepackages.append(pa_getAllPackages(p_api[0], p_api[1]))
-
-                lp = localepackages[0]
-                map(lambda p: _merge_list(lp, p), localepackages)
-                packages.extend(map(lambda m: [m, x, plists[x][0][0]], lp))
-                
-    except KeyError:
-        pass
-    try:
-        if filt['filter']:
-            packages = filter(lambda p: re.search(filt['filter'], p[0]['label']), packages)
-    except KeyError:
-        pass
-
-    # sort on the mirror order then on the label, and finally on the version number
-    packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
-
-    return packages
 
 #############################
 ################# Mirrors API

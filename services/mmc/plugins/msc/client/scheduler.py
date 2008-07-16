@@ -26,10 +26,31 @@ import twisted.web.xmlrpc
 import logging
 
 # our stuff
+from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
 from mmc.plugins.msc.config import MscConfig
 
+def getProxy(schedulerConfig):
+    """
+    Return a suitable Proxy object to communicate with the scheduler
+    """
+    config = MscConfig("msc")
+        
+    url =  makeURL(schedulerConfig)
+
+    if url.startswith("http://"):
+        ret = twisted.web.xmlrpc.Proxy(url)
+    else:
+        if schedulerConfig['verifypeer']:
+            # We have to build the SSL context to include launcher certificates
+            ctx = makeSSLContext(schedulerConfig['verifypeer'], schedulerConfig['cacert'], schedulerConfig['localcert'], False)
+            ret = XmlrpcSslProxy(url)
+            ret.setSSLClientContext(ctx)
+        else:
+            ret = twisted.web.xmlrpc.Proxy(url)
+    return ret
+
 def start_all_commands(scheduler):
-    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'start_all_commands'
     )
     return True
@@ -61,7 +82,7 @@ def ping_client(scheduler, computer):
     # - cn[]
     # - ipHostNumber[]
     # - macAddress[]
-    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'ping_client',
         computer[1]['objectUUID'][0],
         computer[1]['fullname'],
@@ -85,7 +106,7 @@ def probe_client(scheduler, computer):
     # - cn[]
     # - ipHostNumber[]
     # - macAddress[]
-    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'probe_client',
         computer[1]['objectUUID'][0],
         computer[1]['fullname'],
@@ -109,7 +130,7 @@ def ping_and_probe_client(scheduler, computer):
     # - cn[]
     # - ipHostNumber[]
     # - macAddress[]
-    mydeffered = twisted.web.xmlrpc.Proxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'ping_and_probe_client',
         computer[1]['objectUUID'][0],
         computer[1]['fullname'],
@@ -126,14 +147,14 @@ def select_scheduler(scheduler_name):
         scheduler = schedulers[schedulers.keys()[0]]
     else:
         scheduler = schedulers[scheduler_name]
+    return scheduler
 
-    if scheduler['enablessl']:
+def makeURL(config):
+    if config['enablessl']:
         uri = 'https://'
     else:
-        uri = 'http://'
-        
-    if scheduler['username'] != '':
-        uri += '%s:%s@' % (scheduler['username'], scheduler['password'])
-    uri += '%s:%d' % (scheduler['host'], int(scheduler['port']))
-
+        uri = 'http://'        
+    if config['username'] != '':
+        uri += '%s:%s@' % (config['username'], config['password'])
+    uri += '%s:%d' % (config['host'], int(config['port']))
     return uri

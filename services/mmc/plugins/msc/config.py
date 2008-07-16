@@ -56,6 +56,9 @@ class MscConfig(PluginConfig):
     ma_username = ''
     ma_password = ''
     ma_enablessl = True
+    ma_verifypeer = False
+    ma_cacert = ""
+    ma_localcert = ""
 
     # WEB interface stuff
     web_def_awake = 1
@@ -94,7 +97,10 @@ class MscConfig(PluginConfig):
             'host': '127.0.0.1',
             'username': 'username',
             'password': 'password',
-            'enablessl': True
+            'enablessl': True,
+            'verifypeer': False,
+            'cacert': '',
+            'localcert': ''
         }
     }
 
@@ -167,8 +173,15 @@ class MscConfig(PluginConfig):
                         'host': self.get(section, "host"),
                         'username': self.get(section, "username"),
                         'password': self.getpassword(section, "password"),
-                        'enablessl': self.getboolean(section, "enablessl")
+                        'enablessl': self.getboolean(section, "enablessl"),
+                        'verifypeer': False
                     }
+                if self.has_option(section, "verifypeer"):
+                    self.schedulers[section]["verifypeer"] = self.getboolean(section, "verifypeer")
+                if self.schedulers[section]["verifypeer"]:
+                    self.schedulers[section]["cacert"] = self.get(section, "cacert")
+                    self.schedulers[section]["localcert"] = self.get(section, "localcert")
+                    
 
         # some default web interface values
         if self.has_option("web", "web_def_awake"):
@@ -197,6 +210,12 @@ class MscConfig(PluginConfig):
             self.ma_password = self.get("package_api", "password")
         if self.has_option("package_api", "enablessl"):
             self.ma_enablessl = self.getboolean("package_api", "enablessl")
+        if self.has_option("package_api", "verifypeer"):
+            self.ma_verifypeer = self.getboolean("package_api", "verifypeer")
+        if self.has_option("package_api", "cacert"):
+            self.ma_cacert = self.get("package_api", "cacert")
+        if self.has_option("package_api", "localcert"):
+            self.ma_localcert = self.get("package_api", "localcert")
 
 
 # static config ...
