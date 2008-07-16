@@ -40,14 +40,15 @@ class P2PServerCP(Singleton):
     """
     Class to hold configuration directives
     """
-    certfile = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
-    privkey = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
+    cacert = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
+    localcert = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
     
 
     # default values
     bind = ''
     port = 9990
     enablessl = True
+    verifypeer = False
     username = ''
     password = ''
 
@@ -101,9 +102,15 @@ class P2PServerCP(Singleton):
                 else:
                     self.password = self.cp.get('ssl', 'password')
             if self.cp.has_option('ssl', 'certfile'):
-                self.certfile = self.cp.get('ssl', 'certfile')
+                self.cacert = self.cp.get('ssl', 'certfile')
+            if self.cp.has_option('ssl', 'cacert'):
+                self.cacert = self.cp.get('ssl', 'cacert')
             if self.cp.has_option('ssl', 'privkey'):
-                self.privkey = self.cp.get('ssl', 'privkey')
+                self.localcert = self.cp.get('ssl', 'privkey')
+            if self.cp.has_option('ssl', 'localcert'):
+                self.localcert = self.cp.get('ssl', 'localcert')
+            if self.cp.has_option('ssl', 'verifypeer'):
+                self.verifypeer = self.cp.getboolean('ssl', 'verifypeer')
 
         if self.cp.has_option('mirror_api', 'mount_point'):
             self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')

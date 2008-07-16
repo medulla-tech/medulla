@@ -30,7 +30,7 @@ import SimpleHTTPServer
 from twisted.web import xmlrpc, resource, static, server
 from twisted.internet import reactor
 
-from pulse2.package_server.server import P2PServerService
+from pulse2.package_server.server import P2PServerService, P2PSite, makeSSLContext
 from pulse2.package_server.description import Description
 from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
@@ -96,16 +96,17 @@ def initialize(config):
     
     try:
         if config.enablessl:
-            if not os.path.isfile(config.privkey):
-                logger.error('can\'t read SSL key "%s"' % (config.privkey))
+            logger.debug(config.localcert + " " + config.cacert)
+            if not os.path.isfile(config.localcert):
+                logger.error('can\'t read SSL key "%s"' % (config.localcert))
                 return 1
-            if not os.path.isfile(config.certfile):
-                logger.error('can\'t read SSL certificate "%s"' % (config.certfile))
+            if not os.path.isfile(config.cacert):
+                logger.error('can\'t read SSL certificate "%s"' % (config.cacert))
                 return 1
-            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
+            sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
             twisted.internet.reactor.listenSSL(
                 port,
-                twisted.web.server.Site(server),
+                P2PSite(server),
                 interface = config.bind,
                 contextFactory = sslContext
                 )
