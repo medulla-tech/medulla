@@ -180,30 +180,30 @@ class DyngroupDatabase(Singleton):
         session.close()
         return user
 
-    def __getOrCreateUser(self, ctx, user_id = None, type = 0):
+    def __getOrCreateUser(self, ctx, user_id = None, t = 0):
         session = create_session()
         if user_id == None:
             user_id = ctx.userid
-        user = self.__getUser(user_id, type)
+        user = self.__getUser(user_id, t)
         if not user:
             user = Users()
             user.login = user_id
-            user.type = type
+            user.type = t
             session.save(user)
             session.flush()
         session.close()
         return user.id
         
-    def __getUser(self, login, type = 0, session = create_session()):
-        user = session.query(Users).filter(self.users.c.login == login).filter(self.users.c.type == type).first()
+    def __getUser(self, login, t = 0, session = create_session()):
+        user = session.query(Users).filter(self.users.c.login == login).filter(self.users.c.type == t).first()
         return user
 
-    def __getUsers(self, logins, type = 0, session = create_session()):
+    def __getUsers(self, logins, t = 0, session = create_session()):
         users = session.query(Users)
-        if type == None:
+        if t == None:
             users = users.filter(self.users.c.login.in_(*logins))
         else:
-            users = users.filter(self.users.c.login.in_(*logins)).filter(self.users.c.type == type)
+            users = users.filter(self.users.c.login.in_(*logins)).filter(self.users.c.type == t)
         return users
 
     def __getUsersInGroup(self, gid, session = create_session()):
@@ -636,8 +636,8 @@ class DyngroupDatabase(Singleton):
     def add_share(self, ctx, id, shares):
         group = self.get_group(ctx, id)
         session = create_session()
-        for login, type in shares:
-            user_id = self.__getOrCreateUser(ctx, login, type)
+        for login, t in shares:
+            user_id = self.__getOrCreateUser(ctx, login, t)
             self.__createShare(group.id, user_id)
         session.close()
         return True
@@ -645,8 +645,8 @@ class DyngroupDatabase(Singleton):
     def del_share(self, ctx, id, shares):
         group = self.get_group(ctx, id)
         session = create_session()
-        for login, type in shares:
-            user = self.__getUser(login, type, session) 
+        for login, t in shares:
+            user = self.__getUser(login, t, session) 
             if user:
                 self.__deleteShare(group.id, user.id, session)
             else:
