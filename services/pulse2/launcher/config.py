@@ -107,8 +107,9 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
             'username': 'username',
             'password': 'password',
             'enablessl': True,
-            'certfile': '/etc/mmc/pulse2/launchers/keys/cacert.pem',
-            'privkey': "/etc/mmc/pulse2/launchers/keys/privkey.pem",
+            'verifypeer': False,            
+            'cacert': '/etc/mmc/pulse2/launchers/keys/cacert.pem',
+            'localcert': "/etc/mmc/pulse2/launchers/keys/privkey.pem",
             'slots': 300
         }
     }
@@ -201,14 +202,21 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                 self.launchers[section] = {
                         'bind': self.cp.get(section, 'bind'),
                         'enablessl': self.cp.getboolean(section, 'enablessl'),
+                        'verifypeer': self.cp.getboolean(section, 'verifypeer'),
                         'password': self.cp.getpassword(section, 'password'),
                         'port': self.cp.get(section, 'port'),
                         'slots': self.cp.getint(section, 'slots'),
                         'username': self.cp.get(section, 'username')
                     }
                 if self.launchers[section]['enablessl']:
-                    self.launchers[section]['certfile'] = self.cp.get(section, 'certfile')
-                    self.launchers[section]['privkey'] = self.cp.get(section, 'privkey')
+                    try:
+                        self.launchers[section]['cacert'] = self.cp.get(section, 'cacert')
+                    except ConfigParser.NoOptionError:
+                        self.launchers[section]['cacert'] = self.cp.get(section, 'certfile')
+                    try:
+                        self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
+                    except ConfigParser.NoOptionError:
+                        self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
 
 
 

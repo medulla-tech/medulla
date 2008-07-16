@@ -54,6 +54,9 @@ import pulse2.launcher.remote_exec
 import pulse2.launcher.process_control
 import pulse2.launcher.network
 
+from pulse2.launcher.xmlrpc import LauncherSite, makeSSLContext, getProxy
+
+
 # Logging
 import logging
 import logging.config
@@ -79,7 +82,8 @@ def tellIAmAlive():
     scheduler = pulse2.launcher.utils.getScheduler()
 
     # salute our referent scheduler
-    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
+    mydeffered = getProxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)    
+
     mydeffered.\
         addCallback(_cb).\
         addErrback(_eb)
@@ -100,16 +104,16 @@ def startService():
     launcher = Launcher(name)
     try:
         if enablessl:
-            if not os.path.isfile(config.launchers[config.name]["privkey"]):
-                logger.error('launcher %s: can\'t read SSL key "%s"' % (name, config.launchers[config.name]["privkey"]))
+            if not os.path.isfile(config.launchers[config.name]["localcert"]):
+                logger.error('launcher %s: can\'t read SSL key "%s"' % (name, config.launchers[config.name]["localcert"]))
                 return 1
-            if not os.path.isfile(config.launchers[config.name]["certfile"]):
-                logger.error('launcher %s: can\'t read SSL certificate "%s"' % (name, config.launchers[config.name]["certfile"]))
+            if not os.path.isfile(config.launchers[config.name]["cacert"]):
+                logger.error('launcher %s: can\'t read SSL certificate "%s"' % (name, config.launchers[config.name]["cacert"]))
                 return 1
-            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.launchers[config.name]["privkey"], config.launchers[config.name]["certfile"])
+            sslContext = makeSSLContext(config.launchers[config.name])
             twisted.internet.reactor.listenSSL(
                 port,
-                twisted.web.server.Site(launcher),
+                LauncherSite(launcher),
                 interface = bind,
                 contextFactory = sslContext
                 )
