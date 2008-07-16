@@ -18,7 +18,7 @@ create taBLE UsersType (
 );
 CREATE INDEX dyngroup_userstype_value_idx ON UsersType (value(10));
 
-ALTER TABLE Users ADD COLUMN FK_type INT default 0;
+ALTER TABLE Users ADD COLUMN type INT default 0;
 INSERT INTO UsersType values (0, 'user');
 INSERT INTO UsersType values (1, 'group');
 
