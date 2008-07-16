@@ -29,7 +29,6 @@ import re
 import os
 
 # Twisted modules
-import twisted.web.xmlrpc
 import twisted.internet
 
 # MMC plugins
@@ -45,6 +44,7 @@ from mmc.plugins.msc.orm.target import Target
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import chooseLauncher
+from pulse2.scheduler.xmlrpc import getProxy
 import pulse2.scheduler.network
 
 def gatherStuff():
@@ -188,8 +188,9 @@ def runUploadPhase(myCommandOnHostID):
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
         updateHistory(myCommandOnHostID, 'upload_in_progress')
+        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
@@ -199,7 +200,7 @@ def runUploadPhase(myCommandOnHostID):
                 addCallback(parsePushResult, myCommandOnHostID).\
                 addErrback(parsePushError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'async_remote_push',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
@@ -230,8 +231,9 @@ def runUploadPhase(myCommandOnHostID):
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
             updateHistory(myCommandOnHostID, 'upload_in_progress')
+            proxy = getProxy(launcher)            
             if SchedulerConfig().mode == 'sync':
-                mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                mydeffered = proxy.callRemote(
                     'sync_remote_pull',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
@@ -241,7 +243,7 @@ def runUploadPhase(myCommandOnHostID):
                     addCallback(parsePullResult, myCommandOnHostID).\
                     addErrback(parsePullError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                mydeffered = proxy.callRemote(
                     'async_remote_pull',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
@@ -300,11 +302,12 @@ def runExecutionPhase(myCommandOnHostID):
     myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
     if myC.isQuickAction(): # should be a standard script
+        proxy = getProxy(launcher)            
         if SchedulerConfig().mode == 'sync':
             logger.info(myC.start_file)
             logger.info(str(target_host))
             logger.info(str(target_uuid))
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -314,7 +317,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'async_remote_quickaction',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -325,8 +328,9 @@ def runExecutionPhase(myCommandOnHostID):
             return None
         return mydeffered
     else:
+        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'sync_remote_exec',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -336,7 +340,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'async_remote_exec',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -382,8 +386,9 @@ def runDeletePhase(myCommandOnHostID):
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
         updateHistory(myCommandOnHostID, 'delete_in_progress')
+        proxy = getProxy(launcher)        
         if SchedulerConfig().mode == 'sync':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'sync_remote_delete',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -393,7 +398,7 @@ def runDeletePhase(myCommandOnHostID):
                 addCallback(parseDeleteResult, myCommandOnHostID).\
                 addErrback(parseDeleteError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+            mydeffered = proxy.callRemote(
                 'async_remote_delete',
                 myCommandOnHostID,
                 {'host': myT.target_name, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -419,8 +424,9 @@ def runDeletePhase(myCommandOnHostID):
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
             updateHistory(myCommandOnHostID, 'delete_in_progress')
+            proxy = getProxy(launcher)            
             if SchedulerConfig().mode == 'sync':
-                mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                mydeffered = proxy.callRemote(
                     'sync_remote_delete',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -430,7 +436,7 @@ def runDeletePhase(myCommandOnHostID):
                     addCallback(parseDeleteResult, myCommandOnHostID).\
                     addErrback(parseDeleteError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+                mydeffered = proxy.callRemote(
                     'async_remote_delete',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
@@ -478,8 +484,9 @@ def runInventoryPhase(myCommandOnHostID):
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
 
+    proxy = getProxy(launcher)
     if SchedulerConfig().mode == 'sync':
-        mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+        mydeffered = proxy.callRemote(
             'sync_remote_inventory',
             myCommandOnHostID,
             {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}
@@ -488,7 +495,7 @@ def runInventoryPhase(myCommandOnHostID):
             addCallback(parseInventoryResult, myCommandOnHostID).\
             addErrback(parseInventoryError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
-        mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+        mydeffered = proxy.callRemote(
             'async_remote_inventory',
             myCommandOnHostID,
             {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}

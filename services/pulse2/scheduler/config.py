@@ -48,8 +48,9 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
     awake_time = 600
     dbencoding = 'utf-8'
     enablessl = True
-    certfile = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
-    privkey = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
+    verifypeer = False
+    cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
+    localcert = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     host = "127.0.0.1"
     mode = 'async'
     password = 'password'
@@ -96,8 +97,16 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         if self.cp.has_option("scheduler", "enablessl"):
             self.enablessl = self.cp.getboolean("scheduler", "enablessl")
         if self.enablessl:
-            self.setoption("scheduler", "privkey", "privkey")
-            self.setoption("scheduler", "certfile", "certfile")
+            if self.cp.has_option("scheduler", "privkey"):
+                self.localcert = self.cp.get("scheduler", "privkey")
+            if self.cp.has_option("scheduler", "localcert"):
+                self.localcert = self.cp.get("scheduler", "localcert")
+            if self.cp.has_option("scheduler", "certfile"):
+                self.cacert = self.cp.get("scheduler", "certfile")
+            if self.cp.has_option("scheduler", "cacert"):
+                self.cacert = self.cp.get("scheduler", "cacert")
+            if self.cp.has_option("scheduler", "verifypeer"):
+                self.verifypeer = self.cp.get("scheduler", "verifypeer")
         self.setoption("scheduler", "listen", "host")
         self.setoption("scheduler", "mode", "mode")
         if self.cp.has_option("scheduler", "password"):
@@ -113,12 +122,12 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         # [daemon] section parsing
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "group"):
-                self.daemon_group = grp.getgrnam(cp.get("daemon", "group"))[2]
+                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             self.setoption("daemon", "pid_path", "pid_path")
             if self.cp.has_option("daemon", "umask"):
-                self.umask = string.atoi(cp.get("daemon", "umask"), 8)
+                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
             if self.cp.has_option("daemon", "user"):
-                self.daemon_user = pwd.getpwnam(cp.get("daemon", "user"))[2]
+                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
 
         # [launcher_xxx] section parsing
         for section in self.cp.sections():

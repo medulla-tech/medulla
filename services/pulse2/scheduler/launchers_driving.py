@@ -21,11 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import twisted.web.xmlrpc
-
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
+from pulse2.scheduler.xmlrpc import getProxy
 
 def getPubKey(launcher, key_name):
     """ returns a pubkey from launcher "launcher" """
@@ -36,7 +35,8 @@ def getPubKey(launcher, key_name):
 
     if launcher == None or launcher == '':
         launcher = chooseLauncher()
-    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+    
+    mydeffered = getProxy(launcher).callRemote(
         'get_pubkey',
         key_name
     )
@@ -69,7 +69,7 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
             'macs': macs
     })
     # perform call
-    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+    mydeffered = getProxy(launcher).callRemote(
         'icmp',
         client
     )
@@ -87,7 +87,7 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
             'macs': macs
     })
     # perform call
-    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+    mydeffered = getProxy(launcher).callRemote(
         'probe',
         client
     )

@@ -36,7 +36,7 @@ import twisted.web.server
 import twisted.internet.defer
 import twisted.internet.base
 import twisted.internet.reactor
-import twisted.internet.ssl
+from twisted.internet import ssl
 try:
     from twisted.web import http
 except ImportError:
@@ -53,6 +53,7 @@ import pulse2.scheduler.launchers_driving
 
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.xmlrpc import makeSSLContext, SchedulerSite
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.base.computers import ComputerManager
 
@@ -106,16 +107,16 @@ def startService():
     logger.info('scheduler %s: starting' % config.name)
     try:
         if config.enablessl:
-            if not os.path.isfile(config.privkey):
-                logger.error('scheduler "%s": can\'t read SSL key "%s"' % (config.name, config.privkey))
+            if not os.path.isfile(config.localcert):
+                logger.error('scheduler "%s": can\'t read SSL key "%s"' % (config.name, config.localcert))
                 return 1
-            if not os.path.isfile(config.certfile):
-                logger.error('scheduler "%s": can\'t read SSL certificate "%s"' % (config.name, config.certfile))
+            if not os.path.isfile(config.cacert):
+                logger.error('scheduler "%s": can\'t read SSL certificate "%s"' % (config.name, config.cacert))
                 return 1
-            sslContext = twisted.internet.ssl.DefaultOpenSSLContextFactory(config.privkey, config.certfile)
+            sslContext = makeSSLContext(config)
             twisted.internet.reactor.listenSSL(
                 config.port,
-                twisted.web.server.Site(Scheduler(config.name)),
+                SchedulerSite(Scheduler(config.name)),
                 interface = config.host,
                 contextFactory = sslContext
                 )
