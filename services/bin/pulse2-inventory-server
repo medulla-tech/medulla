@@ -24,13 +24,23 @@ def running(daemonize, inifile):
                                     
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
+
+    # When starting, we log to stderr too
+    hdlr2 = logging.StreamHandler()
+    logger.addHandler(hdlr2)
+
     logger.debug("Logger loaded")
 
-    InventoryGetService().initialise(config)
-
-    if daemonize: daemon(config)
-    InventoryGetService().run()
-
+    if InventoryGetService().initialise(config):
+        if daemonize:
+            daemon(config)
+            # No more log to stderr
+            logger.removeHandler(hdlr2)
+        InventoryGetService().run()
+        ret = 0
+    else:
+        ret = 1
+    return ret
 
 def daemon(config):
     """
@@ -82,7 +92,7 @@ def daemon(config):
 
 
 if __name__ == "__main__":
-    inifile = "/etc/mmc/pulse2/inventoryserver.ini"
+    inifile = "/etc/mmc/pulse2/inventory-server/inventory-server.ini"
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
     except getopt.GetoptError:

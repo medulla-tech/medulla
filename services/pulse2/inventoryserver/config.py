@@ -45,8 +45,9 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     port = 9999
     ocsmapping = '/etc/mmc/pulse2/OcsNGMap.xml'
     enablessl = False
-    certfile = '/etc/mmc/pulse2/inventory_server/keys/cacert.pem'
-    privkey = '/etc/mmc/pulse2/inventory_server/keys/privkey.pem'
+    verifypeer = False
+    cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
+    localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
 
     pidfile = '/var/run/pulse2-inventory-server.pid'
     umask = 0007
@@ -72,12 +73,18 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
         if self.cp.has_option('main', 'pidfile'):
             self.pidfile = self.cp.get("main", 'pidfile')
 
-        if self.cp.has_option('ssl', 'enablessl'):
-            self.enablessl = self.cp.getboolean('ssl', 'enablessl')
-        if self.cp.has_option('ssl', 'certfile'):
-            self.certfile = self.cp.get('ssl', 'certfile')
-        if self.cp.has_option('ssl', 'privkey'):
-            self.privkey = self.cp.get('ssl', 'privkey')
+        if self.cp.has_option('main', 'enablessl'):
+            self.enablessl = self.cp.getboolean('main', 'enablessl')
+        if self.cp.has_option('main', 'verifypeer'):
+            self.verifypeer = self.cp.getboolean('main', 'verifypeer')
+        if self.cp.has_option('main', 'certfile'):
+            self.cacert = self.cp.get('main', 'certfile')
+        if self.cp.has_option('main', 'cacert'):
+            self.cacert = self.cp.get('main', 'cacert')
+        if self.cp.has_option('main', 'privkey'):
+            self.localcert = self.cp.get('main', 'privkey')
+        if self.cp.has_option('main', 'localcert'):
+            self.localcert = self.cp.get('main', 'localcert')
 
                             
         if self.cp.has_option('main', 'hostname'):

@@ -219,13 +219,20 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     
 class InventoryGetService(Singleton):
     def initialise(self, config):
-        InventoryWrapper().activate()
+        self.logger = logging.getLogger()
+        try:
+            InventoryWrapper().activate()
+        except Exception, e :
+            self.logger.error(e)
+            return False
+        if not InventoryWrapper().db_check():
+            return False
         self.config = config
         self.bind = config.bind
         self.port = int(config.port)
         self.xmlmapping = config.ocsmapping
-        self.logger = logging.getLogger()        
         OcsMapping().initialize(self.xmlmapping)
+        return True
 
     def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
         # Install SIGTERM handler
