@@ -1,21 +1,54 @@
 #!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+#
+# $Id: __init__.py 22 2008-06-16 07:43:42Z cdelfosse $
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
-from httplib import *
-from zlib import *
-import re
 import os
 import socket
 import sys
+import time
+import logging
+import signal
 
+import BaseHTTPServer
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from httplib import HTTPSConnection
+import threading
+from threading import Thread
 import ConfigParser
 
-class Pulse2InventoryProxyConfig:
-    server = ''
+class Singleton(object):
+    def __new__(type):
+        if not '_the_instance' in type.__dict__:
+            type._the_instance = object.__new__(type)
+        return type._the_instance
+
+class Pulse2InventoryProxyConfig(Singleton):
+    server = '192.168.100.106'
     port = 9999
+    local_port = 9999
     path = '/'
-    tmpdirname = '/tmp/Pulse2InventoryProxy'
     command_name = '/usr/local/bin/ocsinventory-agent'
-    command_attr = '-l %s' % (tmpdirname)
+    command_attr = '--server localhost:9999'
     enablessl = True
     key_file = "conf/key/privkey.pem"
     cert_file = "conf/key/cacert.pem"
@@ -29,10 +62,10 @@ class Pulse2InventoryProxyConfig:
             self.server = self.cp.get('main', 'server')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.get('main', 'port')
+        if self.cp.has_option('main', 'local_port'):
+            self.port = self.cp.get('main', 'local_port')
         if self.cp.has_option('main', 'path'):
             self.path = self.cp.get('main', 'path')
-        if self.cp.has_option('main', 'tmpdirname'):
-            self.tmpdirname = self.cp.get('main', 'tmpdirname')
         if self.cp.has_option('main', 'command_name'):
             self.command_name = self.cp.get('main', 'command_name')
         if self.cp.has_option('main', 'command_attr'):
@@ -43,36 +76,45 @@ class Pulse2InventoryProxyConfig:
             self.key_file = self.cp.get('main', 'key_file')
         if self.cp.has_option('main', 'cert_file'):
             self.cert_file = self.cp.get('main', 'cert_file')
-    
 
-class Pulse2InventoryProxy:
+class LaunchInv(Thread):
     def __init__(self, config):
         self.config = config
-        self.server = self.config.server
-        self.port = self.config.port
-        self.path = self.config.path
-        self.tmpdirname = self.config.tmpdirname
-        if not os.path.exists(self.tmpdirname):
-            print "%s temporary directory does not exists, please check your configuration file" % (self.tmpdirname)
-            sys.exit(-1)
-        if not os.path.exists(self.config.command_name):
-            print "%s command does not exists, please check your configuration file" % (self.config.command_name)
-            sys.exit(-1)
         self.command = '%s %s' % (self.config.command_name, self.config.command_attr)
-        self.enablessl = self.config.enablessl
-        self.key_file = self.config.key_file
-        self.cert_file = self.config.cert_file
+        Thread.__init__(self)
 
-    def send(self, d):
-        data = compress(d)
-        if self.enablessl:
-            h = HTTPSConnection(self.server, self.port)
-            h.key_file = self.key_file
-            h.cert_file = self.cert_file
+    def inventory(self):
+        return os.popen(self.command)
+
+    def run(self):
+        time.sleep(1)
+        self.inventory()
+
+class HttpInventoryProxySingleton(Singleton):
+    count_call = 0
+    want_quit = False
+    def halt(self):
+        self.want_quit = True
+
+class HttpInventoryProxy(BaseHTTPServer.BaseHTTPRequestHandler):
+    def __init__(self, *args):
+        self.logger = logging.getLogger()
+        self.config = Pulse2InventoryProxyConfig()
+        self.singleton = HttpInventoryProxySingleton()
+        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
+
+    def log_message(self, format, *args):
+        self.logger.info(format % args)
+
+    def send(self, data):
+        if self.config.enablessl:
+            h = HTTPSConnection(self.config.server, self.config.port)
+            h.key_file = self.config.key_file
+            h.cert_file = self.config.cert_file
         else:
-            h = HTTPConnection(self.server, self.port)
+            h = HTTPConnection(self.config.server, self.config.port)
         try:
-            h.request('POST', self.path, data, {'content-type':'application/x-compress'})
+            h.request('POST', self.config.path, data, {'content-type':'application/x-compress'})
         except socket.error, e:
             if e.args == (111, 'Connection refused'):
                 print "Connection refused"
@@ -82,64 +124,43 @@ class Pulse2InventoryProxy:
                 
         return h.getresponse()
 
-    def prolog_str(self):
-        return "<QUERY>PROLOG</QUERY>"
+    def do_POST(self):
+        content = self.rfile.read(int(self.headers['Content-Length']))
+        cont = [content, self.headers['Content-Type']]
+        resp = self.send(content)
+        self.send_response(resp.status)
+        self.end_headers()
+        self.wfile.write(resp.read())
+        self.singleton.count_call += 1
+        if self.singleton.count_call > 1:
+            self.singleton.halt()
 
-    def prolog_parse(self, content):
-        response = re.search(r'<RESPONSE>([\w-]+)</RESPONSE>', content).group(1)
-        if response == 'SEND':
-            return True
-        return False
-
-    def inventory_str(self, filename):
-        if not os.path.exists(filename):
-            raise Exception("file not found")
-        f = open(filename, 'r')
-        content = f.read()
-        f.close()
-        return content
-
-    def inv_parse(self, data):
-        # TODO maybe we should do something?
-        return data
-
-    def contact_server(self):
-        prolog = self.send(self.prolog_str())
-        if prolog.status != 200:
-            print "prolog failed : %s" % (prolog.reason)
-            return -1
-        data = decompress(prolog.read())
-        return self.prolog_parse(data)
-
-    def treat_inventory(self):
-        # TODO run inventory in a file and return the path of this file
-        os.popen(self.command)
-        files = os.listdir(self.tmpdirname)
-        if len(files) != 1:
-            raise Exception("too many inventory files")
-        return "%s%s%s" % (self.tmpdirname, os.sep, files[0])
-
-    def send_inventory(self, filename):
-        inv = self.send(self.inventory_str(filename))
-        if inv.status != 200:
-            print "inv send failed : %s" % (inv.reason)
-            return -1
-        data = decompress(inv.read())
-        return self.inv_parse(data)
-
-    def main(self):
-        should_send_invent = self.contact_server()
-        filename = self.treat_inventory()
-        if should_send_invent:
-            ret = self.send_inventory(filename)
-            print ret
-        os.unlink(filename)
+def handler(signum, frame):
+    """
+    SIGTERM handler
+    """
+    os.seteuid(0)
+    os.setegid(0)
+    try:
+        os.unlink(Pulse2InventoryProxyConfig().pidfile)
+    except OSError:
+        pass
+    
+    sys.exit(0)
 
 
-print "reading conf"
-config = Pulse2InventoryProxyConfig()
-print "creating proxy"
-p = Pulse2InventoryProxy(config)
-print "running proxy"
-p.main()
+Pulse2InventoryProxyConfig().setup()
+
+signal.signal(signal.SIGTERM, handler)
+signal.signal(signal.SIGINT, handler)
+
+launchinv = LaunchInv(Pulse2InventoryProxyConfig())
+launchinv.setDaemon(True)
+launchinv.start()
+
+httpd = HTTPServer(('', Pulse2InventoryProxyConfig().local_port), HttpInventoryProxy)
+
+while not HttpInventoryProxySingleton().want_quit:
+    httpd.handle_request()
+
 
