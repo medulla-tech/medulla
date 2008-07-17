@@ -43,9 +43,7 @@ if (isset($_POST["bcreate"])) {
     foreach (array('command') as $post) {
         $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>$_POST[$post.'cmd']);
     }
-    print_r($p_api_id);
     $ret = putPackageDetail($p_api_id, $package);
-    print_r($ret);
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_GET["action"]=="add") {
             new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
