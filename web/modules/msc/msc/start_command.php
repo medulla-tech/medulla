@@ -83,7 +83,12 @@ if (isset($_POST["badvanced"])) {
     foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi', 'copy_mode') as $param) {
         $params[$param] = $_POST[$param];
     }
-    $params['tab'] = 'tablaunch';
+    $prefix = '';
+    if (isset($_POST['gid'])) {
+        $prefix = 'group';
+    }
+
+    $params['tab'] = $prefix.'tablaunch';
     $params['badvanced'] = True;
     header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 }
