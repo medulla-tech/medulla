@@ -81,13 +81,13 @@ $page = new Page("groupmsctabs", _T("Secure control on a group of machines", "ms
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tablaunch", _T("MSC launch tab", "msc"));
+$tab = new Tab("grouptablaunch", _T("MSC launch tab", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tablogs", _T("MSC logs tab", "msc"));
+$tab = new Tab("grouptablogs", _T("MSC logs tab", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tabhistory", _T("MSC history tab", "msc"));
+$tab = new Tab("grouptabhistory", _T("MSC history tab", "msc"));
 $page->addTab($tab);
 
 $submod->addPage($page);
