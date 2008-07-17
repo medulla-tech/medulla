@@ -43,11 +43,13 @@ class LaunchInv(Thread):
         twisted.internet.utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
 
 class ServerInv(Thread):
+    
     def __init__(self, config):
         self.config = config
         Thread.__init__(self)
 
     def run(self):
+        from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxy, HttpInventoryProxySingleton
         httpd = HTTPServer(('', self.config.local_port), HttpInventoryProxy)
         if self.config.pooling == True:
             httpd.serve_forever()

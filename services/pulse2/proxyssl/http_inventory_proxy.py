@@ -32,11 +32,11 @@ import signal
 
 import BaseHTTPServer
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from httplib import HTTPSConnection
+from httplib import HTTPConnection, HTTPSConnection
 
 from pulse2.proxyssl.utilities import Singleton
 from pulse2.proxyssl.threads import LaunchInv, ServerInv
-from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
+
 if os.name == 'nt':
     from _winreg import *
 
@@ -63,6 +63,7 @@ class HttpInventoryProxySingleton(Singleton):
 class HttpInventoryProxy(BaseHTTPServer.BaseHTTPRequestHandler):
     def __init__(self, *args):
         self.logger = logging.getLogger()
+        from pulse2.proxyssl.config import Pulse2InventoryProxyConfig        
         self.config = Pulse2InventoryProxyConfig()
         self.singleton = HttpInventoryProxySingleton()
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
