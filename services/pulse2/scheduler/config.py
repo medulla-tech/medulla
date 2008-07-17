@@ -115,7 +115,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         self.port = int(self.port)
         self.setoption("scheduler", "resolv_order", "resolv_order")
         if not type(self.resolv_order) == type([]):
-            self.resolv_order = [self.resolv_order]
+            self.resolv_order = self.resolv_order.split(' ')
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "username", "username")
 
