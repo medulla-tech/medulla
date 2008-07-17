@@ -1,166 +1,105 @@
 #!/usr/bin/python
 # -*- coding: utf-8; -*-
-#
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
-#
-# $Id: __init__.py 22 2008-06-16 07:43:42Z cdelfosse $
-#
-# This file is part of Pulse 2, http://pulse2.mandriva.org
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
 
 import os
-import socket
+import os.path
 import sys
-import time
+import getopt
 import logging
-import signal
+import logging.config
+from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
+from pulse2.proxyssl import initialize, run
 
-import BaseHTTPServer
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from httplib import HTTPSConnection
-import threading
-from threading import Thread
-import ConfigParser
 
-class Singleton(object):
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
+def running(daemonize, inifile):
+    config = Pulse2InventoryProxyConfig()
+    config.setup(inifile)
 
-class Pulse2InventoryProxyConfig(Singleton):
-    server = '192.168.100.106'
-    port = 9999
-    local_port = 9999
-    path = '/'
-    command_name = '/usr/local/bin/ocsinventory-agent'
-    command_attr = '--server localhost:9999'
-    enablessl = True
-    key_file = "conf/key/privkey.pem"
-    cert_file = "conf/key/cacert.pem"
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
 
-    def setup(self, config_file = 'conf/p2ipc.ini'):
-        # Load configuration file
-        self.cp = ConfigParser.ConfigParser()
-        self.cp.read(config_file)
+    # Create log dir if it doesn't exist
+    os.system('mkdir -p /var/log/mmc')
+                                    
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+    logger.debug("Logger loaded")
 
-        if self.cp.has_option('main', 'server'):
-            self.server = self.cp.get('main', 'server')
-        if self.cp.has_option('main', 'port'):
-            self.port = self.cp.get('main', 'port')
-        if self.cp.has_option('main', 'local_port'):
-            self.port = self.cp.get('main', 'local_port')
-        if self.cp.has_option('main', 'path'):
-            self.path = self.cp.get('main', 'path')
-        if self.cp.has_option('main', 'command_name'):
-            self.command_name = self.cp.get('main', 'command_name')
-        if self.cp.has_option('main', 'command_attr'):
-            self.command_attr = self.cp.get('main', 'command_attr')
-        if self.cp.has_option('main', 'enablessl'):
-            self.enablessl = self.cp.getboolean('main', 'enablessl')
-        if self.cp.has_option('main', 'key_file'):
-            self.key_file = self.cp.get('main', 'key_file')
-        if self.cp.has_option('main', 'cert_file'):
-            self.cert_file = self.cp.get('main', 'cert_file')
+    initialise(config)
 
-class LaunchInv(Thread):
-    def __init__(self, config):
-        self.config = config
-        self.command = '%s %s' % (self.config.command_name, self.config.command_attr)
-        Thread.__init__(self)
+    if daemonize: daemon(config)
+    run()
 
-    def inventory(self):
-        return os.popen(self.command)
 
-    def run(self):
-        time.sleep(1)
-        self.inventory()
-
-class HttpInventoryProxySingleton(Singleton):
-    count_call = 0
-    want_quit = False
-    def halt(self):
-        self.want_quit = True
-
-class HttpInventoryProxy(BaseHTTPServer.BaseHTTPRequestHandler):
-    def __init__(self, *args):
-        self.logger = logging.getLogger()
-        self.config = Pulse2InventoryProxyConfig()
-        self.singleton = HttpInventoryProxySingleton()
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
-
-    def log_message(self, format, *args):
-        self.logger.info(format % args)
-
-    def send(self, data):
-        if self.config.enablessl:
-            h = HTTPSConnection(self.config.server, self.config.port)
-            h.key_file = self.config.key_file
-            h.cert_file = self.config.cert_file
-        else:
-            h = HTTPConnection(self.config.server, self.config.port)
-        try:
-            h.request('POST', self.config.path, data, {'content-type':'application/x-compress'})
-        except socket.error, e:
-            if e.args == (111, 'Connection refused'):
-                print "Connection refused"
-            else:
-                print e.args
-            sys.exit(-1)
-                
-        return h.getresponse()
-
-    def do_POST(self):
-        content = self.rfile.read(int(self.headers['Content-Length']))
-        cont = [content, self.headers['Content-Type']]
-        resp = self.send(content)
-        self.send_response(resp.status)
-        self.end_headers()
-        self.wfile.write(resp.read())
-        self.singleton.count_call += 1
-        if self.singleton.count_call > 1:
-            self.singleton.halt()
-
-def handler(signum, frame):
+def daemon(config):
     """
-    SIGTERM handler
+    daemonize pulse2-inventory-server
+
+    @param pidfile: path to pid file
+    @type pidfile: str
     """
-    os.seteuid(0)
-    os.setegid(0)
+    pidfile = config.pidfile
+        
+    # Test if mmcagent has been already launched in daemon mode
+    if os.path.isfile(pidfile):
+        print pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n"
+        print "use /etc/init.d script to stop and relaunch it"
+        sys.exit(0)
+        
+    # do the UNIX double-fork magic, see Stevens' "Advanced
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
     try:
-        os.unlink(Pulse2InventoryProxyConfig().pidfile)
-    except OSError:
-        pass
+        pid = os.fork()
+        if pid > 0:
+            # exit first parent
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+        
+    # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
+    os.chdir("/")
+    os.setsid()
     
-    sys.exit(0)
+    # do second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit from second parent, print eventual PID before
+            print "Daemon PID %d" % pid
+            os.seteuid(0)
+            os.setegid(0)
+            os.system("echo " + str(pid) + " > " + pidfile)
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
 
 
-Pulse2InventoryProxyConfig().setup()
 
-signal.signal(signal.SIGTERM, handler)
-signal.signal(signal.SIGINT, handler)
+if __name__ == "__main__":
+    inifile = "/etc/mmc/pulse2/inventoryserver.ini"
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+    except getopt.GetoptError:
+        sys.exit(2)
+    daemonize = True
+    for option, argument in opts:
+        if option == "-f":
+            inifile = argument
+        elif option == "-d":
+            daemonize = False
 
-launchinv = LaunchInv(Pulse2InventoryProxyConfig())
-launchinv.setDaemon(True)
-launchinv.start()
-
-httpd = HTTPServer(('', Pulse2InventoryProxyConfig().local_port), HttpInventoryProxy)
-
-while not HttpInventoryProxySingleton().want_quit:
-    httpd.handle_request()
+    if not os.path.exists(inifile):
+        print "File '%s' does not exist." % inifile
+        sys.exit(3)
+ 
+    # Start the daemon main loop
+    sys.exit(running(daemonize, inifile))
 
 
