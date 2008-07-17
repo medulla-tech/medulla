@@ -53,6 +53,10 @@ if (isset($_POST["bconfirm"])) {
     $gid = $_POST['gid'];
     $pid = $_POST['pid'];
     $mode = $_POST['copy_mode'];
+    $prefix = '';
+    if (isset($_POST['gid'])) {
+        $prefix = 'group';
+    }
 
     $cible = array($uuid, $hostname);
     if ($gid) {
@@ -63,7 +67,7 @@ if (isset($_POST["bconfirm"])) {
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
     scheduler_start_all_commands();
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
 }
 
 /* User wants do do custom stuff => display the "advanced" form */
