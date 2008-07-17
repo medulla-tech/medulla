@@ -45,7 +45,7 @@ if ($_GET['uuid']) {
         $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
         // display the selected command
         $cmd = new Command($_GET['cmd_id']);
-        $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
         if ($act) {
             // display the selected command on host
             $coh = new CommandOnHost($_GET['coh_id']);
@@ -62,14 +62,14 @@ if ($_GET['uuid']) {
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=tablogs");
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     } else {
         // display all commands
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=tablogs");
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=grouptablogs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
