@@ -25,7 +25,7 @@
 import logging
 import re
 
-from pulse.proxyssl.utilities import Singleton
+from pulse2.proxyssl.utilities import Singleton
 import ConfigParser
 
 
