@@ -8,17 +8,19 @@ if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
+$prefix = '';
 if ($_GET['hostname'] != '') {
     $p->addTop(sprintf(_T("%s's inventory", 'inventory'), $_GET['hostname']), "modules/inventory/inventory/header.php");
 } else {
     $p->addTop(sprintf(_T("%s's content inventory", 'inventory'), $_GET['groupname']), "modules/inventory/inventory/header.php");
+    $prefix = 'group';
 }
-$p->addTab("tab0", _T("Hardware", 'inventory'), "", "modules/inventory/inventory/view_hardware.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'gid'=>$_GET['gid'], 'groupname'=>$_GET['groupname']));
+$p->addTab($prefix."tab0", _T("Hardware", 'inventory'), "", "modules/inventory/inventory/view_hardware.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'gid'=>$_GET['gid'], 'groupname'=>$_GET['groupname']));
 
 $i = 1;
 // TODO get the list with trads from agent (conf file...)
 foreach (array('Software', 'Network', 'Controller', 'Registry') as $tab) {
-    $p->addTab("tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$_GET['gid'], 'groupname'=>$_GET['groupname']));
+    $p->addTab($prefix."tab$i", _T($tab, 'inventory'), "", "modules/inventory/inventory/view_part.php", array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'part' => $tab, 'gid'=>$_GET['gid'], 'groupname'=>$_GET['groupname']));
     $i++;
 }
 
