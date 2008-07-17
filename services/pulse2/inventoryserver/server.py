@@ -169,7 +169,7 @@ class TreatInv(Thread):
                             hostname = tag[path[1]]
                             self.logger.debug("hostname modified into %s"%hostname)
                 else:
-                    hostname = inventory[path[0]][1][path[1]]
+                    hostname = inventory[path[0]][0][path[1]]
                     self.logger.debug("hostname modified into %s"%hostname)
             except Exception, e:
                 self.logger.error(e)
