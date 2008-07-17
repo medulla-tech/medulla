@@ -14,7 +14,7 @@ class DGConfig(PluginConfig):
         self.dbhost = self.get("database", "dbhost")
         self.dbname = self.get("database", "dbname")
         self.disable = self.get("main", "disable")
-        self.dynamicEnable = (str(self.get("main", "dynamic_enable")) == '1')
+        self.dynamicEnable = self.getboolean("main", "dynamic_enable")
         try:
             self.dbport = self.getint("database", "dbport")
         except NoOptionError:
