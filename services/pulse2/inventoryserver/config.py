@@ -56,7 +56,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
 
     options = {}
 
-    hostname = ['HARDWARE', 'NAME']
+    hostname = ['Hardware', 'Host']
     
 
     def setup(self, config_file):
