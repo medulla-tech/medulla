@@ -74,6 +74,14 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+#: dyngroup/dyngroup/ajaxListGroups.php:78
+msgid "Csv export"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:119
+msgid "Csv's export"
+msgstr ""
+
 #: dyngroup/includes/request.php:100
 msgid "Delete"
 msgstr ""

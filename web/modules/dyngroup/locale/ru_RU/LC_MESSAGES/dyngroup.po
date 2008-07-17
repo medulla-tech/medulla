@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-13 19:25+0200\n"
+"POT-Creation-Date: 2008-07-15 18:15+0200\n"
 "PO-Revision-Date: 2008-04-05 10:53+0300\n"
 "Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,6 +90,14 @@ msgstr "Закрыть"
 #: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Подтвердить"
+
+#: dyngroup/dyngroup/ajaxListGroups.php:78
+msgid "Csv export"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:119
+msgid "Csv's export"
+msgstr ""
 
 #: dyngroup/includes/request.php:100
 msgid "Delete"

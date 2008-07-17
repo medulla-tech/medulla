@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-13 19:25+0200\n"
+"POT-Creation-Date: 2008-07-15 18:15+0200\n"
 "PO-Revision-Date: 2008-06-17 09:59+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -91,6 +91,14 @@ msgstr "Fermer"
 #: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Confirmer"
+
+#: dyngroup/dyngroup/ajaxListGroups.php:78
+msgid "Csv export"
+msgstr "Export CSV"
+
+#: dyngroup/infoPackage.inc.php:119
+msgid "Csv's export"
+msgstr "Export CSV"
 
 #: dyngroup/includes/request.php:100
 msgid "Delete"
