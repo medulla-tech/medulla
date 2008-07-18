@@ -6,11 +6,12 @@ import logging
 import xmlrpclib
 
 from mmc.support.mmctools import Singleton
+import mmc.plugins.pkgs.config
 
 from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 class PackagePutA:
-    def __init__(self, server, port = None, mountpoint = None):
+    def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
         if type(server) == dict:
             mountpoint = server['mountpoint']
@@ -24,7 +25,7 @@ class PackagePutA:
         self.logger.debug('PackagePutA will connect to %s' % (self.server_addr))
 
         self.ppaserver = XmlrpcSslProxy(self.server_addr)
-        self.config = MscConfig("pkgs")
+        self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
         if self.config.upaa_verifypeer:
             self.sslctx = makeSSLContext(self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert, False)
             self.ppaserver.setSSLClientContext(self.sslctx)
@@ -38,13 +39,13 @@ class PackagePutA:
     def putPackageDetail(self, package):
         if self.initialized_failed:
             return -1
-        d = self.paserver.callRemote("putPackageDetail", package)
+        d = self.ppaserver.callRemote("putPackageDetail", package)
         d.addErrback(self.onError, "putPackageDetail", package, -1)
         return d
 
     def dropPackage(self, pid):
         if self.initialized_failed:
             return -1
-        d = self.paserver.callRemote("dropPackage", pid)
+        d = self.ppaserver.callRemote("dropPackage", pid)
         d.addErrback(self.onError, "dropPackage", pid, -1)
         return d

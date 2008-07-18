@@ -68,26 +68,35 @@ class RpcProxy(RpcProxyI):
 
     # PackagePutA
     def ppa_getPackageDetail(self, pp_api_id, pid):
-        upas = self.upaa_getUserPackageApi()
-        for upa in upas:
-            if upa['uuid'] == pp_api_id:
-                return PackageA(upa).getPackageDetail(pid)
-        return False
-    
+        def _ppa_getPackageDetail(result, pp_api_id = pp_api_id, pid = pid):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackageA(upa).getPackageDetail(pid)
+            return False
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_getPackageDetail)
+        return d
+
     def ppa_putPackageDetail(self, pp_api_id, package):
-        upas = self.upaa_getUserPackageApi()
-        for upa in upas:
-            if upa['uuid'] == pp_api_id:
-                return PackagePutA(upa).putPackageDetail(package)
-        logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
-        return False
-        
+        def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).putPackageDetail(package)
+            logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
+            return False
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_putPackageDetail)
+        return d
+
     def ppa_dropPackage(self, pp_api_id, pid):
-        upas = self.upaa_getUserPackageApi()
-        for upa in upas:
-            if upa['uuid'] == pp_api_id:
-                return PackagePutA(upa).dropPackage(pid)
-        return False
+        def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).dropPackage(pid)
+            return False
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_dropPackage)
+        return d
 
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
