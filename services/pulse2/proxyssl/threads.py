@@ -54,7 +54,6 @@ class RunInventory(Singleton):
             d = utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
             d.addCallbacks(self.onSuccess, self.onError)
         else:
-            print "hop"
             self.logger.debug("Flag not set, not starting an inventory")
         self.maybeStartLoop()
 
