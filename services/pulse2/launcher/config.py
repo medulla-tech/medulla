@@ -28,6 +28,7 @@ import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
 import logging      # logging stuff
+import os.path
 
 # MMC
 from mmc.support.config import MMCConfigParser
@@ -218,6 +219,11 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                     except ConfigParser.NoOptionError:
                         self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
 
-
-
+    def check(self):
+        """
+        Raise an error if the configuration is bad
+        """
+        for path in [self.launcher_path, self.ping_path, self.wrapper_path, self.wol_path]:
+            if not os.path.exists(path):
+                raise Exception("Configuration error: path %s does not exists" % path)
 

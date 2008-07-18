@@ -132,6 +132,7 @@ if __name__ == "__main__":
     # Load configuration file
     config = LauncherConfig()
     config.setup(options.config_file)
+    config.check()
 
     # Set umask and effective UID and GID values
     os.umask(config.umask)
