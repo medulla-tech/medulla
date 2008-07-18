@@ -183,7 +183,11 @@ class RpcProxy(RpcProxyI):
 
     def add_command_api(self, pid, target, params, p_api, mode, gid = None):
         ctx = self.currentContext
-        return xmlrpcCleanup(mmc.plugins.msc.package_api.send_package_command(ctx, pid, target, params, p_api, mode, gid))
+        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
+        g.deferred = defer.Deferred()
+        g.send()
+        g.deferred.addCallback(xmlrpcCleanup)
+        return g.deferred
 
     def get_id_command_on_host(self, id_command):
         ctx = self.currentContext

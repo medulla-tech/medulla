@@ -153,78 +153,113 @@ class PackageA:
 
 from mmc.plugins.msc.mirror_api import MirrorApi
 
-def send_package_command(ctx, pid, targets, params, p_api, mode, gid = None):
-    cmd = PackageA(p_api).getPackageCommand(pid)
-    start_file = cmd['command']
-    a_files = PackageA(p_api).getPackageFiles(pid)
-    #TODO : check that params has needed values, else put default one
-    # as long as this method is called from the MSC php, the fields should be
-    # set, but, if someone wants to call it from somewhere else...
-    start_script = (params['start_script'] == 'on' and 'enable' or 'disable')
-    delete_file_after_execute_successful = (params['delete_file_after_execute_successful'] == 'on' and 'enable' or 'disable')
-    wake_on_lan = (params['wake_on_lan'] == 'on' and 'enable' or 'disable')
-    next_connection_delay = params['next_connection_delay']
-    max_connection_attempt = params['max_connection_attempt']
-    start_inventory = (params['start_inventory'] == 'on' and 'enable' or 'disable')
-    maxbw = params['maxbw']
+class SendPackageCommand:
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None):
+        self.ctx = ctx
+        self.p_api = p_api
+        self.pid = pid
+        self.targets = targets
+        self.params = params
+        self.mode = mode
+        self.gid = gid
 
-    try:
-        parameters = params['parameters']
-    except KeyError:
-        parameters = ''
+    def onError(error):
+        logging.getLogger().error("Can't connect: %s", str(error))
+        return self.deferred.callback([])
 
-    try:
-        start_date = convert_date(params['start_date'])
-    except:
-        start_date = '0000-00-00 00:00:00' # ie. "now"
+    def sendResult(self, id_command = -1):
+        self.deferred.callback(id_command)
 
-    try:
-        end_date = convert_date(params['end_date'])
-    except:
-        end_date = '0000-00-00 00:00:00' # ie. "no end date"
+    def send(self):
+        d = PackageA(self.p_api).getPackageCommand(self.pid)
+        d.addCallbacks(self.setCommand, self.onError)
 
-    try:
-        title = params['title']
-    except:
-        title = '' # ie. "no title"
+    def setCommand(self, cmd):
+        self.cmd = cmd
+        d = PackageA(self.p_api).getPackageFiles(self.pid)
+        d.addCallbacks(self.setFiles, self.onError)
 
-    if title == None or title == '':
-        localtime = time.localtime()
-        title = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
-            PackageA(p_api).getPackageLabel(pid),
-            PackageA(p_api).getPackageVersion(pid),
-            localtime[0],
-            localtime[1],
-            localtime[2],
-            localtime[3],
-            localtime[4],
-            localtime[5]
+    def setFiles(self, a_files):
+        self.a_files = a_files
+        d = PackageA(self.p_api).getPackageLabel(self.pid)
+        d.addCallbacks(self.setLabel, self.onError)
+
+    def setLabel(self, label):
+        self.label = label
+        d = PackageA(self.p_api).getPackageVersion(self.pid)
+        d.addCallbacks(self.setVersion, self.onError)
+
+    def setVersion(self, version):
+        self.version = version
+        start_file = self.cmd['command']
+        #TODO : check that params has needed values, else put default one
+        # as long as this method is called from the MSC php, the fields should be
+        # set, but, if someone wants to call it from somewhere else...
+        start_script = (self.params['start_script'] == 'on' and 'enable' or 'disable')
+        delete_file_after_execute_successful = (self.params['delete_file_after_execute_successful'] == 'on' and 'enable' or 'disable')
+        wake_on_lan = (self.params['wake_on_lan'] == 'on' and 'enable' or 'disable')
+        next_connection_delay = self.params['next_connection_delay']
+        max_connection_attempt = self.params['max_connection_attempt']
+        start_inventory = (self.params['start_inventory'] == 'on' and 'enable' or 'disable')
+        maxbw = self.params['maxbw']
+    
+        try:
+            parameters = self.params['parameters']
+        except KeyError:
+            parameters = ''
+    
+        try:
+            start_date = convert_date(self.params['start_date'])
+        except:
+            start_date = '0000-00-00 00:00:00' # ie. "now"
+    
+        try:
+            end_date = convert_date(self.params['end_date'])
+        except:
+            end_date = '0000-00-00 00:00:00' # ie. "no end date"
+    
+        try:
+            title = self.params['title']
+        except:
+            title = '' # ie. "no title"
+    
+        if title == None or title == '':
+            localtime = time.localtime()
+            title = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+                self.label,
+                self.version,
+                localtime[0],
+                localtime[1],
+                localtime[2],
+                localtime[3],
+                localtime[4],
+                localtime[5]
+            )
+    
+        files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
+    
+        id_command = MscDatabase().addCommand(  # TODO: refactor to get less args
+            start_file,
+            parameters,
+            files,
+            self.targets, # TODO : need to convert array into something that we can get back ...
+            self.mode,
+            self.gid,
+            start_script,
+            delete_file_after_execute_successful,
+            start_date,
+            end_date,
+            ctx.userid,
+            ctx.userid,
+            title,
+            wake_on_lan,
+            next_connection_delay,
+            max_connection_attempt,
+            start_inventory,
+            0,
+            maxbw
         )
-
-    files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], a_files)
-
-    id_command = MscDatabase().addCommand(  # TODO: refactor to get less args
-        start_file,
-        parameters,
-        files,
-        targets, # TODO : need to convert array into something that we can get back ...
-        mode,
-        gid,
-        start_script,
-        delete_file_after_execute_successful,
-        start_date,
-        end_date,
-        ctx.userid,
-        ctx.userid,
-        title,
-        wake_on_lan,
-        next_connection_delay,
-        max_connection_attempt,
-        start_inventory,
-        0,
-        maxbw
-    )
-    return id_command
+        return self.sendResult(id_command)
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:
