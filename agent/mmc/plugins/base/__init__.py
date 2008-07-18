@@ -404,8 +404,6 @@ def changeUserMainAttributes(uid,newuid,name,surname):
     l = logging.getLogger()
     ldapObj = ldapUserGroupControl()
     gecos = name + " " + surname
-    l.debug(type(name))
-    l.debug(repr(name))
     gecos = delete_diacritics(gecos)
     name = name
     surname = surname
