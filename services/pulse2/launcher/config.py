@@ -223,7 +223,9 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         """
         Raise an error if the configuration is bad
         """
-        for path in [self.launcher_path, self.ping_path, self.wrapper_path, self.wol_path]:
+        paths = [self.launcher_path, self.ping_path, self.wrapper_path, self.wol_path]
+        paths.extend(self.ssh_keys.values())
+        for path in paths:
             if not os.path.exists(path):
                 raise Exception("Configuration error: path %s does not exists" % path)
 
