@@ -11,13 +11,13 @@ import sys
 import twisted
 import logging
 
-from pulse2.package_server import initialize
+from pulse2.proxyssl import initialize
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
 class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
 
     _svc_name_ = "Pulse2ProxySsl"
-    _svc_display_name_ = "Pulse 2 Proxy Ssl"
+    _svc_display_name_ = "Pulse 2 Proxy SSL"
 
     def __init__(self,args):
         import servicemanager
@@ -31,7 +31,7 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
         if not os.path.exists(self.inifile):
             print "File '%s' does not exist." % self.inifile
             sys.exit(3)
-        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTING,(self._svc_display_name_, '')
+        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTING,(self._svc_display_name_, ''))
 
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
