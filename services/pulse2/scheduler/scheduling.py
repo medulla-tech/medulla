@@ -131,7 +131,7 @@ def runWOLPhase(myCommandOnHostID):
     launcher = chooseLauncher()
 
     # perform call
-    mydeffered = twisted.web.xmlrpc.Proxy(launcher).callRemote(
+    mydeffered = getProxy(launcher).callRemote(
         'wol',
         myT.target_macaddr.split('||')
     )
