@@ -27,6 +27,7 @@ import re
 
 from pulse2.proxyssl.utilities import Singleton
 import ConfigParser
+import sys
 
 
 class Pulse2InventoryProxyConfig(Singleton):
@@ -73,9 +74,9 @@ class Pulse2InventoryProxyConfig(Singleton):
         if self.cp.has_option('main', 'verifypeer'):
             self.verifypeer = self.cp.getboolean('main', 'verifypeer')
         if self.cp.has_option('main', 'key_file'):
-            self.key_file = self.cp.get('main', 'key_file')
+            self.key_file= self.cp.get('main', 'localcert')
         if self.cp.has_option('main', 'cert_file'):
-            self.cert_file = self.cp.get('main', 'cert_file')
+            self.cert_file = self.cp.get('main', 'cacert')
         if self.cp.has_option('pooling', 'activate') and self.cp.getboolean('pooling', 'activate'):
             self.pooling = True
             if self.cp.has_option('pooling', 'type') and self.cp.get('pooling', 'type') == 'reg':
