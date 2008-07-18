@@ -35,7 +35,7 @@ class Pulse2InventoryProxyConfig(Singleton):
     local_port = 9999
     path = '/'
     command_name = "C:\Program Files\OCS Inventory Agent\OCSInventory.exe"
-    command_attr = ('/SERVER:127.0.0.1', '/PNUM:9999')
+    command_attr = "/SERVER:127.0.0.1 /PNUM:9999"
     enablessl = True
     verifypeer = False
     key_file = "conf/key/privkey.pem"
