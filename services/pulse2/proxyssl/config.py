@@ -3,7 +3,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 22 2008-06-16 07:43:42Z cdelfosse $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
