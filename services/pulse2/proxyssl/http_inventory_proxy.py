@@ -29,11 +29,10 @@ import socket
 import sys
 import time
 import signal
-import OpenSLL
+import OpenSSL
 import urlparse
 
 from pulse2.proxyssl.utilities import Singleton
-from pulse2.proxyssl.threads import LaunchInv, ServerInv
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
 from twisted.internet import ssl, reactor
