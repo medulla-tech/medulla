@@ -56,11 +56,15 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(RpcProxyI):
     def getPApiDetail(self, pp_api_id):
-        upas = self.upaa_getUserPackageApi()
-        for upa in upas:
-            if upa['uuid'] == pp_api_id:
-                return upa
-        return False
+        def _getPApiDetail(result, pp_api_id = pp_api_id):
+            for upa in result: 
+                if upa['uuid'] == pp_api_id:
+                    return upa
+            return False
+        
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_getPApiDetail)
+        return d
 
     # PackagePutA
     def ppa_getPackageDetail(self, pp_api_id, pid):

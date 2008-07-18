@@ -37,6 +37,9 @@ class PkgsConfig(PluginConfig):
     upaa_username = ''
     upaa_password = ''
     upaa_enablessl = True
+    upaa_verifypeer = False
+    upaa_cacert = ''
+    upaa_localcert = ''
 
     def readConf(self):
         """
@@ -59,4 +62,11 @@ class PkgsConfig(PluginConfig):
         if self.has_option("user_package_api", "enablessl"):
             self.upaa_enablessl = self.getboolean("user_package_api", "enablessl")
 
+        if self.upaa_enablessl:
+            if self.has_option("user_package_api", "verifypeer"):
+                self.upaa_verifypeer = self.getboolean("user_package_api", "verifypeer")
+            if self.has_option("user_package_api", "cacert"):
+                self.upaa_cacert = self.get("user_package_api", "cacert")
+            if self.has_option("user_package_api", "localcert"):
+                self.upaa_localcert = self.get("user_package_api", "localcert")
 
