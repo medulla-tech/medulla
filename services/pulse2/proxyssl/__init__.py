@@ -27,9 +27,12 @@ import os
 import sys
 import signal
 
+from twisted.internet import reactor, utils
+from twisted.web import http
+
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
-from pulse2.proxyssl.threads import LaunchInv, ServerInv
-from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxySingleton, HttpInventoryProxy
+from pulse2.proxyssl.http_inventory_proxy import MyProxy, HttpInventoryProxySingleton
+from pulse2.proxyssl.threads import RunInventory
 
 def handler(signum, frame):
     """
@@ -45,20 +48,13 @@ def handler(signum, frame):
     sys.exit(0)
 
 def initialize(config):
-    HttpInventoryProxySingleton().initialise(config)
-
-    signal.signal(signal.SIGTERM, handler)
-    signal.signal(signal.SIGINT, handler)
-
-    launchinv = LaunchInv(config)
-    launchinv.setDaemon(True)
-
-    serverinv = ServerInv(config)
-    serverinv.setDaemon(True)
-
-    serverinv.start()
-    launchinv.start()
-
-    launchinv.join()
-    serverinv.join()
-
+    singleton = HttpInventoryProxySingleton()
+    singleton.initialise(config)
+    f = http.HTTPFactory()
+    f.protocol = MyProxy
+    # Listen to incoming connection
+    reactor.listenTCP(config.port, f)
+    # Run the periodic inventory
+    r = RunInventory()
+    r.setup(config)
+    r.run()

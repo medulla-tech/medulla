@@ -29,16 +29,105 @@ import socket
 import sys
 import time
 import signal
-
-import BaseHTTPServer
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from httplib import HTTPConnection, HTTPSConnection
+import OpenSLL
+import urlparse
 
 from pulse2.proxyssl.utilities import Singleton
 from pulse2.proxyssl.threads import LaunchInv, ServerInv
+from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
+
+from twisted.internet import ssl, reactor
+from twisted.web import proxy, server, http
+from twisted.web.server import NOT_DONE_YET
+
 
 if os.name == 'nt':
     from _winreg import *
+
+
+def makeSSLContext(verifypeer, cacert, localcert, log = False):
+    """
+    Make the SSL context for the server, according to the parameters
+
+    @returns: a SSL context
+    """
+    logger = logging.getLogger()
+    if verifypeer:
+        fd = open(localcert)
+        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
+        fd.close()
+        fd = open(cacert)
+        caCertificate = ssl.Certificate.loadPEM(fd.read())
+        fd.close()
+        ctx = localCertificate.options(caCertificate)
+        ctx.verify = True
+        ctx.verifyDepth = 9
+        ctx.requireCertification = True
+        ctx.verifyOnce = True
+        ctx.enableSingleUseKeys = True
+        ctx.enableSessions = True
+        ctx.fixBrokenPeers = False
+        if log:
+            logger.debug("CA certificate informations: %s" % cacert)
+            logger.debug(caCertificate.inspect())
+            print caCertificate.inspect()
+            logger.debug("Inventory server certificate: %s" % localcert)
+            print localCertificate.inspect()
+        return ctx
+    else:
+        if log:
+            logger.warning("SSL enabled, but peer verification is disabled.")
+        ctx = SSL.Context(SSL.SSLv23_METHOD)
+        ctx.use_privatekey_file(localcert)
+        ctx.use_certificate_file(cacert)
+    return ctx
+
+
+class MyProxyRequest(proxy.ProxyRequest):
+
+    """
+    Proxy that handle a outgoing HTTP or HTTPS connection.
+    For HTTPS. create a SSL context according to the configuration file.
+    """
+
+    config = Pulse2InventoryProxyConfig()
+    ports = {'http' : config.port, 'https' : config.port }
+    protocols = {'http': proxy.ProxyClientFactory, 'https': proxy.ProxyClientFactory}
+
+    def process(self):
+        self.uri = "%s:%d%s" % (self.config.server, self.config.port, self.uri)
+        if self.config.enablessl:
+            self.uri = "https://" + self.uri
+        else:
+            self.uri = "http://" + self.uri
+        parsed = urlparse.urlparse(self.uri)
+        protocol = parsed[0]
+        host = parsed[1]
+        port = self.ports[protocol]
+        if ':' in host:
+            host, port = host.split(':')
+            port = int(port)
+        rest = urlparse.urlunparse(('', '') + parsed[2:])
+        if not rest:
+            rest = rest + '/'
+        class_ = self.protocols[protocol]
+        headers = self.getAllHeaders().copy()
+        if 'host' not in headers:
+            headers['host'] = host
+        self.content.seek(0, 0)
+        s = self.content.read()
+        clientFactory = class_(self.method, rest, self.clientproto, headers,
+                               s, self)
+        if self.config.enablessl:
+            ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
+            self.reactor.connectSSL(host, port, clientFactory, ctx)
+        else:
+            self.reactor.connectTCP(host, port, clientFactory)
+        return NOT_DONE_YET
+
+class MyProxy(proxy.Proxy):
+    requestFactory = MyProxyRequest
+
 
 class HttpInventoryProxySingleton(Singleton):
     count_call = 0
@@ -59,45 +148,3 @@ class HttpInventoryProxySingleton(Singleton):
                 return False
         else:
             return False
-
-class HttpInventoryProxy(BaseHTTPServer.BaseHTTPRequestHandler):
-    def __init__(self, *args):
-        self.logger = logging.getLogger()
-        from pulse2.proxyssl.config import Pulse2InventoryProxyConfig        
-        self.config = Pulse2InventoryProxyConfig()
-        self.singleton = HttpInventoryProxySingleton()
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
-
-    def log_message(self, format, *args):
-        self.logger.info(format % args)
-
-    def send(self, data):
-        if self.config.enablessl:
-            h = HTTPSConnection(self.config.server, self.config.port)
-            h.key_file = self.config.key_file
-            h.cert_file = self.config.cert_file
-        else:
-            h = HTTPConnection(self.config.server, self.config.port)
-        try:
-            h.request('POST', self.config.path, data, {'content-type':'application/x-compress'})
-        except socket.error, e:
-            if e.args == (111, 'Connection refused'):
-                print "Connection refused"
-            else:
-                print e.args
-            sys.exit(-1)
-                
-        return h.getresponse()
-
-    def do_POST(self):
-        content = self.rfile.read(int(self.headers['Content-Length']))
-        cont = [content, self.headers['Content-Type']]
-        resp = self.send(content)
-        self.send_response(resp.status)
-        self.end_headers()
-        self.wfile.write(resp.read())
-        if not self.config.pooling:
-            self.singleton.count_call += 1
-            if self.singleton.count_call > 1:
-                self.singleton.halt()
-

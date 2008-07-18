@@ -37,9 +37,11 @@ class Pulse2InventoryProxyConfig(Singleton):
     command_name = "C:\Program Files\OCS Inventory Agent\OCSInventory.exe"
     command_attr = ('/SERVER:127.0.0.1', '/PNUM:9999')
     enablessl = True
+    verifypeer = False
     key_file = "conf/key/privkey.pem"
     cert_file = "conf/key/cacert.pem"
     pooling = False
+    pooling_time = 600
     flag = ('Software\\Mandriva\\Inventory\\Client', 'do_inventory')
     flag_type = 'reg'
 
@@ -57,9 +59,9 @@ class Pulse2InventoryProxyConfig(Singleton):
         if self.cp.has_option('main', 'server'):
             self.server = self.cp.get('main', 'server')
         if self.cp.has_option('main', 'port'):
-            self.port = self.cp.get('main', 'port')
+            self.port = self.cp.getint('main', 'port')
         if self.cp.has_option('main', 'local_port'):
-            self.port = self.cp.get('main', 'local_port')
+            self.port = self.cp.getint('main', 'local_port')
         if self.cp.has_option('main', 'path'):
             self.path = self.cp.get('main', 'path')
         if self.cp.has_option('main', 'command_name'):
@@ -68,6 +70,8 @@ class Pulse2InventoryProxyConfig(Singleton):
             self.command_attr = self.cp.get('main', 'command_attr').split(' ')
         if self.cp.has_option('main', 'enablessl'):
             self.enablessl = self.cp.getboolean('main', 'enablessl')
+        if self.cp.has_option('main', 'verifypeer'):
+            self.verifypeer = self.cp.getboolean('main', 'verifypeer')
         if self.cp.has_option('main', 'key_file'):
             self.key_file = self.cp.get('main', 'key_file')
         if self.cp.has_option('main', 'cert_file'):
@@ -79,7 +83,8 @@ class Pulse2InventoryProxyConfig(Singleton):
             else:
                 self.logger.error("don't know this type of pooling flag")
                 sys.exit(-1)
-                
+            if self.cp.has_option('pooling', 'time'):
+                self.pooling_time = self.cp.getint('pooling', 'time')
             if self.cp.has_option('pooling', 'path'):
                 # TODO if path is given with '/' convert, get the last part to put is as name, remove the begining is HKLM
                 path = re.sub("/", "\\\\", self.cp.get('pooling', 'path')).split('\\')

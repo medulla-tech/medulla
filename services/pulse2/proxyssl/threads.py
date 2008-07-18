@@ -24,37 +24,42 @@
 
 import logging
 
-import BaseHTTPServer
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from httplib import HTTPSConnection
-import threading
-from threading import Thread
-import twisted.internet.utils
-
+from twisted.internet import utils, reactor
 from pulse2.proxyssl.utilities import Singleton
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
-class LaunchInv(Thread):
-    def __init__(self, config):
+class RunInventory(Singleton):
+
+    """
+    Little helper class that runs the inventory agent
+    """
+
+    def setup(self, config):
         self.config = config
-        Thread.__init__(self)
+        self.logger = logging.getLogger()
+        from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxySingleton
+        self.singleton = HttpInventoryProxySingleton()
+
+    def maybeStartLoop(self):
+        if self.config.pooling:
+            self.logger.debug("Scheduling inventory in %s seconds" % self.config.pooling_time)
+            reactor.callLater(self.config.pooling_time, self.run)
 
     def run(self):
-        twisted.internet.utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
-
-class ServerInv(Thread):
-    
-    def __init__(self, config):
-        self.config = config
-        Thread.__init__(self)
-
-    def run(self):
-        from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxy, HttpInventoryProxySingleton
-        httpd = HTTPServer(('', self.config.local_port), HttpInventoryProxy)
-        if self.config.pooling == True:
-            httpd.serve_forever()
+        """
+        Start an OCS inventory, and loop according to the configuration
+        """
+        if self.singleton.check_flag():
+            self.logger.debug("Starting an inventory")
+            d = utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
+            d.addCallbacks(self.onSuccess, self.onError)
         else:
-            while not HttpInventoryProxySingleton().want_quit:
-                httpd.handle_request()
+            print "hop"
+            self.logger.debug("Flag not set, not starting an inventory")
+        self.maybeStartLoop()
 
+    def onSuccess(result):
+        self.logger.debug("Inventory done")
 
+    def onError(reason):
+        self.logger.error("Error while doing inventory: %s" % str(reason))
