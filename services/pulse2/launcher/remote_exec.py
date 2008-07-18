@@ -38,6 +38,8 @@ import twisted.web.xmlrpc
 import pulse2.launcher.process_control
 import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
+from pulse2.launcher.xmlrpc import getProxy
+
 
 SEPARATOR = u'·'
 
@@ -444,7 +446,7 @@ def __cb_async_process_end(shprocess):
     id = shprocess.id
 
     scheduler = pulse2.launcher.utils.getScheduler()
-    mydeffered = twisted.web.xmlrpc.Proxy(scheduler).callRemote(
+    mydeffered = getProxy(scheduler).callRemote(
         shprocess.returnxmlrpcfunc,
         LauncherConfig().name,
         (exitcode, stdout, stderr),
