@@ -163,6 +163,8 @@ def setDefaultClientOptions(client):
         sshoptions = ['/usr/bin/ssh', '-o', 'IdentityFile=%s' % client['cert']]
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
+        if LauncherConfig().rsync_partial:
+            client['proto_args'] += ['--partial']
         for option in LauncherConfig().ssh_options:
             sshoptions += ['-o', option]
         client['proto_args'] += ['--rsh', ' '.join(sshoptions)]

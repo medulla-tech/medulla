@@ -100,6 +100,9 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
     wget_options = ''
     wget_check_certs = True
 
+    # rsync stuff
+    rsync_partial = True
+
     # launchers
     launchers = {
         'launcher_01': {
@@ -171,6 +174,11 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                 self.wget_options = self.cp.get("wget", "wget_options").split(' ')
             if self.cp.has_option("wget", "check_certs"):
                 self.wget_check_certs = self.cp.getboolean("wget", "check_certs")
+
+        # Parse "rsync" section
+        if self.cp.has_section("rsync"):
+            if self.cp.has_option("rsync", "partial"):
+                self.rsync_partial = self.cp.getboolean("rsync", "partial")
 
         # Parse "daemon" section
         if self.cp.has_section("daemon"):
