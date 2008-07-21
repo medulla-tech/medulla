@@ -63,7 +63,7 @@ def create_method(obj, m):
         try:
             old_m = getattr(obj, '_old_'+m)
             ret = old_m(self)
-        except SQLError, e:
+        except exceptions.SQLError, e:
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
                 logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
                 for i in range(0, NB_DB_CONN_TRY):
