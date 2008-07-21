@@ -54,7 +54,7 @@ if (isset($_POST["bconfirm"])) {
     $pid = $_POST['pid'];
     $mode = $_POST['copy_mode'];
     $prefix = '';
-    if (isset($_POST['gid'])) {
+    if (strlen($gid)) {
         $prefix = 'group';
     }
 
