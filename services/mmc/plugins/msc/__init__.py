@@ -179,7 +179,7 @@ class RpcProxy(RpcProxyI):
     ##
     def add_command_quick(self, cmd, target, desc, gid = None):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid))
+        return MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
 
     def add_command_api(self, pid, target, params, p_api, mode, gid = None):
         ctx = self.currentContext

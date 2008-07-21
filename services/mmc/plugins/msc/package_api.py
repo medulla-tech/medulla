@@ -168,7 +168,7 @@ class SendPackageCommand:
         return self.deferred.callback([])
 
     def sendResult(self, id_command = -1):
-        self.deferred.callback(id_command)
+        return self.deferred.callback(id_command)
 
     def send(self):
         d = PackageA(self.p_api).getPackageCommand(self.pid)
@@ -238,7 +238,7 @@ class SendPackageCommand:
     
         files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
     
-        id_command = MscDatabase().addCommand(  # TODO: refactor to get less args
+        MscDatabase().addCommand(  # TODO: refactor to get less args
             start_file,
             parameters,
             files,
@@ -258,8 +258,7 @@ class SendPackageCommand:
             start_inventory,
             0,
             maxbw
-        )
-        return self.sendResult(id_command)
+        ).addCallback(self.sendResult)
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:

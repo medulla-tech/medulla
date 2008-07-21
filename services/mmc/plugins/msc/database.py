@@ -29,6 +29,8 @@ import os.path
 # SqlAlchemy
 from sqlalchemy import *
 
+from twisted.internet import defer
+
 # MMC modules
 from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.base.computers import ComputerManager
@@ -321,6 +323,8 @@ class MscDatabase(Singleton):
         """
         Create a row in the target table.
 
+        Return a Deferred object resulting to the target id
+
         @param target: couple made of (uuid, hostname)
         @type target: list
 
@@ -330,6 +334,34 @@ class MscDatabase(Singleton):
         @param group_id: id of the machine group that requires this target row
         @type group_id: str
         """
+        mirror = None
+        fallback = None
+        targetUri = None
+        
+        def cbMirror(result):
+            d2 = MirrorApi().getFallbackMirror({"name": targetName, "uuid": targetUuid})
+            d2.addCallback(cbFallback, result)
+            return d2
+
+        def cbFallback(result, mirror):
+            fallback = result
+            uri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
+                '||' + \
+                '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
+            return defer.succeed(addtarget(uri))
+
+        def addtarget(targetUri):
+            # TODO: add path
+            return MscDatabase().addTarget(
+                targetName,
+                targetUuid,
+                targetIp,
+                targetMac,
+                targetUri,
+                group_id
+                ) # TODO change mirrors...
+            
+        
         targetUuid = target[0]
         targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
@@ -360,26 +392,13 @@ class MscDatabase(Singleton):
 
         # compute URI depending on selected mode
         if mode == 'push_pull':
-            mirror = MirrorApi().getMirror({"name": targetName, "uuid": targetUuid})
-            fallback = MirrorApi().getFallbackMirror({"name": targetName, "uuid": targetUuid})
-            targetUri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
-                '||' + \
-                '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
-                # FIXME: not sure we should cast to srt ...
+            d = MirrorApi().getMirror({"name": targetName, "uuid": targetUuid})
+            d.addCallback(cbMirror)
+            return d
         elif mode == 'push':
             targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
-        else:
-            targetUri = None
-
-        # TODO: add path
-        return MscDatabase().addTarget(
-            targetName,
-            targetUuid,
-            targetIp,
-            targetMac,
-            targetUri,
-            group_id
-        ) # TODO change mirrors...
+            
+        return defer.succeed(addtarget(targetUri))
 
     def addCommand(self,
                 start_file,
@@ -402,32 +421,42 @@ class MscDatabase(Singleton):
                 repeat = 0,
                 maxbw = 0
             ):
-        """ Main func to inject a new command in our MSC database """
+        """
+        Main func to inject a new command in our MSC database
 
+        Return a Deferred object resulting to the command id
+        """
+
+        def cbCreateTarget(target):
+            if target:
+                if type(target[0]) == list:
+                    t = target.pop()
+                else:
+                    t = target
+                    target = None
+                d2 = self.createTarget(t, mode, group_id)
+                d2.addCallback(cbProcessCommand, target)
+                return d2
+            else:
+                self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))                
+                d.callback(cmd_id)
+
+        def cbProcessCommand(target_id, target):
+            t = session.query(Target).get(target_id)
+            self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
+            self.blacklistTargetHostname(t, session)
+            cbCreateTarget(target)
+                        
         if type(files) == list:
             files = "\n".join(files)
 
         # create (and save) the command itself
         cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw)
 
-        # create the corresponding target and commands_on_host
         session = create_session()
-        if type(target[0]) == list:
-            for t in target:
-                target_id = self.createTarget(t, mode, group_id)
-                t = session.query(Target).get(target_id)
-                self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
-                self.blacklistTargetHostname(t, session)
-        else:
-            target_id = self.createTarget(target, mode, group_id)
-            target = session.query(Target).get(target_id)
-            self.createCommandsOnHost(cmd_id, target.getId(), target.getShortName(), max_connection_attempt, start_date, end_date)
-            self.blacklistTargetHostname(target, session)
-
-        # log
-        self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))
-        return cmd_id
-
+        d = defer.Deferred()
+        cbCreateTarget(target)
+        return d
 
     def blacklistTargetHostname(self, myTarget, session = create_session()):
         # Apply host name blacklist
@@ -446,6 +475,8 @@ class MscDatabase(Singleton):
         """
         Schedule a command for immediate execution into database.
         Multiple machines can be specified in the targets parameter.
+
+        Return a Deferred object resulting to the command id.
 
         @param cmd: command to start (e.g. '/sbin/shutdown -r now')
         @type cmd: str
