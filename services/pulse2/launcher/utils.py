@@ -145,6 +145,8 @@ def setDefaultClientOptions(client):
             client['proto_args'] = ['-nv']
         if not LauncherConfig().wget_check_certs:
             client['proto_args'] += ['--no-check-certificate']
+        if LauncherConfig().wget_continue:
+            client['proto_args'] += ['-c']
         if LauncherConfig().wget_options != '':
             client['proto_args'] += LauncherConfig().wget_options
         if 'maxbw' in client: # FIXME: handle low values of BWLimit (see mechanism below for rsync)
