@@ -84,7 +84,7 @@ if (isset($_POST["badvanced"])) {
         $params[$param] = $_POST[$param];
     }
     $prefix = '';
-    if (isset($_POST['gid'])) {
+    if (strlen($_POST["gid"])) {
         $prefix = 'group';
     }
 
