@@ -133,17 +133,32 @@ class HttpInventoryProxySingleton(Singleton):
     want_quit = False
     def initialise(self, config):
         self.config = config
+        self.logger = logging.getLogger()
 
     def halt(self):
         self.want_quit = True
 
     def check_flag(self):
         if self.config.flag_type == 'reg':
+            self.logger.debug("Checking for flag in registry")
             try:
                 key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0])
-                (hk_do_inv,typeval) = QueryValueEx(key, self.config.flag[1])
+                hk_do_inv, typeval  = QueryValueEx(key, self.config.flag[1])
                 return hk_do_inv == 'yes'
             except WindowsError, e:
+                self.logger.debug(str(e))
                 return False
         else:
             return False
+
+    def clean_flag(self):
+        self.logger.debug("Removing registry key")
+        try:
+            key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0], 0, KEY_SET_VALUE)
+            DeleteValue(key, self.config.flag[1])
+            CloseKey(key)
+            self.logger.debug("Registry key removed")
+        except Exception, e:
+            self.logger.error("Can't delete registry key: %s", str(e))
+            
+        

@@ -50,6 +50,7 @@ class RunInventory(Singleton):
         Start an OCS inventory, and loop according to the configuration
         """
         if self.singleton.check_flag():
+            self.singleton.clean_flag()
             self.logger.debug("Starting an inventory")
             d = utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
             d.addCallbacks(self.onSuccess, self.onError)
