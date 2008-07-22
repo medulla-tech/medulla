@@ -55,7 +55,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
     print "<hr/><table><form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
         "<tr><td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value='$name'/></td>".
         "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
-        "<td>"._T("it should be", "dyngroup")." <select name='visible'><option value='2'".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+        "<td>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
     if ($r->countPart() > 1) {
         drawBoolEquation($bool);
     }
