@@ -28,13 +28,23 @@
 import twisted.web.html
 import twisted.web.xmlrpc
 import logging
+import os
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
 
 class PackageApiPut(PackageApiGet):
     type = 'PackageApiPut'
+    
+    def __init__(self, mp, name = '', tmp_input_dir = ''):
+        PackageApiGet.__init__(self, mp, name)
+        self.tmp_input_dir = tmp_input_dir
 
+    def xmlrpc_getTemporaryFiles(self):
+        if os.path.exists(self.tmp_input_dir)
+            return os.listdir(self.tmp_input_dir)
+        return []
+    
     def xmlrpc_putPackageDetail(self, package):
         pa = Package()
         pa.fromH(package)
