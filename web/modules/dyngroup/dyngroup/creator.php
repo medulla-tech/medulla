@@ -162,14 +162,21 @@ if (!$request->isEmpty()) {
 
 // display action buttons in the bottom
 //TODO put in class
-if (!$request->isEmpty())  {
+if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<hr/>";
     print "<table>";
-    print "<tr><td><a href='".
-        urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS())).
-        "'>"._T("Go to save step", "dyngroup")."</a></td><td><a href='".
-        urlStr("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$request->toS())).
-        "'>"._T("Display content", "dyngroup")."</a></td></tr>";
+    print "<tr><td>";
+    
+    $b = new Button('base', 'computers', 'save');
+    $url = urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS()));
+    print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
+
+    print "</td><td>";
+    $b = new Button('base', 'computers', 'tmpdisplay');
+    $url = urlStr("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$request->toS()));
+    print $b->getOnClickButton(_T("Display content", "dyngroup"), $url, "btnSecondary");
+    
+    print "</td></tr>";
     print "</table>";
 }
 ?>
