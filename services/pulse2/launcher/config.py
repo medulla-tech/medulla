@@ -119,12 +119,19 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         }
     }
 
-    def setoption(self, section, key, attrib):
-        if self.cp.has_option(section, key):
-            setattr(self, attrib, self.cp.get(section, key))
-            logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
-        else:
-            logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+    def setoption(self, section, key, attrib, type = 'str'):
+        if type == 'str':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.get(section, key))
+                logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+        elif type == 'bool':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getboolean(section, key))
+                logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
 
     def setup(self, config_file, name = None):
         # Load configuration file
@@ -201,8 +208,8 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         # Parse "scheduler" section
         self.setoption('scheduler', 'awake_time', 'awake_time')
         self.awake_time=int(self.awake_time)
-        self.setoption('scheduler', 'defer_results', 'defer_results')
-        self.setoption('scheduler', 'enablessl', 'scheduler_enablessl')
+        self.setoption('scheduler', 'defer_results', 'defer_results', 'bool')
+        self.setoption('scheduler', 'enablessl', 'scheduler_enablessl', 'bool')
         self.setoption('scheduler', 'host', 'scheduler_host')
         self.setoption('scheduler', 'password', 'scheduler_password')
         self.setoption('scheduler', 'port', 'scheduler_port')
