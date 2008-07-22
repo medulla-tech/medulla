@@ -34,6 +34,7 @@ $base = &$MMCApp->getModule('base');
 $submod = & $base->getSubmod('computers');
 
 $page = new Page("computers_list", _T("Computers list", "pulse2"));
+$page->setOptions(array("visible"=>False));
 $page->setFile("modules/pulse2/pulse2/computers_list.php");
 $submod->addPage($page);
 
