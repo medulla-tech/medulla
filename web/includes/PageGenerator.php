@@ -1812,36 +1812,88 @@ class Form extends HtmlContainer {
         $str .= "\n</form>\n";
         return $str;
     }
-
-    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
-        return "<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
-    }
-
+    
     function addButton($name, $value) {
-        $this->buttons[] = $this->getButtonString($name, $value);
-    }
-
-    function addOnClickButton($text, $url) {
-        $this->buttons[] = $this->getButtonString("onclick", $text, $klass = "btnPrimary", $extra = "onclick=\"location.href='" . $url . "';\"", $type = "button");
+        $b = new Button();
+        $this->buttons[] = $b->getButtonString($name, $value);
     }
 
     function addValidateButton($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"));
+        $b = new Button();
+        $this->buttons[] = $b->getValidateButtonString($name);
     }
 
     function addCancelButton($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary");
+        $b = new Button();
+        $this->buttons[] = $b->getCancelButtonString($name, "btnSecondary");
     }
 
     function addExpertButton($name, $value) {
         $d = new DivExpertMode();
-        $this->buttons[] = $d->begin() . $this->getButtonString($name, $value) . $d->end();
+        $b = new Button();
+        $this->buttons[] = $d->begin() . $b->getButtonString($name, $value) . $d->end();
     }
 
     function addSummary($msg) {
         $this->summary = $msg;
     }
 
+    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        $b = new Button();
+        return $b->getButtonString($name, $value, $klass, $extra, $type);
+    }
+    
+    function addOnClickButton($text, $url) {
+        $b = new Button();
+        $this->buttons[] = $b->getOnClickButton($text, $url);
+    }
+}
+
+class Button {
+    function Button($module = null, $submod = null, $action = null) { # TODO also verify ACL on tabs
+        if ($module == null) {
+            $this->module = $_GET["module"];
+        } else {
+            $this->module = $module;
+        }
+        if ($submod == null) {
+            $this->submod = $_GET["submod"];
+        } else {
+            $this->submod = $submod;
+        }
+        if ($action == null) {
+            $this->action = $_GET["action"];
+        } else {
+            $this->action = $action;
+        }
+    }
+
+    function getButtonString($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        if (hasCorrectAcl($this->module,$this->submod,$this->action)) {
+            return $this->getButtonStringWithRight($name, $value, $klass, $extra, $type);
+        } else {
+            return $this->getButtonStringWithNoRight($name, $value, $klass, $extra, $type);
+        }
+    }
+                                                    
+    function getButtonStringWithRight($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        return "<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
+    }
+    function getButtonStringWithNoRight($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        return "<input disabled type=\"$type\" name=\"$name\" value=\"$value\" class=\"btnDisabled\" $extra />";
+    }
+
+    function getValidateButtonString($name, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        return $this->getButtonString($name, _("Confirm"));
+    }
+
+    function getCancelButtonString($name, $klass = "btnPrimary", $extra = "", $type = "submit") {
+        return $this->getButtonString($name, _("Cancel"));
+    }
+
+    function getOnClickButton($text, $url, $klass = "btnPrimary", $extra = "", $type = "button") {
+        return $this->getButtonString("onclick", $text, $klass, $extra = "onclick=\"location.href='" . $url . "';\"", $type);
+    }
 }
 
 class ValidatingForm extends Form {
