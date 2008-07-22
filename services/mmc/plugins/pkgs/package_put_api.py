@@ -32,10 +32,17 @@ class PackagePutA:
         # FIXME: still needed ?
         self.initialized_failed = False
 
-    def onError(self, error, funcname, args, value = []):
+    def onError(self, error, funcname, args = '', value = []):
         self.logger.warn("PackagePutA:%s %s has failed: %s" % (funcname, args, error))
         return value
                     
+    def getTemporaryFiles(self):
+        if self.initialized_failed:
+            return []
+        d = self.ppaserver.callRemote("getTemporaryFiles")
+        d.addErrback(self.onError, "getTemporaryFiles")
+        return d
+        
     def putPackageDetail(self, package):
         if self.initialized_failed:
             return -1
