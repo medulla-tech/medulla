@@ -62,7 +62,10 @@ class UserPackageApi(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_getUserPackageApi(self, u):
         user = User().from_h(u)
         if not self.assign.has_key(user.uuid):
-            self.assign[user.uuid] = map(lambda x: x.toH(), self.mirrors['package_api_put'])
+            if self.mirrors.has_key('package_api_put'):
+                self.assign[user.uuid] = map(lambda x: x.toH(), self.mirrors['package_api_put'])
+            else:
+                self.assign[user.uuid] = []
 #            {
 #                'READ'=>@mirrors['package_api_put'],
 #                'WRITE'=>@mirrors['package_api_put'],
