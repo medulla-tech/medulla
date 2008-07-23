@@ -4,6 +4,7 @@ import os
 import logging
 
 import xmlrpclib
+from twisted.web.xmlrpc import Proxy
 
 from mmc.support.mmctools import Singleton
 import mmc.plugins.pkgs.config
@@ -24,11 +25,13 @@ class PackagePutA:
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.logger.debug('PackagePutA will connect to %s' % (self.server_addr))
 
-        self.ppaserver = XmlrpcSslProxy(self.server_addr)
         self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
         if self.config.upaa_verifypeer:
+            self.ppaserver = XmlrpcSslProxy(self.server_addr)
             self.sslctx = makeSSLContext(self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert, False)
             self.ppaserver.setSSLClientContext(self.sslctx)
+        else:
+            self.ppaserver = Proxy(self.server_addr)
         # FIXME: still needed ?
         self.initialized_failed = False
 

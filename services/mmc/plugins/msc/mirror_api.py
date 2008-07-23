@@ -4,6 +4,7 @@ import os
 import logging
 
 import xmlrpclib
+from twisted.web.xmlrpc import Proxy
 
 import mmc.plugins.msc
 from mmc.support.mmctools import Singleton
@@ -31,10 +32,12 @@ class MirrorApi(Singleton):
         self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
         self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
 
-        self.maserver = XmlrpcSslProxy(self.server_addr)
         if self.config.ma_verifypeer:
+            self.maserver = XmlrpcSslProxy(self.server_addr)
             self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)
             self.maserver.setSSLClientContext(self.sslctx)
+        else:
+            self.maserver = Proxy(self.server_addr)
         # FIXME: still needed ?
         self.initialized_failed = False
 

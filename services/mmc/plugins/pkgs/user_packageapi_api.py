@@ -4,6 +4,7 @@ import os
 import logging
 
 import xmlrpclib
+from twisted.web.xmlrpc import Proxy
 
 from mmc.support.mmctools import Singleton
 import mmc.plugins.pkgs.config
@@ -29,10 +30,12 @@ class UserPackageApiApi(Singleton):
         self.server_addr += self.config.upaa_server+':'+str(self.config.upaa_port) + self.config.upaa_mountpoint
         self.logger.debug('UserPackageApiApi will connect to %s' % (self.server_addr))
 
-        self.upaaserver = XmlrpcSslProxy(self.server_addr)
         if self.config.upaa_verifypeer:
+            self.upaaserver = XmlrpcSslProxy(self.server_addr)
             self.sslctx = makeSSLContext(self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert, False)
             self.upaaserver.setSSLClientContext(self.sslctx)
+        else:
+            self.upaaserver = Proxy(self.server_addr)
         # FIXME: still needed ?
         self.initialized_failed = False
 
