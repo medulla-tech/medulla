@@ -73,9 +73,9 @@ class Pulse2InventoryProxyConfig(Singleton):
             self.enablessl = self.cp.getboolean('main', 'enablessl')
         if self.cp.has_option('main', 'verifypeer'):
             self.verifypeer = self.cp.getboolean('main', 'verifypeer')
-        if self.cp.has_option('main', 'key_file'):
+        if self.cp.has_option('main', 'localcert'):
             self.key_file= self.cp.get('main', 'localcert')
-        if self.cp.has_option('main', 'cert_file'):
+        if self.cp.has_option('main', 'cacert'):
             self.cert_file = self.cp.get('main', 'cacert')
         if self.cp.has_option('pooling', 'activate') and self.cp.getboolean('pooling', 'activate'):
             self.pooling = True
