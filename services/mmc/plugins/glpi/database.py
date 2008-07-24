@@ -22,6 +22,7 @@
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
+from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
 from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
@@ -61,47 +62,6 @@ for m in ['first', 'count', 'all']:
     except AttributeError:
         setattr(Query, '_old_'+m, getattr(Query, m))
         setattr(Query, m, create_method(m))
-
-class GlpiConfig(PluginConfig):
-    def readConf(self):
-        PluginConfig.readConf(self)
-        self.dbdriver = self.get("main", "dbdriver")
-        self.dbhost = self.get("main", "dbhost")
-        self.dbname = self.get("main", "dbname")
-        self.dbuser = self.get("main", "dbuser")
-        self.dbpasswd = self.getpassword("main", "dbpasswd")
-
-        if self.has_option("main", "dbsslenable"):
-            self.dbsslenable = self.getboolean("main", "dbsslenable")
-            if self.dbsslenable:
-                self.dbsslca = self.get("main", "dbsslca")
-                self.dbsslcert = self.get("main", "dbsslcert")
-                self.dbsslkey = self.get("main", "dbsslkey")
-
-        self.disable = self.getint("main", "disable")
-        self.displayLocalisationBar = self.getboolean("main", "localisation")
-        try:
-            self.activeProfiles = self.get('main', 'active_profiles').split(' ')
-        except NoOptionError:
-            # put the GLPI default values for actives profiles
-            self.activeProfiles = ['admin', 'normal', 'post-only', 'super-admin']
-        for option in ["dbport", "dbpoolrecycle"]:
-            try:
-                self.__dict__[option] = self.getint("main", option)
-            except NoOptionError:
-                pass
-        try:
-            filter_on = self.get("main", "filter_on")
-            self.filter_on = map(lambda x:x.split('='), filter_on.split(' '))
-            logging.getLogger().debug("will filter machines on %s" % (str(self.filter_on)))
-        except:
-            self.filter_on = None
-
-    def setDefault(self):
-        PluginConfig.setDefault(self)
-        self.dbpoolrecycle = 60
-        self.dbport = None
-        self.dbsslenable = False
 
 class Glpi(DyngroupDatabaseHelper):
     """

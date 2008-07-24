@@ -22,7 +22,8 @@
 from mmc.support.mmctools import xmlrpcCleanup, RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
-from mmc.plugins.glpi.database import GlpiConfig, Glpi
+from mmc.plugins.glpi.config import GlpiConfig
+from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from mmc.plugins.pulse2.location import ComputerLocationManager

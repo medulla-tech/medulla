@@ -20,7 +20,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from mmc.plugins.base import ComputerI
-from mmc.plugins.glpi.database import GlpiConfig, Glpi
+from mmc.plugins.glpi.config import GlpiConfig
+from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
 import logging
 import exceptions
@@ -28,7 +29,7 @@ import exceptions
 class GlpiComputers(ComputerI):
     def __init__(self, conffile = None):
         self.logger = logging.getLogger()
-        self.config = GlpiConfig("glpi")
+        self.config = GlpiConfig("glpi", conffile)
         self.glpi = Glpi()
 
     def getComputer(self, ctx, filt = None):

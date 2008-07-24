@@ -3,12 +3,13 @@ import re
 import logging
 from mmc.support.config import PluginConfig
 from mmc.plugins.glpi.database import Glpi
+from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 import mmc
 
 from ConfigParser import NoOptionError
 
 def activate():
-    conf = GlpiQueryManagerConfig("glpi", None)
+    conf = GlpiQueryManagerConfig("glpi")
     if not mmc.plugins.glpi.activate():
         return False
 
@@ -34,15 +35,6 @@ def query(ctx, criterion, value):
     elif criterion == 'SOFTWARE':
         machines = map(lambda x: x.name, Glpi().getMachineBySoftware(ctx, value))
     return [machines, True]
-
-class GlpiQueryManagerConfig(PluginConfig):
-    def readConf(self):
-        PluginConfig.readConf(self)
-        self.activate = False
-        try:
-            self.activate = self.getboolean("querymanager", "activate")
-        except NoOptionError:
-            self.activate = False
 
 def getAllOs(value = ''):
     return map(lambda x:x.name, Glpi().getAllOs(value))
