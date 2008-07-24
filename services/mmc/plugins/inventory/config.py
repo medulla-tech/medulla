@@ -111,25 +111,32 @@ class InventoryConfig(PluginConfig):
             self.content = {}
 
         if self.has_option('querymanager', 'list'):
-            # Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace
+            simple = self.get('querymanager', 'list')
             self.list = {}
-            for l in self.get('querymanager', 'list').split('||'):
-                self.list[l] = ['string'] # TODO also int...
+            if simple != '':
+                # Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace
+                for l in simple.split('||'):
+                    self.list[l] = ['string'] # TODO also int...
 
         if self.has_option('querymanager', 'double'):
-            # Software/Products::Software/ProductName##Software/ProductVersion
+            double = self.get('querymanager', 'double')
             self.double = {}
-            for l in self.get('querymanager', 'double').split('||'):
-                name, vals = l.split('::')
-                val1, val2 = vals.split('##')
-                self.double[name] = [[val1, 'string'], [val2, 'string']]
+            if double != '':
+                # Software/Products::Software/ProductName##Software/ProductVersion
+                for l in double.split('||'):
+                    name, vals = l.split('::')
+                    val1, val2 = vals.split('##')
+                    self.double[name] = [[val1, 'string'], [val2, 'string']]
                 
         if self.has_option('querymanager', 'halfstatic'):
-            # Registry/Value::Path##DisplayName
-            for l in self.get('querymanager', 'halfstatic').split('||'):
-                name, vals = l.split('::')
-                k, v = vals.split('##')
-                self.halfstatic[name] = ['string', k, v]
+            halfstatic = self.get('querymanager', 'halfstatic')
+            self.halfstatic = {}
+            if halfstatic != '':
+                # Registry/Value::Path##DisplayName
+                for l in halfstatic.split('||'):
+                    name, vals = l.split('::')
+                    k, v = vals.split('##')
+                    self.halfstatic[name] = ['string', k, v]
 
 
 def desArrayIfUnic(x):
