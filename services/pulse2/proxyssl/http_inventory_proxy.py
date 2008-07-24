@@ -69,16 +69,13 @@ def makeSSLContext(verifypeer, cacert, localcert, log = False):
         if log:
             logger.debug("CA certificate informations: %s" % cacert)
             logger.debug(caCertificate.inspect())
-            print caCertificate.inspect()
             logger.debug("Inventory server certificate: %s" % localcert)
-            print localCertificate.inspect()
+            logger.debug(localCertificate.inspect())
         return ctx
     else:
         if log:
             logger.warning("SSL enabled, but peer verification is disabled.")
-        ctx = SSL.Context(SSL.SSLv23_METHOD)
-        ctx.use_privatekey_file(localcert)
-        ctx.use_certificate_file(cacert)
+        ctx = ssl.DefaultOpenSSLContextFactory(localcert, cacert)
     return ctx
 
 
@@ -118,8 +115,12 @@ class MyProxyRequest(proxy.ProxyRequest):
         clientFactory = class_(self.method, rest, self.clientproto, headers,
                                s, self)
         if self.config.enablessl:
-            ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
-            self.reactor.connectSSL(host, port, clientFactory, ctx)
+            try:
+                ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
+                self.reactor.connectSSL(host, port, clientFactory, ctx)
+            except Exception, e:
+                logging.getLogger().error(str(e))
+                raise
         else:
             self.reactor.connectTCP(host, port, clientFactory)
         return NOT_DONE_YET
