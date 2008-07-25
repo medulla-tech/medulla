@@ -174,6 +174,20 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().delmembers_to_group(ctx, id, uuids))
 
+    def importmembers_to_group(self, id, elt, values):
+        ctx = self.currentContext               
+        # get machines uuids from values
+        request, bool = forgeRequest(elt, values)
+        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'request':request, 'equ_bool':bool})
+        # put in the wanted format
+        uuids = {}
+        for m in machines:
+            uuid = m[1]['objectUUID'][0]
+            hostname = m[1]['cn'][0]
+            uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
+        # insert uuid in group with addmembers_to_group
+        return self.addmembers_to_group(id, uuids)
+
     def share_with(self, id):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().share_with(ctx, id))
@@ -199,6 +213,10 @@ class RpcProxy(RpcProxyI):
         if not isDynamicEnable():
             return False
         return xmlrpcCleanup(queryManager.getPossiblesModules(ctx))
+    
+    def getPossiblesCriterionsInMainModule(self):
+        moduleName = ComputerManager().main
+        return self.getPossiblesCriterionsInModule(moduleName)
     
     def getPossiblesCriterionsInModule(self, moduleName):
         ctx = self.currentContext
@@ -270,5 +288,20 @@ def replyToQueryLen(ctx, query, bool = None):
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
     else:
         return xmlrpcCleanup(QueryManager().replyToQueryLen(ctx, query, bool))
+
+def forgeRequest(elt, values):
+    i = 1
+    module = ComputerManager().main
+    crit = elt
+    requests = []
+    bools = []
+    for val in values:
+        print val
+        requests.append("%i==%s::%s==%s" % (i, module, crit, val))
+        bools.append(str(i))
+        i += 1
+    request = '||'.join(requests)
+    bools = "OR("+",".join(bools)+")"
+    return (request, bools)
 
 
