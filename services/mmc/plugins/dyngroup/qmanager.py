@@ -86,7 +86,7 @@ class QueryManager(Singleton):
         if len(ret) == 3:
             if len(value) < ret[2]:
                 return [ret[0], []]
-        return [ret[0], ret[1](value)]
+        return [ret[0], ret[1](ctx, value)]
 
     def replyToQuery(self, ctx, query, bool = None, min = 0, max = 10):
         return self._replyToQuery(ctx, query, bool)[int(min):int(max)]
@@ -94,10 +94,30 @@ class QueryManager(Singleton):
     def replyToQueryLen(self, ctx, query, bool = None):
         return len(self._replyToQuery(ctx, query, bool))
         
+    def __recursive_query(self, ctx, query):
+        op = query[0]
+        ret = []
+        for q in query[1]:
+            if len(q) == 4:
+                qid, module, criterion, value = q
+                val, neg = self._getPluginReplyToQuery(
+                        ctx,
+                        self.queryablePlugins[module],
+                        [criterion, value]
+                )
+            else:
+                ret += [[mmc.plugins.dyngroup.replyToQuery(ctx, q, 0, -1), True]]
+        return (self.__treat_query(op, ret))
+    
     def _replyToQuery(self, ctx, query, bool = None):
+        raise "DON'T USE _replyToQuery!!!"
+        ret = self.__recursive_query(ctx, query)
+        
         values = {}
         values_neg = {}
+
         # TODO does not seems to work...
+        #['AND', [['1', 'dyngroup', 'groupname', 'test']]]
         for qid, module, criterion, value in query:
             val, neg = self._getPluginReplyToQuery(
                 ctx,
