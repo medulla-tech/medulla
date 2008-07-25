@@ -338,8 +338,11 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.debug("### >> table %s, field %s"%(table, field))
         if len(q) > 2:
             self.logger.debug("##### >> semi static name : %s"%(q[2]))
-        partTable = self.table[table]
-        haspartTable = self.table["has" + table]
+        if table == 'Machine':
+            return [self.machine]
+        else:
+            partTable = self.table[table]
+            haspartTable = self.table["has" + table]
         if getInventoryNoms(table) == None:
             return [haspartTable, partTable]
         self.logger.debug("### Nom")
@@ -356,13 +359,15 @@ class Inventory(DyngroupDatabaseHelper):
         table, field = q[0:2]
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
-            partKlass = self.klass[table]
             return and_(
                 self.mapping([None, None, value[0][0], query[3][0].replace('(', '')]),
                 self.mapping([None, None, value[1][0], query[3][1].replace(')', '')])
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
-            partKlass = self.klass[table]
+            if table == 'Machine':
+                partKlass = Machine
+            else:
+                partKlass = self.klass[table]
             value = query[3]
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
@@ -378,7 +383,10 @@ class Inventory(DyngroupDatabaseHelper):
                     return getattr(partKlass.c, field).like(value)
                 return getattr(partKlass.c, field) == value
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
-            partKlass = self.klass[table]
+            if table == 'Machine':
+                partKlass = Machine
+            else:
+                partKlass = self.klass[table]
             value = query[3]
 
             hs = PossibleQueries().possibleQueries('halfstatic')[query[2]]
@@ -519,8 +527,12 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         session = create_session()
-        partKlass = self.klass[table]
-        partTable = self.table[table]
+        if table == 'Machine':
+            partKlass = Machine
+            partTable = self.machine
+        else:
+            partKlass = self.klass[table]
+            partTable = self.table[table]
         
         result = session.query(partKlass).add_column(getattr(partKlass.c, field))
         session.close()
@@ -536,8 +548,12 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         session = create_session()
-        partKlass = self.klass[table]
-        partTable = self.table[table]
+        if table == 'Machine':
+            partKlass = Machine
+            partTable = self.machine
+        else:
+            partKlass = self.klass[table]
+            partTable = self.table[table]
         
         result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%'))
         session.close()
@@ -552,7 +568,10 @@ class Inventory(DyngroupDatabaseHelper):
         return every possible values for a field (field2) in a table, where field1 = value1 and field2 like fuzzy_value
         """
         ret = []
-        partKlass = self.klass[table]
+        if table == 'Machine':
+            partKlass = Machine
+        else:
+            partKlass = self.klass[table]
         session = create_session()
         result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
         result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%'))
@@ -579,8 +598,12 @@ class Inventory(DyngroupDatabaseHelper):
         return unique(ret)
 
     def __getValuesWhereQuery(self, table, field1, value1, field2, session = create_session()):
-        partKlass = self.klass[table]
-        partTable = self.table[table]
+        if table == 'Machine':
+            partKlass = Machine
+            partTable = self.machine
+        else:
+            partKlass = self.klass[table]
+            partTable = self.table[table]
         query = session.query(partKlass).add_column(getattr(partKlass.c, field2))
         filterDone = False
         
