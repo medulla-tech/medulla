@@ -24,6 +24,7 @@ import logging
 from mmc.support.mmctools import Singleton
 from sqlalchemy import *
 from sqlalchemy.exceptions import SQLError
+from mmc.plugins.pulse2.group import ComputerGroupManager
 
 
 # USAGE :
@@ -37,20 +38,20 @@ class DyngroupDatabaseHelper(Singleton):
     def init(self):
         self.logger = logging.getLogger()
 
-    def filter(self, join_query, filt, query, grpby):
+    def filter(self, ctx, join_query, filt, query, grpby):
         query_filter = None
         try:
-            query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, filt['query'])
+            query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:
                 join_query = join_query.join(table)
-        except KeyError:
-            pass
-        except TypeError:
-            pass
+        except KeyError, e:
+            self.logger.error(e)
+        except TypeError, e:
+            self.logger.error(e)
        
         return (join_query, query_filter)
 
-    def __treatQueryLevel(self, query, grpby, join_query, queries, join_tables = [], invert = False):
+    def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = [], invert = False):
         """
         Use recursively by getAllMachines to build the query
         Used in the dyngroup context, to build AND, OR and NOT queries
@@ -58,60 +59,78 @@ class DyngroupDatabaseHelper(Singleton):
         bool = queries[0]
         level = queries[1]
         if bool == 'OR':
-            query_filter, join_tables = self.__treatQueryLevelOR(query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelOR(ctx, query, grpby, join_query, level, join_tables, invert)
         elif bool == 'AND':
-            query_filter, join_tables = self.__treatQueryLevelAND(query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelAND(ctx, query, grpby, join_query, level, join_tables, invert)
         elif bool == 'NOT':
-            query_filter, join_tables = self.__treatQueryLevelNOT(query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelNOT(ctx, query, grpby, join_query, level, join_tables, invert)
         else:
             self.logger.error("Don't know this kind of bool operation : %s" % (bool))
         return (query_filter, join_tables)
 
-    def __treatQueryLevelOR(self, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelOR(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build OR queries
         """
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tab = self.mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on.append(self.mapping(q, invert))
+                if q[1] == 'dyngroup':
+                    join_tab = self.computersTable()
+                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
+                    computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
+                    filter_on.append(self.computersMapping(computers, invert))
+                else:
+                    join_tab = self.mappingTable(q)
+                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
+                    filter_on.append(self.mapping(q, invert))
             else:
-                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
         query_filter = or_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelAND(self, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelAND(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build AND queries
         """
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tab = self.mappingTable(q)
-                join_tables = onlyAddNew(join_tables, join_tab)
-                filter_on_mapping = self.mapping(q, invert)
+                if q[1] == 'dyngroup':
+                    join_tab = self.computersTable()
+                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
+                    computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
+                    filter_on_mapping = self.computersMapping(computers, invert)
+                else:
+                    join_tab = self.mappingTable(q)
+                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
+                    filter_on_mapping = self.mapping(q, invert)
+                    
                 if type(filter_on_mapping) == list:
                     filter_on.extend(filter_on_mapping)
                 else:
                     filter_on.append(filter_on_mapping)
             else:
-                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
         query_filter = and_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelNOT(self, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelNOT(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
         """
         Build NOT queries : it switches the invert flag
         """
         filter_on = []
         for q in queries:
             if len(q) == 4:
-                join_tab = self.mappingTable(q)
-                filt = self.mapping(q, invert)
+                if q[1] == 'dyngroup':
+                    join_tab = self.computersTable()
+                    computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
+                    filt = self.computersMapping(computers, invert)
+                else:
+                    join_tab = self.mappingTable(q)
+                    filt = self.mapping(q, invert)
                 join_q = join_query
                 for table in join_tab:
                     join_q = join_q.join(table)
@@ -120,7 +139,7 @@ class DyngroupDatabaseHelper(Singleton):
                 res = map(lambda x: x[1], query)
                 filter_on.append(not_(grpby.in_(*res)))
             else:
-                query_filter, join_tables = self.__treatQueryLevel(query, grpby, join_query, q, join_tables, not invert)
+                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables, not invert)
                 filter_on.append(query_filter)
         query_filter = and_(*filter_on)
         return (query_filter, join_tables)
@@ -155,7 +174,26 @@ class DyngroupDatabaseHelper(Singleton):
         return the sqlalchemy equation to exec in a select_from()
         """
         raise "mapping has to be defined"
+ 
+    def computersTable(self):
+        """
+        return the computers table mapping
 
+        return the mapped sqlalchemy table for computer
+        """
+        raise "computersTable has to be defined"
+
+    def computersMapping(self, computers, invert = False):
+        """
+        Map the computer object on the good field in the database
+
+        get the list of computers we want to map
+        get a flag saying if we want to map on the value or not to map on the value
+
+        return the sqlalchemy equation to exec in a select_from()
+        """
+        raise "computersMapping has to be defined"
+       
 ############################################
 ## specific code has to be defined 
 ## for these two last method
@@ -194,17 +232,19 @@ class DyngroupDatabaseHelper(Singleton):
 #                return self.software.c.name == query[3]
 
 
-def onlyAddNew(obj, value):
+def onlyAddNew(obj, value, main):
     if type(value) == list:
         for i in value:
             try:
                 obj.index(i)
             except:
-                obj.append(i)
+                if i != main:
+                    obj.append(i)
     else:
         try:
             obj.index(value)
         except:
-            obj.append(value)
+            if value != main:
+                obj.append(value)
     return obj
 

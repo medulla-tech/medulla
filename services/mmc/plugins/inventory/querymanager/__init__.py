@@ -22,24 +22,24 @@ def query(criterion, value):
 def funcGet(couple, type = 'list'):
     if type == 'list':
         table, col = re.compile('/').split(couple)
-        def getListValue(value = '', table = table, col = col):
+        def getListValue(ctx, value = '', table = table, col = col):
             if value != '':
                 return getValuesFuzzy(table, col, value)
             return getValues(table, col)
         return getListValue
     elif type == 'double':
         table, col = re.compile('/').split('Software/ProductName')
-        def getListValue(value = '', table = table, col = col):
+        def getListValue(ctx, value = '', table = table, col = col):
             if value != '':
                 return getValuesFuzzy(table, col, value)
             return getValues(table, col)
         return getListValue
     elif type == 'halfstatic':
-        table, col = re.compile('/').split(couple)
+        table, col, val = re.compile('/').split(couple)
         logging.getLogger().info('funcGet halfstatic:')
         dummy, f, v = PossibleQueries().possibleQueries('halfstatic')[couple]
         logging.getLogger().info("%s - %s" % (f,v))
-        def getListValue(value = '', table = table, col = col, f = f, v = v):
+        def getListValue(ctx, value = '', table = table, col = col, f = f, v = v):
             if value != '':
                 return getValueFuzzyWhere(table, f, v, col, value)
             return getValuesWhere(table, f, v, col)

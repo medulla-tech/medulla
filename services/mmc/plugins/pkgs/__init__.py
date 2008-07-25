@@ -98,6 +98,16 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_ppa_dropPackage)
         return d
 
+    def ppa_getTemporaryFiles(self, pp_api_id):
+        def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).getTemporaryFiles(pp_api_id)
+            return []
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_getTemporaryFiles)
+        return d
+    
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
         ctx = self.currentContext

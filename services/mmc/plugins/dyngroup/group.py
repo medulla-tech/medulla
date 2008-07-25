@@ -1,7 +1,7 @@
 import logging
 from mmc.plugins.pulse2.group import ComputerGroupI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
-from mmc.plugins.dyngroup.querymanager import QueryManager
+from mmc.plugins.dyngroup.qmanager import QueryManager
 
 class DyngroupGroup(ComputerGroupI):
     
@@ -35,4 +35,10 @@ class DyngroupGroup(ComputerGroupI):
         """
         return DyngroupDatabase().request(ctx, query, bool, min, max, filter, QueryManager())
     
+    def result_group_by_name(self, ctx, name, min, max, filter):
+        """
+        Send the group content, given a group name
+        """
+        return DyngroupDatabase().result_group_by_name(ctx, name, min, max, filter, QueryManager())
+            
 

@@ -210,9 +210,25 @@ class DyngroupDatabase(Singleton):
         users = session.query(Users).select_from(self.users.join(self.share).join(self.groups)).filter(self.groups.c.id == gid).all()
         return users
 
-    def __getMachines(self, gid, session = create_session()):
-        machines = session.query(Machines).select_from(self.machines.join(self.results).join(self.groups)).filter(self.groups.c.id == gid).all()
-        return machines
+    def getMachines(self, ctx, params):
+        if params.has_key('gname'):
+            return self.__getMachinesByGroupName(ctx, params['gname'])
+        if params.has_key('gid'):
+            return self.__getMachines(ctx, params['gid'])
+        return []
+        
+    def __getMachinesFirstStep(self, ctx, session = create_session()):
+        select_from = self.machines.join(self.results).join(self.groups)
+        (join_tables, filter_on) = self.__permissions_query(ctx, session)
+        return (self.__merge_join_query(select_from, join_tables), filter_on)
+        
+    def __getMachines(self, ctx, gid, session = create_session()):
+        select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
+        return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.id == gid, filter_on)).all()
+        
+    def __getMachinesByGroupName(self, ctx, groupname, session = create_session()):
+        select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
+        return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.name == groupname, filter_on)).all()
 
     def __getMachine(self, uuid, session = create_session()):
         machine = session.query(Machines).filter(self.machines.c.uuid == uuid).first()
@@ -229,11 +245,13 @@ class DyngroupDatabase(Singleton):
         session.close()
         return machine.id
 
-    def __createShare(self, group_id, user_id):
+    def __createShare(self, group_id, user_id, type_id = None):
         session = create_session()
         share = ShareGroup()
         share.FK_group = group_id
         share.FK_user = user_id
+        if type_id != None:
+            share.FK_type = type_id
         session.save(share)
         session.flush()
         session.close()
@@ -269,8 +287,8 @@ class DyngroupDatabase(Singleton):
         session.close()
         return result.id
 
-    def __deleteResults(self, group_id, session = create_session()):
-        machines = self.__getMachines(group_id, session)
+    def __deleteResults(self, ctx, group_id, session = create_session()):
+        machines = self.__getMachines(ctx, group_id, session)
         for machine in machines:
             self.__deleteResult(group_id, machine.id, session)
 
@@ -289,12 +307,20 @@ class DyngroupDatabase(Singleton):
         session.close()
         return still_linked
 
-    def __getGroupInSession(self, ctx, session, id):
+    def __getGroupInSessionFirstStep(self, ctx, session):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = self.__getUsers(getUserGroups(ctx.userid), 1, session) # get all usergroups ids
         
         group = session.query(Groups).select_from(self.groups.outerjoin(self.shareGroup))
-        group = group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        
+    def __getGroupByNameInSession(self, ctx, session, name):
+        group = self.__getGroupInSessionFirstStep(ctx, session)
+        group = group.filter(self.groups.c.name == name).first()
+        return group
+    
+    def __getGroupInSession(self, ctx, session, id):
+        group = self.__getGroupInSessionFirstStep(ctx, session)
         group = group.filter(self.groups.c.id == id).first()
         return group
         
@@ -305,13 +331,35 @@ class DyngroupDatabase(Singleton):
         if filter:
             result = result.filter(self.machines.c.name.like('%'+filter+'%'))
         return result
+    
+    def __merge_join_query(self, select_from, join_tables):
+        for table in join_tables:
+            if type(table) == list:
+                if table[1]: # outerjoin
+                    if len(table) > 2: # specific on clause
+                        select_from = select_from.outerjoin(table[0], table[2])
+                    else:
+                        select_from = select_from.outerjoin(table[0])
+                else: # normal join
+                    if len(table) > 2: # specific on clause
+                        select_from = select_from.join(table[0], table[2])
+                    else: # hum... why did u use a list!
+                        select_from = select_from.join(table[0])
+            else:
+                select_from = select_from.join(table)
+        return select_from
 
-    def __allgroups_query(self, ctx, params, session = create_session()):
+    def __permissions_query(self, ctx, session):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
-        groups = session.query(Groups).select_from(self.groups.join(self.users, self.users.c.id == self.groups.c.FK_user).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_group))
-        groups = groups.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, and_(self.groups.c.id == self.shareGroup.c.FK_group, self.shareGroup.c.FK_user == user_id)]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        
+    def __allgroups_query(self, ctx, params, session = create_session()):
+        select_from = self.groups
+        join_tables, filter_on = self.__permissions_query(ctx, session)
+        select_from = self.__merge_join_query(select_from, join_tables)
+        groups = session.query(Groups).select_from(select_from).filter(filter_on)
         try:
             if params['canShow']:
                 groups = groups.filter(self.groups.c.display_in_menu == 1)
@@ -344,7 +392,7 @@ class DyngroupDatabase(Singleton):
         except KeyError:
             pass
 
-        return groups
+        return groups.group_by(self.groups.c.id)
 
     def countallgroups(self, ctx, params):
         session = create_session()
@@ -473,7 +521,7 @@ class DyngroupDatabase(Singleton):
         session.close()
 
         # remove all previous results
-        self.__deleteResults(gid)
+        self.__deleteResults(ctx, gid)
 
         return group.id
 
@@ -491,6 +539,15 @@ class DyngroupDatabase(Singleton):
         session.close()
         return group.id
 
+    def __getContent(self, ctx, group, queryManager):
+        session = create_session()
+        if self.isrequest_group(ctx, group.id):
+            ret = self.__request(ctx, group.query, group.bool, 0, -1, '', queryManager, session)
+        else:
+            ret = self.result_group(ctx, group.id, 0, -1)
+        session.close()
+        return ret
+
     def request(self, ctx, query, bool, min, max, filter, queryManager):
         return self.__request(ctx, query, bool, min, max, filter, queryManager)
     
@@ -498,6 +555,12 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
         return self.__request(ctx, group.query, group.bool, start, end, filter, queryManager, session)
+
+    def result_group_by_name(self, ctx, name, min, max, filter, queryManager):
+        session = create_session()
+        group = self.__getGroupByNameInSession(ctx, session, name)
+        content = self.__getContent(ctx, group, queryManager)
+        return content
 
     def __request(self, ctx, query, bool, start, end, filter, queryManager, session = create_session()):
         query = queryManager.getQueryTree(query, bool)
@@ -569,7 +632,7 @@ class DyngroupDatabase(Singleton):
         return group.id
 
     def todyn_group(self, ctx, id):
-        return self.__deleteResults(id)
+        return self.__deleteResults(ctx, id)
 
     def isdyn_group(self, ctx, id):
         session = create_session()

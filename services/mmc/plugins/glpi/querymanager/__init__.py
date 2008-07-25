@@ -36,12 +36,12 @@ def query(ctx, criterion, value):
         machines = map(lambda x: x.name, Glpi().getMachineBySoftware(ctx, value))
     return [machines, True]
 
-def getAllOs(value = ''):
+def getAllOs(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllOs(value))
 
-def getAllEntities(value = ''):
+def getAllEntities(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllEntities(value))
 
-def getAllSoftwares(value = ''):
+def getAllSoftwares(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllSoftwares(value))
     

@@ -3,6 +3,8 @@ from mmc.support.config import PluginConfig
 from ConfigParser import NoOptionError
 
 class DGConfig(PluginConfig):
+    dyngroup_activate = True
+    
     def readConf(self):
         """
         Read the module configuration
@@ -13,7 +15,7 @@ class DGConfig(PluginConfig):
         self.dbpasswd = self.getpassword("database", "dbpasswd")
         self.dbhost = self.get("database", "dbhost")
         self.dbname = self.get("database", "dbname")
-        self.disable = self.get("main", "disable")
+        self.disable = self.getboolean("main", "disable")
         self.dynamicEnable = self.getboolean("main", "dynamic_enable")
         try:
             self.dbport = self.getint("database", "dbport")
@@ -32,6 +34,10 @@ class DGConfig(PluginConfig):
             self.dbdebug = logging._levelNames[self.get("database", "dbdebug")]
         except:
             self.dbdebug = logging.ERROR
+
+        if self.has_section("querymanager"):
+            if self.has_option("querymanager", "activate"):
+                self.dyngroup_activate = self.getboolean("querymanager", "activate")
 
     def setDefault(self):
         """

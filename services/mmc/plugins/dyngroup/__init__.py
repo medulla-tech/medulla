@@ -12,7 +12,7 @@ import datetime
 import exceptions
 
 from mmc.plugins.dyngroup.bool_equations import BoolRequest
-from mmc.plugins.dyngroup.querymanager import QueryManager
+from mmc.plugins.dyngroup.qmanager import QueryManager
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.dyngroup.group import DyngroupGroup
@@ -38,7 +38,7 @@ def activate():
     global config
     config = DGConfig("dyngroup")
 
-    if str(config.disable) == str(1):
+    if config.disable:
         logger.warning("Plugin dyngroup: disabled by configuration.")
         return False
 
@@ -234,7 +234,7 @@ class RpcProxy(RpcProxyI):
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
-            if q[1] != module:
+            if q[1] != module and q[1] != 'dyngroup':
                 return False
         else:
             a = __onlyIn(q, module)

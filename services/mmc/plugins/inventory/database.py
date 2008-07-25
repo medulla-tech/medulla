@@ -27,6 +27,7 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
 from sqlalchemy import *
+import sqlalchemy
 import logging
 import datetime
 import time
@@ -287,7 +288,7 @@ class Inventory(DyngroupDatabaseHelper):
             pass
 
         # doing dyngroups stuff
-        join_query, query_filter = self.filter(self.machine, pattern, session.query(Machine), self.machine.c.id)
+        join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
         query = query.select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
         # end of dyngroups
         return query
@@ -303,6 +304,8 @@ class Inventory(DyngroupDatabaseHelper):
             if pattern['max'] != -1:
                 query = query.offset(pattern['min'])
                 query = query.limit(int(pattern['max']) - int(pattern['min']))
+            else:
+                query = query.all()
         except KeyError, e:
             query = query.all()
 
@@ -320,22 +323,37 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
         
     # needed by DyngroupDatabaseHelper
+    def computersTable(self):
+        return [self.machine]
+
+    def computersMapping(self, computers, invert = False):
+        if not invert:
+            return Machine.c.id.in_(*map(lambda x:fromUUID(x['uuid']), computers))
+        else:
+            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x['uuid']), computers)))
+
     def mappingTable(self, query):
-        table, field = query[2].split('/')
+        q = query[2].split('/')
+        table, field = q[0:2]
+        self.logger.debug("### >> table %s, field %s"%(table, field))
+        if len(q) > 2:
+            self.logger.debug("##### >> semi static name : %s"%(q[2]))
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
         if getInventoryNoms(table) == None:
             return [haspartTable, partTable]
-
+        self.logger.debug("### Nom")
         ret = [haspartTable, partTable]
         for nom in getInventoryNoms(table):
             nomTableName = 'nom%s%s' % (table, nom)
+            self.logger.debug("### nomTableName %s"%(nomTableName))
             nomTable = self.table[nomTableName]
             ret.append(nomTable)
         return ret
     
     def mapping(self, query, invert = False):
-        table, field = query[2].split('/')
+        q = query[2].split('/')
+        table, field = q[0:2]
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             partKlass = self.klass[table]

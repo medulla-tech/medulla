@@ -318,7 +318,7 @@ class Glpi(DyngroupDatabaseHelper):
             join_query = self.machine
             query_filter = None
 
-            join_query, query_filter = self.filter(self.machine, filt, session.query(Machine), self.machine.c.ID)
+            join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.ID)
 
             # filtering on locations
             try:
