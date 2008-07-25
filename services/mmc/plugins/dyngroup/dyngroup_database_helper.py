@@ -133,7 +133,8 @@ class DyngroupDatabaseHelper(Singleton):
                     filt = self.mapping(q, invert)
                 join_q = join_query
                 for table in join_tab:
-                    join_q = join_q.join(table)
+                    if table != join_query:
+                        join_q = join_q.join(table)
                                             
                 query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
                 res = map(lambda x: x[1], query)
