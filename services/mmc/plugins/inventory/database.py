@@ -328,9 +328,9 @@ class Inventory(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(*map(lambda x:fromUUID(x['uuid']), computers))
+            return Machine.c.id.in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers))
         else:
-            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x['uuid']), computers)))
+            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers)))
 
     def mappingTable(self, query):
         q = query[2].split('/')
@@ -893,6 +893,14 @@ def toUUID(id): # TODO : change this method to get a value from somewhere in the
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
+    
+def getComputerDict(c):
+    if type(c) == dict:
+        return c
+    for m in ['toH', 'to_h', 'toh', 'to_H']:
+        if hasattr(c, m):
+            return getattr(c,m)()
+    raise Exception("don't know how to convert in dict")
     
 # Class for SQLalchemy mapping
 class Machine(object):
