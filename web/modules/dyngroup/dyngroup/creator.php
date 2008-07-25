@@ -84,18 +84,23 @@ if (count($modules) == 1) {
 // criterion selection
 //TODO put in class
 if (quickGet('add_req')) {
-    print "<table><tr><td>"._T("Choose your field : ", "dyngroup")."</td>";
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
-    foreach ($criterion as $param_name) {
-        if ($param_name == quickGet('add_param')) {
-            print "<td>$param_name</td>";
-        } else {
-            print "<td><a href='".
-                urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
-                "'>$param_name</a></td>";
+    if (count($criterion) == 1) {
+        quickSet('req', quickGet('add_req'));
+        quickSet('add_param', $criterion[0]);
+    } else {
+        print "<table><tr><td>"._T("Choose your field : ", "dyngroup")."</td>";
+        foreach ($criterion as $param_name) {
+            if ($param_name == quickGet('add_param')) {
+                print "<td>$param_name</td>";
+            } else {
+                print "<td><a href='".
+                    urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
+                    "'>$param_name</a></td>";
+            }
         }
+        print "</tr></table>";
     }
-    print "</tr></table>";
 }
 
 // allow to select/write a value for the criterion
