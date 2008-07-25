@@ -112,6 +112,7 @@ class Group {
 
     function addMember($uuid) { return $this->addMembers(array($uuid)); }
     function delMember($uuid) { return $this->delMembers(array($uuid)); }
+    function importMembers($elt, $values) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); }
     #function removeMachine($uuid) { }
     function addMembers($uuids) { return __xmlrpc_addmembers_to_group($this->id, $uuids); }
     #function addMachines($a_uuids) { }
@@ -163,6 +164,7 @@ function __xmlrpc_isrequest_group($id) { return xmlCall("dyngroup.isrequest_grou
 function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", array($id)); }
 function __xmlrpc_addmembers_to_group($id, $uuids) { return xmlCall("dyngroup.addmembers_to_group", array($id, $uuids)); }
 function __xmlrpc_delmembers_to_group($id, $uuids) { return xmlCall("dyngroup.delmembers_to_group", array($id, $uuids)); }
+function __xmlrpc_importmembers_to_group($id, $elt, $values) { return xmlCall("dyngroup.importmembers_to_group", array($id, $elt, $values)); }
 
 function __xmlrpc_share_with($id) { return xmlCall("dyngroup.share_with", array($id)); }
 function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", array($id, $share)); }

@@ -30,6 +30,10 @@ function getPossiblesModules() {
     return myXmlCall("dyngroup.getPossiblesModules");
 }
 
+function getPossiblesCriterionsInMainModule() {
+    return myXmlCall("dyngroup.getPossiblesCriterionsInMainModule");
+}
+
 function getPossiblesCriterionsInModule($moduleName) {
     return myXmlCall("dyngroup.getPossiblesCriterionsInModule", array($moduleName));
 }
