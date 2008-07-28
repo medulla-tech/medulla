@@ -10,6 +10,7 @@ import os.path
 import sys
 import twisted
 import logging
+import logging.config
 
 from pulse2.proxyssl import initialize
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
