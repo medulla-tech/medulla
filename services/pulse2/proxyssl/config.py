@@ -41,8 +41,8 @@ class Pulse2InventoryProxyConfig(Singleton):
     verifypeer = False
     key_file = "conf/key/privkey.pem"
     cert_file = "conf/key/cacert.pem"
-    pooling = False
-    pooling_time = 600
+    polling = False
+    polling_time = 600
     flag = ('Software\\Mandriva\\Inventory\\Client', 'do_inventory')
     flag_type = 'reg'
 
@@ -77,18 +77,18 @@ class Pulse2InventoryProxyConfig(Singleton):
             self.key_file= self.cp.get('main', 'localcert')
         if self.cp.has_option('main', 'cacert'):
             self.cert_file = self.cp.get('main', 'cacert')
-        if self.cp.has_option('pooling', 'activate') and self.cp.getboolean('pooling', 'activate'):
-            self.pooling = True
-            if self.cp.has_option('pooling', 'type') and self.cp.get('pooling', 'type') == 'reg':
+        if self.cp.has_option('polling', 'activate') and self.cp.getboolean('polling', 'activate'):
+            self.polling = True
+            if self.cp.has_option('polling', 'type') and self.cp.get('polling', 'type') == 'reg':
                 self.flag_type = 'reg'
             else:
-                self.logger.error("don't know this type of pooling flag")
+                self.logger.error("don't know this type of polling flag")
                 sys.exit(-1)
-            if self.cp.has_option('pooling', 'time'):
-                self.pooling_time = self.cp.getint('pooling', 'time')
-            if self.cp.has_option('pooling', 'path'):
+            if self.cp.has_option('polling', 'time'):
+                self.polling_time = self.cp.getint('polling', 'time')
+            if self.cp.has_option('polling', 'path'):
                 # TODO if path is given with '/' convert, get the last part to put is as name, remove the begining is HKLM
-                path = re.sub("/", "\\\\", self.cp.get('pooling', 'path')).split('\\')
+                path = re.sub("/", "\\\\", self.cp.get('polling', 'path')).split('\\')
                 flag = path.pop()
                 if path[0] == 'HKEY_LOCAL_MACHINE':
                     path.reverse()
