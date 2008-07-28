@@ -153,13 +153,13 @@ class HttpInventoryProxySingleton(Singleton):
             return False
 
     def clean_flag(self):
-        self.logger.debug("Removing registry key")
+        self.logger.debug("Setting registry key to 'no'")
         try:
             key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0], 0, KEY_SET_VALUE)
-            DeleteValue(key, self.config.flag[1])
+            SetValue(key, self.config.flag[1], REG_SZ, "no")
             CloseKey(key)
-            self.logger.debug("Registry key removed")
+            self.logger.debug("Registry key value set")
         except Exception, e:
-            self.logger.error("Can't delete registry key: %s", str(e))
+            self.logger.error("Can't change registry key value: %s", str(e))
             
         
