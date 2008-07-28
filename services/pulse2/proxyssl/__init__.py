@@ -54,7 +54,8 @@ def initialize(config):
     f.protocol = MyProxy
     # Listen to incoming connection
     reactor.listenTCP(config.port, f)
-    # Run the periodic inventory
-    r = RunInventory()
-    r.setup(config)
-    r.run()
+    # Run the periodic inventory if configured
+    if config.polling:
+        r = RunInventory()
+        r.setup(config)
+        r.run()
