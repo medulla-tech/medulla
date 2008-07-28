@@ -41,7 +41,7 @@ class PackageApiPut(PackageApiGet):
         self.tmp_input_dir = tmp_input_dir
 
     def xmlrpc_getTemporaryFiles(self):
-        if os.path.exists(self.tmp_input_dir)
+        if os.path.exists(self.tmp_input_dir):
             return os.listdir(self.tmp_input_dir)
         return []
     

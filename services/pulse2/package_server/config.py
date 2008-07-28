@@ -121,7 +121,7 @@ class P2PServerCP(Singleton):
             self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
 
         if self.cp.has_option('main', 'tmp_input_dir'):
-            tmp_input_dir = self.cp.get('main', 'tmp_input_dir')
+            self.tmp_input_dir = self.cp.get('main', 'tmp_input_dir')
 
         for section in self.cp.sections():
             if re.compile('^mirror:[0-9]+$').match(section):                
@@ -138,11 +138,11 @@ class P2PServerCP(Singleton):
             if re.compile('^package_api_put:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
-                pap_tmp_input_dir = tmp_input_dir
+                pap_tmp_input_dir = self.tmp_input_dir
                 if self.cp.has_option(section, 'tmp_input_dir'):
                     pap_tmp_input_dir = self.cp.get(section, 'tmp_input_dir')
 
-                self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':tmp_input_dir})
+                self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
                 
 
 def config_addons(config):
