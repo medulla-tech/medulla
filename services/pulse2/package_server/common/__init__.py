@@ -224,13 +224,12 @@ class Common(Singleton):
         params = self.h_desc(mp)
         path = params['src']
 
-        if not os.path.exists("%s/%s/conf.xml" % (path, pid)):
+        if not os.path.exists(os.path.join(path, pid, 'conf.xml')):
             self.logger.error("package %s does not exists"%(pid))
             raise Exception("UNDEFPKG")
 
-        shutil.move("%s/%s/conf.xml" % (path, pid), "%s/%s/conf.xml.rem" % (path, pid))
+        shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         return pid
-        
 
     def writeFileIntoPackage(self, pid, file):
         pass
