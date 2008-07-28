@@ -41,9 +41,9 @@ class RunInventory(Singleton):
         self.singleton = HttpInventoryProxySingleton()
 
     def maybeStartLoop(self):
-        if self.config.pooling:
-            self.logger.debug("Scheduling inventory in %s seconds" % self.config.pooling_time)
-            reactor.callLater(self.config.pooling_time, self.run)
+        if self.config.polling:
+            self.logger.debug("Scheduling inventory in %s seconds" % self.config.polling_time)
+            reactor.callLater(self.config.polling_time, self.run)
 
     def run(self):
         """
