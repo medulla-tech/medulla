@@ -110,6 +110,7 @@ def runCommand(myCommandOnHostID):
         Just a simple start point, chain-load on Upload Pahse
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    myCoH.setStartDate()
     logger = logging.getLogger()
     logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
