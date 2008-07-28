@@ -61,6 +61,11 @@ class P2PServerCP(Singleton):
         umask = string.atoi('0077', 8)
         pidfile = '/var/run/pulse2-package-server.pid'
 
+    package_detect_loop = 60
+    package_detect_activate = False
+
+    package_detect_tmp_activate = False
+
     parser = None
     mirrors = []
     package_api_get = []
@@ -140,31 +145,40 @@ class P2PServerCP(Singleton):
                 src = self.cp.get(section, 'src')
                 pap_tmp_input_dir = self.tmp_input_dir
                 if self.cp.has_option(section, 'tmp_input_dir'):
+                    self.package_detect_activate = True
+                    self.package_detect_tmp_activate = True
                     pap_tmp_input_dir = self.cp.get(section, 'tmp_input_dir')
 
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
                 
+        if self.cp.has_option("main", "package_detect_activate"): 
+            # WARN this must overide the previously defined activate if it is in the config file
+            self.package_detect_activate = self.cp.getboolean("main", "package_detect_activate")
+            if self.package_detect_activate and self.cp.has_option("main", "package_detect_loop"):
+                self.package_detect_loop = self.cp.getint("main", "package_detect_loop")
+                
+                
 
-def config_addons(config):
-    if len(config.mirrors) > 0:
-#        for mirror_params in config.mirrors:
-            map(lambda x: add_access(x, config), config.mirrors)
-    if len(config.package_api_get) > 0:
-#        for mirror_params in config.package_api_get:
-            map(lambda x: add_server(x, config), config.package_api_get)            
-    return config
+def config_addons(conf):
+    if len(conf.mirrors) > 0:
+#        for mirror_params in conf.mirrors:
+            map(lambda x: add_access(x, conf), conf.mirrors)
+    if len(conf.package_api_get) > 0:
+#        for mirror_params in conf.package_api_get:
+            map(lambda x: add_server(x, conf), conf.package_api_get)            
+    return conf
 
-def add_access(mirror_params, config):
-    mirror_params['port'] = config.port
-    mirror_params['server'] = config.bind
+def add_access(mirror_params, conf):
+    mirror_params['port'] = conf.port
+    mirror_params['server'] = conf.bind
     mirror_params['file_access_path'] = "%s_files" % (mirror_params['mount_point'])
-    mirror_params['file_access_uri'] = config.bind
-    mirror_params['file_access_port'] = config.port
+    mirror_params['file_access_uri'] = conf.bind
+    mirror_params['file_access_port'] = conf.port
     return mirror_params
 
-def add_server(mirror_params, config):
-    mirror_params['port'] = config.port
-    mirror_params['server'] = config.bind
+def add_server(mirror_params, conf):
+    mirror_params['port'] = conf.port
+    mirror_params['server'] = conf.bind
     return mirror_params
 
 

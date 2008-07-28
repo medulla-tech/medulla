@@ -39,6 +39,8 @@ from pulse2.package_server.utilities import md5file, md5sum, Singleton
 
 class Common(Singleton):
     def init(self, config):
+        self.working = True
+        self.working_pkgs = []
         self.logger = logging.getLogger()
         self.logger.info("Loading PackageServer > Common")
         self.config = config
@@ -50,56 +52,86 @@ class Common(Singleton):
         self.files = {}
         self.fid2file = {}
         self.parser = PackageParser()
-        self.parser.init(config)
+        self.parser.init(self.config)
         self.desc = []
+        self.already_declared = {}
 
         try:
-            if len(self.config.mirrors) > 0:
-                for mirror_params in self.config.mirrors:
-                    try:
-                        access = {
-                            'proto':config.proto,
-                            'file_access_uri':mirror_params['file_access_uri'],
-                            'file_access_port':mirror_params['file_access_port'],
-                            'file_access_path':mirror_params['file_access_path']
-                        }
-                        if mirror_params.has_key('mirror'):
-                            access = {
-                                'proto':'',
-                                'file_access_uri':'',
-                                'file_access_port':'',
-                                'file_access_path':'',
-                                'mirror':mirror_params['mirror']
-                            }
-                        self._getPackages(
-                            mirror_params['mount_point'],
-                            mirror_params['src'],
-                            access
-                        )
-                    except Exception, e:
-                        self.logger.error(e)
-
-            if len(self.config.package_api_get) > 0:
-                for mirror_params in self.config.package_api_get:
-                    try:
-                        self._getPackages(mirror_params['mount_point'], mirror_params['src'])
-                    except Exception, e:
-                        self.logger.error(e)
-
-            if len(self.config.package_api_put) > 0:
-                for mirror_params in self.config.package_api_put:
-                    try:
-                        self._getPackages(mirror_params['mount_point'], mirror_params['src'])
-                    except Exception, e:
-                        self.logger.error(e)
-
+            self._detectPackages()
             self._buildReverse()
             self._buildFileList()
 
             self.logger.info("Common : finish loading %d packages" % (len(self.packages)))
+            self.working = False
         except Exception, e:
             self.logger.error("Common : failed to finish loading packages")
+            self.working = False
             raise e
+        
+    def _detectPackages(self, new = False):
+        if len(self.config.mirrors) > 0:
+            for mirror_params in self.config.mirrors:
+                try:
+                    access = {
+                        'proto':self.config.proto,
+                        'file_access_uri':mirror_params['file_access_uri'],
+                        'file_access_port':mirror_params['file_access_port'],
+                        'file_access_path':mirror_params['file_access_path']
+                    }
+                    if mirror_params.has_key('mirror'):
+                        access = {
+                            'proto':'',
+                            'file_access_uri':'',
+                            'file_access_port':'',
+                            'file_access_path':'',
+                            'mirror':mirror_params['mirror']
+                        }
+                    self._getPackages(
+                        mirror_params['mount_point'],
+                        mirror_params['src'],
+                        access,
+                        new
+                    )
+                except Exception, e:
+                    self.logger.error(e)
+
+        if len(self.config.package_api_get) > 0:
+            for mirror_params in self.config.package_api_get:
+                try:
+                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new)
+                except Exception, e:
+                    self.logger.error(e)
+
+        if len(self.config.package_api_put) > 0:
+            for mirror_params in self.config.package_api_put:
+                try:
+                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new)
+                except Exception, e:
+                    self.logger.error(e)
+
+    def moveCorrectPackages(self):
+        if self.working:
+            self.logger.debug("Common : already working")
+            return
+        self.working = True
+        self.logger.debug("Common : getting valid temporary packages")
+        if len(self.config.package_api_put) > 0:
+            for mirror_params in self.config.package_api_put:
+                if os.path.exists(mirror_params['tmp_input_dir']):
+                    self._moveNewPackage(mirror_params)
+        self.working = False
+
+    def detectNewPackages(self):
+        if self.working:
+            self.logger.debug("Common : already working")
+            return
+        self.working = True
+        self.working_pkgs = []
+        self.logger.debug("Common : detecting new packages...")
+        self._detectPackages(True)
+        self._buildReverse()
+        self._buildFileList()
+        self.working = False
 
     def setDesc(self, description):
         self.desc = description
@@ -242,20 +274,43 @@ class Common(Singleton):
         return None
 
 # private
-    def _getPackages(self, mp, src, access = {}): 
-    #file_access_proto = '', file_access_uri = '', file_access_port = '', file_access_path = ''):
+    def _moveNewPackage(self, mirror_params):
+        Find().find(mirror_params['tmp_input_dir'], self._moveNewPackageSub, [mirror_params['src']])
+        
+    def _moveNewPackageSub(self, file, src):
+        if os.path.basename(file) == 'conf.xml':
+            file = os.path.dirname(file)
+            confxml = os.path.join(file, "conf.xml")
+            l_package = self.parser.parse(confxml)
+            if l_package == None:
+                return False
+            if not os.path.exists(os.path.join(src, l_package.id)):
+                self.logger.debug("New valid temporary package detected")
+                shutil.copytree(file, os.path.join(src, l_package.id))
+            
+    def _getPackages(self, mp, src, access = {}, new = False): 
         if not os.path.exists(src):
             raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
     
-        self.mp2p[mp] = []
-        Find().find(src, self._treatConfFile, (mp, access)) 
-        #file_access_proto, file_access_uri, file_access_port, file_access_path))
+        if new:
+            Find().find(src, self._treatNewConfFile, (mp, access))
+        else:
+            self.mp2p[mp] = []
+            Find().find(src, self._treatConfFile, (mp, access)) 
 
-    def _treatConfFile(self, file, mp, access): #file_access_proto, file_access_uri, file_access_port, file_access_path):
+    def _treatNewConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
-            self._treatDir(os.path.dirname(file), mp, access) #file_access_proto, file_access_uri, file_access_port, file_access_path)
+            if not self.already_declared.has_key(file):
+                pid = self._treatDir(os.path.dirname(file), mp, access)
+                self.associatePackage2mp(pid, mp)
+                self.already_declared[file] = True
+                
+    def _treatConfFile(self, file, mp, access):
+        if os.path.basename(file) == 'conf.xml':
+            self._treatDir(os.path.dirname(file), mp, access)
+            self.already_declared[file] = True
 
-    def _treatDir(self, file, mp, access): #file_access_proto, file_access_uri, file_access_port, file_access_path):
+    def _treatDir(self, file, mp, access):
         pid = None
         try:
             if os.path.isdir(file):
@@ -266,6 +321,7 @@ class Common(Singleton):
                     return False
                     
                 pid = l_package.id
+                self.working_pkgs.append(l_package)
 
                 self.mp2p[mp].append(pid)
                 if self.packages.has_key(pid):
@@ -283,14 +339,12 @@ class Common(Singleton):
                             self.logger.warn("the file %s is declared in the package configuration file, but is not in the package directory"%(sfile['filename']))
                             raise Exception("MISSINGFILE")
                         size += self._treatFile(pid, f, path, access, sfile['id']) 
-                        #file_access_proto, file_access_uri, file_access_port, file_access_path, sfile['id'])
                 else:
                     # find all files and then get sizes and md5
                     files = self._getFiles(file)
                     for f in files:
                         path = '/'+re.sub(re.escape(toRelative+os.sep), '', os.path.dirname(f))
                         size += self._treatFile(pid, f, path, access)
-                        #file_access_proto, file_access_uri, file_access_port, file_access_path)
                 self.packages[pid].size = size
                 self.logger.debug("Package size = %d" % size)
         except Exception, err:
@@ -310,6 +364,7 @@ class Common(Singleton):
                 if pid != None:
                     self.mp2p[mp][pid] = None
             raise err
+        return pid
 
     def _treatFile(self, pid, f, path, access = {}, fid = None): #file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
         (fsize, fmd5) = [0,0]
@@ -321,7 +376,6 @@ class Common(Singleton):
             (fsize, fmd5) = self.file_properties[f]
 
         file = File(os.path.basename(f), path, fmd5, fsize, access, fid) 
-        #file_access_proto, file_access_uri, file_access_port, file_access_path, fid)
         self.packages[pid].addFile(file)
         if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")
@@ -339,15 +393,13 @@ class Common(Singleton):
         return files
 
     def _buildReverse(self):
-        for pid in self.packages:
-            package = self.packages[pid]
+        for package in self.working_pkgs:
             if not self.reverse.has_key(package.label):
                 self.reverse[package.label] = {}
-            self.reverse[package.label][package.version] = pid
+            self.reverse[package.label][package.version] = package.id
 
     def _buildFileList(self):
-        for pid in self.packages:
-            package = self.packages[pid]
+        for package in self.working_pkgs:
             for file in package.files.internals: # TODO dont access to internals ! 
                 self.files[file.id] = file.toURI()
 

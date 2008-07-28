@@ -114,7 +114,8 @@ class PackageParserXML:
                 cmds['postCommandFailure'],
                 reboot
             )
-        except:
+        except Exception, e:
+            logging.getLogger().error(e)
             p = None
 
         # TODO load files :
