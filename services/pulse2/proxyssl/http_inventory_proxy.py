@@ -79,6 +79,19 @@ def makeSSLContext(verifypeer, cacert, localcert, log = False):
     return ctx
 
 
+class MyProxyClientFactory(proxy.ProxyClientFactory):
+
+    def buildProtocol(self, addr):
+        # Connection succeeded, we can clean the inventory flag if set
+        if HttpInventoryProxySingleton().checked_flag:
+            HttpInventoryProxySingleton().clean_flag()        
+        return proxy.ProxyClientFactory.buildProtocol(self, addr)
+
+    def clientConnectionFailed(self, connector, reason):
+        logging.getLogger().error("Connection failed: " + str(reason))
+        proxy.ProxyClientFactory.clientConnectionFailed(self, connector, reason)
+
+
 class MyProxyRequest(proxy.ProxyRequest):
 
     """
@@ -88,7 +101,7 @@ class MyProxyRequest(proxy.ProxyRequest):
 
     config = Pulse2InventoryProxyConfig()
     ports = {'http' : config.port, 'https' : config.port }
-    protocols = {'http': proxy.ProxyClientFactory, 'https': proxy.ProxyClientFactory}
+    protocols = {'http': MyProxyClientFactory, 'https': MyProxyClientFactory}
 
     def process(self):
         self.uri = "%s:%d%s" % (self.config.server, self.config.port, self.uri)
@@ -130,14 +143,12 @@ class MyProxy(proxy.Proxy):
 
 
 class HttpInventoryProxySingleton(Singleton):
-    count_call = 0
-    want_quit = False
+
+    checked_flag = False
+
     def initialise(self, config):
         self.config = config
         self.logger = logging.getLogger()
-
-    def halt(self):
-        self.want_quit = True
 
     def check_flag(self):
         if self.config.flag_type == 'reg':
@@ -145,15 +156,18 @@ class HttpInventoryProxySingleton(Singleton):
             try:
                 key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0])
                 hk_do_inv, typeval  = QueryValueEx(key, self.config.flag[1])
-                return hk_do_inv == 'yes'
+                ret = hk_do_inv == 'yes'
             except WindowsError, e:
                 self.logger.debug(str(e))
-                return False
+                ret = False
+            self.checked_flag = ret
         else:
-            return False
+            ret = False
+        return ret
 
     def clean_flag(self):
         self.logger.debug("Setting registry key to 'no' %s %s" % (self.config.flag[0], self.config.flag[1]))
+        self.checked_flag = False
         try:
             key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0], 0, KEY_SET_VALUE)
             SetValueEx(key, self.config.flag[1], 0, REG_SZ, "no")
