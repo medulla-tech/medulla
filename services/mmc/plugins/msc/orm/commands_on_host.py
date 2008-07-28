@@ -26,6 +26,7 @@
 
 import logging
 import time
+import datetime
 import sqlalchemy
 
 class CommandsOnHost(object):
@@ -205,6 +206,7 @@ class CommandsOnHost(object):
 
     def setDone(self):
         self.setCommandStatut('done')
+        self.setEndDate()
     def isDone(self):
         result = (self.getCommandStatut() == 'done')
         logging.getLogger().debug("isDone): %s" % (self.getId(), result))
@@ -377,6 +379,22 @@ class CommandsOnHost(object):
             'next_attempt_date_time': self.next_attempt_date_time,
             'current_launcher': self.current_launcher
         }
+
+    def setStartDate(self):
+        """
+        Set start_date field to current time, only if the field has not been
+        already set.
+        """
+        if not self.start_date:
+            self.start_date = datetime.datetime.now()
+        self.flush()
+
+    def setEndDate(self):
+        """
+        Set end_date field to current time
+        """
+        self.end_date = datetime.datetime.now()
+        self.flush()
 
 def startCommandOnHost(coh_id):
     session = sqlalchemy.create_session()
