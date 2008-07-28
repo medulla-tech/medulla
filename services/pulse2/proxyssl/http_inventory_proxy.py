@@ -141,7 +141,7 @@ class HttpInventoryProxySingleton(Singleton):
 
     def check_flag(self):
         if self.config.flag_type == 'reg':
-            self.logger.debug("Checking for flag in registry")
+            self.logger.debug("Checking flag in registry %s %s" % (self.config.flag[0], self.config.flag[1]))
             try:
                 key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0])
                 hk_do_inv, typeval  = QueryValueEx(key, self.config.flag[1])
@@ -153,10 +153,10 @@ class HttpInventoryProxySingleton(Singleton):
             return False
 
     def clean_flag(self):
-        self.logger.debug("Setting registry key to 'no'")
+        self.logger.debug("Setting registry key to 'no' %s %s" % (self.config.flag[0], self.config.flag[1]))
         try:
             key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0], 0, KEY_SET_VALUE)
-            SetValue(key, self.config.flag[1], REG_SZ, "no")
+            SetValueEx(key, self.config.flag[1], 0, REG_SZ, "no")
             CloseKey(key)
             self.logger.debug("Registry key value set")
         except Exception, e:
