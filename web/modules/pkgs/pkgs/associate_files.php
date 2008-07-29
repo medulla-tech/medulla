@@ -30,7 +30,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 $package = array();
 
 $p_api_id = $_GET['p_api'];
-$pid = $_GET['pid'];
+$pid = base64_decode($_GET['pid']);
 
 if (isset($_POST["bassoc"])) {
     $cbx = array();
