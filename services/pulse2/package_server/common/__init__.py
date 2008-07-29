@@ -217,6 +217,21 @@ class Common(Singleton):
         f.close()
         return [pid, confdir]
 
+    def associateFiles(self, mp, pid, files):
+        if not self.packages.has_key(pid):
+            return [False, "This package don't exists"]
+        params = self.h_desc(mp)
+        path = self._getPackageRoot(pid)
+        files_out = []
+        for f in files:
+            fo = os.path.join(path, pid, os.path.basename(f))
+            self.logger.debug("File association will move %s to %s" % (f, fo))
+            files_out.append(fo)
+            shutil.move(f, fo)
+        self._treatFiles(files_out, mp, pid, access = {})
+            
+        return [True]
+
     def dropPackage(self, pid, mp):
         if not self.packages.has_key(pid):
             self.logger.error("package %s is not defined"%(pid))
@@ -273,6 +288,9 @@ class Common(Singleton):
         return None
 
 # private
+    def _getPackageRoot(self, pid):
+        return self.packages[pid].root
+        
     def _moveNewPackage(self, mirror_params):
         Find().find(mirror_params['tmp_input_dir'], self._moveNewPackageSub, [mirror_params['src']])
         
@@ -281,6 +299,7 @@ class Common(Singleton):
             file = os.path.dirname(file)
             confxml = os.path.join(file, "conf.xml")
             l_package = self.parser.parse(confxml)
+            l_package.setRoot(os.path.dirname(file))
             if l_package == None:
                 return False
             if not os.path.exists(os.path.join(src, l_package.id)):
@@ -309,6 +328,14 @@ class Common(Singleton):
             self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
 
+    def _treatFiles(self, files, mp, pid, access):
+        conf = self.h_desc(mp)
+        toRelative = self.packages[pid].root
+        for f in files:
+            path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
+            size = self._treatFile(pid, f, path, access)
+            self.packages[pid].size += size
+        
     def _treatDir(self, file, mp, access):
         pid = None
         try:
@@ -316,6 +343,7 @@ class Common(Singleton):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
                 confxml = os.path.join(file, "conf.xml")
                 l_package = self.parser.parse(confxml)
+                l_package.setRoot(os.path.dirname(file))
                 if l_package == None:
                     return False
                     
@@ -328,7 +356,7 @@ class Common(Singleton):
 
                 toRelative = os.path.dirname(file)
                 size = 0
-                self.packages[pid] = self.parser.parse(confxml)
+                self.packages[pid] = l_package #self.parser.parse(confxml)
                 if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
                     for sfile in self.packages[pid].specifiedFiles:

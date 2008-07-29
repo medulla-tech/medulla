@@ -41,9 +41,25 @@ class PackageApiPut(PackageApiGet):
         self.tmp_input_dir = tmp_input_dir
 
     def xmlrpc_getTemporaryFiles(self):
+        ret = []
         if os.path.exists(self.tmp_input_dir):
-            return os.listdir(self.tmp_input_dir)
-        return []
+            for f in os.listdir(self.tmp_input_dir):
+                ret.append([f, os.path.isdir(f)])
+        return ret
+
+    def xmlrpc_associatePackages(self, pid, fs):
+        files = []
+        ret = True
+        for f in fs:
+            if not os.path.exists(os.path.join(self.tmp_input_dir, f)):
+                ret = False
+            else:
+                files.append(os.path.join(self.tmp_input_dir, f))
+        if not ret:
+            return [False, 'Some files are missing']
+                
+        ret = Common().associateFiles(self.mp, pid, files)
+        return [True]
     
     def xmlrpc_putPackageDetail(self, package):
         pa = Package()

@@ -105,12 +105,16 @@ class Package:
         self.postcmd_ko = getCommandFromH(postcmd_ko)
         self.reboot = reboot
         self.id = id
+        self.root = ''
 
     def addFile(self, file):
         self.files.append(file)
 
+    def setRoot(self, root):
+        self.root = root
+
     def toH(self):
-        return {
+        ret = {
             'label':self.label,
             'version':self.version,
             'size':self.size,
@@ -124,6 +128,9 @@ class Package:
             'reboot':self.reboot,
             'files':self.files.toH()
         }
+        if self.root != '':
+            ret['basepath'] = self.root
+        return ret
 
     def to_h(self):
         return self.toH()
@@ -164,6 +171,9 @@ class Package:
         self.reboot = 0
         if h.has_key('reboot'):
             self.reboot = h['reboot']
+        self.root = ''
+        if h.has_key('basepath'):
+            self.root = h['basepath']
         return self
 
     def equal(self, p):
