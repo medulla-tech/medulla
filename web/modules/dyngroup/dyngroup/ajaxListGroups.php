@@ -32,6 +32,7 @@ require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/request.php");
 require("../../../modules/dyngroup/includes/dyngroup.php");
+require("../../../modules/dyngroup/graph/index.css");
 
 
 if (!$_GET["start"]) { $_GET["start"] = 0; }
@@ -71,7 +72,7 @@ $n->setParamInfo($ids);
 $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "edit", "id", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "share", "id", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs"));
 $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers"));
