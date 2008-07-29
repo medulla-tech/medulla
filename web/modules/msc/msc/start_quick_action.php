@@ -31,14 +31,12 @@ require_once('modules/msc/includes/utilities.php');
 
 function action($action, $target) {
     /* Handle posting of quick actions */
-    $script_list = msc_script_list_file(); 
-    if ($script_list[0] && array_key_exists($action, $script_list[1])) {
-        $id = add_command_quick(
-            $script_list[1][$action]["command"],
-            $target,
-            $script_list[1][$action]["title".$current_lang],
-            $_GET['gid']
-        );
+    if ($_SESSION["lang"] == "C")
+        $current_lang = "";
+    else
+        $current_lang = substr($_SESSION["lang"], 0, 2);
+    $id = add_command_quick_with_id($action, $target, $current_lang, $_GET["gid"]);
+    if ($id != -1) {
         scheduler_start_all_commands();
         // if on a single computer
         header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
