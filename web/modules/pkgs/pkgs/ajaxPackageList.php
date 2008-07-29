@@ -30,6 +30,7 @@ require("../../../includes/session.inc.php");
 ######
 require_once("../../../modules/pkgs/includes/xmlrpc.php");
 require_once("../../../modules/msc/includes/package_api.php");
+require_once("../../../modules/pkgs/graph/index.css");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
