@@ -177,6 +177,35 @@ class RpcProxy(RpcProxyI):
     ##
     # commands management
     ##
+    def add_command_quick_with_id(self, idcmd, target, lang, gid = None):
+        """
+        @param idcmd: id of the quick action
+        @type idcmd: str
+
+        @param target: targets list
+        @type target: list
+
+        @param lang: language to use for the command title (two characters)
+        @type lang: str
+
+        @param gid: if not None, apply command to a group of machine
+        @type gid: str
+        """
+        ctx = self.currentContext
+        result, qas = qa_list_files()
+        if result and idcmd in qas:
+            try:
+                desc = qas[idcmd]["title" + lang]
+            except KeyError:
+                desc = qas[idcmd]["title"]
+            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
+            d.addCallback(xmlrpcCleanup)
+            ret = d
+        else:
+            ret = -1
+        return ret
+        
+
     def add_command_quick(self, cmd, target, desc, gid = None):
         ctx = self.currentContext
         d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
