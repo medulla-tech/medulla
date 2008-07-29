@@ -29,7 +29,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $package = array();
 
-if (isset($_POST["bcreate"])) {
+if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
     if ($_GET["action"]=="add") {
         $p_api_id = base64_decode($p_api_id);
@@ -47,9 +47,14 @@ if (isset($_POST["bcreate"])) {
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_GET["action"]=="add") {
             new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
-            header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+            if (! isset($_POST["bassoc"])) {
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+            }
         } else {
             new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+        }
+        if (isset($_POST["bassoc"])) {
+            header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>$p_api_id, 'pid'=>$package['id'])));
         }
     } else {
         new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
@@ -150,6 +155,7 @@ foreach ($cmds as $p) {
 
 $f->pop();
 $f->addValidateButton("bcreate");
+$f->addButton('bassoc', _T("Associate files", "pkgs"), "btnSecondary");
 $f->display();
 
 
