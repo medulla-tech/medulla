@@ -162,7 +162,7 @@ if (quickGet('add_param')) {
 if (!$request->isEmpty()) {
     print "<hr/>";
     print "<h3>"._T("The request is : ", "dyngroup")."</h3>";
-    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target));
+    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'request'=>$request->toS()));
 }
 
 // display action buttons in the bottom
