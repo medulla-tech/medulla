@@ -207,6 +207,7 @@ class Common(Singleton):
         path = params['src']
 
         confdir = os.path.join(path, pid)
+        self.packages[pid].setRoot(path)
         confxml = os.path.join(confdir, "conf.xml")
         if os.path.exists(confxml):
             shutil.move(confxml, confxml + ".bkp")
