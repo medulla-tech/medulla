@@ -169,7 +169,7 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
             self.scp_options = [self.scp_options]
         self.setoption('ssh', 'ssh_options', 'ssh_options')
         if not type(self.ssh_options) == type([]):
-            self.ssh_options = [self.ssh_options]
+            self.ssh_options = self.ssh_options.split(' ')
         if self.cp.has_section('ssh'):
             for option in self.cp.options('ssh'):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
