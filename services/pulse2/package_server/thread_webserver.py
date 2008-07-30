@@ -85,7 +85,7 @@ def initialize(config):
         services.append({'type':'user_package_api', 'mp':config.user_package_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         
     if config.mirror_api.has_key('mount_point'):
-        mirror = MirrorApi(services, config.mirror_api['mount_point'])
+        mirror = MirrorApi(services, config.mirror_api['mount_point'], config.assign_algo)
         server.register(mirror, config.mirror_api['mount_point'])
         services.append({'type':'mirror_api', 'mp':config.mirror_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
     else:

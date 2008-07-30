@@ -78,6 +78,8 @@ class P2PServerCP(Singleton):
     package_api_put = []
     proto = 'http'
 
+    assign_algo = 'default'
+
     mirror_api = {}
     user_package_api = {}
     def setup(self, config_file):
@@ -175,6 +177,8 @@ class P2PServerCP(Singleton):
                     self.package_mirror_command = self.cp.getint("main", 'package_mirror_command')
                 if self.cp.has_option("main", 'package_mirror_command_options'):
                     self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
+        if self.cp.has_option("main", "assign_algo"):
+            self.assign_algo = self.cp.get("main", 'assign_algo')
 
 def config_addons(conf):
     if len(conf.mirrors) > 0:
