@@ -141,6 +141,19 @@ def ping_and_probe_client(scheduler, computer):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
+def download_file(scheduler, computer, path):
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+        'download_file',
+        computer[1]['objectUUID'][0],
+        computer[1]['fullname'],
+        computer[1]['cn'][0],
+        computer[1]['ipHostNumber'],
+        computer[1]['macAddress'],
+        path
+    )
+    return mydeffered
+    
+
 def select_scheduler(scheduler_name):
     schedulers = MscConfig('msc').schedulers
     if not scheduler_name:

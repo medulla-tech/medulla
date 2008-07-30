@@ -154,6 +154,23 @@ class RpcProxy(RpcProxyI):
             computer[1]['fullname'] = computer[1]['cn'][0]
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer))
 
+    def can_download_file(self):
+        path = MscConfig('msc').web_dlpath
+        return len(path) > 0
+
+    def download_file(self, scheduler, uuid):
+        path = MscConfig('msc').web_dlpath
+        if not path:
+            ret = False
+        else:
+            ctx = self.currentContext
+            computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+            try: # FIXME: dirty bugfix, should be factorized upstream
+                computer[1]['fullname']
+            except KeyError:
+                computer[1]['fullname'] = computer[1]['cn'][0]
+            ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path)
+        return ret
 
     def _range(self, result, start, end):
         return result[start:end]

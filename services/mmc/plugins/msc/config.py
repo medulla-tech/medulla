@@ -67,6 +67,7 @@ class MscConfig(PluginConfig):
     web_def_maxbw = "0"
     web_def_delay = "60"
     web_def_attempts = "3"
+    web_dlpath = ""
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -196,7 +197,9 @@ class MscConfig(PluginConfig):
             self.web_def_delay = self.get("web", "web_def_delay")
         if self.has_option("web", "web_def_attempts"):
             self.web_def_attempts = self.get("web", "web_def_attempts")
-
+        if self.has_option("web", "web_dlpath"):
+            self.web_dlpath = self.get("web", "web_dlpath")
+            
         # API Package
         if self.has_option("package_api", "mserver"):
             self.ma_server = self.get("package_api", "mserver")
