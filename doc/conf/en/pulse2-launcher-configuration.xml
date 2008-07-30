@@ -90,7 +90,7 @@ option2 = plop      </screen></para>
 
             <entry>Common launchers configuration directives</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
           </row>
 
           <row>
@@ -114,7 +114,7 @@ option2 = plop      </screen></para>
 
             <entry>Launchers services related behaviors</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
           </row>
 
           <row>
@@ -202,7 +202,7 @@ option2 = plop      </screen></para>
             <entry>The Launcher main script location, used by
             launchers-manager to start and daemonize the services.</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
 
             <entry>path</entry>
 
@@ -665,7 +665,7 @@ option2 = plop      </screen></para>
     <title>«wget » section</title>
 
     <para>This section sets the pulse2-launchers wget options (for the pull
-    part of the push/pull mode</para>
+    part of the push/pull mode)</para>
 
     <table>
       <title>Available options for the "wget" section</title>
@@ -707,7 +707,60 @@ option2 = plop      </screen></para>
 
             <entry>boolean</entry>
 
-            <entry>1</entry>
+            <entry>True</entry>
+          </row>
+
+          <row>
+            <entry>resume</entry>
+
+            <entry>Attempt to resume a partial completed transfert</entry>
+
+            <entry>yes</entry>
+
+            <entry>boolean</entry>
+
+            <entry>True</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>«rsync » section</title>
+
+    <para>This section sets the pulse2-launchers rsync options (for the push
+    mode)</para>
+
+    <table>
+      <title>Available options for the "wget" section</title>
+
+      <tgroup cols="5">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Type</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>resume</entry>
+
+            <entry>Attempt to resume a partial completed transfert</entry>
+
+            <entry>yes</entry>
+
+            <entry>boolean</entry>
+
+            <entry>True</entry>
           </row>
         </tbody>
       </tgroup>
@@ -864,7 +917,7 @@ option2 = plop      </screen></para>
 
             <entry>The launcher binding IP address.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string</entry>
 
@@ -872,24 +925,12 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>enablessl</entry>
-
-            <entry>SSL mode support</entry>
-
-            <entry>yes</entry>
-
-            <entry>boolean</entry>
-
-            <entry>1</entry>
-          </row>
-
-          <row>
-            <entry>certfile</entry>
+            <entry>cacert</entry>
 
             <entry>path to the certificate file describing the certificate
             authority of the SSL server</entry>
 
-            <entry>yes</entry>
+            <entry>no if enablessl is set</entry>
 
             <entry>path</entry>
 
@@ -897,11 +938,35 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>privkey</entry>
+            <entry>certfile</entry>
+
+            <entry>deprecated (see cacert)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>enablessl</entry>
+
+            <entry>SSL mode support</entry>
+
+            <entry>no</entry>
+
+            <entry>boolean</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>localcert</entry>
 
             <entry>path to the SSL serverprivate certificate</entry>
 
-            <entry>yes</entry>
+            <entry>no if enablessl is set</entry>
 
             <entry>path</entry>
 
@@ -914,7 +979,7 @@ option2 = plop      </screen></para>
             <entry>The password to use when authenticating vs this
             launcher</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string or base64</entry>
 
@@ -926,11 +991,23 @@ option2 = plop      </screen></para>
 
             <entry>The launcher binding TCP port.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>int</entry>
 
             <entry>8001</entry>
+          </row>
+
+          <row>
+            <entry>privkey</entry>
+
+            <entry>deprecated (see localcert)</entry>
+
+            <entry></entry>
+
+            <entry></entry>
+
+            <entry></entry>
           </row>
 
           <row>
@@ -939,7 +1016,7 @@ option2 = plop      </screen></para>
             <entry>The number of available slots (ie. maximum number of
             concurrent jobs)</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>int</entry>
 
@@ -952,17 +1029,27 @@ option2 = plop      </screen></para>
             <entry>The login name to use when authenticating vs this
             launcher</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string</entry>
 
             <entry>username</entry>
           </row>
+
+          <row>
+            <entry>verifypeer</entry>
+
+            <entry>Check that our parent scheduler present a signed
+            certificate</entry>
+
+            <entry>yes</entry>
+
+            <entry>boolean</entry>
+
+            <entry>False</entry>
+          </row>
         </tbody>
       </tgroup>
     </table>
-
-    <para>By default, a launcher is always defined: "launcher_01":
-    127.0.0.1:8001, with 300 slots.</para>
   </section>
 </article>
