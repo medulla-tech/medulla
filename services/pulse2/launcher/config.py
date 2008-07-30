@@ -98,7 +98,7 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
 
     # wget stuff
     wget_options = ''
-    wget_check_certs = True
+    wget_check_certs = False
     wget_resume = True
 
     # rsync stuff
@@ -155,7 +155,7 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         self.setoption('ssh', 'forward_key', 'ssh_forward_key')
         self.setoption('ssh', 'scp_options', 'scp_options')
         if not type(self.scp_options) == type([]):
-            self.scp_options = [self.scp_options]
+            self.scp_options = self.scp_options.split(' ')
         self.setoption('ssh', 'ssh_options', 'ssh_options')
         if not type(self.ssh_options) == type([]):
             self.ssh_options = self.ssh_options.split(' ')
