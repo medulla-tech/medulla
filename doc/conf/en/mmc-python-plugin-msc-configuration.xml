@@ -551,6 +551,17 @@ enablessl = 1
 
             <entry>3</entry>
           </row>
+
+          <row>
+            <entry>web_dlpath</entry>
+
+            <entry>Directory of target computers from which a file is download when a user perform the download file action in the computers list. If empty, the download file action is not available on the web interface.</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
         </tbody>
       </tgroup>
     </table>
