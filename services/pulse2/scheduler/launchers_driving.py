@@ -107,3 +107,23 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     mydeffered = pingClient(uuid, fqdn, shortname, ips, macs)
     mydeffered.addCallback(_pingcb)
     return mydeffered
+
+def downloadFile(uuid, fqdn, shortname, ips, macs, path):
+    # choose launcher
+    launcher = chooseLauncher()
+    # choose a way to perform the operation
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
+    # perform call
+    mydeffered = getProxy(launcher).callRemote(
+        'download_file',
+        client,
+        path
+    )
+    return mydeffered
+    

@@ -209,6 +209,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.probeClient(uuid, fqdn, shortname, ips, macs))
     def xmlrpc_ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.pingAndProbeClient(uuid, fqdn, shortname, ips, macs))
+    def xmlrpc_download_file(self, uuid, fqdn, shortname, ips, macs, path):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path))
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
 
@@ -229,6 +231,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
+    def xmlrpc_remote_exec(self, launcher, path):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))        
 
 def main():
     parser = optparse.OptionParser()
