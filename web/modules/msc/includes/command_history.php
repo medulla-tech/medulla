@@ -194,7 +194,7 @@ class CommandHistory {
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
-            $raw_errors = array_map('_colorise', $hist["stderr"]);
+            $raw_errors = array_map('_colorise', array_filter($hist["stderr"]));
             $purge_errors = array();
 
             foreach ($raw_errors as $error)
@@ -216,7 +216,7 @@ class CommandHistory {
 function _values($a) { return $a[1]; }
 function _names($a) { return $a[0]; }
 function _colorise($line) {
-    if (preg_match_all("|^(.*) ([ECOX]): (.*)$|", $line, $matches)) {
+    if (preg_match_all("|^(.*) ([ECOXT]):(.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;
 
@@ -233,6 +233,11 @@ function _colorise($line) {
             //$out .= $split[count($split)-1];
             $out .= $matches[3][0];
             $out .= '</font><br/>';
+        } elseif ($matches[2][0] == "T") {
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
+            $out .= '<font color=blue>';
+            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=green>';
@@ -241,12 +246,14 @@ function _colorise($line) {
         } elseif ($matches[2][0] == "X") {
             $out .= '<font color=black>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
         }
-    } else $out .=  "<font>$line</font>\n";
+    } else {
+        $out .=  "";
+    }
     return $out;
 }
 function _toDate($a) {
     if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
-	return sprintf("%04d/%02d/%02d %02d:%02d:%02d", $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
+        return sprintf("%04d/%02d/%02d %02d:%02d:%02d", $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
     } else {
         return $a;
     }
