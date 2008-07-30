@@ -55,6 +55,7 @@ class Common(Singleton):
         self.parser.init(self.config)
         self.desc = []
         self.already_declared = {}
+        self.dontgivepkgs = {}
 
         try:
             self._detectPackages()
@@ -175,6 +176,7 @@ class Common(Singleton):
                 if self.packages[pid] == pa:
                     return pid
                 raise Exception("ARYDEFPKG")
+            self.dontgivepkgs[pid] = self.config.package_mirror_target
             self.packages[pid] = pa
             if not self.reverse.has_key(pa.label):
                 self.reverse[pa.label] = {}
@@ -189,6 +191,7 @@ class Common(Singleton):
             if self.packages.has_key(pid):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+            self.dontgivepkgs[pid] = self.config.package_mirror_target
             self.packages[pid] = pack
             if not self.reverse.has_key(pack.label):
                 self.reverse[pack.label] = {}
@@ -252,22 +255,28 @@ class Common(Singleton):
 
     def package(self, pid, mp = None):
         if mp == None:
-            return self.packages[pid]
-        try:
-            self.mp2p[mp].index(pid)
-            return self.packages[pid]
-        except:
+            if not self.dontgivepkgs.has_key(pid):
+                return self.packages[pid]
             return None
+        try:
+            if not self.dontgivepkgs.has_key(pid):
+                self.mp2p[mp].index(pid)
+                return self.packages[pid]
+            return None
+        except:
+            pass
+        return None
 
     def getPackages(self, mp): #TODO check the clone memory impact
         ret = {}
         try:
             for k in self.packages:
-                try:
-                    self.mp2p[mp].index(k)
-                    ret[k] = self.packages[k]
-                except:
-                    pass
+                if not self.dontgivepkgs.has_key(k):
+                    try:
+                        self.mp2p[mp].index(k)
+                        ret[k] = self.packages[k]
+                    except:
+                        pass
         except Exception, e:
             self.logger.error(e)
         return ret

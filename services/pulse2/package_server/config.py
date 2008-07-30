@@ -66,6 +66,12 @@ class P2PServerCP(Singleton):
 
     package_detect_tmp_activate = False
 
+    package_mirror_loop = 5
+    package_mirror_activate = False
+    package_mirror_target = ''
+    package_mirror_command = '/usr/bin/rsync'
+    package_mirror_command_options = ['-br']
+
     parser = None
     mirrors = []
     package_api_get = []
@@ -157,7 +163,18 @@ class P2PServerCP(Singleton):
             if self.package_detect_activate and self.cp.has_option("main", "package_detect_loop"):
                 self.package_detect_loop = self.cp.getint("main", "package_detect_loop")
                 
-                
+
+        if self.cp.has_option("main", "package_mirror_target"):
+            self.package_mirror_target = self.cp.get("main", "package_mirror_target").split(' ')
+            if self.package_mirror_target != '':
+                self.package_mirror_activate = True
+                if self.cp.has_option("main", 'package_mirror_loop'):
+                    self.package_mirror_loop = self.cp.getint("main", 'package_mirror_loop')
+
+                if self.cp.has_option("main", 'package_mirror_command'):
+                    self.package_mirror_command = self.cp.getint("main", 'package_mirror_command')
+                if self.cp.has_option("main", 'package_mirror_command_options'):
+                    self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
 
 def config_addons(conf):
     if len(conf.mirrors) > 0:

@@ -50,6 +50,7 @@ class PackageApiPut(PackageApiGet):
     def xmlrpc_associatePackages(self, pid, fs):
         files = []
         ret = True
+
         for f in fs:
             if not os.path.exists(os.path.join(self.tmp_input_dir, f)):
                 ret = False
@@ -59,11 +60,14 @@ class PackageApiPut(PackageApiGet):
             return [False, 'Some files are missing']
                 
         ret = Common().associateFiles(self.mp, pid, files)
+        Common().dontgivepkgs[pid] = self.config.package_mirror_target
         return [True]
     
     def xmlrpc_putPackageDetail(self, package):
         pa = Package()
         pa.fromH(package)
+        if Common().dontgivepkgs.has_key(pa.id) and len(Common().dontgivepkgs[pa.id]) > 0:
+            return (False, "This package is curently locked")
 
         ret = Common().editPackage(package['id'], pa)
         if not ret: return False
@@ -75,11 +79,11 @@ class PackageApiPut(PackageApiGet):
         ret = Common().associatePackage2mp(package['id'], self.mp)
         if not ret: return False
 
-        return (package['id'], confdir)
+        return (True, package['id'], confdir)
 
     def xmlrpc_dropPackage(self, pid):
         ret = Common().dropPackage(pid, self.mp)
-        if not ret: return Fals
+        if not ret: return False
 
         ret = Common().desassociatePackage2mp(pid, self.mp)
         if not ret: return False

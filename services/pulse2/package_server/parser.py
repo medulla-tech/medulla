@@ -74,7 +74,10 @@ class PackageParserXML:
             else:
                 v_num = 0
             tmp = version.getElementsByTagName('label')[0]
-            v_txt = tmp.firstChild.wholeText
+            if tmp.firstChild != None:
+                v_txt = tmp.firstChild.wholeText
+            else:
+                v_txt = "0"
             tmp = root.getElementsByTagName('description')
             if len(tmp) == 1 and tmp[0].firstChild != None:
                 tmp = tmp[0]
@@ -130,7 +133,7 @@ class PackageParserXML:
         return p
 
     def to_xml(self, package):
-        str = """
+        s = """
 <package id="%s">
     <name>%s</name>
     <version>
@@ -146,7 +149,7 @@ class PackageParserXML:
         <postCommandFailure name="%s">%s</postCommandFailure>
     </commands>
 </package>
-        """ % (package.id, package.label, package.version, package.version, package.description, package.reboot, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
+        """ % (package.id, package.label, str(package.version), str(package.version), package.description, package.reboot, package.precmd.name, package.precmd.command, package.initcmd.name, package.initcmd.command, package.cmd.name, package.cmd.command, package.postcmd_ok.name, package.postcmd_ok.command, package.postcmd_ko.name, package.postcmd_ko.command)
 
         # TODO add files informations
         #if not package.files.nil? and package.files.size > 0 then
@@ -158,7 +161,7 @@ class PackageParserXML:
         #    end
         #end
 
-        return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n%s%s" % (self.doctype(), str)
+        return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n%s%s" % (self.doctype(), s)
 
     def doctype(self):
         return """

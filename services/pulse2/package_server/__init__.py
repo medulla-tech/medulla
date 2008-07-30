@@ -37,6 +37,9 @@ from pulse2.package_server.utilities import Singleton
 import pulse2.package_server.thread_webserver
 from threading import Thread, Semaphore
 import threading
+from twisted.internet import reactor
+from twisted.internet import task
+from twisted.internet import utils
 
 """
     Pulse2 PackageServer
@@ -51,12 +54,61 @@ class ThreadPackageDetect(Thread):
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
+    def runSub(self):
+        self.logger.debug("ThreadPackageDetect is running")
+        if self.config.package_detect_tmp_activate:
+            Common().moveCorrectPackages()
+        Common().detectNewPackages()
+        
     def run(self):
-        while 1:
-            time.sleep(self.config.package_detect_loop)
-            if self.config.package_detect_tmp_activate:
-                Common().moveCorrectPackages()
-            Common().detectNewPackages()
+        l = task.LoopingCall(self.runSub)
+        l.start(self.config.package_detect_loop)
+
+class ThreadPackageMirror(Thread):
+    def __init__(self, config):
+        Thread.__init__(self)
+        self.logger = logging.getLogger()
+        self.config = config
+
+    def log_message(self, format, *args):
+        self.logger.info(format % args)
+
+    def onError(self, raison, args):
+        pid, target = args
+        self.logger.warning("ThreadPackageMirror failed to synchronise %s"%(str(raison)))
+
+    def onSuccess(self, result, args):
+        pid, target = args
+        self.logger.debug("ThreadPackageMirror succeed %s"%(str(result)))
+        if Common().dontgivepkgs.has_key(pid):
+            try:
+                i = Common().dontgivepkgs[pid].index(target)
+                del Common().dontgivepkgs[pid][i]
+            except ValueError, e:
+                self.logger.warning("ThreadPackageMirror no %s target defined for package %s"%(target, pid))
+            if len(Common().dontgivepkgs[pid]) == 0:
+                del Common().dontgivepkgs[pid]
+        else:
+            self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
+        
+    def runSub(self):
+        for pid in Common().dontgivepkgs:
+            targets = Common().dontgivepkgs[pid]
+            for target in targets:
+                self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
+                pkg = Common().packages[pid]
+                exe = self.config.package_mirror_command
+                args = self.config.package_mirror_command_options
+                args.append(os.path.join(pkg.root, pid))
+                args.append("%s:%s" % (target, pkg.root))
+                self.logger.debug("execute : %s %s"%(exe, str(args)))
+                d = utils.getProcessOutputAndValue(exe, args)
+                d.addCallback(self.onSuccess, (pid, target))
+                d.addErrback(self.onError, (pid, target))
+                       
+    def run(self):
+        l = task.LoopingCall(self.runSub)
+        l.start(self.config.package_mirror_loop)
     
 class ThreadLauncher(Singleton):
     def initialize(self, config):
@@ -73,5 +125,11 @@ class ThreadLauncher(Singleton):
             threadpd.setDaemon(True)
             threadpd.start()
             self.logger.debug("Package detect thread started")
+
+        self.logger.debug("Starting package mirror thread")
+        threadpm = ThreadPackageMirror(config)
+        threadpm.setDaemon(True)
+        threadpm.start()
+        self.logger.debug("Package mirror thread started")
 
         thread_webserver.initialize(self.config)

@@ -97,6 +97,8 @@ class Package:
         self.label = label
         self.version = version
         self.size = size
+        if self.size == None:
+            self.size = 0
         self.description = description
         self.initcmd = getCommandFromH(initcmd)
         self.precmd = getCommandFromH(precmd)
@@ -139,10 +141,10 @@ class Package:
         self.label = h['label']
         self.version = h['version']
         self.id = h['id']
-        if h.has_key('size'):
+        if h.has_key('size') and h['size'] != '':
             self.size = h['size']
         else:
-            self.size = 0
+            self.size = "0"
         if h.has_key('description'):
             self.description = h['description']
         else:
