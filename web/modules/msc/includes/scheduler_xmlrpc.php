@@ -43,4 +43,15 @@ function scheduler_wol_client($scheduler, $client) {
     return xmlCall('msc.scheduler_wol_client', array($scheduler, $maclist));
 }
 
+function scheduler_download_file($scheduler, $client) {
+    return xmlCall('msc.download_file', array($scheduler, $client));
+}
+
+function msc_can_download_file() {
+    if (!isset($_SESSION["msc_can_download_file"])) {
+        $_SESSION["msc_can_download_file"] = xmlCall('msc.can_download_file');
+    }
+    return $_SESSION["msc_can_download_file"];
+}
+
 ?>

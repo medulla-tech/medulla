@@ -107,6 +107,12 @@ $page->addTab($tab);
 
 $submod->addPage($page);
 
+$page = new Page("download_file", _T("Download file from a computer", "msc"));
+$page->setFile("modules/msc/msc/download_file.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+
+$submod->addPage($page);
+
 /* Confirm popup when starting a command */
 $page = new Page("msctabsplay", _T("Play a command", "msc"));
 $page->setFile("modules/msc/msc/msctabsplay.php");
