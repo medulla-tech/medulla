@@ -57,8 +57,8 @@ class RunInventory(Singleton):
             self.logger.debug("Flag not set, not starting an inventory")
         self.maybeStartLoop()
 
-    def onSuccess(result):
+    def onSuccess(self, result):
         self.logger.debug("Inventory done")
 
-    def onError(reason):
+    def onError(self, reason):
         self.logger.error("Error while doing inventory: %s" % str(reason))
