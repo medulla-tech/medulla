@@ -76,6 +76,9 @@ def icmpClient(client, timeout):
     )
 
 def probeClient(client, timeout):
+    """
+    Check ssh connectivity with a computer
+    """
     def __cb_probe_end(result, client=client):
         (exitcode, stdout, stderr) = result
         idData = [
@@ -109,3 +112,24 @@ def probeClient(client, timeout):
     )
     mydeffered.addCallback(__cb_probe_end)
     return mydeffered
+
+def downloadFile(client, path, timeout):
+    """
+    Get and uuencode the first file found in path from client
+    """
+    client = {
+        'protocol': 'ssh',
+        'host': client,
+        'uuid': None,
+        'timeout': timeout
+    }
+    mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
+        None,
+        client,
+        "cd %s; F=`ls -1|head -n1`; test ! -z $F && uuencode.exe -m $F $F" % path,
+        max_log_size = 20 * 1024 * 1024
+    )
+
+    return mydeffered
+    
+    

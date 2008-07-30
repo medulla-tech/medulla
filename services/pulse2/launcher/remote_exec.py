@@ -306,16 +306,16 @@ def remote_quickaction(command_id, client, command, mode):
             )
     return None
 
-def sync_remote_direct(command_id, client, command):
+def sync_remote_direct(command_id, client, command, max_log_size = None):
     """ Handle remote direct stuff on target, sync mode """
-    return remote_direct(command_id, client, command, 'sync')
+    return remote_direct(command_id, client, command, 'sync', max_log_size)
 
-def async_remote_direct(command_id, client, command):
+def async_remote_direct(command_id, client, command, max_log_size = None):
     """ Handle remote direct stuff on target, async mode """
-    return remote_direct(command_id, client, command, 'async')
+    return remote_direct(command_id, client, command, 'async', max_log_size)
 
 
-def remote_direct(command_id, client, command, mode):
+def remote_direct(command_id, client, command, mode, max_log_size = None):
     """ Handle remote direct stuff on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "ssh":
@@ -329,11 +329,14 @@ def remote_direct(command_id, client, command, mode):
         # Build "exec" command
         real_command = command
 
+        if max_log_size == None:
+            # If no max_log_size set, use the value from the configuration file
+            max_log_size = LauncherConfig().wrapper_max_log_size
         # Build final command line
         command_list = [
             LauncherConfig().wrapper_path,
             '--max-log-size',
-            str(LauncherConfig().wrapper_max_log_size),
+            str(max_log_size),
             '--max-exec-time',
             str(client['timeout']),
             '--thru',
