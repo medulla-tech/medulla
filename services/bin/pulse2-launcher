@@ -82,7 +82,7 @@ def tellIAmAlive():
     scheduler = pulse2.launcher.utils.getScheduler()
 
     # salute our referent scheduler
-    mydeffered = getProxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)    
+    mydeffered = getProxy(scheduler).callRemote('tell_i_am_alive', LauncherConfig().name)
 
     mydeffered.\
         addCallback(_cb).\
@@ -94,6 +94,11 @@ def startService():
     config = LauncherConfig()
 
     name = config.name
+
+    if not name in config.launchers:
+        logger.error('launcher %s: No section / invalid section %s in config file !' % (name, name))
+        return 1
+
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']

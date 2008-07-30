@@ -145,7 +145,7 @@ def setDefaultClientOptions(client):
             client['proto_args'] = ['-nv']
         if not LauncherConfig().wget_check_certs:
             client['proto_args'] += ['--no-check-certificate']
-        if LauncherConfig().wget_continue:
+        if LauncherConfig().wget_resume:
             client['proto_args'] += ['-c']
         if LauncherConfig().wget_options != '':
             client['proto_args'] += LauncherConfig().wget_options
@@ -165,7 +165,7 @@ def setDefaultClientOptions(client):
         sshoptions = ['/usr/bin/ssh', '-o', 'IdentityFile=%s' % client['cert']]
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
-        if LauncherConfig().rsync_partial:
+        if LauncherConfig().rsync_resume:
             client['proto_args'] += ['--partial']
         for option in LauncherConfig().ssh_options:
             sshoptions += ['-o', option]

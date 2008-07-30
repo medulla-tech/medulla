@@ -99,24 +99,13 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
     # wget stuff
     wget_options = ''
     wget_check_certs = True
-    wget_continue = True
+    wget_resume = True
 
     # rsync stuff
-    rsync_partial = True
+    rsync_resume = True
 
-    # launchers
+    # launchers (empty for now)
     launchers = {
-        'launcher_01': {
-            'port': 8001,
-            'bind': '127.0.0.1',
-            'username': 'username',
-            'password': 'password',
-            'enablessl': True,
-            'verifypeer': False,            
-            'cacert': '/etc/mmc/pulse2/launchers/keys/cacert.pem',
-            'localcert': "/etc/mmc/pulse2/launchers/keys/privkey.pem",
-            'slots': 300
-        }
     }
 
     def setoption(self, section, key, attrib, type = 'str'):
@@ -180,15 +169,11 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         if self.cp.has_section("wget"):
             if self.cp.has_option("wget", "wget_options"):
                 self.wget_options = self.cp.get("wget", "wget_options").split(' ')
-            if self.cp.has_option("wget", "check_certs"):
-                self.wget_check_certs = self.cp.getboolean("wget", "check_certs")
-            if self.cp.has_option("wget", "continue"):
-                self.wget_continue = self.cp.getboolean("wget", "continue")
+        self.setoption('wget', 'check_certs', 'wget_check_certs', 'bool')
+        self.setoption('wget', 'resume', 'wget_resume', 'bool')
 
         # Parse "rsync" section
-        if self.cp.has_section("rsync"):
-            if self.cp.has_option("rsync", "partial"):
-                self.rsync_partial = self.cp.getboolean("rsync", "partial")
+        self.setoption('rsync', 'resume', 'rsync_resume', 'bool')
 
         # Parse "daemon" section
         if self.cp.has_section("daemon"):
@@ -218,24 +203,30 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         # Parse "launcher_XXXX" sections
         for section in self.cp.sections():
             if re.compile('^launcher_[0-9]+$').match(section):
-                self.launchers[section] = {
-                        'bind': self.cp.get(section, 'bind'),
-                        'enablessl': self.cp.getboolean(section, 'enablessl'),
-                        'verifypeer': self.cp.getboolean(section, 'verifypeer'),
-                        'password': self.cp.getpassword(section, 'password'),
-                        'port': self.cp.get(section, 'port'),
-                        'slots': self.cp.getint(section, 'slots'),
-                        'username': self.cp.get(section, 'username')
-                    }
-                if self.launchers[section]['enablessl']:
-                    try:
-                        self.launchers[section]['cacert'] = self.cp.get(section, 'cacert')
-                    except ConfigParser.NoOptionError:
-                        self.launchers[section]['cacert'] = self.cp.get(section, 'certfile')
-                    try:
-                        self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
-                    except ConfigParser.NoOptionError:
-                        self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
+                try:
+                    self.launchers[section] = {
+                            'bind': self.cp.get(section, 'bind'),
+                            'enablessl': self.cp.getboolean(section, 'enablessl'),
+                            'password': self.cp.getpassword(section, 'password'),
+                            'port': self.cp.get(section, 'port'),
+                            'slots': self.cp.getint(section, 'slots'),
+                            'username': self.cp.get(section, 'username')
+                        }
+                    if self.launchers[section]['enablessl']:
+                        try:
+                            self.launchers[section]['verifypeer'] = self.cp.getboolean(section, 'verifypeer')
+                        except ConfigParser.NoOptionError:
+                            self.launchers[section]['verifypeer'] = False
+                        try:
+                            self.launchers[section]['cacert'] = self.cp.get(section, 'cacert')
+                        except ConfigParser.NoOptionError:
+                            self.launchers[section]['cacert'] = self.cp.get(section, 'certfile')
+                        try:
+                            self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
+                        except ConfigParser.NoOptionError:
+                            self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
+                except ConfigParser.NoOptionError, e:
+                    logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
 
     def check(self):
         """

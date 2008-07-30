@@ -85,7 +85,7 @@ def start_launcher(name, config):
         if pid > 0:
             # exit from second parent, print eventual PID before
             logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
-            os.seteuid(0)            
+            os.seteuid(0)
             os.setegid(0)
             os.system("echo " + str(pid) + " > " + pid_file)
             sys.exit(0)
@@ -100,7 +100,7 @@ def start_launcher(name, config):
 def stop_launcher(name, config):
     logger = logging.getLogger()
     pid_file = os.path.join(config.pid_path, '%s.pid' % name)
-    os.seteuid(0)            
+    os.seteuid(0)
     os.setegid(0)
     f = open(pid_file)
     try:
