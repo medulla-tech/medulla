@@ -232,7 +232,7 @@ def runUploadPhase(myCommandOnHostID):
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
             updateHistory(myCommandOnHostID, 'upload_in_progress')
-            proxy = getProxy(launcher)            
+            proxy = getProxy(launcher)
             if SchedulerConfig().mode == 'sync':
                 mydeffered = proxy.callRemote(
                     'sync_remote_pull',
@@ -303,7 +303,7 @@ def runExecutionPhase(myCommandOnHostID):
     myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
     if myC.isQuickAction(): # should be a standard script
-        proxy = getProxy(launcher)            
+        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
             logger.info(myC.start_file)
             logger.info(str(target_host))
@@ -387,7 +387,7 @@ def runDeletePhase(myCommandOnHostID):
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
         updateHistory(myCommandOnHostID, 'delete_in_progress')
-        proxy = getProxy(launcher)        
+        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
             mydeffered = proxy.callRemote(
                 'sync_remote_delete',
@@ -402,7 +402,7 @@ def runDeletePhase(myCommandOnHostID):
             mydeffered = proxy.callRemote(
                 'async_remote_delete',
                 myCommandOnHostID,
-                {'host': myT.target_name, 'uuid': target_uuid, 'protocol': 'ssh'},
+                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
                 files_list
             )
             mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
@@ -425,7 +425,7 @@ def runDeletePhase(myCommandOnHostID):
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
             updateHistory(myCommandOnHostID, 'delete_in_progress')
-            proxy = getProxy(launcher)            
+            proxy = getProxy(launcher)
             if SchedulerConfig().mode == 'sync':
                 mydeffered = proxy.callRemote(
                     'sync_remote_delete',
