@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false) {
+function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false) {
     $emptyAction = new EmptyActionItem();
     if ($is_group) {
         $inventAction = new ActionItem(_("Inventory"),"groupinvtabs","inventory","inventory", "base", "computers");
@@ -34,10 +34,12 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
         $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+        $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     }
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
+    $actionDownload = array();
     $params = array();
 
     $headers = getComputersListHeaders();
@@ -60,6 +62,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
         $actionMsc[] = $mscAction;
         $actionLogs[] = $logAction;
+        if ($msc_can_download_file) {
+            $actionDownload[] = $downloadFileAction;
+        }
     }
 
     if ($filter['location']) {
@@ -98,8 +103,12 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     
 
     $n->addActionItemArray($actionInventory);
+    if ($msc_can_download_file) {
+        $n->addActionItemArray($actionDownload);
+    };
     $n->addActionItemArray($actionLogs);
     $n->addActionItemArray($actionMsc);
+
     if ($delete_computer && canDelComputer()) {
         $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","supprimer","computer", "base", "computers"));
     }

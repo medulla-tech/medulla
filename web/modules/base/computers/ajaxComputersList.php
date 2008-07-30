@@ -55,8 +55,15 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
 }             
 $names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter, False)));
 $count = getComputerCount($filter);
-    
-list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group);
+
+/* Check if MSC is configured with file download capability */
+$msc_can_download_file = False;
+if (in_array("msc", $_SESSION["modulesList"])) {
+    require_once("../../../modules/msc/includes/scheduler_xmlrpc.php");
+    $msc_can_download_file = True;
+}
+
+list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file);
     
 function join_value($n) {
     $ret = array();
