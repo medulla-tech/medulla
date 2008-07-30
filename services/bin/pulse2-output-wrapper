@@ -126,9 +126,9 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
             return line
         if self.size == self.max_log_size: # limit exhausted
             return ''
-        count = self.max_log_size-self.size
-        self.size += count
-        return line[0:count]
+        spaceleft = self.max_log_size-self.size
+        self.size += len(line)
+        return line[0:spaceleft]
 
     def outReceived(self, data):
         """ Format stdout
