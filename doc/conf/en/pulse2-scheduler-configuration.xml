@@ -231,6 +231,42 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>max_command_time</entry>
+
+            <entry>Command max authorized time, used by the launcher</entry>
+
+            <entry>yes</entry>
+
+            <entry>int</entry>
+
+            <entry>3600</entry>
+          </row>
+
+          <row>
+            <entry>max_upload_time</entry>
+
+            <entry>Upload max authorized time, used by the launcher</entry>
+
+            <entry>yes</entry>
+
+            <entry>int</entry>
+
+            <entry>21600</entry>
+          </row>
+
+          <row>
+            <entry>max_slots</entry>
+
+            <entry>The max number of slot to use for all launchers</entry>
+
+            <entry>yes</entry>
+
+            <entry>int</entry>
+
+            <entry>300</entry>
+          </row>
+
+          <row>
             <entry>mode</entry>
 
             <entry>The scheduler way-of-giving-task-to-its-launchers (see
