@@ -319,7 +319,7 @@ class MscDatabase(Singleton):
         logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
         return myCommandOnHost.getId()
 
-    def createTarget(self, target, mode, group_id):
+    def createTarget(self, target, mode, group_id, root):
         """
         Create a row in the target table.
 
@@ -396,7 +396,7 @@ class MscDatabase(Singleton):
             d.addCallback(cbMirror)
             return d
         elif mode == 'push':
-            targetUri = '%s://%s' % ('file', MscConfig("msc").repopath)
+            targetUri = '%s://%s' % ('file', root)
             
         return defer.succeed(addtarget(targetUri))
 
@@ -419,7 +419,8 @@ class MscDatabase(Singleton):
                 max_connection_attempt = 3,
                 start_inventory = False,
                 repeat = 0,
-                maxbw = 0
+                maxbw = 0,
+                root = MscConfig("msc").repopath
             ):
         """
         Main func to inject a new command in our MSC database
@@ -427,25 +428,25 @@ class MscDatabase(Singleton):
         Return a Deferred object resulting to the command id
         """
 
-        def cbCreateTarget(target):
+        def cbCreateTarget(target, root):
             if target:
                 if type(target[0]) == list:
                     t = target.pop()
                 else:
                     t = target
                     target = None
-                d2 = self.createTarget(t, mode, group_id)
-                d2.addCallback(cbProcessCommand, target)
+                d2 = self.createTarget(t, mode, group_id, root)
+                d2.addCallback(cbProcessCommand, target, root)
                 return d2
             else:
                 self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))                
                 d.callback(cmd_id)
 
-        def cbProcessCommand(target_id, target):
+        def cbProcessCommand(target_id, target, root):
             t = session.query(Target).get(target_id)
             self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
             self.blacklistTargetHostname(t, session)
-            cbCreateTarget(target)
+            cbCreateTarget(target, root)
                         
         if type(files) == list:
             files = "\n".join(files)
@@ -455,7 +456,7 @@ class MscDatabase(Singleton):
 
         session = create_session()
         d = defer.Deferred()
-        cbCreateTarget(target)
+        cbCreateTarget(target, root)
         return d
 
     def blacklistTargetHostname(self, myTarget, session = create_session()):

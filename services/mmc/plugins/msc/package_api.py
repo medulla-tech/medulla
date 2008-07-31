@@ -67,6 +67,16 @@ class PackageA:
         d = self.paserver.callRemote("getPackageLabel", pid)
         d.addErrback(self.onError, "getPackageLabel", pid, False)
         return d
+    
+    def _erGetLocalPackagePath(self):
+        return self.config.repopath
+    
+    def getLocalPackagePath(self, pid):
+        if self.initialized_failed:
+            return self.config.repopath
+        d = self.paserver.callRemote("getLocalPackagePath", pid)
+        d.addErrback(self._erGetLocalPackagePath)
+        return d
 
     def getPackageVersion(self, pid):
         if self.initialized_failed:
@@ -193,6 +203,11 @@ class SendPackageCommand:
 
     def setVersion(self, version):
         self.version = version
+        d = PackageA(self.p_api).getLocalPackagePath(self.pid)
+        d.addCallbacks(self.setRoot, self.onError)
+
+    def setRoot(self, root):
+        self.root = root
         start_file = self.cmd['command']
         #TODO : check that params has needed values, else put default one
         # as long as this method is called from the MSC php, the fields should be
@@ -259,7 +274,8 @@ class SendPackageCommand:
             max_connection_attempt,
             start_inventory,
             0,
-            maxbw
+            maxbw,
+            self.root
         ).addCallback(self.sendResult)
 
 def convert_date(date = '0000-00-00 00:00:00'):
