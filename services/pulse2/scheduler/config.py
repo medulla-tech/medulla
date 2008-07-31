@@ -46,6 +46,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
 
     # [scheduler] section
     awake_time = 600
+    max_slots = 300
     dbencoding = 'utf-8'
     enablessl = True
     verifypeer = False
@@ -93,6 +94,8 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
 
         self.setoption("scheduler", "awake_time", "awake_time")
         self.awake_time = int(self.awake_time)
+        self.setoption("scheduler", "max_slots", "max_slots")
+        self.max_slots = int(self.max_slots)
         self.setoption("scheduler", "dbencoding", "dbencoding")
         if self.cp.has_option("scheduler", "enablessl"):
             self.enablessl = self.cp.getboolean("scheduler", "enablessl")
