@@ -46,13 +46,15 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
 
     # [scheduler] section
     awake_time = 600
-    max_slots = 300
     dbencoding = 'utf-8'
     enablessl = True
     verifypeer = False
     cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     localcert = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     host = "127.0.0.1"
+    max_slots = 300
+    max_command_time = 3600
+    max_upload_time = 21600
     mode = 'async'
     password = 'password'
     port = 8000
@@ -77,12 +79,31 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         }
     }
 
-    def setoption(self, section, key, attrib):
-        if self.cp.has_option(section, key):
-            setattr(self, attrib, self.cp.get(section, key))
-            logging.getLogger().info("scheduler %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
-        else:
-            logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+    def setoption(self, section, key, attrib, type = 'str'):
+        if type == 'str':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.get(section, key))
+                logging.getLogger().info("scheduler %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+        elif type == 'bool':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getboolean(section, key))
+                logging.getLogger().info("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+        if type == 'int':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getint(section, key))
+                logging.getLogger().info("scheduler %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+        elif type == 'pass':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getpassword(section, key))
+                logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, section, key))
+            else:
+                logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def setup(self, config_file):
         # Load configuration file
@@ -92,10 +113,10 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         # [scheduler] section parsing
         self.name = self.cp.get("scheduler", "id")
 
-        self.setoption("scheduler", "awake_time", "awake_time")
-        self.awake_time = int(self.awake_time)
-        self.setoption("scheduler", "max_slots", "max_slots")
-        self.max_slots = int(self.max_slots)
+        self.setoption("scheduler", "awake_time", "awake_time", 'int')
+        self.setoption("scheduler", "max_slots", "max_slots", 'int')
+        self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
+        self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
         if self.cp.has_option("scheduler", "enablessl"):
             self.enablessl = self.cp.getboolean("scheduler", "enablessl")
@@ -112,8 +133,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
                 self.verifypeer = self.cp.get("scheduler", "verifypeer")
         self.setoption("scheduler", "listen", "host")
         self.setoption("scheduler", "mode", "mode")
-        if self.cp.has_option("scheduler", "password"):
-            self.password =self.cp.getpassword("scheduler", "password")
+        self.setoption("scheduler", "password", "password", 'pass')
         self.setoption("scheduler", "port", "port")
         self.port = int(self.port)
         self.setoption("scheduler", "resolv_order", "resolv_order")
