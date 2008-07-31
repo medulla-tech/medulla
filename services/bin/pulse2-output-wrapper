@@ -89,8 +89,8 @@ class Options(twisted.python.usage.Options):
         ["thru", None, None, "The command to wrap the execution, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
         ["check-path", None, '/usr/bin/pulse2-client-check.sh', "The 'checker' path (on the client)"],
         ["action", None, None, "Tell to the client we are going to perform a particular action, f.e. 'INVENTORY', 'REBOOT'"],
-        ["check", None, None, "(server-side check) Ask the client to show us some information for further check, f.e. IP=1.2.3.4 will ask the client to display IP, which will be compared against 1.2.3.4 by the wrapper"],
-        ["verify", None, None, "(client-side check) Ask the client to check some informations, f.e. IP=1.2.3.4 will ask the client if ots IP is 1.2.3.4"],
+        ["check-server-side", None, None, "Ask the client to show us some information for further check, f.e. IP=1.2.3.4 will ask the client to display IP, which will be compared against 1.2.3.4 by the wrapper"],
+        ["check-client-side", None, None, "Ask the client to check for some informations, f.e. IP=1.2.3.4 will ask the client if ots IP is 1.2.3.4"],
         ["max-log-size", None, None, "Keeps the only first bytes of the output"],
         ["max-exec-time", None, None, "Kill command above this number of seconds"],
         ]
@@ -118,14 +118,14 @@ class Options(twisted.python.usage.Options):
         else:
             self.thru_string = None
         self.check_command = [self['check-path']]
-        if self['check']:
-            self.check_command += ['--show', self['check']]
+        if self['check-server-side']:
+            self.check_command += ['--show', self['check-server-side']]
             self.do_check = True
         if self['action']:
             self.check_command += ['--action', self['action']]
             self.do_check = True
-        if self['verify']:
-            self.check_command += ['--verify', self['verify']]
+        if self['check-client-side']:
+            self.check_command += ['--verify', self['check-client-side']]
             self.do_check = True
 
 
@@ -182,7 +182,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         ExitCode().set(exitcode)
         twisted.internet.reactor.stop()
 
-class shPreCommand(twisted.internet.protocol.ProcessProtocol):
+class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
     """ Override some stuff from shOutputWrapper
     """
     def __init__(self, config):
@@ -202,8 +202,8 @@ class shPreCommand(twisted.internet.protocol.ProcessProtocol):
             exitcode = int(reason.value.signal) + 128
 
         if exitcode == 0: # continue in flow if everything went good
-            if self.config['verify']: # if something has to be checked server-side, do it
-                for verif in self.config['check'].split(','): # iterate over checks to do
+            if self.config['check-server-side']: # if something has to be checked server-side, do it
+                for verif in self.config['check-server-side'].split(','): # iterate over checks to do
                     if not re.search('^%s$' % verif, self.stdout, re.M): # if not found, tell it and exit
                         if config.thru_string:
                             format(SEPARATOR.join(config.thru_string), 'T')
@@ -274,8 +274,8 @@ def runCommand(config):
     if config['max-exec-time']:
         twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handling
 
-def runPreCommand(config):
-    process = shPreCommand(config)
+def runCheckCommand(config):
+    process = shCheckCommand(config)
     if config.thru_string:
         handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.check_command)
     else:
@@ -294,7 +294,7 @@ except twisted.python.usage.UsageError, errortext:
 
 # if we have to execute a pre-command, do it, else jump to the real command
 if config.do_check:
-    twisted.internet.reactor.callLater(0, runPreCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
+    twisted.internet.reactor.callLater(0, runCheckCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
 else:
     twisted.internet.reactor.callLater(0, runCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
 twisted.internet.reactor.run()
