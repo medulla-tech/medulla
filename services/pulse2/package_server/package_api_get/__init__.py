@@ -52,6 +52,9 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_getPackageDetail(self, pid):
         return Common().package(pid, self.mp).toH()
 
+    def xmlrpc_getLocalPackagePath(self, pid):
+        return Common().package(pid, self.mp).root
+
     def xmlrpc_getPackageLabel(self, pid):
         return Common().package(pid, self.mp).label
 
