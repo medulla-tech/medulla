@@ -118,9 +118,21 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
-                logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+        elif type == 'int':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getint(section, key))
+                logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
+            else:
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+        elif type == 'pass':
+            if self.cp.has_option(section, key):
+                setattr(self, attrib, self.cp.getpassword(section, key))
+                logging.getLogger().info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
+            else:
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def setup(self, config_file, name = None):
         # Load configuration file
@@ -132,22 +144,17 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         # Parse "launchers" section
         self.setoption('launchers', 'inventory_command', 'inventory_command')
         self.setoption('launchers', 'launcher_path', 'launcher_path')
-        self.setoption('launchers', 'max_command_age', 'max_command_age')
-        self.max_command_age = int(self.max_command_age)
-        self.setoption('launchers', 'max_ping_time', 'max_ping_time')
-        self.max_ping_time = int(self.max_ping_time)
-        self.setoption('launchers', 'max_probe_time', 'max_probe_time')
-        self.max_probe_time = int(self.max_probe_time)
+        self.setoption('launchers', 'max_command_age', 'max_command_age', 'int')
+        self.setoption('launchers', 'max_ping_time', 'max_ping_time', 'int')
+        self.setoption('launchers', 'max_probe_time', 'max_probe_time', 'int')
         self.setoption('launchers', 'ping_path', 'ping_path')
         self.setoption('launchers', 'source_path', 'source_path')
         self.setoption('launchers', 'target_path', 'target_path')
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
 
         # Parse "wrapper" section
-        self.setoption('wrapper', 'max_log_size', 'wrapper_max_log_size')
-        self.wrapper_max_log_size = int(self.wrapper_max_log_size)
-        self.setoption('wrapper', 'max_exec_time', 'wrapper_max_exec_time')
-        self.wrapper_max_exec_time = int(self.wrapper_max_exec_time)
+        self.setoption('wrapper', 'max_log_size', 'wrapper_max_log_size', 'int')
+        self.setoption('wrapper', 'max_exec_time', 'wrapper_max_exec_time', 'int')
         self.setoption('wrapper', 'path', 'wrapper_path')
 
         # Parse "ssh" sections
@@ -191,12 +198,11 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         self.setoption('wol', 'wol_port', 'wol_port')
 
         # Parse "scheduler" section
-        self.setoption('scheduler', 'awake_time', 'awake_time')
-        self.awake_time=int(self.awake_time)
+        self.setoption('scheduler', 'awake_time', 'awake_time', 'int')
         self.setoption('scheduler', 'defer_results', 'defer_results', 'bool')
         self.setoption('scheduler', 'enablessl', 'scheduler_enablessl', 'bool')
         self.setoption('scheduler', 'host', 'scheduler_host')
-        self.setoption('scheduler', 'password', 'scheduler_password')
+        self.setoption('scheduler', 'password', 'scheduler_password', 'pass')
         self.setoption('scheduler', 'port', 'scheduler_port')
         self.setoption('scheduler', 'username', 'scheduler_username')
 
