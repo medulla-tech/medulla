@@ -221,10 +221,14 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                             self.launchers[section]['cacert'] = self.cp.get(section, 'cacert')
                         except ConfigParser.NoOptionError:
                             self.launchers[section]['cacert'] = self.cp.get(section, 'certfile')
+                        if not os.path.exists(self.launchers[section]['cacert']):
+                            raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['cacert'])
                         try:
                             self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
                         except ConfigParser.NoOptionError:
                             self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
+                        if not os.path.exists(self.launchers[section]['localcert']):
+                            raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['localcert'])
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
 
