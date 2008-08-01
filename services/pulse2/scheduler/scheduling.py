@@ -195,7 +195,8 @@ def runUploadPhase(myCommandOnHostID):
                 'sync_remote_push',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
-                files_list
+                files_list,
+                SchedulerConfig().max_upload_time
             )
             mydeffered.\
                 addCallback(parsePushResult, myCommandOnHostID).\
@@ -205,7 +206,8 @@ def runUploadPhase(myCommandOnHostID):
                 'async_remote_push',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
-                files_list
+                files_list,
+                SchedulerConfig().max_upload_time
             )
             mydeffered.addErrback(parsePushError, myCommandOnHostID)
         else:
@@ -238,7 +240,8 @@ def runUploadPhase(myCommandOnHostID):
                     'sync_remote_pull',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
-                    files_list
+                    files_list,
+                    SchedulerConfig().max_upload_time
                 )
                 mydeffered.\
                     addCallback(parsePullResult, myCommandOnHostID).\
@@ -248,7 +251,8 @@ def runUploadPhase(myCommandOnHostID):
                     'async_remote_pull',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
-                    files_list
+                    files_list,
+                    SchedulerConfig().max_upload_time
                 )
                 mydeffered.addErrback(parsePullError, myCommandOnHostID)
             else:
@@ -312,7 +316,8 @@ def runExecutionPhase(myCommandOnHostID):
                 'sync_remote_quickaction',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                myC.start_file
+                myC.start_file,
+                SchedulerConfig().max_command_time
             )
             mydeffered.\
                 addCallback(parseExecutionResult, myCommandOnHostID).\
@@ -322,7 +327,8 @@ def runExecutionPhase(myCommandOnHostID):
                 'async_remote_quickaction',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                myC.start_file
+                myC.start_file,
+                SchedulerConfig().max_command_time
             )
             mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
         else:
@@ -335,7 +341,8 @@ def runExecutionPhase(myCommandOnHostID):
                 'sync_remote_exec',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                myC.start_file
+                myC.start_file,
+                SchedulerConfig().max_command_time
             )
             mydeffered.\
                 addCallback(parseExecutionResult, myCommandOnHostID).\
@@ -345,7 +352,8 @@ def runExecutionPhase(myCommandOnHostID):
                 'async_remote_exec',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                myC.start_file
+                myC.start_file,
+                SchedulerConfig().max_command_time
             )
             mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
         else:
@@ -393,7 +401,8 @@ def runDeletePhase(myCommandOnHostID):
                 'sync_remote_delete',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                files_list
+                files_list,
+                SchedulerConfig().max_command_time
             )
             mydeffered.\
                 addCallback(parseDeleteResult, myCommandOnHostID).\
@@ -403,7 +412,8 @@ def runDeletePhase(myCommandOnHostID):
                 'async_remote_delete',
                 myCommandOnHostID,
                 {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                files_list
+                files_list,
+                SchedulerConfig().max_command_time
             )
             mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
         else:
@@ -431,7 +441,8 @@ def runDeletePhase(myCommandOnHostID):
                     'sync_remote_delete',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                    files_list
+                    files_list,
+                    SchedulerConfig().max_command_time
                 )
                 mydeffered.\
                     addCallback(parseDeleteResult, myCommandOnHostID).\
@@ -441,7 +452,8 @@ def runDeletePhase(myCommandOnHostID):
                     'async_remote_delete',
                     myCommandOnHostID,
                     {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
-                    files_list
+                    files_list,
+                    SchedulerConfig().max_command_time
                 )
                 mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
             else:
@@ -490,7 +502,8 @@ def runInventoryPhase(myCommandOnHostID):
         mydeffered = proxy.callRemote(
             'sync_remote_inventory',
             myCommandOnHostID,
-            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}
+            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+            SchedulerConfig().max_command_time
         )
         mydeffered.\
             addCallback(parseInventoryResult, myCommandOnHostID).\
@@ -499,7 +512,8 @@ def runInventoryPhase(myCommandOnHostID):
         mydeffered = proxy.callRemote(
             'async_remote_inventory',
             myCommandOnHostID,
-            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'}
+            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+            SchedulerConfig().max_command_time
         )
         mydeffered.addErrback(parseInventoryError, myCommandOnHostID)
     else:
