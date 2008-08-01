@@ -26,10 +26,10 @@ class P2PHTTPChannel(http.HTTPChannel):
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
-        if not reason.check(twisted.internet.error.ConnectionDone):
+        if not reason.check(twisted.internet.error.ConnectionDone) and not reason.check(twisted.internet.error.ConnectionLost):
             logger = logging.getLogger()
             logger.error(reason)
-        http.HTTPChannel.connectionLost(self, reason)        
+        http.HTTPChannel.connectionLost(self, reason)
 
 class P2PSite(twisted.web.server.Site):
     protocol = P2PHTTPChannel
