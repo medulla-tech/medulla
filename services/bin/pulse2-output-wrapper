@@ -230,7 +230,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                         format(SEPARATOR.join(config.check_command), 'P')
                         for line in self.stdout.split('\n'):
                             format(line, 'P')
-                        ExitCode().set(exitcode)
+                        ExitCode().set(1)
                         twisted.internet.reactor.stop()
                         return
             runCommand(self.config)
@@ -284,7 +284,7 @@ def format(line, tag):
 
 def runCommand(config):
     process = shOutputWrapper(config)
-    if config.thru_string and config['exec-client-side']:
+    if config.thru_string and not config['exec-server-side']:
         format(SEPARATOR.join(config.thru_string), 'T')
         format(SEPARATOR.join(config.exec_string), 'C')
         handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
@@ -305,6 +305,7 @@ def runCheckCommand(config):
 
 # Parse command line
 config = Options()
+
 try:
     config.parseOptions()
 except twisted.python.usage.UsageError, errortext:
