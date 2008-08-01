@@ -64,6 +64,11 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         real_command += real_files_list
         real_command += [ "%s@%s:%s/" % (client['user'], client['host'], target_path)]
 
+        # Build "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
         # Build final command line
         command_list = [
             LauncherConfig().wrapper_path,
@@ -73,7 +78,18 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
             str(wrapper_timeout),
             '--exec',
             SEPARATOR.join(real_command),
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec-server-side'
         ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
 
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
@@ -133,6 +149,14 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             SEPARATOR.join(real_command),
         ]
 
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -188,6 +212,14 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             SEPARATOR.join(real_command),
         ]
 
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -242,6 +274,14 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             SEPARATOR.join(real_command),
         ]
 
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -293,6 +333,15 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
             '--exec',
             real_command, # we do not use the SEPARATOR here, as the command is send "as is"
         ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -350,6 +399,15 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
             '--only-stdout',
             '--remove-empty-lines'
         ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(
                 command_list,
@@ -410,6 +468,14 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             '--exec',
             real_command, # we do not use the SEPARATOR here, as the command is send "as is"
         ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
 
         if mode == 'async':
             return pulse2.launcher.process_control.commandForker(

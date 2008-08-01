@@ -128,6 +128,9 @@ def setDefaultClientOptions(client):
     if not 'client_check' in client:
         client['client_check'] = None
 
+    if not 'action' in client:
+        client['action'] = None
+
     if client['protocol'] == 'ssh':
         if not 'port' in client:
             client['port'] = 22
