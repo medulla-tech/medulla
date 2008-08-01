@@ -40,18 +40,17 @@ import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.xmlrpc import getProxy
 
-
 SEPARATOR = u'·'
 
-def sync_remote_push(command_id, client, files_list):
+def sync_remote_push(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, sync mode """
-    return remote_push(command_id, client, files_list, 'sync')
+    return remote_push(command_id, client, files_list, 'sync', wrapper_timeout)
 
-def async_remote_push(command_id, client, files_list):
+def async_remote_push(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, async mode """
-    return remote_push(command_id, client, files_list, 'async')
+    return remote_push(command_id, client, files_list, 'async', wrapper_timeout)
 
-def remote_push(command_id, client, files_list, mode):
+def remote_push(command_id, client, files_list, mode, wrapper_timeout):
     """ Handle remote copy (push) """
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
@@ -71,7 +70,7 @@ def remote_push(command_id, client, files_list, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--exec',
             SEPARATOR.join(real_command),
         ]
@@ -83,7 +82,7 @@ def remote_push(command_id, client, files_list, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_push',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -92,15 +91,15 @@ def remote_push(command_id, client, files_list, mode):
             )
     return None
 
-def sync_remote_pull(command_id, client, files_list):
+def sync_remote_pull(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, sync mode """
-    return remote_pull(command_id, client, files_list, 'sync')
+    return remote_pull(command_id, client, files_list, 'sync', wrapper_timeout)
 
-def async_remote_pull(command_id, client, files_list):
+def async_remote_pull(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, async mode """
-    return remote_pull(command_id, client, files_list, 'async')
+    return remote_pull(command_id, client, files_list, 'async', wrapper_timeout)
 
-def remote_pull(command_id, client, files_list, mode):
+def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
     """ Handle remote copy (pull) on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
@@ -126,7 +125,7 @@ def remote_pull(command_id, client, files_list, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -140,7 +139,7 @@ def remote_pull(command_id, client, files_list, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_pull',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -149,15 +148,15 @@ def remote_pull(command_id, client, files_list, mode):
             )
     return None
 
-def sync_remote_delete(command_id, client, files_list):
+def sync_remote_delete(command_id, client, files_list, wrapper_timeout):
     """ Handle remote deletion on target, sync mode """
-    return remote_delete(command_id, client, files_list, 'sync')
+    return remote_delete(command_id, client, files_list, 'sync', wrapper_timeout)
 
-def async_remote_delete(command_id, client, files_list):
+def async_remote_delete(command_id, client, files_list, wrapper_timeout):
     """ Handle remote deletion on target, async mode """
-    return remote_delete(command_id, client, files_list, 'async')
+    return remote_delete(command_id, client, files_list, 'async', wrapper_timeout)
 
-def remote_delete(command_id, client, files_list, mode):
+def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
     """ Handle remote deletion on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
@@ -180,7 +179,7 @@ def remote_delete(command_id, client, files_list, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -194,7 +193,7 @@ def remote_delete(command_id, client, files_list, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_deletion',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -203,15 +202,15 @@ def remote_delete(command_id, client, files_list, mode):
             )
     return None
 
-def sync_remote_exec(command_id, client, command):
+def sync_remote_exec(command_id, client, command, wrapper_timeout):
     """ Handle remote execution on target, sync mode """
-    return remote_exec(command_id, client, command, 'sync')
+    return remote_exec(command_id, client, command, 'sync', wrapper_timeout)
 
-def async_remote_exec(command_id, client, command):
+def async_remote_exec(command_id, client, command, wrapper_timeout):
     """ Handle remote execution on target, async mode """
-    return remote_exec(command_id, client, command, 'async')
+    return remote_exec(command_id, client, command, 'async', wrapper_timeout)
 
-def remote_exec(command_id, client, command, mode):
+def remote_exec(command_id, client, command, mode, wrapper_timeout):
     """ Handle remote execution on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
@@ -233,7 +232,7 @@ def remote_exec(command_id, client, command, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -247,7 +246,7 @@ def remote_exec(command_id, client, command, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_execution',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -256,15 +255,15 @@ def remote_exec(command_id, client, command, mode):
             )
     return None
 
-def sync_remote_quickaction(command_id, client, command):
+def sync_remote_quickaction(command_id, client, command, wrapper_timeout):
     """ Handle remote quick action on target, sync mode """
-    return remote_quickaction(command_id, client, command, 'sync')
+    return remote_quickaction(command_id, client, command, 'sync', wrapper_timeout)
 
-def async_remote_quickaction(command_id, client, command):
+def async_remote_quickaction(command_id, client, command, wrapper_timeout):
     """ Handle remote quick action on target, async mode """
-    return remote_quickaction(command_id, client, command, 'async')
+    return remote_quickaction(command_id, client, command, 'async', wrapper_timeout)
 
-def remote_quickaction(command_id, client, command, mode):
+def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
     """ Handle remote quick action on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "ssh":
@@ -284,7 +283,7 @@ def remote_quickaction(command_id, client, command, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -297,7 +296,7 @@ def remote_quickaction(command_id, client, command, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_quick_action',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -306,16 +305,15 @@ def remote_quickaction(command_id, client, command, mode):
             )
     return None
 
-def sync_remote_direct(command_id, client, command, max_log_size = None):
+def sync_remote_direct(command_id, client, command, max_log_size, wrapper_timeout):
     """ Handle remote direct stuff on target, sync mode """
-    return remote_direct(command_id, client, command, 'sync', max_log_size)
+    return remote_direct(command_id, client, command, 'sync', max_log_size, wrapper_timeout)
 
-def async_remote_direct(command_id, client, command, max_log_size = None):
+def async_remote_direct(command_id, client, command, max_log_size, wrapper_timeout):
     """ Handle remote direct stuff on target, async mode """
-    return remote_direct(command_id, client, command, 'async', max_log_size)
+    return remote_direct(command_id, client, command, 'async', max_log_size, wrapper_timeout)
 
-
-def remote_direct(command_id, client, command, mode, max_log_size = None):
+def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeout):
     """ Handle remote direct stuff on target """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "ssh":
@@ -338,7 +336,7 @@ def remote_direct(command_id, client, command, mode, max_log_size = None):
             '--max-log-size',
             str(max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -354,7 +352,7 @@ def remote_direct(command_id, client, command, mode, max_log_size = None):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_direct',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -363,15 +361,15 @@ def remote_direct(command_id, client, command, mode, max_log_size = None):
             )
     return None
 
-def sync_remote_inventory(command_id, client):
+def sync_remote_inventory(command_id, client, wrapper_timeout):
     """ Handle remote quick action on target, sync mode """
-    return remote_inventory(command_id, client, 'sync')
+    return remote_inventory(command_id, client, 'sync', wrapper_timeout)
 
-def async_remote_inventory(command_id, client):
+def async_remote_inventory(command_id, client, wrapper_timeout):
     """ Handle remote quick action on target, async mode """
-    return remote_inventory(command_id, client, 'async')
+    return remote_inventory(command_id, client, 'async', wrapper_timeout)
 
-def remote_inventory(command_id, client, mode):
+def remote_inventory(command_id, client, mode, wrapper_timeout):
     """ Handle remote inventoring on target, sync mode
 
     This function will simply run the inventory on the othe side
@@ -400,7 +398,7 @@ def remote_inventory(command_id, client, mode):
             '--max-log-size',
             str(LauncherConfig().wrapper_max_log_size),
             '--max-exec-time',
-            str(client['timeout']),
+            str(wrapper_timeout),
             '--thru',
             SEPARATOR.join(thru_command_list),
             '--exec',
@@ -414,7 +412,7 @@ def remote_inventory(command_id, client, mode):
                 command_id,
                 LauncherConfig().defer_results,
                 'completed_inventory',
-                str(client['timeout']),
+                LauncherConfig().max_command_age,
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(

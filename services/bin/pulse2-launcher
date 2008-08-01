@@ -209,34 +209,34 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return twisted.web.server.NOT_DONE_YET
 
     # Synchrone commands summoning
-    def xmlrpc_sync_remote_push(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, files_list))
-    def xmlrpc_sync_remote_pull(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, files_list))
-    def xmlrpc_sync_remote_delete(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, files_list))
-    def xmlrpc_sync_remote_exec(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, command))
-    def xmlrpc_sync_remote_quickaction(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command))
-    def xmlrpc_sync_remote_inventory(self, command_id, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client))
-    def xmlrpc_sync_remote_wol(self, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(command_id, client))
+    def xmlrpc_sync_remote_push(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_push(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_pull(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_pull(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_delete(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_delete(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_exec(self, command_id, client, command, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_exec(command_id, client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_quickaction(self, command_id, client, command, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_quickaction(command_id, client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_inventory(self, command_id, client, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(command_id, client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_wol(self, client, command, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(command_id, client, timeout or LauncherConfig().wrapper_max_exec_time))
 
     # Asynchrone commands summoning
-    def xmlrpc_async_remote_push(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_push(command_id, client, files_list))
-    def xmlrpc_async_remote_pull(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_pull(command_id, client, files_list))
-    def xmlrpc_async_remote_delete(self, command_id, client, files_list):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_delete(command_id, client, files_list))
-    def xmlrpc_async_remote_exec(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(command_id, client, command))
-    def xmlrpc_async_remote_quickaction(self, command_id, client, command):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(command_id, client, command))
-    def xmlrpc_async_remote_inventory(self, command_id, client):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(command_id, client))
+    def xmlrpc_async_remote_push(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_push(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_pull(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_pull(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_delete(self, command_id, client, files_list, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_delete(command_id, client, files_list, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_exec(self, command_id, client, command, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_exec(command_id, client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_quickaction(self, command_id, client, command, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_quickaction(command_id, client, command, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_inventory(self, command_id, client, timeout = None):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(command_id, client, timeout or LauncherConfig().wrapper_max_exec_time))
 
     # Background process lists
     def xmlrpc_get_process_count(self):

@@ -59,7 +59,7 @@ def wolClient(mac_addrs):
 
 def icmpClient(client, timeout):
     """ Send a Ping to our client """
-    def __cb_wol_end(shprocess, client=client):
+    def __cb_icmp_end(shprocess, client=client):
         if not shprocess.exit_code == 0:
             logging.getLogger().warn("launcher %s: ICMP failed on %s: %s, %s" % (LauncherConfig().name, client, shprocess.stdout, shprocess.stderr))
             return False
@@ -72,7 +72,7 @@ def icmpClient(client, timeout):
     # FIXME: use timeout
     return pulse2.launcher.process_control.commandRunner(
         command_list,
-        __cb_wol_end,
+        __cb_icmp_end,
     )
 
 def probeClient(client, timeout):
@@ -102,13 +102,14 @@ def probeClient(client, timeout):
     client = {
         'protocol': 'ssh',
         'host': client,
-        'uuid': None,
-        'timeout': timeout
+        'uuid': None
     }
     mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
         None,
         client,
-        "echo $OS; uname"
+        "echo $OS; uname",
+        0,
+        timeout
     )
     mydeffered.addCallback(__cb_probe_end)
     return mydeffered
@@ -131,5 +132,5 @@ def downloadFile(client, path, timeout):
     )
 
     return mydeffered
-    
-    
+
+

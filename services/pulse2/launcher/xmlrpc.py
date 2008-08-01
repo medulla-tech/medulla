@@ -1,25 +1,25 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva, http://www.mandriva.com
+# (c) 2008 Mandriva, http://www.mandriva.com/
 #
-# $Id$
+# $Id: utils.py 164 2008-07-30 08:39:36Z nrueff $
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# MMC is free software; you can redistribute it and/or modify
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# MMC is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 import logging
 
@@ -41,7 +41,7 @@ class LauncherHTTPChannel(http.HTTPChannel):
     We inherit from http.HTTPChannel to log incoming connections when the
     launcher is in DEBUG mode, and to log connection errors.
     """
-    
+
     def connectionMade(self):
         logger = logging.getLogger()
         logger.debug("Connection from %s" % (self.transport.getHost().host,))
@@ -51,7 +51,7 @@ class LauncherHTTPChannel(http.HTTPChannel):
         if not reason.check(twisted.internet.error.ConnectionDone):
             logger = logging.getLogger()
             logger.error(reason)
-        http.HTTPChannel.connectionLost(self, reason)        
+        http.HTTPChannel.connectionLost(self, reason)
 
 class LauncherSite(twisted.web.server.Site):
     protocol = LauncherHTTPChannel
@@ -63,7 +63,7 @@ def makeSSLContext(config, log = True):
     @returns: a SSL context
     @rtype: twisted.internet.ssl.ContextFactory
     """
-    logger = logging.getLogger()    
+    logger = logging.getLogger()
     if config["verifypeer"]:
         fd = open(config["localcert"])
         localcert = ssl.PrivateCertificate.loadPEM(fd.read())

@@ -102,7 +102,8 @@ def getHealth(config):
 
 def setDefaultClientOptions(client):
     """
-        client i a simple dict, which should contain required connexion infos, for now:
+        client is a simple dict, which should contain required connexion infos, for now:
+            group: an optional group membership
             protocol: which one to use for connexion, mandatory
             host: where to connect, mandatory
             port: default depends on chosen protocol
@@ -115,8 +116,9 @@ def setDefaultClientOptions(client):
     """
     # FIXME: handle missing keys
 
-    if not 'timeout' in client:
-        client['timeout'] = LauncherConfig().wrapper_max_exec_time
+    # client group, used to define 'targets' groups to gather aggregated stats
+    if not 'group' in client:
+        client['group'] = None
 
     if client['protocol'] == 'ssh':
         if not 'port' in client:
@@ -176,9 +178,8 @@ def setDefaultClientOptions(client):
             else:
                 bwlimit = int(client['maxbw'] / (1024 * 8))
                 if bwlimit < 1:
-                    bwlimit = 1 # as bwlimit =0 imply no limit, min bwlimit set to 1
+                    bwlimit = 1 # as bwlimit = 0 imply no limit, min bwlimit set to 1
                 client['proto_args'] += ['--bwlimit', '%d' %  bwlimit] # bwlimit arg in kB/s
-
     return client
 
 class Singleton(object):
