@@ -104,6 +104,8 @@ def setDefaultClientOptions(client):
     """
         client is a simple dict, which should contain required connexion infos, for now:
             group: an optional group membership
+            server_check: an dict of stuff-to-check-on-client (see pulse2-output-wrapper)
+            client_check: an dict of stuff-to-check-on-client (see pulse2-output-wrapper)
             protocol: which one to use for connexion, mandatory
             host: where to connect, mandatory
             port: default depends on chosen protocol
@@ -119,6 +121,12 @@ def setDefaultClientOptions(client):
     # client group, used to define 'targets' groups to gather aggregated stats
     if not 'group' in client:
         client['group'] = None
+
+    if not 'server_check' in client:
+        client['server_check'] = None
+
+    if not 'client_check' in client:
+        client['client_check'] = None
 
     if client['protocol'] == 'ssh':
         if not 'port' in client:
@@ -164,14 +172,14 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        sshoptions = ['/usr/bin/ssh', '-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert']]
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
         if LauncherConfig().rsync_resume:
             client['proto_args'] += ['--partial']
         for option in LauncherConfig().ssh_options:
-            sshoptions += ['-o', option]
-        client['proto_args'] += ['--rsh', ' '.join(sshoptions)]
+            client['transp_args'] += ['-o', option]
+        client['proto_args'] += ['--rsh', ' '.join(['/usr/bin/ssh'] + client['transp_args'])]
         if 'maxbw' in client:
             if client['maxbw'] == 0: # bwlimit forced to 0 => no BW limit
                 pass
