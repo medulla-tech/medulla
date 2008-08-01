@@ -172,9 +172,6 @@ class RpcProxy(RpcProxyI):
             ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path)
         return ret
 
-    def _range(self, result, start, end):
-        return result[start:end]
-
     def pa_adv_countAllPackages(self, filt):
         ctx = self.currentContext
         g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
@@ -182,6 +179,9 @@ class RpcProxy(RpcProxyI):
         g.get()
         g.deferred.addCallback(lambda x: len(x))
         return g.deferred
+
+    def _range(self, result, start, end):
+        return (len(result), result[start:end])
 
     def pa_adv_getAllPackages(self, filt, start, end):
         ctx = self.currentContext
