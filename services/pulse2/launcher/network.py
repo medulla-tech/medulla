@@ -108,7 +108,7 @@ def probeClient(client, timeout):
         None,
         client,
         "echo $OS; uname",
-        0,
+        None,
         timeout
     )
     mydeffered.addCallback(__cb_probe_end)
@@ -122,13 +122,13 @@ def downloadFile(client, path, timeout):
         'protocol': 'ssh',
         'host': client,
         'uuid': None,
-        'timeout': timeout
     }
     mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
         None,
         client,
         "cd %s; F=`ls -1|head -n1`; test ! -z $F && uuencode.exe -m $F $F" % path,
-        max_log_size = 20 * 1024 * 1024
+        20 * 1024 * 1024,
+        timeout
     )
 
     return mydeffered
