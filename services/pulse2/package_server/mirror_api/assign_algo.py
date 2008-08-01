@@ -33,11 +33,14 @@ import imp
 import os
 
 class AssignAlgo(Singleton):
-    def init(self, mirrors, mirrors_fallback, package_apis):
+    def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
         self.logger = logging.getLogger()
         self.mirrors = mirrors
         self.mirrors_fallback = mirrors_fallback
         self.package_apis = package_apis
+        self.url2mirrors = url2mirrors
+        self.url2mirrors_fallback = url2mirrors_fallback
+        self.url2package_apis = url2package_apis
         
     def getMachineMirror(self, machine):
         raise Exception("not defined")
@@ -50,8 +53,11 @@ class AssignAlgo(Singleton):
 
 class AssignAlgoManager(Singleton):
     def getAlgo(self, assign_algo):
+        wanted = assign_algo
         algo, assign_algo = self._getAlgo(assign_algo)
         logging.getLogger().debug("Using the %s Assign Algorythm"%(assign_algo))
+        if wanted != assign_algo:
+            logging.getLogger().warning("Can't load the wanted one (conf:%s, use:%s)"%(wanted, assign_algo))
         return algo
     
     def _getAlgo(self, assign_algo):
@@ -72,6 +78,7 @@ class AssignAlgoManager(Singleton):
             mod = imp.load_module('MyAssignAlgo', f, p, d)
             ret = mod.UserAssignAlgo()
         except Exception, e:
+            logging.getLogger().debug(e)
             if assign_algo != 'default':
                 assign_algo = 'default'
                 ret, assign_algo = self._getAlgo(assign_algo)
