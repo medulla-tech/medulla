@@ -85,8 +85,8 @@ class Options(twisted.python.usage.Options):
     do_check = False
 
     optParameters = [
-        ["exec", None, None, "The command to be executed on the client, arg separator is '%s'" % SEPARATOR],
-        ["thru", None, None, "The command to wrap the execution, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
+        ["exec", None, None, "The command to be executed (on the client or on the server, see below), arg separator is '%s'" % SEPARATOR],
+        ["thru", None, None, "The command to wrap the command to execute (if executed on client, see below) and to wrap the client-check, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
         ["check-path", None, '/usr/bin/pulse2-client-check.sh', "The 'checker' path (on the client)"],
         ["action", None, None, "Tell to the client we are going to perform a particular action, f.e. 'INVENTORY', 'REBOOT'"],
         ["check-server-side", None, None, "Ask the client to show us some information for further check, f.e. IP=1.2.3.4 will ask the client to display IP, which will be compared against 1.2.3.4 by the wrapper"],
@@ -96,6 +96,9 @@ class Options(twisted.python.usage.Options):
         ]
 
     optFlags = [
+        ["examples", None, "show me some examples"],
+        ["exec-server-side", None, "--exec arg is executed on server"],
+        ["exec-client-side", None, "--exec arg is executed on client using --thru to handle the connection"],
         ["no-wrap", None, "Do not wrap output"],
         ["only-stdout", None, "Only write stdout on the output"],
         ["remove-empty-lines", None, "Do not write empty lines"],
@@ -107,6 +110,19 @@ class Options(twisted.python.usage.Options):
     def opt_version(self):
         rev = "$Rev$";
         print rev;
+
+    def opt_examples(self):
+        print 'here are some useful examples:'
+        print
+        print ' + a simple "ls /home" client side:'
+        print '   pulse2_output_wrapper --exec ls·/home --thru ssh·root@client'
+        print ' + same, cheking IP client-side:'
+        print '   pulse2_output_wrapper --exec ls·/home --thru ssh·root@client --check-client-side IP=1.2.3.4'
+        print ' + a simple "rsync /home" server side:'
+        print '   pulse2_output_wrapper --exec rsync·/home·root@client:/home'
+        print ' + same, cheking IP client-side:'
+        print '   pulse2_output_wrapper --exec rsync·/home·root@client:/home --exec-server-side --thru ssh·root@client --check-client-side IP=1.2.3.4'
+        sys.exit(0)
 
     def postOptions(self):
         if not self['exec']:
@@ -127,7 +143,9 @@ class Options(twisted.python.usage.Options):
         if self['check-client-side']:
             self.check_command += ['--verify', self['check-client-side']]
             self.do_check = True
-
+        if self.do_check and not self.thru_string:
+            print '%s: check asked but string to pass thru: --help for usage details.' % (sys.argv[0])
+            sys.exit(3)
 
 class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     """ A twisted.internet.protocol.ProcessProtocol override to handle on-the-fly encoding transcription
@@ -214,6 +232,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                             format(line, 'P')
                         ExitCode().set(exitcode)
                         twisted.internet.reactor.stop()
+                        return
             runCommand(self.config)
         else:                       # something goes bad, prin pre-command output then exits
             if config.thru_string:
@@ -225,6 +244,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                 format(line, 'P')
             ExitCode().set(exitcode)
             twisted.internet.reactor.stop()
+            return
 
     def errReceived(self, data):
         self.stderr += data
@@ -264,7 +284,7 @@ def format(line, tag):
 
 def runCommand(config):
     process = shOutputWrapper(config)
-    if config.thru_string:
+    if config.thru_string and config['exec-client-side']:
         format(SEPARATOR.join(config.thru_string), 'T')
         format(SEPARATOR.join(config.exec_string), 'C')
         handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
