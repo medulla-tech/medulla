@@ -79,7 +79,8 @@ if ($machine) {
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
-foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package) {
+list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+foreach ($packages as $c_package) {
     $package = to_package($c_package[0]);
     $type = $c_package[1];
     $p_api = new ServerAPI($c_package[2]);
@@ -98,8 +99,6 @@ foreach (advGetAllPackages($filter, $start, $start + $maxperpage) as $c_package)
         $a_css[] = 'secondary_list';
     }
 }
-
-$count = advCountAllPackages($filter);
 
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
