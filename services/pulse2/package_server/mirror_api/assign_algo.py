@@ -56,7 +56,19 @@ class AssignAlgoManager(Singleton):
     
     def _getAlgo(self, assign_algo):
         try:
-            f, p, d = imp.find_module(assign_algo, [os.path.join(get_python_lib(), 'pulse2', 'package_server', 'assign_algo')])
+            if os.name == 'nt':
+                curdir = os.path.dirname(__file__)
+                if curdir.endswith("library.zip"):
+                    searchpath = os.path.dirname(curdir)
+                else:
+                    # Go to the parent directory
+                    searchpath, _ = os.path.split(curdir)
+                    # And enter assign_algo directory
+                    searchpath = os.path.join(searchpath, 'assign_algo')
+            else:
+                searchpath = os.path.join(get_python_lib(), 'pulse2', 'package_server', 'assign_algo')
+            logging.getLogger().debug("Algo search path: %s" % searchpath)
+            f, p, d = imp.find_module(assign_algo, [searchpath])
             mod = imp.load_module('MyAssignAlgo', f, p, d)
             ret = mod.UserAssignAlgo()
         except Exception, e:
