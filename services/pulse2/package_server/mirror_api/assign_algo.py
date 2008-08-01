@@ -64,13 +64,16 @@ class AssignAlgoManager(Singleton):
         try:
             if os.name == 'nt':
                 curdir = os.path.dirname(__file__)
-                if curdir.endswith("library.zip"):
-                    searchpath = os.path.dirname(curdir)
+                if "library.zip" in curdir:
+                    # When we are runnning standalone (py2exe output)
+                    # Go to our container directory
+                    searchpath, _ = curdir.split("library.zip")
                 else:
+                    # When running with the source tree
                     # Go to the parent directory
                     searchpath, _ = os.path.split(curdir)
-                    # And enter assign_algo directory
-                    searchpath = os.path.join(searchpath, 'assign_algo')
+                # And enter assign_algo directory
+                searchpath = os.path.join(searchpath, 'assign_algo')
             else:
                 searchpath = os.path.join(get_python_lib(), 'pulse2', 'package_server', 'assign_algo')
             logging.getLogger().debug("Algo search path: %s" % searchpath)
