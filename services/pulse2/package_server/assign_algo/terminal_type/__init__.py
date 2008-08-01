@@ -52,8 +52,9 @@ class UserAssignAlgo(AssignAlgo):
         if not self.assign[m['uuid']].has_key('getMirror'):
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMirror'] = []
-            for u in self.config.type2url[type]['mirror']:
-                self.assign[m['uuid']]['getMirror'].append(self.url2mirrors[u])
+            if type != None:
+                for u in self.config.type2url[type]['mirror']:
+                    self.assign[m['uuid']]['getMirror'].append(self.url2mirrors[u])
         return self.assign[m['uuid']]['getMirror']
         
     def getMachineMirrorFallback(self, m):
@@ -62,8 +63,9 @@ class UserAssignAlgo(AssignAlgo):
         if not self.assign[m['uuid']].has_key('getFallbackMirror'):
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getFallbackMirror'] = []
-            for u in self.config.type2url[type]['mirror']:
-                self.assign[m['uuid']]['getFallbackMirror'].append(self.url2mirrors_fallback[u])
+            if type != None:
+                for u in self.config.type2url[type]['mirror']:
+                    self.assign[m['uuid']]['getFallbackMirror'].append(self.url2mirrors_fallback[u])
         return self.assign[m['uuid']]['getFallbackMirror']
 
     def getMachinePackageApi(self, m):
@@ -72,7 +74,8 @@ class UserAssignAlgo(AssignAlgo):
         if not self.assign[m['uuid']].has_key('getMachinePackageApi'):
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMachinePackageApi'] = []
-            for u in self.config.type2url[type]['package_api']:
-                self.assign[m['uuid']]['getMachinePackageApi'].append(self.url2package_apis[u])
+            if type != None:
+                for u in self.config.type2url[type]['package_api']:
+                    self.assign[m['uuid']]['getMachinePackageApi'].append(self.url2package_apis[u])
         return self.assign[m['uuid']]['getMachinePackageApi']
 

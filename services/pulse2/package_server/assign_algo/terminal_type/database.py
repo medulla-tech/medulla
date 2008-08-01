@@ -217,6 +217,8 @@ class PluginInventoryAADatabase(Singleton):
         query = session.query(self.klass['Registry'])
         query = query.select_from(self.table['Registry'].join(self.table['hasRegistry'].join(self.table['nomRegistryPath'])).join(self.machine).join(self.inventory))
         query = query.filter(self.inventory.c.Last == 1).filter(self.machine.c.id == fromUUID(uuid)).filter(self.table['nomRegistryPath'].c.Path == 'terminalType').first()
+        if query == None:
+            return None
         return query.Value
 
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
