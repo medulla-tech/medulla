@@ -10,8 +10,9 @@ import os.path
 import sys
 import twisted
 import logging
+import logging.config
 
-from pulse2.package_server import initialize
+from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP
 
 class Pulse2PackageServer(win32serviceutil.ServiceFramework):
@@ -31,7 +32,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         if not os.path.exists(self.inifile):
             print "File '%s' does not exist." % self.inifile
             sys.exit(3)		
-        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTING,(self._svc_display_name_, ''))
+        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTING,(self._svc_display_name_, ' Using configuration file: %s' % self.inifile))
         
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
@@ -42,7 +43,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         config.setup(self.inifile)
         logging.config.fileConfig(self.inifile)
         logger = logging.getLogger()
-        initialize(config)
+        ThreadLauncher().initialize(config)
         
     def SvcDoRun(self):
         import servicemanager
