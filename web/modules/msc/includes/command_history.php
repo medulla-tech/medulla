@@ -216,7 +216,7 @@ class CommandHistory {
 function _values($a) { return $a[1]; }
 function _names($a) { return $a[0]; }
 function _colorise($line) {
-    if (preg_match_all("|^(.*) ([ECOXT]):(.*)$|", $line, $matches)) {
+    if (preg_match_all("|^(.*) ([ECOXTP]):(.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;
 
@@ -228,20 +228,23 @@ function _colorise($line) {
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "C") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=blue>';
-            //$split = split('·', $matches[3][0]);
-            //$out .= $split[count($split)-1];
-            $out .= $matches[3][0];
+            $out .= '<font color=violet>';
+            $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "T") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=blue>';
+            $out .= '<font color=violet>';
             $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=green>';
             $out .= $matches[3][0];
+            $out .= '</font><br/>';
+        } elseif ($matches[2][0] == "P") {
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
+            $out .= '<font color=blue>';
+            $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
             $out .= '<font color=black>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
