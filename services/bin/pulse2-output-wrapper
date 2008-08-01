@@ -135,7 +135,7 @@ class Options(twisted.python.usage.Options):
             self.thru_string = None
         self.check_command = [self['check-path']]
         if self['check-server-side']:
-            self.check_command += ['--show', self['check-server-side']]
+            self.check_command += ['--show', ','.join(map(lambda x: x.split('=')[0], self['check-server-side'].split(',')))]
             self.do_check = True
         if self['action']:
             self.check_command += ['--action', self['action']]
@@ -225,8 +225,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                     if not re.search('^%s$' % verif, self.stdout, re.M): # if not found, tell it and exit
                         if config.thru_string:
                             format(SEPARATOR.join(config.thru_string), 'T')
-                        format(SEPARATOR.join(config.exec_string), 'C')
-                        format("PRE-COMMAND FAILED SERVER SIDE: %s not found !" % (verif), 'P')
+                        format("PRE-COMMAND FAILED SERVER SIDE: expected result '%s' was not found !" % (verif), 'P')
                         format(SEPARATOR.join(config.check_command), 'P')
                         for line in self.stdout.split('\n'):
                             format(line, 'P')
@@ -237,7 +236,6 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         else:                       # something goes bad, prin pre-command output then exits
             if config.thru_string:
                 format(SEPARATOR.join(config.thru_string), 'T')
-            format(SEPARATOR.join(config.exec_string), 'C')
             format("PRE-COMMAND FAILED CLIENT SIDE: exicode = %s !" % (exitcode), 'P')
             format(SEPARATOR.join(config.check_command), 'P')
             for line in self.stdout.split('\n'):
