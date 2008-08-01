@@ -114,6 +114,7 @@ class ThreadLauncher(Singleton):
     def initialize(self, config):
         self.logger = logging.getLogger()
         self.config = config
+        config_addons(config)
         Common().init(config)
         
         if self.config.package_detect_activate:

@@ -51,7 +51,6 @@ class MyServer(resource.Resource):
 
 def initialize(config):
     logger = logging.getLogger()
-    config_addons(config)
     
     port = int(config.port)
             
