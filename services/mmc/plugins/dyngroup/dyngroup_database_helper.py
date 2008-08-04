@@ -77,13 +77,19 @@ class DyngroupDatabaseHelper(Singleton):
             if len(q) == 4:
                 if q[1] == 'dyngroup':
                     join_tab = self.computersTable()
-                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
-                    filter_on.append(self.computersMapping(computers, invert))
+                    filt = self.computersMapping(computers, invert)
                 else:
                     join_tab = self.mappingTable(q)
-                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
-                    filter_on.append(self.mapping(q, invert))
+                    filt = self.mapping(q, invert)
+                join_q = join_query
+                for table in join_tab:
+                    if table != join_query:
+                        join_q = join_q.join(table)
+
+                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                res = map(lambda x: x[1], q)
+                filter_on.append(grpby.in_(*res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
@@ -99,18 +105,19 @@ class DyngroupDatabaseHelper(Singleton):
             if len(q) == 4:
                 if q[1] == 'dyngroup':
                     join_tab = self.computersTable()
-                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
-                    filter_on_mapping = self.computersMapping(computers, invert)
+                    filt = self.computersMapping(computers, invert)
                 else:
                     join_tab = self.mappingTable(q)
-                    join_tables = onlyAddNew(join_tables, join_tab, join_query)
-                    filter_on_mapping = self.mapping(q, invert)
-                    
-                if type(filter_on_mapping) == list:
-                    filter_on.extend(filter_on_mapping)
-                else:
-                    filter_on.append(filter_on_mapping)
+                    filt = self.mapping(q, invert)
+                join_q = join_query
+                for table in join_tab:
+                    if table != join_query:
+                        join_q = join_q.join(table)
+
+                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                res = map(lambda x: x[1], q)
+                filter_on.append(grpby.in_(*res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
