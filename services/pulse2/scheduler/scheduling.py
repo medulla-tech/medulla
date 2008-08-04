@@ -64,6 +64,7 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
+
 def startAllCommands(scheduler_name):
     # we return a list of deferred
     deffereds = [] # will hold all deferred
@@ -128,11 +129,8 @@ def runWOLPhase(myCommandOnHostID):
         return runUploadPhase(myCommandOnHostID)
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
-    # choose launcher
-    launcher = chooseLauncher()
-
     # perform call
-    mydeffered = getProxy(launcher).callRemote(
+    mydeffered = getProxy(chooseLauncher()).callRemote(
         'wol',
         myT.target_macaddr.split('||')
     )
@@ -180,16 +178,17 @@ def runUploadPhase(myCommandOnHostID):
             files_list.append(os.path.join(source_path, fname))
         launcher = chooseLauncher()
 
+        target_uuid = myT.getUUID()
         target_host = chooseClientIP(myT)
         if target_host == None:
             # We couldn't get an IP address for the target host
             return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
-        target_uuid = myT.getUUID()
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
         updateHistory(myCommandOnHostID, 'upload_in_progress')
         proxy = getProxy(launcher)
+
         if SchedulerConfig().mode == 'sync':
             mydeffered = proxy.callRemote(
                 'sync_remote_push',
@@ -202,6 +201,7 @@ def runUploadPhase(myCommandOnHostID):
                 addCallback(parsePushResult, myCommandOnHostID).\
                 addErrback(parsePushError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
+            # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
             mydeffered = proxy.callRemote(
                 'async_remote_push',
                 myCommandOnHostID,
@@ -225,12 +225,12 @@ def runUploadPhase(myCommandOnHostID):
                 files_list.append(m1.getFilePath(fid))
             launcher = chooseLauncher()
 
+            target_uuid = myT.getUUID()
             target_host = chooseClientIP(myT)
             if target_host == None:
                 # We couldn't get an IP address for the target host
                 return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
-            target_uuid = myT.getUUID()
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
             updateHistory(myCommandOnHostID, 'upload_in_progress')
@@ -297,12 +297,12 @@ def runExecutionPhase(myCommandOnHostID):
     # if we are here, execution has either previously failed or never be done
     launcher = chooseLauncher()
 
+    target_uuid = myT.getUUID()
     target_host = chooseClientIP(myT)
     if target_host == None:
         # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
 
-    target_uuid = myT.getUUID()
     myCoH.setExecutionInProgress()
     myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
@@ -386,12 +386,12 @@ def runDeletePhase(myCommandOnHostID):
         files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
         launcher = chooseLauncher()
 
+        target_uuid = myT.getUUID()
         target_host = chooseClientIP(myT)
         if target_host == None:
             # We couldn't get an IP address for the target host
             return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
 
-        target_uuid = myT.getUUID()
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
         updateHistory(myCommandOnHostID, 'delete_in_progress')
@@ -426,12 +426,12 @@ def runDeletePhase(myCommandOnHostID):
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
             launcher = chooseLauncher()
 
+            target_uuid = myT.getUUID()
             target_host = chooseClientIP(myT)
             if target_host == None:
                 # We couldn't get an IP address for the target host
                 return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
 
-            target_uuid = myT.getUUID()
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
             updateHistory(myCommandOnHostID, 'delete_in_progress')
@@ -486,14 +486,15 @@ def runInventoryPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: inventory done" % myCommandOnHostID)
         return runEndPhase(myCommandOnHostID)
     # if we are here, inventory has either previously failed or never be done
+
     launcher = chooseLauncher()
 
+    target_uuid = myT.getUUID()
     target_host = chooseClientIP(myT)
     if target_host == None:
         # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
 
-    target_uuid = myT.getUUID()
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
 

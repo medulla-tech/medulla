@@ -45,6 +45,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
 
     # [scheduler] section
     awake_time = 600
+    client_check = None
     dbencoding = 'utf-8'
     enablessl = True
     verifypeer = False
@@ -59,6 +60,7 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
     port = 8000
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     scheduler_path = '/usr/sbin/pulse2-scheduler'
+    server_check = None
     username = 'username'
 
     # [daemon] section
@@ -117,8 +119,8 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
-        if self.cp.has_option("scheduler", "enablessl"):
-            self.enablessl = self.cp.getboolean("scheduler", "enablessl")
+        self.setoption("scheduler", "enablessl", "enablessl", 'boolean')
+
         if self.enablessl:
             if self.cp.has_option("scheduler", "privkey"):
                 self.localcert = self.cp.get("scheduler", "privkey")
@@ -140,6 +142,19 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
             self.resolv_order = self.resolv_order.split(' ')
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
         self.setoption("scheduler", "username", "username")
+
+        if self.cp.has_option("scheduler", "client_check"):
+            self.client_check = {}
+            for token in self.cp.get("scheduler", "client_check").split(','):
+                (key, val) = token.split('=')
+                self.client_check[key] = val
+            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'client_check', self.client_check))
+        if self.cp.has_option("scheduler", "server_check"):
+            self.server_check = {}
+            for token in self.cp.get("scheduler", "server_check").split(','):
+                (key, val) = token.split('=')
+                self.server_check[key] = val
+            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
 
         # [daemon] section parsing
         if self.cp.has_section("daemon"):
