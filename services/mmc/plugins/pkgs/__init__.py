@@ -102,10 +102,20 @@ class RpcProxy(RpcProxyI):
         def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).getTemporaryFiles(pp_api_id)
+                    return PackagePutA(upa).getTemporaryFiles()
             return []
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_getTemporaryFiles)
+        return d
+
+    def ppa_associatePackages(self, pp_api_id, pid, files):
+        def _ppa_associatePackages(result, pp_api_id = pp_api_id, pid = pid, files = files):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).associatePackages(pid, files)
+            return []
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_associatePackages)
         return d
     
     # UserPackageApiApi

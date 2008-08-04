@@ -36,7 +36,7 @@ class PackagePutA:
         self.initialized_failed = False
 
     def onError(self, error, funcname, args = '', value = []):
-        self.logger.warn("PackagePutA:%s %s has failed: %s" % (funcname, args, error))
+        self.logger.warn("PackagePutA:%s %s has failed: %s" % (funcname, str(args), error))
         return value
                     
     def getTemporaryFiles(self):
@@ -44,6 +44,13 @@ class PackagePutA:
             return []
         d = self.ppaserver.callRemote("getTemporaryFiles")
         d.addErrback(self.onError, "getTemporaryFiles")
+        return d
+
+    def associatePackages(self, pid, files):
+        if self.initialized_failed:
+            return []
+        d = self.ppaserver.callRemote("associatePackages", pid, files)
+        d.addErrback(self.onError, "associatePackages", [pid, files])
         return d
         
     def putPackageDetail(self, package):
