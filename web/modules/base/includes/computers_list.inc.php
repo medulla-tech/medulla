@@ -29,6 +29,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $glpiAction = new ActionItem(_("GLPI Inventory"),"groupglpitabs","inventory","inventory", "base", "computers");
         $logAction = new ActionItem(_("Read log"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"groupmsctabs","install","computer", "base", "computers");
+        $msc_can_download_file = false;
     } else {
         $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
         $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
@@ -101,7 +102,6 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $n->setParamInfo($params);
     $n->setCssClass("machineName");
     
-
     $n->addActionItemArray($actionInventory);
     if ($msc_can_download_file) {
         $n->addActionItemArray($actionDownload);
