@@ -27,10 +27,10 @@
 """
 
 import random
-from pulse2.package_server.types import Mirror, Machine
-from pulse2.package_server.mirror_api.assign_algo import AssignAlgo
+from pulse2.package_server.types import Mirror, Machine, User
+from pulse2.package_server.assign_algo import MMAssignAlgo, UPAssignAlgo
 
-class UserAssignAlgo(AssignAlgo):
+class MMUserAssignAlgo(MMAssignAlgo):
     name = 'default'
     assign = {}
     def getMachineMirror(self, m):
@@ -54,4 +54,23 @@ class UserAssignAlgo(AssignAlgo):
         ret = []
         ret += map(lambda papi: papi.toH(), self.package_apis)
         return ret
+
+
+class UPUserAssignAlgo(UPAssignAlgo):
+    name = 'default'
+    assign = {}
+
+    def getUserPackageApi(self, u):
+        user = User().from_h(u)
+        if not self.assign.has_key(user.uuid):
+            if self.package_api_put != None:
+                self.assign[user.uuid] = self.package_api_put
+            else:
+                self.assign[user.uuid] = []
+#            {
+#                'READ'=>@mirrors['package_api_put'],
+#                'WRITE'=>@mirrors['package_api_put'],
+#                'DEL'=>@mirrors['package_api_put']
+#            }
+        return self.assign[user.uuid]
 

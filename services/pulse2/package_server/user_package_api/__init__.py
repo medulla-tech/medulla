@@ -31,46 +31,34 @@ import twisted.web.server
 import logging
 import random
 from pulse2.package_server.types import Mirror, Machine, User
+from pulse2.package_server.assign_algo import UPAssignAlgoManager
+
 
 class UserPackageApi(twisted.web.xmlrpc.XMLRPC):
     type = 'UserPackageApi'
-    def __init__(self, services = {}, name = ''):
+    def __init__(self, services = {}, name = '', assign_algo = 'default'):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
         self.logger = logging.getLogger()
         self.name = name
-        self.mirrors = {}
-        self.assign = {}
+        package_api_put = []
 
         try:
             for service in services:
-                if not self.mirrors.has_key(service['type']):
-                    self.mirrors[service['type']] = []
-                if service['server'] == '':
-                    service['server'] = 'localhost'
-                self.mirrors[service['type']].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
+                if service['type'] == 'package_api_put':
+                    if service['server'] == '':
+                        service['server'] = 'localhost'
+                    package_api_put.append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
             self.logger.debug("(%s) %s api user/packageApi server initialised"%(self.type, self.name))
         except Exception, e:
             self.logger.error("(%s) %s api user/packageApi server can't initialize correctly"%(self.type, self.name))
             raise e
 
+        self.assign_algo = UPAssignAlgoManager().getAlgo(assign_algo)
+        self.assign_algo.init(package_api_put)
+
     def xmlrpc_getServerDetails(self):
-        ret = []
-        if self.mirrors.has_key('package_api_put'):
-            ret = map(lambda m: m.toH(), self.mirrors['package_api_put'])
-        return ret
+        return map(lambda m: m.toH(), self.package_api_put)
 
     def xmlrpc_getUserPackageApi(self, u):
-        user = User().from_h(u)
-        if not self.assign.has_key(user.uuid):
-            if self.mirrors.has_key('package_api_put'):
-                self.assign[user.uuid] = map(lambda x: x.toH(), self.mirrors['package_api_put'])
-            else:
-                self.assign[user.uuid] = []
-#            {
-#                'READ'=>@mirrors['package_api_put'],
-#                'WRITE'=>@mirrors['package_api_put'],
-#                'DEL'=>@mirrors['package_api_put']
-#            }
-        return self.assign[user.uuid]
-
+        return self.assign_algo.getUserPackageApi(u)
 

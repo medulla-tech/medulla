@@ -32,7 +32,7 @@ import logging
 import random
 from pulse2.package_server.types import Mirror, Machine
 from pulse2.package_server.utilities import Singleton
-from pulse2.package_server.mirror_api.assign_algo import AssignAlgoManager
+from pulse2.package_server.assign_algo import MMAssignAlgoManager
 
 class MirrorApi(twisted.web.xmlrpc.XMLRPC):
     type = 'MirrorApi'
@@ -83,7 +83,7 @@ class MirrorApi(twisted.web.xmlrpc.XMLRPC):
             url2package_api = []
             
         # TODO find a clean way to affect another class
-        self.assign_algo = AssignAlgoManager().getAlgo(assign_algo)
+        self.assign_algo = MMAssignAlgoManager().getAlgo(assign_algo)
         self.assign_algo.init(mirrors, mirrors, package_api, url2mirrors, url2mirrors, url2package_api)
 
     def xmlrpc_getServerDetails(self):
