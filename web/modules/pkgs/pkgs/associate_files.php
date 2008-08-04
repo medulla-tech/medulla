@@ -41,8 +41,12 @@ if (isset($_POST["bassoc"])) {
     }
     $ret = associatePackages($p_api_id, $pid, $cbx);
     if (!isXMLRPCError() and $ret and $ret != -1) {
-        new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
-        #header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+        if ($ret[0]) {
+            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
+            header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+        } else {
+            new NotifyWidgetFailure($ret[1]);
+        }
     } else {
         new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
     }

@@ -45,16 +45,20 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
     $ret = putPackageDetail($p_api_id, $package);
     if (!isXMLRPCError() and $ret and $ret != -1) {
-        if ($_GET["action"]=="add") {
-            new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[1]));
-            if (! isset($_POST["bassoc"])) {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+        if ($ret[0]) {
+            if ($_GET["action"]=="add") {
+                new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
+                if (! isset($_POST["bassoc"])) {
+                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+                }
+            } else {
+                new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+            }
+            if (isset($_POST["bassoc"])) {
+                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>$p_api_id, 'pid'=>base64_encode($package['id']))));
             }
         } else {
-            new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
-        }
-        if (isset($_POST["bassoc"])) {
-            header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>$p_api_id, 'pid'=>base64_encode($package['id']))));
+            new NotifyWidgetFailure($ret[1]);
         }
     } else {
         new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
