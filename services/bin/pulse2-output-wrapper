@@ -257,7 +257,6 @@ def format(line, tag):
     * convert to utf-8
     * format line
     """
-
     if config["only-stdout"] and not tag == 'O':
         return
     if config["remove-empty-lines"] and not len(line):
