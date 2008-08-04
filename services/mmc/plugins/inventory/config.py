@@ -60,7 +60,7 @@ class InventoryConfig(PluginConfig):
             'Software/ProductVersion' : 'int'
     }
     halfstatic = {
-            'Registry/Value' : ['string', 'Path', 'DisplayName']
+            'Registry/Value/display name' : ['string', 'Path', 'DisplayName']
     }
 
     def readConf(self):
