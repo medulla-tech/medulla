@@ -147,11 +147,13 @@ def runUploadPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
+
+    # check for upload condition in order to give up if needed
     if myCoH.isUploadRunning(): # upload still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCoH.getId())
         return None
     if not myCoH.isUploadImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to upload right now" % myCommandOnHostID)
+        logger.info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
         return None
     if myCoH.isUploadDone(): # upload already done, jump to next stage
         logger.info("command_on_host #%s: upload done" % myCoH.getId())
@@ -163,37 +165,33 @@ def runUploadPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
         myCoH.setUploadIgnored()
         return runExecutionPhase(myCommandOnHostID)
+
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'TRANSFERT', 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+
     # if we are here, upload has either previously failed or never be done
     # do copy here
     # first attempt to guess is mirror is local (push) or remove (pull)
     # local mirror starts by "file://"
     if re.compile('^file://').match(myT.mirrors): # prepare a remote_push
-        source_path = re.compile('^file://(.*)$').search(myT.mirrors).group(1)
-        files = myC.files.split("\n")
+        client['protocol'] = 'rsyncssh'
         files_list = []
-        for file in files:
+        for file in myC.files.split("\n"):
             fname = file.split('##')[1]
             if re.compile('^/').search(fname):
                 fname = re.compile('^/(.*)$').search(fname).group(1)
-            files_list.append(os.path.join(source_path, fname))
-        launcher = chooseLauncher()
-
-        target_uuid = myT.getUUID()
-        target_host = chooseClientIP(myT)
-        if target_host == None:
-            # We couldn't get an IP address for the target host
-            return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+            files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname))
 
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
         updateHistory(myCommandOnHostID, 'upload_in_progress')
-        proxy = getProxy(launcher)
 
         if SchedulerConfig().mode == 'sync':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'sync_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
+                client,
                 files_list,
                 SchedulerConfig().max_upload_time
             )
@@ -202,10 +200,10 @@ def runUploadPhase(myCommandOnHostID):
                 addErrback(parsePushError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'async_remote_push',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'rsyncssh', 'maxbw': myC.maxbw},
+                client,
                 files_list,
                 SchedulerConfig().max_upload_time
             )
@@ -217,29 +215,23 @@ def runUploadPhase(myCommandOnHostID):
         mirrors = myT.mirrors.split('||')
         mirror = mirrors[0] # TODO: handle when several mirrors are available
         if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
+            client['protocol'] = 'wget'
             m1 = mmc.plugins.msc.mirror_api.Mirror(mirror)
             files = myC.files.split("\n")
             files_list = []
             for file in files:
                 fid = file.split('##')[0]
                 files_list.append(m1.getFilePath(fid))
-            launcher = chooseLauncher()
-
-            target_uuid = myT.getUUID()
-            target_host = chooseClientIP(myT)
-            if target_host == None:
-                # We couldn't get an IP address for the target host
-                return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
             myCoH.setUploadInProgress()
             myCoH.setCommandStatut('upload_in_progress')
             updateHistory(myCommandOnHostID, 'upload_in_progress')
-            proxy = getProxy(launcher)
+
             if SchedulerConfig().mode == 'sync':
-                mydeffered = proxy.callRemote(
+                mydeffered = getProxy(chooseLauncher()).callRemote(
                     'sync_remote_pull',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
+                    client,
                     files_list,
                     SchedulerConfig().max_upload_time
                 )
@@ -247,10 +239,10 @@ def runUploadPhase(myCommandOnHostID):
                     addCallback(parsePullResult, myCommandOnHostID).\
                     addErrback(parsePullError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = proxy.callRemote(
+                mydeffered = getProxy(chooseLauncher()).callRemote(
                     'async_remote_pull',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'wget', 'maxbw': myC.maxbw},
+                    client,
                     files_list,
                     SchedulerConfig().max_upload_time
                 )
@@ -294,28 +286,22 @@ def runExecutionPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
         myCoH.setExecutionIgnored()
         return runDeletePhase(myCommandOnHostID)
-    # if we are here, execution has either previously failed or never be done
-    launcher = chooseLauncher()
 
-    target_uuid = myT.getUUID()
-    target_host = chooseClientIP(myT)
-    if target_host == None:
-        # We couldn't get an IP address for the target host
+    # if we are here, execution has either previously failed or never be done
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'EXECUTE', 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
 
     myCoH.setExecutionInProgress()
     myCoH.setCommandStatut('execution_in_progress')
     updateHistory(myCommandOnHostID, 'execution_in_progress')
+
     if myC.isQuickAction(): # should be a standard script
-        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
-            logger.info(myC.start_file)
-            logger.info(str(target_host))
-            logger.info(str(target_uuid))
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 myC.start_file,
                 SchedulerConfig().max_command_time
             )
@@ -323,10 +309,10 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'async_remote_quickaction',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 myC.start_file,
                 SchedulerConfig().max_command_time
             )
@@ -335,12 +321,11 @@ def runExecutionPhase(myCommandOnHostID):
             return None
         return mydeffered
     else:
-        proxy = getProxy(launcher)
         if SchedulerConfig().mode == 'sync':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'sync_remote_exec',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 myC.start_file,
                 SchedulerConfig().max_command_time
             )
@@ -348,10 +333,10 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'async_remote_exec',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 myC.start_file,
                 SchedulerConfig().max_command_time
             )
@@ -381,26 +366,23 @@ def runDeletePhase(myCommandOnHostID):
         logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
         myCoH.setDeleteIgnored()
         return runEndPhase(myCommandOnHostID)
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'DELETE', 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
+
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
         files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
-        launcher = chooseLauncher()
-
-        target_uuid = myT.getUUID()
-        target_host = chooseClientIP(myT)
-        if target_host == None:
-            # We couldn't get an IP address for the target host
-            return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
 
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
         updateHistory(myCommandOnHostID, 'delete_in_progress')
-        proxy = getProxy(launcher)
+
         if SchedulerConfig().mode == 'sync':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'sync_remote_delete',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 files_list,
                 SchedulerConfig().max_command_time
             )
@@ -408,10 +390,10 @@ def runDeletePhase(myCommandOnHostID):
                 addCallback(parseDeleteResult, myCommandOnHostID).\
                 addErrback(parseDeleteError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = proxy.callRemote(
+            mydeffered = getProxy(chooseLauncher()).callRemote(
                 'async_remote_delete',
                 myCommandOnHostID,
-                {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                client,
                 files_list,
                 SchedulerConfig().max_command_time
             )
@@ -424,23 +406,16 @@ def runDeletePhase(myCommandOnHostID):
         mirror = mirrors[0] # TODO: handle when several mirrors are available
         if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
-            launcher = chooseLauncher()
-
-            target_uuid = myT.getUUID()
-            target_host = chooseClientIP(myT)
-            if target_host == None:
-                # We couldn't get an IP address for the target host
-                return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
 
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
             updateHistory(myCommandOnHostID, 'delete_in_progress')
-            proxy = getProxy(launcher)
+
             if SchedulerConfig().mode == 'sync':
-                mydeffered = proxy.callRemote(
+                mydeffered = getProxy(chooseLauncher()).callRemote(
                     'sync_remote_delete',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                    client,
                     files_list,
                     SchedulerConfig().max_command_time
                 )
@@ -448,10 +423,10 @@ def runDeletePhase(myCommandOnHostID):
                     addCallback(parseDeleteResult, myCommandOnHostID).\
                     addErrback(parseDeleteError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = proxy.callRemote(
+                mydeffered = getProxy(chooseLauncher()).callRemote(
                     'async_remote_delete',
                     myCommandOnHostID,
-                    {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+                    client,
                     files_list,
                     SchedulerConfig().max_command_time
                 )
@@ -485,35 +460,30 @@ def runInventoryPhase(myCommandOnHostID):
     if myCoH.isInventoryDone(): # inventory has already be done, jump to next stage
         logger.info("command_on_host #%s: inventory done" % myCommandOnHostID)
         return runEndPhase(myCommandOnHostID)
-    # if we are here, inventory has either previously failed or never be done
 
-    launcher = chooseLauncher()
-
-    target_uuid = myT.getUUID()
-    target_host = chooseClientIP(myT)
-    if target_host == None:
-        # We couldn't get an IP address for the target host
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'INVENTORY', 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
 
+    # if we are here, inventory has either previously failed or never be done
     myCoH.setInventoryInProgress()
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
 
-    proxy = getProxy(launcher)
     if SchedulerConfig().mode == 'sync':
-        mydeffered = proxy.callRemote(
+        mydeffered = getProxy(chooseLauncher()).callRemote(
             'sync_remote_inventory',
             myCommandOnHostID,
-            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+            client,
             SchedulerConfig().max_command_time
         )
         mydeffered.\
             addCallback(parseInventoryResult, myCommandOnHostID).\
             addErrback(parseInventoryError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
-        mydeffered = proxy.callRemote(
+        mydeffered = getProxy(chooseLauncher()).callRemote(
             'async_remote_inventory',
             myCommandOnHostID,
-            {'host': target_host, 'uuid': target_uuid, 'protocol': 'ssh'},
+            client,
             SchedulerConfig().max_command_time
         )
         mydeffered.addErrback(parseInventoryError, myCommandOnHostID)
@@ -675,3 +645,32 @@ def chooseClientIP(myT):
         'ips': myT.getIps(),
         'macs': myT.getMacs()
     })
+
+def getClientCheck(myT):
+    ret = {}
+    for key in SchedulerConfig().client_check:
+        if SchedulerConfig().client_check[key] == 'ipaddr':
+            ret.update({key: myT.target_ipaddr})
+        if SchedulerConfig().client_check[key] == 'name':
+            ret.update({key: myT.target_name})
+        if SchedulerConfig().client_check[key] == 'uuid':
+            ret.update({key: myT.target_uuid})
+        if SchedulerConfig().client_check[key] == 'macaddr':
+            ret.update({key: myT.target_macaddr.split('||')[0]})
+    return ret;
+
+def getServerCheck(myT):
+    ret = {}
+    for key in SchedulerConfig().server_check:
+        if SchedulerConfig().server_check[key] == 'ipaddr':
+            ret.update({key: myT.target_ipaddr})
+        if SchedulerConfig().server_check[key] == 'name':
+            ret.update({key: myT.target_name})
+        if SchedulerConfig().server_check[key] == 'uuid':
+            ret.update({key: myT.target_uuid})
+        if SchedulerConfig().server_check[key] == 'macaddr':
+            ret.update({key: myT.target_macaddr.split('||')[0]})
+    return ret;
+
+def getClientGroup(myT):
+    return '';
