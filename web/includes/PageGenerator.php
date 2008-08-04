@@ -1813,9 +1813,9 @@ class Form extends HtmlContainer {
         return $str;
     }
     
-    function addButton($name, $value) {
+    function addButton($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
         $b = new Button();
-        $this->buttons[] = $b->getButtonString($name, $value);
+        $this->buttons[] = $b->getButtonString($name, $value, $klass, $extra, $type);
     }
 
     function addValidateButton($name) {
