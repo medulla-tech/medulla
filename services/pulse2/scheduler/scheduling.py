@@ -64,7 +64,6 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
-
 def startAllCommands(scheduler_name):
     # we return a list of deferred
     deffereds = [] # will hold all deferred
@@ -96,8 +95,11 @@ def startAllCommands(scheduler_name):
         filter(database.commands_on_host.c.current_state != 'delete_failed').\
         filter(database.commands_on_host.c.current_state != 'inventory_failed').\
         filter(database.commands_on_host.c.next_launch_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
-        filter(sqlalchemy.or_(database.commands.c.scheduler == '', database.commands.c.scheduler == scheduler_name, database.commands.c.scheduler == None)).\
-        all():
+        filter(sqlalchemy.or_(
+            database.commands.c.scheduler == '',
+            database.commands.c.scheduler == scheduler_name,
+            database.commands.c.scheduler == None)
+        ).all():
         # enter the maze: run command
         deffered = runCommand(q.id)
         if deffered:
@@ -105,6 +107,47 @@ def startAllCommands(scheduler_name):
     session.close()
     logging.getLogger().info("Scheduler: %d tasks to perform" % len(deffereds))
     return deffereds
+
+def stopElapsedCommands(scheduler_name):
+    # we return a list of deferred
+    deffereds = [] # will hold all deferred
+    session = sqlalchemy.create_session()
+    database = MscDatabase()
+    logger = logging.getLogger()
+    logger.debug("MSC_Scheduler->stopElapsedCommands()...")
+    # gather candidates:
+    # retain tasks already in progress
+    # take tasks with end_date in the future, but not null
+    for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)).\
+        filter(database.commands.c.end_date != '0000-00-00 00:00:00').\
+        filter(database.commands.c.end_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
+        filter(sqlalchemy.or_(
+            database.commands_on_host.c.current_state == 'upload_in_progress',
+            database.commands_on_host.c.current_state == 'execution_in_progress',
+            database.commands_on_host.c.current_state == 'delete_in_progress',
+            database.commands_on_host.c.current_state == 'inventory_in_progress',
+            database.commands.c.scheduler == '',
+            database.commands.c.scheduler == scheduler_name,
+            database.commands.c.scheduler == None)
+        ).all():
+        # enter the maze: stop command
+        deffered = stopCommand(q.id)
+        if deffered:
+            deffereds.append(deffered)
+    session.close()
+    logging.getLogger().info("Scheduler: %d tasks to perform" % len(deffereds))
+    return deffereds
+
+def stopCommand(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logger = logging.getLogger()
+    logger.info("going to stop command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    logger.debug("command_on_host state is %s" % myCoH.toH())
+    logger.debug("command state is %s" % myC.toH())
+    for launcher in SchedulerConfig().launchers_uri.values():
+        callOnLauncher(launcher, 'kill_process', myCommandOnHostID)
+    return True
 
 def runCommand(myCommandOnHostID):
     """

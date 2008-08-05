@@ -63,20 +63,19 @@ import logging.config
 
 VERSION = "0.0.0"
 
-def reschedule_start_all_commands((deffered)):
+def reschedule_awake_scheduling((deffered)):
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
-    twisted.internet.reactor.callLater(start_commands_in, run_start_all_commands)
+    twisted.internet.reactor.callLater(start_commands_in, run_awake_scheduling)
 
-def run_start_all_commands():
+def run_awake_scheduling():
     logger = logging.getLogger()
     logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
     # start command, gather deffered
     deferreds = pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
+    pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
     # FIXME: should perhaps be called without waiting for deferreds ?
-    # adds a end hook to reschedule prepare_start_all_commands
-    # dl = twisted.internet.defer.DeferredList(deferreds)
-    # dl.addCallback(reschedule_start_all_commands)
-    reschedule_start_all_commands(None)
+    # adds a end hook to reschedule awake_scheduling
+    reschedule_awake_scheduling(None)
 
 def startService():
     MscDatabase().activate()
@@ -132,7 +131,7 @@ def startService():
         return 1
 
     # start periodic scheduler, called every awake_time seconds
-    reschedule_start_all_commands(None)
+    reschedule_awake_scheduling(None)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
 
     twisted.internet.reactor.run()
@@ -212,7 +211,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_download_file(self, uuid, fqdn, shortname, ips, macs, path):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path))
     def xmlrpc_start_all_commands(self):
-        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
+        return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.awake_scheduling(self.name)))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):
@@ -232,7 +231,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
     def xmlrpc_remote_exec(self, launcher, path):
-        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))        
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
 
 def main():
     parser = optparse.OptionParser()

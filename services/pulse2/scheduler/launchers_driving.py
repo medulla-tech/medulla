@@ -38,16 +38,13 @@ def chooseLauncher():
             used_slots += v['slotused']
             if v['slottotal'] == v['slotused']:
                 del stats[k]
-
         # give up if we may go beyond limit
         if used_slots >= SchedulerConfig().max_slots:
             raise Exception('chooseLauncher()', "Giving up, as we may go beyond our max of %s slots used" % SchedulerConfig().max_slots)
         if len(stats.keys()) == 0:
             raise Exception('chooseLauncher()', "Giving up, no slot seems to be left on launchers")
-
         best_launcher = stats.keys()[random.randint(0, len(stats.keys())-1)]
         return SchedulerConfig().launchers_uri[best_launcher]
-
 
     def _callback(result, stats, launchers, current_launcher):
         # we just got a result from a launcher, let's stack it
