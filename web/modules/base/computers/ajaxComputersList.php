@@ -60,7 +60,7 @@ $count = getComputerCount($filter);
 $msc_can_download_file = False;
 if (in_array("msc", $_SESSION["modulesList"])) {
     require_once("../../../modules/msc/includes/scheduler_xmlrpc.php");
-    $msc_can_download_file = True;
+    $msc_can_download_file = msc_can_download_file();
 }
 
 list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file);
