@@ -21,6 +21,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+import logging
+
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
@@ -30,8 +32,22 @@ def chooseLauncher():
 
     def _finalback(stats):
         import random
+        used_slots = 0
+        # remove full launchers
+        for k,v in stats.items():
+            used_slots += v['slotused']
+            if v['slottotal'] == v['slotused']:
+                del stats[k]
+
+        # give up if we may go beyond limit
+        if used_slots >= SchedulerConfig().max_slots:
+            raise Exception('chooseLauncher()', "Giving up, as we may go beyond our max of %s slots used" % SchedulerConfig().max_slots)
+        if len(stats.keys()) == 0:
+            raise Exception('chooseLauncher()', "Giving up, no slot seems to be left on launchers")
+
         best_launcher = stats.keys()[random.randint(0, len(stats.keys())-1)]
         return SchedulerConfig().launchers_uri[best_launcher]
+
 
     def _callback(result, stats, launchers, current_launcher):
         # we just got a result from a launcher, let's stack it
@@ -105,4 +121,11 @@ def callOnLauncher(launcher, method, *args):
 
 def callOnBestLauncher(method, *args):
     import pulse2.scheduler.xmlrpc
-    return chooseLauncher().addCallback(pulse2.scheduler.xmlrpc.getProxy).addCallback(lambda x: x.callRemote(method, *args))
+
+    def _eb(reason):
+        logging.getLogger().error("scheduler %s: error %s" % (SchedulerConfig().name, reason.getErrorMessage()))
+
+    return chooseLauncher().\
+        addCallback(pulse2.scheduler.xmlrpc.getProxy).\
+        addCallback(lambda x: x.callRemote(method, *args)).\
+        addErrback(_eb)

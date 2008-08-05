@@ -54,27 +54,27 @@ def chooseClientIP(target):
         if method == 'fqdn':
             result = chooseClientIPperFQDN(target)
             if result:
-                logging.getLogger().debug("will connect to %s as %s using DNS resolver" % (target, result))
+                logging.getLogger().debug("scheduler %s: will connect to %s as %s using DNS resolver" % (SchedulerConfig().name, target, result))
                 return result
-            logging.getLogger().debug("won't connect to %s using DNS resolver" % (target))
+            logging.getLogger().debug("scheduler %s: won't connect to %s using DNS resolver" % (SchedulerConfig().name, target))
         if method == 'netbios':
             result = chooseClientIPperNetbios(target)
             if result:
-                logging.getLogger().debug("will connect to %s as %s using Netbios resolver" % (target, result))
+                logging.getLogger().debug("scheduler %s: will connect to %s as %s using Netbios resolver" % (SchedulerConfig().name, target, result))
                 return result
-            logging.getLogger().debug("won't connect to %s using Netbios resolver" % (target))
+            logging.getLogger().debug("scheduler %s: won't connect to %s using Netbios resolver" % (SchedulerConfig().name, target))
         if method == 'hosts':
             result = chooseClientIPperHosts(target)
             if result:
-                logging.getLogger().debug("will connect to %s as %s using Hosts" % (target, result))
+                logging.getLogger().debug("scheduler %s: will connect to %s as %s using Hosts" % (SchedulerConfig().name, target, result))
                 return result
-            logging.getLogger().debug("won't connect to %s using Hosts" % (target))
+            logging.getLogger().debug("scheduler %s: won't connect to %s using Hosts" % (SchedulerConfig().name, target))
         if method == 'ip':
             result = chooseClientIPperIP(target)
             if result:
-                logging.getLogger().debug("will connect to %s as %s using IP given" % (target, result))
+                logging.getLogger().debug("scheduler %s: will connect to %s as %s using IP given" % (SchedulerConfig().name, target, result))
                 return result
-            logging.getLogger().debug("won't connect to %s using IP given" % (target))
+            logging.getLogger().debug("scheduler %s: won't connect to %s using IP given" % (SchedulerConfig().name, target))
     # (unfortunately) got nothing
     return None
 
