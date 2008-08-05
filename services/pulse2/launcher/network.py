@@ -29,6 +29,7 @@ import re
 from pulse2.launcher.config import LauncherConfig
 import pulse2.launcher.process_control
 import mmc.support.mmctools
+SEPARATOR = u'·'
 
 def wolClient(mac_addrs):
     """ Send a BCast WOL packet to mac_addrs """
@@ -126,7 +127,7 @@ def downloadFile(client, path, timeout):
     mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
         None,
         client,
-        "cd %s; F=`ls -1|head -n1`; test ! -z $F && uuencode.exe -m $F $F" % path,
+        SEPARATOR.join(("cd %s; F=`ls -1|head -n1`; test ! -z $F && uuencode.exe -m $F $F" % path).split(' ')),
         20 * 1024 * 1024,
         timeout
     )
