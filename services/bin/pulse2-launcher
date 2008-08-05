@@ -99,6 +99,18 @@ def startService():
         logger.error('launcher %s: No section / invalid section %s in config file !' % (name, name))
         return 1
 
+    # put the scheduler vars
+    config = LauncherConfig()
+    scheduler = config.schedulers[config.launchers[config.name]['scheduler']]
+
+    config.awake_time = scheduler['awake_time']
+    config.defer_results = scheduler['defer_results']
+    config.scheduler_enablessl = scheduler['enablessl']
+    config.scheduler_host = scheduler['host']
+    config.scheduler_password = scheduler['password']
+    config.scheduler_port = scheduler['port']
+    config.scheduler_username = scheduler['username']
+    
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']
