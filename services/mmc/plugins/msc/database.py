@@ -271,7 +271,7 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw):
+    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler):
         session = create_session()
         cmd = Commands()
         now = time.localtime()
@@ -292,6 +292,7 @@ class MscDatabase(Singleton):
         cmd.start_inventory = start_inventory
         cmd.repeat = repeat
         cmd.maxbw = maxbw
+        cmd.scheduler = scheduler
         session.save(cmd)
         session.flush()
         session.close()
@@ -337,7 +338,7 @@ class MscDatabase(Singleton):
         mirror = None
         fallback = None
         targetUri = None
-        
+
         def cbMirror(result):
             d2 = MirrorApi().getFallbackMirror({"name": targetName, "uuid": targetUuid})
             d2.addCallback(cbFallback, result)
@@ -360,8 +361,8 @@ class MscDatabase(Singleton):
                 targetUri,
                 group_id
                 ) # TODO change mirrors...
-            
-        
+
+
         targetUuid = target[0]
         targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
@@ -397,7 +398,7 @@ class MscDatabase(Singleton):
             return d
         elif mode == 'push':
             targetUri = '%s://%s' % ('file', root)
-            
+
         return defer.succeed(addtarget(targetUri))
 
     def addCommand(self,
@@ -420,7 +421,8 @@ class MscDatabase(Singleton):
                 start_inventory = False,
                 repeat = 0,
                 maxbw = 0,
-                root = MscConfig("msc").repopath
+                root = MscConfig("msc").repopath,
+                scheduler = MscConfig("msc").default_scheduler
             ):
         """
         Main func to inject a new command in our MSC database
@@ -439,7 +441,7 @@ class MscDatabase(Singleton):
                 d2.addCallback(cbProcessCommand, target, root)
                 return d2
             else:
-                self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))                
+                self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))
                 d.callback(cmd_id)
 
         def cbProcessCommand(target_id, target, root):
@@ -447,12 +449,12 @@ class MscDatabase(Singleton):
             self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
             self.blacklistTargetHostname(t, session)
             cbCreateTarget(target, root)
-                        
+
         if type(files) == list:
             files = "\n".join(files)
 
         # create (and save) the command itself
-        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw)
+        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler)
 
         session = create_session()
         d = defer.Deferred()
@@ -472,7 +474,7 @@ class MscDatabase(Singleton):
         session.update(myTarget) # not session.save as myTarget was attached to another session
         session.flush()
 
-    def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
+    def addCommandQuick(self, ctx, cmd, targets, desc, gid = None, scheduler = None):
         """
         Schedule a command for immediate execution into database.
         Multiple machines can be specified in the targets parameter.
@@ -519,7 +521,10 @@ class MscDatabase(Singleton):
             False,
             60,
             3,
-            False
+            False,
+            0,
+            0,
+            scheduler or MscConfig("msc").default_scheduler
         )
 
     def addTarget(self, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
@@ -859,7 +864,7 @@ class MscDatabase(Singleton):
                 'conn_ex':[0],
                 'fail_rm':[0],
                 'conn_rm':[0]
-                
+
             }
         }
         running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop'] #, 'scheduled']
@@ -903,7 +908,7 @@ class MscDatabase(Singleton):
                         ret['running']['run_up'][0] += 1
                     else:
                         ret['running']['wait_up'][0] += 1
-            
+
         for i in ['success', 'running', 'failure']:
             ret[i]['total'].append(ret[i]['total'][0] * 100 / ret['total'])
         for i in ['wait_up', 'run_up', 'wait_ex', 'run_ex', 'wait_rm', 'run_rm']:
@@ -929,6 +934,6 @@ class MscDatabase(Singleton):
         #       dont injoignables (nb)
         #   echoué durant sup (nb, %) coh.deleted == 'FAILED'
         #       dont injoignables (nb)
-        
+
         # coh.uploaded, coh.executed, coh.deleted
-            
+

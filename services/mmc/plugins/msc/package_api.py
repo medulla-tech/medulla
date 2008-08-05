@@ -29,7 +29,7 @@ class PackageA:
             bind = server['server']
             if server.has_key('username') and server.has_key('password') and server['username'] != '':
                 login = "%s:%s@" % (server['username'], server['password'])
-            
+
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.logger.debug('PackageA will connect to %s' % (self.server_addr))
 
@@ -67,10 +67,10 @@ class PackageA:
         d = self.paserver.callRemote("getPackageLabel", pid)
         d.addErrback(self.onError, "getPackageLabel", pid, False)
         return d
-    
+
     def _erGetLocalPackagePath(self):
         return self.config.repopath
-    
+
     def getLocalPackagePath(self, pid):
         if self.initialized_failed:
             return self.config.repopath
@@ -166,7 +166,7 @@ class PackageA:
 from mmc.plugins.msc.mirror_api import MirrorApi
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None):
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, scheduler = None):
         self.ctx = ctx
         self.p_api = p_api
         self.pid = pid
@@ -174,6 +174,7 @@ class SendPackageCommand:
         self.params = params
         self.mode = mode
         self.gid = gid
+        self.scheduler = scheduler
 
     def onError(error):
         logging.getLogger().error("Can't connect: %s", str(error))
@@ -219,27 +220,27 @@ class SendPackageCommand:
         max_connection_attempt = self.params['max_connection_attempt']
         start_inventory = (self.params['start_inventory'] == 'on' and 'enable' or 'disable')
         maxbw = self.params['maxbw']
-    
+
         try:
             parameters = self.params['parameters']
         except KeyError:
             parameters = ''
-    
+
         try:
             start_date = convert_date(self.params['start_date'])
         except:
             start_date = '0000-00-00 00:00:00' # ie. "now"
-    
+
         try:
             end_date = convert_date(self.params['end_date'])
         except:
             end_date = '0000-00-00 00:00:00' # ie. "no end date"
-    
+
         try:
             title = self.params['title']
         except:
             title = '' # ie. "no title"
-    
+
         if title == None or title == '':
             localtime = time.localtime()
             title = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
@@ -252,9 +253,9 @@ class SendPackageCommand:
                 localtime[4],
                 localtime[5]
             )
-    
+
         files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
-    
+
         MscDatabase().addCommand(  # TODO: refactor to get less args
             start_file,
             parameters,
@@ -275,7 +276,8 @@ class SendPackageCommand:
             start_inventory,
             0,
             maxbw,
-            self.root
+            self.root,
+            self.scheduler or MscConfig("msc").default_scheduler
         ).addCallback(self.sendResult)
 
 def convert_date(date = '0000-00-00 00:00:00'):
@@ -341,7 +343,7 @@ class GetPackagesUuidFiltered:
         self.filt = filt
 
     def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))        
+        logging.getLogger().error("Can't connect: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -385,7 +387,7 @@ class GetPackagesGroupFiltered:
         self.gid = None
 
     def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))        
+        logging.getLogger().error("Can't connect: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -493,6 +495,6 @@ class GetPackagesAdvanced:
                 self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label']), self.packages)
         except KeyError:
             pass
-        # Sort on the mirror order then on the label, and finally on the version number        
+        # Sort on the mirror order then on the label, and finally on the version number
         self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
         self.deferred.callback(self.packages)

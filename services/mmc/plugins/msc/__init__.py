@@ -135,7 +135,7 @@ class RpcProxy(RpcProxyI):
         except KeyError:
             computer[1]['fullname'] = computer[1]['cn'][0]
         return mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer)
-            
+
     def scheduler_ping_client(self, scheduler, uuid):
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
@@ -194,7 +194,7 @@ class RpcProxy(RpcProxyI):
     ##
     # commands management
     ##
-    def add_command_quick_with_id(self, idcmd, target, lang, gid = None):
+    def add_command_quick_with_id(self, idcmd, target, lang, gid = None, scheduler = None):
         """
         @param idcmd: id of the quick action
         @type idcmd: str
@@ -215,23 +215,23 @@ class RpcProxy(RpcProxyI):
                 desc = qas[idcmd]["title" + lang]
             except KeyError:
                 desc = qas[idcmd]["title"]
-            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
+            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid, scheduler)
             d.addCallback(xmlrpcCleanup)
             ret = d
         else:
             ret = -1
         return ret
-        
 
-    def add_command_quick(self, cmd, target, desc, gid = None):
+
+    def add_command_quick(self, cmd, target, desc, gid = None, scheduler = None):
         ctx = self.currentContext
-        d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
+        d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid, scheduler)
         d.addCallback(xmlrpcCleanup)
         return d
 
-    def add_command_api(self, pid, target, params, p_api, mode, gid = None):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None, scheduler = None):
         ctx = self.currentContext
-        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
+        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, scheduler)
         g.deferred = defer.Deferred()
         g.send()
         g.deferred.addCallback(xmlrpcCleanup)
