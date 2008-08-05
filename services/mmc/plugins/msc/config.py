@@ -31,8 +31,8 @@ from mmc.support.config import PluginConfig
 class MscConfig(PluginConfig):
 
     # default folder values
-    qactionspath = "/tftpboot/revoboot/qactions"
-    repopath = "/tftpboot/revoboot/msc"
+    qactionspath = "/var/lib/pulse2/qactions"
+    repopath = "/var/lib/pulse2/packages"
 
     # default DB options
     db_driver = "mysql"
@@ -81,7 +81,7 @@ class MscConfig(PluginConfig):
 
     # Hostname blacklists setting
     # To filter non FQDN computer host name
-    ignore_non_fqdn = True
+    ignore_non_fqdn = False
     # To filter invalid host name
     ignore_invalid_hostname = False
     # To filter with regexp
@@ -92,17 +92,9 @@ class MscConfig(PluginConfig):
     # MAC address blacklist
     wol_macaddr_blacklist = ""
 
+    default_scheduler = ""
+
     schedulers = {
-        'scheduler_01': {
-            'port': 8000,
-            'host': '127.0.0.1',
-            'username': 'username',
-            'password': 'password',
-            'enablessl': True,
-            'verifypeer': False,
-            'cacert': '',
-            'localcert': ''
-        }
     }
 
     def readConf(self):
@@ -167,6 +159,8 @@ class MscConfig(PluginConfig):
             self.wol_macaddr_blacklist = self.get("msc", "wol_macaddr_blacklist")
 
         # schedulers
+        if self.has_option("msc", "default_scheduler"):
+            self.default_scheduler = self.get("msc", "default_scheduler")
         for section in self.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
                 self.schedulers[section] = {
@@ -182,7 +176,7 @@ class MscConfig(PluginConfig):
                 if self.schedulers[section]["verifypeer"]:
                     self.schedulers[section]["cacert"] = self.get(section, "cacert")
                     self.schedulers[section]["localcert"] = self.get(section, "localcert")
-                    
+
 
         # some default web interface values
         if self.has_option("web", "web_def_awake"):
@@ -199,7 +193,7 @@ class MscConfig(PluginConfig):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_dlpath"):
             self.web_dlpath = self.get("web", "web_dlpath")
-            
+
         # API Package
         if self.has_option("package_api", "mserver"):
             self.ma_server = self.get("package_api", "mserver")
