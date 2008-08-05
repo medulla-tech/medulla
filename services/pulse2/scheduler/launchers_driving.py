@@ -24,42 +24,34 @@
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
-from pulse2.scheduler.xmlrpc import getProxy
-
-def getPubKey(launcher, key_name):
-    """ returns a pubkey from launcher "launcher" """
-    def __cb(result):
-        return result
-    def __eb(reason):
-        return ''
-
-    if launcher == None or launcher == '':
-        launcher = chooseLauncher()
-    
-    mydeffered = getProxy(launcher).callRemote(
-        'get_pubkey',
-        key_name
-    )
-    mydeffered.addCallback(__cb).addErrback(__eb)
-    return mydeffered
 
 def chooseLauncher():
-    """ Select a launcher """
-    import random
-    launchers = SchedulerConfig().launchers
-    launcher = launchers[random.sample(launchers.keys(), 1).pop()]
-    if launcher["enablessl"]:
-        uri = "https://"
-    else:
-        uri = 'http://'
-    if launcher['username'] != '':
-        uri += '%s:%s@' % (launcher['username'], launcher['password'])
-    uri += '%s:%d' % (launcher['host'], int(launcher['port']))
-    return uri
+    """ return a good launcher, URI form """
+
+    def _finalback(stats):
+        import random
+        best_launcher = stats.keys()[random.randint(0, len(stats.keys())-1)]
+        return SchedulerConfig().launchers_uri[best_launcher]
+
+    def _callback(result, stats, launchers, current_launcher):
+        # we just got a result from a launcher, let's stack it
+
+        if result:
+            if stats:
+                stats.update({current_launcher: result})
+            else:
+                stats={current_launcher: result}
+        # if there is at least one launcher to process, do it
+        if launchers:
+            (next_launcher_name, next_launcher_uri) = launchers.popitem()
+            d = callOnLauncher(next_launcher_uri, 'get_health')
+            d.addCallback(_callback, stats, launchers, next_launcher_name)
+            return d
+        else: # no more launcher left, give up
+            return _finalback(stats)
+    return _callback(None, None, SchedulerConfig().launchers_uri.copy(), None)
 
 def pingClient(uuid, fqdn, shortname, ips, macs):
-    # choose launcher
-    launcher = chooseLauncher()
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -68,16 +60,9 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    # perform call
-    mydeffered = getProxy(launcher).callRemote(
-        'icmp',
-        client
-    )
-    return mydeffered
+    return callOnBestLauncher('icmp', client)
 
 def probeClient(uuid, fqdn, shortname, ips, macs):
-    # choose launcher
-    launcher = chooseLauncher()
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -86,12 +71,7 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    # perform call
-    mydeffered = getProxy(launcher).callRemote(
-        'probe',
-        client
-    )
-    return mydeffered
+    return callOnBestLauncher('probe', client)
 
 def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
@@ -109,8 +89,6 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     return mydeffered
 
 def downloadFile(uuid, fqdn, shortname, ips, macs, path):
-    # choose launcher
-    launcher = chooseLauncher()
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -119,11 +97,12 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path):
             'ips': ips,
             'macs': macs
     })
-    # perform call
-    mydeffered = getProxy(launcher).callRemote(
-        'download_file',
-        client,
-        path
-    )
-    return mydeffered
-    
+    return callOnBestLauncher('download_file', client, path)
+
+def callOnLauncher(launcher, method, *args):
+    import pulse2.scheduler.xmlrpc
+    return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args)
+
+def callOnBestLauncher(method, *args):
+    import pulse2.scheduler.xmlrpc
+    return chooseLauncher().addCallback(pulse2.scheduler.xmlrpc.getProxy).addCallback(lambda x: x.callRemote(method, *args))

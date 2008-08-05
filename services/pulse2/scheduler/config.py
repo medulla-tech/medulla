@@ -80,6 +80,8 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         }
     }
 
+    launchers_uri = {}
+
     def setoption(self, section, key, attrib, type = 'str'):
         if type == 'str':
             if self.cp.has_option(section, key):
@@ -176,3 +178,11 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
                         'password':self.cp.getpassword(section, "password"),
                         'port':self.cp.get(section, "port")
                     }
+                if self.launchers[section]["enablessl"]:
+                    uri = "https://"
+                else:
+                    uri = 'http://'
+                if self.launchers[section]['username'] != '':
+                    uri += '%s:%s@' % (self.launchers[section]['username'], self.launchers[section]['password'])
+                uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
+                self.launchers_uri.update({section: uri})

@@ -43,9 +43,9 @@ from mmc.plugins.msc.orm.target import Target
 
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.launchers_driving import chooseLauncher
-from pulse2.scheduler.xmlrpc import getProxy
+from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher
 import pulse2.scheduler.network
+
 
 def gatherStuff():
     """ handy function to gather widely used objects """
@@ -130,10 +130,8 @@ def runWOLPhase(myCommandOnHostID):
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
     # perform call
-    mydeffered = getProxy(chooseLauncher()).callRemote(
-        'wol',
-        myT.target_macaddr.split('||')
-    )
+    mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'))
+
     mydeffered.\
         addCallback(parseWOLResult, myCommandOnHostID).\
         addErrback(parseWOLError, myCommandOnHostID)
@@ -188,7 +186,7 @@ def runUploadPhase(myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'upload_in_progress')
 
         if SchedulerConfig().mode == 'sync':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'sync_remote_push',
                 myCommandOnHostID,
                 client,
@@ -200,7 +198,7 @@ def runUploadPhase(myCommandOnHostID):
                 addErrback(parsePushError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'async_remote_push',
                 myCommandOnHostID,
                 client,
@@ -228,7 +226,7 @@ def runUploadPhase(myCommandOnHostID):
             updateHistory(myCommandOnHostID, 'upload_in_progress')
 
             if SchedulerConfig().mode == 'sync':
-                mydeffered = getProxy(chooseLauncher()).callRemote(
+                mydeffered = callOnBestLauncher(
                     'sync_remote_pull',
                     myCommandOnHostID,
                     client,
@@ -239,7 +237,7 @@ def runUploadPhase(myCommandOnHostID):
                     addCallback(parsePullResult, myCommandOnHostID).\
                     addErrback(parsePullError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = getProxy(chooseLauncher()).callRemote(
+                mydeffered = callOnBestLauncher(
                     'async_remote_pull',
                     myCommandOnHostID,
                     client,
@@ -298,7 +296,7 @@ def runExecutionPhase(myCommandOnHostID):
 
     if myC.isQuickAction(): # should be a standard script
         if SchedulerConfig().mode == 'sync':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
                 client,
@@ -309,7 +307,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'async_remote_quickaction',
                 myCommandOnHostID,
                 client,
@@ -322,7 +320,7 @@ def runExecutionPhase(myCommandOnHostID):
         return mydeffered
     else:
         if SchedulerConfig().mode == 'sync':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'sync_remote_exec',
                 myCommandOnHostID,
                 client,
@@ -333,7 +331,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addCallback(parseExecutionResult, myCommandOnHostID).\
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'async_remote_exec',
                 myCommandOnHostID,
                 client,
@@ -379,7 +377,7 @@ def runDeletePhase(myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'delete_in_progress')
 
         if SchedulerConfig().mode == 'sync':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'sync_remote_delete',
                 myCommandOnHostID,
                 client,
@@ -390,7 +388,7 @@ def runDeletePhase(myCommandOnHostID):
                 addCallback(parseDeleteResult, myCommandOnHostID).\
                 addErrback(parseDeleteError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
-            mydeffered = getProxy(chooseLauncher()).callRemote(
+            mydeffered = callOnBestLauncher(
                 'async_remote_delete',
                 myCommandOnHostID,
                 client,
@@ -412,7 +410,7 @@ def runDeletePhase(myCommandOnHostID):
             updateHistory(myCommandOnHostID, 'delete_in_progress')
 
             if SchedulerConfig().mode == 'sync':
-                mydeffered = getProxy(chooseLauncher()).callRemote(
+                mydeffered = callOnBestLauncher(
                     'sync_remote_delete',
                     myCommandOnHostID,
                     client,
@@ -423,7 +421,7 @@ def runDeletePhase(myCommandOnHostID):
                     addCallback(parseDeleteResult, myCommandOnHostID).\
                     addErrback(parseDeleteError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
-                mydeffered = getProxy(chooseLauncher()).callRemote(
+                mydeffered = callOnBestLauncher(
                     'async_remote_delete',
                     myCommandOnHostID,
                     client,
@@ -470,7 +468,7 @@ def runInventoryPhase(myCommandOnHostID):
     updateHistory(myCommandOnHostID, 'inventory_in_progress')
 
     if SchedulerConfig().mode == 'sync':
-        mydeffered = getProxy(chooseLauncher()).callRemote(
+        mydeffered = callOnBestLauncher(
             'sync_remote_inventory',
             myCommandOnHostID,
             client,
@@ -480,7 +478,7 @@ def runInventoryPhase(myCommandOnHostID):
             addCallback(parseInventoryResult, myCommandOnHostID).\
             addErrback(parseInventoryError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
-        mydeffered = getProxy(chooseLauncher()).callRemote(
+        mydeffered = callOnBestLauncher(
             'async_remote_inventory',
             myCommandOnHostID,
             client,
@@ -673,4 +671,8 @@ def getServerCheck(myT):
     return ret;
 
 def getClientGroup(myT):
-    return '';
+    return ''
+    """
+    if myT.target_ipaddr:
+        return '.'.join(myT.target_ipaddr.split('.')[0:3]);
+    """
