@@ -649,13 +649,17 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
-        result = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
-        result = result.group_by(partTable.c.id).group_by(haspartTable.c.machine)
+        result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
+        for grp in grp_by:
+            result = result.group_by(grp)
         result = result.count()
         session.close()
         return result
     
     def getLastMachineInventoryPart(self, ctx, part, params):
+        return self.__getLastMachineInventoryPart(part, params, ctx)
+        
+    def __getLastMachineInventoryPart(self, part, params, ctx = None):
         """
         Return a list where each item belongs to the last machine inventory.
         Each item is a dictionary of the inventory description.
@@ -672,13 +676,15 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
-        result = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
+        result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
         
         if params.has_key('min') and params.has_key('max'):
             result = result.offset(int(params['min']))
             result = result.limit(int(params['max']) - int(params['min']))
  
-        result = result.group_by(partTable.c.id).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+        for grp in grp_by:
+            result = result.group_by(grp)
+        result = result.order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
         session.close()
         if result:
             # Build the result as a simple dictionary
@@ -720,6 +726,7 @@ class Inventory(DyngroupDatabaseHelper):
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
         haspartKlass = self.klass["has" + part]
+        grp_by = [partTable.c.id, haspartTable.c.machine]
 
         # This SQL query has been built using the one from the LRS inventory module
         # TODO : this request has to be done on Machine and then add the columns so that the left join works...
@@ -734,6 +741,7 @@ class Inventory(DyngroupDatabaseHelper):
                 nomTable = self.table[nomTableName]
                 select_from = select_from.join(nomTable)
                 result = result.add_column(getattr(nomTable.c, nom))
+                grp_by.append(nomTable.c.id)
               
         result = result.select_from(self.machine.outerjoin(select_from)).filter(self.inventory.c.Last == 1)
         result = self.__filterQuery(ctx, result, params)
@@ -758,7 +766,7 @@ class Inventory(DyngroupDatabaseHelper):
                             self.logger.warn("cant find any %s field"%(where[0]))
                     else:
                         self.logger.warn("cant find any %s field"%(where[0]))
-        return result
+        return (result, grp_by)
    
     def __filterQuery(self, ctx, query, params):
         if params.has_key('hostname') and params['hostname'] != '':
