@@ -12,6 +12,7 @@ Source0:	%{name}-2.3.1.tar.gz
 Patch0:		mmc-web-base-Makefile_fix.diff
 Requires:	httpd >= 2.0.52
 Requires:	php-xmlrpc
+Requires:       php
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
