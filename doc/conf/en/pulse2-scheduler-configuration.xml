@@ -169,6 +169,21 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
+            <entry>client_check</entry>
+
+            <entry>comma-separated list of &lt;key&gt;=&lt;value&gt; tokens to
+            ask to the client; value (as part ot the 'target' table' may be
+            name, uuid, ipaddr, mac; only the first value are used for the
+            last two.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
             <entry>dbencoding</entry>
 
             <entry>The encoding to use when injecting logs into the MSC
@@ -328,6 +343,19 @@ option2 = plop      </screen></para>
             <entry>path</entry>
 
             <entry>/usr/sbin/pulse2-scheduler</entry>
+          </row>
+
+          <row>
+            <entry>server_check</entry>
+
+            <entry>see client_check for option formating, the main differente
+            is that checks are done server-side, not client-side.</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry></entry>
           </row>
 
           <row>

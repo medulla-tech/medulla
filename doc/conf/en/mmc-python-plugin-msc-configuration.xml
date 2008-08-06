@@ -190,7 +190,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/tftpboot/revoboot/qactions</entry>
+            <entry>/var/lib/pulse2/qactions</entry>
           </row>
 
           <row>
@@ -201,7 +201,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/tftpboot/revoboot/msc</entry>
+            <entry>/var/lib/pulse2/packages</entry>
           </row>
 
           <row>
@@ -284,96 +284,126 @@ option2 = plop      </screen></para>
             <entry>60 (seconds)</entry>
           </row>
 
-	  <row>
+          <row>
+            <entry>default scheduler</entry>
+
+            <entry>default scheduler to use</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
             <entry>ignore_non_rfc2780</entry>
 
-            <entry>Enable filter for non unicast IP addresses when inserting computers IP address in MSC database</entry>
+            <entry>Enable filter for non unicast IP addresses when inserting
+            computers IP address in MSC database</entry>
 
             <entry>yes</entry>
 
             <entry>1</entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>ignore_non_rfc1918</entry>
 
-            <entry>Enable filter for non private IP addresses when inserting computers IP address in MSC database</entry>
+            <entry>Enable filter for non private IP addresses when inserting
+            computers IP address in MSC database</entry>
 
             <entry>yes</entry>
 
             <entry>0</entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>exclude_ipaddr</entry>
 
-            <entry>Enable filter made of comma separated values with filtered ip addresses or network ranges, used when inserting computers IP address in MSC database. For example: exclude_ipaddr = 192.168.0.1,10.0.0.0/10.255.255.255</entry>
+            <entry>Enable filter made of comma separated values with filtered
+            ip addresses or network ranges, used when inserting computers IP
+            address in MSC database. For example: exclude_ipaddr =
+            192.168.0.1,10.0.0.0/10.255.255.255</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>include_ipaddr</entry>
 
-            <entry>Disable filter made of comma separated values with accepted ip addresses or network ranges, used when inserting computers IP address in MSC database. The IP addresses matching this filter are always accepted and never take out by the other filters. For example: include_ipaddr = 192.168.0.1,10.0.0.0/10.255.255.255</entry>
+            <entry>Disable filter made of comma separated values with accepted
+            ip addresses or network ranges, used when inserting computers IP
+            address in MSC database. The IP addresses matching this filter are
+            always accepted and never take out by the other filters. For
+            example: include_ipaddr =
+            192.168.0.1,10.0.0.0/10.255.255.255</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>ignore_non_fqdn</entry>
 
-            <entry>Enable filter for host name that are not FQDN. If filtered, the host name won't be used by the scheduler to find the target IP address</entry>
-
-            <entry>yes</entry>
-
-            <entry>1</entry>
-	  </row>
-
-	  <row>
-            <entry>ignore_invalid_hostname</entry>
-
-            <entry>Enable filter for host name that are invalid (that contains forbidden characters). If filtered, the host name won't be used by the scheduler to find the target IP address.</entry>
+            <entry>Enable filter for host name that are not FQDN. If filtered,
+            the host name won't be used by the scheduler to find the target IP
+            address</entry>
 
             <entry>yes</entry>
 
             <entry>0</entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
+            <entry>ignore_invalid_hostname</entry>
+
+            <entry>Enable filter for host name that are invalid (that contains
+            forbidden characters). If filtered, the host name won't be used by
+            the scheduler to find the target IP address.</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+
+          <row>
             <entry>exclude_hostname</entry>
 
-            <entry>Enable filter for host name that are invalid if they match a  regexp from this list of regexp. If filtered, the host name won't be used by the scheduler to find the target IP address. For example: exclude_hostname = computer[0-9]* server[0-9]*</entry>
+            <entry>Enable filter for host name that are invalid if they match
+            a regexp from this list of regexp. If filtered, the host name
+            won't be used by the scheduler to find the target IP address. For
+            example: exclude_hostname = computer[0-9]* server[0-9]*</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>include_hostname</entry>
 
-            <entry>The host names matching at least one regexp from this list of regexp will never be filtered. For example: For example: include_hostname = computer[0-9]* server[0-9]*</entry>
+            <entry>The host names matching at least one regexp from this list
+            of regexp will never be filtered. For example: For example:
+            include_hostname = computer[0-9]* server[0-9]*</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
-	  </row>
+          </row>
 
-	  <row>
+          <row>
             <entry>wol_macaddr_blacklist</entry>
 
-            <entry>Space separated regexps to match MAC address to filter when inserting a target for a command into the database. For example: wol_macaddr_blacklist = 12:.* 00:.*</entry>
+            <entry>Space separated regexps to match MAC address to filter when
+            inserting a target for a command into the database. For example:
+            wol_macaddr_blacklist = 12:.* 00:.*</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
-	  </row>
-
+          </row>
         </tbody>
       </tgroup>
     </table>
@@ -425,7 +455,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>enablessl</entry>
 
-            <entry>Flag that tells if SSL should be used to connect to the scheduler</entry>
+            <entry>Flag that tells if SSL should be used to connect to the
+            scheduler</entry>
 
             <entry>yes</entry>
 
@@ -467,7 +498,6 @@ username = username
 password = password
 enablessl = 1
     </screen>
-
   </section>
 
   <section>
@@ -555,13 +585,15 @@ enablessl = 1
           <row>
             <entry>web_dlpath</entry>
 
-            <entry>Directory of target computers from which a file is download when a user perform the download file action in the computers list. If empty, the download file action is not available on the web interface.</entry>
+            <entry>Directory of target computers from which a file is download
+            when a user perform the download file action in the computers
+            list. If empty, the download file action is not available on the
+            web interface.</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
           </row>
-
         </tbody>
       </tgroup>
     </table>
