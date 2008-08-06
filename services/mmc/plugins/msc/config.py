@@ -163,6 +163,8 @@ class MscConfig(PluginConfig):
             self.default_scheduler = self.get("msc", "default_scheduler")
         for section in self.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
+                if self.default_scheduler == "":
+                    self.default_scheduler = section
                 self.schedulers[section] = {
                         'port': self.get(section, "port"),
                         'host': self.get(section, "host"),
