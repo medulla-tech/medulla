@@ -34,7 +34,7 @@ def getProxy(schedulerConfig):
     Return a suitable Proxy object to communicate with the scheduler
     """
     config = MscConfig("msc")
-        
+
     url =  makeURL(schedulerConfig)
 
     if url.startswith("http://"):
@@ -141,6 +141,20 @@ def ping_and_probe_client(scheduler, computer):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
+def stopCommand(scheduler, command_id):
+    def parseResult(result):
+        logging.getLogger().debug('Stop command %s: %s' % (command_id, result))
+        return result
+    def parseError(reason):
+        # FIXME: handle error
+        return False
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+        'stop_command',
+        command_id
+    )
+    mydeffered.addCallback(parseResult).addErrback(parseResult)
+    return mydeffered
+
 def download_file(scheduler, computer, path):
     mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'download_file',
@@ -152,21 +166,19 @@ def download_file(scheduler, computer, path):
         path
     )
     return mydeffered
-    
 
 def select_scheduler(scheduler_name):
-    schedulers = MscConfig('msc').schedulers
     if not scheduler_name:
-        scheduler = schedulers[schedulers.keys()[0]]
-    else:
-        scheduler = schedulers[scheduler_name]
-    return scheduler
+        scheduler_name = MscConfig("msc").default_scheduler
+    if scheduler_name == '':
+        scheduler_name = MscConfig("msc").default_scheduler
+    return MscConfig('msc').schedulers[scheduler_name]
 
 def makeURL(config):
     if config['enablessl']:
         uri = 'https://'
     else:
-        uri = 'http://'        
+        uri = 'http://'
     if config['username'] != '':
         uri += '%s:%s@' % (config['username'], config['password'])
     uri += '%s:%d' % (config['host'], int(config['port']))

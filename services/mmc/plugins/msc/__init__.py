@@ -367,6 +367,7 @@ def restart_command_on_host(coh_id):
     return xmlrpcCleanup(True)
 def stop_command_on_host(coh_id):
     mmc.plugins.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
+    mmc.plugins.msc.client.scheduler.stopCommand(None, coh_id)
     return xmlrpcCleanup(True)
 ### Command on host handling ###
 
