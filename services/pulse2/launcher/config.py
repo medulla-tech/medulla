@@ -205,6 +205,7 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         # Parse "scheduler" section
         if self.cp.has_section('scheduler'):
             self.first_scheduler = 'scheduler'
+            section = 'scheduler'
 
             self.schedulers['scheduler'] = {
                  'host' : self.getvaluedefaulted(section, 'host', '127.0.0.1'),
