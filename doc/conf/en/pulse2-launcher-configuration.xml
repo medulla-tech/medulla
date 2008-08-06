@@ -134,11 +134,11 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>scheduler</entry>
+            <entry>scheduler_XXX</entry>
 
             <entry>Referent scheduler location</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
           </row>
 
           <row>
@@ -768,7 +768,7 @@ option2 = plop      </screen></para>
   </section>
 
   <section>
-    <title>« scheduler » section</title>
+    <title>« scheduler_XXX » section</title>
 
     <para>This section define how the launchers may reach their referent
     scheduler.</para>
@@ -917,7 +917,7 @@ option2 = plop      </screen></para>
 
             <entry>The launcher binding IP address.</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
 
             <entry>string</entry>
 
@@ -979,7 +979,7 @@ option2 = plop      </screen></para>
             <entry>The password to use when authenticating vs this
             launcher</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
 
             <entry>string or base64</entry>
 
@@ -995,7 +995,7 @@ option2 = plop      </screen></para>
 
             <entry>int</entry>
 
-            <entry>8001</entry>
+            <entry></entry>
           </row>
 
           <row>
@@ -1016,11 +1016,23 @@ option2 = plop      </screen></para>
             <entry>The number of available slots (ie. maximum number of
             concurrent jobs)</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
 
             <entry>int</entry>
 
             <entry>300</entry>
+          </row>
+
+          <row>
+            <entry>scheduler</entry>
+
+            <entry>The referent scheduler</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry>the first defined scheduler</entry>
           </row>
 
           <row>
@@ -1029,7 +1041,7 @@ option2 = plop      </screen></para>
             <entry>The login name to use when authenticating vs this
             launcher</entry>
 
-            <entry>no</entry>
+            <entry>yes</entry>
 
             <entry>string</entry>
 
@@ -1042,7 +1054,7 @@ option2 = plop      </screen></para>
             <entry>Check that our parent scheduler present a signed
             certificate</entry>
 
-            <entry>yes</entry>
+            <entry>no if enablessl is set</entry>
 
             <entry>boolean</entry>
 

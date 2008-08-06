@@ -104,7 +104,7 @@ option2 = plop      </screen></para>
 
             <entry>A way to talk to launcher_XXX</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
           </row>
         </tbody>
       </tgroup>
@@ -485,11 +485,11 @@ option2 = plop      </screen></para>
             <entry>Flag telling if SSL mode should be used to connect to the
             launcher.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>boolean</entry>
 
-            <entry>1</entry>
+            <entry></entry>
           </row>
 
           <row>
@@ -497,11 +497,11 @@ option2 = plop      </screen></para>
 
             <entry>The launcher IP address.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string</entry>
 
-            <entry>127.0.0.1</entry>
+            <entry></entry>
           </row>
 
           <row>
@@ -510,11 +510,11 @@ option2 = plop      </screen></para>
             <entry>The password to use when we send XMLRPC commands to this
             launcher.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string or base64</entry>
 
-            <entry>password</entry>
+            <entry></entry>
           </row>
 
           <row>
@@ -522,11 +522,11 @@ option2 = plop      </screen></para>
 
             <entry>The launcher TCP port.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string</entry>
 
-            <entry>8001</entry>
+            <entry></entry>
           </row>
 
           <row>
@@ -535,23 +535,14 @@ option2 = plop      </screen></para>
             <entry>The name to use when we send XMLRPC commands to this
             launcher.</entry>
 
-            <entry>yes</entry>
+            <entry>no</entry>
 
             <entry>string</entry>
 
-            <entry>username</entry>
+            <entry></entry>
           </row>
         </tbody>
       </tgroup>
     </table>
-
-    <para>By default, a launcher is always defined: "launcher_01":</para>
-
-    <screen>[launcher_01]
-host=127.0.0.1
-port=8001
-username = username
-password = password
-enablessl = 1    </screen>
   </section>
 </article>
