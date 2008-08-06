@@ -143,11 +143,11 @@ def stopElapsedCommands(scheduler_name):
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
-    logger.info("going to stop command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    logger.info("going to terminate command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
     logger.debug("command state is %s" % myC.toH())
     for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(launcher, 'int_process', myCommandOnHostID)
+        callOnLauncher(launcher, 'term_process', myCommandOnHostID)
     return True
 
 def runCommand(myCommandOnHostID):

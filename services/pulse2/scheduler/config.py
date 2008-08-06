@@ -73,13 +73,6 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
 
     # [launcher_xxx] section
     launchers = {
-        'launcher_01': {
-            'port': 8001,
-            'host': '127.0.0.1',
-            'username': 'username',
-            'password': 'password',
-            'enablessl': True
-        }
     }
 
     launchers_uri = {}
