@@ -689,31 +689,26 @@ def chooseClientIP(myT):
     })
 
 def getClientCheck(myT):
-    ret = {}
-    for key in SchedulerConfig().client_check:
-        if SchedulerConfig().client_check[key] == 'ipaddr':
-            ret.update({key: myT.target_ipaddr})
-        if SchedulerConfig().client_check[key] == 'name':
-            ret.update({key: myT.target_name})
-        if SchedulerConfig().client_check[key] == 'uuid':
-            ret.update({key: myT.target_uuid})
-        if SchedulerConfig().client_check[key] == 'macaddr':
-            ret.update({key: myT.target_macaddr.split('||')[0]})
-    return ret;
+    return getCheck(SchedulerConfig().client_check, myT);
 
 def getServerCheck(myT):
+    return getCheck(SchedulerConfig().server_check, myT);
+
+def getCheck(check, myT):
     ret = {}
-    for key in SchedulerConfig().server_check:
-        if SchedulerConfig().server_check[key] == 'ipaddr':
+    if not check:
+        return ret;
+    for key in check:
+        if check[key] == 'ipaddr':
             ret.update({key: myT.target_ipaddr})
-        if SchedulerConfig().server_check[key] == 'name':
+        if check[key] == 'name':
             ret.update({key: myT.target_name})
-        if SchedulerConfig().server_check[key] == 'uuid':
+        if check[key] == 'uuid':
             ret.update({key: myT.target_uuid})
-        if SchedulerConfig().server_check[key] == 'macaddr':
+        if check[key] == 'macaddr':
             ret.update({key: myT.target_macaddr.split('||')[0]})
     return ret;
 
 def getClientGroup(myT):
     return MGAssignAlgoManager().getMachineGroup(myT)
-            
+
