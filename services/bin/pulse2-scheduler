@@ -216,6 +216,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path))
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.awake_scheduling(self.name)))
+    def xmlrpc_stop_command(self, id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.stopCommand(id))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):

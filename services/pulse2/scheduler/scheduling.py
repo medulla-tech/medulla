@@ -146,7 +146,7 @@ def stopCommand(myCommandOnHostID):
     logger.debug("command_on_host state is %s" % myCoH.toH())
     logger.debug("command state is %s" % myC.toH())
     for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(launcher, 'kill_process', myCommandOnHostID)
+        callOnLauncher(launcher, 'int_process', myCommandOnHostID)
     return True
 
 def runCommand(myCommandOnHostID):
