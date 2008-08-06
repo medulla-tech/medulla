@@ -55,7 +55,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
             }
             if (isset($_POST["bassoc"])) {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>$p_api_id, 'pid'=>base64_encode($package['id']))));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'pid'=>base64_encode($package['id']))));
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
