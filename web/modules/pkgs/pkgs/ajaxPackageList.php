@@ -47,7 +47,8 @@ if (isset($_GET["end"])) $end = $_GET["end"];
 else $end = 10;
 
 $packages = advGetAllPackages($filter, $start, $end);
-$count = advCountAllPackages($filter);
+$count = $packages[0];
+$packages = $packages[1];
 
 $desc = $params = $names = $versions = array();
 foreach ($packages as $p) {
