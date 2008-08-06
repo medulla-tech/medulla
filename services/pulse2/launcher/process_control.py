@@ -214,6 +214,10 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         # signal is posix signal ID
         return self.sendSignal(signal.SIGINT)
 
+    def sendSigTerm(self):
+        # signal is posix signal ID
+        return self.sendSignal(signal.SIGTERM)
+
     def sendSigUsr1(self):
         # signal is posix signal ID
         return self.sendSignal(signal.SIGUSR1)
@@ -394,6 +398,11 @@ def intProcess(id):
     if process:
         return process.sendSigInt()
     return False
+def termProcess(id):
+    process = ProcessList().getProcess(id)
+    if process:
+        return process.sendSigTerm()
+    return False
 def killProcess(id):
     process = ProcessList().getProcess(id)
     if process:
@@ -416,6 +425,10 @@ def contAllProcess():
 def intAllProcess():
     for id in ProcessList().getRunningIds():
         intProcess(id)
+    return True
+def termAllProcess():
+    for id in ProcessList().getRunningIds():
+        termProcess(id)
     return True
 def killAllProcess():
     for id in ProcessList().getRunningIds():

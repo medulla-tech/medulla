@@ -66,7 +66,7 @@ import re
 SEPARATOR = '·'
 
 class ExitCode(object): # the only way I found to exit with the right exit code
-    value = 0
+    value = 143 # prepare to be killed
 
     def __new__(type):
         if not '_the_instance' in type.__dict__:

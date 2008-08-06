@@ -110,7 +110,7 @@ def startService():
     config.scheduler_password = scheduler['password']
     config.scheduler_port = scheduler['port']
     config.scheduler_username = scheduler['username']
-    
+
     port = int(config.launchers[config.name]['port'])
     bind = config.launchers[config.name]['bind']
     enablessl = config.launchers[config.name]['enablessl']
@@ -285,6 +285,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.contProcess(int(command_id)))
     def xmlrpc_int_process(self, command_id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.intProcess(int(command_id)))
+    def xmlrpc_term_process(self, command_id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.termProcess(int(command_id)))
     def xmlrpc_kill_process(self, command_id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.killProcess(int(command_id)))
     def xmlrpc_hup_process(self, command_id):
@@ -297,6 +299,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.contAllProcess())
     def xmlrpc_int_all_process(self):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.intAllProcess())
+    def xmlrpc_term_all_process(self):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.termAllProcess())
     def xmlrpc_kill_all_process(self):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.process_control.killAllProcess())
     def xmlrpc_hup_all_process(self):

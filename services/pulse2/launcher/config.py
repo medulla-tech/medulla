@@ -88,17 +88,8 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
     daemon_user = 0
 
     # scheduler stuff
-    first_scheduler = 'scheduler'
+    first_scheduler = None
     schedulers = {
-        'scheduler': {
-            'scheduler_host' : "127.0.0.1",
-            'scheduler_port' : "8000",
-            'scheduler_username' : "username",
-            'scheduler_password' : "password",
-            'scheduler_enablessl' : True,
-            'awake_time' : 600,
-            'defer_results' : False
-        }
     }
 
     # wget stuff
@@ -202,21 +193,6 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
         self.setoption('wol', 'wol_path', 'wol_path')
         self.setoption('wol', 'wol_port', 'wol_port')
 
-        # Parse "scheduler" section
-        if self.cp.has_section('scheduler'):
-            self.first_scheduler = 'scheduler'
-            section = 'scheduler'
-
-            self.schedulers['scheduler'] = {
-                 'host' : self.getvaluedefaulted(section, 'host', '127.0.0.1'),
-                 'port' : self.getvaluedefaulted(section, 'port', "8000"),
-                 'username' : self.getvaluedefaulted(section, 'username', "username"),
-                 'password' : self.getvaluedefaulted(section, 'password', "password", 'pass'),
-                 'enablessl' : self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
-                 'awake_time' : self.getvaluedefaulted(section, 'awake_time', 600, 'int'),
-                 'defer_results' : self.getvaluedefaulted(section, 'defer_results', False, 'bool')
-            }
-
         # Parse "scheduler_XXXX" sections
         for section in self.cp.sections():
             if re.compile('^scheduler_[0-9]+$').match(section):
@@ -244,9 +220,9 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                             'enablessl': self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
                             'password': self.getvaluedefaulted(section, 'password', "password", 'pass'),
                             'port': self.cp.get(section, 'port'),
-                            'slots': self.cp.getint(section, 'slots'),
-                            'username': self.cp.get(section, 'username'),
-                            'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler)
+                            'slots': self.getvaluedefaulted(section, 'slots', 300, 'int'),
+                            'username': self.getvaluedefaulted(section, 'username', 'username'),
+                            'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler),
                         }
                     if self.launchers[section]['enablessl']:
                         try:
@@ -267,7 +243,7 @@ class LauncherConfig(pulse2.scheduler.utils.Singleton):
                             raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['localcert'])
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
-        
+
     def getvaluedefaulted(self, section, option, default, type = 'str'):
         if self.cp.has_option(section, option):
             if type == 'str':
