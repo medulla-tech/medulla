@@ -45,6 +45,7 @@ from mmc.plugins.msc.orm.target import Target
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher
 import pulse2.scheduler.network
+from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 
 
 def gatherStuff():
