@@ -56,6 +56,7 @@ from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.xmlrpc import makeSSLContext, SchedulerSite
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.base.computers import ComputerManager
+from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 
 # Logging
 import logging
@@ -102,6 +103,9 @@ def startService():
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
     logger.info('scheduler %s: available launchers: %s' % (config.name, ' '.join(launchers)))
 
+    # put the machine to command group algorithm
+    MGAssignAlgoManager().setAlgo(config.mg_assign_algo)
+            
     # Starts XMLRPC server
     logger.info('scheduler %s: starting' % config.name)
     try:

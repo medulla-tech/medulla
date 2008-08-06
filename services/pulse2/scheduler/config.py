@@ -63,6 +63,8 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
     server_check = None
     username = 'username'
 
+    mg_assign_algo = 'default'
+
     # [daemon] section
     daemon_group = 0
     pid_path = "/var/run/pulse2"
@@ -122,6 +124,9 @@ class SchedulerConfig(pulse2.scheduler.utils.Singleton):
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
         self.setoption("scheduler", "enablessl", "enablessl", 'boolean')
+
+        if self.cp.has_option("scheduler", "mg_assign_algo"):
+            self.mg_assign_algo = self.cp.get("scheduler", 'mg_assign_algo')
 
         if self.enablessl:
             if self.cp.has_option("scheduler", "privkey"):

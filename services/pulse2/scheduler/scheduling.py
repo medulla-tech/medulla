@@ -714,8 +714,5 @@ def getServerCheck(myT):
     return ret;
 
 def getClientGroup(myT):
-    return ''
-    """
-    if myT.target_ipaddr:
-        return '.'.join(myT.target_ipaddr.split('.')[0:3]);
-    """
+    return MGAssignAlgoManager().getMachineGroup(myT)
+            
