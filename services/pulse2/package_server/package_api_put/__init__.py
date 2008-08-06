@@ -32,6 +32,7 @@ import os
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
+from pulse2.package_server.config import P2PServerCP
 
 class PackageApiPut(PackageApiGet):
     type = 'PackageApiPut'
@@ -39,6 +40,7 @@ class PackageApiPut(PackageApiGet):
     def __init__(self, mp, name = '', tmp_input_dir = ''):
         PackageApiGet.__init__(self, mp, name)
         self.tmp_input_dir = tmp_input_dir
+        self.config = P2PServerCP()
 
     def xmlrpc_getTemporaryFiles(self):
         ret = []
