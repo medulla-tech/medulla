@@ -343,8 +343,8 @@ class Common(Singleton):
         toRelative = self.packages[pid].root
         for f in files:
             path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
-            size = self._treatFile(pid, f, path, access)
-            self.packages[pid].size += size
+            size = int(self._treatFile(pid, f, path, access))
+            self.packages[pid].size += int(size)
         
     def _treatDir(self, file, mp, access):
         pid = None
