@@ -321,10 +321,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
 
     def xmlrpc_get_health(self):
-        return pulse2.launcher.utils.getHealth(self.config)
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getHealth(self.config))
 
     def xmlrpc_get_balance(self):
-        return pulse2.launcher.utils.getBalance(self.config)
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.launcher.utils.getBalance(self.config))
 
 def main():
     parser = optparse.OptionParser()
