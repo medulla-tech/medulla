@@ -317,6 +317,7 @@ class MscDatabase(Singleton):
         session.save(myCommandOnHost)
         session.flush()
         session.refresh(myCommandOnHost)
+        session.close()
         logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
         return myCommandOnHost.getId()
 
@@ -430,25 +431,23 @@ class MscDatabase(Singleton):
         Return a Deferred object resulting to the command id
         """
 
-        def cbCreateTarget(target, root):
-            if target:
-                if type(target[0]) == list:
-                    t = target.pop()
-                else:
-                    t = target
-                    target = None
-                d2 = self.createTarget(t, mode, group_id, root)
-                d2.addCallback(cbProcessCommand, target, root)
-                return d2
-            else:
-                self.logger.debug("addCommand: %s (mode=%s)" % (str(cmd_id), mode))
-                d.callback(cmd_id)
+        def cbCreateTarget(t):
+            d2 = self.createTarget(t, mode, group_id, root)
+            d2.addCallback(cbProcessCommand)
+            return d2
 
-        def cbProcessCommand(target_id, target, root):
+        def cbProcessCommand(target_id):
             t = session.query(Target).get(target_id)
             self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
             self.blacklistTargetHostname(t, session)
-            cbCreateTarget(target, root)
+            return target_id
+
+        def cbReturnCmdid(result, cmd_id):
+            for r in result:
+                flag, result = r
+                if not flag:
+                    self.logger.warn("Fail to create this command on hosts and target due to %s"%(str(result)))
+            return cmd_id
 
         if type(files) == list:
             files = "\n".join(files)
@@ -457,9 +456,13 @@ class MscDatabase(Singleton):
         cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler)
 
         session = create_session()
-        d = defer.Deferred()
-        cbCreateTarget(target, root)
-        return d
+        dlist = []
+        for t in target:
+            dlist.append(cbCreateTarget(t))
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(cbReturnCmdid, (cmd_id))
+            
+        return dl
 
     def blacklistTargetHostname(self, myTarget, session = create_session()):
         # Apply host name blacklist
@@ -529,6 +532,7 @@ class MscDatabase(Singleton):
 
     def addTarget(self, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
         """ Inject a new Target object in our MSC database """
+        session = create_session()
         myTarget = Target()
         myTarget.target_name = targetName
         myTarget.target_uuid = targetUuid
@@ -536,7 +540,10 @@ class MscDatabase(Singleton):
         myTarget.target_macaddr = targetMac
         myTarget.mirrors = mirror
         myTarget.id_group = groupID
-        myTarget.flush()
+        session.save(myTarget)
+        session.flush()
+        session.refresh(myTarget)
+        session.close()
         return myTarget.id
 
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
