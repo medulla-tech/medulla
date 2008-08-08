@@ -34,7 +34,7 @@ import os.path
 from mmc.support.config import MMCConfigParser
 
 # our stuff
-import pulse2.launchers.utils
+import pulse2.launcher.utils
 
 class LauncherConfig(pulse2.launchers.utils.Singleton):
     """
