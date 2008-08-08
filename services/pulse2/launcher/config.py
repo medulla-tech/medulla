@@ -34,9 +34,9 @@ import os.path
 from mmc.support.config import MMCConfigParser
 
 # our stuff
-import pulse2.scheduler.utils
+import pulse2.launchers.utils
 
-class LauncherConfig(pulse2.scheduler.utils.Singleton):
+class LauncherConfig(pulse2.launchers.utils.Singleton):
     """
     Singleton Class to hold configuration directives
     """
