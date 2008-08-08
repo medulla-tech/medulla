@@ -33,10 +33,14 @@ import os.path
 # MMC
 from mmc.support.config import MMCConfigParser
 
-# our stuff
-import pulse2.launcher.utils
+class Singleton(object):
+    def __new__(type):
+        if not '_the_instance' in type.__dict__:
+            type._the_instance = object.__new__(type)
+        return type._the_instance
 
-class LauncherConfig(pulse2.launchers.utils.Singleton):
+
+class LauncherConfig(Singleton):
     """
     Singleton Class to hold configuration directives
     """
