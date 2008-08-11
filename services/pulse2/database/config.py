@@ -29,8 +29,7 @@ import logging
 
 # MMC
 import mmc.support.mmctools
-from mmc.support.config import MMCConfigParser
-from pulse2.utils import Singleton
+from pulse2.utils import Singleton, Pulse2ConfigParser
 
 class DatabaseConfig(Singleton):
     dbdriver = 'mysql'
@@ -48,7 +47,7 @@ class DatabaseConfig(Singleton):
 
     def setup(self, config_file):
         # Load configuration file
-        self.cp = MMCConfigParser()
+        self.cp = Pulse2ConfigParser()
         self.cp.read(config_file)
                                 
         if self.cp.has_section("database"):
