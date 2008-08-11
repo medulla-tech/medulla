@@ -25,6 +25,7 @@ from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser(
 
 # some imports to convert stuff in xmlrpcCleanup()
 import datetime
+import re
 from time import time, struct_time
 try:
     import mx.DateTime as mxDateTime

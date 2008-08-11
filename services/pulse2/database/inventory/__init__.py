@@ -25,6 +25,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.database.utilities import unique, create_method, toH, DbObject
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy, SA_MAYOR, SA_MINOR
 from pulse2.database.inventory.mapping import OcsMapping
+from pulse2.utils import Singleton
 
 from sqlalchemy import *
 import sqlalchemy

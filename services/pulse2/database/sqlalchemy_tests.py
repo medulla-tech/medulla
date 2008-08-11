@@ -1,4 +1,5 @@
 from sqlalchemy import *
+from pulse2.database.utilities import create_method
 
 SA_MAYOR = 0
 SA_MINOR = 3
