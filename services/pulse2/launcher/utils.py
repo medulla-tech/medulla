@@ -248,9 +248,3 @@ def setDefaultClientOptions(client):
                     bwlimit = 1 # as bwlimit = 0 imply no limit, min bwlimit set to 1
                 client['proto_args'] += ['--bwlimit', '%d' %  bwlimit] # bwlimit arg in kB/s
     return client
-
-class Singleton(object):
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance

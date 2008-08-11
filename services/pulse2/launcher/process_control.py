@@ -33,8 +33,8 @@ import twisted.internet.defer
 import twisted.internet.reactor
 import twisted.internet.protocol
 
-# Launcher stuff
-from pulse2.launcher.utils import Singleton
+# Others Pulse2 Stuff
+import pulse2.utils
 
 def commandRunner(cmd, cbCommandEnd):
     """
@@ -232,7 +232,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
     def getAge(self):
         return time.time() - self.start_time
 
-class ProcessList(Singleton):
+class ProcessList(pulse2.utils.Singleton):
     """
         Launcher core: kep a track of launched commands
     """
