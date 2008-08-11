@@ -31,11 +31,10 @@ import grp
 import string
 
 # MMC
-import mmc.support.mmctools
 from mmc.support.config import MMCConfigParser
-from mmc.plugins.inventory.utilities import getInventoryNoms
+from pulse2.database.config import DatabaseConfig
 
-class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
+class Pulse2OcsserverConfigParser(DatabaseConfig):
     """
     Singleton Class to hold configuration directives
     """
@@ -60,9 +59,9 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
     
 
     def setup(self, config_file):
-        # Load configuration file
-        self.cp = MMCConfigParser()
-        self.cp.read(config_file)
+        DatabaseConfig.setup(self, config_file)
+        if self.dbname == None:
+            self.dbname = 'inventory'
 
         if self.cp.has_option('main', 'server'):
             self.bind = self.cp.get("main", 'server')
@@ -94,7 +93,7 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
                 self.hostname.append(path[1].split(':'))
                 
             if len(self.hostname) == 3:
-                nom = getInventoryNoms()
+                nom = self.getInventoryNoms()
                 if nom.has_key(self.hostname[0]):
                     self.hostname[2][0] = ('nom%s%s' % (self.hostname[0], self.hostname[2][0]), self.hostname[2][0])
         
@@ -120,3 +119,26 @@ class Pulse2OcsserverConfigParser(mmc.support.mmctools.Singleton):
                     'param':params
                 }
 
+    def getInventoryParts(self):
+        """
+        @return: Return all available inventory parts
+        @rtype: list
+        """
+        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
+            
+            
+    def getInventoryNoms(self, table = None):
+        """
+        @return: Return all available nomenclatures tables
+        @rtype: dict
+        """
+        noms = {
+            'Registry':['Path']
+        }
+    
+        if table == None:
+            return noms
+        if noms.has_key(table):
+            return noms[table]
+        return None
+    

@@ -34,8 +34,6 @@ try:
 except ImportError:
     from twisted.protocols import http
 
-from pulse2.launcher.config import LauncherConfig
-
 class InventoryHTTPChannel(http.HTTPChannel):
     """
     We inherit from http.HTTPChannel to log incoming connections when the

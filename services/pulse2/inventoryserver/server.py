@@ -23,7 +23,6 @@
 
 import BaseHTTPServer
 from zlib import *
-from mmc.support.mmctools import Singleton
 from time import strftime
 import logging
 import time
@@ -36,8 +35,9 @@ from SocketServer import ThreadingMixIn
 from threading import Thread, Semaphore
 import threading
 
-from pulse2.inventoryserver.mapping import OcsMapping
-from pulse2.inventoryserver.database import InventoryWrapper
+from pulse2.database.inventory import InventoryCreator
+from pulse2.database.inventory.mapping import OcsMapping
+from pulse2.database.utilities import Singleton
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import *
 
@@ -178,7 +178,7 @@ class TreatInv(Thread):
             except:
                 pass
                 
-            ret = InventoryWrapper().createNewInventory(hostname, inventory, date)
+            ret = InventoryCreator().createNewInventory(hostname, inventory, date)
             # TODO if ret == False : reply something else
             if not ret:
                 self.logger.error("no inventory created!")
@@ -221,11 +221,11 @@ class InventoryGetService(Singleton):
     def initialise(self, config):
         self.logger = logging.getLogger()
         try:
-            InventoryWrapper().activate()
+            InventoryCreator().activate(config)
         except Exception, e :
             self.logger.error(e)
             return False
-        if not InventoryWrapper().db_check():
+        if not InventoryCreator().db_check():
             return False
         self.config = config
         self.bind = config.bind
