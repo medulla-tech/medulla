@@ -30,8 +30,6 @@ import pwd
 import grp
 import string
 
-# MMC
-from mmc.support.config import MMCConfigParser
 from pulse2.database.config import DatabaseConfig
 
 class Pulse2OcsserverConfigParser(DatabaseConfig):
