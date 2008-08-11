@@ -23,16 +23,15 @@
 
 
 # Misc
-import ConfigParser
 import re
 import logging
 import pwd
 import grp
 import string
 
-from pulse2.database.config import DatabaseConfig
+from pulse2.database.inventory.config import InventoryDatabaseConfig
 
-class Pulse2OcsserverConfigParser(DatabaseConfig):
+class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     """
     Singleton Class to hold configuration directives
     """
@@ -57,7 +56,7 @@ class Pulse2OcsserverConfigParser(DatabaseConfig):
     
 
     def setup(self, config_file):
-        DatabaseConfig.setup(self, config_file)
+        InventoryDatabaseConfig.setup(self, config_file)
         if self.dbname == None:
             self.dbname = 'inventory'
 
@@ -117,26 +116,3 @@ class Pulse2OcsserverConfigParser(DatabaseConfig):
                     'param':params
                 }
 
-    def getInventoryParts(self):
-        """
-        @return: Return all available inventory parts
-        @rtype: list
-        """
-        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
-            
-            
-    def getInventoryNoms(self, table = None):
-        """
-        @return: Return all available nomenclatures tables
-        @rtype: dict
-        """
-        noms = {
-            'Registry':['Path']
-        }
-    
-        if table == None:
-            return noms
-        if noms.has_key(table):
-            return noms[table]
-        return None
-    
