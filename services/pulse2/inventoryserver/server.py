@@ -37,7 +37,7 @@ import threading
 
 from pulse2.database.inventory import InventoryCreator
 from pulse2.database.inventory.mapping import OcsMapping
-from pulse2.database.utilities import Singleton
+from pulse2.utils import Singleton
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import *
 
