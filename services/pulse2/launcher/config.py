@@ -30,17 +30,10 @@ import string       # for atoi
 import logging      # logging stuff
 import os.path
 
-# MMC
-from mmc.support.config import MMCConfigParser
+# Others Pulse2 Stuff
+import pulse2.utils
 
-class Singleton(object):
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
-
-
-class LauncherConfig(Singleton):
+class LauncherConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
     """
@@ -136,7 +129,7 @@ class LauncherConfig(Singleton):
 
     def setup(self, config_file, name = None):
         # Load configuration file
-        self.cp = MMCConfigParser()
+        self.cp = pulse2.utils.Pulse2ConfigParser()
         self.cp.read(config_file)
 
         self.name = name
