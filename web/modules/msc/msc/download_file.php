@@ -28,7 +28,7 @@ require('modules/msc/includes/scheduler_xmlrpc.php');
 $ret = scheduler_download_file('', $_GET['objectUUID']);
 
 if (($ret === False) || ($ret == 0) || ($ret[0] != 0)) {
-    new NotifyWidgetFailure(_T("The download has failed."));
+    new NotifyWidgetFailure(_T("The download has failed.", "msc"));
     header("Location: " . urlStrRedirect("base/computers/index"));
 } else {
     $end = strpos($ret[1], "\n");
