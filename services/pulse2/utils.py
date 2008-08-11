@@ -23,6 +23,14 @@
 
 from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser()
 
+# some imports to convert stuff in xmlrpcCleanup()
+import datetime
+from time import time, struct_time
+try:
+    import mx.DateTime as mxDateTime
+except ImportError:
+    mxDateTime = None
+
 class Singleton(object):
     """
         Duplicate from the Singleton() class from the MMC Project,
@@ -38,7 +46,6 @@ class Pulse2ConfigParser(ConfigParser):
         Duplicate from the MMCConfigParser() class from the MMC Project,
         to remove unwanted dependancies
     """
-
     def __init__(self):
         ConfigParser.__init__(self)
 
@@ -59,4 +66,36 @@ class Pulse2ConfigParser(ConfigParser):
             ret = value
         return ret
 
+
+def xmlrpcCleanup(data):
+    """
+        Duplicate from mmc.support.mmctools.xmlrpcCleanup()
+        to remove unwanted dependancies
+    """
+    if type(data) == dict:
+        ret = {}
+        for key in data.keys():
+            # array keys must be string
+            ret[str(key)] = xmlrpcCleanup(data[key])
+    elif type(data) == list:
+        ret = []
+        for item in data:
+            ret.append(xmlrpcCleanup(item))
+    elif type(data) == datetime.date:
+        ret = tuple(data.timetuple())
+    elif type(data) == datetime.datetime:
+        ret = tuple(data.timetuple())
+    elif mxDateTime and type(data) == mxDateTime.DateTimeType:
+        ret = data.tuple()
+    elif type(data) == struct_time:
+        ret = tuple(data)
+    elif data == None:
+        ret = False
+    elif type(data) == tuple:
+        ret = map(lambda x: xmlrpcCleanup(x), data)
+    elif type(data) == long:
+        ret = str(data)
+    else:
+        ret = data
+    return ret
 
