@@ -35,13 +35,17 @@ def funcGet(couple, type = 'list'):
             return getValues(table, col)
         return getListValue
     elif type == 'halfstatic':
-        table, col, val = re.compile('/').split(couple)
-        logging.getLogger().info('funcGet halfstatic:')
-        dummy, f, v = PossibleQueries().possibleQueries('halfstatic')[couple]
-        logging.getLogger().info("%s - %s" % (f,v))
-        def getListValue(ctx, value = '', table = table, col = col, f = f, v = v):
-            if value != '':
-                return getValueFuzzyWhere(table, f, v, col, value)
-            return getValuesWhere(table, f, v, col)
-        return getListValue
+        try:
+            table, col, val = re.compile('/').split(couple)
+            logging.getLogger().info('funcGet halfstatic:')
+            dummy, f, v = PossibleQueries().possibleQueries('halfstatic')[couple]
+            logging.getLogger().info("%s - %s" % (f,v))
+            def getListValue(ctx, value = '', table = table, col = col, f = f, v = v):
+                if value != '':
+                    return getValueFuzzyWhere(table, f, v, col, value)
+                return getValuesWhere(table, f, v, col)
+            return getListValue
+        except ValueError:
+            logging.getLogger().warning("%s cant be used as a 'halfstatic' value, please check the syntax of the config file."%(couple))
+            pass
   
