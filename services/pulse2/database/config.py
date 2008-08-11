@@ -30,8 +30,9 @@ import logging
 # MMC
 import mmc.support.mmctools
 from mmc.support.config import MMCConfigParser
+from pulse2.utils import Singleton
 
-class DatabaseConfig(mmc.support.mmctools.Singleton):
+class DatabaseConfig(Singleton):
     dbdriver = 'mysql'
     dbhost = "127.0.0.1"
     dbname = None

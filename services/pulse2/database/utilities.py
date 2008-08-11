@@ -89,12 +89,6 @@ def unique(s):
             u.append(x)
     return u
 
-class Singleton(object):
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
-
 NB_DB_CONN_TRY = 2
 
 def create_method(m):
