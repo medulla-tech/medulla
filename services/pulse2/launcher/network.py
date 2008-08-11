@@ -28,7 +28,6 @@ import re
 # Other stuff
 from pulse2.launcher.config import LauncherConfig
 import pulse2.launcher.process_control
-import mmc.support.mmctools
 SEPARATOR = u'·'
 
 def wolClient(mac_addrs):
