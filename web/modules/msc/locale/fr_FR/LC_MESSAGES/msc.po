@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-11 18:50+0200\n"
+"POT-Creation-Date: 2008-06-14 18:20+0200\n"
 "PO-Revision-Date: 2008-06-17 10:03+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -209,6 +209,10 @@ msgstr "Exécution en cours"
 msgid "Exit code was: %s"
 msgstr "Le code de retour était : %s"
 
+#: msc/includes/functions.php:44
+msgid "Failed"
+msgstr "Echec"
+
 #: msc/msc/tabs.php:23 msc/msc/tabs.php:34
 msgid "History"
 msgstr "Historique"
@@ -348,7 +352,7 @@ msgstr "Système d'exploitation"
 msgid "Play a command"
 msgstr "Jouer une commande"
 
-#: msc/msc/start_quick_action.php:61
+#: msc/msc/start_quick_action.php:65
 msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
