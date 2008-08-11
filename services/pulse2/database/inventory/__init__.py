@@ -19,7 +19,6 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from mmc.plugins.inventory.tables_def import PossibleQueries
 from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
@@ -51,6 +50,7 @@ class Inventory(DyngroupDatabaseHelper):
             return None
         self.logger.info("Inventory is activating")
         self.config = config
+        PossibleQueries().init(self.config)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
         self.metadata = BoundMetaData(self.db)
         self.initMappers()
@@ -862,7 +862,23 @@ class Machine(object):
 class InventoryTable(object):
     pass
 
+class PossibleQueries(Singleton):
+    def init(self, config):
+        self.list = config.list
+        self.double = config.double
+        self.halfstatic = config.halfstatic
 
+    def possibleQueries(self, value = None): # TODO : need to put this in the conf file
+        if value == None:
+            return {
+                'list':self.list,
+                'double':self.double,
+                'halfstatic':self.halfstatic
+            }
+        else:
+            if hasattr(self, value):
+                return getattr(self, value)
+            return []
 
 class InventoryCreator(Inventory):
     def createNewInventory(self, hostname, inventory, date):
