@@ -35,7 +35,9 @@ require_once("../../../modules/pkgs/graph/index.css");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-$filter = array('filter'=> $_GET["filter"]);
+$filter = array('filter'=> $_GET["filter"], 'location'=> $_GET['location']);
+$filter1 = $_GET["filter"]. '##'.$_GET['location'];
+
 if ($_GET['location']) {
     $filter['packageapi'] = getPApiDetail(base64_decode($_GET['location']));
 //    $_SESSION['PACKAGEAPI'][base64_decode($_GET['location'])];
@@ -44,7 +46,7 @@ if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
 if (isset($_GET["end"])) $end = $_GET["end"];
-else $end = 10;
+else $end = 9;
 
 $packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
@@ -63,14 +65,14 @@ $n = new OptimizedListInfos($names, _T("Names", "pkgs"));
 $n->addExtraInfo($versions, _T("Versions", "pkgs"));
 $n->addExtraInfo($desc, _T("Descriptions", "pkgs"));
 $n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
+$n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
 
-$n->addActionItemArray(new ActionItem(_T("Edit a package"),"edit","edit","pkgs", "pkgs", "pkgs"));
-$n->addActionItemArray(new ActionItem(_T("Associate files to a package"),"associate_files","associate_files","pkgs", "pkgs", "pkgs"));
-$n->addActionItemArray(new ActionPopupItem(_T("Delete a package"),"delete","delete","pkgs", "pkgs", "pkgs"));
+$n->addActionItemArray(new ActionItem(_T("Edit a package", "pkgs"),"edit","edit","pkgs", "pkgs", "pkgs"));
+//$n->addActionItemArray(new ActionItem(_T("Associate files to a package", "pkgs"),"associate_files","associate_files","pkgs", "pkgs", "pkgs"));
+$n->addActionItemArray(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/><br/>";
 $n->display();
