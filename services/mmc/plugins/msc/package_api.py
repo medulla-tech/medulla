@@ -222,6 +222,11 @@ class SendPackageCommand:
         maxbw = self.params['maxbw']
 
         try:
+            deployment_intervals = self.params['deployment_intervals']
+        except KeyError:
+            deployment_intervals = ''
+
+        try:
             parameters = self.params['parameters']
         except KeyError:
             parameters = ''
@@ -277,7 +282,8 @@ class SendPackageCommand:
             0,
             maxbw,
             self.root,
-            self.scheduler or MscConfig("msc").default_scheduler
+            self.scheduler or MscConfig("msc").default_scheduler,
+            deployment_intervals
         ).addCallback(self.sendResult)
 
 def convert_date(date = '0000-00-00 00:00:00'):

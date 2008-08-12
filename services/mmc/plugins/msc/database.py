@@ -48,6 +48,9 @@ from mmc.plugins.msc.orm.target import Target
 # blacklists
 from mmc.plugins.msc import blacklist
 
+# Pulse 2 stuff
+import pulse2.time_intervals
+
 # Imported last
 import logging
 
@@ -271,7 +274,7 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler):
+    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler, deployment_intervals):
         session = create_session()
         cmd = Commands()
         now = time.localtime()
@@ -293,6 +296,7 @@ class MscDatabase(Singleton):
         cmd.repeat = repeat
         cmd.maxbw = maxbw
         cmd.scheduler = scheduler
+        cmd.deployment_intervals = deployment_intervals
         session.save(cmd)
         session.flush()
         session.close()
@@ -428,7 +432,8 @@ class MscDatabase(Singleton):
                 repeat = 0,
                 maxbw = 0,
                 root = MscConfig("msc").repopath,
-                scheduler = MscConfig("msc").default_scheduler
+                scheduler = MscConfig("msc").default_scheduler,
+                deployment_intervals = ""
             ):
         """
         Main func to inject a new command in our MSC database
@@ -457,8 +462,9 @@ class MscDatabase(Singleton):
         if type(files) == list:
             files = "\n".join(files)
 
+        deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         # create (and save) the command itself
-        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler)
+        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler, deployment_intervals)
 
         session = create_session()
         dlist = []
@@ -535,7 +541,8 @@ class MscDatabase(Singleton):
             False,
             0,
             0,
-            scheduler or MscConfig("msc").default_scheduler
+            scheduler or MscConfig("msc").default_scheduler,
+            ''
         )
 
     def addTarget(self, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
