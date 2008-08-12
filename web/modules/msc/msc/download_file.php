@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
  *
- * $Id: start_quick_action.php 259 2008-07-29 08:17:13Z cdelfosse $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: ajaxPing.php 193 2008-03-20 18:31:49Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
