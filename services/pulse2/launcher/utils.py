@@ -233,7 +233,7 @@ def setDefaultClientOptions(client):
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert']]
         if not 'proto_args' in client:
-            client['proto_args'] = ['--archive', '--verbose']
+            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwX,g=,o=']
         if LauncherConfig().rsync_resume:
             client['proto_args'] += ['--partial']
         for option in LauncherConfig().ssh_options:
