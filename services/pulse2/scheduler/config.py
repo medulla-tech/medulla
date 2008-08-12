@@ -32,10 +32,10 @@ import logging      # logging stuff
 # MMC
 from mmc.support.config import MMCConfigParser
 
-# our stuff
-import pulse2.scheduler.utils
+# Others Pulse2 Stuff
+import pulse2.utils
 
-class SchedulerConfig(pulse2.scheduler.utils.Singleton):
+class SchedulerConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
 

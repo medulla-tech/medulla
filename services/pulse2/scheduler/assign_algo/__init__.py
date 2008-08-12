@@ -27,7 +27,7 @@
 """
 
 import logging
-from pulse2.scheduler.utils import Singleton
+from pulse2.utils import Singleton
 from distutils.sysconfig import get_python_lib
 import imp
 import os
@@ -36,7 +36,7 @@ class MGAssignAlgo(Singleton):
     def __init__(self):
         self.logger = logging.getLogger()
         Singleton.__init__(self)
-        
+
     def getMachineGroup(self, myT):
         raise Exception("getMachineGroup not defined")
 
@@ -79,7 +79,7 @@ class IntAssignAlgoManager(Singleton):
                 logging.getLogger().error("Cant load any %s Assign Algorythm"%(self.name))
                 ret = None
         return (ret, assign_algo)
-    
+
     def getClassInModule(self, mod):
         raise Exception("getClassInModule not defined")
 
@@ -90,4 +90,4 @@ class MGAssignAlgoManager(IntAssignAlgoManager):
 
     def getMachineGroup(self, myT):
         return self.algo.getMachineGroup(myT)
-    
+
