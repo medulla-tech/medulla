@@ -67,6 +67,7 @@ class MscConfig(PluginConfig):
     web_def_maxbw = "0"
     web_def_delay = "60"
     web_def_attempts = "3"
+    web_def_deployment_intervals = ""
     web_dlpath = ""
 
     # IP blacklists settings
@@ -195,6 +196,8 @@ class MscConfig(PluginConfig):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_dlpath"):
             self.web_dlpath = self.get("web", "web_dlpath")
+        if self.has_option("web", "web_def_deployment_intervals"):
+            self.web_def_deployment_intervals = self.get("web", "web_def_deployment_intervals")
 
         # API Package
         if self.has_option("package_api", "mserver"):
