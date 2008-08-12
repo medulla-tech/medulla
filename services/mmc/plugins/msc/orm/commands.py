@@ -27,6 +27,7 @@
 # big modules
 import logging
 import sqlalchemy
+import time
 
 # MSC modules
 import mmc.plugins.msc.database
@@ -35,6 +36,9 @@ from mmc.plugins.msc import blacklist
 
 # ORM mappings
 from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
+
+# Pulse 2 stuff
+import pulse2.time_intervals
 
 class Commands(object):
     """ Mapping between msc.commands and SA
@@ -67,6 +71,15 @@ class Commands(object):
         # TODO: a quick action is not only an action with nothing to upload
         result = (len(self.files) == 0)
         logging.getLogger().debug("isQuickAction(%s): %s" % (self.id, result))
+        return result
+
+    def inDeploymentInterval(self):
+        # TODO: a quick action is not only an action with nothing to upload
+        if not self.deployment_intervals: # no interval given => always perform
+            result = True
+        else:
+            result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
+        logging.getLogger().debug("inDeploymentInterval(%s): %s" % (self.id, result))
         return result
 
     def toH(self):
