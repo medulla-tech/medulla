@@ -29,8 +29,11 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $package = array();
 
-$p_api_id = base64_decode($_GET['p_api']);
-$pid = base64_decode($_GET['pid']);
+$p_api_id = base64_decode(quickGet('p_api'));
+$pid = base64_decode(quickGet('pid'));
+$mode = quickGet('mode');
+$level = 0;
+if ($mode == "creation") { $level = 1; }
 
 if (isset($_POST["bassoc"])) {
     $cbx = array();
@@ -39,7 +42,10 @@ if (isset($_POST["bassoc"])) {
             $cbx[] = preg_replace("/cbx_/", "", $post);
         }
     }
-    $ret = associatePackages($p_api_id, $pid, $cbx);
+    if (isset($_POST['rdo_files'])) {
+        $cbx[] = $_POST['rdo_files'];
+    }
+    $ret = associatePackages($p_api_id, $pid, $cbx, $level);
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
@@ -63,12 +69,28 @@ $p->display();
 $f = new ValidatingForm();
 $f->push(new Table());
 
-foreach ($files as $p) {
-    # TODO use $p[1] to put a different style to directories
-    $f->add(
-        new TrFormElement($p[0], new CheckboxTpl("cbx_".$p[0])),
-        array()
-    );
+if ($mode == 'creation') {
+    $r = new RadioTpl("rdo_files");
+    $vals = array();
+    $keys = array();
+    foreach ($files as $fi) {
+        if ($fi[1] == True) {
+            $vals[] = $fi[0];
+            $keys[] = $fi[0];
+        }
+    }
+    $r->setValues($vals);
+    $r->setChoices($keys);
+    $f->add(new TrFormElement(_T("Select the directory you want for this package", "pkgs"), $r), array());
+    $hidden = new HiddenTpl("mode");
+    $f->add($hidden, array("value" => "creation", "hide" => True));
+} else {
+    foreach ($files as $fi) { # TODO use $p[1] to put a different style to directories
+        $f->add(
+            new TrFormElement($fi[0], new CheckboxTpl("cbx_".$fi[0])),
+            array()
+        );
+    }
 }
 $hidden = new HiddenTpl("p_api");
 $f->add($hidden, array("value" => $p_api_id, "hide" => True));

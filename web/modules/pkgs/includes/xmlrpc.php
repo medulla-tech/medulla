@@ -42,12 +42,14 @@ function getTemporaryFiles($papiid) {
     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
 }
 
-function associatePackages($papiid, $pid, $files) {
-    return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files));
+function associatePackages($papiid, $pid, $files, $level = 0) {
+    return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files, $level));
 }
 
 function dropPackage($p_api, $pid) {
     return xmlCall("pkgs.ppa_dropPackage", array($p_api, $pid));
 }
 
+
+          
 ?>

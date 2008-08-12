@@ -43,7 +43,9 @@ foreach ($res as $mirror) {
     $list[$mirror['uuid']] = $mirror['mountpoint'];
     $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
 }
-$ajax->setSelected($list_val[$mirror['uuid']]);
+if (isset($_GET['location'])) {
+    $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
+}
 $ajax->setElements($list);
 $ajax->setElementsVal($list_val);
 $ajax->display();

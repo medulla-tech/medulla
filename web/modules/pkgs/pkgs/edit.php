@@ -47,15 +47,16 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             if ($_GET["action"]=="add") {
-                new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
+                #new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
                 if (! isset($_POST["bassoc"])) {
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+                    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>base64_encode($p_api_id)))); # TODO add params to go on the good p_api
                 }
             } else {
                 new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+                $package = $ret[3];
             }
             if (isset($_POST["bassoc"])) {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'pid'=>base64_encode($package['id']))));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'pid'=>base64_encode($package['id']), 'mode'=>$_POST['mode'])));
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
@@ -84,7 +85,7 @@ if ($_GET["action"]=="add") {
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
-} else {
+} elseif (count($package) == 0 ) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
     # get existing package
@@ -92,6 +93,9 @@ if ($_GET["action"]=="add") {
     $package = getPackageDetail($p_api_id, $pid);
     $formElt = new HiddenTpl("id");
     
+    $selectpapi = new HiddenTpl('p_api');
+} else {
+    $formElt = new HiddenTpl("id");
     $selectpapi = new HiddenTpl('p_api');
 }
 
@@ -113,6 +117,10 @@ $f->add(
         new TrFormElement(_T("Package Id", "pkgs"), $formElt),
         array("value" => $package['id'], "required" => True)
         );
+
+if ($_GET["action"]=="add") {
+    $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
+}
 
 $fields = array(
     array("label", _T("Package label", "pkgs")),
