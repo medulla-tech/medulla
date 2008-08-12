@@ -176,7 +176,8 @@ class Common(Singleton):
                 if self.packages[pid] == pa:
                     return pid
                 raise Exception("ARYDEFPKG")
-            self.dontgivepkgs[pid] = self.config.package_mirror_target
+            Common().dontgivepkgs[pid] = []
+            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pa
             if not self.reverse.has_key(pa.label):
                 self.reverse[pa.label] = {}
@@ -191,7 +192,8 @@ class Common(Singleton):
             if self.packages.has_key(pid):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
-            self.dontgivepkgs[pid] = self.config.package_mirror_target
+            Common().dontgivepkgs[pid] = []
+            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pack
             if not self.reverse.has_key(pack.label):
                 self.reverse[pack.label] = {}
@@ -221,19 +223,30 @@ class Common(Singleton):
         f.close()
         return [pid, confdir]
 
-    def associateFiles(self, mp, pid, files):
+    def associateFiles(self, mp, pid, files, level = 0):
         if not self.packages.has_key(pid):
             return [False, "This package don't exists"]
         params = self.h_desc(mp)
         path = self._getPackageRoot(pid)
         files_out = []
         for f in files:
-            fo = os.path.join(path, pid, os.path.basename(f))
-            self.logger.debug("File association will move %s to %s" % (f, fo))
-            files_out.append(fo)
-            shutil.move(f, fo)
+            if level == 0:
+                fo = os.path.join(path, pid, os.path.basename(f))
+                self.logger.debug("File association will move %s to %s" % (f, fo))
+                files_out.append(fo)
+                shutil.move(f, fo)
+            elif level == 1:
+                for f1 in os.listdir(f):
+                    f1 = os.path.join(f, f1)
+                    fo = os.path.join(path, pid, os.path.basename(f1))
+                    self.logger.debug("File association will move %s to %s" % (f1, fo))
+                    files_out.append(fo)
+                    shutil.move(f1, fo)
+                shutil.rmtree(f)
+           
         self._treatFiles(files_out, mp, pid, access = {})
-            
+        Common().dontgivepkgs[pid] = []
+        Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
         return [True]
 
     def dropPackage(self, pid, mp):
@@ -247,7 +260,10 @@ class Common(Singleton):
             self.logger.error("package %s does not exists"%(pid))
             raise Exception("UNDEFPKG")
 
-        shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
+        if self.config.real_package_deletion:
+            shutil.rmtree(os.path.join(path, pid))
+        else:
+            shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         return pid
 
     def writeFileIntoPackage(self, pid, file):
@@ -329,7 +345,7 @@ class Common(Singleton):
     def _treatNewConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             if not self.already_declared.has_key(file):
-                pid = self._treatDir(os.path.dirname(file), mp, access)
+                pid = self._treatDir(os.path.dirname(file), mp, access, True)
                 self.associatePackage2mp(pid, mp)
                 self.already_declared[file] = True
                 
@@ -344,9 +360,9 @@ class Common(Singleton):
         for f in files:
             path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
             size = int(self._treatFile(pid, f, path, access))
-            self.packages[pid].size += int(size)
+            self.packages[pid].size = int(self.packages[pid].size) + int(size)
         
-    def _treatDir(self, file, mp, access):
+    def _treatDir(self, file, mp, access, new = False):
         pid = None
         try:
             if os.path.isdir(file):
@@ -384,6 +400,9 @@ class Common(Singleton):
                         size += self._treatFile(pid, f, path, access)
                 self.packages[pid].size = size
                 self.logger.debug("Package size = %d" % size)
+
+                if new:
+                    self.desassociatePackage2mp(pid, mp)
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
                 self.logger.error(err)

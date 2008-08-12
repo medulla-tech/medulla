@@ -46,10 +46,10 @@ class PackageApiPut(PackageApiGet):
         ret = []
         if os.path.exists(self.tmp_input_dir):
             for f in os.listdir(self.tmp_input_dir):
-                ret.append([f, os.path.isdir(f)])
+                ret.append([f, os.path.isdir(os.path.join(self.tmp_input_dir,f))])
         return ret
 
-    def xmlrpc_associatePackages(self, pid, fs):
+    def xmlrpc_associatePackages(self, pid, fs, level = 0):
         files = []
         ret = True
 
@@ -61,8 +61,7 @@ class PackageApiPut(PackageApiGet):
         if not ret:
             return [False, 'Some files are missing']
                 
-        ret = Common().associateFiles(self.mp, pid, files)
-        Common().dontgivepkgs[pid] = self.config.package_mirror_target
+        ret = Common().associateFiles(self.mp, pid, files, level)
         return [True]
     
     def xmlrpc_putPackageDetail(self, package):
@@ -81,7 +80,7 @@ class PackageApiPut(PackageApiGet):
         ret = Common().associatePackage2mp(package['id'], self.mp)
         if not ret: return False
 
-        return (True, package['id'], confdir)
+        return (True, package['id'], confdir, pa.toH())
 
     def xmlrpc_dropPackage(self, pid):
         ret = Common().dropPackage(pid, self.mp)

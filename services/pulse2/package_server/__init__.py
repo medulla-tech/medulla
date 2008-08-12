@@ -92,13 +92,15 @@ class ThreadPackageMirror(Thread):
             self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         
     def runSub(self):
+        self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
         for pid in Common().dontgivepkgs:
             targets = Common().dontgivepkgs[pid]
             for target in targets:
                 self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
                 pkg = Common().packages[pid]
                 exe = self.config.package_mirror_command
-                args = self.config.package_mirror_command_options
+                args = []
+                args.extend(self.config.package_mirror_command_options)
                 args.append(os.path.join(pkg.root, pid))
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
