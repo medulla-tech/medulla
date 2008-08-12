@@ -101,7 +101,6 @@ def startAllCommands(scheduler_name):
             database.commands.c.scheduler == scheduler_name,
             database.commands.c.scheduler == None)
         ).all():
-        # enter the maze: run command
         deffered = runCommand(q.id)
         if deffered:
             deffereds.append(deffered)
@@ -152,9 +151,12 @@ def stopCommand(myCommandOnHostID):
 
 def runCommand(myCommandOnHostID):
     """
-        Just a simple start point, chain-load on Upload Pahse
+        Just a simple start point, chain-load on Upload Phase
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    # FIXME: this test is performed way too late !
+    if not myC.inDeploymentInterval():
+        return
     myCoH.setStartDate()
     logger = logging.getLogger()
     logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
