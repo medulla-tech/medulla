@@ -271,11 +271,11 @@ class Common(Singleton):
 
     def package(self, pid, mp = None):
         if mp == None:
-            if not self.dontgivepkgs.has_key(pid):
+            if not self.dontgivepkgs.has_key(pid) and self.packages[pid].hasFile():
                 return self.packages[pid]
             return None
         try:
-            if not self.dontgivepkgs.has_key(pid):
+            if not self.dontgivepkgs.has_key(pid) and self.packages[pid].hasFile():
                 self.mp2p[mp].index(pid)
                 return self.packages[pid]
             return None
@@ -287,7 +287,7 @@ class Common(Singleton):
         ret = {}
         try:
             for k in self.packages:
-                if not self.dontgivepkgs.has_key(k):
+                if not self.dontgivepkgs.has_key(k) and self.packages[k].hasFile():
                     try:
                         self.mp2p[mp].index(k)
                         ret[k] = self.packages[k]
@@ -360,7 +360,7 @@ class Common(Singleton):
         for f in files:
             path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
             size = int(self._treatFile(pid, f, path, access))
-            self.packages[pid].size = int(self.packages[pid].size) + int(size)
+            self.packages[pid].size = int(self.packages[pid].size) + size
         
     def _treatDir(self, file, mp, access, new = False):
         pid = None

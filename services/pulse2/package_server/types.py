@@ -112,6 +112,9 @@ class Package:
     def addFile(self, file):
         self.files.append(file)
 
+    def hasFile(self):
+        return not self.files.isEmpty()
+
     def setRoot(self, root):
         self.root = root
 
@@ -190,6 +193,9 @@ class AFiles:
 
     def append(self, elt):
         self.internals.append(elt)
+
+    def isEmpty(self):
+        return (len(self.internals) == 0)
 
     def toH(self):
         return map(lambda x: x.toH(), self.internals)
