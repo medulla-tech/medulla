@@ -44,7 +44,7 @@ if (isset($_POST["bconfirm"])) {
     $p_api->fromURI($_POST["papi"]);
 
     $params = array();
-    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw') as $param) {
+    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
 
