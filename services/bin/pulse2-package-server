@@ -27,6 +27,9 @@ def running(inifile, deamonize):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
+    
+    if config.real_package_deletion:
+        logger.warning("Real package deletion is activated")
 
     # When starting, we log to stderr too
     hdlr2 = logging.StreamHandler()
