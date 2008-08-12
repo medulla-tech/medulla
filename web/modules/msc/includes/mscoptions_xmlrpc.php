@@ -45,4 +45,9 @@ function web_def_delay() {
 function web_def_attempts() {
     return xmlCall('msc.get_web_def_attempts');
 }
+
+function web_def_deployment_intervals() {
+    return xmlCall('msc.get_web_def_deployment_intervals');
+}
+
 ?>

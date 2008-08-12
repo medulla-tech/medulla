@@ -44,7 +44,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $page = $path[2];
     $tab = $path[3];
     $params = array();
-    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi', 'maxbw') as $param) {
+    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $post[$param];
     }
     $p_api = new ServerAPI();
@@ -134,8 +134,9 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters')), array("value" => ''));
     $f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
     $f->add(new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
+    $f->add(new TrFormElement(_T('Deployment interval', 'msc'), new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
 
-    $f->add(new TrFormElement(_T('Max bandwidth', 'msc'),   new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
+    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),   new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
     $rb = new RadioTpl("copy_mode");
     $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
     $rb->setvalues(array('push', 'push_pull'));

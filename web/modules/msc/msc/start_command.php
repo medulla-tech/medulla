@@ -80,7 +80,7 @@ if (isset($_POST["badvanced"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi', 'copy_mode') as $param) {
+    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'papi', 'copy_mode', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
     $prefix = '';
@@ -115,29 +115,26 @@ $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"),
 $f->push(new Table());
 
 // form preseeding
-$f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],     "hide" => True));
-$f->add(new HiddenTpl("name"),                                  array("value" => $hostname,         "hide" => True));
-$f->add(new HiddenTpl("hostname"),                              array("value" => $hostname,         "hide" => True));
-$f->add(new HiddenTpl("uuid"),                                  array("value" => $uuid,             "hide" => True));
-$f->add(new HiddenTpl("gid"),                                   array("value" => $gid,              "hide" => True));
-$f->add(new HiddenTpl("from"),                                  array("value" => $from,             "hide" => True));
-$f->add(new HiddenTpl("pid"),                                   array("value" => $pid,              "hide" => True));
-$f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',              "hide" => True));
-$f->add(new HiddenTpl("start_script"),                          array("value" => 'on',              "hide" => True));
-$f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',              "hide" => True));
-$f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),   "hide" => True));
-$f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),"hide" => True));
-$f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),   "hide" => True));
+$f->add(new HiddenTpl("papi"),                                  array("value" => $_GET["papi"],                     "hide" => True));
+$f->add(new HiddenTpl("name"),                                  array("value" => $hostname,                         "hide" => True));
+$f->add(new HiddenTpl("hostname"),                              array("value" => $hostname,                         "hide" => True));
+$f->add(new HiddenTpl("uuid"),                                  array("value" => $uuid,                             "hide" => True));
+$f->add(new HiddenTpl("gid"),                                   array("value" => $gid,                              "hide" => True));
+$f->add(new HiddenTpl("from"),                                  array("value" => $from,                             "hide" => True));
+$f->add(new HiddenTpl("pid"),                                   array("value" => $pid,                              "hide" => True));
+$f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
+$f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
+$f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',                              "hide" => True));
+$f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),                   "hide" => True));
+$f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),                "hide" => True));
+$f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
+$f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));
+$f->add(new HiddenTpl("deployment_intervals"),                  array("value" => web_def_deployment_intervals(),    "hide" => True));
+
 $check = new TrFormElement(_T('awake', 'msc'), new CheckboxTpl("wake_on_lan"));
 $f->add($check, array("value" => web_def_awake() ? "checked" : ""));
 $check = new TrFormElement(_T('invent.', 'msc'), new CheckboxTpl("start_inventory"));
 $f->add($check, array("value" => web_def_inventory() ? "checked" : ""));
-$rb = new RadioTpl("copy_mode");
-$rb->setChoices(array(_T('push', 'msc'), _T('p/p', 'msc')));
-$rb->setvalues(array('push', 'push_pull'));
-$rb->setSelected(web_def_mode());
-$check = new TrFormElement(_T('mode', 'msc'), $rb);
-$f->add($check, array("value" => ''));
 
 $f->addValidateButton("bconfirm");
 $f->addButton("badvanced", _T("Advanced", 'msc'));
