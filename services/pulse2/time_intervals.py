@@ -70,7 +70,7 @@ class TimePoint:
 
     def _valid(self, value):
         """ Checks for value validity """
-        if type(value) == type(''):
+        if value:
             return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)).match(value) != None
         return False
 
@@ -170,7 +170,7 @@ def _merge(s1, s2):
 
 def string2timeinterval(string):
     """ handle conversion from string to timeinterval """
-    if type(string) != type(''):
+    if not string:
         return None
     tp = TimeInterval()
     for segment in string.split(','):
@@ -203,6 +203,7 @@ def intimeinterval(interval, point):
     """
     interval = string2timeinterval(interval)
     point = TimePoint(point)
+
     if not interval:
         return False
     if not point:
