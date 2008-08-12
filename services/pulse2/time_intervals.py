@@ -29,7 +29,7 @@ RE_VALIDHOURMINSEC = '(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]):([0-5][0-9]))'
 RE_VALIDHOURMIN = '(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]))'
 # match HH
 RE_VALIDHOUR = '(([0-9]|[1][0-9]|[2][0-3]))'
-# match full plage
+# match full interval
 RE_VALIDSEGMENT = "^(%s|%s|%s)-(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR, RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)
 
 # minimum value of a time point
@@ -101,7 +101,7 @@ class TimeSegment:
     def __str__(self):
         return "%s-%s" % (self.start.__str__(), self.end.__str__())
 
-class TimePlage:
+class TimeInterval:
     segments = []
 
     def __str__(self):
@@ -168,11 +168,11 @@ def _merge(s1, s2):
         elif s2.end >= s1.end:
             return [s2]                             # s2 "finished" after s1 "end", merge is s2
 
-def string2timeplage(string):
-    """ handle conversion from string to timeplage """
+def string2timeinterval(string):
+    """ handle conversion from string to timeinterval """
     if type(string) != type(''):
         return None
-    tp = TimePlage()
+    tp = TimeInterval()
     for segment in string.split(','):
         split = segment.split('-')
         if len(split) == 2:
@@ -184,33 +184,31 @@ def string2timeplage(string):
             return None
     return tp
 
-def timeplage2string(tp):
-    """ handle conversion from timeplage to string """
+def timeinterval2string(tp):
+    """ handle conversion from timeinterval to string """
     if tp:
         return tp.__str__()
     return None
 
-def normalizeplage(string):
-    tp = string2timeplage(string)
+def normalizeinterval(string):
+    tp = string2timeinterval(string)
     if tp:
-        return timeplage2string(tp)
+        return timeinterval2string(tp)
     return None
 
-def intimeplage(plage, point):
-    """ used to say if a point is in a plage
-        plage is a regular string
+def intimeinterval(interval, point):
+    """ used to say if a point is in an interval
+        interval is a regular string
         point is the "hour" value of a date
     """
-    plage = string2timeplage(plage)
+    interval = string2timeinterval(interval)
     point = TimePoint(point)
-    if not plage:
+    if not interval:
         return False
     if not point:
         return False
 
-    for segment in plage.segments:
+    for segment in interval.segments:
         if point >= segment.start and point <= segment.end:
             return True
     return False
-
-print optimizeplage('1-2')
