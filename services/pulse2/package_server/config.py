@@ -66,6 +66,8 @@ class P2PServerCP(Singleton):
 
     package_detect_tmp_activate = False
 
+    real_package_deletion = False
+
     package_mirror_loop = 5
     package_mirror_activate = False
     package_mirror_target = ''
@@ -178,6 +180,8 @@ class P2PServerCP(Singleton):
                     self.package_mirror_command = self.cp.getint("main", 'package_mirror_command')
                 if self.cp.has_option("main", 'package_mirror_command_options'):
                     self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
+        if self.cp.has_option("main", "real_package_deletion"):
+            self.real_package_deletion = self.cp.getboolean("main", "real_package_deletion")
         if self.cp.has_option("main", "mm_assign_algo"):
             self.mm_assign_algo = self.cp.get("main", 'mm_assign_algo')
         if self.cp.has_option("main", "up_assign_algo"):
