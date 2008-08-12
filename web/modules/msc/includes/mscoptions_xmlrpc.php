@@ -2,7 +2,7 @@
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
- * $Id: utils.py 56 2008-03-19 18:21:07Z nrueff $
+ * $Id$
  *
  * This file is part of Pulse 2, http://pulse2.mandriva.org
  *
