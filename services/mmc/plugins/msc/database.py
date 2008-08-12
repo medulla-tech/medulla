@@ -363,9 +363,10 @@ class MscDatabase(Singleton):
                 group_id
                 ) # TODO change mirrors...
 
-
-        targetUuid = target[0]
-        targetName = target[1]
+        targetUuid = target
+        if type(target) == list:
+            targetUuid = target[0]
+            targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
 
         ipAddresses = computer[1]['ipHostNumber']
@@ -379,6 +380,10 @@ class MscDatabase(Singleton):
         ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
         self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
 
+        try:
+            targetName = computer[1]['cn'][0]
+        except KeyError:
+            pass
         try:
             targetName = computer[1]['fullname']
         except KeyError:
@@ -457,8 +462,11 @@ class MscDatabase(Singleton):
 
         session = create_session()
         dlist = []
-        for t in target:
-            dlist.append(cbCreateTarget(t))
+        if type(target[0]) == list:
+            for t in target:
+                dlist.append(cbCreateTarget(t))
+        else:
+            dlist.append(cbCreateTarget(target))
         dl = defer.DeferredList(dlist)
         dl.addCallback(cbReturnCmdid, (cmd_id))
 
