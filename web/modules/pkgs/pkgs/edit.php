@@ -158,8 +158,11 @@ foreach ($cmds as $p) {
 }
 
 $f->pop();
-$f->addValidateButton("bcreate");
-$f->addButton('bassoc', _T("Associate files", "pkgs"), "btnSecondary");
+if ($_GET["action"]=="add") {
+    $f->addButton('bassoc', _T("Associate files", "pkgs"), "btnPrimary");
+} else {
+    $f->addValidateButton("bcreate");
+}
 $f->display();
 
 
