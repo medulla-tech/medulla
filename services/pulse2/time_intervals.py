@@ -71,7 +71,7 @@ class TimePoint:
     def _valid(self, value):
         """ Checks for value validity """
         if type(value) == type(''):
-            return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)) != None
+            return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)).match(value) != None
         return False
 
     def _normalize(self, value):
