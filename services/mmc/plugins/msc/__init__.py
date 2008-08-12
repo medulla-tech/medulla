@@ -184,6 +184,8 @@ class RpcProxy(RpcProxyI):
         return (len(result), result[start:end])
 
     def pa_adv_getAllPackages(self, filt, start, end):
+        start = int(start)
+        end = int(end)
         ctx = self.currentContext
         g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
         g.deferred = defer.Deferred()
