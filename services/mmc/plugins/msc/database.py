@@ -53,7 +53,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 7
+DATABASEVERSION = 8
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -461,7 +461,7 @@ class MscDatabase(Singleton):
             dlist.append(cbCreateTarget(t))
         dl = defer.DeferredList(dlist)
         dl.addCallback(cbReturnCmdid, (cmd_id))
-            
+
         return dl
 
     def blacklistTargetHostname(self, myTarget, session = create_session()):

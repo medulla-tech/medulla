@@ -50,10 +50,10 @@ def getProxy(schedulerConfig):
     return ret
 
 def start_all_commands(scheduler):
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+    # FIXME: return something usefull !
+    return getProxy(select_scheduler(scheduler)).callRemote(
         'start_all_commands'
     )
-    return True
 
 def ping_client(scheduler, computer):
     """

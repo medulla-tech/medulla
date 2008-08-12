@@ -1,0 +1,5 @@
+ALTER TABLE `commands` \
+    ADD COLUMN `deployment_intervals` varchar(256) default NULL;
+
+DELETE FROM version;
+INSERT INTO version VALUES( '8' );

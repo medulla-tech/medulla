@@ -97,6 +97,7 @@ class Commands(object):
             'post_run_hook': self.post_run_hook,
             'on_success_hook': self.on_success_hook,
             'on_failure_hook': self.on_failure_hook,
-            'maxbw': self.maxbw
+            'maxbw': self.maxbw,
+            'deployment_intervals': self.deployment_intervals
         }
 
