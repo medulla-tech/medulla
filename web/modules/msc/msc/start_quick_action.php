@@ -62,7 +62,7 @@ if (isset($_POST["bconfirm"])) {
         action($_GET['launchAction'], $result);
     }
 } else {
-    $f = new PopupForm(_T("Please confirm you really want to perform this action"));
+    $f = new PopupForm(_T("Please confirm you really want to perform this action", "msc"));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
