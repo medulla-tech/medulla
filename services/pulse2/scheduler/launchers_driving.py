@@ -33,6 +33,8 @@ def chooseLauncher():
     def _finalback(stats):
         import random
         used_slots = 0
+        if len(stats.keys()) == 0:
+            raise Exception("Every launchers seems to be dead !!!")
         # remove full launchers
         for k,v in stats.items():
             used_slots += v['slotused']
@@ -40,29 +42,38 @@ def chooseLauncher():
                 del stats[k]
         # give up if we may go beyond limit
         if used_slots >= SchedulerConfig().max_slots:
-            raise Exception('chooseLauncher()', "Giving up, as we may go beyond our max of %s slots used" % SchedulerConfig().max_slots)
+            raise Exception("Gone beyond our max of %s slots used" % SchedulerConfig().max_slots)
         if len(stats.keys()) == 0:
-            raise Exception('chooseLauncher()', "Giving up, no slot seems to be left on launchers")
+            raise Exception("No free slots on launchers")
         best_launcher = stats.keys()[random.randint(0, len(stats.keys())-1)]
         return SchedulerConfig().launchers_uri[best_launcher]
 
+    def _eb(reason, stats, launchers, current_launcher):
+        logging.getLogger().error("scheduler %s: while talking to launcher %s: %s" % (SchedulerConfig().name, current_launcher, reason.getErrorMessage()))
+        if launchers:
+            (next_launcher_name, next_launcher_uri) = launchers.popitem()
+            d = callOnLauncher(next_launcher_uri, 'get_health')
+            d.addCallback(_callback, stats, launchers, next_launcher_name).\
+            addErrback(_eb, stats, launchers, next_launcher_name)
+            return d
+        else: # no more launcher left, give up
+            return _finalback(stats)
+
     def _callback(result, stats, launchers, current_launcher):
         # we just got a result from a launcher, let's stack it
-
         if result:
-            if stats:
-                stats.update({current_launcher: result})
-            else:
-                stats={current_launcher: result}
+            stats.update({current_launcher: result})
         # if there is at least one launcher to process, do it
         if launchers:
             (next_launcher_name, next_launcher_uri) = launchers.popitem()
             d = callOnLauncher(next_launcher_uri, 'get_health')
-            d.addCallback(_callback, stats, launchers, next_launcher_name)
+            d.addCallback(_callback, stats, launchers, next_launcher_name).\
+            addErrback(_eb, stats, launchers, next_launcher_name)
             return d
         else: # no more launcher left, give up
             return _finalback(stats)
-    return _callback(None, None, SchedulerConfig().launchers_uri.copy(), None)
+
+    return _callback(None, {}, SchedulerConfig().launchers_uri.copy(), None)
 
 def pingClient(uuid, fqdn, shortname, ips, macs):
     # choose a way to perform the operation
@@ -120,7 +131,7 @@ def callOnBestLauncher(method, *args):
     import pulse2.scheduler.xmlrpc
 
     def _eb(reason):
-        logging.getLogger().error("scheduler %s: error %s" % (SchedulerConfig().name, reason.getErrorMessage()))
+        logging.getLogger().error("scheduler %s: while choosing the best launcher: %s" % (SchedulerConfig().name, reason.getErrorMessage()))
 
     return chooseLauncher().\
         addCallback(pulse2.scheduler.xmlrpc.getProxy).\
