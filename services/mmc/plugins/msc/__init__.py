@@ -348,6 +348,8 @@ class RpcProxy(RpcProxyI):
     def get_web_def_attempts(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_attempts)
 
+    def get_web_def_deployment_intervals(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_deployment_intervals)
 ##
 # machines
 ##

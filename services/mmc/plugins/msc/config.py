@@ -28,6 +28,9 @@ import re
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
 
+# Pulse 2 stuff
+import pulse2.time_intervals
+
 class MscConfig(PluginConfig):
 
     # default folder values
@@ -197,7 +200,13 @@ class MscConfig(PluginConfig):
         if self.has_option("web", "web_dlpath"):
             self.web_dlpath = self.get("web", "web_dlpath")
         if self.has_option("web", "web_def_deployment_intervals"):
-            self.web_def_deployment_intervals = self.get("web", "web_def_deployment_intervals")
+            time_intervals = pulse2.time_intervals.normalizeinterval(self.get("web", "web_def_deployment_intervals"))
+            if time_intervals:
+                self.web_def_deployment_intervals = time_intervals
+            else:
+                self.web_def_deployment_intervals = ""
+                logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
+        logging.getLogger().debug("Plugin MSC: Time interval default value set to '%s'" % self.web_def_deployment_intervals)
 
         # API Package
         if self.has_option("package_api", "mserver"):
