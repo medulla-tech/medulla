@@ -583,6 +583,16 @@ enablessl = 1
           </row>
 
           <row>
+            <entry>web_def_deployment_intervals</entry>
+
+            <entry>Fill deployment time window</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
             <entry>web_dlpath</entry>
 
             <entry>Directory of target computers from which a file is download
