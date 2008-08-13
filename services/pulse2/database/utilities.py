@@ -21,6 +21,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from sqlalchemy import *
+
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
 
