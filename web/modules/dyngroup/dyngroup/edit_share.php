@@ -109,7 +109,7 @@ if (isset($_POST["bdeluser_x"])) {
     if (!$listOfMembers) { $listOfMembers = array(); }
 
 
-    list($count, $users) = get_users_detailed($error, '', 0, -1);
+    list($count, $users) = get_users_detailed($error, '', 0, 10000);
     $listOfUsers = array();
     foreach ($users as $u) {
         $listOfUsers[$u['uid']] = array('user'=>array('login'=>$u['uid'], 'type'=>0));
