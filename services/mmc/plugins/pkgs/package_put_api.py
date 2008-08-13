@@ -46,11 +46,11 @@ class PackagePutA:
         d.addErrback(self.onError, "getTemporaryFiles")
         return d
 
-    def associatePackages(self, pid, files):
+    def associatePackages(self, pid, files, level = 0):
         if self.initialized_failed:
             return []
-        d = self.ppaserver.callRemote("associatePackages", pid, files)
-        d.addErrback(self.onError, "associatePackages", [pid, files])
+        d = self.ppaserver.callRemote("associatePackages", pid, files, level)
+        d.addErrback(self.onError, "associatePackages", [pid, files, level])
         return d
         
     def putPackageDetail(self, package):
