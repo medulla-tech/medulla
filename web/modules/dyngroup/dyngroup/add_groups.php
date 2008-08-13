@@ -109,6 +109,9 @@ if (isset($_POST["bdelmachine_x"])) {
             $listOfMembers[$member['uuid']] = $member;
             $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
         }
+        if ($visibility == 'show') {
+            header("Location: " . urlStrRedirect("base/computers/computersgroupcreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+        }
     } else {
         new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
     }
