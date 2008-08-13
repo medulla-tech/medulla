@@ -16,7 +16,6 @@ from ConfigParser import NoOptionError
 
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import Singleton
-from mmc.plugins.glpi.database import GlpiConfig, Glpi
 
 class QueryManager(Singleton):
     """
