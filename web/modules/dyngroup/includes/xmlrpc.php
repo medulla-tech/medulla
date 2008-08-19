@@ -29,4 +29,11 @@ function isDynamicEnable() {
     return $_SESSION["isDynamicEnable"];
 }
 
+function getDefaultModule() {
+    if (!isset($_SESSION["defaultModule"])) {
+        $_SESSION["defaultModule"] = xmlCall("dyngroup.getDefaultModule", null);
+    }
+    return $_SESSION["defaultModule"];
+}
+
 ?>

@@ -63,6 +63,9 @@ $modules = getPossiblesModules();
 if (count($modules) == 1) {
     quickSet('add_req', $modules[0]);
 } else {
+    $default = getDefaultModule();
+    quickSet('add_req', $default);
+    
     print "<table><tr><td>"._T("Choose the module you want to query : ", "dyngroup")."</td>";
     
     foreach ($modules as $name) {
