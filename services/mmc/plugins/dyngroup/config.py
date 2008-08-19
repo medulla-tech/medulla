@@ -4,6 +4,7 @@ from ConfigParser import NoOptionError
 
 class DGConfig(PluginConfig):
     dyngroup_activate = True
+    defaultModule = ''
     
     def readConf(self):
         """
@@ -17,6 +18,8 @@ class DGConfig(PluginConfig):
         self.dbname = self.get("database", "dbname")
         self.disable = self.getboolean("main", "disable")
         self.dynamicEnable = self.getboolean("main", "dynamic_enable")
+        if self.has_option('main', 'default_module'):
+            self.defaultModule = self.get('main', 'default_module')
         try:
             self.dbport = self.getint("database", "dbport")
         except NoOptionError:

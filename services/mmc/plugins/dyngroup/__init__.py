@@ -304,4 +304,5 @@ def forgeRequest(elt, values):
     bools = "OR("+",".join(bools)+")"
     return (request, bools)
 
-
+def getDefaultModule():
+    return config.defaultModule
