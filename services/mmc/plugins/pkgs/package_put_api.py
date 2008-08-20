@@ -53,10 +53,10 @@ class PackagePutA:
         d.addErrback(self.onError, "associatePackages", [pid, files, level])
         return d
         
-    def putPackageDetail(self, package):
+    def putPackageDetail(self, package, need_assign = True):
         if self.initialized_failed:
             return -1
-        d = self.ppaserver.callRemote("putPackageDetail", package)
+        d = self.ppaserver.callRemote("putPackageDetail", package, need_assign)
         d.addErrback(self.onError, "putPackageDetail", package, -1)
         return d
 

@@ -77,11 +77,11 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_ppa_getPackageDetail)
         return d
 
-    def ppa_putPackageDetail(self, pp_api_id, package):
-        def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package):
+    def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
+        def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).putPackageDetail(package)
+                    return PackagePutA(upa).putPackageDetail(package, need_assign)
             logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
             return False
         d = self.upaa_getUserPackageApi()
