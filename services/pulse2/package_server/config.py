@@ -93,8 +93,11 @@ class P2PServerCP(Singleton):
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
 
-        if self.cp.has_option('main', 'bind'):
-            self.bind = self.cp.get("main", 'bind')
+        if self.cp.has_option("main", "bind"): # TODO remove in a future version
+            logging.getLogger().warning("'bind' is obslete, please replace it in your config file by 'host'")
+            self.bind = self.cp.get("main", 'server')
+        elif self.cp.has_option('main', 'host'):
+            self.bind = self.cp.get("main", 'host')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.get("main", 'port')
 
