@@ -193,6 +193,7 @@ class Common(Singleton):
             if self.packages.has_key(pid):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+                pack.setFiles(old.files)
             if need_assign:
                 Common().dontgivepkgs[pid] = []
                 Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)

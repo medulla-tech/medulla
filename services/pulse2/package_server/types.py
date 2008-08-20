@@ -112,6 +112,9 @@ class Package:
     def addFile(self, file):
         self.files.append(file)
 
+    def setFiles(self, files):
+        self.files = files
+
     def hasFile(self):
         return not self.files.isEmpty()
 
