@@ -168,7 +168,7 @@ class Common(Singleton):
                 self.mp2p[desc['mp']].remove(pid)
         return True
 
-    def addPackage(self, pid, pa):
+    def addPackage(self, pid, pa, need_assign = True):
         # return pid for success
         # raise ARYDEFPKG for already existing package
         try:
@@ -176,8 +176,9 @@ class Common(Singleton):
                 if self.packages[pid] == pa:
                     return pid
                 raise Exception("ARYDEFPKG")
-            Common().dontgivepkgs[pid] = []
-            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+            if need_assign:
+                Common().dontgivepkgs[pid] = []
+                Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pa
             if not self.reverse.has_key(pa.label):
                 self.reverse[pa.label] = {}
@@ -187,13 +188,14 @@ class Common(Singleton):
             raise e
         return pid
 
-    def editPackage(self, pid, pack):
+    def editPackage(self, pid, pack, need_assign = True):
         try:
             if self.packages.has_key(pid):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
-            Common().dontgivepkgs[pid] = []
-            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+            if need_assign:
+                Common().dontgivepkgs[pid] = []
+                Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pack
             if not self.reverse.has_key(pack.label):
                 self.reverse[pack.label] = {}
@@ -264,6 +266,7 @@ class Common(Singleton):
             shutil.rmtree(os.path.join(path, pid))
         else:
             shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
+        # TODO remove package from mirrors
         return pid
 
     def writeFileIntoPackage(self, pid, file):

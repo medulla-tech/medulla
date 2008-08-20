@@ -64,13 +64,13 @@ class PackageApiPut(PackageApiGet):
         ret = Common().associateFiles(self.mp, pid, files, level)
         return [True]
     
-    def xmlrpc_putPackageDetail(self, package):
+    def xmlrpc_putPackageDetail(self, package, need_assign = True):
         pa = Package()
         pa.fromH(package)
         if Common().dontgivepkgs.has_key(pa.id) and len(Common().dontgivepkgs[pa.id]) > 0:
             return (False, "This package is curently locked")
 
-        ret = Common().editPackage(package['id'], pa)
+        ret = Common().editPackage(package['id'], pa, need_assign)
         if not ret: return False
 
         ret = Common().writePackageTo(package['id'], self.mp)
