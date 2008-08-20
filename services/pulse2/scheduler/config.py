@@ -160,7 +160,11 @@ class SchedulerConfig(pulse2.utils.Singleton):
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
-            self.setoption("daemon", "pid_path", "pid_path")
+            if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
+                logging.getLogger().warning("'pid_path' is obslete, please replace it in your config file by 'pidfile'")
+                self.setoption('daemon', 'pid_path', 'pid_path')
+            else:
+                self.setoption('daemon', 'pidfile', 'pid_path')
             if self.cp.has_option("daemon", "umask"):
                 self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
             if self.cp.has_option("daemon", "user"):
