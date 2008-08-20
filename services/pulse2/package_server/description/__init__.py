@@ -47,8 +47,6 @@ class Description(resource.Resource):
         #if request.path != '/':
         #    return ''
 
-        print request.args
-
         body = "<html>"
         body += "<table class='mandriva'>"
         body += "<tr class='mandriva'><th class='mandriva'>URL</th><th class='mandriva'>Kind</th><th class='mandriva'>Details</th><th class='mandriva'>State</th></tr>"
@@ -73,7 +71,7 @@ class Description(resource.Resource):
                         body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href=\""+url+"\">content</a></td>"
                         body += self.__up()
                 else:
-                    print '%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp'])
+                    #print '%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp'])
                     client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
                     #ret = client.getServerDetails()
                     url = "?proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+CGI.escape(description['mp'])+"&type="+description['type']
