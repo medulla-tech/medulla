@@ -92,6 +92,11 @@ $page->setFile("modules/dyngroup/dyngroup/save.php");
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("save_detail",_T("Detailed page of save a group of machines","dyngroup"));
+$page->setFile("modules/dyngroup/dyngroup/save_detail.php");
+$page->setOptions(array("visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("list",_T("List all groups of machines","dyngroup"));
 $page->setFile("modules/dyngroup/dyngroup/list.php");
 $submod->addPage($page);

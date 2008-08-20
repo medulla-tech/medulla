@@ -78,33 +78,20 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
     }
     
     if ($save_type == 1) { // request save
-        $r = new Request();
-        $r->parse($request);
-        $r->displayReqListInfos();
-        print sprintf(_T("This request has been saved as %s (id=%s)", "dyngroup"), $name, $gid);
         $group->setRequest($request);
         $group->setBool($bool);
     } else { // result save
         $group->setRequest($request);
         $group->setBool($bool);
         $group->reload();
-        print sprintf(_T("This result has been saved as %s (id=%s)", "dyngroup"), $name, $gid);
-        displayStatic($group, 0, 10, '', $gid);
     }
     if ($visible == 1) { $group->show(); }
+    header("Location: " . urlStrRedirect("base/computers/save_detail", array('id'=>$gid)));
 }
 
 
 function drawBoolEquation($equ_bool) {
         print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator bewteen groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
-}
-
-function displayStatic($group, $start, $end, $filter, $gid) {
-    $_GET['gid'] = $gid;
-    $_GET['start'] = $start;
-    $_GET['end'] = $end;
-
-    $group->prettyDisplay();
 }
 
 ?>
