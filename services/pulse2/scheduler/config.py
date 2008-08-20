@@ -132,7 +132,11 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 self.cacert = self.cp.get("scheduler", "cacert")
             if self.cp.has_option("scheduler", "verifypeer"):
                 self.verifypeer = self.cp.get("scheduler", "verifypeer")
-        self.setoption("scheduler", "listen", "host")
+        if self.cp.has_option("scheduler", "listen"): # TODO remove in a future version
+            logging.getLogger().warning("'listen' is obslete, please replace it in your config file by 'host'")
+            self.setoption("scheduler", "listen", "host")
+        else:
+            self.setoption("scheduler", "host", "host")
         self.setoption("scheduler", "mode", "mode")
         self.setoption("scheduler", "password", "password", 'pass')
         self.setoption("scheduler", "port", "port")
