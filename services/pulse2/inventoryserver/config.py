@@ -60,8 +60,11 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.dbname == None:
             self.dbname = 'inventory'
 
-        if self.cp.has_option('main', 'server'):
+        if self.cp.has_option("main", "server"): # TODO remove in a future version
+            logging.getLogger().warning("'server' is obslete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'server')
+        elif self.cp.has_option('main', 'host'):
+            self.bind = self.cp.get("main", 'host')
         if self.cp.has_option('main', 'port'):
             self.port = self.cp.get("main", 'port')
         if self.cp.has_option('main', 'ocsmapping'):
