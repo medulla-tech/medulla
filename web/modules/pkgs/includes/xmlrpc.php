@@ -30,8 +30,8 @@ function getUserPackageApi() {
     return xmlCall("pkgs.upaa_getUserPackageApi");
 }
 
-function putPackageDetail($papi, $package) {
-    return xmlCall("pkgs.ppa_putPackageDetail", array($papi, $package));
+function putPackageDetail($papi, $package, $need_assign = True) {
+    return xmlCall("pkgs.ppa_putPackageDetail", array($papi, $package, $need_assign));
 }
 
 function getPackageDetail($papiid, $pid) {

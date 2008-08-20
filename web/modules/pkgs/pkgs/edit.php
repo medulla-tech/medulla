@@ -31,8 +31,10 @@ $package = array();
 
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
+    $need_assign = False;
     if ($_GET["action"]=="add") {
         $p_api_id = base64_decode($p_api_id);
+        $need_assign = True;
     }
     foreach (array('id', 'label', 'version', 'description') as $post) {
         $package[$post] = $_POST[$post];
@@ -43,7 +45,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     foreach (array('command') as $post) {
         $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>$_POST[$post.'cmd']);
     }
-    $ret = putPackageDetail($p_api_id, $package);
+    $ret = putPackageDetail($p_api_id, $package, $need_assign);
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             if ($_GET["action"]=="add") {
