@@ -124,7 +124,6 @@ class ThreadLauncher(Singleton):
             if self.config.package_detect_tmp_activate:
                 self.logger.debug("Package detect in temporary folder is activated")
     
-        if config.package_detect_activate:
             self.logger.debug("Starting package detect thread")
             threadpd = ThreadPackageDetect(config)
             threadpd.setDaemon(True)
