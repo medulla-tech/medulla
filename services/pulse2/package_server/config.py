@@ -27,6 +27,7 @@ import ConfigParser
 import re
 import sys
 from pulse2.package_server.utilities import Singleton
+import logging
 
 if sys.platform != "win32":
     import pwd
@@ -95,7 +96,7 @@ class P2PServerCP(Singleton):
 
         if self.cp.has_option("main", "bind"): # TODO remove in a future version
             logging.getLogger().warning("'bind' is obslete, please replace it in your config file by 'host'")
-            self.bind = self.cp.get("main", 'server')
+            self.bind = self.cp.get("main", 'bind')
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')
         if self.cp.has_option('main', 'port'):
