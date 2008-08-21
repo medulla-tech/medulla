@@ -50,15 +50,20 @@ class ThreadPackageDetect(Thread):
         Thread.__init__(self)
         self.logger = logging.getLogger()
         self.config = config
+        self.working = False
 
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
     def runSub(self):
+        if self.working: 
+            return
+        self.working = True
         self.logger.debug("ThreadPackageDetect is running")
         if self.config.package_detect_tmp_activate:
             Common().moveCorrectPackages()
         Common().detectNewPackages()
+        self.working = False
         
     def run(self):
         l = task.LoopingCall(self.runSub)
@@ -69,6 +74,7 @@ class ThreadPackageMirror(Thread):
         Thread.__init__(self)
         self.logger = logging.getLogger()
         self.config = config
+        self.working = False
 
     def log_message(self, format, *args):
         self.logger.info(format % args)
@@ -92,6 +98,9 @@ class ThreadPackageMirror(Thread):
             self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         
     def runSub(self):
+        if self.working: 
+            return
+        self.working = True
         self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
         for pid in Common().dontgivepkgs:
             targets = Common().dontgivepkgs[pid]
@@ -107,6 +116,7 @@ class ThreadPackageMirror(Thread):
                 d = utils.getProcessOutputAndValue(exe, args)
                 d.addCallback(self.onSuccess, (pid, target))
                 d.addErrback(self.onError, (pid, target))
+        self.working = False
                        
     def run(self):
         l = task.LoopingCall(self.runSub)

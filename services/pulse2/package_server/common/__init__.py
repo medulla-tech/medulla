@@ -56,6 +56,7 @@ class Common(Singleton):
         self.desc = []
         self.already_declared = {}
         self.dontgivepkgs = {}
+        self.need_assign = {}
 
         try:
             self._detectPackages()
@@ -68,6 +69,28 @@ class Common(Singleton):
             self.logger.error("Common : failed to finish loading packages")
             self.working = False
             raise e
+
+    def debug(self):
+        self.logger.debug("# START ################")
+        self.logger.debug(">> self.packages")
+        self.logger.debug(self.packages)
+        self.logger.debug(">> self.mp2p")
+        self.logger.debug(self.mp2p)
+        self.logger.debug(">> self.reverse")
+        self.logger.debug(self.reverse)
+        self.logger.debug(">> self.files")
+        self.logger.debug(self.files)
+        self.logger.debug(">> self.fid2file")
+        self.logger.debug(self.fid2file)
+        self.logger.debug(">> self.desc")
+        self.logger.debug(self.desc)
+        self.logger.debug(">> self.already_declared")
+        self.logger.debug(self.already_declared)
+        self.logger.debug(">> self.dontgivepkgs")
+        self.logger.debug(self.dontgivepkgs)
+        self.logger.debug(">> self.need_assign")
+        self.logger.debug(self.need_assign)
+        self.logger.debug("# END ##################")
         
     def _detectPackages(self, new = False):
         if len(self.config.mirrors) > 0:
@@ -158,7 +181,8 @@ class Common(Singleton):
         conf = self.h_desc(mp)
         for desc in self.descBySrc(conf['src']):
             if desc['type'] != 'mirror_files':
-                self.mp2p[desc['mp']].append(pid)
+                if not self.mp2p[desc['mp']].__contains__(pid):
+                    self.mp2p[desc['mp']].append(pid)
         return True
 
     def desassociatePackage2mp(self, pid, mp):
@@ -177,6 +201,8 @@ class Common(Singleton):
                     return pid
                 raise Exception("ARYDEFPKG")
             if need_assign:
+                Common().need_assign[pid] = True
+            else:
                 Common().dontgivepkgs[pid] = []
                 Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pa
@@ -195,6 +221,8 @@ class Common(Singleton):
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
                 pack.setFiles(old.files)
             if need_assign:
+                Common().need_assign[pid] = True
+            else:
                 Common().dontgivepkgs[pid] = []
                 Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pack
@@ -248,6 +276,7 @@ class Common(Singleton):
                 shutil.rmtree(f)
            
         self._treatFiles(files_out, mp, pid, access = {})
+        del Common().need_assign[pid]
         Common().dontgivepkgs[pid] = []
         Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
         return [True]
@@ -268,6 +297,8 @@ class Common(Singleton):
         else:
             shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         # TODO remove package from mirrors
+        if self.packages.has_key(pid):
+            del self.packages[pid]
         return pid
 
     def writeFileIntoPackage(self, pid, file):
@@ -275,11 +306,11 @@ class Common(Singleton):
 
     def package(self, pid, mp = None):
         if mp == None:
-            if not self.dontgivepkgs.has_key(pid) and self.packages[pid].hasFile():
+            if not self.dontgivepkgs.has_key(pid) and not Common().need_assign.has_key(pid) and self.packages[pid].hasFile():
                 return self.packages[pid]
             return None
         try:
-            if not self.dontgivepkgs.has_key(pid) and self.packages[pid].hasFile():
+            if not self.dontgivepkgs.has_key(pid) and not Common().need_assign.has_key(pid) and self.packages[pid].hasFile():
                 self.mp2p[mp].index(pid)
                 return self.packages[pid]
             return None
@@ -291,7 +322,7 @@ class Common(Singleton):
         ret = {}
         try:
             for k in self.packages:
-                if not self.dontgivepkgs.has_key(k) and self.packages[k].hasFile():
+                if not self.dontgivepkgs.has_key(k) and not Common().need_assign.has_key(k) and self.packages[k].hasFile():
                     try:
                         self.mp2p[mp].index(k)
                         ret[k] = self.packages[k]
