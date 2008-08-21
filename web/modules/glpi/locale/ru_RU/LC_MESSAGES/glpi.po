@@ -1,118 +1,107 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of glpi.po to
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Andrzej Skrzypczak <aeskrzypczak@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: glpi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-02 19:50+0200\n"
-"PO-Revision-Date: 2008-04-05 21:13+0300\n"
-"Last-Translator: Игорь Горбунов <igor.gorbounov@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-07-25 13:37+0200\n"
+"Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
+"Language-Team:  <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: glpi/glpi/tabs.php:17
 #, php-format
 msgid "%s's inventory (GLPI)"
-msgstr "Инвентаризация %s (GLPI)"
+msgstr "Inwentarz %s (GLPI)"
 
 #: poubelle/autocomplete.php:53
 msgid "Add"
-msgstr "Добавить"
+msgstr "Dodaj"
 
 #: glpi/glpi/tabs.php:22
 msgid "Controller"
-msgstr "Контроллер"
+msgstr "Kontroler"
 
 #: glpi/infoPackage.inc.php:35
 msgid "Display locations"
-msgstr "Показать местоположение"
+msgstr "Pokaż lokalizacje"
 
 #: glpi/infoPackage.inc.php:55 glpi/infoPackage.inc.php:70
 msgid "GLPI controller tab"
-msgstr "Вкладка контроллеров"
+msgstr "Zakładka kontrolera GLIP"
 
 #: glpi/infoPackage.inc.php:49 glpi/infoPackage.inc.php:64
 msgid "GLPI hardware tab"
-msgstr "Вкладка оборудования"
+msgstr "Zakłądka sprzętu GLPI"
 
 #: glpi/infoPackage.inc.php:52 glpi/infoPackage.inc.php:67
 msgid "GLPI network tab"
-msgstr "Сетевая вкладка"
+msgstr "Zakłądka sieci GLPI"
 
 #: glpi/glpi/tabs.php:18
 msgid "Hardware"
-msgstr "Оборудование"
+msgstr "Sprzęt"
 
 #: glpi/infoPackage.inc.php:45
-#, fuzzy
 msgid "Inventory (GLPI) on a groups of machines"
-msgstr "Инвентаризация (GLPI) машины"
+msgstr "Inwentarz (GLPI) na grupie maszyn"
 
 #: glpi/infoPackage.inc.php:60
 msgid "Inventory (GLPI) on machine"
-msgstr "Инвентаризация (GLPI) машины"
+msgstr "Inwentarz (GLPI) na maszynie"
 
 #: glpi/glpi/tabs.php:22
 msgid "Network"
-msgstr "Сеть"
+msgstr "Sieć"
 
 #: glpi/glpi/view_hardware.php:60
 msgid "Properties"
-msgstr "Свойства"
+msgstr "Właściwości"
 
 #: glpi/glpi/view_hardware.php:61
 msgid "Value"
-msgstr "Значение"
+msgstr "Wartość"
 
 #: glpi/glpi/view_hardware.php:67
 msgid "comments"
-msgstr "комментарий"
+msgstr "komentarze"
 
 #: glpi/glpi/view_hardware.php:75
 msgid "location"
-msgstr "местоположение"
+msgstr "lokalizacja"
 
 #: glpi/glpi/view_hardware.php:66 glpi/glpi/view_hardware.php:68
 msgid "name"
-msgstr "имя"
+msgstr "nazwa"
 
 #: glpi/glpi/view_hardware.php:70
 msgid "os"
-msgstr "ОС"
+msgstr "system"
 
 #: glpi/glpi/view_hardware.php:74
 msgid "os_license_id"
-msgstr "идентификатор лицензии ОС"
+msgstr "id_licencji_systemu"
 
 #: glpi/glpi/view_hardware.php:73
 msgid "os_license_number"
-msgstr "номер лицензии ОС"
+msgstr "numer_licencji_systemu"
 
 #: glpi/glpi/view_hardware.php:72
 msgid "os_sp"
-msgstr "сервис-пак ОС"
+msgstr "os_sp"
 
 #: glpi/glpi/view_hardware.php:71
 msgid "os_version"
-msgstr "версия ОС"
+msgstr "wersja_systemu"
 
 #: glpi/glpi/view_hardware.php:69
 msgid "serial"
-msgstr "серийный номер"
+msgstr "numer"
 
-#, fuzzy
-#~ msgid "GLPI general tab"
-#~ msgstr "Сетевая вкладка"
-
-#, fuzzy
-#~ msgid "GLPI tab 1"
-#~ msgstr "Сетевая вкладка"
-
-#, fuzzy
-#~ msgid "GLPI tab 2"
-#~ msgstr "Сетевая вкладка"
