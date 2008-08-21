@@ -40,6 +40,7 @@ import threading
 from twisted.internet import reactor
 from twisted.internet import task
 from twisted.internet import utils
+from twisted.internet import defer
 
 """
     Pulse2 PackageServer
@@ -98,10 +99,21 @@ class ThreadPackageMirror(Thread):
             self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         
     def runSub(self):
+        def createDeferred(exe, args, pid, target):
+            d = utils.getProcessOutputAndValue(exe, args)
+            d.addCallback(self.onSuccess, (pid, target))
+            d.addErrback(self.onError, (pid, target))
+            return d
+
+        def cbEnding(result, self):
+            self.logger.debug("ThreadPackageMirror end mirroring")
+            self.working = False
+
         if self.working: 
             return
         self.working = True
         self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
+        dlist = []
         for pid in Common().dontgivepkgs:
             targets = Common().dontgivepkgs[pid]
             for target in targets:
@@ -113,10 +125,12 @@ class ThreadPackageMirror(Thread):
                 args.append(os.path.join(pkg.root, pid))
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
-                d = utils.getProcessOutputAndValue(exe, args)
-                d.addCallback(self.onSuccess, (pid, target))
-                d.addErrback(self.onError, (pid, target))
-        self.working = False
+
+                dlist.append(createDeferred(exe, args, pid, target))
+
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(cbEnding, (self))
+        return dl
                        
     def run(self):
         l = task.LoopingCall(self.runSub)
