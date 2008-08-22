@@ -63,6 +63,18 @@ class MscConfig(PluginConfig):
     ma_cacert = ""
     ma_localcert = ""
 
+    # Scheduler API stuff
+    sa_enable = False
+    sa_server = "127.0.0.1"
+    sa_port = "9990"
+    sa_mountpoint = "/scheduler_api"
+    sa_username = ''
+    sa_password = ''
+    sa_enablessl = True
+    sa_verifypeer = False
+    sa_cacert = ""
+    sa_localcert = ""
+
     # WEB interface stuff
     web_def_awake = 1
     web_def_inventory = 1
@@ -227,6 +239,28 @@ class MscConfig(PluginConfig):
         if self.has_option("package_api", "localcert"):
             self.ma_localcert = self.get("package_api", "localcert")
 
+        # Scheduler API
+        if self.has_section("scheduler_api"):
+            self.sa_enable = True
+            if self.has_option("scheduler_api", "host"):
+                self.sa_server = self.get("scheduler_api", "host")
+            if self.has_option("scheduler_api", "port"):
+                self.sa_port = self.get("scheduler_api", "port")
+            if self.has_option("scheduler_api", "mountpoint"):
+                self.sa_mountpoint = self.get("scheduler_api", "mountpoint")
+            if self.has_option("scheduler_api", "username"):
+                self.sa_username = self.get("scheduler_api", "username")
+            if self.has_option("scheduler_api", "password"):
+                self.sa_password = self.get("scheduler_api", "password")
+            if self.has_option("scheduler_api", "enablessl"):
+                self.sa_enablessl = self.getboolean("scheduler_api", "enablessl")
+            if self.has_option("scheduler_api", "verifypeer"):
+                self.sa_verifypeer = self.getboolean("scheduler_api", "verifypeer")
+            if self.has_option("scheduler_api", "cacert"):
+                self.sa_cacert = self.get("scheduler_api", "cacert")
+            if self.has_option("scheduler_api", "localcert"):
+                self.sa_localcert = self.get("scheduler_api", "localcert")
+    
 
 # static config ...
 COMMAND_STATES_LIST = {

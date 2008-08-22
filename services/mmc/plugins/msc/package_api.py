@@ -166,7 +166,7 @@ class PackageA:
 from mmc.plugins.msc.mirror_api import MirrorApi
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, scheduler = None):
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None):
         self.ctx = ctx
         self.p_api = p_api
         self.pid = pid
@@ -174,7 +174,6 @@ class SendPackageCommand:
         self.params = params
         self.mode = mode
         self.gid = gid
-        self.scheduler = scheduler
 
     def onError(error):
         logging.getLogger().error("Can't connect: %s", str(error))
@@ -282,7 +281,6 @@ class SendPackageCommand:
             0,
             maxbw,
             self.root,
-            self.scheduler or MscConfig("msc").default_scheduler,
             deployment_intervals
         ).addCallback(self.sendResult)
 

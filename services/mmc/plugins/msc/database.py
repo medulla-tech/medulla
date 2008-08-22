@@ -36,6 +36,7 @@ from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
+from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc import blacklist
 from mmc.support.mmctools import Singleton
 
@@ -56,7 +57,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 8
+DATABASEVERSION = 9
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -274,7 +275,7 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler, deployment_intervals):
+    def createCommand(self, start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, deployment_intervals):
         session = create_session()
         cmd = Commands()
         now = time.localtime()
@@ -295,14 +296,13 @@ class MscDatabase(Singleton):
         cmd.start_inventory = start_inventory
         cmd.repeat = repeat
         cmd.maxbw = maxbw
-        cmd.scheduler = scheduler
         cmd.deployment_intervals = deployment_intervals
         session.save(cmd)
         session.flush()
         session.close()
         return cmd.id
 
-    def createCommandsOnHost(self, cmd_id, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00"):
+    def createCommandsOnHost(self, cmd_id, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00", scheduler = None):
         session = create_session()
         logging.getLogger().debug("Create new command on host '%s'" % (target_name))
         myCommandOnHost = CommandsOnHost()
@@ -318,6 +318,7 @@ class MscDatabase(Singleton):
         myCommandOnHost.deleted = 'TODO'
         myCommandOnHost.number_attempt_connection_remains = cmd_max_connection_attempt
         myCommandOnHost.next_attempt_date_time = 0
+        myCommandOnHost.scheduler = scheduler
         session.save(myCommandOnHost)
         session.flush()
         session.refresh(myCommandOnHost)
@@ -325,6 +326,12 @@ class MscDatabase(Singleton):
         logging.getLogger().debug("New command on host are created, its id is : %s" % myCommandOnHost.getId())
         return myCommandOnHost.getId()
 
+    def getMachinesSchedulers(self, target):
+        if type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
+            return SchedulerApi().getSchedulers(map(lambda t: t[0], target))
+        else: # target = [uuid, hostname]
+            return SchedulerApi().getScheduler(target[0])
+        
     def createTarget(self, target, mode, group_id, root):
         """
         Create a row in the target table.
@@ -402,7 +409,7 @@ class MscDatabase(Singleton):
         targetIp = '||'.join(ipAddresses)
 
         # compute URI depending on selected mode
-        if mode == 'push_pull':
+        if mode == 'push_pull': # TODO : make only one call for all the targets
             d = MirrorApi().getMirror({"name": targetName, "uuid": targetUuid})
             d.addCallback(cbMirror)
             return d
@@ -432,7 +439,6 @@ class MscDatabase(Singleton):
                 repeat = 0,
                 maxbw = 0,
                 root = MscConfig("msc").repopath,
-                scheduler = MscConfig("msc").default_scheduler,
                 deployment_intervals = ""
             ):
         """
@@ -441,42 +447,50 @@ class MscDatabase(Singleton):
         Return a Deferred object resulting to the command id
         """
 
-        def cbCreateTarget(t):
+        session = create_session()
+        def cbCreateTarget(t, scheduler):
             d2 = self.createTarget(t, mode, group_id, root)
-            d2.addCallback(cbProcessCommand)
+            d2.addCallback(cbProcessCommand, scheduler)
             return d2
 
-        def cbProcessCommand(target_id):
+        def cbProcessCommand(target_id, scheduler):
             t = session.query(Target).get(target_id)
-            self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date)
+            self.createCommandsOnHost(cmd_id, t.getId(), t.getShortName(), max_connection_attempt, start_date, end_date, scheduler)
             self.blacklistTargetHostname(t, session)
             return target_id
 
-        def cbReturnCmdid(result, cmd_id):
-            for r in result:
-                flag, result = r
-                if not flag:
-                    self.logger.warn("Fail to create this command on hosts and target due to %s"%(str(result)))
-            return cmd_id
+        def cbCreateTargetAndCoh(schedulers, target):
+            def cbReturnCmdid(result, cmd_id):
+                for r in result:
+                    flag, result = r
+                    if not flag:
+                        self.logger.warn("Fail to create this command on hosts and target due to %s"%(str(result)))
+                return cmd_id
 
+            dlist = []
+            if type(target[0]) == list:
+                if len(schedulers) != len(target):
+                    self.logger.warn("Failed to get schedulers for targets!")
+                    return defer.succeed(False)
+                schedulers.reverse()
+                for t in target:
+                    dlist.append(cbCreateTarget(t, schedulers.pop()))
+            else:
+                dlist.append(cbCreateTarget(target, schedulers))
+            dl = defer.DeferredList(dlist)
+            dl.addCallback(cbReturnCmdid, (cmd_id))
+            return dl
+    
         if type(files) == list:
             files = "\n".join(files)
 
         deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         # create (and save) the command itself
-        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, scheduler, deployment_intervals)
+        cmd_id = self.createCommand(start_file, parameters, files, start_script, delete_file_after_execute_successful, start_date, end_date, username, webmin_username, title, wake_on_lan, next_connection_delay, max_connection_attempt, start_inventory, repeat, maxbw, deployment_intervals)
 
-        session = create_session()
-        dlist = []
-        if type(target[0]) == list:
-            for t in target:
-                dlist.append(cbCreateTarget(t))
-        else:
-            dlist.append(cbCreateTarget(target))
-        dl = defer.DeferredList(dlist)
-        dl.addCallback(cbReturnCmdid, (cmd_id))
-
-        return dl
+        d = self.getMachinesSchedulers(target)
+        d.addCallback(cbCreateTargetAndCoh, (target))
+        return d
 
     def blacklistTargetHostname(self, myTarget, session = create_session()):
         # Apply host name blacklist
@@ -491,7 +505,7 @@ class MscDatabase(Singleton):
         session.update(myTarget) # not session.save as myTarget was attached to another session
         session.flush()
 
-    def addCommandQuick(self, ctx, cmd, targets, desc, gid = None, scheduler = None):
+    def addCommandQuick(self, ctx, cmd, targets, desc, gid = None):
         """
         Schedule a command for immediate execution into database.
         Multiple machines can be specified in the targets parameter.
@@ -541,7 +555,6 @@ class MscDatabase(Singleton):
             False,
             0,
             0,
-            scheduler or MscConfig("msc").default_scheduler,
             ''
         )
 

@@ -196,7 +196,7 @@ class RpcProxy(RpcProxyI):
     ##
     # commands management
     ##
-    def add_command_quick_with_id(self, idcmd, target, lang, gid = None, scheduler = None):
+    def add_command_quick_with_id(self, idcmd, target, lang, gid = None):
         """
         @param idcmd: id of the quick action
         @type idcmd: str
@@ -217,7 +217,7 @@ class RpcProxy(RpcProxyI):
                 desc = qas[idcmd]["title" + lang]
             except KeyError:
                 desc = qas[idcmd]["title"]
-            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid, scheduler)
+            d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
             d.addCallback(xmlrpcCleanup)
             ret = d
         else:
@@ -225,15 +225,15 @@ class RpcProxy(RpcProxyI):
         return ret
 
 
-    def add_command_quick(self, cmd, target, desc, gid = None, scheduler = None):
+    def add_command_quick(self, cmd, target, desc, gid = None):
         ctx = self.currentContext
-        d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid, scheduler)
+        d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
         d.addCallback(xmlrpcCleanup)
         return d
 
-    def add_command_api(self, pid, target, params, p_api, mode, gid = None, scheduler = None):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None):
         ctx = self.currentContext
-        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, scheduler)
+        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
         g.deferred.addCallback(xmlrpcCleanup)

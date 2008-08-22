@@ -377,7 +377,8 @@ class CommandsOnHost(object):
             'next_launch_date': self.next_launch_date,
             'number_attempt_connection_remains': self.number_attempt_connection_remains,
             'next_attempt_date_time': self.next_attempt_date_time,
-            'current_launcher': self.current_launcher
+            'current_launcher': self.current_launcher,
+            'scheduler': self.scheduler
         }
 
     def setStartDate(self):

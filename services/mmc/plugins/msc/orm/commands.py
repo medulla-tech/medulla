@@ -103,7 +103,6 @@ class Commands(object):
             'next_connection_delay': self.next_connection_delay,
             'max_connection_attempt': self.max_connection_attempt,
             'repeat': self.repeat,
-            'scheduler': self.scheduler,
             'pre_command_hook': self.pre_command_hook,
             'post_command_hook': self.post_command_hook,
             'pre_run_hook': self.pre_run_hook,
