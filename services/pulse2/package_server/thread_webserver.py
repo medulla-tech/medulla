@@ -34,6 +34,7 @@ from pulse2.package_server.server import P2PSite, makeSSLContext
 from pulse2.package_server.description import Description
 from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
+from pulse2.package_server.scheduler_api import SchedulerApi
 from pulse2.package_server.mirror import Mirror
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
@@ -87,6 +88,12 @@ def initialize(config):
         services.append({'type':'mirror_api', 'mp':config.mirror_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
     else:
         logger.warn('package server initialized without mirror api')
+
+    if config.scheduler_api.has_key('mount_point'):
+        scheduler = SchedulerApi(config.scheduler_api['mount_point'], config.scheduler_api)
+        server.register(scheduler, config.scheduler_api['mount_point'])
+        services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+        logger.info("package server initialized with scheduler api")
  
     server.register(Description(services), 'desc')
     Common().setDesc(services)

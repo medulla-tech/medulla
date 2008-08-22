@@ -86,6 +86,8 @@ class P2PServerCP(Singleton):
 
     mirror_api = {}
     user_package_api = {}
+    scheduler_api = {}
+    
     def setup(self, config_file):
         # Load configuration file
         if sys.platform != "win32":
@@ -139,6 +141,14 @@ class P2PServerCP(Singleton):
 
         if self.cp.has_option('user_packageapi_api', 'mount_point'):
             self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
+
+        if self.cp.has_section('scheduler_api'):
+            if self.cp.has_option('scheduler_api', 'mount_point'):
+                self.scheduler_api['mount_point'] = self.cp.get('scheduler_api', 'mount_point')
+            else:
+                self.scheduler_api['mount_point'] = '/scheduler_api'
+            if self.cp.has_option('scheduler_api', 'schedulers'):
+                self.scheduler_api['schedulers'] = self.cp.get('scheduler_api', 'schedulers')
 
         if self.cp.has_option('main', 'tmp_input_dir'):
             self.tmp_input_dir = self.cp.get('main', 'tmp_input_dir')
