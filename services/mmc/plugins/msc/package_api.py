@@ -183,26 +183,14 @@ class SendPackageCommand:
         return self.deferred.callback(id_command)
 
     def send(self):
-        d = PackageA(self.p_api).getPackageCommand(self.pid)
-        d.addCallbacks(self.setCommand, self.onError)
+        d = PackageA(self.p_api).getPackageDetail(self.pid)
+        d.addCallbacks(self.setPackage, self.onError)
 
-    def setCommand(self, cmd):
-        self.cmd = cmd
-        d = PackageA(self.p_api).getPackageFiles(self.pid)
-        d.addCallbacks(self.setFiles, self.onError)
-
-    def setFiles(self, a_files):
-        self.a_files = a_files
-        d = PackageA(self.p_api).getPackageLabel(self.pid)
-        d.addCallbacks(self.setLabel, self.onError)
-
-    def setLabel(self, label):
-        self.label = label
-        d = PackageA(self.p_api).getPackageVersion(self.pid)
-        d.addCallbacks(self.setVersion, self.onError)
-
-    def setVersion(self, version):
-        self.version = version
+    def setPackage(self, package):
+        self.cmd = package['command']
+        self.a_files = package['files']
+        self.label = package['label']
+        self.version = package['version']
         d = PackageA(self.p_api).getLocalPackagePath(self.pid)
         d.addCallbacks(self.setRoot, self.onError)
 
