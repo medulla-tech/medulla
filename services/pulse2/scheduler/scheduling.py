@@ -97,9 +97,9 @@ def startAllCommands(scheduler_name):
         filter(database.commands_on_host.c.current_state != 'inventory_failed').\
         filter(database.commands_on_host.c.next_launch_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
         filter(sqlalchemy.or_(
-            database.commands.c.scheduler == '',
-            database.commands.c.scheduler == scheduler_name,
-            database.commands.c.scheduler == None)
+            database.commands_on_host.c.scheduler == '',
+            database.commands_on_host.c.scheduler == scheduler_name,
+            database.commands_on_host.c.scheduler == None)
         ).all():
         deffered = runCommand(q.id)
         if deffered:
