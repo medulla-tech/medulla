@@ -406,6 +406,7 @@ class Common(Singleton):
                 l_package = self.parser.parse(confxml)
                 l_package.setRoot(os.path.dirname(file))
                 if l_package == None:
+                    self.logger.debug("package failed to parse in %s"%(file))
                     return False
                     
                 pid = l_package.id
@@ -413,6 +414,8 @@ class Common(Singleton):
 
                 self.mp2p[mp].append(pid)
                 if self.packages.has_key(pid):
+                    if new:
+                        self.logger.debug("package '%s' already exists" % (pid))
                     return False
 
                 toRelative = os.path.dirname(file)
