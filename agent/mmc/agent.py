@@ -24,6 +24,7 @@
 import twisted.internet.error
 from twisted.web import xmlrpc, server
 from twisted.internet import ssl, reactor, defer
+from twisted.python import failure
 try:
     from twisted.web import http
 except ImportError:
@@ -76,12 +77,11 @@ class MmcServer(xmlrpc.XMLRPC,object):
     "plugins/" directory
     """
 
-    def __init__(self, modules, login, password):
+    def __init__(self, modules, config):
         xmlrpc.XMLRPC.__init__(self)
         self.modules = modules
+        self.config = config
         self.logger = logging.getLogger()
-        self.login = login
-        self.password = password
 
     def _getFunction(self, functionPath, request):
         """Overrided to use functions from our plugins"""
@@ -121,7 +121,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             s.loggedin = False
 
         # Check authorization using HTTP Basic
-        cleartext_token = self.login + ":" + self.password
+        cleartext_token = self.config.login + ":" + self.config.password
         token = request.getUser() + ":" + request.getPassword()
         if token != cleartext_token:
             self.logger.error("Invalid login / password for HTTP basic authentication")
@@ -132,10 +132,13 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 )
             return server.NOT_DONE_YET
 
-        self.logger.debug('Calling ' + functionPath + str(args))
+        if not s.loggedin:
+            self.logger.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
+        else:
+            self.logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
         try:
             if not s.loggedin and functionPath != "base.ldapAuth":
-                self.logger.warning("Function can't be called because the user in not logged in")
+                self.logger.warning("Function can't be called because the user is not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
                 function = self._getFunction(functionPath, request)
@@ -143,13 +146,54 @@ class MmcServer(xmlrpc.XMLRPC,object):
             self._cbRender(f, request)
         else:
             request.setHeader("content-type", "text/xml")
-            defer.maybeDeferred(function, *args).addErrback(
-                self._ebRender, functionPath, args, request
-            ).addCallback(
-                self._cbRender, request, functionPath, args
-            )
-
+            if self.config.multithreading:
+                oldargs = args
+                args = (function,) + args
+                defer.maybeDeferred(self._runInThread, *args).addErrback(
+                    self._ebRender, functionPath, oldargs, request
+                ).addCallback(
+                    self._cbRender, request, functionPath, oldargs
+                )
+            else:
+                defer.maybeDeferred(function, *args).addErrback(
+                    self._ebRender, functionPath, args, request
+                ).addCallback(
+                    self._cbRender, request, functionPath, args
+                )
         return server.NOT_DONE_YET
+
+    def _runInThread(self, *args, **kwargs):
+        """
+        Very similar to deferToThread, but also handles function that results
+        to a Deferred object.
+        """
+        def _cbSuccess(result, deferred):
+            reactor.callFromThread(deferred.callback, result)
+
+        def _cbFailure(failure, deferred):
+            reactor.callFromThread(deferred.errback, failure)
+        
+        def _putResult(deferred, f, args, kwargs):
+            self.logger.debug("Using thread #%s for %s" % (reactor.threadpool.currentThread().getName().split("-")[2], f.__name__))
+            try:
+                result = f(*args, **kwargs)
+            except:
+                f = failure.Failure()
+                reactor.callFromThread(deferred.errback, f)
+            else:
+                if isinstance(result, defer.Deferred):
+                    # If the result is a Deferred object, attach callback and
+                    # errback (we are not allowed to result to a Deferred)
+                    result.addCallback(_cbSuccess, deferred)
+                    result.addErrback(_cbFailure, deferred)
+                else:
+                    reactor.callFromThread(deferred.callback, result)
+            
+        function = args[0]
+        args = args[1:]
+        d = defer.Deferred()
+        reactor.callInThread(_putResult, d, function, args, kwargs)
+        return d
 
     def _cbRender(self, result, request, functionPath = None, args = None):
         s = request.getSession()
@@ -181,9 +225,9 @@ class MmcServer(xmlrpc.XMLRPC,object):
             pass
         try:
             if s.loggedin:
-                self.logger.debug('response ' + s.userid + " " + str(result))
+                self.logger.debug('Result for ' + s.userid + ", " + str(functionPath) + ": " + str(result))
             else:
-                self.logger.debug('response ' + str(result))
+                self.logger.debug('Result for unauthenticated user, ' + str(functionPath) + ": " + str(result))
             s = xmlrpclib.dumps(result, methodresponse=1)
         except Exception, e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
@@ -318,6 +362,9 @@ def agentService(config, conffile, daemonize):
     logger.info("Using Python Twisted %s" % twisted.version.short())
 
     logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
+    if config.multithreading:
+        logger.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
+        reactor.suggestThreadPoolSize(config.maxthreads)
 
     # Find available plugins
     mod = {}
@@ -432,7 +479,7 @@ class MMCSite(server.Site):
 
 def startService(config, logger, mod):
     # Starting XMLRPC server
-    r = MmcServer(mod, config.login, config.password)
+    r = MmcServer(mod, config)
     if config.enablessl:
         sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
         reactor.listenSSL(config.port, MMCSite(r), interface = config.host, contextFactory = sslContext)
@@ -502,5 +549,14 @@ def readConfig(config):
     except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
         # For compatibility with old version
         config.pidfile = config.get("log", "pidfile")
+
+    # Multi-threading support
+    config.multithreading = False
+    config.maxthreads = 20
+    try:
+        config.multithreading = config.getboolean("main", "multithreading")
+        config.maxthreads = config.getint("main", "maxthreads")
+    except ConfigParser.NoOptionError:
+        pass
 
     return config
