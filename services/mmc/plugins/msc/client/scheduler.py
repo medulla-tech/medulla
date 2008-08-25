@@ -27,7 +27,7 @@ import logging
 
 # our stuff
 from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
-from mmc.plugins.msc.config import MscConfig
+from mmc.plugins.msc.config import MscConfig, makeURL
 
 def getProxy(schedulerConfig):
     """
@@ -174,12 +174,3 @@ def select_scheduler(scheduler_name):
         scheduler_name = MscConfig("msc").default_scheduler
     return MscConfig('msc').schedulers[scheduler_name]
 
-def makeURL(config):
-    if config['enablessl']:
-        uri = 'https://'
-    else:
-        uri = 'http://'
-    if config['username'] != '':
-        uri += '%s:%s@' % (config['username'], config['password'])
-    uri += '%s:%d' % (config['host'], int(config['port']))
-    return uri

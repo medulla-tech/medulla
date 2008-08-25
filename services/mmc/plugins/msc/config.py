@@ -260,6 +260,12 @@ class MscConfig(PluginConfig):
                 self.sa_cacert = self.get("scheduler_api", "cacert")
             if self.has_option("scheduler_api", "localcert"):
                 self.sa_localcert = self.get("scheduler_api", "localcert")
+
+            self.scheduler_url2id = {}
+            
+            for id in self.schedulers:
+                url = makeURL(self.schedulers[id])
+                self.scheduler_url2id[url] = id
     
 
 # static config ...
@@ -310,4 +316,21 @@ MIME_UNKNOWN_ICON = "unknown.png"
 MIME_DIR = "Directory"
 MIME_DIR_ICON = "folder.png"
 DEFAULT_MIME = "application/octet-stream"
+
+def makeURL(config):
+    if config.has_key('proto') and not config.has_key('enablessl'):
+        uri = "%s://" % config['proto']
+    elif config.has_key('protocol') and not config.has_key('enablessl'):
+        uri = "%s://" % config['protocol']
+    else:
+        if config['enablessl']:
+            uri = 'https://'
+        else:
+            uri = 'http://'
+    if config.has_key('username') and config['username'] != '':
+        uri += '%s:%s@' % (config['username'], config['password'])
+    if config.has_key('server') and not config.has_key('host'):
+        config['host'] = config['server']
+    uri += '%s:%d' % (config['host'], int(config['port']))
+    return uri
 

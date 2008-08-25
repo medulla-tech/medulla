@@ -6,7 +6,7 @@ import xmlrpclib
 from twisted.web.xmlrpc import Proxy
 
 import mmc.plugins.msc
-from mmc.plugins.msc.config import MscConfig
+from mmc.plugins.msc.config import MscConfig, makeURL
 from mmc.support.mmctools import Singleton
 
 from mmc.client import XmlrpcSslProxy, makeSSLContext
@@ -44,11 +44,25 @@ class SchedulerApi(Singleton):
         self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
         return []
 
+    def convert2id(self, scheduler):
+        if type(scheduler) == dict:
+            scheduler = makeURL(scheduler)
+        if self.config.scheduler_url2id.has_key(scheduler):
+            return self.config.scheduler_url2id[scheduler]
+        return scheduler
+    
+    def cb_convert2id(self, result):
+        if type(result) == list:
+            return map(lambda s: self.convert2id(s), result)
+        else:
+            return self.convert2id(result)
+
     def getScheduler(self, machine):
         if self.config.sa_enable:
             machine = self.convertMachineIntoH(machine)
             d = self.saserver.callRemote("getScheduler", machine)
             d.addErrback(self.onError, "SchedulerApi:getScheduler", machine)
+            d.addCallback(self.cb_convert2id)
             return d
         else:
             return defer.succeed(MscConfig("msc").default_scheduler)
@@ -58,6 +72,7 @@ class SchedulerApi(Singleton):
             machines = map(lambda m: self.convertMachineIntoH(m), machines)
             d = self.saserver.callRemote("getSchedulers", machines)
             d.addErrback(self.onError, "SchedulerApi:getSchedulers", machines)
+            d.addCallback(self.cb_convert2id)
             return d
         else:
             return defer.succeed(map(lambda m: MscConfig("msc").default_scheduler, machines))
