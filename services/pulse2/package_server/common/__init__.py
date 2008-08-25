@@ -293,12 +293,15 @@ class Common(Singleton):
             raise Exception("UNDEFPKG")
 
         if self.config.real_package_deletion:
-            shutil.rmtree(os.path.join(path, pid))
+            p_dir = os.path.join(path, pid)
+            self.logger.debug("is going to delete %s" % (p_dir))
+            shutil.rmtree(p_dir)
         else:
             shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         # TODO remove package from mirrors
-        if self.packages.has_key(pid):
-            del self.packages[pid]
+        Common().dontgivepkgs[pid] = []
+        Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+       
         return pid
 
     def writeFileIntoPackage(self, pid, file):

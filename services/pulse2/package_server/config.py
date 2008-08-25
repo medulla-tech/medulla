@@ -73,7 +73,8 @@ class P2PServerCP(Singleton):
     package_mirror_activate = False
     package_mirror_target = ''
     package_mirror_command = '/usr/bin/rsync'
-    package_mirror_command_options = ['-br']
+    package_mirror_command_options = ['-ar', '--delete']
+    package_mirror_level0_command_options = ['-d', '--delete']
 
     parser = None
     mirrors = []
@@ -194,6 +195,9 @@ class P2PServerCP(Singleton):
                     self.package_mirror_command = self.cp.getint("main", 'package_mirror_command')
                 if self.cp.has_option("main", 'package_mirror_command_options'):
                     self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
+                if self.cp.has_option("main", 'package_mirror_level0_command_options'):
+                    self.package_mirror_level0_command_options = self.cp.get("main", 'package_mirror_level0_command_options').split(' ')
+
         if self.cp.has_option("main", "real_package_deletion"):
             self.real_package_deletion = self.cp.getboolean("main", "real_package_deletion")
         if self.cp.has_option("main", "mm_assign_algo"):

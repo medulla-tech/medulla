@@ -30,6 +30,7 @@ import time
 import signal
 import os
 import sys
+import shutil
 
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
@@ -85,7 +86,7 @@ class ThreadPackageMirror(Thread):
         self.logger.warning("ThreadPackageMirror failed to synchronise %s"%(str(raison)))
 
     def onSuccess(self, result, args):
-        pid, target = args
+        pid, target, is_deletion = args
         self.logger.debug("ThreadPackageMirror succeed %s"%(str(result)))
         if Common().dontgivepkgs.has_key(pid):
             try:
@@ -99,9 +100,27 @@ class ThreadPackageMirror(Thread):
             self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         
     def runSub(self):
-        def createDeferred(exe, args, pid, target):
+        def mirror_level0(result, args):
+            pid, target, is_deletion = args
+            pkg = Common().packages[pid]
+            if Common().packages.has_key(pid):
+                del Common().packages[pid]
+                                    
+            os.rmdir(os.path.join(pkg.root, pid))
+            exe = self.config.package_mirror_command
+            args = []
+            args.extend(self.config.package_mirror_level0_command_options)
+            args.append("%s%s" % (pkg.root, os.path.sep))
+            args.append("%s:%s" % (target, pkg.root))
+            self.logger.debug("execute : %s %s"%(exe, str(args)))
+            createDeferred(exe, args, pid, target, False)
+
+        def createDeferred(exe, args, pid, target, is_deletion = False):
             d = utils.getProcessOutputAndValue(exe, args)
-            d.addCallback(self.onSuccess, (pid, target))
+            if is_deletion:
+                d.addCallback(mirror_level0, (pid, target, is_deletion))
+            else:
+                d.addCallback(self.onSuccess, (pid, target, is_deletion))
             d.addErrback(self.onError, (pid, target))
             return d
 
@@ -116,17 +135,25 @@ class ThreadPackageMirror(Thread):
         dlist = []
         for pid in Common().dontgivepkgs:
             targets = Common().dontgivepkgs[pid]
+            pkg = Common().packages[pid]
+            exe = self.config.package_mirror_command
+            p_dir = os.path.join(pkg.root, pid)
+            is_deletion = False
+            if not os.path.exists(p_dir):
+                # deletion = mirror empty dir + mirror top level on just 1 level
+                os.mkdir(p_dir)
+                # mark as deletion
+                is_deletion = True
+                
             for target in targets:
                 self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
-                pkg = Common().packages[pid]
-                exe = self.config.package_mirror_command
                 args = []
                 args.extend(self.config.package_mirror_command_options)
-                args.append(os.path.join(pkg.root, pid))
+                args.append(p_dir)
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
 
-                dlist.append(createDeferred(exe, args, pid, target))
+                dlist.append(createDeferred(exe, args, pid, target, is_deletion))
 
         dl = defer.DeferredList(dlist)
         dl.addCallback(cbEnding, (self))
