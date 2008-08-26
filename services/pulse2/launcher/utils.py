@@ -235,7 +235,7 @@ def setDefaultClientOptions(client):
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwX,g=,o=']
         if LauncherConfig().rsync_resume:
-            client['proto_args'] += ['--partial']
+            client['proto_args'] += ['--partial', '--append']
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         client['proto_args'] += ['--rsh', ' '.join(['/usr/bin/ssh'] + client['transp_args'])]
