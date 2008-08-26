@@ -41,6 +41,8 @@ class DyngroupDatabaseHelper(Singleton):
     def filter(self, ctx, join_query, filt, query, grpby):
         query_filter = None
         try:
+            if not filt.has_key('query'):
+                return (join_query, query_filter)
             query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:
                 join_query = join_query.join(table)
@@ -83,9 +85,12 @@ class DyngroupDatabaseHelper(Singleton):
                     join_tab = self.mappingTable(q)
                     filt = self.mapping(q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
 
                 q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
                 res = map(lambda x: x[1], q)
@@ -111,9 +116,12 @@ class DyngroupDatabaseHelper(Singleton):
                     join_tab = self.mappingTable(q)
                     filt = self.mapping(q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
 
                 q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
                 res = map(lambda x: x[1], q)
@@ -139,9 +147,12 @@ class DyngroupDatabaseHelper(Singleton):
                     join_tab = self.mappingTable(q)
                     filt = self.mapping(q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
                                             
                 query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
                 res = map(lambda x: x[1], query)
