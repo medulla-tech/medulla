@@ -198,7 +198,8 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
 
         format(str(exitcode), 'X')
         ExitCode().set(exitcode)
-        twisted.internet.reactor.stop()
+        if twisted.internet.reactor.running:
+            twisted.internet.reactor.stop()
 
 class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
     """ Override some stuff from shOutputWrapper
@@ -212,7 +213,6 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-
         # compute good exitcode
         if reason.value.exitCode != None:
             exitcode = int(reason.value.exitCode)
@@ -230,7 +230,8 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                         for line in self.stdout.splitlines():
                             format(line, 'P')
                         ExitCode().set(1)
-                        twisted.internet.reactor.stop()
+                        if twisted.internet.reactor.running:
+                            twisted.internet.reactor.stop()
                         return
             runCommand(self.config)
         else:                       # something goes bad, prin pre-command output then exits
@@ -241,7 +242,8 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
             for line in self.stdout.splitlines():
                 format(line, 'P')
             ExitCode().set(exitcode)
-            twisted.internet.reactor.stop()
+            if twisted.internet.reactor.running:
+                twisted.internet.reactor.stop()
             return
 
     def errReceived(self, data):
@@ -280,29 +282,52 @@ def format(line, tag):
         print line
 
 def runCommand(config):
-    process = shOutputWrapper(config)
-    if config.thru_string and not config['exec-server-side']:
+    if config.thru_string and not config['exec-server-side']: # handle command wrapping if needed
         format(SEPARATOR.join(config.thru_string), 'T')
         format(SEPARATOR.join(config.exec_string), 'C')
-        handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.exec_string)
+        headarg = config.thru_string[0]
+        tailargs = config.thru_string + config.exec_string
     else:
         format(SEPARATOR.join(config.exec_string), 'C')
-        handler = twisted.internet.reactor.spawnProcess(process, config.exec_string[0], config.exec_string)
+        headarg = config.exec_string[0]
+        tailargs = config.exec_string
+
+    # fork process
+    handler = twisted.internet.reactor.spawnProcess(shOutputWrapper(config), headarg, tailargs)
+
+    # install termination handler to cleanly terminated sub-process in case of emergency
+    twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', stopProcess, handler)
+
+    # install timeout handler => process gets killed if above config['max-exec-time'] seconds
     if config['max-exec-time']:
-        twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handling
+        twisted.internet.reactor.callLater(int(config['max-exec-time']), stopProcess, handler) # max_exec_time handling
 
 def runCheckCommand(config):
-    process = shCheckCommand(config)
-    if config.thru_string:
-        handler = twisted.internet.reactor.spawnProcess(process, config.thru_string[0], config.thru_string + config.check_command)
+    if config.thru_string: # handle command wrapping if needed
+        headarg = config.thru_string[0]
+        tailargs = config.thru_string + config.check_command
     else:
-        handler = twisted.internet.reactor.spawnProcess(process, config.check_command[0], config.check_command)
+        headarg = config.check_command[0]
+        tailargs = config.check_command
+
+    # fork process
+    handler = twisted.internet.reactor.spawnProcess(shCheckCommand(config), headarg, tailargs)
+
+    # install termination handler to cleanly terminated sub-process in case of emergency
+    twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', stopProcess, handler)
+
+    # install timeout handler => process gets killed if above config['max-exec-time'] seconds
     if config['max-exec-time']:
-        twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handling
+        twisted.internet.reactor.callLater(int(config['max-exec-time']), stopProcess, handler)
+
+def stopProcess(handler):
+    if handler.pid:
+        handler.signalProcess(signal.SIGKILL)
+    # give the reactor a chance to terminate cleanly
+    time.sleep(1)
 
 # Parse command line
 config = Options()
-
 try:
     config.parseOptions()
 except twisted.python.usage.UsageError, errortext:
@@ -310,10 +335,12 @@ except twisted.python.usage.UsageError, errortext:
     print '%s: Try --help for usage details.' % (sys.argv[0])
     sys.exit(0)
 
-# if we have to execute a pre-command, do it, else jump to the real command
-if config.do_check:
-    twisted.internet.reactor.callLater(0, runCheckCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
+# delayed start to give the reactor a chance to install its signals handlers
+if config.do_check: # if we have to execute a pre-command, do it, else jump to the real command
+    twisted.internet.reactor.callWhenRunning(runCheckCommand, config)
 else:
-    twisted.internet.reactor.callLater(0, runCommand, config) # delayed start to give the reactor a chance to install its SIGCHILD handlers
+    twisted.internet.reactor.callWhenRunning(runCommand, config)
+
+# fire the reactor
 twisted.internet.reactor.run()
 sys.exit(ExitCode().get())
