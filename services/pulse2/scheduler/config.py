@@ -116,7 +116,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
-        self.setoption("scheduler", "enablessl", "enablessl", 'boolean')
+        self.setoption("scheduler", "enablessl", "enablessl", 'bool')
 
         if self.cp.has_option("scheduler", "mg_assign_algo"):
             self.mg_assign_algo = self.cp.get("scheduler", 'mg_assign_algo')
