@@ -22,7 +22,7 @@
 import logging
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.plugins.pulse2.location import ComputerLocationManager
 
@@ -69,25 +69,25 @@ class RpcProxy(RpcProxyI):
     # groups
     def isdyn_group(self, gid):
         ctx = self.currentContext
-        return ComputerGroupManager().isdyn_group(ctx, gid)
-        
+        return xmlrpcCleanup(ComputerGroupManager().isdyn_group(ctx, gid))
+
     def isrequest_group(self, gid):
         ctx = self.currentContext
-        return ComputerGroupManager().isrequest_group(ctx, gid)
-        
+        return xmlrpcCleanup(ComputerGroupManager().isrequest_group(ctx, gid))
+
     def requestresult_group(self, gid, min, max, filter):
         ctx = self.currentContext
-        return ComputerGroupManager().requestresult_group(ctx, gid, min, max, filter)
-        
+        return xmlrpcCleanup(ComputerGroupManager().requestresult_group(ctx, gid, min, max, filter))
+
     def result_group(self, gid, min, max, filter):
         ctx = self.currentContext
-        return ComputerGroupManager().result_group(ctx, gid, min, max, filter)
+        return xmlrpcCleanup(ComputerGroupManager().result_group(ctx, gid, min, max, filter))
 
     # Locations
     def getUserLocations(self):
         ctx = self.currentContext
-        return ComputerLocationManager().getUserLocations(ctx.userid)
+        return xmlrpcCleanup(ComputerLocationManager().getUserLocations(ctx.userid))
 
 
 def displayLocalisationBar():
-    return ComputerLocationManager().displayLocalisationBar()
+    return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())
