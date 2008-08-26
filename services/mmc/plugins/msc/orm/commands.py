@@ -52,6 +52,9 @@ class Commands(object):
     def hasToWOL(self):
         return self.wake_on_lan == 'enable'
 
+    def hasToRunInventory(self):
+        return self.start_inventory == 'enable'
+
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
         logging.getLogger().debug("hasSomethingToUpload(%s): %s" % (self.id, result))
