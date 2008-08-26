@@ -175,7 +175,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         """
         if self.end:
             return True
-        for line in data.split('\n'):
+        for line in data.splitlines():
             format(self.truncate_to_max_log_size(line), 'O')
         return True
 
@@ -184,7 +184,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         """
         if self.end:
             return True
-        for line in data.split('\n'):
+        for line in data.splitlines():
             format(self.truncate_to_max_log_size(line), 'E')
         return True
 
@@ -227,7 +227,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                             format(SEPARATOR.join(config.thru_string), 'T')
                         format("PRE-COMMAND FAILED SERVER SIDE: expected result '%s' was not found !" % (verif), 'P')
                         format(SEPARATOR.join(config.check_command), 'P')
-                        for line in self.stdout.split('\n'):
+                        for line in self.stdout.splitlines():
                             format(line, 'P')
                         ExitCode().set(1)
                         twisted.internet.reactor.stop()
@@ -238,7 +238,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                 format(SEPARATOR.join(config.thru_string), 'T')
             format("PRE-COMMAND FAILED CLIENT SIDE: exicode = %s !" % (exitcode), 'P')
             format(SEPARATOR.join(config.check_command), 'P')
-            for line in self.stdout.split('\n'):
+            for line in self.stdout.splitlines():
                 format(line, 'P')
             ExitCode().set(exitcode)
             twisted.internet.reactor.stop()
@@ -298,7 +298,7 @@ def runCheckCommand(config):
     else:
         handler = twisted.internet.reactor.spawnProcess(process, config.check_command[0], config.check_command)
     if config['max-exec-time']:
-        twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handlinng
+        twisted.internet.reactor.callLater(int(config['max-exec-time']), handler.signalProcess, signal.SIGKILL) # max_exec_time handling
 
 # Parse command line
 config = Options()
