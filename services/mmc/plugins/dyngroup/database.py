@@ -110,12 +110,6 @@ class DyngroupDatabase(Singleton):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
-        # Groups
-        self.groups = Table("Groups", self.metadata,
-                            Column('FK_user', Integer, ForeignKey('Users.id')),
-                            autoload = True)
-        mapper(Groups, self.groups)
-
         # Users
         self.users = Table("Users", self.metadata, autoload = True)
         mapper(Users, self.users)
@@ -127,16 +121,29 @@ class DyngroupDatabase(Singleton):
                             autoload = True)
         mapper(ShareGroup, self.shareGroup)
 
-        # Machines
-        self.machines = Table("Machines", self.metadata, autoload = True)
-        mapper(Machines, self.machines)
-
         # Results
         self.results = Table("Results", self.metadata,
                             Column('FK_group', Integer, ForeignKey('Groups.id')),
                             Column('FK_machine', Integer, ForeignKey('Machines.id')),
                             autoload = True)
         mapper(Results, self.results)
+
+        # Groups
+        self.groups = Table("Groups", self.metadata,
+                            Column('FK_user', Integer, ForeignKey('Users.id')),
+                            autoload = True)
+        #mapper(Groups, self.groups)
+        mapper(Groups, self.groups, properties = {
+            'results' : relation(Results),
+            }
+               )
+
+        # Machines
+        self.machines = Table("Machines", self.metadata, autoload = True)
+        mapper(Machines, self.machines, properties = {
+            'results' : relation(Results),
+            }
+               )
 
         # version
         self.version = Table("version", self.metadata, autoload = True)
@@ -438,6 +445,7 @@ class DyngroupDatabase(Singleton):
         return False
         
     def get_group(self, ctx, id):
+        # FIXME: Is the next line used ?
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
@@ -668,13 +676,24 @@ class DyngroupDatabase(Singleton):
             self.__createResult(group.id, machine_id)
         session.close()
         return True
-
     def addmembers_to_group(self, ctx, id, uuids):
-        group = self.get_group(ctx, id)
+        """
+        Add member computers specified by a uuids list to a group.
+        """
         session = create_session()
+        group = self.__getGroupInSession(ctx, session, id)
         for uuid in uuids:
-            machine_id = self.__getOrCreateMachine(uuid, uuids[uuid]['hostname'])
-            self.__createResult(group.id, machine_id)
+            machine = self.__getMachine(uuid, session)
+            if not machine:
+                machine = Machines()
+                machine.uuid = uuid
+                machine.name = uuids[uuid]['hostname']
+                session.save(machine)
+            result = Results()
+            machine.results.append(result)
+            group.results.append(result)
+            session.save(result)
+        session.flush()
         session.close()
         return True
 
