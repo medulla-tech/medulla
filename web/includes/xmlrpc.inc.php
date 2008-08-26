@@ -214,9 +214,12 @@ function xmlCall($method, $params = null) {
        Test if the XMLRPC result is a boolean value set to False.
        If it is the case, xmlrpc_decode will return an empty string.
        So we need to test this special case.
+
+       Looks like this bug is fixed in latest PHP version. At least it works
+       with PHP 5.2.0.
     */    
     $booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
-    if ($xmlResponse == $booleanFalse) $xmlResponse = "0";
+    if ($xmlResponse == $booleanFalse) $xmlResponse = False;
     else {
         $xmlResponseTmp = xmlrpc_decode($xmlResponse, "UTF-8");
         /* if we cannot decode in UTF-8 */
@@ -258,7 +261,7 @@ function xmlCall($method, $params = null) {
     }
     
     /* If the XML-RPC server sent a fault, display an error */
-    if (($xmlResponse["faultCode"])&&(is_array($xmlResponse))) {
+    if ((is_array($xmlResponse) && ($xmlResponse["faultCode"]))) {
         if ($xmlResponse["faultCode"] == "8003") {
             /* 
               Fault 8003 means the session with the XML-RPC server has expired.
