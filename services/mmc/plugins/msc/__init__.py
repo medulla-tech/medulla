@@ -361,8 +361,10 @@ def pingMachine(uuid):
     return xmlrpcCleanup2(Machine(uuid).ping())
 
 ### Commands on host handling ###
+# FIXME: we should realy rationalize this stuff !
 def start_command_on_host(coh_id):
     mmc.plugins.msc.orm.commands_on_host.startCommandOnHost(coh_id)
+    mmc.plugins.msc.client.scheduler.startCommand(None, coh_id)
     return xmlrpcCleanup(True)
 def pause_command_on_host(coh_id):
     mmc.plugins.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)

@@ -155,6 +155,21 @@ def stopCommand(scheduler, command_id):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
+def startCommand(scheduler, command_id):
+    def parseResult(result):
+        logging.getLogger().debug('Start command %s: %s' % (command_id, result))
+        return result
+    def parseError(reason):
+        # FIXME: handle error
+        return False
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+        'start_command',
+        command_id
+    )
+    mydeffered.addCallback(parseResult).addErrback(parseResult)
+    return mydeffered
+
+
 def download_file(scheduler, computer, path, bwlimit):
     mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'download_file',
