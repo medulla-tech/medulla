@@ -125,9 +125,9 @@ if ($_GET["action"]=="add") {
 }
 
 $fields = array(
-    array("label", _T("Package label", "pkgs")),
-    array("version", _T("Package version", "pkgs")),
-    array('description', _T("Description", "pkgs")),
+    array("label", _T("Package label", "pkgs"), array("required" => True)),
+    array("version", _T("Package version", "pkgs"), array("required" => True)),
+    array('description', _T("Description", "pkgs"), array()),
 );
 
 $cmds = array(
@@ -145,7 +145,7 @@ $options = array(
 foreach ($fields as $p) {
     $f->add(
         new TrFormElement($p[1], new InputTpl($p[0])),
-        array("value" => $package[$p[0]])
+        array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
 
