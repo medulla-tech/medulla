@@ -35,7 +35,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
         $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
-        $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
+        $downloadFileAction = new ActionPopupItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     }
     $actionInventory = array();
     $actionLogs = array();
