@@ -604,6 +604,19 @@ enablessl = 1
 
             <entry></entry>
           </row>
+
+          <row>
+            <entry>web_def_dlmaxbw</entry>
+
+            <entry>Max bandwidth to use when download a file from a computer.
+	    Set to 0 by default. If set to 0, there is no bandwidth limit
+	    applied.</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+
         </tbody>
       </tgroup>
     </table>
