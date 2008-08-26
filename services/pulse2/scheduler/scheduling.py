@@ -498,6 +498,9 @@ def runInventoryPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
+    if not myC.hasToRunInventory(): # do not run inventory
+        logger.info("command_on_host #%s: inventory ignored" % myCommandOnHostID)
+        return runEndPhase(myCommandOnHostID)
     if myCoH.isInventoryRunning(): # inventory still running, immediately returns
         logger.info("command_on_host #%s: still inventoring" % myCommandOnHostID)
         return None
