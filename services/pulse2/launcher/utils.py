@@ -143,7 +143,7 @@ def getHealth(config):
             elif line.startswith("SwapFree:"):
                 swap_free = int(line.split()[1])
         meminfo.close()
-        return total * 1024, (total-cached-buffers) * 1024, (swap_total-swap_free) * 1024 # return is always in B (not kB)
+        return total, total-cached-buffers, swap_total-swap_free # return is always in kB
 
     from pulse2.launcher.process_control import ProcessList
     total, free, swapused = getMem()
