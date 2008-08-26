@@ -112,7 +112,7 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     mydeffered.addCallback(_pingcb)
     return mydeffered
 
-def downloadFile(uuid, fqdn, shortname, ips, macs, path):
+def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -121,7 +121,7 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path):
             'ips': ips,
             'macs': macs
     })
-    return callOnBestLauncher('download_file', client, path)
+    return callOnBestLauncher('download_file', client, path, bwlimit)
 
 def callOnLauncher(launcher, method, *args):
     import pulse2.scheduler.xmlrpc
