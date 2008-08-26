@@ -1949,6 +1949,10 @@ class PopupForm extends Form {
         $this->ask = $ask;
     }
 
+    function addValidateButtonWithFade($name) {
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"new Effect.Fade('popup'); return true;\"" );
+    }
+
     function addCancelButton($name) {
         $this->buttons[] = $this->getButtonString($name, _("Cancel"), "btnSecondary", "onclick=\"new Effect.Fade('popup'); return false;\"" );
     }
