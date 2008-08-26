@@ -84,6 +84,8 @@ class MscConfig(PluginConfig):
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
     web_dlpath = ""
+    # Max bandwith to use to download a file
+    web_def_dlmaxbw = 0
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -211,6 +213,8 @@ class MscConfig(PluginConfig):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_dlpath"):
             self.web_dlpath = self.get("web", "web_dlpath")
+        if self.has_option("web", "web_def_dlmaxbw"):
+            self.web_def_dlmaxbw = self.getint("web", "web_def_dlmaxbw")
         if self.has_option("web", "web_def_deployment_intervals"):
             time_intervals = pulse2.time_intervals.normalizeinterval(self.get("web", "web_def_deployment_intervals"))
             if time_intervals:

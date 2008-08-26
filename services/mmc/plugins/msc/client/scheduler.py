@@ -155,7 +155,7 @@ def stopCommand(scheduler, command_id):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
-def download_file(scheduler, computer, path):
+def download_file(scheduler, computer, path, bwlimit):
     mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
         'download_file',
         computer[1]['objectUUID'][0],
@@ -163,7 +163,8 @@ def download_file(scheduler, computer, path):
         computer[1]['cn'][0],
         computer[1]['ipHostNumber'],
         computer[1]['macAddress'],
-        path
+        path,
+        bwlimit
     )
     return mydeffered
 

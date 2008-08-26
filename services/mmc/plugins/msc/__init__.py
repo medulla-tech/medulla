@@ -163,13 +163,14 @@ class RpcProxy(RpcProxyI):
         if not path:
             ret = False
         else:
+            bwlimit = MscConfig('msc').web_def_dlmaxbw
             ctx = self.currentContext
             computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
             try: # FIXME: dirty bugfix, should be factorized upstream
                 computer[1]['fullname']
             except KeyError:
                 computer[1]['fullname'] = computer[1]['cn'][0]
-            ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path)
+            ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path, bwlimit)
         return ret
 
     def pa_adv_countAllPackages(self, filt):
