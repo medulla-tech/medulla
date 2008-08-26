@@ -24,6 +24,11 @@
 # Python stuff
 import logging
 import re
+import tempfile
+import shutil
+import xmlrpclib
+import os
+import os.path
 
 # Other stuff
 from pulse2.launcher.config import LauncherConfig
@@ -114,23 +119,42 @@ def probeClient(client, timeout):
     mydeffered.addCallback(__cb_probe_end)
     return mydeffered
 
-def downloadFile(client, path, timeout):
+def downloadFile(client, path, bwlimit, timeout):
     """
-    Get and uuencode the first file found in path from client
+    Get the first file found in the given path from client.
     """
+
+    def __cb_dl_end(result, path):
+        code, stdout, stderr = result
+        ret = False
+        if not code:
+            # Look for the first available file contained in the directory
+            for root, dirs, files in os.walk(path):
+                if files:
+                    ret = (files[0], os.path.join(root, files[0]))
+                    break
+            # If there was one, build a binary string from its content
+            if ret:
+                rname, fname = ret
+                f = file(fname)
+                data = f.read()
+                f.close()
+                ret = (rname, xmlrpclib.Binary(data))
+        shutil.rmtree(path)
+        return ret
+
+    def __err_dl_end(failure, path):
+        logging.getLogger().error("launcher %s: %s" % (LauncherConfig().name, failure))
+        shutil.rmtree(path)
+        return False
+
     client = {
         'protocol': 'ssh',
         'host': client,
         'uuid': None,
     }
-    mydeffered = pulse2.launcher.remote_exec.sync_remote_direct(
-        None,
-        client,
-        SEPARATOR.join(("cd %s; F=`ls -1|head -n1`; test ! -z $F && uuencode.exe -m $F $F" % path).split(' ')),
-        20 * 1024 * 1024,
-        timeout
-    )
-
-    return mydeffered
-
-
+    targetpath = tempfile.mkdtemp(".p2")
+    myDeferred = pulse2.launcher.remote_exec.from_remote_to_launcher(None, client, path, targetpath, bwlimit, timeout)
+    myDeferred.addCallback(__cb_dl_end, targetpath)
+    myDeferred.addErrback(__err_dl_end, targetpath)
+    return myDeferred

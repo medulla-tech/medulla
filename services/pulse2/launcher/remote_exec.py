@@ -494,6 +494,37 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             )
     return None
 
+def from_remote_to_launcher(command_id, client, path, targetpath, bwlimit, wrapper_timeout):
+    """
+    Recursive copy of a directory from a client to the launcher using scp.
+    """
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    command_list = ['/usr/bin/scp']
+    command_list += client['transp_args']
+    if bwlimit:
+        command_list += ['-l'] + [str(bwlimit)]
+    command_list += ['-r']
+    command_list += [ "%s@%s:%s" % (client['user'], client['host'], path)]
+    command_list += [targetpath]
+    # The following ssh options are not used by scp, so we remove them
+    command_list.remove('-T')
+    command_list.remove('-a')
+    
+    # Build final command line
+    command_list = [
+        LauncherConfig().wrapper_path,
+        '--max-log-size',
+        str(LauncherConfig().wrapper_max_log_size),
+        '--max-exec-time',
+        str(wrapper_timeout),
+        '--exec',
+        SEPARATOR.join(command_list),
+        ]
+    return pulse2.launcher.process_control.commandRunner(
+        command_list,
+        __cb_sync_process_end)
+
+
 def __cb_sync_process_end(shprocess):
     """
         Handle sync process termination

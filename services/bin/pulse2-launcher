@@ -308,8 +308,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_probe(self, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.network.probeClient(client, timeout or LauncherConfig().max_probe_time))
 
-    def xmlrpc_download_file(self, client, path, timeout = None):
-        return xmlrpcCleanup(pulse2.launcher.network.downloadFile(client, path, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_download_file(self, client, path, bwlimit = 0, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.network.downloadFile(client, path, bwlimit, timeout or LauncherConfig().wrapper_max_exec_time))
 
     def xmlrpc_get_pubkey(self, key_name):
         return xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
