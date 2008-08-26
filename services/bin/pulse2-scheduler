@@ -70,7 +70,7 @@ def reschedule_awake_scheduling((deffered)):
 
 def run_awake_scheduling():
     logger = logging.getLogger()
-    logger.info('scheduler "%s": startAllCommands started' % (SchedulerConfig().name))
+    logger.info('scheduler "%s": wake-up' % (SchedulerConfig().name))
     # start command, gather deffered
     deferreds = pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
     pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
@@ -216,6 +216,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit))
     def xmlrpc_start_all_commands(self):
         return mmc.support.mmctools.xmlrpcCleanup(len(pulse2.scheduler.scheduling.startAllCommands(self.name)))
+    def xmlrpc_start_command(self, id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(id))
     def xmlrpc_stop_command(self, id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.stopCommand(id))
 

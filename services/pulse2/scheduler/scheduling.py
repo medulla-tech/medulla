@@ -105,7 +105,7 @@ def startAllCommands(scheduler_name):
         if deffered:
             deffereds.append(deffered)
     session.close()
-    logging.getLogger().info("Scheduler: %d tasks to perform" % len(deffereds))
+    logging.getLogger().info("Scheduler: %d tasks to start" % len(deffereds))
     return deffereds
 
 def stopElapsedCommands(scheduler_name):
@@ -127,16 +127,17 @@ def stopElapsedCommands(scheduler_name):
             database.commands_on_host.c.current_state == 'execution_in_progress',
             database.commands_on_host.c.current_state == 'delete_in_progress',
             database.commands_on_host.c.current_state == 'inventory_in_progress',
-            database.commands.c.scheduler == '',
-            database.commands.c.scheduler == scheduler_name,
-            database.commands.c.scheduler == None)
+        )).filter(sqlalchemy.or_(
+            database.commands_on_host.c.scheduler == '',
+            database.commands_on_host.c.scheduler == scheduler_name,
+            database.commands_on_host.c.scheduler == None)
         ).all():
         # enter the maze: stop command
         deffered = stopCommand(q.id)
         if deffered:
             deffereds.append(deffered)
     session.close()
-    logging.getLogger().info("Scheduler: %d tasks to perform" % len(deffereds))
+    logging.getLogger().info("Scheduler: %d tasks to stop" % len(deffereds))
     return deffereds
 
 def stopCommand(myCommandOnHostID):
@@ -147,6 +148,15 @@ def stopCommand(myCommandOnHostID):
     logger.debug("command state is %s" % myC.toH())
     for launcher in SchedulerConfig().launchers_uri.values():
         callOnLauncher(launcher, 'term_process', myCommandOnHostID)
+    return True
+
+def startCommand(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logger = logging.getLogger()
+    logger.info("going to start command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    logger.debug("command_on_host state is %s" % myCoH.toH())
+    logger.debug("command state is %s" % myC.toH())
+    runCommand(myCommandOnHostID)
     return True
 
 def runCommand(myCommandOnHostID):
