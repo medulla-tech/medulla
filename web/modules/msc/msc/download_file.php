@@ -25,23 +25,23 @@
 
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
-$ret = scheduler_download_file('', $_GET['objectUUID']);
-
-if (($ret === False) || ($ret == 0) || ($ret[0] != 0)) {
-    new NotifyWidgetFailure(_T("The download has failed.", "msc"));
-    header("Location: " . urlStrRedirect("base/computers/index"));
+if (isset($_POST["bconfirm"])) {
+    $ret = scheduler_download_file('', $_GET['objectUUID']);
+    if ($ret === False) {
+        new NotifyWidgetFailure(_T("The download has failed.", "msc"));
+        header("Location: " . urlStrRedirect("base/computers/index"));
+    } else {
+        $filename = $ret[0];
+        ob_end_clean();
+        header("Content-type: application/octet-stream");
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        print $ret[1]->scalar;
+    }
 } else {
-    $end = strpos($ret[1], "\n");
-    $header = substr($ret[1], 0, $end);
-    list($encoding, $mode, $filename) = explode(" ", $header);
-    if ($encoding != "begin-base64")
-        exit("Bad encoding");
-    ob_end_clean();
-    header("Content-type: application/octet-stream");
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    print base64_decode(substr($ret[1], $end + 1));
+    $f = new PopupForm(_T("Download a file from a computer"));
+    $f->addText(sprintf(_T("Warning: this operation may last a long time.")));
+    $f->addValidateButtonWithFade("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();    
 }
-
-exit;
-
 ?>
