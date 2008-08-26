@@ -23,7 +23,7 @@
  */
 
 #TODO remove this include...
-require_once("modules/inventory/includes/xmlrpc.php");
+#require_once("modules/inventory/includes/xmlrpc.php");
 #require("modules/msc/includes/xmlrpc.php");
 
 require_once("modules/base/includes/computers.inc.php");
