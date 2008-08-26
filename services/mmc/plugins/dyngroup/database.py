@@ -132,7 +132,6 @@ class DyngroupDatabase(Singleton):
         self.groups = Table("Groups", self.metadata,
                             Column('FK_user', Integer, ForeignKey('Users.id')),
                             autoload = True)
-        #mapper(Groups, self.groups)
         mapper(Groups, self.groups, properties = {
             'results' : relation(Results),
             }
@@ -676,6 +675,7 @@ class DyngroupDatabase(Singleton):
             self.__createResult(group.id, machine_id)
         session.close()
         return True
+
     def addmembers_to_group(self, ctx, id, uuids):
         """
         Add member computers specified by a uuids list to a group.
