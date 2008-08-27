@@ -116,8 +116,10 @@ def sortCommands(commands_to_perform):
         for ids in tocome_distribution.values():
             ids_list += ids
 
-        if len(ids) == 0:
+        if len(ids_list) == 0:
+            logging.getLogger().info("Scheduler: 0 tasks to start")
             return 0
+
         logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
         try: # this code is not well tested: let's protect it :D
             # tocome_distribution is a dict, keys are the current group names, values are the ids (array) of commands to launch
