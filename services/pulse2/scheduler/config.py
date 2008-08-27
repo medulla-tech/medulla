@@ -44,6 +44,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     cp = None
 
     # [scheduler] section
+    announce_check = dict()
     awake_time = 600
     client_check = None
     dbencoding = 'utf-8'
@@ -158,6 +159,12 @@ class SchedulerConfig(pulse2.utils.Singleton):
             for token in self.cp.get("scheduler", "server_check").split(','):
                 (key, val) = token.split('=')
                 self.server_check[key] = val
+            logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
+        if self.cp.has_option("scheduler", "announce_check"):
+            self.announce_check = {}
+            for token in self.cp.get("scheduler", "announce_check").split(','):
+                (key, val) = token.split('=')
+                self.announce_check[key] = val
             logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
 
         # [daemon] section parsing

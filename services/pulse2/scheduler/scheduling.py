@@ -312,7 +312,7 @@ def runUploadPhase(myCommandOnHostID):
         myCoH.setUploadIgnored()
         return runExecutionPhase(myCommandOnHostID)
 
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'TRANSFERT', 'group': getClientGroup(myT)}
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
@@ -434,7 +434,7 @@ def runExecutionPhase(myCommandOnHostID):
         return runDeletePhase(myCommandOnHostID)
 
     # if we are here, execution has either previously failed or never be done
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'EXECUTE', 'group': getClientGroup(myT)}
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('execute'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
 
@@ -512,7 +512,7 @@ def runDeletePhase(myCommandOnHostID):
         logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
         myCoH.setDeleteIgnored()
         return runEndPhase(myCommandOnHostID)
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'DELETE', 'group': getClientGroup(myT)}
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
 
@@ -610,7 +610,7 @@ def runInventoryPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: inventory done" % myCommandOnHostID)
         return runEndPhase(myCommandOnHostID)
 
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': 'INVENTORY', 'group': getClientGroup(myT)}
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
 
@@ -800,6 +800,13 @@ def getClientCheck(myT):
 
 def getServerCheck(myT):
     return getCheck(SchedulerConfig().server_check, myT);
+
+def getAnnounceCheck(announce):
+    if not announce:
+        return '';
+    if not announce in SchedulerConfig().announce_check:
+        return '';
+    return SchedulerConfig().announce_check[announce];
 
 def getCheck(check, myT):
     ret = {}
