@@ -27,6 +27,7 @@ import sqlalchemy
 import time
 import re
 import os
+import random
 
 # Twisted modules
 import twisted.internet
@@ -43,7 +44,7 @@ from mmc.plugins.msc.orm.target import Target
 
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher
+from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance
 import pulse2.scheduler.network
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 
@@ -66,8 +67,6 @@ def gatherCoHStuff(idCommandOnHost):
     return (myCommandOnHost, myCommand, myTarget)
 
 def startAllCommands(scheduler_name):
-    # we return a list of deferred
-    deffereds = [] # will hold all deferred
     session = sqlalchemy.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
@@ -82,6 +81,8 @@ def startAllCommands(scheduler_name):
     # take tasks with a pid not already set
     # take tasks with next launch time in the future
     # TODO: check command state integrity AND command_on_host state integrity in a separtseparate function
+
+    commands_to_perform = []
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
@@ -101,12 +102,101 @@ def startAllCommands(scheduler_name):
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         ).all():
-        deffered = runCommand(q.id)
-        if deffered:
-            deffereds.append(deffered)
+        commands_to_perform.append(q.id)
     session.close()
-    logging.getLogger().info("Scheduler: %d tasks to start" % len(deffereds))
-    return deffereds
+
+    return sortCommands(commands_to_perform)
+
+def sortCommands(commands_to_perform):
+
+    def _cb(result, tocome_distribution):
+
+        ids_list = [] # will contain the IDs from commands to run
+        # list is pre-filled in case of something goes wrong below
+        for ids in tocome_distribution.values():
+            ids_list += ids
+
+        if len(ids) == 0:
+            return 0
+        logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
+        try: # this code is not well tested: let's protect it :D
+            # tocome_distribution is a dict, keys are the current group names, values are the ids (array) of commands to launch
+            current_distribution = dict()
+            for launcher in result:
+                for group in result[launcher]['by_group']:
+                    if not group in current_distribution:
+                        current_distribution[group] = result[launcher]['by_group'][group]['running']
+                    else:
+                        current_distribution[group] += result[launcher]['by_group'][group]['running']
+            # => now current_distribution is a dict, keys are the current group names, values are the used slots per group fully aggregated over all launchers
+
+            # lets build an array with aggregated stats
+            aggregated_distribution = dict()
+            for key in tocome_distribution:
+                if key not in aggregated_distribution:
+                    aggregated_distribution[key] = {'tocome': 0, 'current': 0}
+                aggregated_distribution[key]['tocome'] = len(tocome_distribution[key])
+            for key in current_distribution:
+                if key not in aggregated_distribution:
+                    aggregated_distribution[key] = {'tocome': 0, 'current': 0}
+                aggregated_distribution[key]['current'] = current_distribution[key]
+            # we now got a dict, which for each group contains how mush stuff we are doing, and how much stuff we want to add
+
+            # the next step is to know how much command we want to run
+            # we got two options here:
+            # - either run as many commands as possible while staying below a certain ceil per group
+            # - or run as any commands as possible while keeping deployment equilibrated group per group
+
+            # first case: we want to
+            # - run as many commands as possible,
+            # - at last obtain as many commands running as configured in scheduler.ini
+            # thus we have reach max_slots / group count
+            to_reach = int(SchedulerConfig().max_slots / len(aggregated_distribution))
+
+            # second case: we want to
+            # - run as many commands as possible,
+            # - at last obtain the same ammount of running command per group
+            # so the idea is to find the group where tocome + current is minimum,
+            # then raise all groups to this level
+            # the calculs are done here, but please read carefuly:
+            # !!!!! DO NOT USE THIS VALUE !!!!!
+            # IT MAY PREVENT SCHEDULER TO RUN AT FULL CAPACITY IF A GROUP ALMOST EMPTY
+            # to_reach = min(map(lambda(x,y): y['current'] + y['tocome'], aggregated_distribution.items()))
+
+            # we can now obtain the full list of command_id
+            ids_list = []
+            for group in tocome_distribution.keys():
+                for i in range(0, to_reach - aggregated_distribution[group]['current']): # some space left in this group
+                    if aggregated_distribution[group]['tocome'] > 0:                     # and some stuff to add to this group
+                        if len(tocome_distribution[group]):
+                            ids_list.append(tocome_distribution[group].pop(0))
+            random.shuffle(ids_list)
+            logging.getLogger().debug("scheduler %s: commands sorted: %s" % (SchedulerConfig().name, ids_list))
+        except: # hum, something goes weird, try to get ids_list anyway
+            logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
+
+        deffereds = [] # will hold all deferred
+        for id in ids_list:
+            deffered = runCommand(id)
+            if deffered:
+                deffereds.append(deffered)
+        logging.getLogger().info("Scheduler: %d tasks to start" % len(deffereds))
+        return len(deffereds)
+
+
+    # build array of commands to perform
+    tocome_distribution = dict()
+    for command_id in commands_to_perform:
+        (myCoH, myC, myT) = gatherCoHStuff(command_id)
+        command_group = getClientGroup(myT)
+        if not command_group in tocome_distribution:
+            tocome_distribution[command_group] = [command_id]
+        else:
+            tocome_distribution[command_group].append(command_id)
+
+    # build array of commands being processed by available launchers
+    return getLaunchersBalance().\
+        addCallback(_cb, tocome_distribution)
 
 def stopElapsedCommands(scheduler_name):
     # we return a list of deferred

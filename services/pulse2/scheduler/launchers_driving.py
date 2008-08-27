@@ -22,6 +22,7 @@
 # MA 02110-1301, USA.
 
 import logging
+import random
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
@@ -31,7 +32,6 @@ def chooseLauncher():
     """ return a good launcher, URI form """
 
     def _finalback(stats):
-        import random
         used_slots = 0
         if len(stats.keys()) == 0:
             raise Exception("Every launchers seems to be dead !!!")
@@ -72,6 +72,36 @@ def chooseLauncher():
             return d
         else: # no more launcher left, give up
             return _finalback(stats)
+
+    return _callback(None, {}, SchedulerConfig().launchers_uri.copy(), None)
+
+def getLaunchersBalance():
+    """ return balancing status for launchers """
+
+    def _eb(reason, stats, launchers, current_launcher):
+        logging.getLogger().error("scheduler %s: while talking to launcher %s: %s" % (SchedulerConfig().name, current_launcher, reason.getErrorMessage()))
+        if launchers:
+            (next_launcher_name, next_launcher_uri) = launchers.popitem()
+            d = callOnLauncher(next_launcher_uri, 'get_balance')
+            d.addCallback(_callback, stats, launchers, next_launcher_name).\
+            addErrback(_eb, stats, launchers, next_launcher_name)
+            return d
+        else: # no more launcher left, give up
+            return stats
+
+    def _callback(result, stats, launchers, current_launcher):
+        # we just got a result from a launcher, let's stack it
+        if result:
+            stats.update({current_launcher: result})
+        # if there is at least one launcher to process, do it
+        if launchers:
+            (next_launcher_name, next_launcher_uri) = launchers.popitem()
+            d = callOnLauncher(next_launcher_uri, 'get_balance')
+            d.addCallback(_callback, stats, launchers, next_launcher_name).\
+            addErrback(_eb, stats, launchers, next_launcher_name)
+            return d
+        else: # no more launcher left, give up
+            return stats
 
     return _callback(None, {}, SchedulerConfig().launchers_uri.copy(), None)
 
