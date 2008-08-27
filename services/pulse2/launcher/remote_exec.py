@@ -130,11 +130,17 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
 
         # Build "exec" command
         real_command  = ['wget']
-        real_command  += client['proto_args']
-        real_command  += ['-N']
-        real_command  += files_list
-        real_command  += ['-P']
-        real_command  += [target_path]
+        real_command += client['proto_args']
+        real_command += ['-N']
+        real_command += files_list
+        real_command += ['-P']
+        real_command += [target_path]
+        # Make downloaded files executable
+        real_command += ['&&']
+        real_command += ['chmod']
+        real_command += ['u+x']
+        real_command += ['-R']
+        real_command += [target_path]
 
         # Build final command line
         command_list = [
@@ -258,8 +264,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
         # Build "exec" command
-        # TODO: chmod should be done upper
-        real_command  = ['cd', target_path, ';', 'chmod', '+x', command, ';', command ]
+        real_command  = ['cd', target_path, ';', command]
 
         # Build final command line
         command_list = [
