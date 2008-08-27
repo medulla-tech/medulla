@@ -167,6 +167,10 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         }
 
     def getState(self):
+        if self.handler:
+            pid = self.handler.pid
+        else:
+            pid = None
         return {
             'command': self.cmd,
             'id': self.id,
@@ -174,7 +178,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
             'exit_code': self.exit_code,
             'status': self.status,
             'signal': self.signal,
-            'pid': self.handler.pid,
+            'pid': pid,
             'done': self.done,
         }
 
