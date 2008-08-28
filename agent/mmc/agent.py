@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import twisted.internet.error
+import twisted.copyright
 from twisted.web import xmlrpc, server
 from twisted.internet import ssl, reactor, defer
 from twisted.python import failure
@@ -359,7 +360,7 @@ def agentService(config, conffile, daemonize):
 
     logger.info("mmc-agent %s starting..." % VERSION)
     logger.info("Using Python %s" % sys.version.split("\n")[0])
-    logger.info("Using Python Twisted %s" % twisted.version.short())
+    logger.info("Using Python Twisted %s" % twisted.copyright.version)
 
     logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
     if config.multithreading:
