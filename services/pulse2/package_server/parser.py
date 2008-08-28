@@ -161,7 +161,8 @@ class PackageParserXML:
         #    end
         #end
 
-        return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n%s%s" % (self.doctype(), s)
+        tmp = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n%s%s" % (self.doctype(), s)
+        return tmp.encode("utf-8")
 
     def doctype(self):
         return """
