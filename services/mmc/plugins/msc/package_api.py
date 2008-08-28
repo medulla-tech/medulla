@@ -22,6 +22,7 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 class PackageA:
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
+        bind = server
         if type(server) == dict:
             mountpoint = server['mountpoint']
             port = server['port']
