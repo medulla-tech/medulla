@@ -201,10 +201,22 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
         # Build "exec" command
-        real_command  = ['rm', '-fr']
+        real_command = ['rm', '-fr']
         real_command  += map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command  += [';', 'rmdir', target_path]
-
+        real_command += [';', 'if', '!', 'rmdir', target_path, ';']
+        real_command += ['then']
+        # Use the dellater command if available
+        real_command +=  ['if', '[', '-x', '/usr/bin/dellater.exe', ']', ';']
+        real_command +=  ['then']
+        # The permissions need to be modified, else the directory can't be
+        # deleted.
+        real_command +=  ['chown', 'SYSTEM.SYSTEM', target_path, ';']
+        # The mount/grep/sed stuff is needed to get the directory name for
+        # Windows.
+        real_command +=  ['dellater', '"$(mount |grep " on / type"|sed "s/ on \/ type.*$//")"' + target_path, ';']
+        real_command +=  ['fi', ';']
+        real_command += ['fi']
+        
         # Build final command line
         command_list = [
             LauncherConfig().wrapper_path,
