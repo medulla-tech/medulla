@@ -67,6 +67,9 @@ VERSION = "0.0.0"
 def reschedule_awake_scheduling((deffered)):
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     twisted.internet.reactor.callLater(start_commands_in, run_awake_scheduling)
+    # FIXME: Little sleep because sometimes Python exits before the
+    # callLater have the time to start
+    time.sleep(2)
 
 def run_awake_scheduling():
     logger = logging.getLogger()
