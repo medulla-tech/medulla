@@ -188,3 +188,6 @@ class ThreadLauncher(Singleton):
         self.logger.debug("Package mirror thread started")
 
         thread_webserver.initialize(self.config)
+        # FIXME: Little sleep because sometimes Python exits before the
+        # threads have the time to start
+        time.sleep(5)
