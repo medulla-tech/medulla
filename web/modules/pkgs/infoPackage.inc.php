@@ -44,8 +44,10 @@ $submod->addPage($page);
 $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
+$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 $page = new Page("associate_files", _T('Associate files to a package', 'pkgs'));
+$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("delete",_T("Delete a package", 'pkgs'));
