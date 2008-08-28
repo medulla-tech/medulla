@@ -245,13 +245,23 @@ class Common(Singleton):
         confdir = os.path.join(path, pid)
         self.packages[pid].setRoot(path)
         confxml = os.path.join(confdir, "conf.xml")
-        if os.path.exists(confxml):
-            shutil.move(confxml, confxml + ".bkp")
+        confxmltmp = confxml + '.tmp'
         if not os.path.exists(confdir):
             os.mkdir(confdir)
-        f = open(confxml, 'w+')
-        f.write(xml)
-        f.close()
+        try:
+            f = open(confxmltmp, 'w+')
+            f.write(xml)
+            f.close()
+        except Exception, e:
+            self.logger.error("Error while writing new conf.xml file")
+            self.logger.error(e)
+            if os.path.exists(confxmltmp):
+                os.remove(confxmltmp)
+            return (None, None)
+        if os.path.exists(confxml):
+            os.remove(confxml)
+        shutil.move(confxmltmp, confxml)
+            
         return [pid, confdir]
 
     def associateFiles(self, mp, pid, files, level = 0):
