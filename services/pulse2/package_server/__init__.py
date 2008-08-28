@@ -146,6 +146,8 @@ class ThreadPackageMirror(Thread):
                 is_deletion = True
                 
             for target in targets:
+                if target == '':
+                    continue
                 self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
                 args = []
                 args.extend(self.config.package_mirror_command_options)
@@ -181,11 +183,12 @@ class ThreadLauncher(Singleton):
             threadpd.start()
             self.logger.debug("Package detect thread started")
 
-        self.logger.debug("Starting package mirror thread")
-        threadpm = ThreadPackageMirror(config)
-        threadpm.setDaemon(True)
-        threadpm.start()
-        self.logger.debug("Package mirror thread started")
+        if self.config.package_mirror_activate:
+            self.logger.debug("Starting package mirror thread")
+            threadpm = ThreadPackageMirror(config)
+            threadpm.setDaemon(True)
+            threadpm.start()
+            self.logger.debug("Package mirror thread started")
 
         thread_webserver.initialize(self.config)
         # FIXME: Little sleep because sometimes Python exits before the

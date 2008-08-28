@@ -202,7 +202,7 @@ class Common(Singleton):
                 raise Exception("ARYDEFPKG")
             if need_assign:
                 Common().need_assign[pid] = True
-            else:
+            elif self.config.package_mirror_activate:
                 Common().dontgivepkgs[pid] = []
                 Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pa
@@ -222,7 +222,7 @@ class Common(Singleton):
                 pack.setFiles(old.files)
             if need_assign:
                 Common().need_assign[pid] = True
-            else:
+            elif self.config.package_mirror_activate:
                 Common().dontgivepkgs[pid] = []
                 Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
             self.packages[pid] = pack
@@ -287,8 +287,9 @@ class Common(Singleton):
            
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
-        Common().dontgivepkgs[pid] = []
-        Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+        if self.config.package_mirror_activate:
+            Common().dontgivepkgs[pid] = []
+            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
         return [True]
 
     def dropPackage(self, pid, mp):
@@ -309,8 +310,9 @@ class Common(Singleton):
         else:
             shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         # TODO remove package from mirrors
-        Common().dontgivepkgs[pid] = []
-        Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+        if self.config.package_mirror_activate:
+            Common().dontgivepkgs[pid] = []
+            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
        
         return pid
 

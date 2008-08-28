@@ -186,7 +186,9 @@ class P2PServerCP(Singleton):
 
         if self.cp.has_option("main", "package_mirror_target"):
             self.package_mirror_target = self.cp.get("main", "package_mirror_target").split(' ')
-            if self.package_mirror_target != '':
+            if (type(self.package_mirror_target) == str and self.package_mirror_target != '') or \
+                    (type(self.package_mirror_target) == list and len(self.package_mirror_target) == 1 and self.package_mirror_target[0] != '') or \
+                    (type(self.package_mirror_target) == list and len(self.package_mirror_target) != 1):
                 self.package_mirror_activate = True
                 if self.cp.has_option("main", 'package_mirror_loop'):
                     self.package_mirror_loop = self.cp.getint("main", 'package_mirror_loop')
