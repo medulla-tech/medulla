@@ -30,16 +30,16 @@ require_once("modules/base/includes/computers.inc.php");
 if (isset($_POST["bcreate"])) {
     addComputer($_POST);
     if (!isXMLRPCError()) {
-        new NotifyWidgetSuccess(_T("Computer successfully added"));
+        new NotifyWidgetSuccess(_("Computer successfully added"));
         header("Location: " . urlStrRedirect("base/computers/index"));
     }
 }
 
 
 $p = new PageGenerator();
-if ($_GET["action"] == "add") $title =  _T("Add a computer");
+if ($_GET["action"] == "add") $title =  _("Add a computer");
 else {
-    $title =  _T("Edit a computer");;
+    $title =  _("Edit a computer");
     $sidemenu->forceActiveItem("index");
 }
 $p->setTitle($title);
@@ -56,12 +56,12 @@ if ($_GET["action"]=="add") {
 }
 
 $f->add(
-        new TrFormElement(_T("Computer name"), $formElt),
+        new TrFormElement(_("Computer name"), $formElt),
         array("value" => $computername, "required" => True)
         );
 
 $f->add(
-        new TrFormElement(_T("Description"), new InputTpl("computerdescription")),
+        new TrFormElement(_("Description"), new InputTpl("computerdescription")),
         array("value" => $computerdescription)
         );
 
@@ -80,7 +80,7 @@ if (canAssociateComputer2Location()) {
     if (in_array("pulse2", $_SESSION["modulesList"])) {
         require('modules/pulse2/includes/select_location.php');
         $f->add(
-            new TrFormElement(_T("Location"), select_locations(null)), # TODO when edit, should get the locations in GET or POST
+            new TrFormElement(_("Location"), select_locations(null)), # TODO when edit, should get the locations in GET or POST
             array("value" => '')
         );
     }
