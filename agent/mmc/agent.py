@@ -175,7 +175,8 @@ class MmcServer(xmlrpc.XMLRPC,object):
             reactor.callFromThread(deferred.errback, failure)
         
         def _putResult(deferred, f, args, kwargs):
-            self.logger.debug("Using thread #%s for %s" % (reactor.threadpool.currentThread().getName().split("-")[2], f.__name__))
+            import threading
+            self.logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
             try:
                 result = f(*args, **kwargs)
             except:
