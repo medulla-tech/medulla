@@ -542,8 +542,8 @@ class Glpi(DyngroupDatabaseHelper):
         }
         if advanced:
             net = self.getMachineNetwork(uuid)
-            ret['macAddress'] = map(lambda n: n['ifaddr'], net) #self.getMachineMac(uuid)
-            ret['ipHostNumber'] = map(lambda n: n['ifmac'], net) #self.getMachineIp(uuid)
+            ret['macAddress'] = map(lambda n: n['ifmac'], net) #self.getMachineMac(uuid)
+            ret['ipHostNumber'] = map(lambda n: n['ifaddr'], net) #self.getMachineIp(uuid)
             ret['subnetMask'] = map(lambda n: n['netmask'], net) 
             domain = self.getMachineDomain(machine.ID)
             if domain == None:
