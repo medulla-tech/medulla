@@ -28,11 +28,11 @@
 
 import random
 from pulse2.package_server.types import Mirror, Machine
-from pulse2.package_server.mirror_api.assign_algo import AssignAlgo
+from pulse2.package_server.assign_algo import MMAssignAlgo
 from pulse2.package_server.assign_algo.terminal_type.database import PluginInventoryAADatabase
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
 
-class UserAssignAlgo(AssignAlgo):
+class UserAssignAlgo(MMAssignAlgo):
     name = 'terminal_type'
     assign = {}
 
