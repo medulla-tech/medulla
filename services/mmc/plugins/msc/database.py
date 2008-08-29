@@ -57,7 +57,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 9
+DATABASEVERSION = 10
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -370,6 +370,7 @@ class MscDatabase(Singleton):
                 targetUuid,
                 targetIp,
                 targetMac,
+                targetBCast,
                 targetUri,
                 group_id
                 ) # TODO change mirrors...
@@ -379,8 +380,28 @@ class MscDatabase(Singleton):
             targetUuid = target[0]
             targetName = target[1]
         computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+        self.logger.debug("target getComputer %s " % (str(computer)))
 
+        def getBCast(ip, netmask):
+            a_ip = ip.split('.')
+            a_netmask = netmask.split('.')
+            a_network = [0,0,0,0]
+            for i in range(0,4):
+                a_network[i] = int(a_ip[i]) & int(a_netmask[i])
+            a_notnetmask = map(lambda i: int(i) ^ 255, netmask.split('.'))
+            for i in range(0,4):
+                a_ip[i] = int(a_network[i]) | int(a_notnetmask[i])
+            return '.'.join(map(lambda x: str(x), a_ip))
+            
+        h_mac2bcast = {}
+        bcastAddresses = []
         ipAddresses = computer[1]['ipHostNumber']
+        netmask = computer[1]['subnetMask']
+        
+        for i in range(len(computer[1]['macAddress'])):
+            bcastAddress = getBCast(ipAddresses[i], netmask[i])
+            h_mac2bcast[computer[1]['macAddress'][i]] = bcastAddress
+        
         self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
         # Apply IP addresses blacklist
         if self.config.ignore_non_rfc2780:
@@ -404,9 +425,13 @@ class MscDatabase(Singleton):
         macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
         self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
 
+        for mac in macAddresses:
+            bcastAddresses.append(h_mac2bcast[mac])
+
         # Multiple IP addresses or IP addresses may be separated by "||"
         targetMac = '||'.join(macAddresses)
         targetIp = '||'.join(ipAddresses)
+        targetBCast = '||'.join(bcastAddresses)
 
         # compute URI depending on selected mode
         if mode == 'push_pull': # TODO : make only one call for all the targets
@@ -558,7 +583,7 @@ class MscDatabase(Singleton):
             ''
         )
 
-    def addTarget(self, targetName, targetUuid, targetIp, targetMac, mirror, groupID = None):
+    def addTarget(self, targetName, targetUuid, targetIp, targetMac, targetBCast, mirror, groupID = None):
         """ Inject a new Target object in our MSC database """
         session = create_session()
         myTarget = Target()
@@ -566,6 +591,7 @@ class MscDatabase(Singleton):
         myTarget.target_uuid = targetUuid
         myTarget.target_ipaddr = targetIp
         myTarget.target_macaddr = targetMac
+        myTarget.target_bcast = targetBCast
         myTarget.mirrors = mirror
         myTarget.id_group = groupID
         session.save(myTarget)

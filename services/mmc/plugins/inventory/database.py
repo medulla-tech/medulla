@@ -278,9 +278,7 @@ class Inventory(DyngroupDatabaseHelper):
             gid = pattern['gid']
             machines = []
             if ComputerGroupManager().isrequest_group(ctx, gid):
-                self.logger.info("isrequest_group")
                 machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
-                self.logger.info("isrequest_group")
             else:
                 machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
@@ -944,15 +942,19 @@ class Machine(object):
             if len(net) == 0:
                 ret[1]['ipHostNumber'] = ''
                 ret[1]['macAddress'] = ''
+                ret[1]['subnetMask'] = ''
             else:
                 net = net[0]
                 ret[1]['ipHostNumber'] = []
                 ret[1]['macAddress'] = []
+                ret[1]['subnetMask'] = []
                 for n in net[1]:
                     if n['IP'] != None:
                         ret[1]['ipHostNumber'].append(n['IP'])
                     if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
                         ret[1]['macAddress'].append(n['MACAddress'])
+                    if n['SubnetMask'] != None:
+                        ret[1]['subnetMask'].append(n['SubnetMask'])
         return ret
 
     def toCustom(self, get):

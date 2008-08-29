@@ -61,6 +61,7 @@ class Target(object):
             'target_uuid': self.target_uuid,
             'target_ipaddr': self.target_ipaddr,
             'target_macaddr': self.target_macaddr,
+            'target_bcast': self.target_bcast,
             'mirrors': self.mirrors,
             'id_group': self.id_group
         }

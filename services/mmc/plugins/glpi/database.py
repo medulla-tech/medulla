@@ -541,8 +541,10 @@ class Glpi(DyngroupDatabaseHelper):
             'objectUUID': [uuid]
         }
         if advanced:
-            ret['macAddress'] = self.getMachineMac(uuid)
-            ret['ipHostNumber'] = self.getMachineIp(uuid)
+            net = self.getMachineNetwork(uuid)
+            ret['macAddress'] = map(lambda n: n['ifaddr'], net) #self.getMachineMac(uuid)
+            ret['ipHostNumber'] = map(lambda n: n['ifmac'], net) #self.getMachineIp(uuid)
+            ret['subnetMask'] = map(lambda n: n['netmask'], net) 
             domain = self.getMachineDomain(machine.ID)
             if domain == None:
                 domain = ''
@@ -813,6 +815,17 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     ##################### for msc
+    def getMachineNetwork(self, uuid):
+        """
+        Get a machine network
+        """
+        session = create_session()
+        query = session.query(Network).select_from(self.machine.join(self.network))
+        query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuid)
+        ret = unique(map(lambda m: m.toH(), query.all()))
+        session.close()
+        return ret
+        
     def getMachineMac(self, uuid):
         """
         Get a machine mac addresses
@@ -924,6 +937,16 @@ class UserProfile(object):
     pass
 
 class Network(object):
+    def toH(self):
+        return {
+            'name': self.name,
+            'ifaddr': self.ifaddr,
+            'ifmac': self.ifmac,
+            'netmask': self.netmask,
+            'gateway': self.gateway,
+            'subnet': self.subnet
+        }
+       
     def to_a(self):
         return [
             ['name', self.name],
