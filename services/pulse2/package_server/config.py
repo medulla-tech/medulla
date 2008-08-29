@@ -194,7 +194,7 @@ class P2PServerCP(Singleton):
                     self.package_mirror_loop = self.cp.getint("main", 'package_mirror_loop')
 
                 if self.cp.has_option("main", 'package_mirror_command'):
-                    self.package_mirror_command = self.cp.getint("main", 'package_mirror_command')
+                    self.package_mirror_command = self.cp.get("main", 'package_mirror_command')
                 if self.cp.has_option("main", 'package_mirror_command_options'):
                     self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
                 if self.cp.has_option("main", 'package_mirror_level0_command_options'):
