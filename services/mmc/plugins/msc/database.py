@@ -399,7 +399,12 @@ class MscDatabase(Singleton):
         netmask = computer[1]['subnetMask']
         
         for i in range(len(computer[1]['macAddress'])):
-            bcastAddress = getBCast(ipAddresses[i], netmask[i])
+            try:
+                bcastAddress = getBCast(ipAddresses[i], netmask[i])
+            except Exception, e:
+                self.logger.debug("Can't compute broadcast address with ip=%s and netmask=%s: %s" % (ipAddresses[i], netmask[i], str(e)))
+                bcastAddress = "255.255.255.255"
+                self.logger.debug("Using default broadcast address %s" % bcastAddress)                
             h_mac2bcast[computer[1]['macAddress'][i]] = bcastAddress
         
         self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
