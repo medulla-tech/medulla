@@ -301,8 +301,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.process_control.hupAllProcess())
 
     # Network stuff handling
-    def xmlrpc_wol(self, mac_addrs):
-        return xmlrpcCleanup(pulse2.launcher.network.wolClient(mac_addrs))
+    def xmlrpc_wol(self, mac_addrs, target_bcast = None):
+        return xmlrpcCleanup(pulse2.launcher.network.wolClient(mac_addrs, target_bcast))
     def xmlrpc_icmp(self, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.network.icmpClient(client, timeout or LauncherConfig().max_ping_time))
     def xmlrpc_probe(self, client, timeout = None):

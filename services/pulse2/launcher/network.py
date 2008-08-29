@@ -29,13 +29,14 @@ import shutil
 import xmlrpclib
 import os
 import os.path
+from twisted.internet import defer
 
 # Other stuff
 from pulse2.launcher.config import LauncherConfig
 import pulse2.launcher.process_control
 SEPARATOR = u'·'
 
-def wolClient(mac_addrs):
+def wolClient(mac_addrs, target_bcast = None):
     """ Send a BCast WOL packet to mac_addrs """
     def __cb_wol_end(shprocess):
         if not shprocess.exit_code == 0:
@@ -44,24 +45,32 @@ def wolClient(mac_addrs):
         logging.getLogger().debug("launcher %s: WOL succeeded" % (LauncherConfig().name))
         return True
 
+    def cbReturn(result):
+        ret = True
+        for res in result:
+            if not res[1]:
+                ret = False
+        return ret
+
     command_list = [
         LauncherConfig().wol_path,
-        '--ipaddr=%s' % LauncherConfig().wol_bcast,
         '--port=%s' % LauncherConfig().wol_port,
     ]
 
-    # clean empty macs
-    purged_mac_addrs = []
-    for i in mac_addrs:
-        if i:
-            purged_mac_addrs.append(i)
-    command_list += purged_mac_addrs
+    dl = []
+    for i in range(len(mac_addrs)):
+        if mac_addrs[i]:
+            bcast = LauncherConfig().wol_bcast
+            if target_bcast[i]:
+                bcast = target_bcast[i]
+            cmd = command_list + ['--ipaddr=%s' % bcast, mac_addrs[i]]
+            logging.getLogger().debug("cmd %s"%(str(cmd)))
+            dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
 
-    return pulse2.launcher.process_control.commandRunner(
-        command_list,
-        __cb_wol_end
-    )
-
+    dl = defer.DeferredList(dl)
+    dl.addCallback(cbReturn)
+    return dl
+    
 def icmpClient(client, timeout):
     """ Send a Ping to our client """
     def __cb_icmp_end(shprocess, client=client):
