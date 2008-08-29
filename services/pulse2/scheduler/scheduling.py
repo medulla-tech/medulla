@@ -278,7 +278,7 @@ def runWOLPhase(myCommandOnHostID):
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
     # perform call
-    mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'))
+    mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
 
     mydeffered.\
         addCallback(parseWOLResult, myCommandOnHostID).\
