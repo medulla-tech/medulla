@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-28 14:47+0200\n"
-"PO-Revision-Date: 2008-08-28 14:49+0200\n"
+"PO-Revision-Date: 2008-07-26 22:46+0200\n"
 "Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Contrôle sécurisé de %s"
 #: msc/msc/msctabsstatus.php:50
 #, php-format
 msgid "(with %s beeing unreachable)"
-msgstr "(dont %s sont injoingnables)"
+msgstr "(dont %s sont injoignables)"
 
 #: msc/msc/start_command.php:140
 msgid "Advanced"
