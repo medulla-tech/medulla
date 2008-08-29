@@ -58,15 +58,23 @@ def wolClient(mac_addrs, target_bcast = None):
     ]
 
     dl = []
+    sorted = {}
     for i in range(len(mac_addrs)):
         if mac_addrs[i]:
             bcast = LauncherConfig().wol_bcast
             if target_bcast[i]:
                 bcast = target_bcast[i]
-            cmd = command_list + ['--ipaddr=%s' % bcast, mac_addrs[i]]
-            logging.getLogger().debug("cmd %s"%(str(cmd)))
-            dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
-
+            if not sorted.has_key(bcast):
+                sorted[bcast] = []
+            sorted[bcast].append(mac_addrs[i])
+    for bcat in sorted:
+        mac_addresses = sorted[bcat]
+        cmd = command_list + ['--ipaddr=%s' % bcast] + mac_addresses
+        logging.getLogger().debug("WOL  : %s"%(str(cmd)))
+        dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
+    
+    if len(dl) == 1:
+        return dl[0]
     dl = defer.DeferredList(dl)
     dl.addCallback(cbReturn)
     return dl
