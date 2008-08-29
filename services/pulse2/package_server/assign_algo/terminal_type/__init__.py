@@ -32,12 +32,12 @@ from pulse2.package_server.assign_algo import MMAssignAlgo
 from pulse2.package_server.assign_algo.terminal_type.database import PluginInventoryAADatabase
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
 
-class UserAssignAlgo(MMAssignAlgo):
+class MMUserAssignAlgo(MMAssignAlgo):
     name = 'terminal_type'
     assign = {}
 
-    def __init__(self):
-        AssignAlgo.__init__(self)
+    def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
+        MMAssignAlgo.init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis)
         self.config = PluginInventoryAAConfig()
         self.config.setup("/etc/mmc/pulse2/pserver/plugin_terminal_type.ini")
         self.database = PluginInventoryAADatabase()
