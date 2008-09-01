@@ -48,13 +48,6 @@ class Autocomplete {
 
     <!--
         var groups = new Array();
-        <?php
-            include_once("modules/dyngroup/includes/xmlrpc.php");
-            foreach (getPossiblesValuesForCriterionInModuleFuzzy($this->module, $this->criterion, '') as $res)
-            {   
-                echo "groups.push('" . htmlentities($res, ENT_QUOTES) . "');\n";
-            }
-        ?>
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
             'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value"});
     -->
