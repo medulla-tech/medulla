@@ -80,6 +80,10 @@ class QueryManager(Singleton):
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
         return self.queryPossibilities[moduleName].keys()
 
+    def getTypeForCriterionInModule(self, ctx, moduleName, criterion):
+        ret = self.queryPossibilities[moduleName][criterion]
+        return ret[0]
+        
     def getPossiblesValuesForCriterionInModule(self, ctx, moduleName, criterion, value = ''):
         ret = self.queryPossibilities[moduleName][criterion]
         if len(ret) == 3:

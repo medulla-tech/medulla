@@ -95,6 +95,7 @@ class Glpi(DyngroupDatabaseHelper):
 
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
+        DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
             return None
@@ -270,6 +271,13 @@ class Glpi(DyngroupDatabaseHelper):
         Use the glpi.ini conf parameter filter_on to filter machines on some parameters
         The request is in OR not in AND, so be carefull with what you want
         """
+        ret = self.__filter_on_filter(query)
+        if ret == None:
+            return query
+        else:
+            return query.filter(ret)
+        
+    def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
             for filter_key, filter_value in self.config.filter_on:
@@ -279,17 +287,20 @@ class Glpi(DyngroupDatabaseHelper):
                 else:
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
             if len(a_filter_on) == 0:
-                return query
+                return None
             elif len(a_filter_on) == 1:
-                return query.filter(a_filter_on[0])
+                return a_filter_on[0]
             else:
-                return query.filter(or_(*a_filter_on))
-        return query
+                return or_(*a_filter_on)
+        return None
 
     def __filter_on_entity(self, query, ctx):
+        ret = self.__filter_on_entity_filter(query, ctx)
+        return query.filter(ret)
+
+    def __filter_on_entity_filter(self, query, ctx):
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.machine.c.FK_entities.in_(*entities))
-        return query
+        return self.machine.c.FK_entities.in_(*entities)
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
@@ -344,7 +355,9 @@ class Glpi(DyngroupDatabaseHelper):
             join_query = self.machine
             query_filter = None
 
-            join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.ID)
+            filters = [self.machine.c.deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
+
+            join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.ID, filters)
 
             # filtering on locations
             try:
@@ -384,8 +397,12 @@ class Glpi(DyngroupDatabaseHelper):
                 
                 location = self.__getName(location)
                 query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
-
+                
             query = query.select_from(join_query).filter(query_filter)
+            query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+            query = self.__filter_on(query)
+            query = self.__filter_on_entity(query, ctx)
+
         return query
 
     def __getName(self, obj):
@@ -412,6 +429,30 @@ class Glpi(DyngroupDatabaseHelper):
             return self.location
         elif query[2] == 'SOFTWARE':
             return [self.inst_software, self.licenses, self.software]
+        elif query[2] == 'Nom':
+            return []
+        elif query[2] == 'Contact':
+            return []
+        elif query[2] == 'Numero du contact':
+            return []
+        elif query[2] == 'Comments':
+            return []
+        elif query[2] == 'Modele':
+            return self.model
+        elif query[2] == 'Lieu':
+            return self.locations
+        elif query[2] == 'OS':
+            return self.os
+        elif query[2] == 'ServicePack':
+            return self.os_sp
+        elif query[2] == 'Groupe':
+            return self.group
+        elif query[2] == 'Reseau':
+            return self.network
+        elif query[2] == 'Logiciel':
+            return [self.inst_software, self.licenses, self.software]
+        elif query[2] == 'Version':
+            return [self.inst_software, self.licenses, self.software]
         return []
 
     def mapping(self, query, invert = False):
@@ -421,22 +462,70 @@ class Glpi(DyngroupDatabaseHelper):
         if len(query) == 4:
             r1 = re.compile('\*')
             like = False
-            if r1.search(query[3]):
-                like = True
-                query[3] = r1.sub('%', query[3])
-                
-            if invert:
-                if like:
-                    return not_(self.__getTable(query[2]).like(query[3]))
-                else:
-                    return self.__getTable(query[2]) != query[3]
+            if type(query[3]) == list:
+                q3 = []
+                query[3][0] = re.sub('^\(', '', query[3][0])
+                query[3][-1] = re.sub('\)$', '', query[3][-1])
+                for q in query[3]:
+                    if r1.search(q):
+                        like = True
+                        q = r1.sub('%', q)
+                    q3.append(q)
+                query[3] = q3
             else:
-                if like:
-                    return self.__getTable(query[2]).like(query[3])
+                if r1.search(query[3]):
+                    like = True
+                    query[3] = r1.sub('%', query[3])
+                
+            parts = self.__getPartsFromQuery(query)
+            ret = []
+            for part in parts:
+                partA, partB = part
+                if invert:
+                    if like:
+                        ret.append(not_(partA.like(partB)))
+                    else:
+                        ret.append(partA != partB)
                 else:
-                    return self.__getTable(query[2]) == query[3]
+                    if like:
+                        ret.append(partA.like(partB))
+                    else:
+                        ret.append(partA == partB)
+            return and_(*ret)
         else:
             return self.__treatQueryLevel(query)
+
+    def __getPartsFromQuery(self, query):
+        if query[2] == 'OS':
+            return [[self.os.c.name, query[3]]]
+        elif query[2] == 'ENTITY':
+            return [[self.location.c.name, query[3]]]
+        elif query[2] == 'SOFTWARE':
+            return [[self.software.c.name, query[3]]]
+        elif query[2] == 'Nom':
+            return [[self.machine.c.name, query[3]]]
+        elif query[2] == 'Contact':
+            return [[self.machine.c.contact, query[3]]]
+        elif query[2] == 'Numero du contact':
+            return [[self.machine.c.contact_num, query[3]]]
+        elif query[2] == 'Comments':
+            return [[self.machine.c.comments, query[3]]]
+        elif query[2] == 'Modele':
+            return [[self.model.c.name, query[3]]]
+        elif query[2] == 'Lieu':
+            return [[self.locations.c.name, query[3]]]
+        elif query[2] == 'ServicePack':
+            return [[self.os_sp.c.name, query[3]]]
+        elif query[2] == 'Groupe':
+            return [[self.group.c.name, query[3]]]
+        elif query[2] == 'Reseau':
+            return [[self.network.c.name, query[3]]]
+        elif query[2] == 'Logiciel':
+            return [[self.software.c.name, query[3]]]
+        elif query[2] == 'Version':
+            return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
+        return []
+ 
 
     def __getTable(self, table):
         if table == 'OS':
@@ -824,9 +913,14 @@ class Glpi(DyngroupDatabaseHelper):
         @return: all softwares defined in the GLPI database
         """
         session = create_session()
-        query = session.query(Software)
+        query = session.query(Software).select_from(self.software.join(self.licenses).join(self.inst_software).join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
+        query = query.filter(self.software.c.FK_entities.in_(*entities))
         if filter != '':
             query = query.filter(self.software.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.software.c.name).all()
         ret = query.all()
         session.close()
         return ret
@@ -840,10 +934,15 @@ class Glpi(DyngroupDatabaseHelper):
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.software.c.name == swname)
+        if type(swname) == list:
+            query = query.filter(and_(self.software.c.name == swname[0], glpi_license.version == swname[1]))
+        else:
+            query = query.filter(self.software.c.name == swname)
         ret = query.all()
         session.close()
         return ret
+    def getMachineBySoftwareAndVersion(self, ctx, swname):
+        return self.getMachineBySoftware(ctx, swname)
 
     def getAllHostnames(self, ctx, filt = ''):
         """

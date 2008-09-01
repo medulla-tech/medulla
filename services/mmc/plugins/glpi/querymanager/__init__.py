@@ -28,6 +28,8 @@ def queryPossibilities():
     ret['ServicePack'] = ['list', getAllOsSps]
     ret['Groupe'] = ['list', getAllGroups]
     ret['Reseau'] = ['list', getAllNetworks]
+    ret['Logiciel'] = ['list', getAllSoftwares, 3]
+    ret['Version'] = ['double', getAllSoftwaresAndVersions]
     
 #    ret['OS'] = ['list', getAllOs]
 #    ret['ENTITY'] = ['list', getAllEntities]
@@ -44,9 +46,10 @@ def query(ctx, criterion, value):
         machines = map(lambda x: x.name, Glpi().getMachineByOs(ctx, value))
     elif criterion == 'ENTITY':
         machines = map(lambda x: x.name, Glpi().getMachineByEntity(ctx, value))
-    elif criterion == 'SOFTWARE':
+    elif criterion == 'SOFTWARE' or criterion == 'Logiciel':
         machines = map(lambda x: x.name, Glpi().getMachineBySoftware(ctx, value))
-        
+    elif criterion == 'Version':
+        machines = map(lambda x: x.name, Glpi().getMachineBySoftwareAndVersion(ctx, value))
     elif criterion == 'Nom':
         machines = map(lambda x: x.name, Glpi().getMachineByHostname(ctx, value))
     elif criterion == 'Contact':
@@ -76,6 +79,9 @@ def getAllEntities(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllEntities(ctx, value))
 
 def getAllSoftwares(ctx, value = ''):
+    return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value))
+
+def getAllSoftwaresAndVersions(ctx, value = ""):
     return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value))
     
 def getAllHostnames(ctx, value = ''):

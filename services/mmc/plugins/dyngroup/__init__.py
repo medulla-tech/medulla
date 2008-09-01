@@ -223,6 +223,12 @@ class RpcProxy(RpcProxyI):
         if not isDynamicEnable():
             return False
         return xmlrpcCleanup(queryManager.getPossiblesCriterionsInModule(ctx, moduleName))
+
+    def getTypeForCriterionInModule(self, moduleName, criterion):
+        ctx = self.currentContext
+        if not isDynamicEnable():
+            return False
+        return xmlrpcCleanup(queryManager.getTypeForCriterionInModule(ctx, moduleName, criterion))
     
     def getPossiblesValuesForCriterionInModule(self, moduleName, criterion):
         ctx = self.currentContext
@@ -234,7 +240,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        retour = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, search)
+        retour = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(search))
         return xmlrpcCleanup(retour[1])
     
     def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, search, value2 = ''): # not used anymore ?
@@ -242,7 +248,7 @@ class RpcProxy(RpcProxyI):
         if not isDynamicEnable():
             return False
         retour = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion)
-        p1 = re.compile(value2, re.IGNORECASE)
+        p1 = re.compile(unescape(value2), re.IGNORECASE)
         ret = []
         for r in retour[1][search]: # must take into account * ...
             if type(r) == str and p1.search(r):
@@ -306,3 +312,8 @@ def forgeRequest(elt, values):
 
 def getDefaultModule():
     return config.defaultModule
+
+def unescape(search):
+    if type(search) == str and search != '':
+        return re.sub('&lt;', '<', re.sub('&gt;', '>', search))
+    return search

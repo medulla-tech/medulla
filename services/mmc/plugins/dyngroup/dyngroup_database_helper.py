@@ -36,9 +36,12 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 class DyngroupDatabaseHelper(Singleton):
     def init(self):
-        self.logger = logging.getLogger()
+        #self.logger = logging.getLogger()
+        self.filters = {}
 
-    def filter(self, ctx, join_query, filt, query, grpby):
+    def filter(self, ctx, join_query, filt, query, grpby, filters = None):
+        if filters != None:
+            self.filters[ctx.userid] = and_(*filters)
         query_filter = None
         try:
             if not filt.has_key('query'):
@@ -92,7 +95,10 @@ class DyngroupDatabaseHelper(Singleton):
                 else:
                     join_q = join_q.join(join_tab)
 
-                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
                 filter_on.append(grpby.in_(*res))
             else:
@@ -123,7 +129,10 @@ class DyngroupDatabaseHelper(Singleton):
                 else:
                     join_q = join_q.join(join_tab)
 
-                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
                 filter_on.append(grpby.in_(*res))
             else:
@@ -154,7 +163,10 @@ class DyngroupDatabaseHelper(Singleton):
                 else:
                     join_q = join_q.join(join_tab)
                                             
-                query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                query = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], query)
                 filter_on.append(not_(grpby.in_(*res)))
             else:
