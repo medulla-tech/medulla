@@ -19,6 +19,7 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# TODO rename location into entity (and locations in location)
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
@@ -134,9 +135,13 @@ class Glpi(DyngroupDatabaseHelper):
         Initialize all SQLalchemy mappers needed for the inventory database
         """
 
-        # location
+        # entity
         self.location = Table("glpi_entities", self.metadata, autoload = True)
         mapper(Location, self.location)
+
+        # location
+        self.locations = Table("glpi_dropdown_locations", self.metadata, autoload = True)
+        mapper(Locations, self.locations)
 
         # processor
         self.processor = Table("glpi_device_processor", self.metadata, autoload = True)
@@ -148,9 +153,15 @@ class Glpi(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Network, self.network)
 
+        self.net = Table("glpi_dropdown_network", self.metadata, autoload = True)
+        mapper(Net, self.net)
+
         # os
         self.os = Table("glpi_dropdown_os", self.metadata, autoload = True)
         mapper(OS, self.os)
+
+        self.os_sp = Table("glpi_dropdown_os_sp", self.metadata, autoload = True)
+        mapper(OsSp, self.os_sp)
 
         # domain
         self.domain = Table('glpi_dropdown_domain', self.metadata, autoload = True)
@@ -161,22 +172,24 @@ class Glpi(DyngroupDatabaseHelper):
         self.machine = Table("glpi_computers", self.metadata,
             Column('ID', Integer, primary_key=True),
             Column('FK_entities', Integer, ForeignKey('glpi_entities.ID')),
+            Column('FK_groups', Integer, ForeignKey('glpi_groups.ID')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
             Column('os', Integer, ForeignKey('glpi_dropdown_os.ID')),
             Column('os_version', Integer, nullable=False),
-            Column('os_sp', Integer, nullable=False),
+            Column('os_sp', Integer, ForeignKey('glpi_dropdown_os_sp.ID')),
             Column('os_license_number', String(255), nullable=True),
             Column('os_license_id', String(255), nullable=True),
-            Column('location', Integer, nullable=False),
+            Column('location', Integer, ForeignKey('glpi_dropdown_locations.ID')),
             Column('domain', Integer, ForeignKey('glpi_dropdown_domain.ID')),
-            Column('network', Integer, nullable=False),
-            Column('model', Integer, nullable=False),
+            Column('network', Integer, ForeignKey('glpi_dropdown_network.ID')),
+            Column('model', Integer, ForeignKey('glpi_dropdown_model.ID')),
             Column('type', Integer, nullable=False),
             Column('deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
             Column('state', Integer, nullable=False), #ForeignKey('glpi_dropdown_state.ID')),
-            Column('comments', String(255), nullable=False))
+            Column('comments', String(255), nullable=False),
+            autoload = True)
         mapper(Machine, self.machine) #, properties={'FK_entities': relation(Location)})
 
         # profile
@@ -226,6 +239,14 @@ class Glpi(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Licenses, self.licenses)
 
+        # model
+        self.model = Table("glpi_dropdown_model", self.metadata, autoload = True)
+        mapper(Model, self.model)
+        
+        # group
+        self.group = Table("glpi_groups", self.metadata, autoload = True)
+        mapper(Group, self.group)
+
 
 
     def enableLogging(self, level = None):
@@ -263,6 +284,11 @@ class Glpi(DyngroupDatabaseHelper):
                 return query.filter(a_filter_on[0])
             else:
                 return query.filter(or_(*a_filter_on))
+        return query
+
+    def __filter_on_entity(self, query, ctx):
+        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
+        query = query.filter(self.machine.c.FK_entities.in_(*entities))
         return query
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
@@ -739,18 +765,19 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     ##################### functions used by querymanager
-    def getAllOs(self, filt = ''):
+    def getAllOs(self, ctx, filt = ''):
         """
         @return: all os defined in the GLPI database
         """
         session = create_session()
-        query = session.query(OS)
+        query = session.query(OS).select_from(self.os.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.os.c.name.like('%'+filt+'%'))
         ret = query.all()
         session.close()
         return ret
-
     def getMachineByOs(self, ctx, osname):
         """
         @return: all machines that have this os
@@ -760,22 +787,24 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Machine).select_from(self.machine.join(self.os)).filter(self.os.c.name == osname)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
         ret = query.all()
         session.close()
         return ret
 
-    def getAllEntities(self, filt = ''):
+    def getAllEntities(self, ctx, filt = ''):
         """
         @return: all entities defined in the GLPI database
         """
         session = create_session()
-        query = session.query(Location)
+        query = session.query(Location).select_from(self.model.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.location.c.name.like('%'+filt+'%'))
         ret = query.all()
         session.close()
         return ret
-
     def getMachineByEntity(self, ctx, enname):
         """
         @return: all machines that are in this entity
@@ -785,11 +814,12 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Machine).select_from(self.machine.join(self.location)).filter(self.location.c.name == enname)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
         ret = query.all()
         session.close()
         return ret
 
-    def getAllSoftwares(self, filt = ''):
+    def getAllSoftwares(self, ctx, filt = ''):
         """
         @return: all softwares defined in the GLPI database
         """
@@ -800,7 +830,6 @@ class Glpi(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-
     def getMachineBySoftware(self, ctx, swname):
         """
         @return: all machines that have this software
@@ -809,11 +838,249 @@ class Glpi(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.inst_software).join(self.licenses).join(self.software))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.software.c.name == swname)
         ret = query.all()
         session.close()
         return ret
 
+    def getAllHostnames(self, ctx, filt = ''):
+        """
+        @return: all hostnames defined in the GLPI database
+        """
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.machine.c.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+    def getMachineByHostname(self, ctx, hostname):
+        """
+        @return: all machines that have this hostname
+        """
+        # TODO use the ctx...
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.machine.c.name == hostname)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllContacts(self, ctx, filt = ''):
+        """          
+        @return: all hostnames defined in the GLPI database
+        """          
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.machine.c.contact.like('%'+filt+'%'))
+        ret = query.group_by(self.machine.c.contact).all()
+        session.close()
+        return ret
+    def getMachineByContact(self, ctx, contact):
+        """
+        @return: all machines that have this contact
+        """
+        # TODO use the ctx...
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.machine.c.contact == contact)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllContactNums(self, ctx, filt = ''):
+        """          
+        @return: all hostnames defined in the GLPI database
+        """          
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.machine.c.contact_num.like('%'+filt+'%'))
+        ret = query.group_by(self.machine.c.contact_num).all()
+        session.close()
+        return ret
+    def getMachineByContactNum(self, ctx, contact_num):
+        """
+        @return: all machines that have this contact number
+        """
+        # TODO use the ctx...
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.machine.c.contact_num == contact_num)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllComments(self, ctx, filt = ''):
+        """                                            
+        @return: all hostnames defined in the GLPI database
+        """                      
+        session = create_session()   
+        query = session.query(Machine)                 
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':                               
+            query = query.filter(self.machine.c.comments.like('%'+filt+'%'))
+        ret = query.group_by(self.machine.c.comments).all()
+        session.close()
+        return ret
+    def getMachineByComment(self, ctx, comment):
+        """                                            
+        @return: all machines that have this contact number
+        """                 
+        # TODO use the ctx...    
+        session = create_session()   
+        query = session.query(Machine)                 
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)                
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.machine.c.comments == comment)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllModels(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(Model).select_from(self.model.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.model.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.model.c.name).all()
+        session.close()
+        return ret
+    def getMachineByModel(self, ctx, filt):
+        """ @return: all machines that have this contact number """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.model))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.model.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllLocations(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(Locations).select_from(self.locations.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.locations.c.completename.like('%'+filt+'%'))
+        ret = query.group_by(self.locations.c.completename).all()
+        session.close()
+        return ret
+    def getMachineByLocation(self, ctx, filt):
+        """ @return: all machines that have this contact number """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.locations))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.locations.c.completename == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllOsSps(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(OsSp).select_from(self.os_sp.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.os_sp.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.os_sp.c.name).all()
+        session.close()
+        return ret
+    def getMachineByOsSp(self, ctx, filt):
+        """ @return: all machines that have this contact number """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.os_sp))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.os_sp.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllGroups(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(Group).select_from(self.group.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
+        query = query.filter(self.group.c.FK_entities.in_(*entities))
+        if filter != '':
+            query = query.filter(self.group.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.group.c.name).all()
+        session.close()
+        return ret
+    def getMachineByGroup(self, ctx, filt):# ENTITY!
+        """ @return: all machines that have this contact number """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.group))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
+        query = query.filter(self.group.c.FK_entities.in_(*entities))
+        query = query.filter(self.group.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllNetworks(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(Net).select_from(self.net.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.net.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.net.c.name).all()
+        session.close()
+        return ret
+    def getMachineByNetwork(self, ctx, filt):
+        """ @return: all machines that have this contact number """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.net))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.net.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+    
+        
     ##################### for msc
     def getMachineNetwork(self, uuid):
         """
@@ -973,5 +1240,20 @@ class InstSoftware(object):
     pass
 
 class Licenses(object):
+    pass
+
+class Group(object):
+    pass
+
+class OsSp(object):
+    pass
+
+class Model(object):
+    pass
+
+class Locations(object):
+    pass
+
+class Net(object):
     pass
 
