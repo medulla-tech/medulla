@@ -114,10 +114,9 @@ if (quickGet('add_req')) {
 if (quickGet('add_param')) {
     print "<form action='".  urlStr("base/computers/$target", array()).  "' method='POST'><table>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
-    $param = getPossiblesValuesForCriterionInModule(quickGet('req'), quickGet('add_param'));
-    if (!is_array($param)) { $param = array($param); }
+    $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
     print "<tr><td>".quickGet('req')." > ".quickGet('add_param')."</td><td>";
-    switch ($param[0]) {
+    switch ($type) { #$param[0]) {
         case 'string':
             print "<input name='value' type='text'></input>";
             print "<input class='btnPrimary' value='"._T("Add", "dyngroup")."' name='Add' type='submit'/>";

@@ -50,4 +50,8 @@ function getPossiblesValuesForCriterionInModuleFuzzyWhere($moduleName, $criterio
     return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzyWhere", array(urldecode($moduleName), urldecode($criterion), urldecode($search), urldecode($value2)));
 }
 
+function getTypeForCriterionInModule($moduleName, $criterion) {
+    return myXmlCall("dyngroup.getTypeForCriterionInModule", array($moduleName, $criterion));
+}
+
 ?>
