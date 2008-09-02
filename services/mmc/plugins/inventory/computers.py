@@ -23,6 +23,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from mmc.plugins.inventory.database import Inventory
 import logging
+import time
 import exceptions
 
 class InventoryComputers(ComputerI):
@@ -88,10 +89,11 @@ class InventoryComputers(ComputerI):
         comment = params["computerdescription"].encode("utf-8")
         ip = params['computerip']
         mac = params['computermac']
+        net = params['computernet']
         location = None
         if params.has_key('location_uuid'):
             location = params['location_uuid']
-        ret = self.inventory.addMachine(name, ip, mac, comment, location)
+        ret = self.inventory.addMachine(name, ip, mac, net, comment, location)
             
 
         return ret
@@ -99,7 +101,8 @@ class InventoryComputers(ComputerI):
     def neededParamsAddComputer(self):
         return [
             ['computerip', 'string', 'computer\'s ip address'],
-            ['computermac', 'string', 'computer\'s mac address']
+            ['computermac', 'string', 'computer\'s mac address'],
+            ['computernet', 'string', 'computer\'s network adress']
         ]
 
     def canDelComputer(self):

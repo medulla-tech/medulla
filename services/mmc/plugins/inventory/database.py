@@ -822,7 +822,7 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
-    def addMachine(self, name, ip, mac, comment = None, location = None): # TODO add the location association
+    def addMachine(self, name, ip, mac, net, comment = None, location = None): # TODO add the location association
         session = create_session()
         m = Machine()
         m.Name = name
@@ -841,6 +841,7 @@ class Inventory(DyngroupDatabaseHelper):
         n = net()
         n.MACAddress = mac
         n.IP = ip
+        n.SubnetMask = net
         session.save(n)
         session.flush()
         h = hasNet()
