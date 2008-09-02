@@ -83,7 +83,11 @@ $params = array();
 $actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start",   "msc", "base", "computers");
 $actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
 $actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
-$actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",      "display", "msc", "base", "computers");
+if (strlen($gid)) {
+    $actiondetails = new ActionItem(_T("Details", "msc"),    "groupmsctabs",      "display", "msc", "base", "computers");
+} else {
+    $actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",      "display", "msc", "base", "computers");
+}
 $actionstatus  = new ActionPopupItem(_T("Status", "msc"),"msctabsstatus","status",  "msc", "base", "computers");
 $actionstatus->setWidth("600");
 $actionempty   = new EmptyActionItem();

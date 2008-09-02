@@ -91,7 +91,7 @@ foreach ($packages as $c_package) {
     if ($machine) {
         $params[] = array('pid'=>$package->id, 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
-        $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+        $params[] = array('pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
     }
     if ($type==0) {
         $a_css[] = 'primary_list';
