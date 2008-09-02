@@ -220,6 +220,7 @@ class Common(Singleton):
                 old = self.packages[pid]
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
                 pack.setFiles(old.files)
+                pack.size = old.size
             if need_assign:
                 Common().need_assign[pid] = True
             elif self.config.package_mirror_activate:
