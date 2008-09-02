@@ -157,7 +157,7 @@ msgstr "Onglet de création d'un groupe dynamique"
 
 #: dyngroup/dyngroup/edithead.php:34
 msgid "Edit a dynamic group"
-msgstr "Éditer un groupe statique"
+msgstr "Éditer un groupe dynamique"
 
 #: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
 msgid "Edit a static group"
