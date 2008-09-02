@@ -336,7 +336,7 @@ class MscDatabase(Singleton):
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
         
-    def createTarget(self, session, target, mode, group_id, root):
+    def createTarget(self, session, target, mode, group_id, root, username):
         """
         Create a row in the target table.
 
@@ -376,6 +376,7 @@ class MscDatabase(Singleton):
                 targetIp,
                 targetMac,
                 targetBCast,
+                targetNetmask,
                 targetUri,
                 group_id
                 ) # TODO change mirrors...
@@ -384,7 +385,9 @@ class MscDatabase(Singleton):
         if type(target) == list:
             targetUuid = target[0]
             targetName = target[1]
-        computer = ComputerManager().getComputer(None, {'uuid': targetUuid})
+        class MyUser(object):
+            userid = username
+        computer = ComputerManager().getComputer(MyUser(), {'uuid': targetUuid})
         self.logger.debug("target getComputer %s " % (str(computer)))
 
         def getBCast(ip, netmask):
@@ -399,7 +402,9 @@ class MscDatabase(Singleton):
             return '.'.join(map(lambda x: str(x), a_ip))
             
         h_mac2bcast = {}
+        h_mac2netmask = {}
         bcastAddresses = []
+        netmasks = []
         ipAddresses = computer[1]['ipHostNumber']
         netmask = computer[1]['subnetMask']
         
@@ -411,6 +416,10 @@ class MscDatabase(Singleton):
                 bcastAddress = "255.255.255.255"
                 self.logger.debug("Using default broadcast address %s" % bcastAddress)                
             h_mac2bcast[computer[1]['macAddress'][i]] = bcastAddress
+            try:
+                h_mac2netmask[computer[1]['macAddress'][i]] = netmask[i]
+            except:
+                h_mac2netmask[computer[1]['macAddress'][i]] = '0.0.0.0'
         
         self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
         # Apply IP addresses blacklist
@@ -437,11 +446,13 @@ class MscDatabase(Singleton):
 
         for mac in macAddresses:
             bcastAddresses.append(h_mac2bcast[mac])
+            netmasks.append(h_mac2netmask[mac])
 
         # Multiple IP addresses or IP addresses may be separated by "||"
         targetMac = '||'.join(macAddresses)
         targetIp = '||'.join(ipAddresses)
         targetBCast = '||'.join(bcastAddresses)
+        targetNetmask = '||'.join(netmasks)
 
         # compute URI depending on selected mode
         if mode == 'push_pull': # TODO : make only one call for all the targets
@@ -485,7 +496,7 @@ class MscDatabase(Singleton):
         session = create_session()
         self.enableLogging(logging.DEBUG)
         def cbCreateTarget(t, scheduler):
-            d2 = self.createTarget(session, t, mode, group_id, root)
+            d2 = self.createTarget(session, t, mode, group_id, root, username)
             d2.addCallback(cbProcessCommand, scheduler)
             return d2
 
@@ -596,7 +607,7 @@ class MscDatabase(Singleton):
             ''
         )
 
-    def addTarget(self, session, targetName, targetUuid, targetIp, targetMac, targetBCast, mirror, groupID = None):
+    def addTarget(self, session, targetName, targetUuid, targetIp, targetMac, targetBCast, targetNetmask, mirror, groupID = None):
         """
         Inject a new Target object in our MSC database
         Return the corresponding Target object
@@ -607,6 +618,7 @@ class MscDatabase(Singleton):
         myTarget.target_ipaddr = targetIp
         myTarget.target_macaddr = targetMac
         myTarget.target_bcast = targetBCast
+        myTarget.target_network = targetNetmask
         myTarget.mirrors = mirror
         myTarget.id_group = groupID
         session.save(myTarget)
