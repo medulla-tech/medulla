@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-02 19:51+0200\n"
+"POT-Creation-Date: 2008-09-03 18:22+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
 
-#: msc/msc/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:134
+#: msc/msc/ajaxLogsFilter.php:136 msc/msc/ajaxLogsFilter.php:138
 msgid "%a %d %b %Y %T"
 msgstr "%a %d %b %Y %T"
 
@@ -30,9 +30,11 @@ msgstr "%a %d %b %Y %T"
 msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
 "access it"
-msgstr "Host %s nie jest zdefiniowany w module MSC lub nie masz uprawnień dostępu do niego."
+msgstr ""
+"Host %s nie jest zdefiniowany w module MSC lub nie masz uprawnień dostępu do "
+"niego."
 
-#: msc/msc/ajaxLogsFilter.php:136 msc/logs/ajaxLogsFilter.php:100
+#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:140
 #, php-format
 msgid "%s on %s"
 msgstr "%s na %s"
@@ -58,7 +60,7 @@ msgstr "bezpiecznakontrola maszyny %s"
 msgid "(with %s beeing unreachable)"
 msgstr "(gdy %s jest niedostępne)"
 
-#: msc/msc/start_command.php:134
+#: msc/msc/start_command.php:140
 msgid "Advanced"
 msgstr "Zaawansowane"
 
@@ -67,7 +69,7 @@ msgstr "Zaawansowane"
 msgid "Advanced launch action \"%s\" on \"%s\""
 msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 
-#: msc/msc/ajaxLogsFilter.php:130 msc/logs/ajaxLogsFilter.php:95
+#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:134
 msgid "As soon as possible"
 msgstr "Tka szybko, jak tylko możliwe"
 
@@ -75,8 +77,8 @@ msgstr "Tka szybko, jak tylko możliwe"
 msgid "Bytes"
 msgstr "Bajtów"
 
-#: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:112
-#: msc/msc/ajaxLogsFilter.php:170 msc/logs/ajaxLogsFilter.php:137
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:116
+#: msc/msc/ajaxLogsFilter.php:174 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr "Polecenie"
 
@@ -105,7 +107,7 @@ msgstr "Parametry polecenia"
 msgid "Command start date"
 msgstr "Data uruchomienia polecenia"
 
-#: msc/infoPackage.inc.php:129
+#: msc/infoPackage.inc.php:135
 msgid "Command status"
 msgstr "Stan polecenia"
 
@@ -113,7 +115,7 @@ msgstr "Stan polecenia"
 msgid "Command title"
 msgstr "Tytuł polecenia"
 
-#: msc/msc/launch.php:143
+#: msc/msc/launch.php:144
 msgid "Copy Mode"
 msgstr "Tryb kopiowania"
 
@@ -121,7 +123,7 @@ msgstr "Tryb kopiowania"
 msgid "Creation date"
 msgstr "Data utworzenia"
 
-#: msc/infoPackage.inc.php:181
+#: msc/infoPackage.inc.php:187
 msgid "Csv's export"
 msgstr "Export csv"
 
@@ -134,7 +136,8 @@ msgid "Delay between two connections"
 msgstr "Opóźnienie między 2 połączeniami"
 
 #: msc/msc/launch.php:132
-msgid "Delay betwen connections"
+#, fuzzy
+msgid "Delay betwen connections (minuts)"
 msgstr "Opóźnienie między połączeniami"
 
 #: msc/includes/functions.php:33
@@ -153,15 +156,19 @@ msgstr "Usuń pliki po zakończeniu wykonywania"
 msgid "Delete in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/msc/start_command.php:104
+#: msc/msc/start_command.php:113
 #, php-format
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Wdroż  <b>%s w.%s</b><br/> na <b>%s</b>"
 
-#: msc/msc/logs.php:48 msc/msc/ajaxPackageFilter.php:116
-#: msc/msc/packages.php:22 msc/msc/ajaxLogsFilter.php:86
-#: msc/msc/history.php:49 msc/logs/ajaxLogsFilter.php:69
-#: msc/logs/ajaxLogsFilter.php:70
+#: msc/msc/launch.php:137
+msgid "Deployment interval"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:69 msc/logs/ajaxLogsFilter.php:70
+#: msc/msc/packages.php:22 msc/msc/ajaxLogsFilter.php:87
+#: msc/msc/ajaxLogsFilter.php:89 msc/msc/ajaxPackageFilter.php:115
+#: msc/msc/logs.php:48 msc/msc/history.php:49
 msgid "Details"
 msgstr "Szczegóły"
 
@@ -169,8 +176,16 @@ msgstr "Szczegóły"
 msgid "Done"
 msgstr "Zrobione"
 
-#: msc/msc/launch.php:136 msc/msc/ajaxLogsFilter.php:165
-#: msc/logs/ajaxLogsFilter.php:132
+#: msc/msc/download_file.php:41
+msgid "Download a file from a computer"
+msgstr ""
+
+#: msc/infoPackage.inc.php:110
+msgid "Download file from a computer"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:169
+#: msc/msc/launch.php:136
 msgid "End date"
 msgstr "Data zakończenia"
 
@@ -198,10 +213,14 @@ msgstr "Wykonanie nieudane"
 msgid "Execution in progress"
 msgstr "W trakcie wykonywania"
 
-#: msc/includes/command_history.php:242
+#: msc/includes/command_history.php:250
 #, php-format
 msgid "Exit code was: %s"
 msgstr "Kod zakońćzenia to: %s"
+
+#: msc/includes/functions.php:44
+msgid "Failed"
+msgstr ""
 
 #: msc/msc/tabs.php:23 msc/msc/tabs.php:34
 msgid "History"
@@ -211,7 +230,7 @@ msgstr "Historia"
 msgid "Host"
 msgstr "Host"
 
-#: msc/infoPackage.inc.php:176
+#: msc/infoPackage.inc.php:182
 msgid "IP Addr."
 msgstr "Adr IP"
 
@@ -231,7 +250,7 @@ msgstr "Inwentaryzacja w trakcie"
 msgid "Label"
 msgstr "Etykieta"
 
-#: msc/msc/ajaxPackageFilter.php:115 msc/msc/packages.php:21
+#: msc/msc/packages.php:21 msc/msc/ajaxPackageFilter.php:114
 msgid "Launch"
 msgstr "Uruchom"
 
@@ -239,11 +258,11 @@ msgstr "Uruchom"
 msgid "Launch Actions"
 msgstr "Akcje Uruchaiania"
 
-#: msc/infoPackage.inc.php:140
+#: msc/infoPackage.inc.php:146
 msgid "Launch a command"
 msgstr "Wykonaj polecenie"
 
-#: msc/infoPackage.inc.php:146
+#: msc/infoPackage.inc.php:152
 msgid "Launch a quick action command"
 msgstr "Wykonaj polecenie szybkeij akcji"
 
@@ -251,7 +270,7 @@ msgstr "Wykonaj polecenie szybkeij akcji"
 msgid "Logs"
 msgstr "Logi"
 
-#: msc/infoPackage.inc.php:171
+#: msc/infoPackage.inc.php:177
 msgid "MAC Addr."
 msgstr "Adr MAC"
 
@@ -271,8 +290,9 @@ msgstr "Zakładka wykonywania MSC"
 msgid "MSC logs tab"
 msgstr "Zakładka logów MSC"
 
-#: msc/msc/launch.php:138
-msgid "Max bandwidth"
+#: msc/msc/launch.php:139
+#, fuzzy
+msgid "Max bandwidth (b/s)"
 msgstr "Maksymalna przepustowość"
 
 #: msc/msc/launch.php:133
@@ -283,8 +303,8 @@ msgstr "Maksymalna liczba prób połączenia"
 msgid "N/A"
 msgstr "N/D"
 
-#: msc/msc/package_detail.php:39 msc/includes/command_history.php:43
-#: msc/includes/command_history.php:98 msc/includes/command_history.php:163
+#: msc/includes/command_history.php:43 msc/includes/command_history.php:98
+#: msc/includes/command_history.php:163 msc/msc/package_detail.php:39
 msgid "Name"
 msgstr "Nazwa"
 
@@ -300,24 +320,24 @@ msgstr "Nie dostępny"
 msgid "Other/N.A."
 msgstr "Inne / N/D"
 
-#: msc/msc/ajaxPackageFilter.php:104 msc/msc/packages.php:18
+#: msc/msc/packages.php:18 msc/msc/ajaxPackageFilter.php:103
 msgid "Package"
 msgstr "Opakowanie"
 
-#: msc/msc/ajaxPackageFilter.php:106
+#: msc/msc/ajaxPackageFilter.php:105
 msgid "Package size"
 msgstr "Rozmiwa opakowania"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:151
+#: msc/infoPackage.inc.php:157 msc/msc/packages.php:7
 msgid "Packages"
 msgstr "Pakiety"
 
-#: msc/msc/ajaxLogsFilter.php:84 msc/includes/functions.php:40
-#: msc/logs/ajaxLogsFilter.php:67
+#: msc/includes/functions.php:40 msc/logs/ajaxLogsFilter.php:67
+#: msc/msc/ajaxLogsFilter.php:84
 msgid "Pause"
 msgstr "Pauza"
 
-#: msc/infoPackage.inc.php:117
+#: msc/infoPackage.inc.php:123
 msgid "Pause a command"
 msgstr "Pauzuj polecenie"
 
@@ -326,23 +346,23 @@ msgstr "Pauzuj polecenie"
 msgid "Pause action %s on host %s"
 msgstr "Pauzuj akcję %s na hoście %s"
 
-#: msc/infoPackage.inc.php:161
+#: msc/infoPackage.inc.php:167
 msgid "Ping"
 msgstr "Ping"
 
-#: msc/infoPackage.inc.php:156
+#: msc/infoPackage.inc.php:162
 msgid "Ping and probe"
 msgstr "Pinguj i sprawdzaj"
 
-#: msc/infoPackage.inc.php:166
+#: msc/infoPackage.inc.php:172
 msgid "Platform"
 msgstr "Platforma"
 
-#: msc/infoPackage.inc.php:111
+#: msc/infoPackage.inc.php:117
 msgid "Play a command"
 msgstr "Odtwórz polecenie"
 
-#: msc/msc/start_quick_action.php:63
+#: msc/msc/start_quick_action.php:65
 msgid "Please confirm you really want to perform this action"
 msgstr "Potwierdź, czy napewno chcesz wykonać tą akcję"
 
@@ -400,7 +420,7 @@ msgstr "Pokaż logi wszystkich zakończonych zadań"
 msgid "Show all logs"
 msgstr "Pokaż wszystkie logi"
 
-#: msc/logs/localSidebar.php:6 msc/logs/pending.php:33
+#: msc/logs/pending.php:33 msc/logs/localSidebar.php:6
 msgid "Show all pending task's logs"
 msgstr "Pokaż logi wszystkich oczekujących zadań"
 
@@ -424,7 +444,7 @@ msgstr "Pokaż logi stanu własnych zadań"
 msgid "Show finished task's logs"
 msgstr "Pokaż logi zakończoncyh zadań"
 
-#: msc/infoPackage.inc.php:134
+#: msc/infoPackage.inc.php:140
 msgid "Show package's details"
 msgstr "Pokaż szczegóły pakietu"
 
@@ -436,7 +456,7 @@ msgstr "Pokaż logi zadań oczekujących"
 msgid "Show running task's logs"
 msgstr "Pokaż logi trwających zadań"
 
-#: msc/msc/ajaxLogsFilter.php:83 msc/logs/ajaxLogsFilter.php:66
+#: msc/logs/ajaxLogsFilter.php:66 msc/msc/ajaxLogsFilter.php:83
 msgid "Start"
 msgstr "Start"
 
@@ -449,8 +469,8 @@ msgstr "Uruchom zapytanie \"Wake On Lan\" jeżeli nie uda się połączyć"
 msgid "Start action %s on host %s"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: msc/msc/launch.php:135 msc/msc/ajaxLogsFilter.php:167
-#: msc/logs/ajaxLogsFilter.php:134
+#: msc/logs/ajaxLogsFilter.php:134 msc/msc/ajaxLogsFilter.php:171
+#: msc/msc/launch.php:135
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -470,16 +490,15 @@ msgstr "Rozpocznij agenta inwentaryzacji"
 msgid "Start the script"
 msgstr "Rozpocznik skrypt"
 
-#: msc/msc/ajaxLogsFilter.php:87
+#: msc/msc/ajaxLogsFilter.php:91
 msgid "Status"
 msgstr "Stan"
 
-#: msc/msc/ajaxLogsFilter.php:85 msc/includes/functions.php:41
-#: msc/logs/ajaxLogsFilter.php:68
+#: msc/logs/ajaxLogsFilter.php:68 msc/msc/ajaxLogsFilter.php:85
 msgid "Stop"
 msgstr "Stop"
 
-#: msc/infoPackage.inc.php:123
+#: msc/infoPackage.inc.php:129
 msgid "Stop a command"
 msgstr "Zatrzymaj polecenie"
 
@@ -487,6 +506,15 @@ msgstr "Zatrzymaj polecenie"
 #, php-format
 msgid "Stop action %s on host %s"
 msgstr "Zatrzymaj akcje %s na hoście %s"
+
+#: msc/includes/functions.php:41
+#, fuzzy
+msgid "Stopped"
+msgstr "Stop"
+
+#: msc/msc/download_file.php:31
+msgid "The download has failed."
+msgstr ""
 
 #: msc/msc/ajaxPackageFilter.php:55
 #, php-format
@@ -522,19 +550,23 @@ msgstr "W trakcie wysyłania"
 msgid "User command creator"
 msgstr "Twórca poleceń użytkownika"
 
-#: msc/msc/package_detail.php:40 msc/includes/command_history.php:44
-#: msc/includes/command_history.php:99 msc/includes/command_history.php:164
+#: msc/includes/command_history.php:44 msc/includes/command_history.php:99
+#: msc/includes/command_history.php:164 msc/msc/package_detail.php:40
 msgid "Value"
 msgstr "Wartość"
 
-#: msc/msc/ajaxPackageFilter.php:105 msc/msc/package_detail.php:36
-#: msc/msc/packages.php:19
+#: msc/msc/packages.php:19 msc/msc/package_detail.php:36
+#: msc/msc/ajaxPackageFilter.php:104
 msgid "Version"
 msgstr "Wersja"
 
 #: msc/msc/launch.php:128
 msgid "Wake on lan"
 msgstr "Wake on lan"
+
+#: msc/msc/download_file.php:42
+msgid "Warning: this operation may last a long time."
+msgstr ""
 
 #: msc/includes/command_history.php:223
 msgid "Y-m-d H:i:s"
@@ -544,7 +576,7 @@ msgstr "R-m-d.G:i.s"
 msgid "You don't have the good permissions to access this command"
 msgstr "Nie masz uprawnień by skorzystać z tego polecenia"
 
-#: msc/msc/start_command.php:122
+#: msc/msc/start_command.php:134
 msgid "awake"
 msgstr "budź"
 
@@ -560,18 +592,18 @@ msgstr "nie udało się wdrożyć na komputerach"
 msgid "computers were successfully deployed"
 msgstr "zakończono wdrażanie na komputerach"
 
-#: msc/msc/ajaxLogsFilter.php:171 msc/includes/command_history.php:33
-#: msc/logs/ajaxLogsFilter.php:138
+#: msc/includes/command_history.php:33 msc/logs/ajaxLogsFilter.php:138
+#: msc/msc/ajaxLogsFilter.php:175
 msgid "current_state"
 msgstr "obecny_stan"
 
-#: msc/msc/ajaxLogsFilter.php:174 msc/includes/command_history.php:36
-#: msc/logs/ajaxLogsFilter.php:141
+#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:141
+#: msc/msc/ajaxLogsFilter.php:178
 msgid "deleted"
 msgstr "usunięto"
 
-#: msc/msc/ajaxLogsFilter.php:173 msc/includes/command_history.php:35
-#: msc/logs/ajaxLogsFilter.php:140
+#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:140
+#: msc/msc/ajaxLogsFilter.php:177
 msgid "executed"
 msgstr "wykonano"
 
@@ -587,13 +619,9 @@ msgstr "błąd podczas zatrzymywania"
 msgid "failed during upload"
 msgstr "błąd podczas wysyłania"
 
-#: msc/msc/start_command.php:124
+#: msc/msc/start_command.php:136
 msgid "invent."
 msgstr "inwent."
-
-#: msc/msc/start_command.php:130
-msgid "mode"
-msgstr "tryb"
 
 #: msc/msc/launch.php:56
 msgid "never"
@@ -603,15 +631,11 @@ msgstr "nigdy"
 msgid "now"
 msgstr "teraz"
 
-#: msc/msc/start_command.php:127
-msgid "p/p"
-msgstr "p/p"
-
-#: msc/msc/launch.php:140 msc/msc/start_command.php:127
+#: msc/msc/launch.php:141
 msgid "push"
 msgstr "pchnij"
 
-#: msc/msc/launch.php:140
+#: msc/msc/launch.php:141
 msgid "push / pull"
 msgstr "pchnij / pobierz"
 
@@ -627,12 +651,12 @@ msgstr "w trakcie zatrzymywania"
 msgid "running upload"
 msgstr "w trakcie wysyłania"
 
-#: msc/msc/ajaxLogsFilter.php:113
+#: msc/msc/ajaxLogsFilter.php:117
 msgid "start_date"
 msgstr "data_rozpoczęcia"
 
-#: msc/msc/ajaxLogsFilter.php:172 msc/includes/command_history.php:34
-#: msc/logs/ajaxLogsFilter.php:139
+#: msc/includes/command_history.php:34 msc/logs/ajaxLogsFilter.php:139
+#: msc/msc/ajaxLogsFilter.php:176
 msgid "uploaded"
 msgstr "wysłano"
 
@@ -648,3 +672,8 @@ msgstr "oczekiwanie na zatrzymanie"
 msgid "waiting to upload"
 msgstr "oczekiwanie na wysłanie"
 
+#~ msgid "mode"
+#~ msgstr "tryb"
+
+#~ msgid "p/p"
+#~ msgstr "p/p"
