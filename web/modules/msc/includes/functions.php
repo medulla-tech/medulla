@@ -38,7 +38,7 @@ function getStatusTable() {
                      "not_reachable" => _T("Not reachable", "msc"),
                      "done" => _T("Done", "msc"),
                      "pause" => _T("Pause", "msc"),
-                     "stop" => _T("Stop", "msc"),
+                     "stop" => _T("Stopped", "msc"),
                      "scheduled" => _T("Scheduled", "msc"),
                      "rescheduled" => _T("Rescheduled", "msc"),
                      "failed" => _T("Failed", "msc")
