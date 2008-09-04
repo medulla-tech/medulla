@@ -162,8 +162,20 @@ function __xmlrpc_isdyn_group($id) { return xmlCall("dyngroup.isdyn_group", arra
 function __xmlrpc_todyn_group($id) { return xmlCall("dyngroup.todyn_group", array($id)); }
 function __xmlrpc_isrequest_group($id) { return xmlCall("dyngroup.isrequest_group", array($id)); }
 function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", array($id)); }
-function __xmlrpc_addmembers_to_group($id, $uuids) { return xmlCall("dyngroup.addmembers_to_group", array($id, $uuids)); }
-function __xmlrpc_delmembers_to_group($id, $uuids) { return xmlCall("dyngroup.delmembers_to_group", array($id, $uuids)); }
+function __xmlrpc_addmembers_to_group($id, $uuids) {
+    if (!empty($uuids))
+        $ret = xmlCall("dyngroup.addmembers_to_group", array($id, $uuids));
+    else
+        $ret = True;
+    return $ret;
+}
+function __xmlrpc_delmembers_to_group($id, $uuids) {
+    if (!empty($uuids)) 
+        $ret = xmlCall("dyngroup.delmembers_to_group", array($id, $uuids));
+    else
+        $ret = True;
+    return $ret;
+}
 function __xmlrpc_importmembers_to_group($id, $elt, $values) { return xmlCall("dyngroup.importmembers_to_group", array($id, $elt, $values)); }
 
 function __xmlrpc_share_with($id) { return xmlCall("dyngroup.share_with", array($id)); }
