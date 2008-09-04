@@ -115,6 +115,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
+        DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Inventory don't need activation")
             return None
