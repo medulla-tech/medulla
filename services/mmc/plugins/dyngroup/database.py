@@ -23,6 +23,7 @@
 
 # SqlAlchemy
 from sqlalchemy import *
+
 from sqlalchemy.exceptions import NoSuchTableError
 
 # MMC modules
@@ -72,7 +73,7 @@ class DyngroupDatabase(Singleton):
 
         self.logger.info("Dyngroup database is connecting")
         self.config = DGConfig("dyngroup", conffile)
-        self.db = create_engine(self.makeConnectionPath(), echo=False)
+        self.db = create_engine(self.makeConnectionPath())
         self.metadata = BoundMetaData(self.db)
         try:
             self.initMappers()
@@ -159,7 +160,6 @@ class DyngroupDatabase(Singleton):
 
     def myfunctions(self):
         pass
-
 
     def enableLogging(self, level = None):
         """
@@ -674,27 +674,36 @@ class DyngroupDatabase(Singleton):
             machine_id = self.__getOrCreateMachine(key[1]['objectUUID'][0], key[1]['cn'][0])
             self.__createResult(group.id, machine_id)
         session.close()
-        return True
-
+        return True                                                                
     def addmembers_to_group(self, ctx, id, uuids):
         """
         Add member computers specified by a uuids list to a group.
         """
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
-        for uuid in uuids:
-            machine = self.__getMachine(uuid, session)
-            if not machine:
-                machine = Machines()
-                machine.uuid = uuid
-                machine.name = uuids[uuid]['hostname']
-                session.save(machine)
-            result = Results()
-            machine.results.append(result)
-            group.results.append(result)
-            session.save(result)
-        session.flush()
         session.close()
+        connection = self.db.connect()
+        trans = connection.begin()
+        toinsert = []
+        for uuid in uuids:
+            session = create_session()
+            machine = self.__getMachine(uuid, session)
+            session.close()
+            if not machine:
+                ins = self.machines.insert(
+                    values = { "uuid" : uuid,
+                               "name" : uuids[uuid]['hostname'] }
+                    )
+                ret = connection.execute(ins)
+                machine_id = ret.last_inserted_ids()
+            else:
+                machine_id = machine.id
+            toinsert.append(
+                { "FK_group" : group.id,
+                  "FK_machine" : machine_id }
+                )
+        connection.execute(self.results.insert(), toinsert)
+        trans.commit()
         return True
 
     def delmembers_to_group(self, ctx, id, uuids):
