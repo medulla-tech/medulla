@@ -34,11 +34,13 @@ require_once("../../../modules/dyngroup/includes/request.php");
 require("../../../modules/dyngroup/includes/dyngroup.php");
 require("../../../modules/dyngroup/graph/index.css");
 
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
 
-if (!$_GET["start"]) { $_GET["start"] = 0; }
-if (!$_GET["end"]) { $_GET["end"] = 10; }
+$start = 0;
+if ($_GET["start"]) { $start = $_GET['start']; }
 
-$params = array('min'=>$_GET["start"], 'max'=>$_GET["end"], 'filter'=>$_GET["filter"]);
+$params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
 $list = getAllGroups($params);
 $count = countAllGroups($params);
 $filter = $_GET["filter"];
