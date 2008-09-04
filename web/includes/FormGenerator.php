@@ -461,7 +461,7 @@ class DynamicDateTpl extends InputTpl {
             timeFormat      :   "24",
             button          :   "'.$this->name.'_button",
             firstDay        :   1,
-            weekNumbers     :   false,
+            weekNumbers     :   false
             });
             </script>';
     }
