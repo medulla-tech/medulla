@@ -236,7 +236,9 @@ class DyngroupDatabase(Singleton):
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.name == groupname, filter_on)).all()
 
-    def __getMachine(self, uuid, session = create_session()):
+    def __getMachine(self, uuid, session = None):
+        if not session:
+            session = create_session()
         machine = session.query(Machines).filter(self.machines.c.uuid == uuid).first()
         return machine
 
@@ -707,15 +709,24 @@ class DyngroupDatabase(Singleton):
         return True
 
     def delmembers_to_group(self, ctx, id, uuids):
+        """
+        Remove from a group member computers, specified by a uuids list.
+        """
         group = self.get_group(ctx, id)
+        connection = self.db.connect()
+        trans = connection.begin()
         session = create_session()
+        todelete = []
         for uuid in uuids:
             machine = self.__getMachine(uuid, session)
             if machine:
-                self.__deleteResult(group.id, machine.id, session)
+                todelete.append({ "machineid" : machine.id })
             else:
                 self.logger.debug("no member to delete! ('%s')" % (uuid))
         session.close()
+        if todelete:
+            connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine == bindparam("machineid"))), todelete)
+        trans.commit()
         return True
 
     def share_with(self, ctx, id):
