@@ -163,11 +163,11 @@ class DyngroupDatabaseHelper(Singleton):
                 else:
                     join_q = join_q.join(join_tab)
                                             
-                query = query.add_column(grpby).select_from(join_q).filter(filt)
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
                 if self.filters.has_key(ctx.userid):
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], query)
+                res = map(lambda x: x[1], q)
                 filter_on.append(not_(grpby.in_(*res)))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables, not invert)
