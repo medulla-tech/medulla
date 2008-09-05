@@ -111,7 +111,7 @@ if ($areCommands) {
             $a_details[] = $actiondetails;
             $a_status[] = $actionstatus;
         }
-        $a_current[] = to_date($cmd['date_created']); // Brrr, seem really ugly, should we not use sprintf ?
+        $a_current[] = _toDate($cmd['date_created']); // Brrr, seem really ugly, should we not use sprintf ?
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_current, _T("start_date", "msc"));
@@ -198,11 +198,4 @@ if ($n != null) {
 }
 
 
-function to_date($list) {
-    if (count($list) != 9) {
-        return $list;
-    } else {
-        return $list[0].'/'.$list[1].'/'.$list[2].' '.$list[3].':'.$list[4].':'.$list[5];
-    }
-}
 ?>
