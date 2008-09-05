@@ -494,7 +494,6 @@ class MscDatabase(Singleton):
         """
 
         session = create_session()
-        self.enableLogging(logging.DEBUG)
         def cbCreateTarget(t, scheduler):
             d2 = self.createTarget(session, t, mode, group_id, root, username)
             d2.addCallback(cbProcessCommand, scheduler)
@@ -514,7 +513,6 @@ class MscDatabase(Singleton):
                         self.logger.warn("Fail to create this command on hosts and target due to %s"%(str(result)))
                 session.flush()
                 session.close()
-                self.disableLogging()
                 return cmd.getId()
 
             dlist = []
@@ -817,7 +815,6 @@ class MscDatabase(Singleton):
 
             self.enableLogging()
             ret = query.all()
-            self.disableLogging()
 
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
@@ -841,7 +838,6 @@ class MscDatabase(Singleton):
 
             self.enableLogging()
             ret = query.all()
-            self.disableLogging()
 
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
@@ -861,7 +857,6 @@ class MscDatabase(Singleton):
             query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
             self.enableLogging()
             ret = query.all()
-            self.disableLogging()
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
