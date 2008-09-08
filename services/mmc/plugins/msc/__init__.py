@@ -218,6 +218,9 @@ class RpcProxy(RpcProxyI):
                 desc = qas[idcmd]["title" + lang]
             except KeyError:
                 desc = qas[idcmd]["title"]
+            if gid:
+                # Get all targets corresponding to the computer given group ID
+                target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
             d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
             d.addCallback(xmlrpcCleanup)
             ret = d
@@ -227,6 +230,9 @@ class RpcProxy(RpcProxyI):
 
 
     def add_command_quick(self, cmd, target, desc, gid = None):
+        """
+        Deprecated
+        """
         ctx = self.currentContext
         d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
         d.addCallback(xmlrpcCleanup)
@@ -234,6 +240,9 @@ class RpcProxy(RpcProxyI):
 
     def add_command_api(self, pid, target, params, p_api, mode, gid = None):
         ctx = self.currentContext
+        if gid:
+            # Get all targets corresponding to the computer given group ID
+            target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()

@@ -53,9 +53,9 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().requestresult_group(ctx, gid, min, max, filter)
 
-    def result_group(self, ctx, gid, min, max, filter):
+    def result_group(self, ctx, gid, min, max, filter, idOnly = True):
         klass = self.components[self.main]
-        return klass().result_group(ctx, gid, min, max, filter)
+        return klass().result_group(ctx, gid, min, max, filter, idOnly)
 
     def request(self, ctx, query, bool, min, max, filter):
         klass = self.components[self.main]
@@ -84,7 +84,7 @@ class ComputerGroupI:
         """
         pass
 
-    def result_group(self, ctx, gid, min, max, filter):
+    def result_group(self, ctx, gid, min, max, filter, idOnly):
         """
         Send the group content
         """

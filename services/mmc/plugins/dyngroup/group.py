@@ -23,11 +23,11 @@ class DyngroupGroup(ComputerGroupI):
         """
         return DyngroupDatabase().requestresult_group(ctx, gid, min, max, filter, QueryManager())
     
-    def result_group(self, ctx, gid, min, max, filter):
+    def result_group(self, ctx, gid, min, max, filter, idOnly = True):
         """
         Send the group content
         """
-        return DyngroupDatabase().result_group(ctx, gid, min, max, filter)
+        return DyngroupDatabase().result_group(ctx, gid, min, max, filter, idOnly)
 
     def request(self, ctx, query, bool, min, max, filter):
         """
