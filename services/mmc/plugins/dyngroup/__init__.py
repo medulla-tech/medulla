@@ -132,7 +132,7 @@ class RpcProxy(RpcProxyI):
 
     def result_group(self, id, start, end, filter):
         ctx = self.currentContext
-        return xmlrpcCleanup(map(lambda g:g.toH(), DyngroupDatabase().result_group(ctx, id, start, end, filter)))
+        return xmlrpcCleanup(map(lambda g:g.toH(), DyngroupDatabase().result_group(ctx, id, start, end, filter, False)))
 
     def countresult_group(self, id, filter):
         ctx = self.currentContext

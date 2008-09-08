@@ -592,12 +592,15 @@ class DyngroupDatabase(Singleton):
         session.close()
         return result
 
-    def result_group(self, ctx, id, start, end, filter = ''):
+    def result_group(self, ctx, id, start, end, filter = '', justId = True):
         session = create_session()
         result = self.__result_group_query(ctx, session, id, filter)
         if int(start) != 0 or int(end) != -1:
             result = result.offset(int(start)).limit(int(end) - int(start))
-        ret = map(lambda m:m.uuid, result.all())
+        if justId:
+            ret = map(lambda m:m.uuid, result.all())
+        else:
+            ret = result.all()
         session.close()
         return ret
 
