@@ -78,6 +78,9 @@ class LauncherConfig(pulse2.utils.Singleton):
     wol_port = '40000'
     wol_bcast = '255.255.255.255'
 
+    # SSH Proxy stuff
+    tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
+
     # daemon stuff
     daemon_group = 0
     pid_path = "/var/run/pulse2"
@@ -193,6 +196,9 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('wol', 'wol_bcast', 'wol_bcast')
         self.setoption('wol', 'wol_path', 'wol_path')
         self.setoption('wol', 'wol_port', 'wol_port')
+
+        # Parse "tcp_sproxy" section
+        self.setoption('tcp_sproxy', 'tcp_sproxy_path', 'tcp_sproxy_path')
 
         # Parse "scheduler_XXXX" sections
         for section in self.cp.sections():
