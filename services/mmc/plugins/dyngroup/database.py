@@ -78,7 +78,8 @@ class DyngroupDatabase(Singleton):
         self.metadata = BoundMetaData(self.db)
         try:
             self.initMappers()
-        except NoSuchTableError:
+        except NoSuchTableError, e:
+            self.logger.error(e)
             self.session = None
             return None
         self.metadata.create_all()
@@ -690,7 +691,7 @@ class DyngroupDatabase(Singleton):
                                "name" : uuids[uuid]['hostname'] }
                     )
                 ret = connection.execute(ins)
-                machine_id = ret.last_inserted_ids()
+                machine_id = ret.last_inserted_ids()[0]
             else:
                 machine_id = machine.id
             toinsert.append(
