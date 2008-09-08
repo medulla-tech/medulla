@@ -132,7 +132,7 @@ sub server($$) {
 
     # allow 40 seconds for the initial connect
     $SIG{ALRM} = \&sigterm;
-    alarm(40);
+    alarm(60);
 
     # connection loop
     while (1) {
@@ -143,7 +143,7 @@ sub server($$) {
         my ($port2, $iaddr2) = unpack_sockaddr_in(getsockname(CLIENT));
         my $peer2 = inet_ntoa($iaddr2);
         syslog("info", "connect from ".$peer." to ".$peer2);
-        if (($peer ne $peer2) && ($peer ne $addr)) {
+        if ($peer ne $addr) {
             syslog("info", "rejected");
             next;
         } else {
