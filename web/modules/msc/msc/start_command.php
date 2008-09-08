@@ -59,10 +59,6 @@ if (isset($_POST["bconfirm"])) {
     }
 
     $cible = array($uuid, $hostname);
-    if ($gid) {
-        $group = new Group($_GET['gid']);
-        $cible = array_map("onlyValues", $group->getResult(0, -1));
-    }
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);

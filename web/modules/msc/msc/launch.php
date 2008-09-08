@@ -66,14 +66,10 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     if (isset($_GET['uuid']) && $_GET['uuid']) {
         $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
         if ($machine->uuid == $uuid) { // Action on a single computer
-                $cible = array($uuid, $machine->hostname);
+            $cible = array($uuid, $machine->hostname);
         } else { // action on a whole group
-                $group = new Group($gid);
-                $cible = array_map('onlyValues', $group->getResult(0, -1));
+            die("Computer UUIDs dont match");
         }
-    } else {
-        $group = new Group($gid);
-        $cible = array_map('onlyValues', $group->getResult(0, -1));
     }
 
     $pid = $post['pid'];

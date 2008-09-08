@@ -58,8 +58,7 @@ if (isset($_POST["bconfirm"])) {
     /* single action post on a group */
     if (isset($_GET['gid'])) {
         $group = new Group($_GET['gid'], true);
-        $result = array_map("onlyValues", $group->getResult(0, -1));
-        action($_GET['launchAction'], $result);
+        action($_GET['launchAction'], null);
     }
 } else {
     $f = new PopupForm(_T("Please confirm you really want to perform this action", "msc"));
