@@ -267,7 +267,6 @@ class SendPackageCommand:
             next_connection_delay,
             max_connection_attempt,
             do_inventory,
-            0,
             maxbw,
             self.root,
             deployment_intervals
