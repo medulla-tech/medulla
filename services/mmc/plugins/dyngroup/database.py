@@ -35,6 +35,7 @@ from mmc.support.mmctools import Singleton
 
 # Imported last
 import logging
+import re
 
 SA_MAYOR = 0
 SA_MINOR = 3
@@ -324,7 +325,11 @@ class DyngroupDatabase(Singleton):
         
     def __getGroupByNameInSession(self, ctx, session, name):
         group = self.__getGroupInSessionFirstStep(ctx, session)
-        group = group.filter(self.groups.c.name == name).first()
+        if re.search("\*", name):
+            name = re.sub("\*", "%", name)
+            group = group.filter(self.groups.c.name.like(name))
+        else:
+            group = group.filter(self.groups.c.name == name).first()
         return group
     
     def __getGroupInSession(self, ctx, session, id):
@@ -573,26 +578,11 @@ class DyngroupDatabase(Singleton):
 
     def __request(self, ctx, query, bool, start, end, filter, queryManager, session = create_session()):
         query = queryManager.getQueryTree(query, bool)
-        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end)
-
-        ret = []
+        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end, True)
         if type(result) == dict:
-            for key in result:
-                machine = self.__getMachine(result[key][1]['objectUUID'][0], session)
-                id = None
-                if machine:
-                    id = machine.id
-                ret.append({'uuid': result[key][1]['objectUUID'][0], 'hostname': result[key][1]['cn'][0], 'id': id})
-        else:
-            for res in result:
-                machine = self.__getMachine(res[1]['objectUUID'][0], session)
-                id = None
-                if machine:
-                    id = machine.id
-                ret.append({'uuid': res[1]['objectUUID'][0], 'hostname': res[1]['cn'][0], 'id': id})
-            
+            result = result.values()
         session.close()
-        return ret
+        return result
 
     def countrequestresult_group(self, ctx, id, filter, queryManager):
         session = create_session()
@@ -607,7 +597,7 @@ class DyngroupDatabase(Singleton):
         result = self.__result_group_query(ctx, session, id, filter)
         if int(start) != 0 or int(end) != -1:
             result = result.offset(int(start)).limit(int(end) - int(start))
-        ret = result.all()
+        ret = map(lambda m:m.uuid, result.all())
         session.close()
         return ret
 

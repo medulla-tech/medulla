@@ -395,11 +395,11 @@ class GetPackagesGroupFiltered:
             self.machines = []
             if ComputerGroupManager().isdyn_group(self.ctx, self.gid):
                 if ComputerGroupManager().isrequest_group(self.ctx, self.gid):
-                    self.machines = map(lambda m: m['uuid'], ComputerGroupManager().requestresult_group(self.ctx, self.gid, 0, -1, ''))
+                    self.machines = ComputerGroupManager().requestresult_group(self.ctx, self.gid, 0, -1, '')
                 else:
-                    self.machines = map(lambda m: m.uuid, ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, ''))
+                    self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
             else:
-                self.machines = map(lambda m: m.uuid, ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, ''))
+                self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
             d = MirrorApi().getApiPackages(self.machines)
             d.addCallbacks(self.getMirrors, self.onError)
 

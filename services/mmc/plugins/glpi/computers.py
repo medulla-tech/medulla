@@ -95,7 +95,7 @@ class GlpiComputers(ComputerI):
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
                     
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False):
         if filt == None or filt == '':
             filt = {}
         try:
@@ -106,7 +106,7 @@ class GlpiComputers(ComputerI):
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
             pass
-        return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced)
+        return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId)
 
     def getComputerCount(self, ctx, filt = None):
         if filt == None or filt == '':

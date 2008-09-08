@@ -333,9 +333,9 @@ class Glpi(DyngroupDatabaseHelper):
                 gid = filt['gid']
                 machines = []
                 if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
                 else:
-                    machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(*machines))
 
             except KeyError:
@@ -566,7 +566,7 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return count
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False):
         """
         Get the computer list that match filters parameters between min and max
         """
@@ -584,10 +584,13 @@ class Glpi(DyngroupDatabaseHelper):
             query = query.limit(max)
 
         # TODO : need to find a way to remove group_by/order_by ...
-        if filt.has_key('get'):
-            ret = map(lambda m: self.__formatMachine(m, advanced, filt['get']), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+        if justId:
+            ret = map(lambda m: self.getMachineUUID(m), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
         else:
-            ret = map(lambda m: self.__formatMachine(m, advanced), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+            if filt.has_key('get'):
+                ret = map(lambda m: self.__formatMachine(m, advanced, filt['get']), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+            else:
+                ret = map(lambda m: self.__formatMachine(m, advanced), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
         session.close()
         return ret
 

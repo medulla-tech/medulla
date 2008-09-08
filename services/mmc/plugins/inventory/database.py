@@ -279,9 +279,9 @@ class Inventory(DyngroupDatabaseHelper):
             gid = pattern['gid']
             machines = []
             if ComputerGroupManager().isrequest_group(ctx, gid):
-                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
             else:
-                machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
         except KeyError, e:
             pass
@@ -327,9 +327,9 @@ class Inventory(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers))
+            return Machine.c.id.in_(*map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers)))
+            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, query):
         q = query[2].split('/')
@@ -776,9 +776,9 @@ class Inventory(DyngroupDatabaseHelper):
             query = query.filter(Machine.c.id==fromUUID(params['uuid']))
         if params.has_key('gid') and params['gid'] != '':
             if ComputerGroupManager().isrequest_group(ctx, params['gid']):
-                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
             else:
-                machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
         return query
        
@@ -914,6 +914,9 @@ def getComputerDict(c):
 class Machine(object):
     def toH(self):
         return { 'hostname':self.Name, 'uuid':toUUID(self.id) }
+
+    def uuid(self):
+        return toUUID(self.id)
         
     def toDN(self, ctx, advanced = False):
         ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
