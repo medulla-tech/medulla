@@ -111,7 +111,7 @@ if ($areCommands) {
             $a_details[] = $actiondetails;
             $a_status[] = $actionstatus;
         }
-        $a_current[] = _toDate($cmd['date_created']); // Brrr, seem really ugly, should we not use sprintf ?
+        $a_current[] = _toDate($cmd['creation_date']); // Brrr, seem really ugly, should we not use sprintf ?
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_current, _T("start_date", "msc"));
@@ -142,7 +142,7 @@ if ($areCommands) {
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
 
-            if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['number_attempt_connection_remains']) {
+            if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
             }
             if (isset($statusTable[$coh['current_state']])) {

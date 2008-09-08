@@ -44,7 +44,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $page = $path[2];
     $tab = $path[3];
     $params = array();
-    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
+    foreach (array('start_script', 'clean_on_success', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $post[$param];
     }
     $p_api = new ServerAPI();
@@ -124,19 +124,18 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
     $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
     $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
-    $f->add(new TrFormElement(_T('Command title', 'msc'),   new InputTpl('ltitle')), array("value" => $name));
-    $f->add(new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan")), array("value" => $_GET['wake_on_lan'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory")), array("value" => $_GET['start_inventory'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delay betwen connections (minuts)', 'msc'), new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
-    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'), new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
-    $f->add(new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters')), array("value" => ''));
-    $f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
-    $f->add(new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
-    $f->add(new TrFormElement(_T('Deployment interval', 'msc'), new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
-
-    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),   new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
+    $f->add(new TrFormElement(_T('Command title', 'msc'),                               new InputTpl('ltitle')), array("value" => $name));
+    $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
+    $f->add(new TrFormElement(_T('Delay betwen connections (minuts)', 'msc'),           new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
+    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
+    $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));
+    $f->add(new TrFormElement(_T('Start date', 'msc'),                                  new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
+    $f->add(new TrFormElement(_T('End date', 'msc'),                                    new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
+    $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
+    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
     $rb = new RadioTpl("copy_mode");
     $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
     $rb->setvalues(array('push', 'push_pull'));

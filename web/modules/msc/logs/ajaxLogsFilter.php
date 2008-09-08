@@ -101,7 +101,7 @@ foreach ($cmds as $coh) {
     $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
     $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
     $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
-    if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['number_attempt_connection_remains']) {
+    if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
         $coh['current_state'] = 'rescheduled';
     }
     if (isset($statusTable[$coh['current_state']])) {
