@@ -1,0 +1,333 @@
+#!/usr/bin/perl -w
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2005-2007 Linbox, http://www.linbox.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+# Some proxy code is based on tcpproxy (c)opyright 1999 by dan
+# goldwater, dgold@zblob.com
+
+# the idea behind this stuff:
+# we want to connect
+# - a client ($fromIp)
+# - a server ($toIp:$toPort)
+# - thought us
+#
+# the server must (and may only) listen on localhost
+#
+# in an ideal world the client would connect to $toIp:$toPort
+#
+# in a paranoid world (our) the client would connect on us and been
+# forwarded thourght ssh to 127.0.0.1:$toPort
+#
+# we first start by looking for 2 locally free port:
+# - $proxyport on which we will bind,
+# - $localport on which we will bind ssh,
+# then we fork() and:
+# - establish an ssh session from us to $toIp,
+# - ask ssh to forward TCP traffic from 127.0.0.1:$localport to
+#   127.0.0.1:$toPort
+# - start to forward all traffic comming from $fromIp on $proxyport to
+#   127.0.0.1:$localport
+#
+# any question ?
+
+use strict;
+use Socket;
+use POSIX qw(setsid);
+use warnings;
+use Sys::Syslog;
+use Sys::Syslog qw(:DEFAULT setlogsock);
+use IO::Socket::INET;
+
+# command line parsing: simple, always 4 arguments
+
+if ( @ARGV < 3 ) {
+    print "Usage: proxy.pl <from-ip> <to-ip> <to-port> <ssh-options-comma-separated>\n";
+    exit 1;
+}
+my ($fromIp, $toIp, $toPort, $proxyCommand) = @ARGV;
+
+# globals
+my $pid;
+
+#
+# Look for two free ports in the range "5900-5999"
+#
+sub alloc_freeport()  {
+    my $localport = 5900;
+    my $max = 100;
+    my $tries = $max;
+    my ($sock1, $sock2);
+
+    while (1) {
+        $tries--;
+        return 0 if ($tries == 0); # give up if no attempt left
+        $localport += 2;
+
+        # attempt to get the first port
+        $sock1 = new IO::Socket::INET ( LocalPort => $localport, Proto => 'tcp', Listen => 1, Reuse => 1 );
+        next unless $sock1;
+        close($sock1);
+
+        # attempt to get the second port
+        $sock2 = new IO::Socket::INET ( LocalPort => $localport + 1, Proto => 'tcp', Listen => 1, Reuse => 1 );
+        next unless $sock2;
+        close($sock2);
+
+        # if we are here, we got 2 available ports
+        last;
+    }
+    return $localport;
+}
+
+#
+# Transparent proxy (connects server and client)
+#
+sub proxy($$$$) {
+    my $remoteAddr = shift;
+    my $proxyPort = shift;
+    my $destHost  = shift;
+    my $destPort  = shift;
+
+    my $peer;
+    do {
+        $peer = server($remoteAddr, $proxyPort);
+        client($destHost, $destPort);
+        transferdata();
+    } while ($peer ne $remoteAddr);
+}
+
+
+#
+# proxy client
+#
+sub server($$) {
+    my($addr) = shift;
+    my($port) = shift;
+
+    # establish TCP connection: listen to $port
+    socket(SERVER, PF_INET, SOCK_STREAM, getprotobyname('tcp'));
+    setsockopt(SERVER, SOL_SOCKET, SO_REUSEADDR, pack("l", 1));
+    bind(SERVER, sockaddr_in($port, INADDR_ANY));
+    listen(SERVER, 1);
+
+    # allow 40 seconds for the initial connect
+    $SIG{ALRM} = \&sigterm;
+    alarm(40);
+
+    # connection loop
+    while (1) {
+        accept(CLIENT, SERVER);
+
+        my ($port, $iaddr) = unpack_sockaddr_in(getpeername(CLIENT));
+        my $peer = inet_ntoa($iaddr);
+        my ($port2, $iaddr2) = unpack_sockaddr_in(getsockname(CLIENT));
+        my $peer2 = inet_ntoa($iaddr2);
+        syslog("info", "connect from ".$peer." to ".$peer2);
+        if (($peer ne $peer2) && ($peer ne $addr)) {
+            syslog("info", "rejected");
+            next;
+        } else {
+            alarm(0);
+            return $peer;
+        }
+    }
+}
+
+#
+# proxy server
+#
+sub client($$) {
+    my $remote = shift;
+    my $port = shift;
+    my $paddr;
+    my $tries = 5;
+
+    # establish TCP connection: connect to $remote:$port
+    $paddr = sockaddr_in($port, inet_aton($remote));
+    socket(SOCK, PF_INET, SOCK_STREAM, getprotobyname('tcp'));
+
+    # connection loop
+    while (1) {
+        last if (connect(SOCK, $paddr));
+        syslog("err", "Could not connect to $remote:$port: $!");
+        sleep(1);
+        $tries--;
+        mydie("5 tries") if ($tries == 0);
+    }
+
+    select(SOCK);
+    $| = 1;
+    select(STDOUT);
+    return;
+}
+
+# move data through the tunnel.
+# called when data is waiting at one end of the tunnel.
+# it moves the data to the other end.
+# input: direction flag:  0 = client->server   1 = server->client
+sub movedata($) {
+    my($s2c) = $_[0];
+    my($buf1, $buf2, $buf3, $len1, $len2, $offset, $written);
+    my($FH1, $FH2);
+    my($decode) = 0;
+    my($encode) = 0;
+
+    if($s2c) { # data from server to client
+        $FH1 = \*SOCK;
+        $FH2 = \*CLIENT;
+    } else { # data from client to server
+        $FH1 = \*CLIENT;
+        $FH2 = \*SOCK;
+    }
+
+    # read incoming stuff
+    $len1 = sysread($FH1, $buf1, 4096, 0);
+
+    unless(defined($len1)) { # handle read error
+        next if($! =~ /^Interrupted/);
+        mydie("system read error: $!");
+    }
+
+    if($len1 == 0) { # handle closed socket
+        return 0;
+    }
+
+    $buf2 = $buf1;
+    $len2 = $len1;
+
+    $offset = 0;
+    while($len2) { # write outgoing stuff
+        $written = syswrite($FH2, $buf2, $len2, $offset);
+        mydie("system write error: $!\n") unless(defined($written)); # handle write error
+        $len2 -= $written;
+        $offset += $written;
+    }
+    return 1;
+}
+
+# main processing function once connections are established
+# alternately checks the client and server sockets to see if any
+# data is waiting on them to be read.
+# if data is available, it calls the MoveData() function to move the
+# data from one socket to the other.
+sub transferdata() {
+    my($rin, $rout, $blksize1, $blksize2, $nfound, $FH1, $FH2);
+
+    # read from stdin if we are an inetd managed daemon, otherwise read
+    # from the client socket which we created
+
+    $FH1 = \*CLIENT;
+    $FH2 = \*SOCK;
+
+    $rin = "";
+    vec($rin, fileno($FH2), 1) = 1;
+    vec($rin, fileno($FH1), 1) = 1;
+
+
+    while(1) { # main processing loop.  stay here until a socket closes.
+        $nfound = select($rout=$rin, undef, undef, undef);
+
+        if(vec($rout, fileno($FH1), 1)) { # move from client to server
+            unless(movedata(0)) {
+                syslog("info", "client closed connection");
+                return;
+            }
+        }
+        if(vec($rout, fileno($FH2), 1)) { # move from server to client
+            unless(movedata(1)) {
+                syslog("info", "server closed connection");
+                return;
+            }
+        }
+    }
+}
+
+#
+# Syslog the error before exit
+#
+sub mydie {
+    my $txt = shift;
+
+    # kill the tunnel
+    kill 15, $pid;
+    syslog("crit", "died: $txt");
+    exit(1);
+}
+
+#
+# SIGKILL handler
+#
+sub sigterm {
+    # kill the tunnel
+    kill 15, $pid;
+    syslog("debug", "signal handler kill $pid");
+    exit(0);
+}
+
+#
+# Main processing
+#
+
+setlogsock('unix');
+openlog("proxy.pl: to $toIp", "", "daemon");
+
+# set up the tunnel
+my $localport = alloc_freeport();
+my $proxyport = $localport + 1;
+
+print "$proxyport\n";
+
+# installs SIGPIPE and SIGTERM handlers
+$SIG{PIPE} = 'IGNORE';
+$SIG{TERM} = \&sigterm;
+
+# compute SSH command_line
+my @sshArgs  = split(/,/, $proxyCommand);
+
+my @sshCommand;
+push @sshCommand, "/usr/bin/ssh";
+while (@sshArgs) {
+    my $sshArg = pop @sshArgs;
+    push @sshCommand, '-o', $sshArg;
+}
+
+push @sshCommand, "-L", "127.0.0.1:$localport:127.0.0.1:$toPort";
+push @sshCommand, "-n", "-N"; # useful for what we want to do
+push @sshCommand, $toIp;
+
+# fork to summon SSH stuff
+$pid = fork();
+die "Cannot fork: $!" unless defined($pid);
+if ($pid == 0) { # child process, will become ssh process
+    close STDIN;
+    close STDOUT;
+    close STDERR;
+    exec @sshCommand;
+    exit 0;   # Child process exits when it is done.
+} else { # parent process: proxy
+    proxy($fromIp, $proxyport, "127.0.0.1", $localport);
+    # in the end, we kill the tunnel
+    kill 15, $pid;
+    syslog("debug", "done kill $pid");
+    exit(0);
+}
