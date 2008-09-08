@@ -821,10 +821,7 @@ class MscDatabase(Singleton):
             query = query.offset(int(min))
             query = query.limit(int(max)-int(min))
             query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-
-            self.enableLogging()
             ret = query.all()
-
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
@@ -844,10 +841,7 @@ class MscDatabase(Singleton):
             query = query.offset(int(min))
             query = query.limit(int(max) - int(min))
             query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-
-            self.enableLogging()
             ret = query.all()
-
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
@@ -864,7 +858,6 @@ class MscDatabase(Singleton):
             query = query.offset(int(min))
             query = query.limit(int(max)-int(min))
             query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-            self.enableLogging()
             ret = query.all()
             session.close()
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
