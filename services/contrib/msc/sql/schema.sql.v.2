@@ -1,3 +1,5 @@
-alter table commands add column webmin_username varchar(255) null default "" after username;
+ALTER TABLE commands \
+    ADD COLUMN webmin_username VARCHAR(255) NULL DEFAULT "" AFTER username;
+
 DELETE FROM version;
 INSERT INTO version VALUES( '2' );

@@ -202,11 +202,11 @@ class SendPackageCommand:
         # as long as this method is called from the MSC php, the fields should be
         # set, but, if someone wants to call it from somewhere else...
         start_script = (self.params['start_script'] == 'on' and 'enable' or 'disable')
-        delete_file_after_execute_successful = (self.params['delete_file_after_execute_successful'] == 'on' and 'enable' or 'disable')
-        wake_on_lan = (self.params['wake_on_lan'] == 'on' and 'enable' or 'disable')
+        clean_on_success = (self.params['clean_on_success'] == 'on' and 'enable' or 'disable')
+        do_wol = (self.params['do_wol'] == 'on' and 'enable' or 'disable')
         next_connection_delay = self.params['next_connection_delay']
         max_connection_attempt = self.params['max_connection_attempt']
-        start_inventory = (self.params['start_inventory'] == 'on' and 'enable' or 'disable')
+        do_inventory = (self.params['do_inventory'] == 'on' and 'enable' or 'disable')
         maxbw = self.params['maxbw']
 
         try:
@@ -250,6 +250,7 @@ class SendPackageCommand:
         files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
 
         MscDatabase().addCommand(  # TODO: refactor to get less args
+            self.ctx,
             start_file,
             parameters,
             files,
@@ -257,16 +258,15 @@ class SendPackageCommand:
             self.mode,
             self.gid,
             start_script,
-            delete_file_after_execute_successful,
+            clean_on_success,
             start_date,
             end_date,
-            self.ctx.userid,
-            self.ctx.userid,
+            "root", # TODO: may use another login name
             title,
-            wake_on_lan,
+            do_wol,
             next_connection_delay,
             max_connection_attempt,
-            start_inventory,
+            do_inventory,
             0,
             maxbw,
             self.root,

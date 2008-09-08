@@ -255,14 +255,14 @@ class CommandsOnHost(object):
 ### Misc state changes handling  ###
     def reSchedule(self, delay):
         """ Reschedule when something ent wrong """
-        if self.number_attempt_connection_remains < 1: # no try left
+        if self.attempts_left < 1: # no attempts left
             self.setFailed() # TODO: introduce a new state (failed ?)
-        elif self.number_attempt_connection_remains == 1: # was the last try: tag as done, no rescheduling
-            self.number_attempt_connection_remains -= 1
+        elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
+            self.attempts_left -= 1
             self.flush()
             self.setFailed()
         else: # reschedule in other cases
-            self.number_attempt_connection_remains -= 1
+            self.attempts_left -= 1
             self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
             self.flush()
             self.setScheduled()
@@ -375,7 +375,7 @@ class CommandsOnHost(object):
             'executed': self.executed,
             'deleted': self.deleted,
             'next_launch_date': self.next_launch_date,
-            'number_attempt_connection_remains': self.number_attempt_connection_remains,
+            'attempts_left': self.attempts_left,
             'next_attempt_date_time': self.next_attempt_date_time,
             'current_launcher': self.current_launcher,
             'scheduler': self.scheduler

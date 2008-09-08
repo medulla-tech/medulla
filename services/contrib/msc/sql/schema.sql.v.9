@@ -1,5 +1,7 @@
-ALTER TABLE commands_on_host ADD COLUMN scheduler VARCHAR(255) DEFAULT NULL;
-ALTER TABLE commands DROP COLUMN scheduler;
+ALTER TABLE commands_on_host \
+    ADD COLUMN scheduler VARCHAR(255) DEFAULT NULL;
+ALTER TABLE commands \
+    DROP COLUMN scheduler;
 
 DELETE FROM version;
 INSERT INTO version VALUES( '9' );

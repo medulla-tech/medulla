@@ -50,10 +50,10 @@ class Commands(object):
         return self.next_connection_delay
 
     def hasToWOL(self):
-        return self.wake_on_lan == 'enable'
+        return self.do_wol == 'enable'
 
     def hasToRunInventory(self):
-        return self.start_inventory == 'enable'
+        return self.do_inventory == 'enable'
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
@@ -66,7 +66,7 @@ class Commands(object):
         return result
 
     def hasSomethingToDelete(self):
-        result = (self.delete_file_after_execute_successful == 'enable' and len(self.files) != 0)
+        result = (self.clean_on_success == 'enable' and len(self.files) != 0)
         logging.getLogger().debug("hasSomethingToDelete(%s): %s" % (self.getId(), result))
         return result
 
@@ -88,24 +88,23 @@ class Commands(object):
     def toH(self):
         return {
             'id': self.id,
-            'date_created': self.date_created,
+            'creation_date': self.creation_date,
             'start_file': self.start_file,
             'parameters': self.parameters,
             'start_script': self.start_script,
-            'delete_file_after_execute_successful': self.delete_file_after_execute_successful,
+            'clean_on_success': self.clean_on_success,
             'files': self.files,
             'start_date': self.start_date,
             'end_date': self.end_date,
             'target': '',
-            'username': self.username,
-            'webmin_username': self.webmin_username,
+            'connect_as': self.connect_as,
+            'creator': self.creator,
             'dispatched': self.dispatched,
             'title': self.title,
-            'start_inventory': self.start_inventory,
-            'wake_on_lan': self.wake_on_lan,
+            'do_inventory': self.do_inventory,
+            'do_wol': self.do_wol,
             'next_connection_delay': self.next_connection_delay,
             'max_connection_attempt': self.max_connection_attempt,
-            'repeat': self.repeat,
             'pre_command_hook': self.pre_command_hook,
             'post_command_hook': self.post_command_hook,
             'pre_run_hook': self.pre_run_hook,
@@ -113,6 +112,8 @@ class Commands(object):
             'on_success_hook': self.on_success_hook,
             'on_failure_hook': self.on_failure_hook,
             'maxbw': self.maxbw,
-            'deployment_intervals': self.deployment_intervals
+            'deployment_intervals': self.deployment_intervals,
+            'bundle_id': self.bundle_id,
+            'order_in_bundle': self.order_in_bundle
         }
 
