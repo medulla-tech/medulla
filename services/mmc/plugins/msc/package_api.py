@@ -166,8 +166,47 @@ class PackageA:
 
 from mmc.plugins.msc.mirror_api import MirrorApi
 
+class SendBundleCommand:
+    def __init__(self, ctx, porders, targets, params, mode, gid = None):
+        self.ctx = ctx
+        self.porders = porders
+        self.targets = targets
+        self.params = params
+        self.mode = mode
+        self.gid = gid
+        self.bundle_id = None
+       
+    def onError(error):
+        logging.getLogger().error("Can't connect: %s", str(error))
+        return self.deferred.callback([])
+
+    def sendResult(self, result):
+        return self.deferred.callback([self.bundle_id, result])
+
+    def send(self):
+        bundle = MscDatabase().createBundle()
+        self.bundle_id = bundle.id
+
+        ret = []
+        for id in self.porders:
+            p_api, pid, order = self.porders[id]
+            g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order)
+            g.deferred = defer.Deferred()
+            g.send()
+            ret.append(g.deferred)
+
+        if len(ret) == 0:
+            return False
+        elif len(ret) == 1:
+            return ret[0]
+        else:
+            dl = defer.DeferredList(ret)
+            dl.addCallback(self.sendResult)
+            return dl
+        return False
+        
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None):
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None):
         self.ctx = ctx
         self.p_api = p_api
         self.pid = pid
@@ -175,6 +214,8 @@ class SendPackageCommand:
         self.params = params
         self.mode = mode
         self.gid = gid
+        self.bundle_id = bundle_id
+        self.order_in_bundle = order_in_bundle
 
     def onError(error):
         logging.getLogger().error("Can't connect: %s", str(error))
@@ -269,7 +310,9 @@ class SendPackageCommand:
             do_inventory,
             maxbw,
             self.root,
-            deployment_intervals
+            deployment_intervals,
+            self.bundle_id,
+            self.order_in_bundle
         ).addCallback(self.sendResult)
 
 def convert_date(date = '0000-00-00 00:00:00'):

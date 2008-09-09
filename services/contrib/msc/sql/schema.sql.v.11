@@ -47,5 +47,13 @@ ALTER TABLE `commands_history` \
     DROP KEY `id_command_on_host`, \
     ADD KEY(`fk_commands_on_host`);
 
+CREATE TABLE IF NOT EXISTS bundle (
+    id INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id)
+);
+        
+
+
+
 DELETE FROM version;
 INSERT INTO version VALUES( "11" );

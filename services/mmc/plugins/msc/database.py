@@ -45,6 +45,7 @@ from mmc.plugins.msc.orm.commands import Commands
 from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
 from mmc.plugins.msc.orm.commands_history import CommandsHistory
 from mmc.plugins.msc.orm.target import Target
+from mmc.plugins.msc.orm.bundle import Bundle
 
 # blacklists
 from mmc.plugins.msc import blacklist
@@ -161,6 +162,7 @@ class MscDatabase(Singleton):
         # commands
         self.commands = Table("commands", self.metadata,
                             Column('dispatched', String(32), default='YES'),
+                            Column('bundle_id', Integer, ForeignKey('bundle.id')),
                             autoload = True)
         # commands_history
         self.commands_history = Table(
@@ -172,6 +174,12 @@ class MscDatabase(Singleton):
         # target
         self.target = Table(
             "target",
+            self.metadata,
+            autoload = True
+        )
+        # bundle
+        self.bundle = Table(
+            "bundle",
             self.metadata,
             autoload = True
         )
@@ -203,8 +211,10 @@ class MscDatabase(Singleton):
             'commandsonhosts' : relation(CommandsOnHost)
             }
         )
+        mapper(Bundle, self.bundle, properties = {})
         mapper(Commands, self.commands, properties = {
             'commandsonhosts' : relation(CommandsOnHost),
+            'bundle' : relation(Bundle),
             }
         )
         # FIXME: Version is missing
@@ -284,7 +294,16 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals):
+    def createBundle(self, session = create_session()):
+        """
+        Return a new Bundle
+        """
+        bdl = Bundle()
+        session.save(bdl)
+        session.flush()
+        return bdl
+        
+    def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
         """
         Return a Command object
         """
@@ -307,6 +326,8 @@ class MscDatabase(Singleton):
         cmd.do_inventory = do_inventory
         cmd.maxbw = maxbw
         cmd.deployment_intervals = deployment_intervals
+        cmd.bundle_id = bundle_id
+        cmd.order_in_bundle = order_in_bundle
         session.save(cmd)
         session.flush()
         return cmd
@@ -482,7 +503,9 @@ class MscDatabase(Singleton):
                 do_inventory = 'disable',
                 maxbw = 0,
                 root = MscConfig("msc").repopath,
-                deployment_intervals = ""
+                deployment_intervals = "",
+                bundle_id = None,
+                order_in_bundle = None
             ):
         """
         Main func to inject a new command in our MSC database
@@ -543,7 +566,7 @@ class MscDatabase(Singleton):
         deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         # create (and save) the command itself
         session = create_session()
-        cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals)
+        cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
         session.close()
 
         d = self.getMachinesSchedulers(target)
