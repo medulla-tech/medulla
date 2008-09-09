@@ -65,6 +65,30 @@ class CommandOnHost {
         $n->drawTable(0);
     }
 }
+class Bundle {
+    function Bundle($bundle_id) {
+        $this->db_bundle = bundle_detail($bundle_id);
+        if (!$this->db_cmd) { # use does not have the good permissions
+            return false;
+        }
+    }
+    function quickDisplay($actions = array(), $params = array()) {
+        if (!$this->db_bundle) { # use does not have the good permissions
+            $widget = new RenderedMSCCommandDontExists();
+            $widget->display();
+            return false;
+        }
+        $n = new ListInfos(array("Bundle #".$this->db_bundle[0]['id']), _T('Bundle', 'msc'));
+        $n->addExtraInfo(array(_toDate($this->db_bundle[0]['creation_date'])), _T('Creation date', 'msc'));
+        $n->setParamInfo(array($params));
+        foreach ($actions as $a) {
+            $n->addActionItem($a);
+        }
+        $n->drawTable(0);
+        return true;
+    }
+}
+
 class Command {
     function Command($cmd) {
         $this->db_cmd = command_detail($cmd);
