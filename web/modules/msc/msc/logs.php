@@ -28,7 +28,16 @@ require_once('modules/msc/includes/functions.php');
 
 if ($_GET['uuid']) {
     // bottom of the page : details for the command if coh_id is specified
-    if ($_GET['coh_id']) {
+    if ($_GET['bundle_id']) {
+        $bdl = new Bundle($_GET['bundle_id']);
+        $act = $bdl->quickDisplay();
+        if ($act) {
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
+    } elseif ($_GET['coh_id']) {
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $ch = new CommandHistory($coh_id);
@@ -63,6 +72,15 @@ if ($_GET['uuid']) {
         if ($act) {
             // display all the commands on hosts
             $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
+    } elseif ($_GET['bundle_id']) {
+        $bdl = new Bundle($_GET['bundle_id']);
+        $act = $bdl->quickDisplay();
+        if ($act) {
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();

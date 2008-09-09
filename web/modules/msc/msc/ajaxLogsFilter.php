@@ -48,19 +48,27 @@ $history = $_GET['history'];
 $tab = $_GET['tab'];
 $areCommands = False;
 if ($uuid) {
-    if ($history) {
-        $count = count_finished_commands_on_host($uuid, $filter);
-        $cmds = get_finished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
+    if (strlen($_GET['bundle_id'])) {
+        $count = count_all_commands_on_host_bundle($uuid, $_GET['bundle_id'], $filter, $history);
+        $cmds = get_all_commands_on_host_bundle($uuid, $_GET['bundle_id'], $start, $start + $maxperpage, $filter, $history);
     } else {
-        $count = count_unfinished_commands_on_host($uuid, $filter);
-        $cmds = get_unfinished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
+        if ($history) {
+            $count = count_finished_commands_on_host($uuid, $filter);
+            $cmds = get_finished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
+        } else {
+            $count = count_unfinished_commands_on_host($uuid, $filter);
+            $cmds = get_unfinished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
+        }
     }
 } elseif ($gid) { # FIXME: same think to do on groups
 /*    if ($history) {
         $count = 0;
         $cmds = array();
     } else {*/
-        if ($_GET['cmd_id']) {
+        if (strlen($_GET['bundle_id'])) {
+            $count = count_all_commands_on_host_bundlegroup($gid, $_GET['bundle_id'], $filter, $history);
+            $cmds = get_all_commands_on_host_bundlegroup($gid, $_GET['bundle_id'], $start, $start + $maxperpage, $filter, $history);
+        } elseif ($_GET['cmd_id']) {
             $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter, $history);
             $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage, $filter, $history);
         } else {
@@ -137,7 +145,11 @@ if ($areCommands) {
             } else {
                 $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
             }
-            $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+            if (strlen($cmd['bundle_id'])) {
+                $a_cmd[] = sprintf(_T("%s on %s (Bundle #%s)", 'msc'), $cmd['title'], $coh['host'], $cmd['bundle_id']);
+            } else {
+                $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+            }
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
