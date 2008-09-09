@@ -23,6 +23,7 @@
  */
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false) {
+    $msc_is_vnc_available = true;
     $emptyAction = new EmptyActionItem();
     if ($is_group) {
         $inventAction = new ActionItem(_("Inventory"),"groupinvtabs","inventory","inventory", "base", "computers");
@@ -30,17 +31,20 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $logAction = new ActionItem(_("Read log"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"groupmsctabs","install","computer", "base", "computers");
         $msc_can_download_file = false;
+        $msc_is_vnc_available = false;
     } else {
         $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
         $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
         $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
         $downloadFileAction = new ActionPopupItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
+        $vncClientAction = new ActionPopupItem(_("VNC Client"), "vnc_client", "vncclient", "computer", "base", "computers");
     }
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
     $actionDownload = array();
+    $actionVncClient = array();
     $params = array();
 
     $headers = getComputersListHeaders();
@@ -58,13 +62,16 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 
         if (in_array("inventory", $_SESSION["modulesList"])) {
             $actionInventory[] = $inventAction;
-        } else { 
+        } else {
             $actionInventory[] = $glpiAction;
         }
         $actionMsc[] = $mscAction;
         $actionLogs[] = $logAction;
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
+        }
+        if ($msc_is_vnc_available) {
+            $actionVncClient[] = $vncClientAction;
         }
     }
 
@@ -101,10 +108,13 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
     $n->setCssClass("machineName");
-    
+
     $n->addActionItemArray($actionInventory);
     if ($msc_can_download_file) {
         $n->addActionItemArray($actionDownload);
+    };
+    if ($msc_is_vnc_available) {
+        $n->addActionItemArray($actionVncClient);
     };
     $n->addActionItemArray($actionLogs);
     $n->addActionItemArray($actionMsc);

@@ -52,7 +52,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $canbedeletedfromgroup = false;
         }
     }
-}             
+}
 $names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter, False)));
 $count = getComputerCount($filter);
 
@@ -64,7 +64,7 @@ if (in_array("msc", $_SESSION["modulesList"])) {
 }
 
 list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file);
-    
+
 function join_value($n) {
     $ret = array();
     foreach ($n[1] as $k=>$v) {
