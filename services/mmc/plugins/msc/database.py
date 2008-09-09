@@ -724,6 +724,34 @@ class MscDatabase(Singleton):
         session.close()
         return l
 
+    def countAllCommandsOnHostBundle(self, ctx, uuid, bundle_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands.c.creator == ctx.userid).filter(self.commands.c.bundle_id == bundle_id)
+#        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
+        c = ret.count()
+        session.close()
+        return c
+
+    def countAllCommandsOnHostBundleGroup(self, ctx, gid, bundle_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        session = create_session()
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid).filter(self.commands.c.bundle_id == bundle_id)
+#        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
+        if filt != '':
+            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
+        c = ret.count()
+        session.close()
+        return c
+
     def countAllCommandsOnHostGroup(self, ctx, gid, cmd_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid)
@@ -791,6 +819,44 @@ class MscDatabase(Singleton):
             return c
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return False
+
+    def getAllCommandsOnHostBundle(self, ctx, uuid, bundle_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        Session = create_session()
+        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.creator == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands.c.bundle_id == bundle_id)
+        
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            query = query.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            query = query.filter(self.commands_on_host.c.current_state != 'done')
+
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+        query = query.order_by(asc(self.commands.c.order_in_bundle))
+        ret = query.all()
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
+
+    def getAllCommandsOnHostBundleGroup(self, ctx, gid, bundle_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        session = create_session()
+        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.creator == ctx.userid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.bundle_id == bundle_id)
+        
+        if filt != '':
+            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
+        if history:
+            query = query.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            query = query.filter(self.commands_on_host.c.current_state != 'done')
+
+        query = query.offset(int(min))
+        query = query.limit(int(max)-int(min))
+        query = query.order_by(asc(self.commands.c.order_in_bundle))
+        ret = query.all()
+        session.close()
+        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
 
     def getAllCommandsOnHostGroup(self, ctx, gid, cmd_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
@@ -912,6 +978,17 @@ class MscDatabase(Singleton):
         session.close()
         return map(lambda x: x.toH(), ret)
 
+    def getBundle(self, ctx, bundle_id):
+        session = create_session()
+        ret = session.query(Bundle).filter(self.bundle.c.id == bundle_id).first().toH()
+        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.bundle_id == bundle_id).all())
+        session.close()
+        try:
+            ret['creation_date'] = cmds[0]['creation_date']
+        except:
+            ret['creation_date'] = ''
+        return [ret, cmds]
+        
     def getCommands(self, ctx, cmd_id):
         a_targets = map(lambda target: target.target_uuid, self.getTargets(cmd_id))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx.userid, a_targets):
