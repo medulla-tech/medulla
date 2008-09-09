@@ -194,8 +194,8 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
 }
 
 // SORT BUNDLE WIDGETS
-class RenderedMSCBundleSort {
-    function RenderedMSCBundleSort() {
+class RenderedMSCBundleSortParent {
+    function RenderedMSCBundleSortParent() {
         $this->input_pre = 'si_';
     }
     function initCount() {
@@ -220,6 +220,15 @@ class RenderedMSCBundleSort {
     function check_sort_order($orders) { # check if order is valid (no loop, no jumps, ...)
         return True;
     }
+    function display() {
+        $orders = array();
+        $i = 1;
+        foreach ($this->members as $pid => $plabel) {
+            $orders[$pid] = $i;
+            $i++;
+        }
+        $this->display_ordered($orders);
+    }
     function display_ordered($orders) {
         $f = new ValidatingForm();
         $f->push(new Table());
@@ -234,6 +243,20 @@ class RenderedMSCBundleSort {
         foreach ($this->getHidden() as $w) {
             $f->add($w[0], $w[1]);
         }
+        $this->display_options($f);
+        
+        $f->pop();
+        $f->addButton('blaunch_bundle', _T("Launch bundle", "msc"), "btnPrimary");
+        $f->addButton('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnSecondary");
+        $f->display();
+    }
+}
+
+class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
+    function RenderedMSCBundleSort() {
+        parent::RenderedMSCBundleSortParent();
+    }
+    function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
         $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
@@ -249,20 +272,6 @@ class RenderedMSCBundleSort {
         $f->add($check, array("value" => web_def_awake() ? "checked" : ""));
         $check = new TrFormElement(_T('invent.', 'msc'), new CheckboxTpl("do_inventory"));
         $f->add($check, array("value" => web_def_inventory() ? "checked" : ""));
-        
-        $f->pop();
-        $f->addButton('blaunch_bundle', _T("Launch bundle", "msc"), "btnPrimary");
-        $f->addButton('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnSecondary");
-        $f->display();
-    }
-    function display() {
-        $orders = array();
-        $i = 1;
-        foreach ($this->members as $pid => $plabel) {
-            $orders[$pid] = $i;
-            $i++;
-        }
-        $this->display_ordered($orders);
     }
 }
 
@@ -272,7 +281,6 @@ class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
         $this->machine = $machine;
         $this->members = $members;
         $this->initCount();
-        
     }
     function getHidden() {
         return array(
@@ -285,6 +293,63 @@ class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
 class RenderedMSCBundleSortG extends RenderedMSCBundleSort {
     function RenderedMSCBundleSortG($group, $members) {
         parent::RenderedMSCBundleSort();
+        $this->group = $group;
+        $this->members = $members;
+        $this->initCount();
+    }
+    function getHidden() {
+        return array(array(new HiddenTpl("gid"), array("value" => $this->group->id, "hide" => True)));
+    }
+}
+
+class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
+    function RenderedMSCBundleSortAdv() {
+        parent::RenderedMSCBundleSortParent();
+    }
+    function display_options($f) {
+        $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
+        $f->add(new TrFormElement(_T('Command title', 'msc'),                               new InputTpl('ltitle')), array("value" => $name));
+        $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));   
+        $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
+        $f->add(new TrFormElement(_T('Delay betwen connections (minuts)', 'msc'),           new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
+        $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
+        $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));                                 
+        $f->add(new TrFormElement(_T('Start date', 'msc'),                                  new DynamicDateTpl('start_date')), array('ask_for_now' => 1));                      
+        $f->add(new TrFormElement(_T('End date', 'msc'),                                    new DynamicDateTpl('end_date')), array('ask_for_never' => 1));                      
+        $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
+        $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
+        $rb = new RadioTpl("copy_mode");
+        $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+        $rb->setvalues(array('push', 'push_pull'));
+        $rb->setSelected($_GET['copy_mode']);
+        $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+    
+
+        $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
+        $f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',                              "hide" => True));
+    }
+}
+
+class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
+    function RenderedMSCBundleSortAdvM($machine, $members) {
+        parent::RenderedMSCBundleSortAdv();
+        $this->machine = $machine;
+        $this->members = $members;
+        $this->initCount();
+    }
+    function getHidden() {
+        return array(
+            array(new HiddenTpl("uuid"), array("value" => $this->machine->uuid, "hide" => True)),
+            array(new HiddenTpl("hostname"), array("value" => $this->machine->hostname, "hide" => True))
+        );
+    }
+}
+
+class RenderedMSCBundleSortAdvG extends RenderedMSCBundleSortAdv {
+    function RenderedMSCBundleSortAdvG($group, $members) {
+        parent::RenderedMSCBundleSortAdv();
         $this->group = $group;
         $this->members = $members;
         $this->initCount();

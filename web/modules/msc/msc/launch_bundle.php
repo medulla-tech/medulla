@@ -33,125 +33,6 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/msc/includes/bundle_widgets.php');
 
-### Advanced actions handling ###
-/* Advanced action: post handling */
-if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
-    // Vars seeding
-    $post = $_POST;
-    $from = $post['from'];
-    $path =  explode('|', $from);
-    $module = $path[0];
-    $submod = $path[1];
-    $page = $path[2];
-    $tab = $path[3];
-    $params = array();
-    foreach (array('start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay','max_connection_attempt', 'start_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'clean_on_success', 'do_wol', 'do_inventory') as $param) {
-        $params[$param] = $post[$param];
-    }
-    $p_api = new ServerAPI();
-    $p_api->fromURI($post['papi']);
-
-    foreach (array('start_date', 'end_date') as $param) {
-        if ($post[$param] == _T("now", "msc")) {
-            $params[$param] = "0000-00-00 00:00:00";
-        } elseif ($post[$param] == _T("never", "msc")) {
-            $params[$param] = "0000-00-00 00:00:00";
-        } else
-            $params[$param] = $post[$param];
-    }
-
-    $hostname = $post['hostname'];
-    $uuid = $post['uuid'];
-    $gid = $post['gid'];
-
-    if (isset($_GET['uuid']) && $_GET['uuid']) {
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        if ($machine->uuid == $uuid) { // Action on a single computer
-                $cible = array($uuid, $machine->hostname);
-        } else { // action on a whole group
-                $group = new Group($gid);
-                $cible = array_map('onlyValues', $group->getResult(0, -1));
-        }
-    } else {
-        $group = new Group($gid);
-        $cible = array_map('onlyValues', $group->getResult(0, -1));
-    }
-
-    $pid = $post['pid'];
-    $mode = $post['copy_mode'];
-
-    // record new command
-    $id = add_bundle_api($pid, $cible, $params, $p_api, $mode, $gid);
-    scheduler_start_all_commands();
-
-    // then redirect to the logs page
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id)));
-}
-
-/* Advanced action: form display */
-if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
-    // Vars seeding
-    $from = $_GET['from'];
-    $hostname = $_GET['hostname'];
-    $uuid = $_GET['uuid'];
-    $gid = $_GET['gid'];
-    $pid = $_GET['pid'];
-    $p_api = new ServerAPI();
-    $p_api->fromURI($_GET["papi"]);
-    $name = getPackageLabel($p_api, $_GET['pid']);
-
-    if (isset($_GET['uuid']) && $_GET['uuid']) {
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        // top label
-        if ($machine->uuid == $_GET['uuid']) { // Action on a single computer
-                $hostname = $machine->hostname;
-                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $machine->hostname));
-        } else { // action on a whole group
-                $group = new Group($_GET['gid'], true);
-                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
-        }
-    } else {
-        $group = new Group($_GET['gid'], true);
-        $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
-    }
-    $label->display();
-
-    // form design
-    $f = new Form();
-    $f->push(new Table());
-    $f->add(new HiddenTpl("uuid"),  array("value" => $uuid,         "hide" => True));
-    $f->add(new HiddenTpl("papi"),  array("value" => $_GET["papi"], "hide" => True));
-    $f->add(new HiddenTpl("name"),  array("value" => $hostname,     "hide" => True));
-    $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
-    $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
-    $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
-    $f->add(new TrFormElement(_T('Command title', 'msc'),   new InputTpl('ltitle')), array("value" => $name));
-    $f->add(new TrFormElement(_T('Wake on lan', 'msc'), new CheckboxTpl("wake_on_lan")), array("value" => $_GET['wake_on_lan'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Start inventory', 'msc'), new CheckboxTpl("start_inventory")), array("value" => $_GET['start_inventory'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Start the script', 'msc'), new CheckboxTpl("start_script")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'), new CheckboxTpl("delete_file_after_execute_successful")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delay betwen connections (minuts)', 'msc'), new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
-    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'), new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
-    $f->add(new TrFormElement(_T('Command parameters', 'msc'), new InputTpl('parameters')), array("value" => ''));
-    $f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
-    $f->add(new TrFormElement(_T('End date', 'msc'), new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
-    $f->add(new TrFormElement(_T('Deployment interval', 'msc'), new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
-
-    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),   new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
-    $rb = new RadioTpl("copy_mode");
-    $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-    $rb->setvalues(array('push', 'push_pull'));
-    $rb->setSelected($_GET['copy_mode']);
-    $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-
-    $f->pop();
-    $f->addValidateButton("bconfirm");
-    $f->addCancelButton("bback");
-    $f->display();
-
-}
-### /Advanced actions handling ###
-
 function launch_bundle($cible, $orders, $gid = null) {
     $params = array();
     foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory') as $param) {
@@ -170,7 +51,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
     } else { // We found a matching computer    
-        if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"])) { // display possible action to put in the bundle
+        if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"]) and !isset($_POST["badvanced_bundle_valid"])) { // display possible action to put in the bundle
             $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
             $list = new RenderedMSCBundleChoiceM($machine);
             $list->display();
@@ -187,10 +68,23 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
             } else {
                 $cible = array($machine->uuid, $machine->hostname);
                 $id_bundle = launch_bundle($cible, $orders);
-                #    header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'cmd_id'=>$id_command)));
+                header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle)));
             }
-        } elseif (isset($_POST["badvanced_bundle"])) { // display the advanced widget
+        } elseif (isset($_POST["badvanced_bundle"])) {
             $members = unserialize(base64_decode($_POST["lmembers"]));
+            $sort = new RenderedMSCBundleSortAdvM($machine, $members);
+            $sort->display();
+        } elseif (isset($_POST["badvanced_bundle_valid"])) {
+            $members = unserialize(base64_decode($_POST["lmembers"]));
+            $sort = new RenderedMSCBundleSortAdvM($machine, $members);
+            $orders = $sort->get_sort_order();
+            if (!$sort->check_sort_order($orders)) {
+                $sort->display_ordered($orders);
+            } else {
+                $cible = array($machine->uuid, $machine->hostname);
+                $id_bundle = launch_bundle($cible, $orders);
+                header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle)));
+            }
         }
     }
 }
@@ -198,7 +92,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 /* group display */
 if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
-    if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"])) {
+    if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"]) and !isset($_POST["badvanced_bundle_valid"])) {
         $list = new RenderedMSCBundleChoiceG($group);
         $list->display();
     } elseif (isset($_POST["bsort_bundle"])) {
@@ -207,18 +101,30 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         $sort->display();
     } elseif (isset($_POST["blaunch_bundle"])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
-        $sort = new RenderedMSCBundleSortG($machine, $members);
+        $sort = new RenderedMSCBundleSortG($group, $members);
         $orders = $sort->get_sort_order();
         if (!$sort->check_sort_order($orders)) {
             $sort->display_ordered($orders);
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
-            $id_command = launch_bundle($cible, $orders, $group->id);
-            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'cmd_id'=>$id_command)));
+            $id_bundle = launch_bundle($cible, $orders, $group->id);
+            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle)));
         }
     } elseif (isset($_POST["badvanced_bundle"])) {
-        // TODO!
         $members = unserialize(base64_decode($_POST["lmembers"]));
+        $sort = new RenderedMSCBundleSortAdvG($group, $members);
+        $sort->display();
+    } elseif (isset($_POST["badvanced_bundle_valid"])) {
+        $members = unserialize(base64_decode($_POST["lmembers"]));
+        $sort = new RenderedMSCBundleSortAdvG($group, $members);
+        $orders = $sort->get_sort_order();
+        if (!$sort->check_sort_order($orders)) {
+            $sort->display_ordered($orders);
+        } else {
+            $cible = array_map("onlyValues", $group->getResult(0, -1));
+            $id_bundle = launch_bundle($cible, $orders, $group->id);
+            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle)));
+        }
     }
 }
 
