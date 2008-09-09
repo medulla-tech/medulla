@@ -110,7 +110,11 @@ $n = null;
 
 if ($areCommands) {
     foreach ($cmds as $cmd) {
-        $a_cmd[] = $cmd['title'];
+        if (strlen($cmd['bundle_id'])) {
+            $a_cmd[] = sprintf(_T("%s (Bundle #%s)", "msc"), $cmd['title'], $cmd['bundle_id']);
+        } else {
+            $a_cmd[] = $cmd['title'];
+        }
         $params[] = array('cmd_id'=>$cmd['id'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
         if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
