@@ -310,8 +310,8 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.network.probeClient(client, timeout or LauncherConfig().max_probe_time))
 
     # TCP SProxy stuff
-    def xmlrpc_tcp_sproxy(self, client, from_ip, to_ip, to_port):
-        return xmlrpcCleanup(pulse2.launcher.tcp_sproxy.establishProxy(client, from_ip, to_ip, to_port))
+    def xmlrpc_tcp_sproxy(self, target, requestor_ip, requested_port):
+        return xmlrpcCleanup(pulse2.launcher.tcp_sproxy.establishProxy(target, requestor_ip, requested_port))
 
     def xmlrpc_download_file(self, client, path, bwlimit = 0, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.network.downloadFile(client, path, bwlimit, timeout or LauncherConfig().wrapper_max_exec_time))

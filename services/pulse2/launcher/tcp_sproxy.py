@@ -54,23 +54,25 @@ class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
         self.defferedLinkStatus.addCallback(lambda x: x.proxyPort)
 
     def outReceived(self, data):
-        if re.match(self.RE_PROXYINFOS, data).group(1).split(','):
+        if re.match(self.RE_PROXYINFOS, data):
             ((self.sourceIp, self.sourcePort), (self.proxyIp, self.proxyPort), (self.passthroughIp, self.passthroughPort), (self.targetIp, self.targetPort))  = map(lambda a: a.split(":"), re.search(self.RE_PROXYINFOS, data).group(1).split(','))
             logging.getLogger().debug('got link status: %s' % data)
             self.defferedLinkStatus.callback(self)
+        else:
+            return False
 
-def establishProxy(client, fromIp, toIp, toPort):
+def establishProxy(target, requestor_ip, requested_port):
     """
     Establish a TCP connection to client using our proxy
     """
-    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    client = pulse2.launcher.utils.setDefaultClientOptions({'protocol': 'tcpsproxy'})
 
     # Build final command line
     command_list = [
         LauncherConfig().tcp_sproxy_path,
-        fromIp,
-        toIp,
-        toPort,
+        requestor_ip,
+        target,
+        requested_port,
         ','.join(LauncherConfig().ssh_options)
     ]
 
