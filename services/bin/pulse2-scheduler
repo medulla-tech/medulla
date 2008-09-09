@@ -223,6 +223,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(id))
     def xmlrpc_stop_command(self, id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.stopCommand(id))
+    def xmlrpc_tcp_sproxy(self, uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port))
 
     ### XMLRPC functions used from a launcher ###
     def xmlrpc_tell_i_am_alive(self, launcher):

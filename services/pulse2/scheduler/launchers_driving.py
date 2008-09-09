@@ -27,6 +27,7 @@ import random
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
+import pulse2.scheduler.xmlrpc
 
 def chooseLauncher():
     """ return a good launcher, URI form """
@@ -153,12 +154,37 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     })
     return callOnBestLauncher('download_file', client, path, bwlimit)
 
+def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
+    def _preparecb(result, client, requestor_ip, requested_port):
+
+        # try to find the corresponding launcher's IP address
+        # Ugly code, anyway seems to work
+        for (a,b) in SchedulerConfig().launchers_uri.items():
+            if result == b:
+                launcher = SchedulerConfig().launchers[a]['host']
+
+        return pulse2.scheduler.xmlrpc.getProxy(result).\
+            callRemote('tcp_sproxy', client, requestor_ip, requested_port).\
+            addCallback(lambda a,b: (b,a), launcher) # returns (host, port)
+
+    # choose a way to perform the operation
+    client = chooseClientIP({
+            'uuid': uuid,
+            'fqdn': fqdn,
+            'shortname': shortname,
+            'ips': ips,
+            'macs': macs
+    })
+
+    # choose launcher as we will need it IP later, pass it to _preparecb
+    launcher = chooseLauncher()
+    return launcher.\
+        addCallback(_preparecb, client, requestor_ip, requested_port)
+
 def callOnLauncher(launcher, method, *args):
-    import pulse2.scheduler.xmlrpc
     return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args)
 
 def callOnBestLauncher(method, *args):
-    import pulse2.scheduler.xmlrpc
 
     def _eb(reason):
         logging.getLogger().error("scheduler %s: while choosing the best launcher: %s" % (SchedulerConfig().name, reason.getErrorMessage()))
