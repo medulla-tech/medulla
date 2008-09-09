@@ -295,8 +295,6 @@ openlog("proxy.pl: to $toIp", "", "daemon");
 my $localport = alloc_freeport();
 my $proxyport = $localport + 1;
 
-print "$proxyport\n";
-
 # installs SIGPIPE and SIGTERM handlers
 $SIG{PIPE} = 'IGNORE';
 $SIG{TERM} = \&sigterm;
@@ -311,7 +309,7 @@ while (@sshArgs) {
     push @sshCommand, '-o', $sshArg;
 }
 
-push @sshCommand, "-L", "127.0.0.1:$localport:127.0.0.1:$toPort";
+push @sshCommand, "-L", "$localport:127.0.0.1:$toPort";
 push @sshCommand, "-n", "-N"; # useful for what we want to do
 push @sshCommand, $toIp;
 
@@ -325,6 +323,8 @@ if ($pid == 0) { # child process, will become ssh process
     exec @sshCommand;
     exit 0;   # Child process exits when it is done.
 } else { # parent process: proxy
+    print "LINK $fromIp:0,127.0.0.1:$proxyport,127.0.0.1:$localport,$toIp:$toPort";
+    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
     proxy($fromIp, $proxyport, "127.0.0.1", $localport);
     # in the end, we kill the tunnel
     kill 15, $pid;

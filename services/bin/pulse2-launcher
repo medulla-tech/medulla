@@ -48,6 +48,7 @@ import pulse2.launcher.utils
 import pulse2.launcher.remote_exec
 import pulse2.launcher.process_control
 import pulse2.launcher.network
+import pulse2.launcher.tcp_sproxy
 
 from pulse2.launcher.xmlrpc import LauncherSite, makeSSLContext, getProxy
 
@@ -307,6 +308,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.network.icmpClient(client, timeout or LauncherConfig().max_ping_time))
     def xmlrpc_probe(self, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.network.probeClient(client, timeout or LauncherConfig().max_probe_time))
+
+    # TCP SProxy stuff
+    def xmlrpc_tcp_sproxy(self, client, from_ip, to_ip, to_port):
+        return xmlrpcCleanup(pulse2.launcher.tcp_sproxy.establishProxy(client, from_ip, to_ip, to_port))
 
     def xmlrpc_download_file(self, client, path, bwlimit = 0, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.network.downloadFile(client, path, bwlimit, timeout or LauncherConfig().wrapper_max_exec_time))
