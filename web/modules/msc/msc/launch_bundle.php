@@ -68,7 +68,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
             } else {
                 $cible = array($machine->uuid, $machine->hostname);
                 $id_bundle = launch_bundle($cible, $orders);
-                header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle)));
+                header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
             }
         } elseif (isset($_POST["badvanced_bundle"])) {
             $members = unserialize(base64_decode($_POST["lmembers"]));
@@ -83,7 +83,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
             } else {
                 $cible = array($machine->uuid, $machine->hostname);
                 $id_bundle = launch_bundle($cible, $orders);
-                header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle)));
+                header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
             }
         }
     }
@@ -108,7 +108,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle)));
+            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
         }
     } elseif (isset($_POST["badvanced_bundle"])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
@@ -123,7 +123,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle)));
+            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
         }
     }
 }
