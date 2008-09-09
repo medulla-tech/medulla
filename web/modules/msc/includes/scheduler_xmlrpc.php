@@ -29,7 +29,7 @@ function scheduler_start_all_commands($scheduler) {
 function scheduler_ping_and_probe_client($scheduler, $client) {
     return xmlCall('msc.scheduler_ping_and_probe_client', array($scheduler, $client));
 }
-    
+
 function scheduler_ping_client($scheduler, $client) {
     return xmlCall('msc.scheduler_ping_client', array($scheduler, $client));
 }
@@ -45,6 +45,10 @@ function scheduler_wol_client($scheduler, $client) {
 
 function scheduler_download_file($scheduler, $client) {
     return xmlCall('msc.download_file', array($scheduler, $client));
+}
+
+function scheduler_establish_vnc_proxy($scheduler, $client, $requestor_ip) {
+    return xmlCall('msc.establish_vnc_proxy', array($scheduler, $client, $requestor_ip));
 }
 
 function msc_can_download_file() {

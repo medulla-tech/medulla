@@ -117,6 +117,10 @@ $page = new Page("download_file", _T("Download file from a computer", "msc"));
 $page->setFile("modules/msc/msc/download_file.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 
+$page = new Page("vnc_client", _T("Establish a VNC connection", "msc"));
+$page->setFile("modules/msc/msc/vnc_client.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+
 $submod->addPage($page);
 
 /* Confirm popup when starting a command */
