@@ -51,7 +51,11 @@ class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def __init__(self):
         self.defferedLinkStatus = twisted.internet.defer.Deferred()
-        self.defferedLinkStatus.addCallback(lambda x: x.proxyPort)
+        if LauncherConfig().tcp_sproxy_host:
+            host = LauncherConfig().tcp_sproxy_host
+        else:
+            host = '' # can't guess how to be contacted, let the scheduler choose
+        self.defferedLinkStatus.addCallback(lambda x: (LauncherConfig().name, host, x.proxyPort))
 
     def outReceived(self, data):
         if re.match(self.RE_PROXYINFOS, data):

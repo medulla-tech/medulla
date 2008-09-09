@@ -80,6 +80,7 @@ class LauncherConfig(pulse2.utils.Singleton):
 
     # SSH Proxy stuff
     tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
+    tcp_sproxy_host = None
 
     # daemon stuff
     daemon_group = 0
@@ -199,6 +200,8 @@ class LauncherConfig(pulse2.utils.Singleton):
 
         # Parse "tcp_sproxy" section
         self.setoption('tcp_sproxy', 'tcp_sproxy_path', 'tcp_sproxy_path')
+        self.setoption('tcp_sproxy', 'tcp_sproxy_host', 'tcp_sproxy_host')
+
 
         # Parse "scheduler_XXXX" sections
         for section in self.cp.sections():
