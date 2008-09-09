@@ -173,6 +173,15 @@ class RpcProxy(RpcProxyI):
             ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path, bwlimit)
         return ret
 
+    def establish_vnc_proxy(self, scheduler, uuid, requestor_ip):
+        ctx = self.currentContext
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        try: # FIXME: dirty bugfix, should be factorized upstream
+            computer[1]['fullname']
+        except KeyError:
+            computer[1]['fullname'] = computer[1]['cn'][0]
+        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.tcp_sproxy(scheduler, computer, requestor_ip, "5900"))
+
     def pa_adv_countAllPackages(self, filt):
         ctx = self.currentContext
         g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)

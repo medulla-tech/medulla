@@ -61,12 +61,12 @@ def ping_client(scheduler, computer):
         [
             None,
             {
-                'macAddress': ['00:16:E6:0D:E8:DF'],
-                'displayName': ['NomType=IBM-E50-8818-D34\r\nCl\xe9 N\xb0338\r\nsalle de formation 5\xe8me '],
-                'cn': ['SFORM03W'],
-                'objectUUID': ['UUID8096'],
-                'ipHostNumber': ['55.100.6.81'],
-                'fullname': 'SFORM03W.D11510100.cpam-reims.cnamts.fr'
+                'macAddress': ['XX:XX:XX:XX:XX:XX'],
+                'displayName': ['NomType=A Dummy Client'],
+                'cn': ['my-short-name'],
+                'objectUUID': ['UUID1234'],
+                'ipHostNumber': ['IP.AD.DR.ES'],
+                'fullname': 'my-fully.qualified.domain.tld'
             }
         ]
     """
@@ -180,6 +180,19 @@ def download_file(scheduler, computer, path, bwlimit):
         computer[1]['macAddress'],
         path,
         bwlimit
+    )
+    return mydeffered
+
+def tcp_sproxy(scheduler, computer, requestor_ip, requested_port):
+    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+        'tcp_sproxy',
+        computer[1]['objectUUID'][0],
+        computer[1]['fullname'],
+        computer[1]['cn'][0],
+        computer[1]['ipHostNumber'],
+        computer[1]['macAddress'],
+        requestor_ip,
+        requested_port
     )
     return mydeffered
 
