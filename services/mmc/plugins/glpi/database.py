@@ -566,7 +566,7 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return count
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """
         Get the computer list that match filters parameters between min and max
         """
@@ -586,6 +586,8 @@ class Glpi(DyngroupDatabaseHelper):
         # TODO : need to find a way to remove group_by/order_by ...
         if justId:
             ret = map(lambda m: self.getMachineUUID(m), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+        elif toH:
+            ret = map(lambda m: m.toH(), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
         else:
             if filt.has_key('get'):
                 ret = map(lambda m: self.__formatMachine(m, advanced, filt['get']), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
@@ -1264,6 +1266,8 @@ def toUUID(id):
 
 # Class for SQLalchemy mapping
 class Machine(object):
+    def toH(self):
+        return { 'hostname':self.name, 'uuid':toUUID(self.ID) }
     def to_a(self):
         return [
             ['name',self.name],

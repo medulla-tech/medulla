@@ -277,12 +277,12 @@ def __addCtxFilters(ctx, filt = {}):
         pass
     return filt
 
-def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False):
+def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH = False):
     if __onlyIn(query, ComputerManager().main):
         module = ComputerManager().main
         filt = __addCtxFilters(ctx)
         filt['query'] = query
-        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, False, justId))
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, False, justId, toH))
     else:
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 

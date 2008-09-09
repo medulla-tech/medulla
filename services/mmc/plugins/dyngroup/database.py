@@ -664,10 +664,10 @@ class DyngroupDatabase(Singleton):
         group = self.__getGroupInSession(ctx, session, id)
 
         query = queryManager.getQueryTree(group.query, group.bool)
-        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1)
+        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
 
         for key in result:
-            machine_id = self.__getOrCreateMachine(key[1]['objectUUID'][0], key[1]['cn'][0])
+            machine_id = self.__getOrCreateMachine(key['uuid'], key['hostname'])
             self.__createResult(group.id, machine_id)
         session.close()
         return True                                                                
