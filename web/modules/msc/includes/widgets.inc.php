@@ -228,4 +228,5 @@ class RenderedImgInput extends HtmlElement {
             />';
     }
 }
+
 ?>

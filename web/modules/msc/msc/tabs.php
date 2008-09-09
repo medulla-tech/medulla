@@ -19,6 +19,7 @@ if ($_GET['uuid']) {
         $p->setSideMenu($sidemenu);
         $p->addTop(sprintf(_T("%s's machine secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
+        $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
         $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
         $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
         $p->display();
@@ -30,6 +31,7 @@ if ($_GET['uuid']) {
     $group = new Group($_GET['gid'], true);
     $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
     $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid'=>$_GET['gid']));
+    $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid'=>$_GET['gid']));
     $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid'=>$_GET['gid']));
     $p->addTab("grouptabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid'=>$_GET['gid']));
     $p->display();

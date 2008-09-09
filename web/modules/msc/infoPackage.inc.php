@@ -84,6 +84,9 @@ $page->setOptions(array("visible"=>False));
 $tab = new Tab("grouptablaunch", _T("MSC launch tab", "msc"));
 $page->addTab($tab);
 
+$tab = new Tab("grouptabbundle", _T("MSC bundle tab", "msc"));
+$page->addTab($tab);
+
 $tab = new Tab("grouptablogs", _T("MSC logs tab", "msc"));
 $page->addTab($tab);
 
@@ -97,6 +100,9 @@ $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
 
 $tab = new Tab("tablaunch", _T("MSC launch tab", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tabbundle", _T("MSC bundle tab", "msc"));
 $page->addTab($tab);
 
 $tab = new Tab("tablogs", _T("MSC logs tab", "msc"));

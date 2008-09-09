@@ -102,6 +102,10 @@ function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null) {
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid));
 }
 
+function add_bundle_api($porders, $target, $params, $mode, $gid = null) {
+    return xmlCall('msc.add_bundle_api', array($porders, $target, $params, $mode, $gid));
+}
+
 function add_command_quick($cmd, $hosts, $desc, $gid = null) {
     return xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
 }
