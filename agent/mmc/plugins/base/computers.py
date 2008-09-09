@@ -200,12 +200,12 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getRestrictedComputersListLen(ctx, filt)
     
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         min = int(min)
         max = int(max)
         klass = self.components[self.main]
         instance = klass()
-        return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId)
+        return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
     def getComputersListHeaders(self, ctx):
         klass = self.components[self.main]
