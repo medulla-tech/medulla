@@ -155,18 +155,12 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     return callOnBestLauncher('download_file', client, path, bwlimit)
 
 def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
-    def _preparecb(result, client, requestor_ip, requested_port):
+    def _finalize(result):
+        (launcher, host, port) = result
 
-        # try to find the corresponding launcher's IP address
-        # Ugly code, anyway seems to work
-        for (a,b) in SchedulerConfig().launchers_uri.items():
-            if result == b:
-                launcher = SchedulerConfig().launchers[a]['host']
-
-        return pulse2.scheduler.xmlrpc.getProxy(result).\
-            callRemote('tcp_sproxy', client, requestor_ip, requested_port).\
-            addCallback(lambda a,b: (b,a), launcher) # returns (host, port)
-
+        if host == '':
+            host = SchedulerConfig().launchers[launcher]['host']
+        return (host, port)
     # choose a way to perform the operation
     client = chooseClientIP({
             'uuid': uuid,
@@ -176,10 +170,8 @@ def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_por
             'macs': macs
     })
 
-    # choose launcher as we will need it IP later, pass it to _preparecb
-    launcher = chooseLauncher()
-    return launcher.\
-        addCallback(_preparecb, client, requestor_ip, requested_port)
+    return callOnBestLauncher('tcp_sproxy', client, requestor_ip, requested_port).\
+        addCallback(_finalize);
 
 def callOnLauncher(launcher, method, *args):
     return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args)
