@@ -115,7 +115,7 @@ class EditInPlace extends ActionEncapsulator{
 }
 
 /**
- *	class for action in various application
+ *  class for action in various application
  */
 class ActionItem {
     var $desc;
@@ -124,11 +124,11 @@ class ActionItem {
     var $paramString;
 
     /**
-     *	Constructor
+     *  Constructor
      * @param $desc description
      * @param $action string include in the url
      * @param $classCss class for CSS like "supprimer" or other class define
-     * 	  in the CSS global.css
+     *    in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
     function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null) {
@@ -136,20 +136,20 @@ class ActionItem {
         $this->action=$action;
         $this->classCss=$classCss;
         $this->paramString=$paramString;
-	if ($module == null) $this->module = $_GET["module"];
-	else $this->module = $module;
-	if ($submod == null) $this->submod = $_GET["submod"];
-	else $this->submod = $submod;
-        $this->tab = $tab;        
+        if ($module == null) $this->module = $_GET["module"];
+        else $this->module = $module;
+        if ($submod == null) $this->submod = $_GET["submod"];
+        else $this->submod = $submod;
+        $this->tab = $tab;
         $this->path = $this->module . "/" . $this->submod . "/" . $this->action;
         if ($this->tab != null) {
             $this->path .= "/" . $this->tab;
-        } 
+        }
     }
 
     /**
-     *	display a link for the action
-     * 	@param add &$this->param=$param at the very end of the url
+     *  display a link for the action
+     *  @param add &$this->param=$param at the very end of the url
      *  display "displayWithRight" if you have correct right
      */
     function display($param, $extraParams = array()) {
@@ -178,7 +178,7 @@ class ActionItem {
     function displayWithNoRight($param, $extraParams = array()) {
         echo "<li class=\"".$this->classCss."\" style=\"opacity: 0.30;\">";
         echo "<a title=\"".$this->desc."\" href=\"#\" onclick='return false;'>&nbsp;</a>";
-        echo "</li>";            
+        echo "</li>";
     }
 
     /**
@@ -191,7 +191,7 @@ class ActionItem {
             } else {
                 $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($obj);
             }
-	    $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk ."\">";
+            $str= "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action . $urlChunk ."\">";
             $str.= "$obj";
             $str.=" </a>";
             return $str;
@@ -210,7 +210,7 @@ class ActionItem {
         $urlChunk = "";
         foreach($arr as $option => $value) {
             $urlChunk .= "&amp;" . $option . "=" . urlencode($value);
-        }        
+        }
         return $urlChunk;
     }
 
@@ -274,20 +274,19 @@ class ActionPopupItem extends ActionItem {
     }
 }
 
-
 class EmptyActionItem extends ActionItem {
 
-    function EmptyActionItem() {        
+    function EmptyActionItem() {
     }
 
     function display($param = null) {
         print '<li class="empty"><a href="#" onclick="return false;">&nbsp;</a></li>';
     }
-    
+
 }
 
 /**
- *	class who maintain array presentation of information
+ *  class who maintain array presentation of information
  */
 class ListInfos extends HtmlElement {
     var $arrInfo; /**< main list */
@@ -311,7 +310,7 @@ class ListInfos extends HtmlElement {
         $this->initVar();
         $this->col_width = array();
         $this->extranavbar = $extranavbar;
-        $this->firstColumnActionLink = True;        
+        $this->firstColumnActionLink = True;
     }
 
     function setAdditionalInfo($addinfo) {
@@ -329,7 +328,7 @@ class ListInfos extends HtmlElement {
     }
 
     /**
-     *	add an ActionItem
+     *  add an ActionItem
      *  @param $objActionItem object ActionItem
      */
     function addActionItem($objActionItem) {
@@ -347,8 +346,8 @@ class ListInfos extends HtmlElement {
 
 
     /**
-     *	add an array String to display
-     *	@param $arrString an Array String to display
+     *  add an array String to display
+     *  @param $arrString an Array String to display
      */
     function addExtraInfo($arrString, $description= "",$width="") {
         $this->extraInfo[] = &$arrString;
@@ -382,7 +381,7 @@ class ListInfos extends HtmlElement {
     }
 
     /**
-     *	init class' vars
+     *  init class' vars
      */
     function initVar() {
 
@@ -411,14 +410,14 @@ class ListInfos extends HtmlElement {
 
 
     /**
-     *	set the name of the array (for CSS)
+     *  set the name of the array (for CSS)
      */
     function setName($name) {
         $this->name=$name;
     }
 
     /**
-     *	set the cssclass of a row
+     *  set the cssclass of a row
      */
     function setCssClass($name) {
         $this->cssClass=$name;
@@ -449,7 +448,7 @@ class ListInfos extends HtmlElement {
     }
 
     /**
-     *	draw number of page etc...
+     *  draw number of page etc...
      */
     function drawHeader($navbar = 1) {
         $this->displayNavbar($navbar);
@@ -468,7 +467,7 @@ class ListInfos extends HtmlElement {
             else if ((count($this->arrInfo) > 0) && ($pages < 1))
                 $pages = 1;
             else if ($pages < 0)
-                $pages = 0;            
+                $pages = 0;
             printf("%.0f", $pages);
             echo ")\n";
         }
@@ -616,37 +615,37 @@ class OptimizedListInfos extends ListInfos {
     }
 
     /**
-     *	init class' vars
+     *  init class' vars
      */
-    function initVar() {        
-	$this->name="Elements";
-	global $conf;
-	if (!isset($_GET["start"]))
+    function initVar() {
+    $this->name="Elements";
+    global $conf;
+    if (!isset($_GET["start"]))
             {
                 if (!isset($_POST["start"]))
                     {
                         $this->start = 0;
-                        if (count($this->arrInfo) > 0)      		{
+                        if (count($this->arrInfo) > 0)              {
                             $this->end = $conf["global"]["maxperpage"] - 1;
                         } else {
                             $this->end = 0;
-      			}
+                }
                     }
             }
-	else		{
+    else        {
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
-	}
-	$this->maxperpage = $conf["global"]["maxperpage"];
+    }
+    $this->maxperpage = $conf["global"]["maxperpage"];
         $this->setItemCount(count($this->arrInfo));
         $this->startreal = $this->start;
-        $this->endreal = $this->end;            
+        $this->endreal = $this->end;
     }
 
     /**
-     *	draw number of page etc...
+     *  draw number of page etc...
      */
-    function drawHeader($navbar=1) {      
+    function drawHeader($navbar=1) {
         $count = $this->getItemCount();
         $this->displayNavbar($navbar);
         echo "<p class=\"listInfos\">";
@@ -664,13 +663,13 @@ class OptimizedListInfos extends ListInfos {
             else if (($count > 0) && ($pages < 1))
                 $pages = 1;
             else if ($pages < 0)
-                $pages = 0;            
+                $pages = 0;
             printf("%.0f", $pages);
             echo ")\n";
         }
         echo "</p>";
     }
-    
+
 }
 
 /**
@@ -689,27 +688,27 @@ class UserInfos extends OptimizedListInfos {
 
 
 /**
- *  
+ *
  *  Display a previous/next navigation bar for ListInfos widget
- *  
+ *
  */
 class SimpleNavBar extends HtmlElement {
 
     /**
      * @param $curstart: the first item index to display
-     * @param $curent: the last item index 
+     * @param $curent: the last item index
      * @param $itemcount: total number of item
      * @param $filter: the current list filter
      */
     function SimpleNavBar($curstart, $curend, $itemcount, $extra = "") {
         global $conf;
-        $this->max = $conf["global"]["maxperpage"];        
+        $this->max = $conf["global"]["maxperpage"];
         $this->curstart = $curstart;
         $this->curend = $curend;
         $this->itemcount = $itemcount;
         $this->extra = $extra;
     }
-   
+
     function display() {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
@@ -724,7 +723,7 @@ class SimpleNavBar extends HtmlElement {
             printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
             echo "\">"._("Previous")."</a></li>\n";
         }
-        
+
         if (($this->curend + 1) >= $this->itemcount)
             echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
         else {
@@ -735,7 +734,7 @@ class SimpleNavBar extends HtmlElement {
             echo "\">"._("Next")."</a></li>\n";
         }
 
-        echo "</ul>\n";        
+        echo "</ul>\n";
     }
 
 }
@@ -756,22 +755,22 @@ class AjaxNavBar extends SimpleNavBar {
      * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
      */
     function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam" ) {
-        global $conf;        
+        global $conf;
         if (isset($_GET["start"])) {
             $curstart = $_GET["start"];
             $curend = $_GET["end"];
         } else {
-            $curstart = 0;            
+            $curstart = 0;
             if ($itemcount > 0)
                 $curend = $conf["global"]["maxperpage"] - 1;
-            else 
+            else
                 $curend = 0;
         }
         $this->SimpleNavBar($curstart, $curend, $itemcount);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
     }
-    
+
     function display() {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
@@ -805,7 +804,7 @@ class AjaxNavBar extends SimpleNavBar {
 
 class AjaxFilter extends HtmlElement {
 
-    /** 
+    /**
      * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
      * @param $divid: div ID which is updated by the URL output
      */
@@ -813,7 +812,7 @@ class AjaxFilter extends HtmlElement {
         if (strpos($url, "?") === False)
             /* Add extra ? needed to build the URL */
             $this->url = $url . "?";
-        else 
+        else
             /* Add extra & needed to build the URL */
             $this->url = $url . "&";
         $this->divid = $divid;
@@ -833,7 +832,7 @@ class AjaxFilter extends HtmlElement {
     }
 
     function display() {
-        
+
 ?>
 <form name="Form" id="Form" action="#">
 
@@ -851,7 +850,7 @@ class AjaxFilter extends HtmlElement {
         var refreshtimer = null;
         var refreshparamtimer = null;
         var refreshdelay = 5000;
- 
+
         /**
          * Clear the timers set vith setTimeout
          */
@@ -861,7 +860,7 @@ class AjaxFilter extends HtmlElement {
             }
             if (refreshparamtimer != null) {
                 clearTimeout(refreshparamtimer);
-            }            
+            }
         }
 
         /**
@@ -902,12 +901,12 @@ if ($this->refresh) {
             clearTimers();
             refreshtimer = setTimeout("updateSearch()", 500);
         }
-         
+
         pushSearch();
     </script>
 
 </form>
-<?        
+<?
           }
 
     function displayDivToUpdate() {
@@ -925,17 +924,17 @@ class AjaxFilterLocation extends AjaxFilter {
     function setElements($elt) {
         $this->location->setElements($elt);
     }
-    
+
     function setElementsVal($elt) {
         $this->location->setElementsVal($elt);
     }
-    
+
     function setSelected($elemnt) {
         $this->location->setSelected($elemnt);
     }
-    
+
     function display() {
-        
+
 ?>
 <form name="Form" id="Form" action="#">
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
@@ -987,17 +986,17 @@ class AjaxFilterLocation extends AjaxFilter {
             launch++;
             setTimeout("updateSearch()",500);
         }
-         
+
         pushSearch();
     </script>
 
 </form>
-<?        
+<?
           }
 }
 
 /**
- *	side menu items class
+ *  side menu items class
  *     this class is required by SideMenu class
  *     each SideMenuItem is all necessary information to
  *     create a link.
@@ -1008,7 +1007,7 @@ class AjaxFilterLocation extends AjaxFilter {
 class SideMenuItem {
     var $text, $module, $submod, $action, $activebg, $inactivebg;
     /**
-     *	main constructor
+     *  main constructor
      * @param $text text for the link
      * @param $module module for link
      * @param $submod sub module for link
@@ -1036,12 +1035,12 @@ class SideMenuItem {
 
 
     /**
-     *	display the SideMenuItem on the screen
+     *  display the SideMenuItem on the screen
      */
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             echo '<li id="'.$this->cssId.'">';
-	    echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
+        echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
         }
     }
 
@@ -1094,16 +1093,16 @@ class SideMenuItem {
 
 class SideMenuItemNoAclCheck extends SideMenuItem {
     /**
-     *	display the SideMenuItem on the screen
+     *  display the SideMenuItem on the screen
      */
     function display() {
         echo '<li id="'.$this->cssId.'">';
-	    echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
+        echo '<a href="'.$this->getLink().'" target="_self">'.$this->text.'</a></li>'."\n";
     }
 }
 
 /**
- *	SideMenu class
+ *  SideMenu class
  *     this class display side menu item
  *     side menu is mmc's left menu, it regroups
  *     possible actions we can do in a spécific module
@@ -1118,17 +1117,17 @@ class SideMenu {
     var $activatedItem;
 
     /**
-     *	SideMenu default constructor
+     *  SideMenu default constructor
      *     initalize empty itemArray for SideMenuItem
      */
     function SideMenu() {
         $this->itemArray = array();
         $this->backgroundImage = null;
-        $this->activatedItem = null;        
+        $this->activatedItem = null;
     }
 
     /**
-     *	add a sideMenu Item into the SideMenu
+     *  add a sideMenu Item into the SideMenu
      * @param $objSideMenuItem object SideMenuItem
      */
     function addSideMenuItem($objSideMenuItem) {
@@ -1141,7 +1140,7 @@ class SideMenu {
     function setClass($class) {
         $this->className=$class;
     }
-    
+
     /**
      * @return className for CSS
      */
@@ -1164,7 +1163,7 @@ class SideMenu {
     }
 
     /**
-     *	print the SideMenu and the sideMenuItem
+     *  print the SideMenu and the sideMenuItem
      */
     function display() {
         echo "<div id=\"sidebar\">\n";
@@ -1177,8 +1176,8 @@ class SideMenu {
     }
 
     /**
-     *	@return return the Css content for a sidebar
-     *	static method to get SideBarCss String
+     *  @return return the Css content for a sidebar
+     *  static method to get SideBarCss String
      */
     function getSideBarCss() {
         $css = "";
@@ -1203,14 +1202,14 @@ class SideMenu {
 }
 
 /**
- *	PageGenerator class
+ *  PageGenerator class
  */
 class PageGenerator {
-    var $sidemenu;	/*< SideMenu Object */
-    var $content;	/*< array who contains contents Objects */
+    var $sidemenu;  /*< SideMenu Object */
+    var $content;   /*< array who contains contents Objects */
 
     /**
-     *	Constructor
+     *  Constructor
      */
     function PageGenerator($title = "") {
         $content=array();
@@ -1218,7 +1217,7 @@ class PageGenerator {
     }
 
     /**
-     *	set the sideMenu object
+     *  set the sideMenu object
      */
     function setSideMenu($objSideMenu) {
         $this->sidemenu=$objSideMenu;
@@ -1232,7 +1231,7 @@ class PageGenerator {
     }
 
     /**
-     *	display the whole page
+     *  display the whole page
      */
     function display() {
         $this->displaySideMenu();
@@ -1250,7 +1249,7 @@ class PageGenerator {
     }
 
     /**
-     *	display the side Menu
+     *  display the side Menu
      */
     function displaySideMenu() {
         $this->displayCss();
@@ -1258,7 +1257,7 @@ class PageGenerator {
     }
 
     /**
-     *	display the page title
+     *  display the page title
      */
     function displayTitle() {
         if (isset($this->title)) print "<h2>" . $this->title . "</h2>\n";
@@ -1276,28 +1275,28 @@ class DisplayFile extends HtmlElement {
     }
 
     function display() {
-        require($this->file);        
+        require($this->file);
     }
 }
 
 /**
  * Class for a tab content
- */ 
+ */
 class TabbedPage extends Div {
-    
+
     function TabbedPage($title, $file) {
         $this->Div(array("class" => "tabdiv"));
         $this->title = $title;
         $this->add(new DisplayFile($file));
     }
-    
+
     function displayTitle() {
         return "<h2>" . $this->title . "</h2>\n";
     }
-    
+
     function begin() {
         $s = Div::begin();
-        $s .= $this->displayTitle();       
+        $s .= $this->displayTitle();
         return $s;
     }
 
@@ -1330,10 +1329,10 @@ class TabWidget extends HtmlElement {
         else
             $klass = "";
         print '<li id="' . $this->id . '"' . $klass . '"> '
-                . '<a href="' . $this->getLink() . '">' 
+                . '<a href="' . $this->getLink() . '">'
             . $this->title . "</a></li>";
     }
-    
+
 }
 
 /**
@@ -1346,7 +1345,7 @@ class TabbedPageGenerator extends PageGenerator {
         $this->topfile = null;
         $this->tabselector = new TabSelector();
         $this->pages = array();
-        $this->firstTabActivated = False;        
+        $this->firstTabActivated = False;
     }
 
     /**
@@ -1356,7 +1355,7 @@ class TabbedPageGenerator extends PageGenerator {
         $this->title = $title;
         $this->topfile = $file;
     }
-    
+
 
     /**
      * Add a new tab to a page
@@ -1404,7 +1403,7 @@ class TabbedPageGenerator extends PageGenerator {
                 list($title, $file) = $this->pages[$tab->id];
                 $this->page = new TabbedPage($title, $file);
             }
-        }        
+        }
         if ($this->page != null) $this->page->display();
     }
 
@@ -1414,13 +1413,13 @@ class TabbedPageGenerator extends PageGenerator {
  * Allow to draw a tab selector
  */
 class TabSelector extends HtmlContainer {
-    
+
     function TabSelector() {
         $this->HtmlContainer();
         $this->tabs = array();
         $this->order = array();
     }
- 
+
     function getDefaultTab() {
         if (empty($this->elements))
             return null;
@@ -1580,7 +1579,7 @@ class NotifyWidget {
  *
  */
 class NotifyWidgetSuccess extends NotifyWidget {
-    
+
     function NotifyWidgetSuccess($message) {
         $this->flush();
         $this->add("<div id=\"validCode\">$message</div>");
@@ -1595,8 +1594,8 @@ class NotifyWidgetSuccess extends NotifyWidget {
  *
  */
 class NotifyWidgetFailure extends NotifyWidget {
-    
-    function NotifyWidgetFailure($message) {        
+
+    function NotifyWidgetFailure($message) {
         $this->flush();
         $this->add("<div id=\"errorCode\">$message</div>");
         $this->setLevel(4);
@@ -1638,7 +1637,7 @@ function urlStr($link, $param = array(), $ampersandEncode = True) {
     foreach ($param as $key=>$value) {
         $enc_param.= "$amp"."$key=$value";
     }
-    
+
     if (count($arr) == 3) {
         $ret = "main.php?module=".$arr[0]."$amp"."submod=".$arr[1]."$amp"."action=".$arr[2].$enc_param;
     } else if (count($arr) == 4) {
@@ -1668,7 +1667,7 @@ function findFirstInSideBar($sidebar) {
 
 
 class HtmlElement {
-    
+
     var $options;
 
     function HtmlElement() {
@@ -1690,7 +1689,7 @@ class HtmlElement {
 }
 
 class HtmlContainer {
-    
+
     var $elements;
     var $index;
     var $popped;
@@ -1703,13 +1702,13 @@ class HtmlContainer {
     }
 
     function begin() {
-        die("Must be implemented by the subclass");        
+        die("Must be implemented by the subclass");
     }
 
     function end() {
-        die("Must be implemented by the subclass");        
+        die("Must be implemented by the subclass");
     }
-    
+
     function display() {
         print "\n" . $this->begin() . "\n";
         foreach($this->elements as $element) $element->display();
@@ -1718,7 +1717,7 @@ class HtmlContainer {
 
     function add($element, $options = array()) {
         $element->setOptions($options);
-        $this->push($element);        
+        $this->push($element);
     }
 
     function push($element) {
@@ -1731,8 +1730,8 @@ class HtmlContainer {
             if ($this->elements[$this->index]->hasBeenPopped()) {
                 /* All the contained elements have been popped, so add the new element in the list */
                 $this->index++;
-                $this->elements[$this->index] = $element;            
-                //print "pushing " . $element->options["id"] . " into " . $this->options["id"] . "<br>";               
+                $this->elements[$this->index] = $element;
+                //print "pushing " . $element->options["id"] . " into " . $this->options["id"] . "<br>";
             } else {
                 /* Recursively push a new element into the container */
                 $this->elements[$this->index]->push($element);
@@ -1761,7 +1760,7 @@ class HtmlContainer {
 
 
 class Div extends HtmlContainer {
-    
+
     function Div($options = array()) {
         $this->HtmlContainer();
         $this->options = $options;
@@ -1772,10 +1771,10 @@ class Div extends HtmlContainer {
         $str = "";
         foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
         if (!$this->display) $displayStyle = ' style =" display: none;"';
-        else $displayStyle = "";        
+        else $displayStyle = "";
         return "<div$str$displayStyle>";
     }
-    
+
     function end () {
         return "</div>";
     }
@@ -1790,12 +1789,12 @@ class Form extends HtmlContainer {
 
     function Form($options = array()) {
         $this->HtmlContainer();
-        if (!isset($options["method"])) $options["method"] = "post";        
+        if (!isset($options["method"])) $options["method"] = "post";
         $this->options = $options;
         $this->buttons = array();
         $this->summary = NULL;
     }
-    
+
     function begin() {
         $str = "";
         foreach($this->options as $key => $value) $str.= " $key=\"$value\"";
@@ -1812,7 +1811,7 @@ class Form extends HtmlContainer {
         $str .= "\n</form>\n";
         return $str;
     }
-    
+
     function addButton($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
         $b = new Button();
         $this->buttons[] = $b->getButtonString($name, $value, $klass, $extra, $type);
@@ -1842,7 +1841,7 @@ class Form extends HtmlContainer {
         $b = new Button();
         return $b->getButtonString($name, $value, $klass, $extra, $type);
     }
-    
+
     function addOnClickButton($text, $url) {
         $b = new Button();
         $this->buttons[] = $b->getOnClickButton($text, $url);
@@ -1875,7 +1874,7 @@ class Button {
             return $this->getButtonStringWithNoRight($name, $value, $klass, $extra, $type);
         }
     }
-                                                    
+
     function getButtonStringWithRight($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") {
         return "<input type=\"$type\" name=\"$name\" value=\"$value\" class=\"$klass\" $extra />";
     }
@@ -1918,7 +1917,7 @@ class ValidatingForm extends Form {
  *
  */
 class PopupForm extends Form {
-    
+
     function PopupForm($title) {
         $options = array("action" => $_SERVER["REQUEST_URI"]);
         $this->Form($options);
@@ -1959,6 +1958,28 @@ class PopupForm extends Form {
 
 }
 
+/**
+ *
+ * Allow to easily build the little popup, summon a new window
+ *
+ */
+class PopupWindowForm extends PopupForm {
+
+    function PopupWindowForm($title) {
+        $options = array("action" => $_SERVER["REQUEST_URI"]);
+        $this->PopupForm($options);
+        $this->title = $title;
+        $this->text = array();
+        $this->ask = "";
+        $this->target_uri = "";
+    }
+
+    function addValidateButtonWithFade($name) {
+        print_r($options);
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"new Effect.Fade('popup'); window.open('".$this->target_uri."', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=no, width=330, height=200'); return false;\"" );
+    }
+}
+
 class Table extends HtmlContainer {
 
     function Table($options = array()) {
@@ -1977,13 +1998,13 @@ class Table extends HtmlContainer {
 }
 
 class DivForModule extends Div {
-    
+
     function DivForModule($title, $color, $options = array()) {
         $options["style"] = "background-color: " . $color;
         $options["class"] = "formblock";
         $this->Div($options);
         $this->title = $title;
-        $this->color = $color;        
+        $this->color = $color;
     }
 
     function begin() {
