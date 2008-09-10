@@ -742,17 +742,11 @@ class DyngroupDatabase(Singleton):
         group = self.get_group(ctx, id)
         connection = self.db.connect()
         trans = connection.begin()
-        session = create_session()
-        todelete = []
-        for uuid in uuids:
-            machine = self.__getMachine(uuid, session)
-            if machine:
-                todelete.append({ "machineid" : machine.id })
-            else:
-                self.logger.debug("no member to delete! ('%s')" % (uuid))
-        session.close()
-        if todelete:
-            connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine == bindparam("machineid"))), todelete)
+        uuids = map(lambda x: x["uuid"], uuids.values())
+        # Delete the selected machines from the Results table
+        connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine.in_(select([self.machines.c.id], self.machines.c.uuid.in_(*uuids))))))
+        # Update the Machines table
+        self.__updateMachinesTable(connection)
         trans.commit()
         return True
 
