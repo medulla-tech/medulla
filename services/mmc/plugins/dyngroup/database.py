@@ -667,34 +667,34 @@ class DyngroupDatabase(Singleton):
         session.close()
         return (q != None and self.countresult_group(ctx, id) == 0)
 
-    def reload_group(self, ctx, id, queryManager):
-        connection = self.db.connect()
-        trans = connection.begin()
-        session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
-        session.close()
-        query = queryManager.getQueryTree(group.query, group.bool)
-        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
+    def __insert_into_machines_and_results(self, connection, computers, groupid):
+        """
+        This function is called by reload_group and addmembers_to_group to
+        update the Results and Machines tables of the database.
+
+        @param computers: list of dicts with {'uuid':uuid, 'hostname':name}
+        @type computers: list
+        """
         # Get already registered machines
-        uuids = map(lambda x: x["uuid"], result)
+        uuids = map(lambda x: x["uuid"], computers)
         existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(*uuids)))
         # Prepare insert for the Results table
         into_results = []
         existing_uuids_hash = {}
         for machines_id, uuid, name in existing:
             into_results.append({
-                "FK_group" : group.id,
+                "FK_group" : groupid,
                 "FK_machine" : machines_id
                 })
             existing_uuids_hash[uuid] = None
         # Prepare insert for the Machines table
         into_machines = []
-        for key in result:
-            uuid = key["uuid"]
+        for computer in computers:
+            uuid = computer["uuid"]
             if uuid not in existing_uuids_hash:
                 into_machines.append({
                     "uuid" : uuid,
-                    "name" : key["hostname"]
+                    "name" : computer["hostname"]
                     })
         # Insert needed Machines rows
         if into_machines:
@@ -703,14 +703,25 @@ class DyngroupDatabase(Singleton):
             # Prepare remaining insert for Results table
             for elt in into_machines:
                 into_results.append({
-                    "FK_group" : group.id,
+                    "FK_group" : groupid,
                     "FK_machine" : id_sequence
                 })
                 id_sequence = id_sequence + 1
         # Insert into Results table
         connection.execute(self.results.insert(), into_results)
+        
+    def reload_group(self, ctx, id, queryManager):
+        connection = self.db.connect()
+        trans = connection.begin()
+        session = create_session()
+        group = self.__getGroupInSession(ctx, session, id)
+        session.close()
+        query = queryManager.getQueryTree(group.query, group.bool)
+        result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
+        self.__insert_into_machines_and_results(connection, result, group.id)
         trans.commit()
-        return True                                                                
+        return True
+    
     def addmembers_to_group(self, ctx, id, uuids):
         """
         Add member computers specified by a uuids list to a group.
@@ -720,25 +731,7 @@ class DyngroupDatabase(Singleton):
         session.close()
         connection = self.db.connect()
         trans = connection.begin()
-        toinsert = []
-        for uuid in uuids:
-            session = create_session()
-            machine = self.__getMachine(uuid, session)
-            session.close()
-            if not machine:
-                ins = self.machines.insert(
-                    values = { "uuid" : uuid,
-                               "name" : uuids[uuid]['hostname'] }
-                    )
-                ret = connection.execute(ins)
-                machine_id = ret.last_inserted_ids()[0]
-            else:
-                machine_id = machine.id
-            toinsert.append(
-                { "FK_group" : group.id,
-                  "FK_machine" : machine_id }
-                )
-        connection.execute(self.results.insert(), toinsert)
+        self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
         trans.commit()
         return True
 
