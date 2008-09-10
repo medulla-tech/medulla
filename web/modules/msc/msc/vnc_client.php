@@ -23,42 +23,70 @@
 
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
-if (isset($_POST["bconfirm"])) {
+if ($_GET["establishproxy"] == "yes") {
     $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $_SERVER["REMOTE_ADDR"]);
 
     # $result is expected to be an array containing host, port, let's check it:
-    if ($ret === False) {
-        new NotifyWidgetFailure(_T("The connection has failed.", "msc"));
-        header("Location: " . urlStrRedirect("base/computers/index"));
+    if ($result == False) {
+        echo "
+            <HTML>
+            <head>
+                <title>Mandriva Management Console</title>
+                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
+            </head>
+            <BODY style='background-color: #FFFFFF;'>
+            <center>
+                <div class='popup' style='position: relative;'>
+                    <div class='__popup_container'>
+                    <h2>"._T("Connection failed !", "msc") . "</h2>
+                    <br/>
+                <br/>
+                <button id='btnPrimary' onclick='window.close();'>"._T("Close window", "msc") . "</button>
+            </center>
+            </BODY>
+            </HTML>
+            ";
     } else {
         $host = $result[0];
         $port = $result[1];
+        # see http://www.tightvnc.com/doc/java/README.txt
+        echo "
+            <HTML>
+            <head>
+                <title>Mandriva Management Console</title>
+                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
+            </head>
+            <BODY style='background-color: #FFFFFF;'>
+            <center>
+                <div class='popup' style='position: relative;'>
+                    <div class='__popup_container'>
+                        <h2>"._T("Connection Succedeed !", "msc") . "</h2>
+                        <br/>
+                        "._T("This connection will be automatically shutted down in 60 minuts.", "msc") . "<br/>
+                        <br/>
+                        "._T("Please close this windows when you are done.", "msc") . "<br/>
+                        <br/>
+                        <button id='btnPrimary' onclick='window.close();'>Close window</button>
+                    </div>
+                    <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar' WIDTH=100 HEIGHT=10>
+                    <PARAM NAME='PORT' VALUE='$port'>
+                    <PARAM NAME='HOST' VALUE='$host'>
+                    <PARAM NAME='Encoding' VALUE='Tight'>
+                    <PARAM NAME='View only' VALUE='Yes'>
+                    <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
+                    <PARAM NAME='Compression Level' VALUE='9'>
+                    <PARAM NAME='Open new window' VALUE='Yes'>
+                    <PARAM NAME='Show controls' VALUE='No'>
+                    <PARAM NAME='Offer Relogin' VALUE='No'>
+                    <PARAM NAME='Restricted colors' VALUE='Yes'>
+                    <PARAM NAME='JPEG image quality' VALUE='0'>
+                    </APPLET>
+                </div>
+            </center>
+            </BODY>
+            </HTML>
+        ";
     }
-
-    # see http://www.tightvnc.com/doc/java/README.txt
-    echo "
-        <HTML>
-        <HEADER>
-        <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>
-        <META HTTP-EQUIV='EXPIRES' CONTENT='0'>
-        <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>
-        </HEADER>
-        <BODY>
-        <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar'>
-        <PARAM NAME='PORT' VALUE='$port'>
-        <PARAM NAME='HOST' VALUE='$host'>
-        <PARAM NAME='Encoding' VALUE='Tight'>
-        <PARAM NAME='View only' VALUE='Yes'>
-        <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
-        <PARAM NAME='Compression Level' VALUE='9'>
-        <PARAM NAME='Open new window' VALUE='Yes'>
-        <PARAM NAME='Show controls' VALUE='No'>
-        <PARAM NAME='Offer Relogin' VALUE='No'>
-        </APPLET>
-        </BODY>
-        </HTML>
-    ";
-
 /*
  * to send a true VNC config file:
     header("Content-type: VncViewer/Config");
@@ -70,7 +98,8 @@ if (isset($_POST["bconfirm"])) {
 
 
 } else {
-    $f = new PopupForm(_T("Establish a VNC connection to this computer"));
+    $f = new PopupWindowForm(_T("Establish a VNC connection to this computer"));
+    $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
     $f->addValidateButtonWithFade("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
