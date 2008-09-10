@@ -83,7 +83,7 @@ class MscConfig(PluginConfig):
     web_def_delay = "60"
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
-    web_dlpath = ""
+    web_dlpath = []
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
 
@@ -212,7 +212,9 @@ class MscConfig(PluginConfig):
         if self.has_option("web", "web_def_attempts"):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_dlpath"):
-            self.web_dlpath = self.get("web", "web_dlpath")
+            dlpaths = self.get("web", "web_dlpath")
+            for path in dlpaths.split(","):
+                self.web_dlpath.append(path.strip())
         if self.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.getint("web", "web_def_dlmaxbw")
         if self.has_option("web", "web_def_deployment_intervals"):
