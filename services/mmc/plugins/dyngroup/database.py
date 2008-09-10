@@ -255,6 +255,17 @@ class DyngroupDatabase(Singleton):
         session.close()
         return machine.id
 
+    def __updateMachinesTable(self, connection):
+        """
+        Remove all rows in the Machines table that are no more needed
+        """
+        # Get all Machines id that are not a foreign key in Results
+        todelete = connection.execute(select([self.machines.c.id], not_(self.machines.c.id.in_(select([self.results.c.FK_machine]))))).fetchall()
+        todelete = map(lambda x: {"id" : x[0]}, todelete)
+        # Delete them if any
+        if todelete:
+            connection.execute(self.machines.delete(self.machines.c.id == bindparam("id")), todelete)
+
     def __createShare(self, group_id, user_id, type_id = None):
         session = create_session()
         share = ShareGroup()
@@ -463,23 +474,15 @@ class DyngroupDatabase(Singleton):
 
     def delete_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
-
-        session = create_session()
-        group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
-        if not group:
-            return False
-
-        results = session.query(Results).filter(self.results.c.FK_group == group.id).all()
-        for result in results:
-            machine = session.query(Machines).filter(self.machines.c.id == result.FK_machine).first()
-            # check if the machine is in other groups
-            inside = session.query(Results).filter(self.results.c.FK_machine == machine.id).count()
-            if inside == 1:
-                session.delete(machine)
-            session.delete(result)
-        session.delete(group)
-        session.flush()
-        session.close()
+        connection = self.db.connect()
+        trans = connection.begin()
+        # Delete the previous results for this group in the Results table
+        connection.execute(self.results.delete(self.results.c.FK_group == id))
+        # Update the Machines table to remove ghost records
+        self.__updateMachinesTable(connection)
+        # Delete the group from the Groups table
+        connection.execute(self.groups.delete(self.groups.c.id == id))
+        trans.commit()
         return True
 
     def create_group(self, ctx, name, visibility):
@@ -535,9 +538,14 @@ class DyngroupDatabase(Singleton):
         session.flush()
         session.close()
 
-        # remove all previous results
-        self.__deleteResults(ctx, gid)
-
+        connection = self.db.connect()
+        trans = connection.begin()        
+        # Delete the previous results for this group in the Results table
+        connection.execute(self.results.delete(self.results.c.FK_group == gid))
+        # Update the Machines table to remove ghost records
+        self.__updateMachinesTable(connection)
+        trans.commit()
+        
         return group.id
 
     def bool_group(self, ctx, id):
@@ -660,16 +668,48 @@ class DyngroupDatabase(Singleton):
         return (q != None and self.countresult_group(ctx, id) == 0)
 
     def reload_group(self, ctx, id, queryManager):
+        connection = self.db.connect()
+        trans = connection.begin()
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
-
+        session.close()
         query = queryManager.getQueryTree(group.query, group.bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
-
+        # Get already registered machines
+        uuids = map(lambda x: x["uuid"], result)
+        existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(*uuids)))
+        # Prepare insert for the Results table
+        into_results = []
+        existing_uuids_hash = {}
+        for machines_id, uuid, name in existing:
+            into_results.append({
+                "FK_group" : group.id,
+                "FK_machine" : machines_id
+                })
+            existing_uuids_hash[uuid] = None
+        # Prepare insert for the Machines table
+        into_machines = []
         for key in result:
-            machine_id = self.__getOrCreateMachine(key['uuid'], key['hostname'])
-            self.__createResult(group.id, machine_id)
-        session.close()
+            uuid = key["uuid"]
+            if uuid not in existing_uuids_hash:
+                into_machines.append({
+                    "uuid" : uuid,
+                    "name" : key["hostname"]
+                    })
+        # Insert needed Machines rows
+        if into_machines:
+            ret = connection.execute(self.machines.insert(), into_machines)
+            id_sequence = ret.last_inserted_ids()[0]
+            # Prepare remaining insert for Results table
+            for elt in into_machines:
+                into_results.append({
+                    "FK_group" : group.id,
+                    "FK_machine" : id_sequence
+                })
+                id_sequence = id_sequence + 1
+        # Insert into Results table
+        connection.execute(self.results.insert(), into_results)
+        trans.commit()
         return True                                                                
     def addmembers_to_group(self, ctx, id, uuids):
         """
