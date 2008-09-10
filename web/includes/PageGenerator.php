@@ -618,25 +618,25 @@ class OptimizedListInfos extends ListInfos {
      *  init class' vars
      */
     function initVar() {
-    $this->name="Elements";
-    global $conf;
-    if (!isset($_GET["start"]))
-            {
-                if (!isset($_POST["start"]))
-                    {
-                        $this->start = 0;
-                        if (count($this->arrInfo) > 0)              {
-                            $this->end = $conf["global"]["maxperpage"] - 1;
-                        } else {
-                            $this->end = 0;
-                }
+        $this->name="Elements";
+        global $conf;
+        if (!isset($_GET["start"]))
+                {
+                    if (!isset($_POST["start"]))
+                        {
+                            $this->start = 0;
+                            if (count($this->arrInfo) > 0)              {
+                                $this->end = $conf["global"]["maxperpage"] - 1;
+                            } else {
+                                $this->end = 0;
                     }
-            }
-    else        {
-            $this->start = $_GET["start"];
-            $this->end = $_GET["end"];
-    }
-    $this->maxperpage = $conf["global"]["maxperpage"];
+                        }
+                }
+        else        {
+                $this->start = $_GET["start"];
+                $this->end = $_GET["end"];
+        }
+        $this->maxperpage = $conf["global"]["maxperpage"];
         $this->setItemCount(count($this->arrInfo));
         $this->startreal = $this->start;
         $this->endreal = $this->end;
@@ -1040,7 +1040,7 @@ class SideMenuItem {
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             echo '<li id="'.$this->cssId.'">';
-        echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
+            echo '<a href="'.$this->getLink().'">'.$this->text.'</a></li>'."\n";
         }
     }
 
