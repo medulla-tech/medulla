@@ -25,7 +25,7 @@
 require_once("modules/dyngroup/includes/includes.php");
 
 $id = quickGet('gid');
-$group = new Group($id, true);
+$group = new Group($id, False);
 
 if (quickGet('valid')) {
     $group->delete();
@@ -42,7 +42,7 @@ if (quickGet('valid')) {
 <p>
 
 <?  
-    printf(_T("You will delete group <b>%s</b>.", "dyngroup"),$group->getName());
+    printf(_T("You will delete group <b>%s</b>.", "dyngroup"), $_GET["groupname"]);
 ?>
 
 </p>
