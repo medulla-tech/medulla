@@ -147,7 +147,7 @@ msgid "Delay between two connections"
 msgstr "Délai entre deux connexions"
 
 #: msc/msc/launch.php:132
-msgid "Delay betwen connections (minuts)"
+msgid "Delay betwen connections (minutes)"
 msgstr "Délai entre les connexions (minutes)"
 
 #: msc/includes/functions.php:33

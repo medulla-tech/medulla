@@ -125,7 +125,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delay betwen connections (minuts)', 'msc'),           new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
+    $f->add(new TrFormElement(_T('Delay betwen connections (minutes)', 'msc'),           new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
     $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
     $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));
     $f->add(new TrFormElement(_T('Start date', 'msc'),                                  new DynamicDateTpl('start_date')), array('ask_for_now' => 1));

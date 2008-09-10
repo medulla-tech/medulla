@@ -137,7 +137,7 @@ msgstr "Opóźnienie między 2 połączeniami"
 
 #: msc/msc/launch.php:132
 #, fuzzy
-msgid "Delay betwen connections (minuts)"
+msgid "Delay betwen connections (minutes)"
 msgstr "Opóźnienie między połączeniami"
 
 #: msc/includes/functions.php:33
