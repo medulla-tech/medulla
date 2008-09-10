@@ -37,18 +37,27 @@ if (isset($_POST["bconfirm"])) {
 
     # see http://www.tightvnc.com/doc/java/README.txt
     echo "
-   <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar'>
-   <PARAM NAME='PORT' VALUE='$port'>
-   <PARAM NAME='HOST' VALUE='$host'>
-   <PARAM NAME='Encoding' VALUE='Tight'>
-   <PARAM NAME='View only' VALUE='Yes'>
-   <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
-   <PARAM NAME='Compression Level' VALUE='9'>
-   <PARAM NAME='Open new window' VALUE='Yes'>
-   <PARAM NAME='Show controls' VALUE='No'>
-   <PARAM NAME='Offer Relogin' VALUE='No'>
-   </APPLET><BR>
-   ";
+        <HTML>
+        <HEADER>
+        <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>
+        <META HTTP-EQUIV='EXPIRES' CONTENT='0'>
+        <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>
+        </HEADER>
+        <BODY>
+        <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar'>
+        <PARAM NAME='PORT' VALUE='$port'>
+        <PARAM NAME='HOST' VALUE='$host'>
+        <PARAM NAME='Encoding' VALUE='Tight'>
+        <PARAM NAME='View only' VALUE='Yes'>
+        <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
+        <PARAM NAME='Compression Level' VALUE='9'>
+        <PARAM NAME='Open new window' VALUE='Yes'>
+        <PARAM NAME='Show controls' VALUE='No'>
+        <PARAM NAME='Offer Relogin' VALUE='No'>
+        </APPLET>
+        </BODY>
+        </HTML>
+    ";
 
 /*
  * to send a true VNC config file:
