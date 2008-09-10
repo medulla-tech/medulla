@@ -36,7 +36,8 @@ from pulse2.launcher.config import LauncherConfig
 class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
 # this RE matched either ip:port or hostname:port
     RE_TCPIP = '((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([A-Za-z][A-Za-z0-9\-\.]+)):(0|([1-9]\d{0,3}|[1-5]\d{4}|[6][0-5][0-5]([0-2]\d|[3][0-5])))'
-    RE_PROXYINFOS = '^LINK (%s,%s,%s,%s)$' % (RE_TCPIP, RE_TCPIP, RE_TCPIP, RE_TCPIP)
+    RE_LINKINFO = '^LINK (%s,%s,%s,%s)$' % (RE_TCPIP, RE_TCPIP, RE_TCPIP, RE_TCPIP)
+    RE_LINKERROR = '^LINK ERROR$'
 
     sourcePort = None
     proxyPort = None
@@ -46,24 +47,27 @@ class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
     proxyIp = None
     targetIp = None
     passthroughIp = None
-
+    host = ''
     defferedLinkStatus = None
 
     def __init__(self):
         self.defferedLinkStatus = twisted.internet.defer.Deferred()
         if LauncherConfig().tcp_sproxy_host:
-            host = LauncherConfig().tcp_sproxy_host
-        else:
-            host = '' # can't guess how to be contacted, let the scheduler choose
-        self.defferedLinkStatus.addCallback(lambda x: (LauncherConfig().name, host, x.proxyPort))
+            self.host = LauncherConfig().tcp_sproxy_host
+
+    def _mycustomcb(self, data):
+        logging.getLogger().debug('cb: %s' % data)
 
     def outReceived(self, data):
-        if re.match(self.RE_PROXYINFOS, data):
-            ((self.sourceIp, self.sourcePort), (self.proxyIp, self.proxyPort), (self.passthroughIp, self.passthroughPort), (self.targetIp, self.targetPort))  = map(lambda a: a.split(":"), re.search(self.RE_PROXYINFOS, data).group(1).split(','))
+        if re.match(self.RE_LINKINFO, data):
+            ((self.sourceIp, self.sourcePort), (self.proxyIp, self.proxyPort), (self.passthroughIp, self.passthroughPort), (self.targetIp, self.targetPort))  = map(lambda a: a.split(":"), re.search(self.RE_LINKINFO, data).group(1).split(','))
             logging.getLogger().debug('got link status: %s' % data)
-            self.defferedLinkStatus.callback(self)
+            ret = (LauncherConfig().name, self.host, self.proxyPort);
+            self.defferedLinkStatus.callback(ret)
         else:
-            return False
+            logging.getLogger().debug('got link status: %s' % data)
+            self.defferedLinkStatus.callback(False)
+
 
 def establishProxy(target, requestor_ip, requested_port):
     """

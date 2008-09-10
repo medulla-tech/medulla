@@ -102,16 +102,20 @@ sub alloc_freeport()  {
 #
 # Transparent proxy (connects server and client)
 #
-sub proxy($$$$) {
+sub proxy($$$$$$) {
     my $remoteAddr = shift;
     my $proxyPort = shift;
     my $destHost  = shift;
     my $destPort  = shift;
+    my $toIp  = shift;
+    my $toPort  = shift;
 
     my $peer;
     do {
-        $peer = server($remoteAddr, $proxyPort);
         client($destHost, $destPort);
+        select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
+        print "LINK $remoteAddr:0,127.0.0.1:$proxyPort,127.0.0.1:$destPort,$toIp:$toPort";
+        $peer = server($remoteAddr, $proxyPort);
         transferdata();
     } while ($peer ne $remoteAddr);
 }
@@ -130,7 +134,7 @@ sub server($$) {
     bind(SERVER, sockaddr_in($port, INADDR_ANY));
     listen(SERVER, 1);
 
-    # allow 40 seconds for the initial connect
+    # allow 60 seconds for the initial connect
     $SIG{ALRM} = \&sigterm;
     alarm(60);
 
@@ -147,7 +151,8 @@ sub server($$) {
             syslog("info", "rejected");
             next;
         } else {
-            alarm(0);
+            # autokill after 60 minuts
+            alarm(3600);
             return $peer;
         }
     }
@@ -271,6 +276,8 @@ sub mydie {
     # kill the tunnel
     kill 15, $pid;
     syslog("crit", "died: $txt");
+    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
+    print "LINK ERROR";
     exit(1);
 }
 
@@ -280,7 +287,6 @@ sub mydie {
 sub sigterm {
     # kill the tunnel
     kill 15, $pid;
-    syslog("debug", "signal handler kill $pid");
     exit(0);
 }
 
@@ -289,7 +295,7 @@ sub sigterm {
 #
 
 setlogsock('unix');
-openlog("proxy.pl: to $toIp", "", "daemon");
+openlog("pulse2-rcp-sproxy: to $toIp", "", "daemon");
 
 # set up the tunnel
 my $localport = alloc_freeport();
@@ -323,9 +329,9 @@ if ($pid == 0) { # child process, will become ssh process
     exec @sshCommand;
     exit 0;   # Child process exits when it is done.
 } else { # parent process: proxy
-    print "LINK $fromIp:0,127.0.0.1:$proxyport,127.0.0.1:$localport,$toIp:$toPort";
-    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
-    proxy($fromIp, $proxyport, "127.0.0.1", $localport);
+#    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
+#    print "LINK $fromIp:0,127.0.0.1:$proxyport,127.0.0.1:$localport,$toIp:$toPort\n";
+    proxy($fromIp, $proxyport, "127.0.0.1", $localport, $toIp, $toPort);
     # in the end, we kill the tunnel
     kill 15, $pid;
     syslog("debug", "done kill $pid");
