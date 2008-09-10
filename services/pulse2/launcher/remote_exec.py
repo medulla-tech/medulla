@@ -511,7 +511,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             )
     return None
 
-def from_remote_to_launcher(command_id, client, path, targetpath, bwlimit, wrapper_timeout):
+def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrapper_timeout):
     """
     Recursive copy of a directory from a client to the launcher using scp.
     """
@@ -521,7 +521,8 @@ def from_remote_to_launcher(command_id, client, path, targetpath, bwlimit, wrapp
     if bwlimit:
         command_list += ['-l'] + [str(bwlimit)]
     command_list += ['-r']
-    command_list += [ "%s@%s:%s" % (client['user'], client['host'], path)]
+    for path in paths:
+        command_list += [ "%s@%s:%s" % (client['user'], client['host'], path)]
     command_list += [targetpath]
     # The following ssh options are not used by scp, so we remove them
     command_list.remove('-T')
