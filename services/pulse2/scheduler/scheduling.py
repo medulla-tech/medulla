@@ -66,11 +66,14 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
-def startAllCommands(scheduler_name):
+def startAllCommands(scheduler_name, commandID = None):
     session = sqlalchemy.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
-    logger.debug("MSC_Scheduler->startAllCommands()...")
+    if commandID:
+        logger.debug("MSC_Scheduler->startAllCommands() for command %s..." % commandID)
+    else:
+        logger.debug("MSC_Scheduler->startAllCommands()...")
     # gather candidates:
     # ignore completed tasks
     # ignore paused tasks
@@ -82,8 +85,7 @@ def startAllCommands(scheduler_name):
     # take tasks with next launch time in the future
     # TODO: check command state integrity AND command_on_host state integrity in a separtseparate function
 
-    commands_to_perform = []
-    for q in session.query(CommandsOnHost).\
+    commands_query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
         filter(database.commands_on_host.c.current_state != 'pause').\
@@ -101,13 +103,21 @@ def startAllCommands(scheduler_name):
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
-        ).all():
+        )
+    if commandID:
+        commands_query = commands_query.filter(database.commands.c.id == commandID)
+    commands_to_perform = []
+    for q in commands_query.all():
         commands_to_perform.append(q.id)
     session.close()
 
     return sortCommands(commands_to_perform)
 
 def sortCommands(commands_to_perform):
+    """
+    Process CommandsOnHost objects list and fires needed deferred objects to
+    perform the commands on background.
+    """
 
     def _cb(result, tocome_distribution):
 
@@ -197,7 +207,7 @@ def sortCommands(commands_to_perform):
             tocome_distribution[command_group].append(command_id)
 
     # build array of commands being processed by available launchers
-    return getLaunchersBalance().\
+    getLaunchersBalance().\
         addCallback(_cb, tocome_distribution)
 
 def stopElapsedCommands(scheduler_name):
@@ -250,6 +260,12 @@ def startCommand(myCommandOnHostID):
     logger.debug("command state is %s" % myC.toH())
     runCommand(myCommandOnHostID)
     return True
+
+def startScheduledCommand(scheduler_name, commandID):
+    """
+    Tell the scheduler to immediately start a given command
+    """
+    return startAllCommands(scheduler_name, commandID)
 
 def runCommand(myCommandOnHostID):
     """
