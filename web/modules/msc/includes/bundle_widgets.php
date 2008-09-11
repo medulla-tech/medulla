@@ -197,6 +197,9 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
 class RenderedMSCBundleSortParent {
     function RenderedMSCBundleSortParent() {
         $this->input_pre = 'si_';
+        $this->buttons = array(
+            array('blaunch_bundle', _T("Launch bundle", "msc"), "btnPrimary")
+        );
     }
     function initCount() {
         $this->count_members = count($this->members);
@@ -246,8 +249,9 @@ class RenderedMSCBundleSortParent {
         $this->display_options($f);
         
         $f->pop();
-        $f->addButton('blaunch_bundle', _T("Launch bundle", "msc"), "btnPrimary");
-        $f->addButton('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnSecondary");
+        foreach ($this->buttons as $b) {
+            $f->addButton($b[0], $b[1], $b[2]);
+        }
         $f->display();
     }
 }
@@ -255,6 +259,7 @@ class RenderedMSCBundleSortParent {
 class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
     function RenderedMSCBundleSort() {
         parent::RenderedMSCBundleSortParent();
+        $this->buttons[]= array('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnSecondary");
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
@@ -308,7 +313,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
-        $f->add(new TrFormElement(_T('Command title', 'msc'),                               new InputTpl('ltitle')), array("value" => $name));
+        $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('title')), array("value" => $name));
         $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
         $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
         $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));   

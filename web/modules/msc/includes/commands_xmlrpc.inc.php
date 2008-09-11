@@ -117,5 +117,9 @@ function get_command_on_host_title($cmd_id) {
     return xmlCall('msc.get_command_on_host_title', array($cmd_id));
 }
 
+function get_command_on_host_in_commands($cmd_id) {
+    return xmlCall('msc.get_command_on_host_in_commands', array($cmd_id));
+}
+
 
 ?>

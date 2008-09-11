@@ -47,6 +47,17 @@ if (strlen($_GET['uuid'])) {
         $coh_id = $_GET['coh_id'];
         $ch = new CommandHistory($coh_id);
         $ch->display();
+    } elseif (strlen($_GET['cmd_id'])) {
+        $params = array('tab'=>$_GET['tab'], 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'bundle_id'=>$_GET['bundle_id']);
+        if (strlen($_GET['bundle_id'])) {
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        }
+        print "<hr/><br/>";
+        $coh_ids = get_command_on_host_in_commands($_GET['cmd_id']);
+        $coh_id = $coh_ids[0]; # we know there is only one because we are in uuid (one machine)
+        $ch = new CommandHistory($coh_id);
+        $ch->display();
     } else {
         $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs");
         $ajax->setRefresh(5000);

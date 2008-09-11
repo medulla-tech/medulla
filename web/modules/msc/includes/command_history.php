@@ -78,7 +78,10 @@ class Bundle {
             $widget->display();
             return false;
         }
-        $n = new ListInfos(array("Bundle #".$this->db_bundle[0]['id']), _T('Bundle', 'msc'));
+        if (!strlen($this->db_bundle[0]['title'])) {
+            $this->db_bundle[0]['title'] = "Bundle #".$this->db_bundle[0]['id'];
+        }
+        $n = new ListInfos(array($this->db_bundle[0]['title']), _T('Bundle', 'msc'));
         $n->addExtraInfo(array(_toDate($this->db_bundle[0]['creation_date'])), _T('Creation date', 'msc'));
         $n->setParamInfo(array($params));
         foreach ($actions as $a) {

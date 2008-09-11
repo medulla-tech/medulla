@@ -103,7 +103,13 @@ if ($areCommands) {
                 $p['cmd_id'] = $cmd['id'];
                 $a_cmd[] = $cmd['title'];
             } else {
-                $a_cmd[] = sprintf(_T("Bundle #%s", "msc"), $cmd['bundle_id']);
+                $bundle = bundle_detail($cmd['bundle_id']);
+                $bundle = $bundle[0];
+                if (!strlen($bundle['title'])) {
+                    $a_cmd[] = sprintf(_T("Bundle #%s", "msc"), $cmd['bundle_id']);
+                } else {
+                    $a_cmd[] = $bundle['title'];
+                }
             }
         } elseif (!strlen($cmd['bundle_id']) and !strlen($gid)) {
             $a_cmd[] = $cmd['title'];
