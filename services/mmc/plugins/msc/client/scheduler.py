@@ -55,6 +55,12 @@ def start_all_commands(scheduler):
         'start_all_commands'
     )
 
+def start_scheduled_command(scheduler, idCommand):
+    return getProxy(select_scheduler(scheduler)).callRemote(
+        'start_scheduled_command',
+        idCommand
+    )
+
 def ping_client(scheduler, computer):
     """
     expected struct for computer:
