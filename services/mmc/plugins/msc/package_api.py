@@ -184,6 +184,7 @@ class SendBundleCommand:
         return self.deferred.callback([self.bundle_id, result])
 
     def send(self):
+        # treat bundle title
         try:
             title = self.params['title']
         except:
@@ -202,12 +203,25 @@ class SendBundleCommand:
                 localtime[5]
             )
 
+        last_order = 0
+        for id in self.porders:
+            p_api, pid, order = self.porders[id]
+            if order > last_order:
+                last_order = order
+                
+        # treat bundle inventory and halt (put on the last command)
+        do_inventory = self.params['do_inventory']
+
         bundle = MscDatabase().createBundle(title)
         self.bundle_id = bundle.id
 
         ret = []
         for id in self.porders:
             p_api, pid, order = self.porders[id]
+            if order == last_order:
+                self.params['do_inventory'] = do_inventory
+            else:
+                self.params['do_inventory'] = 'off'
             g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order)
             g.deferred = defer.Deferred()
             g.send()
@@ -226,10 +240,10 @@ class SendBundleCommand:
 class SendPackageCommand:
     def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None):
         self.ctx = ctx
-        self.p_api = p_api
+        self.p_api = p_api.copy()
         self.pid = pid
         self.targets = targets
-        self.params = params
+        self.params = params.copy()
         self.mode = mode
         self.gid = gid
         self.bundle_id = bundle_id
