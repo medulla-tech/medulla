@@ -824,22 +824,28 @@ class MscDatabase(Singleton):
     
     def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1):
         i = 0
+        min = int(min)
+        max = int(max)
         ids = []
         defined = {}
         for cmd in cmds:
             id, bundle_id = cmd
-            if max != -1 and max < i:
+            if max != -1 and max-1 < i:
                 break
             if i < min:
-                defined[bundle_id] = id
-                i += 1
+                if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
+                    defined[bundle_id] = id
+                    i += 1
+                elif bundle_id == 'NULL' or bundle_id == None:
+                    i += 1
                 continue
             if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
                 defined[bundle_id] = id    
                 ids.append(id)
+                i += 1
             elif bundle_id == 'NULL' or bundle_id == None:
                 ids.append(id)
-            i += 1
+                i += 1
         return ids
 
     def displayLogs(self, ctx, params = {}): # TODO USE ctx
@@ -860,13 +866,10 @@ class MscDatabase(Singleton):
 
         size = 0
         if params['b_id'] == None and params['cmd_id'] == None:
-            query = self.__displayLogsQuery(ctx, params, session)
-            query = query.offset(int(params['min']))
-            query = query.limit(int(params['max'])-int(params['min']))
-            ret =  query.order_by(asc(params['order_by'])).all()
+            ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
             cmds = map(lambda c: (c.id, c.bundle_id), ret)
-            ret = self.__displayLogsQuery(ctx, params, session).all()
-            size = map(lambda c: (c.id, c.bundle_id), ret)
+            size = []
+            size.extend(cmds)
 
             ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
             size = len(self.__displayLogsQueryGetIds(size))
