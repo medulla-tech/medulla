@@ -37,7 +37,7 @@ function action($action, $target) {
         $current_lang = substr($_SESSION["lang"], 0, 2);
     $id = add_command_quick_with_id($action, $target, $current_lang, $_GET["gid"]);
     if ($id != -1) {
-        scheduler_start_all_commands();
+        scheduler_start_scheduled_command("", $id);
         // if on a single computer
         $tab = 'tablogs';
         if (count($_GET["gid"]) > 0) {
