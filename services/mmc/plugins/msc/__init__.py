@@ -270,37 +270,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
-    def count_all_commands_on_group(self, gid, filt = '', history = None):
+    def displayLogs(self, params = {}):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsOnGroup(ctx, gid, filt, history))
-
-    def get_all_commands_on_group(self, gid, min, max, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsOnGroup(ctx, gid, min, max, filt, history))
-
-    def count_all_commands_on_host_bundle(self, uuid, bundle_id, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsOnHostBundle(ctx, uuid, bundle_id, filt, history))
-
-    def get_all_commands_on_host_bundle(self, uuid, bundle_id, min, max, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsOnHostBundle(ctx, uuid, bundle_id, min, max, filt, history))
-
-    def count_all_commands_on_host_bundlegroup(self, gid, bundle_id, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsOnHostBundleGroup(ctx, gid, bundle_id, filt, history))
-
-    def get_all_commands_on_host_bundlegroup(self, gid, bundle_id, min, max, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsOnHostBundleGroup(ctx, gid, bundle_id, min, max, filt, history))
-
-    def count_all_commands_on_host_group(self, gid, cmd_id, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsOnHostGroup(ctx, gid, cmd_id, filt, history))
-
-    def get_all_commands_on_host_group(self, gid, cmd_id, min, max, filt = '', history = None):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsOnHostGroup(ctx, gid, cmd_id, min, max, filt, history))
+        return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
 
     def get_all_commandsonhost_currentstate(self):
         ctx = self.currentContext
@@ -329,22 +301,6 @@ class RpcProxy(RpcProxyI):
     def get_all_commands_on_host(self, uuid, min, max, filt = ''):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsOnHost(ctx, uuid, min, max, filt))
-
-    def count_finished_commands_on_host(self, uuid, filt = ''):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countFinishedCommandsOnHost(ctx, uuid, filt))
-
-    def get_finished_commands_on_host(self, uuid, min, max, filt = ''):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getFinishedCommandsOnHost(ctx, uuid, min, max, filt))
-
-    def count_unfinished_commands_on_host(self, uuid, filt = ''):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countUnfinishedCommandsOnHost(ctx, uuid, filt))
-
-    def get_unfinished_commands_on_host(self, uuid, min, max, filt = ''):
-        ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getUnfinishedCommandsOnHost(ctx, uuid, min, max, filt))
 
     def get_commands_on_host(self, coh_id):
         ctx = self.currentContext

@@ -738,75 +738,6 @@ class MscDatabase(Singleton):
         session.close()
         return c
 
-    def countAllCommandsOnHostBundleGroup(self, ctx, gid, bundle_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid).filter(self.commands.c.bundle_id == bundle_id)
-#        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
-        if filt != '':
-            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
-        c = ret.count()
-        session.close()
-        return c
-
-    def countAllCommandsOnHostGroup(self, ctx, gid, cmd_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid)
-#        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
-        if cmd_id:
-            ret = ret.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
-        if filt != '':
-            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
-        c = ret.count()
-        session.close()
-        return c
-
-    def countAllCommandsOnGroup(self, ctx, gid, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid)
-        if filt != '':
-            ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            ret = ret.filter(self.commands_on_host.c.current_state != 'done')
-        c = ret.distinct().count()
-        session.close()
-        return c
-
-    def countFinishedCommandsOnHost(self, ctx, uuid, filt):
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-            session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state == 'done')
-            #.filter(self.commands.c.creator == ctx.userid)
-            if filt != '':
-                ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
-            c = ret.count()
-            session.close()
-            return c
-        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
-        return False
-
-    def countUnfinishedCommandsOnHost(self, ctx, uuid, filt):
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-            session = create_session()
-            ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done')
-            #.filter(self.commands.c.creator == ctx.userid)
-            if filt != '':
-                ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
-            c = ret.count()
-            session.close()
-            return c
-        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
-        return False
-
     def countAllCommandsOnHost(self, ctx, uuid, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
             session = create_session()
@@ -819,122 +750,6 @@ class MscDatabase(Singleton):
             return c
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return False
-
-    def getAllCommandsOnHostBundle(self, ctx, uuid, bundle_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        Session = create_session()
-        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.creator == ctx.userid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands.c.bundle_id == bundle_id)
-        
-        if filt != '':
-            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            query = query.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            query = query.filter(self.commands_on_host.c.current_state != 'done')
-
-        query = query.offset(int(min))
-        query = query.limit(int(max)-int(min))
-        query = query.order_by(asc(self.commands.c.order_in_bundle))
-        ret = query.all()
-        session.close()
-        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
-
-    def getAllCommandsOnHostBundleGroup(self, ctx, gid, bundle_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.creator == ctx.userid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.bundle_id == bundle_id)
-        
-        if filt != '':
-            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            query = query.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            query = query.filter(self.commands_on_host.c.current_state != 'done')
-
-        query = query.offset(int(min))
-        query = query.limit(int(max)-int(min))
-        query = query.order_by(asc(self.commands.c.order_in_bundle))
-        ret = query.all()
-        session.close()
-        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
-
-    def getAllCommandsOnHostGroup(self, ctx, gid, cmd_id, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(self.target.c.target_name).add_column(self.target.c.target_uuid).filter(self.commands.c.creator == ctx.userid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
-        if cmd_id:
-            query = query.filter(self.commands_on_host.c.fk_commands == str(cmd_id))
-        if filt != '':
-            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            query = query.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            query = query.filter(self.commands_on_host.c.current_state != 'done')
-
-        query = query.offset(int(min))
-        query = query.limit(int(max)-int(min))
-        query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-        ret = query.all()
-        session.close()
-        return map(lambda x: (x[0].toH(), x[1], x[2], x[3]), ret)
-
-    def getAllCommandsOnGroup(self, ctx, gid, min, max, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        query = session.query(Commands)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).filter(self.commands.c.creator == ctx.userid)
-        if filt != '':
-            query = query.filter(self.commands.c.title.like('%'+filt+'%'))
-        if history:
-            query = query.filter(self.commands_on_host.c.current_state == 'done')
-        else:
-            query = query.filter(self.commands_on_host.c.current_state != 'done')
-        query = query.offset(int(min))
-        query = query.limit(int(max)-int(min))
-        query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-        ret = query.distinct().all()
-        l = map(lambda x: x.toH(), ret)
-        session.close()
-        return l
-
-    def getFinishedCommandsOnHost(self, ctx, uuid, min, max, filt):
-        """
-        Get the MSC commands that are flagged as 'done' for a host.
-        The last inserted commands are returned first.
-        """
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-            session = create_session()
-            query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state) #.filter(self.commands.c.creator == ctx.userid)
-            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state == 'done')
-            if filt != '':
-                query = query.filter(self.commands.c.title.like('%'+filt+'%'))
-            query = query.offset(int(min))
-            query = query.limit(int(max)-int(min))
-            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-            ret = query.all()
-            session.close()
-            return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
-        return []
-
-    def getUnfinishedCommandsOnHost(self, ctx, uuid, min, max, filt):
-        """
-        Get the MSC commands that are flagged as not 'done' for a host.
-        The last inserted commands are returned first.
-        """
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-            session = create_session()
-            query = session.query(Commands).order_by(desc(Commands.c.id)).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state) #.filter(self.commands.c.creator == ctx.userid)
-            query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands_on_host.c.current_state != 'done')
-            if filt != '':
-                query = query.filter(self.commands.c.title.like('%' + filt + '%'))
-            query = query.offset(int(min))
-            query = query.limit(int(max) - int(min))
-            query = query.order_by(asc(self.commands_on_host.c.next_launch_date))
-            ret = query.all()
-            session.close()
-            return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
-        return []
 
     def getAllCommandsOnHost(self, ctx, uuid, min, max, filt):
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
@@ -952,6 +767,123 @@ class MscDatabase(Singleton):
             return map(lambda x: (x[0].toH(), x[1], x[2]), ret)
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return []
+
+    ###################
+    def __displayLogsQuery(self, ctx, params, session):
+        query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+        if params['gid'] != None:
+            query = query.filter(self.target.c.id_group == params['gid'])
+        if params['uuid'] != None:
+            query = query.filter(self.target.c.target_uuid == params['uuid'])
+        if params['filt'] != None:
+            query = query.filter(self.commands.c.title.like('%'+params['filt']+'%'))
+        if params['finished']:
+            query = query.filter(self.commands_on_host.c.current_state == 'done')
+        else:
+            query = query.filter(self.commands_on_host.c.current_state != 'done')
+        return query.group_by(self.commands.c.bundle_id).order_by(asc(params['order_by']))
+  
+    def __displayLogsQuery2(self, ctx, params, session):
+        filter = []
+        select_from = None
+        group_by = None
+
+        # Get query parts
+        query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+        query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+        if params['cmd_id'] != None: # COH
+            filter = [self.commands.c.id == params['cmd_id']]
+            if params['b_id'] != None:
+                filter.append(self.commands.c.bundle_id == params['b_id'])
+        else: # CMD
+            if params['b_id'] != None:
+                filter = [self.commands.c.bundle_id == params['b_id']]
+            group_by = self.commands.c.id
+    
+        if params['gid'] != None: # Filter on a machines group id
+            filter.append(self.target.c.id_group == params['gid'])
+    
+        if params['uuid'] != None: # Filter on a machine uuid
+            filter.append(self.target.c.target_uuid == params['uuid'])
+           
+        if params['filt'] != None: # Filter on a commande names
+            filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
+    
+        if params['finished']: # Filter on finished commands only
+            filter.append(self.commands_on_host.c.current_state == 'done')
+        else:
+            filter.append(self.commands_on_host.c.current_state != 'done')
+            
+        query = query.filter(and_(*filter))
+        
+        if group_by != None:
+            query = query.group_by(group_by)
+    
+        return query
+    
+    def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1):
+        i = 0
+        ids = []
+        defined = {}
+        for cmd in cmds:
+            id, bundle_id = cmd
+            if max != -1 and max < i:
+                break
+            if i < min:
+                defined[bundle_id] = id
+                i += 1
+                continue
+            if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
+                defined[bundle_id] = id    
+                ids.append(id)
+            elif bundle_id == 'NULL' or bundle_id == None:
+                ids.append(id)
+            i += 1
+        return ids
+
+    def displayLogs(self, ctx, params = {}): # TODO USE ctx
+        session = create_session()
+        for i in ('b_id', 'cmd_id', 'coh_id', 'gid', 'uuid', 'filt'):
+            if not params.has_key(i) or params[i] == '':
+                params[i] = None
+        if not params.has_key('min'):
+            params['min'] = 0
+        if not params.has_key('max'):
+            params['max'] = -1
+        if not params.has_key('finished') or params['finished'] == '':
+            params['finished'] = False
+        try:
+            params['order_by'] = getattr(self.commands_on_host.c, params['order_by'])
+        except:
+            params['order_by'] = getattr(self.commands_on_host.c, 'next_launch_date')
+
+        size = 0
+        if params['b_id'] == None and params['cmd_id'] == None:
+            query = self.__displayLogsQuery(ctx, params, session)
+            query = query.offset(int(params['min']))
+            query = query.limit(int(params['max'])-int(params['min']))
+            ret =  query.order_by(asc(params['order_by'])).all()
+            cmds = map(lambda c: (c.id, c.bundle_id), ret)
+            ret = self.__displayLogsQuery(ctx, params, session).all()
+            size = map(lambda c: (c.id, c.bundle_id), ret)
+
+            ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
+            size = len(self.__displayLogsQueryGetIds(size))
+            
+            query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+            query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+            query = query.filter(self.commands.c.id.in_(*ids)).order_by(asc(params['order_by']))
+            ret = query.group_by(self.commands.c.id).all()
+            session.close()
+            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+        else:
+            ret = self.__displayLogsQuery2(ctx, params, session).all()
+            size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+            session.close()
+            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+
+        return 0, []
+    ###################
 
     def getCommandsOnHost(self, ctx, coh_id): # FIXME should we use the ctx
     # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
@@ -1118,4 +1050,4 @@ class MscDatabase(Singleton):
         #       dont injoignables (nb)
 
         # coh.uploaded, coh.executed, coh.deleted
-
+ 
