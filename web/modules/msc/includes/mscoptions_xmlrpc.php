@@ -22,6 +22,9 @@
  * MA 02110-1301, USA.
  */
 
+# A handful of XML RPC calls to recover config options from msc.ini
+# throught the MMC
+
 function web_def_awake() {
     return xmlCall('msc.get_web_def_awake');
 }
@@ -48,6 +51,18 @@ function web_def_attempts() {
 
 function web_def_deployment_intervals() {
     return xmlCall('msc.get_web_def_deployment_intervals');
+}
+
+function web_vnc_view_only() {
+    return xmlCall('msc.get_web_vnc_view_only');
+}
+
+function web_vnc_network_connectivity() {
+    return xmlCall('msc.get_web_vnc_network_connectivity');
+}
+
+function web_vnc_allow_user_control() {
+    return xmlCall('msc.get_web_vnc_allow_user_control');
 }
 
 ?>

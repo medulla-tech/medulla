@@ -22,6 +22,9 @@
  */
 
 require('modules/msc/includes/scheduler_xmlrpc.php');
+require('modules/msc/includes/mscoptions_xmlrpc.php');
+
+# FIXME: I'm not really proud of this piece of code :/
 
 if ($_GET["establishproxy"] == "yes") {
     $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $_SERVER["REMOTE_ADDR"]);
@@ -71,15 +74,70 @@ if ($_GET["establishproxy"] == "yes") {
                     <APPLET CODE=VncViewer.class ARCHIVE='modules/msc/graph/java/VncViewer.jar' WIDTH=100 HEIGHT=10>
                     <PARAM NAME='PORT' VALUE='$port'>
                     <PARAM NAME='HOST' VALUE='$host'>
-                    <PARAM NAME='Encoding' VALUE='Tight'>
+                    <PARAM NAME='Open new window' VALUE='Yes'>
+                    <PARAM NAME='Offer Relogin' VALUE='No'>
+            ";
+
+        if (web_vnc_allow_user_control()) {
+            echo "
+                    <PARAM NAME='Show controls' VALUE='Yes'>
+            ";
+        } else {
+            echo "
+                    <PARAM NAME='Show controls' VALUE='No'>
+            ";
+        }
+
+        if (web_vnc_view_only()) {
+            echo "
                     <PARAM NAME='View only' VALUE='Yes'>
                     <PARAM NAME='Cursor shape updates' VALUE='Ignore'>
+            ";
+        } else {
+            echo "
+                    <PARAM NAME='View only' VALUE='No'>
+                    <PARAM NAME='Cursor shape updates' VALUE='Enable'>
+            ";
+        }
+
+        if (web_vnc_network_connectivity() == 'fiber') {
+            echo "
+                    <PARAM NAME='Encoding' VALUE='Raw'>
+                    <PARAM NAME='Compression Level' VALUE='1'>
+                    <PARAM NAME='Restricted colors' VALUE='No'>
+                    <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'>
+            ";
+        } elseif (web_vnc_network_connectivity() == 'lan') {
+            echo "
+                    <PARAM NAME='Encoding' VALUE='Hextile'>
+                    <PARAM NAME='Compression Level' VALUE='1'>
+                    <PARAM NAME='Restricted colors' VALUE='No'>
+                    <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'>
+            ";
+        } elseif (web_vnc_network_connectivity() == 'cable') {
+            echo "
+                    <PARAM NAME='Encoding' VALUE='Tight'>
+                    <PARAM NAME='Compression Level' VALUE='Default'>
+                    <PARAM NAME='Restricted colors' VALUE='No'>
+                    <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'>
+            ";
+        } elseif (web_vnc_network_connectivity() == 'dsl') {
+            echo "
+                    <PARAM NAME='Encoding' VALUE='Tight'>
                     <PARAM NAME='Compression Level' VALUE='9'>
-                    <PARAM NAME='Open new window' VALUE='Yes'>
-                    <PARAM NAME='Show controls' VALUE='No'>
-                    <PARAM NAME='Offer Relogin' VALUE='No'>
-                    <PARAM NAME='Restricted colors' VALUE='Yes'>
+                    <PARAM NAME='Restricted colors' VALUE='No'>
                     <PARAM NAME='JPEG image quality' VALUE='0'>
+            ";
+        } elseif (web_vnc_network_connectivity() == 'isdn') {
+            echo "
+                    <PARAM NAME='Encoding' VALUE='Tight'>
+                    <PARAM NAME='Compression Level' VALUE='9'>
+                    <PARAM NAME='Restricted colors' VALUE='Yes'>
+                    <!-- <PARAM NAME='JPEG image quality' VALUE='Jpeg Off'> -->
+            ";
+        }
+
+        echo "
                     </APPLET>
                 </div>
             </center>
