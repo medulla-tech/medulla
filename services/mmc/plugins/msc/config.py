@@ -88,9 +88,9 @@ class MscConfig(PluginConfig):
     web_def_dlmaxbw = 0
 
     # VNC applet behavior
-    vnc_view_only = True
-    vnc_network_connectivity = "lan"
-    vnc_allow_user_control = False
+    web_vnc_view_only = True
+    web_vnc_network_connectivity = "lan"
+    web_vnc_allow_user_control = False
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -232,11 +232,11 @@ class MscConfig(PluginConfig):
 
         # VNC stuff
         if self.has_option("web", "vnc_view_only"):
-            self.vnc_view_only = self.getboolean("web", "vnc_view_only")
+            self.web_vnc_view_only = self.getboolean("web", "vnc_view_only")
         if self.has_option("web", "vnc_network_connectivity"):
-            self.vnc_network_connectivity = self.get("web", "vnc_network_connectivity")
+            self.web_vnc_network_connectivity = self.get("web", "vnc_network_connectivity")
         if self.has_option("web", "vnc_allow_user_control"):
-            self.vnc_allow_user_controlself.getboolean("web", "vnc_allow_user_control")
+            self.web_vnc_allow_user_control.getboolean("web", "vnc_allow_user_control")
 
         # API Package
         if self.has_option("package_api", "mserver"):
