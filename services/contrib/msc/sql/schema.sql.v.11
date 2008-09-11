@@ -47,9 +47,10 @@ ALTER TABLE `commands_history` \
     DROP KEY `id_command_on_host`, \
     ADD KEY(`fk_commands_on_host`);
 
-CREATE TABLE IF NOT EXISTS bundle (
-    id INT NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (id)
+CREATE TABLE IF NOT EXISTS bundle ( \
+    id INT NOT NULL AUTO_INCREMENT, \
+    title VARCHAR(255) DEFAULT NULL, \
+    PRIMARY KEY (id) \
 );
         
 
