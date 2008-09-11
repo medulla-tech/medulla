@@ -184,7 +184,25 @@ class SendBundleCommand:
         return self.deferred.callback([self.bundle_id, result])
 
     def send(self):
-        bundle = MscDatabase().createBundle()
+        try:
+            title = self.params['title']
+        except:
+            title = '' # ie. "no title"
+        self.params['title'] = None
+
+        if title == None or title == '':
+            localtime = time.localtime()
+            title = "Bundle (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+                str(len(self.porders)),
+                localtime[0],
+                localtime[1],
+                localtime[2],
+                localtime[3],
+                localtime[4],
+                localtime[5]
+            )
+
+        bundle = MscDatabase().createBundle(title)
         self.bundle_id = bundle.id
 
         ret = []

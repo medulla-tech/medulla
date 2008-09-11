@@ -39,5 +39,5 @@ class Bundle(object):
         return self.id
 
     def toH(self):
-        return { 'id': self.id }
+        return { 'id': self.id, 'title': self.title }
 

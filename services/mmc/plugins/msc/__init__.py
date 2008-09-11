@@ -330,6 +330,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnHostTitle(ctx, cmd_id))
 
+    def get_command_on_host_in_commands(self, cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getCommandOnHostInCommands(ctx, cmd_id))
+
     #
     # default WEB values handling
     #

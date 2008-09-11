@@ -294,11 +294,12 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def createBundle(self, session = create_session()):
+    def createBundle(self, title = '', session = create_session()):
         """
         Return a new Bundle
         """
         bdl = Bundle()
+        bdl.title = title
         session.save(bdl)
         session.flush()
         return bdl
@@ -954,6 +955,12 @@ class MscDatabase(Singleton):
         ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host)).filter(self.commands.c.id == cmd_id).first()
         session.close()
         return ret.title
+
+    def getCommandOnHostInCommands(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
+        session.close() 
+        return map(lambda c:c.id, ret)
 
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         ret = {
