@@ -48,35 +48,19 @@ $history = $_GET['history'];
 $tab = $_GET['tab'];
 $areCommands = False;
 if ($uuid) {
-    if (strlen($_GET['bundle_id'])) {
-        $count = count_all_commands_on_host_bundle($uuid, $_GET['bundle_id'], $filter, $history);
-        $cmds = get_all_commands_on_host_bundle($uuid, $_GET['bundle_id'], $start, $start + $maxperpage, $filter, $history);
+    if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
+        list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'cmd_id'=>$_GET['cmd_id'], 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
     } else {
-        if ($history) {
-            $count = count_finished_commands_on_host($uuid, $filter);
-            $cmds = get_finished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
-        } else {
-            $count = count_unfinished_commands_on_host($uuid, $filter);
-            $cmds = get_unfinished_commands_on_host($uuid, $start, $start + $maxperpage, $filter);
-        }
+        list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        $areCommands = True;
     }
 } elseif ($gid) { # FIXME: same think to do on groups
-/*    if ($history) {
-        $count = 0;
-        $cmds = array();
-    } else {*/
-        if (strlen($_GET['bundle_id'])) {
-            $count = count_all_commands_on_host_bundlegroup($gid, $_GET['bundle_id'], $filter, $history);
-            $cmds = get_all_commands_on_host_bundlegroup($gid, $_GET['bundle_id'], $start, $start + $maxperpage, $filter, $history);
-        } elseif ($_GET['cmd_id']) {
-            $count = count_all_commands_on_host_group($gid, $_GET['cmd_id'], $filter, $history);
-            $cmds = get_all_commands_on_host_group($gid, $_GET['cmd_id'], $start, $start + $maxperpage, $filter, $history);
-        } else {
-            $areCommands = True;
-            $count = count_all_commands_on_group($gid, $filter, $history);
-            $cmds = get_all_commands_on_group($gid, $start, $start + $maxperpage, $filter, $history);
-        }
-    //}
+    if ($_GET['cmd_id']) {
+        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+    } else {
+        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        $areCommands = True;
+    }
 }
 
 $a_cmd = array();
@@ -110,12 +94,26 @@ $n = null;
 
 if ($areCommands) {
     foreach ($cmds as $cmd) {
-        if (strlen($cmd['bundle_id'])) {
-            $a_cmd[] = sprintf(_T("%s (Bundle #%s)", "msc"), $cmd['title'], $cmd['bundle_id']);
+        $coh_id = $cmd[1];
+        $cmd = $cmd[0];
+        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+        if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) {
+            $p['bundle_id'] = $cmd['bundle_id'];
+            if (strlen($_GET['bundle_id'])) {
+                $p['cmd_id'] = $cmd['id'];
+                $a_cmd[] = $cmd['title'];
+            } else {
+                $a_cmd[] = sprintf(_T("Bundle #%s", "msc"), $cmd['bundle_id']);
+            }
+        } elseif (!strlen($cmd['bundle_id']) and !strlen($gid)) {
+            $a_cmd[] = $cmd['title'];
+            $p['cmd_id'] = $cmd['id'];
+            $p['coh_id'] = $coh_id;
         } else {
             $a_cmd[] = $cmd['title'];
+            $p['cmd_id'] = $cmd['id'];
         }
-        $params[] = array('cmd_id'=>$cmd['id'], 'tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+        $params[] = $p;
         if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
             $a_status[] = $actionempty;
@@ -135,7 +133,7 @@ if ($areCommands) {
         $coh_id = $cmd[1];
         $cho_status = $cmd[2];
         $cmd = $cmd[0];
-        if (($_GET['coh_id'] && $coh_id == $_GET['coh_id']) || !$_GET['coh_id']) {
+        if ((strlen($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !strlen($_GET['coh_id'])) {
             $coh = get_commands_on_host($coh_id);
             if ($history) {
                 $d = $coh["end_date"];
@@ -166,8 +164,12 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
-
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            if (strlen($cmd['bundle_id'])) {
+                $p['bundle_id'] = $cmd['bundle_id'];
+            }
+            
+            $params[] = $p;
             $icons = state_tmpl($coh['current_state']);
             $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
             $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;

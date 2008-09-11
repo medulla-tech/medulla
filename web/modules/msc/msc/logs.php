@@ -26,9 +26,9 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 
-if ($_GET['uuid']) {
+if (strlen($_GET['uuid'])) {
     // bottom of the page : details for the command if coh_id is specified
-    if ($_GET['bundle_id']) {
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
@@ -37,7 +37,12 @@ if ($_GET['uuid']) {
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
-    } elseif ($_GET['coh_id']) {
+    } elseif (strlen($_GET['coh_id'])) {
+        $params = array('tab'=>$_GET['tab'], 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'bundle_id'=>$_GET['bundle_id']);
+        if (strlen($_GET['bundle_id'])) {
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        }
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $ch = new CommandHistory($coh_id);
@@ -49,10 +54,25 @@ if ($_GET['uuid']) {
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
-} elseif ($_GET['gid']) {
-    if ($_GET['coh_id']) {
-        $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
+} elseif (strlen($_GET['gid'])) {
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {
+        $bdl = new Bundle($_GET['bundle_id']);
+        $act = $bdl->quickDisplay();
+        if ($act) {
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptablogs");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
+    } elseif (strlen($_GET['coh_id'])) {
+        $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
         // display the selected command
+        if (strlen($_GET['bundle_id'])) {
+            $params['bundle_id'] = $_GET['bundle_id'];
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
+        }
+        $params['cmd_id'] = $_GET['cmd_id'];
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
         if ($act) {
@@ -65,22 +85,21 @@ if ($_GET['uuid']) {
             $ch = new CommandHistory($coh_id);
             $ch->display();
         }
-    } elseif ($_GET['cmd_id']) {
+    } elseif (strlen($_GET['cmd_id'])) {
+        $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
         // display just the selected command
+        $bdlink = '';
+        if (strlen($_GET['bundle_id'])) {
+            $params['bundle_id'] = $_GET['bundle_id'];
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
+            $bdlink = "&bundle_id=".$_GET['bundle_id'];
+        }
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
-            $ajax->display();
-            print "<br/><br/><br/>";
-            $ajax->displayDivToUpdate();
-        }
-    } elseif ($_GET['bundle_id']) {
-        $bdl = new Bundle($_GET['bundle_id']);
-        $act = $bdl->quickDisplay();
-        if ($act) {
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptablogs");
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();

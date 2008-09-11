@@ -22,30 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function count_all_commands_on_host_bundle($uuid, $bundle_id, $filter, $history = 0) {
-    return xmlCall('msc.count_all_commands_on_host_bundle', array($uuid, $bundle_id, $filter, $history));
-}
-
-function get_all_commands_on_host_bundle($uuid, $bundle_id, $min, $max, $filter, $history = 0) {
-    return xmlCall('msc.get_all_commands_on_host_bundle', array($uuid, $bundle_id, $min, $max, $filter, $history));
-}
- 
-function count_all_commands_on_host_bundlegroup($gid, $bundle_id, $filter, $history = 0) {
-    return xmlCall('msc.count_all_commands_on_host_bundlegroup', array($gid, $bundle_id, $filter, $history));
-}
-
-function get_all_commands_on_host_bundlegroup($gid, $bundle_id, $min, $max, $filter, $history = 0) {
-    return xmlCall('msc.get_all_commands_on_host_bundlegroup', array($gid, $bundle_id, $min, $max, $filter, $history));
-}
-
-function count_all_commands_on_host_group($gid, $cmd_id, $filter, $history = 0) {
-    return xmlCall('msc.count_all_commands_on_host_group', array($gid, $cmd_id, $filter, $history));
-}
-
-function get_all_commands_on_host_group($gid, $cmd_id, $min, $max, $filter, $history = 0) {
-    return xmlCall('msc.get_all_commands_on_host_group', array($gid, $cmd_id, $min, $max, $filter, $history));
-}
-
 function get_all_commandsonhost_currentstate() {
     return xmlCall('msc.get_all_commandsonhost_currentstate');
 }
@@ -66,36 +42,12 @@ function get_all_commandsonhost_by_type($type, $min, $max, $filter) {
     return xmlCall('msc.get_all_commandsonhost_by_type', array($type, $min, $max, $filter));
 }
 
-function count_all_commands_on_group($gid, $filter, $history = 0) {
-    return xmlCall('msc.count_all_commands_on_group', array($gid, $filter, $history));
-}
-
-function get_all_commands_on_group($gid, $min, $max, $filter, $history = 0) {
-    return xmlCall('msc.get_all_commands_on_group', array($gid, $min, $max, $filter, $history));
-}
-
 function count_all_commands_on_host($uuid, $filter) {
     return xmlCall('msc.count_all_commands_on_host', array($uuid, $filter));
 }
 
 function get_all_commands_on_host($uuid, $min, $max, $filter) {
     return xmlCall('msc.get_all_commands_on_host', array($uuid, $min, $max, $filter));
-}
-
-function count_finished_commands_on_host($uuid, $filter) {
-    return xmlCall('msc.count_finished_commands_on_host', array($uuid, $filter));
-}
-
-function get_finished_commands_on_host($uuid, $min, $max, $filter) {
-    return xmlCall('msc.get_finished_commands_on_host', array($uuid, $min, $max, $filter));
-}
-
-function count_unfinished_commands_on_host($uuid, $filter) {
-    return xmlCall('msc.count_unfinished_commands_on_host', array($uuid, $filter));
-}
-
-function get_unfinished_commands_on_host($uuid, $min, $max, $filter) {
-    return xmlCall('msc.get_unfinished_commands_on_host', array($uuid, $min, $max, $filter));
 }
 
 function get_commands_on_host($coh_id) {
@@ -136,6 +88,10 @@ function add_command_quick_with_id($idcmd, $hosts, $lang, $gid = null) {
 
 function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
+}
+
+function displayLogs($params) {
+    return xmlCall('msc.displayLogs', array($params));
 }
 
 /* Command on host handling */
