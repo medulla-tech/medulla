@@ -87,6 +87,11 @@ class MscConfig(PluginConfig):
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
 
+    # VNC applet behavior
+    vnc_view_only = True
+    vnc_network_connectivity = "lan"
+    vnc_allow_user_control = False
+
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
     ignore_non_rfc2780 = True
@@ -225,6 +230,14 @@ class MscConfig(PluginConfig):
                 self.web_def_deployment_intervals = ""
                 logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
 
+        # VNC stuff
+        if self.has_option("web", "vnc_view_only"):
+            self.vnc_view_only = self.getboolean("web", "vnc_view_only")
+        if self.has_option("web", "vnc_network_connectivity"):
+            self.vnc_network_connectivity = self.get("web", "vnc_network_connectivity")
+        if self.has_option("web", "vnc_allow_user_control"):
+            self.vnc_allow_user_controlself.getboolean("web", "vnc_allow_user_control")
+
         # API Package
         if self.has_option("package_api", "mserver"):
             self.ma_server = self.get("package_api", "mserver")
@@ -268,11 +281,11 @@ class MscConfig(PluginConfig):
                 self.sa_localcert = self.get("scheduler_api", "localcert")
 
             self.scheduler_url2id = {}
-            
+
             for id in self.schedulers:
                 url = makeURL(self.schedulers[id])
                 self.scheduler_url2id[url] = id
-    
+
 
 # static config ...
 COMMAND_STATES_LIST = {
