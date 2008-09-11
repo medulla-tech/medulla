@@ -782,7 +782,7 @@ class MscDatabase(Singleton):
             query = query.filter(self.commands_on_host.c.current_state == 'done')
         else:
             query = query.filter(self.commands_on_host.c.current_state != 'done')
-        return query.group_by(self.commands.c.bundle_id).order_by(asc(params['order_by']))
+        return query.group_by(self.commands.c.id).order_by(asc(params['order_by']))
   
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
