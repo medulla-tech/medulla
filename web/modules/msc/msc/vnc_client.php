@@ -63,9 +63,9 @@ if ($_GET["establishproxy"] == "yes") {
             <center>
                 <div class='popup' style='position: relative;'>
                     <div class='__popup_container'>
-                        <h2>"._T("Connection Succedeed !", "msc") . "</h2>
+                        <h2>"._T("Connection Succeedeed !", "msc") . "</h2>
                         <br/>
-                        "._T("This connection will be automatically shutted down in 60 minuts.", "msc") . "<br/>
+                        "._T("This connection will be automatically shut down in 60 minutes.", "msc") . "<br/>
                         <br/>
                         "._T("Please close this windows when you are done.", "msc") . "<br/>
                         <br/>
