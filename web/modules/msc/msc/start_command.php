@@ -62,7 +62,7 @@ if (isset($_POST["bconfirm"])) {
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-    scheduler_start_all_commands();
+    scheduler_start_scheduled_command('', $id_command);
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
 }
 

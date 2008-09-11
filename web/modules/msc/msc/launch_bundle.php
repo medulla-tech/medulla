@@ -40,7 +40,7 @@ function launch_bundle($cible, $orders, $gid = null) {
     }
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid);
-    scheduler_start_all_commands();
+    scheduler_start_scheduled_command('', $id_command);
     return $id_command;
 }
 
