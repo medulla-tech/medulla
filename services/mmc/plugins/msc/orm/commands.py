@@ -46,6 +46,15 @@ class Commands(object):
     def getId(self):
         return self.id
 
+    def getBundleId(self):
+        return self.bundle_id
+
+    def getOrderInBundle(self):
+        return self.order_in_bundle
+
+    def isPartOfABundle(self):
+        return self.bundle_id != None
+
     def getNextConnectionDelay(self):
         return self.next_connection_delay
 

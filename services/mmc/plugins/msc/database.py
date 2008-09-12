@@ -125,7 +125,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True )
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True)
         self.metadata = BoundMetaData(self.db)
         self.initTables()
         self.initMappers()
@@ -303,7 +303,7 @@ class MscDatabase(Singleton):
         session.save(bdl)
         session.flush()
         return bdl
-        
+
     def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
         """
         Return a Command object
@@ -783,7 +783,7 @@ class MscDatabase(Singleton):
         else:
             query = query.filter(self.commands_on_host.c.current_state != 'done')
         return query.group_by(self.commands.c.id).order_by(asc(params['order_by']))
-  
+
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
         select_from = None
@@ -800,28 +800,28 @@ class MscDatabase(Singleton):
             if params['b_id'] != None:
                 filter = [self.commands.c.bundle_id == params['b_id']]
             group_by = self.commands.c.id
-    
+
         if params['gid'] != None: # Filter on a machines group id
             filter.append(self.target.c.id_group == params['gid'])
-    
+
         if params['uuid'] != None: # Filter on a machine uuid
             filter.append(self.target.c.target_uuid == params['uuid'])
-           
+
         if params['filt'] != None: # Filter on a commande names
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
-    
+
         if params['finished']: # Filter on finished commands only
             filter.append(self.commands_on_host.c.current_state == 'done')
         else:
             filter.append(self.commands_on_host.c.current_state != 'done')
-            
+
         query = query.filter(and_(*filter))
-        
+
         if group_by != None:
             query = query.group_by(group_by)
-    
+
         return query
-    
+
     def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1):
         i = 0
         min = int(min)
@@ -840,7 +840,7 @@ class MscDatabase(Singleton):
                     i += 1
                 continue
             if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
-                defined[bundle_id] = id    
+                defined[bundle_id] = id
                 ids.append(id)
                 i += 1
             elif bundle_id == 'NULL' or bundle_id == None:
@@ -873,7 +873,7 @@ class MscDatabase(Singleton):
 
             ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
             size = len(self.__displayLogsQueryGetIds(size))
-            
+
             query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
             query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
             query = query.filter(self.commands.c.id.in_(*ids)).order_by(asc(params['order_by']))
@@ -924,7 +924,7 @@ class MscDatabase(Singleton):
         except:
             ret['creation_date'] = ''
         return [ret, cmds]
-        
+
     def getCommands(self, ctx, cmd_id):
         a_targets = map(lambda target: target.target_uuid, self.getTargets(cmd_id))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx.userid, a_targets):
@@ -962,7 +962,7 @@ class MscDatabase(Singleton):
     def getCommandOnHostInCommands(self, ctx, cmd_id):
         session = create_session()
         ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
-        session.close() 
+        session.close()
         return map(lambda c:c.id, ret)
 
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
@@ -1081,4 +1081,4 @@ class MscDatabase(Singleton):
         #       dont injoignables (nb)
 
         # coh.uploaded, coh.executed, coh.deleted
- 
+
