@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.1.0rc7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-11 18:08+0200\n"
-"PO-Revision-Date: 2008-09-11 18:08+0200\n"
+"PO-Revision-Date: 2008-09-12 11:32+0200\n"
 "Last-Translator: Nicolas Rueff <nicolas.rueff@mandriva.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -94,7 +94,7 @@ msgstr "Ensemble d'applications"
 #: msc/msc/ajaxLogsFilter.php:109
 #, php-format
 msgid "Bundle #%s"
-msgstr "Ensemble d'applications"
+msgstr "Ensemble d'applications #%s"
 
 #: msc/includes/bundle_widgets.php:316
 msgid "Bundle title"
@@ -307,7 +307,6 @@ msgid "Launch Actions"
 msgstr "Lancer une action"
 
 #: msc/includes/bundle_widgets.php:201 msc/msc/tabs.php:22 msc/msc/tabs.php:34
-#, fuzzy
 msgid "Launch Bundle"
 msgstr "Démarrer"
 
@@ -332,7 +331,6 @@ msgid "MSC"
 msgstr "MSC"
 
 #: msc/infoPackage.inc.php:87 msc/infoPackage.inc.php:105
-#, fuzzy
 msgid "MSC bundle tab"
 msgstr "Onglet des ensembles d'applications"
 
