@@ -66,6 +66,28 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
+def getDepencencies(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    session = sqlalchemy.create_session()
+    database = MscDatabase()
+
+    # look for CoH from same bundle
+    # look for CoH from lower order
+    # look for unfinished CoH
+    # look for CoH on same host
+    coh_dependencies = []
+    for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+        filter(database.commands.c.bundle_id == myC.bundle_id).\
+        filter(database.commands.c.order_in_bundle < myC.order_in_bundle).\
+        filter(database.commands_on_host.c.current_state !=  'done').\
+        filter(database.target.c.target_uuid ==  myT.target_uuid).\
+        all():
+        coh_dependencies.append(q.id)
+    session.close()
+    return coh_dependencies
+
 def startAllCommands(scheduler_name, commandID = None):
     session = sqlalchemy.create_session()
     database = MscDatabase()
@@ -272,9 +294,23 @@ def runCommand(myCommandOnHostID):
         Just a simple start point, chain-load on Upload Phase
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    # FIXME: this test is performed way too late !
+    logger = logging.getLogger()
+
+    # FIXME: those tests are performed way too late !
+
     if not myC.inDeploymentInterval():
         return
+    if not myC.isPartOfABundle(): # command is independant, we may advance
+        logger.debug("command_on_host #%s: not part of a bundle" % myCoH.getId())
+    else: # command is part of a bundle, let's check the bundle state
+        logger.debug("command_on_host #%s: part of bundle %s, order %s " % (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
+        deps =  getDepencencies(myCommandOnHostID)
+        if len(deps) != 0:
+            logger.debug("command_on_host #%s: depends on %s " % (myCoH.getId(), deps))
+            return True # give up, some deps has to be done
+        else:
+            logger.debug("command_on_host #%s: do not depends on something" % (myCoH.getId()))
+
     myCoH.setStartDate()
     logger = logging.getLogger()
     logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
