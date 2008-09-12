@@ -81,7 +81,7 @@ def establishProxy(target, requestor_ip, requested_port):
         requestor_ip,
         target,
         requested_port,
-        ','.join(LauncherConfig().ssh_options)
+        ','.join(client['transp_args'])
     ]
 
     proxy = proxyProtocol()
