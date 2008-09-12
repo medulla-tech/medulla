@@ -210,10 +210,10 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['IdentityFile=%s' % client['cert']]
         for option in LauncherConfig().ssh_options:
-            client['transp_args'] += ['-o', option]
-        client['transp_args'] += ['-o', "UserKnownHostsFile=/dev/null"] # required to prevent tcp forwarding failure
+            client['transp_args'] += [option]
+        client['transp_args'] += ["UserKnownHostsFile=/dev/null"] # required to prevent tcp forwarding failure
 
     if client['protocol'] == 'wget':
         if not 'port' in client:
