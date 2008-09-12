@@ -63,6 +63,7 @@ if ($uuid) {
     }
 }
 
+
 $a_cmd = array();
 $a_date = array();
 $a_uploaded = array();
@@ -119,20 +120,77 @@ if ($areCommands) {
             $a_cmd[] = $cmd['title'];
             $p['cmd_id'] = $cmd['id'];
         }
+
+        if (
+                (strlen($uuid) and strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) or 
+                (strlen($gid) and !strlen($_GET['cmd_id']))
+            ) {
+            if (strlen($gid) and !strlen($cmd['bundle_id'])) {
+                $status = get_command_on_group_status($cmd['id']);
+                $a_uploaded[] = strval($status['running']['wait_up'][0])."/".strval($status['running']['run_up'][0])."/".strval($status['failure']['conn_up'][0]+$status['failure']['fail_up'][0]);
+                $a_executed[] = strval($status['running']['wait_ex'][0])."/".strval($status['running']['run_ex'][0])."/".strval($status['failure']['conn_ex'][0]+$status['failure']['fail_ex'][0]);
+                $a_deleted[] = strval($status['running']['wait_rm'][0])."/".strval($status['running']['run_rm'][0])."/".strval($status['failure']['conn_rm'][0]+$status['failure']['fail_rm'][0]);
+            } else {
+                $a_uploaded[] ='';
+                $a_executed[] ='';
+                $a_deleted[] = '';
+            }
+            $a_current[] = '';
+            $a_start[] = $actionempty;
+            $a_stop[]  = $actionempty;
+            $a_pause[] = $actionempty;
+        } else {
+            $coh = get_commands_on_host($coh_id);
+            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
+            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
+            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+            if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
+                $coh['current_state'] = 'rescheduled';
+            }
+            if (isset($statusTable[$coh['current_state']])) {
+                $a_current[] = $statusTable[$coh['current_state']];
+            } else {
+                $a_current[] = $coh['current_state'];
+            }
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            if (strlen($cmd['bundle_id'])) {
+                $p['bundle_id'] = $cmd['bundle_id'];
+            }
+            
+            $params[] = $p;
+            $icons = state_tmpl($coh['current_state']);
+            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
+            $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
+        }
+        
         $params[] = $p;
         if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
             $a_status[] = $actionempty;
         } else {
             $a_details[] = $actiondetails;
-            $a_status[] = $actionstatus;
+            if (!strlen($gid) or (strlen($gid) and strlen($cmd['bundle_id']))) {
+                $a_status[] = $actionempty;
+            } else {
+                $a_status[] = $actionstatus;
+            }
         }
-        $a_current[] = _toDate($cmd['creation_date']); // Brrr, seem really ugly, should we not use sprintf ?
+        $a_date[] = _toDate($cmd['creation_date']); // Brrr, seem really ugly, should we not use sprintf ?
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
-    $n->addExtraInfo($a_current, _T("start_date", "msc"));
+    $n->addExtraInfo($a_date, _T("start_date", "msc"));
+    $n->addExtraInfo($a_current, _T("current_state", "msc"));
+    $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
+    $n->addExtraInfo($a_executed, _T("executed", "msc"));
+    $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
 
     $n->addActionItemArray($a_details);
+    $n->addActionItemArray($a_start);
+    if (!$history) {
+        $n->addActionItemArray($a_pause);
+        $n->addActionItemArray($a_stop);
+    }
     $n->addActionItemArray($a_status);
 } else {
     foreach ($cmds as $cmd) {
