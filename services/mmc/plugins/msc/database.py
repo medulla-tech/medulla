@@ -966,6 +966,20 @@ class MscDatabase(Singleton):
         return map(lambda c:c.id, ret)
 
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        session = create_session()
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
+        ret = self.__getStatus(ctx, query)
+        session.close()
+        return ret
+
+    def getCommandOnBundleStatus(self, ctx, bundle_id):
+        session = create_session()
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.bundle_id == bundle_id)
+        ret = self.__getStatus(ctx, query)
+        session.close()
+        return ret
+
+    def __getStatus(self, ctx, query):
         ret = {
             'total':0,
             'success':{
@@ -993,8 +1007,7 @@ class MscDatabase(Singleton):
         }
         running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop'] #, 'scheduled']
         failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable']
-        session = create_session()
-        for coh in session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id):
+        for coh in query:
             ret['total'] += 1
             if coh.current_state == 'done': # success
                 ret['success']['total'][0] += 1
@@ -1048,7 +1061,6 @@ class MscDatabase(Singleton):
                 ret['failure'][i].append(0)
             else:
                 ret['failure'][i].append(ret['failure'][i][0] * 100 / ret['total'])
-        session.close()
         return ret
 
         # nombre total de coh

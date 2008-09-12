@@ -329,6 +329,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnGroupStatus(ctx, cmd_id))
 
+    def get_command_on_bundle_status(self, bundle_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getCommandOnBundleStatus(ctx, bundle_id))
+
     def get_command_on_host_title(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnHostTitle(ctx, cmd_id))
