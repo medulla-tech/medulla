@@ -24,9 +24,20 @@
 
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
-$cmd_id = $_GET['cmd_id'];
-$status = get_command_on_group_status($cmd_id);
-$title = get_command_on_host_title($cmd_id);
+if (strlen($_GET['cmd_id'])) {
+    $cmd_id = $_GET['cmd_id'];
+    $status = get_command_on_group_status($cmd_id);
+    $title = get_command_on_host_title($cmd_id);
+    $title = sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total']);
+} elseif (strlen($_GET['bundle_id'])) {
+    $status = get_command_on_bundle_status($_GET['bundle_id']);
+    $bdl = bundle_detail($_GET['bundle_id']);
+    $cmd_nb = count($bdl[1]);
+    $machines_nb = $status['total'] / count($bdl[1]);
+    $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers", "msc"), $bdl[0]['title'], $cmd_nb, $machines_nb);
+} else {
+    print _T("error : cmd_id or bundle_id must be given", "msc");
+}
 
 $labels = array(
     array('success',_T('computers were successfully deployed', 'msc')),
@@ -52,8 +63,8 @@ $slabels = array(
 
 );
 
-?><h3><?= sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total'])?>&nbsp;
-<a href='<?= urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id)) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
+?><h3><?= $title?>&nbsp;
+<a href='<?= urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id, 'bundle_id'=>$_GET['bundle_id'])) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
 </h3>
  <table width='100%'> <?php
 

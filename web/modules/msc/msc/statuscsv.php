@@ -2,9 +2,15 @@
 
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
-$cmd_id = $_GET['cmd_id'];
-$s = get_command_on_group_status($cmd_id);
-$title = get_command_on_host_title($cmd_id);
+if (strlen($_GET['cmd_id'])) {
+    $cmd_id = $_GET['cmd_id'];
+    $s = get_command_on_group_status($cmd_id);
+    $title = get_command_on_host_title($cmd_id);
+} elseif (strlen($_GET['bundle_id'])) {
+    $s = get_command_on_bundle_status($_GET['bundle_id']);
+    $bdl = bundle_detail($_GET['bundle_id']);
+    $title = $bdl[0]['title'];
+}
 
 ob_end_clean();
 

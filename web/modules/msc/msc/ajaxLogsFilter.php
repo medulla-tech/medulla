@@ -184,7 +184,8 @@ if ($areCommands) {
             $a_status[] = $actionempty;
         } else {
             $a_details[] = $actiondetails;
-            if (!strlen($gid) or (strlen($gid) and strlen($cmd['bundle_id']))) {
+            if (!strlen($gid) and !strlen($cmd['bundle_id'])) {
+                #if (!strlen($gid) or (strlen($gid) and strlen($cmd['bundle_id']))) {
                 $a_status[] = $actionempty;
             } else {
                 $a_status[] = $actionstatus;
