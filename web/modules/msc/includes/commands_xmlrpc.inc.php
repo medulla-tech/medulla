@@ -113,6 +113,10 @@ function get_command_on_group_status($cmd_id) {
     return xmlCall('msc.get_command_on_group_status', array($cmd_id));
 }
 
+function get_command_on_bundle_status($bundle_id) {
+    return xmlCall('msc.get_command_on_bundle_status', array($bundle_id));
+}
+
 function get_command_on_host_title($cmd_id) {
     return xmlCall('msc.get_command_on_host_title', array($cmd_id));
 }

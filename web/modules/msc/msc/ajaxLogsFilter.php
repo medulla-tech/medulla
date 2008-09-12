@@ -130,6 +130,21 @@ if ($areCommands) {
                 $a_uploaded[] = strval($status['running']['wait_up'][0])."/".strval($status['running']['run_up'][0])."/".strval($status['failure']['conn_up'][0]+$status['failure']['fail_up'][0]);
                 $a_executed[] = strval($status['running']['wait_ex'][0])."/".strval($status['running']['run_ex'][0])."/".strval($status['failure']['conn_ex'][0]+$status['failure']['fail_ex'][0]);
                 $a_deleted[] = strval($status['running']['wait_rm'][0])."/".strval($status['running']['run_rm'][0])."/".strval($status['failure']['conn_rm'][0]+$status['failure']['fail_rm'][0]);
+            } elseif (strlen($gid) and strlen($cmd['bundle_id']) and strlen($_GET['bundle_id'])) {
+                $status = get_command_on_group_status($cmd['id']);
+                $a_uploaded[] = strval($status['running']['wait_up'][0])."/".strval($status['running']['run_up'][0])."/".strval($status['failure']['conn_up'][0]+$status['failure']['fail_up'][0]);
+                $a_executed[] = strval($status['running']['wait_ex'][0])."/".strval($status['running']['run_ex'][0])."/".strval($status['failure']['conn_ex'][0]+$status['failure']['fail_ex'][0]);
+                $a_deleted[] = strval($status['running']['wait_rm'][0])."/".strval($status['running']['run_rm'][0])."/".strval($status['failure']['conn_rm'][0]+$status['failure']['fail_rm'][0]);
+            } elseif (strlen($gid) and !strlen($_GET['cmd_id'])) {
+                $status = get_command_on_bundle_status($cmd['bundle_id']);
+                $a_uploaded[] = strval($status['running']['wait_up'][0])."/".strval($status['running']['run_up'][0])."/".strval($status['failure']['conn_up'][0]+$status['failure']['fail_up'][0]);
+                $a_executed[] = strval($status['running']['wait_ex'][0])."/".strval($status['running']['run_ex'][0])."/".strval($status['failure']['conn_ex'][0]+$status['failure']['fail_ex'][0]);
+                $a_deleted[] = strval($status['running']['wait_rm'][0])."/".strval($status['running']['run_rm'][0])."/".strval($status['failure']['conn_rm'][0]+$status['failure']['fail_rm'][0]);
+            } elseif (strlen($uuid) and strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
+                $status = get_command_on_bundle_status($cmd['bundle_id']);
+                $a_uploaded[] = strval($status['running']['wait_up'][0])."/".strval($status['running']['run_up'][0])."/".strval($status['failure']['conn_up'][0]+$status['failure']['fail_up'][0]);
+                $a_executed[] = strval($status['running']['wait_ex'][0])."/".strval($status['running']['run_ex'][0])."/".strval($status['failure']['conn_ex'][0]+$status['failure']['fail_ex'][0]);
+                $a_deleted[] = strval($status['running']['wait_rm'][0])."/".strval($status['running']['run_rm'][0])."/".strval($status['failure']['conn_rm'][0]+$status['failure']['fail_rm'][0]);
             } else {
                 $a_uploaded[] ='';
                 $a_executed[] ='';
@@ -157,7 +172,6 @@ if ($areCommands) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
             
-            $params[] = $p;
             $icons = state_tmpl($coh['current_state']);
             $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
             $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
