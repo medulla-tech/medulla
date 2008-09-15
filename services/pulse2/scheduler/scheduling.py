@@ -329,6 +329,8 @@ def runWOLPhase(myCommandOnHostID):
         return runUploadPhase(myCommandOnHostID)
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
+    updateHistory(myCommandOnHostID, 'wol_in_progress')
+
     # perform call
     mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
 
@@ -705,8 +707,7 @@ def runRebootPhase(myCommandOnHostID):
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
 
-    # FIXME: we should add a new stae, then should be able to log the reboot operation
-    # updateHistory(myCommandOnHostID, 'reboot_in_progress')
+    updateHistory(myCommandOnHostID, 'reboot_in_progress')
 
     if SchedulerConfig().mode == 'sync':
         mydeffered = callOnBestLauncher(
@@ -737,8 +738,9 @@ def runEndPhase(myCommandOnHostID):
     myCoH.setDone()
     return None
 
-def parseWOLResult(output, myCommandOnHostID):
+def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     logging.getLogger().info("command_on_host #%s: WOL done" % myCommandOnHostID)
+    updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
     return runUploadPhase(myCommandOnHostID)
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -808,29 +810,30 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
         myCoH.setInventoryDone()
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
-        return runEndPhase(myCommandOnHostID)
+        return runRebootPhase(myCommandOnHostID)
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
     myCoH.setInventoryFailed()
     myCoH.reSchedule(myC.getNextConnectionDelay())
     updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
-    return None
+    return runRebootPhase(myCommandOnHostID)
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
-        # updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
+        updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
         return runEndPhase(myCommandOnHostID)
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
-    # updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
+    updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
     myCoH.reSchedule(myC.getNextConnectionDelay())
     return None
 
-def parseWOLError(output, myCommandOnHostID):
+def parseWOLError(reason, myCommandOnHostID):
     logging.getLogger().info("command_on_host #%s: WOL failed" % myCommandOnHostID)
+    updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
     return runUploadPhase(myCommandOnHostID)
 
 def parsePushError(reason, myCommandOnHostID):
@@ -884,7 +887,7 @@ def parseRebootError(reason, myCommandOnHostID):
     logger = logging.getLogger()
     logger.info("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.reSchedule(myC.getNextConnectionDelay())
-    # updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
+    updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
     # FIXME: should return a failure (but which one ?)
     return None
 
