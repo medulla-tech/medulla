@@ -217,6 +217,7 @@ class MscConfig(PluginConfig):
         if self.has_option("web", "web_def_attempts"):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_dlpath"):
+            self.web_dlpath = []
             dlpaths = self.get("web", "web_dlpath")
             for path in dlpaths.split(","):
                 self.web_dlpath.append(path.strip())
