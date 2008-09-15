@@ -499,8 +499,8 @@ class MscDatabase(Singleton):
                 end_date = "0000-00-00 00:00:00",
                 connect_as = "root",
                 title = "",
-                do_wol = 'enable',
                 do_reboot = 'disable',
+                do_wol = 'enable',
                 next_connection_delay = 60,
                 max_connection_attempt = 3,
                 do_inventory = 'disable',
@@ -633,6 +633,7 @@ class MscDatabase(Singleton):
             "0000-00-00 00:00:00",
             "root",     # FIXME: this should be the effective user we want to connect with
             desc,
+            "disable",
             "disable",
             60,
             3,

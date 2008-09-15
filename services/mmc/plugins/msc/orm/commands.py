@@ -64,6 +64,9 @@ class Commands(object):
     def hasToRunInventory(self):
         return self.do_inventory == 'enable'
 
+    def hasToReboot(self):
+        return self.do_reboot == 'enable'
+
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
         logging.getLogger().debug("hasSomethingToUpload(%s): %s" % (self.id, result))
