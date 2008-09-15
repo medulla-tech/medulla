@@ -447,6 +447,9 @@ def pa_getPackagePostCommandSuccess(p_api, pid):
 def pa_getPackagePostCommandFailure(p_api, pid):
     return PackageA(p_api).getPackagePostCommandFailure(pid)
 
+def pa_getPackageHasToReboot(p_api, pid):
+    return PackageA(p_api).getPackageHasToReboot(pid)
+
 def pa_getPackageFiles(p_api, pid):
     return PackageA(p_api).getPackageFiles(pid)
 

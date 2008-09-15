@@ -129,6 +129,13 @@ class PackageA:
         d.addErrback(self.onError, "getPackagePostCommandFailure", pid, False)
         return d
 
+    def getPackageHasToReboot(self, pid):
+        if self.initialized_failed:
+            return False
+        d = self.paserver.callRemote("getPackageHasToReboot", pid)
+        d.addErrback(self.onError, "getPackageHasToReboot", pid, False)
+        return d
+
     def getPackageFiles(self, pid):
         if self.initialized_failed:
             return []
@@ -175,7 +182,7 @@ class SendBundleCommand:
         self.mode = mode
         self.gid = gid
         self.bundle_id = None
-       
+
     def onError(error):
         logging.getLogger().error("Can't connect: %s", str(error))
         return self.deferred.callback([])
@@ -208,7 +215,7 @@ class SendBundleCommand:
             p_api, pid, order = self.porders[id]
             if order > last_order:
                 last_order = order
-                
+
         # treat bundle inventory and halt (put on the last command)
         do_inventory = self.params['do_inventory']
 
@@ -236,7 +243,7 @@ class SendBundleCommand:
             dl.addCallback(self.sendResult)
             return dl
         return False
-        
+
 class SendPackageCommand:
     def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None):
         self.ctx = ctx
