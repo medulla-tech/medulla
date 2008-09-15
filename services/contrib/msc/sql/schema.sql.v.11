@@ -29,6 +29,7 @@ ALTER TABLE `commands` \
     MODIFY `title` VARCHAR(255) DEFAULT NULL, \
     CHANGE `date_created` `creation_date` DATETIME NOT NULL, \
     DROP COLUMN `repeat`, \
+    ADD COLUMN `do_reboot` ENUM("enable", "disable") DEFAULT "disable" NOT NULL, \
     ADD COLUMN `bundle_id` INT DEFAULT NULL, \
     ADD COLUMN `order_in_bundle` SMALLINT DEFAULT NULL, \
     ADD KEY(`bundle_id`);
@@ -47,14 +48,15 @@ ALTER TABLE `commands_history` \
     DROP KEY `id_command_on_host`, \
     ADD KEY(`fk_commands_on_host`);
 
+ALTER TABLE `target` \
+    ADD KEY(`target_uuid`(10));
+
 CREATE TABLE IF NOT EXISTS bundle ( \
     id INT NOT NULL AUTO_INCREMENT, \
     title VARCHAR(255) DEFAULT NULL, \
+    do_reboot ENUM("enable", "disable") DEFAULT "disable" NOT NULL, \
     PRIMARY KEY (id) \
 );
-        
-
-
 
 DELETE FROM version;
 INSERT INTO version VALUES( "11" );
