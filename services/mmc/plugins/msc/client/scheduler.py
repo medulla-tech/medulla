@@ -55,10 +55,10 @@ def start_all_commands(scheduler):
         'start_all_commands'
     )
 
-def start_scheduled_command(scheduler, idCommand):
+def start_these_commands(scheduler, commands):
     return getProxy(select_scheduler(scheduler)).callRemote(
-        'start_scheduled_command',
-        idCommand
+        'start_these_commands',
+        commands
     )
 
 def ping_client(scheduler, computer):

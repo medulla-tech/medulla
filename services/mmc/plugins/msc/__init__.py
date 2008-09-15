@@ -127,8 +127,8 @@ class RpcProxy(RpcProxyI):
     def scheduler_start_all_commands(self, scheduler):
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_all_commands(scheduler))
 
-    def scheduler_start_scheduled_command(self, scheduler, id):
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_scheduled_command(scheduler, id))
+    def scheduler_start_these_commands(self, scheduler, commands):
+        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_these_commands(scheduler, commands))
 
     def scheduler_ping_and_probe_client(self, scheduler, uuid):
         ctx = self.currentContext
