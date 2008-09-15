@@ -88,12 +88,12 @@ def getDepencencies(myCommandOnHostID):
     session.close()
     return coh_dependencies
 
-def startAllCommands(scheduler_name, commandID = None):
+def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
-    if commandID:
-        logger.debug("MSC_Scheduler->startAllCommands() for command %s..." % commandID)
+    if commandIDs:
+        logger.debug("MSC_Scheduler->startAllCommands() for commands %s..." % commandIDs)
     else:
         logger.debug("MSC_Scheduler->startAllCommands()...")
     # gather candidates:
@@ -126,8 +126,8 @@ def startAllCommands(scheduler_name, commandID = None):
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         )
-    if commandID:
-        commands_query = commands_query.filter(database.commands.c.id == commandID)
+    if commandIDs:
+        commands_query = commands_query.filter(database.commands.c.id.in_(*commandIDs))
     commands_to_perform = []
     for q in commands_query.all():
         commands_to_perform.append(q.id)
@@ -283,11 +283,11 @@ def startCommand(myCommandOnHostID):
     runCommand(myCommandOnHostID)
     return True
 
-def startScheduledCommand(scheduler_name, commandID):
+def startTheseCommands(scheduler_name, commandIDs):
     """
     Tell the scheduler to immediately start a given command
     """
-    return startAllCommands(scheduler_name, commandID)
+    return startAllCommands(scheduler_name, commandIDs)
 
 def runCommand(myCommandOnHostID):
     """
