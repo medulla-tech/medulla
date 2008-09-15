@@ -39,18 +39,18 @@ ALTER TABLE `commands_on_host` \
     MODIFY `uploaded` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL, \
     MODIFY `executed` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL, \
     MODIFY `deleted` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL, \
-    MODIFY `current_state` ENUM("upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_failed", "inventory_done", "not_reachable", "done", "pause", "stop", "scheduled") DEFAULT "scheduled" NOT NULL, \
+    MODIFY `current_state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "not_reachable", "done", "pause", "stop", "scheduled") DEFAULT "scheduled" NOT NULL, \
     DROP KEY `id_command`, \
     ADD KEY(`fk_commands`), \
     ADD KEY(`scheduler`);
 
 ALTER TABLE `commands_history` \
+    MODIFY `state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "reboot_in_progress", "reboot_done", "reboot_failed"), \
     DROP KEY `id_command_on_host`, \
     ADD KEY(`fk_commands_on_host`);
 
 ALTER TABLE `target` \
     ADD KEY(`target_uuid`(10));
-
 CREATE TABLE IF NOT EXISTS bundle ( \
     id INT NOT NULL AUTO_INCREMENT, \
     title VARCHAR(255) DEFAULT NULL, \
