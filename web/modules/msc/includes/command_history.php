@@ -288,7 +288,7 @@ function _colorise($line) {
             $out .= '<font color=black face=fixed>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
         }
     } else {
-        $out .=  "";
+        $out .= '<font color=black face=fixed>' . $line . '</font>';
     }
     return $out;
 }
