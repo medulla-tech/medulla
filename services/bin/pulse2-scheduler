@@ -75,8 +75,16 @@ def run_awake_scheduling():
     logger = logging.getLogger()
     logger.info('scheduler "%s": wake-up' % (SchedulerConfig().name))
     # start command, gather deffered
-    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
-    pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
+    try:
+        pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
+    except Exception, e:
+        logger.error("Error while running startAllCommands:")
+        logger.error(e)
+    try:
+        pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
+    except Exception, e:
+        logger.error("Error while running stopElapsedCommands")
+        logger.error(e)
     # FIXME: should perhaps be called without waiting for deferreds ?
     # adds a end hook to reschedule awake_scheduling
     reschedule_awake_scheduling(None)
@@ -140,10 +148,10 @@ def startService():
     # start periodic scheduler, called every awake_time seconds
     reschedule_awake_scheduling(None)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
-
+        
     twisted.internet.reactor.run()
     return 0
-
+    
 class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
     """
