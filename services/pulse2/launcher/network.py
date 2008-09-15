@@ -72,13 +72,13 @@ def wolClient(mac_addrs, target_bcast = None):
         cmd = command_list + ['--ipaddr=%s' % bcast] + mac_addresses
         logging.getLogger().debug("WOL  : %s"%(str(cmd)))
         dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
-    
+
     if len(dl) == 1:
         return dl[0]
     dl = defer.DeferredList(dl)
     dl.addCallback(cbReturn)
     return dl
-    
+
 def icmpClient(client, timeout):
     """ Send a Ping to our client """
     def __cb_icmp_end(shprocess, client=client):
@@ -144,7 +144,7 @@ def downloadFile(client, path, bwlimit, timeout):
     def __cb_dl_end(result, path):
         code, stdout, stderr = result
         ret = False
-        if not code:
+        if code == 0 or code == 1: # code may be 1 if one of our downloaded folders do not exists
             # Look for the first available file contained in the directory
             for root, dirs, files in os.walk(path):
                 if files:
