@@ -25,6 +25,7 @@
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
+require_once('modules/msc/includes/widgets.inc.php');
 
 if (strlen($_GET['uuid'])) {
     // bottom of the page : details for the command if coh_id is specified

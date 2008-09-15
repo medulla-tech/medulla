@@ -77,7 +77,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
 
     // record new command
     $id = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-    scheduler_start_scheduled_command('', $id);
+    scheduler_start_these_commands('', array($id));
 
     // then redirect to the logs page
     header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id)));

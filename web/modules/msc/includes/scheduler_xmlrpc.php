@@ -26,8 +26,8 @@ function scheduler_start_all_commands($scheduler) {
     return xmlCall('msc.scheduler_start_all_commands', array($scheduler));
 }
 
-function scheduler_start_scheduled_command($scheduler, $id) {
-    return xmlCall('msc.scheduler_start_scheduled_command', array($scheduler, $id));
+function scheduler_start_these_commands($scheduler, $ids) {
+    return xmlCall('msc.scheduler_start_these_commands', array($scheduler, $ids));
 }
 
 function scheduler_ping_and_probe_client($scheduler, $client) {

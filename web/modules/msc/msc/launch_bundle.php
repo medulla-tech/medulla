@@ -39,9 +39,16 @@ function launch_bundle($cible, $orders, $gid = null) {
         $params[$param] = $_POST[$param];
     }
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    $id_command = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid);
-    scheduler_start_scheduled_command('', $id_command);
-    return $id_command;
+    $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid);
+    if (is_array($ret) && !empty($ret)) {
+        $commands = $ret[1];
+        $ids = array();
+        foreach($commands as $key => $value) {
+            $ids[] = $value[1];
+        }
+        scheduler_start_these_commands('', $ids);
+    }
+    return $ret;
 }
 
 /* single target: form display */
