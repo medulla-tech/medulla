@@ -23,6 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("functions.php"); # for return_icon
+
 class CommandOnHost {
     function CommandOnHost($coh) {
         $statusTable = getStatusTable();
@@ -168,20 +170,29 @@ class CommandHistory {
             $widget->display();
             return;
         }
+
+        # FIXME: stolen from ajaxLogsFiler.php, should be factorized
+        $a_uploaded ='<img style="vertical-align: middle;" alt="'.$this->db_coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['uploaded']).'"/> ';
+        $a_executed ='<img style="vertical-align: middle;" alt="'.$this->db_coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['executed']).'"/> ';
+        $a_deleted = '<img style="vertical-align: middle;" alt="'.$this->db_coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['deleted']).'"/> ';
+
+        $state = $a_uploaded . $a_executed . $a_deleted;
+
         $values = array(
-            array(_T('Command name', 'msc'),$this->db_cmd['title']),
-            array(_T('Creation date', 'msc'),_toDate($this->db_cmd['creation_date'])),
-            array(_T('User command creator', 'msc'),$this->db_cmd['creator']),
-            array(_T('Execute file', 'msc'),$this->db_cmd['start_file']),
-            array(_T('Execution arguments', 'msc'),$this->db_cmd['parameters']),
-            array(_T('Start execute file', 'msc'),$this->db_cmd['start_script']),
-            array(_T('Start inventory agent', 'msc'),$this->db_cmd['do_inventory']),
+            array(_T('Command name', 'msc'),            $this->db_cmd['title']),
+            array(_T('Command state', 'msc'),           $state),
+            array(_T('Creation date', 'msc'),           _toDate($this->db_cmd['creation_date'])),
+            array(_T('User command creator', 'msc'),    $this->db_cmd['creator']),
+            array(_T('Execute file', 'msc'),            $this->db_cmd['start_file']),
+            array(_T('Execution arguments', 'msc'),     $this->db_cmd['parameters']),
+            array(_T('Start execute file', 'msc'),      $this->db_cmd['start_script']),
+            array(_T('Start inventory agent', 'msc'),   $this->db_cmd['do_inventory']),
             array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['do_wol']),
-            array(_T('Remaining attempts', 'msc'),$this->db_coh['attempts_left']),
+            array(_T('Remaining attempts', 'msc'),      $this->db_coh['attempts_left']),
             array(_T('Delay between two connections', 'msc'),$this->db_cmd['next_connection_delay']),
-            array(_T('Command start date', 'msc'),_toDate($this->db_cmd['start_date'])),
-            array(_T('Command expiry date', 'msc'),_toDate($this->db_cmd['end_date'])),
-            array(_T('Command next run date', 'msc'),_toDate($this->db_coh['next_launch_date']))
+            array(_T('Command start date', 'msc'),      _toDate($this->db_cmd['start_date'])),
+            array(_T('Command expiry date', 'msc'),     _toDate($this->db_cmd['end_date'])),
+            array(_T('Command next run date', 'msc'),   _toDate($this->db_coh['next_launch_date'])),
         );
 
         $name = array_map("_names", $values);
