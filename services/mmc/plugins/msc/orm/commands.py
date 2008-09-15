@@ -111,6 +111,7 @@ class Commands(object):
             'dispatched': self.dispatched,
             'title': self.title,
             'do_inventory': self.do_inventory,
+            'do_reboot': self.do_wol,
             'do_wol': self.do_wol,
             'next_connection_delay': self.next_connection_delay,
             'max_connection_attempt': self.max_connection_attempt,

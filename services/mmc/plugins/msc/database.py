@@ -304,7 +304,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
+    def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
         """
         Return a Command object
         """
@@ -321,6 +321,7 @@ class MscDatabase(Singleton):
         cmd.connect_as = connect_as
         cmd.creator = creator
         cmd.title = title
+        cmd.do_reboot = do_reboot
         cmd.do_wol = do_wol
         cmd.next_connection_delay = next_connection_delay
         cmd.max_connection_attempt = max_connection_attempt
@@ -499,6 +500,7 @@ class MscDatabase(Singleton):
                 connect_as = "root",
                 title = "",
                 do_wol = 'enable',
+                do_reboot = 'disable',
                 next_connection_delay = 60,
                 max_connection_attempt = 3,
                 do_inventory = 'disable',
@@ -567,7 +569,7 @@ class MscDatabase(Singleton):
         deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         # create (and save) the command itself
         session = create_session()
-        cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
+        cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
         session.close()
 
         d = self.getMachinesSchedulers(target)

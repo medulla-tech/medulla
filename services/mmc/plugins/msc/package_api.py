@@ -284,6 +284,7 @@ class SendPackageCommand:
         start_script = (self.params['start_script'] == 'on' and 'enable' or 'disable')
         clean_on_success = (self.params['clean_on_success'] == 'on' and 'enable' or 'disable')
         do_wol = (self.params['do_wol'] == 'on' and 'enable' or 'disable')
+        do_reboot = (self.params['do_reboot'] == 'on' and 'enable' or 'disable')
         next_connection_delay = self.params['next_connection_delay']
         max_connection_attempt = self.params['max_connection_attempt']
         do_inventory = (self.params['do_inventory'] == 'on' and 'enable' or 'disable')
@@ -343,6 +344,7 @@ class SendPackageCommand:
             end_date,
             "root", # TODO: may use another login name
             title,
+            do_reboot,
             do_wol,
             next_connection_delay,
             max_connection_attempt,
