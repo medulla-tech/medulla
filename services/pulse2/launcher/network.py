@@ -41,9 +41,9 @@ def wolClient(mac_addrs, target_bcast = None):
     def __cb_wol_end(shprocess):
         if not shprocess.exit_code == 0:
             logging.getLogger().warn("launcher %s: WOL failed: %s, %s" % (LauncherConfig().name, shprocess.stdout, shprocess.stderr))
-            return False
+            return (False, "mac addresses: %s, target broadcasts: %s" % (mac_addrs, target_bcast), "")
         logging.getLogger().debug("launcher %s: WOL succeeded" % (LauncherConfig().name))
-        return True
+        return (True, "mac addresses: %s, target broadcasts: %s" % (mac_addrs, target_bcast), "")
 
     def cbReturn(result):
         ret = True
