@@ -45,7 +45,7 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_getServerDetails(self):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
-    
+
     def xmlrpc_getAllPackages(self, mirror = None):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
@@ -78,6 +78,9 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_getPackagePostCommandFailure(self, pid):
         return Common().package(pid, self.mp).postcmd_ko.toH()
+
+    def xmlrpc_getPackageHasToReboot(self, pid):
+        return Common().package(pid, self.mp).reboot
 
     def xmlrpc_getPackageFiles(self, pid): # TODO remove the internals
         return map(lambda x: x.toH(), Common().package(pid, self.mp).files.internals)
