@@ -148,10 +148,10 @@ def startService():
     # start periodic scheduler, called every awake_time seconds
     reschedule_awake_scheduling(None)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
-        
+
     twisted.internet.reactor.run()
     return 0
-    
+
 class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
     """
@@ -251,6 +251,9 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_deletion(launcher, (exitcode, stdout, stderr), id))
     def xmlrpc_completed_inventory(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_reboot(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_reboot(launcher, (exitcode, stdout, stderr), id))
+
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
     def xmlrpc_remote_exec(self, launcher, path):

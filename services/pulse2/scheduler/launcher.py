@@ -61,5 +61,7 @@ def completed_inventory(launcher, (exitcode, stdout, stderr), id):
     pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
     return True
 
-
-
+def completed_reboot(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that reboot after of CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parseRebootResult((exitcode, stdout, stderr), id)
+    return True
