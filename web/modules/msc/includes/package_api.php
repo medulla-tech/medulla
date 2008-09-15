@@ -40,6 +40,10 @@ function getPackagePostCommandFailure($p_api, $pid) {
         return xmlCall("msc.pa_getPackagePostCommandFailure", array($p_api, $pid));
 }
 
+function getPackageHasToReboot($p_api, $pid) {
+        return xmlCall("msc.pa_getPackageHasToReboot", array($p_api, $pid));
+}
+
 function getPackageFiles($p_api, $pid) {
         return xmlCall("msc.pa_getPackageFiles", array($p_api, $pid));
 }

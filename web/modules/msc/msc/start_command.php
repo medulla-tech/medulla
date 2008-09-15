@@ -44,7 +44,7 @@ if (isset($_POST["bconfirm"])) {
     $p_api->fromURI($_POST["papi"]);
 
     $params = array();
-    foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
+    foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
 
@@ -76,7 +76,7 @@ if (isset($_POST["badvanced"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals') as $param) {
+    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
     $prefix = '';
@@ -108,6 +108,8 @@ $name = getPackageLabel($p_api, $_GET["pid"]);
 $version = getPackageVersion($p_api, $_GET["pid"]);
 $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $cible));
 
+$hastoreboot = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
+
 $f->push(new Table());
 
 // form preseeding
@@ -121,6 +123,7 @@ $f->add(new HiddenTpl("pid"),                                   array("value" =>
 $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
 $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
 $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
+$f->add(new HiddenTpl("do_reboot"),                             array("value" => $hastoreboot,                      "hide" => True));
 $f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),                   "hide" => True));
 $f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),                "hide" => True));
 $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
