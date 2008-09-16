@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-02 20:01+0200\n"
+"POT-Creation-Date: 2008-09-16 17:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,17 +16,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inventory/inventory/tabs.php:14
+#: inventory/inventory/tabs.php:15
 #, php-format
 msgid "%s's content inventory"
 msgstr ""
 
-#: inventory/inventory/tabs.php:12
+#: inventory/inventory/tabs.php:13
 #, php-format
 msgid "%s's inventory"
 msgstr ""
 
-#: inventory/inventory/body.php:32
+#: inventory/inventory/body.php:39
 #, php-format
 msgid "%s's list"
 msgstr ""
@@ -267,9 +267,9 @@ msgstr ""
 msgid "Graphique"
 msgstr ""
 
-#: inventory/inventory/tabs.php:16 inventory/inventory/hardware.php:27
-#: inventory/inventory/localSidebar.php:7
-#: inventory/inventory/i18n_labels.php:56 inventory/infoPackage.inc.php:45
+#: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
+#: inventory/inventory/tabs.php:18 inventory/inventory/i18n_labels.php:56
+#: inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr ""
 
@@ -313,6 +313,11 @@ msgstr ""
 #: inventory/inventory/i18n_labels.php:62 inventory/infoPackage.inc.php:33
 #: inventory/infoPackage.inc.php:39
 msgid "Inventory"
+msgstr ""
+
+#: inventory/inventory/view.php:48
+#, php-format
+msgid "Inventory of %s"
 msgstr ""
 
 #: inventory/infoPackage.inc.php:124
@@ -371,7 +376,7 @@ msgstr ""
 msgid "Media"
 msgstr ""
 
-#: inventory/inventory/memory.php:27 inventory/inventory/localSidebar.php:16
+#: inventory/inventory/localSidebar.php:16 inventory/inventory/memory.php:27
 #: inventory/inventory/i18n_labels.php:75 inventory/infoPackage.inc.php:56
 msgid "Memory"
 msgstr ""
@@ -401,7 +406,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: inventory/inventory/network.php:27 inventory/inventory/localSidebar.php:9
+#: inventory/inventory/localSidebar.php:9 inventory/inventory/network.php:27
 #: inventory/inventory/i18n_labels.php:82 inventory/infoPackage.inc.php:47
 msgid "Network"
 msgstr ""
@@ -451,7 +456,7 @@ msgstr ""
 msgid "PortType"
 msgstr ""
 
-#: inventory/inventory/printer.php:27 inventory/inventory/localSidebar.php:19
+#: inventory/inventory/localSidebar.php:19 inventory/inventory/printer.php:27
 #: inventory/inventory/i18n_labels.php:93 inventory/infoPackage.inc.php:62
 msgid "Printer"
 msgstr ""
@@ -478,6 +483,10 @@ msgstr ""
 
 #: inventory/inventory/i18n_labels.php:99
 msgid "ProductVersion"
+msgstr ""
+
+#: inventory/inventory/view.php:78
+msgid "Properties"
 msgstr ""
 
 #: inventory/inventory/i18n_labels.php:100
@@ -545,7 +554,7 @@ msgstr ""
 msgid "SmbVersion"
 msgstr ""
 
-#: inventory/inventory/software.php:27 inventory/inventory/localSidebar.php:8
+#: inventory/inventory/localSidebar.php:8 inventory/inventory/software.php:27
 #: inventory/inventory/i18n_labels.php:114 inventory/infoPackage.inc.php:70
 msgid "Software"
 msgstr ""
@@ -579,7 +588,7 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: inventory/inventory/storage.php:27 inventory/inventory/localSidebar.php:21
+#: inventory/inventory/localSidebar.php:21 inventory/inventory/storage.php:27
 #: inventory/inventory/i18n_labels.php:121 inventory/infoPackage.inc.php:66
 msgid "Storage"
 msgstr ""
@@ -632,7 +641,7 @@ msgstr ""
 msgid "VRAMSize"
 msgstr ""
 
-#: inventory/inventory/i18n_labels.php:134
+#: inventory/inventory/view.php:79 inventory/inventory/i18n_labels.php:134
 msgid "Value"
 msgstr ""
 
@@ -644,8 +653,8 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: inventory/inventory/videocard.php:27
-#: inventory/inventory/localSidebar.php:22 inventory/infoPackage.inc.php:68
+#: inventory/inventory/localSidebar.php:22
+#: inventory/inventory/videocard.php:27 inventory/infoPackage.inc.php:68
 msgid "VideoCard"
 msgstr ""
 
