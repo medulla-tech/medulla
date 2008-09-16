@@ -35,7 +35,7 @@ require_once('modules/msc/includes/bundle_widgets.php');
 
 function launch_bundle($cible, $orders, $gid = null) {
     $params = array();
-    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'title') as $param) {
+    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'do_reboot', 'title') as $param) {
         $params[$param] = $_POST[$param];
     }
     // TODO: activate this  : msc_command_set_pause($cmd_id);
@@ -57,7 +57,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
     if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
-    } else { // We found a matching computer    
+    } else { // We found a matching computer
         if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"]) and !isset($_POST["badvanced_bundle_valid"])) { // display possible action to put in the bundle
             $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
             $list = new RenderedMSCBundleChoiceM($machine);
