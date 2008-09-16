@@ -3,7 +3,7 @@
 msgid "%3.1f %s%s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:225 msc/msc/ajaxLogsFilter.php:227
+#: msc/msc/ajaxLogsFilter.php:231 msc/msc/ajaxLogsFilter.php:233
 msgid "%a %d %b %Y %T"
 msgstr ""
 
@@ -14,12 +14,12 @@ msgid ""
 "access it"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:232
+#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:238
 #, php-format
 msgid "%s on %s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:230
+#: msc/msc/ajaxLogsFilter.php:236
 #, php-format
 msgid "%s on %s (Bundle #%s)"
 msgstr ""
@@ -62,8 +62,12 @@ msgstr ""
 msgid "Advanced launch bundle"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:223
+#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:229
 msgid "As soon as possible"
+msgstr ""
+
+#: msc/includes/bundle_widgets.php:324
+msgid "Beginning of validity"
 msgstr ""
 
 #: msc/includes/command_history.php:86
@@ -92,8 +96,8 @@ msgstr ""
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:196
-#: msc/msc/ajaxLogsFilter.php:271 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:202
+#: msc/msc/ajaxLogsFilter.php:277 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr ""
 
@@ -175,7 +179,7 @@ msgstr ""
 msgid "Delete failed"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:320 msc/msc/launch.php:126
+#: msc/includes/bundle_widgets.php:319 msc/msc/launch.php:126
 msgid "Delete files after a successful execution"
 msgstr ""
 
@@ -212,9 +216,12 @@ msgstr ""
 msgid "Download file from a computer"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:325 msc/logs/ajaxLogsFilter.php:132
-#: msc/msc/ajaxLogsFilter.php:266
+#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:272
 msgid "End date"
+msgstr ""
+
+#: msc/includes/bundle_widgets.php:325
+msgid "End of validity"
 msgstr ""
 
 #: msc/infoPackage.inc.php:122
@@ -540,8 +547,7 @@ msgstr ""
 msgid "Start action %s on host %s"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:324 msc/logs/ajaxLogsFilter.php:134
-#: msc/msc/ajaxLogsFilter.php:268
+#: msc/logs/ajaxLogsFilter.php:134 msc/msc/ajaxLogsFilter.php:274
 msgid "Start date"
 msgstr ""
 
@@ -549,7 +555,7 @@ msgstr ""
 msgid "Start execute file"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:318 msc/msc/launch.php:127
+#: msc/includes/bundle_widgets.php:320 msc/msc/launch.php:127
 msgid "Start inventory"
 msgstr ""
 
@@ -557,7 +563,7 @@ msgstr ""
 msgid "Start inventory agent"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:319 msc/msc/launch.php:125
+#: msc/includes/bundle_widgets.php:318 msc/msc/launch.php:125
 msgid "Start the script"
 msgstr ""
 
@@ -687,12 +693,12 @@ msgid "computers were successfully deployed"
 msgstr ""
 
 #: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:138
-#: msc/msc/ajaxLogsFilter.php:198 msc/msc/ajaxLogsFilter.php:272
+#: msc/msc/ajaxLogsFilter.php:204 msc/msc/ajaxLogsFilter.php:278
 msgid "current_state"
 msgstr ""
 
 #: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:141
-#: msc/msc/ajaxLogsFilter.php:201 msc/msc/ajaxLogsFilter.php:275
+#: msc/msc/ajaxLogsFilter.php:207 msc/msc/ajaxLogsFilter.php:281
 msgid "deleted"
 msgstr ""
 
@@ -701,7 +707,7 @@ msgid "error : cmd_id or bundle_id must be given"
 msgstr ""
 
 #: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:140
-#: msc/msc/ajaxLogsFilter.php:200 msc/msc/ajaxLogsFilter.php:274
+#: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:280
 msgid "executed"
 msgstr ""
 
@@ -749,12 +755,12 @@ msgstr ""
 msgid "running upload"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:197
+#: msc/msc/ajaxLogsFilter.php:203
 msgid "start_date"
 msgstr ""
 
 #: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
-#: msc/msc/ajaxLogsFilter.php:199 msc/msc/ajaxLogsFilter.php:273
+#: msc/msc/ajaxLogsFilter.php:205 msc/msc/ajaxLogsFilter.php:279
 msgid "uploaded"
 msgstr ""
 

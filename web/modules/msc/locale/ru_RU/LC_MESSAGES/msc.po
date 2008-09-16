@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-15 18:42+0200\n"
+"POT-Creation-Date: 2008-09-16 17:18+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
 
-#: msc/msc/ajaxLogsFilter.php:225 msc/msc/ajaxLogsFilter.php:227
+#: msc/msc/ajaxLogsFilter.php:231 msc/msc/ajaxLogsFilter.php:233
 msgid "%a %d %b %Y %T"
 msgstr "%a %d %b %Y %T"
 
@@ -34,12 +34,12 @@ msgstr ""
 "Host %s nie jest zdefiniowany w module MSC lub nie masz uprawnień dostępu do "
 "niego."
 
-#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:232
+#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:238
 #, php-format
 msgid "%s on %s"
 msgstr "%s na %s"
 
-#: msc/msc/ajaxLogsFilter.php:230
+#: msc/msc/ajaxLogsFilter.php:236
 #, php-format
 msgid "%s on %s (Bundle #%s)"
 msgstr ""
@@ -82,9 +82,13 @@ msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 msgid "Advanced launch bundle"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:223
+#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:229
 msgid "As soon as possible"
 msgstr "Tka szybko, jak tylko możliwe"
+
+#: msc/includes/bundle_widgets.php:324
+msgid "Beginning of validity"
+msgstr ""
 
 #: msc/includes/command_history.php:86
 msgid "Bundle"
@@ -113,8 +117,8 @@ msgstr "Bajtów"
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:196
-#: msc/msc/ajaxLogsFilter.php:271 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:202
+#: msc/msc/ajaxLogsFilter.php:277 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr "Polecenie"
 
@@ -200,7 +204,7 @@ msgstr "Usuwanie zakończone"
 msgid "Delete failed"
 msgstr "Usuwanie nieudane"
 
-#: msc/includes/bundle_widgets.php:320 msc/msc/launch.php:126
+#: msc/includes/bundle_widgets.php:319 msc/msc/launch.php:126
 msgid "Delete files after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
 
@@ -237,10 +241,13 @@ msgstr ""
 msgid "Download file from a computer"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:325 msc/logs/ajaxLogsFilter.php:132
-#: msc/msc/ajaxLogsFilter.php:266
+#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:272
 msgid "End date"
 msgstr "Data zakończenia"
+
+#: msc/includes/bundle_widgets.php:325
+msgid "End of validity"
+msgstr ""
 
 #: msc/infoPackage.inc.php:122
 msgid "Establish a VNC connection"
@@ -572,8 +579,7 @@ msgstr "Uruchom zapytanie \"Wake On Lan\" jeżeli nie uda się połączyć"
 msgid "Start action %s on host %s"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: msc/includes/bundle_widgets.php:324 msc/logs/ajaxLogsFilter.php:134
-#: msc/msc/ajaxLogsFilter.php:268
+#: msc/logs/ajaxLogsFilter.php:134 msc/msc/ajaxLogsFilter.php:274
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -581,7 +587,7 @@ msgstr "Data uruchomienia"
 msgid "Start execute file"
 msgstr "Start wykonywania pliku"
 
-#: msc/includes/bundle_widgets.php:318 msc/msc/launch.php:127
+#: msc/includes/bundle_widgets.php:320 msc/msc/launch.php:127
 msgid "Start inventory"
 msgstr "Rozpocznij inwentaryzację"
 
@@ -589,7 +595,7 @@ msgstr "Rozpocznij inwentaryzację"
 msgid "Start inventory agent"
 msgstr "Rozpocznij agenta inwentaryzacji"
 
-#: msc/includes/bundle_widgets.php:319 msc/msc/launch.php:125
+#: msc/includes/bundle_widgets.php:318 msc/msc/launch.php:125
 msgid "Start the script"
 msgstr "Rozpocznik skrypt"
 
@@ -723,12 +729,12 @@ msgid "computers were successfully deployed"
 msgstr "zakończono wdrażanie na komputerach"
 
 #: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:138
-#: msc/msc/ajaxLogsFilter.php:198 msc/msc/ajaxLogsFilter.php:272
+#: msc/msc/ajaxLogsFilter.php:204 msc/msc/ajaxLogsFilter.php:278
 msgid "current_state"
 msgstr "obecny_stan"
 
 #: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:141
-#: msc/msc/ajaxLogsFilter.php:201 msc/msc/ajaxLogsFilter.php:275
+#: msc/msc/ajaxLogsFilter.php:207 msc/msc/ajaxLogsFilter.php:281
 msgid "deleted"
 msgstr "usunięto"
 
@@ -737,7 +743,7 @@ msgid "error : cmd_id or bundle_id must be given"
 msgstr ""
 
 #: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:140
-#: msc/msc/ajaxLogsFilter.php:200 msc/msc/ajaxLogsFilter.php:274
+#: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:280
 msgid "executed"
 msgstr "wykonano"
 
@@ -785,12 +791,12 @@ msgstr "w trakcie zatrzymywania"
 msgid "running upload"
 msgstr "w trakcie wysyłania"
 
-#: msc/msc/ajaxLogsFilter.php:197
+#: msc/msc/ajaxLogsFilter.php:203
 msgid "start_date"
 msgstr "data_rozpoczęcia"
 
 #: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
-#: msc/msc/ajaxLogsFilter.php:199 msc/msc/ajaxLogsFilter.php:273
+#: msc/msc/ajaxLogsFilter.php:205 msc/msc/ajaxLogsFilter.php:279
 msgid "uploaded"
 msgstr "wysłano"
 
