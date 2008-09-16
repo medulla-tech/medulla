@@ -1214,6 +1214,7 @@ class PageGenerator {
     function PageGenerator($title = "") {
         $content=array();
         $this->title = $title;
+        $this->fixheight = True;
     }
 
     /**
@@ -1236,8 +1237,10 @@ class PageGenerator {
     function display() {
         $this->displaySideMenu();
         $this->displayTitle();
-        /* On IE, make the page have a minimal length, else the sidemenu may be cut */
-        print '<div class="fixheight"></div>';
+        if ($this->fixheight) {
+            /* On IE, make the page have a minimal length, else the sidemenu may be cut */
+            print '<div class="fixheight"></div>';
+        }
     }
 
     function displayCss() {
@@ -1261,6 +1264,13 @@ class PageGenerator {
      */
     function displayTitle() {
         if (isset($this->title)) print "<h2>" . $this->title . "</h2>\n";
+    }
+
+    /**
+     * Sometimes, we don't want to add the fixheight div in the page
+     */
+    function setNoFixHeight() {
+        $this->fixheight = False;
     }
 }
 
