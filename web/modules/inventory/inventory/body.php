@@ -29,10 +29,6 @@ require_once("modules/inventory/includes/xmlrpc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$p = new PageGenerator(sprintf(_T("%s's list", "inventory"), $label));
-$p->setSideMenu($sidemenu);
-$p->display();
-
 $url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table.'&from=inventory%2Finventory%2F'.strtolower($table);
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
     $url .= "&$get=".$_GET[$get];
@@ -40,8 +36,11 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get)
 $ajax = new AjaxFilter($url);
 
 $ajax->display();
-print "<br/><br/><br/>";
+$p = new PageGenerator(sprintf(_T("%s's list", "inventory"), $label));
+$p->setSideMenu($sidemenu);
+$p->setNoFixHeight();
+$p->display();
+
 $ajax->displayDivToUpdate();
 
 ?>
-
