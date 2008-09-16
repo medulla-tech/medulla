@@ -1,12 +1,12 @@
 <?
-/* 
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
  * $Id: widgets.inc.php 279 2008-08-12 13:13:06Z nrueff $
  *
  * This file is part of Mandriva Management Console (MMC).
- *      
+ *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -16,11 +16,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *  
+ *
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */     
+ */
 
 class RenderedMSCBundleChoice {
     function RenderedMSCBundleChoice() { }
@@ -28,10 +28,10 @@ class RenderedMSCBundleChoice {
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $nonmemb = unserialize(base64_decode($_POST["lnonmemb"]));
         $this->list = unserialize(base64_decode($_POST["list"]));
-        if (!is_array($this->list)) { 
+        if (!is_array($this->list)) {
             $this->loadList();
         }
-        
+
         if (isset($_POST["bdeluser_x"])) {
             if (isset($_POST["members"])) {
                 foreach ($_POST["members"] as $member) {
@@ -81,7 +81,7 @@ class RenderedMSCBundleChoice {
   </div>
  </td>
  <td style="border: none;">
-  <div> 
+  <div>
    <input type="image" name="bdeluser" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
    <input type="image" name="badduser" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
   </div>
@@ -110,7 +110,7 @@ class RenderedMSCBundleChoice {
 <input type="hidden" name="list" value="<?php echo base64_encode(serialize($this->list)); ?>" />
 <?
     }
-    
+
     function display_end() {
 ?>
 <input type="submit" name="bsort_bundle" class="btnPrimary" value="<?= _T("Set order", "msc"); ?>" />
@@ -119,7 +119,7 @@ class RenderedMSCBundleChoice {
 <style type="text/css">
 <!--
 #grouplist
-{       
+{
         color: #666;
         background-color: #F0F4F7;
         border: solid 1px #CCC;
@@ -129,12 +129,12 @@ class RenderedMSCBundleChoice {
 }
 
 #grouplist div.list
-{       
+{
         float: left;
 }
 
 select.list
-{       
+{
         width: 250px;
 }
 -->
@@ -178,7 +178,7 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
     }
 
     function loadList() {
-        $filter = array('group'=>$this->group->id); 
+        $filter = array('group'=>$this->group->id);
         list($count, $packages) = advGetAllPackages($filter, 0, -1);
         $this->list = array();
         foreach ($packages as $c_package) {
@@ -247,7 +247,7 @@ class RenderedMSCBundleSortParent {
             $f->add($w[0], $w[1]);
         }
         $this->display_options($f);
-        
+
         $f->pop();
         foreach ($this->buttons as $b) {
             $f->addButton($b[0], $b[1], $b[2]);
@@ -266,7 +266,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
         $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
-        $f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',                              "hide" => True));
+        $f->add(new HiddenTpl("do_reboot"),                             array("value" => '',                                "hide" => True));
         $f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),                   "hide" => True));
         $f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),                "hide" => True));
         $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
@@ -314,26 +314,26 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
         $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('title')), array("value" => $name));
-        $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
-        $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
-        $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));   
+        $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_POST['do_wol'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
         $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
-        $f->add(new TrFormElement(_T('Delay betwen connections (minutes)', 'msc'),           new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
-        $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
-        $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));                                 
-        $f->add(new TrFormElement(_T('Start date', 'msc'),                                  new DynamicDateTpl('start_date')), array('ask_for_now' => 1));                      
-        $f->add(new TrFormElement(_T('End date', 'msc'),                                    new DynamicDateTpl('end_date')), array('ask_for_never' => 1));                      
-        $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
+        $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_POST['do_inventory'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement(_T('Delay betwen connections (minutes)', 'msc'),          new InputTpl("next_connection_delay")), array("value" => $_POST['next_connection_delay']));
+        $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_POST['max_connection_attempt']));
+        $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));
+        $f->add(new TrFormElement(_T('Beginning of validity', 'msc'),                       new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
+        $f->add(new TrFormElement(_T('End of validity', 'msc'),                             new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
+        $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_POST['deployment_intervals']));
         $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
         $rb = new RadioTpl("copy_mode");
         $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
         $rb->setvalues(array('push', 'push_pull'));
         $rb->setSelected($_GET['copy_mode']);
         $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-    
 
-        $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
-        $f->add(new HiddenTpl("delete_file_after_execute_successful"),  array("value" => 'on',                              "hide" => True));
+
+        $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',  "hide" => True));
+        $f->add(new HiddenTpl("do_reboot"),             array("value" => '',    "hide" => True));
     }
 }
 
