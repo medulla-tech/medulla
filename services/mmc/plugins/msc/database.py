@@ -62,6 +62,7 @@ DATABASEVERSION = 11
 
 # TODO need to check for useless function (there should be many unused one...)
 
+NB_DB_CONN_TRY = 2
 def create_method(obj, m):
     def method(self, already_in_loop = False):
         ret = None
@@ -154,6 +155,20 @@ class MscDatabase(Singleton):
         if (self.db != None):
             return self.version.select().execute().fetchone()[0]
         return False
+
+    def getDbConnection(self):
+        ret = None
+        for i in range(NB_DB_CONN_TRY):
+            try:
+                ret = self.db.connect()
+            except exceptions.SQLError, e:
+                self.logger.error(e)
+            except Exception, e:
+                self.logger.error(e)
+            if ret: break
+        if not ret:
+            raise "Database connection error"
+        return ret
 
     def initTables(self):
         """
@@ -515,7 +530,7 @@ class MscDatabase(Singleton):
 
         Return a Deferred object resulting to the command id
         """
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()
         targets_to_insert = []
         targets_scheduler = []

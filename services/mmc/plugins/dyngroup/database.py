@@ -160,6 +160,21 @@ class DyngroupDatabase(Singleton):
         except:
             return False
 
+    def getDbConnection(self):
+        NB_DB_CONN_TRY = 2
+        ret = None
+        for i in range(NB_DB_CONN_TRY):
+            try:
+                ret = self.db.connect()
+            except exceptions.SQLError, e:
+                self.logger.error(e)
+            except Exception, e:
+                self.logger.error(e)
+            if ret: break
+        if not ret:
+            raise "Database connection error"
+        return ret
+
     def myfunctions(self):
         pass
 
@@ -474,7 +489,7 @@ class DyngroupDatabase(Singleton):
 
     def delete_group(self, ctx, id):
         user_id = self.__getOrCreateUser(ctx)
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()
         # Delete the previous results for this group in the Results table
         connection.execute(self.results.delete(self.results.c.FK_group == id))
@@ -538,7 +553,7 @@ class DyngroupDatabase(Singleton):
         session.flush()
         session.close()
 
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()        
         # Delete the previous results for this group in the Results table
         connection.execute(self.results.delete(self.results.c.FK_group == gid))
@@ -711,7 +726,7 @@ class DyngroupDatabase(Singleton):
         connection.execute(self.results.insert(), into_results)
         
     def reload_group(self, ctx, id, queryManager):
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
@@ -729,7 +744,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
         session.close()
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()
         self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
         trans.commit()
@@ -740,7 +755,7 @@ class DyngroupDatabase(Singleton):
         Remove from a group member computers, specified by a uuids list.
         """
         group = self.get_group(ctx, id)
-        connection = self.db.connect()
+        connection = self.getDbConnection()
         trans = connection.begin()
         uuids = map(lambda x: x["uuid"], uuids.values())
         # Delete the selected machines from the Results table
