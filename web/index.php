@@ -50,6 +50,7 @@ if (isset($_POST["bConnect"])) {
     if (isset($conf[$_POST["server"]])) {
         $_SESSION["XMLRPC_agent"] = parse_url($conf[$_POST["server"]]["url"]);
         $_SESSION["agent"] = $_POST["server"];
+        $_SESSION["XMLRPC_server_description"] = $conf[$_POST["server"]]["description"];
     } else {
         $error = sprintf(_T("The server %s does not exist"), $_POST["server"]);
     }

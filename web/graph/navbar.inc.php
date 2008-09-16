@@ -57,7 +57,11 @@ if (isExpertMode()) {
 <p class="path">
 <?php
   /* Path automatic creation */
-print '<a href="main.php">'._("Home").'</a>';
+print '<span style="color: #FFF">' . $_SESSION["XMLRPC_server_description"] . '</span>';
+print '&nbsp;: ';
+print '<a href="main.php">';
+print _("Home");
+print '</a>';
 if ($_GET["module"]) { /* if not main page */
         $MMCApp =&MMCApp::getInstance();
         $mod = $MMCApp->_modules[$_GET['module']];
