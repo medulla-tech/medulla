@@ -38,7 +38,7 @@ if (isset($_GET['uuid']) and $_GET['uuid'] != '' and isset($_GET['coh_id'])) {
     $ch->display();
 } else if (isset($_GET['uuid']) and $_GET['uuid'] != '' and !isset($_GET['coh_id'])) { # Display history for a specific host
     $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
-    $ajax->setRefresh(5000);
+    $ajax->setRefresh(30000);
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();

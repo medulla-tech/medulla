@@ -46,7 +46,7 @@ foreach ($res as $name) {
 $ajax->setElements($labels);
 $ajax->setElementsVal($list);
 
-$ajax->setRefresh(5000);
+$ajax->setRefresh(30000);
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();

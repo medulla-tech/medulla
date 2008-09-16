@@ -61,7 +61,7 @@ if (strlen($_GET['uuid'])) {
         $ch->display();
     } else {
         $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs");
-        $ajax->setRefresh(5000);
+        $ajax->setRefresh(30000);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
