@@ -2,19 +2,19 @@
 # Copyright (C) 2008 THE Pulse 2 - GLPI web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - GLPI web package.
 # Nicolas Rueff <n.rueff@mandriva.com>, 2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - GLPI Web Interface 1.1.0rc1\n"
+"Project-Id-Version: Pulse 2 - GLPI Web Interface 1.2.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-16 17:15+0200\n"
-"PO-Revision-Date: 2008-06-17 10:00+0200\n"
+"PO-Revision-Date: 2008-09-16 17:35+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: glpi/glpi/tabs.php:17
 #, php-format
