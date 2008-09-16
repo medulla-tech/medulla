@@ -2,7 +2,7 @@
 /**
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
- * $Id: download_file.php 285 2008-08-26 12:11:40Z cdelfosse $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

@@ -4,7 +4,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: launch.php 278 2008-08-12 13:12:00Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

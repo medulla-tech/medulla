@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: widgets.inc.php 279 2008-08-12 13:13:06Z nrueff $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
