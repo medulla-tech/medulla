@@ -2,13 +2,13 @@
 # Copyright (C) 2008 THE Pulse 2 - GLPI web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - GLPI web package.
 # Nicolas Rueff <n.rueff@mandriva.com>, 2008.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - GLPI Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-02 19:50+0200\n"
+"POT-Creation-Date: 2008-09-16 17:15+0200\n"
 "PO-Revision-Date: 2008-06-17 10:00+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -20,10 +20,6 @@ msgstr ""
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr "Inventaire de %s (GLPI)"
-
-#: poubelle/autocomplete.php:53
-msgid "Add"
-msgstr "Ajouter"
 
 #: glpi/glpi/tabs.php:22
 msgid "Controller"
@@ -104,6 +100,9 @@ msgstr "Version de l'OS"
 #: glpi/glpi/view_hardware.php:69
 msgid "serial"
 msgstr "Numero de série"
+
+#~ msgid "Add"
+#~ msgstr "Ajouter"
 
 #~ msgid "GLPI general tab"
 #~ msgstr "Onglet général"

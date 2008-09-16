@@ -3,10 +3,6 @@
 msgid "%s's inventory (GLPI)"
 msgstr ""
 
-#: poubelle/autocomplete.php:53
-msgid "Add"
-msgstr ""
-
 #: glpi/glpi/tabs.php:22
 msgid "Controller"
 msgstr ""
