@@ -39,11 +39,20 @@ if (strlen($_GET['cmd_id'])) {
     print _T("error : cmd_id or bundle_id must be given", "msc");
 }
 
-$labels = array(
-    array('success',_T('computers were successfully deployed', 'msc')),
-    array('running',_T('computers are running a deploiement', 'msc')),
-    array('failure',_T('computers failed to deploy', 'msc')),
-);
+if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
+    /* Change labels when displaying a bundle summary */
+    $labels = array(
+        array('success',_T('packages installation were successful', 'msc')),
+        array('running',_T('packages installation are being done', 'msc')),
+        array('failure',_T('packages installation failed', 'msc')),
+        );
+} else {
+    $labels = array(
+        array('success',_T('computers were successfully deployed', 'msc')),
+        array('running',_T('computers are running a deploiement', 'msc')),
+        array('failure',_T('computers failed to deploy', 'msc')),
+        );
+}
 
 $slabels = array(
     'success'=>array(),
