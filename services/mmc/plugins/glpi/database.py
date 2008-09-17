@@ -940,6 +940,10 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         if type(swname) == list:
+            # FIXME: the way the web interface process dynamic group sub-query
+            # is wrong, so for the moment we need this loop:
+            while type(swname[0]) == list:
+                swname = swname[0]
             query = query.filter(and_(self.software.c.name == swname[0], glpi_license.version == swname[1]))
         else:
             query = query.filter(self.software.c.name == swname)
