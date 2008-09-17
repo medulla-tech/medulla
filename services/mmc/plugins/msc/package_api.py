@@ -184,7 +184,7 @@ class SendBundleCommand:
         self.bundle_id = None
 
     def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))
+        logging.getLogger().error("SendBundleCommand: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, result):
@@ -193,10 +193,10 @@ class SendBundleCommand:
     def send(self):
         # treat bundle title
         try:
-            title = self.params['title']
+            title = self.params['bundle_title']
         except:
             title = '' # ie. "no title"
-        self.params['title'] = None
+        self.params['bundle_title'] = None
 
         if title == None or title == '':
             localtime = time.localtime()
@@ -235,9 +235,7 @@ class SendBundleCommand:
             ret.append(g.deferred)
 
         if len(ret) == 0:
-            return False
-        elif len(ret) == 1:
-            return ret[0]
+            self.onError("No order to send")
         else:
             dl = defer.DeferredList(ret)
             dl.addCallback(self.sendResult)
