@@ -193,10 +193,11 @@ class ExternalLdapProvisioner(ProvisionerI):
                 self.logger.info("No profile information for user %s in attribute %s" % (uid, self.config.profileAttr))
                 profile = None
             if profile:
+                profile = profile.strip()
                 try:
                     acls = self.config.profilesAcl[profile]
                 except KeyError:
-                    self.logger.info("No ACL defined in configuration file for profile %s" % profile)
+                    self.logger.info("No ACL defined in configuration file for profile '%s'" % profile)
                     acls = None
                 if acls != None:
                     self.logger.info("Setting MMC ACL corresponding to user profile %s: %s" % (profile, acls))
