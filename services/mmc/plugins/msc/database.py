@@ -880,7 +880,7 @@ class MscDatabase(Singleton):
         try:
             params['order_by'] = getattr(self.commands_on_host.c, params['order_by'])
         except:
-            params['order_by'] = getattr(self.commands_on_host.c, 'next_launch_date')
+            params['order_by'] = getattr(self.commands_on_host.c, 'id')
 
         size = 0
         if params['b_id'] == None and params['cmd_id'] == None:
@@ -894,7 +894,7 @@ class MscDatabase(Singleton):
 
             query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
             query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
-            query = query.filter(self.commands.c.id.in_(*ids)).order_by(asc(params['order_by']))
+            query = query.filter(self.commands.c.id.in_(*ids)).order_by(desc(params['order_by']))
             ret = query.group_by(self.commands.c.id).all()
             session.close()
             return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
