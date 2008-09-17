@@ -313,7 +313,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
-        $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('title')), array("value" => $name));
+        $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('bundle_title')), array("value" => $name));
         $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_POST['do_wol'] == 'on' ? 'checked' : ''));
         $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
         $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));

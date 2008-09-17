@@ -35,7 +35,7 @@ require_once('modules/msc/includes/bundle_widgets.php');
 
 function launch_bundle($cible, $orders, $gid = null) {
     $params = array();
-    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'do_reboot', 'title') as $param) {
+    foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'do_reboot', 'bundle_title') as $param) {
         $params[$param] = $_POST[$param];
     }
     // TODO: activate this  : msc_command_set_pause($cmd_id);
