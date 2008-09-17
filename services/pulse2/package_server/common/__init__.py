@@ -30,6 +30,7 @@ import twisted.web.xmlrpc
 import os
 import re
 import shutil
+import md5
 import logging
 from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
@@ -38,6 +39,10 @@ from pulse2.package_server.utilities import md5file, md5sum, Singleton
 
 
 class Common(Singleton):
+
+    MD5SUMS = "MD5SUMS"
+    CONFXML = "conf.xml"
+    
     def init(self, config):
         self.working = True
         self.working_pkgs = []
@@ -133,6 +138,30 @@ class Common(Singleton):
                 except Exception, e:
                     self.logger.error(e)
 
+    def _detectRemovedPackages(self):
+        """
+        Look for no more available conf.xml files, and unregister packages.
+        """
+        todelete = []
+        for pid in self.packages:
+            proot = self._getPackageRoot(pid)
+            confxml = os.path.join(proot, pid, "conf.xml")
+            if not os.path.exists(confxml):
+                self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
+                # Remove the package from the mirror
+                done = []
+                for desc in self.descBySrc(proot):
+                    if desc['type'] != 'mirror_files':
+                        mp = desc['mp']
+                        if pid in self.mp2p[mp]:
+                            if mp not in done:
+                                self.dropPackage(pid, mp)
+                                self.desassociatePackage2mp(pid, mp)
+                                done.append(mp)
+                todelete.append(pid)
+        for pid in todelete:
+            del self.packages[pid]
+
     def moveCorrectPackages(self):
         if self.working:
             self.logger.debug("Common : already working")
@@ -148,14 +177,16 @@ class Common(Singleton):
     def detectNewPackages(self):
         if self.working:
             self.logger.debug("Common : already working")
-            return
+            return False
         self.working = True
         self.working_pkgs = []
         self.logger.debug("Common : detecting new packages...")
         self._detectPackages(True)
+        self._detectRemovedPackages()
         self._buildReverse()
         self._buildFileList()
         self.working = False
+        return True
 
     def setDesc(self, description):
         self.desc = description
@@ -186,10 +217,15 @@ class Common(Singleton):
         return True
 
     def desassociatePackage2mp(self, pid, mp):
+        """
+        Remove association between a package and mirrors
+        """
         conf = self.h_desc(mp)
         for desc in self.descBySrc(conf['src']):
             if desc['type'] != 'mirror_files':
-                self.mp2p[desc['mp']].remove(pid)
+                if pid in self.mp2p[desc['mp']]:
+                    self.logger.debug("Unlink package %s from %s" % (pid, desc['mp']))
+                    self.mp2p[desc['mp']].remove(pid)
         return True
 
     def addPackage(self, pid, pa, need_assign = True):
@@ -294,22 +330,24 @@ class Common(Singleton):
         return [True]
 
     def dropPackage(self, pid, mp):
+        """
+        Physically removes the given package content from the disk (if setted)
+        Also mark the package as not available
+        """
         if not self.packages.has_key(pid):
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
         params = self.h_desc(mp)
         path = params['src']
 
-        if not os.path.exists(os.path.join(path, pid, 'conf.xml')):
-            self.logger.error("package %s does not exists"%(pid))
-            raise Exception("UNDEFPKG")
-
         if self.config.real_package_deletion:
             p_dir = os.path.join(path, pid)
             self.logger.debug("is going to delete %s" % (p_dir))
-            shutil.rmtree(p_dir)
+            shutil.rmtree(p_dir, ignore_errors = True)
         else:
-            shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
+            confxml = os.path.join(path, pid, 'conf.xml')
+            if os.path.exists(confxml):
+                shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         # TODO remove package from mirrors
         if self.config.package_mirror_activate:
             Common().dontgivepkgs[pid] = []
@@ -393,15 +431,36 @@ class Common(Singleton):
             self.mp2p[mp] = []
             Find().find(src, self._treatConfFile, (mp, access)) 
 
+    def _createMD5File(self, dirname):
+        """
+        Create the MD5SUMS file for a directory content
+        """
+        fmd5name = os.path.join(dirname, self.MD5SUMS)
+        if not os.path.exists(fmd5name):
+            self.logger.info("Computing MD5 sums file %s" % fmd5name)
+            md5sums = []
+            for root, dirs, files in os.walk(dirname):
+                for name in files:
+                    if name != self.CONFXML:
+                        f = file(os.path.join(root, name))
+                        md5sums.append([name, md5.md5(f.read()).hexdigest()])
+                        f.close()
+            fmd5 = file(fmd5name, "w+")
+            for name, md5hash in md5sums:
+                fmd5.write("%s  %s\n" % (md5hash, name))
+            fmd5.close()
+
     def _treatNewConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             if not self.already_declared.has_key(file):
+                self._createMD5File(os.path.dirname(file))
                 pid = self._treatDir(os.path.dirname(file), mp, access, True)
                 self.associatePackage2mp(pid, mp)
                 self.already_declared[file] = True
                 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
+            self._createMD5File(os.path.dirname(file))
             self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
 
