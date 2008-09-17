@@ -141,6 +141,14 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         real_command += ['u+x']
         real_command += ['-R']
         real_command += [target_path]
+        # Check files integrity with MD5SUMS file if available
+        real_command += ['&&']
+        real_command += ['cd', target_path]
+        real_command += ['&&']
+        real_command += ['if', '[', '-f', 'MD5SUMS', ']', ';']
+        real_command += ['then']
+        real_command += ['md5sum', '-c', 'MD5SUMS', ';']
+        real_command += ['fi']
 
         # Build final command line
         command_list = [
