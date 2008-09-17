@@ -147,7 +147,7 @@ class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
     function RenderedMSCBundleChoiceM($machine) {
         $this->machine = $machine;
         $this->title_right = _T('Actions in bundle', 'msc');
-        $this->title_left = _T('Possible action', 'msc');
+        $this->title_left = _T('Possible actions', 'msc');
         $this->request_uri = urlStr('base/computers/msctabs', array('tab'=>"tabbundle", 'uuid'=>$this->machine->uuid, 'hostname'=>$this->machine->hostname));
         $this->treatPost();
     }
@@ -172,7 +172,7 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
     function RenderedMSCBundleChoiceG($group) {
         $this->group = $group;
         $this->title_right = _T('Actions in bundle', 'msc');
-        $this->title_left = _T('Possible action', 'msc');
+        $this->title_left = _T('Possible actions', 'msc');
         $this->request_uri = urlStr('base/computers/groupmsctabs', array('tab'=>"grouptabbundle", 'gid'=>$this->group->id));
         $this->treatPost();
     }
