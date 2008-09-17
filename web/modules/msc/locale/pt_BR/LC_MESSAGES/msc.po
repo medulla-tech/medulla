@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:18+0200\n"
+"POT-Creation-Date: 2008-09-17 11:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,8 +114,8 @@ msgstr ""
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:202
-#: msc/msc/ajaxLogsFilter.php:277 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/package_detail.php:36
+#: msc/msc/ajaxLogsFilter.php:202 msc/msc/ajaxLogsFilter.php:277
 msgid "Command"
 msgstr ""
 
@@ -215,10 +215,10 @@ msgid "Deployment interval"
 msgstr ""
 
 #: msc/logs/ajaxLogsFilter.php:69 msc/logs/ajaxLogsFilter.php:70
-#: msc/msc/ajaxLogsFilter.php:80 msc/msc/ajaxLogsFilter.php:82
-#: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:49
-#: msc/msc/logs.php:45 msc/msc/logs.php:55 msc/msc/logs.php:85
-#: msc/msc/logs.php:89 msc/msc/logs.php:107 msc/msc/packages.php:22
+#: msc/msc/ajaxPackageFilter.php:115 msc/msc/ajaxLogsFilter.php:80
+#: msc/msc/ajaxLogsFilter.php:82 msc/msc/logs.php:45 msc/msc/logs.php:55
+#: msc/msc/logs.php:85 msc/msc/logs.php:89 msc/msc/logs.php:107
+#: msc/msc/history.php:49 msc/msc/packages.php:22
 msgid "Details"
 msgstr ""
 
@@ -396,11 +396,11 @@ msgstr ""
 msgid "Package size"
 msgstr ""
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:169
+#: msc/infoPackage.inc.php:169 msc/msc/packages.php:7
 msgid "Packages"
 msgstr ""
 
-#: msc/includes/functions.php:46 msc/logs/ajaxLogsFilter.php:67
+#: msc/logs/ajaxLogsFilter.php:67 msc/includes/functions.php:46
 #: msc/msc/ajaxLogsFilter.php:77
 msgid "Pause"
 msgstr ""
@@ -439,7 +439,7 @@ msgid "Please confirm you really want to perform this action"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:150 msc/includes/bundle_widgets.php:175
-msgid "Possible action"
+msgid "Possible actions"
 msgstr ""
 
 #: msc/includes/widgets.inc.php:176
@@ -516,11 +516,11 @@ msgstr ""
 msgid "Show all logs"
 msgstr ""
 
-#: msc/logs/localSidebar.php:6 msc/logs/pending.php:33
+#: msc/logs/pending.php:33 msc/logs/localSidebar.php:6
 msgid "Show all pending task's logs"
 msgstr ""
 
-#: msc/logs/localSidebar.php:7 msc/logs/running.php:33
+#: msc/logs/running.php:33 msc/logs/localSidebar.php:7
 msgid "Show all running task's logs"
 msgstr ""
 
@@ -710,12 +710,12 @@ msgstr ""
 msgid "computers were successfully deployed"
 msgstr ""
 
-#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:138
+#: msc/logs/ajaxLogsFilter.php:138 msc/includes/command_history.php:35
 #: msc/msc/ajaxLogsFilter.php:204 msc/msc/ajaxLogsFilter.php:278
 msgid "current_state"
 msgstr ""
 
-#: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:141
+#: msc/logs/ajaxLogsFilter.php:141 msc/includes/command_history.php:38
 #: msc/msc/ajaxLogsFilter.php:207 msc/msc/ajaxLogsFilter.php:281
 msgid "deleted"
 msgstr ""
@@ -724,7 +724,7 @@ msgstr ""
 msgid "error : cmd_id or bundle_id must be given"
 msgstr ""
 
-#: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:140
+#: msc/logs/ajaxLogsFilter.php:140 msc/includes/command_history.php:37
 #: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:280
 msgid "executed"
 msgstr ""
@@ -777,7 +777,7 @@ msgstr ""
 msgid "start_date"
 msgstr ""
 
-#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
+#: msc/logs/ajaxLogsFilter.php:139 msc/includes/command_history.php:36
 #: msc/msc/ajaxLogsFilter.php:205 msc/msc/ajaxLogsFilter.php:279
 msgid "uploaded"
 msgstr ""

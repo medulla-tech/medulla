@@ -2,20 +2,20 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:18+0200\n"
+"POT-Creation-Date: 2008-09-17 11:36+0200\n"
 "PO-Revision-Date: 2008-09-16 17:39+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: msc/includes/utilities.php:35
 #, php-format
@@ -118,8 +118,8 @@ msgstr "Octets"
 msgid "Close window"
 msgstr "Fermer la fenêtre"
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:202
-#: msc/msc/ajaxLogsFilter.php:277 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/package_detail.php:36
+#: msc/msc/ajaxLogsFilter.php:202 msc/msc/ajaxLogsFilter.php:277
 msgid "Command"
 msgstr "Commande"
 
@@ -219,10 +219,10 @@ msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
 #: msc/logs/ajaxLogsFilter.php:69 msc/logs/ajaxLogsFilter.php:70
-#: msc/msc/ajaxLogsFilter.php:80 msc/msc/ajaxLogsFilter.php:82
-#: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:49
-#: msc/msc/logs.php:45 msc/msc/logs.php:55 msc/msc/logs.php:85
-#: msc/msc/logs.php:89 msc/msc/logs.php:107 msc/msc/packages.php:22
+#: msc/msc/ajaxPackageFilter.php:115 msc/msc/ajaxLogsFilter.php:80
+#: msc/msc/ajaxLogsFilter.php:82 msc/msc/logs.php:45 msc/msc/logs.php:55
+#: msc/msc/logs.php:85 msc/msc/logs.php:89 msc/msc/logs.php:107
+#: msc/msc/history.php:49 msc/msc/packages.php:22
 msgid "Details"
 msgstr "Détails"
 
@@ -400,11 +400,11 @@ msgstr "Package"
 msgid "Package size"
 msgstr "Taille du package"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:169
+#: msc/infoPackage.inc.php:169 msc/msc/packages.php:7
 msgid "Packages"
 msgstr "Packages"
 
-#: msc/includes/functions.php:46 msc/logs/ajaxLogsFilter.php:67
+#: msc/logs/ajaxLogsFilter.php:67 msc/includes/functions.php:46
 #: msc/msc/ajaxLogsFilter.php:77
 msgid "Pause"
 msgstr "Mettre en pause"
@@ -443,7 +443,8 @@ msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
 #: msc/includes/bundle_widgets.php:150 msc/includes/bundle_widgets.php:175
-msgid "Possible action"
+#, fuzzy
+msgid "Possible actions"
 msgstr "Action possible"
 
 #: msc/includes/widgets.inc.php:176
@@ -520,11 +521,11 @@ msgstr "Montrer toutes les actions finies"
 msgid "Show all logs"
 msgstr "Montrer toutes les actions"
 
-#: msc/logs/localSidebar.php:6 msc/logs/pending.php:33
+#: msc/logs/pending.php:33 msc/logs/localSidebar.php:6
 msgid "Show all pending task's logs"
 msgstr "Montrer toutes les actions en attente"
 
-#: msc/logs/localSidebar.php:7 msc/logs/running.php:33
+#: msc/logs/running.php:33 msc/logs/localSidebar.php:7
 msgid "Show all running task's logs"
 msgstr "Montrer toutes les actions en cours"
 
@@ -714,12 +715,12 @@ msgstr "machines ont échoué lors du déploiement"
 msgid "computers were successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
-#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:138
+#: msc/logs/ajaxLogsFilter.php:138 msc/includes/command_history.php:35
 #: msc/msc/ajaxLogsFilter.php:204 msc/msc/ajaxLogsFilter.php:278
 msgid "current_state"
 msgstr "État"
 
-#: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:141
+#: msc/logs/ajaxLogsFilter.php:141 msc/includes/command_history.php:38
 #: msc/msc/ajaxLogsFilter.php:207 msc/msc/ajaxLogsFilter.php:281
 msgid "deleted"
 msgstr "Suppression"
@@ -728,7 +729,7 @@ msgstr "Suppression"
 msgid "error : cmd_id or bundle_id must be given"
 msgstr "erreur : cmd_id ou bundle_id doit être renseigné"
 
-#: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:140
+#: msc/logs/ajaxLogsFilter.php:140 msc/includes/command_history.php:37
 #: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:280
 msgid "executed"
 msgstr "Exécution"
@@ -781,7 +782,7 @@ msgstr "en cours de téléchargement"
 msgid "start_date"
 msgstr "Date de démarrage"
 
-#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
+#: msc/logs/ajaxLogsFilter.php:139 msc/includes/command_history.php:36
 #: msc/msc/ajaxLogsFilter.php:205 msc/msc/ajaxLogsFilter.php:279
 msgid "uploaded"
 msgstr "Envoi"
@@ -797,4 +798,3 @@ msgstr "en attente de suppression"
 #: msc/msc/msctabsstatus.php:51
 msgid "waiting to upload"
 msgstr "en attente de téléchargement"
-
