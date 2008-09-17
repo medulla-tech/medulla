@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-17 11:36+0200\n"
-"PO-Revision-Date: 2008-09-16 17:39+0200\n"
+"PO-Revision-Date: 2008-09-17 11:38+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -443,9 +443,8 @@ msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
 #: msc/includes/bundle_widgets.php:150 msc/includes/bundle_widgets.php:175
-#, fuzzy
 msgid "Possible actions"
-msgstr "Action possible"
+msgstr "Actions possibles"
 
 #: msc/includes/widgets.inc.php:176
 msgid "Quick action list is empty"
