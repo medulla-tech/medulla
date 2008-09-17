@@ -849,7 +849,7 @@ class AjaxFilter extends HtmlElement {
         document.getElementById('param').focus();
         var refreshtimer = null;
         var refreshparamtimer = null;
-        var refreshdelay = 5000;
+        var refreshdelay = <?= $this->refresh ?>;
 
         /**
          * Clear the timers set vith setTimeout
