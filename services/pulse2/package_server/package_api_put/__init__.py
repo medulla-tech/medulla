@@ -29,6 +29,7 @@ import twisted.web.html
 import twisted.web.xmlrpc
 import logging
 import os
+import time
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
@@ -43,6 +44,7 @@ class PackageApiPut(PackageApiGet):
         self.config = P2PServerCP()
 
     def xmlrpc_getTemporaryFiles(self):
+        self.logger.debug("xmlrpc_getTemporaryFiles")
         ret = []
         if os.path.exists(self.tmp_input_dir):
             for f in os.listdir(self.tmp_input_dir):
@@ -62,9 +64,17 @@ class PackageApiPut(PackageApiGet):
             return [False, 'Some files are missing']
                 
         ret = Common().associateFiles(self.mp, pid, files, level)
-        return [True]
-    
+        # Run the detectNewPackages stuff to register our new package
+        # FIXME: the next line force the new package to be detected
+        del Common().packages[pid]
+        for i in range(10):
+            ret = Common().detectNewPackages()
+            if ret: break
+            time.sleep(1)
+        return [ret]
+
     def xmlrpc_putPackageDetail(self, package, need_assign = True):
+        self.logger.debug("xmlrpc_putPackageDetail")
         pa = Package()
         pa.fromH(package)
         if Common().dontgivepkgs.has_key(pa.id) and len(Common().dontgivepkgs[pa.id]) > 0:
@@ -72,7 +82,8 @@ class PackageApiPut(PackageApiGet):
 
         ret = Common().editPackage(package['id'], pa, need_assign)
         if not ret: return False
-
+        
+        # Create conf.xml file in package
         ret = Common().writePackageTo(package['id'], self.mp)
         ret, confdir = ret
         if not ret: return False
