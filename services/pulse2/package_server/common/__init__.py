@@ -449,7 +449,7 @@ class Common(Singleton):
             for root, dirs, files in os.walk(dirname):
                 for name in files:
                     if name != self.CONFXML:
-                        f = file(os.path.join(root, name))
+                        f = file(os.path.join(root, name), "rb")
                         md5sums.append([name, md5.md5(f.read()).hexdigest()])
                         f.close()
             fmd5 = file(fmd5name, "w+")
