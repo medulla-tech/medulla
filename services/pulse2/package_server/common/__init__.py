@@ -159,6 +159,8 @@ class Common(Singleton):
                                 self.desassociatePackage2mp(pid, mp)
                                 done.append(mp)
                 todelete.append(pid)
+                if confxml in self.already_declared:
+                    del self.already_declared[confxml]
         for pid in todelete:
             del self.packages[pid]
 
@@ -220,6 +222,7 @@ class Common(Singleton):
         for desc in self.descBySrc(conf['src']):
             if desc['type'] != 'mirror_files':
                 if not self.mp2p[desc['mp']].__contains__(pid):
+                    self.logger.debug("Link package %s to %s" % (pid, desc['mp']))
                     self.mp2p[desc['mp']].append(pid)
         return True
 
