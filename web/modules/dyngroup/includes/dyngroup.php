@@ -111,7 +111,7 @@ class Group {
     function reload() {  return __xmlrpc_reload_group($this->id); }
 
     function addMember($uuid) { return $this->addMembers(array($uuid)); }
-    function delMember($uuid) { return $this->delMembers(array($uuid)); }
+    function delMember($uuid) { return $this->delMembers($uuid); }
     function importMembers($elt, $values) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); }
     #function removeMachine($uuid) { }
     function addMembers($uuids) { return __xmlrpc_addmembers_to_group($this->id, $uuids); }
