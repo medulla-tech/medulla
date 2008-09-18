@@ -270,7 +270,7 @@ class Inventory(DyngroupDatabaseHelper):
             bool = None
             if pattern.has_key('equ_bool'):
                 bool = pattern['equ_bool']
-            machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+            machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
         except KeyError, e:
             pass
