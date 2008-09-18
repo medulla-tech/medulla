@@ -163,15 +163,22 @@ class Common(Singleton):
             del self.packages[pid]
 
     def moveCorrectPackages(self):
+        """
+        Look for valid package in the input dir of each, and move them to the
+        mirror repository
+        """
         if self.working:
             self.logger.debug("Common : already working")
             return
         self.working = True
         self.logger.debug("Common : getting valid temporary packages")
-        if len(self.config.package_api_put) > 0:
-            for mirror_params in self.config.package_api_put:
-                if os.path.exists(mirror_params['tmp_input_dir']):
-                    self._moveNewPackage(mirror_params)
+        try:
+            if len(self.config.package_api_put) > 0:
+                for mirror_params in self.config.package_api_put:
+                    if os.path.exists(mirror_params['tmp_input_dir']):
+                        self._moveNewPackage(mirror_params)
+        except Exception, e:
+            self.logger.error("moveCorrectPackages: " + str(e))
         self.working = False
 
     def detectNewPackages(self):
