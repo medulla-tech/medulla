@@ -179,20 +179,22 @@ class CommandHistory {
         $state = $a_uploaded . $a_executed . $a_deleted;
 
         $values = array(
-            array(_T('Command name', 'msc'),            $this->db_cmd['title']),
-            array(_T('Command state', 'msc'),           $state),
-            array(_T('Creation date', 'msc'),           _toDate($this->db_cmd['creation_date'])),
-            array(_T('User command creator', 'msc'),    $this->db_cmd['creator']),
-            array(_T('Execute file', 'msc'),            $this->db_cmd['start_file']),
-            array(_T('Execution arguments', 'msc'),     $this->db_cmd['parameters']),
-            array(_T('Start execute file', 'msc'),      $this->db_cmd['start_script']),
-            array(_T('Start inventory agent', 'msc'),   $this->db_cmd['do_inventory']),
-            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),$this->db_cmd['do_wol']),
-            array(_T('Remaining attempts', 'msc'),      $this->db_coh['attempts_left']),
-            array(_T('Delay between two connections', 'msc'),$this->db_cmd['next_connection_delay']),
-            array(_T('Command start date', 'msc'),      _toDate($this->db_cmd['start_date'])),
-            array(_T('Command expiry date', 'msc'),     _toDate($this->db_cmd['end_date'])),
-            array(_T('Command next run date', 'msc'),   _toDate($this->db_coh['next_launch_date'])),
+            array(_T('Command name', 'msc'),                                    $this->db_cmd['title']),
+            array(_T('Command state', 'msc'),                                   $state),
+            array(_T('Creation date', 'msc'),                           _toDate($this->db_cmd['creation_date'])),
+            array(_T('User command creator', 'msc'),                            $this->db_cmd['creator']),
+            array(_T('Script to start', 'msc'),                                 $this->db_cmd['start_file']),
+            array(_T('Script parameters', 'msc'),                               $this->db_cmd['parameters']),
+            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),   $this->db_cmd['do_wol']),
+            array(_T('Start script', 'msc'),                                    $this->db_cmd['start_script']),
+            array(_T('Delete files after a successful execution', 'msc'),       $this->db_cmd['clean_on_success']),
+            array(_T('Do an inventory after a successful execution', 'msc'),    $this->db_cmd['do_inventory']),
+            array(_T('Reboot client after a successful deletion', 'msc'),       $this->db_cmd['do_reboot']),
+            array(_T('Remaining connection attempts', 'msc'),                   $this->db_coh['attempts_left']),
+            array(_T('Delay between two connections (minutes)', 'msc'),         $this->db_cmd['next_connection_delay']),
+            array(_T('The command may start after', 'msc'),             _toDate($this->db_cmd['start_date'])),
+            array(_T('The command must stop before', 'msc'),            _toDate($this->db_cmd['end_date'])),
+            array(_T('The command won\'t be run until', 'msc'),         _toDate($this->db_coh['next_launch_date'])),
         );
 
         $name = array_map("_names", $values);
