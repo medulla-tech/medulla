@@ -25,44 +25,51 @@
 # A handful of XML RPC calls to recover config options from msc.ini
 # throught the MMC
 
+function __web_def_in_session($option) {
+    if (!isset($_SESSION[$option])) {
+        $_SESSION[$option] = xmlCall("msc.get_web_def_" . $option);
+    }
+    return $_SESSION[$option];
+}
+
 function web_def_awake() {
-    return xmlCall('msc.get_web_def_awake');
+    return __web_def_in_session("awake");
 }
 
 function web_def_inventory() {
-    return xmlCall('msc.get_web_def_inventory');
+    return __web_def_in_session("inventory");
 }
 
 function web_def_mode() {
-    return xmlCall('msc.get_web_def_mode');
+    return __web_def_in_session("mode");
 }
 
 function web_def_maxbw() {
-    return xmlCall('msc.get_web_def_maxbw');
+    return __web_def_in_session("maxbw");
 }
 
 function web_def_delay() {
-    return xmlCall('msc.get_web_def_delay');
+    return __web_def_in_session("delay");
 }
 
 function web_def_attempts() {
-    return xmlCall('msc.get_web_def_attempts');
+    return __web_def_in_session("attempts");
 }
 
 function web_def_deployment_intervals() {
-    return xmlCall('msc.get_web_def_deployment_intervals');
+    return __web_def_in_session("deployment_intervals");
 }
 
 function web_vnc_view_only() {
-    return xmlCall('msc.get_web_vnc_view_only');
+    return __web_def_in_session("vnc_view_only");
 }
 
 function web_vnc_network_connectivity() {
-    return xmlCall('msc.get_web_vnc_network_connectivity');
+    return __web_def_in_session("vnc_network_connectivity");
 }
 
 function web_vnc_allow_user_control() {
-    return xmlCall('msc.get_web_vnc_allow_user_control');
+    return __web_def_in_session("vnc_allow_user_control");
 }
 
 ?>
