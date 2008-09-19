@@ -226,9 +226,15 @@ class RenderedMSCBundleSortParent {
     function display() {
         $orders = array();
         $i = 1;
-        foreach ($this->members as $pid => $plabel) {
-            $orders[$pid] = $i;
-            $i++;
+        if ($_POST["badvanced_bundle"] != '') { # advanced mode: keep previously given order if possible
+            foreach ($this->members as $pid => $plabel) {
+                $orders[$pid] = $_POST["si_$pid"];
+            }
+        } else { # standard mode: generate order
+            foreach ($this->members as $pid => $plabel) {
+                $orders[$pid] = $i;
+                $i++;
+            }
         }
         $this->display_ordered($orders);
     }
