@@ -799,7 +799,10 @@ class MscDatabase(Singleton):
         if params['finished']:
             query = query.filter(self.commands_on_host.c.current_state == 'done')
         else:
-            query = query.filter(self.commands_on_host.c.current_state != 'done')
+            # If we are querying on a bundle, we also want to display the
+            # commands_on_host flagged as done
+            if params['b_id'] == None:
+                query = query.filter(self.commands_on_host.c.current_state != 'done')
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
     def __displayLogsQuery2(self, ctx, params, session):
@@ -831,7 +834,10 @@ class MscDatabase(Singleton):
         if params['finished']: # Filter on finished commands only
             filter.append(self.commands_on_host.c.current_state == 'done')
         else:
-            filter.append(self.commands_on_host.c.current_state != 'done')
+            # If we are querying on a bundle, we also want to display the
+            # commands_on_host flagged as done
+            if params['b_id'] == None:            
+                filter.append(self.commands_on_host.c.current_state != 'done')
 
         query = query.filter(and_(*filter))
 
