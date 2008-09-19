@@ -93,6 +93,8 @@ if (isset($_POST["badvanced"])) {
 #### FORM DISPLAY HANDLING ####
 // vars preseeding
 $from = $_GET['from'];
+$name = $_GET['name'];
+$version = $_GET['version'];
 $hostname = $_GET['hostname'];
 $uuid = $_GET['uuid'];
 $gid = $_GET['gid'];
@@ -104,8 +106,6 @@ if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
-$name = getPackageLabel($p_api, $_GET["pid"]);
-$version = getPackageVersion($p_api, $_GET["pid"]);
 $f = new PopupForm(sprintf(_T("Deploy <b>%s v.%s</b><br/> on <b>%s</b>", "msc"), $name, $version, $cible));
 
 $hastoreboot = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
