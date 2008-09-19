@@ -169,9 +169,11 @@ class MmcServer(xmlrpc.XMLRPC,object):
         to a Deferred object.
         """
         def _cbSuccess(result, deferred):
+            self.logger.debug("_cbSuccess")
             reactor.callFromThread(deferred.callback, result)
 
         def _cbFailure(failure, deferred):
+            self.logger.debug("_cbFailure")
             reactor.callFromThread(deferred.errback, failure)
         
         def _putResult(deferred, f, args, kwargs):
@@ -380,6 +382,12 @@ def agentService(config, conffile, daemonize):
         # Set base plugin as the first plugin to load
         plugins.remove("base")
         plugins.insert(0, "base")
+
+    # Put pulse2 plugins as the last to be imported, else we may get a mix up
+    # with pulse2 module available in the main python path
+    if "pulse2" in plugins:
+        plugins.remove("pulse2")
+        plugins.append("pulse2")
 
     # Load plugins
     for plugin in plugins:
