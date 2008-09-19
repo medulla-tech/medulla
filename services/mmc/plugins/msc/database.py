@@ -58,7 +58,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 11
+DATABASEVERSION = 12
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -840,7 +840,7 @@ class MscDatabase(Singleton):
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
-            if params['b_id'] == None:            
+            if params['b_id'] == None:
                 filter.append(self.commands_on_host.c.current_state != 'done')
 
         query = query.filter(and_(*filter))

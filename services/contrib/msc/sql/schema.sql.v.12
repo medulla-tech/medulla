@@ -1,0 +1,11 @@
+ALTER TABLE `commands_on_host` \
+    MODIFY `current_state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "not_reachable", "done", "pause", "stop", "scheduled", "failed") DEFAULT "scheduled" NOT NULL;
+
+UPDATE `commands_on_host` \
+    SET `current_state` = "failed" WHERE `current_state` = 0;
+
+ALTER TABLE `commands` \
+    ADD COLUMN `package_id` VARCHAR(255) DEFAULT NULL;
+
+DELETE FROM version;
+INSERT INTO version VALUES( "12" );
