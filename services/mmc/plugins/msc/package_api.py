@@ -46,7 +46,7 @@ class PackageA:
 
     def onError(self, error, funcname, args, value = []):
         self.logger.warn("PackageA:%s %s has failed: %s" % (funcname, args, error))
-        return value
+        return error
 
     def getAllPackages(self, mirror = None):
         if self.initialized_failed:
@@ -254,9 +254,9 @@ class SendPackageCommand:
         self.bundle_id = bundle_id
         self.order_in_bundle = order_in_bundle
 
-    def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))
-        return self.deferred.callback([])
+    def onError(self, error):
+        logging.getLogger().error("SendPackageCommand: %s", str(error))
+        return self.deferred.errback(error)
 
     def sendResult(self, id_command = -1):
         return self.deferred.callback(id_command)
@@ -352,7 +352,7 @@ class SendPackageCommand:
             deployment_intervals,
             self.bundle_id,
             self.order_in_bundle
-        ).addCallback(self.sendResult)
+        ).addCallbacks(self.sendResult, self.onError)
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:

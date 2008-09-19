@@ -247,7 +247,7 @@ class RpcProxy(RpcProxyI):
         """
         ctx = self.currentContext
         d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
-        d.addCallback(xmlrpcCleanup)
+        d.addCallbacks(xmlrpcCleanup, lambda err: err)
         return d
 
     def add_command_api(self, pid, target, params, p_api, mode, gid = None):
@@ -258,7 +258,7 @@ class RpcProxy(RpcProxyI):
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
-        g.deferred.addCallback(xmlrpcCleanup)
+        g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
         return g.deferred
 
     def add_bundle_api(self, porders, target, params, mode, gid = None):
@@ -266,7 +266,7 @@ class RpcProxy(RpcProxyI):
         g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
-        g.deferred.addCallback(xmlrpcCleanup)
+        g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
         return g.deferred
 
     def get_id_command_on_host(self, id_command):

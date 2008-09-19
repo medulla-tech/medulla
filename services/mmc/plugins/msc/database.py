@@ -589,6 +589,7 @@ class MscDatabase(Singleton):
 
         d = self.getMachinesSchedulers(target)
         d.addCallback(cbCreateTargetAndCoh, (target))
+        d.addErrback(lambda err: err)
         return d
 
     def blacklistTargetHostname(self, target):

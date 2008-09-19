@@ -42,7 +42,7 @@ class SchedulerApi(Singleton):
     
     def onError(self, error, funcname, args):
         self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
-        return []
+        return error
 
     def convert2id(self, scheduler):
         if type(scheduler) == dict:
