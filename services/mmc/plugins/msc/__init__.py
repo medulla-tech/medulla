@@ -365,13 +365,13 @@ class RpcProxy(RpcProxyI):
     def get_web_def_deployment_intervals(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_deployment_intervals)
 
-    def get_web_vnc_view_only(self):
+    def get_web_def_vnc_view_only(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_view_only)
 
-    def get_web_vnc_network_connectivity(self):
+    def get_web_def_vnc_network_connectivity(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_network_connectivity)
 
-    def get_web_vnc_allow_user_control(self):
+    def get_web_def_vnc_allow_user_control(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_allow_user_control)
 
 ##
