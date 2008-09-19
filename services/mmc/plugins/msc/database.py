@@ -551,10 +551,13 @@ class MscDatabase(Singleton):
 
         def cbCreateTargetAndCoh(schedulers, target):
             def cbReturnCmd(result, cmd):
+                # let's check if something goes wrong while creating our targets
                 for r in result:
-                    flag, result = r
+                    flag, data = r
                     if not flag:
-                        self.logger.warn("Fail to create this command on hosts and target due to %s"%(str(result)))
+                        self.logger.warn("Fail to create this command on hosts and target due to '%s'" % (str(data)))
+                        # FIXME: not error handling here, if something went wrong further ptrocessing may fail
+
                 r = connection.execute(self.target.insert(), targets_to_insert)
                 first_target_id = r.last_inserted_ids()[0]
                 for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, targets_scheduler):

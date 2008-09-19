@@ -23,11 +23,13 @@
 
 # Twisted
 import twisted.web.xmlrpc
+import twisted.internet.defer
 import logging
 
 # our stuff
 from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
 from mmc.plugins.msc.config import MscConfig, makeURL
+from mmc.plugins.msc.scheduler_api import SchedulerApi
 
 def getProxy(schedulerConfig):
     """
@@ -51,100 +53,87 @@ def getProxy(schedulerConfig):
 
 def start_all_commands(scheduler):
     # FIXME: return something usefull !
-    return getProxy(select_scheduler(scheduler)).callRemote(
+    return getProxy(__select_scheduler(scheduler)).callRemote(
         'start_all_commands'
     )
 
 def start_these_commands(scheduler, commands):
-    return getProxy(select_scheduler(scheduler)).callRemote(
+    return getProxy(__select_scheduler(scheduler)).callRemote(
         'start_these_commands',
         commands
     )
 
 def ping_client(scheduler, computer):
-    """
-    expected struct for computer:
-        [
-            None,
-            {
-                'macAddress': ['XX:XX:XX:XX:XX:XX'],
-                'displayName': ['NomType=A Dummy Client'],
-                'cn': ['my-short-name'],
-                'objectUUID': ['UUID1234'],
-                'ipHostNumber': ['IP.AD.DR.ES'],
-                'fullname': 'my-fully.qualified.domain.tld'
-            }
-        ]
-    """
-    def parseResult(result):
-        logging.getLogger().debug('Ping computer %s: %s' % (computer, result))
-        return result
-    def parseError(reason):
-        # FIXME: handle error
-        return False
-    # ping is done using available data:
-    # - uuid
-    # - fullname
-    # - cn[]
-    # - ipHostNumber[]
-    # - macAddress[]
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
-        'ping_client',
-        computer[1]['objectUUID'][0],
-        computer[1]['fullname'],
-        computer[1]['cn'][0],
-        computer[1]['ipHostNumber'],
-        computer[1]['macAddress'],
-    )
-    mydeffered.addCallback(parseResult).addErrback(parseResult)
-    return mydeffered
+    return process_on_client(scheduler, computer, 'ping_client')
 
 def probe_client(scheduler, computer):
-    def parseResult(result):
-        logging.getLogger().debug('Probe client %s: %s' % (computer, result))
-        return result
-    def parseError(reason):
-        # FIXME: handle error
-        return False
-    # probe is done using available data:
-    # - uuid
-    # - fullname
-    # - cn[]
-    # - ipHostNumber[]
-    # - macAddress[]
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
-        'probe_client',
-        computer[1]['objectUUID'][0],
-        computer[1]['fullname'],
-        computer[1]['cn'][0],
-        computer[1]['ipHostNumber'],
-        computer[1]['macAddress'],
-    )
-    mydeffered.addCallback(parseResult).addErrback(parseResult)
-    return mydeffered
+    return process_on_client(scheduler, computer, 'probe_client')
 
 def ping_and_probe_client(scheduler, computer):
+    return process_on_client(scheduler, computer, 'ping_and_probe_client')
+
+def download_file(scheduler, computer, path, bwlimit):
+    return process_on_client(scheduler, computer, 'download_file', path, bwlimit)
+
+def tcp_sproxy(scheduler, computer, requestor_ip, requested_port):
+    return process_on_client(scheduler, computer, 'tcp_sproxy', requestor_ip, requested_port)
+
+def process_on_client(proposed_scheduler_name, computer, function, *args):
+    """
+        proposed_scheduler will be used in emergency case
+        expected struct for computer (the target):
+            [
+                None,
+                {
+                    'macAddress': ['XX:XX:XX:XX:XX:XX'],
+                    'displayName': ['NomType=A Dummy Client'],
+                    'cn': ['my-short-name'],
+                    'objectUUID': ['UUID1234'],
+                    'ipHostNumber': ['IP.AD.DR.ES'],
+                    'fullname': 'my-fully.qualified.domain.tld'
+                }
+            ]
+
+        probe is done using available data:
+        - uuid
+        - fullname
+        - cn[]
+        - ipHostNumber[]
+        - macAddress[]
+    """
     def parseResult(result):
-        logging.getLogger().debug('Ping then probe client %s: %s' % (computer, result))
+        logging.getLogger().debug('%s %s: %s' % (function, computer, result))
         return result
-    def parseError(reason):
-        # FIXME: handle error
-        return False
-    # probe is done using available data:
-    # - uuid
-    # - fullname
-    # - cn[]
-    # - ipHostNumber[]
-    # - macAddress[]
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
-        'ping_and_probe_client',
-        computer[1]['objectUUID'][0],
-        computer[1]['fullname'],
-        computer[1]['cn'][0],
-        computer[1]['ipHostNumber'],
-        computer[1]['macAddress'],
-    )
-    mydeffered.addCallback(parseResult).addErrback(parseResult)
+
+    def runResult(result):
+        # attempt to fall back on something known
+
+        if not result or result == '':
+            scheduler_name = proposed_scheduler_name
+            if not scheduler_name or scheduler_name == '':
+                scheduler_name = MscConfig("msc").default_scheduler
+        else:
+            scheduler_name = result
+        logging.getLogger().debug("got %s as scheduler for client %s" % (scheduler_name, computer[1]['objectUUID'][0]))
+
+        if scheduler_name not in MscConfig('msc').schedulers:
+            logging.getLogger().warn("scheduler %s do not exists" % (scheduler_name))
+            return twisted.internet.defer.fail(twisted.python.failure.Failure("Invalid scheduler %s (do not seems to exists)" % (scheduler_name)))
+
+        mydeffered = getProxy(MscConfig('msc').schedulers[scheduler_name]).callRemote(
+            function,
+            computer[1]['objectUUID'][0],
+            computer[1]['fullname'],
+            computer[1]['cn'][0],
+            computer[1]['ipHostNumber'],
+            computer[1]['macAddress'],
+            *args
+        )
+        mydeffered.addCallback(parseResult).addErrback(lambda reason: reason)
+        return mydeffered
+
+    mydeffered = SchedulerApi().getScheduler(computer[1]['objectUUID'][0])
+    mydeffered.addCallback(runResult).addErrback(lambda reason: reason)
     return mydeffered
 
 def stopCommand(scheduler, command_id):
@@ -154,7 +143,7 @@ def stopCommand(scheduler, command_id):
     def parseError(reason):
         # FIXME: handle error
         return False
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
         'stop_command',
         command_id
     )
@@ -168,7 +157,7 @@ def startCommand(scheduler, command_id):
     def parseError(reason):
         # FIXME: handle error
         return False
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
+    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
         'start_command',
         command_id
     )
@@ -176,36 +165,9 @@ def startCommand(scheduler, command_id):
     return mydeffered
 
 
-def download_file(scheduler, computer, path, bwlimit):
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
-        'download_file',
-        computer[1]['objectUUID'][0],
-        computer[1]['fullname'],
-        computer[1]['cn'][0],
-        computer[1]['ipHostNumber'],
-        computer[1]['macAddress'],
-        path,
-        bwlimit
-    )
-    return mydeffered
-
-def tcp_sproxy(scheduler, computer, requestor_ip, requested_port):
-    mydeffered = getProxy(select_scheduler(scheduler)).callRemote(
-        'tcp_sproxy',
-        computer[1]['objectUUID'][0],
-        computer[1]['fullname'],
-        computer[1]['cn'][0],
-        computer[1]['ipHostNumber'],
-        computer[1]['macAddress'],
-        requestor_ip,
-        requested_port
-    )
-    return mydeffered
-
-def select_scheduler(scheduler_name):
+def __select_scheduler(scheduler_name):
     if not scheduler_name:
         scheduler_name = MscConfig("msc").default_scheduler
     if scheduler_name == '':
         scheduler_name = MscConfig("msc").default_scheduler
     return MscConfig('msc').schedulers[scheduler_name]
-
