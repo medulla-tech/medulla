@@ -23,7 +23,10 @@
  */
 
 function displayLocalisationBar() {
-    return xmlCall("pulse2.displayLocalisationBar");
+    if (!isset($_SESSION["displayLocalisationBar"])) {
+        $_SESSION["displayLocalisationBar"] = xmlCall("pulse2.displayLocalisationBar");
+    }
+    return $_SESSION["displayLocalisationBar"];
 }
 
 ?>
