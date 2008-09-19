@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-26 13:13+0200\n"
+"POT-Creation-Date: 2008-09-19 18:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,79 +16,112 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: pkgs/pkgs/index.php:29 pkgs/pkgs/localSidebar.php:5
-msgid "Packages list"
-msgstr ""
-
-#: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:53
-#: pkgs/infoPackage.inc.php:44
-msgid "Add a package"
-msgstr ""
-
-#: pkgs/pkgs/ajaxPackageList.php:60
+#: pkgs/pkgs/ajaxPackageList.php:64
 msgid "Names"
 msgstr ""
 
-#: pkgs/pkgs/ajaxPackageList.php:61
+#: pkgs/pkgs/ajaxPackageList.php:65
 msgid "Versions"
 msgstr ""
 
-#: pkgs/pkgs/ajaxPackageList.php:62
+#: pkgs/pkgs/ajaxPackageList.php:66
 msgid "Descriptions"
 msgstr ""
 
-#: pkgs/pkgs/ajaxPackageList.php:69 pkgs/pkgs/edit.php:69
+#: pkgs/pkgs/ajaxPackageList.php:73 pkgs/pkgs/edit.php:91
 #: pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr ""
 
-#: pkgs/pkgs/ajaxPackageList.php:70 pkgs/infoPackage.inc.php:49
+#: pkgs/pkgs/ajaxPackageList.php:75 pkgs/infoPackage.inc.php:53
 msgid "Delete a package"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:42
-#, php-format
-msgid "Package successfully added in %s"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:45
-msgid "Package failed to save"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:89
-msgid "Package API"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:94
-msgid "Package Id"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:99
-msgid "Package label"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:100
-msgid "Package version"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:101
-msgid "Description"
-msgstr ""
-
-#: pkgs/pkgs/edit.php:105
-msgid "Command's name : "
-msgstr ""
-
-#: pkgs/pkgs/edit.php:105
-msgid "Command : "
 msgstr ""
 
 #: pkgs/pkgs/remove.php:32
 msgid "The package has been deleted."
 msgstr ""
 
-#: pkgs/pkgs/remove.php:37
+#: pkgs/pkgs/remove.php:33
+msgid "The package failed to delete"
+msgstr ""
+
+#: pkgs/pkgs/remove.php:38
 msgid "Delete this package"
+msgstr ""
+
+#: pkgs/pkgs/localSidebar.php:5 pkgs/pkgs/index.php:29
+msgid "Packages list"
+msgstr ""
+
+#: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:75
+#: pkgs/infoPackage.inc.php:44
+msgid "Add a package"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:57
+msgid "Package successfully edited"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:67
+msgid "Package failed to save"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:114
+msgid "Package API"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:119
+msgid "Package Id"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:128
+msgid "Package label"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:129
+msgid "Package version"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:130
+msgid "Description"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:134
+msgid "Command's name : "
+msgstr ""
+
+#: pkgs/pkgs/edit.php:134
+msgid "Command : "
+msgstr ""
+
+#: pkgs/pkgs/edit.php:142
+msgid "Need a reboot ?"
+msgstr ""
+
+#: pkgs/pkgs/edit.php:172
+msgid "Associate files"
+msgstr ""
+
+#: pkgs/pkgs/associate_files.php:51
+#, php-format
+msgid "Files succesfully associated with package %s"
+msgstr ""
+
+#: pkgs/pkgs/associate_files.php:57
+msgid "Failed to associate files"
+msgstr ""
+
+#: pkgs/pkgs/associate_files.php:64
+#, php-format
+msgid "Associate files to package %s"
+msgstr ""
+
+#: pkgs/pkgs/associate_files.php:84
+msgid "Select the directory you want for this package"
+msgstr ""
+
+#: pkgs/pkgs/associate_files.php:101
+msgid "Associate"
 msgstr ""
 
 #: pkgs/infoPackage.inc.php:32 pkgs/infoPackage.inc.php:38
@@ -97,4 +130,8 @@ msgstr ""
 
 #: pkgs/infoPackage.inc.php:42
 msgid "Show all packages"
+msgstr ""
+
+#: pkgs/infoPackage.inc.php:49
+msgid "Associate files to a package"
 msgstr ""

@@ -2,13 +2,13 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - pkgs Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-28 14:52+0200\n"
+"POT-Creation-Date: 2008-09-19 18:57+0200\n"
 "PO-Revision-Date: 2008-08-28 14:58+0200\n"
 "Last-Translator: Olivier Roussy <oroussy@mandriva.com>\n"
 "Language-Team: French\n"
@@ -30,7 +30,7 @@ msgstr "Associer"
 msgid "Associate files"
 msgstr "Associer des fichiers"
 
-#: pkgs/infoPackage.inc.php:48
+#: pkgs/infoPackage.inc.php:49
 msgid "Associate files to a package"
 msgstr "Associer des fichiers à un package"
 
@@ -47,7 +47,7 @@ msgstr "Commande : "
 msgid "Command's name : "
 msgstr "Nom de la commande : "
 
-#: pkgs/pkgs/ajaxPackageList.php:75 pkgs/infoPackage.inc.php:51
+#: pkgs/pkgs/ajaxPackageList.php:75 pkgs/infoPackage.inc.php:53
 msgid "Delete a package"
 msgstr "Supprimer un package"
 
