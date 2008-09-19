@@ -346,7 +346,7 @@ class Glpi(DyngroupDatabaseHelper):
                 bool = None
                 if filt.has_key('equ_bool'):
                     bool = filt['equ_bool']
-                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
                 query = query.filter(self.machine.c.ID.in_(*machines))
             except KeyError, e:
                 pass
