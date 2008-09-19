@@ -41,7 +41,10 @@ function getRestrictedComputersName($min = 0, $max = -1, $filt = null) {
 }
 
 function getComputersListHeaders() {
-    return xmlCall("base.getComputersListHeaders");
+    if (!isset($_SESSION["getComputersListHeaders"])) {
+        $_SESSION["getComputersListHeaders"] = xmlCall("base.getComputersListHeaders");
+    }
+    return $_SESSION["getComputersListHeaders"];
 }
 
 function canAddComputer() {
