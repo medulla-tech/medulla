@@ -30,8 +30,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $glpiAction = new ActionItem(_("GLPI Inventory"),"groupglpitabs","inventory","inventory", "base", "computers");
         $logAction = new ActionItem(_("Read log"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_("Software deployment"),"groupmsctabs","install","computer", "base", "computers");
-        $msc_can_download_file = false;
-        $msc_is_vnc_available = false;
+        $downloadFileAction = new ActionPopupItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
+        $vncClientAction = new ActionPopupItem(_("VNC Client"), "vnc_client", "vncclient", "computer", "base", "computers");
     } else {
         $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
         $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
