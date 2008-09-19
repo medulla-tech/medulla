@@ -149,7 +149,7 @@ def sortCommands(commands_to_perform):
             ids_list += ids
 
         if len(ids_list) == 0:
-            logging.getLogger().info("Scheduler: 0 tasks to start")
+            logging.getLogger().info("Scheduler: 0 task to start")
             return 0
 
         logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
