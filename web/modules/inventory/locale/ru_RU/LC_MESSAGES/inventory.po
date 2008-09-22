@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:17+0200\n"
+"POT-Creation-Date: 2008-09-22 17:51+0200\n"
 "PO-Revision-Date: 2008-07-25 14:11+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -15,6 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
+
+#: inventory/inventory/body.php:39
+#, fuzzy, php-format
+msgid "%s list"
+msgstr "Lista %s"
 
 #: inventory/inventory/tabs.php:15
 #, php-format
@@ -25,11 +30,6 @@ msgstr "Inwentarz zawartości %s"
 #, php-format
 msgid "%s's inventory"
 msgstr "inwentarz %s"
-
-#: inventory/inventory/body.php:39
-#, php-format
-msgid "%s's list"
-msgstr "Lista %s"
 
 #: inventory/inventory/i18n_labels.php:3
 msgid "Application"

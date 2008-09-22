@@ -8,15 +8,20 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc2\n"
+"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-19 18:56+0200\n"
-"PO-Revision-Date: 2008-09-19 19:07+0200\n"
+"POT-Creation-Date: 2008-09-22 17:51+0200\n"
+"PO-Revision-Date: 2008-09-22 18:12+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit"
+
+#: inventory/inventory/body.php:39
+#, php-format
+msgid "%s list"
+msgstr "liste des %s"
 
 #: inventory/inventory/tabs.php:15
 #, php-format
@@ -27,11 +32,6 @@ msgstr "Inventaire du contenu de %s"
 #, php-format
 msgid "%s's inventory"
 msgstr "Inventaire de %s"
-
-#: inventory/inventory/body.php:39
-#, php-format
-msgid "%s's list"
-msgstr "liste des %s"
 
 #: inventory/inventory/i18n_labels.php:3
 msgid "Application"
