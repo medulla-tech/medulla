@@ -73,7 +73,7 @@ my $pid;
 # Look for two free ports in the range "5900-5999"
 #
 sub alloc_freeport()  {
-    my $localport = 5900;
+    my $localport = 8100;
     my $max = 100;
     my $tries = $max;
     my ($sock1, $sock2);
@@ -165,7 +165,7 @@ sub client($$) {
     my $remote = shift;
     my $port = shift;
     my $paddr;
-    my $tries = 5;
+    my $tries = 20;
 
     # establish TCP connection: connect to $remote:$port
     $paddr = sockaddr_in($port, inet_aton($remote));
