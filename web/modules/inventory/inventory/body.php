@@ -36,7 +36,7 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get)
 $ajax = new AjaxFilter($url);
 
 $ajax->display();
-$p = new PageGenerator(sprintf(_T("%s's list", "inventory"), $label));
+$p = new PageGenerator(sprintf(_T("%s list", "inventory"), $label));
 $p->setSideMenu($sidemenu);
 $p->setNoFixHeight();
 $p->display();
