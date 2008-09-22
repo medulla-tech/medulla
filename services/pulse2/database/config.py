@@ -39,7 +39,7 @@ class DatabaseConfig(Singleton):
     dbuser = 'mmc'
     dbpasswd = 'mmc'
 
-    dbpoolrecycle = None
+    dbpoolrecycle = 60
     dbsslenable = False
     dbsslca = None
     dbsslcert = None
