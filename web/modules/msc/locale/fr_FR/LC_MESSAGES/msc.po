@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc2\n"
+"Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-19 18:56+0200\n"
-"PO-Revision-Date: 2008-09-19 19:05+0200\n"
+"POT-Creation-Date: 2008-09-22 17:52+0200\n"
+"PO-Revision-Date: 2008-09-22 18:12+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -539,7 +539,7 @@ msgid "Show all running task's logs"
 msgstr "Montrer toutes les actions en cours"
 
 #: msc/logs/all.php:33
-msgid "Show all task's logs"
+msgid "Show all task logs"
 msgstr "Montrer toutes les actions"
 
 #: msc/logs/localSidebar.php:9 msc/infoPackage.inc.php:52

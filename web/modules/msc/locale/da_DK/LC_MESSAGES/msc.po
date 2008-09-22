@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-19 18:45+0200\n"
+"POT-Creation-Date: 2008-09-22 17:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -535,7 +535,7 @@ msgid "Show all running task's logs"
 msgstr ""
 
 #: msc/logs/all.php:33
-msgid "Show all task's logs"
+msgid "Show all task logs"
 msgstr ""
 
 #: msc/logs/localSidebar.php:9 msc/infoPackage.inc.php:52

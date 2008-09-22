@@ -517,7 +517,7 @@ msgid "Show all running task's logs"
 msgstr ""
 
 #: msc/logs/all.php:33
-msgid "Show all task's logs"
+msgid "Show all task logs"
 msgstr ""
 
 #: msc/logs/localSidebar.php:9 msc/infoPackage.inc.php:52
