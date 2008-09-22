@@ -30,7 +30,7 @@ require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 
 
-$p = new PageGenerator(_T("Show all task's logs", 'msc'));
+$p = new PageGenerator(_T("Show all task logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
