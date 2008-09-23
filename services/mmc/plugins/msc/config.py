@@ -343,7 +343,7 @@ def makeURL(config):
     elif config.has_key('protocol') and not config.has_key('enablessl'):
         uri = "%s://" % config['protocol']
     else:
-        if config['enablessl']:
+        if 'enablessl' in config and config['enablessl']:
             uri = 'https://'
         else:
             uri = 'http://'
