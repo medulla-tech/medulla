@@ -45,17 +45,23 @@ class SchedulerApi(Singleton):
         return error
 
     def convert2id(self, scheduler):
+        self.logger.debug("Looking up scheduler id using: " + str(scheduler))
         ret = None
         if type(scheduler) == dict:
             if "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
-            else:
+            elif "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
                 scheduler = makeURL(scheduler)
+        elif type(scheduler) in (str, unicode):
+            ret = scheduler
         if not ret:
             if self.config.scheduler_url2id.has_key(scheduler):
+                self.logger.debug("Found scheduler id from MSC config file using this key %s" % scheduler)
                 ret = self.config.scheduler_url2id[scheduler]
         if not ret:
+            self.logger.debug("Using default scheduler")
             ret = self.config.default_scheduler
+        self.logger.debug("Using scheduler '%s'" % ret)
         return scheduler
     
     def cb_convert2id(self, result):
