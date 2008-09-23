@@ -334,7 +334,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $rb = new RadioTpl("copy_mode");
         $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
         $rb->setvalues(array('push', 'push_pull'));
-        $rb->setSelected($_GET['copy_mode']);
+        $rb->setSelected($_POST['copy_mode']);
         $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
 
 
