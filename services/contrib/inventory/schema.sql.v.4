@@ -1,0 +1,12 @@
+ALTER TABLE `Bios` CHANGE `BiosVersion` `BiosVersion` VARCHAR( 255 ) NULL DEFAULT NULL;
+ALTER TABLE `Controller` CHANGE `StandardType` `StandardType` VARCHAR( 255 ) NULL DEFAULT NULL;
+ALTER TABLE `Network` CHANGE `CardType` `CardType` VARCHAR( 255 ) NULL DEFAULT NULL;
+ALTER TABLE `Port` CHANGE `Stamp` `Stamp` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `Storage` CHANGE `StandardType` `StandardType` VARCHAR( 255 ) NULL DEFAULT NULL;
+
+--
+-- Database version
+--
+TRUNCATE Version;
+INSERT INTO Version VALUES( '4' );
+
