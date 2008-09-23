@@ -45,13 +45,17 @@ class SchedulerApi(Singleton):
         return error
 
     def convert2id(self, scheduler):
+        ret = None
         if type(scheduler) == dict:
             if "mountpoint" in scheduler and scheduler["mountpoint"]:
-                scheduler = scheduler["mountpoint"]
+                ret = scheduler["mountpoint"]
             else:
                 scheduler = makeURL(scheduler)
-        if self.config.scheduler_url2id.has_key(scheduler):
-            return self.config.scheduler_url2id[scheduler]
+        if not ret:
+            if self.config.scheduler_url2id.has_key(scheduler):
+                ret = self.config.scheduler_url2id[scheduler]
+        if not ret:
+            ret = self.config.default_scheduler
         return scheduler
     
     def cb_convert2id(self, result):
