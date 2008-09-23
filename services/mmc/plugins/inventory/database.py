@@ -320,6 +320,46 @@ class Inventory(DyngroupDatabaseHelper):
         ret = len(query.all())
         session.close()
         return ret
+
+    def getComputersOptimized(self, ctx, filt):
+        """
+        Return a list of computers, but try to optimize the way we get its
+        inventory.
+        """
+        result = self.getMachinesOnly(ctx, filt)
+        tables = Inventory().config.content
+        if len(tables) == 1 and "Registry" in tables:
+            # The inventory to display is to be taken from the same Registry
+            # table
+            computers = {}
+            ids = []
+            uuids = []
+            for machine in result:
+                ids.append(machine.id)
+                uuid = toUUID(machine.id)
+                tmp = [ False,
+                        { 'cn' : [machine.Name],
+                          'objectUUID' : [uuid] } ]
+                computers[uuid] = tmp
+                # Keep UUID order
+                uuids.append(uuid)
+            if len(uuids):
+                # For all resulting machines ids, get the inventory part
+                inventoryResult = self.getLastMachineInventoryPart(ctx, tables.keys()[0], {'ids' : ids })
+                # Process each row, one row == one computer inventory
+                for row in inventoryResult:
+                    uuid = row[2]
+                    # Process inventory content
+                    for inv in row[1]:
+                        computers[uuid][1][inv["Path"]] = inv["Value"]
+            # Build the result
+            ret = []
+            for uuid in uuids:
+                ret.append(computers[uuid])
+        else:
+            result = self.getMachinesOnly(ctx, filt)
+            ret = map(lambda m: m.toDN(ctx), result)
+        return ret
         
     # needed by DyngroupDatabaseHelper
     def computersTable(self):
@@ -780,6 +820,9 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
+        # Filter using a list of machine ids
+        if params.has_key('ids') and len(params['ids']):
+            query = query.filter(self.machine.c.id.in_(*params['ids']))
         return query
        
     def getIdInTable(self, tableName, values, session = None):
