@@ -46,7 +46,7 @@ class SchedulerApi(Singleton):
 
     def convert2id(self, scheduler):
         if type(scheduler) == dict:
-            if "mountpoint" in scheduler:
+            if "mountpoint" in scheduler and scheduler["mountpoint"]:
                 scheduler = scheduler["mountpoint"]
             else:
                 scheduler = makeURL(scheduler)
