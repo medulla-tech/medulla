@@ -412,58 +412,79 @@ def runUploadPhase(myCommandOnHostID):
             return None
         return mydeffered
     else: # remote pull
-        mirrors = myT.mirrors.split('||')
-        mirror = mirrors[0] # TODO: handle when several mirrors are available
-        if re.compile('^http://').match(mirror) or re.compile('^https://').match(mirror): # HTTP download
-            client['protocol'] = 'wget'
-            m1 = mmc.plugins.msc.mirror_api.Mirror(mirror)
-            files = myC.files.split("\n")
-            files_list = []
-            for file in files:
-                fid = file.split('##')[0]
-                files_list.append(m1.getFilePath(fid))
 
-            myCoH.setUploadInProgress()
-            myCoH.setCommandStatut('upload_in_progress')
-            updateHistory(myCommandOnHostID, 'upload_in_progress')
+        # mirror is formated like this:
+        # https://localhost:9990/mirror1||https://localhost:9990/mirror1
+        try:
+            mirrors = myT.mirrors.split('||')
+        except:
+            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%', skipping command" % (myCommandOnHostID, myT.mirrors))
+            return None
 
-            if SchedulerConfig().mode == 'sync':
-                mydeffered = callOnBestLauncher(
-                    'sync_remote_pull',
-                    myCommandOnHostID,
-                    client,
-                    files_list,
-                    SchedulerConfig().max_upload_time
-                )
-                mydeffered.\
-                    addCallback(parsePullResult, myCommandOnHostID).\
-                    addErrback(parsePullError, myCommandOnHostID)
-            elif SchedulerConfig().mode == 'async':
-                mydeffered = callOnBestLauncher(
-                    'async_remote_pull',
-                    myCommandOnHostID,
-                    client,
-                    files_list,
-                    SchedulerConfig().max_upload_time
-                )
-                mydeffered.addErrback(parsePullError, myCommandOnHostID)
-            else:
-                return None
-            return mydeffered
-        elif re.compile('^smb://').match(mirror): # TODO: NET download
-            pass
-        elif re.compile('^ftp://').match(mirror): # TODO: FTP download
-            pass
-        elif re.compile('^nfs://').match(mirror): # TODO: NFS download
-            pass
-        elif re.compile('^ssh://').match(mirror): # TODO: SSH download
-            pass
-        elif re.compile('^rsync://').match(mirror): # TODO: RSYNC download
-            pass
-        else: # do nothing
-            pass
-    myCoH.setUploadIgnored() # can't guess what to do, jump to next phase
-    return runExecutionPhase(myCommandOnHostID)
+        # mirrors is an array containing one mirror per value, let's find one valid
+
+        file_uris = list()
+        for m in mirrors:
+            mirror_api = mmc.plugins.msc.mirror_api.Mirror(m)
+            # convert between file_id (rightmost part of file_path splited over '##') and file_uri
+            files_list = map(lambda x: mirror_api.getFilePath(x.split('##')[0]), myC.files.split("\n"))
+
+            if not False in files_list and not '' in files_list: # seems we got an URI per given file (file not font are False), this mirror should be OK
+                # build a dict with the protocol and the files uris
+                if re.compile('^http://').match(m) or re.compile('^https://').match(m): # HTTP download
+                    file_uris.append({'protocol': 'wget', 'files': files_list, 'mirror': m})
+                elif re.compile('^smb://').match(mirror): # TODO: NET download
+                    pass
+                elif re.compile('^ftp://').match(mirror): # FIXME: check that wget may handle FTP as HTTP
+                    file_uris.append({'protocol': 'wget', 'files': files_list, 'mirror': m})
+                elif re.compile('^nfs://').match(mirror): # TODO: NFS download
+                    pass
+                elif re.compile('^ssh://').match(mirror): # TODO: SSH download
+                    pass
+                elif re.compile('^rsync://').match(mirror): # TODO: RSYNC download
+                    pass
+                else: # do nothing
+                    pass
+
+        # from here, either file_uris is an array with a bunch of uris, or it is void in which case we give up
+        if not file_uris:
+            logger.warn("command_on_host #%s: can't get a valid mirror, skipping command" % (myCommandOnHostID))
+            return None
+        choosed_mirror = random.choice(file_uris) # TODO: chaos is good, but we may be smarter here
+
+        logger.warn("command_on_host #%s: mirror '%s' has been choosen" % (myCommandOnHostID, choosed_mirror['mirror']))
+        client['protocol'] = choosed_mirror['protocol']
+        files_list = choosed_mirror['files']
+
+        # we should now be ready to begin upload, let's record it
+        myCoH.setUploadInProgress()
+        myCoH.setCommandStatut('upload_in_progress')
+        updateHistory(myCommandOnHostID, 'upload_in_progress')
+
+        # upload starts here
+        if SchedulerConfig().mode == 'sync':
+            mydeffered = callOnBestLauncher(
+                'sync_remote_pull',
+                myCommandOnHostID,
+                client,
+                files_list,
+                SchedulerConfig().max_upload_time
+            )
+            mydeffered.\
+                addCallback(parsePullResult, myCommandOnHostID).\
+                addErrback(parsePullError, myCommandOnHostID)
+        elif SchedulerConfig().mode == 'async':
+            mydeffered = callOnBestLauncher(
+                'async_remote_pull',
+                myCommandOnHostID,
+                client,
+                files_list,
+                SchedulerConfig().max_upload_time
+            )
+            mydeffered.addErrback(parsePullError, myCommandOnHostID)
+        else:
+            return None
+        return mydeffered
 
 def runExecutionPhase(myCommandOnHostID):
     # Second step : execute file
