@@ -62,7 +62,7 @@ class SchedulerApi(Singleton):
             self.logger.debug("Using default scheduler")
             ret = self.config.default_scheduler
         self.logger.debug("Using scheduler '%s'" % ret)
-        return scheduler
+        return ret
     
     def cb_convert2id(self, result):
         if type(result) == list:
