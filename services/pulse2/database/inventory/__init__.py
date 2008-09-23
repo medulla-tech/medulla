@@ -28,11 +28,11 @@ from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import Singleton
 
 from sqlalchemy import *
-import sqlalchemy
-import logging
+
 import datetime
 import time
 import re
+import logging
 
 
 class Inventory(DyngroupDatabaseHelper):
@@ -883,6 +883,9 @@ class PossibleQueries(Singleton):
 
 class InventoryCreator(Inventory):
     def createNewInventory(self, hostname, inventory, date):
+        """
+        Add a new inventory for a computer
+        """
         # TODO : check that inventory is not empty....
         k = 0
         for i in map(lambda x: len(inventory[x]), inventory):
@@ -897,27 +900,37 @@ class InventoryCreator(Inventory):
         try:
             m = self.getMachinesOnly(None, {'hostname':hostname}) # TODO uuids!
             if len(m) == 0:
+                # If this computer is not in the Machine table, add it
                 m = Machine()
                 m.Name = hostname
                 session.save(m)
             elif len(m) > 1:
+                # If this computer has been registered twice, exit
                 session.close()
                 return False
             else:
+                # Get the current computer
                 m = m[0]
+            # Set last inventory flag to 0 for already existing inventory for
+            # this computer
             result = session.query(InventoryTable).select_from(self.inventory.join(self.table['hasHardware']).join(self.machine)).filter(self.machine.c.Name == hostname)
             for inv in result:
                 inv.Last = 0
                 session.save(inv)
+
+            # Create a new empty inventory, and flag it as the last
             i = InventoryTable()
             i.Date, i.Time = date
             i.Last = 1
             session.save(i)
             session.flush()
-            
+
+            # Loop on all inventory parts
             for table in inventory:
                 content = inventory[table]
                 tname = table.lower()
+
+                # This part of inventory is empty, so skip it
                 if len(content) == 0:
                     continue
                 
@@ -926,11 +939,15 @@ class InventoryCreator(Inventory):
                 hasTable = self.table['has'+table]
                 
                 h = hasTable.insert()
+                # loop on all inventory part columns
                 for cols in content:
+                    # skip if empty
+                    if len(cols) == 0:
+                        continue
                     try:
-                        if len(cols) == 0:
-                            continue
+                        # Look up these columns in the inventory table
                         id = self.getIdInTable(table, cols, session)
+                        # Create them if none found
                         if id == None:
                             k = klass()
                             for col in cols:
