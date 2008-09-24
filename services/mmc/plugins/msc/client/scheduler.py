@@ -24,12 +24,17 @@
 # Twisted
 import twisted.web.xmlrpc
 import twisted.internet.defer
+
+from sqlalchemy import *
 import logging
 
 # our stuff
 from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
 from mmc.plugins.msc.config import MscConfig, makeURL
 from mmc.plugins.msc.scheduler_api import SchedulerApi
+from mmc.plugins.msc.database import MscDatabase
+from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
+
 
 def getProxy(schedulerConfig):
     """
@@ -52,16 +57,29 @@ def getProxy(schedulerConfig):
     return ret
 
 def start_all_commands(scheduler):
+    """
+    @deprecated
+    """
     # FIXME: return something usefull !
     return getProxy(__select_scheduler(scheduler)).callRemote(
         'start_all_commands'
     )
 
 def start_these_commands(scheduler, commands):
-    return getProxy(__select_scheduler(scheduler)).callRemote(
-        'start_these_commands',
-        commands
-    )
+    database = MscDatabase()
+    session = create_session()
+    coh_query = session.query(CommandsOnHost).filter(database.commands.c.id.in_(*commands))
+    done = []
+    for coh in coh_query.all():
+        scheduler = coh.scheduler
+        if not scheduler in done:
+            logging.getLogger().debug('Starting command on scheduler %s' % scheduler)
+            done.append(scheduler)
+            getProxy(__select_scheduler(scheduler)).callRemote(
+                'start_these_commands',
+                commands
+            )
+    session.close()
 
 def ping_client(scheduler, computer):
     return process_on_client(scheduler, computer, 'ping_client')
