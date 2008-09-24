@@ -79,6 +79,7 @@ class MscConfig(PluginConfig):
     web_def_awake = 1
     web_def_inventory = 1
     web_def_mode = "push"
+    web_force_mode = True
     web_def_maxbw = "0"
     web_def_delay = "60"
     web_def_attempts = "3"
@@ -88,6 +89,7 @@ class MscConfig(PluginConfig):
     web_def_dlmaxbw = 0
 
     # VNC applet behavior
+    web_vnc_show_icon = True
     web_vnc_view_only = True
     web_vnc_network_connectivity = "lan"
     web_vnc_allow_user_control = False
@@ -210,6 +212,8 @@ class MscConfig(PluginConfig):
             self.web_def_inventory = self.getint("web", "web_def_inventory")
         if self.has_option("web", "web_def_mode"):
             self.web_def_mode = self.get("web", "web_def_mode")
+        if self.has_option("web", "web_force_mode"):
+            self.web_force_mode = self.getboolean("web", "web_force_mode")
         if self.has_option("web", "web_def_maxbw"):
             self.web_def_maxbw = self.get("web", "web_def_maxbw")
         if self.has_option("web", "web_def_delay"):
@@ -232,6 +236,8 @@ class MscConfig(PluginConfig):
                 logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
 
         # VNC stuff
+        if self.has_option("web", "vnc_show_icon"):
+            self.web_vnc_show_icon = self.getboolean("web", "vnc_show_icon")
         if self.has_option("web", "vnc_view_only"):
             self.web_vnc_view_only = self.getboolean("web", "vnc_view_only")
         if self.has_option("web", "vnc_network_connectivity"):

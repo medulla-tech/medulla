@@ -353,6 +353,9 @@ class RpcProxy(RpcProxyI):
     def get_web_def_mode(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_mode)
 
+    def get_web_force_mode(self):
+        return xmlrpcCleanup(MscConfig("msc").web_force_mode)
+
     def get_web_def_maxbw(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_maxbw)
 
@@ -367,6 +370,9 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_vnc_view_only(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_view_only)
+
+    def get_web_def_vnc_show_icon(self):
+        return xmlrpcCleanup(MscConfig("msc").web_vnc_show_icon)
 
     def get_web_def_vnc_network_connectivity(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_network_connectivity)
