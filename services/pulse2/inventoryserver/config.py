@@ -39,7 +39,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     # default values
     bind = ''
     port = 9999
-    ocsmapping = '/etc/mmc/pulse2/OcsNGMap.xml'
+    ocsmapping = '/etc/mmc/pulse2/inventory-server/OcsNGMap.xml'
     enablessl = False
     verifypeer = False
     cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
