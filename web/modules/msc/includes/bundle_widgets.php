@@ -331,15 +331,17 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $f->add(new TrFormElement(_T('End of validity', 'msc'),                             new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
         $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_POST['deployment_intervals']));
         $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
-        $rb = new RadioTpl("copy_mode");
-        $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-        $rb->setvalues(array('push', 'push_pull'));
-        $rb->setSelected($_POST['copy_mode']);
-        $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-
-
-        $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',  "hide" => True));
-        $f->add(new HiddenTpl("do_reboot"),             array("value" => '',    "hide" => True));
+        $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',              "hide" => True));
+        $f->add(new HiddenTpl("do_reboot"),             array("value" => '',                "hide" => True));
+        if (web_force_mode()) {
+            $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(),    "hide" => True));
+        } else {
+            $rb = new RadioTpl("copy_mode");
+            $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+            $rb->setvalues(array('push', 'push_pull'));
+            $rb->setSelected($_POST['copy_mode']);
+            $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+        }
     }
 }
 

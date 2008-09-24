@@ -44,6 +44,10 @@ function web_def_mode() {
     return __web_def_in_session("mode");
 }
 
+function web_force_mode() {
+    return __web_def_in_session("force_mode");
+}
+
 function web_def_maxbw() {
     return __web_def_in_session("maxbw");
 }
@@ -70,6 +74,10 @@ function web_vnc_network_connectivity() {
 
 function web_vnc_allow_user_control() {
     return __web_def_in_session("vnc_allow_user_control");
+}
+
+function web_vnc_show_icon() {
+    return __web_def_in_session("vnc_show_icon");
 }
 
 ?>
