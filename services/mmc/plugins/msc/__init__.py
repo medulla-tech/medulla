@@ -353,7 +353,7 @@ class RpcProxy(RpcProxyI):
     def get_web_def_mode(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_mode)
 
-    def get_web_force_mode(self):
+    def get_web_def_force_mode(self):
         return xmlrpcCleanup(MscConfig("msc").web_force_mode)
 
     def get_web_def_maxbw(self):
