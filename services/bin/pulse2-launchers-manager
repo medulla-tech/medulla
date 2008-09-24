@@ -139,6 +139,16 @@ if __name__ == "__main__":
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
 
+    # Try to create the default log directory
+    LOGDIR = '/var/log/mmc'
+    if not os.path.exists(LOGDIR):
+        try:
+            os.mkdir(LOGDIR)
+        except:
+            # Maybe we are not root, so it may not be a problem if the mkdir
+            # failed
+            pass
+
     # Start logger
     logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
