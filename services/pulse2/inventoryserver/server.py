@@ -60,7 +60,7 @@ class InventoryServer:
             deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
         except AttributeError, e:
             pass
-    
+
         if query == 'PROLOG':
             config = InventoryGetService().config
             if len(config.options.keys()) == 0:
@@ -220,6 +220,12 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 class InventoryGetService(Singleton):
     def initialise(self, config):
         self.logger = logging.getLogger()
+        self.xmlmapping = config.ocsmapping
+        try:
+            OcsMapping().initialize(self.xmlmapping)
+        except IOError, e:
+            self.logger.error(e)
+            return False
         try:
             InventoryCreator().activate(config)
         except Exception, e :
@@ -230,8 +236,6 @@ class InventoryGetService(Singleton):
         self.config = config
         self.bind = config.bind
         self.port = int(config.port)
-        self.xmlmapping = config.ocsmapping
-        OcsMapping().initialize(self.xmlmapping)
         return True
 
     def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
