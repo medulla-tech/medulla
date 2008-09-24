@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 """
-    Pulse2 PackageServer
+    Pulse2 PackageServer Mirror API
 """
 import twisted.web.html
 import twisted.web.xmlrpc
@@ -48,7 +48,16 @@ class Mirror(twisted.web.xmlrpc.XMLRPC):
 
     def xmlrpc_isAvailable(self, pid):
         return Common().getPackages(self.mp).has_key(pid)
-        
+
+    def xmlrpc_getFilesURI(self, fids):
+        ret = []
+        for fid in fids:
+            ret.append(self.xmlrpc_getFilePath(fid))
+        return ret
+
+    def xmlrpc_getFileURI(self, fid):
+        return self.xmlrpc_getFilePath(fid)
+    
     def xmlrpc_getFilePath(self, fid):
         f = Common().getFile(fid)
         if f == None:
