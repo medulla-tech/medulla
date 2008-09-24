@@ -280,7 +280,7 @@ function xmlCall($method, $params = null) {
             /* We didn't find one */
             $result = new ErrorHandlingItem('');
             $result->setMsg(_("unknown error"));
-            $result->setAdvice(_("This exception is unknow. Please contact us to add an error handling on this error."));
+            $result->setAdvice(_("This exception is unknown. Please contact us to add an error handling on this error."));
         }        
         $result->process($xmlResponse);        
         $errorStatus = 1;
