@@ -43,7 +43,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
     foreach (array('command') as $post) {
-        $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>$_POST[$post.'cmd']);
+        $package[$post] = array('name'=>$_POST[$post.'name'], 'command'=>stripslashes($_POST[$post.'cmd']));
     }
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
     if (!isXMLRPCError() and $ret and $ret != -1) {
@@ -163,7 +163,7 @@ foreach ($cmds as $p) {
     );
     $f->add(
         new TrFormElement($p[2], new InputTpl($p[0].'cmd')),
-        array("value" => $package[$p[0]]['command'])
+        array("value" => htmlspecialchars($package[$p[0]]['command']))
     );
 }
 

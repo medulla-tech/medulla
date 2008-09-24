@@ -46,7 +46,7 @@ if (isset($_POST["bassoc"])) {
         $cbx[] = $_POST['rdo_files'];
     }
     $ret = associatePackages($p_api_id, $pid, $cbx, $level);
-    if (!isXMLRPCError() and $ret and $ret != -1) {
+    if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
             new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
             header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
