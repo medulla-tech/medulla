@@ -156,7 +156,7 @@ if ($_GET["establishproxy"] == "yes") {
 
 
 } else {
-    $f = new PopupWindowForm(_T("Establish a VNC connection to this computer"));
+    $f = new PopupWindowForm(_T("Establish a VNC connection to this computer", "msc"));
     $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
     $f->addValidateButtonWithFade("bconfirm");
     $f->addCancelButton("bback");
