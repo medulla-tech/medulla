@@ -15,6 +15,9 @@ if (strlen($_GET['cmd_id'])) {
 ob_end_clean();
 
 $filename = "command_status_$cmd_id";
+/* The two following lines make the CSV export works for IE 7.x */
+header("Pragma: ");
+header("Cache-Control: ");
 header("Content-type: text/txt");
 header('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 
