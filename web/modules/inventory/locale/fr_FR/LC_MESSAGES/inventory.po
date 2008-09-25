@@ -8,10 +8,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc3\n"
+"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-22 17:51+0200\n"
-"PO-Revision-Date: 2008-09-22 18:12+0200\n"
+"POT-Creation-Date: 2008-09-25 19:34+0200\n"
+"PO-Revision-Date: 2008-09-25 19:35+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
