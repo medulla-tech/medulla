@@ -38,8 +38,8 @@ if (isset($_POST["bconfirm"])) {
         print $ret[1]->scalar;
     }
 } else {
-    $f = new PopupForm(_T("Download a file from a computer"));
-    $f->addText(sprintf(_T("Warning: this operation may last a long time.")));
+    $f = new PopupForm(_T("Download a file from a computer", "msc"));
+    $f->addText(sprintf(_T("Warning: this operation may last a long time.", "msc")));
     $f->addValidateButtonWithFade("bconfirm");
     $f->addCancelButton("bback");
     $f->display();    
