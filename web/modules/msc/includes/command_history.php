@@ -67,6 +67,7 @@ class CommandOnHost {
         $n->drawTable(0);
     }
 }
+
 class Bundle {
     function Bundle($bundle_id) {
         $this->db_bundle = bundle_detail($bundle_id);

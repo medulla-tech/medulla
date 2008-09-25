@@ -41,13 +41,14 @@ $filter = $_GET["filter"];
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
-$hostname = $_GET['hostname'];
 $uuid = $_GET['uuid'];
 $gid = $_GET['gid'];
 $history = $_GET['history'];
 $tab = $_GET['tab'];
 $areCommands = False;
+
 if ($uuid) {
+    $hostname = $_GET['hostname'];
     if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
         list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'cmd_id'=>$_GET['cmd_id'], 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
     } else {
@@ -76,13 +77,13 @@ $params = array();
 $actionplay    = new ActionPopupItem(_T("Start", "msc"), "msctabsplay",  "start",   "msc", "base", "computers");
 $actionpause   = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause",   "msc", "base", "computers");
 $actionstop    = new ActionPopupItem(_T("Stop", "msc"),  "msctabsstop",  "stop",    "msc", "base", "computers");
-if (strlen($gid)) {
-    $actiondetails = new ActionItem(_T("Details", "msc"),    "groupmsctabs",      "display", "msc", "base", "computers");
-} else {
-    $actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",      "display", "msc", "base", "computers");
-}
 $actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
 $actionstatus->setWidth("600");
+if (strlen($gid)) {
+    $actiondetails = new ActionItem(_T("Details", "msc"),    "groupmsctabs",    "display", "msc", "base", "computers");
+} else {
+    $actiondetails = new ActionItem(_T("Details", "msc"),    "msctabs",         "display", "msc", "base", "computers");
+}
 $actionempty   = new EmptyActionItem();
 
 $a_start = array();
@@ -215,11 +216,13 @@ if ($areCommands) {
     $n->addActionItemArray($a_status);
 } else {
     foreach ($cmds as $cmd) {
+
         $coh_id = $cmd[1];
         $cho_status = $cmd[2];
         $cmd = $cmd[0];
         if ((strlen($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !strlen($_GET['coh_id'])) {
             $coh = get_commands_on_host($coh_id);
+
             if ($history) {
                 $d = $coh["end_date"];
             } else {
@@ -249,7 +252,7 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }

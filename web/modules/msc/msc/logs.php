@@ -28,7 +28,9 @@ require_once('modules/msc/includes/functions.php');
 require_once('modules/msc/includes/widgets.inc.php');
 
 if (strlen($_GET['uuid'])) {
-    // bottom of the page : details for the command if coh_id is specified
+/*
+ * display stuff for a single client
+ */
     if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
@@ -67,7 +69,10 @@ if (strlen($_GET['uuid'])) {
         $ajax->displayDivToUpdate();
     }
 } elseif (strlen($_GET['gid'])) {
-    if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {
+/*
+ * display stuff for a single group
+ */
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
@@ -76,14 +81,16 @@ if (strlen($_GET['uuid'])) {
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
-    } elseif (strlen($_GET['coh_id'])) {
+    } elseif (strlen($_GET['coh_id'])) {// display the selected command on host
         $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
-        // display the selected command
+
         if (strlen($_GET['bundle_id'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
+            // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
         }
+
         $params['cmd_id'] = $_GET['cmd_id'];
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
@@ -97,16 +104,18 @@ if (strlen($_GET['uuid'])) {
             $ch = new CommandHistory($coh_id);
             $ch->display();
         }
-    } elseif (strlen($_GET['cmd_id'])) {
+    } elseif (strlen($_GET['cmd_id'])) {// just display the selected command
         $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
-        // display just the selected command
+
         $bdlink = '';
         if (strlen($_GET['bundle_id'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
+            // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
             $bdlink = "&bundle_id=".$_GET['bundle_id'];
         }
+
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay();
         if ($act) {
