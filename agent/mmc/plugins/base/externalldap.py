@@ -53,12 +53,17 @@ class ExternalLdapAuthenticatorConfig(AuthenticatorConfig):
             self.filter = self.get(self.section, "filter")
         except NoOptionError:
             pass
+        try:
+            self.network_timeout = self.getint(self.section, "network_timeout")
+        except NoOptionError:
+            pass
 
     def setDefault(self):
         AuthenticatorConfig.setDefault(self)
         self.filter = "objectClass=*"
         self.bindname = None
         self.bindpasswd = None
+        self.network_timeout = None
 
 
 class ExternalLdapAuthenticator(AuthenticatorI):
@@ -103,7 +108,10 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         connected = False
         for ldapurl in self.config.ldapurls:
             try:
+                self.logger.debug("Connecting to %s" % ldapurl)
                 l = ldap.initialize(ldapurl)
+                if self.config.network_timeout:
+                    l.set_option(ldap.OPT_NETWORK_TIMEOUT, self.config.network_timeout)
                 if self.config.bindname:
                     l.simple_bind_s(self.config.bindname, self.config.bindpasswd)
                 else:
@@ -115,7 +123,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                 # Exit loop, because we found a LDAP server to connect to
                 break
         if not connected:
-            raise "Can't find an external LDAP server to connect to"
+            raise Exception("Can't find an external LDAP server to connect to")
         return l
 
     def searchUser(self, l, user):

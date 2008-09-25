@@ -54,8 +54,8 @@ class AuthenticationManager(Singleton):
             mandatory = True
             try:
                 instance = klass()
-                valid = instance.validate()
                 mandatory = instance.config.mandatory
+                valid = instance.validate()
             except Exception, e:
                 self.logger.exception(e)
                 valid = False
