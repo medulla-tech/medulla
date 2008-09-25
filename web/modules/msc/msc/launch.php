@@ -111,7 +111,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
-        $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "', 'msc'), $name, $group->getName()));
+        $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
 
         $f->push(new Table());
         $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
