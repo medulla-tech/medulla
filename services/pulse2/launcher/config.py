@@ -45,8 +45,8 @@ class LauncherConfig(pulse2.utils.Singleton):
     inventory_command = "echo Doing inventory"
     launcher_path = "/usr/sbin/pulse2-launcher"
     max_command_age = 86400
-    max_ping_time = 2
-    max_probe_time = 5
+    max_ping_time = 4
+    max_probe_time = 20
     ping_path = "/usr/sbin/pulse2-ping"
     reboot_command = "shutdown.exe -f -r 1 || shutdown -r now"
     source_path = "/var/lib/pulse2/packages"
