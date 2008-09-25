@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE package SYSTEM "package_v1.dtd">
+ <package id='##ID##'>
+        <name>##ID##</name>
+        <version>
+                <numeric></numeric>
+                <label>1.0</label>
+        </version>
+        <commands>
+                <preCommand></preCommand>
+                <installInit></installInit>
+                <command name='install'>##CMD##</command>
+                <postCommandSuccess></postCommandSuccess>
+                <postCommandFailure></postCommandFailure>
+        </commands>
+ </package>
