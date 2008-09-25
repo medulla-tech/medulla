@@ -323,6 +323,9 @@ class MscDatabase(Singleton):
         """
         Return a Command object
         """
+        if type(files) == list:
+            files = "\n".join(files)
+
         cmd = Commands()
         now = time.localtime()
         cmd.creation_date = "%s-%s-%s %s:%s:%s" % (now[0], now[1], now[2], now[3], now[4], now[5])
@@ -342,7 +345,7 @@ class MscDatabase(Singleton):
         cmd.max_connection_attempt = max_connection_attempt
         cmd.do_inventory = do_inventory
         cmd.maxbw = maxbw
-        cmd.deployment_intervals = deployment_intervals
+        cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         cmd.bundle_id = bundle_id
         cmd.order_in_bundle = order_in_bundle
         session.save(cmd)
@@ -373,7 +376,7 @@ class MscDatabase(Singleton):
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
 
-    def createTarget(self, session, ctx, target, mode, group_id, root, connect_as):
+    def createTarget(self, ctx, target, mode, group_id, root, connect_as):
         """
         Create a row in the target table.
 
@@ -538,7 +541,7 @@ class MscDatabase(Singleton):
         coh_to_insert = []
 
         def cbCreateTarget(t, scheduler):
-            d2 = self.createTarget(session, ctx, t, mode, group_id, root, connect_as)
+            d2 = self.createTarget(ctx, t, mode, group_id, root, connect_as)
             d2.addCallback(cbProcessCommand, scheduler)
             return d2
 
@@ -549,7 +552,7 @@ class MscDatabase(Singleton):
             targets_to_insert.append(target)
             targets_scheduler.append(scheduler)
 
-        def cbCreateTargetAndCoh(schedulers, target):
+        def cbCreateFullCommand(schedulers, target, files):
             def cbReturnCmd(result, cmd):
                 # let's check if something goes wrong while creating our targets
                 for r in result:
@@ -578,20 +581,17 @@ class MscDatabase(Singleton):
             else:
                 dlist.append(cbCreateTarget(target, schedulers))
             dl = defer.DeferredList(dlist)
+
+            # create (and save) the command itself
+            session = create_session()
+            cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
+            session.close()
+
             dl.addCallback(cbReturnCmd, (cmd))
             return dl
 
-        if type(files) == list:
-            files = "\n".join(files)
-
-        deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
-        # create (and save) the command itself
-        session = create_session()
-        cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
-        session.close()
-
         d = self.getMachinesSchedulers(target)
-        d.addCallback(cbCreateTargetAndCoh, (target))
+        d.addCallback(cbCreateFullCommand, (target), files)
         d.addErrback(lambda err: err)
         return d
 
