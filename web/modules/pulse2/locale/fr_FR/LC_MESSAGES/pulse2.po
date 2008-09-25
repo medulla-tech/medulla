@@ -6,10 +6,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - pulse2 Web Interface 1.2.0rc2\n"
+"Project-Id-Version: Pulse 2 - Pulse2 Web Interface 1.2.0rc4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:19+0200\n"
-"PO-Revision-Date: 2008-09-19 19:02+0200\n"
+"POT-Creation-Date: 2008-09-25 19:47+0200\n"
+"PO-Revision-Date: 2008-09-25 19:47+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
