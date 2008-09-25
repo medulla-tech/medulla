@@ -33,7 +33,7 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 ### Advanced actions handling ###
-/* Advanced action: post handling */
+/* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     // Vars seeding
     $post = $_POST;
@@ -42,7 +42,6 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
-    $tab = $path[3];
     $params = array();
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $post[$param];
@@ -59,67 +58,69 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
             $params[$param] = $post[$param];
     }
 
-    $hostname = $post['hostname'];
-    $uuid = $post['uuid'];
-    $gid = $post['gid'];
-
-    if (isset($_GET['uuid']) && $_GET['uuid']) {
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        if ($machine->uuid == $uuid) { // Action on a single computer
-            $cible = array($uuid, $machine->hostname);
-        } else { // action on a whole group
-            die("Computer UUIDs dont match");
-        }
-    }
-
     $pid = $post['pid'];
     $mode = $post['copy_mode'];
 
-    // record new command
-    $id = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-    scheduler_start_these_commands('', array($id));
+    if (isset($post['uuid']) && $post['uuid']) { # command on a single target
+        $hostname = $post['hostname'];
+        $uuid = $post['uuid'];
+        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+        $target = array($uuid, $machine->hostname);
+        $tab = 'tablogs';
+        // record new command
+        $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
+        scheduler_start_these_commands('', array($id));
+        // then redirect to the logs page
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'cmd_id'=>$id)));
+    } else { # command on a whole group
+        $gid = $post['gid'];
+        $tab = 'grouptablogs';
+        // record new command
+        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid);
+        scheduler_start_these_commands('', array($id));
+        // then redirect to the logs page
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id)));
+    }
 
-    // then redirect to the logs page
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id)));
 }
 
 /* Advanced action: form display */
 if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     // Vars seeding
     $from = $_GET['from'];
-    $hostname = $_GET['hostname'];
-    $uuid = $_GET['uuid'];
-    $gid = $_GET['gid'];
     $pid = $_GET['pid'];
     $p_api = new ServerAPI();
     $p_api->fromURI($_GET["papi"]);
     $name = getPackageLabel($p_api, $_GET['pid']);
 
+    // form design
+    $f = new Form();
+
+    // display top label
     if (isset($_GET['uuid']) && $_GET['uuid']) {
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        // top label
-        if ($machine->uuid == $_GET['uuid']) { // Action on a single computer
-                $hostname = $machine->hostname;
-                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $machine->hostname));
-        } else { // action on a whole group
-                $group = new Group($_GET['gid'], true);
-                $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
-        }
+        $hostname = $_GET['hostname'];
+        $uuid = $_GET['uuid'];
+        $machine = getMachine(array('uuid'=>$uuid), True);
+
+        $hostname = $machine->hostname;
+        $label = new RenderedLabel(3, sprintf(_T('Single advanced launch : action "%s" on "%s"', 'msc'), $name, $machine->hostname));
+
+        $f->push(new Table());
+        $f->add(new HiddenTpl("uuid"),  array("value" => $uuid,         "hide" => True));
+        $f->add(new HiddenTpl("name"),  array("value" => $hostname,     "hide" => True));
     } else {
-        $group = new Group($_GET['gid'], true);
-        $label = new RenderedLabel(3, sprintf(_T('Advanced launch action "%s" on "%s"', 'msc'), $name, $group->getName()));
+        $gid = $_GET['gid'];
+        $group = new Group($gid, true);
+        $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "', 'msc'), $name, $group->getName()));
+
+        $f->push(new Table());
+        $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
     }
     $label->display();
 
-    // form design
-    $f = new Form();
-    $f->push(new Table());
-    $f->add(new HiddenTpl("uuid"),  array("value" => $uuid,         "hide" => True));
-    $f->add(new HiddenTpl("papi"),  array("value" => $_GET["papi"], "hide" => True));
-    $f->add(new HiddenTpl("name"),  array("value" => $hostname,     "hide" => True));
-    $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
     $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
-    $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
+    $f->add(new HiddenTpl("papi"),  array("value" => $_GET["papi"], "hide" => True));
+    $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
     $f->add(new TrFormElement(_T('Command name', 'msc'),                                new InputTpl('ltitle')), array("value" => $name));
     $f->add(new TrFormElement(_T('Script parameters', 'msc'),                           new InputTpl('parameters')), array("value" => ''));
     $f->add(new TrFormElement(_T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
