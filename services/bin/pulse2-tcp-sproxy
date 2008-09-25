@@ -58,24 +58,24 @@ use Sys::Syslog;
 use Sys::Syslog qw(:DEFAULT setlogsock);
 use IO::Socket::INET;
 
-# command line parsing: simple, always 4 arguments
-
-if ( @ARGV < 3 ) {
-    print "Usage: proxy.pl <from-ip> <to-ip> <to-port> <ssh-options-comma-separated>\n";
+# command line parsing: simple, always 9 arguments
+# FIXME: we should use Getopt or Getoptions::Long to handle parameters (ticket already opened: #387)
+if ( @ARGV != 9 ) {
+    print "Usage: proxy.pl <from-ip> <to-ip> <to-port> <ssh-options-comma-separated> <start-port> <end-port> <establish-delay> <connect-delay> <session-lenght>\n";
     exit 1;
 }
-my ($fromIp, $toIp, $toPort, $proxyCommand) = @ARGV;
 
 # globals
+my ($fromIp, $toIp, $toPort, $proxyCommand, $startPort, $endPort, $establishDelay, $connectDelay, $sessionMaxLenght) = @ARGV;
 my $pid;
 
 #
-# Look for two free ports in the range "5900-5999"
+# Look for two free ports in the range "$startPort-$endPort"
 #
 sub alloc_freeport()  {
-    my $localport = 8100;
-    my $max = 100;
-    my $tries = $max;
+    my $localport   = $startPort;
+    my $max         = $endPort-$startPort;
+    my $tries       = $max;
     my ($sock1, $sock2);
 
     while (1) {
@@ -103,12 +103,12 @@ sub alloc_freeport()  {
 # Transparent proxy (connects server and client)
 #
 sub proxy($$$$$$) {
-    my $remoteAddr = shift;
-    my $proxyPort = shift;
-    my $destHost  = shift;
-    my $destPort  = shift;
-    my $toIp  = shift;
-    my $toPort  = shift;
+    my $remoteAddr  = shift;
+    my $proxyPort   = shift;
+    my $destHost    = shift;
+    my $destPort    = shift;
+    my $toIp        = shift;
+    my $toPort      = shift;
 
     my $peer;
     do {
@@ -134,9 +134,9 @@ sub server($$) {
     bind(SERVER, sockaddr_in($port, INADDR_ANY));
     listen(SERVER, 1);
 
-    # allow 60 seconds for the initial connect
+    # allow $connectDelay seconds for the initial connect
     $SIG{ALRM} = \&sigterm;
-    alarm(60);
+    alarm($connectDelay);
 
     # connection loop
     while (1) {
@@ -152,7 +152,7 @@ sub server($$) {
             next;
         } else {
             # autokill after 60 minuts
-            alarm(3600);
+            alarm($sessionMaxLenght);
             return $peer;
         }
     }
@@ -165,7 +165,7 @@ sub client($$) {
     my $remote = shift;
     my $port = shift;
     my $paddr;
-    my $tries = 20;
+    my $tries = $establishDelay;
 
     # establish TCP connection: connect to $remote:$port
     $paddr = sockaddr_in($port, inet_aton($remote));
@@ -177,7 +177,7 @@ sub client($$) {
         syslog("err", "Could not connect to $remote:$port: $!");
         sleep(1);
         $tries--;
-        mydie("5 tries") if ($tries == 0);
+        mydie("$establishDelay tries") if ($tries == 0);
     }
 
     select(SOCK);
@@ -205,7 +205,7 @@ sub movedata($) {
         $FH2 = \*SOCK;
     }
 
-    # read incoming stuff
+    # reads incoming stuff
     $len1 = sysread($FH1, $buf1, 4096, 0);
 
     unless(defined($len1)) { # handle read error
@@ -329,9 +329,9 @@ if ($pid == 0) { # child process, will become ssh process
     exec @sshCommand;
     exit 0;   # Child process exits when it is done.
 } else { # parent process: proxy
-#    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
-#    print "LINK $fromIp:0,127.0.0.1:$proxyport,127.0.0.1:$localport,$toIp:$toPort\n";
+
     proxy($fromIp, $proxyport, "127.0.0.1", $localport, $toIp, $toPort);
+
     # in the end, we kill the tunnel
     kill 15, $pid;
     syslog("debug", "done kill $pid");

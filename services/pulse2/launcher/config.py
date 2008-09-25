@@ -82,6 +82,11 @@ class LauncherConfig(pulse2.utils.Singleton):
     # SSH Proxy stuff
     tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
     tcp_sproxy_host = None
+    tcp_sproxy_port_range_start = 8100
+    tcp_sproxy_port_range_end = 8200
+    tcp_sproxy_establish_delay = 20
+    tcp_sproxy_connect_delay = 60
+    tcp_sproxy_session_lenght = 3600
 
     # daemon stuff
     daemon_group = 0
@@ -186,7 +191,7 @@ class LauncherConfig(pulse2.utils.Singleton):
             if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
-                logging.getLogger().warning("'pid_path' is obslete, please replace it in your config file by 'pidfile'")
+                logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
@@ -203,7 +208,17 @@ class LauncherConfig(pulse2.utils.Singleton):
         # Parse "tcp_sproxy" section
         self.setoption('tcp_sproxy', 'tcp_sproxy_path', 'tcp_sproxy_path')
         self.setoption('tcp_sproxy', 'tcp_sproxy_host', 'tcp_sproxy_host')
-
+        self.setoption('tcp_sproxy', 'tcp_sproxy_establish_delay', 'tcp_sproxy_establish_delay', 'int')
+        self.setoption('tcp_sproxy', 'tcp_sproxy_connect_delay', 'tcp_sproxy_connect_delay', 'int')
+        self.setoption('tcp_sproxy', 'tcp_sproxy_session_lenght', 'tcp_sproxy_session_lenght', 'int')
+        if self.cp.has_section("tcp_sproxy"):
+            if self.cp.has_option("tcp_sproxy", "tcp_sproxy_port_range"):
+                range = map(lambda x: int(x), self.cp.get("tcp_sproxy", "tcp_sproxy_port_range").split('-'))
+                if len(range) != 2:
+                    logging.getLogger().warning("'tcp_sproxy_port_range' not formated as expected, using default value, please check your config file ")
+                else:
+                    (self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end) = range
+        logging.getLogger().info("launcher %s: section %s, option %s set to %d-%d" % (self.name, 'tcp_sproxy', 'tcp_sproxy_port_range', self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end))
 
         # Parse "scheduler_XXXX" sections
         for section in self.cp.sections():

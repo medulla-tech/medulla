@@ -81,7 +81,12 @@ def establishProxy(target, requestor_ip, requested_port):
         requestor_ip,
         target,
         requested_port,
-        ','.join(client['transp_args'])
+        ','.join(client['transp_args']),
+        str(LauncherConfig().tcp_sproxy_port_range_start),
+        str(LauncherConfig().tcp_sproxy_port_range_end),
+        str(LauncherConfig().tcp_sproxy_establish_delay),
+        str(LauncherConfig().tcp_sproxy_connect_delay),
+        str(LauncherConfig().tcp_sproxy_session_lenght)
     ]
 
     proxy = proxyProtocol()
