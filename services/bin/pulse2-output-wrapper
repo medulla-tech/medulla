@@ -280,6 +280,7 @@ def format(line, tag):
         print "%.2f %s: %s" % (time.time(), tag, line)
     else:
         print line
+        sys.stdout.flush()
 
 def runCommand(config):
     if config.thru_string and not config['exec-server-side']: # handle command wrapping if needed
