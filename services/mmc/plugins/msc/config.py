@@ -150,7 +150,7 @@ class MscConfig(PluginConfig):
         if self.has_option("msc", "db_debug"):
             self.db_debug = self.get("msc", "db_debug")
         if self.has_option("msc", "db_pool_recycle"):
-            self.dbpoolrecycle = self.get("msc", "db_pool_recycle")
+            self.dbpoolrecycle = self.getint("msc", "db_pool_recycle")
         # SSL connection support
         if self.has_option("msc", "db_ssl_enable"):
             self.db_ssl_enable = self.getboolean("msc", "db_ssl_enable")
