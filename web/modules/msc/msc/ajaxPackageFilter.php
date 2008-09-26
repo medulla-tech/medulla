@@ -50,7 +50,7 @@ if ($_GET['uuid']) {
 
 require_once("../../../modules/msc/includes/package_api.php");
 if ($machine) {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on machine "%s"', 'msc'), $machine->hostname));
+    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $machine->hostname));
 } else {
     $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
 }

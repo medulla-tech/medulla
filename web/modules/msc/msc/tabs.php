@@ -10,14 +10,14 @@ if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 if ($_GET['uuid']) {
     $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
     if ($machine->uuid != $_GET['uuid']) {
-        $p = new PageGenerator(sprintf(_T("%s's machine secure control", 'msc'), $_GET['hostname']));
+        $p = new PageGenerator(sprintf(_T("%s's computer secure control", 'msc'), $_GET['hostname']));
         $p->setSideMenu($sidemenu);
         $p->display();
         include('modules/msc/msc/header.php');
     } else {
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
-        $p->addTop(sprintf(_T("%s's machine secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
+        $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
         $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
         $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));

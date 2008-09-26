@@ -29,14 +29,14 @@ msgstr ""
 msgid "%s status"
 msgstr ""
 
+#: msc/msc/tabs.php:13 msc/msc/tabs.php:20
+#, php-format
+msgid "%s's computer secure control"
+msgstr ""
+
 #: msc/msc/tabs.php:32
 #, php-format
 msgid "%s's group secure control"
-msgstr ""
-
-#: msc/msc/tabs.php:13 msc/msc/tabs.php:20
-#, php-format
-msgid "%s's machine secure control"
 msgstr ""
 
 #: msc/msc/msctabsstatus.php:68 msc/msc/msctabsstatus.php:69
@@ -489,11 +489,11 @@ msgid "Secure Control"
 msgstr ""
 
 #: msc/infoPackage.inc.php:80
-msgid "Secure control on a group of machines"
+msgid "Secure control on a group of computers"
 msgstr ""
 
 #: msc/infoPackage.inc.php:98
-msgid "Secure control on machine"
+msgid "Secure control on computer"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:116
@@ -624,14 +624,14 @@ msgstr ""
 msgid "The download has failed."
 msgstr ""
 
+#: msc/msc/ajaxPackageFilter.php:53
+#, php-format
+msgid "These packages can be installed on computer \"%s\""
+msgstr ""
+
 #: msc/msc/ajaxPackageFilter.php:55
 #, php-format
 msgid "These packages can be installed on group \"%s\""
-msgstr ""
-
-#: msc/msc/ajaxPackageFilter.php:53
-#, php-format
-msgid "These packages can be installed on machine \"%s\""
 msgstr ""
 
 #: msc/msc/vnc_client.php:68
@@ -708,8 +708,16 @@ msgstr ""
 msgid "computers are running a deploiement"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:53
+#: msc/msc/msctabsstatus.php:53 msc/msc/statuscsv.php:36
 msgid "computers failed to deploy"
+msgstr ""
+
+#: msc/msc/statuscsv.php:29
+msgid "computers running a deploiement"
+msgstr ""
+
+#: msc/msc/statuscsv.php:28
+msgid "computers successfully deployed"
 msgstr ""
 
 #: msc/msc/msctabsstatus.php:51
@@ -735,15 +743,15 @@ msgstr ""
 msgid "executed"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:69
+#: msc/msc/msctabsstatus.php:69 msc/msc/statuscsv.php:39
 msgid "failed during execution"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:70
+#: msc/msc/msctabsstatus.php:70 msc/msc/statuscsv.php:41
 msgid "failed during suppression"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:68
+#: msc/msc/msctabsstatus.php:68 msc/msc/statuscsv.php:37
 msgid "failed during upload"
 msgstr ""
 
@@ -779,15 +787,15 @@ msgstr ""
 msgid "push / pull"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:63
+#: msc/msc/msctabsstatus.php:63 msc/msc/statuscsv.php:33
 msgid "running execution"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:65
+#: msc/msc/msctabsstatus.php:65 msc/msc/statuscsv.php:35
 msgid "running suppression"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:61
+#: msc/msc/msctabsstatus.php:61 msc/msc/statuscsv.php:31
 msgid "running upload"
 msgstr ""
 
@@ -795,19 +803,39 @@ msgstr ""
 msgid "start_date"
 msgstr ""
 
+#: msc/msc/statuscsv.php:26
+msgid "title"
+msgstr ""
+
+#: msc/msc/statuscsv.php:27
+msgid "total"
+msgstr ""
+
+#: msc/msc/statuscsv.php:42
+msgid "unreachable during suppression"
+msgstr ""
+
+#: msc/msc/statuscsv.php:38
+msgid "unreachable during upload"
+msgstr ""
+
+#: msc/msc/statuscsv.php:40
+msgid "unreacheable during execution"
+msgstr ""
+
 #: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
 #: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:282
 msgid "uploaded"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:62
+#: msc/msc/msctabsstatus.php:62 msc/msc/statuscsv.php:32
 msgid "waiting to execute"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:64
+#: msc/msc/msctabsstatus.php:64 msc/msc/statuscsv.php:34
 msgid "waiting to suppress"
 msgstr ""
 
-#: msc/msc/msctabsstatus.php:60
+#: msc/msc/msctabsstatus.php:60 msc/msc/statuscsv.php:30
 msgid "waiting to upload"
 msgstr ""

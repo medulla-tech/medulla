@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-25 19:42+0200\n"
+"POT-Creation-Date: 2008-09-26 18:19+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -49,15 +49,15 @@ msgstr ""
 msgid "%s status"
 msgstr "status %s"
 
+#: msc/msc/tabs.php:13 msc/msc/tabs.php:20
+#, fuzzy, php-format
+msgid "%s's computer secure control"
+msgstr "bezpieczna kontrola grupy %s"
+
 #: msc/msc/tabs.php:32
 #, php-format
 msgid "%s's group secure control"
 msgstr "bezpieczna kontrola grupy %s"
-
-#: msc/msc/tabs.php:13 msc/msc/tabs.php:20
-#, php-format
-msgid "%s's machine secure control"
-msgstr "bezpiecznakontrola maszyny %s"
 
 #: msc/msc/msctabsstatus.php:68 msc/msc/msctabsstatus.php:69
 #: msc/msc/msctabsstatus.php:70
@@ -525,11 +525,13 @@ msgid "Secure Control"
 msgstr "Bezpieczna kontrola"
 
 #: msc/infoPackage.inc.php:80
-msgid "Secure control on a group of machines"
+#, fuzzy
+msgid "Secure control on a group of computers"
 msgstr "Bezpieczna kontrola całej grupy maszyn "
 
 #: msc/infoPackage.inc.php:98
-msgid "Secure control on machine"
+#, fuzzy
+msgid "Secure control on computer"
 msgstr "Bezpieczna kontrola maszyny "
 
 #: msc/includes/bundle_widgets.php:116
@@ -664,15 +666,15 @@ msgstr ""
 msgid "The download has failed."
 msgstr ""
 
+#: msc/msc/ajaxPackageFilter.php:53
+#, fuzzy, php-format
+msgid "These packages can be installed on computer \"%s\""
+msgstr "Te pakiety można zainstalować na grupie \"%s\""
+
 #: msc/msc/ajaxPackageFilter.php:55
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr "Te pakiety można zainstalować na grupie \"%s\""
-
-#: msc/msc/ajaxPackageFilter.php:53
-#, php-format
-msgid "These packages can be installed on machine \"%s\""
-msgstr "Te pakiety można zainstalować na maszynie \"%s\""
 
 #: msc/msc/vnc_client.php:68
 msgid "This connection will be automatically shut down in 60 minutes."
@@ -750,9 +752,19 @@ msgstr "budź"
 msgid "computers are running a deploiement"
 msgstr "trwa wdrażanie na komputerach"
 
-#: msc/msc/msctabsstatus.php:53
+#: msc/msc/msctabsstatus.php:53 msc/msc/statuscsv.php:36
 msgid "computers failed to deploy"
 msgstr "nie udało się wdrożyć na komputerach"
+
+#: msc/msc/statuscsv.php:29
+#, fuzzy
+msgid "computers running a deploiement"
+msgstr "trwa wdrażanie na komputerach"
+
+#: msc/msc/statuscsv.php:28
+#, fuzzy
+msgid "computers successfully deployed"
+msgstr "zakończono wdrażanie na komputerach"
 
 #: msc/msc/msctabsstatus.php:51
 msgid "computers were successfully deployed"
@@ -777,15 +789,15 @@ msgstr ""
 msgid "executed"
 msgstr "wykonano"
 
-#: msc/msc/msctabsstatus.php:69
+#: msc/msc/msctabsstatus.php:69 msc/msc/statuscsv.php:39
 msgid "failed during execution"
 msgstr "nie udało się wykonać"
 
-#: msc/msc/msctabsstatus.php:70
+#: msc/msc/msctabsstatus.php:70 msc/msc/statuscsv.php:41
 msgid "failed during suppression"
 msgstr "błąd podczas zatrzymywania"
 
-#: msc/msc/msctabsstatus.php:68
+#: msc/msc/msctabsstatus.php:68 msc/msc/statuscsv.php:37
 msgid "failed during upload"
 msgstr "błąd podczas wysyłania"
 
@@ -821,15 +833,15 @@ msgstr "pchnij"
 msgid "push / pull"
 msgstr "pchnij / pobierz"
 
-#: msc/msc/msctabsstatus.php:63
+#: msc/msc/msctabsstatus.php:63 msc/msc/statuscsv.php:33
 msgid "running execution"
 msgstr "w trakcie wykonywania"
 
-#: msc/msc/msctabsstatus.php:65
+#: msc/msc/msctabsstatus.php:65 msc/msc/statuscsv.php:35
 msgid "running suppression"
 msgstr "w trakcie zatrzymywania"
 
-#: msc/msc/msctabsstatus.php:61
+#: msc/msc/msctabsstatus.php:61 msc/msc/statuscsv.php:31
 msgid "running upload"
 msgstr "w trakcie wysyłania"
 
@@ -837,22 +849,48 @@ msgstr "w trakcie wysyłania"
 msgid "start_date"
 msgstr "data_rozpoczęcia"
 
+#: msc/msc/statuscsv.php:26
+msgid "title"
+msgstr ""
+
+#: msc/msc/statuscsv.php:27
+msgid "total"
+msgstr ""
+
+#: msc/msc/statuscsv.php:42
+#, fuzzy
+msgid "unreachable during suppression"
+msgstr "błąd podczas zatrzymywania"
+
+#: msc/msc/statuscsv.php:38
+#, fuzzy
+msgid "unreachable during upload"
+msgstr "błąd podczas wysyłania"
+
+#: msc/msc/statuscsv.php:40
+#, fuzzy
+msgid "unreacheable during execution"
+msgstr "nie udało się wykonać"
+
 #: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
 #: msc/msc/ajaxLogsFilter.php:206 msc/msc/ajaxLogsFilter.php:282
 msgid "uploaded"
 msgstr "wysłano"
 
-#: msc/msc/msctabsstatus.php:62
+#: msc/msc/msctabsstatus.php:62 msc/msc/statuscsv.php:32
 msgid "waiting to execute"
 msgstr "oczekiwanie na wykonanie"
 
-#: msc/msc/msctabsstatus.php:64
+#: msc/msc/msctabsstatus.php:64 msc/msc/statuscsv.php:34
 msgid "waiting to suppress"
 msgstr "oczekiwanie na zatrzymanie"
 
-#: msc/msc/msctabsstatus.php:60
+#: msc/msc/msctabsstatus.php:60 msc/msc/statuscsv.php:30
 msgid "waiting to upload"
 msgstr "oczekiwanie na wysłanie"
+
+#~ msgid "%s's machine secure control"
+#~ msgstr "bezpiecznakontrola maszyny %s"
 
 #~ msgid "Command next run date"
 #~ msgstr "Nastepne uruchomienie polecenia"
@@ -867,6 +905,9 @@ msgstr "oczekiwanie na wysłanie"
 #, fuzzy
 #~ msgid "Launch bundle"
 #~ msgstr "Uruchom"
+
+#~ msgid "These packages can be installed on machine \"%s\""
+#~ msgstr "Te pakiety można zainstalować na maszynie \"%s\""
 
 #~ msgid "mode"
 #~ msgstr "tryb"
