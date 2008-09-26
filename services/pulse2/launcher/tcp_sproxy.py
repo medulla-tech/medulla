@@ -51,39 +51,44 @@ class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
     passthroughIp = None
     host = ''
     defferedLinkStatus = None
+    gotLinkStatus = False
 
     def __init__(self):
         self.defferedLinkStatus = twisted.internet.defer.Deferred()
         if LauncherConfig().tcp_sproxy_host:
             self.host = LauncherConfig().tcp_sproxy_host
 
-    def _mycustomcb(self, data):
-        logging.getLogger().debug('cb: %s' % data)
+    def processEnded(self, reason):
+        if not self.gotLinkStatus: # something goes weird: we never got a link status
+            logging.getLogger().warn('proxy finished before a link status was received')
+            self.defferedLinkStatus.callback(False) # FIXME: should return a Failure
 
     def outReceived(self, data):
         if re.match(self.RE_LINKINFO, data):
             ((self.sourceIp, self.sourcePort), (self.proxyIp, self.proxyPort), (self.passthroughIp, self.passthroughPort), (self.targetIp, self.targetPort))  = map(lambda a: a.split(":"), re.search(self.RE_LINKINFO, data).group(1).split(','))
             logging.getLogger().debug('got link status: %s' % data)
-            ret = (LauncherConfig().name, self.host, self.proxyPort);
+            ret = (LauncherConfig().name, self.host, self.proxyPort)
+            self.gotLinkStatus = True
             self.defferedLinkStatus.callback(ret)
         else:
-            logging.getLogger().debug('got link status: %s' % data)
-            self.defferedLinkStatus.callback(False)
+            logging.getLogger().warn('got this from the proxy: %s' % data)
 
-
-def establishProxy(target, requestor_ip, requested_port):
+def establishProxy(client, requestor_ip, requested_port):
     """
     Establish a TCP connection to client using our proxy
     """
-    client = pulse2.launcher.utils.setDefaultClientOptions({'protocol': 'tcpsproxy'})
-
-    # FIXME: target should be "client format" compliant
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    """
+    client['client_check'] = getClientCheck(client)
+    client['server_check'] = getServerCheck(client)
+    client['action'] = getAnnounceCheck('vnc')
+    """
 
     # Built "exec" command
     real_command = [
         LauncherConfig().tcp_sproxy_path,
         requestor_ip,
-        target,
+        client['host'],
         requested_port,
         ','.join(client['transp_args']),
         str(LauncherConfig().tcp_sproxy_port_range_start),
@@ -95,8 +100,9 @@ def establishProxy(target, requestor_ip, requested_port):
 
     # Built "thru" command
     thru_command_list  = ['/usr/bin/ssh']
-    thru_command_list += client['transp_args']
-    thru_command_list += [ "%s@%s" % ('root', target)]
+    for option in client['transp_args']:
+        thru_command_list += ['-o', option]
+    thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
     command_list = [
         LauncherConfig().wrapper_path,
@@ -114,19 +120,6 @@ def establishProxy(target, requestor_ip, requested_port):
         '--exec-server-side'
     ]
 
-    """
-    X /usr/sbin/pulse2-output-wrapper
-    X --no-wrap
-    X --only-stdout
-    X --remove-empty-lines
-    X --exec-server-side
-    X --exec=/usr/sbin/pulse2-tcp-sproxy·192.168.21.1·192.168.0.16·5900·IdentityFile=/etc/mmc/pulse2/id_dsa,StrictHostKeyChecking=no,Batchmode=yes,PasswordAuthentication=no,ServerAliveInterval=10,CheckHostIP=no,ConnectTimeout=10,UserKnownHostsFile=/dev/null·8100·8200·20·60·3600
-    X --thru /usr/bin/ssh·-o·IdentityFile=/etc/mmc/pulse2/id_dsa·-o·StrictHostKeyChecking=no·-o·PasswordAuthentication=no·-o·CheckHostIP=no·root@192.168.0.16
-    --check-server-side IP=1.2.3.4
-    --action=VNC
-    """
-
-    """
     # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
     if client['client_check']:
         command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
@@ -134,7 +127,6 @@ def establishProxy(target, requestor_ip, requested_port):
         command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
     if client['action']:
         command_list += ['--action', client['action']]
-    """
 
     proxy = proxyProtocol()
     handler = twisted.internet.reactor.spawnProcess(proxy, command_list[0], command_list, None)
