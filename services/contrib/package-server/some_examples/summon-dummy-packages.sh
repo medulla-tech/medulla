@@ -7,8 +7,7 @@ for i in 1 2 4 7; do # units
                 mkdir $f
                 pushd $f
                 dd if=/dev/urandom of=data.bin bs=1k count=$l
-                uuencode -m data.bin data.bin > data.b64
-                cat ../summon-dummy-packages.xml | sed "s/##ID##/$f/" | sed "s/##CMD##/cat data.b64/" > conf.xml
+                cat ../summon-dummy-packages.xml | sed "s/##ID##/$f/" | sed "s/##CMD##/uuencode -m data.bin data.bin/" > conf.xml
                 popd
         done
 done
