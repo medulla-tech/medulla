@@ -72,7 +72,7 @@ class InventoryConfig(PluginConfig):
         self.dbpasswd = self.getpassword("inventory", "dbpasswd")
         self.disable = self.getboolean("main", "disable")
         try:
-            self.dbpoolrecycle = self.getint("main", "dbpoolrecycle")
+            self.dbpoolrecycle = self.getint("inventory", "dbpoolrecycle")
         except NoOptionError:
             self.dbpoolrecycle = None
                                                                         
