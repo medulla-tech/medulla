@@ -47,7 +47,7 @@ from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance
 import pulse2.scheduler.network
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
-
+from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 
 def gatherStuff():
     """ handy function to gather widely used objects """
@@ -932,34 +932,21 @@ def chooseClientIP(myT):
         'macs': myT.getMacs()
     })
 
-def getClientCheck(myT):
-    return getCheck(SchedulerConfig().client_check, myT);
-
-def getServerCheck(myT):
-    return getCheck(SchedulerConfig().server_check, myT);
-
-def getAnnounceCheck(announce):
-    if not announce:
-        return '';
-    if not announce in SchedulerConfig().announce_check:
-        return '';
-    return SchedulerConfig().announce_check[announce];
-
-def getCheck(check, myT):
-    ret = {}
-    if not check:
-        return ret;
-    for key in check:
-        if check[key] == 'ipaddr':
-            ret.update({key: myT.target_ipaddr})
-        if check[key] == 'name':
-            ret.update({key: myT.target_name})
-        if check[key] == 'uuid':
-            ret.update({key: myT.target_uuid})
-        if check[key] == 'macaddr':
-            ret.update({key: myT.target_macaddr.split('||')[0]})
-    return ret;
-
 def getClientGroup(myT):
     return MGAssignAlgoManager().getMachineGroup(myT)
 
+def getClientCheck(myT):
+    return getCheck(SchedulerConfig().client_check, {
+        'uuid': myT.getUUID(),
+        'shortname': myT.getShortName(),
+        'ips': myT.getIps(),
+        'macs': myT.getMacs()
+    });
+
+def getServerCheck(myT):
+    return getCheck(SchedulerConfig().server_check, {
+        'uuid': myT.getUUID(),
+        'shortname': myT.getShortName(),
+        'ips': myT.getIps(),
+        'macs': myT.getMacs()
+    });

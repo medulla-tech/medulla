@@ -27,6 +27,7 @@ import random
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
+from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 import pulse2.scheduler.xmlrpc
 
 def chooseLauncher():
@@ -146,32 +147,53 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
 def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     # choose a way to perform the operation
     client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs
+        'uuid': uuid,
+        'fqdn': fqdn,
+        'shortname': shortname,
+        'ips': ips,
+        'macs': macs
     })
     return callOnBestLauncher('download_file', client, path, bwlimit)
 
 def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
     def _finalize(result):
-        (launcher, host, port) = result
-
-        if host == '':
-            host = SchedulerConfig().launchers[launcher]['host']
-        return (host, port)
+        if type(result) == list: # got expected struct
+            (launcher, host, port) = result
+            if host == '':
+                host = SchedulerConfig().launchers[launcher]['host']
+            return (host, port)
+        else:
+            return False
     # choose a way to perform the operation
-    client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs
+    ip = chooseClientIP({
+        'uuid': uuid,
+        'fqdn': fqdn,
+        'shortname': shortname,
+        'ips': ips,
+        'macs': macs
     })
 
+    client = {
+        'host': ip,
+        'uuid': uuid,
+        'shortname': shortname,
+        'ip': ips,
+        'macs': macs,
+        'protocol': 'tcpsproxy'
+    }
+    client['client_check'] = getClientCheck(client)
+    client['server_check'] = getServerCheck(client)
+    client['action'] = getAnnounceCheck('vnc')
+
     return callOnBestLauncher('tcp_sproxy', client, requestor_ip, requested_port).\
-        addCallback(_finalize);
+        addCallback(_finalize).\
+        addErrback(lambda reason: reason)
+
+def getClientCheck(target):
+    return getCheck(SchedulerConfig().client_check, target);
+
+def getServerCheck(target):
+    return getCheck(SchedulerConfig().server_check, target);
 
 def callOnLauncher(launcher, method, *args):
     return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args)
@@ -185,3 +207,4 @@ def callOnBestLauncher(method, *args):
         addCallback(pulse2.scheduler.xmlrpc.getProxy).\
         addCallback(lambda x: x.callRemote(method, *args)).\
         addErrback(_eb)
+
