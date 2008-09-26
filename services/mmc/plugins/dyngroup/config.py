@@ -26,7 +26,7 @@ class DGConfig(PluginConfig):
             # We will use the default db driver port
             self.dbport = None
         if self.has_option("database", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.get("database", "dbpoolrecycle")
+            self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
 
         if self.has_option("database", "dbsslenable"):
             self.dbsslenable = self.getboolean("database", "dbsslenable")
