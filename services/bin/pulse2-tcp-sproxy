@@ -69,6 +69,9 @@ if ( @ARGV != 9 ) {
 my ($fromIp, $toIp, $toPort, $proxyCommand, $startPort, $endPort, $establishDelay, $connectDelay, $sessionMaxLenght) = @ARGV;
 my $pid;
 
+# force STDOUT flushing (we could also have flushed all buffers using 'local $| = 1;')
+select((select(STDOUT), $| = 1)[0]);
+
 #
 # Look for two free ports in the range "$startPort-$endPort"
 #
@@ -113,7 +116,6 @@ sub proxy($$$$$$) {
     my $peer;
     do {
         client($destHost, $destPort);
-        select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
         print "LINK $remoteAddr:0,127.0.0.1:$proxyPort,127.0.0.1:$destPort,$toIp:$toPort";
         $peer = server($remoteAddr, $proxyPort);
         transferdata();
@@ -276,7 +278,6 @@ sub mydie {
     # kill the tunnel
     kill 15, $pid;
     syslog("crit", "died: $txt");
-    select((select(STDOUT), $| = 1)[0]); # forces STDOUT flushing
     print "LINK ERROR";
     exit(1);
 }
@@ -295,7 +296,7 @@ sub sigterm {
 #
 
 setlogsock('unix');
-openlog("pulse2-rcp-sproxy: to $toIp", "", "daemon");
+openlog("pulse2-tcp-sproxy: to $toIp", "", "daemon");
 
 # set up the tunnel
 my $localport = alloc_freeport();
