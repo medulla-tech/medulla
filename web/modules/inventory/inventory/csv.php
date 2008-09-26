@@ -44,7 +44,11 @@ foreach ($datum as $machine) {
     $uuid = $machine[2];
     $content = $machine[1];
     if ($firstline) {
-        print "\"Machine\",\"".implode('","', array_keys($content[0]))."\"\n";
+        $header = array();
+        foreach(array_keys($content[0]) as $column) {
+            $header[] = _T($column);
+        }
+        print '"' . _T("Computer") . '","' . implode('","', $header) . "\"\n";
         $firstline = false;
     }
     foreach ($content as $line) {
