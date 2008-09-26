@@ -167,14 +167,13 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def getVersion(self):
         return VERSION
 
-    def _ebRender(self, failure):
+    def _ebRender(self, failure, func, args):
         self.logger.error(failure)
         if isinstance(failure.value, xmlrpclib.Fault):
             return failure.value
         return xmlrpclib.Fault(self.FAILURE, "Internal Error")
 
-    def _cbRender(self, result, request):
-        args, func = xmlrpclib.loads(request.content.getvalue())
+    def _cbRender(self, result, request, func, args):
         if isinstance(result, Scheduler):
             result = mmc.support.mmctools.xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
@@ -193,7 +192,6 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         """
         override method of xmlrpc python twisted framework
         """
-        headers = request.getAllHeaders()
         args, functionPath = xmlrpclib.loads(request.content.read())
         function = self._getFunction(functionPath)
 
@@ -204,15 +202,17 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
                 twisted.web.xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler, basic HTTP authentication is required"),
-                request
+                request,
+                functionPath,
+                args
                 )
             return twisted.web.server.NOT_DONE_YET
 
         request.setHeader("content-type", "text/xml")
         twisted.internet.defer.maybeDeferred(function, *args).addErrback(
-            self._ebRender
+            self._ebRender, functionPath, args
         ).addCallback(
-            self._cbRender, request
+            self._cbRender, request, functionPath, args
         )
         return twisted.web.server.NOT_DONE_YET
 
