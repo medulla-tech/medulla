@@ -121,7 +121,7 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("groupinvtabs", _T("Inventory on a group of machines", "inventory"));
+$page = new Page("groupinvtabs", _T("Inventory on a group of computers", "inventory"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $page->setOptions(array("visible"=>False));
 $tab = new Tab("grouptab0",  _T("Hardware tab", "inventory"));
@@ -141,7 +141,7 @@ $page->addTab($tab);
 
 $submod->addPage($page);
 
-$page = new Page("invtabs", _T("Inventory on machine", "inventory"));
+$page = new Page("invtabs", _T("Inventory on a single computer", "inventory"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $page->setOptions(array("visible"=>False));
 

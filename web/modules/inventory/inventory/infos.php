@@ -30,14 +30,14 @@ if (isset($_POST["uuid"])) {
 
 ?>
 
-<h2><?= _T("Informations supplementaires", 'inventory') ?></h2>
+<h2><?= _T("Additionnal informations", 'inventory') ?></h2>
 
 <?php
 
 $table = 'Hardware';
 $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"]));
 $date = $inv[0][1][0]['timestamp'];
-$date = $date[0] .'-'. $date[1] .'-'. $date[2]; 
+$date = $date[0] .'-'. $date[1] .'-'. $date[2];
 
 ?>
 <p><?= _T("First apparition", 'inventory') . " : " . $date ?></p>

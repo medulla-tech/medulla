@@ -68,7 +68,7 @@ _T('LowMem', 'inventory');
 _T('MACAddress', 'inventory');
 _T('MIB', 'inventory');
 _T('MacAddr', 'inventory');
-_T('Machine', 'inventory');
+_T('Computer', 'inventory');
 _T('Manuf', 'inventory');
 _T('Manufacturer', 'inventory');
 _T('Media', 'inventory');
