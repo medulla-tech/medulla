@@ -586,17 +586,22 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     Recursive copy of a directory from a client to the launcher using scp.
     """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
-    command_list = ['/usr/bin/scp']
-    command_list += client['transp_args']
+    real_command = ['/usr/bin/scp']
+    real_command += client['transp_args']
     if bwlimit:
-        command_list += ['-l'] + [str(bwlimit)]
-    command_list += ['-r']
+        real_command += ['-l'] + [str(bwlimit)]
+    real_command += ['-r']
     for path in paths:
-        command_list += [ "%s@%s:%s" % (client['user'], client['host'], path)]
-    command_list += [targetpath]
+        real_command += [ "%s@%s:%s" % (client['user'], client['host'], path)]
+    real_command += [targetpath]
     # The following ssh options are not used by scp, so we remove them
-    command_list.remove('-T')
-    command_list.remove('-a')
+    real_command.remove('-T')
+    real_command.remove('-a')
+
+    # Built "thru" command
+    thru_command_list  = ['/usr/bin/ssh']
+    thru_command_list += client['transp_args']
+    thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
     # Build final command line
     command_list = [
@@ -606,8 +611,20 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
         '--max-exec-time',
         str(wrapper_timeout),
         '--exec',
-        SEPARATOR.join(command_list),
+        SEPARATOR.join(real_command),
+        '--thru',
+        SEPARATOR.join(thru_command_list),
+        '--exec-server-side'
         ]
+
+    # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+    if client['client_check']:
+        command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+    if client['server_check']:
+        command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+    if client['action']:
+        command_list += ['--action', client['action']]
+
     return pulse2.launcher.process_control.commandRunner(
         command_list,
         __cb_sync_process_end)

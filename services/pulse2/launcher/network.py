@@ -165,11 +165,6 @@ def downloadFile(client, path, bwlimit, timeout):
         shutil.rmtree(path)
         return False
 
-    client = {
-        'protocol': 'ssh',
-        'host': client,
-        'uuid': None,
-    }
     targetpath = tempfile.mkdtemp(".p2")
     myDeferred = pulse2.launcher.remote_exec.from_remote_to_launcher(None, client, path, targetpath, bwlimit, timeout)
     myDeferred.addCallback(__cb_dl_end, targetpath)
