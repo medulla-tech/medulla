@@ -1,7 +1,6 @@
-<?
-/**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+<?php
+/*
+ * (c) 2007-2008 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -22,17 +21,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/inventory/includes/xmlrpc.php");
-
-$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
-foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
-    $url .= "&$get=".$_GET[$get];
+/* stolen from the MSC plugin */
+function _toDate($a) {
+    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
+        return sprintf("%04d/%02d/%02d %02d:%02d:%02d", $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
+    } else {
+        return $a;
+    }
 }
-$ajax = new AjaxFilter($url);
-
-$ajax->display();
-print "<br/><br/><br/>";
-$ajax->displayDivToUpdate();
 
 ?>
 
