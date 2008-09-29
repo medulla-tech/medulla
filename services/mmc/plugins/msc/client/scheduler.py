@@ -34,7 +34,7 @@ from mmc.plugins.msc.config import MscConfig, makeURL
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
-
+from mmc.plugins.msc.orm.target import Target
 
 def getProxy(schedulerConfig):
     """
@@ -161,12 +161,18 @@ def stopCommand(scheduler, command_id):
     def parseError(reason):
         # FIXME: handle error
         return False
-    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
-        'stop_command',
-        command_id
-    )
-    mydeffered.addCallback(parseResult).addErrback(parseResult)
-    return mydeffered
+    session = create_session()
+    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
+    session.close()
+    if ret:
+        mydeffered = getProxy(__select_scheduler(ret[1].scheduler)).callRemote(
+            'stop_command',
+            command_id
+        )
+        mydeffered.addCallback(parseResult).addErrback(parseResult)
+        return mydeffered
+    else:
+        logging.getLogger().error("stopCommand: no target associated to coh %s" % command_id)
 
 def startCommand(scheduler, command_id):
     def parseResult(result):
@@ -175,12 +181,18 @@ def startCommand(scheduler, command_id):
     def parseError(reason):
         # FIXME: handle error
         return False
-    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
-        'start_command',
-        command_id
-    )
-    mydeffered.addCallback(parseResult).addErrback(parseResult)
-    return mydeffered
+    session = create_session()
+    ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
+    session.close()
+    if ret:
+        mydeffered = getProxy(__select_scheduler(ret[1].scheduler)).callRemote(
+            'start_command',
+            command_id
+        )
+        mydeffered.addCallback(parseResult).addErrback(parseResult)
+        return mydeffered
+    else:
+        self.logger.error("startCommand: no target associated to coh %s" % command_id)
 
 
 def __select_scheduler(scheduler_name):
