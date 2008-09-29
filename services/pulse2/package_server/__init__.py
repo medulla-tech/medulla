@@ -89,33 +89,45 @@ class ThreadPackageMirror(Thread):
 
     def onSuccess(self, result, args):
         pid, target, is_deletion = args
-        self.logger.debug("ThreadPackageMirror succeed %s"%(str(result)))
-        if Common().dontgivepkgs.has_key(pid):
-            try:
-                i = Common().dontgivepkgs[pid].index(target)
-                del Common().dontgivepkgs[pid][i]
-            except ValueError, e:
-                self.logger.warning("ThreadPackageMirror no %s target defined for package %s"%(target, pid))
-            if len(Common().dontgivepkgs[pid]) == 0:
-                del Common().dontgivepkgs[pid]
+        out, err, code = result
+        if code == 0:
+            self.logger.debug("ThreadPackageMirror succeed %s"%(str(result)))
+            if Common().dontgivepkgs.has_key(pid):
+                try:
+                    i = Common().dontgivepkgs[pid].index(target)
+                    del Common().dontgivepkgs[pid][i]
+                except ValueError, e:
+                    self.logger.warning("ThreadPackageMirror no %s target defined for package %s"%(target, pid))
+                if len(Common().dontgivepkgs[pid]) == 0:
+                    del Common().dontgivepkgs[pid]
+                    self.logger.info("ThreadPackageMirror: package %s successfully mirrored everywhere" % pid)
+                    pkg = Common().packages[pid]
+                    p_dir = os.path.join(pkg.root, pid)
+                    if not os.path.exists(p_dir):
+                        self.logger.debug("ThreadPackageMirror: removing package %s from available packages" % pid)
+                        del Common().packages[pid]
+            else:
+                self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         else:
-            self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
+            self.logger.error("ThreadPackageMirror mirroring command failed %s"%(str(result)))
         
     def _runSub(self):
         def mirror_level0(result, args):
             pid, target, is_deletion = args
-            pkg = Common().packages[pid]
-            if Common().packages.has_key(pid):
-                del Common().packages[pid]
-            self.logger.debug("Removing %s" % os.path.join(pkg.root, pid))
-            os.rmdir(os.path.join(pkg.root, pid))
-            exe = self.config.package_mirror_command
-            args = []
-            args.extend(self.config.package_mirror_level0_command_options)
-            args.append(str("%s%s" % (pkg.root, os.path.sep)))
-            args.append("%s:%s" % (target, pkg.root))
-            self.logger.debug("execute : %s %s"%(exe, str(args)))
-            createDeferred(exe, args, pid, target, False)
+            out, err, code = result
+            if code == 0:
+                pkg = Common().packages[pid]
+                self.logger.debug("Removing %s" % os.path.join(pkg.root, pid))
+                os.rmdir(os.path.join(pkg.root, pid))
+                exe = self.config.package_mirror_command
+                args = []
+                args.extend(self.config.package_mirror_level0_command_options)
+                args.append(str("%s%s" % (pkg.root, os.path.sep)))
+                args.append("%s:%s" % (target, pkg.root))
+                self.logger.debug("execute mirror level0: %s %s"%(exe, str(args)))
+                return createDeferred(exe, args, pid, target, False)
+            else:
+                self.logger.debug("ThreadPackageMirror failed %s"%(str(result)))
 
         def createDeferred(exe, args, pid, target, is_deletion = False):
             d = utils.getProcessOutputAndValue(exe, args)
@@ -127,7 +139,7 @@ class ThreadPackageMirror(Thread):
             return d
 
         def cbEnding(result, self):
-            self.logger.debug("ThreadPackageMirror end mirroring")
+            self.logger.debug("ThreadPackageMirror end mirroring: %s" % str(result))
             self.working = False
 
         if self.working: 
