@@ -55,7 +55,7 @@ foreach ($uniq as $display) {
         if (count($machine[1]) == 0) {
             $result[$name]['Machine'] = $name;
             $result[$name]['uuid'] = $uuid;
-        }   
+        }
         foreach ($machine[1] as $element) {
             $result[$name]['Machine'] = $name;
             $result[$name]['uuid'] = $uuid;
@@ -66,10 +66,10 @@ foreach ($uniq as $display) {
                         $types[$head] = $display;
                     }
                     $result[$name][$head] = $val;
-                }   
-            }   
-        }   
-    }   
+                }
+            }
+        }
+    }
 }
 $sorted_result = array();
 $params = array();
@@ -105,7 +105,7 @@ foreach ($sorted_result as $head => $vals) {
         $n->addExtraInfo($vals, $head);
     }
 }
-        
+
 if ($n != null) {
     $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
     #$n->addActionItem(new ActionPopupItem(_T("Informations"),"infos","infos","inventaire"));
@@ -118,7 +118,7 @@ if ($n != null) {
     $n->display();
 }
 
-?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>implode('|', $uniq), 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
+?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>implode('|', $uniq), 'gid'=>$_GET["gid"], 'uuid'=>$_GET['uuid'], )) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
 
 
 </table>

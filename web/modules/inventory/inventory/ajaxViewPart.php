@@ -44,7 +44,7 @@ if ($_GET['uuid'] != '') {
     $graph = getInventoryGraph($table);
     $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
     $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
-    
+
     /* display everything else in separated tables */
     $n = null;
     $h = array();
@@ -70,7 +70,7 @@ if ($_GET['uuid'] != '') {
             } else {
                 $k = _T($k, 'inventory');
             }
-       
+
             if ($n == null) {
                 $n = new OptimizedListInfos($v, $k);
             } else {
