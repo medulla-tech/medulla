@@ -35,7 +35,7 @@ import mmc.plugins.msc.machines
 from mmc.plugins.msc import blacklist
 
 # ORM mappings
-from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
+from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost, stopCommandOnHost
 
 # Pulse 2 stuff
 import pulse2.time_intervals
@@ -95,7 +95,16 @@ class Commands(object):
         else:
             result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
         logging.getLogger().debug("inDeploymentInterval(%s): %s" % (self.id, result))
-        return result
+        return result        
+
+    def getCohIds(self):
+        """
+        Returns the list of commands_on_host linked to this command
+        """
+        session = sqlalchemy.create_session()
+        myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.c.fk_commands == self.getId())
+        session.close()
+        return myCommandOnHosts.all()        
 
     def toH(self):
         return {
@@ -130,3 +139,17 @@ class Commands(object):
             'order_in_bundle': self.order_in_bundle
         }
 
+def stopCommand(c_id):
+    """
+    Stop a command, by stopping all its related commands_on_host.
+    @returns: the list of all related commands_on_host
+    @rtype: list
+    """
+    session = sqlalchemy.create_session()
+    myCommand= session.query(Commands).get(c_id)
+    ret = []
+    for cmd in myCommand.getCohIds():
+        ret.append(cmd)
+        stopCommandOnHost(cmd.id)
+    session.close()
+    return ret

@@ -407,6 +407,15 @@ def stop_command_on_host(coh_id):
     return xmlrpcCleanup(True)
 ### Command on host handling ###
 
+### Commands handling ###
+def stop_command(c_id):
+    # Update the database
+    cohs = mmc.plugins.msc.orm.commands.stopCommand(c_id)
+    # Tell the schedulers to stop the related commands_on_host
+    for coh in cohs:
+        mmc.plugins.msc.client.scheduler.stopCommand(None, coh.id)
+###
+
 ##
 # common
 ##

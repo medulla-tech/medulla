@@ -918,7 +918,6 @@ class MscDatabase(Singleton):
     ###################
 
     def getCommandsOnHost(self, ctx, coh_id): # FIXME should we use the ctx
-    # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
         session.close()
