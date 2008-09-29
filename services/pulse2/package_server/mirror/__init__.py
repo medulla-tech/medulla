@@ -59,6 +59,7 @@ class Mirror(twisted.web.xmlrpc.XMLRPC):
         return self.xmlrpc_getFilePath(fid)
     
     def xmlrpc_getFilePath(self, fid):
+        self.logger.debug("getFilePath: %s" % str(fid))
         f = Common().getFile(fid)
         if f == None:
             return ''
