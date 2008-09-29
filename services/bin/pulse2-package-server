@@ -47,10 +47,10 @@ def running(inifile, deamonize):
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
 
     # Become a daemon
-    if daemonize: daemon(config)
-
-    # No more log to stderr
-    logger.removeHandler(hdlr2)
+    if daemonize:
+        daemon(config)
+        # No more log to stderr
+        logger.removeHandler(hdlr2)
 
     twisted.internet.reactor.run()
     return 0
