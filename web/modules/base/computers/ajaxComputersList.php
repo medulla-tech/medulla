@@ -62,7 +62,7 @@ $count = getComputerCount($filter);
  * */
 $msc_can_download_file = False;
 $msc_vnc_show_icon = False;
-if (in_array("msc", $_SESSION["modulesList"])) {
+if (in_array("msc", $_SESSION["supportModList"])) {
     require_once("../../../modules/msc/includes/scheduler_xmlrpc.php");
     require_once("../../../modules/msc/includes/mscoptions_xmlrpc.php");
     $msc_can_download_file = msc_can_download_file();

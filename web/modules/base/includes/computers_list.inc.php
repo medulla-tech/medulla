@@ -60,7 +60,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $value['gid'] = $filter['gid'];
         $params[] = $value;
 
-        if (in_array("inventory", $_SESSION["modulesList"])) {
+        if (in_array("inventory", $_SESSION["supportModList"])) {
             $actionInventory[] = $inventAction;
         } else {
             $actionInventory[] = $glpiAction;
