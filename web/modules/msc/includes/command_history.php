@@ -49,6 +49,7 @@ class CommandOnHost {
         $n->drawTable(0);
     }
     function quickDisplay($actions = array(), $params = array()) {
+        $statusTable = getStatusTable();
         $n = null;
         $params = array();
         foreach ($this->values as $col) {
@@ -303,5 +304,6 @@ function _toDate($a) {
     }
 }
 function _plusIcon($a) {
-    return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> '.$a;
+    $statusTable = getStatusTable();
+    return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> ' . $statusTable[$a];
 }
