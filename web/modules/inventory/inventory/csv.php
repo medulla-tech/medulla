@@ -12,10 +12,10 @@ ob_end_clean();
 $filename = implode('.', explode('|', $table));
 /* The two following lines make the CSV export works for IE 7.x */
 header("Pragma: ");
-header("Cache-Control: ");/*
+header("Cache-Control: ");
 header("Content-type: text/txt");
 header('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-*/
+
 $tables = explode('|', $table);
 
 $datum = array();
