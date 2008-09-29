@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 """
-    Pulse2 PackageServer
+    Pulse2 PackageServer Mirror/Computer link API
 """
 
 import twisted.web.xmlrpc
