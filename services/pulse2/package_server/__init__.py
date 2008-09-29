@@ -58,13 +58,15 @@ class ThreadPackageDetect(Thread):
         self.logger.info(format % args)
 
     def runSub(self):
-        if self.working: 
+        if self.working:
+            self.logger.debug("ThreadPackageDetect already running")
             return
         self.working = True
         self.logger.debug("ThreadPackageDetect is running")
         if self.config.package_detect_tmp_activate:
             Common().moveCorrectPackages()
         Common().detectNewPackages()
+        self.logger.debug("ThreadPackageDetect end")                
         self.working = False
         
     def run(self):
@@ -81,9 +83,9 @@ class ThreadPackageMirror(Thread):
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
-    def onError(self, raison, args):
+    def onError(self, reason):
         pid, target = args
-        self.logger.warning("ThreadPackageMirror failed to synchronise %s"%(str(raison)))
+        self.logger.warning("ThreadPackageMirror failed to synchronise %s"%(str(reason)))
 
     def onSuccess(self, result, args):
         pid, target, is_deletion = args
@@ -99,18 +101,18 @@ class ThreadPackageMirror(Thread):
         else:
             self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
         
-    def runSub(self):
+    def _runSub(self):
         def mirror_level0(result, args):
             pid, target, is_deletion = args
             pkg = Common().packages[pid]
             if Common().packages.has_key(pid):
                 del Common().packages[pid]
-                                    
+            self.logger.debug("Removing %s" % os.path.join(pkg.root, pid))
             os.rmdir(os.path.join(pkg.root, pid))
             exe = self.config.package_mirror_command
             args = []
             args.extend(self.config.package_mirror_level0_command_options)
-            args.append("%s%s" % (pkg.root, os.path.sep))
+            args.append(str("%s%s" % (pkg.root, os.path.sep)))
             args.append("%s:%s" % (target, pkg.root))
             self.logger.debug("execute : %s %s"%(exe, str(args)))
             createDeferred(exe, args, pid, target, False)
@@ -133,6 +135,7 @@ class ThreadPackageMirror(Thread):
         self.working = True
         self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
         dlist = []
+        self.logger.debug("dontgivepkgs: " + str(Common().dontgivepkgs))
         for pid in Common().dontgivepkgs:
             targets = Common().dontgivepkgs[pid]
             pkg = Common().packages[pid]
@@ -151,7 +154,7 @@ class ThreadPackageMirror(Thread):
                 self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
                 args = []
                 args.extend(self.config.package_mirror_command_options)
-                args.append(p_dir)
+                args.append(str(p_dir))
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
 
@@ -160,7 +163,14 @@ class ThreadPackageMirror(Thread):
         dl = defer.DeferredList(dlist)
         dl.addCallback(cbEnding, (self))
         return dl
-                       
+
+    def runSub(self):
+        try:
+            self._runSub()
+        except Exception, e:
+            self.logger.error("ThreadPackageMirror: " + str(e))
+            self.working = False
+
     def run(self):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_mirror_loop)
