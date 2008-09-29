@@ -34,7 +34,15 @@ if (isset($_POST["bconfirm"])) {
     $page = $path[2];
     $tab = $path[3];
 
-    if ($_POST['gid'] != '') {
+    if (strlen($_POST['gid']) && !strlen($_POST["coh_id"])) {
+        /* The stop command must be done on a group of computers */
+        $cmd_id = $_POST["cmd_id"];
+        $gid = $_POST["gid"];
+        stop_command($cmd_id);
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid)));
+    } else if ($_POST['gid'] != '') {
+        /* The stop command is done on a commands_on_host for a group of
+           computers */
         $coh_id = $_POST["coh_id"];
         $cmd_id = $_POST["cmd_id"];
         $gid = $_POST["gid"];
@@ -51,6 +59,7 @@ if (isset($_POST["bconfirm"])) {
     /* Form displaying */
     $from = $_GET['from'];
     $hostname = $_GET["hostname"];
+    $groupname = $_GET["groupname"];
     $uuid = $_GET["uuid"];
     $cmd_id = $_GET["cmd_id"];
     $coh_id = $_GET["coh_id"];
@@ -58,7 +67,12 @@ if (isset($_POST["bconfirm"])) {
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
 
-    $f = new PopupForm(sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname));
+    if (strlen($gid) & !strlen($coh_id)) {
+        $title = sprintf(_T("Stop action %s on this group", 'msc'), $name);
+    } else {
+        $title = sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname);
+    }
+    $f = new PopupForm($title);
     $f->add(new HiddenTpl("name"),      array("value" => $hostname, "hide" => True));
     $f->add(new HiddenTpl("from"),      array("value" => $from,     "hide" => True));
     $f->add(new HiddenTpl("cmd_id"),    array("value" => $cmd_id,   "hide" => True));

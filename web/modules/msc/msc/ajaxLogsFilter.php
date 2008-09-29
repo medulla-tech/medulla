@@ -133,18 +133,21 @@ if ($areCommands) {
                 $a_uploaded[] ='';
                 $a_executed[] ='';
                 $a_deleted[] = '';
+                $a_stop[] = $actionstop;
             } elseif (strlen($gid) and strlen($cmd['bundle_id']) and strlen($_GET['bundle_id'])) {
                 $status = get_command_on_group_status($cmd['id']);
                 # FIXME: a true status has to be build !!!
                 $a_uploaded[] ='';
                 $a_executed[] ='';
                 $a_deleted[] = '';
+                $a_stop[] = $actionempty;
             } elseif (strlen($gid) and !strlen($_GET['cmd_id'])) {
                 $status = get_command_on_bundle_status($cmd['bundle_id']);
                 # FIXME: a true status has to be build !!!
                 $a_uploaded[] ='';
                 $a_executed[] ='';
                 $a_deleted[] = '';
+                $a_stop[] = $actionempty;
             } elseif (strlen($uuid) and strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
                 // display all commands on a commputer: "bundle" case
                 $status = get_command_on_bundle_status($cmd['bundle_id']);
@@ -152,14 +155,15 @@ if ($areCommands) {
                 $a_uploaded[] ='';
                 $a_executed[] ='';
                 $a_deleted[] = '';
+                $a_stop[] = $actionempty;
             } else {
                 $a_uploaded[] ='';
                 $a_executed[] ='';
                 $a_deleted[] = '';
+                $a_stop[] = $actionempty;
             }
             $a_current[] = '';
             $a_start[] = $actionempty;
-            $a_stop[]  = $actionempty;
             $a_pause[] = $actionempty;
         } else {
             $coh = get_commands_on_host($coh_id);
