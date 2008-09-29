@@ -161,8 +161,11 @@ class Common(Singleton):
                 todelete.append(pid)
                 if confxml in self.already_declared:
                     del self.already_declared[confxml]
-        for pid in todelete:
-            del self.packages[pid]
+        if not self.config.package_mirror_activate:
+            # For the mirror stuff to work, we do not remove the package from
+            # our main packages dict
+            for pid in todelete:
+                del self.packages[pid]
 
     def moveCorrectPackages(self):
         """
@@ -467,6 +470,8 @@ class Common(Singleton):
                 pid = self._treatDir(os.path.dirname(file), mp, access, True)
                 self.associatePackage2mp(pid, mp)
                 self.already_declared[file] = True
+                if self.config.package_mirror_activate:
+                    self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
                 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
@@ -543,7 +548,7 @@ class Common(Singleton):
                 if pid != None:
                     self.mp2p[mp][pid] = None
             raise err
-        return pid
+        return str(pid)
 
     def _treatFile(self, pid, f, path, access = {}, fid = None): #file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
         (fsize, fmd5) = [0,0]
