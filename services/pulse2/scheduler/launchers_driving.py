@@ -146,13 +146,28 @@ def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
 
 def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     # choose a way to perform the operation
-    client = chooseClientIP({
+
+    # choose a way to perform the operation
+    ip = chooseClientIP({
         'uuid': uuid,
         'fqdn': fqdn,
         'shortname': shortname,
         'ips': ips,
         'macs': macs
     })
+
+    client = {
+        'host': ip,
+        'uuid': uuid,
+        'shortname': shortname,
+        'ip': ips,
+        'macs': macs,
+        'protocol': 'ssh'
+    }
+    client['client_check'] = getClientCheck(client)
+    client['server_check'] = getServerCheck(client)
+    client['action'] = getAnnounceCheck('transfert')
+
     return callOnBestLauncher('download_file', client, path, bwlimit)
 
 def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
