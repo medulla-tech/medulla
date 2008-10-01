@@ -42,9 +42,27 @@ class MMUserAssignAlgo(MMAssignAlgo):
         self.config.setup("/etc/mmc/pulse2/pserver/plugin_terminal_type.ini")
         self.database = PluginInventoryAADatabase()
         self.database.activate(self.config)
-        
+        self.populateCache()
+        self.logger.debug("init done for terminal_type assign algo")
+
+    def populateCache(self):
+        """
+        Map machines UUIDs to type
+        """
+        self.logger.info("Populating computer type cache")
+        self.types = {}
+        for row in self.database.buildPopulateCacheQuery():
+            self.types["UUID" + str(row[2])] = row[0].Value
+        self.logger.info("Populate done (%d computers)" % len(self.types))
+    
     def __getMachineType(self, m):
-        return self.database.getMachineType(m['uuid'])
+        try:
+            ret = self.types[m['uuid']]
+        except KeyError:
+            ret = self.database.getMachineType(m['uuid'])
+            # Put result in memory cache
+            self.types[m['uuid']] = ret
+        return ret
     
     def getMachineMirror(self, m):
         if not self.assign.has_key(m['uuid']):
@@ -79,3 +97,5 @@ class MMUserAssignAlgo(MMAssignAlgo):
                     self.assign[m['uuid']]['getMachinePackageApi'].append(self.url2package_apis[u])
         return self.assign[m['uuid']]['getMachinePackageApi']
 
+    def getComputersPackageApi(self, machines):
+        pass

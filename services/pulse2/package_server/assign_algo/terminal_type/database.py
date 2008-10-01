@@ -221,6 +221,14 @@ class PluginInventoryAADatabase(Singleton):
             return None
         return query.Value
 
+    def buildPopulateCacheQuery(self):
+        session = create_session()
+        result = session.query(self.klass['Registry']).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(self.table['hasRegistry'].c.inventory.label("inventoryid")).add_column(self.inventory.c.Date)
+        selectfrom = self.table['hasRegistry'].join(self.inventory).join(self.table['Registry']).join(self.table["nomRegistryPath"])
+        result = result.select_from(self.machine.outerjoin(selectfrom)).filter(self.inventory.c.Last == 1)
+        result = result.filter(self.table["nomRegistryPath"].c.Path == 'terminalType')
+        return result
+
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
 
