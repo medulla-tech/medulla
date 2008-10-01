@@ -199,21 +199,21 @@ class ExternalLdapProvisioner(ProvisionerI):
                 profile = userentry[self.config.profileAttr][0].lower()
             except KeyError:
                 self.logger.info("No profile information for user %s in attribute %s" % (uid, self.config.profileAttr))
-                profile = None
-            if profile:
-                profile = profile.strip()
-                try:
-                    acls = self.config.profilesAcl[profile]
-                except KeyError:
-                    self.logger.info("No ACL defined in configuration file for profile '%s'" % profile)
-                    acls = None
-                if acls != None:
-                    self.logger.info("Setting MMC ACL corresponding to user profile %s: %s" % (profile, acls))
-                    entry = l.getDetailedUser(uid)
-                    if not "lmcUserObject" in entry["objectClass"]:
-                        entry["objectClass"].append("lmcUserObject")
-                        l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
-                    l.changeUserAttributes(uid, "lmcAcl", acls)
+                profile = ""
+            profile = profile.strip()
+            try:
+                acls = self.config.profilesAcl[profile]
+            except KeyError:
+                self.logger.info("No ACL defined in configuration file for profile '%s'" % profile)
+                self.logger.info("Setting ACL to empty")
+                acls = None
+            if profile and acls:
+                self.logger.info("Setting MMC ACL corresponding to user profile %s: %s" % (profile, str(acls)))
+            entry = l.getDetailedUser(uid)
+            if not "lmcUserObject" in entry["objectClass"]:
+                entry["objectClass"].append("lmcUserObject")
+                l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
+            l.changeUserAttributes(uid, "lmcAcl", acls)
 
     def validate(self):
         return True
