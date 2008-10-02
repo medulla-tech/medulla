@@ -52,7 +52,7 @@ if (isset($_POST["bconfirm"])) {
     /* quick action on a single target */
     if (isset($_GET['uuid'])) {
         $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        action($_GET['launchAction'], array($machine->uuid, $machine->hostname));
+        action($_GET['launchAction'], array($machine->uuid));
     }
 
     /* single action post on a group */

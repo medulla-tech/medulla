@@ -58,7 +58,7 @@ if (isset($_POST["bconfirm"])) {
         $prefix = 'group';
     }
 
-    $cible = array($uuid, $hostname);
+    $cible = array($uuid);
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);

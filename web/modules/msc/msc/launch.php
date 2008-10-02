@@ -65,7 +65,7 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
         $hostname = $post['hostname'];
         $uuid = $post['uuid'];
         $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-        $target = array($uuid, $machine->hostname);
+        $target = array($uuid);
         $tab = 'tablogs';
         // record new command
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);

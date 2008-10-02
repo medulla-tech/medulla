@@ -73,7 +73,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
             if (!$sort->check_sort_order($orders)) {
                 $sort->display_ordered($orders);
             } else {
-                $cible = array($machine->uuid, $machine->hostname);
+                $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
                 header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
             }
@@ -88,7 +88,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
             if (!$sort->check_sort_order($orders)) {
                 $sort->display_ordered($orders);
             } else {
-                $cible = array($machine->uuid, $machine->hostname);
+                $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
                 header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
             }
