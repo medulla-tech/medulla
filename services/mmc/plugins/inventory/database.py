@@ -814,6 +814,9 @@ class Inventory(DyngroupDatabaseHelper):
             query = query.filter(Machine.c.Name.like('%'+params['filter']+'%'))
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.c.id==fromUUID(params['uuid']))
+        if params.has_key('uuids') and len(params['uuids']):
+            uuids = map(lambda m: fromUUID(m), params['uuids'])
+            query = query.filter(Machine.c.id.in_(*uuids))
         if params.has_key('gid') and params['gid'] != '':
             if ComputerGroupManager().isrequest_group(ctx, params['gid']):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
