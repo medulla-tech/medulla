@@ -182,7 +182,7 @@ class SendBundleCommand:
         self.mode = mode
         self.gid = gid
         self.bundle_id = None
-
+        
     def onError(error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
         return self.deferred.callback([])

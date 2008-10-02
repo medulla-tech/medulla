@@ -214,7 +214,7 @@ class RpcProxy(RpcProxyI):
         @param idcmd: id of the quick action
         @type idcmd: str
 
-        @param target: targets list
+        @param target: targets, list of computers UUIDs
         @type target: list
 
         @param lang: language to use for the command title (two characters)
@@ -232,10 +232,7 @@ class RpcProxy(RpcProxyI):
                 desc = qas[idcmd]["title"]
             if gid:
                 # Get all targets corresponding to the computer given group ID
-                target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
-            if type(target) == list:
-                if type(target[0]) != list:
-                    target = [target]
+                target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
             d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
             d.addCallback(xmlrpcCleanup)
             ret = d
@@ -254,13 +251,14 @@ class RpcProxy(RpcProxyI):
         return d
 
     def add_command_api(self, pid, target, params, p_api, mode, gid = None):
+        """
+        @param target: must be list of UUID
+        @type target: list
+        """
         ctx = self.currentContext
+        #get_group_results(self, ctx, gid, min, max, filter):
         if gid:
-            # Get all targets corresponding to the computer given group ID
-            target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
-        if type(target) == list:
-            if type(target[0]) != list:
-                target = [target]
+            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
@@ -269,9 +267,8 @@ class RpcProxy(RpcProxyI):
 
     def add_bundle_api(self, porders, target, params, mode, gid = None):
         ctx = self.currentContext
-        if type(target) == list:
-            if type(target[0]) != list:
-                target = [target]
+        if gid:
+            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
         g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()

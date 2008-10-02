@@ -492,8 +492,7 @@ class MscDatabase(Singleton):
         coh_to_insert = []
 
         # Get all targets network information
-        uuids = map(lambda x: x[0], targets)
-        computers = ComputerManager().getComputersNetwork(ctx, {"uuids" : uuids})        
+        computers = ComputerManager().getComputersNetwork(ctx, {"uuids" : targets})
         # Rebuild the targets list, and get computers data
         tmp = []
         targetsdata = []
@@ -527,8 +526,8 @@ class MscDatabase(Singleton):
             for i in range(len(targets)):
                 if push_pull:
                     # FIXME: we only take the the first mirrors
-                    mirror = mirrors[i][0]
-                    fallback = fbmirrors[i][0]
+                    mirror = mirrors[i]
+                    fallback = fbmirrors[i]
                     uri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
                           '||' + \
                           '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
