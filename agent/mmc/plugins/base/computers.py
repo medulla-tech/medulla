@@ -171,6 +171,7 @@ class ComputerManager(Singleton):
             return []
 
     def getComputer(self, ctx, filt = None):
+        self.logger.debug("getComputer %s" % filt)
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputer(ctx, filt)
@@ -185,6 +186,11 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getMachineIp(ctx, filt)
 
+    def getComputersNetwork(self, ctx, filt = None):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputersNetwork(ctx, filt)
+        
     def getComputersList(self, ctx, filt = None):
         klass = self.components[self.main]
         instance = klass()
