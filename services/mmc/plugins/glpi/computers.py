@@ -52,6 +52,9 @@ class GlpiComputers(ComputerI):
                 self.logger.warn("User %s does not have good permissions to access machine '%s'" % (ctx.userid, machine))
                 return False
             raise e
+
+    def getComputersNetwork(self, ctx, params):
+        return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] })
     
     def getMachineMac(self, ctx, params):
         return self.getMachineMac(params['uuid'])
