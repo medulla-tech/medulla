@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-26 18:05+0200\n"
+"POT-Creation-Date: 2008-10-02 09:30+0200\n"
 "PO-Revision-Date: 2008-09-26 18:04+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -118,7 +118,7 @@ msgstr "Commentaires"
 msgid "Company"
 msgstr "Entreprise"
 
-#: inventory/inventory/csv.php:51 inventory/inventory/i18n_labels.php:71
+#: inventory/inventory/csv.php:52 inventory/inventory/i18n_labels.php:71
 msgid "Computer"
 msgstr ""
 
