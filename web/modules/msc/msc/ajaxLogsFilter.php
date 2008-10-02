@@ -182,7 +182,6 @@ if ($areCommands) {
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
-
             $icons = state_tmpl($coh['current_state']);
             $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
             $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
@@ -202,7 +201,7 @@ if ($areCommands) {
                 $a_status[] = $actionstatus;
             }
         }
-        $a_date[] = _toDate($cmd['creation_date']); // Brrr, seem really ugly, should we not use sprintf ?
+        $a_date[] = _toDate($coh['start_date']); // Brrr, seem really ugly, should we not use sprintf ?
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_date, _T("start_date", "msc"));
@@ -226,7 +225,6 @@ if ($areCommands) {
         $cmd = $cmd[0];
         if ((strlen($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !strlen($_GET['coh_id'])) {
             $coh = get_commands_on_host($coh_id);
-
             if ($history) {
                 $d = $coh["end_date"];
             } else {

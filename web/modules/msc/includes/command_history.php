@@ -303,6 +303,7 @@ function _toDate($a) {
         return $a;
     }
 }
+
 function _plusIcon($a) {
     $statusTable = getStatusTable();
     return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> ' . $statusTable[$a];
