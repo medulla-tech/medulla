@@ -398,6 +398,7 @@ class GetPackagesFiltered:
         if "packageapi" in self.filt:
             ret = PackageA(self.filt["packageapi"]).getAllPackages(False)
             ret.addCallbacks(self.sendResult, self.onError)
+            d.addErrback(lambda err: self.onError(err))
         else:
             ret = self.sendResult()
 
@@ -407,7 +408,7 @@ class GetPackagesFiltered:
         self.deferred.callback(ret)
 
     def onError(self, error):
-        logging.getLogger().error("Can't connect to package api: %s", str(error))
+        logging.getLogger().error("GetPackagesFiltered: %s", str(error))
         self.deferred.callback([])
 
 class GetPackagesUuidFiltered:
@@ -416,8 +417,8 @@ class GetPackagesUuidFiltered:
         self.ctx = ctx
         self.filt = filt
 
-    def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))
+    def onError(self, error):
+        logging.getLogger().error("GetPackagesUuidFiltered: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -428,6 +429,7 @@ class GetPackagesUuidFiltered:
             self.machine = self.filt["uuid"]
             d = MirrorApi().getApiPackage(self.machine)
             d.addCallbacks(self.uuidFilter2, self.onError)
+            d.addErrback(lambda err: self.onError(err))
         except KeyError:
             self.sendResult()
 
@@ -435,6 +437,7 @@ class GetPackagesUuidFiltered:
         self.package_apis = package_apis
         d = MirrorApi().getMirror(self.machine)
         d.addCallbacks(self.uuidFilter3, self.onError)
+        d.addErrback(lambda err: self.onError(err))
 
     def uuidFilter3(self, mirror):
         self.mirror = mirror
@@ -460,8 +463,8 @@ class GetPackagesGroupFiltered:
         self.filt = filt
         self.gid = None
 
-    def onError(error):
-        logging.getLogger().error("Can't connect: %s", str(error))
+    def onError(self, error):
+        logging.getLogger().error("GetPackagesGroupFiltered: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -483,14 +486,17 @@ class GetPackagesGroupFiltered:
                 self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
             d = MirrorApi().getApiPackages(self.machines)
             d.addCallbacks(self.getMirrors, self.onError)
+            d.addErrback(lambda err: self.onError(err))
 
     def getMirrors(self, package_apis):
         self.package_apis = package_apis
         d = MirrorApi().getMirrors(self.machines)
         d.addCallbacks(self.getMirrorsResult, self.onError)
+        d.addErrback(lambda err: self.onError(err))
 
     def getMirrorsResult(self, mirrors):
         self.mirrors = mirrors
+        logging.getLogger().debug("len mirrors: %d" % len(mirrors))
         mergedlist = []
         for i in range(len(self.package_apis)):
             tmpmerged = []
@@ -502,9 +508,15 @@ class GetPackagesGroupFiltered:
             self.sendResult()
         else:
             plists = []
+            n = len(mergedlist[0])
+            i = 0
             for i in range(len(mergedlist[0])): # all line must have the same size!
+                logging.getLogger().debug(i)
                 plists.insert(i, [])
-                map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
+                try:
+                    map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
+                except IndexError:
+                    logging.getLogger().error("Error with i=%d" %i)
             self.plists = plists
             self.index = -1
             self.p_apis = None
