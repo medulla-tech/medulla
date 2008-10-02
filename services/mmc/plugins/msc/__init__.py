@@ -233,6 +233,9 @@ class RpcProxy(RpcProxyI):
             if gid:
                 # Get all targets corresponding to the computer given group ID
                 target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
+            if type(target) == list:
+                if type(target[0]) != list:
+                    target = [target]
             d = MscDatabase().addCommandQuick(ctx, qas[idcmd]["command"], target, desc, gid)
             d.addCallback(xmlrpcCleanup)
             ret = d
@@ -255,6 +258,9 @@ class RpcProxy(RpcProxyI):
         if gid:
             # Get all targets corresponding to the computer given group ID
             target = map(lambda g: [g.uuid, g.name] , ComputerGroupManager().result_group(ctx, gid, 0, -1, '', False))
+        if type(target) == list:
+            if type(target[0]) != list:
+                target = [target]
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
@@ -263,6 +269,9 @@ class RpcProxy(RpcProxyI):
 
     def add_bundle_api(self, porders, target, params, mode, gid = None):
         ctx = self.currentContext
+        if type(target) == list:
+            if type(target[0]) != list:
+                target = [target]
         g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid)
         g.deferred = defer.Deferred()
         g.send()
