@@ -57,6 +57,21 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().result_group(ctx, gid, min, max, filter, idOnly)
 
+    def get_group_results(self, ctx, gid, min, max, filter, idOnly = True):
+        """
+        Wrapper that according to the group type calls result_group (static
+        or stored results for a group) or requestresult_group (dynamic group)
+        """
+        klass = self.components[self.main]
+        if self.isdyn_group(ctx, gid):
+            if self.isrequest_group(ctx, gid):
+                ret = self.requestresult_group(ctx, gid, min, max, filter)
+            else:
+                ret = self.result_group(ctx, gid, min, max, filter, True)
+        else:
+            ret = self.result_group(ctx, gid, min, max, filter, True)
+        return ret
+            
     def request(self, ctx, query, bool, min, max, filter):
         klass = self.components[self.main]
         return klass().request(ctx, query, bool, min, max, filter)
