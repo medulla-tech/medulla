@@ -812,8 +812,12 @@ class Glpi(DyngroupDatabaseHelper):
     def doesUserHaveAccessToMachines(self, userid, a_machine_uuid, all = True):
         """
         Check if the user has correct permissions to access more than one or to all machines
+
+        Return always true for the root user.
+
+        @rtype: bool
         """
-        if not self.displayLocalisationBar:
+        if not self.displayLocalisationBar or userid == "root":
             return True
         a_locations = map(lambda loc:loc.name, self.getUserLocations(userid))
         session = create_session()
@@ -833,6 +837,8 @@ class Glpi(DyngroupDatabaseHelper):
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
         """
         Check if the user has correct permissions to access this machine
+
+        @rtype: bool
         """
         return self.doesUserHaveAccessToMachines(userid, [machine_uuid])
 
