@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-02 09:26+0200\n"
-"PO-Revision-Date: 2008-10-02 09:34+0200\n"
+"PO-Revision-Date: 2008-10-03 16:15+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Statut de %s"
 #: msc/msc/tabs.php:13 msc/msc/tabs.php:20
 #, php-format
 msgid "%s's computer secure control"
-msgstr "Contrôle sécurisé du groupe %s"
+msgstr "Contrôle sécurisé du client %s"
 
 #: msc/msc/tabs.php:32
 #, php-format
@@ -98,8 +98,7 @@ msgstr "Ensemble d'applications #%s"
 #: msc/msc/msctabsstatus.php:37
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
-msgstr ""
-"État du bundle '%s' concernant <b>%s</b> commandes sur <b>%s</b> machines"
+msgstr "État du bundle '%s' concernant <b>%s</b> commandes sur <b>%s</b> machines"
 
 #: msc/includes/bundle_widgets.php:322
 msgid "Bundle title"
@@ -233,7 +232,7 @@ msgstr "Télécharger un fichier depuis un ordinateur"
 
 #: msc/infoPackage.inc.php:116
 msgid "Download file from a computer"
-msgstr "Télécharger un fichier depuis un ordinateur"
+msgstr "Téléchargement de fichier depuis un ordinateur"
 
 #: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:277
 msgid "End date"
@@ -245,11 +244,11 @@ msgstr "Fin de validité"
 
 #: msc/infoPackage.inc.php:122
 msgid "Establish a VNC connection"
-msgstr "Établir une connection VNC"
+msgstr "Établir une connexion VNC"
 
 #: msc/msc/vnc_client.php:159
 msgid "Establish a VNC connection to this computer"
-msgstr "Établir une connection VNC vers cet ordinateur"
+msgstr "Établir une connexion VNC vers cet ordinateur"
 
 #: msc/includes/widgets.inc.php:153
 msgid "Execute action..."
@@ -464,7 +463,7 @@ msgstr "Actions rapides sur %s"
 #: msc/includes/widgets.inc.php:27
 #, php-format
 msgid "Quick action path %s don't exists"
-msgstr "Le repertoire des actions rapide %s n'existe pas"
+msgstr "Le répertoire des actions rapide %s n'existe pas"
 
 #: msc/includes/command_history.php:194 msc/msc/launch.php:130
 msgid "Reboot client after a successful deletion"
@@ -658,7 +657,7 @@ msgstr "Le téléchargement a échoué"
 #: msc/msc/ajaxPackageFilter.php:53
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
-msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
+msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 
 #: msc/msc/ajaxPackageFilter.php:55
 #, php-format
@@ -721,7 +720,7 @@ msgstr "WOL en cours"
 
 #: msc/includes/bundle_widgets.php:323
 msgid "Wake on lan"
-msgstr "Réveil reseau (WOL)"
+msgstr "Réveil réseau (WOL)"
 
 #: msc/msc/download_file.php:42
 msgid "Warning: this operation may last a long time."
