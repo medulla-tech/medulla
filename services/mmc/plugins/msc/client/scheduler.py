@@ -174,6 +174,24 @@ def stopCommand(scheduler, command_id):
     else:
         logging.getLogger().error("stopCommand: no target associated to coh %s" % command_id)
 
+def stopCommands(scheduler, command_ids):
+    """
+    Connect to the specified scheduler to stop a bunch of commands_on_host,
+    given their ids.
+    """
+    def parseResult(result):
+        logging.getLogger().debug('Stopping commands %s' % command_ids)
+        return result
+    def parseError(reason):
+        # FIXME: handle error
+        return False
+    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
+        'stop_commands',
+        command_ids
+    )
+    mydeffered.addCallback(parseResult).addErrback(parseResult)
+    return mydeffered
+
 def startCommand(scheduler, command_id):
     def parseResult(result):
         logging.getLogger().debug('Start command %s: %s' % (command_id, result))

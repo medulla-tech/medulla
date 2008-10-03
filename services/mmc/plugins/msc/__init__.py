@@ -415,11 +415,13 @@ def stop_command_on_host(coh_id):
 
 ### Commands handling ###
 def stop_command(c_id):
-    # Update the database
-    cohs = mmc.plugins.msc.orm.commands.stopCommand(c_id)
-    # Tell the schedulers to stop the related commands_on_host
-    for coh in cohs:
-        mmc.plugins.msc.client.scheduler.stopCommand(None, coh.id)
+    # Update command in database
+    MscDatabase().stopCommand(c_id)
+    # Stop related commands_on_host on related schedulers
+    scheds = MscDatabase().getCommandsonhostsAndSchedulers(c_id)
+    for sched in scheds:
+        d = mmc.plugins.msc.client.scheduler.stopCommands(None, scheds[sched])
+        d.addErrback(lambda err: self.logger.error("stop_command: " + str(err)))
 ###
 
 ##

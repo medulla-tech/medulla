@@ -642,6 +642,38 @@ class MscDatabase(Singleton):
                    "id_group" : groupID }
         return target
 
+    def stopCommand(self, c_id):
+        """
+        Stop a command, by stopping all its related commands_on_host.
+        @returns: the list of all related commands_on_host
+        @rtype: list
+        """
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        self.commands_on_host.update(self.commands_on_host.c.fk_commands == c_id).execute({self.commands_on_host.c.current_state:"failed", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
+        trans.commit()
+        
+    def getCommandsonhostsAndSchedulers(self, c_id):
+        """
+        For a given command id, returns a dict with:
+         - keys: a scheduler id (e.g. scheduler_01)
+         - values: the related commands_on_host for each scheduler
+        """
+        conn = self.getDbConnection()
+        result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands == c_id).execute()
+        schedulers = {}
+        for row in result:
+            coh, scheduler = row
+            if scheduler in schedulers:
+                schedulers[scheduler].append(coh)
+            else:
+                schedulers[scheduler] = [coh]
+        conn.close()
+        return schedulers
+
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.creator == ctx.userid).filter(self.commands_on_host.c.current_state <> '').group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
