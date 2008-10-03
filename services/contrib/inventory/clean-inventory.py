@@ -4,7 +4,7 @@
 import sys
 from sqlalchemy import *
 
-def delete_old_inventories(inventory):
+def deleteOldInventories(inventory):
     """
     Clean up the Inventory table, i.e. delete old inventories (Last != 1)
     """
@@ -12,7 +12,7 @@ def delete_old_inventories(inventory):
     to_delete.execute()
 
 
-def delete_has_tables_missing_inventories(inventory):
+def deleteHasTablesMissingInventories(inventory):
     """
     Remove every linked tables (has*) rows referencing missing
     inventories
@@ -26,7 +26,7 @@ def delete_has_tables_missing_inventories(inventory):
         to_delete.execute()
 
 
-def delete_has_tables_missing_machines(machine):
+def deleteHasTablesMissingMachines(machine):
     """
     Remove every linked tables (has*) rows referencing missing machines
     """
@@ -39,7 +39,7 @@ def delete_has_tables_missing_machines(machine):
         to_delete.execute()
 
 
-def clean_up_inventory_parts(inventory):
+def cleanUpInventoryParts(inventory):
     """
     Clean up the inventory parts tables (Bios/hasBios, Drive/hasDrive etc)
     """
@@ -62,7 +62,7 @@ def clean_up_inventory_parts(inventory):
         to_delete.execute()
 
 
-def delete_empty_inventories(inventory):
+def deleteEmptyInventories(inventory):
     """
     Check there are no empty inventories (i.e. Inventory rows not
     referenced by any has* row)
@@ -95,21 +95,21 @@ if __name__ == "__main__":
     machine = Table("Machine", metadata, autoload = True)
 
     print "Deleting old inventories..."
-    delete_old_inventories(inventory)
+    deleteOldInventories(inventory)
     print "Done !"
 
-    print "Deleting rows with missing with missing inventories..."
-    delete_has_tables_missing_inventories(inventory)
+    print "Deleting rows with missing inventories..."
+    deleteHasTablesMissingInventories(inventory)
     print "Done !"
 
-    print "Deleting rows with missing with missing inventories..."
-    delete_has_tables_missing_machines(machine)
+    print "Deleting rows with missing inventories..."
+    deleteHasTablesMissingMachines(machine)
     print "Done !"
 
     print "Cleaning up inventory parts..."
-    clean_up_inventory_parts(inventory)
+    cleanUpInventoryParts(inventory)
     print "Done !"
 
     print "Deleting empty inventories..."
-    delete_empty_inventories(inventory)
+    deleteEmptyInventories(inventory)
     print "Done !"
