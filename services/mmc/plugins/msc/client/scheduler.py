@@ -135,8 +135,8 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         logging.getLogger().debug("got %s as scheduler for client %s" % (scheduler_name, computer[1]['objectUUID'][0]))
 
         if scheduler_name not in MscConfig('msc').schedulers:
-            logging.getLogger().warn("scheduler %s do not exists" % (scheduler_name))
-            return twisted.internet.defer.fail(twisted.python.failure.Failure("Invalid scheduler %s (do not seems to exists)" % (scheduler_name)))
+            logging.getLogger().warn("scheduler %s does not exist" % (scheduler_name))
+            return twisted.internet.defer.fail(twisted.python.failure.Failure("Invalid scheduler %s (does not seem to exist)" % (scheduler_name)))
 
         mydeffered = getProxy(MscConfig('msc').schedulers[scheduler_name]).callRemote(
             function,
