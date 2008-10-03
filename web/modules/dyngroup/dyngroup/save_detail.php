@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: save.php 120 2008-07-22 15:58:02Z oroussy $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *

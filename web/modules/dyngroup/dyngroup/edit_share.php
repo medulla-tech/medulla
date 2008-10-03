@@ -3,7 +3,7 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
  *
- * $Id: add_groups.php 106 2008-06-30 13:30:54Z oroussy $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
