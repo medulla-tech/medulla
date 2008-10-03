@@ -3,12 +3,22 @@
 
 import sys
 from sqlalchemy import *
+import logging
+
+# Set up logging
+logger = logging.getLogger(sys.argv[0])
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
 
 def deleteOldInventories(inventory):
     """
     Clean up the Inventory table, i.e. delete old inventories (Last != 1)
     """
     to_delete = inventory.delete(inventory.c.Last != 1)
+    logger.debug("deleteOldInventories: SQL request: %s" % to_delete)
     to_delete.execute()
 
 
@@ -23,6 +33,7 @@ def deleteHasTablesMissingInventories(inventory):
         inventory_ids = select([inventory.c.id])
 
         to_delete = has_table.delete(not_(has_table.c.inventory.in_(inventory_ids)))
+        logger.debug("deleteHasTablesMissingInventories: on table %s: SQL request: %s" % (table, str(to_delete).replace('\n', ' ')))
         to_delete.execute()
 
 
@@ -36,6 +47,7 @@ def deleteHasTablesMissingMachines(machine):
         machine_ids = select([machine.c.id])
 
         to_delete = has_table.delete(not_(has_table.c.machine.in_(machine_ids)))
+        logger.debug("deleteHasTablesMissingMachines: on table %s: SQL request: %s" % (table, str(to_delete).replace('\n', ' ')))
         to_delete.execute()
 
 
@@ -52,6 +64,7 @@ def cleanUpInventoryParts(inventory):
         has_table_ids = select([getattr(has_table.c, table.lower())])
 
         to_delete = element.delete(not_(element.c.id.in_(has_table_ids)))
+        logger.debug("cleanUpInventoryParts: on table %s: SQL request: %s" % (table, str(to_delete).replace('\n', ' ')))
         to_delete.execute()
 
         # Next, we look for the opposite : part / inventory links pointing
@@ -59,6 +72,7 @@ def cleanUpInventoryParts(inventory):
         element_ids = select([element.c.id])
 
         to_delete = has_table.delete(not_(getattr(has_table.c, table.lower()).in_(element_ids)))
+        logger.debug("cleanUpInventoryParts: on table %s: SQL request: %s" % (table, str(to_delete).replace('\n', ' ')))
         to_delete.execute()
 
 
@@ -75,6 +89,7 @@ def deleteEmptyInventories(inventory):
 
     all_inventories = union(*all_inventories_select)
     to_delete = inventory.delete(not_(inventory.c.id.in_(all_inventories)))
+    logger.debug("deleteEmptyInventories: SQL request: %s" % str(to_delete).replace('\n', ' '))
     to_delete.execute()
 
 def usage(argv):
@@ -94,22 +109,22 @@ if __name__ == "__main__":
     inventory = Table("Inventory", metadata, autoload = True)
     machine = Table("Machine", metadata, autoload = True)
 
-    print "Deleting old inventories..."
+    logger.info("Deleting old inventories...")
     deleteOldInventories(inventory)
-    print "Done !"
+    logger.info("Done !")
 
-    print "Deleting rows with missing inventories..."
+    logger.info("Deleting rows with missing inventories...")
     deleteHasTablesMissingInventories(inventory)
-    print "Done !"
+    logger.info("Done !")
 
-    print "Deleting rows with missing inventories..."
+    logger.info("Deleting rows with missing inventories...")
     deleteHasTablesMissingMachines(machine)
-    print "Done !"
+    logger.info("Done !")
 
-    print "Cleaning up inventory parts..."
+    logger.info("Cleaning up inventory parts...")
     cleanUpInventoryParts(inventory)
-    print "Done !"
+    logger.info("Done !")
 
-    print "Deleting empty inventories..."
+    logger.info("Deleting empty inventories...")
     deleteEmptyInventories(inventory)
-    print "Done !"
+    logger.info("Done !")
