@@ -111,9 +111,9 @@ def establishProxy(client, requestor_ip, requested_port):
         #'--max-exec-time', # FIXME: wrapper_timeout missing in function signature :/
         #str(wrapper_timeout),
         '--exec',
-        SEPARATOR.join(real_command),
+        SEPARATOR.join(real_command).encode('utf-8', 'ignore'),
         '--thru',
-        SEPARATOR.join(thru_command_list),
+        SEPARATOR.join(thru_command_list).encode('utf-8', 'ignore'),
         '--no-wrap',
         '--only-stdout',
         '--remove-empty-lines',
