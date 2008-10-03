@@ -858,7 +858,15 @@ class MscDatabase(Singleton):
             params['order_by'] = getattr(self.commands_on_host.c, 'id')
 
         size = 0
-        if params['b_id'] == None and params['cmd_id'] == None:
+        if params['gid'] and params['cmd_id']:
+            # In this case, we want to get the commands on a group.
+            # Using min/max, we get a range of commands, but we always want
+            # the total count of commands.
+            ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
+            size = self.__displayLogsQuery2(ctx, params, session).count()
+            session.close()
+            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+        elif params['b_id'] == None and params['cmd_id'] == None:
             ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
             cmds = map(lambda c: (c.id, c.bundle_id), ret)
             size = []
@@ -875,6 +883,7 @@ class MscDatabase(Singleton):
             return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
         else:
             ret = self.__displayLogsQuery2(ctx, params, session).all()
+            # FIXME: using distinct, size will always return 1 ...
             size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
             session.close()
             return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
