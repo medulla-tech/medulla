@@ -398,7 +398,7 @@ class GetPackagesFiltered:
         if "packageapi" in self.filt:
             ret = PackageA(self.filt["packageapi"]).getAllPackages(False)
             ret.addCallbacks(self.sendResult, self.onError)
-            d.addErrback(lambda err: self.onError(err))
+            ret.addErrback(lambda err: self.onError(err))
         else:
             ret = self.sendResult()
 
