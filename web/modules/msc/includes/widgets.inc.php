@@ -80,7 +80,7 @@ class RenderedMSCHostDontExists extends HtmlElement {
 
 class RenderedMSCCommandDontExists extends RenderedMSCHostDontExists {
     function RenderedMSCCommandDontExists() {
-        $this->str = _T("You don't have the good permissions to access this command");
+        $this->str = _T("You don't have the right permissions to display this command", "msc");
     }
 }
 
