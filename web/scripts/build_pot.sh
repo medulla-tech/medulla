@@ -16,21 +16,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
 POT="modules/base/locale/base.pot"
 
+rm ${POT}
 touch ${POT}
-find . -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=_ {} \;
+find . -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=_T {} \;
 
-
-for name in `find ${1} -type f -name *.po`
-  do
-    newname=`echo ${name} | sed 's!^\(.*\)/\(.*\).po$!\1/\2.po2!'`
+for name in `find ${1} -type f -name *.po`; do
     echo -n "updating ${name}..."
-    msgmerge ${name} ${POT} > ${newname}
-    rm ${name}
-    mv ${newname} ${name}
+    msgmerge --update --add-location --sort-output ${name} ${POT}
     echo "done"
-  done
+done
 
 exit 0
