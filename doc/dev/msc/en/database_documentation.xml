@@ -77,12 +77,12 @@
       </varlistentry>
 
       <varlistentry>
-       <term>start_file</term>
+        <term>start_file</term>
 
-	<listitem>
-	 <para>The command to launch to start installation of the
-	 package</para>
-	</listitem>
+        <listitem>
+          <para>The command to launch to start installation of the
+          package</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
@@ -103,7 +103,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>clean_on_succes</term>
+        <term>clean_on_success</term>
 
         <listitem>
           <para>Do we erase copied files after a successful run, mainly used
@@ -112,11 +112,12 @@
       </varlistentry>
 
       <varlistentry>
-	<term>files</term>
+        <term>files</term>
 
-	<listitem>
-	  <para>The list of files for the package, with MD5 control sums</para>
-	</listitem>
+        <listitem>
+          <para>The list of files for the package, with MD5 control
+          sums</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
@@ -155,7 +156,7 @@
         <term>dispatched</term>
 
         <listitem>
-          <para>Tell if the command has been fileld into relevant
+          <para>Tell if the command has been field into relevant
           computers</para>
         </listitem>
       </varlistentry>
@@ -185,14 +186,6 @@
       </varlistentry>
 
       <varlistentry>
-        <term>next_connection_delay</term>
-
-        <listitem>
-          <para>Interval between two connections attempts</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
         <term>max_connection_attempt</term>
 
         <listitem>
@@ -202,86 +195,93 @@
       </varlistentry>
 
       <varlistentry>
-	<term>pre_command_hook</term>
+        <term>next_connection_delay</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>Interval between two connection attempts</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>post_command_hook</term>
+        <term>pre_command_hook</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>?</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>pre_run_hook</term>
+        <term>post_command_hook</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>?</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>post_run_hook</term>
+        <term>pre_run_hook</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>?</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>on_success_hook</term>
+        <term>post_run_hook</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>?</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>on_failure_hook</term>
+        <term>on_success_hook</term>
 
-	<listitem>
-	  <para>?</para>
-	</listitem>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>on_failure_hook</term>
+
+        <listitem>
+          <para>?</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
         <term>maxbw</term>
 
         <listitem>
-          <para>when we have something to send on the client, do not go over
+          <para>when we have something to send to the client, do not go over
           this BW rate (b/s), default is 0</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>deployment_intervals</term>
+        <term>deployment_intervals</term>
 
-	<listitem>
-	  <para>The interval of time between two deployment attempts</para>
-	</listitem>
+        <listitem>
+          <para>The interval of time between two deployment attempts</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>bundle_id</term>
+        <term>bundle_id</term>
 
-	<listitem>
-	  <para>The Bundle ID the command belongs to</para>
-	</listitem>
+        <listitem>
+          <para>The Bundle ID the command belongs to</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>order_in_bundle</term>
+        <term>order_in_bundle</term>
 
-	<listitem>
-	  <para>The command's order inside its bundle</para>
-	</listitem>
+        <listitem>
+          <para>The command's order inside its bundle</para>
+        </listitem>
       </varlistentry>
-
     </variablelist>
   </section>
 
@@ -292,6 +292,9 @@
     host.</para>
 
     <para>It is linked to the "commands" table using fk_commands as
+    constraint.</para>
+
+    <para>It is linked to the "target" table using fk_target as
     constraint.</para>
 
     <variablelist>
@@ -312,11 +315,19 @@
       </varlistentry>
 
       <varlistentry>
-	<term>host</term>
+        <term>fk_target</term>
 
-	<listitem>
-	  <para>The target host to run the command on.</para>
-	</listitem>
+        <listitem>
+          <para>A foreign key to the "target" table</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>host</term>
+
+        <listitem>
+          <para>The target host to run the command on.</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
@@ -401,21 +412,12 @@
       </varlistentry>
 
       <varlistentry>
-	<term>fk_target</term>
+        <term>scheduler</term>
 
-	<listitem>
-	  <para>A foreign key to the "target" table</para>
-	</listitem>
+        <listitem>
+          <para>The scheduler in charge of this command</para>
+        </listitem>
       </varlistentry>
-
-      <varlistentry>
-	<term>scheduler</term>
-
-	<listitem>
-	  <para>The scheduler in charge of this command</para>
-	</listitem>
-      </varlistentry>
-
     </variablelist>
   </section>
 
@@ -581,7 +583,8 @@
         <term>id_group</term>
 
         <listitem>
-          <para>???</para>
+          <para>Commands may be grouped using some criteria (IP adress, ...),
+          this filed hold their group id</para>
         </listitem>
       </varlistentry>
 
@@ -643,18 +646,16 @@
     <para>This table holds Bundle (sets of commands) IDs.</para>
 
     <variablelist>
-
       <varlistentry>
-	<term>id</term>
+        <term>id</term>
 
-	<listitem>
-	  <para>The table's primary key.</para>
-	</listitem>
+        <listitem>
+          <para>The table's primary key.</para>
+        </listitem>
       </varlistentry>
-
     </variablelist>
-
   </section>
+
   <section>
     <title>The "version" table</title>
 
