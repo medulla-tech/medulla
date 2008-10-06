@@ -20,7 +20,7 @@ POT="modules/base/locale/base.pot"
 
 rm ${POT}
 touch ${POT}
-find . -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=_T {} \;
+find . -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=_ {} \;
 
 for name in `find ${1} -type f -name *.po`; do
     echo -n "updating ${name}..."
