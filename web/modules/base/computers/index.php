@@ -26,7 +26,7 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/graph/computers/index.css");
 
-$p = new PageGenerator(_T("Computer list"));
+$p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

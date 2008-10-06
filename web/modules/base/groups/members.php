@@ -102,7 +102,7 @@ if (isset($_POST["bdeluser_x"])) {
         del_member($group, $del);
         callPluginFunction("delUserFromGroup", array($del, $group));
     }
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("Group successfully modified"));
+    if (!isXMLRPCError()) new NotifyWidgetSuccess(_("Group successfully modified"));
 
     $members = get_members($group);
 } else {

@@ -52,7 +52,7 @@ if (isset($_POST["bConnect"])) {
         $_SESSION["agent"] = $_POST["server"];
         $_SESSION["XMLRPC_server_description"] = $conf[$_POST["server"]]["description"];
     } else {
-        $error = sprintf(_T("The server %s does not exist"), $_POST["server"]);
+        $error = sprintf(_("The server %s does not exist"), $_POST["server"]);
     }
 
     if (!isset($error) && auth_user($login, $pass, $error)) {
@@ -86,7 +86,7 @@ if (isset($_POST["bConnect"])) {
 
 if ($_GET["error"]) $error = urldecode($_GET["error"]) . "<br/>" . $error;
 if ($_GET["agentsessionexpired"]) {
-    $error = _T("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
+    $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
 
 ?>

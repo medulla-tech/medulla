@@ -69,7 +69,7 @@ $addParams = neededParamsAddComputer();
 foreach ($addParams as $p) {
     if ($p[1] == 'string') {
         $f->add(
-            new TrFormElement(_T($p[2]), new InputTpl($p[0])),
+            new TrFormElement(_($p[2]), new InputTpl($p[0])),
             array("value" => '')
         );
     }

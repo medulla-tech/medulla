@@ -60,13 +60,13 @@ function print_ajax_nav($curstart,
 
   if ($curstart == 0)
     {
-      echo "<li class=\"previousListInactive\">"._T("Previous")."</li>\n";
+      echo "<li class=\"previousListInactive\">"._("Previous")."</li>\n";
     }
   else
     {
       $start = $curstart - $max;
       $end = $curstart - 1;
-      echo "<li class=\"previousList\"><a href=\"#\" onClick=\"updateSearchParam('$filter','$start','$end'); return false\";>"._T("Previous")."</a></li>\n";
+      echo "<li class=\"previousList\"><a href=\"#\" onClick=\"updateSearchParam('$filter','$start','$end'); return false\";>"._("Previous")."</a></li>\n";
     }
 
   if (($curend + 1) >= count($items))
@@ -79,7 +79,7 @@ function print_ajax_nav($curstart,
       $end = $curend + $max;
 
 
-      echo "<li class=\"nextList\"><a href=\"#\" onClick=\"updateSearchParam('$filter','$start','$end'); return false\";>"._T("Next")."</a></li>\n";
+      echo "<li class=\"nextList\"><a href=\"#\" onClick=\"updateSearchParam('$filter','$start','$end'); return false\";>"._("Next")."</a></li>\n";
     }
 
   echo "</ul>\n";
