@@ -901,36 +901,24 @@ class MscDatabase(Singleton):
 
         size = 0
 
-        if params['cmd_id']:                    # we want informations about one command
-            if params['gid'] or params['uuid']: # we want informations about one command on one group / one computer
+
+
+        if params['gid'] or params['uuid']:     # we want informations about one group / host
+            if params['cmd_id']:                # we want informations about one command on one group / host
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
                 ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
                 size = self.__displayLogsQuery2(ctx, params, session).count()
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-            else:                               # we want informations about one command (do not care the target)
-                ret = self.__displayLogsQuery2(ctx, params, session).all()
-                # FIXME: using distinct, size will always return 1 ...
-                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
-                session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        elif params['b_id']:                    # we want informations about one bundle
-            if params['gid'] or params['uuid']: # we want informations about one bundle on one group / one computer
+            elif params['b_id']:                # we want informations about one bundle on one group / host
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
                 ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
                 size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-            else:                               # we want informations about one bundle (do not care the target)
-                ret = self.__displayLogsQuery2(ctx, params, session).all()
-                # FIXME: using distinct, size will always return 1 ...
-                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
-                session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        else:                                   # we want informations about all commands / bundles
-            if params['gid'] or params['uuid']: # we want informations about all commands on one group / one computer
+            else:                               # we want all informations about on one group / host
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
                 cmds = map(lambda c: (c.id, c.bundle_id), ret)
 
@@ -948,7 +936,20 @@ class MscDatabase(Singleton):
 
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-            else:                               # we want informations about all commands / bundles (do not care the target)
+        else:                                   # we want all informations
+            if params['cmd_id']:                # we want all informations about one command
+                ret = self.__displayLogsQuery2(ctx, params, session).all()
+                # FIXME: using distinct, size will always return 1 ...
+                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+            elif params['b_id']:                # we want all informations about one bundle
+                ret = self.__displayLogsQuery2(ctx, params, session).all()
+                # FIXME: using distinct, size will always return 1 ...
+                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+            else:                               # we want all informations about everything
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
                 cmds = map(lambda c: (c.id, c.bundle_id), ret)
 
