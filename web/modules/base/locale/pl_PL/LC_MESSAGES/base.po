@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-15 18:12+0200\n"
+"POT-Creation-Date: 2008-10-06 17:55+0200\n"
 "PO-Revision-Date: 2008-06-26 11:01+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team: Polski <pl@li.org>\n"
@@ -16,1123 +16,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: graph/header.inc.php:209
-msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
-"Nie można przesłać formularza. Błędne wpisy są podświetlone na czerwono. "
-
-#: graph/navbar.inc.php:40
-msgid "standard mode"
-msgstr "trybu standardowego"
-
-#: graph/navbar.inc.php:42
-msgid "expert mode"
-msgstr "trybu zaawansowanego"
-
-#: graph/navbar.inc.php:47
-msgid "Click to switch to"
-msgstr "Kliknij aby zmienić do"
-
-#: graph/navbar.inc.php:48
-msgid "logout"
-msgstr "wyloguj"
-
-#: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
-msgid "Logout"
-msgstr "Wyloguj"
-
-#: graph/navbar.inc.php:60 main_content.php:167
-msgid "Home"
-msgstr "Katalog domowy"
-
-#: graph/navbar.inc.php:113
-msgid ""
-"If this phrase does not change, you browser is not supported by the MMC "
-"application"
-msgstr ""
-"Jeżeli ten tekst nie ulegnie zmianie, to znaczy, że Twoja przeglądarka nie "
-"jest obsługiwana przez aplikację MCC"
-
-#: includes/ErrorHandling.php:75
-msgid "Show complete trackback"
-msgstr "Pokaż cały ślad"
-
-#: includes/ErrorHandling.php:76
-msgid "Complete Traceback"
-msgstr "Cały ślad"
-
-#: includes/favorites.php:4
-msgid "Root user cannot have favorites"
-msgstr "Użytkownik root nie może mieć ulubionych"
-
-#: includes/favorites.php:149
-msgid "Add this page to your favorite"
-msgstr "Dodaj ten pakiet do ulubionych"
-
-#: includes/ajaxTools.php:74 includes/PageGenerator.php:729
-#: includes/PageGenerator.php:735 includes/PageGenerator.php:788
-#: includes/PageGenerator.php:792
-msgid "Next"
-msgstr "Dalej"
-
-#: includes/commonErrorHandling.php:30
-msgid "This item already exists in your LDAP directory"
-msgstr "Ten wpis już istnieje w Twoim katalogu LDAP"
-
-#: includes/commonErrorHandling.php:31
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>change this entry name</li>\n"
-"                            <li>delete this entry before recreate it</li>\n"
-"                        </ul>"
-msgstr ""
-"Rozwiąż problem poprzez:\n"
-"                     <ul>\n"
-"                          <li>zmień nazwę tego wpisu</li>\n"
-"                          <li>usuń ten wpis zanim go odtworzysz</li>\n"
-"                    </ul>"
-
-#: includes/commonErrorHandling.php:43
-msgid "MMC Agent can't contact your LDAP server"
-msgstr "Agent MCC nie może się połączyć z Twoim serwerem LDAP"
-
-#: includes/commonErrorHandling.php:44
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly "
-"configured in /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>Verify you LDAP server is up</li>\n"
-"                        </ul>"
-msgstr ""
-"Rozwiąż problem poprzez:\n"
-"                          <ul>\n"
-"                              <li>Sprawdź czy Twój serwer LDAP jest "
-"prawidłowo skonfigurowany w /etc/mmc/plugins/base/ini <li>\n"
-"                              <li>Sprawdź czy Twój serwer LDAP działą</li>\n"
-"                           </ul>"
-
-#: includes/commonErrorHandling.php:53
-msgid "Error during authentication process"
-msgstr "Błąd podczas procesu autentyfikacji"
-
-#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
-msgid "Please contact your administrator."
-msgstr "Proszę skontaktować się ze swoim administratorem"
-
-#: includes/commonErrorHandling.php:58
-msgid "Error while provisioning your account"
-msgstr "Błąd podczas przygotowywania Twojego konta"
-
-#: includes/commonErrorHandling.php:64
-msgid "This items seems to not be in the index"
-msgstr "Wydaje się, że tego obiektu nie ma w indeksie"
-
-#: includes/commonErrorHandling.php:65
-msgid ""
-"This problem can appear if:\n"
-"                        <ul>\n"
-"                            <li>This item no longer exists.</li>\n"
-"                            <li>You misspelled it.</li>\n"
-"                        </ul>"
-msgstr ""
-"Ten problem może wystąpić jeżeli:                            <ul>\n"
-"                              <li>Ten obiekt nie istnieje</li>\n"
-"                              <li>Błędnie go wpisałeś.</li>\n"
-"                          </ul>"
-
-#: includes/commonErrorHandling.php:77
-msgid "smbpasswd failed to change your password entry"
-msgstr "smbpasswd nie dało rady zmienić Twojego hasła"
-
-#: includes/commonErrorHandling.php:78
-msgid ""
-"Verify that your smbpasswd is correctly configured:\n"
-"                        <ul>\n"
-"                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly "
-"configured</li>\n"
-"                        </ul>"
-msgstr ""
-"Upewnij się, że masz prawidłowo skonfigurowane smbpasswd:\n"
-"                        <ul>\n"
-"                             <li> Twój serwer LDAP może nie działąć</li>\n"
-"                             <li> Twój serwer SAMBY nie jest prawidłowo "
-"skonfigurowany<li>n                         </ul>"
-
-#: includes/acl.inc.php:112
-msgid "You do not have required rights"
-msgstr "Nie masz odpowiednich uprawnień"
-
-#: includes/PageGenerator.php:104 includes/PageGenerator.php:1833
-#: includes/PageGenerator.php:1901 modules/base/groups/members.php:182
-#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
-#: modules/base/users/edit.php:438
-msgid "Cancel"
-msgstr "Anuluj"
-
 #: includes/PageGenerator.php:458 includes/PageGenerator.php:654
-msgid "to"
-msgstr "do"
-
-#: includes/PageGenerator.php:459 includes/PageGenerator.php:655
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - W sumie <b>%s</b> "
-
-#: includes/PageGenerator.php:462 includes/PageGenerator.php:658
-msgid "page"
-msgstr "strona"
-
-#: includes/PageGenerator.php:718 includes/PageGenerator.php:725
-#: includes/PageGenerator.php:780 includes/PageGenerator.php:784
-msgid "Previous"
-msgstr "Poprzednia"
-
-#: includes/PageGenerator.php:1565
-msgid "Ok"
-msgstr "Ok"
-
-#: includes/PageGenerator.php:1829 modules/base/groups/members.php:181
-#: modules/base/users/edit.php:437 modules/base/users/editacl.php:224
-#: modules/base/users/editacl.php:220
-msgid "Confirm"
-msgstr "Potwierdź"
-
-#: includes/bgps_view.php:64
-msgid "No job."
-msgstr "Brak zadań"
-
-#: includes/i18n.inc.php:49
-msgid "english"
-msgstr "angielski"
-
-#: includes/i18n.inc.php:50
-msgid "danish"
-msgstr "duński"
-
-#: includes/i18n.inc.php:51
-msgid "german"
-msgstr "niemiecki"
-
-#: includes/i18n.inc.php:52
-msgid "french"
-msgstr "francuski"
-
-#: includes/i18n.inc.php:53
-msgid "spanish"
-msgstr "hiszpański"
-
-#: includes/i18n.inc.php:54
-msgid "norwegian"
-msgstr "norweski"
-
-#: includes/i18n.inc.php:55
-msgid "polish"
-msgstr "polski"
-
-#: includes/i18n.inc.php:56
-msgid "brazilian"
-msgstr "brazylijski"
-
-#: includes/i18n.inc.php:57
-msgid "russian"
-msgstr "rosyjski"
-
-#: includes/xmlrpc.inc.php:122 includes/xmlrpc.inc.php:150
-msgid "Can't connect to MMC agent"
-msgstr "Nie można połączyć się z agentem MCC"
-
-#: includes/xmlrpc.inc.php:123 includes/xmlrpc.inc.php:151
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr "Wydaje się, że agent MCC nie działa lub jest źle skonfigurowany."
-
-#: includes/xmlrpc.inc.php:123
-msgid "<br/> Error: "
-msgstr ""
-
-#: includes/xmlrpc.inc.php:123
-msgid " - "
-msgstr ""
-
-#: includes/xmlrpc.inc.php:135 includes/xmlrpc.inc.php:163
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr "Nie można wysłać żądania XML-RPC do agenta MCC"
-
-#: includes/xmlrpc.inc.php:136 includes/xmlrpc.inc.php:164
-msgid "MMC agent seems to be not correctly configured."
-msgstr "Wydaje się, że agent MCC nie jest prawidłowo skonfigurowany."
-
-#: includes/xmlrpc.inc.php:154 includes/xmlrpc.inc.php:173
-#: includes/xmlrpc.inc.php:182 includes/xmlrpc.inc.php:201
-msgid "MMC agent communication problem"
-msgstr "Problem z komunikacją agenta MCC"
-
-#: includes/xmlrpc.inc.php:155 includes/xmlrpc.inc.php:183
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-"Nie można się połączyć z agentem MCC. Proszę sprawdzić czy korzystasz z "
-"właściwego portu TCP oraz z prawidłowego protokołu."
-
-#: includes/xmlrpc.inc.php:174 includes/xmlrpc.inc.php:202
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr "Agent MCC nie przydzielił nam numeru sesji. Sprawdź wersję agenta MCC>"
-
-#: includes/xmlrpc.inc.php:251 includes/xmlrpc.inc.php:279
-msgid "unknown error"
-msgstr "nieznany błąd"
-
-#: includes/xmlrpc.inc.php:252 includes/xmlrpc.inc.php:280
-msgid ""
-"This exception is unknow. Please contact us to add an error handling on this "
-"error."
-msgstr ""
-"Nieznany wyjątek. Proszę skontaktować się z nami w celu uzyskania informacji "
-"o radzeniu sobie z takimi błędami."
-
-#: includes/FormGenerator.php:165
-msgid "Delete photo"
-msgstr "Usuń zdjęcie"
-
-#: includes/FormGenerator.php:197
-msgid "yes"
-msgstr "tak"
-
-#: includes/FormGenerator.php:200
-msgid "no"
-msgstr "nie"
-
-#: includes/FormGenerator.php:209 includes/FormGenerator.php:537
-#: includes/FormGenerator.php:585 modules/base/views/norightGroups.tpl.php:31
-msgid "unavailable"
-msgstr "niedostępne"
-
-#: includes/FormGenerator.php:373
-msgid "Year: "
-msgstr "Rok: "
-
-#: includes/FormGenerator.php:373
-msgid "Month: "
-msgstr "Miesiąc: "
-
-#: includes/FormGenerator.php:373
-msgid "Day: "
-msgstr "Dzień: "
-
-#: includes/FormGenerator.php:374
-msgid "Hour: "
-msgstr "Godzina: "
-
-#: includes/FormGenerator.php:374
-msgid "Min.: "
-msgstr "Minuta: "
-
-#: includes/FormGenerator.php:374
-msgid "Sec.: "
-msgstr "Sek.:"
-
-#: includes/FormGenerator.php:445 includes/FormGenerator.php:449
-msgid "or <a href='#'"
-msgstr "lub <a href='#'"
-
-#: includes/FormGenerator.php:447
-msgid "value=\"now\";'>now</a>"
-msgstr "value=\"now\";'>teraz</a>"
-
-#: includes/FormGenerator.php:451
-msgid "value=\"never\";'>never</a>"
-msgstr "value=\"never\";'>nigdy</a>"
-
-#: includes/FormGenerator.php:503 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
-#: modules/base/views/editGroups.tpl.php:74
-msgid "Add"
-msgstr "Dodaj"
-
-#: includes/FormGenerator.php:759 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:83
-#: modules/base/views/editGroups.tpl.php:61
-#: modules/base/views/index.tpl.php:92
-msgid "Delete"
-msgstr "Usuń"
-
-#: modules/base/groups/ajaxFilter.php:41
-#: modules/base/views/roGroups.tpl.php:37
-#: modules/base/views/editGroups.tpl.php:52
-#: modules/base/views/norightGroups.tpl.php:28
-#: modules/base/infoPackage.inc.php:157
-msgid "Groups"
-msgstr "Grupy"
-
-#: modules/base/groups/ajaxFilter.php:43
-msgid "Comments"
-msgstr "Komentarze"
-
-#: modules/base/groups/ajaxFilter.php:46
-msgid "Edit members"
-msgstr "Edytuj członków"
-
-#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:52
-msgid "Edit group"
-msgstr "Edytuj grupę"
-
-#: modules/base/groups/ajaxFilter.php:49
-msgid "Groups management"
-msgstr "Zarządzanie grupą"
-
-#: modules/base/groups/members.php:116
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr ""
-"Nie można usunąć niektórych użytkowników z tej grupy ponieważ jest to ich "
-"podstawowa grupa."
-
-#: modules/base/groups/members.php:119
-#, php-format
-msgid "Group members %s"
-msgstr "Członkowie grupy %s"
-
-#: modules/base/groups/members.php:132
-msgid "All users"
-msgstr "Wszyscy użytkownicy"
-
-#: modules/base/groups/members.php:156 modules/base/infoPackage.inc.php:180
-msgid "Group members"
-msgstr "Członkowie grupy"
-
-#: modules/base/groups/delete.php:32
-#, php-format
-msgid "Group %s deleted"
-msgstr "Grupa %s usunięta"
-
-#: modules/base/groups/delete.php:40 modules/base/groups/delete.php:51
-msgid "Delete group"
-msgstr "Usuń grupę"
-
-#: modules/base/groups/delete.php:43
-msgid "You will delete group"
-msgstr "Usuniesz grupę"
-
-#: modules/base/groups/delete.php:46
-msgid "This group will be deleted even though it is not empty"
-msgstr "Ta grupa zostanie usunięta, mimo tego, że nie jest pusta"
-
-#: modules/base/groups/localSidebar.php:28
-#: modules/base/users/localSidebar.php:28
-msgid "List"
-msgstr "Lista"
-
-#: modules/base/groups/edit.php:35
-#, php-format
-msgid "Group %s successfully added"
-msgstr "Dodano grupę %s"
-
-#: modules/base/groups/edit.php:43
-#, php-format
-msgid "Group %s successfully modified"
-msgstr "Zmodyfikowano grupę %s"
-
-#: modules/base/groups/edit.php:48
-msgid "Add group"
-msgstr "Dodaj grupę"
-
-#: modules/base/groups/edit.php:71
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
-msgstr ""
-"Nazwa grupy może zawierać tylko litery i cyfry i musi zaczynać się od litery."
-
-#: modules/base/groups/edit.php:88
-msgid "Group name"
-msgstr "Nazwa grupy"
-
-#: modules/base/groups/edit.php:91
-msgid "Description"
-msgstr "Opis"
-
-#: modules/base/groups/edit.php:103
-msgid "Create"
-msgstr "Utwórz"
-
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:163
-msgid "Group list"
-msgstr "Lista grup"
-
-#: modules/base/computers/localSidebar.php:7
-msgid "All computers"
-msgstr "Wszystkie komputery"
-
-#: modules/base/computers/localSidebar.php:10
-msgid "Add computer"
-msgstr "Dodaj komputer"
-
-#: modules/base/users/ajaxFilter.php:66 modules/base/users/edit.php:299
-#: modules/base/views/index.tpl.php:78 index.php:150 index.php:152
-msgid "Login"
-msgstr "Logowanie"
-
-#: modules/base/users/ajaxFilter.php:77 modules/base/users/edit.php:316
-#: modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "Nazwa"
-
-#: modules/base/users/ajaxFilter.php:78
-msgid "Mail"
-msgstr "Poczta"
-
-#: modules/base/users/ajaxFilter.php:79
-msgid "Telephone"
-msgstr "Telefon"
-
-#: modules/base/users/ajaxFilter.php:81 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "Edytuj"
-
-#: modules/base/users/ajaxFilter.php:82 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "Uprawnienia MCC"
-
-#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "Kopia zapasowa"
-
-#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:101
-msgid "Users"
-msgstr "Użytkownicy"
-
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:71
-#: modules/base/users/localSidebar.php:32
-msgid "Change your password"
-msgstr "Zmień hasło"
-
-#: modules/base/users/passwd.php:43
-msgid "Your password has been changed."
-msgstr "Twoje hasło zostało zmienione"
-
-#: modules/base/users/passwd.php:48
-msgid "Change your user's password"
-msgstr "Zmień hasło użytkownika"
-
-#: modules/base/users/passwd.php:58
-msgid "You are going to change your password"
-msgstr "Zmienisz swoje hasło"
-
-#: modules/base/users/passwd.php:62
-msgid "Current password"
-msgstr "Obecne hasło"
-
-#: modules/base/users/passwd.php:64
-msgid "New password"
-msgstr "Nowe hasło"
-
-#: modules/base/users/passwd.php:66 modules/base/infoPackage.inc.php:249
-msgid "Confirm your password"
-msgstr "Potwierdź hasło"
-
-#: modules/base/users/passwd.php:72
-msgid "Return"
-msgstr "Powrót"
-
-#: modules/base/users/passwd.php:77
-msgid "Invalid current password. Please retry."
-msgstr "Nieprawidłowe hasło. Proszę spróbować ponownie."
-
-#: modules/base/users/passwd.php:79
-msgid "Passwords are mismatching. Please retry."
-msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
-
-#: modules/base/users/delete.php:33
-#, php-format
-msgid "User %s has been successfully deleted"
-msgstr "Usunięto użytkownika %s"
-
-#: modules/base/users/delete.php:37
-msgid "Delete user"
-msgstr "Usuń użytkownika"
-
-#: modules/base/users/delete.php:38
-#, php-format
-msgid "You will delete user <b>%s</b>."
-msgstr "Usuniesz użytkownika <b>%s</b>."
-
-#: modules/base/users/delete.php:39
-msgid "Delete all user's files"
-msgstr "Usuń wszystkie pliki użytkownika"
-
-#: modules/base/users/backup.php:38
-msgid "Backup a user's folder"
-msgstr "Zarchiwizuj katalog użytkownika"
-
-#: modules/base/users/backup.php:52
-msgid "Backup a user's home directory"
-msgstr "Zarchiwizuj katalog domowy użytkownika"
-
-#: modules/base/users/backup.php:54
-#, php-format
-msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr "Rozpoczęto archiwizowanie katalogu użytkownika <b>%s</b> w tle."
-
-#: modules/base/users/backup.php:56
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the "
-"backup."
-msgstr "Po zakończeniu, zarchiwizowane pliki zostaną zapisane do katalogu %s."
-
-#: modules/base/users/backup.php:58
-msgid "Please go to the status page to check the backup status."
-msgstr ""
-"Proszę udać się do strony statusu aby zapoznać się ze stanem archiwizacji."
-
-#: modules/base/users/backup.php:60
-msgid "This operation will last according to the amount of data to backup."
-msgstr ""
-"Czas trwania operacji będzie zależał od ilości danych do zarchiwizowania."
 
 #: modules/base/users/backup.php:74
 #, php-format
 msgid "%s home directory will be archived."
 msgstr "Katalog domowy %s zostanie zarchiwizowany."
-
-#: modules/base/users/backup.php:79
-#, php-format
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-"Proszę określić rozmiar nośnika. Jeżeli pojemność danych przekroczy dostępny "
-"rozmiar, zostanie utworzonych kilka plików o odpowiednim rozmiarze."
-
-#: modules/base/users/backup.php:83
-msgid "Media size"
-msgstr "Rozmiar nośnika"
-
-#: modules/base/users/backup.php:90
-msgid "Launch backup"
-msgstr "Rozpocznij archiwizowanie"
-
-#: modules/base/users/edit.php:80
-msgid "The confirmation password does not match the new password."
-msgstr "Potwierdzenie hasła nie zgadza się z nowym hasłem."
-
-#: modules/base/users/edit.php:85
-msgid "User's name invalid !"
-msgstr "Nieważna nazwa użytkownika!"
-
-#: modules/base/users/edit.php:94
-msgid "The primary group field can't be empty."
-msgstr "Pole grupa podstawowa nie może być puste."
-
-#: modules/base/users/edit.php:98
-#, php-format
-msgid "The group %s does not exist, and so can't be set as primary group."
-msgstr "Grupa %s nie istnieje, nie można jej ustawić jako grupę podstawową."
-
-#: modules/base/users/edit.php:110
-msgid "Password is empty."
-msgstr "Hasło jest puste."
-
-#: modules/base/users/edit.php:122
-msgid "This user already exists."
-msgstr "Taki użytkownik już istnieje."
-
-#: modules/base/users/edit.php:127 modules/base/users/edit.php:150
-msgid "User enabled."
-msgstr "Uaktywniono użytkownika."
-
-#: modules/base/users/edit.php:130 modules/base/users/edit.php:146
-msgid "User disabled."
-msgstr "Zablokowano użytkownika."
-
-#: modules/base/users/edit.php:194
-#, php-format
-msgid "The photo is too big. The max size is %s x %s."
-msgstr "Zdjęcie jest zbyt duże. Maksymalny rozmiar to %s na %s."
-
-#: modules/base/users/edit.php:195 modules/base/users/edit.php:196
-msgid "The photo is not a JPG file."
-msgstr "Zdjęcie nie jest plikiem JPG."
-
-#: modules/base/users/edit.php:200
-msgid "Attributes updated."
-msgstr "Uaktualniono właściwości."
-
-#: modules/base/users/edit.php:211
-msgid "Password updated."
-msgstr "Uaktualniono hasło."
-
-#: modules/base/users/edit.php:242
-#, php-format
-msgid "User %s has been successfully created."
-msgstr "Utworzono użytkownika %s."
-
-#: modules/base/users/edit.php:263
-msgid "Add user"
-msgstr "Dodaj użytkownika"
-
-#: modules/base/users/edit.php:266
-msgid "Edit user"
-msgstr "Edytuj użytkownika"
-
-#: modules/base/users/edit.php:303 modules/base/infoPackage.inc.php:248
-#: index.php:158 index.php:160
-msgid "Password"
-msgstr "Hasło "
-
-#: modules/base/users/edit.php:307
-msgid "Confirm password"
-msgstr "Potwierdź hasło"
-
-#: modules/base/users/edit.php:312
-msgid "Photo"
-msgstr "Zdjęcie"
-
-#: modules/base/users/edit.php:319
-msgid "First name"
-msgstr "Imię"
-
-#: modules/base/users/edit.php:322
-msgid "Title"
-msgstr "Tytuł"
-
-#: modules/base/users/edit.php:326 modules/base/infoPackage.inc.php:240
-msgid "Mail address"
-msgstr "Adres pocztowy"
-
-#: modules/base/users/edit.php:333 modules/base/infoPackage.inc.php:241
-msgid "Telephone number"
-msgstr "Numer telefonu"
-
-#: modules/base/users/edit.php:335
-msgid "Telephone Number"
-msgstr "Numer telefonu"
-
-#: modules/base/users/edit.php:339
-msgid "Mobile number"
-msgstr "Numer komórkowy"
-
-#: modules/base/users/edit.php:343 modules/base/infoPackage.inc.php:243
-msgid "Fax number"
-msgstr "Numer faxu"
-
-#: modules/base/users/edit.php:347 modules/base/infoPackage.inc.php:244
-msgid "Home phone number"
-msgstr "Domowy numer telefonu"
-
-#: modules/base/users/edit.php:365
-msgid "User is disabled, if checked"
-msgstr "Użytkownik jest zablokowany"
-
-#: modules/base/users/edit.php:366
-msgid ""
-"A disabled user can't log in any UNIX services. <br/>\n"
-"                            Her/his login shell command is replaced by /bin/"
-"false"
-msgstr ""
-"Zablokowany użytkownik nie może logować się do żadnych usług UNIX-owych.. "
-"<br/>\n"
-"                            Jej / jego powłoka logowania została zastąpiona "
-"przez /bin/false"
-
-#: modules/base/users/edit.php:378 modules/base/views/index.tpl.php:87
-msgid "Home directory"
-msgstr "Katalog domowy"
-
-#: modules/base/users/edit.php:382
-msgid "Create home directory on filesystem"
-msgstr "Utwórz katalog domowy w systemie plików"
-
-#: modules/base/users/edit.php:386 modules/base/infoPackage.inc.php:237
-msgid "Login shell"
-msgstr "Powłoka logowania"
-
-#: modules/base/users/edit.php:389 modules/base/infoPackage.inc.php:245
-msgid "Common name"
-msgstr "Nazwa"
-
-#: modules/base/users/edit.php:390
-msgid ""
-"This field is used by some LDAP clients (for example Thunderbird address "
-"book) to display user entries."
-msgstr ""
-"Niektórzy klienci LDAP (np. książka adresowa Thunderbirda) wykorzystują to "
-"pole do wyświetlania wpisów użytkownika."
-
-#: modules/base/users/edit.php:394 modules/base/infoPackage.inc.php:246
-msgid "Preferred name to be used"
-msgstr "Preferowana nazwa"
-
-#: modules/base/users/edit.php:395
-msgid ""
-"This field is used by SAMBA (and other LDAP clients) to display user name."
-msgstr ""
-"To pole jest wykorzystywane przez SAMBĘ (i innych klientów LDAP) do "
-"wyświetlania nazwy użytkownika."
-
-#: modules/base/users/editacl.php:62 modules/base/users/editacl.php:56
-msgid "User ACLs successfully modified."
-msgstr "ALC użytkowników zmodyfikowane prawidłowo."
-
-#: modules/base/users/editacl.php:77 modules/base/users/editacl.php:73
-msgid "hide"
-msgstr "ukryj"
-
-#: modules/base/users/editacl.php:78 modules/base/users/editacl.php:74
-msgid "description"
-msgstr "opis"
-
-#: modules/base/users/editacl.php:79 modules/base/users/editacl.php:75
-msgid "read only"
-msgstr "tylko do odczytu"
-
-#: modules/base/users/editacl.php:80 modules/base/users/editacl.php:76
-msgid "read/write"
-msgstr "odczyt / zapis"
-
-#: modules/base/users/editacl.php:131 modules/base/users/editacl.php:127
-msgid "Select all"
-msgstr "Zaznacz wszystkie"
-
-#: modules/base/users/editacl.php:132 modules/base/users/editacl.php:128
-msgid "Deselect all"
-msgstr "Odznacz wszystkie"
-
-#: modules/base/users/editacl.php:133 modules/base/users/editacl.php:129
-msgid "Function name"
-msgstr "Nazwa funkcji"
-
-#: modules/base/users/editacl.php:134 modules/base/users/editacl.php:130
-msgid "Authorize"
-msgstr "Autoryzuj"
-
-#: modules/base/users/editacl.php:160 modules/base/users/editacl.php:156
-msgid "Warning no desc found in infoPackage.inc.php :"
-msgstr "Uwaga, nie znaleziono pliku desc w infoPackage.inc.php:"
-
-#: modules/base/users/editacl.php:194 modules/base/users/editacl.php:190
-#, php-format
-msgid "Edit ACL of user %s"
-msgstr "Edytuj ACL użytkownika %s"
-
-#: modules/base/users/editacl.php:202 modules/base/users/editacl.php:198
-msgid "Edit ACL of user"
-msgstr "Edytuj ACL użytkownika"
-
-#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
-#: modules/base/infoPackage.inc.php:106
-msgid "User list"
-msgstr "Lista użytkowników"
-
-#: modules/base/status/index.php:110
-msgid "Uptime: "
-msgstr "Uptime: "
-
-#: modules/base/status/index.php:114
-msgid "day"
-msgstr "dzień"
-
-#: modules/base/status/index.php:119
-msgid "hour"
-msgstr "godznia"
-
-#: modules/base/status/index.php:122
-msgid "minute"
-msgstr "minuta"
-
-#: modules/base/status/index.php:127
-msgid "Memory"
-msgstr "Pamięć"
-
-#: modules/base/status/index.php:129
-msgid "Swap"
-msgstr "Swap"
-
-#: modules/base/status/index.php:212
-msgid "Global view"
-msgstr "Widok globalny"
-
-#: modules/base/status/index.php:219
-msgid "Server status"
-msgstr "Status serwera"
-
-#: modules/base/status/index.php:226
-msgid "Hard drive partitions"
-msgstr "Partycje dysku twardego"
-
-#: modules/base/status/index.php:234
-msgid "Background jobs"
-msgstr "Zadania w tle"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:91
-#, php-format
-msgid "Group %s already exist"
-msgstr "Grupa %s już istnieje"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:105
-#, php-format
-msgid "Group %s created"
-msgstr "Utworzono grupę %s"
-
-#: modules/base/includes/users-xmlrpc.inc.php:95
-#: modules/base/includes/users-xmlrpc.inc.php:91
-#, php-format
-msgid "user %s created<br />"
-msgstr "utworzono użytkownika %s<br /> "
-
-#: modules/base/includes/errorHandling.php:28
-msgid "LDAP log file does not exist."
-msgstr "Plik logów LDAP nie istnieje."
-
-#: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
-"openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log</pre>\n"
-"                        </p>\n"
-"                        "
-msgstr ""
-"Proszę upewnij się, czy masz:                          <p>Tą linię w "
-"katalogu /etc/ldap/slapd.conf lub /etc/openldap/spald.conf:\n"
-"                          <pre>poiom logowania            256</pre></p>\n"
-"                          <p>oraz tą linię w /etc/syslog.conf:\n"
-"                          <pre>local4.*          /var/log/ldap.log</pre>\n"
-"                          </p>\n"
-"                          "
-
-#: modules/base/includes/computers_list.inc.php:27
-#: modules/base/includes/computers_list.inc.php:28
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Inventory"
-msgstr "Katalog"
-
-#: modules/base/includes/computers_list.inc.php:28
-#: modules/base/includes/computers_list.inc.php:30
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Read log"
-msgstr "Czytaj log"
-
-#: modules/base/includes/computers_list.inc.php:29
-#: modules/base/includes/computers_list.inc.php:31
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Software deployment"
-msgstr "Wdrożenie oprogramowania"
-
-#: modules/base/includes/computers_list.inc.php:30
-#: modules/base/includes/computers_list.inc.php:29
-#: modules/base/includes/computers_list.inc.php:34
-msgid "GLPI Inventory"
-msgstr "Katalog GLPI"
-
-#: modules/base/includes/computers_list.inc.php:88
-#: modules/base/includes/computers_list.inc.php:95
-msgid "Computers list"
-msgstr "Lista komputerów"
-
-#: modules/base/includes/computers_list.inc.php:97
-#: modules/base/includes/computers_list.inc.php:104
-msgid "Delete computer"
-msgstr "Usuń komputer"
-
-#: modules/base/includes/computers_list.inc.php:100
-#: modules/base/includes/computers_list.inc.php:107
-msgid "Remove machine from group"
-msgstr "Usuń komputer z grupy"
-
-#: modules/base/logview/ajax_showlog.php:42
-msgid "Date"
-msgstr "Data"
-
-#: modules/base/logview/ajax_showlog.php:43
-msgid "Connection"
-msgstr "Połączenie"
-
-#: modules/base/logview/ajax_showlog.php:44
-msgid "Operation"
-msgstr "Operacja"
-
-#: modules/base/logview/ajax_showlog.php:45
-msgid "Actions"
-msgstr "Akcje"
-
-#: modules/base/logview/ajax_showlog.php:46
-msgid "Extra informations"
-msgstr "Dodatkowe informacje"
-
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
-msgstr "Widok logów operacji LDAP"
-
-#: modules/base/views/roGroups.tpl.php:32
-#: modules/base/views/editGroups.tpl.php:38
-msgid "Primary group"
-msgstr "Grupa podstawowa"
-
-#: modules/base/views/editGroups.tpl.php:65
-msgid "Add user to group"
-msgstr "Dodaj użytkownika do grupy"
-
-#: modules/base/views/editGroups.tpl.php:110
-msgid "This group doesn't exist"
-msgstr "Ta grupa nie istnieje"
-
-#: modules/base/infoPackage.inc.php:34
-msgid "User and group"
-msgstr "Użytkownik i grupa"
-
-#: modules/base/infoPackage.inc.php:44
-msgid "Home page"
-msgstr "Strona dmowa"
-
-#: modules/base/infoPackage.inc.php:50
-msgid "Favorites page"
-msgstr "Strona ulubionych "
-
-#: modules/base/infoPackage.inc.php:59
-msgid "Status"
-msgstr "Stan"
-
-#: modules/base/infoPackage.inc.php:64
-msgid "Default status page"
-msgstr "Domyślna strona stanu"
-
-#: modules/base/infoPackage.inc.php:73
-msgid "Log view"
-msgstr "Widok logów"
-
-#: modules/base/infoPackage.inc.php:78
-msgid "LDAP log"
-msgstr "Log LDAP"
-
-#: modules/base/infoPackage.inc.php:119
-msgid "Add a user"
-msgstr "Dodaj użytkownika"
-
-#: modules/base/infoPackage.inc.php:122
-msgid "Edit a user"
-msgstr "Edytuj użytkownika"
-
-#: modules/base/infoPackage.inc.php:126
-msgid "Edit ACL permissions on a user"
-msgstr "Edytuj pozwolenia ACL użytkownika"
-
-#: modules/base/infoPackage.inc.php:130
-msgid "Delete a user"
-msgstr "Usuń użytkownika"
-
-#: modules/base/infoPackage.inc.php:135
-msgid "Backup user files"
-msgstr "Archiwizuj pliki użytkownika"
-
-#: modules/base/infoPackage.inc.php:140
-msgid "Change user password"
-msgstr "Zmień hasło użytkownika"
-
-#: modules/base/infoPackage.inc.php:146
-msgid "Get user photo"
-msgstr "Pobierz zdjęcie użytkownika"
-
-#: modules/base/infoPackage.inc.php:167
-msgid "Add a group"
-msgstr "Dodaj grupę"
-
-#: modules/base/infoPackage.inc.php:170
-msgid "Delete a group"
-msgstr "Usuń grupę"
-
-#: modules/base/infoPackage.inc.php:184
-msgid "Edit a group"
-msgstr "Edytuj grupę"
-
-#: modules/base/infoPackage.inc.php:195
-msgid "Computers"
-msgstr "Komputery"
-
-#: modules/base/infoPackage.inc.php:200
-msgid "Computer list"
-msgstr "Lista komputerów"
-
-#: modules/base/infoPackage.inc.php:203
-msgid "Add computer "
-msgstr "Dodaj komputer"
-
-#: modules/base/infoPackage.inc.php:209
-msgid "Edit computer "
-msgstr "Edytuj komputer"
-
-#: modules/base/infoPackage.inc.php:213
-msgid "Delete a computer"
-msgstr "Usuń komputer"
-
-#: modules/base/infoPackage.inc.php:218
-msgid "Ajax part of computers list"
-msgstr "Część AJAX-owa listy komputerów"
-
-#: modules/base/infoPackage.inc.php:231
-msgid "User photo"
-msgstr "Zdjęcie użytkownika"
-
-#: modules/base/infoPackage.inc.php:232
-msgid "User login"
-msgstr "Login użytkownika"
-
-#: modules/base/infoPackage.inc.php:233
-msgid "User name"
-msgstr "Nazwa użytkownika"
-
-#: modules/base/infoPackage.inc.php:234
-msgid "User groups"
-msgstr "Grupy użytkowników"
-
-#: modules/base/infoPackage.inc.php:235
-msgid "User firstname"
-msgstr "Imię użytkownika"
-
-#: modules/base/infoPackage.inc.php:236
-msgid "User home directory"
-msgstr "Katalog domowy użytkownika"
-
-#: modules/base/infoPackage.inc.php:239
-msgid "User title"
-msgstr "Tytuł użytkownika"
-
-#: modules/base/infoPackage.inc.php:242
-msgid "Mobile phone number"
-msgstr "Numer telefonu komórkowego"
-
-#: modules/base/infoPackage.inc.php:250
-msgid "Enable/Disable user account"
-msgstr "Odbloku / Zablokuj konto użytkownika"
-
-#: logout/index.php:51
-msgid "Your session will be closed"
-msgstr "Twoja sesja zostanie zakończona"
-
-#: index.php:80 index.php:82
-msgid "Login failed"
-msgstr "Logowanie nieudane"
-
-#: index.php:162 index.php:164
-msgid "Server"
-msgstr "Serwer"
-
-#: index.php:186 index.php:187
-msgid "Language"
-msgstr "Język"
-
-#: index.php:218 index.php:219
-msgid "Connect"
-msgstr "Połącz"
 
 #: license.php:33
 msgid ""
@@ -1164,6 +56,145 @@ msgstr ""
 "wersji.\n"
 "</p>"
 
+#: modules/base/users/edit.php:366
+msgid ""
+"A disabled user can't log in any UNIX services. <br/>\n"
+"                            Her/his login shell command is replaced by /bin/"
+"false"
+msgstr ""
+"Zablokowany użytkownik nie może logować się do żadnych usług UNIX-owych.. "
+"<br/>\n"
+"                            Jej / jego powłoka logowania została zastąpiona "
+"przez /bin/false"
+
+#: modules/base/logview/ajax_showlog.php:45
+msgid "Actions"
+msgstr "Akcje"
+
+#: includes/FormGenerator.php:503 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+#: modules/base/views/editGroups.tpl.php:74
+msgid "Add"
+msgstr "Dodaj"
+
+#: modules/base/computers/edit.php:40
+#, fuzzy
+msgid "Add a computer"
+msgstr "Dodaj komputer"
+
+#: modules/base/infoPackage.inc.php:167
+msgid "Add a group"
+msgstr "Dodaj grupę"
+
+#: modules/base/infoPackage.inc.php:119
+msgid "Add a user"
+msgstr "Dodaj użytkownika"
+
+#: modules/base/computers/localSidebar.php:10
+msgid "Add computer"
+msgstr "Dodaj komputer"
+
+#: modules/base/infoPackage.inc.php:203
+msgid "Add computer "
+msgstr "Dodaj komputer"
+
+#: modules/base/groups/edit.php:48
+msgid "Add group"
+msgstr "Dodaj grupę"
+
+#: includes/favorites.php:149
+msgid "Add this page to your favorite"
+msgstr "Dodaj ten pakiet do ulubionych"
+
+#: modules/base/users/edit.php:263
+msgid "Add user"
+msgstr "Dodaj użytkownika"
+
+#: modules/base/views/editGroups.tpl.php:65
+msgid "Add user to group"
+msgstr "Dodaj użytkownika do grupy"
+
+#: modules/base/infoPackage.inc.php:218
+msgid "Ajax part of computers list"
+msgstr "Część AJAX-owa listy komputerów"
+
+#: modules/base/computers/localSidebar.php:7
+msgid "All computers"
+msgstr "Wszystkie komputery"
+
+#: modules/base/groups/members.php:132
+msgid "All users"
+msgstr "Wszyscy użytkownicy"
+
+#: modules/base/users/edit.php:200
+msgid "Attributes updated."
+msgstr "Uaktualniono właściwości."
+
+#: modules/base/users/editacl.php:130
+msgid "Authorize"
+msgstr "Autoryzuj"
+
+#: modules/base/status/index.php:234
+msgid "Background jobs"
+msgstr "Zadania w tle"
+
+#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "Kopia zapasowa"
+
+#: modules/base/users/backup.php:38
+msgid "Backup a user's folder"
+msgstr "Zarchiwizuj katalog użytkownika"
+
+#: modules/base/users/backup.php:52
+msgid "Backup a user's home directory"
+msgstr "Zarchiwizuj katalog domowy użytkownika"
+
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of <b>%s</b> user's folder has been launched in background."
+msgstr "Rozpoczęto archiwizowanie katalogu użytkownika <b>%s</b> w tle."
+
+#: modules/base/infoPackage.inc.php:135
+msgid "Backup user files"
+msgstr "Archiwizuj pliki użytkownika"
+
+#: includes/xmlrpc.inc.php:183
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Nie można się połączyć z agentem MCC. Proszę sprawdzić czy korzystasz z "
+"właściwego portu TCP oraz z prawidłowego protokołu."
+
+#: includes/xmlrpc.inc.php:150
+msgid "Can't connect to MMC agent"
+msgstr "Nie można połączyć się z agentem MCC"
+
+#: includes/xmlrpc.inc.php:163
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "Nie można wysłać żądania XML-RPC do agenta MCC"
+
+#: includes/PageGenerator.php:104 includes/PageGenerator.php:1900
+#: includes/PageGenerator.php:1966 modules/base/groups/delete.php:52
+#: modules/base/groups/members.php:182 modules/base/users/backup.php:91
+#: modules/base/users/edit.php:438
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: modules/base/infoPackage.inc.php:140
+msgid "Change user password"
+msgstr "Zmień hasło użytkownika"
+
+#: modules/base/users/localSidebar.php:32 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:71
+msgid "Change your password"
+msgstr "Zmień hasło"
+
+#: modules/base/users/passwd.php:48
+msgid "Change your user's password"
+msgstr "Zmień hasło użytkownika"
+
 #: license.php:53
 msgid ""
 "Click here to get more information about our support and maintenance "
@@ -1172,15 +203,1033 @@ msgstr ""
 "Aby uzyskać więcej informacji o naszym programie wsparcia i aktualizacji, "
 "kliknij tutaj."
 
-#: main.php:88
-msgid "Error, you don't have correct rights !"
-msgstr "Błąd, nie masz wystarczających uprawnień!"
+#: graph/navbar.inc.php:47
+msgid "Click to switch to"
+msgstr "Kliknij aby zmienić do"
+
+#: modules/base/groups/ajaxFilter.php:43
+msgid "Comments"
+msgstr "Komentarze"
+
+#: modules/base/users/edit.php:389 modules/base/infoPackage.inc.php:245
+msgid "Common name"
+msgstr "Nazwa"
+
+#: includes/ErrorHandling.php:76
+msgid "Complete Traceback"
+msgstr "Cały ślad"
 
 #: modules/base/computers/trads.php:26
 #, fuzzy
 msgid "Computer Name"
 msgstr "Komputery"
 
+#: modules/base/computers/index.php:29 modules/base/infoPackage.inc.php:200
+msgid "Computer list"
+msgstr "Lista komputerów"
+
+#: modules/base/computers/edit.php:59
+#, fuzzy
+msgid "Computer name"
+msgstr "Komputery"
+
+#: modules/base/computers/edit.php:33
+#, fuzzy
+msgid "Computer successfully added"
+msgstr "Dodano grupę %s"
+
+#: modules/base/infoPackage.inc.php:195
+msgid "Computers"
+msgstr "Komputery"
+
+#: modules/base/includes/computers_list.inc.php:108
+msgid "Computers list"
+msgstr "Lista komputerów"
+
+#: includes/PageGenerator.php:1896 includes/PageGenerator.php:1962
+#: includes/PageGenerator.php:1989 modules/base/groups/edit.php:106
+#: modules/base/groups/members.php:181 modules/base/users/edit.php:437
+#: modules/base/users/editacl.php:220
+msgid "Confirm"
+msgstr "Potwierdź"
+
+#: modules/base/users/edit.php:307
+msgid "Confirm password"
+msgstr "Potwierdź hasło"
+
+#: modules/base/users/passwd.php:66 modules/base/infoPackage.inc.php:249
+msgid "Confirm your password"
+msgstr "Potwierdź hasło"
+
+#: index.php:220
+msgid "Connect"
+msgstr "Połącz"
+
+#: modules/base/logview/ajax_showlog.php:43
+msgid "Connection"
+msgstr "Połączenie"
+
+#: modules/base/groups/edit.php:103
+msgid "Create"
+msgstr "Utwórz"
+
+#: modules/base/users/edit.php:382
+msgid "Create home directory on filesystem"
+msgstr "Utwórz katalog domowy w systemie plików"
+
+#: modules/base/users/passwd.php:62
+msgid "Current password"
+msgstr "Obecne hasło"
+
+#: modules/base/logview/ajax_showlog.php:42
+msgid "Date"
+msgstr "Data"
+
+#: includes/FormGenerator.php:373
+msgid "Day: "
+msgstr "Dzień: "
+
+#: modules/base/infoPackage.inc.php:64
+msgid "Default status page"
+msgstr "Domyślna strona stanu"
+
+#: includes/FormGenerator.php:759 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:83
+#: modules/base/views/editGroups.tpl.php:61
+#: modules/base/views/index.tpl.php:92
+msgid "Delete"
+msgstr "Usuń"
+
+#: modules/base/infoPackage.inc.php:213
+msgid "Delete a computer"
+msgstr "Usuń komputer"
+
+#: modules/base/infoPackage.inc.php:170
+msgid "Delete a group"
+msgstr "Usuń grupę"
+
+#: modules/base/infoPackage.inc.php:130
+msgid "Delete a user"
+msgstr "Usuń użytkownika"
+
+#: modules/base/users/delete.php:39
+msgid "Delete all user's files"
+msgstr "Usuń wszystkie pliki użytkownika"
+
+#: modules/base/includes/computers_list.inc.php:123
+msgid "Delete computer"
+msgstr "Usuń komputer"
+
+#: modules/base/groups/delete.php:40 modules/base/groups/delete.php:51
+msgid "Delete group"
+msgstr "Usuń grupę"
+
+#: includes/FormGenerator.php:165
+msgid "Delete photo"
+msgstr "Usuń zdjęcie"
+
+#: modules/base/computers/delete.php:34
+#, fuzzy
+msgid "Delete this computer"
+msgstr "Usuń komputer"
+
+#: modules/base/users/delete.php:37
+msgid "Delete user"
+msgstr "Usuń użytkownika"
+
+#: modules/base/computers/edit.php:64 modules/base/groups/edit.php:91
+msgid "Description"
+msgstr "Opis"
+
+#: modules/base/users/editacl.php:128
+msgid "Deselect all"
+msgstr "Odznacz wszystkie"
+
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
 msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:33
+#: modules/base/includes/computers_list.inc.php:40
+msgid "Download file"
+msgstr ""
+
+#: modules/base/users/ajaxFilter.php:81 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "Edytuj"
+
+#: modules/base/users/editacl.php:198
+msgid "Edit ACL of user"
+msgstr "Edytuj ACL użytkownika"
+
+#: modules/base/users/editacl.php:190
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr "Edytuj ACL użytkownika %s"
+
+#: modules/base/infoPackage.inc.php:126
+msgid "Edit ACL permissions on a user"
+msgstr "Edytuj pozwolenia ACL użytkownika"
+
+#: modules/base/computers/edit.php:42
+#, fuzzy
+msgid "Edit a computer"
+msgstr "Edytuj komputer"
+
+#: modules/base/infoPackage.inc.php:184
+msgid "Edit a group"
+msgstr "Edytuj grupę"
+
+#: modules/base/infoPackage.inc.php:122
+msgid "Edit a user"
+msgstr "Edytuj użytkownika"
+
+#: modules/base/infoPackage.inc.php:209
+msgid "Edit computer "
+msgstr "Edytuj komputer"
+
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:52
+msgid "Edit group"
+msgstr "Edytuj grupę"
+
+#: modules/base/groups/ajaxFilter.php:46
+msgid "Edit members"
+msgstr "Edytuj członków"
+
+#: modules/base/users/edit.php:266
+msgid "Edit user"
+msgstr "Edytuj użytkownika"
+
+#: modules/base/infoPackage.inc.php:250
+msgid "Enable/Disable user account"
+msgstr "Odbloku / Zablokuj konto użytkownika"
+
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "Błąd podczas procesu autentyfikacji"
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "Błąd podczas przygotowywania Twojego konta"
+
+#: main.php:88
+msgid "Error, you don't have correct rights !"
+msgstr "Błąd, nie masz wystarczających uprawnień!"
+
+#: modules/base/logview/ajax_showlog.php:46
+msgid "Extra informations"
+msgstr "Dodatkowe informacje"
+
+#: modules/base/infoPackage.inc.php:50
+msgid "Favorites page"
+msgstr "Strona ulubionych "
+
+#: modules/base/users/edit.php:343 modules/base/infoPackage.inc.php:243
+msgid "Fax number"
+msgstr "Numer faxu"
+
+#: modules/base/users/edit.php:319
+msgid "First name"
+msgstr "Imię"
+
+#: graph/header.inc.php:209
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr ""
+"Nie można przesłać formularza. Błędne wpisy są podświetlone na czerwono. "
+
+#: modules/base/users/editacl.php:129
+msgid "Function name"
+msgstr "Nazwa funkcji"
+
+#: modules/base/includes/computers_list.inc.php:30
+#: modules/base/includes/computers_list.inc.php:37
+msgid "GLPI Inventory"
+msgstr "Katalog GLPI"
+
+#: modules/base/infoPackage.inc.php:146
+msgid "Get user photo"
+msgstr "Pobierz zdjęcie użytkownika"
+
+#: modules/base/status/index.php:212
+msgid "Global view"
+msgstr "Widok globalny"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:91
+#, php-format
+msgid "Group %s already exist"
+msgstr "Grupa %s już istnieje"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:105
+#, php-format
+msgid "Group %s created"
+msgstr "Utworzono grupę %s"
+
+#: modules/base/groups/delete.php:32
+#, php-format
+msgid "Group %s deleted"
+msgstr "Grupa %s usunięta"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "Dodano grupę %s"
+
+#: modules/base/groups/edit.php:43
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "Zmodyfikowano grupę %s"
+
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:163
+msgid "Group list"
+msgstr "Lista grup"
+
+#: modules/base/groups/members.php:156 modules/base/infoPackage.inc.php:180
+msgid "Group members"
+msgstr "Członkowie grupy"
+
+#: modules/base/groups/members.php:119
+#, php-format
+msgid "Group members %s"
+msgstr "Członkowie grupy %s"
+
+#: modules/base/groups/edit.php:88
+msgid "Group name"
+msgstr "Nazwa grupy"
+
+#: modules/base/groups/members.php:105
+#, fuzzy
+msgid "Group successfully modified"
+msgstr "Zmodyfikowano grupę %s"
+
+#: modules/base/groups/ajaxFilter.php:41
+#: modules/base/views/editGroups.tpl.php:52
+#: modules/base/views/norightGroups.tpl.php:28
+#: modules/base/views/roGroups.tpl.php:37 modules/base/infoPackage.inc.php:157
+msgid "Groups"
+msgstr "Grupy"
+
+#: modules/base/groups/ajaxFilter.php:49
+msgid "Groups management"
+msgstr "Zarządzanie grupą"
+
+#: modules/base/status/index.php:226
+msgid "Hard drive partitions"
+msgstr "Partycje dysku twardego"
+
+#: graph/navbar.inc.php:63 main_content.php:167
+msgid "Home"
+msgstr "Katalog domowy"
+
+#: modules/base/users/edit.php:378 modules/base/views/index.tpl.php:87
+msgid "Home directory"
+msgstr "Katalog domowy"
+
+#: modules/base/infoPackage.inc.php:44
+msgid "Home page"
+msgstr "Strona dmowa"
+
+#: modules/base/users/edit.php:347 modules/base/infoPackage.inc.php:244
+msgid "Home phone number"
+msgstr "Domowy numer telefonu"
+
+#: includes/FormGenerator.php:374
+msgid "Hour: "
+msgstr "Godzina: "
+
+#: graph/navbar.inc.php:117
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr ""
+"Jeżeli ten tekst nie ulegnie zmianie, to znaczy, że Twoja przeglądarka nie "
+"jest obsługiwana przez aplikację MCC"
+
+#: modules/base/users/passwd.php:77
+msgid "Invalid current password. Please retry."
+msgstr "Nieprawidłowe hasło. Proszę spróbować ponownie."
+
+#: modules/base/includes/users-xmlrpc.inc.php:46
+msgid "Invalid login"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:29
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Inventory"
+msgstr "Katalog"
+
+#: modules/base/infoPackage.inc.php:78
+msgid "LDAP log"
+msgstr "Log LDAP"
+
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "Plik logów LDAP nie istnieje."
+
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr "Widok logów operacji LDAP"
+
+#: index.php:188
+msgid "Language"
+msgstr "Język"
+
+#: modules/base/users/backup.php:90
+msgid "Launch backup"
+msgstr "Rozpocznij archiwizowanie"
+
+#: modules/base/groups/localSidebar.php:28
+#: modules/base/users/localSidebar.php:28
+msgid "List"
+msgstr "Lista"
+
+#: modules/base/computers/edit.php:83
+#, fuzzy
+msgid "Location"
+msgstr "Połączenie"
+
+#: modules/base/infoPackage.inc.php:73
+msgid "Log view"
+msgstr "Widok logów"
+
+#: modules/base/users/ajaxFilter.php:66 modules/base/users/edit.php:299
+#: modules/base/views/index.tpl.php:78 index.php:153
+msgid "Login"
+msgstr "Logowanie"
+
+#: index.php:83
+msgid "Login failed"
+msgstr "Logowanie nieudane"
+
+#: modules/base/users/edit.php:386 modules/base/infoPackage.inc.php:237
+msgid "Login shell"
+msgstr "Powłoka logowania"
+
+#: graph/navbar.inc.php:50 logout/index.php:49 logout/index.php:54
+msgid "Logout"
+msgstr "Wyloguj"
+
+#: includes/commonErrorHandling.php:43
+msgid "MMC Agent can't contact your LDAP server"
+msgstr "Agent MCC nie może się połączyć z Twoim serwerem LDAP"
+
+#: includes/xmlrpc.inc.php:182 includes/xmlrpc.inc.php:201
+msgid "MMC agent communication problem"
+msgstr "Problem z komunikacją agenta MCC"
+
+#: includes/xmlrpc.inc.php:151
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr "Wydaje się, że agent MCC nie działa lub jest źle skonfigurowany."
+
+#: includes/xmlrpc.inc.php:164
+msgid "MMC agent seems to be not correctly configured."
+msgstr "Wydaje się, że agent MCC nie jest prawidłowo skonfigurowany."
+
+#: modules/base/users/ajaxFilter.php:82 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "Uprawnienia MCC"
+
+#: modules/base/users/ajaxFilter.php:78
+msgid "Mail"
+msgstr "Poczta"
+
+#: modules/base/users/edit.php:326 modules/base/infoPackage.inc.php:240
+msgid "Mail address"
+msgstr "Adres pocztowy"
+
+#: modules/base/users/backup.php:83
+msgid "Media size"
+msgstr "Rozmiar nośnika"
+
+#: modules/base/status/index.php:127
+msgid "Memory"
+msgstr "Pamięć"
+
+#: includes/FormGenerator.php:374
+msgid "Min.: "
+msgstr "Minuta: "
+
+#: modules/base/users/edit.php:339
+msgid "Mobile number"
+msgstr "Numer komórkowy"
+
+#: modules/base/infoPackage.inc.php:242
+msgid "Mobile phone number"
+msgstr "Numer telefonu komórkowego"
+
+#: includes/FormGenerator.php:373
+msgid "Month: "
+msgstr "Miesiąc: "
+
+#: modules/base/users/ajaxFilter.php:77 modules/base/users/edit.php:316
+#: modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "Nazwa"
+
+#: modules/base/users/passwd.php:64
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: includes/PageGenerator.php:728 includes/PageGenerator.php:734
+#: includes/PageGenerator.php:787 includes/PageGenerator.php:791
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+msgid "Next"
+msgstr "Dalej"
+
+#: includes/bgps_view.php:64
+msgid "No job."
+msgstr "Brak zadań"
+
+#: includes/PageGenerator.php:1574
+msgid "Ok"
+msgstr "Ok"
+
+#: modules/base/logview/ajax_showlog.php:44
+msgid "Operation"
+msgstr "Operacja"
+
+#: modules/base/users/edit.php:303 modules/base/infoPackage.inc.php:248
+#: index.php:161
+msgid "Password"
+msgstr "Hasło "
+
+#: modules/base/users/edit.php:110
+msgid "Password is empty."
+msgstr "Hasło jest puste."
+
+#: modules/base/users/edit.php:211
+msgid "Password updated."
+msgstr "Uaktualniono hasło."
+
+#: modules/base/users/passwd.php:79
+msgid "Passwords are mismatching. Please retry."
+msgstr "Hasła się nie zgadzają. Proszę spróbować ponownie."
+
+#: modules/base/users/edit.php:312
+msgid "Photo"
+msgstr "Zdjęcie"
+
+#: modules/base/includes/errorHandling.php:29
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+"Proszę upewnij się, czy masz:                          <p>Tą linię w "
+"katalogu /etc/ldap/slapd.conf lub /etc/openldap/spald.conf:\n"
+"                          <pre>poiom logowania            256</pre></p>\n"
+"                          <p>oraz tą linię w /etc/syslog.conf:\n"
+"                          <pre>local4.*          /var/log/ldap.log</pre>\n"
+"                          </p>\n"
+"                          "
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "Proszę skontaktować się ze swoim administratorem"
+
+#: modules/base/users/backup.php:58
+msgid "Please go to the status page to check the backup status."
+msgstr ""
+"Proszę udać się do strony statusu aby zapoznać się ze stanem archiwizacji."
+
+#: modules/base/users/backup.php:79
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Proszę określić rozmiar nośnika. Jeżeli pojemność danych przekroczy dostępny "
+"rozmiar, zostanie utworzonych kilka plików o odpowiednim rozmiarze."
+
+#: modules/base/users/edit.php:394 modules/base/infoPackage.inc.php:246
+msgid "Preferred name to be used"
+msgstr "Preferowana nazwa"
+
+#: includes/PageGenerator.php:717 includes/PageGenerator.php:724
+#: includes/PageGenerator.php:779 includes/PageGenerator.php:783
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: modules/base/views/editGroups.tpl.php:38
+#: modules/base/views/roGroups.tpl.php:32
+msgid "Primary group"
+msgstr "Grupa podstawowa"
+
+#: modules/base/includes/computers_list.inc.php:31
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Read log"
+msgstr "Czytaj log"
+
+#: modules/base/includes/computers_list.inc.php:126
+msgid "Remove machine from group"
+msgstr "Usuń komputer z grupy"
+
+#: modules/base/users/passwd.php:72
+msgid "Return"
+msgstr "Powrót"
+
+#: includes/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "Użytkownik root nie może mieć ulubionych"
+
+#: includes/FormGenerator.php:374
+msgid "Sec.: "
+msgstr "Sek.:"
+
+#: modules/base/users/editacl.php:127
+msgid "Select all"
+msgstr "Zaznacz wszystkie"
+
+#: index.php:165
+msgid "Server"
+msgstr "Serwer"
+
+#: modules/base/status/index.php:219
+msgid "Server status"
+msgstr "Status serwera"
+
+#: includes/ErrorHandling.php:75
+msgid "Show complete trackback"
+msgstr "Pokaż cały ślad"
+
+#: modules/base/includes/computers_list.inc.php:32
+#: modules/base/includes/computers_list.inc.php:39
+msgid "Software deployment"
+msgstr "Wdrożenie oprogramowania"
+
+#: includes/commonErrorHandling.php:44
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify you LDAP server is up</li>\n"
+"                        </ul>"
+msgstr ""
+"Rozwiąż problem poprzez:\n"
+"                          <ul>\n"
+"                              <li>Sprawdź czy Twój serwer LDAP jest "
+"prawidłowo skonfigurowany w /etc/mmc/plugins/base/ini <li>\n"
+"                              <li>Sprawdź czy Twój serwer LDAP działą</li>\n"
+"                           </ul>"
+
+#: includes/commonErrorHandling.php:31
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
+msgstr ""
+"Rozwiąż problem poprzez:\n"
+"                     <ul>\n"
+"                          <li>zmień nazwę tego wpisu</li>\n"
+"                          <li>usuń ten wpis zanim go odtworzysz</li>\n"
+"                    </ul>"
+
+#: modules/base/groups/members.php:116
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Nie można usunąć niektórych użytkowników z tej grupy ponieważ jest to ich "
+"podstawowa grupa."
+
+#: modules/base/infoPackage.inc.php:59
+msgid "Status"
+msgstr "Stan"
+
+#: modules/base/status/index.php:129
+msgid "Swap"
+msgstr "Swap"
+
+#: modules/base/users/ajaxFilter.php:79
+msgid "Telephone"
+msgstr "Telefon"
+
+#: modules/base/users/edit.php:335
+msgid "Telephone Number"
+msgstr "Numer telefonu"
+
+#: modules/base/users/edit.php:333 modules/base/infoPackage.inc.php:241
+msgid "Telephone number"
+msgstr "Numer telefonu"
+
+#: includes/xmlrpc.inc.php:202
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr "Agent MCC nie przydzielił nam numeru sesji. Sprawdź wersję agenta MCC>"
+
+#: modules/base/computers/delete.php:30
+msgid "The computer has been deleted."
+msgstr ""
+
+#: modules/base/users/edit.php:80
+msgid "The confirmation password does not match the new password."
+msgstr "Potwierdzenie hasła nie zgadza się z nowym hasłem."
+
+#: modules/base/users/backup.php:56
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
+msgstr "Po zakończeniu, zarchiwizowane pliki zostaną zapisane do katalogu %s."
+
+#: modules/base/users/edit.php:98
+#, php-format
+msgid "The group %s does not exist, and so can't be set as primary group."
+msgstr "Grupa %s nie istnieje, nie można jej ustawić jako grupę podstawową."
+
+#: modules/base/groups/edit.php:71
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Nazwa grupy może zawierać tylko litery i cyfry i musi zaczynać się od litery."
+
+#: modules/base/users/edit.php:195 modules/base/users/edit.php:196
+msgid "The photo is not a JPG file."
+msgstr "Zdjęcie nie jest plikiem JPG."
+
+#: modules/base/users/edit.php:194
+#, php-format
+msgid "The photo is too big. The max size is %s x %s."
+msgstr "Zdjęcie jest zbyt duże. Maksymalny rozmiar to %s na %s."
+
+#: modules/base/users/edit.php:94
+msgid "The primary group field can't be empty."
+msgstr "Pole grupa podstawowa nie może być puste."
+
+#: index.php:55
+#, fuzzy, php-format
+msgid "The server %s does not exist"
+msgstr "Ta grupa nie istnieje"
+
+#: includes/xmlrpc.inc.php:283
+#, fuzzy
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Nieznany wyjątek. Proszę skontaktować się z nami w celu uzyskania informacji "
+"o radzeniu sobie z takimi błędami."
+
+#: modules/base/users/edit.php:395
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr ""
+"To pole jest wykorzystywane przez SAMBĘ (i innych klientów LDAP) do "
+"wyświetlania nazwy użytkownika."
+
+#: modules/base/users/edit.php:390
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"Niektórzy klienci LDAP (np. książka adresowa Thunderbirda) wykorzystują to "
+"pole do wyświetlania wpisów użytkownika."
+
+#: modules/base/views/editGroups.tpl.php:110
+msgid "This group doesn't exist"
+msgstr "Ta grupa nie istnieje"
+
+#: modules/base/groups/delete.php:46
+msgid "This group will be deleted even though it is not empty"
+msgstr "Ta grupa zostanie usunięta, mimo tego, że nie jest pusta"
+
+#: includes/commonErrorHandling.php:30
+msgid "This item already exists in your LDAP directory"
+msgstr "Ten wpis już istnieje w Twoim katalogu LDAP"
+
+#: includes/commonErrorHandling.php:64
+msgid "This items seems to not be in the index"
+msgstr "Wydaje się, że tego obiektu nie ma w indeksie"
+
+#: modules/base/users/backup.php:60
+msgid "This operation will last according to the amount of data to backup."
+msgstr ""
+"Czas trwania operacji będzie zależał od ilości danych do zarchiwizowania."
+
+#: includes/commonErrorHandling.php:65
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"Ten problem może wystąpić jeżeli:                            <ul>\n"
+"                              <li>Ten obiekt nie istnieje</li>\n"
+"                              <li>Błędnie go wpisałeś.</li>\n"
+"                          </ul>"
+
+#: modules/base/users/edit.php:122
+msgid "This user already exists."
+msgstr "Taki użytkownik już istnieje."
+
+#: modules/base/users/edit.php:322
+msgid "Title"
+msgstr "Tytuł"
+
+#: modules/base/status/index.php:110
+msgid "Uptime: "
+msgstr "Uptime: "
+
+#: modules/base/users/edit.php:242
+#, php-format
+msgid "User %s has been successfully created."
+msgstr "Utworzono użytkownika %s."
+
+#: modules/base/users/delete.php:33
+#, php-format
+msgid "User %s has been successfully deleted"
+msgstr "Usunięto użytkownika %s"
+
+#: modules/base/users/editacl.php:56
+msgid "User ACLs successfully modified."
+msgstr "ALC użytkowników zmodyfikowane prawidłowo."
+
+#: modules/base/infoPackage.inc.php:34
+msgid "User and group"
+msgstr "Użytkownik i grupa"
+
+#: modules/base/users/edit.php:130 modules/base/users/edit.php:146
+msgid "User disabled."
+msgstr "Zablokowano użytkownika."
+
+#: modules/base/users/edit.php:127 modules/base/users/edit.php:150
+msgid "User enabled."
+msgstr "Uaktywniono użytkownika."
+
+#: modules/base/infoPackage.inc.php:235
+msgid "User firstname"
+msgstr "Imię użytkownika"
+
+#: modules/base/infoPackage.inc.php:234
+msgid "User groups"
+msgstr "Grupy użytkowników"
+
+#: modules/base/infoPackage.inc.php:236
+msgid "User home directory"
+msgstr "Katalog domowy użytkownika"
+
+#: modules/base/users/edit.php:365
+msgid "User is disabled, if checked"
+msgstr "Użytkownik jest zablokowany"
+
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:106
+msgid "User list"
+msgstr "Lista użytkowników"
+
+#: modules/base/infoPackage.inc.php:232
+msgid "User login"
+msgstr "Login użytkownika"
+
+#: modules/base/infoPackage.inc.php:233
+msgid "User name"
+msgstr "Nazwa użytkownika"
+
+#: modules/base/infoPackage.inc.php:231
+msgid "User photo"
+msgstr "Zdjęcie użytkownika"
+
+#: modules/base/infoPackage.inc.php:239
+msgid "User title"
+msgstr "Tytuł użytkownika"
+
+#: modules/base/users/edit.php:85
+msgid "User's name invalid !"
+msgstr "Nieważna nazwa użytkownika!"
+
+#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:101
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: modules/base/includes/computers_list.inc.php:34
+#: modules/base/includes/computers_list.inc.php:41
+msgid "VNC Client"
+msgstr ""
+
+#: includes/commonErrorHandling.php:78
+msgid ""
+"Verify that your smbpasswd is correctly configured:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly "
+"configured</li>\n"
+"                        </ul>"
+msgstr ""
+"Upewnij się, że masz prawidłowo skonfigurowane smbpasswd:\n"
+"                        <ul>\n"
+"                             <li> Twój serwer LDAP może nie działąć</li>\n"
+"                             <li> Twój serwer SAMBY nie jest prawidłowo "
+"skonfigurowany<li>n                         </ul>"
+
+#: modules/base/users/editacl.php:156
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr "Uwaga, nie znaleziono pliku desc w infoPackage.inc.php:"
+
+#: includes/FormGenerator.php:373
+msgid "Year: "
+msgstr "Rok: "
+
+#: modules/base/users/passwd.php:58
+msgid "You are going to change your password"
+msgstr "Zmienisz swoje hasło"
+
+#: includes/acl.inc.php:112
+msgid "You do not have required rights"
+msgstr "Nie masz odpowiednich uprawnień"
+
+#: index.php:89
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+
+#: modules/base/groups/delete.php:43
+msgid "You will delete group"
+msgstr "Usuniesz grupę"
+
+#: modules/base/users/delete.php:38
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "Usuniesz użytkownika <b>%s</b>."
+
+#: modules/base/users/passwd.php:43
+msgid "Your password has been changed."
+msgstr "Twoje hasło zostało zmienione"
+
+#: logout/index.php:51
+msgid "Your session will be closed"
+msgstr "Twoja sesja zostanie zakończona"
+
+#: includes/i18n.inc.php:56
+msgid "brazilian"
+msgstr "brazylijski"
+
+#: includes/i18n.inc.php:50
+msgid "danish"
+msgstr "duński"
+
+#: modules/base/status/index.php:114
+msgid "day"
+msgstr "dzień"
+
+#: modules/base/users/editacl.php:74
+msgid "description"
+msgstr "opis"
+
+#: includes/i18n.inc.php:49
+msgid "english"
+msgstr "angielski"
+
+#: graph/navbar.inc.php:42
+msgid "expert mode"
+msgstr "trybu zaawansowanego"
+
+#: includes/i18n.inc.php:52
+msgid "french"
+msgstr "francuski"
+
+#: includes/i18n.inc.php:51
+msgid "german"
+msgstr "niemiecki"
+
+#: modules/base/users/editacl.php:73
+msgid "hide"
+msgstr "ukryj"
+
+#: modules/base/status/index.php:119
+msgid "hour"
+msgstr "godznia"
+
+#: graph/navbar.inc.php:48
+msgid "logout"
+msgstr "wyloguj"
+
+#: modules/base/status/index.php:122
+msgid "minute"
+msgstr "minuta"
+
+#: includes/FormGenerator.php:200
+msgid "no"
+msgstr "nie"
+
+#: includes/i18n.inc.php:54
+msgid "norwegian"
+msgstr "norweski"
+
+#: includes/FormGenerator.php:445 includes/FormGenerator.php:449
+msgid "or <a href='#'"
+msgstr "lub <a href='#'"
+
+#: includes/PageGenerator.php:461 includes/PageGenerator.php:657
+msgid "page"
+msgstr "strona"
+
+#: includes/i18n.inc.php:55
+msgid "polish"
+msgstr "polski"
+
+#: modules/base/users/editacl.php:75
+msgid "read only"
+msgstr "tylko do odczytu"
+
+#: modules/base/users/editacl.php:76
+msgid "read/write"
+msgstr "odczyt / zapis"
+
+#: includes/i18n.inc.php:57
+msgid "russian"
+msgstr "rosyjski"
+
+#: includes/commonErrorHandling.php:77
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd nie dało rady zmienić Twojego hasła"
+
+#: includes/i18n.inc.php:53
+msgid "spanish"
+msgstr "hiszpański"
+
+#: graph/navbar.inc.php:40
+msgid "standard mode"
+msgstr "trybu standardowego"
+
+#: includes/PageGenerator.php:457 includes/PageGenerator.php:653
+msgid "to"
+msgstr "do"
+
+#: includes/FormGenerator.php:209 includes/FormGenerator.php:537
+#: includes/FormGenerator.php:585 modules/base/views/norightGroups.tpl.php:31
+msgid "unavailable"
+msgstr "niedostępne"
+
+#: includes/xmlrpc.inc.php:282
+msgid "unknown error"
+msgstr "nieznany błąd"
+
+#: modules/base/includes/users-xmlrpc.inc.php:91
+#, php-format
+msgid "user %s created<br />"
+msgstr "utworzono użytkownika %s<br /> "
+
+#: includes/FormGenerator.php:451
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"never\";'>nigdy</a>"
+
+#: includes/FormGenerator.php:447
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"now\";'>teraz</a>"
+
+#: includes/FormGenerator.php:197
+msgid "yes"
+msgstr "tak"
