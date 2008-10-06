@@ -795,6 +795,36 @@ class Glpi(DyngroupDatabaseHelper):
 
         return ret
 
+    def getLocationsCount(self):
+        """
+        Returns the total count of locations
+        """
+        session = create_session()
+        ret = session.query(Location).count()
+        session.close()
+        return ret
+
+    def getUsersInSameLocations(self, userid, locations = None):
+        """
+        Returns all users name that share the same locations with the given
+        user
+        """
+        if locations == None:
+            locations = self.getUserLocations(userid)
+        ret = []
+        if locations:
+            inloc = []
+            for location in locations:
+                inloc.append(location.name)
+            session = create_session()
+            q = session.query(User).select_from(self.user.join(self.userprofile).join(self.location)).filter(self.location.c.name.in_(*inloc)).filter(self.user.c.name != userid).distinct().all()
+            session.close()
+            # Only returns the user names
+            ret = map(lambda u: u.name, q)
+        # Always append the given userid
+        ret.append(userid)
+        return ret
+
     def getComputerInLocation(self, location = None):
         """
         Get all computers in that location

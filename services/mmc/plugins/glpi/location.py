@@ -23,4 +23,8 @@ class GlpiLocation(ComputerLocationI):
     def displayLocalisationBar(self):
         return self.config.displayLocalisationBar
 
+    def getLocationsCount(self):
+        return Glpi().getLocationsCount()
 
+    def getUsersInSameLocations(self, userid):
+        return Glpi().getUsersInSameLocations(userid)
