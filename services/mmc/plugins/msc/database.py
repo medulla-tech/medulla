@@ -683,8 +683,8 @@ class MscDatabase(Singleton):
 
     def countAllCommandsonhostByCurrentstate(self, ctx, current_state, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
-        ret = ret.filter(self.commands_on_host.c.current_state == current_state).filter(self.commands.c.creator == ctx.userid)
+        ret = self.__queryAllCommandsonhostBy(session, ctx)
+        ret = ret.filter(self.commands_on_host.c.current_state == current_state)
         # the join in itself is useless here, but we want to have exactly
         # the same result as in getAllCommandsonhostByCurrentstate
         if filt != '':
@@ -695,9 +695,8 @@ class MscDatabase(Singleton):
 
     def getAllCommandsonhostByCurrentstate(self, ctx, current_state, min = 0, max = 10, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+        ret = self.__queryAllCommandsonhostBy(session, ctx)
         ret = ret.filter(self.commands_on_host.c.current_state == current_state)
-        ret = ret.filter(self.commands.c.creator == ctx.userid)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         ret = ret.offset(int(min))
@@ -707,9 +706,20 @@ class MscDatabase(Singleton):
         session.close()
         return l
 
+    def __queryAllCommandsonhostBy(self, session, ctx):
+        """
+        Built a part of the query for the *AllCommandsonhost* methods
+        """
+        q = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+        if ctx.locationsCount not in [None, 0, 1]:
+            # We have multiple locations (entities) in database, so we filter
+            # the results using the current userid
+            q = q.filter(self.commands.c.creator == ctx.userid)
+        return q
+
     def countAllCommandsonhostByType(self, ctx, type, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.creator == ctx.userid)
+        ret = self.__queryAllCommandsonhostBy(session, ctx)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         if int(type) == 0: # all
@@ -726,7 +736,7 @@ class MscDatabase(Singleton):
 
     def getAllCommandsonhostByType(self, ctx, type, min, max, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.creator == ctx.userid)
+        ret = self.__queryAllCommandsonhostBy(session, ctx)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         if int(type) == 0: # all

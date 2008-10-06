@@ -36,6 +36,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.pulse2.group import ComputerGroupManager
+from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.qaction import qa_list_files
@@ -85,6 +86,9 @@ class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
+        s.locationsCount = ComputerLocationManager().getLocationsCount()
+        s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
+        s.filterType = "mine"
         return s
 
 ##
@@ -346,6 +350,14 @@ class RpcProxy(RpcProxyI):
     def get_command_on_host_in_commands(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnHostInCommands(ctx, cmd_id))
+
+    def set_commands_filter(self, filterType):
+        ctx = self.currentContext
+        ctx.filterType = filterType
+
+    def get_commands_filter(self, filterType):
+        ctx = self.currentContext
+        return ctx.filterType
 
     #
     # default WEB values handling
