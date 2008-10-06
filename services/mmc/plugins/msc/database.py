@@ -521,7 +521,7 @@ class MscDatabase(Singleton):
 
         def cbPushModeCreateTargets(schedulers):
             return cbCreateTargets(None, None, schedulers, push_pull = False)
-        
+
         def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
             for i in range(len(targets)):
                 if push_pull:
@@ -655,7 +655,7 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
         trans.commit()
-        
+
     def getCommandsonhostsAndSchedulers(self, c_id):
         """
         For a given command id, returns a dict with:
@@ -890,37 +890,59 @@ class MscDatabase(Singleton):
             params['order_by'] = getattr(self.commands_on_host.c, 'id')
 
         size = 0
-        if params['gid'] and params['cmd_id']:
-            # In this case, we want to get the commands on a group.
-            # Using min/max, we get a range of commands, but we always want
-            # the total count of commands.
-            ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
-            size = self.__displayLogsQuery2(ctx, params, session).count()
-            session.close()
-            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        elif params['b_id'] == None and params['cmd_id'] == None:
-            ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
-            cmds = map(lambda c: (c.id, c.bundle_id), ret)
-            size = []
-            size.extend(cmds)
 
-            ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
-            size = len(self.__displayLogsQueryGetIds(size))
+        if params['cmd_id'] or params['b_id']:  # we want informations about one command / one bundle
+            if params['gid'] or params['uuid']: # we want informations about one command / one bundle on one group / one computer
+                # Using min/max, we get a range of commands, but we always want
+                # the total count of commands.
+                ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
+                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+            else:                               # we want informations about one command / one bundle (do not care the target)
+                ret = self.__displayLogsQuery2(ctx, params, session).all()
+                # FIXME: using distinct, size will always return 1 ...
+                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+        else:                                   # we want informations about all commands / bundles
+            if params['gid'] or params['uuid']: # we want informations about all commands on one group / one computer
+                ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
+                cmds = map(lambda c: (c.id, c.bundle_id), ret)
 
-            query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
-            query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
-            query = query.filter(self.commands.c.id.in_(*ids)).order_by(desc(params['order_by']))
-            ret = query.group_by(self.commands.c.id).all()
-            session.close()
-            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
-        else:
-            ret = self.__displayLogsQuery2(ctx, params, session).all()
-            # FIXME: using distinct, size will always return 1 ...
-            size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
-            session.close()
-            return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+                size = []
+                size.extend(cmds)
+                size = len(self.__displayLogsQueryGetIds(size))
 
-        return 0, []
+                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
+
+                query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+                query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+                query = query.filter(self.commands.c.id.in_(*ids))
+                query = query.order_by(desc(params['order_by']))
+                ret = query.group_by(self.commands.c.id).all()
+
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+            else:                               # we want informations about all commands / bundles (do not care the target)
+                ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
+                cmds = map(lambda c: (c.id, c.bundle_id), ret)
+
+                size = []
+                size.extend(cmds)
+                size = len(self.__displayLogsQueryGetIds(size))
+
+                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
+
+                query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
+                query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+                query = query.filter(self.commands.c.id.in_(*ids))
+                query = query.order_by(desc(params['order_by']))
+                ret = query.group_by(self.commands.c.id).all()
+
+                session.close()
+                return size, map(lambda x: (x[0].toH(), x[1], x[2]), ret)
+
     ###################
 
     def getCommandsOnHost(self, ctx, coh_id): # FIXME should we use the ctx
