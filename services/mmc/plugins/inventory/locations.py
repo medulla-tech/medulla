@@ -44,6 +44,13 @@ class InventoryLocation(ComputerLocationI):
     def displayLocalisationBar(self):
         return self.config.displayLocalisationBar
 
+    def getLocationsCount(self):
+        return Inventory().getLocationsCount()
+
+    def getUsersInSameLocations(self, userid):
+        return Inventory().getUsersInSameLocations(userid)
+
+
 def convertLocations(hloc):
     return {
         'name':hloc['Label'],

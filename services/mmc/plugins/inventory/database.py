@@ -942,6 +942,17 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return m
 
+    def getLocationsCount(self):
+        session = create_session()
+        count = session.query(self.klass['Entity']).count()
+        session.close()
+        return count
+
+    def getUsersInSameLocations(self, userid):
+        # TODO
+        return [userid]
+
+
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
 
