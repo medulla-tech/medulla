@@ -36,7 +36,7 @@
     </revhistory>
 
     <abstract>
-      <para>Documentation for Pulse2 MSC schema v.6</para>
+      <para>Documentation for Pulse2 MSC schema v.12</para>
     </abstract>
   </articleinfo>
 
@@ -69,11 +69,20 @@
       </varlistentry>
 
       <varlistentry>
-        <term>date_created</term>
+        <term>creation_date</term>
 
         <listitem>
           <para>The command date creation</para>
         </listitem>
+      </varlistentry>
+
+      <varlistentry>
+       <term>start_file</term>
+
+	<listitem>
+	 <para>The command to launch to start installation of the
+	 package</para>
+	</listitem>
       </varlistentry>
 
       <varlistentry>
@@ -94,12 +103,20 @@
       </varlistentry>
 
       <varlistentry>
-        <term>delete_file_after_execute_successful</term>
+        <term>clean_on_succes</term>
 
         <listitem>
           <para>Do we erase copied files after a successful run, mainly used
           for packages debug purpose</para>
         </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>files</term>
+
+	<listitem>
+	  <para>The list of files for the package, with MD5 control sums</para>
+	</listitem>
       </varlistentry>
 
       <varlistentry>
@@ -119,7 +136,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>username</term>
+        <term>connect_as</term>
 
         <listitem>
           <para>Login name used to connect our client</para>
@@ -127,10 +144,10 @@
       </varlistentry>
 
       <varlistentry>
-        <term>webmin_username</term>
+        <term>creator</term>
 
         <listitem>
-          <para>Hold the command initiator name</para>
+          <para>Holds the command initiator name</para>
         </listitem>
       </varlistentry>
 
@@ -152,7 +169,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>start_inventory</term>
+        <term>do_inventory</term>
 
         <listitem>
           <para>Whenever start inventory command on client</para>
@@ -160,10 +177,18 @@
       </varlistentry>
 
       <varlistentry>
-        <term>wake_on_lan</term>
+        <term>do_wol</term>
 
         <listitem>
           <para>Whenever perform a WOL on client</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>next_connection_delay</term>
+
+        <listitem>
+          <para>Interval between two connections attempts</para>
         </listitem>
       </varlistentry>
 
@@ -177,20 +202,51 @@
       </varlistentry>
 
       <varlistentry>
-        <term>repeat</term>
+	<term>pre_command_hook</term>
 
-        <listitem>
-          <para>Interval between two connections attempts</para>
-        </listitem>
+	<listitem>
+	  <para>?</para>
+	</listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>scheduler</term>
+	<term>post_command_hook</term>
 
-        <listitem>
-          <para>a command will be realized by a particular scheduler, this
-          field hold its name</para>
-        </listitem>
+	<listitem>
+	  <para>?</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>pre_run_hook</term>
+
+	<listitem>
+	  <para>?</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>post_run_hook</term>
+
+	<listitem>
+	  <para>?</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>on_success_hook</term>
+
+	<listitem>
+	  <para>?</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>on_failure_hook</term>
+
+	<listitem>
+	  <para>?</para>
+	</listitem>
       </varlistentry>
 
       <varlistentry>
@@ -201,6 +257,31 @@
           this BW rate (b/s), default is 0</para>
         </listitem>
       </varlistentry>
+
+      <varlistentry>
+	<term>deployment_intervals</term>
+
+	<listitem>
+	  <para>The interval of time between two deployment attempts</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>bundle_id</term>
+
+	<listitem>
+	  <para>The Bundle ID the command belongs to</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>order_in_bundle</term>
+
+	<listitem>
+	  <para>The command's order inside its bundle</para>
+	</listitem>
+      </varlistentry>
+
     </variablelist>
   </section>
 
@@ -210,7 +291,7 @@
     <para>This table contains the running status of a command for a particular
     host.</para>
 
-    <para>It is linked to the "commands" table using id_command as
+    <para>It is linked to the "commands" table using fk_commands as
     constraint.</para>
 
     <variablelist>
@@ -228,6 +309,14 @@
         <listitem>
           <para>A FK to the commands table</para>
         </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>host</term>
+
+	<listitem>
+	  <para>The target host to run the command on.</para>
+	</listitem>
       </varlistentry>
 
       <varlistentry>
@@ -288,15 +377,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>current_pid</term>
-
-        <listitem>
-          <para>The command pid from the launcher point-of-view</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>number_attempt_connection_remains</term>
+        <term>attempts_left</term>
 
         <listitem>
           <para>The amount of tries left</para>
@@ -318,6 +399,23 @@
           <para>The in-charge launcher</para>
         </listitem>
       </varlistentry>
+
+      <varlistentry>
+	<term>fk_target</term>
+
+	<listitem>
+	  <para>A foreign key to the "target" table</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>scheduler</term>
+
+	<listitem>
+	  <para>The scheduler in charge of this command</para>
+	</listitem>
+      </varlistentry>
+
     </variablelist>
   </section>
 
@@ -325,10 +423,10 @@
     <title>The "commands_history" table</title>
 
     <para>This table contains the stdout/stderr of each stage of a command for
-    a partiucular host.</para>
+    a particular host.</para>
 
     <para>It is linked to the "commands_on_host" table using
-    id_command_on_host as constraint.</para>
+    fk_commands_on_host as constraint.</para>
 
     <variablelist>
       <varlistentry>
@@ -386,32 +484,12 @@
 
     <para>This table contains directions to deploy a package.</para>
 
-    <para>It is linked to the "commands_on_host" table using
-    id_command_on_host as constraint and "commands" table using id_command as
-    constraint.</para>
-
     <variablelist>
       <varlistentry>
         <term>id</term>
 
         <listitem>
           <para>The table primary key</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>fk_commands_on_host</term>
-
-        <listitem>
-          <para>A FK to the commands_on_host table</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>fk_commands</term>
-
-        <listitem>
-          <para>A FK to the commands table</para>
         </listitem>
       </varlistentry>
 
@@ -424,7 +502,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>mirror</term>
+        <term>mirrors</term>
 
         <listitem>
           <para>the packages location. This field must be formatted as
@@ -511,7 +589,7 @@
         <term>scheduler</term>
 
         <listitem>
-          <para>???</para>
+          <para>The scheduler for this target</para>
         </listitem>
       </varlistentry>
 
@@ -540,9 +618,43 @@
           perform WOL</para>
         </listitem>
       </varlistentry>
+
+      <varlistentry>
+        <term>target_bcast</term>
+
+        <listitem>
+          <para>The target's broadcast IP, if relevant</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>target_network</term>
+
+        <listitem>
+          <para>The target's netmask, if relevant</para>
+        </listitem>
+      </varlistentry>
     </variablelist>
   </section>
 
+  <section>
+    <title>The "bundle" table</title>
+
+    <para>This table holds Bundle (sets of commands) IDs.</para>
+
+    <variablelist>
+
+      <varlistentry>
+	<term>id</term>
+
+	<listitem>
+	  <para>The table's primary key.</para>
+	</listitem>
+      </varlistentry>
+
+    </variablelist>
+
+  </section>
   <section>
     <title>The "version" table</title>
 
