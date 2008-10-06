@@ -1,16 +1,16 @@
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-06 17:55+0200\n"
-"PO-Revision-Date: 2008-08-29 18:21+0200\n"
+"PO-Revision-Date: 2008-10-06 18:25+0200\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.10\n"
-"Plural-Forms:  nplurals=2; plural=(n > 1);\n"
+"Plural-Forms:  nplurals=2; plural=(n > 1);"
 
 #: includes/PageGenerator.php:458 includes/PageGenerator.php:654
 #, php-format
@@ -319,9 +319,8 @@ msgid "Delete photo"
 msgstr "Supprimer photo"
 
 #: modules/base/computers/delete.php:34
-#, fuzzy
 msgid "Delete this computer"
-msgstr "Supprimer un ordinateur"
+msgstr "Supprimer cet ordinateur"
 
 #: modules/base/users/delete.php:37
 msgid "Delete user"
@@ -486,9 +485,8 @@ msgid "Group name"
 msgstr "Nom du groupe"
 
 #: modules/base/groups/members.php:105
-#, fuzzy
 msgid "Group successfully modified"
-msgstr "Le groupe %s a été modifié avec succès"
+msgstr "Groupe modifié avec succès"
 
 #: modules/base/groups/ajaxFilter.php:41
 #: modules/base/views/editGroups.tpl.php:52
@@ -538,7 +536,7 @@ msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
 
 #: modules/base/includes/users-xmlrpc.inc.php:46
 msgid "Invalid login"
-msgstr ""
+msgstr "Utilisateur invalide"
 
 #: modules/base/includes/computers_list.inc.php:29
 #: modules/base/includes/computers_list.inc.php:36
@@ -854,7 +852,7 @@ msgstr ""
 
 #: modules/base/computers/delete.php:30
 msgid "The computer has been deleted."
-msgstr ""
+msgstr "Cet ordinateur a été supprimé"
 
 #: modules/base/users/edit.php:80
 msgid "The confirmation password does not match the new password."
@@ -899,12 +897,11 @@ msgid "The primary group field can't be empty."
 msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
 
 #: index.php:55
-#, fuzzy, php-format
+#, php-format
 msgid "The server %s does not exist"
-msgstr "Ce groupe n'existe pas"
+msgstr "Le serveur %s n'existe pas"
 
 #: includes/xmlrpc.inc.php:283
-#, fuzzy
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -1045,7 +1042,7 @@ msgstr "Utilisateurs"
 #: modules/base/includes/computers_list.inc.php:34
 #: modules/base/includes/computers_list.inc.php:41
 msgid "VNC Client"
-msgstr ""
+msgstr "Client VNC"
 
 #: includes/commonErrorHandling.php:78
 msgid ""
@@ -1083,6 +1080,7 @@ msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
 msgstr ""
+"Vous avez été déconnecté parce que la session entre l'interface web MMC et l'agent MMC a expiré."
 
 #: modules/base/groups/delete.php:43
 msgid "You will delete group"
@@ -1222,3 +1220,4 @@ msgstr "value=\"immediat\";'>immediat</a>"
 #: includes/FormGenerator.php:197
 msgid "yes"
 msgstr "oui"
+
