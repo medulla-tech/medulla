@@ -286,6 +286,9 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.process_control.intProcess(int(command_id)))
     def xmlrpc_term_process(self, command_id):
         return xmlrpcCleanup(pulse2.launcher.process_control.termProcess(int(command_id)))
+    def xmlrpc_term_processes(self, command_ids):
+        for command_id in command_ids:
+            pulse2.launcher.process_control.termProcess(int(command_id))
     def xmlrpc_kill_process(self, command_id):
         return xmlrpcCleanup(pulse2.launcher.process_control.killProcess(int(command_id)))
     def xmlrpc_hup_process(self, command_id):
