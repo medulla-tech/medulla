@@ -306,7 +306,6 @@ def forgeRequest(elt, values):
     requests = []
     bools = []
     for val in values:
-        print val
         requests.append("%i==%s::%s==%s" % (i, module, crit, val))
         bools.append(str(i))
         i += 1
