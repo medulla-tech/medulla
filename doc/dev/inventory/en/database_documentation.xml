@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+	  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Inventory database documentaion</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+
+      <surname>Noirbent</surname>
+
+      <email>nnoirbent@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 Nicolas Noirbent - Mandriva</year>
+    </copyright>
+
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+	<revnumber>1.0</revnumber>
+	<date>2008-10-07</date>
+	<authorinitials>NN</authorinitials>
+	<revdescription>
+	  <para>Documentation for schema v.4</para>
+	</revdescription>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para></para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>The inventory database design</title>
+
+    <para>The inventory database holds data on the computers managed
+      by Pulse 2, namely their hardware (available storage, memory,
+      connected printers/modems etc.) and software (installed software
+      packages, registry keys etc.) configuration.</para>
+
+    <para>The inventory database has a number of hardware/software
+      element tables, each describing a given computer part in detail,
+      with fields specific to the part (e.g. the available space, in the
+      Drive table).</para>
+
+    <para>Every table is linked to the Inventory and Machine tables
+    using a table dedicated to this linking feature. For example, the
+    Modem table is linked to the Inventory and Machine tables using
+    the hasModem table.</para>
+
+    <screenshot>
+      <screeninfo>The inventory database design</screeninfo>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="database_schema.png" />
+        </imageobject>
+      </mediaobject>
+     </screenshot>
+
+  </section>
+
+  <section>
+    <title>The "Inventory" table</title>
+
+    <para>This table holds a list of the inventories stored in the
+    database.</para>
+
+    <variablelist>
+      <varlistentry>
+	<term>id</term>
+
+	<listitem>
+	  <para>The table primary key</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>Date</term>
+
+	<listitem>
+	  <para>The date the inventory was retrieved</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>Time</term>
+
+	<listitem>
+	  <para>The time the inventory was retrieved</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>Last</term>
+
+	<listitem>
+	  <para>Whether this inventory is the last one we retrieved
+	    for this machine</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section>
+    <title>The "Machine" table</title>
+
+    <variablelist>
+      <varlistentry>
+	<term>id</term>
+
+	<listitem>
+	  <para>The table primary key</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>Name</term>
+
+	<listitem>
+	  <para>The machine's name</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>lastId</term>
+
+	<listitem>
+	  <para>A foreign key to the "Inventory" table, pointing to
+	  the last inventory retrieved for this machine.</para>
+	</listitem>
+      </varlistentry>
+
+<!-- FIXME: find out what these fields are for. If they're not used -->
+<!--       anymore, remove them from the schema as well. -->
+<!--       <varlistentry> -->
+<!-- 	<term>lastBootId</term> -->
+
+<!-- 	<listitem> -->
+<!-- 	  <para></para> -->
+<!-- 	</listitem> -->
+<!--       </varlistentry> -->
+
+<!--       <varlistentry> -->
+<!-- 	<term>LastCustomId</term> -->
+
+<!-- 	<listitem> -->
+<!-- 	  <para></para> -->
+<!-- 	</listitem> -->
+<!--       </varlistentry> -->
+
+<!--       <varlistentry> -->
+<!-- 	<term>LastNmapId</term> -->
+
+<!-- 	<listitem> -->
+<!-- 	  <para></para> -->
+<!-- 	</listitem> -->
+<!--       </varlistentry> -->
+
+    </variablelist>
+  </section>
+
+  <section>
+    <title>The "hasXxx" tables</title>
+
+    <para>The "hasXxx" tables (e.g. "hasModem", "hasStorage", etc.)
+    are used to link the "Machine", "Inventory" and parts tables. For
+    example, the "hasStorage" table links together the "Machine",
+    "Inventory" and "Storage" tables.</para>
+
+    <para>For example, the "hasStorage" table :</para>
+
+    <variablelist>
+      <varlistentry>
+	<term>machine</term>
+
+	<listitem>
+	  <para>A foreign key to the "Machine" table</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>inventory</term>
+
+	<listitem>
+	  <para>A foreign key to the "Inventory" table</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>storage</term>
+
+	<listitem>
+	  <para>A foreign key to the "hasStorage" table. For the
+	  "Modem" table it would be "modem" and "hasModem", for the
+	  "Drive" table it would be "drive" and "hasDrive", etc.</para>
+	</listitem>
+      </varlistentry>
+
+    </variablelist>
+  </section>
+</article>
