@@ -240,8 +240,12 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        retour = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(search))
-        return xmlrpcCleanup(retour[1])
+        result = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(search))
+        ret = result[1]
+        # Only returns the 100 first results
+        # FIXME: maybe the range limitation could be done on the queryManager ?
+        ret = ret[:100]
+        return xmlrpcCleanup(ret)
     
     def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, search, value2 = ''): # not used anymore ?
         ctx = self.currentContext
