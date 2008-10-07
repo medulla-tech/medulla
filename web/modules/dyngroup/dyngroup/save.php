@@ -32,7 +32,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $id = idGet();
-$group = null; 
+$group = null;
 if ($id) { $group = new Group($id, true); }
 $request = quickGet('request');
 if (!$request) { $request = $group->getRequest(); }
@@ -56,7 +56,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
         "<tr><td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value='$name'/></td>".
         "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
         "<td>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
-    if ($r->countPart() > 1) {
+    if ($r->countPart() > 0) {
         drawBoolEquation($bool);
     }
     print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
@@ -76,7 +76,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
         $group = new Group();
         $gid = $group->create($name, $visible);
     }
-    
+
     if ($save_type == 1) { // request save
         $group->setRequest($request);
         $group->setBool($bool);
@@ -91,7 +91,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
 
 
 function drawBoolEquation($equ_bool) {
-        print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator bewteen groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
+        print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
 }
 
 ?>
