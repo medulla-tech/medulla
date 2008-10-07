@@ -136,13 +136,22 @@ class Mirror:
             self.logger.warn("Mirror:isAvailable %s fails"%(pid))
             return False
 
-    def getFilePath(self, fid):
-        """ convert from a fid (File ID) to a file path """
+    def getFileURI(self, fid):
+        """ convert from a fid (File ID) to a file URI """
         if self.initialized_failed:
             return False
         try:
-            return self.xmlrpc.getFilePath(fid)
+            return self.xmlrpc.getFileURI(fid)
         except:
-            self.logger.warn("Mirror:getFilePath %s fails"%(fid))
+            self.logger.warn("Mirror:getFileURI %s fails" % fid)
             return False
 
+    def getFilesURI(self, fids):
+        """ convert from a list of fids (File ID) to a list of files URI """
+        if self.initialized_failed:
+            return False
+        try:
+            return self.xmlrpc.getFilesURI(fids)
+        except:
+            self.logger.warn("Mirror:getFilesURI %s fails " % fids)
+            return False
