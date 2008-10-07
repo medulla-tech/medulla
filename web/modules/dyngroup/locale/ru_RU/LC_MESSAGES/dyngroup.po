@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-07 15:44+0200\n"
+"POT-Creation-Date: 2008-10-07 16:13+0200\n"
 "PO-Revision-Date: 2008-07-25 13:29+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -89,6 +89,21 @@ msgstr "Wybierz pole : "
 msgid "Close"
 msgstr "Zamknij"
 
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:70
+#, fuzzy
+msgid "Computers Group Creator"
+msgstr "Twórca grup maszyn"
+
+#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:74
+#, fuzzy
+msgid "Computers Group Editor"
+msgstr "Edytor grup maszyn"
+
+#: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
+#, fuzzy, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Skrócono listę maszyn do %d maszyn"
+
 #: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Potwierdź"
@@ -106,7 +121,8 @@ msgid "Delete"
 msgstr "Usuń"
 
 #: dyngroup/infoPackage.inc.php:104
-msgid "Delete a group of machines"
+#, fuzzy
+msgid "Delete a group of computers"
 msgstr "Usuń grupę maszyn"
 
 #: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
@@ -119,7 +135,7 @@ msgstr "Usuń tą grupę"
 
 #: dyngroup/infoPackage.inc.php:95
 #, fuzzy
-msgid "Detailed page of save a group of machines"
+msgid "Detailed page of save a group of computers"
 msgstr "Usuń grupę maszyn"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:72
@@ -132,7 +148,8 @@ msgid "Display %s '%s'"
 msgstr "Pokaż %s '%s'"
 
 #: dyngroup/infoPackage.inc.php:80
-msgid "Display a groups of machines"
+#, fuzzy
+msgid "Display a groups of computers"
 msgstr "Wyświetl grupę maszyn"
 
 #: dyngroup/dyngroup/creator.php:187
@@ -204,7 +221,8 @@ msgid "Group name"
 msgstr "Nazwa grup"
 
 #: dyngroup/infoPackage.inc.php:109
-msgid "Group of machines details"
+#, fuzzy
+msgid "Group of computers details"
 msgstr "Szczegóły grupy maszyn"
 
 #: dyngroup/includes/groups.inc.php:57
@@ -242,21 +260,9 @@ msgid "Is the group visible"
 msgstr "Czy grupa jest widoczna"
 
 #: dyngroup/infoPackage.inc.php:100
-msgid "List all groups of machines"
+#, fuzzy
+msgid "List all groups of computers"
 msgstr "Lista wszystkich grup maszyn"
-
-#: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
-#, php-format
-msgid "Machine list has been truncated at %d machines"
-msgstr "Skrócono listę maszyn do %d maszyn"
-
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:70
-msgid "Machines Group Creator"
-msgstr "Twórca grup maszyn"
-
-#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:74
-msgid "Machines Group Editor"
-msgstr "Edytor grup maszyn"
 
 #: dyngroup/dyngroup/save.php:56
 msgid "Name :"
@@ -280,15 +286,17 @@ msgid "Regenerate"
 msgstr "Odtwórz"
 
 #: dyngroup/dyngroup/remove_machine.php:47
-msgid "Remove Machine"
-msgstr "Usuń maszynę"
+msgid "Remove Computer"
+msgstr ""
 
 #: dyngroup/dyngroup/remove_machine.php:37
-msgid "Remove a machine"
+#, fuzzy
+msgid "Remove a computer"
 msgstr "Usuń maszynę"
 
 #: dyngroup/infoPackage.inc.php:114
-msgid "Remove a machine from a group"
+#, fuzzy
+msgid "Remove a computer from a computers group"
 msgstr "Usuń maszynę z grupy"
 
 #: dyngroup/dyngroup/save.php:30 dyngroup/dyngroup/save_detail.php:30
@@ -300,7 +308,8 @@ msgid "Save"
 msgstr "Zapisz"
 
 #: dyngroup/infoPackage.inc.php:90
-msgid "Save a group of machines"
+#, fuzzy
+msgid "Save a group of computers"
 msgstr "Zapisz grupę maszyn"
 
 #: dyngroup/includes/request.php:97
@@ -317,7 +326,8 @@ msgid "Select what is inside the file"
 msgstr ""
 
 #: dyngroup/infoPackage.inc.php:85
-msgid "Share a group of machines"
+#, fuzzy
+msgid "Share a group of computers"
 msgstr "Udostępnij grupę maszyn"
 
 #: dyngroup/dyngroup/edit_share.php:38
@@ -397,8 +407,8 @@ msgid "You will delete group <b>%s</b>."
 msgstr "Usuniesz grupę <b>%s</b>."
 
 #: dyngroup/dyngroup/remove_machine.php:44
-#, php-format
-msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
+#, fuzzy, php-format
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Usuniesz maszynę <b>%s</b> z grupy <b>%s</b>."
 
 #: dyngroup/dyngroup/save.php:58
@@ -445,3 +455,6 @@ msgstr "grupa statyczna"
 #: dyngroup/dyngroup/save.php:58
 msgid "visible"
 msgstr "widoczne"
+
+#~ msgid "Remove Machine"
+#~ msgstr "Usuń maszynę"

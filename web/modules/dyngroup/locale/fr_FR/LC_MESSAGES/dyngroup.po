@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-07 15:44+0200\n"
-"PO-Revision-Date: 2008-10-07 15:45+0200\n"
+"POT-Creation-Date: 2008-10-07 16:13+0200\n"
+"PO-Revision-Date: 2008-10-07 16:17+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,19 @@ msgstr "Sélectionner votre champ : "
 msgid "Close"
 msgstr "Fermer"
 
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:70
+msgid "Computers Group Creator"
+msgstr "Créateur de groupe d'ordinateurs"
+
+#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:74
+msgid "Computers Group Editor"
+msgstr "Éditeur de groupe d'ordinateurs"
+
+#: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
+
 #: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Confirmer"
@@ -106,8 +119,8 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #: dyngroup/infoPackage.inc.php:104
-msgid "Delete a group of machines"
-msgstr "Supprimer le groupe d'ordinateurs"
+msgid "Delete a group of computers"
+msgstr "Supprimer un groupe d'ordinateurs"
 
 #: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
 msgid "Delete group"
@@ -118,8 +131,8 @@ msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
 #: dyngroup/infoPackage.inc.php:95
-msgid "Detailed page of save a group of machines"
-msgstr "Page détaillée pour la sauvegarde d'un groupe d'ordinateurs"
+msgid "Detailed page of save a group of computers"
+msgstr "Page détaillée pour l'enregistrement d'un groupe d'ordinateurs"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:72
 msgid "Display"
@@ -131,7 +144,7 @@ msgid "Display %s '%s'"
 msgstr "Afficher %s '%s'"
 
 #: dyngroup/infoPackage.inc.php:80
-msgid "Display a groups of machines"
+msgid "Display a groups of computers"
 msgstr "Montrer un groupe d'ordinateurs"
 
 #: dyngroup/dyngroup/creator.php:187
@@ -202,7 +215,7 @@ msgid "Group name"
 msgstr "Nom du groupe"
 
 #: dyngroup/infoPackage.inc.php:109
-msgid "Group of machines details"
+msgid "Group of computers details"
 msgstr "Détails du groupe d'ordinateurs"
 
 #: dyngroup/includes/groups.inc.php:57
@@ -240,21 +253,8 @@ msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
 #: dyngroup/infoPackage.inc.php:100
-msgid "List all groups of machines"
+msgid "List all groups of computers"
 msgstr "Lister tous les groupes d'ordinateurs"
-
-#: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
-#, php-format
-msgid "Machine list has been truncated at %d machines"
-msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
-
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:70
-msgid "Machines Group Creator"
-msgstr "Créateur de groupe d'ordinateurs"
-
-#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:74
-msgid "Machines Group Editor"
-msgstr "Éditeur de groupe d'ordinateurs"
 
 #: dyngroup/dyngroup/save.php:56
 msgid "Name :"
@@ -278,16 +278,16 @@ msgid "Regenerate"
 msgstr "Re-générer"
 
 #: dyngroup/dyngroup/remove_machine.php:47
-msgid "Remove Machine"
+msgid "Remove Computer"
 msgstr "Enlever l'ordinateur"
 
 #: dyngroup/dyngroup/remove_machine.php:37
-msgid "Remove a machine"
+msgid "Remove a computer"
 msgstr "Enlever un ordinateur"
 
 #: dyngroup/infoPackage.inc.php:114
-msgid "Remove a machine from a group"
-msgstr "Supprimer un ordinateur d'un groupe"
+msgid "Remove a computer from a computers group"
+msgstr "Enlever un ordinateur d'un groupe"
 
 #: dyngroup/dyngroup/save.php:30 dyngroup/dyngroup/save_detail.php:30
 msgid "Request saver"
@@ -298,7 +298,7 @@ msgid "Save"
 msgstr "Sauvegarder"
 
 #: dyngroup/infoPackage.inc.php:90
-msgid "Save a group of machines"
+msgid "Save a group of computers"
 msgstr "Sauvegarder un groupe d'ordinateurs"
 
 #: dyngroup/includes/request.php:97
@@ -314,7 +314,7 @@ msgid "Select what is inside the file"
 msgstr "Sélectionnez le type de donnée qui se trouve dans le fichier"
 
 #: dyngroup/infoPackage.inc.php:85
-msgid "Share a group of machines"
+msgid "Share a group of computers"
 msgstr "Partager un groupe d'ordinateurs"
 
 #: dyngroup/dyngroup/edit_share.php:38
@@ -393,7 +393,7 @@ msgstr "Vous allez supprimer le groupe <b>%s</b>."
 
 #: dyngroup/dyngroup/remove_machine.php:44
 #, php-format
-msgid "You will remove machine <b>%s</b> from group <b>%s</b>."
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
 #: dyngroup/dyngroup/save.php:58
