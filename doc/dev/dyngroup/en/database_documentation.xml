@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
-<article class="whitepaper" lang="fr">
-  <title>Dyngroup database documentaion</title>
+<article class="whitepaper">
+  <title>Dyngroup database documentation</title>
 
   <articleinfo>
     <author>
@@ -37,15 +37,15 @@
       </revision>
 
       <revision revisionflag="off">
-	<revnumber>1.1</revnumber>
+        <revnumber>1.1</revnumber>
 
-	<date>2008-10-06</date>
+        <date>2008-10-06</date>
 
-	<authorinitials>NN</authorinitials>
+        <authorinitials>NN</authorinitials>
 
-	<revdescription>
-	  <para>Documentation updated for schema v.2</para>
-	</revdescription>
+        <revdescription>
+          <para>Documentation updated for schema v.2</para>
+        </revdescription>
       </revision>
     </revhistory>
 
@@ -57,9 +57,9 @@
   <section>
     <title>The dyngroup database design</title>
 
-    <para>In Pulse2 a group is way to launch an action on several machines at
-    the same time, it contains machines and has a name. A group is associated
-    to an user, this user can share the group with others users if
+    <para>In Pulse2 a group is a way to launch an action on several machines
+    at the same time, it contains machines and has a name. A group is
+    associated to an user, this user can share the group with others users if
     wanted.</para>
 
     <para>There are 3 kinds of groups:</para>
@@ -68,7 +68,7 @@
       <listitem>
         <para>Dynamic groups, these groups have a query, but are not directly
         associated to machines. Each time the group content is required, an
-        algorythm execute the query on the required plugins. That implies user
+        algorithm execute the query on the required plugins. That implies user
         can remove a machine from this group.</para>
       </listitem>
     </itemizedlist>
@@ -84,8 +84,8 @@
       <listitem>
         <para>Mixed groups, these groups have a query and are associated to
         machines. That way the computer list is generated from a query, but is
-        not updated everytime. That implies user can remove a machine from the
-        group, and can also re initialise the group from the query.</para>
+        not updated every time. That implies user can remove a machine from
+        the group, and can also re initialize the group from the query.</para>
       </listitem>
     </itemizedlist>
 
@@ -98,7 +98,6 @@
         </imageobject>
       </mediaobject>
     </screenshot>
-
   </section>
 
   <section>
@@ -174,10 +173,9 @@
         <term>bool</term>
 
         <listitem>
-          <para>In case the query contains several sub queries, this
-            field holds the data describing the relationship between
-            the resulting lists of machines.
-	  </para>
+          <para>In case the query contains several sub queries, this field
+          holds the data describing the relationship between the resulting
+          lists of machines.</para>
         </listitem>
       </varlistentry>
 
@@ -197,14 +195,13 @@
           <para>A foreign key to the group's owner</para>
         </listitem>
       </varlistentry>
-
     </variablelist>
   </section>
 
   <section>
     <title>The "Results" table</title>
 
-    <para>This table make the link betwen a group and the machines it
+    <para>This table make the link between a group and the machines it
     contains.</para>
 
     <para>It is linked to the "Groups" table using FK_group as
@@ -242,10 +239,11 @@
 
   <section>
     <title>The "Users" table</title>
+
     <para>This table contains users data.</para>
 
     <para>It is linked to the "UsersType" table using type as
-      constraint.</para>
+    constraint.</para>
 
     <variablelist>
       <varlistentry>
@@ -265,36 +263,36 @@
       </varlistentry>
 
       <varlistentry>
-	<term>type</term>
+        <term>type</term>
 
-	<listitem>
-	  <para>A Foreign Key to the "UsersType" table</para>
-	</listitem>
+        <listitem>
+          <para>A Foreign Key to the "UsersType" table</para>
+        </listitem>
       </varlistentry>
-
     </variablelist>
   </section>
 
   <section>
     <title>The "UsersType" table</title>
-    <para>This table holds the various possible types of users
-    (single user, group etc)</para>
+
+    <para>This table holds the various possible types of users (single user,
+    group etc)</para>
 
     <variablelist>
       <varlistentry>
-	<term>id</term>
+        <term>id</term>
 
-	<listitem>
-	  <para>The table primary key</para>
-	</listitem>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>value</term>
+        <term>value</term>
 
-	<listitem>
-	  <para>The type of user</para>
-	</listitem>
+        <listitem>
+          <para>The type of user</para>
+        </listitem>
       </varlistentry>
     </variablelist>
   </section>
@@ -302,7 +300,7 @@
   <section>
     <title>The "ShareGroup" table</title>
 
-    <para>This table describes the link betwen an user and a group when this
+    <para>This table describes the link between an user and a group when this
     link is not ownership.</para>
 
     <para>It is linked to the "Groups" table using FK_group as
@@ -313,7 +311,6 @@
 
     <para>It is linked to the "ShareGroupType" table using FK_type as
     constraint.</para>
-
 
     <variablelist>
       <varlistentry>
@@ -328,7 +325,7 @@
         <term>FK_group</term>
 
         <listitem>
-          <para>A Foreing Key to the "Groups" table</para>
+          <para>A Foreign Key to the "Groups" table</para>
         </listitem>
       </varlistentry>
 
@@ -341,35 +338,36 @@
       </varlistentry>
 
       <varlistentry>
-	<term>FK_type</term>
+        <term>FK_type</term>
 
-	<listitem>
-	  <para>A Foreign Key to the "ShareGroupType" table</para>
-	</listitem>
+        <listitem>
+          <para>A Foreign Key to the "ShareGroupType" table</para>
+        </listitem>
       </varlistentry>
     </variablelist>
   </section>
 
   <section>
     <title>The "ShareGroupType" table</title>
-    <para>This table holds the various types of share groups
-    privileges : view, edit...</para>
+
+    <para>This table holds the various types of share groups privileges :
+    view, edit...</para>
 
     <variablelist>
       <varlistentry>
-	<term>id</term>
+        <term>id</term>
 
-	<listitem>
-	  <para>The table primary key</para>
-	</listitem>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
       </varlistentry>
 
       <varlistentry>
-	<term>value</term>
+        <term>value</term>
 
-	<listitem>
-	  <para>The type of sharing privilege (view, edit etc)</para>
-	</listitem>
+        <listitem>
+          <para>The type of sharing privilege (view, edit etc)</para>
+        </listitem>
       </varlistentry>
     </variablelist>
   </section>
@@ -377,6 +375,6 @@
   <section>
     <title>The "version" table</title>
 
-    <para>Used to hold the database veresion, in the table Number.</para>
+    <para>Used to hold the database version, in the table Number.</para>
   </section>
 </article>
