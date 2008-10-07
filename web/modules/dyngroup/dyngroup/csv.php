@@ -11,7 +11,7 @@ header("Content-type: text/txt");
 header('Content-Disposition: attachment; filename="'.$name.'.csv"');
 
 function get_first($val) { return $val[0]; }
-function get_second($val) { return $val[1]; }
+function get_second($val) { return _T($val[1], "base"); }
 function get_values($h, $values) {
     $ret = array();
     foreach ($h as $k) {
