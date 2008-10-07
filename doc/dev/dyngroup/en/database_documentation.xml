@@ -201,7 +201,7 @@
   <section>
     <title>The "Results" table</title>
 
-    <para>This table make the link between a group and the machines it
+    <para>This table makes the link between a group and the machines it
     contains.</para>
 
     <para>It is linked to the "Groups" table using FK_group as
