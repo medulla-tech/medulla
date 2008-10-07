@@ -88,7 +88,7 @@ class ContextMaker(ContextMakerI):
         s.userid = self.userid
         s.locationsCount = ComputerLocationManager().getLocationsCount()
         s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
-        s.filterType = "mine"
+        s.filterType = "all"
         return s
 
 ##
