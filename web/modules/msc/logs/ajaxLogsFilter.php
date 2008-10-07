@@ -159,13 +159,6 @@ $n->end = $maxperpage;
 $n->display();
 
 
-function to_date($list) {
-    if (count($list) != 9) {
-        return $list;
-    } else {
-        return $list[0].'/'.$list[1].'/'.$list[2].' '.$list[3].':'.$list[4].':'.$list[5];
-    }
-}
 ?>
 <!-- inject styles -->
 <link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />

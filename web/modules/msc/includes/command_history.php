@@ -296,6 +296,7 @@ function _colorise($line) {
     }
     return $out;
 }
+
 function _toDate($a) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
