@@ -1,0 +1,7 @@
+for i in `seq 1 300`; do
+	./test-xmlrpc.py \
+		--server https://username:password@127.0.0.1:8001 \
+		--func async_remote_quickaction \
+		--args "`date +%s`;protocol=ssh|uuid=UUID1|host=192.168.0.6|key=/etc/mmc/pulse2/id_dsa;cat;100000";
+done
+
