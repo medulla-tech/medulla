@@ -2,25 +2,25 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc4\n"
+"Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-07 15:00+0200\n"
-"PO-Revision-Date: 2008-10-03 16:15+0200\n"
+"PO-Revision-Date: 2008-10-07 15:04+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);"
 
 #: msc/includes/command_history.php:312
 #, php-format
 msgid "%04d/%02d/%02d %02d:%02d:%02d"
-msgstr ""
+msgstr "%04d/%02d/%02d %02d:%02d:%02d"
 
 #: msc/includes/utilities.php:35
 #, php-format
@@ -84,9 +84,8 @@ msgid "Advanced launch bundle"
 msgstr "Lancement d'un ensemble d'applications (avancé)"
 
 #: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:329
-#, fuzzy
 msgid "All users commands"
-msgstr "Mettre une commande en pause"
+msgstr "Commandes de tous les utilisateurs"
 
 #: msc/includes/command_history.php:310 msc/logs/ajaxLogsFilter.php:98
 #: msc/msc/ajaxLogsFilter.php:238
@@ -389,9 +388,8 @@ msgid "Maximum number of connection attempt"
 msgstr "Nombre de tentatives de connexions"
 
 #: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:329
-#, fuzzy
 msgid "My commands"
-msgstr "Jouer une commande"
+msgstr "Mes commandes"
 
 #: msc/logs/ajaxLogsFilter.php:96
 msgid "N/A"
@@ -403,9 +401,8 @@ msgid "Name"
 msgstr "Nom"
 
 #: msc/includes/command_history.php:307
-#, fuzzy
 msgid "Never"
-msgstr "jamais"
+msgstr "Jamais"
 
 #: msc/msc/tabs.php:42
 msgid "Not enough informations"
@@ -757,9 +754,8 @@ msgid "Y-m-d H:i:s"
 msgstr "Y-m-d H:i:s"
 
 #: msc/includes/widgets.inc.php:83
-#, fuzzy
 msgid "You don't have the right permissions to display this command"
-msgstr "Vous n'avez pas le droit d'accéder à cette commande"
+msgstr "Vous n'avez pas le droit de consulter cette commande"
 
 #: msc/includes/bundle_widgets.php:282 msc/msc/start_command.php:133
 msgid "awake"
@@ -900,3 +896,4 @@ msgstr "en attente de suppression"
 #: msc/msc/msctabsstatus.php:60 msc/msc/statuscsv.php:30
 msgid "waiting to upload"
 msgstr "en attente de téléchargement"
+
