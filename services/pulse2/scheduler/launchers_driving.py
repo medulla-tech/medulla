@@ -211,12 +211,14 @@ def getServerCheck(target):
     return getCheck(SchedulerConfig().server_check, target);
 
 def callOnLauncher(launcher, method, *args):
-    return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args)
+    def _eb(reason):
+        logging.getLogger().warn("scheduler %s: while talking to launcher %s : %s" % (SchedulerConfig().name, launcher, reason.getErrorMessage()))
+    return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args).addErrback(_eb)
 
 def callOnBestLauncher(method, *args):
 
     def _eb(reason):
-        logging.getLogger().error("scheduler %s: while choosing the best launcher: %s" % (SchedulerConfig().name, reason.getErrorMessage()))
+        logging.getLogger().error("scheduler %s: while choosing the best launcher : %s" % (SchedulerConfig().name, reason.getErrorMessage()))
 
     return chooseLauncher().\
         addCallback(pulse2.scheduler.xmlrpc.getProxy).\

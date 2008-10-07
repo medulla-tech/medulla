@@ -791,14 +791,14 @@ def runEndPhase(myCommandOnHostID):
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    def setstate(myCommandOnHostID):
+    def setstate(myCommandOnHostID, stdout, stderr):
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
         myCoH.setScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
         runUploadPhase(myCommandOnHostID)
 
-    updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
-    twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID)
+    twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
     return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
