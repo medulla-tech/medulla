@@ -196,6 +196,21 @@ class CommandsOnHost(object):
         return result
 ### /Handle inventory states ###
 
+
+### Handle wol states ###
+    def isWOLImminent(self):
+        result = (self.isScheduled() and self.isInTimeSlot())
+        logging.getLogger().debug("isWOLImminent(%s): %s" % (self.getId(), result))
+        return result
+
+    def setWOLInProgress(self):
+        self.setCommandStatut('wol_in_progress')
+    def isWOLRunning(self):
+        result = (self.getCommandStatut() == 'wol_in_progress')
+        logging.getLogger().debug("isWOLRunning(%s): %s" % (self.getId(), result))
+        return result
+### /Handle inventory states ###
+
 ### Handle general states ###
     def setScheduled(self):
         self.setCommandStatut('scheduled')
@@ -254,7 +269,7 @@ class CommandsOnHost(object):
 
 ### Misc state changes handling  ###
     def reSchedule(self, delay):
-        """ Reschedule when something ent wrong """
+        """ Reschedule when something went wrong """
         if self.attempts_left < 1: # no attempts left
             self.setFailed() # TODO: introduce a new state (failed ?)
         elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
@@ -347,7 +362,7 @@ class CommandsOnHost(object):
             Returns True if processing can continue,
             False else.
         """
-        self.setDeleteDone()                             # set task status
+        self.setDeleteDone()                                # set task status
         if self.getCommandStatut() == 'delete_in_progress': # normal flow
             self.setCommandStatut('delete_done')            # set command status
             return True                                     # continue command flow
