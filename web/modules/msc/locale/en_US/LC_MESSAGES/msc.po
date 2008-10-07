@@ -1,9 +1,14 @@
+#: msc/includes/command_history.php:312
+#, php-format
+msgid "%04d/%02d/%02d %02d:%02d:%02d"
+msgstr ""
+
 #: msc/includes/utilities.php:35
 #, php-format
 msgid "%3.1f %s%s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:236 msc/msc/ajaxLogsFilter.php:238
+#: msc/msc/ajaxLogsFilter.php:240 msc/msc/ajaxLogsFilter.php:242
 msgid "%a %d %b %Y %T"
 msgstr ""
 
@@ -14,12 +19,12 @@ msgid ""
 "access it"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:100 msc/msc/ajaxLogsFilter.php:243
+#: msc/logs/ajaxLogsFilter.php:103 msc/msc/ajaxLogsFilter.php:247
 #, php-format
 msgid "%s on %s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:241
+#: msc/msc/ajaxLogsFilter.php:245
 #, php-format
 msgid "%s on %s (Bundle #%s)"
 msgstr ""
@@ -57,7 +62,12 @@ msgstr ""
 msgid "Advanced launch bundle"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:95 msc/msc/ajaxLogsFilter.php:234
+#: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:329
+msgid "All users commands"
+msgstr ""
+
+#: msc/includes/command_history.php:310 msc/logs/ajaxLogsFilter.php:98
+#: msc/msc/ajaxLogsFilter.php:238
 msgid "As soon as possible"
 msgstr ""
 
@@ -69,7 +79,7 @@ msgstr ""
 msgid "Bundle"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:111
+#: msc/msc/ajaxLogsFilter.php:115
 #, php-format
 msgid "Bundle #%s"
 msgstr ""
@@ -91,8 +101,8 @@ msgstr ""
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:206
-#: msc/msc/ajaxLogsFilter.php:282 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:140 msc/msc/ajaxLogsFilter.php:210
+#: msc/msc/ajaxLogsFilter.php:286 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr ""
 
@@ -147,7 +157,7 @@ msgstr ""
 msgid "Csv's export"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:130
+#: msc/logs/ajaxLogsFilter.php:133
 msgid "Date"
 msgstr ""
 
@@ -189,11 +199,11 @@ msgstr ""
 msgid "Deployment interval"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:69 msc/logs/ajaxLogsFilter.php:70
-#: msc/msc/ajaxLogsFilter.php:83 msc/msc/ajaxLogsFilter.php:85
-#: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:49
+#: msc/logs/ajaxLogsFilter.php:72 msc/logs/ajaxLogsFilter.php:73
+#: msc/msc/ajaxLogsFilter.php:87 msc/msc/ajaxLogsFilter.php:89
+#: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:65
 #: msc/msc/logs.php:47 msc/msc/logs.php:57 msc/msc/logs.php:91
-#: msc/msc/logs.php:96 msc/msc/logs.php:115 msc/msc/packages.php:22
+#: msc/msc/logs.php:96 msc/msc/logs.php:114 msc/msc/packages.php:22
 msgid "Details"
 msgstr ""
 
@@ -213,7 +223,7 @@ msgstr ""
 msgid "Download file from a computer"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:277
+#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:281
 msgid "End date"
 msgstr ""
 
@@ -355,13 +365,21 @@ msgstr ""
 msgid "Maximum number of connection attempt"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:93
+#: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:329
+msgid "My commands"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:96
 msgid "N/A"
 msgstr ""
 
 #: msc/includes/command_history.php:45 msc/includes/command_history.php:129
 #: msc/includes/command_history.php:205 msc/msc/package_detail.php:39
 msgid "Name"
+msgstr ""
+
+#: msc/includes/command_history.php:307
+msgid "Never"
 msgstr ""
 
 #: msc/msc/tabs.php:42
@@ -388,8 +406,8 @@ msgstr ""
 msgid "Packages"
 msgstr ""
 
-#: msc/includes/functions.php:46 msc/logs/ajaxLogsFilter.php:67
-#: msc/msc/ajaxLogsFilter.php:78
+#: msc/includes/functions.php:46 msc/logs/ajaxLogsFilter.php:70
+#: msc/msc/ajaxLogsFilter.php:82
 msgid "Pause"
 msgstr ""
 
@@ -553,7 +571,7 @@ msgstr ""
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:66 msc/msc/ajaxLogsFilter.php:77
+#: msc/logs/ajaxLogsFilter.php:69 msc/msc/ajaxLogsFilter.php:81
 msgid "Start"
 msgstr ""
 
@@ -567,7 +585,7 @@ msgstr ""
 msgid "Start action %s on host %s"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:134 msc/msc/ajaxLogsFilter.php:279
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:283
 msgid "Start date"
 msgstr ""
 
@@ -591,11 +609,11 @@ msgstr ""
 msgid "Start the script"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:80
+#: msc/msc/ajaxLogsFilter.php:84
 msgid "Status"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:68 msc/msc/ajaxLogsFilter.php:79
+#: msc/logs/ajaxLogsFilter.php:71 msc/msc/ajaxLogsFilter.php:83
 msgid "Stop"
 msgstr ""
 
@@ -714,7 +732,7 @@ msgid "Y-m-d H:i:s"
 msgstr ""
 
 #: msc/includes/widgets.inc.php:83
-msgid "You don't have the good permissions to access this command"
+msgid "You don't have the right permissions to display this command"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:282 msc/msc/start_command.php:133
@@ -741,13 +759,13 @@ msgstr ""
 msgid "computers were successfully deployed"
 msgstr ""
 
-#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:138
-#: msc/msc/ajaxLogsFilter.php:208 msc/msc/ajaxLogsFilter.php:283
+#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:141
+#: msc/msc/ajaxLogsFilter.php:212 msc/msc/ajaxLogsFilter.php:287
 msgid "current_state"
 msgstr ""
 
-#: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:141
-#: msc/msc/ajaxLogsFilter.php:211 msc/msc/ajaxLogsFilter.php:286
+#: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:144
+#: msc/msc/ajaxLogsFilter.php:215 msc/msc/ajaxLogsFilter.php:290
 msgid "deleted"
 msgstr ""
 
@@ -755,8 +773,8 @@ msgstr ""
 msgid "error : cmd_id or bundle_id must be given"
 msgstr ""
 
-#: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:140
-#: msc/msc/ajaxLogsFilter.php:210 msc/msc/ajaxLogsFilter.php:285
+#: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:143
+#: msc/msc/ajaxLogsFilter.php:214 msc/msc/ajaxLogsFilter.php:289
 msgid "executed"
 msgstr ""
 
@@ -816,7 +834,7 @@ msgstr ""
 msgid "running upload"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:207
+#: msc/msc/ajaxLogsFilter.php:211
 msgid "start_date"
 msgstr ""
 
@@ -840,8 +858,8 @@ msgstr ""
 msgid "unreacheable during execution"
 msgstr ""
 
-#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:139
-#: msc/msc/ajaxLogsFilter.php:209 msc/msc/ajaxLogsFilter.php:284
+#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:142
+#: msc/msc/ajaxLogsFilter.php:213 msc/msc/ajaxLogsFilter.php:288
 msgid "uploaded"
 msgstr ""
 
