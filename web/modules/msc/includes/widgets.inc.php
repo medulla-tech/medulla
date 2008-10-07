@@ -229,4 +229,189 @@ class RenderedImgInput extends HtmlElement {
     }
 }
 
+class AjaxFilterCommands extends AjaxFilter {
+
+    function AjaxFilterCommands($url, $divid = "container", $paramname = 'commands', $params = array()) {
+        $this->AjaxFilter($url, $divid, $params);
+        $this->commands = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+        $this->paramname = $paramname;
+        $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
+        $this->setElements($elts);
+        $this->setElementsVal(array("mine" => "mine", "all" => "all"));
+        if (isset($_SESSION["msc_commands_filter"])) {
+            $this->setSelected($_SESSION["msc_commands_filter"]);
+        } else {
+            $this->setSelected(getCommandsFilter());
+        }
+    }
+
+    function setElements($elt) {
+        $this->commands->setElements($elt);
+    }
+
+    function setElementsVal($elt) {
+        $this->commands->setElementsVal($elt);
+    }
+
+    function setSelected($elemnt) {
+        $this->commands->setSelected($elemnt);
+    }
+
+    function display() {
+
+?>
+<form name="Form" id="Form" action="#">
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+    <span class="searchfield">
+<?php
+        $this->commands->display();
+?>
+    </span>&nbsp;
+    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    </span>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('param').focus();
+
+
+        /**
+        * update div with user
+        */
+        function updateSearch() {
+            launch--;
+
+                if (launch==0) {
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+                }
+            }
+
+        /**
+        * provide navigation in ajax for user
+        */
+
+        function updateSearchParam(filter, start, end) {
+            var reg = new RegExp("##", "g");
+            var tableau = filter.split(reg);
+            filter = tableau[0];
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            }
+
+        /**
+        * wait 500ms and update search
+        */
+
+        function pushSearch() {
+            launch++;
+            setTimeout("updateSearch()",500);
+        }
+
+        pushSearch();
+    </script>
+
+</form>
+<?
+          }
+}
+
+class AjaxFilterCommandsStates extends AjaxFilter {
+
+    function AjaxFilterCommandsStates($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) { 
+        $this->AjaxFilter($url, $divid, $params);
+
+        /* Commands selection dropdown */
+        $this->commands = new SelectItem($paramname1, 'pushSearch', 'searchfieldreal noborder');
+        $this->paramname1 = $paramname1;
+        $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
+        $this->commands->setElements($elts);
+        $this->commands->setElementsVal(array("mine" => "mine", "all" => "all"));
+        if (isset($_SESSION["msc_commands_filter"])) {
+            $this->commands->setSelected($_SESSION["msc_commands_filter"]);
+        } else {
+            $this->commands->setSelected(getCommandsFilter());
+        }
+        
+        /* State selection dropdown */
+        $this->paramname2 = $paramname2;
+        $this->states = new SelectItem($paramname2, 'pushSearch', 'searchfieldreal noborder');
+    }
+
+    function setElements($elt) {
+        $this->states->setElements($elt);
+    }
+
+    function setElementsVal($elt) {
+        $this->states->setElementsVal($elt);
+    }
+
+    function setSelected($elemnt) {
+        $this->states->setSelected($elemnt);
+    }
+
+    function display() {
+
+?>
+<form name="Form" id="Form" action="#">
+    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+    <div id="searchSpan" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+    <span class="searchfield">
+<?php
+        $this->commands->display();
+        $this->states->display();
+?>
+    </span>&nbsp;
+    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    </span>
+    </div>
+
+    <script type="text/javascript">
+        document.getElementById('param').focus();
+
+
+        /**
+        * update div with user
+        */
+        function updateSearch() {
+            launch--;
+
+                if (launch==0) {
+                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
+                }
+            }
+
+        /**
+        * provide navigation in ajax for user
+        */
+
+        function updateSearchParam(filter, start, end) {
+            var reg = new RegExp("##", "g");
+            var tableau = filter.split(reg);
+            filter = tableau[0];
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
+            }
+
+        /**
+        * wait 500ms and update search
+        */
+
+        function pushSearch() {
+            launch++;
+            setTimeout("updateSearch()",500);
+        }
+
+        pushSearch();
+    </script>
+
+</form>
+<?
+          }
+}
+
 ?>

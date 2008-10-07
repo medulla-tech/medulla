@@ -35,7 +35,7 @@ if (strlen($_GET['uuid'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -62,7 +62,7 @@ if (strlen($_GET['uuid'])) {
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else {
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs");
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs");
         $ajax->setRefresh(30000);
         $ajax->display();
         print "<br/><br/><br/>";
@@ -76,7 +76,7 @@ if (strlen($_GET['uuid'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptablogs");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -106,7 +106,6 @@ if (strlen($_GET['uuid'])) {
         }
     } elseif (strlen($_GET['cmd_id'])) {// just display the selected command
         $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
-
         $bdlink = '';
         if (strlen($_GET['bundle_id'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
@@ -120,14 +119,14 @@ if (strlen($_GET['uuid'])) {
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     } else {
         // display all commands
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=grouptablogs");
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=grouptablogs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();

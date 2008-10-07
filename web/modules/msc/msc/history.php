@@ -26,18 +26,34 @@
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
+require_once('modules/msc/includes/widgets.inc.php');
 
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
-# Display a specific command_on_host for a specific host
+/*if (strlen($_GET['bundle_id'])) { {
+     Bundle history for single host 
+    $bdl = new Bundle($_GET['bundle_id']);
+    $act = $bdl->quickDisplay();
+    if ($act) {
+        if (strlen($_GET['uuid']) and strlen($_GET['coh_id'])) {
+            
+        } else if (strlen($_GET['uuid'])) {
+            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tabhistory");
+        }
+        $ajax->display();
+        print "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    }
+} else*/
 if (isset($_GET['uuid']) and $_GET['uuid'] != '' and isset($_GET['coh_id'])) {
+    # Display a specific command_on_host for a specific host
     print "<hr/><br/>";
     $coh_id = $_GET['coh_id'];
     $ch = new CommandHistory($coh_id);
     $ch->display();
 } else if (isset($_GET['uuid']) and $_GET['uuid'] != '' and !isset($_GET['coh_id'])) { # Display history for a specific host
-    $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
+    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
     $ajax->setRefresh(30000);
     $ajax->display();
     print "<br/><br/><br/>";
@@ -60,18 +76,16 @@ if (isset($_GET['uuid']) and $_GET['uuid'] != '' and isset($_GET['coh_id'])) {
     $cmd = new Command($_GET['cmd_id']);
     $cmd->quickDisplay();
     // display all the commands on hosts
-    $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&history=1&tab=grouptabhistory");
+    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&history=1&tab=grouptabhistory");
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 } else if (isset($_GET['gid']) and (!isset($_GET['coh_id']) and !isset($_GET['cmd_id']))) { # Display history for a specific group
     // display all commands
-    $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory");
+    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory");
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 }
-
-    // Whe should display an error message
 
 ?>

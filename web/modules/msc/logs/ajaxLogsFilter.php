@@ -29,7 +29,6 @@ require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 
-#require_once("../../../modules/msc/includes/widgets.inc.php");
 require_once("../../../modules/msc/includes/functions.php");
 require_once("../../../modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("../../../modules/msc/includes/command_history.php");
@@ -45,6 +44,10 @@ else $start = 0;
 $type = $_GET['type'];
 $current_state = $_GET['currentstate'];
 $from = $_GET['from'];
+
+if (isset($_GET["commands"])) {
+    setCommandsFilter($_GET["commands"]);
+}
 
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);

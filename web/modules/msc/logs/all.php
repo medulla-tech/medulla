@@ -28,13 +28,13 @@ require("graph/navbar.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
-
+require_once('modules/msc/includes/widgets.inc.php');
 
 $p = new PageGenerator(_T("Show all task logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter("modules/msc/logs/ajaxLogsFilter.php?type=0&from=all");
+$ajax = new AjaxFilterCommands("modules/msc/logs/ajaxLogsFilter.php?type=0&from=all");
 $ajax->setRefresh(30000);
 $ajax->display();
 print "<br/><br/><br/>";

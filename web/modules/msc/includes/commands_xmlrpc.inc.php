@@ -94,6 +94,18 @@ function displayLogs($params) {
     return xmlCall('msc.displayLogs', array($params));
 }
 
+function setCommandsFilter($param) {
+    if ($_SESSION["msc_commands_filter"] != $param) {
+        /* Only update the value in session if changed */
+        $_SESSION["msc_commands_filter"] = $param;
+        xmlCall('msc.set_commands_filter', array($param));
+    }
+}
+
+function getCommandsFilter() {
+    return xmlCall('msc.get_commands_filter');
+}
+
 /* Command on host handling */
 function start_command_on_host($id) {
     return xmlCall('msc.start_command_on_host', array($id));

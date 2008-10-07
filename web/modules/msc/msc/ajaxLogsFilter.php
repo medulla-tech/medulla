@@ -47,6 +47,10 @@ $history = $_GET['history'];
 $tab = $_GET['tab'];
 $areCommands = False;
 
+if (isset($_GET["commands"])) {
+    setCommandsFilter($_GET["commands"]);
+}
+
 if ($uuid) {
     $hostname = $_GET['hostname'];
     if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
