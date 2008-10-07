@@ -674,9 +674,46 @@ class MscDatabase(Singleton):
         conn.close()
         return schedulers
 
+    def __queryUsersFilter(self, ctx, q):
+        """
+        Build a part of a query for commands, that add user filtering
+        """
+        if ctx.filterType == "mine":
+            # User just want to get her/his commands
+            q = q.filter(self.commands.c.creator == ctx.userid)
+        elif ctx.filterType == "all":
+            # User want to get all commands she/he has the right to see
+            if ctx.userid == "root":
+                # root can see everything, so no filter for root
+                pass
+            elif ctx.locationsCount not in [None, 0, 1] and ctx.userids:
+                # We have multiple locations, and a list of userids sharing the
+                # same locations of the current user
+                q = q.filter(self.commands.c.creator.in_(*ctx.userids))
+            # else if we have just one location, we don't apply any filter. The
+            #     user can see the commands of all users
+                
+        else:
+            # Unknown filter type
+            self.logger.warn("Unknown filter type when querying commands")
+            if ctx.locationsCount not in [None, 0, 1]:
+                # We have multiple locations (entities) in database, so we
+                # filter the results using the current userid
+                q = q.filter(self.commands.c.creator == ctx.userid)
+        return q
+
+    def __queryAllCommandsonhostBy(self, session, ctx):
+        """
+        Built a part of the query for the *AllCommandsonhost* methods
+        """
+        q = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+        q = self.__queryUsersFilter(ctx, q)
+        return q
+
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.creator == ctx.userid).filter(self.commands_on_host.c.current_state <> '').group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
+        ret = self.__queryAllCommandsonhostBy(session, ctx)
+        ret = ret.filter(self.commands_on_host.c.current_state <> '').group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
         l = map(lambda x: x.current_state, ret.all())
         session.close()
         return l
@@ -705,17 +742,6 @@ class MscDatabase(Singleton):
         l = map(lambda x: x.toH(), ret.all())
         session.close()
         return l
-
-    def __queryAllCommandsonhostBy(self, session, ctx):
-        """
-        Built a part of the query for the *AllCommandsonhost* methods
-        """
-        q = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
-        if ctx.locationsCount not in [None, 0, 1]:
-            # We have multiple locations (entities) in database, so we filter
-            # the results using the current userid
-            q = q.filter(self.commands.c.creator == ctx.userid)
-        return q
 
     def countAllCommandsonhostByType(self, ctx, type, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
@@ -814,6 +840,7 @@ class MscDatabase(Singleton):
             # commands_on_host flagged as done
             if params['b_id'] == None:
                 query = query.filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed')))
+        query = self.__queryUsersFilter(ctx, query)
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
     def __displayLogsQuery2(self, ctx, params, session):
@@ -850,6 +877,7 @@ class MscDatabase(Singleton):
             if params['b_id'] == None:
                 filter.append(not_(self.commands_on_host.c.current_state.in_('done', 'failed')))
 
+        query = self.__queryUsersFilter(ctx, query)
         query = query.filter(and_(*filter))
 
         if group_by != None:

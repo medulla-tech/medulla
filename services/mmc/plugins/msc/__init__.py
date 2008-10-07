@@ -355,7 +355,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         ctx.filterType = filterType
 
-    def get_commands_filter(self, filterType):
+    def get_commands_filter(self):
         ctx = self.currentContext
         return ctx.filterType
 
