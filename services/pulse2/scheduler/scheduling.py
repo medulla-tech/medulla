@@ -430,8 +430,9 @@ def runUploadPhase(myCommandOnHostID):
         file_uris = list()
         for m in mirrors:
             mirror_api = mmc.plugins.msc.mirror_api.Mirror(m)
+            
             # convert between file_id (rightmost part of file_path splited over '##') and file_uri
-            files_list = map(lambda x: mirror_api.getFilePath(x.split('##')[0]), myC.files.split("\n"))
+            files_list = map(lambda x: mirror_api.getFileURI(x.split('##')[0]), myC.files.split("\n"))
 
             if not False in files_list and not '' in files_list: # seems we got an URI per given file (file not font are False), this mirror should be OK
                 # build a dict with the protocol and the files uris
