@@ -448,7 +448,7 @@ def runUploadPhase(myCommandOnHostID):
             logger.warn("command_on_host #%s: Package '%s' is not available on mirrors %s and %s" % (myCommandOnHostID, myC.package_id, mirror, fbmirror))
             return None
         logger.debug("command_on_host #%s: mirror '%s' has been choosen" % (myCommandOnHostID, choosen_mirror))
-            
+
         mirror_api = mmc.plugins.msc.mirror_api.Mirror(choosen_mirror)
         files_list = map(lambda x: mirror_api.getFileURI(x.split('##')[0]), myC.files.split("\n"))
 
@@ -781,9 +781,10 @@ def runEndPhase(myCommandOnHostID):
     return None
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
-    logging.getLogger().info("command_on_host #%s: WOL done" % myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up " % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
-    return runUploadPhase(myCommandOnHostID)
+    twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, runUploadPhase, myCommandOnHostID)
+    return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -874,14 +875,14 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     return None
 
 def parseWOLError(reason, myCommandOnHostID):
-    logging.getLogger().info("command_on_host #%s: WOL failed" % myCommandOnHostID)
+    logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    return runUploadPhase(myCommandOnHostID)
+    return runUploadPhase(myCommandOnHostID) # keep going further
 
 def parsePushError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logging.getLogger().warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
@@ -889,7 +890,7 @@ def parsePushError(reason, myCommandOnHostID):
 def parsePullError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logging.getLogger().warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
     return None
@@ -897,7 +898,7 @@ def parsePullError(reason, myCommandOnHostID):
 def parseExecutionError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logging.getLogger().warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToExecutionFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
@@ -906,7 +907,7 @@ def parseExecutionError(reason, myCommandOnHostID):
 def parseDeleteError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logging.getLogger().warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToDeleteFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
@@ -916,7 +917,7 @@ def parseInventoryError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
-    logger.info("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.setInventoryFailed()
     myCoH.reSchedule(myC.getNextConnectionDelay())
     updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
@@ -927,7 +928,7 @@ def parseRebootError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
-    logger.info("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.reSchedule(myC.getNextConnectionDelay())
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
     # FIXME: should return a failure (but which one ?)

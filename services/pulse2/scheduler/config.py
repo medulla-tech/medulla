@@ -56,6 +56,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     max_slots = 300
     max_command_time = 3600
     max_upload_time = 21600
+    max_wol_time = 300
     mode = 'async'
     password = 'password'
     port = 8000
@@ -116,6 +117,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.setoption("scheduler", "max_slots", "max_slots", 'int')
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
+        self.setoption("scheduler", "max_wol_time", "max_wol_time", 'int')
         self.setoption("scheduler", "dbencoding", "dbencoding")
         self.setoption("scheduler", "enablessl", "enablessl", 'bool')
 
