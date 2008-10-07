@@ -755,7 +755,6 @@ class Inventory(DyngroupDatabaseHelper):
                         for i in range(5, len(res)):
                             tmp[noms[part][i-5]] = res[i]
                 machine_inv[res[1]].append(tmp)
-                self.logger.debug(machine_inv[res[1]])
             for name in machine_uuid:
                 ret.append([name, machine_inv[name], machine_uuid[name]])
         return ret
