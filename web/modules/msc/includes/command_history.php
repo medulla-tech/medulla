@@ -265,34 +265,34 @@ function _colorise($line) {
         $date = date(_T("Y-m-d H:i:s", "msc"), $matches[1][0]);
         if ($matches[2][0] == "E") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=red face=fixed>';
+            $out .= '<font color=red face=sans-serif>';
             $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "C") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=maroon face=fixed>';
+            $out .= '<font color=navy face=sans-serif>';
             $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "T") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=maroon face=fixed>';
+            $out .= '<font color=purple face=sans-serif>';
             $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=green face=fixed>';
+            $out .= '<font color=green face=sans-serif>';
             $out .= $matches[3][0];
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "P") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
-            $out .= '<font color=blue face=fixed>';
+            $out .= '<font color=teal face=sans-serif>';
             $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
-            $out .= '<font color=black face=fixed>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
+            $out .= '<font color=black face=sans-serif>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
         }
     } else {
-        $out .= '<font color=black face=fixed>' . $line . '</font>';
+        $out .= '<font color=black face=sans-serif>' . $line . '</font>';
     }
     return $out;
 }
