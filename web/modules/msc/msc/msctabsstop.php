@@ -67,7 +67,7 @@ if (isset($_POST["bconfirm"])) {
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
 
-    if (strlen($gid) & !strlen($coh_id)) {
+    if (strlen($gid) && !strlen($coh_id)) {
         $title = sprintf(_T("Stop action %s on this group", 'msc'), $name);
     } else {
         $title = sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname);
