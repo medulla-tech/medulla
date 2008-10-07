@@ -168,17 +168,21 @@ class MmcServer(xmlrpc.XMLRPC,object):
         Very similar to deferToThread, but also handles function that results
         to a Deferred object.
         """
-        def _cbSuccess(result, deferred):
-            self.logger.debug("_cbSuccess")
+        def _printExecutionTime(start):
+            self.logger.debug("Execution time: %f" % (time.time() - start))
+
+        def _cbSuccess(result, deferred, start):
+            _printExecutionTime(start)
             reactor.callFromThread(deferred.callback, result)
 
-        def _cbFailure(failure, deferred):
-            self.logger.debug("_cbFailure")
+        def _cbFailure(failure, deferred, start):
+            _printExecutionTime(start)            
             reactor.callFromThread(deferred.errback, failure)
-        
+            
         def _putResult(deferred, f, args, kwargs):
             import threading
             self.logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
+            start = time.time()
             try:
                 result = f(*args, **kwargs)
             except:
@@ -188,9 +192,10 @@ class MmcServer(xmlrpc.XMLRPC,object):
                 if isinstance(result, defer.Deferred):
                     # If the result is a Deferred object, attach callback and
                     # errback (we are not allowed to result to a Deferred)
-                    result.addCallback(_cbSuccess, deferred)
-                    result.addErrback(_cbFailure, deferred)
+                    result.addCallback(_cbSuccess, deferred, start)
+                    result.addErrback(_cbFailure, deferred, start)
                 else:
+                    _printExecutionTime(start)
                     reactor.callFromThread(deferred.callback, result)
             
         function = args[0]
