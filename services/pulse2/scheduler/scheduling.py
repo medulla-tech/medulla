@@ -326,14 +326,23 @@ def runWOLPhase(myCommandOnHostID):
     """
         Attempt do see if a wake-on-lan should be done
     """
+
+    # check for WOL condition in order to give up if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
-    if not myC.hasToWOL(): # do not perform wake on lan
+    if not myC.hasToWOL():              # do not perform WOL
         logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
         return runUploadPhase(myCommandOnHostID)
+    if myCoH.isWOLRunning():            # WOL in progress, give up
+        logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
+        return None
+    if not myCoH.isWOLImminent():       # nothing to do right now, give out
+        logger.info("command_on_host #%s: not the right time to WOL" % myCoH.getId())
+        return None
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
     updateHistory(myCommandOnHostID, 'wol_in_progress')
+    myCoH.setCommandStatut('wol_in_progress')
 
     # perform call
     mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
@@ -781,9 +790,15 @@ def runEndPhase(myCommandOnHostID):
     return None
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
-    logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up " % (myCommandOnHostID,SchedulerConfig().max_wol_time))
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    def setstate(myCommandOnHostID):
+        logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
+        myCoH.setScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
+        runUploadPhase(myCommandOnHostID)
+
     updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
-    twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, runUploadPhase, myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
+    twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID)
     return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -875,9 +890,12 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     return None
 
 def parseWOLError(reason, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
+
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    return runUploadPhase(myCommandOnHostID) # keep going further
+    myCoH.setScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
+    return runUploadPhase(myCommandOnHostID)
 
 def parsePushError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
