@@ -23,7 +23,10 @@
  */
 
 function getUserLocations() {
-    return xmlCall("pulse2.getUserLocations");
+    if (!isset($_SESSION["pulse2.getUserLocations"])) {
+        $_SESSION["pulse2.getUserLocations"] = xmlCall("pulse2.getUserLocations");
+    }
+    return $_SESSION["pulse2.getUserLocations"];
 }
 
 ?>
