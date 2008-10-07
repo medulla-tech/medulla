@@ -31,61 +31,92 @@ require_once('modules/msc/includes/widgets.inc.php');
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
-/*if (strlen($_GET['bundle_id'])) { {
-     Bundle history for single host 
-    $bdl = new Bundle($_GET['bundle_id']);
-    $act = $bdl->quickDisplay();
-    if ($act) {
-        if (strlen($_GET['uuid']) and strlen($_GET['coh_id'])) {
-            
-        } else if (strlen($_GET['uuid'])) {
-            $ajax = new AjaxFilter("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tabhistory");
+if (strlen($_GET['uuid'])) {
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) {
+        $bdl = new Bundle($_GET['bundle_id']);
+        $act = $bdl->quickDisplay();
+        if ($act) {
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=tabhistory");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
         }
+    } elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific host
+        $params = array('tab'=>$_GET['tab'], 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'bundle_id'=>$_GET['bundle_id']);
+        if (strlen($_GET['bundle_id'])) {
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
+        }
+        print "<hr/><br/>";
+        $coh_id = $_GET['coh_id'];
+        $ch = new CommandHistory($coh_id);
+        $ch->display();
+    } else { # Display history for a specific host
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
+        $ajax->setRefresh(30000);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
-} else*/
-if (isset($_GET['uuid']) and $_GET['uuid'] != '' and isset($_GET['coh_id'])) {
-    # Display a specific command_on_host for a specific host
-    print "<hr/><br/>";
-    $coh_id = $_GET['coh_id'];
-    $ch = new CommandHistory($coh_id);
-    $ch->display();
-} else if (isset($_GET['uuid']) and $_GET['uuid'] != '' and !isset($_GET['coh_id'])) { # Display history for a specific host
-    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
-    $ajax->setRefresh(30000);
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
-} else if (isset($_GET['gid']) and isset($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
-    $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
-    // display the selected command
-    $cmd = new Command($_GET['cmd_id']);
-    $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","display","msc", "base", "computers")), $params);
-    // display the selected command on host
-    $coh = new CommandOnHost($_GET['coh_id']);
-    $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
-    // display the command on host details
-    print "<hr/><br/>";
-    $coh_id = $_GET['coh_id'];
-    $ch = new CommandHistory($coh_id);
-    $ch->display();
-} else if (isset($_GET['gid']) and isset($_GET['cmd_id'])) { # Display a specific command for a specific group
-    // display just the selected command
-    $cmd = new Command($_GET['cmd_id']);
-    $cmd->quickDisplay();
-    // display all the commands on hosts
-    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&cmd_id=".$_GET['cmd_id']."&history=1&tab=grouptabhistory");
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
-} else if (isset($_GET['gid']) and (!isset($_GET['coh_id']) and !isset($_GET['cmd_id']))) { # Display history for a specific group
-    // display all commands
-    $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory");
-    $ajax->display();
-    print "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
+} elseif (strlen($_GET['gid'])) {
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle       
+        $bdl = new Bundle($_GET['bundle_id']);
+        $act = $bdl->quickDisplay();
+        if ($act) {
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptabhistory");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
+    } elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
+        $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
+
+        if (strlen($_GET['bundle_id'])) {
+            $params['bundle_id'] = $_GET['bundle_id'];
+            // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
+        }
+
+        // display the selected command
+        $cmd = new Command($_GET['cmd_id']);
+        $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","display","msc", "base", "computers")), $params);
+        // display the selected command on host
+        $coh = new CommandOnHost($_GET['coh_id']);
+        $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
+        // display the command on host details
+        print "<hr/><br/>";
+        $coh_id = $_GET['coh_id'];
+        $ch = new CommandHistory($coh_id);
+        $ch->display();
+    } elseif (strlen($_GET['cmd_id'])) { # Display a specific command for a specific group
+        $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
+        $bdlink = '';
+        if (strlen($_GET['bundle_id'])) {
+            $params['bundle_id'] = $_GET['bundle_id'];
+            // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
+            $bdl = new Bundle($_GET['bundle_id']);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
+            $bdlink = "&bundle_id=".$_GET['bundle_id'];
+        }
+
+        // display just the selected command
+        $cmd = new Command($_GET['cmd_id']);
+        $act = $cmd->quickDisplay();
+        if ($act) {
+            // display all the commands on hosts
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptabhistory&history=1");
+            $ajax->display();
+            print "<br/><br/><br/>";
+            $ajax->displayDivToUpdate();
+        }
+    } else { # Display history for a specific group
+        // display all commands
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory");
+        $ajax->display();
+        print "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    }
 }
 
 ?>
