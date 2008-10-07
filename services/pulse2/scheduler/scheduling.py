@@ -264,6 +264,10 @@ def stopElapsedCommands(scheduler_name):
     logging.getLogger().info("Scheduler: %d tasks to stop" % len(deffereds))
     return deffereds
 
+def stopCommandsOnHosts(ids):
+    for launcher in SchedulerConfig().launchers_uri.values():
+        callOnLauncher(launcher, 'term_processes', ids)
+
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
