@@ -173,7 +173,8 @@
         <term>do_inventory</term>
 
         <listitem>
-          <para>Whenever start inventory command on client</para>
+          <para>Whether to start an inventory command on the client
+          once the command has suceeded</para>
         </listitem>
       </varlistentry>
 
@@ -181,7 +182,17 @@
         <term>do_wol</term>
 
         <listitem>
-          <para>Whenever perform a WOL on client</para>
+          <para>Whether to perform a Wake On Lan (WOL) on the client
+          before attempting to connect to it</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>do_reboot</term>
+
+        <listitem>
+          <para>Whether to reboot the machine after the command
+          succeeded</para>
         </listitem>
       </varlistentry>
 
@@ -281,6 +292,16 @@
         <listitem>
           <para>The command's order inside its bundle</para>
         </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>package_id</term>
+
+	<listitem>
+	  <para>The identifier of the package deployed by the command,
+	  or NULL in case the command is a quick
+	  action</para>
+	</listitem>
       </varlistentry>
     </variablelist>
   </section>
@@ -444,6 +465,14 @@
 
         <listitem>
           <para>A FK to the commands_on_host table</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>date</term>
+
+        <listitem>
+          <para>The time at which the command was run</para>
         </listitem>
       </varlistentry>
 
@@ -652,6 +681,22 @@
         <listitem>
           <para>The table's primary key.</para>
         </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>title</term>
+	<listitem>
+	  <para>The bundle's title</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>do_reboot</term>
+
+	<listitem>
+	  <para>Whether the target should be rebooted once the bundle
+	    has been deployed</para>
+	</listitem>
       </varlistentry>
     </variablelist>
   </section>
