@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:13+0200\n"
+"POT-Creation-Date: 2008-10-07 15:44+0200\n"
 "PO-Revision-Date: 2008-07-25 13:29+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -169,7 +169,8 @@ msgid "Edit this group"
 msgstr "Edytuj tą grupę"
 
 #: dyngroup/dyngroup/save.php:94
-msgid "Enter Boolean operator bewteen groups"
+#, fuzzy
+msgid "Enter Boolean operator between groups"
 msgstr "Wpisz wartość Boolean między tymi grupami"
 
 #: dyngroup/dyngroup/creator.php:182

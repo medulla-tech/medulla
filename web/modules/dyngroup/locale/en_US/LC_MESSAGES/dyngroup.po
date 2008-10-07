@@ -150,7 +150,7 @@ msgid "Edit this group"
 msgstr ""
 
 #: dyngroup/dyngroup/save.php:94
-msgid "Enter Boolean operator bewteen groups"
+msgid "Enter Boolean operator between groups"
 msgstr ""
 
 #: dyngroup/dyngroup/creator.php:182
