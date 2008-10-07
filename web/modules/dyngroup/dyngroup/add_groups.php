@@ -55,7 +55,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
     $count = getRestrictedComputersListLen();
     if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
+        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {
@@ -84,7 +84,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listC = array();
     foreach ($listOfMembers as $member) { $listN[$member['uuid']] = $member; }
     foreach ($listOfCurMembers as $member) { $listC[$member['uuid']] = $member; }
-    
+
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
 
@@ -94,7 +94,7 @@ if (isset($_POST["bdelmachine_x"])) {
     } else {
         $group->create($name, ($visibility == 'show'));
     }
-    
+
     $res = $group->addMembers($newmem) && $group->delMembers($delmem);
 
     if ($res) {
@@ -126,7 +126,7 @@ if (isset($_POST["bdelmachine_x"])) {
         $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
         $listOfMembers[$member['uuid']] = $member;
     }
-    
+
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
 
@@ -134,7 +134,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID')), False);
     $count = getRestrictedComputersListLen();
     if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
+        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {
