@@ -297,9 +297,20 @@ function _colorise($line) {
     return $out;
 }
 function _toDate($a) {
+    $never = array(2031, 12, 31, 23, 59, 59);
+    $asap = array(1970, 1, 1, 0, 0, 0);
+
     if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
-        return sprintf("%04d/%02d/%02d %02d:%02d:%02d", $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
-    } else {
+
+        if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
+            return _T('Never', 'msc');
+
+        if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+            return _T('As soon as possible', 'msc');
+
+        return sprintf(_T('%04d/%02d/%02d %02d:%02d:%02d', 'msc'), $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
+
+    } else { # can't guess if we talk about a date or something else :/
         return $a;
     }
 }
