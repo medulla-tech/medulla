@@ -330,6 +330,7 @@ class SendPackageCommand:
 
         MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
+            self.pid,
             start_file,
             parameters,
             files,

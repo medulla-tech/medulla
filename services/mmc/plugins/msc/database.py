@@ -319,7 +319,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
+    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
         """
         Return a Command object
         """
@@ -329,6 +329,7 @@ class MscDatabase(Singleton):
         cmd = Commands()
         now = time.localtime()
         cmd.creation_date = "%s-%s-%s %s:%s:%s" % (now[0], now[1], now[2], now[3], now[4], now[5])
+        cmd.package_id = package_id
         cmd.start_file = start_file
         cmd.parameters = parameters
         cmd.files = files
@@ -378,6 +379,7 @@ class MscDatabase(Singleton):
 
     def addCommand(self,
                 ctx,
+                package_id,
                 start_file,
                 parameters,
                 files,
@@ -540,7 +542,7 @@ class MscDatabase(Singleton):
                 targets_name.append(targets[i][1])
 
             session = create_session()
-            cmd = self.createCommand(session, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
+            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
             session.close()
 
             r = connection.execute(self.target.insert(), targets_to_insert)
@@ -605,6 +607,7 @@ class MscDatabase(Singleton):
 
         return self.addCommand(
             ctx,
+            None,
             cmd,
             "",
             files,
@@ -998,14 +1001,14 @@ class MscDatabase(Singleton):
 
     ###################
 
-    def getCommandsOnHost(self, ctx, coh_id): # FIXME should we use the ctx
+    def getCommandsOnHost(self, ctx, coh_id):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
         session.close()
         target = self.getTargetForCoh(ctx, coh_id)
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, target.target_uuid):
             return coh
-        self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, target.target_name))
+        self.logger.warn("User %s does not have right permissions to access '%s'" % (ctx.userid, target.target_name))
         return False
 
     def getTargetForCoh(self, ctx, coh_id): # FIXME should we use the ctx
