@@ -268,6 +268,13 @@ class LauncherConfig(pulse2.utils.Singleton):
                             self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
                         if not os.path.exists(self.launchers[section]['localcert']):
                             raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['localcert'])
+
+                        maxslots = (os.sysconf('SC_OPEN_MAX') - 50) / 2 # "should work in most case" formulae
+                        if self.launchers[section]['slots'] > maxslots:
+                            logging.getLogger().warn("launcher %s: section %s, slots capped to %s instead of %s regarding the max FD (%s)" % (self.name, section, maxslots, self.launchers[section]['slots'], os.sysconf('SC_OPEN_MAX')))
+                            self.launchers[section]['slots'] = maxslots
+
+
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
 

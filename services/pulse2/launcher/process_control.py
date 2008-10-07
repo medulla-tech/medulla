@@ -43,7 +43,17 @@ def commandRunner(cmd, cbCommandEnd):
     """
     process = commandProtocol(cmd)
     # FIXME: codec should be taken from conf file
-    process.handler = twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
+    process.handler = twisted.internet.reactor.spawnProcess(
+        process,
+        cmd[0],
+        map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
+        None, # env
+        None, # path
+        None, # uid
+        None, # gid
+        None, # usePTY
+        { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
+    )
     logging.getLogger().debug('about to execute ' + ' '.join(cmd))
     process.deferred = twisted.internet.defer.Deferred()
     process.deferred.addCallback(cbCommandEnd)
@@ -57,7 +67,17 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
         logging.getLogger().warn('Attempt to add command %s twice' % id)
         return False
     # FIXME: codec should be taken from conf file
-    process.handler = twisted.internet.reactor.spawnProcess(process, cmd[0], map(lambda(x): x.encode('utf-8', 'ignore'), cmd), None)
+    process.handler = twisted.internet.reactor.spawnProcess(
+        process,
+        cmd[0],
+        map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
+        None, # env
+        None, # path
+        None, # uid
+        None, # gid
+        None, # usePTY
+        { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
+    )
     logging.getLogger().debug('about to execute ' + ' '.join(cmd))
     process.returnxmlrpcfunc = callbackName
     process.id = id

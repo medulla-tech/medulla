@@ -111,9 +111,9 @@ def establishProxy(client, requestor_ip, requested_port):
         #'--max-exec-time', # FIXME: wrapper_timeout missing in function signature :/
         #str(wrapper_timeout),
         '--exec',
-        SEPARATOR.join(real_command).encode('utf-8', 'ignore'),
+        SEPARATOR.join(real_command),
         '--thru',
-        SEPARATOR.join(thru_command_list).encode('utf-8', 'ignore'),
+        SEPARATOR.join(thru_command_list),
         '--no-wrap',
         '--only-stdout',
         '--remove-empty-lines',
@@ -129,6 +129,17 @@ def establishProxy(client, requestor_ip, requested_port):
         command_list += ['--action', client['action']]
 
     proxy = proxyProtocol()
-    handler = twisted.internet.reactor.spawnProcess(proxy, command_list[0], command_list, None)
+    handler = twisted.internet.reactor.spawnProcess(
+        proxy,
+        command_list[0],
+        map(lambda(x): x.encode('utf-8', 'ignore'), command_list),
+        None, # env
+        None, # path
+        None, # uid
+        None, # gid
+        None, # usePTY
+        { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
+    )
+
     logging.getLogger().debug('about to execute ' + ' '.join(command_list))
     return proxy.defferedLinkStatus
