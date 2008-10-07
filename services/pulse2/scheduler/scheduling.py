@@ -425,41 +425,57 @@ def runUploadPhase(myCommandOnHostID):
             logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%', skipping command" % (myCommandOnHostID, myT.mirrors))
             return None
 
-        # mirrors is an array containing one mirror per value, let's find one valid
-
-        file_uris = list()
-        for m in mirrors:
-            mirror_api = mmc.plugins.msc.mirror_api.Mirror(m)
-            
-            # convert between file_id (rightmost part of file_path splited over '##') and file_uri
-            files_list = map(lambda x: mirror_api.getFileURI(x.split('##')[0]), myC.files.split("\n"))
-
-            if not False in files_list and not '' in files_list: # seems we got an URI per given file (file not font are False), this mirror should be OK
-                # build a dict with the protocol and the files uris
-                if re.compile('^http://').match(m) or re.compile('^https://').match(m): # HTTP download
-                    file_uris.append({'protocol': 'wget', 'files': files_list, 'mirror': m})
-                elif re.compile('^smb://').match(mirror): # TODO: NET download
-                    pass
-                elif re.compile('^ftp://').match(mirror): # FIXME: check that wget may handle FTP as HTTP
-                    file_uris.append({'protocol': 'wget', 'files': files_list, 'mirror': m})
-                elif re.compile('^nfs://').match(mirror): # TODO: NFS download
-                    pass
-                elif re.compile('^ssh://').match(mirror): # TODO: SSH download
-                    pass
-                elif re.compile('^rsync://').match(mirror): # TODO: RSYNC download
-                    pass
-                else: # do nothing
-                    pass
-
-        # from here, either file_uris is an array with a bunch of uris, or it is void in which case we give up
-        if not file_uris:
-            logger.warn("command_on_host #%s: can't get a valid mirror, skipping command" % (myCommandOnHostID))
+        # Check mirrors
+        if len(mirrors) != 2:
+            logger.warn("command_on_host #%s: we need two mirrors ! '%'" % (myCommandOnHostID, myT.mirrors))
             return None
-        choosed_mirror = random.choice(file_uris) # TODO: chaos is good, but we may be smarter here
+        mirror = mirrors[0]
+        fbmirror = mirrors[1]
+        choosen_mirror = None
 
-        logger.warn("command_on_host #%s: mirror '%s' has been choosen" % (myCommandOnHostID, choosed_mirror['mirror']))
-        client['protocol'] = choosed_mirror['protocol']
-        files_list = choosed_mirror['files']
+        # Test package availability on the two mirrors, primary and fallback
+        available = mmc.plugins.msc.mirror_api.Mirror(mirror).isAvailable(myC.package_id)
+        if available:
+            logger.debug("command_on_host #%s: Package '%s' is available on %s" % (myCommandOnHostID, myC.package_id, mirror))
+            choosen_mirror = mirror
+        else:
+            if fbmirror != mirror:
+                available = mmc.plugins.msc.mirror_api.Mirror(fbmirror).isAvailable(myC.package_id)
+                if available:
+                    logger.debug("command_on_host #%s: Package '%s' is available on %s" % (myCommandOnHostID, myC.package_id, fbmirror))
+                    choosen_mirror = fbmirror
+        if not choosen_mirror:
+            logger.warn("command_on_host #%s: Package '%s' is not available on mirrors %s and %s" % (myCommandOnHostID, myC.package_id, mirror, fbmirror))
+            return None
+        logger.debug("command_on_host #%s: mirror '%s' has been choosen" % (myCommandOnHostID, choosen_mirror))
+            
+        mirror_api = mmc.plugins.msc.mirror_api.Mirror(choosen_mirror)
+        files_list = map(lambda x: mirror_api.getFileURI(x.split('##')[0]), myC.files.split("\n"))
+
+        if not False in files_list and not '' in files_list:
+            # build a dict with the protocol and the files uris
+            if re.compile('^http://').match(choosen_mirror) or re.compile('^https://').match(choosen_mirror): # HTTP download
+                file_uris = {'protocol': 'wget', 'files': files_list}
+            elif re.compile('^smb://').match(choosen_mirror): # TODO: NET download
+                pass
+            elif re.compile('^ftp://').match(choosen_mirror): # FIXME: check that wget may handle FTP as HTTP
+                file_uris = {'protocol': 'wget', 'files': files_list}
+            elif re.compile('^nfs://').match(choosen_mirror): # TODO: NFS download
+                pass
+            elif re.compile('^ssh://').match(choosen_mirror): # TODO: SSH download
+                pass
+            elif re.compile('^rsync://').match(choosen_mirror): # TODO: RSYNC download
+                pass
+            else: # do nothing
+                pass
+
+        # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
+        if not file_uris:
+            logger.warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCommandOnHostID))
+            return None
+
+        client['protocol'] = file_uris['protocol']
+        files_list = file_uris['files']
 
         # we should now be ready to begin upload, let's record it
         myCoH.setUploadInProgress()
