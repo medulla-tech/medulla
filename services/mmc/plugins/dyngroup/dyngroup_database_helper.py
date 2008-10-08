@@ -20,11 +20,12 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
 from mmc.support.mmctools import Singleton
 from sqlalchemy import *
 from sqlalchemy.exceptions import SQLError
 from mmc.plugins.pulse2.group import ComputerGroupManager
+import logging
+from sets import Set
 
 
 # USAGE :
@@ -53,7 +54,7 @@ class DyngroupDatabaseHelper(Singleton):
             self.logger.error(e)
         except TypeError, e:
             self.logger.error(e)
-       
+
         return (join_query, query_filter)
 
     def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = [], invert = False):
@@ -112,6 +113,8 @@ class DyngroupDatabaseHelper(Singleton):
         Build AND queries
         """
         filter_on = []
+        result_set = None
+        optimize = True
         for q in queries:
             if len(q) == 4:
                 if q[1] == 'dyngroup':
@@ -134,11 +137,19 @@ class DyngroupDatabaseHelper(Singleton):
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
+                if result_set:
+                    result_set.intersection_update(Set(res))
+                else:
+                    result_set = Set(res)
                 filter_on.append(grpby.in_(*res))
             else:
+                optimize = False
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
-        query_filter = and_(*filter_on)
+        if optimize:
+            query_filter = grpby.in_(*result_set)
+        else:
+            query_filter = and_(*filter_on)
         return (query_filter, join_tables)
 
     def __treatQueryLevelNOT(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
