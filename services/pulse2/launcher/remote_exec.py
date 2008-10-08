@@ -209,9 +209,9 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
         # Build "exec" command
-        real_command = ['rm', '-fr']
+        real_command = ['rm']
         real_command  += map(lambda(a): os.path.join(target_path, a), files_list)
-        real_command += [';', 'if', '!', 'rmdir', target_path, ';']
+        real_command += ['&&', 'if', '!', 'rmdir', target_path, ';']
         real_command += ['then']
         # Use the dellater command if available
         real_command +=  ['if', '[', '-x', '/usr/bin/dellater.exe', ']', ';']
