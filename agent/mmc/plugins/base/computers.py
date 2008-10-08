@@ -121,6 +121,9 @@ class ComputerManager(Singleton):
         self.logger.info("Selecting computer manager: %s" % name)
         self.main = name
 
+    def getManagerName(self):
+        return self.main
+
     def register(self, name, klass):
         self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
         self.components[name] = klass
