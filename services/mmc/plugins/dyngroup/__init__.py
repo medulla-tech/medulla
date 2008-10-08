@@ -177,14 +177,19 @@ class RpcProxy(RpcProxyI):
     def importmembers_to_group(self, id, elt, values):
         ctx = self.currentContext               
         # get machines uuids from values
-        request, bool = forgeRequest(elt, values)
-        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'request':request, 'equ_bool':bool})
+        request, bool, optimization = forgeRequest(elt, values)
+        req = {'request':request, 'equ_bool':bool, 'optimization' : optimization}
+        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, req)
         # put in the wanted format
         uuids = {}
-        for m in machines:
-            uuid = m[1]['objectUUID'][0]
-            hostname = m[1]['cn'][0]
-            uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
+        if optimization:
+            for hostname, uuid in machines:
+                uuids[uuid] = {'hostname':hostname, 'uuid' : uuid}
+        else:
+            for m in machines:
+                uuid = m[1]['objectUUID'][0]
+                hostname = m[1]['cn'][0]
+                uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
         # insert uuid in group with addmembers_to_group
         return self.addmembers_to_group(id, uuids)
 
@@ -305,13 +310,22 @@ def forgeRequest(elt, values):
     crit = elt
     requests = []
     bools = []
+    optimization = True
     for val in values:
+        # If there is a wildcard in a value, we don't flag this request for
+        # possible optimization
+        if optimization:
+            optimization = not "*" in val
         requests.append("%i==%s::%s==%s" % (i, module, crit, val))
         bools.append(str(i))
         i += 1
     request = '||'.join(requests)
     bools = "OR("+",".join(bools)+")"
-    return (request, bools)
+    if optimization and ComputerManager().getManagerName() == "inventory":
+        optim = { "criterion" : crit, "data" : values }
+    else:
+        optim = {}
+    return (request, bools, optim)
 
 def getDefaultModule():
     return config.defaultModule
