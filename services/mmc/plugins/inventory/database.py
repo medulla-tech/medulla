@@ -307,7 +307,6 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.all()
         except KeyError, e:
             query = query.all()
-
         session.close()
         return query
     
@@ -321,12 +320,39 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def optimizedQuery(self, ctx, filt):
+        """
+        @returns: a list of couples (UUID, hostname)
+        @rtype: list
+        """
+        criterion = filt['optimization']['criterion']
+        criterion = ["Path", criterion.split("/")[2]]
+        values = ['Value', filt['optimization']['data']]
+        result = self.getLastMachineInventoryPart(
+            ctx, 'Registry',
+            {'where' : [criterion, values] } )
+        # Just returns a list of couple (UUID, hostname)
+        ret = map(lambda x: (x[0], x[2]), result)
+        return ret
+
     def getComputersOptimized(self, ctx, filt):
         """
         Return a list of computers, but try to optimize the way we get its
         inventory.
         """
-        result = self.getMachinesOnly(ctx, filt)
+        optimization = False
+        if 'optimization' in filt:
+            if 'criterion' in filt['optimization']:
+                if filt['optimization']['criterion'].startswith('Registry/Value/'):
+                    optimization = True
+        if optimization:
+            # In optimized mode, we don't return the full of inventory of the
+            # computers corresponding to the request, but just list of couples
+            # (UUID, hostname)
+            return self.optimizedQuery(ctx, filt)
+        else:
+            result = self.getMachinesOnly(ctx, filt)
+
         tables = Inventory().config.content
         if len(tables) == 1 and "Registry" in tables:
             # The inventory to display is to be taken from the same Registry
@@ -788,7 +814,10 @@ class Inventory(DyngroupDatabaseHelper):
         if params.has_key('where') and params['where'] != '':
             for where in params['where']:
                 if hasattr(partTable.c, where[0]):
-                    result = result.filter(getattr(partTable.c, where[0]) == where[1])
+                    if type(where[1]) == list:
+                        result = result.filter(getattr(partTable.c, where[0]).in_(*where[1]))
+                    else:
+                        result = result.filter(getattr(partTable.c, where[0]) == where[1])
                 else:
                     if noms.has_key(part):
                         try:
@@ -797,7 +826,10 @@ class Inventory(DyngroupDatabaseHelper):
                             
                             nomTable = self.table[nomTableName]
                             if hasattr(nomTable.c, where[0]):
-                                result = result.filter(getattr(nomTable.c, where[0]) == where[1])
+                                if type(where[1]) == list:
+                                    result = result.filter(getattr(nomTable.c, where[0]).in_(*where[1]))
+                                else:
+                                    result = result.filter(getattr(nomTable.c, where[0]) == where[1])
                             else:
                                 self.logger.warn("cant find the required field (%s) in table %s"%(where[0], nomTableName))
                         except ValueError:
