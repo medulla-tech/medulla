@@ -553,7 +553,7 @@ def runExecutionPhase(myCommandOnHostID):
                 'sync_remote_quickaction',
                 myCommandOnHostID,
                 client,
-                myC.start_file,
+                ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
             mydeffered.\
@@ -564,7 +564,7 @@ def runExecutionPhase(myCommandOnHostID):
                 'async_remote_quickaction',
                 myCommandOnHostID,
                 client,
-                myC.start_file,
+                ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
             mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
@@ -577,7 +577,7 @@ def runExecutionPhase(myCommandOnHostID):
                 'sync_remote_exec',
                 myCommandOnHostID,
                 client,
-                myC.start_file,
+                ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
             mydeffered.\
@@ -588,7 +588,7 @@ def runExecutionPhase(myCommandOnHostID):
                 'async_remote_exec',
                 myCommandOnHostID,
                 client,
-                myC.start_file,
+                ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
             mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
