@@ -404,14 +404,14 @@ class Inventory(DyngroupDatabaseHelper):
         if len(q) > 2:
             self.logger.debug("##### >> semi static name : %s"%(q[2]))
         if table == 'Machine':
-            return [self.machine]
+            return [self.machine, self.table['hasHardware'], self.inventory]
         else:
             partTable = self.table[table]
             haspartTable = self.table["has" + table]
         if getInventoryNoms(table) == None:
             return [haspartTable, partTable]
         self.logger.debug("### Nom")
-        ret = [haspartTable, partTable]
+        ret = [haspartTable, partTable, self.inventory]
         for nom in getInventoryNoms(table):
             nomTableName = 'nom%s%s' % (table, nom)
             self.logger.debug("### nomTableName %s"%(nomTableName))
@@ -436,17 +436,17 @@ class Inventory(DyngroupDatabaseHelper):
             value = query[3]
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return getattr(partKlass.c, field) > value
+                return and_(getattr(partKlass.c, field) > value, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return getattr(partKlass.c, field) < value
+                return and_(getattr(partKlass.c, field) < value, self.inventory.c.Last == 1)
             elif invert:
-                return getattr(partKlass.c, field) != value
+                return and_(getattr(partKlass.c, field) != value, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return getattr(partKlass.c, field).like(value)
-                return getattr(partKlass.c, field) == value
+                    return and_(getattr(partKlass.c, field).like(value), self.inventory.c.Last == 1)
+                return and_(getattr(partKlass.c, field) == value, self.inventory.c.Last == 1)
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
                 partKlass = Machine
@@ -471,17 +471,17 @@ class Inventory(DyngroupDatabaseHelper):
 
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) > value, condition)
+                return and_(getattr(partKlass.c, field) > value, condition, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) < value, condition)
+                return and_(getattr(partKlass.c, field) < value, condition, self.inventory.c.Last == 1)
             elif invert:
-                return and_(getattr(partKlass.c, field) != value, condition)
+                return and_(getattr(partKlass.c, field) != value, condition, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass.c, field).like(value), condition)
-                return and_(getattr(partKlass.c, field) == value, condition)
+                    return and_(getattr(partKlass.c, field).like(value), condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass.c, field) == value, condition, self.inventory.c.Last == 1)
           
     def getMachines(self, ctx, pattern = None):
         """
