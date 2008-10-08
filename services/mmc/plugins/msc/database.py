@@ -645,6 +645,23 @@ class MscDatabase(Singleton):
                    "id_group" : groupID }
         return target
 
+    def stopBundle(self, bundle_id):
+        """
+        Stop a bundle, by stopping all its related commands_on_host.
+        """
+        #@returns: the list of all related commands_on_host
+        #@rtype: list
+        #"""
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
+        c_ids = map(lambda x:x[0], c_ids)
+        self.commands_on_host.update(self.commands_on_host.c.fk_commands.in_(*c_ids)).execute({self.commands_on_host.c.current_state:"stop", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
+        trans.commit()
+                
     def stopCommand(self, c_id):
         """
         Stop a command, by stopping all its related commands_on_host.
@@ -658,6 +675,24 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
         trans.commit()
+
+    def getCommandsonhostsAndSchedulersOnBundle(self, bundle_id):
+        """
+        """
+        conn = self.getDbConnection()
+        c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
+        c_ids = map(lambda x:x[0], c_ids)
+        self.logger.debug("Will stop these commands : %s" % (c_ids))
+        result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands.in_(*c_ids)).execute()
+        schedulers = {}
+        for row in result:
+            coh, scheduler = row
+            if scheduler in schedulers:
+                schedulers[scheduler].append(coh)
+            else:
+                schedulers[scheduler] = [coh]
+        conn.close()
+        return schedulers
 
     def getCommandsonhostsAndSchedulers(self, c_id):
         """

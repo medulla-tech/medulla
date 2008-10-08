@@ -436,6 +436,17 @@ def stop_command(c_id):
         d.addErrback(lambda err: self.logger.error("stop_command: " + str(err)))
 ###
 
+### Bundle handling ###
+def stop_bundle(bundle_id):
+    # Update command in database
+    MscDatabase().stopBundle(bundle_id)
+    # Stop related commands_on_host on related schedulers
+    scheds = MscDatabase().getCommandsonhostsAndSchedulersOnBundle(bundle_id) 
+    for sched in scheds:
+        d = mmc.plugins.msc.client.scheduler.stopCommands(None, scheds[sched])
+        d.addErrback(lambda err: self.logger.error("stop_bundle: " + str(err)))
+###
+
 ##
 # common
 ##
