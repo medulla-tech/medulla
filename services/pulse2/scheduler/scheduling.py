@@ -305,17 +305,6 @@ def runCommand(myCommandOnHostID):
     if not myC.inDeploymentInterval():
         return
 
-    # rapid jumps to handle scheduler-taken-down situations
-    if myCoH.isUploadDone(): # in case we have been stopped *after* the upload, jump there
-        logger.info("command_on_host #%s: upload done, jump to execution stage" % myCommandOnHostID)
-        return runExecutionPhase(myCommandOnHostID)
-    if myCoH.isExecutionDone(): # in case we have been stopped *after* the execution, jump there
-        logger.info("command_on_host #%s: execution done, jump to inventory stage" % myCommandOnHostID)
-        return runDeletePhase(myCommandOnHostID)
-    if myCoH.isDeleteDone(): # in case we have been stopped *after* the deletion, jump there
-        logger.info("command_on_host #%s: deletion done, jump to inventory stage" % myCommandOnHostID)
-        return runInventoryPhase(myCommandOnHostID)
-
     if not myC.isPartOfABundle(): # command is independant, we may advance
         logger.debug("command_on_host #%s: not part of a bundle" % myCoH.getId())
     else: # command is part of a bundle, let's check the bundle state
@@ -377,15 +366,15 @@ def runUploadPhase(myCommandOnHostID):
     if myCoH.isUploadRunning(): # upload still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCoH.getId())
         return None
+    if myCoH.isUploadIgnored(): # upload has already been ignored, jump to next stage
+        logger.info("command_on_host #%s: upload ignored" % myCoH.getId())
+        return runExecutionPhase(myCommandOnHostID)
+    if myCoH.isUploadDone(): # upload has already already done, jump to next stage
+        logger.info("command_on_host #%s: upload done" % myCoH.getId())
+        return runExecutionPhase(myCommandOnHostID)
     if not myCoH.isUploadImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
         return None
-    if myCoH.isUploadDone(): # upload already done, jump to next stage
-        logger.info("command_on_host #%s: upload done" % myCoH.getId())
-        return runExecutionPhase(myCommandOnHostID)
-    if myCoH.isUploadIgnored(): # upload has been ignored, jump to next stage
-        logger.info("command_on_host #%s: upload ignored" % myCoH.getId())
-        return runExecutionPhase(myCommandOnHostID)
     if not myC.hasSomethingToUpload(): # nothing to upload here, jump to next stage
         logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
         myCoH.setUploadIgnored()
@@ -536,15 +525,15 @@ def runExecutionPhase(myCommandOnHostID):
     if myCoH.isExecutionRunning(): # execution still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCommandOnHostID)
         return None
+    if myCoH.isExecutionDone(): # execution has already been done, jump to next stage
+        logger.info("command_on_host #%s: execution done" % myCommandOnHostID)
+        return runDeletePhase(myCommandOnHostID)
+    if myCoH.isExecutionIgnored(): # execution has already been ignored, jump to next stage
+        logger.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
+        return runDeletePhase(myCommandOnHostID)
     if not myCoH.isExecutionImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: nothing to execute right now" % myCommandOnHostID)
         return None
-    if myCoH.isExecutionDone(): # execution already done, jump to next stage
-        logger.info("command_on_host #%s: execution done" % myCommandOnHostID)
-        return runDeletePhase(myCommandOnHostID)
-    if myCoH.isExecutionIgnored(): # execution previously ignored, jump to next stage
-        logger.info("command_on_host #%s: execution ignored" % myCommandOnHostID)
-        return runDeletePhase(myCommandOnHostID)
     if not myC.hasSomethingToExecute(): # nothing to execute here, jump to next stage
         logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
         myCoH.setExecutionIgnored()
@@ -616,15 +605,15 @@ def runDeletePhase(myCommandOnHostID):
     if myCoH.isDeleteRunning(): # delete still running, immediately returns
         logging.getLogger().info("command_on_host #%s: still deleting" % myCommandOnHostID)
         return None
-    if not myCoH.isDeleteImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
-        return None
     if myCoH.isDeleteDone(): # delete has already be done, jump to next stage
         logger.info("command_on_host #%s: delete done" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
-    if myCoH.isDeleteIgnored(): # delete ignored, jump to next stage
+    if myCoH.isDeleteIgnored(): # delete has already be ignored, jump to next stage
         logger.info("command_on_host #%s: delete ignored" % myCommandOnHostID)
         return runInventoryPhase(myCommandOnHostID)
+    if not myCoH.isDeleteImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: nothing to delete right now" % myCommandOnHostID)
+        return None
     if not myC.hasSomethingToDelete(): # nothing to delete here, jump to next stage
         logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
         myCoH.setDeleteIgnored()
