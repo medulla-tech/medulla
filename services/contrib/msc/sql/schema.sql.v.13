@@ -1,0 +1,10 @@
+ALTER TABLE `commands_on_host` \
+    ADD COLUMN `last_wol_attempt` DATETIME DEFAULT NULL, \
+    ADD COLUMN `fk_use_as_proxy` INT DEFAULT NULL, \
+    ADD COLUMN `order_in_proxy` SMALLINT DEFAULT NULL;
+
+ALTER TABLE `commands` \
+    ADD COLUMN `use_local_proxy` ENUM("no", "yes") DEFAULT "no" NOT NULL;
+
+DELETE FROM version;
+INSERT INTO version VALUES( "13" );
