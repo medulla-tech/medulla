@@ -321,9 +321,12 @@ class Inventory(DyngroupDatabaseHelper):
         query = self.__machinesOnlyQuery(ctx, pattern, session)
         query = query.order_by(asc(self.machine.c.Name))
         try:
-            if pattern['max'] != -1 and ComputerGroupManager().isrequest_group(ctx, gid):
-                query = query.offset(pattern['min'])
-                query = query.limit(int(pattern['max']) - int(pattern['min']))
+            if pattern['max'] != -1:
+                if (pattern.has_key('gid') and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) or not pattern.has_key('gid'):
+                    query = query.offset(pattern['min'])
+                    query = query.limit(int(pattern['max']) - int(pattern['min']))
+                else:
+                    query = query.all()
             else:
                 query = query.all()
         except KeyError, e:
