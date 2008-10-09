@@ -304,6 +304,18 @@ def runCommand(myCommandOnHostID):
 
     if not myC.inDeploymentInterval():
         return
+
+    # rapid jumps to handle scheduler-taken-down situations
+    if myCoH.isUploadDone(): # in case we have been stopped *after* the upload, jump there
+        logger.info("command_on_host #%s: upload done, jump to execution stage" % myCommandOnHostID)
+        return runExecutionPhase(myCommandOnHostID)
+    if myCoH.isExecutionDone(): # in case we have been stopped *after* the execution, jump there
+        logger.info("command_on_host #%s: execution done, jump to inventory stage" % myCommandOnHostID)
+        return runDeletePhase(myCommandOnHostID)
+    if myCoH.isDeleteDone(): # in case we have been stopped *after* the deletion, jump there
+        logger.info("command_on_host #%s: deletion done, jump to inventory stage" % myCommandOnHostID)
+        return runInventoryPhase(myCommandOnHostID)
+
     if not myC.isPartOfABundle(): # command is independant, we may advance
         logger.debug("command_on_host #%s: not part of a bundle" % myCoH.getId())
     else: # command is part of a bundle, let's check the bundle state
