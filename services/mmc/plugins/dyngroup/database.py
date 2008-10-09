@@ -389,9 +389,9 @@ class DyngroupDatabase(Singleton):
     def __result_group_query(self, ctx, session, id, filter = ''):
         result = session.query(Machines).select_from(self.machines.join(self.results))
         result = result.filter(self.results.c.FK_group == id)
-        result = result.order_by(asc(self.machines.c.name))
         if filter:
             result = result.filter(self.machines.c.name.like('%'+filter+'%'))
+        result = result.order_by(asc(self.machines.c.name))
         return result
     
     def __merge_join_query(self, select_from, join_tables):
