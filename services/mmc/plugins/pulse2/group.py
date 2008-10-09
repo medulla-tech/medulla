@@ -57,6 +57,10 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().result_group(ctx, gid, min, max, filter, idOnly)
 
+    def countresult_group(self, ctx, gid, filter):
+        klass = self.components[self.main]
+        return klass().countresult_group(ctx, gid, filter)
+
     def get_group_results(self, ctx, gid, min, max, filter, idOnly = True):
         """
         Wrapper that according to the group type calls result_group (static

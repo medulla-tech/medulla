@@ -248,7 +248,7 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
         
-    def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session()):
+    def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session(), count = False):
         query = session.query(Machine)
         try:
             query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
@@ -281,8 +281,27 @@ class Inventory(DyngroupDatabaseHelper):
             if ComputerGroupManager().isrequest_group(ctx, gid):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
             else:
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                if (not pattern.has_key('hostname') or pattern['hostname'] == '') \
+                    and (not pattern.has_key('filter') or pattern['filter'] == ''):
+                        if count:
+                            return ComputerGroupManager().countresult_group(ctx, gid, '')
+                        else:
+                            min = 0
+                            max = 10
+                            if pattern.has_key('min'):
+                                min = pattern['min']
+                            if pattern.has_key('max'):
+                                max = pattern['max']
+                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, ''))
+                            
+                else:
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(*machines))
+            if not ComputerGroupManager().isrequest_group(ctx, gid):
+                if count:
+                    return query.count()
+                else:
+                    return query
         except KeyError, e:
             pass
 
@@ -315,8 +334,7 @@ class Inventory(DyngroupDatabaseHelper):
         Return the number of available machines
         """
         session = create_session()
-        query = self.__machinesOnlyQuery(ctx, pattern, session)
-        ret = len(query.all())
+        ret = self.__machinesOnlyQuery(ctx, pattern, session, True)
         session.close()
         return ret
 

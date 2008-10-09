@@ -29,6 +29,12 @@ class DyngroupGroup(ComputerGroupI):
         """
         return DyngroupDatabase().result_group(ctx, gid, min, max, filter, idOnly)
 
+    def countresult_group(self, ctx, gid, filter):
+        """
+        Count the group content
+        """
+        return DyngroupDatabase().countresult_group(ctx, gid, filter)
+
     def request(self, ctx, query, bool, min, max, filter):
         """
         Reply to this query
