@@ -33,27 +33,63 @@ if (isset($_POST["bconfirm"])) {
     $submod = $path[1];
     $page = $path[2];
     $tab = $path[3];
+    $url = array();
+    foreach (array('name', 'from', 'cmd_id', 'coh_id', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
+        $url[$post] = $_POST[$post];
+    }
+    $url['tab'] = $tab;
 
-    if (strlen($_POST['gid']) && !strlen($_POST["coh_id"])) {
-        /* The stop command must be done on a group of computers */
-        $cmd_id = $_POST["cmd_id"];
-        $gid = $_POST["gid"];
-        stop_command($cmd_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid)));
-    } else if ($_POST['gid'] != '') {
-        /* The stop command is done on a commands_on_host for a group of
-           computers */
-        $coh_id = $_POST["coh_id"];
-        $cmd_id = $_POST["cmd_id"];
-        $gid = $_POST["gid"];
-        stop_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+    if (strlen($_POST['bundle_id'])) {
+        $bundle_id = $_POST['bundle_id'];
+        if (strlen($_POST['gid'])) {
+            if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
+                stop_bundle($bundle_id);
+                
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid)));
+            } elseif (strlen($_POST["cmd_id"]) and !strlen($_POST["coh_id"])) {
+                $cmd_id = $_POST["cmd_id"];
+                stop_command($cmd_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id)));
+            } else {
+                $coh_id = $_POST["coh_id"];
+                $cmd_id = $_POST["cmd_id"];
+                stop_command_on_host($coh_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id, 'cmd_id'=>$cmd_id)));
+            }
+        } elseif (strlen($_POST["uuid"])) {
+            $hostname = $_POST["hostname"];
+            $uuid = $_POST["uuid"];
+            if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
+                stop_bundle($bundle_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            } else {
+                $coh_id = $_POST["coh_id"];
+                stop_command_on_host($coh_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            }
+        }
     } else {
-        $hostname = $_POST["hostname"];
-        $uuid = $_POST["uuid"];
-        $coh_id = $_POST["coh_id"];
-        stop_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        if (strlen($_POST['gid']) && !strlen($_POST["coh_id"])) {
+            /* The stop command must be done on a group of computers */
+            $cmd_id = $_POST["cmd_id"];
+            $gid = $_POST["gid"];
+            stop_command($cmd_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'gid'=>$gid)));
+        } else if (strlen($_POST['gid'])) {
+            /* The stop command is done on a commands_on_host for a group of
+               computers */
+            $coh_id = $_POST["coh_id"];
+            $cmd_id = $_POST["cmd_id"];
+            $gid = $_POST["gid"];
+            stop_command_on_host($coh_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+        } else {
+            $hostname = $_POST["hostname"];
+            $uuid = $_POST["uuid"];
+            $coh_id = $_POST["coh_id"];
+            stop_command_on_host($coh_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); #array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        }
     }
 } else {
     /* Form displaying */
@@ -64,13 +100,18 @@ if (isset($_POST["bconfirm"])) {
     $cmd_id = $_GET["cmd_id"];
     $coh_id = $_GET["coh_id"];
     $gid = $_GET["gid"];
+    $bundle_id = $_GET['bundle_id'];
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
 
+    $action_type = _T('action', 'msc');
+    if (strlen($bundle_id)) {
+        $action_type = _T('bundle', 'msc');
+    }
     if (strlen($gid) && !strlen($coh_id)) {
-        $title = sprintf(_T("Stop action %s on this group", 'msc'), $name);
+        $title = sprintf(_T("Stop %s %s on this group", 'msc'), $action_type, $name);
     } else {
-        $title = sprintf(_T("Stop action %s on host %s", 'msc'), $name, $hostname);
+        $title = sprintf(_T("Stop %s %s on host %s", 'msc'), $action_type, $name, $hostname);
     }
     $f = new PopupForm($title);
     $f->add(new HiddenTpl("name"),      array("value" => $hostname, "hide" => True));
@@ -79,8 +120,10 @@ if (isset($_POST["bconfirm"])) {
     $f->add(new HiddenTpl("coh_id"),    array("value" => $coh_id,   "hide" => True));
     $f->add(new HiddenTpl("uuid"),      array("value" => $uuid,     "hide" => True));
     $f->add(new HiddenTpl("gid"),       array("value" => $gid,      "hide" => True));
+    $f->add(new HiddenTpl("bundle_id"), array("value" => $bundle_id,"hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
+    #DEBUG print "u:$uuid - g:$gid || b:$bundle_id - c:$cmd_id - h:$coh_id";
 }
 ?>

@@ -125,6 +125,10 @@ function stop_command($id) {
     return xmlCall('msc.stop_command', array($id));
 }
 
+function stop_bundle($bundle_id) {
+    return xmlCall('msc.stop_bundle', array($bundle_id));
+}
+
 function get_command_on_group_status($cmd_id) {
     return xmlCall('msc.get_command_on_group_status', array($cmd_id));
 }

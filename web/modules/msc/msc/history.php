@@ -63,7 +63,7 @@ if (strlen($_GET['uuid'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
-            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&tab=grouptabhistory");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=grouptabhistory");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
