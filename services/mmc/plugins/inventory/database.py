@@ -38,6 +38,8 @@ SA_MINOR = 3
 
 NB_DB_CONN_TRY = 2
 
+MAX_REQ_NUM = 100
+
 # TODO need to check for useless function (there should be many unused one...)
 
 def create_method(m):
@@ -623,7 +625,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
         
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field))
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -644,7 +646,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
         
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%'))
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -663,7 +665,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
         session = create_session()
         result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
-        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%'))
+        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -678,7 +680,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         session = create_session()
-        result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
+        result = self.__getValuesWhereQuery(table, field1, value1, field2, session).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
