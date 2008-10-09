@@ -112,6 +112,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
         filter(database.commands_on_host.c.current_state != 'done').\
         filter(database.commands_on_host.c.current_state != 'pause').\
         filter(database.commands_on_host.c.current_state != 'stop').\
+        filter(database.commands_on_host.c.current_state != 'failed').\
         filter(database.commands_on_host.c.current_state != 'upload_in_progress').\
         filter(database.commands_on_host.c.current_state != 'execution_in_progress').\
         filter(database.commands_on_host.c.current_state != 'delete_in_progress').\
