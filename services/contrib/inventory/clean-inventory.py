@@ -6,15 +6,15 @@ from sqlalchemy import *
 import logging
 
 # The inventory tables we wish to purge
-tables_elements = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
+#tables_elements = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
+tables_elements = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard"]
 
 # Set up logging
 logger = logging.getLogger(sys.argv[0])
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(handler)
-logger.setLevel(logging.INFO)
-
+logger.setLevel(logging.DEBUG)
 
 def deleteOldInventories(inventory):
     """
@@ -116,17 +116,32 @@ def deleteEmptyInventories(inventory):
     """
     #First, build up the union for every machine in the has* tables
 
-    return # security to prevent using this function
-
-    all_inventories_select = []
+    to_delete = None
     for table in tables_elements:
+        # First we look for inventory parts not linked to any has*
         has_table = Table("has" + table, metadata, autoload = True)
-        all_inventories_select.append(select([has_table.c.inventory]))
 
-    all_inventories = union(*all_inventories_select)
-    to_delete = inventory.delete(not_(inventory.c.id.in_(all_inventories)))
-    logger.debug("deleteEmptyInventories: SQL request: %s" % str(to_delete).replace('\n', ' '))
-    to_delete.execute()
+        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
+                outerjoin(inventory, has_table, has_table.c.inventory == inventory.c.id).\
+                select(has_table.c.inventory == None).\
+                execute().\
+                fetchall()
+            )
+        logger.info("deleteEmptyInventories : processing table has%s" % (table))
+        if not to_delete:
+            to_delete = to_merge
+        else:
+            to_delete = list(set(to_delete).intersection(set(to_merge)))
+
+    if len(to_delete) > 0:
+        logger.info("deleteEmptyInventories : will purge %d rows" % (len(to_delete)))
+        to_delete = list(set(to_delete)) # now I may deduplicate my IDs
+        for i in range(0, 1+len(to_delete)/1000): # delete by 1000-pack
+            inventory.delete(inventory.c.id.in_(*to_delete[i*1000:(i+1)*1000])).execute()
+            logger.info("deleteEmptyInventories : done %d%%" % ((i * 100 / (1+len(to_delete)/1000))))
+        logger.debug("deleteEmptyInventories : purged rows : %s" % (to_delete))
+    else:
+        logger.info("deleteEmptyInventories : no rows to purge")
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s [db_conn_string]' % argv[0]
@@ -141,6 +156,12 @@ if __name__ == "__main__":
 
     inventory = Table("Inventory", metadata, autoload = True)
     machine = Table("Machine", metadata, autoload = True)
+
+    """
+    logger.info("Deleting empty inventories...")
+    deleteEmptyInventories(inventory)
+    logger.info("Done !")
+    """
 
     logger.info("Deleting old inventories...")
     deleteOldInventories(inventory)
@@ -158,8 +179,3 @@ if __name__ == "__main__":
     cleanUpInventoryParts(inventory)
     logger.info("Done !")
 
-    """
-    logger.info("Deleting empty inventories...")
-    deleteEmptyInventories(inventory)
-    logger.info("Done !")
-    """
