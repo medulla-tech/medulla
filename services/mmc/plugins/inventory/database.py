@@ -292,7 +292,7 @@ class Inventory(DyngroupDatabaseHelper):
                                 min = pattern['min']
                             if pattern.has_key('max'):
                                 max = pattern['max']
-                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, min+max, ''))
+                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, min, ''))
                             
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
@@ -321,7 +321,7 @@ class Inventory(DyngroupDatabaseHelper):
         query = self.__machinesOnlyQuery(ctx, pattern, session)
         query = query.order_by(asc(self.machine.c.Name))
         try:
-            if pattern['max'] != -1:
+            if pattern['max'] != -1 and ComputerGroupManager().isrequest_group(ctx, gid):
                 query = query.offset(pattern['min'])
                 query = query.limit(int(pattern['max']) - int(pattern['min']))
             else:
