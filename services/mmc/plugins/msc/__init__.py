@@ -425,26 +425,41 @@ def stop_command_on_host(coh_id):
     return xmlrpcCleanup(True)
 ### Command on host handling ###
 
+def action_on_command(id, f_name, f_database, f_scheduler):
+    # Update command in database
+    getattr(MscDatabase(), f_database)(id)
+    # Stop related commands_on_host on related schedulers
+    scheds = MscDatabase().getCommandsonhostsAndSchedulers(id)
+    for sched in scheds:
+        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
+        d.addErrback(lambda err: self.logger.error("%s: " % (f_name) + str(err)))
+        
 ### Commands handling ###
 def stop_command(c_id):
-    # Update command in database
-    MscDatabase().stopCommand(c_id)
-    # Stop related commands_on_host on related schedulers
-    scheds = MscDatabase().getCommandsonhostsAndSchedulers(c_id)
-    for sched in scheds:
-        d = mmc.plugins.msc.client.scheduler.stopCommands(None, scheds[sched])
-        d.addErrback(lambda err: self.logger.error("stop_command: " + str(err)))
+    return action_on_command(c_id, 'stop_command', 'stopCommand', 'stopCommands')
+
+def start_command(c_id):
+    return action_on_command(c_id, 'start_command', 'startCommand', 'startCommands')
+
+def pause_command(c_id):
+    return action_on_command(c_id, 'pause_command', 'pauseCommand', 'pauseCommands')
+
+def restart_command(c_id):
+    return action_on_command(c_id, 'restart_command', 'restartCommand', 'restartCommands')
 ###
 
 ### Bundle handling ###
 def stop_bundle(bundle_id):
-    # Update command in database
-    MscDatabase().stopBundle(bundle_id)
-    # Stop related commands_on_host on related schedulers
-    scheds = MscDatabase().getCommandsonhostsAndSchedulersOnBundle(bundle_id) 
-    for sched in scheds:
-        d = mmc.plugins.msc.client.scheduler.stopCommands(None, scheds[sched])
-        d.addErrback(lambda err: self.logger.error("stop_bundle: " + str(err)))
+    return action_on_command(bundle_id, 'stop_bundle', 'stopBundle', 'stopCommands')
+
+def start_bundle(c_id):
+    return action_on_bundle(c_id, 'start_bundle', 'startBundle', 'startCommands')
+
+def pause_bundle(c_id):
+    return action_on_bundle(c_id, 'pause_bundle', 'pauseBundle', 'pauseCommands')
+
+def restart_bundle(c_id):
+    return action_on_bundle(c_id, 'restart_bundle', 'restartBundle', 'restartCommands')
 ###
 
 ##
