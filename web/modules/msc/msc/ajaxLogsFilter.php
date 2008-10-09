@@ -101,6 +101,7 @@ $n = null;
 if ($areCommands) {
     foreach ($cmds as $cmd) {
         $coh_id = $cmd[1];
+        $coh = $cmd[3];
         $cmd = $cmd[0];
         $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) {
@@ -168,7 +169,6 @@ if ($areCommands) {
             $a_start[] = $actionempty;
             $a_pause[] = $actionempty;
         } else {
-            $coh = get_commands_on_host($coh_id);
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
@@ -223,10 +223,10 @@ if ($areCommands) {
     foreach ($cmds as $cmd) {
 
         $coh_id = $cmd[1];
-        $cho_status = $cmd[2];
+        $coh_status = $cmd[2];
+        $coh = $cmd[3];
         $cmd = $cmd[0];
         if ((strlen($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !strlen($_GET['coh_id'])) {
-            $coh = get_commands_on_host($coh_id);
             if ($history) {
                 $d = $coh["end_date"];
             } else {
