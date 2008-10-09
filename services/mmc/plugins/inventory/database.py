@@ -281,21 +281,22 @@ class Inventory(DyngroupDatabaseHelper):
             if ComputerGroupManager().isrequest_group(ctx, gid):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
             else:
-                if (not pattern.has_key('hostname') or pattern['hostname'] == '') \
-                    and (not pattern.has_key('filter') or pattern['filter'] == ''):
-                        if count:
-                            return ComputerGroupManager().countresult_group(ctx, gid, '')
-                        else:
-                            min = 0
-                            max = 10
-                            if pattern.has_key('min'):
-                                min = pattern['min']
-                            if pattern.has_key('max'):
-                                max = pattern['max']
-                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, ''))
-                            
-                else:
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                 filt = ''
+                 if pattern.has_key('hostname'):
+                     filt = pattern['hostname']
+                 if pattern.has_key('filter'):
+                     filt = pattern['filter']
+                 if count:
+                     return ComputerGroupManager().countresult_group(ctx, gid, filt)
+                 else:
+                     min = 0
+                     max = -1
+                     if pattern.has_key('min'):
+                         min = pattern['min']
+                     if pattern.has_key('max'):
+                         max = pattern['max']
+                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
+                     
             query = query.filter(self.machine.c.id.in_(*machines))
             if not ComputerGroupManager().isrequest_group(ctx, gid):
                 if count:
