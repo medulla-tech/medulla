@@ -292,7 +292,7 @@ class Inventory(DyngroupDatabaseHelper):
                                 min = pattern['min']
                             if pattern.has_key('max'):
                                 max = pattern['max']
-                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, min, ''))
+                            machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, ''))
                             
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
