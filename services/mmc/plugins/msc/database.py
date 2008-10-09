@@ -1072,7 +1072,7 @@ class MscDatabase(Singleton):
         return [ret, cmds]
 
     def getCommands(self, ctx, cmd_id):
-        a_targets = map(lambda target: target.target_uuid, self.getTargets(cmd_id))
+        a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx.userid, a_targets):
             session = create_session()
             ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
@@ -1093,10 +1093,14 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def getTargets(self, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
-        session = create_session()
-        ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
-        session.close()
+    def getTargets(self, cmd_id, onlyId = False):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+        if onlyId:
+            connection = self.getDbConnection()
+            ret = connection.execute(select([self.target.c.id], and_(self.commands_on_host.c.fk_commands == cmd_id, self.target.c.id == self.commands_on_host.c.fk_target))).fetchall()
+        else:
+            session = create_session()
+            ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
+            session.close()
         return ret
 
     def getCommandOnHostTitle(self, ctx, cmd_id):
