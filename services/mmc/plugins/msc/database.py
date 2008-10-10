@@ -1111,7 +1111,7 @@ class MscDatabase(Singleton):
     def getTargets(self, cmd_id, onlyId = False):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         if onlyId:
             connection = self.getDbConnection()
-            ret = connection.execute(select([self.target.c.id], and_(self.commands_on_host.c.fk_commands == cmd_id, self.target.c.id == self.commands_on_host.c.fk_target))).fetchall()
+            ret = connection.execute(select([self.target.c.target_uuid], and_(self.commands_on_host.c.fk_commands == cmd_id, self.target.c.id == self.commands_on_host.c.fk_target))).fetchall()
         else:
             session = create_session()
             ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
