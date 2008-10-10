@@ -271,7 +271,7 @@ class CommandsOnHost(object):
     def reSchedule(self, delay):
         """ Reschedule when something went wrong """
         if self.attempts_left < 1: # no attempts left
-            self.setFailed() # TODO: introduce a new state (failed ?)
+            self.setFailed()
         elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
             self.attempts_left -= 1
             self.flush()
@@ -393,7 +393,9 @@ class CommandsOnHost(object):
             'attempts_left': self.attempts_left,
             'next_attempt_date_time': self.next_attempt_date_time,
             'current_launcher': self.current_launcher,
-            'scheduler': self.scheduler
+            'scheduler': self.scheduler,
+            'order_in_proxy': self.order_in_proxy,
+            'fk_use_as_proxy': self.fk_use_as_proxy
         }
 
     def setStartDate(self):

@@ -82,6 +82,11 @@ class Commands(object):
         logging.getLogger().debug("hasSomethingToDelete(%s): %s" % (self.getId(), result))
         return result
 
+    def hasToUseProxy(self):
+        result = (self.use_local_proxy == 'yes')
+        logging.getLogger().debug("hasToUseProxy(%s): %s" % (self.getId(), result))
+        return result
+
     def isQuickAction(self):
         # TODO: a quick action is not only an action with nothing to upload
         result = (len(self.files) == 0)
@@ -95,7 +100,7 @@ class Commands(object):
         else:
             result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
         logging.getLogger().debug("inDeploymentInterval(%s): %s" % (self.id, result))
-        return result        
+        return result
 
     def getCohIds(self):
         """
@@ -104,7 +109,7 @@ class Commands(object):
         session = sqlalchemy.create_session()
         myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.c.fk_commands == self.getId())
         session.close()
-        return myCommandOnHosts.all()        
+        return myCommandOnHosts.all()
 
     def toH(self):
         return {
@@ -136,7 +141,8 @@ class Commands(object):
             'maxbw': self.maxbw,
             'deployment_intervals': self.deployment_intervals,
             'bundle_id': self.bundle_id,
-            'order_in_bundle': self.order_in_bundle
+            'order_in_bundle': self.order_in_bundle,
+            'use_local_proxy': self.use_local_proxy
         }
 
 def stopCommand(c_id):

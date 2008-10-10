@@ -58,7 +58,7 @@ import logging
 
 SA_MAYOR = 0
 SA_MINOR = 3
-DATABASEVERSION = 12
+DATABASEVERSION = 13
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -676,7 +676,7 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
         trans.commit()
-                
+
     def stopCommand(self, c_id):
         """
         Stop a command, by stopping all its related commands_on_host.
@@ -745,7 +745,7 @@ class MscDatabase(Singleton):
                 q = q.filter(self.commands.c.creator.in_(*ctx.userids))
             # else if we have just one location, we don't apply any filter. The
             #     user can see the commands of all users
-                
+
         else:
             # Unknown filter type
             self.logger.warn("Unknown filter type when querying commands")
