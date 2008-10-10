@@ -81,16 +81,28 @@ $page = new Page("groupmsctabs", _T("Secure control on a group of computers", "m
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("grouptablaunch", _T("MSC launch tab", "msc"));
+$tab = new Tab("grouptablaunch", _T("MSC launch tab for a group", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptabbundle", _T("MSC bundle tab", "msc"));
+$tab = new Tab("grouptabbundle", _T("MSC bundle tab for a group", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptablogs", _T("MSC logs tab", "msc"));
+$tab = new Tab("grouptablogs", _T("MSC logs tab for a group", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptabhistory", _T("MSC history tab", "msc"));
+$tab = new Tab("grouptabhistory", _T("MSC history tab for a group", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tablaunch", _T("MSC launch tab for a machine in a group", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tabbundle", _T("MSC bundle tab for a machine in a group", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tablogs", _T("MSC logs tab for a machine in a group", "msc"));
+$page->addTab($tab);
+
+$tab = new Tab("tabhistory", _T("MSC history tab for a machine in a group", "msc"));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -99,16 +111,16 @@ $page = new Page("msctabs", _T("Secure control on computer", "msc"));
 $page->setFile("modules/msc/msc/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tablaunch", _T("MSC launch tab", "msc"));
+$tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tabbundle", _T("MSC bundle tab", "msc"));
+$tab = new Tab("tabbundle", _T("MSC bundle tab for a machine", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tablogs", _T("MSC logs tab", "msc"));
+$tab = new Tab("tablogs", _T("MSC logs tab for a machine", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tabhistory", _T("MSC history tab", "msc"));
+$tab = new Tab("tabhistory", _T("MSC history tab for a machine", "msc"));
 $page->addTab($tab);
 
 $submod->addPage($page);

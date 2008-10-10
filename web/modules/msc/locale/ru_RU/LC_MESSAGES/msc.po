@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-02 23:16+0200\n"
+"POT-Creation-Date: 2008-07-05 12:42+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Bundle"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:115
+#: msc/msc/ajaxLogsFilter.php:116
 #, php-format
 msgid "Bundle #%s"
 msgstr ""
@@ -155,7 +155,7 @@ msgstr "Data uruchomienia polecenia"
 msgid "Command state"
 msgstr "Stan polecenia"
 
-#: msc/infoPackage.inc.php:147
+#: msc/infoPackage.inc.php:159
 msgid "Command status"
 msgstr "Stan polecenia"
 
@@ -178,7 +178,7 @@ msgstr "Tryb kopiowania"
 msgid "Creation date"
 msgstr "Data utworzenia"
 
-#: msc/infoPackage.inc.php:199
+#: msc/infoPackage.inc.php:211
 msgid "Csv's export"
 msgstr "Export csv"
 
@@ -248,7 +248,7 @@ msgstr "Zrobione"
 msgid "Download a file from a computer"
 msgstr ""
 
-#: msc/infoPackage.inc.php:116
+#: msc/infoPackage.inc.php:128
 msgid "Download file from a computer"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgstr "Data zakończenia"
 msgid "End of validity"
 msgstr ""
 
-#: msc/infoPackage.inc.php:122
+#: msc/infoPackage.inc.php:134
 msgid "Establish a VNC connection"
 msgstr ""
 
@@ -314,7 +314,7 @@ msgstr "Historia"
 msgid "Host"
 msgstr "Host"
 
-#: msc/infoPackage.inc.php:194
+#: msc/infoPackage.inc.php:206
 msgid "IP Addr."
 msgstr "Adr IP"
 
@@ -351,11 +351,11 @@ msgstr "Akcje Uruchaiania"
 msgid "Launch Bundle"
 msgstr "Uruchom"
 
-#: msc/infoPackage.inc.php:158
+#: msc/infoPackage.inc.php:170
 msgid "Launch a command"
 msgstr "Wykonaj polecenie"
 
-#: msc/infoPackage.inc.php:164
+#: msc/infoPackage.inc.php:176
 msgid "Launch a quick action command"
 msgstr "Wykonaj polecenie szybkeij akcji"
 
@@ -363,7 +363,7 @@ msgstr "Wykonaj polecenie szybkeij akcji"
 msgid "Logs"
 msgstr "Logi"
 
-#: msc/infoPackage.inc.php:189
+#: msc/infoPackage.inc.php:201
 msgid "MAC Addr."
 msgstr "Adr MAC"
 
@@ -371,22 +371,61 @@ msgstr "Adr MAC"
 msgid "MSC"
 msgstr "MSC"
 
-#: msc/infoPackage.inc.php:87 msc/infoPackage.inc.php:105
+#: msc/infoPackage.inc.php:87
 #, fuzzy
-msgid "MSC bundle tab"
+msgid "MSC bundle tab for a group"
 msgstr "Zakładka wykonywania MSC"
 
-#: msc/infoPackage.inc.php:93 msc/infoPackage.inc.php:111
-msgid "MSC history tab"
+#: msc/infoPackage.inc.php:117
+#, fuzzy
+msgid "MSC bundle tab for a machine"
+msgstr "Zakładka wykonywania MSC"
+
+#: msc/infoPackage.inc.php:99
+msgid "MSC bundle tab for a machine in a group"
+msgstr ""
+
+#: msc/infoPackage.inc.php:93
+#, fuzzy
+msgid "MSC history tab for a group"
 msgstr "Zakładka Histori MSC"
 
-#: msc/infoPackage.inc.php:84 msc/infoPackage.inc.php:102
-msgid "MSC launch tab"
+#: msc/infoPackage.inc.php:123
+#, fuzzy
+msgid "MSC history tab for a machine"
+msgstr "Zakładka Histori MSC"
+
+#: msc/infoPackage.inc.php:105
+msgid "MSC history tab for a machine in a group"
+msgstr ""
+
+#: msc/infoPackage.inc.php:84
+#, fuzzy
+msgid "MSC launch tab for a group"
 msgstr "Zakładka wykonywania MSC"
 
-#: msc/infoPackage.inc.php:90 msc/infoPackage.inc.php:108
-msgid "MSC logs tab"
+#: msc/infoPackage.inc.php:114
+#, fuzzy
+msgid "MSC launch tab for a machine"
+msgstr "Zakładka wykonywania MSC"
+
+#: msc/infoPackage.inc.php:96
+msgid "MSC launch tab for a machine in a group"
+msgstr ""
+
+#: msc/infoPackage.inc.php:90
+#, fuzzy
+msgid "MSC logs tab for a group"
 msgstr "Zakładka logów MSC"
+
+#: msc/infoPackage.inc.php:120
+#, fuzzy
+msgid "MSC logs tab for a machine"
+msgstr "Zakładka logów MSC"
+
+#: msc/infoPackage.inc.php:102
+msgid "MSC logs tab for a machine in a group"
+msgstr ""
 
 #: msc/msc/launch.php:136 msc/includes/bundle_widgets.php:333
 #, fuzzy
@@ -436,7 +475,7 @@ msgstr "Opakowanie"
 msgid "Package size"
 msgstr "Rozmiwa opakowania"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:169
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:181
 msgid "Packages"
 msgstr "Pakiety"
 
@@ -445,7 +484,7 @@ msgstr "Pakiety"
 msgid "Pause"
 msgstr "Pauza"
 
-#: msc/infoPackage.inc.php:135
+#: msc/infoPackage.inc.php:147
 msgid "Pause a command"
 msgstr "Pauzuj polecenie"
 
@@ -454,19 +493,19 @@ msgstr "Pauzuj polecenie"
 msgid "Pause action %s on host %s"
 msgstr "Pauzuj akcję %s na hoście %s"
 
-#: msc/infoPackage.inc.php:179
+#: msc/infoPackage.inc.php:191
 msgid "Ping"
 msgstr "Ping"
 
-#: msc/infoPackage.inc.php:174
+#: msc/infoPackage.inc.php:186
 msgid "Ping and probe"
 msgstr "Pinguj i sprawdzaj"
 
-#: msc/infoPackage.inc.php:184
+#: msc/infoPackage.inc.php:196
 msgid "Platform"
 msgstr "Platforma"
 
-#: msc/infoPackage.inc.php:129
+#: msc/infoPackage.inc.php:141
 msgid "Play a command"
 msgstr "Odtwórz polecenie"
 
@@ -555,7 +594,7 @@ msgstr "Bezpieczna kontrola"
 msgid "Secure control on a group of computers"
 msgstr "Bezpieczna kontrola całej grupy maszyn "
 
-#: msc/infoPackage.inc.php:98
+#: msc/infoPackage.inc.php:110
 #, fuzzy
 msgid "Secure control on computer"
 msgstr "Bezpieczna kontrola maszyny "
@@ -597,7 +636,7 @@ msgstr "Pokaż logi stanu własnych zadań"
 msgid "Show finished task's logs"
 msgstr "Pokaż logi zakończoncyh zadań"
 
-#: msc/infoPackage.inc.php:152
+#: msc/infoPackage.inc.php:164
 msgid "Show package's details"
 msgstr "Pokaż szczegóły pakietu"
 
@@ -671,7 +710,7 @@ msgstr "Zatrzymaj akcje %s na hoście %s"
 msgid "Stop %s %s on this group"
 msgstr "Zatrzymaj akcje %s na hoście %s"
 
-#: msc/infoPackage.inc.php:141
+#: msc/infoPackage.inc.php:153
 msgid "Stop a command"
 msgstr "Zatrzymaj polecenie"
 
