@@ -361,7 +361,7 @@ class MscDatabase(Singleton):
         return cmd
 
     def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00", scheduler = None, order_in_proxy = None):
-        logging.getLogger().debug("Create new command on host '%s'" % target["target_name"])
+        logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
             "start_date" : cmd_start_date,
@@ -545,10 +545,12 @@ class MscDatabase(Singleton):
                 else:
                     uri = '%s://%s' % ('file', root)
                 targetsdata[i]['mirrors'] = uri
+                # Keep not blacklisted target name for commands_on_host
+                # creation.
+                targets_name.append(targets[i][1])
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
                 targets_to_insert.append(targetsdata[i])
-                targets_name.append(targets[i][1])
 
             session = create_session()
             cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle, proxies)
