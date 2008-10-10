@@ -33,7 +33,7 @@ class MGUserAssignAlgo(MGAssignAlgo):
     name = 'ip_class'
     # functions has to be put
     def getMachineGroup(self, myT):
-        netmask = [255, 255, 254, 0] # FIXME: netmask is hardcoded !!!
+        netmask = [255, 254, 0, 0] # FIXME: netmask is hardcoded !!!
         if myT.target_ipaddr:
             real_target =  myT.target_ipaddr.split('||')[0]
             try:
@@ -45,3 +45,5 @@ class MGUserAssignAlgo(MGAssignAlgo):
                 return ''
         return ''
 
+    def getMaxNumberOfGroups(self):
+        return 3

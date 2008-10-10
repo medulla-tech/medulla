@@ -34,3 +34,6 @@ class MGUserAssignAlgo(MGAssignAlgo):
     def getMachineGroup(self, myT):
         return ""
 
+    def getMaxNumberOfGroups(self):
+        return 1
+

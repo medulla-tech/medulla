@@ -40,12 +40,15 @@ class MGAssignAlgo(Singleton):
     def getMachineGroup(self, myT):
         raise Exception("getMachineGroup not defined")
 
+    def getMaxNumberOfGroups(self):
+        raise Exception("getMaxNumberOfGroups not defined")
+
 class IntAssignAlgoManager(Singleton):
     name = ''
     def setAlgo(self, assign_algo):
         wanted = assign_algo
         algo, assign_algo = self._getAlgo(assign_algo)
-        logging.getLogger().debug("Using the %s %s Assign Algorythm"%(assign_algo, self.name))
+        logging.getLogger().debug("Using the %s %s Assign Algorithm"%(assign_algo, self.name))
         if wanted != assign_algo:
             logging.getLogger().warning("Can't load the wanted one (conf:%s, use:%s)"%(wanted, assign_algo))
         self.algo = algo
@@ -76,7 +79,7 @@ class IntAssignAlgoManager(Singleton):
                 assign_algo = 'default'
                 ret, assign_algo = self._getAlgo(assign_algo)
             else:
-                logging.getLogger().error("Cant load any %s Assign Algorythm"%(self.name))
+                logging.getLogger().error("Cant load any %s Assign Algorithm"%(self.name))
                 ret = None
         return (ret, assign_algo)
 
@@ -91,3 +94,5 @@ class MGAssignAlgoManager(IntAssignAlgoManager):
     def getMachineGroup(self, myT):
         return self.algo.getMachineGroup(myT)
 
+    def getMaxNumberOfGroups(self):
+        return self.algo.getMaxNumberOfGroups()
