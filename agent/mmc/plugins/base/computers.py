@@ -129,7 +129,11 @@ class ComputerManager(Singleton):
         self.components[name] = klass
         
     def validate(self):
-        return True
+        ret = (self.main == "none") or (self.main in self.components)
+        if not ret:
+            self.logger.error("Selected computer manager '%s' not available" % self.main)
+            self.logger.error("Please check that the corresponding plugin was successfully enabled")
+        return ret
 
     def canAddComputer(self):
         klass = self.components[self.main]
