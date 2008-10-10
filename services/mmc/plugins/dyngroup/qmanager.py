@@ -78,7 +78,11 @@ class QueryManager(Singleton):
         return self.queryPossibilities.keys()
     
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
-        return self.queryPossibilities[moduleName].keys()
+        try:
+            return self.queryPossibilities[moduleName].keys()
+        except:
+            self.logger.error("Dyngroup module %s don't exists"%(moduleName))
+            return []
 
     def getTypeForCriterionInModule(self, ctx, moduleName, criterion):
         ret = self.queryPossibilities[moduleName][criterion]
