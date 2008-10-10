@@ -185,8 +185,8 @@ def sortCommands(commands_to_perform):
             # first case: we want to
             # - run as many commands as possible,
             # - at last obtain as many commands running as configured in scheduler.ini
-            # thus we have reach max_slots / group count
-            to_reach = int(SchedulerConfig().max_slots / len(aggregated_distribution))
+            # thus we have reach max_slots / max group count
+            to_reach = int(SchedulerConfig().max_slots / getMaxNumberOfGroups())
 
             # second case: we want to
             # - run as many commands as possible,
@@ -976,6 +976,9 @@ def chooseClientIP(myT):
 
 def getClientGroup(myT):
     return MGAssignAlgoManager().getMachineGroup(myT)
+
+def getMaxNumberOfGroups():
+    return MGAssignAlgoManager().getMaxNumberOfGroups()
 
 def getClientCheck(myT):
     return getCheck(SchedulerConfig().client_check, {
