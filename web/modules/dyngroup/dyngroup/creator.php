@@ -96,7 +96,14 @@ if (quickGet('add_req')) {
         quickSet('add_param', $criterion[0]);
     } else {
         print "<table><tr><td>"._T("Choose your field : ", "dyngroup")."</td>";
+        $modulo = 0;
+        $field_per_line = 4;
+        $multiline = -1;
         foreach ($criterion as $param_name) {
+            if ($modulo%$field_per_line==0) {
+                $multiline += 1;
+                if ($multiline) { print "</tr><tr><td>&nbsp;</td>"; }
+            }
             if ($param_name == quickGet('add_param')) {
                 print "<td>$param_name</td>";
             } else {
@@ -104,6 +111,11 @@ if (quickGet('add_req')) {
                     urlStr("base/computers/$target", array( 'req'=>quickGet('add_req'), 'add_param'=>$param_name, 'request'=>$request->toURL(), 'id'=>$id )).
                     "'>$param_name</a></td>";
             }
+            $modulo += 1;
+        }
+        while ($multiline && $modulo%$field_per_line <= ($field_per_line-1) && $modulo%$field_per_line != 0) {
+            print "<td>&nbsp;</td>";
+            $modulo += 1;
         }
         print "</tr></table>";
     }
