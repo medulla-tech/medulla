@@ -91,7 +91,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
 
 
 function drawBoolEquation($equ_bool) {
-        print "</tr><tr><td colspan='2'>"._T("Enter Boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
+        print "</tr><tr><td colspan='2'>"._T("Enter boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
 }
 
 ?>
