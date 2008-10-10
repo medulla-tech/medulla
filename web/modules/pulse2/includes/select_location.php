@@ -28,14 +28,17 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 function select_locations($selected, $name = 'locations') {
     $sel = new SelectItem($name);
     $list = array();
-    foreach (getUserLocations() as $loc) {
-        $list[$loc['uuid']] = $loc['name'];
+    $locations = getUserLocations();
+    if (is_array($locations)) {
+        foreach ($locations as $loc) {
+            $list[$loc['uuid']] = $loc['name'];
+        }
+    } else {
+        $locations = array();
     }
-
     $sel->setElements($list);
     $sel->setElementsVal($list);
     $sel->setSelected($selected);
-
     return $sel;
 }
 
