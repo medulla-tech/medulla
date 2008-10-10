@@ -65,8 +65,10 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         } else {
             $actionInventory[] = $glpiAction;
         }
-        $actionMsc[] = $mscAction;
-        $actionLogs[] = $logAction;
+        if (in_array("msc", $_SESSION["supportModList"])) {
+            $actionMsc[] = $mscAction;
+            $actionLogs[] = $logAction;
+        }
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
         }
@@ -116,9 +118,10 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if ($msc_vnc_show_icon) {
         $n->addActionItemArray($actionVncClient);
     };
-    $n->addActionItemArray($actionLogs);
-    $n->addActionItemArray($actionMsc);
-
+    if (in_array("msc", $_SESSION["supportModList"])) {
+        $n->addActionItemArray($actionLogs);
+        $n->addActionItemArray($actionMsc);
+    }
     if ($delete_computer && canDelComputer()) {
         $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","supprimer","computer", "base", "computers"));
     }
