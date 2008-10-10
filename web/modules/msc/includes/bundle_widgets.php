@@ -342,6 +342,12 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
             $rb->setSelected($_POST['copy_mode']);
             $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
         }
+
+        /* Only display local proxy button on a group and if allowed */
+        if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+            $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'),
+                                      new CheckboxTpl("local_proxy")), array("value" => ''));
+        }
     }
 }
 

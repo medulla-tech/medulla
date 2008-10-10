@@ -33,13 +33,13 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/msc/includes/bundle_widgets.php');
 
-function launch_bundle($cible, $orders, $gid = null) {
+function launch_bundle($cible, $orders, $gid = null, $proxy = array()) {
     $params = array();
     foreach (array('create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'do_reboot', 'bundle_title') as $param) {
         $params[$param] = $_POST[$param];
     }
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid);
+    $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid, $proxy);
     if (is_array($ret) && !empty($ret)) {
         $commands = $ret[1];
         $ids = array();
@@ -49,6 +49,33 @@ function launch_bundle($cible, $orders, $gid = null) {
         scheduler_start_these_commands('', $ids);
     }
     return $ret;
+}
+
+if (isset($_POST["bconfirmproxy"])) {
+    /* Start bundle using local proxies */
+    $proxy = array();
+    if (isset($_POST["lpmembers"])) {
+        $lmachines = unserialize(base64_decode($_POST["lpmachines"]));
+        $members = unserialize(base64_decode($_POST["lpmembers"]));
+        foreach($members as $member => $name) {
+            $computer = preg_split("/##/", $member);
+            $proxy[] = $computer[1];
+        }
+    }
+    $gid = $_POST["gid"];
+
+    /* package order in bundle */
+    $members = unserialize(base64_decode($_POST["lmembers"]));
+    $sort = new RenderedMSCBundleSortG($group, $members);
+    $orders = $sort->get_sort_order();
+
+    $bundle_id = launch_bundle(array(), $orders, $gid, $proxy);
+    header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$gid, 'bundle_id'=>$id_bundle[0])));}
+
+if (isset($_POST["local_proxy"]) && isset($_POST["blaunch_bundle"])) {
+    require('modules/msc/msc/local_proxy.php');
+    /* Unset this so that bundle is not launched */
+    unset($_POST["blaunch_bundle"]);
 }
 
 /* single target: form display */
@@ -97,7 +124,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 }
 
 /* group display */
-if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
+if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid']) && !isset($_POST["local_proxy"])) {
     $group = new Group($_GET['gid'], true);
     if (!isset($_POST["bsort_bundle"]) and !isset($_POST["blaunch_bundle"]) and !isset($_POST["badvanced_bundle"]) and !isset($_POST["badvanced_bundle_valid"])) {
         $list = new RenderedMSCBundleChoiceG($group);

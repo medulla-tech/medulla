@@ -70,12 +70,12 @@ function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
 }
 
-function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null) {
-    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid));
+function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array()) {
+    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy));
 }
 
-function add_bundle_api($porders, $target, $params, $mode, $gid = null) {
-    return xmlCall('msc.add_bundle_api', array($porders, $target, $params, $mode, $gid));
+function add_bundle_api($porders, $target, $params, $mode, $gid = null, $proxy = array()) {
+    return xmlCall('msc.add_bundle_api', array($porders, $target, $params, $mode, $gid, $proxy));
 }
 
 function add_command_quick($cmd, $hosts, $desc, $gid = null) {

@@ -32,9 +32,8 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
-### Advanced actions handling ###
-/* Advanced Action Post Handling */
-if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
+
+function start_command($proxy = array()) {
     // Vars seeding
     $post = $_POST;
     $from = $post['from'];
@@ -76,12 +75,44 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm'])) {
         $gid = $post['gid'];
         $tab = 'grouptablogs';
         // record new command
-        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid);
+        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $proxy);
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id)));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
     }
+}
 
+/* Validation on local proxies selection page */
+if (isset($_POST["bconfirmproxy"])) {
+    $proxy = array();
+    if (isset($_POST["lpmembers"])) {
+        $lmachines = unserialize(base64_decode($_POST["lpmachines"]));
+        $members = unserialize(base64_decode($_POST["lpmembers"]));
+        foreach($members as $member => $name) {
+            $computer = preg_split("/##/", $member);
+            $proxy[] = $computer[1];
+        }
+    }
+    start_command($proxy);
+}
+
+if (isset($_GET['badvanced']) and isset($_POST['local_proxy'])) {
+    if (isset($_POST['bback'])) {
+        $from = $_POST['from'];
+        $path =  explode('|', $from);
+        $module = $path[0];
+        $submod = $path[1];
+        $page = $path[2];
+        $gid = $_POST["gid"];
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$gid)));
+    } else
+        require('modules/msc/msc/local_proxy.php');
+
+}
+
+/* Advanced Action Post Handling */
+if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
+    start_command();
 }
 
 /* Advanced action: form display */
@@ -134,11 +165,21 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('The command must stop before', 'msc'),                new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
     $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
     $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
-    $rb = new RadioTpl("copy_mode");
-    $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-    $rb->setvalues(array('push', 'push_pull'));
-    $rb->setSelected($_GET['copy_mode']);
-    $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+    if (web_force_mode()) {
+        $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(), "hide" => True));
+    } else {
+        $rb = new RadioTpl("copy_mode");
+        $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+        $rb->setvalues(array('push', 'push_pull'));
+        $rb->setSelected($_GET['copy_mode']);
+        $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+    }
+
+    /* Only display local proxy button on a group and if allowed */
+    if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+        $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'),
+                                  new CheckboxTpl("local_proxy")), array("value" => ''));
+    }
 
     $f->pop();
     $f->addValidateButton("bconfirm");

@@ -80,4 +80,8 @@ function web_vnc_show_icon() {
     return __web_def_in_session("vnc_show_icon");
 }
 
+function web_allow_local_proxy() {
+    return __web_def_in_session("allow_local_proxy");
+}
+
 ?>
