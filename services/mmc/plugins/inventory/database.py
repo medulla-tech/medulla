@@ -428,7 +428,7 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x), computers)))
 
-    def mappingTable(self, query):
+    def mappingTable(self, ctx, query):
         q = query[2].split('/')
         table, field = q[0:2]
         self.logger.debug("### >> table %s, field %s"%(table, field))
@@ -450,14 +450,14 @@ class Inventory(DyngroupDatabaseHelper):
             ret.append(nomTable)
         return ret
     
-    def mapping(self, query, invert = False):
+    def mapping(self, ctx, query, invert = False):
         q = query[2].split('/')
         table, field = q[0:2]
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             return and_(
-                self.mapping([None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping([None, None, value[1][0], query[3][1].replace(')', '')])
+                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')])
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':

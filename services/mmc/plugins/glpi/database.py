@@ -423,44 +423,56 @@ class Glpi(DyngroupDatabaseHelper):
         else:
             query_filter = and_(query_filter, eq)
         return query_filter
-    
-    def mappingTable(self, query):
+
+    def computersTable(self):
+        return [self.machine]
+        
+    def computersMapping(self, computers, invert = False):
+        if not invert:
+            return Machine.c.ID.in_(*map(lambda x:fromUUID(x), computers))
+        else:
+            return Machine.c.ID.not_(in_(*map(lambda x:fromUUID(x), computers)))
+
+    def mappingTable(self, ctx, query):
         """
         Map a table name on a table mapping
         """
+        base = []
+        if ctx.userid != 'root':
+            base.append(self.location)
         if query[2] == 'OS':
-            return self.os
+            return base + [self.os]
         elif query[2] == 'ENTITY':
-            return self.location
+            return base + [self.location]
         elif query[2] == 'SOFTWARE':
-            return [self.inst_software, self.licenses, self.software]
+            return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Nom':
-            return []
+            return base
         elif query[2] == 'Contact':
-            return []
+            return base
         elif query[2] == 'Numero du contact':
-            return []
+            return base
         elif query[2] == 'Comments':
-            return []
+            return base
         elif query[2] == 'Modele':
-            return self.model
+            return base + [self.model]
         elif query[2] == 'Lieu':
-            return self.locations
+            return base + [self.locations]
         elif query[2] == 'OS':
-            return self.os
+            return base + [self.os]
         elif query[2] == 'ServicePack':
-            return self.os_sp
+            return base + [self.os_sp]
         elif query[2] == 'Groupe':
-            return self.group
+            return base + [self.group]
         elif query[2] == 'Reseau':
-            return self.network
+            return base + [self.network]
         elif query[2] == 'Logiciel':
-            return [self.inst_software, self.licenses, self.software]
+            return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Version':
-            return [self.inst_software, self.licenses, self.software]
+            return base + [self.inst_software, self.licenses, self.software]
         return []
 
-    def mapping(self, query, invert = False):
+    def mapping(self, ctx, query, invert = False):
         """
         Map a name and request parameters on a sqlalchemy request
         """
@@ -496,6 +508,8 @@ class Glpi(DyngroupDatabaseHelper):
                         ret.append(partA.like(partB))
                     else:
                         ret.append(partA == partB)
+            if ctx.userid != 'root':
+                ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
         else:
             return self.__treatQueryLevel(query)

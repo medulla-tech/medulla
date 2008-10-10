@@ -86,8 +86,8 @@ class DyngroupDatabaseHelper(Singleton):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
                 if type(join_tab) == list:
                     for table in join_tab:
@@ -122,8 +122,8 @@ class DyngroupDatabaseHelper(Singleton):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
                 if type(join_tab) == list:
                     for table in join_tab:
@@ -137,7 +137,7 @@ class DyngroupDatabaseHelper(Singleton):
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                if result_set:
+                if result_set != None:
                     result_set.intersection_update(Set(res))
                 else:
                     result_set = Set(res)
@@ -164,8 +164,8 @@ class DyngroupDatabaseHelper(Singleton):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
                 if type(join_tab) == list:
                     for table in join_tab:
@@ -196,7 +196,7 @@ class DyngroupDatabaseHelper(Singleton):
                 self.mappingTable(query)
         return ret
 
-    def mappingTable(self, query):
+    def mappingTable(self, ctx, query):
         """
         Map a table name on a table mapping
 
@@ -206,7 +206,7 @@ class DyngroupDatabaseHelper(Singleton):
         """
         raise "mappingTable has to be defined"
 
-    def mapping(self, query, invert = False):
+    def mapping(self, ctx, query, invert = False):
         """
         Map a name and request parameters on a sqlalchemy request
 
@@ -241,7 +241,7 @@ class DyngroupDatabaseHelper(Singleton):
 ## for these two last method
 ############################################
 #
-#    def mappingTable(self, query):
+#    def mappingTable(self, ctx, query):
 #        """
 #        Map a table name on a table mapping
 #        """
@@ -253,7 +253,7 @@ class DyngroupDatabaseHelper(Singleton):
 #            return [self.inst_software, self.licenses, self.software]
 #        return []
 #
-#    def mapping(self, query, invert = False):
+#    def mapping(self, ctx, query, invert = False):
 #        """
 #        Map a name and request parameters on a sqlalchemy request
 #        """
