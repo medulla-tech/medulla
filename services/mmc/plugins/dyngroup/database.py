@@ -367,9 +367,9 @@ class DyngroupDatabase(Singleton):
 
     def __getGroupInSessionFirstStep(self, ctx, session):
         user_id = self.__getOrCreateUser(ctx)
-        ug_ids = self.__getUsers(getUserGroups(ctx.userid), 1, session) # get all usergroups ids
+        ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
         
-        group = session.query(Groups).select_from(self.groups.outerjoin(self.shareGroup))
+        group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_user == self.users.c.id).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_group))
         return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
         
     def __getGroupByNameInSession(self, ctx, session, name):
@@ -415,7 +415,7 @@ class DyngroupDatabase(Singleton):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
-        return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, and_(self.groups.c.id == self.shareGroup.c.FK_group, self.shareGroup.c.FK_user == user_id)]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
         
     def __allgroups_query(self, ctx, params, session = None):
         if not session:
