@@ -124,19 +124,34 @@ $submod = & $base->getSubmod('computers');
 $page = new Page("groupinvtabs", _T("Inventory on a group of computers", "inventory"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $page->setOptions(array("visible"=>False));
-$tab = new Tab("grouptab0",  _T("Hardware tab", "inventory"));
+$tab = new Tab("grouptab0",  _T("Hardware tab for a group", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptab1",  _T("Software tab", "inventory"));
+$tab = new Tab("grouptab1",  _T("Software tab for a group", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptab2",  _T("Network tab", "inventory"));
+$tab = new Tab("grouptab2",  _T("Network tab for a group", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptab3",  _T("Controller tab", "inventory"));
+$tab = new Tab("grouptab3",  _T("Controller tab for a group", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("grouptab4",  _T("Registry tab", "inventory"));
+$tab = new Tab("grouptab4",  _T("Registry tab for a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab0",  _T("Hardware tab for a machine in a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab1",  _T("Software tab for a machine in a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab2",  _T("Network tab for a machine in a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab3",  _T("Controller tab for a machine in a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab4",  _T("Registry tab for a machine in a group", "inventory"));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -145,19 +160,19 @@ $page = new Page("invtabs", _T("Inventory on a single computer", "inventory"));
 $page->setFile("modules/inventory/inventory/tabs.php");
 $page->setOptions(array("visible"=>False));
 
-$tab = new Tab("tab0",  _T("Hardware tab", "inventory"));
+$tab = new Tab("tab0",  _T("Hardware tab for a machine", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("tab1",  _T("Software tab", "inventory"));
+$tab = new Tab("tab1",  _T("Software tab for a machine", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("tab2",  _T("Network tab", "inventory"));
+$tab = new Tab("tab2",  _T("Network tab for a machine", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("tab3",  _T("Controller tab", "inventory"));
+$tab = new Tab("tab3",  _T("Controller tab for a machine", "inventory"));
 $page->addTab($tab);
 
-$tab = new Tab("tab4",  _T("Registry tab", "inventory"));
+$tab = new Tab("tab4",  _T("Registry tab for a machine", "inventory"));
 $page->addTab($tab);
 
 $submod->addPage($page);

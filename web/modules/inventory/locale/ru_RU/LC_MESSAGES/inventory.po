@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-02 09:30+0200\n"
+"POT-Creation-Date: 2008-07-05 12:45+0200\n"
 "PO-Revision-Date: 2008-07-25 14:11+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -44,7 +44,7 @@ msgstr "Aplikacja"
 msgid "Availability"
 msgstr "Dostępność"
 
-#: inventory/inventory/index.php:27 inventory/inventory/i18n_labels.php:5
+#: inventory/inventory/i18n_labels.php:5 inventory/inventory/index.php:27
 msgid "Bios"
 msgstr "Bios"
 
@@ -124,15 +124,25 @@ msgstr ""
 msgid "Connector"
 msgstr "Konnektor"
 
+#: inventory/inventory/i18n_labels.php:24
 #: inventory/inventory/controller.php:27
-#: inventory/inventory/localSidebar.php:10
-#: inventory/inventory/i18n_labels.php:24 inventory/infoPackage.inc.php:49
+#: inventory/inventory/localSidebar.php:10 inventory/infoPackage.inc.php:49
 msgid "Controller"
 msgstr "Kontroler"
 
-#: inventory/infoPackage.inc.php:136 inventory/infoPackage.inc.php:157
-msgid "Controller tab"
+#: inventory/infoPackage.inc.php:136
+#, fuzzy
+msgid "Controller tab for a group"
 msgstr "Zakładka Kontrolera"
+
+#: inventory/infoPackage.inc.php:172
+#, fuzzy
+msgid "Controller tab for a machine"
+msgstr "Zakładka Kontrolera"
+
+#: inventory/infoPackage.inc.php:151
+msgid "Controller tab for a machine in a group"
+msgstr ""
 
 #: inventory/inventory/i18n_labels.php:25
 msgid "CpuNum"
@@ -186,8 +196,8 @@ msgstr "Dysk"
 msgid "DiskSize"
 msgstr "RozmiarDysku"
 
-#: inventory/inventory/drive.php:27 inventory/inventory/localSidebar.php:14
-#: inventory/inventory/i18n_labels.php:37 inventory/infoPackage.inc.php:52
+#: inventory/inventory/i18n_labels.php:37 inventory/inventory/drive.php:27
+#: inventory/inventory/localSidebar.php:14 inventory/infoPackage.inc.php:52
 msgid "Drive"
 msgstr "Napęd"
 
@@ -276,15 +286,25 @@ msgstr "Ogólne"
 msgid "Graphique"
 msgstr "Grafika"
 
-#: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/inventory/tabs.php:18 inventory/inventory/i18n_labels.php:56
-#: inventory/infoPackage.inc.php:45
+#: inventory/inventory/tabs.php:18 inventory/inventory/hardware.php:27
+#: inventory/inventory/i18n_labels.php:56
+#: inventory/inventory/localSidebar.php:7 inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr "Sprzęt"
 
-#: inventory/infoPackage.inc.php:127 inventory/infoPackage.inc.php:148
-msgid "Hardware tab"
+#: inventory/infoPackage.inc.php:127
+#, fuzzy
+msgid "Hardware tab for a group"
 msgstr "Zakłądka sprzętu"
+
+#: inventory/infoPackage.inc.php:163
+#, fuzzy
+msgid "Hardware tab for a machine"
+msgstr "Zakłądka sprzętu"
+
+#: inventory/infoPackage.inc.php:142
+msgid "Hardware tab for a machine in a group"
+msgstr ""
 
 #: inventory/inventory/i18n_labels.php:57
 msgid "HardwareVersion"
@@ -310,8 +330,8 @@ msgstr "IP"
 msgid "Informations"
 msgstr "Informacje"
 
-#: inventory/inventory/input.php:27 inventory/inventory/localSidebar.php:15
-#: inventory/inventory/i18n_labels.php:61 inventory/infoPackage.inc.php:54
+#: inventory/inventory/input.php:27 inventory/inventory/i18n_labels.php:61
+#: inventory/inventory/localSidebar.php:15 inventory/infoPackage.inc.php:54
 msgid "Input"
 msgstr "Wejście"
 
@@ -330,7 +350,7 @@ msgstr "Inwentarz"
 msgid "Inventory on a group of computers"
 msgstr "Inwentarz grupy maszyn"
 
-#: inventory/infoPackage.inc.php:144
+#: inventory/infoPackage.inc.php:159
 #, fuzzy
 msgid "Inventory on a single computer"
 msgstr "Inwerntarz maszyny"
@@ -379,8 +399,8 @@ msgstr "Producent"
 msgid "Media"
 msgstr "Media"
 
-#: inventory/inventory/localSidebar.php:16 inventory/inventory/memory.php:27
-#: inventory/inventory/i18n_labels.php:75 inventory/infoPackage.inc.php:56
+#: inventory/inventory/i18n_labels.php:75 inventory/inventory/memory.php:27
+#: inventory/inventory/localSidebar.php:16 inventory/infoPackage.inc.php:56
 msgid "Memory"
 msgstr "Pamięć"
 
@@ -400,8 +420,9 @@ msgstr "Model"
 msgid "Modem"
 msgstr "Modem"
 
+#: inventory/inventory/i18n_labels.php:80
 #: inventory/inventory/localSidebar.php:17 inventory/inventory/monitor.php:27
-#: inventory/inventory/i18n_labels.php:80 inventory/infoPackage.inc.php:58
+#: inventory/infoPackage.inc.php:58
 msgid "Monitor"
 msgstr "Monitor"
 
@@ -409,14 +430,24 @@ msgstr "Monitor"
 msgid "Name"
 msgstr "Nazwa"
 
-#: inventory/inventory/localSidebar.php:9 inventory/inventory/network.php:27
-#: inventory/inventory/i18n_labels.php:82 inventory/infoPackage.inc.php:47
+#: inventory/inventory/network.php:27 inventory/inventory/i18n_labels.php:82
+#: inventory/inventory/localSidebar.php:9 inventory/infoPackage.inc.php:47
 msgid "Network"
 msgstr "Sieć"
 
-#: inventory/infoPackage.inc.php:133 inventory/infoPackage.inc.php:154
-msgid "Network tab"
+#: inventory/infoPackage.inc.php:133
+#, fuzzy
+msgid "Network tab for a group"
 msgstr "Zakładka sieci"
+
+#: inventory/infoPackage.inc.php:169
+#, fuzzy
+msgid "Network tab for a machine"
+msgstr "Zakładka sieci"
+
+#: inventory/infoPackage.inc.php:148
+msgid "Network tab for a machine in a group"
+msgstr ""
 
 #: inventory/inventory/i18n_labels.php:83
 msgid "NetworkType"
@@ -438,7 +469,7 @@ msgstr "NumerSeryjnySystemu"
 msgid "OperatingSystem"
 msgstr "SystemOperacyjny"
 
-#: inventory/inventory/pci.php:27 inventory/inventory/i18n_labels.php:88
+#: inventory/inventory/i18n_labels.php:88 inventory/inventory/pci.php:27
 msgid "Pci"
 msgstr "Pci"
 
@@ -450,8 +481,9 @@ msgstr "Telefon"
 msgid "PointType"
 msgstr "TypPunktu"
 
+#: inventory/inventory/i18n_labels.php:91
 #: inventory/inventory/localSidebar.php:18 inventory/inventory/port.php:27
-#: inventory/inventory/i18n_labels.php:91 inventory/infoPackage.inc.php:60
+#: inventory/infoPackage.inc.php:60
 msgid "Port"
 msgstr "Port"
 
@@ -459,8 +491,8 @@ msgstr "Port"
 msgid "PortType"
 msgstr "TypPortu"
 
-#: inventory/inventory/localSidebar.php:19 inventory/inventory/printer.php:27
-#: inventory/inventory/i18n_labels.php:93 inventory/infoPackage.inc.php:62
+#: inventory/inventory/i18n_labels.php:93 inventory/inventory/printer.php:27
+#: inventory/inventory/localSidebar.php:19 inventory/infoPackage.inc.php:62
 msgid "Printer"
 msgstr "Drukarka"
 
@@ -504,14 +536,24 @@ msgstr "ZarejestrowanaFirma"
 msgid "RegisteredName"
 msgstr "ZarejestrowanaNazwa"
 
-#: inventory/inventory/localSidebar.php:11 inventory/inventory/registry.php:27
+#: inventory/inventory/registry.php:27 inventory/inventory/localSidebar.php:11
 #: inventory/infoPackage.inc.php:72
 msgid "Registry"
 msgstr "Rejestr"
 
-#: inventory/infoPackage.inc.php:139 inventory/infoPackage.inc.php:160
-msgid "Registry tab"
+#: inventory/infoPackage.inc.php:139
+#, fuzzy
+msgid "Registry tab for a group"
 msgstr "Zakładka rejestru"
+
+#: inventory/infoPackage.inc.php:175
+#, fuzzy
+msgid "Registry tab for a machine"
+msgstr "Zakładka rejestru"
+
+#: inventory/infoPackage.inc.php:154
+msgid "Registry tab for a machine in a group"
+msgstr ""
 
 #: inventory/inventory/i18n_labels.php:103
 msgid "Resolution"
@@ -529,7 +571,7 @@ msgstr "Numer"
 msgid "Size"
 msgstr "Rozmiar"
 
-#: inventory/inventory/slot.php:27 inventory/inventory/i18n_labels.php:107
+#: inventory/inventory/i18n_labels.php:107 inventory/inventory/slot.php:27
 msgid "Slot"
 msgstr "Slot"
 
@@ -557,17 +599,28 @@ msgstr "TypSmb"
 msgid "SmbVersion"
 msgstr "WersjaSmb"
 
-#: inventory/inventory/localSidebar.php:8 inventory/inventory/software.php:27
-#: inventory/inventory/i18n_labels.php:114 inventory/infoPackage.inc.php:70
+#: inventory/inventory/software.php:27 inventory/inventory/i18n_labels.php:114
+#: inventory/inventory/localSidebar.php:8 inventory/infoPackage.inc.php:70
 msgid "Software"
 msgstr "Oprogramowanie"
 
-#: inventory/infoPackage.inc.php:130 inventory/infoPackage.inc.php:151
-msgid "Software tab"
+#: inventory/infoPackage.inc.php:130
+#, fuzzy
+msgid "Software tab for a group"
 msgstr "Zakładka oprogramowania"
 
+#: inventory/infoPackage.inc.php:166
+#, fuzzy
+msgid "Software tab for a machine"
+msgstr "Zakładka oprogramowania"
+
+#: inventory/infoPackage.inc.php:145
+msgid "Software tab for a machine in a group"
+msgstr ""
+
+#: inventory/inventory/i18n_labels.php:115
 #: inventory/inventory/localSidebar.php:20 inventory/inventory/sound.php:27
-#: inventory/inventory/i18n_labels.php:115 inventory/infoPackage.inc.php:64
+#: inventory/infoPackage.inc.php:64
 msgid "Sound"
 msgstr "Dźwięk"
 
@@ -591,8 +644,8 @@ msgstr "StandardowyTyp"
 msgid "State"
 msgstr "Stan"
 
-#: inventory/inventory/localSidebar.php:21 inventory/inventory/storage.php:27
-#: inventory/inventory/i18n_labels.php:121 inventory/infoPackage.inc.php:66
+#: inventory/inventory/i18n_labels.php:121 inventory/inventory/storage.php:27
+#: inventory/inventory/localSidebar.php:21 inventory/infoPackage.inc.php:66
 msgid "Storage"
 msgstr "Pamięć"
 
@@ -644,7 +697,7 @@ msgstr "Użytkownik"
 msgid "VRAMSize"
 msgstr "RozmiarVRAM"
 
-#: inventory/inventory/view.php:79 inventory/inventory/i18n_labels.php:134
+#: inventory/inventory/i18n_labels.php:134 inventory/inventory/view.php:79
 msgid "Value"
 msgstr "Wartość"
 
@@ -656,8 +709,8 @@ msgstr "Dostawca"
 msgid "Version"
 msgstr "Wersja"
 
-#: inventory/inventory/localSidebar.php:22
-#: inventory/inventory/videocard.php:27 inventory/infoPackage.inc.php:68
+#: inventory/inventory/videocard.php:27
+#: inventory/inventory/localSidebar.php:22 inventory/infoPackage.inc.php:68
 msgid "VideoCard"
 msgstr "KartaWideo"
 
