@@ -51,6 +51,11 @@ def create_method(m):
                 for i in range(0, NB_DB_CONN_TRY):
                     new_m = getattr(Query, m)
                     ret = new_m(self, True)
+            elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
+                logging.getLogger().warn("SQLError MySQL server has gone away")
+                for i in range(0, NB_DB_CONN_TRY):
+                    new_m = getattr(obj, m)
+                    ret = new_m(self, True)
             if ret:
                 return ret
             raise e
