@@ -324,7 +324,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle):
+    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle, proxies):
         """
         Return a Command object
         """
@@ -354,11 +354,13 @@ class MscDatabase(Singleton):
         cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         cmd.bundle_id = bundle_id
         cmd.order_in_bundle = order_in_bundle
+        if proxies:
+            cmd.use_local_proxy = 'yes'
         session.save(cmd)
         session.flush()
         return cmd
 
-    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00", scheduler = None):
+    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00", scheduler = None, order_in_proxy = None):
         logging.getLogger().debug("Create new command on host '%s'" % target["target_name"])
         return {
             "host" : target_name,
@@ -372,6 +374,7 @@ class MscDatabase(Singleton):
             "attempts_left" : cmd_max_connection_attempt,
             "next_attempt_date_time" : 0,
             "scheduler" : scheduler,
+            "order_in_proxy" : order_in_proxy,
             "fk_target" : target_id,
             "fk_commands" : command
             }
@@ -406,7 +409,8 @@ class MscDatabase(Singleton):
                 root = MscConfig("msc").repopath,
                 deployment_intervals = "",
                 bundle_id = None,
-                order_in_bundle = None
+                order_in_bundle = None,
+                proxies = []
             ):
         """
         Main func to inject a new command in our MSC database
@@ -547,13 +551,17 @@ class MscDatabase(Singleton):
                 targets_name.append(targets[i][1])
 
             session = create_session()
-            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle)
+            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle, proxies)
             session.close()
 
             r = connection.execute(self.target.insert(), targets_to_insert)
             first_target_id = r.last_inserted_ids()[0]
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
-                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, start_date, end_date, ascheduler))
+                try:
+                    order_in_proxy = proxies.index(atarget["target_uuid"])
+                except ValueError:
+                    order_in_proxy = None
+                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, start_date, end_date, ascheduler, order_in_proxy))
                 first_target_id = first_target_id + 1
             connection.execute(self.commands_on_host.insert(), coh_to_insert)
             trans.commit()

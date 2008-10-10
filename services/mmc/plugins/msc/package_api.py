@@ -174,7 +174,7 @@ class PackageA:
 from mmc.plugins.msc.mirror_api import MirrorApi
 
 class SendBundleCommand:
-    def __init__(self, ctx, porders, targets, params, mode, gid = None):
+    def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
         self.ctx = ctx
         self.porders = porders
         self.targets = targets
@@ -182,6 +182,7 @@ class SendBundleCommand:
         self.mode = mode
         self.gid = gid
         self.bundle_id = None
+        self.proxies = proxies
         
     def onError(error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
@@ -229,7 +230,7 @@ class SendBundleCommand:
                 self.params['do_inventory'] = do_inventory
             else:
                 self.params['do_inventory'] = 'off'
-            g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order)
+            g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order, self.proxies)
             g.deferred = defer.Deferred()
             g.send()
             ret.append(g.deferred)
@@ -243,7 +244,7 @@ class SendBundleCommand:
         return False
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None):
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = []):
         self.ctx = ctx
         self.p_api = p_api.copy()
         self.pid = pid
@@ -253,6 +254,7 @@ class SendPackageCommand:
         self.gid = gid
         self.bundle_id = bundle_id
         self.order_in_bundle = order_in_bundle
+        self.proxies = proxies
 
     def onError(self, error):
         logging.getLogger().error("SendPackageCommand: %s", str(error))
@@ -352,7 +354,8 @@ class SendPackageCommand:
             self.root,
             deployment_intervals,
             self.bundle_id,
-            self.order_in_bundle
+            self.order_in_bundle,
+            self.proxies
         ).addCallbacks(self.sendResult, self.onError)
 
 def convert_date(date = '0000-00-00 00:00:00'):
@@ -404,7 +407,6 @@ class GetPackagesFiltered:
             ret = self.sendResult()
 
     def sendResult(self, packages = []):
-        logging.getLogger().debug(packages)
         ret = map(lambda m: [m, 0, self.filt['packageapi']], packages)
         self.deferred.callback(ret)
 
@@ -497,7 +499,6 @@ class GetPackagesGroupFiltered:
 
     def getMirrorsResult(self, mirrors):
         self.mirrors = mirrors
-        logging.getLogger().debug("len mirrors: %d" % len(mirrors))
         mergedlist = []
         for i in range(len(self.package_apis)):
             tmpmerged = []
@@ -512,7 +513,6 @@ class GetPackagesGroupFiltered:
             n = len(mergedlist[0])
             i = 0
             for i in range(len(mergedlist[0])): # all line must have the same size!
-                logging.getLogger().debug(i)
                 plists.insert(i, [])
                 try:
                     map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)

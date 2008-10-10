@@ -254,7 +254,7 @@ class RpcProxy(RpcProxyI):
         d.addCallbacks(xmlrpcCleanup, lambda err: err)
         return d
 
-    def add_command_api(self, pid, target, params, p_api, mode, gid = None):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = []):
         """
         @param target: must be list of UUID
         @type target: list
@@ -263,17 +263,17 @@ class RpcProxy(RpcProxyI):
         #get_group_results(self, ctx, gid, min, max, filter):
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid)
+        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, proxies = proxy)
         g.deferred = defer.Deferred()
         g.send()
         g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
         return g.deferred
 
-    def add_bundle_api(self, porders, target, params, mode, gid = None):
+    def add_bundle_api(self, porders, target, params, mode, gid = None, proxy = []):
         ctx = self.currentContext
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-        g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid)
+        g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid, proxy)
         g.deferred = defer.Deferred()
         g.send()
         g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
@@ -397,6 +397,9 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_vnc_allow_user_control(self):
         return xmlrpcCleanup(MscConfig("msc").web_vnc_allow_user_control)
+
+    def get_web_def_allow_local_proxy(self):
+        return xmlrpcCleanup(MscConfig("msc").web_allow_local_proxy)
 
 ##
 # machines

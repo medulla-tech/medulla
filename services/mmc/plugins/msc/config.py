@@ -88,6 +88,9 @@ class MscConfig(PluginConfig):
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
 
+    # local proxy
+    web_allow_local_proxy = False
+
     # VNC applet behavior
     web_vnc_show_icon = True
     web_vnc_view_only = True
@@ -234,6 +237,8 @@ class MscConfig(PluginConfig):
             else:
                 self.web_def_deployment_intervals = ""
                 logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
+        if self.has_option("web", "web_allow_local_proxy"):
+            self.web_allow_local_proxy = self.get("web", "web_allow_local_proxy")
 
         # VNC stuff
         if self.has_option("web", "vnc_show_icon"):
