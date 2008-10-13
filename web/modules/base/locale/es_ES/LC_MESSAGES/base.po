@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MDS Spanish translation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-06 17:55+0200\n"
-"PO-Revision-Date: 2008-03-27 13:59+0100\n"
+"POT-Creation-Date: 2008-10-13 09:10+0200\n"
+"PO-Revision-Date: 2008-10-13 09:11+0200\n"
 "Last-Translator: Juan Asensio Sánchez <okelet@gmail.com>\n"
 "Language-Team: Aitire / Juan Asensio Sánchez <info@aitire.es / okelet@gmail."
 "com>\n"
@@ -44,6 +44,21 @@ msgid ""
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
+"<p>\n"
+"La versión de la comunidad de este producto está distribuida con la "
+"esperanza de que sea\n"
+"útil, pero se distribuye <strong>sin garantía de ninguna clase</strong>, "
+"incluyendo las garantías\n"
+"aplicables mercantiles o de aplicabilidad para un propósito particular. Vea "
+"la licencia Pública General\n"
+"(GNU GPL, GNU General Public License) para más detalles.</p>\n"
+"<p>\n"
+"Más aún, este producto es una parte principal y crítica de sus sistemas de "
+"información. Esta versión\n"
+"de la comunidad se distribuye sin soporte profesional de ningún tipo, y sin "
+"ningún método certificado\n"
+"y probado de actualización desde versiones anteriores.\n"
+"</p>"
 
 #: modules/base/users/edit.php:366
 msgid ""
@@ -67,7 +82,6 @@ msgid "Add"
 msgstr "Añadir"
 
 #: modules/base/computers/edit.php:40
-#, fuzzy
 msgid "Add a computer"
 msgstr "Añadir equipo"
 
@@ -104,9 +118,8 @@ msgid "Add user to group"
 msgstr "Añadir usuario a grupo"
 
 #: modules/base/infoPackage.inc.php:218
-#, fuzzy
 msgid "Ajax part of computers list"
-msgstr "Lista de equipos"
+msgstr "Parte Ajax de la lista de equipos"
 
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
@@ -168,8 +181,8 @@ msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Nose pudo enviar la solicitud XML-RPC al agente MMC"
 
 #: includes/PageGenerator.php:104 includes/PageGenerator.php:1900
-#: includes/PageGenerator.php:1966 modules/base/groups/delete.php:52
-#: modules/base/groups/members.php:182 modules/base/users/backup.php:91
+#: includes/PageGenerator.php:1966 modules/base/groups/members.php:182
+#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:438
 msgid "Cancel"
 msgstr "Cancelar"
@@ -178,8 +191,8 @@ msgstr "Cancelar"
 msgid "Change user password"
 msgstr "Cambiar contraseña del usuario"
 
-#: modules/base/users/localSidebar.php:32 modules/base/users/passwd.php:36
-#: modules/base/users/passwd.php:71
+#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:71
+#: modules/base/users/localSidebar.php:32
 msgid "Change your password"
 msgstr "Cambie su contraseña"
 
@@ -192,6 +205,8 @@ msgid ""
 "Click here to get more information about our support and maintenance "
 "subscription plan."
 msgstr ""
+"Haga click aquí para obtener más información acerca de nuestros planes de "
+"soporte y suscripción de mantenimiento."
 
 #: graph/navbar.inc.php:47
 msgid "Click to switch to"
@@ -210,7 +225,6 @@ msgid "Complete Traceback"
 msgstr "Mensaje completo"
 
 #: modules/base/computers/trads.php:26
-#, fuzzy
 msgid "Computer Name"
 msgstr "Nombre del equipo"
 
@@ -219,26 +233,24 @@ msgid "Computer list"
 msgstr "Lista de equipos"
 
 #: modules/base/computers/edit.php:59
-#, fuzzy
 msgid "Computer name"
 msgstr "Nombre del equipo"
 
 #: modules/base/computers/edit.php:33
-#, fuzzy
 msgid "Computer successfully added"
-msgstr "El grupo %s ha sido añadido correctamente"
+msgstr "Equipo añadido correctamente"
 
 #: modules/base/infoPackage.inc.php:195
 msgid "Computers"
 msgstr "Equipos"
 
-#: modules/base/includes/computers_list.inc.php:108
+#: modules/base/includes/computers_list.inc.php:110
 msgid "Computers list"
 msgstr "Lista de equipos"
 
 #: includes/PageGenerator.php:1896 includes/PageGenerator.php:1962
-#: includes/PageGenerator.php:1989 modules/base/groups/edit.php:106
-#: modules/base/groups/members.php:181 modules/base/users/edit.php:437
+#: includes/PageGenerator.php:1989 modules/base/groups/members.php:181
+#: modules/base/groups/edit.php:106 modules/base/users/edit.php:437
 #: modules/base/users/editacl.php:220
 msgid "Confirm"
 msgstr "Confirmar"
@@ -306,7 +318,7 @@ msgstr "Borrar un usuario"
 msgid "Delete all user's files"
 msgstr "Borrar todos los archivos del usuario"
 
-#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:126
 msgid "Delete computer"
 msgstr "Eliminar equipo"
 
@@ -319,15 +331,14 @@ msgid "Delete photo"
 msgstr "Borrar foto"
 
 #: modules/base/computers/delete.php:34
-#, fuzzy
 msgid "Delete this computer"
-msgstr "Eliminar equipo"
+msgstr "Eliminar este equipo"
 
 #: modules/base/users/delete.php:37
 msgid "Delete user"
 msgstr "Borrar usuario"
 
-#: modules/base/computers/edit.php:64 modules/base/groups/edit.php:91
+#: modules/base/groups/edit.php:91 modules/base/computers/edit.php:64
 msgid "Description"
 msgstr "Descripción"
 
@@ -337,12 +348,12 @@ msgstr "No seleccionar nada"
 
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre para mostrar"
 
 #: modules/base/includes/computers_list.inc.php:33
 #: modules/base/includes/computers_list.inc.php:40
 msgid "Download file"
-msgstr ""
+msgstr "Descargar archivo"
 
 #: modules/base/users/ajaxFilter.php:81 modules/base/views/index.tpl.php:89
 msgid "Edit"
@@ -362,7 +373,6 @@ msgid "Edit ACL permissions on a user"
 msgstr "Editar los permisos ACL de un usuario"
 
 #: modules/base/computers/edit.php:42
-#, fuzzy
 msgid "Edit a computer"
 msgstr "Editar equipo"
 
@@ -420,7 +430,7 @@ msgstr "Número de fax"
 
 #: modules/base/users/edit.php:319
 msgid "First name"
-msgstr "Apellido"
+msgstr "Nombre"
 
 #: graph/header.inc.php:209
 msgid "Form cannot be submit. Input errors are highlighted in red."
@@ -486,15 +496,11 @@ msgstr "Miembros del grupo %s"
 msgid "Group name"
 msgstr "Nombre del grupo"
 
-#: modules/base/groups/members.php:105
-#, fuzzy
-msgid "Group successfully modified"
-msgstr "El grupo %s ha sido modificado correctamente"
-
 #: modules/base/groups/ajaxFilter.php:41
+#: modules/base/views/roGroups.tpl.php:37
 #: modules/base/views/editGroups.tpl.php:52
 #: modules/base/views/norightGroups.tpl.php:28
-#: modules/base/views/roGroups.tpl.php:37 modules/base/infoPackage.inc.php:157
+#: modules/base/infoPackage.inc.php:157
 msgid "Groups"
 msgstr "Grupos"
 
@@ -572,9 +578,8 @@ msgid "List"
 msgstr "Lista"
 
 #: modules/base/computers/edit.php:83
-#, fuzzy
 msgid "Location"
-msgstr "Conexión"
+msgstr "Localización"
 
 #: modules/base/infoPackage.inc.php:73
 msgid "Log view"
@@ -658,9 +663,9 @@ msgstr "Nombre"
 msgid "New password"
 msgstr "Nueva contraseña"
 
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
 #: includes/PageGenerator.php:728 includes/PageGenerator.php:734
 #: includes/PageGenerator.php:787 includes/PageGenerator.php:791
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
 msgid "Next"
 msgstr "Siguiente"
 
@@ -739,14 +744,14 @@ msgstr ""
 msgid "Preferred name to be used"
 msgstr "Nombre preferido para usar"
 
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 #: includes/PageGenerator.php:717 includes/PageGenerator.php:724
 #: includes/PageGenerator.php:779 includes/PageGenerator.php:783
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 msgid "Previous"
 msgstr "Anterior"
 
-#: modules/base/views/editGroups.tpl.php:38
 #: modules/base/views/roGroups.tpl.php:32
+#: modules/base/views/editGroups.tpl.php:38
 msgid "Primary group"
 msgstr "Grupo primario"
 
@@ -755,7 +760,7 @@ msgstr "Grupo primario"
 msgid "Read log"
 msgstr "Leer bitácora"
 
-#: modules/base/includes/computers_list.inc.php:126
+#: modules/base/includes/computers_list.inc.php:129
 msgid "Remove machine from group"
 msgstr "Eliminar equipo de grupo"
 
@@ -862,7 +867,7 @@ msgstr ""
 
 #: modules/base/computers/delete.php:30
 msgid "The computer has been deleted."
-msgstr ""
+msgstr "EL equipo ha sido eliminado"
 
 #: modules/base/users/edit.php:80
 msgid "The confirmation password does not match the new password."
@@ -903,13 +908,7 @@ msgstr "La foto es muy grande. El tamaño máximo es %s x %s"
 msgid "The primary group field can't be empty."
 msgstr "El campo del grupo primario no puede estar vacío."
 
-#: index.php:55
-#, fuzzy, php-format
-msgid "The server %s does not exist"
-msgstr "Este grupo no existe"
-
 #: includes/xmlrpc.inc.php:283
-#, fuzzy
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -998,11 +997,11 @@ msgstr "Usuario y grupo"
 
 #: modules/base/users/edit.php:130 modules/base/users/edit.php:146
 msgid "User disabled."
-msgstr "Usuario desactivado."
+msgstr "Usuario deshabilitado."
 
 #: modules/base/users/edit.php:127 modules/base/users/edit.php:150
 msgid "User enabled."
-msgstr "Usuario activado"
+msgstr "Usuario habilitado."
 
 #: modules/base/infoPackage.inc.php:235
 msgid "User firstname"
@@ -1043,7 +1042,7 @@ msgstr "Título del usuario"
 
 #: modules/base/users/edit.php:85
 msgid "User's name invalid !"
-msgstr "El nombre de usuario no es válido !"
+msgstr "¡El nombre de usuario no es válido!"
 
 #: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:95
 #: modules/base/infoPackage.inc.php:101
@@ -1053,7 +1052,7 @@ msgstr "Usuarios"
 #: modules/base/includes/computers_list.inc.php:34
 #: modules/base/includes/computers_list.inc.php:41
 msgid "VNC Client"
-msgstr ""
+msgstr "Cliente VNC"
 
 #: includes/commonErrorHandling.php:78
 msgid ""
@@ -1115,9 +1114,8 @@ msgid "brazilian"
 msgstr "brasileño"
 
 #: includes/i18n.inc.php:50
-#, fuzzy
 msgid "danish"
-msgstr "español"
+msgstr "danés"
 
 #: modules/base/status/index.php:114
 msgid "day"
@@ -1141,7 +1139,7 @@ msgstr "francés"
 
 #: includes/i18n.inc.php:51
 msgid "german"
-msgstr ""
+msgstr "alemán"
 
 #: modules/base/users/editacl.php:73
 msgid "hide"
@@ -1176,9 +1174,8 @@ msgid "page"
 msgstr "página"
 
 #: includes/i18n.inc.php:55
-#, fuzzy
 msgid "polish"
-msgstr "inglés"
+msgstr "polaco"
 
 #: modules/base/users/editacl.php:75
 msgid "read only"
@@ -1190,7 +1187,7 @@ msgstr "leer/escribir"
 
 #: includes/i18n.inc.php:57
 msgid "russian"
-msgstr ""
+msgstr "ruso"
 
 #: includes/commonErrorHandling.php:77
 msgid "smbpasswd failed to change your password entry"
