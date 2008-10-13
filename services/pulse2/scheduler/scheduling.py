@@ -244,9 +244,7 @@ def stopElapsedCommands(scheduler_name):
     # retain tasks already in progress
     # take tasks with end_date in the future, but not null
     for q in session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands)).\
-        filter(database.commands.c.end_date != '0000-00-00 00:00:00').\
-        filter(database.commands.c.end_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
+        select_from(database.commands_on_host).\
         filter(sqlalchemy.or_(
             database.commands_on_host.c.current_state == 'upload_in_progress',
             database.commands_on_host.c.current_state == 'execution_in_progress',
@@ -257,8 +255,15 @@ def stopElapsedCommands(scheduler_name):
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         ).all():
-        # enter the maze: stop command
-        deffered = stopCommand(q.id)
+        # enter the maze: tag command as to-be-stopped if relevant
+
+        deffered = None
+        (myCoH, myC, myT) = gatherCoHStuff(q.id)
+        if not myC.inDeploymentInterval(): # stops command not in interval
+            deffered = stopCommand(q.id)# stops command no valid anymore
+        elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
+            deffered = stopCommand(q.id)
+
         if deffered:
             deffereds.append(deffered)
     session.close()
