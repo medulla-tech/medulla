@@ -93,6 +93,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         # command data
         self.cmd = cmd
         self.done = False
+        self.isnotifyingparent = False # semaphore to handle possible thread intersections
         self.id = id
         self.group = None
 

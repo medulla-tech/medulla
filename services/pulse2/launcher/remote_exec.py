@@ -645,24 +645,28 @@ def __cb_async_process_end(shprocess):
     """
     def _cb(result, id):
         # as we successfuly sent our result to our scheduler, command can be safely removed from our list
+        shprocess.isnotifyingparent = False
         pulse2.launcher.process_control.ProcessList().removeProcess(id)
     def _eb(reason, id):
         # no result can be sent, log and keep our process in our list
+        shprocess.isnotifyingparent = False
         logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s: %s' % (LauncherConfig().name, id, scheduler, reason.value))
 
-    exitcode = shprocess.exit_code
-    stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
-    stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
-    id = shprocess.id
+    if not shprocess.isnotifyingparent:
+        shprocess.isnotifyingparent = True
+        exitcode = shprocess.exit_code
+        stdout = unicode(shprocess.stdout, 'utf-8', 'strict')
+        stderr = unicode(shprocess.stderr, 'utf-8', 'strict')
+        id = shprocess.id
 
-    scheduler = pulse2.launcher.utils.getScheduler()
-    mydeffered = getProxy(scheduler).callRemote(
-        shprocess.returnxmlrpcfunc,
-        LauncherConfig().name,
-        (exitcode, stdout, stderr),
-        id
-    )
-    mydeffered.\
-        addCallback(_cb, id).\
-        addErrback(_eb, id)
+        scheduler = pulse2.launcher.utils.getScheduler()
+        mydeffered = getProxy(scheduler).callRemote(
+            shprocess.returnxmlrpcfunc,
+            LauncherConfig().name,
+            (exitcode, stdout, stderr),
+            id
+        )
+        mydeffered.\
+            addCallback(_cb, id).\
+            addErrback(_eb, id)
     return

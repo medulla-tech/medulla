@@ -63,6 +63,11 @@ def scheduleTellIAmAlive():
     tell_in = LauncherConfig().awake_time - time.time() % LauncherConfig().awake_time
     twisted.internet.reactor.callLater(tell_in, tellIAmAlive)
 
+def logStats():
+    config = LauncherConfig().launchers[LauncherConfig().name]
+    logging.getLogger().info('launcher %s: current balance is %s' % (LauncherConfig().name, pulse2.launcher.utils.getBalance(config)))
+    twisted.internet.reactor.callLater(60, logStats)
+
 def tellIAmAlive():
     def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
         if pulse2.launcher.process_control.ProcessList().getZombiesCount() > 0:
@@ -145,7 +150,11 @@ def startService():
 
     # Start periodic scheduler probing, called every awake_time seconds
     tellIAmAlive()
+    # Start periodic logging, called every 60 seconds
+    twisted.internet.reactor.callLater(60, logStats)
+
     logger.info('launcher %s: %d slots, listening on %s:%d' % (name, slots, bind, port))
+
 
     twisted.internet.reactor.run()
     return 0
