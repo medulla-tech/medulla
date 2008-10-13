@@ -400,9 +400,8 @@ def runUploadPhase(myCommandOnHostID):
 
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
-        updateHistory(myCommandOnHostID, 'upload_in_progress')
-
         if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
                 'sync_remote_push',
                 myCommandOnHostID,
@@ -422,7 +421,9 @@ def runUploadPhase(myCommandOnHostID):
                 files_list,
                 SchedulerConfig().max_upload_time
             )
-            mydeffered.addErrback(parsePushError, myCommandOnHostID)
+            mydeffered.\
+                addCallback(parsePushOrder, myCommandOnHostID).\
+                addErrback(parsePushError, myCommandOnHostID)
         else:
             return None
         return mydeffered
@@ -488,13 +489,11 @@ def runUploadPhase(myCommandOnHostID):
         client['protocol'] = file_uris['protocol']
         files_list = file_uris['files']
 
-        # we should now be ready to begin upload, let's record it
         myCoH.setUploadInProgress()
         myCoH.setCommandStatut('upload_in_progress')
-        updateHistory(myCommandOnHostID, 'upload_in_progress')
-
         # upload starts here
         if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
                 'sync_remote_pull',
                 myCommandOnHostID,
@@ -513,7 +512,9 @@ def runUploadPhase(myCommandOnHostID):
                 files_list,
                 SchedulerConfig().max_upload_time
             )
-            mydeffered.addErrback(parsePullError, myCommandOnHostID)
+            mydeffered.\
+                addCallback(parsePullOrder, myCommandOnHostID).\
+                addErrback(parsePullError, myCommandOnHostID)
         else:
             return None
         return mydeffered
@@ -545,12 +546,11 @@ def runExecutionPhase(myCommandOnHostID):
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
 
-    myCoH.setExecutionInProgress()
-    myCoH.setCommandStatut('execution_in_progress')
-    updateHistory(myCommandOnHostID, 'execution_in_progress')
-
     if myC.isQuickAction(): # should be a standard script
+        myCoH.setExecutionInProgress()
+        myCoH.setCommandStatut('execution_in_progress')
         if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
                 'sync_remote_quickaction',
                 myCommandOnHostID,
@@ -569,12 +569,17 @@ def runExecutionPhase(myCommandOnHostID):
                 ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
-            mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
+            mydeffered.\
+                addCallback(parseExecutionOrder, myCommandOnHostID).\
+                addErrback(parseExecutionError, myCommandOnHostID)
         else:
             return None
         return mydeffered
     else:
+        myCoH.setExecutionInProgress()
+        myCoH.setCommandStatut('execution_in_progress')
         if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
                 'sync_remote_exec',
                 myCommandOnHostID,
@@ -593,7 +598,9 @@ def runExecutionPhase(myCommandOnHostID):
                 ' '.join([myC.start_file, myC.parameters]).strip(),
                 SchedulerConfig().max_command_time
             )
-            mydeffered.addErrback(parseExecutionError, myCommandOnHostID)
+            mydeffered.\
+                addCallback(parseExecutionOrder, myCommandOnHostID).\
+                addErrback(parseExecutionError, myCommandOnHostID)
         else:
             return None
         return mydeffered
@@ -629,9 +636,8 @@ def runDeletePhase(myCommandOnHostID):
 
         myCoH.setDeleteInProgress()
         myCoH.setCommandStatut('delete_in_progress')
-        updateHistory(myCommandOnHostID, 'delete_in_progress')
-
         if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'delete_in_progress')
             mydeffered = callOnBestLauncher(
                 'sync_remote_delete',
                 myCommandOnHostID,
@@ -650,7 +656,9 @@ def runDeletePhase(myCommandOnHostID):
                 files_list,
                 SchedulerConfig().max_command_time
             )
-            mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
+            mydeffered.\
+                addCallback(parseDeleteOrder, myCommandOnHostID).\
+                addErrback(parseDeleteError, myCommandOnHostID)
         else:
             return None
         return mydeffered
@@ -662,9 +670,8 @@ def runDeletePhase(myCommandOnHostID):
 
             myCoH.setDeleteInProgress()
             myCoH.setCommandStatut('delete_in_progress')
-            updateHistory(myCommandOnHostID, 'delete_in_progress')
-
             if SchedulerConfig().mode == 'sync':
+                updateHistory(myCommandOnHostID, 'delete_in_progress')
                 mydeffered = callOnBestLauncher(
                     'sync_remote_delete',
                     myCommandOnHostID,
@@ -683,7 +690,9 @@ def runDeletePhase(myCommandOnHostID):
                     files_list,
                     SchedulerConfig().max_command_time
                 )
-                mydeffered.addErrback(parseDeleteError, myCommandOnHostID)
+                mydeffered.\
+                    addCallback(parseDeleteOrder, myCommandOnHostID).\
+                    addErrback(parseDeleteError, myCommandOnHostID)
             else:
                 return None
             return mydeffered
@@ -723,9 +732,8 @@ def runInventoryPhase(myCommandOnHostID):
 
     # if we are here, inventory has either previously failed or never be done
     myCoH.setInventoryInProgress()
-    updateHistory(myCommandOnHostID, 'inventory_in_progress')
-
     if SchedulerConfig().mode == 'sync':
+        updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = callOnBestLauncher(
             'sync_remote_inventory',
             myCommandOnHostID,
@@ -742,7 +750,9 @@ def runInventoryPhase(myCommandOnHostID):
             client,
             SchedulerConfig().max_command_time
         )
-        mydeffered.addErrback(parseInventoryError, myCommandOnHostID)
+        mydeffered.\
+            addCallback(parseInventoryOrder, myCommandOnHostID).\
+            addErrback(parseInventoryError, myCommandOnHostID)
     else:
         return None
     return mydeffered
@@ -760,9 +770,8 @@ def runRebootPhase(myCommandOnHostID):
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
 
-    updateHistory(myCommandOnHostID, 'reboot_in_progress')
-
     if SchedulerConfig().mode == 'sync':
+        updateHistory(myCommandOnHostID, 'reboot_in_progress')
         mydeffered = callOnBestLauncher(
             'sync_remote_reboot',
             myCommandOnHostID,
@@ -779,7 +788,9 @@ def runRebootPhase(myCommandOnHostID):
             client,
             SchedulerConfig().max_command_time
         )
-        mydeffered.addErrback(parseRebootError, myCommandOnHostID)
+        mydeffered.\
+            addCallback(parseRebootOrder, myCommandOnHostID).\
+            addErrback(parseRebootError, myCommandOnHostID)
     else:
         return None
     return mydeffered
@@ -890,6 +901,64 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
     myCoH.reSchedule(myC.getNextConnectionDelay())
     return None
+
+def parsePushOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'upload_in_progress')
+        logging.getLogger().info("command_on_host #%s: push order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        myCoH.setUploadToDo()
+        myCoH.setCommandStatut('scheduled')
+        logging.getLogger().warn("command_on_host #%s: push order not taken in account" % myCommandOnHostID)
+        return None
+
+def parsePullOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'upload_in_progress')
+        logging.getLogger().info("command_on_host #%s: pull order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        myCoH.setUploadToDo()
+        myCoH.setCommandStatut('scheduled')
+        logging.getLogger().warn("command_on_host #%s: pull order not taken in account" % myCommandOnHostID)
+        return None
+
+def parseExecutionOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'execution_in_progress')
+        logging.getLogger().info("command_on_host #%s: execution order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        myCoH.setExecutionToDo()
+        myCoH.setCommandStatut('scheduled')
+        logging.getLogger().warn("command_on_host #%s: execution order not taken in account" % myCommandOnHostID)
+        return None
+
+def parseDeleteOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'delete_in_progress')
+        logging.getLogger().info("command_on_host #%s: delete order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        myCoH.setDeleteToDo()
+        myCoH.setCommandStatut('scheduled')
+        logging.getLogger().warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
+        return None
+
+def parseRebootOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'reboot_in_progress')
+        logging.getLogger().info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        logging.getLogger().warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
+        return None
 
 def parseWOLError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
