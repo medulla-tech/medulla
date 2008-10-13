@@ -982,8 +982,6 @@ class MscDatabase(Singleton):
 
         size = 0
 
-
-
         if params['gid'] or params['uuid']:     # we want informations about one group / host
             if params['cmd_id']:                # we want informations about one command on one group / host
                 # Using min/max, we get a range of commands, but we always want
@@ -1000,6 +998,8 @@ class MscDatabase(Singleton):
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
             else:                               # we want all informations about on one group / host
+                # Get all commands related to the given computer UUID or group
+                # id
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
                 cmds = map(lambda c: (c.id, c.bundle_id), ret)
 
@@ -1012,6 +1012,9 @@ class MscDatabase(Singleton):
                 query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
                 query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
                 query = query.filter(self.commands.c.id.in_(*ids))
+                if params['uuid']:
+                    # Filter target according to the given UUID
+                    query = query.filter(self.target.c.target_uuid == params['uuid'])
                 query = query.order_by(desc(params['order_by']))
                 ret = query.group_by(self.commands.c.id).all()
 
