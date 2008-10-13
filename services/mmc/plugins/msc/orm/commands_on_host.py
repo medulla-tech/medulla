@@ -75,14 +75,16 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isUploadRunning(%s): %s" % (self.getId(), result))
         return result
 
-    def setUploadStatut(self, uploaded):
-        self.uploaded = uploaded
-        self.flush()
-
+    def setUploadToDo(self):
+        self.setUploadStatut('TODO')
     def isUploadToDo(self):
         result = (self.uploaded == 'TODO')
         logging.getLogger().debug("isUploadToDo(%s): %s" % (self.getId(), result))
         return result
+
+    def setUploadStatut(self, uploaded):
+        self.uploaded = uploaded
+        self.flush()
 ### /Handle upload states ###
 
 ### Handle execution states ###
@@ -119,14 +121,16 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isExecutionRunning(%s): %s" % (self.getId(), result))
         return result
 
-    def setExecutionStatut(self, executed):
-        self.executed = executed
-        self.flush()
-
+    def setExecutionToDo(self):
+        self.setExecutionStatut('TODO')
     def isExecutionToDo(self):
         result = (self.executed == 'TODO')
         logging.getLogger().debug("isExecutionToDo(%s): %s" % (self.getId(), result))
         return result
+
+    def setExecutionStatut(self, executed):
+        self.executed = executed
+        self.flush()
 ### /Handle execution states ###
 
 ### Handle deletion states ###
@@ -163,6 +167,8 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
         return result
 
+    def setDeleteToDo(self):
+        self.setDeleteStatut('TODO')
     def isDeleteToDo(self):
         result = (self.deleted == 'TODO')
         logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
