@@ -115,6 +115,11 @@ class Common(Singleton):
                             'file_access_path':'',
                             'mirror':mirror_params['mirror']
                         }
+                    self.logger.debug("Getting packages for %s %s %s" % (
+                        mirror_params['mount_point'],
+                        mirror_params['src'],
+                        str(access),
+                    ))
                     self._getPackages(
                         mirror_params['mount_point'],
                         mirror_params['src'],
@@ -584,6 +589,8 @@ class Common(Singleton):
 
     def _buildFileList(self):
         for package in self.working_pkgs:
-            for file in package.files.internals: # TODO dont access to internals ! 
+            self.logger.debug("Building file list for package %s" % package.id)
+            for file in package.files.internals: # TODO dont access to internals !
+                self.logger.debug("file id %s => %s" % (file.id, file.toURI()))
                 self.files[file.id] = file.toURI()
 
