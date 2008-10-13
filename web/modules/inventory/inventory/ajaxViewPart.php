@@ -49,11 +49,13 @@ if ($_GET['uuid'] != '') {
     $n = null;
     $h = array();
     $index = 0;
-    foreach ($inv[0][1] as $def) {
-        foreach ($def as $k => $v) {
-            $h[$k][$index] = $v;
+    if ($count > 0) {
+        foreach ($inv[0][1] as $def) {
+            foreach ($def as $k => $v) {
+                $h[$k][$index] = $v;
+            }
+            $index+=1;
         }
-        $index+=1;
     }
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
     foreach ($h as $k => $v) {
