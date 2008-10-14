@@ -59,7 +59,7 @@ def commandRunner(cmd, cbCommandEnd):
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
 
-def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group):
+def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind):
     """
     """
     process = commandProtocol(cmd)
@@ -85,6 +85,7 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
     process.endback = cbCommandEnd
     process.max_age = max_exec_time
     process.group = group
+    process.kind = kind
     return True
 
 class commandProtocol(twisted.internet.protocol.ProcessProtocol):
@@ -96,6 +97,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.isnotifyingparent = False # semaphore to handle possible thread intersections
         self.id = id
         self.group = None
+        self.kind = None
 
         # command process handling
         self.handler = None
@@ -196,6 +198,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
             'command': self.cmd,
             'id': self.id,
             'group': self.group,
+            'kind': self.kind,
             'exit_code': self.exit_code,
             'status': self.status,
             'signal': self.signal,

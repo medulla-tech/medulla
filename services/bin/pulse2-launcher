@@ -66,6 +66,7 @@ def scheduleTellIAmAlive():
 def logStats():
     config = LauncherConfig().launchers[LauncherConfig().name]
     logging.getLogger().info('launcher %s: current balance is %s' % (LauncherConfig().name, pulse2.launcher.utils.getBalance(config)))
+    logging.getLogger().info('launcher %s: current health is %s' % (LauncherConfig().name, pulse2.launcher.utils.getHealth(config)))
     twisted.internet.reactor.callLater(60, logStats)
 
 def tellIAmAlive():

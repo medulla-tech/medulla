@@ -88,21 +88,33 @@ def getBalance(config):
     # - amount of zombie process in the group
     group_stats = {}
 
+    # built "kind" struct => to balance by kind
+    # one item per group, containing the following keys:
+    # - total number of process by kind
+    # - amount of running process by kind
+    # - amount of zombie process by kind
+    kind_stats = {}
+
     for process_id in process_list:
         process_state = process_list[process_id].getState()
         if not process_state['group'] in group_stats: # initialize struct
             group_stats[process_state['group']] = {'total': 0, 'running': 0, 'zombie': 0}
+        if not process_state['kind'] in kind_stats: # initialize struct
+            kind_stats[process_state['kind']] = {'total': 0, 'running': 0, 'zombie': 0}
         group_stats[process_state['group']]['total'] += 1
+        kind_stats[process_state['kind']]['total'] += 1
         counts['total'] += 1
         counts['free'] -= 1
         if process_state['done']:
             group_stats[process_state['group']]['zombie'] += 1
+            kind_stats[process_state['kind']]['zombie'] += 1
             counts['zombie'] += 1
         else:
             group_stats[process_state['group']]['running'] += 1
+            kind_stats[process_state['kind']]['running'] += 1
             counts['running'] += 1
 
-    return {'by_group': group_stats, 'global': counts}
+    return {'by_group': group_stats, 'global': counts, 'by_kind': kind_stats}
 
 def getHealth(config):
     """

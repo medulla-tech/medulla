@@ -100,6 +100,7 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
                 'completed_push',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'push'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -180,6 +181,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
                 'completed_pull',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'pull'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -255,6 +257,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
                 'completed_deletion',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'delete'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -316,6 +319,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
                 'completed_execution',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'exec'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -376,6 +380,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
                 'completed_quick_action',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'quickaction'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -442,6 +447,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
                 'completed_direct',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'direct'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -511,6 +517,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
                 'completed_inventory',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'inventory'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
@@ -573,6 +580,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
                 'completed_reboot',
                 LauncherConfig().max_command_age,
                 client['group'],
+                'reboot'
             )
         elif mode == 'sync':
             return pulse2.launcher.process_control.commandRunner(
