@@ -103,10 +103,29 @@ def startAllCommands(scheduler_name, commandIDs = []):
     # ignore tasks already in progress
     # ignore tasks which failed
     # ignore tasks with no retries left
-    # take tasks with a pid not already set
     # take tasks with next launch time in the future
+    #
+    # Please pay attention that as nowhere is is specified the commands start_date and end_date
+    # fields 'special' values ("0000-00-00 00:00:00" and "2031-12-31 23:59:59"), I
+    # concider that:
+    #  - start_date:
+    #   + "0000-00-00 00:00:00" means "as soon as possible",
+    #   + "2031-12-31 23:59:59" means "never",
+    #  - end_date:
+    #   + "0000-00-00 00:00:00" means "never" (yeah, that's f*****g buggy, but how really matter the *specs*, hu ?),
+    #   + "2031-12-31 23:59:59" means "never",
+    #
+    # consequently, I may process tasks:
+    #     with start_date = "0000-00-00 00:00:00" or start_date <= now
+    # and start_date <> "2031-12-31 23:59:59"
+    # and end_date = "0000-00-00 00:00:00" or end_date = "2031-12-31 23:59:59" or end_date >= now
+    #
+    #
     # TODO: check command state integrity AND command_on_host state integrity in a separtseparate function
 
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    soon = time.strftime("0000-00-00 00:00:00")
+    later = time.strftime("2031-12-31 23:59:59")
     commands_query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
@@ -121,7 +140,17 @@ def startAllCommands(scheduler_name, commandIDs = []):
         filter(database.commands_on_host.c.current_state != 'execution_failed').\
         filter(database.commands_on_host.c.current_state != 'delete_failed').\
         filter(database.commands_on_host.c.current_state != 'inventory_failed').\
-        filter(database.commands_on_host.c.next_launch_date <= time.strftime("%Y-%m-%d %H:%M:%S")).\
+        filter(database.commands_on_host.c.next_launch_date <= now).\
+        filter(sqlalchemy.or_(
+            database.commands.c.start_date == soon,
+            database.commands.c.start_date <= now)
+        ).\
+        filter(database.commands.c.start_date != later).\
+        filter(sqlalchemy.or_(
+            database.commands.c.end_date == soon,
+            database.commands.c.end_date == later,
+            database.commands.c.end_date >= now)
+        ).\
         filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
