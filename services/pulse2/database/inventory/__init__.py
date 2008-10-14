@@ -694,10 +694,11 @@ class Inventory(DyngroupDatabaseHelper):
         if sessionCreator:
             session.close()
         try:
-            return res.id
+            ret = res.id
         except:
-            return None
-            
+            ret = None
+        return ret
+
     def isElemInTable(self, tableName, values, session = None):
         sessionCreator = False
         if session == None:
@@ -939,7 +940,9 @@ class InventoryCreator(Inventory):
                 hasTable = self.table['has'+table]
                 
                 h = hasTable.insert()
-                # loop on all inventory part columns
+                # keep track of already inserted datas for this table
+                already_inserted = []
+                # loop on all inventory part columns                
                 for cols in content:
                     # skip if empty
                     if len(cols) == 0:
@@ -983,22 +986,21 @@ class InventoryCreator(Inventory):
                                     nid = n.id
                                 nids[nom] = nid
                             self.logger.debug("2 %s"%(str(nids)))
+                        # closes if block
 
                         params = {'machine':m.id, 'inventory':i.id, tname:id}
                         if len(nids.keys()) > 0:
                             for nom in nids:
                                 params[nom.lower()] = nids[nom]
-                        has = self.isElemInTable('has'+table, params, session)
-                        if has == None or has == 0:
+                        if params not in already_set:
                             h.execute(params)
-                            # we should flush the session, but as it is not absolutly needed here,
-                            # and it takes a lot of time, we will do it later.
+                            already_set.append(params)
                     except UnicodeDecodeError, e: # just for test
                         pass
                     except Exception, e:
                         logging.getLogger().error(e)
                         pass
-
+                # closes for block
         except KeyError, e:
             transaction.rollback()
             session.close()
