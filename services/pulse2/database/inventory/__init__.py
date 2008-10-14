@@ -957,14 +957,14 @@ class InventoryCreator(Inventory):
                                 if type(col) == str or type(col) == unicode:
                                     setattr(k, col, cols[col])
                             session.save(k)
-                            session.flush()
+                            # Immediatly flush this new row, because we need an
+                            # id
+                            session.flush([k])
                             id = k.id
                         
                         nids = {}
                         if OcsMapping().nomenclatures.has_key(table):
                             for nom in OcsMapping().nomenclatures[table]:
-                                self.logger.debug("1 %s"%(str(nom)))
-                                self.logger.debug("1.1 %s"%(str(cols)))
                                 nomName = 'nom%s%s' % (table, nom)
                                 nomKlass = self.klass[nomName]
                                 nomTable = self.table[nomName]
@@ -973,19 +973,18 @@ class InventoryCreator(Inventory):
                                 for col in cols:
                                     if type(col) == tuple and col[0] == nomName:
                                         ncols[col[1]] = cols[col]
-                                self.logger.debug("1.2 %s"%(str(ncols)))
                                 
                                 nid = self.getIdInTable(nomName, ncols, session)
-                                self.logger.debug("1.3 %s"%(str(nid)))
                                 if nid == None:
                                     n = nomKlass()
                                     for col in ncols:
                                         setattr(n, col, ncols[col])
                                     session.save(n)
-                                    session.flush()
+                                    # Immediatly flush this new row, because
+                                    # we need an id
+                                    session.flush([n])
                                     nid = n.id
                                 nids[nom] = nid
-                            self.logger.debug("2 %s"%(str(nids)))
                         # closes if block
 
                         params = {'machine':m.id, 'inventory':i.id, tname:id}
@@ -993,7 +992,14 @@ class InventoryCreator(Inventory):
                             for nom in nids:
                                 params[nom.lower()] = nids[nom]
                         if params not in already_inserted:
-                            h.execute(params)
+                            # Prepare insertion in the 'has' table
+                            hk = hasKlass()
+                            for attr, value in params.items():
+                                setattr(hk, attr, value)
+                            # We will flush the new rows for the 'has' tables
+                            # at the end, because it's faster to do it in one
+                            # shot
+                            session.save(hk)
                             already_inserted.append(params)
                     except UnicodeDecodeError, e: # just for test
                         pass
