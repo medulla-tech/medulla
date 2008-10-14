@@ -227,7 +227,7 @@ class CommandsOnHost(object):
 
     def setDone(self):
         self.setCommandStatut('done')
-        self.setEndDate()
+        self.setEndDate() # final state: we may write the date down
     def isDone(self):
         result = (self.getCommandStatut() == 'done')
         logging.getLogger().debug("isDone): %s" % (self.getId(), result))
@@ -235,6 +235,7 @@ class CommandsOnHost(object):
 
     def setFailed(self):
         self.setCommandStatut('failed')
+        self.setEndDate() # final state: we may write the date down
     def isFailed(self):
         result = (self.getCommandStatut() == 'failed')
         logging.getLogger().debug("isFailed): %s" % (self.getId(), result))
