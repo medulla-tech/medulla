@@ -198,6 +198,8 @@ class RpcProxy(RpcProxyI):
         return g.deferred
 
     def _range(self, result, start, end):
+        if end == -1:
+            return (len(result), result[start:len(result)])
         return (len(result), result[start:end])
 
     def pa_adv_getAllPackages(self, filt, start, end):
