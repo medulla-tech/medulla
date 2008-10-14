@@ -992,9 +992,9 @@ class InventoryCreator(Inventory):
                         if len(nids.keys()) > 0:
                             for nom in nids:
                                 params[nom.lower()] = nids[nom]
-                        if params not in already_set:
+                        if params not in already_inserted:
                             h.execute(params)
-                            already_set.append(params)
+                            already_inserted.append(params)
                     except UnicodeDecodeError, e: # just for test
                         pass
                     except Exception, e:
