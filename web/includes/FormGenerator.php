@@ -456,7 +456,7 @@ class DynamicDateTpl extends InputTpl {
             <script type="text/javascript">
             Calendar.setup({
             inputField      :   "'.$this->name.'",
-            ifFormat        :   "%Y-%m-%d %H:%M:%S",       // format of the input field
+            ifFormat        :   "%Y-%m-%d %H:%M:00",       // format of the input field
             showsTime       :   true,
             timeFormat      :   "24",
             button          :   "'.$this->name.'_button",
