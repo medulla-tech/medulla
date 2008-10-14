@@ -68,7 +68,7 @@ def start_all_commands(scheduler):
 def start_these_commands(scheduler, commands):
     database = MscDatabase()
     session = create_session()
-    coh_query = session.query(CommandsOnHost).filter(database.commands.c.id.in_(*commands))
+    coh_query = session.query(CommandsOnHost).filter(database.commands_on_host.c.fk_commands.in_(*commands))
     done = []
     for coh in coh_query.all():
         scheduler = coh.scheduler
