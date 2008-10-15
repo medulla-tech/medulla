@@ -435,9 +435,10 @@ def action_on_command(id, f_name, f_database, f_scheduler):
     getattr(MscDatabase(), f_database)(id)
     # Stop related commands_on_host on related schedulers
     scheds = MscDatabase().getCommandsonhostsAndSchedulers(id)
+    logger = logging.getLogger()
     for sched in scheds:
         d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
-        d.addErrback(lambda err: self.logger.error("%s: " % (f_name) + str(err)))
+        d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
         
 ### Commands handling ###
 def stop_command(c_id):
