@@ -180,31 +180,56 @@ class CommandHistory {
 
         $state = $a_uploaded . $a_executed . $a_deleted;
 
-        $values = array(
+        if ($this->db_cmd['start_date'])
+            if ($this->db_cmd['end_date'])
+                $validity = sprintf(_T('<i>from</i> %s <i>to</i> %s'), _toDate($this->db_cmd['start_date']), _toDate($this->db_cmd['end_date']));
+            else
+                $validity = sprintf(_T('<i>from</i> %s'), _toDate($this->db_cmd['start_date']));
+        else
+            if ($this->db_cmd['end_date'])
+                $validity = sprintf(_T('<i>to</i> %s'), _toDate($this->db_cmd['end_date']));
+            else
+                $validity = sprintf(_T('<i>not set</i>'));
+
+        if ($this->db_cmd['deployment_intervals']) {
+            $deploy_interv = str_replace(array('-', ','), array(' - ', ', '), $this->db_cmd['deployment_intervals']);
+        } else
+            $deploy_interv = _T('<i>not set</i>', 'msc');
+
+        if ($this->db_cmd['start_file'])
+            if ($this->db_cmd['parameters'])
+                $command_line = sprintf(_T('%s %s'), $this->db_cmd['start_file'], $this->db_cmd['parameters']);
+            else
+                $command_line = sprintf(_T('%s <i>(no additionnal parameter given)</i>'), $this->db_cmd['start_file']);
+        else
+            $command_line = T('<i>not set</i>', 'msc');
+
+        // gettext obfucation: _T('enable', 'msc'), _T('disable', 'msc')
+        $static_values = array(
             array(_T('Command name', 'msc'),                                    $this->db_cmd['title']),
-            array(_T('Command state', 'msc'),                                   $state),
-            array(_T('Creation date', 'msc'),                           _toDate($this->db_cmd['creation_date'])),
-            array(_T('User command creator', 'msc'),                            $this->db_cmd['creator']),
-            array(_T('Script to start', 'msc'),                                 $this->db_cmd['start_file']),
-            array(_T('Script parameters', 'msc'),                               $this->db_cmd['parameters']),
-            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),   $this->db_cmd['do_wol']),
-            array(_T('Start script', 'msc'),                                    $this->db_cmd['start_script']),
-            array(_T('Delete files after a successful execution', 'msc'),       $this->db_cmd['clean_on_success']),
-            array(_T('Do an inventory after a successful execution', 'msc'),    $this->db_cmd['do_inventory']),
-            array(_T('Reboot client after a successful deletion', 'msc'),       $this->db_cmd['do_reboot']),
-            array(_T('Remaining connection attempts', 'msc'),                   $this->db_coh['attempts_left']),
+            array(_T('Creation', 'msc'),                                        sprintf(_T('<i>on</i> %s <i>by</i> %s'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
+            array(_T('Validity period', 'msc'),                                 $validity),
+            array(_T('Execution interval', 'msc'),                              $deploy_interv),
+            array(_T('Command line to run', 'msc'),                             $command_line),
+            array('',                                                           ''),
+            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),   _T($this->db_cmd['do_wol'], 'msc')),
+            array(_T('Start script ?', 'msc'),                                  _T($this->db_cmd['start_script'], 'msc')),
+            array(_T('Delete files after a successful execution ?', 'msc'),     _T($this->db_cmd['clean_on_success'], 'msc')),
+            array(_T('Do an inventory after a successful execution ?', 'msc'),  _T($this->db_cmd['do_inventory'], 'msc')),
+            array(_T('Reboot client after a successful deletion ?', 'msc'),     _T($this->db_cmd['do_reboot'], 'msc')),
             array(_T('Delay between two connections (minutes)', 'msc'),         $this->db_cmd['next_connection_delay']),
-            array(_T('The command may start after', 'msc'),             _toDate($this->db_cmd['start_date'])),
-            array(_T('The command must stop before', 'msc'),            _toDate($this->db_cmd['end_date'])),
-            array(_T('The command won\'t be run until', 'msc'),         _toDate($this->db_coh['next_launch_date'])),
+            array('',                                                           ''),
+            array(_T('Command state', 'msc'),                                   $state),
+            array(_T('Remaining connection attempts ?', 'msc'),                 $this->db_coh['attempts_left']),
+            array(_T('Next processing hour', 'msc'),                            _toDate($this->db_coh['next_launch_date'])),
         );
 
-        $name = array_map("_names", $values);
-        $value = array_map("_values", $values);
+        $static_name = array_map("_names", $static_values);
+        $static_value = array_map("_values", $static_values);
 
-        $n = new ListInfos($name, _T('Name', 'msc'));
-        $n->addExtraInfo($value, _T('Value', 'msc'));
-        $n->setRowsPerPage(count($values));
+        $n = new ListInfos($static_name, _T('Name', 'msc'));
+        $n->addExtraInfo($static_value, _T('Value', 'msc'));
+        $n->setRowsPerPage(count($static_values));
         $n->setTableHeaderPadding(1);
         $n->drawTable(0);
 
@@ -221,6 +246,7 @@ class CommandHistory {
         $n->setTableHeaderPadding(1);
         print "<hr/><br/>";
         $n->drawTable(0);
+        print "<hr/><br/>";
 
         # display command history
         # display log files
