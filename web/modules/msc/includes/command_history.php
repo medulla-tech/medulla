@@ -182,14 +182,14 @@ class CommandHistory {
 
         if ($this->db_cmd['start_date'])
             if ($this->db_cmd['end_date'])
-                $validity = sprintf(_T('<i>from</i> %s <i>to</i> %s'), _toDate($this->db_cmd['start_date']), _toDate($this->db_cmd['end_date']));
+                $validity = sprintf(_T('<i>from</i> %s <i>to</i> %s', 'msc'), _toDate($this->db_cmd['start_date']), _toDate($this->db_cmd['end_date']));
             else
-                $validity = sprintf(_T('<i>from</i> %s'), _toDate($this->db_cmd['start_date']));
+                $validity = sprintf(_T('<i>from</i> %s', 'msc'), _toDate($this->db_cmd['start_date']));
         else
             if ($this->db_cmd['end_date'])
-                $validity = sprintf(_T('<i>to</i> %s'), _toDate($this->db_cmd['end_date']));
+                $validity = sprintf(_T('<i>to</i> %s', 'msc'), _toDate($this->db_cmd['end_date']));
             else
-                $validity = sprintf(_T('<i>forever</i>'));
+                $validity = sprintf(_T('<i>forever</i>', 'msc'));
 
         if ($this->db_cmd['deployment_intervals']) {
             $deploy_interv = str_replace(array('-', ','), array(' - ', ', '), $this->db_cmd['deployment_intervals']);
@@ -198,9 +198,9 @@ class CommandHistory {
 
         if ($this->db_cmd['start_file'])
             if ($this->db_cmd['parameters'])
-                $command_line = sprintf(_T('%s %s'), $this->db_cmd['start_file'], $this->db_cmd['parameters']);
+                $command_line = sprintf(_T('%s %s', 'msc'), $this->db_cmd['start_file'], $this->db_cmd['parameters']);
             else
-                $command_line = sprintf(_T('%s <i>(no additionnal parameter given)</i>'), $this->db_cmd['start_file']);
+                $command_line = sprintf(_T('%s <i>(no additionnal parameter given)</i>', 'msc'), $this->db_cmd['start_file']);
         else
             $command_line = _T('<i>not set</i>', 'msc');
 
@@ -209,7 +209,7 @@ class CommandHistory {
         _T('disable', 'msc');
         $static_values = array(
             array(_T('Command name', 'msc'),                                    $this->db_cmd['title']),
-            array(_T('Creation', 'msc'),                                        sprintf(_T('<i>on</i> %s <i>by</i> %s'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
+            array(_T('Creation', 'msc'),                                        sprintf(_T('<i>on</i> %s <i>by</i> %s', 'msc'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
             array(_T('Validity period', 'msc'),                                 $validity),
             array(_T('Processing interval', 'msc'),                             $deploy_interv),
             array(_T('Command line to run', 'msc'),                             $command_line),
