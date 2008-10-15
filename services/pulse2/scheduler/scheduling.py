@@ -88,7 +88,7 @@ def getDependancies(myCommandOnHostID):
     session.close()
     return coh_dependencies
 
-def getPotentialLocalProxy(myCommandOnHostID):
+def getLocalProxyUploadStatus(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
     possible return values:
         - 'waiting': my time is not yet come
@@ -149,8 +149,24 @@ def getPotentialLocalProxy(myCommandOnHostID):
             logging.getLogger().debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else:                                                           # and others better candidates seems dead => PROXY SERVER MODE
-            logging.getLogger().debug("scheduler %s: coh #%s becomelocal proxy server" % (SchedulerConfig().name, myCommandOnHostID))
+            logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'server'
+
+def getLocalProxyMayCleanup(myCommandOnHostID):
+    """ attempt to analyse coh in the same command in order to now how we may advance.
+    """
+    # iterate over CoH which
+    # are linked to the same command
+    # are not our CoH
+    # are our client
+    # have finished their upload or totally failed
+    return session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+        filter(database.commands.c.id == myC.id).\
+        filter(database.commands_on_host.c.id != myCoH.id).\
+        filter(database.commands_on_host.c.uploaded != 'DONE').\
+        filter(database.commands_on_host.c.current_state != 'failed').\
+        count(database.commands_on_host.c.fk_use_as_proxy == myCoH.id) == 0
 
 def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
