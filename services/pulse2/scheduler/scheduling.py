@@ -88,6 +88,70 @@ def getDependancies(myCommandOnHostID):
     session.close()
     return coh_dependencies
 
+def getPotentialLocalProxy(myCommandOnHostID):
+    """ attempt to analyse coh in the same command in order to now how we may advance.
+    possible return values:
+        - 'waiting': my time is not yet come
+        - 'server': I'm an active proxy server
+        - 'dead': I'm a client and all proxies seems dead
+        - an int: I'm a client and the returned value is the CoH I will use
+    """
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    session = sqlalchemy.create_session()
+    database = MscDatabase()
+
+    smallest_done_upload_order_in_proxy = None
+    best_ready_proxy_server_coh = None
+    potential_proxy_server_coh = None
+
+    # iterate over CoH which
+    # are linked to the same command
+    # are not our CoH
+    for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+        filter(database.commands.c.id == myC.id).\
+        filter(database.commands_on_host.c.id != myCoH.id).\
+        all():
+            if q.uploaded == 'DONE':                                            # got a pal which succeeded in doing its upload
+                if q.order_in_proxy:                                            # got a potent proxy server
+                    if smallest_done_upload_order_in_proxy < q.order_in_proxy:  # keep its id as it seems to be the best server ever
+                        smallest_done_upload_order_in_proxy = q.order_in_proxy
+                        best_ready_proxy_server_coh = q.id
+            elif q.current_state != 'failed':                                   # got a pal which may still do something
+                if q.order_in_proxy != None:                                    # got a potential proxy server
+                    if myCoH.order_in_proxy == None:                            # i may use this server, as I'm not server myself
+                        potential_proxy_server_coh = q.id
+                    elif myCoH.order_in_proxy > q.order_in_proxy:               # i may use this server, as it has a lower priority than me
+                        potential_proxy_server_coh = q.id
+    session.close()
+
+    # we now know:
+    # a proxy that may be used
+    # a proxy that might be used
+    # let's take a decision about our future
+
+    if myCoH.order_in_proxy == None:                                    # I'm a client: I MUST use a proxy server
+        if best_ready_proxy_server_coh != None:                         # a proxy seems ready => PROXY CLIENT MODE
+            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+            return best_ready_proxy_server_coh
+        elif potential_proxy_server_coh != None:                        # but one may become ready => WAITING
+            logging.getLogger().debug("scheduler %s: coh #%s still waiting for a local proxy to use" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'waiting'
+        else:                                                           # and all seems dead => ERROR
+            logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'dead'
+    else:                                                               # I'm a server: I MAY use a proxy
+        if best_ready_proxy_server_coh != None:                         # a proxy seems ready => PROXY CLIENT MODE
+            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+            return best_ready_proxy_server_coh
+        elif potential_proxy_server_coh:                                # but one better candidate may become ready => WAITING
+            logging.getLogger().debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'waiting'
+        else:                                                           # and others better candidates seems dead => PROXY SERVER MODE
+            logging.getLogger().debug("scheduler %s: coh #%s becomelocal proxy server" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'server'
+
 def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
     database = MscDatabase()
