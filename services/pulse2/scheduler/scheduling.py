@@ -66,7 +66,7 @@ def gatherCoHStuff(idCommandOnHost):
     session.close()
     return (myCommandOnHost, myCommand, myTarget)
 
-def getDepencencies(myCommandOnHostID):
+def getDependancies(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
     session = sqlalchemy.create_session()
@@ -344,7 +344,7 @@ def runCommand(myCommandOnHostID):
         logger.debug("command_on_host #%s: not part of a bundle" % myCoH.getId())
     else: # command is part of a bundle, let's check the bundle state
         logger.debug("command_on_host #%s: part of bundle %s, order %s " % (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
-        deps =  getDepencencies(myCommandOnHostID)
+        deps =  getDependancies(myCommandOnHostID)
         if len(deps) != 0:
             logger.debug("command_on_host #%s: depends on %s " % (myCoH.getId(), deps))
             return True # give up, some deps has to be done
