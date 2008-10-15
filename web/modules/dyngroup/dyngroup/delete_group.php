@@ -42,7 +42,7 @@ if (quickGet('valid')) {
 <p>
 
 <?  
-    printf(_T("You will delete group <b>%s</b>.", "dyngroup"), $_GET["groupname"]);
+    printf(_T("Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an other group).", "dyngroup"), $_GET["groupname"]);
 ?>
 
 </p>
