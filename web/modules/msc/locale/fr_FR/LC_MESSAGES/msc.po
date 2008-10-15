@@ -2,13 +2,13 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-05 12:42+0200\n"
+"POT-Creation-Date: 2008-10-15 11:06+0200\n"
 "PO-Revision-Date: 2008-10-07 15:04+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: msc/includes/command_history.php:312
+#: msc/includes/command_history.php:340
 #, php-format
 msgid "%04d/%02d/%02d %02d:%02d:%02d"
 msgstr "%04d/%02d/%02d %02d:%02d:%02d"
@@ -31,6 +31,16 @@ msgstr "%3.1f %s%s"
 msgid "%a %d %b %Y %T"
 msgstr "%d %b %a %Y %T"
 
+#: msc/includes/command_history.php:201
+#, fuzzy, php-format
+msgid "%s %s"
+msgstr "%s sur %s"
+
+#: msc/includes/command_history.php:203
+#, php-format
+msgid "%s <i>(no additionnal parameter given)</i>"
+msgstr ""
+
 #: msc/includes/widgets.inc.php:66
 #, php-format
 msgid ""
@@ -40,7 +50,7 @@ msgstr ""
 "L'ordinateur \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas "
 "la permission d'y accéder"
 
-#: msc/msc/ajaxLogsFilter.php:245 msc/logs/ajaxLogsFilter.php:103
+#: msc/logs/ajaxLogsFilter.php:103 msc/msc/ajaxLogsFilter.php:245
 #, php-format
 msgid "%s on %s"
 msgstr "%s sur %s"
@@ -71,6 +81,30 @@ msgstr "Contrôle sécurisé du groupe %s"
 msgid "(with %s beeing unreachable)"
 msgstr "(dont %s sont injoignables)"
 
+#: msc/includes/command_history.php:187
+#, php-format
+msgid "<i>from</i> %s"
+msgstr ""
+
+#: msc/includes/command_history.php:185
+#, php-format
+msgid "<i>from</i> %s <i>to</i> %s"
+msgstr ""
+
+#: msc/includes/command_history.php:192 msc/includes/command_history.php:197
+msgid "<i>not set</i>"
+msgstr ""
+
+#: msc/includes/command_history.php:212
+#, php-format
+msgid "<i>on</i> %s <i>by</i> %s"
+msgstr ""
+
+#: msc/includes/command_history.php:190
+#, php-format
+msgid "<i>to</i> %s"
+msgstr ""
+
 #: msc/includes/bundle_widgets.php:149 msc/includes/bundle_widgets.php:174
 msgid "Actions in bundle"
 msgstr "Actions de l'ensemble d'applications"
@@ -83,12 +117,17 @@ msgstr "Avancé"
 msgid "Advanced launch bundle"
 msgstr "Lancement d'un ensemble d'applications (avancé)"
 
+#: msc/msc/local_proxy.php:47
+#, fuzzy
+msgid "All computers of this group"
+msgstr "Arrêt de %s %s sur ce groupe"
+
 #: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:329
 msgid "All users commands"
 msgstr "Commandes de tous les utilisateurs"
 
-#: msc/msc/ajaxLogsFilter.php:236 msc/logs/ajaxLogsFilter.php:98
-#: msc/includes/command_history.php:310
+#: msc/includes/command_history.php:338 msc/logs/ajaxLogsFilter.php:98
+#: msc/msc/ajaxLogsFilter.php:236
 msgid "As soon as possible"
 msgstr "Dès que possible"
 
@@ -123,8 +162,8 @@ msgstr "Octets"
 msgid "Close window"
 msgstr "Fermer la fenêtre"
 
-#: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:208
-#: msc/msc/ajaxLogsFilter.php:284 msc/logs/ajaxLogsFilter.php:140
+#: msc/logs/ajaxLogsFilter.php:140 msc/msc/ajaxLogsFilter.php:208
+#: msc/msc/ajaxLogsFilter.php:284 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr "Commande"
 
@@ -137,8 +176,13 @@ msgstr "État de la commande '%s' sur <b>%s</b> machines"
 msgid "Command expiry date"
 msgstr "Date d'expiration de la commande"
 
-#: msc/msc/launch.php:124 msc/includes/command_history.php:107
-#: msc/includes/command_history.php:184
+#: msc/includes/command_history.php:215
+#, fuzzy
+msgid "Command line to run"
+msgstr "Nom de la commande"
+
+#: msc/includes/command_history.php:107 msc/includes/command_history.php:211
+#: msc/msc/launch.php:155
 msgid "Command name"
 msgstr "Nom de la commande"
 
@@ -150,7 +194,7 @@ msgstr "Paramètres du script"
 msgid "Command start date"
 msgstr "Date de démarrage de la commande"
 
-#: msc/includes/command_history.php:185
+#: msc/includes/command_history.php:224
 msgid "Command state"
 msgstr "État de la commande"
 
@@ -166,12 +210,16 @@ msgstr "Connexion réussie !"
 msgid "Connection failed !"
 msgstr "Échec de la connexion"
 
-#: msc/msc/launch.php:141 msc/includes/bundle_widgets.php:343
+#: msc/includes/bundle_widgets.php:343 msc/msc/launch.php:175
 msgid "Copy Mode"
 msgstr "Mode de transfert"
 
+#: msc/includes/command_history.php:212
+#, fuzzy
+msgid "Creation"
+msgstr "Date de création"
+
 #: msc/includes/command_history.php:89 msc/includes/command_history.php:108
-#: msc/includes/command_history.php:186
 msgid "Creation date"
 msgstr "Date de création"
 
@@ -187,7 +235,7 @@ msgstr "Date"
 msgid "Delay between two connections"
 msgstr "Délai entre deux connexions"
 
-#: msc/msc/launch.php:132 msc/includes/command_history.php:196
+#: msc/includes/command_history.php:222 msc/msc/launch.php:163
 msgid "Delay between two connections (minutes)"
 msgstr "Délai entre deux connexions (minutes)"
 
@@ -203,9 +251,13 @@ msgstr "Suppression terminée"
 msgid "Delete failed"
 msgstr "Échec de la suppression"
 
-#: msc/msc/launch.php:128 msc/includes/command_history.php:192
-#: msc/includes/bundle_widgets.php:325
+#: msc/includes/bundle_widgets.php:325 msc/msc/launch.php:159
 msgid "Delete files after a successful execution"
+msgstr "Détruire les fichiers après une commande réussie"
+
+#: msc/includes/command_history.php:219
+#, fuzzy
+msgid "Delete files after a successful execution ?"
 msgstr "Détruire les fichiers après une commande réussie"
 
 #: msc/includes/functions.php:32
@@ -217,21 +269,30 @@ msgstr "Suppression en cours"
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Déploiement de <b>%s v.%s</b><br/> sur <b>%s</b>"
 
-#: msc/msc/launch.php:135 msc/includes/bundle_widgets.php:332
+#: msc/includes/bundle_widgets.php:348 msc/msc/launch.php:180
+msgid "Deploy using a local proxy"
+msgstr ""
+
+#: msc/includes/bundle_widgets.php:332 msc/msc/launch.php:166
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
+#: msc/logs/ajaxLogsFilter.php:72 msc/logs/ajaxLogsFilter.php:73
+#: msc/msc/ajaxLogsFilter.php:87 msc/msc/ajaxLogsFilter.php:89
 #: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:48
 #: msc/msc/history.php:78 msc/msc/history.php:83 msc/msc/history.php:99
 #: msc/msc/logs.php:47 msc/msc/logs.php:57 msc/msc/logs.php:91
 #: msc/msc/logs.php:96 msc/msc/logs.php:114 msc/msc/packages.php:22
-#: msc/msc/ajaxLogsFilter.php:87 msc/msc/ajaxLogsFilter.php:89
-#: msc/logs/ajaxLogsFilter.php:72 msc/logs/ajaxLogsFilter.php:73
 msgid "Details"
 msgstr "Détails"
 
-#: msc/msc/launch.php:129 msc/includes/command_history.php:193
+#: msc/msc/launch.php:160
 msgid "Do an inventory after a successful execution"
+msgstr "Faire un inventaire après une commande réussie"
+
+#: msc/includes/command_history.php:220
+#, fuzzy
+msgid "Do an inventory after a successful execution ?"
 msgstr "Faire un inventaire après une commande réussie"
 
 #: msc/includes/functions.php:45 msc/includes/functions.php:53
@@ -246,7 +307,7 @@ msgstr "Télécharger un fichier depuis un ordinateur"
 msgid "Download file from a computer"
 msgstr "Téléchargement de fichier depuis un ordinateur"
 
-#: msc/msc/ajaxLogsFilter.php:279 msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:279
 msgid "End date"
 msgstr "Date de fin"
 
@@ -286,7 +347,12 @@ msgstr "Échec de l'exécution"
 msgid "Execution in progress"
 msgstr "Exécution en cours"
 
-#: msc/includes/command_history.php:292
+#: msc/includes/command_history.php:214
+#, fuzzy
+msgid "Execution interval"
+msgstr "Exécution terminée"
+
+#: msc/includes/command_history.php:320
 #, php-format
 msgid "Exit code was: %s"
 msgstr "Le code de retour était : %s"
@@ -295,7 +361,7 @@ msgstr "Le code de retour était : %s"
 msgid "Failed"
 msgstr "Échec"
 
-#: msc/msc/launch.php:114
+#: msc/msc/launch.php:145
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur groupe : action \"%s\" sur \"%s\""
@@ -340,7 +406,7 @@ msgstr "Démarrer"
 msgid "Launch Actions"
 msgstr "Lancer une action"
 
-#: msc/msc/tabs.php:22 msc/msc/tabs.php:34 msc/includes/bundle_widgets.php:201
+#: msc/includes/bundle_widgets.php:201 msc/msc/tabs.php:22 msc/msc/tabs.php:34
 msgid "Launch Bundle"
 msgstr "Lancer un bundle"
 
@@ -351,6 +417,10 @@ msgstr "Lancer une action"
 #: msc/infoPackage.inc.php:176
 msgid "Launch a quick action command"
 msgstr "Lancer une action rapide"
+
+#: msc/msc/local_proxy.php:67
+msgid "Local proxies"
+msgstr ""
 
 #: msc/msc/tabs.php:23 msc/msc/tabs.php:35
 msgid "Logs"
@@ -412,11 +482,11 @@ msgstr "Onglet des journaux pour une machine"
 msgid "MSC logs tab for a machine in a group"
 msgstr "Onglet des journaux pour une machine dans un groupe"
 
-#: msc/msc/launch.php:136 msc/includes/bundle_widgets.php:333
+#: msc/includes/bundle_widgets.php:333 msc/msc/launch.php:167
 msgid "Max bandwidth (b/s)"
 msgstr "Bande passante maximale (b/s)"
 
-#: msc/msc/launch.php:131 msc/includes/bundle_widgets.php:328
+#: msc/includes/bundle_widgets.php:328 msc/msc/launch.php:162
 msgid "Maximum number of connection attempt"
 msgstr "Nombre de tentatives de connexions"
 
@@ -428,14 +498,18 @@ msgstr "Mes commandes"
 msgid "N/A"
 msgstr "N/A"
 
-#: msc/msc/package_detail.php:39 msc/includes/command_history.php:45
-#: msc/includes/command_history.php:129 msc/includes/command_history.php:205
+#: msc/includes/command_history.php:45 msc/includes/command_history.php:129
+#: msc/includes/command_history.php:232 msc/msc/package_detail.php:39
 msgid "Name"
 msgstr "Nom"
 
-#: msc/includes/command_history.php:307
+#: msc/includes/command_history.php:335
 msgid "Never"
 msgstr "Jamais"
+
+#: msc/includes/command_history.php:226
+msgid "Next processing hour"
+msgstr ""
 
 #: msc/msc/tabs.php:42
 msgid "Not enough informations"
@@ -461,8 +535,8 @@ msgstr "Taille du package"
 msgid "Packages"
 msgstr "Packages"
 
-#: msc/msc/ajaxLogsFilter.php:82 msc/logs/ajaxLogsFilter.php:70
-#: msc/includes/functions.php:46
+#: msc/includes/functions.php:46 msc/logs/ajaxLogsFilter.php:70
+#: msc/msc/ajaxLogsFilter.php:82
 msgid "Pause"
 msgstr "Mettre en pause"
 
@@ -517,8 +591,13 @@ msgstr "Actions rapides sur %s"
 msgid "Quick action path %s don't exists"
 msgstr "Le répertoire des actions rapide %s n'existe pas"
 
-#: msc/msc/launch.php:130 msc/includes/command_history.php:194
+#: msc/msc/launch.php:161
 msgid "Reboot client after a successful deletion"
+msgstr "Redémarrer le poste après une commande réussie"
+
+#: msc/includes/command_history.php:221
+#, fuzzy
+msgid "Reboot client after a successful deletion ?"
 msgstr "Redémarrer le poste après une commande réussie"
 
 #: msc/includes/functions.php:40
@@ -533,8 +612,9 @@ msgstr "Échec du redémarrage"
 msgid "Reboot in progress"
 msgstr "Redémarrage en cours"
 
-#: msc/includes/command_history.php:195
-msgid "Remaining connection attempts"
+#: msc/includes/command_history.php:225
+#, fuzzy
+msgid "Remaining connection attempts ?"
 msgstr "Nombre de tentatives restantes"
 
 #: msc/msc/connection_error.php:24
@@ -553,13 +633,9 @@ msgstr "Re-programmé"
 msgid "Scheduled"
 msgstr "Programmé"
 
-#: msc/msc/launch.php:125 msc/includes/command_history.php:189
+#: msc/msc/launch.php:156
 msgid "Script parameters"
 msgstr "Paramètres du script"
-
-#: msc/includes/command_history.php:188
-msgid "Script to start"
-msgstr "Script à lancer"
 
 #: msc/infoPackage.inc.php:33
 msgid "Secure Control"
@@ -573,11 +649,15 @@ msgstr "Contrôle sécurisé du groupe de machines"
 msgid "Secure control on computer"
 msgstr "Contrôle sécurisé de l'ordinateur"
 
+#: msc/msc/local_proxy.php:41
+msgid "Select local proxies"
+msgstr ""
+
 #: msc/includes/bundle_widgets.php:116
 msgid "Set order"
 msgstr "Définir l'ordre"
 
-#: msc/logs/localSidebar.php:8 msc/logs/finished.php:33
+#: msc/logs/finished.php:33 msc/logs/localSidebar.php:8
 msgid "Show all finished task's logs"
 msgstr "Montrer toutes les actions finies"
 
@@ -621,17 +701,17 @@ msgstr "Montrer les actions en attente"
 msgid "Show running task's logs"
 msgstr "Montrer les actions en cours"
 
-#: msc/msc/launch.php:106
+#: msc/msc/launch.php:137
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
-#: msc/msc/ajaxLogsFilter.php:81 msc/logs/ajaxLogsFilter.php:69
+#: msc/logs/ajaxLogsFilter.php:69 msc/msc/ajaxLogsFilter.php:81
 msgid "Start"
 msgstr "Démarrer"
 
-#: msc/msc/launch.php:126 msc/includes/command_history.php:114
-#: msc/includes/command_history.php:190
+#: msc/includes/command_history.php:114 msc/includes/command_history.php:217
+#: msc/msc/launch.php:157
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
@@ -640,7 +720,7 @@ msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 msgid "Start action %s on host %s"
 msgstr "Démarrer l'action %s sur l'ordinateur %s"
 
-#: msc/msc/ajaxLogsFilter.php:281 msc/logs/ajaxLogsFilter.php:137
+#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:281
 msgid "Start date"
 msgstr "Date de démarrage"
 
@@ -656,8 +736,13 @@ msgstr "Démarrer un inventaire"
 msgid "Start inventory agent"
 msgstr "Démarrer un inventaire"
 
-#: msc/msc/launch.php:127 msc/includes/command_history.php:191
+#: msc/msc/launch.php:158
 msgid "Start script"
+msgstr "Démarrer le script"
+
+#: msc/includes/command_history.php:218
+#, fuzzy
+msgid "Start script ?"
 msgstr "Démarrer le script"
 
 #: msc/includes/bundle_widgets.php:324
@@ -668,7 +753,7 @@ msgstr "Démarrer le script"
 msgid "Status"
 msgstr "Statut"
 
-#: msc/msc/ajaxLogsFilter.php:83 msc/logs/ajaxLogsFilter.php:71
+#: msc/logs/ajaxLogsFilter.php:71 msc/msc/ajaxLogsFilter.php:83
 msgid "Stop"
 msgstr "Arrêter"
 
@@ -690,17 +775,13 @@ msgstr "Stopper une commande"
 msgid "Stopped"
 msgstr "Arrêté"
 
-#: msc/msc/launch.php:133 msc/includes/command_history.php:197
+#: msc/msc/launch.php:164
 msgid "The command may start after"
 msgstr "La commande pourra démarrer à partir de"
 
-#: msc/msc/launch.php:134 msc/includes/command_history.php:198
+#: msc/msc/launch.php:165
 msgid "The command must stop before"
 msgstr "La commande doit s'arrêter avant"
-
-#: msc/includes/command_history.php:199
-msgid "The command won't be run until"
-msgstr "La commande sera lancée à partir de"
 
 #: msc/msc/download_file.php:31
 msgid "The download has failed."
@@ -724,11 +805,11 @@ msgstr "Cette connexion sera automatiquement fermée dans 60 minutes."
 msgid "To do"
 msgstr "À faire"
 
-#: msc/includes/command_history.php:220
+#: msc/includes/command_history.php:247
 msgid "Transferred files list"
 msgstr "Liste des fichiers transférés"
 
-#: msc/includes/command_history.php:212
+#: msc/includes/command_history.php:239
 msgid "Transferred files list empty."
 msgstr "La liste des fichiers transférés est vide"
 
@@ -744,17 +825,21 @@ msgstr "Échec de l'envoi"
 msgid "Upload in progress"
 msgstr "Envoi en cours"
 
-#: msc/includes/command_history.php:109 msc/includes/command_history.php:187
+#: msc/includes/command_history.php:109
 msgid "User command creator"
 msgstr "Créateur de la commande"
 
-#: msc/msc/package_detail.php:40 msc/includes/command_history.php:46
-#: msc/includes/command_history.php:130 msc/includes/command_history.php:206
+#: msc/includes/command_history.php:213
+msgid "Validity period"
+msgstr ""
+
+#: msc/includes/command_history.php:46 msc/includes/command_history.php:130
+#: msc/includes/command_history.php:233 msc/msc/package_detail.php:40
 msgid "Value"
 msgstr "Valeur"
 
-#: msc/msc/ajaxPackageFilter.php:104 msc/msc/packages.php:19
-#: msc/msc/package_detail.php:36
+#: msc/msc/ajaxPackageFilter.php:104 msc/msc/package_detail.php:36
+#: msc/msc/packages.php:19
 msgid "Version"
 msgstr "Version"
 
@@ -782,7 +867,7 @@ msgstr "Attention: cette opération peut prendre du temps."
 msgid "Work in progress"
 msgstr "En cours"
 
-#: msc/includes/command_history.php:265
+#: msc/includes/command_history.php:293
 msgid "Y-m-d H:i:s"
 msgstr "Y-m-d H:i:s"
 
@@ -794,7 +879,7 @@ msgstr "Vous n'avez pas le droit de consulter cette commande"
 msgid "action"
 msgstr "l'action"
 
-#: msc/msc/start_command.php:133 msc/includes/bundle_widgets.php:282
+#: msc/includes/bundle_widgets.php:282 msc/msc/start_command.php:133
 msgid "awake"
 msgstr "réveil"
 
@@ -806,7 +891,7 @@ msgstr "du bundle"
 msgid "computers are running a deploiement"
 msgstr "machines sont en cours de déploiement"
 
-#: msc/msc/statuscsv.php:36 msc/msc/msctabsstatus.php:53
+#: msc/msc/msctabsstatus.php:53 msc/msc/statuscsv.php:36
 msgid "computers failed to deploy"
 msgstr "machines ont échoué lors du déploiement"
 
@@ -822,46 +907,54 @@ msgstr "machines ont réussi leur déploiement"
 msgid "computers were successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
+#: msc/includes/command_history.php:35 msc/logs/ajaxLogsFilter.php:141
 #: msc/msc/ajaxLogsFilter.php:210 msc/msc/ajaxLogsFilter.php:285
-#: msc/logs/ajaxLogsFilter.php:141 msc/includes/command_history.php:35
 msgid "current_state"
 msgstr "État"
 
+#: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:144
 #: msc/msc/ajaxLogsFilter.php:213 msc/msc/ajaxLogsFilter.php:288
-#: msc/logs/ajaxLogsFilter.php:144 msc/includes/command_history.php:38
 msgid "deleted"
 msgstr "Suppression"
+
+#: msc/includes/command_history.php:209
+msgid "disable"
+msgstr ""
+
+#: msc/includes/command_history.php:208
+msgid "enable"
+msgstr ""
 
 #: msc/msc/msctabsstatus.php:39
 msgid "error : cmd_id or bundle_id must be given"
 msgstr "erreur : cmd_id ou bundle_id doit être renseigné"
 
+#: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:143
 #: msc/msc/ajaxLogsFilter.php:212 msc/msc/ajaxLogsFilter.php:287
-#: msc/logs/ajaxLogsFilter.php:143 msc/includes/command_history.php:37
 msgid "executed"
 msgstr "Exécution"
 
-#: msc/msc/statuscsv.php:39 msc/msc/msctabsstatus.php:69
+#: msc/msc/msctabsstatus.php:69 msc/msc/statuscsv.php:39
 msgid "failed during execution"
 msgstr "ont échoué durant l'execution"
 
-#: msc/msc/statuscsv.php:41 msc/msc/msctabsstatus.php:70
+#: msc/msc/msctabsstatus.php:70 msc/msc/statuscsv.php:41
 msgid "failed during suppression"
 msgstr "ont échoué durant la suppression"
 
-#: msc/msc/statuscsv.php:37 msc/msc/msctabsstatus.php:68
+#: msc/msc/msctabsstatus.php:68 msc/msc/statuscsv.php:37
 msgid "failed during upload"
 msgstr "ont échoué durant le téléchargement"
 
-#: msc/msc/start_command.php:135 msc/includes/bundle_widgets.php:284
+#: msc/includes/bundle_widgets.php:284 msc/msc/start_command.php:135
 msgid "invent."
 msgstr "invent."
 
-#: msc/msc/launch.php:55
+#: msc/msc/launch.php:54
 msgid "never"
 msgstr "jamais"
 
-#: msc/msc/launch.php:53
+#: msc/msc/launch.php:52
 msgid "now"
 msgstr "maintenant"
 
@@ -877,23 +970,23 @@ msgstr "installations de packages ont échoué"
 msgid "packages installation were successful"
 msgstr "installations de packages ont réussi"
 
-#: msc/msc/launch.php:138 msc/includes/bundle_widgets.php:340
+#: msc/includes/bundle_widgets.php:340 msc/msc/launch.php:172
 msgid "push"
 msgstr "push"
 
-#: msc/msc/launch.php:138 msc/includes/bundle_widgets.php:340
+#: msc/includes/bundle_widgets.php:340 msc/msc/launch.php:172
 msgid "push / pull"
 msgstr "push / pull"
 
-#: msc/msc/statuscsv.php:33 msc/msc/msctabsstatus.php:63
+#: msc/msc/msctabsstatus.php:63 msc/msc/statuscsv.php:33
 msgid "running execution"
 msgstr "en cours d'execution"
 
-#: msc/msc/statuscsv.php:35 msc/msc/msctabsstatus.php:65
+#: msc/msc/msctabsstatus.php:65 msc/msc/statuscsv.php:35
 msgid "running suppression"
 msgstr "en cours de suppression"
 
-#: msc/msc/statuscsv.php:31 msc/msc/msctabsstatus.php:61
+#: msc/msc/msctabsstatus.php:61 msc/msc/statuscsv.php:31
 msgid "running upload"
 msgstr "en cours de téléchargement"
 
@@ -921,19 +1014,25 @@ msgstr "ont échoué durant le téléchargement"
 msgid "unreacheable during execution"
 msgstr "ont échoué durant l'execution"
 
+#: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:142
 #: msc/msc/ajaxLogsFilter.php:211 msc/msc/ajaxLogsFilter.php:286
-#: msc/logs/ajaxLogsFilter.php:142 msc/includes/command_history.php:36
 msgid "uploaded"
 msgstr "Envoi"
 
-#: msc/msc/statuscsv.php:32 msc/msc/msctabsstatus.php:62
+#: msc/msc/msctabsstatus.php:62 msc/msc/statuscsv.php:32
 msgid "waiting to execute"
 msgstr "en attente d'exécution"
 
-#: msc/msc/statuscsv.php:34 msc/msc/msctabsstatus.php:64
+#: msc/msc/msctabsstatus.php:64 msc/msc/statuscsv.php:34
 msgid "waiting to suppress"
 msgstr "en attente de suppression"
 
-#: msc/msc/statuscsv.php:30 msc/msc/msctabsstatus.php:60
+#: msc/msc/msctabsstatus.php:60 msc/msc/statuscsv.php:30
 msgid "waiting to upload"
 msgstr "en attente de téléchargement"
+
+#~ msgid "Script to start"
+#~ msgstr "Script à lancer"
+
+#~ msgid "The command won't be run until"
+#~ msgstr "La commande sera lancée à partir de"

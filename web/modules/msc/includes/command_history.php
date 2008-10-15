@@ -204,7 +204,9 @@ class CommandHistory {
         else
             $command_line = T('<i>not set</i>', 'msc');
 
-        // gettext obfucation: _T('enable', 'msc'), _T('disable', 'msc')
+        // gettext obfucation
+        _T('enable', 'msc');
+        _T('disable', 'msc');
         $static_values = array(
             array(_T('Command name', 'msc'),                                    $this->db_cmd['title']),
             array(_T('Creation', 'msc'),                                        sprintf(_T('<i>on</i> %s <i>by</i> %s'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
