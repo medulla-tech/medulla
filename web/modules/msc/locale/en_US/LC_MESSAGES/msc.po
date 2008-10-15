@@ -60,6 +60,10 @@ msgstr ""
 msgid "(with %s beeing unreachable)"
 msgstr ""
 
+#: msc/includes/command_history.php:192
+msgid "<i>forever</i>"
+msgstr ""
+
 #: msc/includes/command_history.php:187
 #, php-format
 msgid "<i>from</i> %s"
@@ -70,7 +74,7 @@ msgstr ""
 msgid "<i>from</i> %s <i>to</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:192 msc/includes/command_history.php:197
+#: msc/includes/command_history.php:205 msc/includes/command_history.php:222
 msgid "<i>not set</i>"
 msgstr ""
 
@@ -82,6 +86,10 @@ msgstr ""
 #: msc/includes/command_history.php:190
 #, php-format
 msgid "<i>to</i> %s"
+msgstr ""
+
+#: msc/includes/command_history.php:197
+msgid "<i>whole day</i>"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:149 msc/includes/bundle_widgets.php:174
@@ -300,6 +308,10 @@ msgstr ""
 msgid "Execute action..."
 msgstr ""
 
+#: msc/includes/command_history.php:218
+msgid "Execute command line ?"
+msgstr ""
+
 #: msc/includes/command_history.php:110
 msgid "Execute file"
 msgstr ""
@@ -318,10 +330,6 @@ msgstr ""
 
 #: msc/includes/functions.php:29
 msgid "Execution in progress"
-msgstr ""
-
-#: msc/includes/command_history.php:214
-msgid "Execution interval"
 msgstr ""
 
 #: msc/includes/command_history.php:320
@@ -549,6 +557,10 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
+#: msc/includes/command_history.php:214
+msgid "Processing interval"
+msgstr ""
+
 #: msc/includes/widgets.inc.php:176
 msgid "Quick action list is empty"
 msgstr ""
@@ -584,7 +596,7 @@ msgid "Reboot in progress"
 msgstr ""
 
 #: msc/includes/command_history.php:225
-msgid "Remaining connection attempts ?"
+msgid "Remaining connection attempts"
 msgstr ""
 
 #: msc/msc/connection_error.php:24
@@ -708,10 +720,6 @@ msgstr ""
 
 #: msc/msc/launch.php:158
 msgid "Start script"
-msgstr ""
-
-#: msc/includes/command_history.php:218
-msgid "Start script ?"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:324

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-15 11:06+0200\n"
+"POT-Creation-Date: 2008-10-15 11:25+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -80,6 +80,10 @@ msgstr "bezpieczna kontrola grupy %s"
 msgid "(with %s beeing unreachable)"
 msgstr "(gdy %s jest niedostępne)"
 
+#: msc/includes/command_history.php:192
+msgid "<i>forever</i>"
+msgstr ""
+
 #: msc/includes/command_history.php:187
 #, php-format
 msgid "<i>from</i> %s"
@@ -90,7 +94,7 @@ msgstr ""
 msgid "<i>from</i> %s <i>to</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:192 msc/includes/command_history.php:197
+#: msc/includes/command_history.php:205 msc/includes/command_history.php:222
 msgid "<i>not set</i>"
 msgstr ""
 
@@ -102,6 +106,10 @@ msgstr ""
 #: msc/includes/command_history.php:190
 #, php-format
 msgid "<i>to</i> %s"
+msgstr ""
+
+#: msc/includes/command_history.php:197
+msgid "<i>whole day</i>"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:149 msc/includes/bundle_widgets.php:174
@@ -333,6 +341,11 @@ msgstr ""
 msgid "Execute action..."
 msgstr "Wykonaj akcje"
 
+#: msc/includes/command_history.php:218
+#, fuzzy
+msgid "Execute command line ?"
+msgstr "Wykonanie zakończone"
+
 #: msc/includes/command_history.php:110
 msgid "Execute file"
 msgstr "Wykonaj plik"
@@ -352,11 +365,6 @@ msgstr "Wykonanie nieudane"
 #: msc/includes/functions.php:29
 msgid "Execution in progress"
 msgstr "W trakcie wykonywania"
-
-#: msc/includes/command_history.php:214
-#, fuzzy
-msgid "Execution interval"
-msgstr "Wykonanie zakończone"
 
 #: msc/includes/command_history.php:320
 #, php-format
@@ -595,6 +603,11 @@ msgstr "Potwierdź, czy napewno chcesz wykonać tą akcję"
 msgid "Possible actions"
 msgstr ""
 
+#: msc/includes/command_history.php:214
+#, fuzzy
+msgid "Processing interval"
+msgstr "Wykonanie zakończone"
+
 #: msc/includes/widgets.inc.php:176
 msgid "Quick action list is empty"
 msgstr "LIsta sybkich akcji jest pusta"
@@ -636,7 +649,7 @@ msgstr "Usuwanie trwa"
 
 #: msc/includes/command_history.php:225
 #, fuzzy
-msgid "Remaining connection attempts ?"
+msgid "Remaining connection attempts"
 msgstr "Pozostałe próby"
 
 #: msc/msc/connection_error.php:24
@@ -765,11 +778,6 @@ msgstr "Rozpocznij agenta inwentaryzacji"
 #: msc/msc/launch.php:158
 #, fuzzy
 msgid "Start script"
-msgstr "Rozpocznik skrypt"
-
-#: msc/includes/command_history.php:218
-#, fuzzy
-msgid "Start script ?"
 msgstr "Rozpocznik skrypt"
 
 #: msc/includes/bundle_widgets.php:324
@@ -1080,6 +1088,10 @@ msgstr "oczekiwanie na wysłanie"
 #, fuzzy
 #~ msgid "Delay betwen connections (minuts)"
 #~ msgstr "Opóźnienie między połączeniami"
+
+#, fuzzy
+#~ msgid "Start script ?"
+#~ msgstr "Rozpocznik skrypt"
 
 #~ msgid "These packages can be installed on machine \"%s\""
 #~ msgstr "Te pakiety można zainstalować na maszynie \"%s\""
