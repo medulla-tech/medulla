@@ -88,7 +88,7 @@ def getDependancies(myCommandOnHostID):
     session.close()
     return coh_dependencies
 
-def getLocalProxyUploadStatus(myCommandOnHostID):
+def localProxyUploadStatus(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
     possible return values:
         - 'waiting': my time is not yet come
@@ -114,7 +114,7 @@ def getLocalProxyUploadStatus(myCommandOnHostID):
         filter(database.commands_on_host.c.id != myCoH.id).\
         all():
             if q.uploaded == 'DONE':                                            # got a pal which succeeded in doing its upload
-                if q.order_in_proxy:                                            # got a potent proxy server
+                if q.order_in_proxy != None:                                    # got a potent proxy server
                     if smallest_done_upload_order_in_proxy < q.order_in_proxy:  # keep its id as it seems to be the best server ever
                         smallest_done_upload_order_in_proxy = q.order_in_proxy
                         best_ready_proxy_server_coh = q.id
@@ -152,21 +152,28 @@ def getLocalProxyUploadStatus(myCommandOnHostID):
             logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'server'
 
-def getLocalProxyMayCleanup(myCommandOnHostID):
+def localProxyMayCleanup(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
     """
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    session = sqlalchemy.create_session()
+    database = MscDatabase()
+
     # iterate over CoH which
     # are linked to the same command
     # are not our CoH
     # are our client
     # have finished their upload or totally failed
-    return session.query(CommandsOnHost).\
+    res = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
         filter(database.commands_on_host.c.id != myCoH.id).\
         filter(database.commands_on_host.c.uploaded != 'DONE').\
         filter(database.commands_on_host.c.current_state != 'failed').\
-        count(database.commands_on_host.c.fk_use_as_proxy == myCoH.id) == 0
+        count(database.commands_on_host.c.fk_use_as_proxy == myCoH.id)
+    session.close()
+    return res == 0
 
 def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
@@ -187,7 +194,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
     #
     # Please pay attention that as nowhere is is specified the commands start_date and end_date
     # fields 'special' values ("0000-00-00 00:00:00" and "2031-12-31 23:59:59"), I
-    # concider that:
+    # consider that:
     #  - start_date:
     #   + "0000-00-00 00:00:00" means "as soon as possible",
     #   + "2031-12-31 23:59:59" means "never",
@@ -499,11 +506,78 @@ def runUploadPhase(myCommandOnHostID):
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
+    use_coh_as_proxy = None # None: be server, else be client using this coh
+    if myC.hasToUseProxy():
+        proxystatus = localProxyUploadStatus(myCommandOnHostID)
+        if proxystatus == 'waiting':
+            logger.info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
+            return None
+        elif proxystatus == 'dead':
+            logger.warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
+            return None
+        elif proxystatus == 'server':
+            logger.info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
+            pass
+        else:
+            logger.info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
+            use_coh_as_proxy = proxystatus
+
     # if we are here, upload has either previously failed or never be done
     # do copy here
-    # first attempt to guess is mirror is local (push) or remove (pull)
+    # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
+    if use_coh_as_proxy: # proxy
+        client['protocol'] = 'rsyncproxy'
+        # get informations about our proxy
+        (proxyCoH, proxyC, proxyT) = gatherCoHStuff(use_coh_as_proxy)
+        proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
+        if not proxy['host']: # We couldn't get an IP address for the target host
+            return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCommandOnHostID)
+        # and fill struct
+        # only proxy['host'] used until now
+        client['proxy'] = {
+            'command_id': use_coh_as_proxy,
+            'host': proxy['host'],
+            'uuid': proxy['uuid']
+        }
+
+        files_list = []
+        for file in myC.files.split("\n"):
+            fname = file.split('##')[1]
+            if re.compile('^/').search(fname):
+                fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # drop first path component
+            files_list.append(fname)
+
+        myCoH.setUploadInProgress()
+        myCoH.setCommandStatut('upload_in_progress')
+        if SchedulerConfig().mode == 'sync':
+            updateHistory(myCommandOnHostID, 'upload_in_progress')
+            mydeffered = callOnBestLauncher(
+                'sync_remote_pull',
+                myCommandOnHostID,
+                client,
+                files_list,
+                SchedulerConfig().max_upload_time
+            )
+            mydeffered.\
+                addCallback(parsePushResult, myCommandOnHostID).\
+                addErrback(parsePushError, myCommandOnHostID)
+        elif SchedulerConfig().mode == 'async':
+            # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
+            mydeffered = callOnBestLauncher(
+                'async_remote_pull',
+                myCommandOnHostID,
+                client,
+                files_list,
+                SchedulerConfig().max_upload_time
+            )
+            mydeffered.\
+                addCallback(parsePushOrder, myCommandOnHostID).\
+                addErrback(parsePushError, myCommandOnHostID)
+        else:
+            return None
+        return mydeffered
     # local mirror starts by "file://"
-    if re.compile('^file://').match(myT.mirrors): # prepare a remote_push
+    elif re.compile('^file://').match(myT.mirrors): # prepare a remote_push
         client['protocol'] = 'rsyncssh'
         files_list = []
         for file in myC.files.split("\n"):
@@ -541,7 +615,7 @@ def runUploadPhase(myCommandOnHostID):
         else:
             return None
         return mydeffered
-    else: # remote pull
+    else: # remote push/pull
 
         # mirror is formated like this:
         # https://localhost:9990/mirror1||https://localhost:9990/mirror1
@@ -743,6 +817,11 @@ def runDeletePhase(myCommandOnHostID):
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
+
+    if myC.hasToUseProxy():
+        if not localProxyMayCleanup(myCommandOnHostID):
+            logger.info("command_on_host #%s: cleanup postponed, waiting for some clients" % myCommandOnHostID)
+            return None
 
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
