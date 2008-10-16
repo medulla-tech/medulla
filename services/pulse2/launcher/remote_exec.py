@@ -188,6 +188,59 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
                 command_list,
                 __cb_sync_process_end
             )
+    elif client['protocol'] == "rsyncproxy":
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
+        src_path = pulse2.launcher.utils.getTempFolderName(client['proxy']['command_id'], client['proxy']['uuid'])
+
+        real_command  = ['rsync']
+        real_command += client['proto_args']
+
+        real_command += ["%s@%s:'%s'" % (client['user'], client['proxy']['host'], ' '.join(map(lambda x: "%s/%s/%s" % (LauncherConfig().target_path, src_path, x), files_list)))]
+        real_command += [target_path]
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--max-log-size',
+            str(LauncherConfig().wrapper_max_log_size),
+            '--max-exec-time',
+            str(wrapper_timeout),
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            SEPARATOR.join(real_command),
+        ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
+        if mode == 'async':
+            return pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_pull',
+                LauncherConfig().max_command_age,
+                client['group'],
+                'pull'
+            )
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
+
     return None
 
 def sync_remote_delete(command_id, client, files_list, wrapper_timeout):

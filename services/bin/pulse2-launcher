@@ -373,6 +373,13 @@ def main():
         logger.error("Please fix the configuration file")
         sys.exit(1)
 
+    # FIXME: need debug here, to now what's going wrong if it goes wrong
+    for keyname in LauncherConfig().ssh_keys:
+        if pulse2.launcher.utils.addPrivKeyToSSHAgent(keyname):
+            logger.info("launcher %s: Successfuly declared the ssh key '%s' to your ssh agent" % (options.id, keyname))
+        else:
+            logger.warn("launcher %s: Couldn't declare the ssh key '%s' to your ssh agent, hope you won't need to forward it !" % (options.id, keyname))
+
     # start service
     sys.exit(startService())
 

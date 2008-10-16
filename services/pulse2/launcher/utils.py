@@ -22,7 +22,7 @@
 # MA 02110-1301, USA.
 
 import md5
-
+import os # for adding / removing a ssh key
 from pulse2.launcher.config import LauncherConfig
 
 def getScheduler():
@@ -40,6 +40,32 @@ def getScheduler():
 def getTempFolderName(id_command, client_uuid):
     """ Generate a temporary folder name which will contain our deployment stuff """
     return LauncherConfig().temp_folder_prefix + md5.new('%s%s' % (id_command, client_uuid)).hexdigest()[len(LauncherConfig().temp_folder_prefix):]
+
+def addPrivKeyToSSHAgent(key_name):
+    """
+        ask the ssh-agent to keep our key
+
+    """
+    if key_name == None or key_name == '':
+        key_name = LauncherConfig().ssh_defaultkey
+
+    if key_name not in LauncherConfig().ssh_keys.keys():
+        return False
+
+    return (os.system('ssh-add %s 2> /dev/null' % LauncherConfig().ssh_keys[key_name]) == 0)
+
+def removePrivKeyFromSSHAgent(key_name):
+    """
+        ask the ssh-agent to keep our key
+
+    """
+    if key_name == None or key_name == '':
+        key_name = LauncherConfig().ssh_defaultkey
+
+    if key_name not in LauncherConfig().ssh_keys.keys():
+        return False
+
+    return (os.system('ssh-add -d %s 2> /dev/null' % LauncherConfig().ssh_keys[key_name]) == 0)
 
 def getPubKey(key_name):
     """
@@ -199,6 +225,7 @@ def setDefaultClientOptions(client):
     if not 'action' in client:
         client['action'] = None
 
+    # command execution throught SSH
     if client['protocol'] == 'ssh':
         if not 'port' in client:
             client['port'] = 22
@@ -215,6 +242,7 @@ def setDefaultClientOptions(client):
         else:
             client['transp_args'] += ['-a']
 
+    # TCP forwarding through SSH, mainly used sor VNC proxying
     if client['protocol'] == 'tcpsproxy':
         if not 'port' in client:
             client['port'] = 22
@@ -227,6 +255,7 @@ def setDefaultClientOptions(client):
             client['transp_args'] += [option]
         client['transp_args'] += ["UserKnownHostsFile=/dev/null"] # required to prevent tcp forwarding failure
 
+    # Push/pull mode using wget driven by SSH
     if client['protocol'] == 'wget':
         if not 'port' in client:
             client['port'] = 22
@@ -247,6 +276,21 @@ def setDefaultClientOptions(client):
         client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
+
+    # Local Proxy mode (obviously using rsync)
+    if client['protocol'] == 'rsyncproxy':
+        if not 'port' in client:
+            client['port'] = 22
+        if not 'user' in client:
+            client['user'] = 'root'
+        if not 'cert' in client:
+            client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
+        for option in LauncherConfig().ssh_options:
+            client['transp_args'] += ['-o', option]
+        client['transp_args'] += ['-A'] # always forward TCP key
+        if not 'proto_args' in client:
+            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwx,g=,o=', '--rsh=/usr/bin/ssh']
 
     if client['protocol'] == 'rsyncssh':
         if not 'port' in client:
