@@ -150,7 +150,7 @@ if ($_GET['uuid'] != '') {
         $n->end = $maxperpage;
         $n->display();
     }
-    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?= urlStr("inventory/inventory/csv", array('table'=>$display, 'gid'=>$_GET["gid"], 'filter' => $_GET['filter'])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
 }
 
 ?>

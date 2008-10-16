@@ -6,6 +6,7 @@ require_once("modules/inventory/includes/utils.php"); // for _toDate
 $table = $_GET['table'];
 $get_uuid = $_GET['uuid'];
 $gid = $_GET['gid'];
+$filter = $_GET['filter'];
 
 ob_end_clean();
 
@@ -21,7 +22,7 @@ $tables = explode('|', $table);
 $datum = array();
 if (count($tables) > 1) {
     foreach ($tables as $table) {
-        $machines = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid));
+        $machines = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
         foreach ($machines as $machine) {
             $name = $machine[0];
             $uuid = $machine[2];
@@ -36,7 +37,7 @@ if (count($tables) > 1) {
     }
     $datum = array_values($datum);
 } else {
-    $datum = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid));
+    $datum = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
 }
 
 $firstline = true;
