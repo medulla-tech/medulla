@@ -39,13 +39,13 @@ if (isset($_POST["bconfirm"])) {
         $cmd_id = $_POST["cmd_id"];
         $gid = $_POST["gid"];
         start_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'coh_id'=>$coh_id, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
     } else {
         $hostname = $_POST["hostname"];
         $uuid = $_POST["uuid"];
         $coh_id = $_POST["coh_id"];
         start_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'coh_id'=>$coh_id, 'cmd_id'=>$cmd_id, 'uuid'=>$uuid, 'hostname'=>$hostname)));
     }
 } else {
     /* Form displaying */

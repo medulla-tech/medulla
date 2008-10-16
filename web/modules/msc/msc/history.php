@@ -36,7 +36,7 @@ if (strlen($_GET['uuid'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
-            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=tabhistory");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=tabhistory&action=msctabs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -52,7 +52,7 @@ if (strlen($_GET['uuid'])) {
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else { # Display history for a specific host
-        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory");
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory&action=msctabs");
         $ajax->setRefresh(30000);
         $ajax->display();
         print "<br/><br/><br/>";
@@ -63,7 +63,7 @@ if (strlen($_GET['uuid'])) {
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
-            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=grouptabhistory");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&bundle_id=".$_GET['bundle_id']."&history=1&tab=grouptabhistory&action=groupmsctabs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -105,14 +105,14 @@ if (strlen($_GET['uuid'])) {
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts
-            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptabhistory&history=1");
+            $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptabhistory&history=1&action=groupmsctabs");
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     } else { # Display history for a specific group
         // display all commands
-        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory");
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&history=1&tab=grouptabhistory&action=groupmsctabs");
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();

@@ -103,7 +103,7 @@ if ($areCommands) {
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+        $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) {
             $p['bundle_id'] = $cmd['bundle_id'];
             if (strlen($_GET['bundle_id'])) {
@@ -180,7 +180,7 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
@@ -256,7 +256,7 @@ if ($areCommands) {
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|msctabs|'.$tab, 'gid'=>$gid);
+            $p = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$coh['host'], 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
