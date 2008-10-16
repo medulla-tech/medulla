@@ -33,6 +33,7 @@ from twisted.internet import defer
 
 # MMC modules
 from mmc.plugins.pulse2.location import ComputerLocationManager
+from mmc.plugins.pulse2 import Pulse2Session as create_session
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
@@ -61,37 +62,6 @@ SA_MINOR = 3
 DATABASEVERSION = 13
 
 # TODO need to check for useless function (there should be many unused one...)
-
-NB_DB_CONN_TRY = 2
-def create_method(obj, m):
-    def method(self, already_in_loop = False):
-        ret = None
-        try:
-            old_m = getattr(obj, '_old_'+m)
-            ret = old_m(self)
-        except exceptions.SQLError, e:
-            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(obj, m)
-                    ret = new_m(self, True)
-            elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("SQLError MySQL server has gone away")
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(obj, m)
-                    ret = new_m(self, True)
-            if ret:
-                return ret
-            raise e
-        return ret
-    return method
-
-for m in ['first', 'count', 'all']:
-    try:
-        getattr(Query, '_old_'+m)
-    except AttributeError:
-        setattr(Query, '_old_'+m, getattr(Query, m))
-        setattr(Query, m, create_method(Query, m))
 
 class MscDatabase(Singleton):
     """

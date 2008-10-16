@@ -30,44 +30,12 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
 from sqlalchemy import *
-from sqlalchemy.exceptions import SQLError
+from mmc.plugins.pulse2 import Pulse2Session as create_session
 import logging
 import re
 
 SA_MAYOR = 0
 SA_MINOR = 3
-
-NB_DB_CONN_TRY = 2
-
-def create_method(m):
-    def method(self, already_in_loop = False):
-        ret = None
-        try:
-            old_m = getattr(Query, '_old_'+m)
-            ret = old_m(self)
-        except SQLError, e:
-            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(Query, m)
-                    ret = new_m(self, True)
-            elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("SQLError MySQL server has gone away")
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(obj, m)
-                    ret = new_m(self, True)
-            if ret:
-                return ret
-            raise e
-        return ret
-    return method
- 
-for m in ['first', 'count', 'all']:
-    try:
-        getattr(Query, '_old_'+m)
-    except AttributeError:
-        setattr(Query, '_old_'+m, getattr(Query, m))
-        setattr(Query, m, create_method(m))
 
 class Glpi(DyngroupDatabaseHelper):
     """
@@ -110,7 +78,7 @@ class Glpi(DyngroupDatabaseHelper):
         self.metadata = BoundMetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
-        self.is_activated = True
+        self.is_activated = True        
         self.logger.debug("Glpi finish activation")
 
     def connected(self):

@@ -33,6 +33,8 @@ from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.dyngroup
 from mmc.support.mmctools import Singleton
 
+from mmc.plugins.pulse2 import Pulse2Session as create_session
+
 # Imported last
 import logging
 import re

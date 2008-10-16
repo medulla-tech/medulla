@@ -19,6 +19,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# SqlAlchemy
+import sqlalchemy.orm.session
+from sqlalchemy.exceptions import SQLError
+
 import logging
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
@@ -45,6 +49,48 @@ def activate():
         ComputerLocationManager().select(config.location)
     
     return True
+
+
+# Our fix for SQLAlchemy behaviour with MySQL
+# Sometimes we lost the connection to the MySQL Server, even on a local server.
+
+NB_DB_CONN_TRY = 2
+
+def create_method(m):
+    def method(self, already_in_loop = False):
+        ret = None
+        try:
+            old_m = getattr(Query, '_old_'+m)
+            ret = old_m(self)
+        except SQLError, e:
+            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
+                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
+                for i in range(0, NB_DB_CONN_TRY):
+                    new_m = getattr(Query, m)
+                    ret = new_m(self, True)
+            elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
+                logging.getLogger().warn("SQLError MySQL server has gone away")
+                for i in range(0, NB_DB_CONN_TRY):
+                    new_m = getattr(obj, m)
+                    ret = new_m(self, True)
+            if ret:
+                return ret
+            raise e
+        return ret
+    return method
+
+class Pulse2Session(sqlalchemy.orm.session.Session):
+    """
+    Overload the query method of SA Session() instance, to retry .first() /
+    .count() / .all() methods when we get a SQLError exceptions from MySQL.
+    """
+
+    def query(self, mapper_or_class, *addtl_entities, **kwargs):
+        q = sqlalchemy.orm.session.Session.query(self, mapper_or_class, *addtl_entities, **kwargs)
+        for m in ['first', 'count', 'all']:
+            setattr(q, '_old_'+m, getattr(q, m))
+            setattr(q, m, create_method(m))
+        return q
 
 
 class Pulse2Config(PluginConfig):
