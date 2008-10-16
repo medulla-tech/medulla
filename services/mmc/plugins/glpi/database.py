@@ -33,6 +33,7 @@ from sqlalchemy import *
 from mmc.plugins.pulse2 import Pulse2Session as create_session
 import logging
 import re
+from sets import Set
 
 SA_MAYOR = 0
 SA_MINOR = 3
@@ -503,13 +504,13 @@ class Glpi(DyngroupDatabaseHelper):
             return [[self.locations.c.name, query[3]]]
         elif query[2] == 'ServicePack':
             return [[self.os_sp.c.name, query[3]]]
-        elif query[2] == 'Groupe':
+        elif query[2] == 'Groupe': # TODO double join on ENTITY
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Reseau':
             return [[self.network.c.name, query[3]]]
-        elif query[2] == 'Logiciel':
+        elif query[2] == 'Logiciel': # TODO double join on ENTITY
             return [[self.software.c.name, query[3]]]
-        elif query[2] == 'Version':
+        elif query[2] == 'Version': # TODO double join on ENTITY
             return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
         return []
  
@@ -841,14 +842,16 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Machine).select_from(self.machine.join(self.location))
         query = query.filter(self.location.c.name.in_(*a_locations))
         query = self.filterOnUUID(query, a_machine_uuid)
-        ret = query.group_by(self.machine.c.name).all()
+        ret = query.group_by(self.machine.c.ID).all()
         size = 1
         if type(ret) == list:
             size = len(ret)
         if all and size == len(a_machine_uuid):
             return True
-        elif (not all) and len(query.group_by(self.machine.c.name)) > 0:
+        elif (not all) and len(ret) > 0:
             return True
+        ret = Set(map(lambda m:toUUID(str(m.ID)), ret))
+        self.logger.info("dont have permissions on %s"%(str(Set(a_machine_uuid) - ret)))
         return False
         
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
