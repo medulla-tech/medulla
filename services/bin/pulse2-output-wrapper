@@ -61,6 +61,7 @@ import twisted.python.usage
 
 import time
 import sys
+import os
 import signal
 import re
 SEPARATOR = '·'
@@ -294,7 +295,7 @@ def runCommand(config):
         tailargs = config.exec_string
 
     # fork process
-    handler = twisted.internet.reactor.spawnProcess(shOutputWrapper(config), headarg, tailargs)
+    handler = twisted.internet.reactor.spawnProcess(shOutputWrapper(config), headarg, tailargs, purged_env)
 
     # install termination handler to cleanly terminated sub-process in case of emergency
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', stopProcess, handler)
@@ -312,7 +313,7 @@ def runCheckCommand(config):
         tailargs = config.check_command
 
     # fork process
-    handler = twisted.internet.reactor.spawnProcess(shCheckCommand(config), headarg, tailargs)
+    handler = twisted.internet.reactor.spawnProcess(shCheckCommand(config), headarg, tailargs, purged_env)
 
     # install termination handler to cleanly terminated sub-process in case of emergency
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', stopProcess, handler)
@@ -335,6 +336,12 @@ except twisted.python.usage.UsageError, errortext:
     print '%s: %s' % (sys.argv[0], errortext)
     print '%s: Try --help for usage details.' % (sys.argv[0])
     sys.exit(0)
+
+purged_env = {} # hold "secured" env vars
+
+# catch ssh-agent auth socket if available for further usage
+if os.getenv('SSH_AUTH_SOCK'):
+    purged_env['SSH_AUTH_SOCK'] = os.getenv('SSH_AUTH_SOCK')
 
 # delayed start to give the reactor a chance to install its signals handlers
 if config.do_check: # if we have to execute a pre-command, do it, else jump to the real command
