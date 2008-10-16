@@ -26,6 +26,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require("modules/base/graph/computers/index.css");
+require("modules/dyngroup/graph/index.css");
 
 $p = new PageGenerator(_T("Group list", 'dyngroup'));
 $p->setSideMenu($sidemenu);
@@ -39,48 +40,3 @@ $ajax->displayDivToUpdate();
                                 
 # changer le style de li.display (pas bon icone)
 ?>
-
-<style>
-li.display a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.details a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/detail.gif");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.edit a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/edit.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.delete a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/delete.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-</style>
-
-
