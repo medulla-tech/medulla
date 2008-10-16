@@ -32,7 +32,6 @@ require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/request.php");
 require("../../../modules/dyngroup/includes/dyngroup.php");
-require("../../../modules/dyngroup/graph/index.css");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -71,10 +70,11 @@ $n->end = $conf["global"]["maxperpage"];
 $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
+
 $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "share", "id", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
 if (in_array("msc", $_SESSION["supportModList"])) {
     $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
     $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
@@ -84,7 +84,5 @@ $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","compu
 $n->disableFirstColumnActionLink();
 
 $n->display();
-    
-# changer le style de li.display (pas bon icone)
 ?>
 
