@@ -245,6 +245,7 @@ class CommandHistory {
             }
         }
         $n = new ListInfos($files, _T('Transferred files list', 'msc'));
+        $n->setRowsPerPage(count($files) +1);
         $n->setTableHeaderPadding(1);
         print "<hr/><br/>";
         $n->drawTable(0);
