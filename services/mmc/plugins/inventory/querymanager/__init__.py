@@ -1,10 +1,11 @@
 import os
 import re
 import logging
-from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy, activate
+from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-activate() # erk...
+def activate():
+    return True
 
 def queryPossibilities():
     ret = {}

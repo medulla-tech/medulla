@@ -8,11 +8,6 @@ import mmc
 
 def activate():
     conf = DGConfig("dyngroup")
-
-    DyngroupDatabase().activate()
-    if conf.disable:
-       return False
-       
     return conf.dyngroup_activate
 
 def queryPossibilities():

@@ -10,10 +10,6 @@ from ConfigParser import NoOptionError
 
 def activate():
     conf = GlpiQueryManagerConfig("glpi")
-    if not mmc.plugins.glpi.activate():
-        return False
-
-    Glpi().activate()
     return conf.activate
 
 def queryPossibilities():
