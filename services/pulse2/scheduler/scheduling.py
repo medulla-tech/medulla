@@ -98,6 +98,11 @@ def localProxyUploadStatus(myCommandOnHostID):
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
+    # as for now, if we previously found a proxy, use it
+    if myCoH.getUsedProxy() != None:
+        logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
+        return 'keeping'
+
     session = sqlalchemy.create_session()
     database = MscDatabase()
 
@@ -131,7 +136,7 @@ def localProxyUploadStatus(myCommandOnHostID):
     # a proxy that might be used
     # let's take a decision about our future
 
-    if myCoH.order_in_proxy == None:                                    # I'm a client: I MUST use a proxy server
+    if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server
         if best_ready_proxy_server_coh != None:                         # a proxy seems ready => PROXY CLIENT MODE
             logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
             return best_ready_proxy_server_coh
@@ -171,9 +176,10 @@ def localProxyMayCleanup(myCommandOnHostID):
         filter(database.commands_on_host.c.id != myCoH.id).\
         filter(database.commands_on_host.c.uploaded != 'DONE').\
         filter(database.commands_on_host.c.current_state != 'failed').\
-        count(database.commands_on_host.c.fk_use_as_proxy == myCoH.id)
+        filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.id).\
+        all()
     session.close()
-    return res == 0
+    return len(res) == 0
 
 def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
@@ -502,11 +508,12 @@ def runUploadPhase(myCommandOnHostID):
         myCoH.setUploadIgnored()
         return runExecutionPhase(myCommandOnHostID)
 
+    # check if we may reach client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
 
-    use_coh_as_proxy = None # None: be server, else be client using this coh
+    # fullfil used proxy (if we can)
     if myC.hasToUseProxy():
         proxystatus = localProxyUploadStatus(myCommandOnHostID)
         if proxystatus == 'waiting':
@@ -517,25 +524,27 @@ def runUploadPhase(myCommandOnHostID):
             return None
         elif proxystatus == 'server':
             logger.info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
-            pass
+            myCoH.setUsedProxy(myCommandOnHostID) # special case: this way we now we were server
+        elif proxystatus == 'keeping':
+            logger.info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
         else:
             logger.info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
-            use_coh_as_proxy = proxystatus
+            myCoH.setUsedProxy(proxystatus)
 
     # if we are here, upload has either previously failed or never be done
     # do copy here
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
-    if use_coh_as_proxy: # proxy
+    if myCoH.isProxyClient():
         client['protocol'] = 'rsyncproxy'
         # get informations about our proxy
-        (proxyCoH, proxyC, proxyT) = gatherCoHStuff(use_coh_as_proxy)
+        (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
         proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
         if not proxy['host']: # We couldn't get an IP address for the target host
             return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCommandOnHostID)
         # and fill struct
         # only proxy['host'] used until now
         client['proxy'] = {
-            'command_id': use_coh_as_proxy,
+            'command_id': myCoH.getUsedProxy(),
             'host': proxy['host'],
             'uuid': proxy['uuid']
         }
