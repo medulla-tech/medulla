@@ -263,7 +263,17 @@ class RpcProxy(RpcProxyI):
         for r in retour[1][search]: # must take into account * ...
             if type(r) == str and p1.search(r):
                 ret.append(r)
-        return ret
+        return xmlrpcCleanup(ret)
+
+    def checkBoolean(self, bool):
+        if bool == None or bool == '':
+            return [True, -1]
+        b = BoolRequest()
+        try:
+            b.parse(bool)
+        except:
+            return [False, -1]
+        return xmlrpcCleanup([b.isValid(), b.countOps()])
     
 def __onlyIn(query, module):
     for q in query[1]:

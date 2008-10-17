@@ -3,6 +3,7 @@ import logging
 from random import randint
 from uniq import unique
 from xml.dom import minidom
+from sets import Set
 
 p1 = re.compile(' ')
 p2 = re.compile(',')
@@ -48,7 +49,7 @@ class BoolRequest(object):
     def isValid(self):
         if self.equ == None:
             return False
-        return True
+        return self.equ.check()
 
     def merge(self, lists):
         logging.getLogger().debug(lists)
@@ -57,6 +58,9 @@ class BoolRequest(object):
     def getTree(self, lists):
         logging.getLogger().debug(lists)
         return self.equ.getTree(lists)
+
+    def countOps(self):
+        return self.equ.count()
         
     def toS(self):
         return self.equ.toS()
@@ -162,6 +166,27 @@ class BoolEquation(BoolElement):
         else:
             self.parse(str)
     
+    def check(self): # ids are always in a range from 1 to count
+        return map(lambda x:int(x), self.getVals()) == range(1,1+self.count())
+        
+    def count(self):
+        return len(self.getVals())
+        
+    def getVals(self):
+        return Set(self._getVals())
+
+    def _getVals(self):
+        vals = []
+        for k in self.list:
+            b = self.list[k]
+            if type(b) == BoolValue:
+                vals.append(b.getValue())
+            elif type(b) == int:
+                vals.append(b)
+            else:
+                vals.extend(b._count())
+        return vals
+
     def parseXML(self, xml):
         if type(xml) == str:
             dom = minidom.parseString(xml)
@@ -183,7 +208,7 @@ class BoolEquation(BoolElement):
         
     
     def parse(self, str):
-        # has XML parse better, and convertion from STR to XML is quite easy, we use the XML parser
+        # as XML parse better, and convertion from STR to XML is quite easy, we use the XML parser
         xml = s2x6.sub('', s2x5.sub('</p></b>', s2x4.sub('</p><p>', s2x3.sub('<b t="NOT"><p>', s2x2.sub('<b t="OR"><p>', s2x1.sub('<b t="AND"><p>', str))))))
         return self.parseXML(xml)
             
