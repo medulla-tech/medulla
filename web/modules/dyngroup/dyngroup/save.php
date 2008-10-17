@@ -46,10 +46,11 @@ if (!$visible && $group) { $visible = $group->show; }
 $bool = quickGet('equ_bool');
 if (!$bool && $group) { $bool = $group->getBool(); }
 
-if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
+$r = new Request();
+$r->parse($request);
+$check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
+if ($name == '' || xmlrpc_group_name_exists($name, $group->id) || !$check || isset($_POST['checkBool'])) {
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
-    $r = new Request();
-    $r->parse($request);
     $r->displayReqListInfos();
     // TODO : put in class
     print "<hr/><table><form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
@@ -63,7 +64,7 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
         "</form></table>";
     if (xmlrpc_group_name_exists($name, $group->id)) {
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
-    } elseif (isset($_POST['btnPrimary'])) {
+    } elseif (isset($_POST['btnPrimary']) && $check) {
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
     }
 } else {
@@ -91,7 +92,22 @@ if ($name == '' || xmlrpc_group_name_exists($name, $group->id)) {
 
 
 function drawBoolEquation($equ_bool) {
-        print "</tr><tr><td colspan='2'>"._T("Enter boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/></td>";
+    print "</tr><tr><td colspan='2'>"._T("Enter boolean operator between groups", "dyngroup")." <input value='$equ_bool' name='equ_bool' type='input'/><input name='checkBool' value='"._T('Check', 'dyngroup')."' type='submit'/></td>";
+}
+
+function checkBoolEquation($bool, $r, $display_success) {
+    $chk = checkBoolean($bool);
+    if (!$chk[0]) {
+        new NotifyWidgetFailure(sprintf(_T("The boolean equation '%s' is not valid", "dyngroup"), $bool));
+        return False;
+    } elseif ($chk[1] != -1 and $chk[1] != count($r->subs)) {
+        new NotifyWidgetFailure(sprintf(_T("The boolean equation '%s' is not valid.<br/>Not the same number of sub-requests", "dyngroup"), $bool));
+        return False;
+    } elseif ($display_success) {
+        new NotifyWidgetSuccess(sprintf(_T("The boolean equation is valid", "dyngroup")));
+        return True;
+    }
+    return True;
 }
 
 ?>
