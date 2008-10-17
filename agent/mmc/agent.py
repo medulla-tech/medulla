@@ -32,6 +32,7 @@ except ImportError:
     from twisted.protocols import http
 
 from mmc.client import makeSSLContext
+from mmc.support.mmctools import Singleton
 
 import imp
 import logging
@@ -52,21 +53,6 @@ sys.path.append("plugins")
 Fault = xmlrpclib.Fault
 ctx = None
 VERSION = "2.3.1"
-
-def getAvailablePlugins(path):
-    """
-    Fetch all available MMC plugin
-
-    @param path: UNIX path where the plugins are located
-    @type path: str
-
-    @return: list of all .py in a path
-    @rtype: list
-    """
-    ret = []
-    for item in glob.glob(os.path.join(path, "*", "__init__.py")):
-        ret.append(item.split("/")[1])
-    return ret
 
 class MmcServer(xmlrpc.XMLRPC,object):
     """
@@ -375,77 +361,13 @@ def agentService(config, conffile, daemonize):
         logger.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
         reactor.suggestThreadPoolSize(config.maxthreads)
 
-    # Find available plugins
-    mod = {}
-    sys.path.append("plugins")
-    modList = []
-    plugins = getAvailablePlugins("plugins/")
-    if not "base" in plugins:
-        logger.error("Plugin 'base' is not available. Please install it.")
-        return 1
-    else:
-        # Set base plugin as the first plugin to load
-        plugins.remove("base")
-        plugins.insert(0, "base")
-
-    # Put pulse2 plugins as the last to be imported, else we may get a mix up
-    # with pulse2 module available in the main python path
-    if "pulse2" in plugins:
-        plugins.remove("pulse2")
-        plugins.append("pulse2")
-
-    # Load plugins
-    for plugin in plugins:
-        f, p, d = imp.find_module(plugin, ['plugins'])
-
-        try:
-            mod[plugin] = imp.load_module(plugin, f, p, d)
-        except Exception,e:
-            logger.exception(e)
-            logger.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
-            continue
-
-        # If module has no activate function
-        try:
-            func = getattr(mod[plugin], "activate")
-        except:
-            logger.error('File '+ plugin+ ' is not a MMC plugin.')
-            del mod[plugin]
-            continue
-
-        # If is active
-        try:
-            if (func()):
-                version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
-                logger.info('Plugin ' + plugin + ' loaded, ' + version)
-                modList.append(str(plugin))
-            else:
-                # If we can't activate it
-                logger.info('Plugin '+plugin+' not loaded.')
-                del mod[plugin]
-        except Exception, e:
-            logger.error('Error while trying to load plugin ' + plugin)
-            logger.exception(e)
-            del mod[plugin]
-            # We do no exit but go on when another plugin than base fail
-
-        # Check that "base" plugin was loaded
-        if plugin == "base" and not "base" in mod:
-            logger.error("MMC agent can't run without the base plugin. Exiting.")
-            return 4
-
-    # Activate all manager objects
-    func = getattr(mod["base"], "validate")
-    if not func():
-        logger.error("Error while activating manager objects")
-        return 4
-
-    # Set module list
-    setModList = getattr(mod["base"], "setModList")
-    setModList(modList)
+    # Ask PluginManager to load MMC plugins
+    pm = PluginManager()
+    code = pm.loadPlugins()
+    if code: return code
 
     try:
-        startService(config, logger, mod)
+        startService(config, logger, pm.plugins)
     except Exception, e:
         # This is a catch all for all the exception that can happened
         logger.exception("Program exception:")
@@ -575,3 +497,145 @@ def readConfig(config):
         pass
 
     return config
+
+
+class PluginManager(Singleton):
+    """
+    This singleton class imports available MMC plugins, activates them, and
+    keeps track of all enabled plugins.
+    """
+    
+    pluginDirectory = 'plugins/'
+    # Will contains the enabled plugins name and corresponding python
+    # module objects
+    plugins = {}
+
+    def __init__(self):
+        Singleton.__init__(self)
+        self.logger = logging.getLogger()
+
+    def isEnabled(self, plugin):
+        """
+        @rtype: bool
+        @return: Return True if the plugin has been enabled
+        """
+        return plugin in self.plugins
+
+    def getEnabledPlugins(self):
+        """
+        @rtype: dict
+        @return: the enabled plugins as a dict, key is the plugin name, value
+                 is the python module object
+        """
+        return self.plugins
+
+    def getEnabledPluginNames(self):
+        """
+        @rtype: list
+        @return: the names of the enabled plugins
+        """"
+        return self.getEnabledPlugins().keys()
+
+    def getAvailablePlugins(self):
+        """
+        Fetch all available MMC plugin
+
+        @param path: UNIX path where the plugins are located
+        @type path: str
+
+        @return: list of all .py in a path
+        @rtype: list
+        """
+        ret = []
+        for item in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py")):
+            ret.append(item.split("/")[1])
+        return ret
+
+    def loadPlugins(self):
+        """
+        Find and load available MMC plugins
+
+        @rtype: int
+        @returns: exit code > 0 on error
+        """
+        # Find available plugins
+        mod = {}
+        sys.path.append("plugins")
+        modList = []
+        plugins = self.getAvailablePlugins()
+        if not "base" in plugins:
+            self.logger.error("Plugin 'base' is not available. Please install it.")
+            return 1
+        else:
+            # Set base plugin as the first plugin to load
+            plugins.remove("base")
+            plugins.insert(0, "base")
+
+        # Put pulse2 plugins as the last to be imported, else we may get a mix
+        # up with pulse2 module available in the main python path
+        if "pulse2" in plugins:
+            plugins.remove("pulse2")
+            plugins.append("pulse2")
+
+        # Load plugins
+        self.logger.info("Importing available MMC plugins")
+        for plugin in plugins:
+            f, p, d = imp.find_module(plugin, ['plugins'])
+
+            try:
+                mod[plugin] = imp.load_module(plugin, f, p, d)
+            except Exception,e:
+                self.logger.exception(e)
+                self.logger.error('Plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
+                continue
+
+            # If module has no activate function
+            try:
+                func = getattr(mod[plugin], "activate")
+            except:
+                self.logger.error('File '+ plugin+ ' is not a MMC plugin.')
+                del mod[plugin]
+                continue
+
+            # If is active
+            try:
+                if (func()):
+                    version = 'API version: '+str(getattr(mod[plugin], "getApiVersion")())+' build(' +str(getattr(mod[plugin], "getRevision")())+')'
+                    self.logger.info('Plugin ' + plugin + ' loaded, ' + version)
+                    modList.append(str(plugin))
+                else:
+                    # If we can't activate it
+                    self.logger.info('Plugin '+plugin+' not loaded.')
+                    del mod[plugin]
+            except Exception, e:
+                self.logger.error('Error while trying to load plugin ' + plugin)
+                self.logger.exception(e)
+                del mod[plugin]
+                # We do no exit but go on when another plugin than base fail
+
+            # Check that "base" plugin was loaded
+            if plugin == "base" and not "base" in mod:
+                self.logger.error("MMC agent can't run without the base plugin. Exiting.")
+                return 4
+        
+        # store enabled plugins
+        self.plugins = mod
+
+        self.logger.info("MMC plugins activation stage 2")
+        for plugin in plugins:
+            if self.isEnabled(plugin):
+                try:
+                    func = getattr(mod[plugin], "activate_2")
+                except AttributeError:
+                    func = None
+                if func:
+                    if not func():
+                        self.logger.error("Error in activation stage 2 for plugin '%s'" % plugin)
+                        self.logger.error("Please check your MMC agent configuration and log")
+                        return 4
+
+        # Set module list
+        setModList = getattr(mod["base"], "setModList")
+        setModList(modList)
+    
+        return 0

@@ -160,7 +160,7 @@ def activate():
     
     return True
 
-def validate():
+def activate_2():
     """
     This function is called by the MMC agent when all the plugins activate()
     functions have been called.
