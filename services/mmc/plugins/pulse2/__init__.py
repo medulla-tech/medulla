@@ -65,6 +65,7 @@ def updateQueryClass():
 
 def create_method(m):
     def method(self, already_in_loop = False):
+        NB_DB_CONN_TRY = 2
         ret = None
         try:
             old_m = getattr(self, '_old_'+m)
