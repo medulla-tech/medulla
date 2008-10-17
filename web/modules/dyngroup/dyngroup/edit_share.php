@@ -114,6 +114,7 @@ if (isset($_POST["bdeluser_x"])) {
     foreach ($users as $u) {
         $listOfUsers[$u['uid']] = array('user'=>array('login'=>$u['uid'], 'type'=>0));
     }
+    $listOfUsers['root'] = array('user'=>array('login'=>'root', 'type'=>0));
     $groups = search_groups('');
     foreach ($groups as $u) {
         $listOfUsers[$u[0]] = array('user'=>array('login'=>$u[0], 'type'=>1));
