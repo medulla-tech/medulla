@@ -59,6 +59,7 @@ import logging
 SA_MAYOR = 0
 SA_MINOR = 3
 DATABASEVERSION = 13
+NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
 
@@ -1126,10 +1127,13 @@ class MscDatabase(Singleton):
                 'total':[0],
                 'wait_up':[0],
                 'run_up':[0],
+                'sec_up':[0],
                 'wait_ex':[0],
                 'run_ex':[0],
+                'sec_ex':[0],
                 'wait_rm':[0],
-                'run_rm':[0]
+                'run_rm':[0],
+                'sec_rm':[0]
             },
             'failure':{
                 'total':[0],
@@ -1148,7 +1152,7 @@ class MscDatabase(Singleton):
             ret['total'] += 1
             if coh.current_state == 'done': # success
                 ret['success']['total'][0] += 1
-            elif coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED': # failure
+            elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
                 ret['failure']['total'][0] += 1
                 if coh.uploaded == 'FAILED':
                     ret['failure']['fail_up'][0] += 1
@@ -1162,6 +1166,17 @@ class MscDatabase(Singleton):
                     ret['failure']['fail_rm'][0] += 1
                     if coh.current_state == 'not_reachable':
                         ret['failure']['conn_rm'][0] += 1
+            elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
+                ret['running']['total'][0] += 1
+                if coh.uploaded == 'FAILED':
+                    ret['running']['wait_up'][0] += 1
+                    ret['running']['sec_up'][0] += 1
+                elif coh.executed == 'FAILED':
+                    ret['running']['wait_ex'][0] += 1
+                    ret['running']['sec_ex'][0] += 1
+                elif coh.deleted == 'FAILED':
+                    ret['running']['wait_rm'][0] += 1
+                    ret['running']['sec_rm'][0] += 1
             else: # running
                 ret['running']['total'][0] += 1
                 if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
@@ -1205,10 +1220,13 @@ class MscDatabase(Singleton):
         # en cours (nb, %)
         #   attente up (nb, %)
         #   cours d'up (nb, %)
+        #   deja essaye d'up (nb)
         #   attente exec (nb, %)
         #   cours d'ex (nb, %)
+        #   deja essaye d'ex (nb)
         #   attente sup (nb, %)
         #   cours sup (nb, %)
+        #   deja essaye de sup (nb)
         # non dep (nb, %)
         #   echoué durant up (nb, %) coh.uploaded == 'FAILED'
         #       dont injoignables (nb)
