@@ -27,8 +27,6 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
 from sqlalchemy import *
-from mmc.plugins.pulse2 import Pulse2Session as create_session
-
 import sqlalchemy
 import logging
 import datetime
@@ -621,7 +619,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
         
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM).all()
         session.close()
 
         if result:
@@ -663,7 +661,9 @@ class Inventory(DyngroupDatabaseHelper):
                 ret.append(res[1])
         return unique(ret)
 
-    def __getValuesWhereQuery(self, table, field1, value1, field2, session = create_session()):
+    def __getValuesWhereQuery(self, table, field1, value1, field2, session = None):
+        if session == None:
+            session = create_session()
         if table == 'Machine':
             partKlass = Machine
             partTable = self.machine

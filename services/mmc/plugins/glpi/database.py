@@ -30,7 +30,6 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
 from sqlalchemy import *
-from mmc.plugins.pulse2 import Pulse2Session as create_session
 import logging
 import re
 from sets import Set

@@ -33,7 +33,6 @@ from twisted.internet import defer
 
 # MMC modules
 from mmc.plugins.pulse2.location import ComputerLocationManager
-from mmc.plugins.pulse2 import Pulse2Session as create_session
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
