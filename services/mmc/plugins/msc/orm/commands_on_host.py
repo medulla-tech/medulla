@@ -44,42 +44,42 @@ class CommandsOnHost(object):
 ### Handle upload states ###
     def isUploadImminent(self):
         result = (self.isScheduled() and self.isInTimeSlot())
-        logging.getLogger().debug("isUploadImminent(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadImminent(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadIgnored(self):
         self.setUploadStatut('IGNORED')
     def isUploadIgnored(self):
         result = (self.uploaded == 'IGNORED')
-        logging.getLogger().debug("isUploadIgnored(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadIgnored(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadFailed(self):
         self.setUploadStatut('FAILED')
     def isUploadFailed(self):
         result = (self.uploaded == 'FAILED')
-        logging.getLogger().debug("isUploadFailed(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadDone(self):
         self.setUploadStatut('DONE')
     def isUploadDone(self):
         result = (self.uploaded == 'DONE')
-        logging.getLogger().debug("isUploadDone(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadInProgress(self):
         self.setUploadStatut('WORK_IN_PROGRESS')
     def isUploadRunning(self):
         result = (self.uploaded == 'WORK_IN_PROGRESS')
-        logging.getLogger().debug("isUploadRunning(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadToDo(self):
         self.setUploadStatut('TODO')
     def isUploadToDo(self):
         result = (self.uploaded == 'TODO')
-        logging.getLogger().debug("isUploadToDo(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isUploadToDo(#%s): %s" % (self.getId(), result))
         return result
 
     def setUploadStatut(self, uploaded):
@@ -90,42 +90,42 @@ class CommandsOnHost(object):
 ### Handle execution states ###
     def isExecutionImminent(self):
         result = ((self.isScheduled() or self.getCommandStatut() == 'upload_done') and self.isInTimeSlot())
-        logging.getLogger().debug("isExecutionImminent(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionImminent(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionIgnored(self):
         self.setExecutionStatut('IGNORED')
     def isExecutionIgnored(self):
         result = (self.executed == 'IGNORED')
-        logging.getLogger().debug("isExecutionIgnored(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionIgnored(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionFailed(self):
         self.setExecutionStatut('FAILED')
     def isExecutionFailed(self):
         result = (self.executed == 'FAILED')
-        logging.getLogger().debug("isExecutionFailed(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionDone(self):
         self.setExecutionStatut('DONE')
     def isExecutionDone(self):
         result = (self.executed == 'DONE')
-        logging.getLogger().debug("isExecutionDone(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionInProgress(self):
         self.setExecutionStatut('WORK_IN_PROGRESS')
     def isExecutionRunning(self):
         result = (self.executed == 'WORK_IN_PROGRESS')
-        logging.getLogger().debug("isExecutionRunning(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionToDo(self):
         self.setExecutionStatut('TODO')
     def isExecutionToDo(self):
         result = (self.executed == 'TODO')
-        logging.getLogger().debug("isExecutionToDo(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isExecutionToDo(#%s): %s" % (self.getId(), result))
         return result
 
     def setExecutionStatut(self, executed):
@@ -136,42 +136,42 @@ class CommandsOnHost(object):
 ### Handle deletion states ###
     def isDeleteImminent(self):
         result = ((self.isScheduled() or self.getCommandStatut() == 'execution_done') and self.isInTimeSlot())
-        logging.getLogger().debug("isDeleteImminent(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeleteImminent(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteIgnored(self):
         self.setDeleteStatut('IGNORED')
     def isDeleteIgnored(self):
         result = (self.deleted == 'IGNORED')
-        logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteFailed(self):
         self.setDeleteStatut('FAILED')
     def isDeleteFailed(self):
         result = (self.deleted == 'FAILED')
-        logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteDone(self):
         self.setDeleteStatut('DONE')
     def isDeleteDone(self):
         result = (self.deleted == 'DONE')
-        logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteInProgress(self):
         self.setDeleteStatut('WORK_IN_PROGRESS')
     def isDeleteRunning(self):
         result = (self.deleted == 'WORK_IN_PROGRESS')
-        logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteToDo(self):
         self.setDeleteStatut('TODO')
     def isDeleteToDo(self):
         result = (self.deleted == 'TODO')
-        logging.getLogger().debug("isDeletePossible(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteStatut(self, deleted):
@@ -184,21 +184,21 @@ class CommandsOnHost(object):
         self.setCommandStatut('inventory_failed')
     def isInventoryFailed(self):
         result = (self.getCommandStatut() == 'inventory_failed')
-        logging.getLogger().debug("isInventoryFailed(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isInventoryFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setInventoryDone(self):
         self.setCommandStatut('inventory_done')
     def isInventoryDone(self):
         result = (self.getCommandStatut() == 'inventory_done')
-        logging.getLogger().debug("isInventoryDone(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isInventoryDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setInventoryInProgress(self):
         self.setCommandStatut('inventory_in_progress')
     def isInventoryRunning(self):
         result = (self.getCommandStatut() == 'inventory_in_progress')
-        logging.getLogger().debug("isInventoryRunning(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isInventoryRunning(#%s): %s" % (self.getId(), result))
         return result
 ### /Handle inventory states ###
 
@@ -206,14 +206,14 @@ class CommandsOnHost(object):
 ### Handle wol states ###
     def isWOLImminent(self):
         result = (self.isScheduled() and self.isInTimeSlot())
-        logging.getLogger().debug("isWOLImminent(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isWOLImminent(#%s): %s" % (self.getId(), result))
         return result
 
     def setWOLInProgress(self):
         self.setCommandStatut('wol_in_progress')
     def isWOLRunning(self):
         result = (self.getCommandStatut() == 'wol_in_progress')
-        logging.getLogger().debug("isWOLRunning(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isWOLRunning(#%s): %s" % (self.getId(), result))
         return result
 ### /Handle inventory states ###
 
@@ -222,7 +222,7 @@ class CommandsOnHost(object):
         self.setCommandStatut('scheduled')
     def isScheduled(self):
         result = (self.getCommandStatut() == 'scheduled')
-        logging.getLogger().debug("isScheduled(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isScheduled(#%s): %s" % (self.getId(), result))
         return result
 
     def setDone(self):
@@ -230,7 +230,7 @@ class CommandsOnHost(object):
         self.setEndDate() # final state: we may write the date down
     def isDone(self):
         result = (self.getCommandStatut() == 'done')
-        logging.getLogger().debug("isDone): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setFailed(self):
@@ -238,14 +238,14 @@ class CommandsOnHost(object):
         self.setEndDate() # final state: we may write the date down
     def isFailed(self):
         result = (self.getCommandStatut() == 'failed')
-        logging.getLogger().debug("isFailed): %s" % (self.getId(), result))
+        logging.getLogger().debug("isFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStop(self):
         self.setCommandStatut('stop')
     def isStopped(self):
         result = (self.getCommandStatut() == 'stop')
-        logging.getLogger().debug("isStopped(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStopped(#%s): %s" % (self.getId(), result))
         return result
 
     def setPause(self):
@@ -257,13 +257,12 @@ class CommandsOnHost(object):
             self.setPause()
     def isPaused(self):
         result = (self.getCommandStatut() == 'pause')
-        logging.getLogger().debug("isPaused(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isPaused(#%s): %s" % (self.getId(), result))
         return result
 
     def setCommandStatut(self, current_state):
         self.current_state = current_state
         self.flush()
-
     def getCommandStatut(self):
         return self.current_state
 
@@ -273,6 +272,32 @@ class CommandsOnHost(object):
         else:
             return True
 ### /Handle general states ###
+
+### Handle local proxy stuff ###
+    def isProxyClient(self):
+        # I'm a client if:
+        # fk_use_as_proxy is set (ie I found a proxy server)
+        # fk_use_as_proxy is not equal to my id (ie the proxy server is not me)
+        result = (self.fk_use_as_proxy != None and self.fk_use_as_proxy != self.id)
+        logging.getLogger().debug("isProxyClient(#%s): %s" % (self.getId(), result))
+        return result
+    def isProxyServer(self):
+        # I'm a server if:
+        # order_in_proxy is set (ie I have chance to become a server)
+        # fk_use_as_proxy is equal to my id (ie the proxy server is me)
+        result = (self.order_in_proxy != None and self.id == self.fk_use_as_proxy)
+        logging.getLogger().debug("isProxyServer(#%s): %s" % (self.getId(), result))
+        return result
+
+    def getOrderInProxy(self):
+        return self.order_in_proxy
+
+    def setUsedProxy(self, coh_id):
+        self.fk_use_as_proxy = coh_id
+    def getUsedProxy(self):
+        return self.fk_use_as_proxy
+
+### /Handle local proxy stuff ###
 
 ### Misc state changes handling  ###
     def reSchedule(self, delay):
