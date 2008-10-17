@@ -456,7 +456,7 @@ zone "%(zone)s" {
             # Check that the given IP can fit into the reverse zone
             if ip.startswith(ipStart):
                 # Ok, add it
-                ipLast = ip.replace(ipStart, "")
+                ipLast = ip.replace(ipStart, "", 1)
                 elements = ipLast.split(".")
                 elements.reverse()
                 elements.pop() # Remove the last "."
