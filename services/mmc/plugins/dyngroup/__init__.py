@@ -24,7 +24,6 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 VERSION = '2.0.0'
 APIVERSION = '0:0:0'
 REVISION = int('$Rev$'.split(':')[1].strip(' $'))
-logger = None
 queryManager = None
 config = None
 
@@ -33,7 +32,6 @@ def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION
 
 def activate():
-    global logger
     logger = logging.getLogger()
     global config
     config = DGConfig("dyngroup")
@@ -42,12 +40,6 @@ def activate():
         logger.warning("Plugin dyngroup: disabled by configuration.")
         return False
 
-    if isDynamicEnable():
-        logger.warning("Plugin dyngroup: dynamic groups are enabled")
-        global queryManager
-        queryManager = QueryManager()
-        queryManager.activate()
-
     DyngroupDatabase().activate()
     if not DyngroupDatabase().db_check():
         return False
@@ -55,6 +47,16 @@ def activate():
     ComputerGroupManager().register("dyngroup", DyngroupGroup)
 
     return True
+
+def activate_2():
+    if isDynamicEnable():
+        logger = logging.getLogger()
+        logger.warning("Plugin dyngroup: dynamic groups are enabled")
+        global queryManager
+        queryManager = QueryManager()
+        queryManager.activate()
+    return True
+    
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -96,7 +98,6 @@ class RpcProxy(RpcProxyI):
     def tos_group(self, id):
         ctx = self.currentContext
         self.logger.error('tos_group is not implemented')
-        pass
         
     def setname_group(self, id, name):
         ctx = self.currentContext
