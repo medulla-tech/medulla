@@ -49,7 +49,7 @@ class Autocomplete {
     <!--
         var groups = new Array();
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
-            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value"});
+            'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value", frequency: 2.0});
     -->
     </script>
     <?php
