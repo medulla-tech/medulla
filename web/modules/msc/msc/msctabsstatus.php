@@ -57,11 +57,11 @@ if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
 $slabels = array(
     'success'=>array(),
     'running'=>array(
-        array('wait_up', _T('waiting to upload', 'msc')),
+        array('wait_up', _T('waiting to upload', 'msc'), 'sec_up', _T('(with %s already try)', 'msc')),
         array('run_up', _T('running upload', 'msc')),
-        array('wait_ex', _T('waiting to execute', 'msc')),
+        array('wait_ex', _T('waiting to execute', 'msc'), 'sec_ex', _T('(with %s already try)', 'msc')),
         array('run_ex', _T('running execution', 'msc')),
-        array('wait_rm', _T('waiting to suppress', 'msc')),
+        array('wait_rm', _T('waiting to suppress', 'msc'), 'sec_rm', _T('(with %s already try)', 'msc')),
         array('run_rm', _T('running suppression', 'msc'))
     ),
     'failure'=>array(

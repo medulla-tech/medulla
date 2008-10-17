@@ -228,7 +228,7 @@ class RenderedMSCBundleSortParent {
         $i = 1;
         if ($_POST["badvanced_bundle"] != '') { # advanced mode: keep previously given order if possible
             foreach ($this->members as $pid => $plabel) {
-                $orders[$pid] = $_POST["si_$pid"];
+                $orders[$pid] = $_POST[$this->input_pre.$pid];
             }
         } else { # standard mode: generate order
             foreach ($this->members as $pid => $plabel) {

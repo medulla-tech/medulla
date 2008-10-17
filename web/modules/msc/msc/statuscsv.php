@@ -28,10 +28,13 @@ $header = array(
                 _T('computers successfully deployed', 'msc'),
                 _T('computers running a deploiement', 'msc'),
                 _T('waiting to upload', 'msc'),
+                _T('waiting to upload and already try', 'msc'),
                 _T('running upload', 'msc'),
                 _T('waiting to execute', 'msc'),
+                _T('waiting to execute and already try', 'msc'),
                 _T('running execution', 'msc'),
                 _T('waiting to suppress', 'msc'),
+                _T('waiting to suppress and already try', 'msc'),
                 _T('running suppression', 'msc'),
                 _T('computers failed to deploy', 'msc'),
                 _T('failed during upload', 'msc'),
@@ -42,7 +45,7 @@ $header = array(
                 _T('unreachable during suppression', 'msc')
                 );
 
-$content = array($title, $s['total'], $s['success']['total'][0], $s['running']['total'][0], $s['running']['wait_up'][0], $s['running']['run_up'][0], $s['running']['wait_ex'][0], $s['running']['run_ex'][0], $s['running']['wait_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
+$content = array($title, $s['total'], $s['success']['total'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
 
 
 print '"'.join('";"', $header)."\"\n";
