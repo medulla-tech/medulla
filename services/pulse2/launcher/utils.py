@@ -22,7 +22,8 @@
 # MA 02110-1301, USA.
 
 import md5
-import os # for adding / removing a ssh key
+import logging
+
 from pulse2.launcher.config import LauncherConfig
 
 def getScheduler():
@@ -40,32 +41,6 @@ def getScheduler():
 def getTempFolderName(id_command, client_uuid):
     """ Generate a temporary folder name which will contain our deployment stuff """
     return LauncherConfig().temp_folder_prefix + md5.new('%s%s' % (id_command, client_uuid)).hexdigest()[len(LauncherConfig().temp_folder_prefix):]
-
-def addPrivKeyToSSHAgent(key_name):
-    """
-        ask the ssh-agent to keep our key
-
-    """
-    if key_name == None or key_name == '':
-        key_name = LauncherConfig().ssh_defaultkey
-
-    if key_name not in LauncherConfig().ssh_keys.keys():
-        return False
-
-    return (os.system('ssh-add %s 2> /dev/null' % LauncherConfig().ssh_keys[key_name]) == 0)
-
-def removePrivKeyFromSSHAgent(key_name):
-    """
-        ask the ssh-agent to keep our key
-
-    """
-    if key_name == None or key_name == '':
-        key_name = LauncherConfig().ssh_defaultkey
-
-    if key_name not in LauncherConfig().ssh_keys.keys():
-        return False
-
-    return (os.system('ssh-add -d %s 2> /dev/null' % LauncherConfig().ssh_keys[key_name]) == 0)
 
 def getPubKey(key_name):
     """

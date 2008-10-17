@@ -43,7 +43,7 @@ except ImportError:
 from pulse2.launcher.config import LauncherConfig
 from pulse2.utils import xmlrpcCleanup
 import pulse2.launcher.utils
-
+import pulse2.launcher.ssh_agent
 # XMLRPC funcs
 import pulse2.launcher.remote_exec
 import pulse2.launcher.process_control
@@ -373,13 +373,8 @@ def main():
         logger.error("Please fix the configuration file")
         sys.exit(1)
 
-    # FIXME: need debug here, to now what's going wrong if it goes wrong
-    for keyname in LauncherConfig().ssh_keys:
-        if pulse2.launcher.utils.addPrivKeyToSSHAgent(keyname):
-            logger.info("launcher %s: Successfuly declared the ssh key '%s' to your ssh agent" % (options.id, keyname))
-        else:
-            logger.warn("launcher %s: Couldn't declare the ssh key '%s' to your ssh agent, hope you won't need to forward it !" % (options.id, keyname))
-
+    # setup SSH Agent
+    pulse2.launcher.ssh_agent.setupSSHAgent()
     # start service
     sys.exit(startService())
 

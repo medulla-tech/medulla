@@ -59,6 +59,8 @@ class LauncherConfig(pulse2.utils.Singleton):
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
 
     # ssh stuff
+    ssh_agent_sock = None
+    ssh_agent_pid = None
     ssh_defaultkey = 'default'
     ssh_forward_key = 'let'
     ssh_options = [ \
@@ -273,7 +275,6 @@ class LauncherConfig(pulse2.utils.Singleton):
                         if self.launchers[section]['slots'] > maxslots:
                             logging.getLogger().warn("launcher %s: section %s, slots capped to %s instead of %s regarding the max FD (%s)" % (self.name, section, maxslots, self.launchers[section]['slots'], os.sysconf('SC_OPEN_MAX')))
                             self.launchers[section]['slots'] = maxslots
-
 
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
