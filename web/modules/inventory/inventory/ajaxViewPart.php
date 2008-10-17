@@ -49,7 +49,7 @@ if ($_GET['uuid'] != '') {
     $n = null;
     $h = array();
     $index = 0;
-    if ($count > 0) {
+    if ($count > 0 and is_array($inv) and is_array($inv[0]) and is_array($inv[0][1])) {
         foreach ($inv[0][1] as $def) {
             foreach ($def as $k => $v) {
                 $h[$k][$index] = $v;
