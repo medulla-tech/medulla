@@ -533,7 +533,7 @@ class PluginManager(Singleton):
         """
         @rtype: list
         @return: the names of the enabled plugins
-        """"
+        """
         return self.getEnabledPlugins().keys()
 
     def getAvailablePlugins(self):
