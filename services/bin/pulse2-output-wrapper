@@ -295,6 +295,12 @@ def runCommand(config):
         tailargs = config.exec_string
 
     # fork process
+    if not os.access(headarg, os.X_OK):
+        print '%s: %s can\'t be executed !' % (sys.argv[0], headarg)
+        ExitCode().set(1)
+        if twisted.internet.reactor.running:
+            twisted.internet.reactor.stop()
+        return
     handler = twisted.internet.reactor.spawnProcess(shOutputWrapper(config), headarg, tailargs, purged_env)
 
     # install termination handler to cleanly terminated sub-process in case of emergency
@@ -313,6 +319,12 @@ def runCheckCommand(config):
         tailargs = config.check_command
 
     # fork process
+    if not os.access(headarg, os.X_OK):
+        print '%s: %s can\'t be executed !' % (sys.argv[0], headarg)
+        ExitCode().set(1)
+        if twisted.internet.reactor.running:
+            twisted.internet.reactor.stop()
+        return
     handler = twisted.internet.reactor.spawnProcess(shCheckCommand(config), headarg, tailargs, purged_env)
 
     # install termination handler to cleanly terminated sub-process in case of emergency
@@ -335,7 +347,7 @@ try:
 except twisted.python.usage.UsageError, errortext:
     print '%s: %s' % (sys.argv[0], errortext)
     print '%s: Try --help for usage details.' % (sys.argv[0])
-    sys.exit(0)
+    sys.exit(1)
 
 purged_env = {} # hold "secured" env vars
 

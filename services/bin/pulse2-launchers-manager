@@ -56,7 +56,7 @@ def start_launcher(name, config):
     launcher_path = config.launcher_path
     # Test if this launcher already exists
     if os.path.isfile(pid_file):
-        logger.warning('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
+        logger.error('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
         print ('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
         return
 

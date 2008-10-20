@@ -374,7 +374,9 @@ def main():
         sys.exit(1)
 
     # setup SSH Agent
-    pulse2.launcher.ssh_agent.setupSSHAgent()
+    if LauncherConfig().is_sshagent_available:
+        pulse2.launcher.ssh_agent.setupSSHAgent()
+
     # start service
     sys.exit(startService())
 

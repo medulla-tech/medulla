@@ -58,6 +58,8 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
         real_files_list = files_list
 
+        if not LauncherConfig().is_rsync_available:
+            return False
         # Build "exec" command
         real_command  = ['/usr/bin/rsync']
         real_command += client['proto_args']
@@ -124,6 +126,8 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
     if client['protocol'] == "wget":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -258,6 +262,9 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
+
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -334,6 +341,9 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
+
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -395,6 +405,9 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
+
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -455,6 +468,9 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
+
+        if not LauncherConfig().is_ssh_available:
+            return False
 
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
@@ -532,6 +548,9 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
+
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -595,6 +614,9 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
     if client['protocol'] == "ssh":
         # command is issued though our wrapper, time to build it
 
+        if not LauncherConfig().is_ssh_available:
+            return False
+
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
@@ -647,6 +669,10 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     Recursive copy of a directory from a client to the launcher using scp.
     """
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
+
+    if not LauncherConfig().is_scp_available:
+        return False
+
     real_command = ['/usr/bin/scp']
     real_command += client['transp_args']
     if bwlimit:

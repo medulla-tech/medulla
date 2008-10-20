@@ -28,7 +28,7 @@ import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
 import logging      # logging stuff
-import os.path
+import os
 
 # Others Pulse2 Stuff
 import pulse2.utils
@@ -119,25 +119,25 @@ class LauncherConfig(pulse2.utils.Singleton):
                 setattr(self, attrib, self.cp.get(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'int':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getint(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'pass':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getpassword(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
             else:
-                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
+                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
     def setup(self, config_file, name = None):
         # Load configuration file
@@ -157,6 +157,28 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('launchers', 'reboot_command', 'reboot_command')
         self.setoption('launchers', 'target_path', 'target_path')
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
+
+        # check for a few binaries availability
+        if not os.access('/usr/bin/rsync', os.X_OK): # FIXME: hardcoded and so on
+            logging.getLogger().warn("launcher %s: can't find RSYNC (looking for %s), disabling all rsync-related stuff" % (self.name, '/usr/bin/rsync'))
+            self.is_rsync_available = False
+        else:
+            self.is_rsync_available = True
+        if not os.access('/usr/bin/ssh', os.X_OK): # FIXME: hardcoded and so on
+            logging.getLogger().warn("launcher %s: can't find SSH (looking for %s), disabling all ssh-related stuff" % (self.name, '/usr/bin/ssh'))
+            self.is_ssh_available = False
+        else:
+            self.is_ssh_available = True
+        if not os.access('/usr/bin/ssh-agent', os.X_OK): # FIXME: hardcoded and so on
+            logging.getLogger().warn("launcher %s: can't find SSH AGENT (looking for %s), disabling all ssh-agent-related stuff" % (self.name, '/usr/bin/ssh-agent'))
+            self.is_sshagent_available = False
+        else:
+            self.is_sshagent_available = True
+        if not os.access('/usr/bin/scp', os.X_OK): # FIXME: hardcoded and so on
+            logging.getLogger().warn("launcher %s: can't find SCP (looking for %s), disabling all scp-related stuff" % (self.name, '/usr/bin/scp'))
+            self.is_scp_available = False
+        else:
+            self.is_scp_available = True
 
         # Parse "wrapper" section
         self.setoption('wrapper', 'max_log_size', 'wrapper_max_log_size', 'int')
@@ -192,7 +214,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
-            if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
+            if self.cp.has_option('daemon', 'pid_path'):
                 logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
@@ -217,7 +239,7 @@ class LauncherConfig(pulse2.utils.Singleton):
             if self.cp.has_option("tcp_sproxy", "tcp_sproxy_port_range"):
                 range = map(lambda x: int(x), self.cp.get("tcp_sproxy", "tcp_sproxy_port_range").split('-'))
                 if len(range) != 2:
-                    logging.getLogger().warning("'tcp_sproxy_port_range' not formated as expected, using default value, please check your config file ")
+                    logging.getLogger().info("'tcp_sproxy_port_range' not formated as expected, using default value, please check your config file ")
                 else:
                     (self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end) = range
         logging.getLogger().info("launcher %s: section %s, option %s set to %d-%d" % (self.name, 'tcp_sproxy', 'tcp_sproxy_port_range', self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end))
@@ -237,8 +259,8 @@ class LauncherConfig(pulse2.utils.Singleton):
                     }
                     if self.first_scheduler == None:
                         self.first_scheduler = section
-                except ConfigParser.NoOptionError, e:
-                    logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
+                except ConfigParser.NoOptionError, error:
+                    logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, error))
 
         # Parse "launcher_XXXX" sections
         for section in self.cp.sections():
@@ -280,6 +302,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
 
     def getvaluedefaulted(self, section, option, default, type = 'str'):
+        """ parse value using the given type """
         if self.cp.has_option(section, option):
             if type == 'str':
                 return self.cp.get(section, option)
