@@ -468,8 +468,10 @@ def runWOLPhase(myCommandOnHostID):
     if not myCoH.isWOLImminent():       # nothing to do right now, give out
         logger.info("command_on_host #%s: not the right time to WOL" % myCoH.getId())
         return None
+
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
+    myCoH.setLastWOLAttempt()
     updateHistory(myCommandOnHostID, 'wol_in_progress')
     myCoH.setCommandStatut('wol_in_progress')
 
@@ -1014,6 +1016,7 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
 
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
+
     return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):

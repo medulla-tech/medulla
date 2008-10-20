@@ -213,7 +213,9 @@ def getServerCheck(target):
 def callOnLauncher(launcher, method, *args):
     def _eb(reason):
         logging.getLogger().warn("scheduler %s: while sending command to launcher %s : %s" % (SchedulerConfig().name, launcher, reason.getErrorMessage()))
-    return pulse2.scheduler.xmlrpc.getProxy(launcher).callRemote(method, *args).addErrback(_eb)
+    return pulse2.scheduler.xmlrpc.getProxy(launcher).\
+        callRemote(method, *args).\
+        addErrback(_eb)
 
 def callOnBestLauncher(method, *args):
 
