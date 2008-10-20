@@ -395,7 +395,7 @@ def stopElapsedCommands(scheduler_name):
 
 def stopCommandsOnHosts(ids):
     for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(launcher, 'term_processes', ids)
+        callOnLauncher(None, launcher, 'term_processes', ids)
 
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -404,7 +404,7 @@ def stopCommand(myCommandOnHostID):
     logger.debug("command_on_host state is %s" % myCoH.toH())
     logger.debug("command state is %s" % myC.toH())
     for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(launcher, 'term_process', myCommandOnHostID)
+        callOnLauncher(None, launcher, 'term_process', myCommandOnHostID)
     return True
 
 def startCommand(myCommandOnHostID):
@@ -490,7 +490,7 @@ def runWOLPhase(myCommandOnHostID):
     myCoH.setCommandStatut('wol_in_progress')
 
     # perform call
-    mydeffered = callOnBestLauncher('wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
+    mydeffered = callOnBestLauncher(myCommandOnHostID, 'wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
 
     mydeffered.\
         addCallback(parseWOLResult, myCommandOnHostID).\
@@ -577,6 +577,7 @@ def runUploadPhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_pull',
                 myCommandOnHostID,
                 client,
@@ -589,6 +590,7 @@ def runUploadPhase(myCommandOnHostID):
         elif SchedulerConfig().mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_pull',
                 myCommandOnHostID,
                 client,
@@ -616,6 +618,7 @@ def runUploadPhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_push',
                 myCommandOnHostID,
                 client,
@@ -628,6 +631,7 @@ def runUploadPhase(myCommandOnHostID):
         elif SchedulerConfig().mode == 'async':
             # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_push',
                 myCommandOnHostID,
                 client,
@@ -708,6 +712,7 @@ def runUploadPhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_pull',
                 myCommandOnHostID,
                 client,
@@ -719,6 +724,7 @@ def runUploadPhase(myCommandOnHostID):
                 addErrback(parsePullError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_pull',
                 myCommandOnHostID,
                 client,
@@ -765,6 +771,7 @@ def runExecutionPhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_quickaction',
                 myCommandOnHostID,
                 client,
@@ -776,6 +783,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_quickaction',
                 myCommandOnHostID,
                 client,
@@ -794,6 +802,7 @@ def runExecutionPhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_exec',
                 myCommandOnHostID,
                 client,
@@ -805,6 +814,7 @@ def runExecutionPhase(myCommandOnHostID):
                 addErrback(parseExecutionError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_exec',
                 myCommandOnHostID,
                 client,
@@ -857,6 +867,7 @@ def runDeletePhase(myCommandOnHostID):
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'delete_in_progress')
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'sync_remote_delete',
                 myCommandOnHostID,
                 client,
@@ -868,6 +879,7 @@ def runDeletePhase(myCommandOnHostID):
                 addErrback(parseDeleteError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
+                myCommandOnHostID,
                 'async_remote_delete',
                 myCommandOnHostID,
                 client,
@@ -891,6 +903,7 @@ def runDeletePhase(myCommandOnHostID):
             if SchedulerConfig().mode == 'sync':
                 updateHistory(myCommandOnHostID, 'delete_in_progress')
                 mydeffered = callOnBestLauncher(
+                    myCommandOnHostID,
                     'sync_remote_delete',
                     myCommandOnHostID,
                     client,
@@ -902,6 +915,7 @@ def runDeletePhase(myCommandOnHostID):
                     addErrback(parseDeleteError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
                 mydeffered = callOnBestLauncher(
+                    myCommandOnHostID,
                     'async_remote_delete',
                     myCommandOnHostID,
                     client,
@@ -953,6 +967,7 @@ def runInventoryPhase(myCommandOnHostID):
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
             'sync_remote_inventory',
             myCommandOnHostID,
             client,
@@ -963,6 +978,7 @@ def runInventoryPhase(myCommandOnHostID):
             addErrback(parseInventoryError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
             'async_remote_inventory',
             myCommandOnHostID,
             client,
@@ -991,6 +1007,8 @@ def runRebootPhase(myCommandOnHostID):
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
         mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
+            myCommandOnHostID,
             'sync_remote_reboot',
             myCommandOnHostID,
             client,
@@ -1001,6 +1019,8 @@ def runRebootPhase(myCommandOnHostID):
             addErrback(parseRebootError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
+            myCommandOnHostID,
             'async_remote_reboot',
             myCommandOnHostID,
             client,

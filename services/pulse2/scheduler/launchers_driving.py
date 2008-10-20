@@ -23,12 +23,16 @@
 
 import logging
 import random
+import sqlalchemy
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 import pulse2.scheduler.xmlrpc
+
+from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
+from mmc.plugins.msc.orm.commands_history import CommandsHistory
 
 def chooseLauncher():
     """ return a good launcher, URI form """
@@ -54,7 +58,7 @@ def chooseLauncher():
         logging.getLogger().error("scheduler %s: while talking to launcher %s: %s" % (SchedulerConfig().name, current_launcher, reason.getErrorMessage()))
         if launchers:
             (next_launcher_name, next_launcher_uri) = launchers.popitem()
-            d = callOnLauncher(next_launcher_uri, 'get_health')
+            d = callOnLauncher(None, next_launcher_uri, 'get_health')
             d.addCallback(_callback, stats, launchers, next_launcher_name).\
             addErrback(_eb, stats, launchers, next_launcher_name)
             return d
@@ -68,7 +72,7 @@ def chooseLauncher():
         # if there is at least one launcher to process, do it
         if launchers:
             (next_launcher_name, next_launcher_uri) = launchers.popitem()
-            d = callOnLauncher(next_launcher_uri, 'get_health')
+            d = callOnLauncher(None, next_launcher_uri, 'get_health')
             d.addCallback(_callback, stats, launchers, next_launcher_name).\
             addErrback(_eb, stats, launchers, next_launcher_name)
             return d
@@ -84,7 +88,7 @@ def getLaunchersBalance():
         logging.getLogger().error("scheduler %s: while talking to launcher %s: %s" % (SchedulerConfig().name, current_launcher, reason.getErrorMessage()))
         if launchers:
             (next_launcher_name, next_launcher_uri) = launchers.popitem()
-            d = callOnLauncher(next_launcher_uri, 'get_balance')
+            d = callOnLauncher(None, next_launcher_uri, 'get_balance')
             d.addCallback(_callback, stats, launchers, next_launcher_name).\
             addErrback(_eb, stats, launchers, next_launcher_name)
             return d
@@ -98,7 +102,7 @@ def getLaunchersBalance():
         # if there is at least one launcher to process, do it
         if launchers:
             (next_launcher_name, next_launcher_uri) = launchers.popitem()
-            d = callOnLauncher(next_launcher_uri, 'get_balance')
+            d = callOnLauncher(None, next_launcher_uri, 'get_balance')
             d.addCallback(_callback, stats, launchers, next_launcher_name).\
             addErrback(_eb, stats, launchers, next_launcher_name)
             return d
@@ -116,7 +120,7 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    return callOnBestLauncher('icmp', client)
+    return callOnBestLauncher(None, 'icmp', client)
 
 def probeClient(uuid, fqdn, shortname, ips, macs):
     # choose a way to perform the operation
@@ -127,7 +131,7 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    return callOnBestLauncher('probe', client)
+    return callOnBestLauncher(None, 'probe', client)
 
 def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
@@ -168,7 +172,7 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('transfert')
 
-    return callOnBestLauncher('download_file', client, path, bwlimit)
+    return callOnBestLauncher(None, 'download_file', client, path, bwlimit)
 
 def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
     def _finalize(result):
@@ -200,7 +204,7 @@ def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_por
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('vnc')
 
-    return callOnBestLauncher('tcp_sproxy', client, requestor_ip, requested_port).\
+    return callOnBestLauncher(None, 'tcp_sproxy', client, requestor_ip, requested_port).\
         addCallback(_finalize).\
         addErrback(lambda reason: reason)
 
@@ -210,20 +214,29 @@ def getClientCheck(target):
 def getServerCheck(target):
     return getCheck(SchedulerConfig().server_check, target);
 
-def callOnLauncher(launcher, method, *args):
+def callOnLauncher(coh_id, launcher, method, *args):
+    # coh_id to keep a track of the command, set to None if we don't want to keep a track
+
+    if coh_id: # FIXME: we may want to log launcher_name instead of launcher_uri
+        session = sqlalchemy.create_session()
+        myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
+        session.close()
+        myCommandOnHost.setCurrentLauncher(launcher)
+
     def _eb(reason):
         logging.getLogger().warn("scheduler %s: while sending command to launcher %s : %s" % (SchedulerConfig().name, launcher, reason.getErrorMessage()))
     return pulse2.scheduler.xmlrpc.getProxy(launcher).\
         callRemote(method, *args).\
         addErrback(_eb)
 
-def callOnBestLauncher(method, *args):
+def callOnBestLauncher(coh_id, method, *args):
+
+    def _cb(launcher):
+        return callOnLauncher(coh_id, launcher, method, *args)
 
     def _eb(reason):
         logging.getLogger().error("scheduler %s: while choosing the best launcher : %s" % (SchedulerConfig().name, reason.getErrorMessage()))
 
     return chooseLauncher().\
-        addCallback(pulse2.scheduler.xmlrpc.getProxy).\
-        addCallback(lambda x: x.callRemote(method, *args)).\
+        addCallback(_cb).\
         addErrback(_eb)
-
