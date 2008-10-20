@@ -16,6 +16,7 @@ from mmc.plugins.dyngroup.qmanager import QueryManager
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.dyngroup.group import DyngroupGroup
+from mmc.plugins.dyngroup.computers import DyngroupComputers
 
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.pulse2.group import ComputerGroupManager
@@ -45,6 +46,7 @@ def activate():
         return False
 
     ComputerGroupManager().register("dyngroup", DyngroupGroup)
+    ComputerManager().register("dyngroup", DyngroupComputers)
 
     return True
 

@@ -364,6 +364,20 @@ class DyngroupDatabase(Singleton):
         session.close()
         return still_linked
 
+    def __deleteResult4AllGroups(self, machine_id, session = None):
+        open_session = False
+        if not session:
+            open_session = True
+            session = create_session()
+        results = session.query(Results).filter(self.results.c.FK_machine == machine_id).all()
+        for result in results:
+            session.delete(result)
+            session.flush()
+
+        if open_session:
+            session.close()
+        return True
+
     def __getGroupInSessionFirstStep(self, ctx, session):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
@@ -789,6 +803,18 @@ class DyngroupDatabase(Singleton):
         self.__updateMachinesTable(connection)
         trans.commit()
         return True
+
+    def delMachine(self, uuid):
+        session = create_session()
+        m = self.__getMachine(uuid, session)
+        if m:
+            mid = m.id
+            session.delete(m)
+            self.__deleteResult4AllGroups(mid, session)
+            session.close()
+            return True
+        session.close()
+        return False
 
     def share_with(self, ctx, id):
         session = create_session()
