@@ -44,7 +44,13 @@ $name = quickGet('name');
 $visible = quickGet('visible'); # TODO check all this!
 if (!$visible && $group) { $visible = $group->show; }
 $bool = quickGet('equ_bool');
-if (!$bool && $group) { $bool = $group->getBool(); }
+if (!$bool && $group) {
+    if (isset($_POST['checkBool']) || isset($_POST['btnPrimary'])) {
+        $bool = '';
+    } else {
+        $bool = $group->getBool();
+    }
+}
 
 $r = new Request();
 $r->parse($request);
