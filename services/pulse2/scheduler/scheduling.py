@@ -28,6 +28,7 @@ import time
 import re
 import os
 import random
+import datetime
 
 # Twisted modules
 import twisted.internet
@@ -462,7 +463,20 @@ def runWOLPhase(myCommandOnHostID):
     if not myC.hasToWOL():              # do not perform WOL
         logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
         return runUploadPhase(myCommandOnHostID)
-    if myCoH.isWOLRunning():            # WOL in progress, give up
+    if myCoH.isWOLRunning():            # WOL in progress
+        if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
+            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < SchedulerConfig().max_wol_time:
+                # we should wait a little more
+                return None
+            else:
+                # we already pass the delay, let's continue
+                logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
+                myCoH.setScheduled()
+                return runUploadPhase(myCommandOnHostID)
+        else: # WOL marked as "in progress", but no time given ?!
+            # return None to avoid some possible race conditions
+            return None
+
         logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
         return None
     if not myCoH.isWOLImminent():       # nothing to do right now, give out
