@@ -49,7 +49,7 @@ if (isset($_POST["bassoc"])) {
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
             new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
-            header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location'=>$p_api_id))); # TODO add params to go on the good p_api
+            header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
         } else {
             new NotifyWidgetFailure($ret[1]);
         }
