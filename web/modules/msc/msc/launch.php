@@ -96,19 +96,23 @@ if (isset($_POST["bconfirmproxy"])) {
     start_command($proxy);
 }
 
-if (isset($_GET['badvanced']) and isset($_POST['local_proxy'])) {
-    if (isset($_POST['bback'])) {
-        $from = $_POST['from'];
-        $path =  explode('|', $from);
-        $module = $path[0];
-        $submod = $path[1];
-        $page = $path[2];
-        $gid = $_POST["gid"];
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$gid)));
-    } else
-        require('modules/msc/msc/local_proxy.php');
 
+/* cancel button handling */
+if (isset($_POST['bback'])) {
+    $from = $_POST['from'];
+    $path =  explode('|', $from);
+    $module = $path[0];
+    $submod = $path[1];
+    $page = $path[2];
+    if (isset($_POST["gid"]))
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$_POST["gid"])));
+    if (isset($_POST["uuid"]))
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"msctabs", 'uuid'=>$_POST["uuid"])));
 }
+
+/* local proxy selection handling */
+if (isset($_POST['local_proxy']))
+    require('modules/msc/msc/local_proxy.php');
 
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {

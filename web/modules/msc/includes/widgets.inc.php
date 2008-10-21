@@ -138,11 +138,11 @@ class RenderedMSCActions extends HtmlElement {
             $selectDisabled = "DISABLED";
             $onSubmit = "";
         }
-        
+
         if (!$this->error && count($this->list) > 0) {
             $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $this->qa_on_name));
             $label->display();
-                        
+
             print '
                 <div id="msc-standard-host-actions"> <!-- STANDARD HOST ACTIONS -->
                     <table>
@@ -320,7 +320,7 @@ class AjaxFilterCommands extends AjaxFilter {
 
 class AjaxFilterCommandsStates extends AjaxFilter {
 
-    function AjaxFilterCommandsStates($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) { 
+    function AjaxFilterCommandsStates($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) {
         $this->AjaxFilter($url, $divid, $params);
 
         /* Commands selection dropdown */
@@ -334,7 +334,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         } else {
             $this->commands->setSelected(getCommandsFilter());
         }
-        
+
         /* State selection dropdown */
         $this->paramname2 = $paramname2;
         $this->states = new SelectItem($paramname2, 'pushSearch', 'searchfieldreal noborder');
