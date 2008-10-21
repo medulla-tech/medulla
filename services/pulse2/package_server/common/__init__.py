@@ -36,7 +36,7 @@ from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
 from pulse2.package_server.utilities import md5file, md5sum, Singleton
-
+from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 
 class Common(Singleton):
 
@@ -246,6 +246,53 @@ class Common(Singleton):
                     self.mp2p[desc['mp']].remove(pid)
         return True
 
+    ######################################################
+    # methods to treat all rsync mechanism
+    
+    def rsyncPackageOnMirrors(self, pid = None):
+        if pid == None:
+            self.logger.debug("rsyncPackageOnMirrors for all packages")
+            for pid in self.packages:
+                self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
+        else:
+            self.logger.debug("rsyncPackageOnMirrors for '%s'"%(pid))
+            self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
+        PkgsRsyncStateSerializer().serialize()
+        
+    def isPackageAccessible(self, pid):
+        return (not self.dontgivepkgs.has_key(pid) and not self.need_assign.has_key(pid) and self.packages[pid].hasFile())
+
+    def getPackagesThatNeedRsync(self):
+        if self.dontgivepkgs != {}:
+            self.logger.debug("getPackagesThatNeedRsync : " + str(self.dontgivepkgs))
+        return map(lambda x:[x, self.dontgivepkgs[x], self.packages[x]], self.dontgivepkgs)
+
+    def removePackagesFromRsyncList(self, pid, target):
+        if self.dontgivepkgs.has_key(pid):
+            modif = False
+            try:
+                i = self.dontgivepkgs[pid].index(target)
+                del self.dontgivepkgs[pid][i]
+                modif = True
+            except ValueError, e:
+                self.logger.warning("PackageMirror no %s target defined for package %s"%(target, pid))
+            if len(self.dontgivepkgs[pid]) == 0:
+                del self.dontgivepkgs[pid]
+                modif = True
+                self.logger.info("PackageMirror: package %s successfully mirrored everywhere" % pid)
+                pkg = self.packages[pid]
+                p_dir = os.path.join(pkg.root, pid)
+                if not os.path.exists(p_dir):
+                    self.logger.debug("PackageMirror: removing package %s from available packages" % pid)
+                    del self.packages[pid]
+            if modif:
+                PkgsRsyncStateSerializer().serialize()
+            return True
+        else:
+            self.logger.warning("PackageMirror don't know this package : %s"%(pid))
+            return False
+    ######################################################
+
     def addPackage(self, pid, pa, need_assign = True):
         # return pid for success
         # raise ARYDEFPKG for already existing package
@@ -257,8 +304,7 @@ class Common(Singleton):
             if need_assign:
                 Common().need_assign[pid] = True
             elif self.config.package_mirror_activate:
-                Common().dontgivepkgs[pid] = []
-                Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+                Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pa
             if not self.reverse.has_key(pa.label):
                 self.reverse[pa.label] = {}
@@ -278,8 +324,7 @@ class Common(Singleton):
             if need_assign:
                 Common().need_assign[pid] = True
             elif self.config.package_mirror_activate:
-                Common().dontgivepkgs[pid] = []
-                Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+                Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pack
             if not self.reverse.has_key(pack.label):
                 self.reverse[pack.label] = {}
@@ -343,8 +388,7 @@ class Common(Singleton):
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
         if self.config.package_mirror_activate:
-            Common().dontgivepkgs[pid] = []
-            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+            Common().rsyncPackageOnMirrors(pid)
         return [True]
 
     def dropPackage(self, pid, mp):
@@ -368,8 +412,7 @@ class Common(Singleton):
                 shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
         # TODO remove package from mirrors
         if self.config.package_mirror_activate:
-            Common().dontgivepkgs[pid] = []
-            Common().dontgivepkgs[pid].extend(self.config.package_mirror_target)
+            Common().rsyncPackageOnMirrors(pid)
        
         return pid
 
@@ -378,11 +421,11 @@ class Common(Singleton):
 
     def package(self, pid, mp = None):
         if mp == None:
-            if not self.dontgivepkgs.has_key(pid) and not Common().need_assign.has_key(pid) and self.packages[pid].hasFile():
+            if self.isPackageAccessible(pid):
                 return self.packages[pid]
             return None
         try:
-            if not self.dontgivepkgs.has_key(pid) and not Common().need_assign.has_key(pid) and self.packages[pid].hasFile():
+            if self.isPackageAccessible(pid):
                 self.mp2p[mp].index(pid)
                 return self.packages[pid]
             return None
@@ -390,11 +433,16 @@ class Common(Singleton):
             pass
         return None
 
-    def getPackages(self, mp): #TODO check the clone memory impact
+    def getPendingPackages(self, mp):
+        ret = self.getPackages(mp, True)
+        return ret
+        
+    def getPackages(self, mp, pending = False): #TODO check the clone memory impact
         ret = {}
         try:
             for k in self.packages:
-                if not self.dontgivepkgs.has_key(k) and not Common().need_assign.has_key(k) and self.packages[k].hasFile():
+                is_acc = self.isPackageAccessible(k)
+                if (is_acc and not pending) or (not is_acc and pending):
                     try:
                         self.mp2p[mp].index(k)
                         ret[k] = self.packages[k]
@@ -402,6 +450,19 @@ class Common(Singleton):
                         pass
         except Exception, e:
             self.logger.error(e)
+        return ret
+
+    def getRsyncStatus(self, pid, mp):
+        if self.isPackageAccessible(pid):
+            return map(lambda h: [h, 'OK'], self.config.package_mirror_target)
+        ret = []
+        nok = self.dontgivepkgs[pid]
+        for h in self.config.package_mirror_target:
+            try:
+                nok.index(h)
+                ret.append([h, 'NOK'])
+            except:
+                ret.append([h, 'OK'])
         return ret
 
     def reverse(self, mp): #TODO check the clone memory impact
@@ -476,7 +537,7 @@ class Common(Singleton):
                 self.associatePackage2mp(pid, mp)
                 self.already_declared[file] = True
                 if self.config.package_mirror_activate:
-                    self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
+                    Common().rsyncPackageOnMirrors(pid)
                 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':

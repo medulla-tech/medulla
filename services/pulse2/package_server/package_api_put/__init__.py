@@ -102,6 +102,9 @@ class PackageApiPut(PackageApiGet):
 
         return pid
 
+    def xmlrpc_getRsyncStatus(self, pid):
+        return Common().getRsyncStatus(pid, self.mp)
+
     def xmlrpc_putPackageLabel(self, pid, label):
         self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
 

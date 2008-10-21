@@ -72,9 +72,11 @@ class P2PServerCP(Singleton):
     package_mirror_loop = 5
     package_mirror_activate = False
     package_mirror_target = ''
+    package_mirror_status_file = '/var/data/mmc/status'
     package_mirror_command = '/usr/bin/rsync'
     package_mirror_command_options = ['-ar', '--delete']
     package_mirror_level0_command_options = ['-d', '--delete']
+    package_mirror_command_options_ssh_options = None
 
     parser = None
     mirrors = []
@@ -190,6 +192,9 @@ class P2PServerCP(Singleton):
                     (type(self.package_mirror_target) == list and len(self.package_mirror_target) == 1 and self.package_mirror_target[0] != '') or \
                     (type(self.package_mirror_target) == list and len(self.package_mirror_target) != 1):
                 self.package_mirror_activate = True
+
+                if self.cp.has_option("main", 'package_mirror_status_file'):
+                    self.package_mirror_status_file = self.cp.getint("main", 'package_mirror_status_file')
                 if self.cp.has_option("main", 'package_mirror_loop'):
                     self.package_mirror_loop = self.cp.getint("main", 'package_mirror_loop')
 
@@ -197,6 +202,8 @@ class P2PServerCP(Singleton):
                     self.package_mirror_command = self.cp.get("main", 'package_mirror_command')
                 if self.cp.has_option("main", 'package_mirror_command_options'):
                     self.package_mirror_command_options = self.cp.get("main", 'package_mirror_command_options').split(' ')
+                if self.cp.has_option("main", "package_mirror_command_options_ssh_options"):
+                    self.package_mirror_command_options_ssh_options = self.cp.get("main", 'package_mirror_command_options_ssh_options').split(' ')
                 if self.cp.has_option("main", 'package_mirror_level0_command_options'):
                     self.package_mirror_level0_command_options = self.cp.get("main", 'package_mirror_level0_command_options').split(' ')
 

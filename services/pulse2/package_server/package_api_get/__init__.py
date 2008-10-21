@@ -49,6 +49,10 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_getAllPackages(self, mirror = None):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
+    def xmlrpc_getAllPendingPackages(self, mirror = None):
+        ret = Common().getPendingPackages(self.mp)
+        return map(lambda x: ret[x].toH(), ret)
+
     def xmlrpc_getPackageDetail(self, pid):
         return Common().package(pid, self.mp).toH()
 

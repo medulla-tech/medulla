@@ -34,6 +34,7 @@ import shutil
 
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
+from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 from pulse2.package_server.utilities import Singleton
 import pulse2.package_server.thread_webserver
 from threading import Thread, Semaphore
@@ -46,6 +47,7 @@ from twisted.internet import defer
 """
     Pulse2 PackageServer
 """
+
 
 class ThreadPackageDetect(Thread):
     def __init__(self, config):
@@ -74,16 +76,20 @@ class ThreadPackageDetect(Thread):
         l.start(self.config.package_detect_loop)
 
 class ThreadPackageMirror(Thread):
-    def __init__(self, config):
+    def __init__(self, config, sync_status):
         Thread.__init__(self)
         self.logger = logging.getLogger()
         self.config = config
         self.working = False
+        self.status = self.config.package_mirror_status_file
+        if not sync_status:
+            # sync global
+            Common().rsyncPackageOnMirrors()
 
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
-    def onError(self, reason):
+    def onError(self, reason, args):
         pid, target = args
         self.logger.warning("ThreadPackageMirror failed to synchronise %s"%(str(reason)))
 
@@ -92,22 +98,7 @@ class ThreadPackageMirror(Thread):
         out, err, code = result
         if code == 0:
             self.logger.debug("ThreadPackageMirror succeed %s"%(str(result)))
-            if Common().dontgivepkgs.has_key(pid):
-                try:
-                    i = Common().dontgivepkgs[pid].index(target)
-                    del Common().dontgivepkgs[pid][i]
-                except ValueError, e:
-                    self.logger.warning("ThreadPackageMirror no %s target defined for package %s"%(target, pid))
-                if len(Common().dontgivepkgs[pid]) == 0:
-                    del Common().dontgivepkgs[pid]
-                    self.logger.info("ThreadPackageMirror: package %s successfully mirrored everywhere" % pid)
-                    pkg = Common().packages[pid]
-                    p_dir = os.path.join(pkg.root, pid)
-                    if not os.path.exists(p_dir):
-                        self.logger.debug("ThreadPackageMirror: removing package %s from available packages" % pid)
-                        del Common().packages[pid]
-            else:
-                self.logger.warning("ThreadPackageMirror don't know this package : %s"%(pid))
+            Common().removePackagesFromRsyncList(pid, target)
         else:
             self.logger.error("ThreadPackageMirror mirroring command failed %s"%(str(result)))
         
@@ -122,6 +113,8 @@ class ThreadPackageMirror(Thread):
                 exe = self.config.package_mirror_command
                 args = []
                 args.extend(self.config.package_mirror_level0_command_options)
+                if type(self.config.package_mirror_command_options_ssh_options) == list:
+                    args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
                 args.append(str("%s%s" % (pkg.root, os.path.sep)))
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute mirror level0: %s %s"%(exe, str(args)))
@@ -147,10 +140,7 @@ class ThreadPackageMirror(Thread):
         self.working = True
         self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
         dlist = []
-        self.logger.debug("dontgivepkgs: " + str(Common().dontgivepkgs))
-        for pid in Common().dontgivepkgs:
-            targets = Common().dontgivepkgs[pid]
-            pkg = Common().packages[pid]
+        for pid, targets, pkg in Common().getPackagesThatNeedRsync():
             exe = self.config.package_mirror_command
             p_dir = os.path.join(pkg.root, pid)
             is_deletion = False
@@ -166,6 +156,8 @@ class ThreadPackageMirror(Thread):
                 self.logger.debug("ThreadPackageMirror will mirror %s on %s"%(pid, target))
                 args = []
                 args.extend(self.config.package_mirror_command_options)
+                if type(self.config.package_mirror_command_options_ssh_options) == list:
+                    args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
                 args.append(str(p_dir))
                 args.append("%s:%s" % (target, pkg.root))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
@@ -193,6 +185,7 @@ class ThreadLauncher(Singleton):
         self.config = config
         config_addons(config)
         Common().init(config)
+        sync_status = PkgsRsyncStateSerializer().init(Common())
         
         if self.config.package_detect_activate:
             self.logger.debug("Package detect is activated")
@@ -207,7 +200,7 @@ class ThreadLauncher(Singleton):
 
         if self.config.package_mirror_activate:
             self.logger.debug("Starting package mirror thread")
-            threadpm = ThreadPackageMirror(config)
+            threadpm = ThreadPackageMirror(config, sync_status)
             threadpm.setDaemon(True)
             threadpm.start()
             self.logger.debug("Package mirror thread started")
