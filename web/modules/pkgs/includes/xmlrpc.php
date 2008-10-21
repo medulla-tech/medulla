@@ -50,6 +50,9 @@ function dropPackage($p_api, $pid) {
     return xmlCall("pkgs.ppa_dropPackage", array($p_api, $pid));
 }
 
+function getRsyncStatus($p_api, $pid) {
+    return xmlCall("pkgs.ppa_getRsyncStatus", array($p_api, $pid));
+}
 
           
 ?>

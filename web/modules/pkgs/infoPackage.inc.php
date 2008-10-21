@@ -49,9 +49,20 @@ $submod->addPage($page);
 $page = new Page("associate_files", _T('Associate files to a package', 'pkgs'));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
+$page = new Page("pending", _T('See pending packages', 'pkgs'));
+$submod->addPage($page);
+
+$page = new Page("rsync",_T("Show mirror status", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/rsync.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
 
 $page = new Page("delete",_T("Delete a package", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("ajaxPendingPackageList");
+$page->setFile("modules/pkgs/pkgs/ajaxPendingPackageList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
 $page = new Page("ajaxPackageList");
