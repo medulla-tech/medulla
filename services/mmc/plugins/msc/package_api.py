@@ -55,6 +55,14 @@ class PackageA:
         d.addErrback(self.onError, "getAllPackages", mirror)
         return d
 
+    def getAllPendingPackages(self, mirror = None):
+        try:
+            d = self.paserver.callRemote("getAllPendingPackages", mirror)
+            d.addErrback(self.onError, "getAllPendingPackages", mirror)
+            return d
+        except:
+            return []
+
     def getPackageDetail(self, pid):
         if self.initialized_failed:
             return False
@@ -390,7 +398,6 @@ def _merge_list(list, x):
     for i in rem:
       list.remove(i)
 
-
 class GetPackagesFiltered:
 
     def __init__(self, ctx, filt):
@@ -400,7 +407,10 @@ class GetPackagesFiltered:
 
     def get(self):
         if "packageapi" in self.filt:
-            ret = PackageA(self.filt["packageapi"]).getAllPackages(False)
+            if 'pending' in self.filt:
+                ret = PackageA(self.filt["packageapi"]).getAllPendingPackages(False)
+            else:
+                ret = PackageA(self.filt["packageapi"]).getAllPackages(False)
             ret.addCallbacks(self.sendResult, self.onError)
             ret.addErrback(lambda err: self.onError(err))
         else:
@@ -454,7 +464,10 @@ class GetPackagesUuidFiltered:
             self.packages.extend(map(lambda m: [m, self.index, self.p_api], result))
         if self.package_apis:
             self.p_api = self.package_apis.pop()
-            d = PackageA(self.p_api).getAllPackages(self.mirror)
+            if 'pending' in self.filt:
+                d = PackageA(self.p_api).getAllPendingPackages(self.mirror)
+            else:
+                d = PackageA(self.p_api).getAllPackages(self.mirror)
             d.addCallbacks(self.getPackagesLoop)
         else:
             self.sendResult(self.packages)
@@ -544,7 +557,10 @@ class GetPackagesGroupFiltered:
             self.index = self.index + 1
         if self.p_apis:
             p_api = self.p_apis.pop()
-            d = PackageA(p_api[0]).getAllPackages(p_api[1])
+            if 'pending' in self.filt:
+                d = PackageA(p_api[0]).getAllPendingPackages(p_api[1])
+            else:
+                d = PackageA(p_api[0]).getAllPackages(p_api[1])
             d.addCallbacks(self.getPackagesLoop)
         else:
             # No more remote call to do, we are done
@@ -579,7 +595,7 @@ class GetPackagesAdvanced:
         # Apply filter if wanted
         try:
             if self.filt['filter']:
-                self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label']), self.packages)
+                self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
         except KeyError:
             pass
         # Sort on the mirror order then on the label, and finally on the version number

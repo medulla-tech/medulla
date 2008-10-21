@@ -66,3 +66,10 @@ class PackagePutA:
         d = self.ppaserver.callRemote("dropPackage", pid)
         d.addErrback(self.onError, "dropPackage", pid, -1)
         return d
+
+    def getRsyncStatus(self, pid):
+        if self.initialized_failed:
+            return -1
+        d = self.ppaserver.callRemote("getRsyncStatus", pid)
+        d.addErrback(self.onError, "getRsyncStatus", pid, -1)
+        return d

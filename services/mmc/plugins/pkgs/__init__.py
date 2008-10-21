@@ -117,6 +117,16 @@ class RpcProxy(RpcProxyI):
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_associatePackages)
         return d
+
+    def ppa_getRsyncStatus(self, pp_api_id, pid):
+        def _ppa_getRsyncStatus(result, pp_api_id = pp_api_id, pid = pid):
+            for upa in result:
+                if upa['uuid'] == pp_api_id:
+                    return PackagePutA(upa).getRsyncStatus(pid)
+            return []
+        d = self.upaa_getUserPackageApi()
+        d.addCallback(_ppa_getRsyncStatus)
+        return d
     
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
