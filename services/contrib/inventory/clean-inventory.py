@@ -81,6 +81,7 @@ def deleteHasTablesMissingMachines(machine):
         else:
             logger.info("deleteHasTablesMissingMachines : on table has%s: no rows to purge" % (table))
 
+
 def cleanUpInventoryParts(inventory):
     """
     Clean up the inventory parts tables (Bios/hasBios, Drive/hasDrive etc)
@@ -150,7 +151,7 @@ def usage(argv):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        exit(usage(sys.argv))
+        sys.exit(usage(sys.argv))
     mysql_db = create_engine(sys.argv[1])
     metadata = MetaData(mysql_db)
 

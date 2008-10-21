@@ -77,6 +77,7 @@ class MscConfig(PluginConfig):
 
     # WEB interface stuff
     web_def_awake = 1
+    web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_inventory = 1
     web_def_mode = "push"
     web_force_mode = True
@@ -211,6 +212,8 @@ class MscConfig(PluginConfig):
         # some default web interface values
         if self.has_option("web", "web_def_awake"):
             self.web_def_awake = self.getint("web", "web_def_awake")
+        if self.has_option("web", "web_def_date_fmt"):
+            self.web_def_date_fmt = self.getint("web", "web_def_date_fmt")
         if self.has_option("web", "web_def_inventory"):
             self.web_def_inventory = self.getint("web", "web_def_inventory")
         if self.has_option("web", "web_def_mode"):

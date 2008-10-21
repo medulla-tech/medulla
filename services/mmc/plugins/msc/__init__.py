@@ -364,8 +364,12 @@ class RpcProxy(RpcProxyI):
     #
     # default WEB values handling
     #
+
     def get_web_def_awake(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_awake)
+
+    def get_web_def_date_fmt(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_date_fmt)
 
     def get_web_def_inventory(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_inventory)
@@ -439,7 +443,7 @@ def action_on_command(id, f_name, f_database, f_scheduler):
     for sched in scheds:
         d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
-        
+
 ### Commands handling ###
 def stop_command(c_id):
     return action_on_command(c_id, 'stop_command', 'stopCommand', 'stopCommands')

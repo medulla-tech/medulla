@@ -330,13 +330,13 @@ class MscDatabase(Singleton):
         session.flush()
         return cmd
 
-    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, cmd_start_date = "0000-00-00 00:00:00", cmd_end_date = "0000-00-00 00:00:00", scheduler = None, order_in_proxy = None):
+    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, scheduler = None, order_in_proxy = None):
         logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
-            "start_date" : cmd_start_date,
-            "end_date" : cmd_end_date,
-            "next_launch_date" : cmd_start_date,
+            "start_date" : None,
+            "end_date" : None,
+            "next_launch_date" : "0000-00-00 00:00:00",
             "current_state" : "scheduled",
             "uploaded" : "TODO",
             "executed" : "TODO",
@@ -533,7 +533,7 @@ class MscDatabase(Singleton):
                     order_in_proxy = proxies.index(atarget["target_uuid"])
                 except ValueError:
                     order_in_proxy = None
-                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, start_date, end_date, ascheduler, order_in_proxy))
+                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, ascheduler, order_in_proxy))
                 first_target_id = first_target_id + 1
             connection.execute(self.commands_on_host.insert(), coh_to_insert)
             trans.commit()
