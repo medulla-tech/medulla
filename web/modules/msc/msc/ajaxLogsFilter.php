@@ -164,7 +164,6 @@ if ($areCommands) {
                 }
             }
             $a_stop[] = $astop;
-            
             $a_current[] = '';
             $a_start[] = $actionempty;
             $a_pause[] = $actionempty;
@@ -203,7 +202,10 @@ if ($areCommands) {
                 $a_status[] = $actionstatus;
             }
         }
-        $a_date[] = _toDate($coh['start_date']); // Brrr, seem really ugly, should we not use sprintf ?
+        if (!is_array($cmd['start_date']))
+            $a_date[] = _toDate(array(1970, 1, 1, 0, 0, 0));
+        else
+            $a_date[] = _toDate($cmd['start_date']);
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_date, _T("start_date", "msc"));

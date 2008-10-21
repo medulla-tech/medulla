@@ -358,7 +358,7 @@ function _toDate($a) {
         return strftime(web_def_date_fmt(), $parsed_date);
 
     } else { # can't guess if we talk about a date or something else :/
-        return $a;
+        return _T('<i>undefined</i>', 'msc');
     }
 }
 
