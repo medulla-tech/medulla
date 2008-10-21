@@ -172,7 +172,10 @@ function xmlCall($method, $params = null) {
 
     /* Get the response from the server */
     while (!feof($sock)) {
-        $xmlResponse .= fgets($sock);
+	if (isset($xmlResponse))
+	        $xmlResponse .= fgets($sock);
+	else
+	        $xmlResponse = fgets($sock);
     }
     fclose($sock);
 
@@ -261,7 +264,7 @@ function xmlCall($method, $params = null) {
     }
     
     /* If the XML-RPC server sent a fault, display an error */
-    if ((is_array($xmlResponse) && ($xmlResponse["faultCode"]))) {
+    if ((is_array($xmlResponse) && (isset($xmlResponse["faultCode"])))) {
         if ($xmlResponse["faultCode"] == "8003") {
             /* 
               Fault 8003 means the session with the XML-RPC server has expired.

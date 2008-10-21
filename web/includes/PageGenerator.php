@@ -497,7 +497,9 @@ class ListInfos extends HtmlElement {
         foreach ($this->description as $key => $desc) {
             if ($this->col_width[$key]) {
                 $width_styl = 'width: '.$this->col_width[$key].';';
-            }
+            } else {
+                $width_styl = '';
+            }	
             if (!$first) {
 
                 if (!$this->first_elt_padding) {
