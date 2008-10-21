@@ -213,7 +213,7 @@ class MscConfig(PluginConfig):
         if self.has_option("web", "web_def_awake"):
             self.web_def_awake = self.getint("web", "web_def_awake")
         if self.has_option("web", "web_def_date_fmt"):
-            self.web_def_date_fmt = self.getint("web", "web_def_date_fmt")
+            self.web_def_date_fmt = self.get("web", "web_def_date_fmt")
         if self.has_option("web", "web_def_inventory"):
             self.web_def_inventory = self.getint("web", "web_def_inventory")
         if self.has_option("web", "web_def_mode"):
