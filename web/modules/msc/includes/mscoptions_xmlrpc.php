@@ -36,6 +36,10 @@ function web_def_awake() {
     return __web_def_in_session("awake");
 }
 
+function web_def_date_fmt() {
+    return __web_def_in_session("date_fmt");
+}
+
 function web_def_inventory() {
     return __web_def_in_session("inventory");
 }

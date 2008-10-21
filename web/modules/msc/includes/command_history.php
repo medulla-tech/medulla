@@ -24,6 +24,7 @@
  */
 
 require_once("functions.php"); # for return_icon
+require_once("mscoptions_xmlrpc.php"); # to read msc.ini
 
 class CommandOnHost {
     function CommandOnHost($coh) {
@@ -353,7 +354,8 @@ function _toDate($a) {
         if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
 
-        return sprintf(_T('%04d/%02d/%02d %02d:%02d:%02d', 'msc'), $a[0], $a[1], $a[2], $a[3], $a[4], $a[5]);
+        $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
+        return strftime(web_def_date_fmt(), $parsed_date);
 
     } else { # can't guess if we talk about a date or something else :/
         return $a;
