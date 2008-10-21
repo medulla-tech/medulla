@@ -265,7 +265,16 @@ class Common(Singleton):
     def getPackagesThatNeedRsync(self):
         if self.dontgivepkgs != {}:
             self.logger.debug("getPackagesThatNeedRsync : " + str(self.dontgivepkgs))
-        return map(lambda x:[x, self.dontgivepkgs[x], self.packages[x]], self.dontgivepkgs)
+        ret = []
+        rem = []
+        for x in self.dontgivepkgs:
+            if not self.packages.has_key(x) or not self.packages[x]:
+                rem.append(x)
+            else:
+                ret.append([x, self.dontgivepkgs[x], self.packages[x]])
+        for x in rem:
+            del self.dontgivepkgs[x]
+        return ret
 
     def removePackagesFromRsyncList(self, pid, target):
         if self.dontgivepkgs.has_key(pid):
