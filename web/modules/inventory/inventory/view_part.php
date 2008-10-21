@@ -33,7 +33,6 @@ $ajax = new AjaxFilter($url);
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-
 ?>
 
 
