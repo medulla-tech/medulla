@@ -54,4 +54,8 @@ function getTypeForCriterionInModule($moduleName, $criterion) {
     return myXmlCall("dyngroup.getTypeForCriterionInModule", array($moduleName, $criterion));
 }
 
+function checkBoolean($bool) {
+    return myXmlCall("dyngroup.checkBoolean", array($bool));
+}
+
 ?>
