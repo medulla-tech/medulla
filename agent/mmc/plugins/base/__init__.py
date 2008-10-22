@@ -959,12 +959,9 @@ class ldapUserGroupControl:
                     'gidnumber':str(gidNumber),
                     'objectclass':('posixGroup','top')
                      }
-        try:
-            entry = 'cn=' + cn + ',' + self.baseGroupsDN
-            attributes = [ (k,v) for k,v in group_info.items() ]
-            self.l.add_s(entry, attributes)
-        except ldap.LDAPError, error:
-            raise mmcException(error)
+        entry = 'cn=' + cn + ',' + self.baseGroupsDN
+        attributes = [ (k,v) for k,v in group_info.items() ]
+        self.l.add_s(entry, attributes)
         return gidNumber
 
     def delUserFromGroup(self,cngroup,uiduser):
