@@ -21,6 +21,7 @@
 
 # SqlAlchemy
 from sqlalchemy.exceptions import SQLError
+import sqlalchemy.orm.query
 
 import logging
 from ConfigParser import NoOptionError
@@ -57,31 +58,38 @@ def updateQueryClass():
     Sometimes we lost the connection to the MySQL Server, even on a local
     server.
     """
-    import sqlalchemy.orm.query
     q = sqlalchemy.orm.query.Query
-    for m in ['first', 'count', 'all']:
+    for m in ['first', 'count', 'all', '__iter__']:
         setattr(q, '_old_'+m, getattr(q, m))
         setattr(q, m, create_method(m))
 
 def create_method(m):
     def method(self, already_in_loop = False):
         NB_DB_CONN_TRY = 2
-        ret = None
+        NORESULT = "__noresult__"
+        ret = NORESULT
         try:
             old_m = getattr(self, '_old_'+m)
             ret = old_m()
         except SQLError, e:
+            reconnect = False
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(self, m)
-                    ret = new_m(True)
+                logging.getLogger().warn("SQLError Lost connection")
+                reconnect = True
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
                 logging.getLogger().warn("SQLError MySQL server has gone away")
+                reconnect = True
+            if reconnect:
                 for i in range(0, NB_DB_CONN_TRY):
+                    logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
                     new_m = getattr(self, m)
-                    ret = new_m(True)
-            if ret:
+                    try:
+                        ret = new_m(True)
+                        break
+                    except Exception, e:
+                        # Try again
+                        continue
+            if ret != NORESULT:
                 return ret
             raise e
         return ret
