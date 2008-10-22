@@ -29,7 +29,7 @@
 // hide msc module for the moment
 $mod = new Module("msc");
 $mod->setVersion("2.0.0");
-$mod->setRevision("$Rev$");
+$mod->setRevision('$Rev$');
 $mod->setDescription(_T("Secure Control", "msc"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
