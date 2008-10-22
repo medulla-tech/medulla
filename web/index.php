@@ -34,6 +34,7 @@ require("includes/PageGenerator.php");
 
 $root = $conf["global"]["root"];
 
+$login = "";
 if (isset($_POST["bConnect"])) {
     $login = $_POST["username"];
     $pass = $_POST["password"];
@@ -55,7 +56,7 @@ if (isset($_POST["bConnect"])) {
         $error = sprintf(_("The server %s does not exist"), $_POST["server"]);
     }
 
-    if (!isset($error) && auth_user($login, $pass, $error)) {
+    if (empty($error) && auth_user($login, $pass)) {
         $_SESSION["login"] = $login;
         $_SESSION["pass"] = $pass;
         /* Set session expiration time */
@@ -84,8 +85,8 @@ if (isset($_POST["bConnect"])) {
     }
 }
 
-if ($_GET["error"]) $error = urldecode($_GET["error"]) . "<br/>" . $error;
-if ($_GET["agentsessionexpired"]) {
+if (!empty($_GET["error"])) $error = urldecode($_GET["error"]) . "<br/>" . $error;
+if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
 
@@ -118,7 +119,12 @@ if ($_GET["agentsessionexpired"]) {
 
 <!-- Put header content here  -->
 
-        <p class="lock"><?= $conf["logintitle"][$_SESSION["lang"]] ;?></p>
+        <p class="lock">
+        <?
+        if (!empty($conf["logintitle"][$_SESSION["lang"]]))
+            print $conf["logintitle"][$_SESSION["lang"]];
+        ?>
+        </p>
 
         </div></div></div>
 
@@ -169,6 +175,7 @@ if (isset($error)) {
 
 
                         $servList = array();
+                        $descList = array();
 
                         foreach ($conf as $key => $value) {
                             if (strstr($key,"server_")) {
@@ -180,7 +187,6 @@ if (isset($error)) {
                         $listbox = new SelectItem("server");
                         $listbox->setElements($descList);
                         $listbox->setElementsVal($labelList);
-                        $listbox->setSelected($descList[0]);
                         $listbox->display();
 
                         ?>

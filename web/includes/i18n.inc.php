@@ -78,8 +78,8 @@ if (!function_exists('_T')) {
 
 
 /* Set language to use in the interface */
-if (!$_SESSION['lang']) {
-    if (!$_COOKIE['lang']) {
+if (!isset($_SESSION['lang'])) {
+    if (!isset($_COOKIE['lang'])) {
         /*
           If no cookie with the previously used language is found,
           auto-detect it
@@ -110,7 +110,7 @@ if ($_SESSION["lang"] == "C") {
     setlocale(LC_ALL, $_SESSION['lang'] . ".UTF-8");
 }
 
-if (!is_array($_SESSION["supportModList"])) { //if supportModList not available
+if (empty($_SESSION["supportModList"])) { //if supportModList not available
 					      //ex: not logged
 	$_SESSION["supportModList"] = array();
 }

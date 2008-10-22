@@ -29,7 +29,7 @@ function check_auth($login, $pass) {
     return xmlCall("base.ldapAuth", $param);
 }
 
-function auth_user ($login, $pass, $error)
+function auth_user ($login, $pass)
 {
     global $conf;
     global $error;
