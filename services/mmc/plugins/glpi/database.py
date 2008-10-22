@@ -245,7 +245,7 @@ class Glpi(DyngroupDatabaseHelper):
         The request is in OR not in AND, so be carefull with what you want
         """
         ret = self.__filter_on_filter(query)
-        if ret == None:
+        if type(ret) == type(None):
             return query
         else:
             return query.filter(ret)
