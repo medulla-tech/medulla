@@ -29,7 +29,7 @@
 
 $mod = new Module("inventory");
 $mod->setVersion("2.0.0");
-$mod->setRevision("$Rev: 63 $");
+$mod->setRevision('$Rev: 63 $');
 $mod->setDescription(_T("Inventory", "inventory"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
