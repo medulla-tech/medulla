@@ -127,7 +127,19 @@ $submod->addPage($page);
 
 $page = new Page("download_file", _T("Download file from a computer", "msc"));
 $page->setFile("modules/msc/msc/download_file.php");
-$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$page->setOptions(array("visible"=>False));
+
+$submod->addPage($page);
+
+$page = new Page("download_file_remove", _T("Remove a downloaded file", "msc"));
+$page->setFile("modules/msc/msc/download_file_remove.php");
+$page->setOptions(array("visible"=>False, "noHeader" => True, "noACL" => True));
+
+$submod->addPage($page);
+
+$page = new Page("download_file_get", _T("Get a downloaded file", "msc"));
+$page->setFile("modules/msc/msc/download_file_get.php");
+$page->setOptions(array("visible"=>False, "noHeader" => True, "noACL" => True));
 
 $submod->addPage($page);
 
@@ -206,6 +218,11 @@ $submod->addPage($page);
 $page = new Page("ajaxIpaddr", _T("IP Addr.", "msc"));
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $page->setFile("modules/msc/msc/ajaxIpaddr.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxDownloadFile", _T("Download file page", "msc"));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setFile("modules/msc/msc/ajaxDownloadFile.php");
 $submod->addPage($page);
 
 $page = new Page("statuscsv",_T("Csv's export", "msc"));

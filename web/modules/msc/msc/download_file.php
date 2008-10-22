@@ -23,25 +23,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require('modules/msc/includes/machines.inc.php');
+require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
+
+require("modules/base/graph/computers/index.css");
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
+$p = new PageGenerator(); //_T("Download file page", "msc"));
+$p->setSideMenu($sidemenu);
+$p->display();
+
 if (isset($_POST["bconfirm"])) {
-    $ret = scheduler_download_file('', $_GET['objectUUID']);
-    if ($ret === False) {
-        new NotifyWidgetFailure(_T("The download has failed.", "msc"));
-        header("Location: " . urlStrRedirect("base/computers/index"));
+    $ret = msc_download_file($_GET['objectUUID']);
+    if (is_array($ret) && ($ret[0] === True)) {
+        new NotifyWidgetSuccess(_T('The download is in progress.', 'msc'));
     } else {
-        $filename = $ret[0];
-        ob_end_clean();
-        header("Content-type: application/octet-stream");
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        print $ret[1]->scalar;
+        if ($ret[1] == 1) {
+            new NotifyWidgetFailure(_T("A file is already being downloaded.", "msc"));
+        } else {
+            new NotifyWidgetFailure(_T("The download has failed.", "msc"));
+        }
     }
-} else {
-    $f = new PopupForm(_T("Download a file from a computer", "msc"));
-    $f->addText(sprintf(_T("Warning: this operation may last a long time.", "msc")));
-    $f->addValidateButtonWithFade("bconfirm");
-    $f->addCancelButton("bback");
-    $f->display();    
 }
+
+$ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxDownloadFile', array('objectUUID' => $_GET['objectUUID'])));
+$ajax->setRefresh(60000);
+$ajax->display();
+
+$f = new Form(array('id' => 'dl'));
+$f->addSummary('Click below to start downloading file from this computer. Warning: the download may last a long time', 'msc');
+$computer = getMachine(array('uuid'=>$_GET['objectUUID']), $ping = False);
+$f->addButton('bconfirm', 'Start download from computer ' . $computer->hostname);
+$f->display();
+
+print '<br />';
+
+$ajax->displayDivToUpdate();
+
 ?>

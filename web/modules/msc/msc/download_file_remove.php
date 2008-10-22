@@ -1,10 +1,8 @@
 <?
-
-/*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+/**
+ * (c) 2008 Mandriva, http://www.mandriva.com/
  *
- * $Id$
+ * $Id: vnc_client.php 377 2008-09-25 09:24:04Z cdelfosse $
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,4 +20,17 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+require('modules/msc/includes/scheduler_xmlrpc.php');
+
+if ($_POST["bconfirm"]) {
+    msc_remove_downloaded_files(array($_GET['id']));
+    if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The file has been deleted.", "msc"));
+    header("Location: " . urlStrRedirect("base/computers/download_file", array("objectUUID" => $_GET["objectUUID"])));
+} else {
+    $f = new PopupWindowForm(_T("Please confirm file deletion", "msc"));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
+}
 ?>

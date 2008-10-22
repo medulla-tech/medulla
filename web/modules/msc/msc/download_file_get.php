@@ -1,10 +1,8 @@
-<?
-
-/*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+ <?
+/**
+ * (c) 2008 Mandriva, http://www.mandriva.com/
  *
- * $Id$
+ * $Id: vnc_client.php 377 2008-09-25 09:24:04Z cdelfosse $
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,4 +20,18 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+require('modules/msc/includes/scheduler_xmlrpc.php');
+
+$ret = msc_get_downloaded_file($_GET['id']);
+if ($ret === False) {
+    new NotifyWidgetFailure(_T("The download has failed.", "msc"));
+} else {
+    $filename = $ret[0];
+    ob_end_clean();
+    header("Content-type: application/octet-stream");
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    print $ret[1]->scalar;
+}
+
 ?>
