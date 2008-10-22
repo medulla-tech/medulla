@@ -307,9 +307,9 @@ class ListInfos extends HtmlElement {
         $this->arrInfo=$tab;
         $this->arrAction=array();
         $this->description[] = $description;
+        $this->extranavbar = $extranavbar;
         $this->initVar();
         $this->col_width = array();
-        $this->extranavbar = $extranavbar;
         $this->firstColumnActionLink = True;
     }
 
@@ -478,7 +478,11 @@ class ListInfos extends HtmlElement {
      * display main action (first action
      */
     function drawMainAction($idx) {
-        echo "<td class=\"".$this->cssClass."\">";
+        if (!empty($this->cssClass)) {
+            echo "<td class=\"".$this->cssClass."\">";
+        } else {
+            echo "<td>";
+        }
         if (is_a($this->arrAction[0], 'ActionItem')) {
             $firstAction = $this->arrAction[0];
         } else if (is_array($this->arrAction[0])) {
@@ -494,19 +498,20 @@ class ListInfos extends HtmlElement {
     function drawTable($navbar = 1) {
         echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         echo "<thead><tr>";
+        $first = False;
         foreach ($this->description as $key => $desc) {
-            if ($this->col_width[$key]) {
+            if (isset($this->col_width[$key])) {
                 $width_styl = 'width: '.$this->col_width[$key].';';
             } else {
                 $width_styl = '';
             }	
             if (!$first) {
 
-                if (!$this->first_elt_padding) {
+                if (!isset($this->first_elt_padding)) {
                     $this->first_elt_padding = 32;
                 }
                 echo "<td style=\"$width_styl\"><span style=\"color: #777; padding-left: ".$this->first_elt_padding."px;\">$desc</span></td>";
-                $first = 1;
+                $first = True;
 
             } else {
                 echo "<td style=\"$width_styl\"><span style=\"color: #777;\">$desc</span></td>";
@@ -522,13 +527,13 @@ class ListInfos extends HtmlElement {
         for ( $idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
             if (($this->start - $idx) % 2) {
                 echo "<tr";
-                if ($this->cssClasses[$idx] != '') {
+                if (!empty($this->cssClasses[$idx])) {
                     echo " class=\"".$this->cssClasses[$idx]."\"";
                 }
                 echo ">";
             } else {
                 echo "<tr class=\"alternate";
-                if ($this->cssClasses[$idx] != '') {
+                if (!empty($this->cssClasses[$idx])) {
                     echo " ".$this->cssClasses[$idx];
                 }
                 echo "\">";
@@ -538,7 +543,11 @@ class ListInfos extends HtmlElement {
             if (count($this->arrAction) && $this->firstColumnActionLink) {
                 $this->drawMainAction($idx);
             } else {
-                echo "<td class=\"".$this->cssClass."\">";
+                if (!empty($this->cssClass)) {
+                    echo "<td class=\"".$this->cssClass."\">";
+                } else {
+                    echo "<td>";
+                }
                 echo $this->arrInfo[$idx];
                 echo "</td>";
             }
@@ -834,6 +843,8 @@ class AjaxFilter extends HtmlElement {
     }
 
     function display() {
+        global $conf;
+        $root = $conf["global"]["root"];
 
 ?>
 <form name="Form" id="Form" action="#">
@@ -1752,8 +1763,10 @@ class HtmlContainer {
     }
 
     function hasBeenPopped() {
+        
         if ($this->popped) $ret = True;
         else if ($this->index == -1) $ret = False;
+        else $ret = False;
         return $ret;
     }
 

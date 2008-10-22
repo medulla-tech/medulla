@@ -92,10 +92,10 @@ function autoInclude() {
         return;
     }
     
-    if ($redirArray[$__module][$__submod][$__action]) {
+    if (!empty($redirArray[$__module][$__submod][$__action])) {
         require($redirArray[$__module][$__submod][$__action]);
     } else {
-        if ($redirAjaxArray[$__module][$__submod][$__action]) {
+        if (!empty($redirAjaxArray[$__module][$__submod][$__action])) {
             require($redirAjaxArray[$__module][$__submod][$__action]);
         }
         else {
