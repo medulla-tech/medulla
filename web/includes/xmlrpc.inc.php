@@ -171,11 +171,12 @@ function xmlCall($method, $params = null) {
     fflush($sock);
 
     /* Get the response from the server */
+    $xmlResponse = '';
     while (!feof($sock)) {
 	if (isset($xmlResponse))
-	        $xmlResponse .= fgets($sock);
+            $xmlResponse .= fgets($sock);
 	else
-	        $xmlResponse = fgets($sock);
+            $xmlResponse = fgets($sock);
     }
     fclose($sock);
 

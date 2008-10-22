@@ -1077,6 +1077,8 @@ class SideMenuItem {
         if ($this->activebg != "" && $this->inactivebg != "") {
             if ($active) $bgi = "background-image: url(" . $this->activebg . ");";
             else $bgi = "background-image: url(" . $this->inactivebg . ");";
+        } else {
+            $bgi = "";
         }
 
         if ($active) {
