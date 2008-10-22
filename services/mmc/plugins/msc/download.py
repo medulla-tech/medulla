@@ -173,25 +173,26 @@ class MscDownloadedFiles:
         @returns: list of tuples (filename, uuid, timestamp, length, inode)
         """
         ret = []
-        tmp = {}
-        # Get files list from the storage directory
-        for fname in os.listdir(self.storage):
-            statinfo = os.stat(os.path.join(self.storage, fname))
-            if fname.endswith(self.LOCKEXT):
-                timestamp = statinfo.st_mtime
-                uuid = fname.split('.')[0]
-                tmp[timestamp] = ('', uuid, list(datetime.datetime.fromtimestamp(float(statinfo.st_mtime)).timetuple()), 0, statinfo.st_ino)
-            else:
-                try:
-                    uuid, timestamp, name = fname.split('-', 2)
-                    tmp[int(timestamp)] = (name, uuid, list(datetime.datetime.fromtimestamp(float(timestamp)).timetuple()), statinfo.st_size, statinfo.st_ino)
-                except ValueError:
-                    pass
-        # Sort file list by inverse chronological order
-        timestamps = tmp.keys()
-        timestamps.sort(reverse = True)
-        for timestamp in timestamps:
-            ret.append(tmp[timestamp])
+        if os.path.exists(self.storage):
+            tmp = {}
+            # Get files list from the storage directory
+            for fname in os.listdir(self.storage):
+                statinfo = os.stat(os.path.join(self.storage, fname))
+                if fname.endswith(self.LOCKEXT):
+                    timestamp = statinfo.st_mtime
+                    uuid = fname.split('.')[0]
+                    tmp[timestamp] = ('', uuid, list(datetime.datetime.fromtimestamp(float(statinfo.st_mtime)).timetuple()), 0, statinfo.st_ino)
+                else:
+                    try:
+                        uuid, timestamp, name = fname.split('-', 2)
+                        tmp[int(timestamp)] = (name, uuid, list(datetime.datetime.fromtimestamp(float(timestamp)).timetuple()), statinfo.st_size, statinfo.st_ino)
+                    except ValueError:
+                        pass
+            # Sort file list by inverse chronological order
+            timestamps = tmp.keys()
+            timestamps.sort(reverse = True)
+            for timestamp in timestamps:
+                ret.append(tmp[timestamp])
         return ret
         
     def removeFiles(self, inodes):
