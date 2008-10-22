@@ -90,9 +90,6 @@ def probe_client(scheduler, computer):
 def ping_and_probe_client(scheduler, computer):
     return process_on_client(scheduler, computer, 'ping_and_probe_client')
 
-def download_file(scheduler, computer, path, bwlimit):
-    return process_on_client(scheduler, computer, 'download_file', path, bwlimit)
-
 def tcp_sproxy(scheduler, computer, requestor_ip, requested_port):
     return process_on_client(scheduler, computer, 'tcp_sproxy', requestor_ip, requested_port)
 

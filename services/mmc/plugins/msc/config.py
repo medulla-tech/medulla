@@ -24,6 +24,7 @@
 # big modules
 import logging
 import re
+import os.path
 
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
@@ -36,6 +37,7 @@ class MscConfig(PluginConfig):
     # default folder values
     qactionspath = "/var/lib/pulse2/qactions"
     repopath = "/var/lib/pulse2/packages"
+    download_directory_path = "/var/lib/pulse2/downloads"
 
     # default DB options
     db_driver = "mysql"
@@ -231,6 +233,9 @@ class MscConfig(PluginConfig):
             dlpaths = self.get("web", "web_dlpath")
             for path in dlpaths.split(","):
                 self.web_dlpath.append(path.strip())
+            if not os.path.exists(self.download_directory_path):
+                logging.getLogger().warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
+                
         if self.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.getint("web", "web_def_dlmaxbw")
         if self.has_option("web", "web_def_deployment_intervals"):

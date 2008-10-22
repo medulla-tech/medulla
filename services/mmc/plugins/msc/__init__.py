@@ -41,6 +41,7 @@ from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.qaction import qa_list_files
 from mmc.plugins.msc.machines import Machines, Machine
+from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
@@ -80,6 +81,16 @@ def activate():
     if not MscDatabase().db_check():
         return False
 
+    return True
+
+def activate_2():
+    dldir = MscConfig('msc').download_directory_path
+    if os.path.exists(dldir):
+        logging.getLogger().info('Cleaning lock file in %s' % dldir)
+        for root, dirs, files in os.walk(dldir):
+            for name in files:
+                if name.endswith(MscDownloadedFiles.LOCKEXT):
+                    os.remove(os.path.join(root, name))
     return True
 
 class ContextMaker(ContextMakerI):
@@ -163,10 +174,11 @@ class RpcProxy(RpcProxyI):
 
     def can_download_file(self):
         path = MscConfig('msc').web_dlpath
-        return len(path) > 0
+        return (len(path) > 0) and os.path.exists(MscConfig('msc').download_directory_path)
 
-    def download_file(self, scheduler, uuid):
+    def download_file(self, uuid):
         path = MscConfig('msc').web_dlpath
+        ctx = self.currentContext
         if not path:
             ret = False
         else:
@@ -177,8 +189,21 @@ class RpcProxy(RpcProxyI):
                 computer[1]['fullname']
             except KeyError:
                 computer[1]['fullname'] = computer[1]['cn'][0]
-            ret = mmc.plugins.msc.client.scheduler.download_file(scheduler, computer, path, bwlimit)
+            mscdlp = MscDownloadProcess(ctx.userid, computer, path, bwlimit)
+            ret = mscdlp.startDownload()
         return ret
+
+    def get_downloaded_files_list(self):
+        mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
+        return mscdlfiles.getFilesList()
+
+    def get_downloaded_file(self, node):
+        mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
+        return mscdlfiles.getFile(node)        
+
+    def remove_downloaded_files(self, ids):
+        mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
+        mscdlfiles.removeFiles(ids)
 
     def establish_vnc_proxy(self, scheduler, uuid, requestor_ip):
         ctx = self.currentContext
