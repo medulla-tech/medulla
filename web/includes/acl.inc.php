@@ -62,7 +62,7 @@ function hasCorrectAcl($module,$submod,$action) {
         return true;
     }
     if ($_SESSION["login"]=="root") {return true;}
-    if ($_SESSION["acl"][$module][$submod][$action]["right"]) {return true;}
+    if (isset($_SESSION["acl"][$module][$submod][$action]["right"])) {return true;}
     return false;
 }
 
@@ -73,11 +73,12 @@ function hasCorrectTabAcl($module, $submod, $action, $tab) {
 
 function hasCorrectModuleAcl($module) {
   global $redirArray;
-  // if you are root
+  /* if you are root */
   if ($_SESSION["login"]=="root") {return true;}
-  //if you have one acces to the module
-  if ($_SESSION["acl"][$module]) {return true;}
-  if (!$redirArray[$module]) { return true; }
+  /* if you have an ACL set for this module */
+  if (isset($_SESSION["acl"][$module])) {return true;}
+  /* FIXME: the next line may be wrong */
+  if (empty($redirArray[$module])) { return true; }
   return false;
 }
 
