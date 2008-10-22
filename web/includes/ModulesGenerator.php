@@ -462,7 +462,7 @@ class Module {
         $this->_acl[$aclname] = $description;
     }
 
-    function &addSubmod($sub) {
+    function addSubmod($sub) {
         $sub->_parentname = $this->getName();
         $this->_submod[$sub->getName()] = &$sub;
     }
