@@ -161,6 +161,10 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
             self.__dict__[option] = self.get(self.section, option)
         if self.has_option(self.section, "profile_attr"):
             self.profileAttr = self.get(self.section, "profile_attr")
+            if self.has_option(self.section, "profile_group_mapping"):
+                self.profileGroupMapping = self.getboolean(self.section, "profile_group_mapping")
+            if self.has_option(self.section, "profile_group_prefix"):
+                self.profileGroupPrefix = self.get(self.section, "profile_group_prefix")            
             PROFILEACL = "profile_acl_"
             for option in self.options(self.section):
                 if option.startswith(PROFILEACL):
@@ -170,6 +174,8 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
         ProvisionerConfig.setDefault(self)
         self.profileAttr = None
         self.profilesAcl = {}
+        self.profileGroupMapping = False
+        self.profileGroupPrefix = ""
 
 
 class ExternalLdapProvisioner(ProvisionerI):
@@ -214,6 +220,30 @@ class ExternalLdapProvisioner(ProvisionerI):
                 entry["objectClass"].append("lmcUserObject")
                 l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
             l.changeUserAttributes(uid, "lmcAcl", acls)
+            if self.config.profileGroupMapping:
+                # Set user group membership according to mapping
+                for prof in self.config.profilesAcl:
+                    groupname = self.config.profileGroupPrefix + prof
+                    if prof != profile:
+                        # Delete the user from a group not belonging to her/his
+                        # profile
+                        try:
+                            l.delUserFromGroup(groupname, uid)
+                            self.logger.debug('Deleting user %s from group %s' % (uid, groupname))
+                        except ldap.NO_SUCH_OBJECT:
+                            # The group does not exist
+                            pass
+                    else:
+                        # Add the user to this group
+                        try:
+                            l.addGroup(groupname)
+                        except ldap.ALREADY_EXISTS:
+                            # This group already exists
+                            pass
+                        self.logger.debug('Adding user %s to group %s' % (uid, groupname))
+                        l.addUserToGroup(groupname, uid)
+                        
+                    
 
     def validate(self):
         return True
