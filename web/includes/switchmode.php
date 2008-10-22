@@ -35,6 +35,6 @@ if (isExpertMode()) {
     setExpertMode(1);
   } 
 
-header("Location: ".$_SERVER[HTTP_REFERER]);
+header("Location: ".$_SERVER["HTTP_REFERER"]);
 
 ?>
