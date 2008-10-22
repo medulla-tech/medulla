@@ -119,7 +119,7 @@ foreach ($cmds as $coh) {
     if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
     if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
     if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-    if ($_GET['coh_id'] && $coh_id == $_GET['coh_id']) {
+    if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {
         $a_details[] = $actionempty;
     } elseif ($coh['current_state'] != 'done') {
         $a_details[] = $actiondetails_logs;

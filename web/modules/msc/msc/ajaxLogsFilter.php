@@ -228,7 +228,7 @@ if ($areCommands) {
         $coh_status = $cmd[2];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        if ((strlen($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !strlen($_GET['coh_id'])) {
+        if ((isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !isset($_GET['coh_id'])) {
             if ($history) {
                 $d = $coh["end_date"];
             } else {

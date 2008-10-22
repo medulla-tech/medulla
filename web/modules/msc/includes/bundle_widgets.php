@@ -25,9 +25,9 @@
 class RenderedMSCBundleChoice {
     function RenderedMSCBundleChoice() { }
     function treatPost() {
-        $members = unserialize(base64_decode($_POST["lmembers"]));
-        $nonmemb = unserialize(base64_decode($_POST["lnonmemb"]));
-        $this->list = unserialize(base64_decode($_POST["list"]));
+        $members = isset($_POST["lmembers"])    ? unserialize(base64_decode($_POST["lmembers"]))    : null;
+        $nonmemb = isset($_POST["lnonmemb"])    ? unserialize(base64_decode($_POST["lnonmemb"]))    : null;
+        $this->list = isset($_POST["list"])     ? unserialize(base64_decode($_POST["list"]))        : null;
         if (!is_array($this->list)) {
             $this->loadList();
         }
@@ -148,7 +148,6 @@ class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
         $this->machine = $machine;
         $this->title_right = _T('Actions in bundle', 'msc');
         $this->title_left = _T('Possible actions', 'msc');
-        $this->request_uri = urlStr('base/computers/msctabs', array('tab'=>"tabbundle", 'uuid'=>$this->machine->uuid, 'hostname'=>$this->machine->hostname));
         $this->treatPost();
     }
 
@@ -173,7 +172,6 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
         $this->group = $group;
         $this->title_right = _T('Actions in bundle', 'msc');
         $this->title_left = _T('Possible actions', 'msc');
-        $this->request_uri = urlStr('base/computers/groupmsctabs', array('tab'=>"grouptabbundle", 'gid'=>$this->group->id));
         $this->treatPost();
     }
 
@@ -265,7 +263,8 @@ class RenderedMSCBundleSortParent {
 class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
     function RenderedMSCBundleSort() {
         parent::RenderedMSCBundleSortParent();
-        $this->buttons[]= array('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnSecondary");
+        $this->buttons []= array('badvanced_bundle', _T("Advanced launch bundle", "msc"), "btnPrimary");
+        $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
@@ -356,6 +355,7 @@ class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
         parent::RenderedMSCBundleSortAdv();
         $this->machine = $machine;
         $this->members = $members;
+        $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");
         $this->initCount();
     }
     function getHidden() {
@@ -371,6 +371,7 @@ class RenderedMSCBundleSortAdvG extends RenderedMSCBundleSortAdv {
         parent::RenderedMSCBundleSortAdv();
         $this->group = $group;
         $this->members = $members;
+        $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");
         $this->initCount();
     }
     function getHidden() {

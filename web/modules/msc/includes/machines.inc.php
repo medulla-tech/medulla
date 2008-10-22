@@ -10,7 +10,8 @@ class Machine {
         $this->hostname = $h_params['hostname'][0];
         $this->uuid = $h_params['uuid'];
         $this->displayName = $h_params['displayName'];
-        $this->platform = $_COOKIE["session"][$this->hostname]["platform"]; // should change hostname into uuid
+	if (isset($_COOKIE["session"]))
+		$this->platform = $_COOKIE["session"][$this->hostname]["platform"]; // should change hostname into uuid
         if ($ping) {
             $this->platform = rpcGetPlatform($h_params);
             $this->ping = rpcPingMachine($h_params);
