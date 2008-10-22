@@ -48,8 +48,7 @@ from twisted.internet import defer
     Pulse2 PackageServer
 """
 
-
-class ThreadPackageDetect(Thread):
+class ThreadPackageHelper(Thread):
     def __init__(self, config):
         Thread.__init__(self)
         self.logger = logging.getLogger()
@@ -59,6 +58,7 @@ class ThreadPackageDetect(Thread):
     def log_message(self, format, *args):
         self.logger.info(format % args)
 
+class ThreadPackageDetect(ThreadPackageHelper):
     def runSub(self):
         if self.working:
             self.logger.debug("ThreadPackageDetect already running")
@@ -75,19 +75,72 @@ class ThreadPackageDetect(Thread):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_detect_loop)
 
-class ThreadPackageMirror(Thread):
+class ThreadPackageGlobalMirror(ThreadPackageHelper):
+    def onError(self, reason, args):
+        target, root = args
+        self.logger.warning("ThreadPackageGlobalMirror failed to synchronise %s:%s %s"%(target, root, str(reason)))
+
+    def onSuccess(self, result, args):
+        target, root = args
+        out, err, code = result
+        if code == 0:
+            self.logger.debug("ThreadPackageGlobalMirror succeed on %s:%s"%(target, root))
+        else:
+            self.logger.warning("ThreadPackageGlobalMirror mirroring command failed %s:%s %s"%(target, root, str(result)))
+
+    def _runSub(self):
+        def createDeferred(exe, args, target, root):
+            d = utils.getProcessOutputAndValue(exe, args)
+            d.addCallback(self.onSuccess, (target, root))
+            d.addErrback(self.onError, (target, root))
+            return d
+        
+        def cbEnding(result, self):
+            self.logger.debug("ThreadPackageGlobalMirror end mirroring")
+            self.working = False
+        
+        if self.working:
+            return
+
+        self.working = True
+        self.logger.debug("ThreadPackageGlobalMirror start global mirroring")
+        dlist = []
+        all_roots = Common().getAllPackageRoot()
+        for root in all_roots:
+            exe = self.config.package_mirror_command
+            args = []
+            args.extend(self.config.package_global_mirror_command_options)
+            if type(self.config.package_mirror_command_options_ssh_options) == list:
+                args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
+            args.append(root)
+
+            for target in self.config.package_mirror_target:
+                l_args = args[:]
+                l_args.append("%s:%s%s.." % (target, root, os.path.sep))
+                dlist.append(createDeferred(exe, l_args, target, root))
+
+        dl = defer.DeferredList(dlist)
+        dl.addCallback(cbEnding, (self))
+        return dl
+        
+    def runSub(self):
+        try:
+            self._runSub()
+        except Exception, e:
+            self.logger.error("ThreadPackageGlobalMirror: " + str(e))
+            self.working = False
+
+    def run(self):
+        l = task.LoopingCall(self.runSub)
+        l.start(self.config.package_global_mirror_loop)
+ 
+class ThreadPackageMirror(ThreadPackageHelper):
     def __init__(self, config, sync_status):
-        Thread.__init__(self)
-        self.logger = logging.getLogger()
-        self.config = config
-        self.working = False
+        ThreadPackageHelper.__init__(self, config)
         self.status = self.config.package_mirror_status_file
         if not sync_status:
             # sync global
             Common().rsyncPackageOnMirrors()
-
-    def log_message(self, format, *args):
-        self.logger.info(format % args)
 
     def onError(self, reason, args):
         pid, target = args
@@ -204,6 +257,13 @@ class ThreadLauncher(Singleton):
             threadpm.setDaemon(True)
             threadpm.start()
             self.logger.debug("Package mirror thread started")
+
+            if self.config.package_global_mirror_activate:
+                self.logger.debug("Starting global package mirror thread")
+                threadgp = ThreadPackageGlobalMirror(config)
+                threadgp.setDaemon(True)
+                threadgp.start()
+                self.logger.debug("Global package mirror thread started")
 
         thread_webserver.initialize(self.config)
         # FIXME: Little sleep because sometimes Python exits before the

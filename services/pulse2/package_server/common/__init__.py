@@ -248,7 +248,13 @@ class Common(Singleton):
 
     ######################################################
     # methods to treat all rsync mechanism
-
+    def getAllPackageRoot(self):
+        ret = {}
+        for m in self.desc:
+            if m.has_key('src') and not ret.has_key(m['src']):
+                ret[m['src']] = None
+        return ret.keys()
+    
     def rsyncPackageOnMirrors(self, pid = None):
         if pid == None:
             self.logger.debug("rsyncPackageOnMirrors for all packages")

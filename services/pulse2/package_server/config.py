@@ -77,6 +77,9 @@ class P2PServerCP(Singleton):
     package_mirror_command_options = ['-ar', '--delete']
     package_mirror_level0_command_options = ['-d', '--delete']
     package_mirror_command_options_ssh_options = None
+    package_global_mirror_activate = True
+    package_global_mirror_loop = 3600
+    package_global_mirror_command_options = ['-ar', '--delete']
 
     parser = None
     mirrors = []
@@ -206,6 +209,13 @@ class P2PServerCP(Singleton):
                     self.package_mirror_command_options_ssh_options = self.cp.get("main", 'package_mirror_command_options_ssh_options').split(' ')
                 if self.cp.has_option("main", 'package_mirror_level0_command_options'):
                     self.package_mirror_level0_command_options = self.cp.get("main", 'package_mirror_level0_command_options').split(' ')
+
+            if self.cp.has_option("main", "package_global_mirror_activate"):
+                self.package_global_mirror_activate = self.cp.getboolean("main", "package_global_mirror_activate")
+                if self.cp.has_section("main", "package_global_mirror_loop"):
+                    self.package_global_mirror_loop = self.cp.getint("main", "package_global_mirror_loop")
+                if self.cp.has_section("main", "package_global_mirror_command_options"):
+                    self.package_global_mirror_loop = self.cp.get("main", "package_global_mirror_command_options").split(' ')
 
         if self.cp.has_option("main", "real_package_deletion"):
             self.real_package_deletion = self.cp.getboolean("main", "real_package_deletion")
