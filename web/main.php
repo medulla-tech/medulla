@@ -92,18 +92,18 @@ function autoInclude() {
         return;
     }
     
-    if ($redirArray[$__module][$_GET["submod"]][$__action]) {
-        require($redirArray[$__module][$_GET["submod"]][$__action]);
+    if ($redirArray[$__module][$__submod][$__action]) {
+        require($redirArray[$__module][$__submod][$__action]);
     } else {
-        if ($redirAjaxArray[$__module][$_GET["submod"]][$__action]) {
-            require($redirAjaxArray[$__module][$_GET["submod"]][$__action]);
+        if ($redirAjaxArray[$__module][$__submod][$__action]) {
+            require($redirAjaxArray[$__module][$__submod][$__action]);
         }
         else {
             require("main_content.php");
         }
     }
 
-    if (!isNoHeader($__module,$_GET["submod"],$__action)) {
+    if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/footer.inc.php");
     }
 }

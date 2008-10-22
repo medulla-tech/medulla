@@ -270,7 +270,11 @@ class SubModule {
         }
         $MMC =&MMCApp::getInstance();
 
-        $selected = ($_GET['submod'] == $this->getName());
+        if (empty($_GET['submod'])) {
+            $selected = False;
+        } else {
+            $selected = ($_GET['submod'] == $this->getName());
+        }
 
         if ($this->_visibility!=True&&$selected) {
             if ($this->_alias!=Null) {

@@ -62,7 +62,7 @@ print '&nbsp;: ';
 print '<a href="main.php">';
 print _("Home");
 print '</a>';
-if ($_GET["module"]) { /* if not main page */
+if (!empty($_GET["module"])) { /* if not main page */
         $MMCApp =&MMCApp::getInstance();
         $mod = $MMCApp->_modules[$_GET['module']];
         $submod = $mod->_submod[$_GET['submod']];

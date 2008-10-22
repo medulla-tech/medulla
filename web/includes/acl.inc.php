@@ -57,7 +57,10 @@ function getAclAttr($attr) {
 
 function hasCorrectAcl($module,$submod,$action) {
     global $noAclArray;
-    if ($noAclArray[$module][$submod][$action]==1) { return true; }
+    if (isset($noAclArray[$module][$submod][$action]) && 
+        ($noAclArray[$module][$submod][$action] == 1)) {
+        return true;
+    }
     if ($_SESSION["login"]=="root") {return true;}
     if ($_SESSION["acl"][$module][$submod][$action]["right"]) {return true;}
     return false;

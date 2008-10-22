@@ -29,7 +29,7 @@ require_once("modules/base/includes/computers.inc.php");
  */
 $mod = new Module("base");
 $mod->setVersion("2.3.1");
-$mod->setRevision("$Rev$");
+$mod->setRevision('$Rev$');
 $mod->setAPIVersion("6:0:2");
 $mod->setDescription(_("User and group"));
 $mod->setPriority(1);

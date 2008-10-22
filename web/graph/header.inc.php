@@ -25,7 +25,8 @@
 <?php
 /* $Id$ */
 
-$css = $conf["global"]["root"]."graph";
+$root = $conf["global"]["root"];
+$css = $root."graph";
 
 ?>
 

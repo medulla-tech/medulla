@@ -36,7 +36,7 @@ if (!function_exists('_T')) {
     * if domain not specify, use $_GET['module'] instead
     **/
     function _T($var,$domain = null) {
-        if ($domain == null) {
+        if (($domain == null) && !empty($_GET['module'])) {
             $domain = $_GET['module'];
         }
         return dgettext($domain,$var);
