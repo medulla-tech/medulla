@@ -42,7 +42,7 @@ class Common(Singleton):
 
     MD5SUMS = "MD5SUMS"
     CONFXML = "conf.xml"
-    
+
     def init(self, config):
         self.working = True
         self.working_pkgs = []
@@ -96,7 +96,7 @@ class Common(Singleton):
         self.logger.debug(">> self.need_assign")
         self.logger.debug(self.need_assign)
         self.logger.debug("# END ##################")
-        
+
     def _detectPackages(self, new = False):
         if len(self.config.mirrors) > 0:
             for mirror_params in self.config.mirrors:
@@ -220,7 +220,7 @@ class Common(Singleton):
             if 'src' in d and d['src'] == src:
                 ret.append(d)
         return ret
-    
+
     def checkPath4package(self, path): # TODO check if still used
         # TODO get conf.xml files in path, parse them, and fill the hashes
         return False
@@ -248,7 +248,7 @@ class Common(Singleton):
 
     ######################################################
     # methods to treat all rsync mechanism
-    
+
     def rsyncPackageOnMirrors(self, pid = None):
         if pid == None:
             self.logger.debug("rsyncPackageOnMirrors for all packages")
@@ -258,7 +258,7 @@ class Common(Singleton):
             self.logger.debug("rsyncPackageOnMirrors for '%s'"%(pid))
             self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
         PkgsRsyncStateSerializer().serialize()
-        
+
     def isPackageAccessible(self, pid):
         return (not self.dontgivepkgs.has_key(pid) and not self.need_assign.has_key(pid) and self.packages[pid].hasFile())
 
@@ -370,7 +370,7 @@ class Common(Singleton):
         if os.path.exists(confxml):
             os.remove(confxml)
         shutil.move(confxmltmp, confxml)
-            
+
         return [pid, confdir]
 
     def associateFiles(self, mp, pid, files, level = 0):
@@ -393,7 +393,7 @@ class Common(Singleton):
                     files_out.append(fo)
                     shutil.move(f1, fo)
                 shutil.rmtree(f)
-           
+
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
         if self.config.package_mirror_activate:
@@ -422,7 +422,7 @@ class Common(Singleton):
         # TODO remove package from mirrors
         if self.config.package_mirror_activate:
             Common().rsyncPackageOnMirrors(pid)
-       
+
         return pid
 
     def writeFileIntoPackage(self, pid, file):
@@ -445,7 +445,7 @@ class Common(Singleton):
     def getPendingPackages(self, mp):
         ret = self.getPackages(mp, True)
         return ret
-        
+
     def getPackages(self, mp, pending = False): #TODO check the clone memory impact
         ret = {}
         try:
@@ -493,10 +493,10 @@ class Common(Singleton):
 # private
     def _getPackageRoot(self, pid):
         return self.packages[pid].root
-        
+
     def _moveNewPackage(self, mirror_params):
         Find().find(mirror_params['tmp_input_dir'], self._moveNewPackageSub, [mirror_params['src']])
-        
+
     def _moveNewPackageSub(self, file, src):
         if os.path.basename(file) == 'conf.xml':
             file = os.path.dirname(file)
@@ -508,31 +508,35 @@ class Common(Singleton):
             if not os.path.exists(os.path.join(src, l_package.id)):
                 self.logger.debug("New valid temporary package detected")
                 shutil.copytree(file, os.path.join(src, l_package.id))
-            
-    def _getPackages(self, mp, src, access = {}, new = False): 
+
+    def _getPackages(self, mp, src, access = {}, new = False):
         if not os.path.exists(src):
             raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
-    
+
         if new:
             Find().find(src, self._treatNewConfFile, (mp, access))
         else:
             self.mp2p[mp] = []
-            Find().find(src, self._treatConfFile, (mp, access)) 
+            Find().find(src, self._treatConfFile, (mp, access))
 
     def _createMD5File(self, dirname):
         """
         Create the MD5SUMS file for a directory content
         """
         fmd5name = os.path.join(dirname, self.MD5SUMS)
-        if not os.path.exists(fmd5name):
+        if not os.path.exists(fmd5name): # create file only if it do not exists
             self.logger.info("Computing MD5 sums file %s" % fmd5name)
             md5sums = []
             for root, dirs, files in os.walk(dirname):
                 for name in files:
                     if name != self.CONFXML:
-                        f = file(os.path.join(root, name), "rb")
-                        md5sums.append([name, md5.md5(f.read()).hexdigest()])
-                        f.close()
+                        try:
+                            filepath = os.path.join(root, name)
+                            f = file(filepath, "rb")
+                            md5sums.append([filepath[len(dirname)+1:], md5.md5(f.read()).hexdigest()])
+                            f.close()
+                        except IOError, e:
+                            self.logger.warn("Error while reading %s: %s" % (filepath, e))
             fmd5 = file(fmd5name, "w+")
             for name, md5hash in md5sums:
                 fmd5.write("%s  %s\n" % (md5hash, name))
@@ -547,7 +551,7 @@ class Common(Singleton):
                 self.already_declared[file] = True
                 if self.config.package_mirror_activate:
                     Common().rsyncPackageOnMirrors(pid)
-                
+
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             self._createMD5File(os.path.dirname(file))
@@ -561,7 +565,7 @@ class Common(Singleton):
             path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
-        
+
     def _treatDir(self, file, mp, access, new = False):
         pid = None
         try:
@@ -573,7 +577,7 @@ class Common(Singleton):
                 if l_package == None:
                     self.logger.debug("package failed to parse in %s"%(file))
                     return False
-                    
+
                 pid = l_package.id
                 self.working_pkgs.append(l_package)
 
@@ -594,7 +598,7 @@ class Common(Singleton):
                         if not os.exists(f):
                             self.logger.warn("the file %s is declared in the package configuration file, but is not in the package directory"%(sfile['filename']))
                             raise Exception("MISSINGFILE")
-                        size += self._treatFile(pid, f, path, access, sfile['id']) 
+                        size += self._treatFile(pid, f, path, access, sfile['id'])
                 else:
                     # find all files and then get sizes and md5
                     files = self._getFiles(file)
@@ -634,7 +638,7 @@ class Common(Singleton):
         else:
             (fsize, fmd5) = self.file_properties[f]
 
-        file = File(os.path.basename(f), path, fmd5, fsize, access, fid) 
+        file = File(os.path.basename(f), path, fmd5, fsize, access, fid)
         self.packages[pid].addFile(file)
         if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")
