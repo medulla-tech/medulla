@@ -8,7 +8,7 @@ import logging
 # The inventory tables we wish to purge
 tables_elements = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
 split_on = 10000
-do_execute = True
+do_execute = False
 
 # Set up logging
 logger = logging.getLogger(sys.argv[0])
@@ -160,7 +160,6 @@ def deleteEmptyInventories(inventory):
                 execute().\
                 fetchall()
             )
-        to_delete_old = to_delete
         if to_delete == None:
             to_delete = to_merge
         else:
@@ -177,6 +176,38 @@ def deleteEmptyInventories(inventory):
         logger.debug("deleteEmptyInventories : purged rows : %s" % (to_delete))
     else:
         logger.info("deleteEmptyInventories : no rows to purge")
+
+def deleteEmptyMachines(machine):
+
+    #First, build up the intersection for every machine in the has* tables
+    to_delete = None
+    for table in tables_elements:
+        # First we look for inventory parts not linked to any has*
+        has_table = Table("has" + table, metadata, autoload = True)
+
+        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
+                outerjoin(machine, has_table, has_table.c.machine == machine.c.id).\
+                select(has_table.c.machine == None).\
+                execute().\
+                fetchall()
+            )
+        if to_delete == None:
+            to_delete = to_merge
+        else:
+            to_delete = list(set(to_delete).intersection(set(to_merge)))
+        print to_merge
+        logger.info("deleteEmptyMachines : processing table has%s: %d spotted, %d kept" % (table, len(to_merge), len(to_delete)))
+
+    if len(to_delete) > 0:
+        logger.info("deleteEmptyMachines : will purge %d rows" % (len(to_delete)))
+        to_delete = list(set(to_delete)) # now I may deduplicate my IDs
+        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+            if do_execute:
+                inventory.delete(machine.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+            logger.info("deleteEmptyMachines : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
+        logger.debug("deleteEmptyMachines : purged rows : %s" % (to_delete))
+    else:
+        logger.info("deleteEmptyMachines : no rows to purge")
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s [db_conn_string]' % argv[0]
@@ -212,12 +243,10 @@ if __name__ == "__main__":
     deleteEmptyInventories(inventory)
     logger.info("Done !")
 
+    logger.info("Cleaning orphaned computers...")
+    deleteEmptyMachines(machine)
+    logger.info("Done !")
+
     logger.info("Cleaning up inventory parts...")
     cleanUpInventoryParts(inventory)
     logger.info("Done !")
-
-    """
-    logger.info("Cleaning orphaned inventories...")
-    deleteEmptyInventories(inventory)
-    logger.info("Done !")
-    """
