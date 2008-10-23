@@ -118,5 +118,6 @@ require("includes/PageGenerator.php");
 
 autoInclude();
 
-ob_end_flush();
+if (strlen(ob_get_contents())) ob_end_flush();
+
 ?>
