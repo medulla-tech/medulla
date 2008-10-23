@@ -947,6 +947,8 @@ class AjaxFilterLocation extends AjaxFilter {
     }
 
     function display() {
+        global $conf;
+        $root = $conf["global"]["root"];
 
 ?>
 <form name="Form" id="Form" action="#">
