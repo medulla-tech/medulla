@@ -23,7 +23,7 @@
 
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
-if ($_POST["bconfirm"]) {
+if (isset($_POST["bconfirm"])) {
     msc_remove_downloaded_files(array($_GET['id']));
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The file has been deleted.", "msc"));
     header("Location: " . urlStrRedirect("base/computers/download_file", array("objectUUID" => $_GET["objectUUID"])));
