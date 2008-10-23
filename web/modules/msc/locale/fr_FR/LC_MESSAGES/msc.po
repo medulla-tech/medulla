@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-23 15:09+0200\n"
-"PO-Revision-Date: 2008-10-23 15:10+0200\n"
+"POT-Creation-Date: 2008-10-23 15:18+0200\n"
+"PO-Revision-Date: 2008-10-23 15:18+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -187,7 +187,9 @@ msgstr "Annuler la création de l'ensemble d'applications"
 msgid ""
 "Click below to start downloading file from this computer. Warning: the "
 "download may last a long time"
-msgstr "Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
+msgstr ""
+"Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier "
+"depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
 
 #: msc/msc/vnc_client.php:47
 msgid "Close window"
@@ -792,6 +794,11 @@ msgstr "Démarrer l'action %s sur l'ordinateur %s"
 #: msc/msc/ajaxLogsFilter.php:283 msc/logs/ajaxLogsFilter.php:137
 msgid "Start date"
 msgstr "Date de démarrage"
+
+#: msc/msc/download_file.php:57
+#, php-format
+msgid "Start download from computer %s"
+msgstr "Démarrer le téléchargement depuis %s"
 
 #: msc/includes/command_history.php:113
 msgid "Start execute file"
