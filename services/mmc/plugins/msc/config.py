@@ -235,7 +235,7 @@ class MscConfig(PluginConfig):
                 self.web_dlpath.append(path.strip())
             if not os.path.exists(self.download_directory_path):
                 logging.getLogger().warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
-                
+
         if self.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.getint("web", "web_def_dlmaxbw")
         if self.has_option("web", "web_def_deployment_intervals"):
@@ -256,7 +256,7 @@ class MscConfig(PluginConfig):
         if self.has_option("web", "vnc_network_connectivity"):
             self.web_vnc_network_connectivity = self.get("web", "vnc_network_connectivity")
         if self.has_option("web", "vnc_allow_user_control"):
-            self.web_vnc_allow_user_control.getboolean("web", "vnc_allow_user_control")
+            self.web_vnc_allow_user_control = self.getboolean("web", "vnc_allow_user_control")
 
         # API Package
         if self.has_option("package_api", "mserver"):
