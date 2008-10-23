@@ -26,8 +26,12 @@
  * Try to include a CSS for the current displayed module and sub-module
  */
 function autoIncludeCss() {
-    $css = "modules/" . $_GET["module"] ."/graph/" . $_GET["submod"] . "/index.css";
-    if (file_exists($css) && $_GET["module"] != "base" && $_GET["module"] != "samba") include($css);
+    if (empty($_GET["module"])) $module = "";
+    else $module = $_GET["module"];
+    if (empty($_GET["module"])) $submod = "";
+    else $submod = $_GET["submod"];    
+    $css = "modules/" . $module . "/graph/" . $submod . "/index.css";
+    if (file_exists($css) && $module != "base" && $submod != "samba") include($css);
 }
 
 print '<style type="text/css"><!--';
