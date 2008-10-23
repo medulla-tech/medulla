@@ -69,28 +69,28 @@ class Commands(object):
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
-        logging.getLogger().debug("hasSomethingToUpload(%s): %s" % (self.id, result))
+        logging.getLogger().debug("hasSomethingToUpload(#%s): %s" % (self.id, result))
         return result
 
     def hasSomethingToExecute(self):
         result = (self.start_script == 'enable' and len(self.start_file) != 0)
-        logging.getLogger().debug("hasSomethingToExecute(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("hasSomethingToExecute(#%s): %s" % (self.getId(), result))
         return result
 
     def hasSomethingToDelete(self):
         result = (self.clean_on_success == 'enable' and len(self.files) != 0)
-        logging.getLogger().debug("hasSomethingToDelete(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("hasSomethingToDelete(#%s): %s" % (self.getId(), result))
         return result
 
     def hasToUseProxy(self):
         result = (self.use_local_proxy == 'yes')
-        logging.getLogger().debug("hasToUseProxy(%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("hasToUseProxy(#%s): %s" % (self.getId(), result))
         return result
 
     def isQuickAction(self):
         # TODO: a quick action is not only an action with nothing to upload
         result = (len(self.files) == 0)
-        logging.getLogger().debug("isQuickAction(%s): %s" % (self.id, result))
+        logging.getLogger().debug("isQuickAction(#%s): %s" % (self.id, result))
         return result
 
     def inDeploymentInterval(self):
@@ -99,7 +99,7 @@ class Commands(object):
             result = True
         else:
             result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
-        logging.getLogger().debug("inDeploymentInterval(%s): %s" % (self.id, result))
+        logging.getLogger().debug("inDeploymentInterval(#%s): %s" % (self.id, result))
         return result
 
     def getCohIds(self):

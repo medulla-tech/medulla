@@ -143,28 +143,28 @@ class CommandsOnHost(object):
         self.setDeleteStatut('IGNORED')
     def isDeleteIgnored(self):
         result = (self.deleted == 'IGNORED')
-        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeleteIgnored(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteFailed(self):
         self.setDeleteStatut('FAILED')
     def isDeleteFailed(self):
         result = (self.deleted == 'FAILED')
-        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeleteFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteDone(self):
         self.setDeleteStatut('DONE')
     def isDeleteDone(self):
         result = (self.deleted == 'DONE')
-        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeleteDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteInProgress(self):
         self.setDeleteStatut('WORK_IN_PROGRESS')
     def isDeleteRunning(self):
         result = (self.deleted == 'WORK_IN_PROGRESS')
-        logging.getLogger().debug("isDeletePossible(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isDeleteRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setDeleteToDo(self):
