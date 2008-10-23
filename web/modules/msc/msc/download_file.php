@@ -30,7 +30,7 @@ require("graph/navbar.inc.php");
 require("modules/base/graph/computers/index.css");
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
-$p = new PageGenerator(); //_T("Download file page", "msc"));
+$p = new PageGenerator(_T("Download file page", "msc"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -52,7 +52,7 @@ $ajax->setRefresh(60000);
 $ajax->display();
 
 $f = new Form(array('id' => 'dl'));
-$f->addSummary('Click below to start downloading file from this computer. Warning: the download may last a long time', 'msc');
+$f->addSummary(_T('Click below to start downloading file from this computer. Warning: the download may last a long time', 'msc'));
 $computer = getMachine(array('uuid'=>$_GET['objectUUID']), $ping = False);
 $f->addButton('bconfirm', 'Start download from computer ' . $computer->hostname);
 $f->display();
