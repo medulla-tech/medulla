@@ -712,9 +712,6 @@ class Inventory(DyngroupDatabaseHelper):
 
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
-        partKlass = self.klass[part]
-        partTable = self.table[part]
-        haspartTable = self.table["has" + part]
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
         for grp in grp_by:
             result = result.group_by(grp)
