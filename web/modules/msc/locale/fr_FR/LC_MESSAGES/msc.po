@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-23 14:57+0200\n"
-"PO-Revision-Date: 2008-10-23 15:06+0200\n"
+"POT-Creation-Date: 2008-10-23 15:09+0200\n"
+"PO-Revision-Date: 2008-10-23 15:10+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -183,6 +183,12 @@ msgstr "Octets"
 msgid "Cancel bundle creation"
 msgstr "Annuler la création de l'ensemble d'applications"
 
+#: msc/msc/download_file.php:55
+msgid ""
+"Click below to start downloading file from this computer. Warning: the "
+"download may last a long time"
+msgstr "Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
+
 #: msc/msc/vnc_client.php:47
 msgid "Close window"
 msgstr "Fermer la fenêtre"
@@ -337,7 +343,7 @@ msgstr "Télécharger le fichier"
 msgid "Download file from a computer"
 msgstr "Téléchargement de fichier depuis un ordinateur"
 
-#: msc/infoPackage.inc.php:223
+#: msc/msc/download_file.php:33 msc/infoPackage.inc.php:223
 msgid "Download file page"
 msgstr "Téléchargement de fichiers"
 
