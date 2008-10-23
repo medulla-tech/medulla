@@ -53,8 +53,9 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
         }
     }
 } else { # more than one table to display, show them as usual (ie no split)
-
     $datum = array();
+
+    getLastMachineInventoryPart($tables, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
 
     foreach ($tables as $table) {
         $machines = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));

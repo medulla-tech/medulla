@@ -127,6 +127,9 @@ $page->setOptions(array("visible"=>False));
 $tab = new Tab("grouptab0",  _T("Hardware tab for a group", "inventory"));
 $page->addTab($tab);
 
+$tab = new Tab("grouptab5",  _T("Bios tab for a group", "inventory"));
+$page->addTab($tab);
+
 $tab = new Tab("grouptab1",  _T("Software tab for a group", "inventory"));
 $page->addTab($tab);
 
@@ -140,6 +143,9 @@ $tab = new Tab("grouptab4",  _T("Registry tab for a group", "inventory"));
 $page->addTab($tab);
 
 $tab = new Tab("tab0",  _T("Hardware tab for a computer in a group", "inventory"));
+$page->addTab($tab);
+
+$tab = new Tab("tab5",  _T("Bios tab for a computer in a group", "inventory"));
 $page->addTab($tab);
 
 $tab = new Tab("tab1",  _T("Software tab for a computer in a group", "inventory"));
