@@ -28,7 +28,7 @@
 function autoIncludeCss() {
     if (empty($_GET["module"])) $module = "";
     else $module = $_GET["module"];
-    if (empty($_GET["module"])) $submod = "";
+    if (empty($_GET["submod"])) $submod = "";
     else $submod = $_GET["submod"];    
     $css = "modules/" . $module . "/graph/" . $submod . "/index.css";
     if (file_exists($css) && $module != "base" && $submod != "samba") include($css);
