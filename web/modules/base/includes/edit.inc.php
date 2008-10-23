@@ -28,7 +28,13 @@
  *  convert an aclString to an aclArray
  */
 function createAclArray($aclString) {
-    list($acl, $aclattr) = split('/', $aclString);
+    $acl = "";
+    $aclattr = "";
+    if (strpos($aclString, '/') === False) {
+        $acl = $aclString;
+    } else {
+        list($acl, $aclattr) = split('/', $aclString);
+    }
 
     $retacl = array();
     $retacltab = array();
