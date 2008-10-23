@@ -57,7 +57,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         foreach ($headers as $header) {
             $columns[$header[0]][]= $value[$header[0]];
         }
-        $value['gid'] = $filter['gid'];
+	if (isset($filter['gid']))
+	        $value['gid'] = $filter['gid'];
+		
         $params[] = $value;
 
         if (in_array("inventory", $_SESSION["supportModList"])) {
