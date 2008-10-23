@@ -551,12 +551,16 @@ class Common(Singleton):
     def _treatNewConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             if not self.already_declared.has_key(file):
-                self._createMD5File(os.path.dirname(file))
-                pid = self._treatDir(os.path.dirname(file), mp, access, True)
-                self.associatePackage2mp(pid, mp)
-                self.already_declared[file] = True
-                if self.config.package_mirror_activate:
-                    Common().rsyncPackageOnMirrors(pid)
+                l_package = self.parser.parse(file)
+                if not self.need_assign.has_key(l_package.id):
+                    self._createMD5File(os.path.dirname(file))
+                    pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
+                    self.associatePackage2mp(pid, mp)
+                    self.already_declared[file] = True
+                    if self.config.package_mirror_activate:
+                        Common().rsyncPackageOnMirrors(pid)
+                else:
+                    self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
@@ -572,13 +576,14 @@ class Common(Singleton):
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
 
-    def _treatDir(self, file, mp, access, new = False):
+    def _treatDir(self, file, mp, access, new = False, l_package = None):
         pid = None
         try:
             if os.path.isdir(file):
                 self.logger.debug("loading package metadata (xml) in %s"%(file))
-                confxml = os.path.join(file, "conf.xml")
-                l_package = self.parser.parse(confxml)
+                if l_package == None:
+                    confxml = os.path.join(file, "conf.xml")
+                    l_package = self.parser.parse(confxml)
                 l_package.setRoot(os.path.dirname(file))
                 if l_package == None:
                     self.logger.debug("package failed to parse in %s"%(file))
@@ -595,7 +600,7 @@ class Common(Singleton):
 
                 toRelative = os.path.dirname(file)
                 size = 0
-                self.packages[pid] = l_package #self.parser.parse(confxml)
+                self.packages[pid] = l_package
                 if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
                     for sfile in self.packages[pid].specifiedFiles:
