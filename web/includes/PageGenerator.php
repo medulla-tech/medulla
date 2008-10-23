@@ -988,8 +988,14 @@ class AjaxFilterLocation extends AjaxFilter {
         function updateSearchParam(filter, start, end) {
             var reg = new RegExp("##", "g");
             var tableau = filter.split(reg);
-            filter = tableau[0];
-            var location = tableau[1];
+            var location = "";
+            if (tableau.length > 1) {
+                filter = tableau[0];
+                location = tableau[1];
+            } else {
+                filter = "";
+                location = tableau[0];
+            }
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
 
