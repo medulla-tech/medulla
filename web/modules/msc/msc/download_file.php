@@ -54,7 +54,7 @@ $ajax->display();
 $f = new Form(array('id' => 'dl'));
 $f->addSummary(_T('Click below to start downloading file from this computer. Warning: the download may last a long time', 'msc'));
 $computer = getMachine(array('uuid'=>$_GET['objectUUID']), $ping = False);
-$f->addButton('bconfirm', 'Start download from computer ' . $computer->hostname);
+$f->addButton('bconfirm', _T(sprintf('Start download from computer %s', $computer->hostname), 'msc'));
 $f->display();
 
 print '<br />';
