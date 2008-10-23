@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - Packages Web Interface 1.2.0rc4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-12 14:50+0200\n"
-"PO-Revision-Date: 2008-09-25 19:45+0200\n"
+"PO-Revision-Date: 2008-08-24 22:10+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -140,7 +140,7 @@ msgstr "Montrer l'état de synchronisation des miroirs"
 
 #: pkgs/pkgs/ajaxPendingPackageList.php:74
 msgid "Show mirrors"
-msgstr "Montrer l'ét�at des miroirs"
+msgstr "Montrer l'état des miroirs"
 
 #: pkgs/pkgs/remove.php:33
 msgid "The package failed to delete"
