@@ -185,7 +185,10 @@ class ThreadPackageMirror(ThreadPackageHelper):
             return d
 
         def cbEnding(result, self):
-            self.logger.debug("ThreadPackageMirror end mirroring: %s" % str(result))
+            if result == []:
+                self.logger.debug("ThreadPackageMirror end mirroring")
+            else:
+                self.logger.debug("ThreadPackageMirror end mirroring: %s" % str(result))
             self.working = False
 
         if self.working: 
