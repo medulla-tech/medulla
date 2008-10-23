@@ -79,12 +79,10 @@ $a_details = array();
 
 $n = null;
 
-foreach ($cmds as $coh) {
+foreach ($cmds as $item) {
+    list($coh, $cmd, $target) = $item;
     $coh_id = $coh['id'];
     $cho_status = $coh['current_state'];
-    $cmd = command_detail($coh['fk_commands']);
-    $coh = get_commands_on_host($coh_id);
-    $target = get_target_for_coh($coh_id);
 
     if ($history) {
         $d = $coh["end_date"];
