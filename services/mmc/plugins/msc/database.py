@@ -729,7 +729,7 @@ class MscDatabase(Singleton):
         """
         Built a part of the query for the *AllCommandsonhost* methods
         """
-        q = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands))
+        q = session.query(CommandsOnHost, Commands, Target).select_from(self.commands.join(self.commands_on_host.join(self.target)))
         q = self.__queryUsersFilter(ctx, q)
         return q
 
@@ -737,7 +737,8 @@ class MscDatabase(Singleton):
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
         ret = ret.filter(self.commands_on_host.c.current_state <> '').group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
-        l = map(lambda x: x.current_state, ret.all())
+        # x[0] contains a commands_on_host object
+        l = map(lambda x: x[0].current_state, ret.all())
         session.close()
         return l
 
@@ -762,7 +763,7 @@ class MscDatabase(Singleton):
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
         ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
-        l = map(lambda x: x.toH(), ret.all())
+        l = map(lambda x: (x[0].toH(), x[1].toH(), x[2].toH()), ret.all())
         session.close()
         return l
 
@@ -799,7 +800,7 @@ class MscDatabase(Singleton):
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
         ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
-        l = map(lambda x: x.toH(), ret.all())
+        l = map(lambda x: (x[0].toH(), x[1].toH(), x[2].toH()), ret.all())
         session.close()
         return l
 
