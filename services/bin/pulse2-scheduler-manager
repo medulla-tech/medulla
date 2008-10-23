@@ -42,7 +42,7 @@ def start_scheduler(config):
     """
     logger = logging.getLogger()
     name = config.name
-    
+
     logger.info('daemonization started: scheduler %s' % name)
 
     pid_path = config.pid_path
@@ -82,7 +82,7 @@ def start_scheduler(config):
         if pid > 0:
             # exit from second parent, print eventual PID before
             logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
-            os.seteuid(0)            
+            os.seteuid(0)
             os.setegid(0)
             os.system("echo " + str(pid) + " > " + pid_file)
             sys.exit(0)
@@ -98,7 +98,7 @@ def start_scheduler(config):
 def stop_scheduler(config):
     name = config.name
     logger = logging.getLogger()
-    os.seteuid(0)            
+    os.seteuid(0)
     os.setegid(0)
     pid_file = os.path.join(config.pid_path, '%s.pid' % name)
     f = open(pid_file)

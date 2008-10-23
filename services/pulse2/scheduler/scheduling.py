@@ -1008,7 +1008,6 @@ def runRebootPhase(myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
-            myCommandOnHostID,
             'sync_remote_reboot',
             myCommandOnHostID,
             client,
@@ -1019,7 +1018,6 @@ def runRebootPhase(myCommandOnHostID):
             addErrback(parseRebootError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
-            myCommandOnHostID,
             myCommandOnHostID,
             'async_remote_reboot',
             myCommandOnHostID,

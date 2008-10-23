@@ -27,13 +27,14 @@ import re           # fo re.compil
 import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
-import logging      # logging stuff
 
 # MMC
 from mmc.support.config import MMCConfigParser
 
 # Others Pulse2 Stuff
 import pulse2.utils
+
+import logging      # logging stuff
 
 class SchedulerConfig(pulse2.utils.Singleton):
     """
