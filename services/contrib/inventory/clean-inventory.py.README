@@ -13,6 +13,10 @@ mysql://<user>:<password>@127.0.0.1/<inventory_database>
 Post-cleanup, you may want to optimize your database using optim.sql.
 
 Some advices:
+- before any use, dont' forget to modify:
+ + mandatory_elements = ["Hardware"] (if relevent)
+ + split_on = 1000 (to tune in some way, keep as low for SA 0.3-)
+ + do_execute = False (set to True for real work)
 - backup your database before using this script !
 - if the script is interrupted, it will continue from where it stops,
 - avoid to run the script with the inventory server running.
