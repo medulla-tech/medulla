@@ -164,15 +164,18 @@ class TreatInv(Thread):
                 path = Pulse2OcsserverConfigParser().hostname
                 # WARNING : no fallback if the tag does not exists....
                 if len(path) == 3:
-                    for tag in inventory[path[0]]:
-                        if tag.has_key(path[2][0]) and tag[path[2][0]] == path[2][1]:
-                            hostname = tag[path[1]]
-                            self.logger.debug("hostname modified into %s"%hostname)
+                    if path[0] in inventory:
+                        for tag in inventory[path[0]]:
+                            self.logger.debug("tag = %s" % tag)
+                            if tag.has_key(path[2][0]) and tag[path[2][0]] == path[2][1]:
+                                hostname = tag[path[1]]
+                                self.logger.debug("hostname modified into %s"%hostname)
                 else:
                     hostname = inventory[path[0]][0][path[1]]
                     self.logger.debug("hostname modified into %s"%hostname)
             except Exception, e:
-                self.logger.error(e)
+                self.logger.exception(e)
+                self.logger.error("inventory = %s" % inventory)
             try:
                 date = inventory['ACCESSLOG'][1]['LOGDATE']
             except:
