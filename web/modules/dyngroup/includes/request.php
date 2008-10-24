@@ -143,8 +143,8 @@ class SubRequest {
         $this->id = $b[0];
         $this->module = $b[1];
         $this->crit = $c[0];
-        #$this->val = explode(', ', rtrim(ltrim($c[1], '('), ')'));
-        $this->val = explode(', ', $c[1]);
+        $this->val = explode(', ', rtrim(ltrim($c[1], '('), ')'));
+        #$this->val = explode(', ', $c[1]);
         if (is_array($this->val) && count($this->val) == 1) {
             $this->val = $this->val[0];
         }
