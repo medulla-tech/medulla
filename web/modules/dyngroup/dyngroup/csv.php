@@ -7,6 +7,9 @@ $gid = quickGet('gid');
 
 ob_end_clean();
 
+/* The two following lines make the CSV export works for IE 6.x on HTTPS ! */
+header("Pragma: ");
+header("Cache-Control: ");
 header("Content-type: text/txt");
 header('Content-Disposition: attachment; filename="'.$name.'.csv"');
 
