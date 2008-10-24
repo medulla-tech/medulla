@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-22 09:41+0200\n"
+"POT-Creation-Date: 2008-10-24 18:59+0200\n"
 "PO-Revision-Date: 2008-07-25 14:11+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -21,12 +21,12 @@ msgstr ""
 msgid "%s list"
 msgstr "Lista %s"
 
-#: inventory/inventory/tabs.php:15
+#: inventory/inventory/tabs.php:16
 #, php-format
 msgid "%s's content inventory"
 msgstr "Inwentarz zawartości %s"
 
-#: inventory/inventory/tabs.php:13
+#: inventory/inventory/tabs.php:14
 #, php-format
 msgid "%s's inventory"
 msgstr "inwentarz %s"
@@ -47,6 +47,16 @@ msgstr "Dostępność"
 #: inventory/inventory/index.php:27 inventory/inventory/i18n_labels.php:5
 msgid "Bios"
 msgstr "Bios"
+
+#: inventory/infoPackage.inc.php:148
+#, fuzzy
+msgid "Bios tab for a computer in a group"
+msgstr "Zakładka rejestru"
+
+#: inventory/infoPackage.inc.php:130
+#, fuzzy
+msgid "Bios tab for a group"
+msgstr "Zakładka rejestru"
 
 #: inventory/inventory/i18n_labels.php:6
 msgid "BiosVendor"
@@ -116,7 +126,7 @@ msgstr "Komentarze"
 msgid "Company"
 msgstr "Firma"
 
-#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:84
+#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:85
 #: inventory/inventory/i18n_labels.php:71
 msgid "Computer"
 msgstr ""
@@ -131,17 +141,17 @@ msgstr "Konnektor"
 msgid "Controller"
 msgstr "Kontroler"
 
-#: inventory/infoPackage.inc.php:172
+#: inventory/infoPackage.inc.php:178
 #, fuzzy
 msgid "Controller tab for a computer"
 msgstr "Zakładka Kontrolera"
 
-#: inventory/infoPackage.inc.php:151
+#: inventory/infoPackage.inc.php:157
 #, fuzzy
 msgid "Controller tab for a computer in a group"
 msgstr "Zakładka Kontrolera"
 
-#: inventory/infoPackage.inc.php:136
+#: inventory/infoPackage.inc.php:139
 #, fuzzy
 msgid "Controller tab for a group"
 msgstr "Zakładka Kontrolera"
@@ -289,17 +299,16 @@ msgid "Graphique"
 msgstr "Grafika"
 
 #: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/inventory/tabs.php:18 inventory/inventory/i18n_labels.php:56
-#: inventory/infoPackage.inc.php:45
+#: inventory/inventory/i18n_labels.php:56 inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr "Sprzęt"
 
-#: inventory/infoPackage.inc.php:163
+#: inventory/infoPackage.inc.php:169
 #, fuzzy
 msgid "Hardware tab for a computer"
 msgstr "Zakłądka sprzętu"
 
-#: inventory/infoPackage.inc.php:142
+#: inventory/infoPackage.inc.php:145
 #, fuzzy
 msgid "Hardware tab for a computer in a group"
 msgstr "Zakłądka sprzętu"
@@ -353,7 +362,7 @@ msgstr "Inwentarz"
 msgid "Inventory on a group of computers"
 msgstr "Inwentarz grupy maszyn"
 
-#: inventory/infoPackage.inc.php:159
+#: inventory/infoPackage.inc.php:165
 #, fuzzy
 msgid "Inventory on a single computer"
 msgstr "Inwerntarz maszyny"
@@ -437,17 +446,17 @@ msgstr "Nazwa"
 msgid "Network"
 msgstr "Sieć"
 
-#: inventory/infoPackage.inc.php:169
+#: inventory/infoPackage.inc.php:175
 #, fuzzy
 msgid "Network tab for a computer"
 msgstr "Zakładka sieci"
 
-#: inventory/infoPackage.inc.php:148
+#: inventory/infoPackage.inc.php:154
 #, fuzzy
 msgid "Network tab for a computer in a group"
 msgstr "Zakładka sieci"
 
-#: inventory/infoPackage.inc.php:133
+#: inventory/infoPackage.inc.php:136
 #, fuzzy
 msgid "Network tab for a group"
 msgstr "Zakładka sieci"
@@ -543,17 +552,17 @@ msgstr "ZarejestrowanaNazwa"
 msgid "Registry"
 msgstr "Rejestr"
 
-#: inventory/infoPackage.inc.php:175
+#: inventory/infoPackage.inc.php:181
 #, fuzzy
 msgid "Registry tab for a computer"
 msgstr "Zakładka rejestru"
 
-#: inventory/infoPackage.inc.php:154
+#: inventory/infoPackage.inc.php:160
 #, fuzzy
 msgid "Registry tab for a computer in a group"
 msgstr "Zakładka rejestru"
 
-#: inventory/infoPackage.inc.php:139
+#: inventory/infoPackage.inc.php:142
 #, fuzzy
 msgid "Registry tab for a group"
 msgstr "Zakładka rejestru"
@@ -607,17 +616,17 @@ msgstr "WersjaSmb"
 msgid "Software"
 msgstr "Oprogramowanie"
 
-#: inventory/infoPackage.inc.php:166
+#: inventory/infoPackage.inc.php:172
 #, fuzzy
 msgid "Software tab for a computer"
 msgstr "Zakładka oprogramowania"
 
-#: inventory/infoPackage.inc.php:145
+#: inventory/infoPackage.inc.php:151
 #, fuzzy
 msgid "Software tab for a computer in a group"
 msgstr "Zakładka oprogramowania"
 
-#: inventory/infoPackage.inc.php:130
+#: inventory/infoPackage.inc.php:133
 #, fuzzy
 msgid "Software tab for a group"
 msgstr "Zakładka oprogramowania"

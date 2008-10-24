@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.1.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-22 09:41+0200\n"
+"POT-Creation-Date: 2008-10-24 18:59+0200\n"
 "PO-Revision-Date: 2008-06-17 09:57+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: English/USA <en@li.org>\n"
@@ -21,12 +21,12 @@ msgstr ""
 msgid "%s list"
 msgstr ""
 
-#: inventory/inventory/tabs.php:15
+#: inventory/inventory/tabs.php:16
 #, php-format
 msgid "%s's content inventory"
 msgstr ""
 
-#: inventory/inventory/tabs.php:13
+#: inventory/inventory/tabs.php:14
 #, php-format
 msgid "%s's inventory"
 msgstr ""
@@ -45,6 +45,14 @@ msgstr ""
 
 #: inventory/inventory/index.php:27 inventory/inventory/i18n_labels.php:5
 msgid "Bios"
+msgstr ""
+
+#: inventory/infoPackage.inc.php:148
+msgid "Bios tab for a computer in a group"
+msgstr ""
+
+#: inventory/infoPackage.inc.php:130
+msgid "Bios tab for a group"
 msgstr ""
 
 #: inventory/inventory/i18n_labels.php:6
@@ -115,7 +123,7 @@ msgstr ""
 msgid "Company"
 msgstr ""
 
-#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:84
+#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:85
 #: inventory/inventory/i18n_labels.php:71
 msgid "Computer"
 msgstr ""
@@ -130,15 +138,15 @@ msgstr ""
 msgid "Controller"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:172
+#: inventory/infoPackage.inc.php:178
 msgid "Controller tab for a computer"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:151
+#: inventory/infoPackage.inc.php:157
 msgid "Controller tab for a computer in a group"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:136
+#: inventory/infoPackage.inc.php:139
 msgid "Controller tab for a group"
 msgstr ""
 
@@ -285,16 +293,15 @@ msgid "Graphique"
 msgstr ""
 
 #: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/inventory/tabs.php:18 inventory/inventory/i18n_labels.php:56
-#: inventory/infoPackage.inc.php:45
+#: inventory/inventory/i18n_labels.php:56 inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:163
+#: inventory/infoPackage.inc.php:169
 msgid "Hardware tab for a computer"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:142
+#: inventory/infoPackage.inc.php:145
 msgid "Hardware tab for a computer in a group"
 msgstr ""
 
@@ -345,7 +352,7 @@ msgstr ""
 msgid "Inventory on a group of computers"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:159
+#: inventory/infoPackage.inc.php:165
 msgid "Inventory on a single computer"
 msgstr ""
 
@@ -428,15 +435,15 @@ msgstr ""
 msgid "Network"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:169
+#: inventory/infoPackage.inc.php:175
 msgid "Network tab for a computer"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:148
+#: inventory/infoPackage.inc.php:154
 msgid "Network tab for a computer in a group"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:133
+#: inventory/infoPackage.inc.php:136
 msgid "Network tab for a group"
 msgstr ""
 
@@ -531,15 +538,15 @@ msgstr ""
 msgid "Registry"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:175
+#: inventory/infoPackage.inc.php:181
 msgid "Registry tab for a computer"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:154
+#: inventory/infoPackage.inc.php:160
 msgid "Registry tab for a computer in a group"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:139
+#: inventory/infoPackage.inc.php:142
 msgid "Registry tab for a group"
 msgstr ""
 
@@ -592,15 +599,15 @@ msgstr ""
 msgid "Software"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:166
+#: inventory/infoPackage.inc.php:172
 msgid "Software tab for a computer"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:145
+#: inventory/infoPackage.inc.php:151
 msgid "Software tab for a computer in a group"
 msgstr ""
 
-#: inventory/infoPackage.inc.php:130
+#: inventory/infoPackage.inc.php:133
 msgid "Software tab for a group"
 msgstr ""
 

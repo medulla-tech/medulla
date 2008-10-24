@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-22 09:41+0200\n"
-"PO-Revision-Date: 2008-10-22 09:43+0200\n"
+"POT-Creation-Date: 2008-10-24 18:59+0200\n"
+"PO-Revision-Date: 2008-10-24 18:59+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +23,12 @@ msgstr ""
 msgid "%s list"
 msgstr "liste des %s"
 
-#: inventory/inventory/tabs.php:15
+#: inventory/inventory/tabs.php:16
 #, php-format
 msgid "%s's content inventory"
 msgstr "Inventaire du contenu de %s"
 
-#: inventory/inventory/tabs.php:13
+#: inventory/inventory/tabs.php:14
 #, php-format
 msgid "%s's inventory"
 msgstr "Inventaire de %s"
@@ -48,6 +48,14 @@ msgstr "Disponibilité"
 #: inventory/inventory/index.php:27 inventory/inventory/i18n_labels.php:5
 msgid "Bios"
 msgstr "Bios"
+
+#: inventory/infoPackage.inc.php:148
+msgid "Bios tab for a computer in a group"
+msgstr "Onglet BIOS pour un ordinateur dans un groupe"
+
+#: inventory/infoPackage.inc.php:130
+msgid "Bios tab for a group"
+msgstr "Onglet BIOS pour un groupe"
 
 #: inventory/inventory/i18n_labels.php:6
 msgid "BiosVendor"
@@ -117,7 +125,7 @@ msgstr "Commentaires"
 msgid "Company"
 msgstr "Entreprise"
 
-#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:84
+#: inventory/inventory/csv.php:45 inventory/inventory/csv.php:85
 #: inventory/inventory/i18n_labels.php:71
 msgid "Computer"
 msgstr "Machine"
@@ -132,15 +140,15 @@ msgstr "Connecteur"
 msgid "Controller"
 msgstr "Contrôleur"
 
-#: inventory/infoPackage.inc.php:172
+#: inventory/infoPackage.inc.php:178
 msgid "Controller tab for a computer"
 msgstr "Onglet contrôleur pour un ordinateur"
 
-#: inventory/infoPackage.inc.php:151
+#: inventory/infoPackage.inc.php:157
 msgid "Controller tab for a computer in a group"
 msgstr "Onglet contrôleur pour un ordinateur dans un groupe"
 
-#: inventory/infoPackage.inc.php:136
+#: inventory/infoPackage.inc.php:139
 msgid "Controller tab for a group"
 msgstr "Onglet contrôleur pour un groupe"
 
@@ -287,16 +295,15 @@ msgid "Graphique"
 msgstr "Graphique"
 
 #: inventory/inventory/hardware.php:27 inventory/inventory/localSidebar.php:7
-#: inventory/inventory/tabs.php:18 inventory/inventory/i18n_labels.php:56
-#: inventory/infoPackage.inc.php:45
+#: inventory/inventory/i18n_labels.php:56 inventory/infoPackage.inc.php:45
 msgid "Hardware"
 msgstr "Matériel"
 
-#: inventory/infoPackage.inc.php:163
+#: inventory/infoPackage.inc.php:169
 msgid "Hardware tab for a computer"
 msgstr "Onglet matériel pour un ordinateur"
 
-#: inventory/infoPackage.inc.php:142
+#: inventory/infoPackage.inc.php:145
 msgid "Hardware tab for a computer in a group"
 msgstr "Onglet matériel pour un ordinateur dans un groupe"
 
@@ -347,7 +354,7 @@ msgstr "Inventaire de %s"
 msgid "Inventory on a group of computers"
 msgstr "Inventaire d'un groupe de machines"
 
-#: inventory/infoPackage.inc.php:159
+#: inventory/infoPackage.inc.php:165
 msgid "Inventory on a single computer"
 msgstr "Inventaire de la machine"
 
@@ -430,15 +437,15 @@ msgstr "Nom"
 msgid "Network"
 msgstr "Réseau"
 
-#: inventory/infoPackage.inc.php:169
+#: inventory/infoPackage.inc.php:175
 msgid "Network tab for a computer"
 msgstr "Onglet réseau pour un ordinateur"
 
-#: inventory/infoPackage.inc.php:148
+#: inventory/infoPackage.inc.php:154
 msgid "Network tab for a computer in a group"
 msgstr "Onglet réseau pour un ordinateur dans un groupe"
 
-#: inventory/infoPackage.inc.php:133
+#: inventory/infoPackage.inc.php:136
 msgid "Network tab for a group"
 msgstr "Onglet réseau pour un groupe"
 
@@ -533,15 +540,15 @@ msgstr "Nom"
 msgid "Registry"
 msgstr "Registre"
 
-#: inventory/infoPackage.inc.php:175
+#: inventory/infoPackage.inc.php:181
 msgid "Registry tab for a computer"
 msgstr "Onglet registre pour un ordinateur"
 
-#: inventory/infoPackage.inc.php:154
+#: inventory/infoPackage.inc.php:160
 msgid "Registry tab for a computer in a group"
 msgstr "Onglet registre pour un ordinateur dans un groupe"
 
-#: inventory/infoPackage.inc.php:139
+#: inventory/infoPackage.inc.php:142
 msgid "Registry tab for a group"
 msgstr "Onglet registre pour un groupe"
 
@@ -594,15 +601,15 @@ msgstr "Version (SMB)"
 msgid "Software"
 msgstr "Logiciel"
 
-#: inventory/infoPackage.inc.php:166
+#: inventory/infoPackage.inc.php:172
 msgid "Software tab for a computer"
 msgstr "Onglet logiciel pour un ordinateur"
 
-#: inventory/infoPackage.inc.php:145
+#: inventory/infoPackage.inc.php:151
 msgid "Software tab for a computer in a group"
 msgstr "Onglet logiciel pour un ordinateur dans un groupe"
 
-#: inventory/infoPackage.inc.php:130
+#: inventory/infoPackage.inc.php:133
 msgid "Software tab for a group"
 msgstr "Onglet logiciel pour un groupe"
 
