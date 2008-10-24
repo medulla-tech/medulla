@@ -2,19 +2,19 @@
 # Copyright (C) 2008 THE Pulse 2 - GLPI web'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - GLPI web package.
 # Nicolas Rueff <n.rueff@mandriva.com>, 2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - GLPI Web Interface 1.2.0rc4\n"
+"Project-Id-Version: Pulse 2 - GLPI Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-02 09:30+0200\n"
-"PO-Revision-Date: 2008-09-25 19:33+0200\n"
+"PO-Revision-Date: 2008-10-24 18:58+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: glpi/glpi/tabs.php:17
 #, php-format
@@ -23,15 +23,15 @@ msgstr "Inventaire de %s (GLPI)"
 
 #: glpi/glpi/tabs.php:22
 msgid "Controller"
-msgstr "Controlleur"
+msgstr "Contrôleur"
 
 #: glpi/infoPackage.inc.php:35
 msgid "Display locations"
-msgstr "Montrer les localizations"
+msgstr "Montrer les lieux"
 
 #: glpi/infoPackage.inc.php:55 glpi/infoPackage.inc.php:70
 msgid "GLPI controller tab"
-msgstr "Onglet controlleur"
+msgstr "Onglet contrôleur"
 
 #: glpi/infoPackage.inc.php:49 glpi/infoPackage.inc.php:64
 msgid "GLPI hardware tab"
@@ -39,11 +39,11 @@ msgstr "Onglet général"
 
 #: glpi/infoPackage.inc.php:52 glpi/infoPackage.inc.php:67
 msgid "GLPI network tab"
-msgstr "Onglet reseau"
+msgstr "Onglet réseau"
 
 #: glpi/glpi/tabs.php:18
 msgid "Hardware"
-msgstr "Materiel"
+msgstr "Matériel"
 
 #: glpi/infoPackage.inc.php:45
 msgid "Inventory (GLPI) on a groups of machines"
@@ -55,7 +55,7 @@ msgstr "Inventaire (GLPI) de la machine"
 
 #: glpi/glpi/tabs.php:22
 msgid "Network"
-msgstr "Reseau"
+msgstr "Réseau"
 
 #: glpi/glpi/view_hardware.php:60
 msgid "Properties"
@@ -67,15 +67,15 @@ msgstr "Valeur"
 
 #: glpi/glpi/view_hardware.php:67
 msgid "comments"
-msgstr "Commentaires"
+msgstr "commentaires"
 
 #: glpi/glpi/view_hardware.php:75
 msgid "location"
-msgstr "Localization"
+msgstr "lieux"
 
 #: glpi/glpi/view_hardware.php:66 glpi/glpi/view_hardware.php:68
 msgid "name"
-msgstr "Nom"
+msgstr "nom"
 
 #: glpi/glpi/view_hardware.php:70
 msgid "os"
@@ -99,16 +99,5 @@ msgstr "Version de l'OS"
 
 #: glpi/glpi/view_hardware.php:69
 msgid "serial"
-msgstr "Numero de série"
+msgstr "numéro de série"
 
-#~ msgid "Add"
-#~ msgstr "Ajouter"
-
-#~ msgid "GLPI general tab"
-#~ msgstr "Onglet général"
-
-#~ msgid "GLPI tab 1"
-#~ msgstr "Onglet reseau"
-
-#~ msgid "GLPI tab 2"
-#~ msgstr "Onglet controlleur"
