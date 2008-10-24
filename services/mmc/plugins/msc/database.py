@@ -775,11 +775,11 @@ class MscDatabase(Singleton):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled', 'failed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled'))
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed'))
         c = ret.count()
         session.close()
         return c
@@ -792,11 +792,11 @@ class MscDatabase(Singleton):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled', 'failed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled'))
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state == 'done')
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed'))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
         ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
