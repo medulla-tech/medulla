@@ -36,26 +36,15 @@ require_once("../../../modules/msc/includes/command_history.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-if (empty($_GET['history'])) {
-    $history = '';
-} else {
-    $history = $_GET['history'];
-}
-$filter = $_GET["filter"];
-if (isset($_GET["start"])) $start = $_GET["start"];
-else $start = 0;
+$history = empty($_GET['history'])              ? ''    : $_GET['history'];
+$filter = empty($_GET["filter"])                ? ''    : $_GET['filter'];
+$start = empty($_GET["start"])                  ? 0     : $_GET["start"];
+$type = empty($_GET["type"])                    ? 0     : $_GET["type"];
+$current_state = empty($_GET['currentstate'])   ? ''    : $_GET['currentstate'];
+$from = empty($_GET["from"])                    ? ''    : $_GET["from"];
 
-$type = $_GET['type'];
-$from = $_GET['from'];
-if (empty($_GET['currentstate'])) {
-    $current_state = '';
-} else {
-    $current_state = $_GET['currentstate'];
-}
-
-if (isset($_GET["commands"])) {
+if (!empty($_GET["commands"]))
     setCommandsFilter($_GET["commands"]);
-}
 
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
