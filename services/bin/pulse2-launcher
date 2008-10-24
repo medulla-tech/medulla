@@ -159,7 +159,6 @@ def startService():
 
     logger.info('launcher %s: %d slots, listening on %s:%d' % (name, slots, bind, port))
 
-
     twisted.internet.reactor.run()
     return 0
 

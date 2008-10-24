@@ -265,7 +265,9 @@ def setDefaultClientOptions(client):
             client['transp_args'] += ['-o', option]
         client['transp_args'] += ['-A'] # always forward TCP key
         if not 'proto_args' in client:
-            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwx,g=,o=', '--rsh=/usr/bin/ssh']
+            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwx,g=,o=']
+        # inside ssh get the same args as outside ssh
+        client['proto_args'] += ['--rsh="/usr/bin/ssh %s"' % ' '.join(map(lambda x:'-o %s' % x, LauncherConfig().ssh_options))]
 
     if client['protocol'] == 'rsyncssh':
         if not 'port' in client:
