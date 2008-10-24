@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-09 01:48+0200\n"
-"PO-Revision-Date: 2008-10-07 16:17+0200\n"
+"POT-Creation-Date: 2008-10-24 18:52+0200\n"
+"PO-Revision-Date: 2008-10-24 18:55+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: dyngroup/dyngroup/details.php:33
 #, php-format
@@ -35,15 +35,15 @@ msgstr "%s) Recherche %s = (%s) dans le module %s"
 msgid "->"
 msgstr "->"
 
-#: dyngroup/dyngroup/save.php:65 dyngroup/dyngroup/import_from_file.php:44
-#: dyngroup/dyngroup/add_groups.php:121
+#: dyngroup/dyngroup/add_groups.php:121 dyngroup/dyngroup/save.php:72
+#: dyngroup/dyngroup/import_from_file.php:44
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
 
-#: dyngroup/includes/double.php:70 dyngroup/includes/autocomplete.php:43
 #: dyngroup/dyngroup/creator.php:134 dyngroup/dyngroup/creator.php:162
-#: dyngroup/dyngroup/creator.php:166
+#: dyngroup/dyngroup/creator.php:166 dyngroup/includes/autocomplete.php:43
+#: dyngroup/includes/double.php:70
 msgid "Add"
 msgstr "Ajouter"
 
@@ -80,11 +80,15 @@ msgstr ""
 "Etes-vous sûr de bien vouloir supprimer le groupe <b>%s</b>?<br/> (il est "
 "possible qu'il soit utilisé dans un autre groupe)."
 
-#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
 #: dyngroup/dyngroup/delete_group.php:50
-#: dyngroup/dyngroup/remove_machine.php:48
+#: dyngroup/dyngroup/remove_machine.php:48 dyngroup/includes/groups.inc.php:82
+#: dyngroup/includes/groups.inc.php:175
 msgid "Cancel"
 msgstr "Annuler"
+
+#: dyngroup/dyngroup/save.php:101
+msgid "Check"
+msgstr "Vérifier"
 
 #: dyngroup/dyngroup/creator.php:72
 msgid "Choose the module you want to query : "
@@ -143,7 +147,7 @@ msgstr "Supprimer ce groupe"
 msgid "Detailed page of save a group of computers"
 msgstr "Page détaillée pour l'enregistrement d'un groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:72
+#: dyngroup/dyngroup/ajaxListGroups.php:71
 msgid "Display"
 msgstr "Montrer"
 
@@ -181,7 +185,7 @@ msgstr "Onglet de création d'un groupe dynamique"
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe dynamique"
 
-#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
+#: dyngroup/dyngroup/edithead.php:41 dyngroup/dyngroup/groupshead.php:32
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -189,7 +193,7 @@ msgstr "Éditer un groupe statique"
 msgid "Edit this group"
 msgstr "Éditer ce groupe"
 
-#: dyngroup/dyngroup/save.php:94
+#: dyngroup/dyngroup/save.php:101
 msgid "Enter boolean operator between groups"
 msgstr "Spécifier un opérateur booléen entre les groupes"
 
@@ -209,7 +213,7 @@ msgstr "Erreur à la modification du groupe"
 msgid "Group failed to share"
 msgstr "Erreur à la modification des partages du groupe"
 
-#: dyngroup/dyngroup/list.php:30
+#: dyngroup/dyngroup/list.php:31
 msgid "Group list"
 msgstr "Liste des groupes"
 
@@ -217,9 +221,9 @@ msgstr "Liste des groupes"
 msgid "Group members"
 msgstr "Membres du groupe"
 
-#: dyngroup/includes/groups.inc.php:117
-#: dyngroup/dyngroup/ajaxListGroups.php:64
+#: dyngroup/dyngroup/ajaxListGroups.php:63
 #: dyngroup/dyngroup/import_from_file.php:50
+#: dyngroup/includes/groups.inc.php:117
 msgid "Group name"
 msgstr "Nom du groupe"
 
@@ -235,8 +239,8 @@ msgstr "Partage du groupe"
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
-#: dyngroup/dyngroup/import_from_file.php:41
 #: dyngroup/dyngroup/add_groups.php:102
+#: dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
@@ -244,7 +248,7 @@ msgstr "Groupe modifié avec succès"
 msgid "Group successfully shared"
 msgstr "Groupe partagé avec succès"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/ajaxListGroups.php:60
 msgid "Hidden"
 msgstr "Caché"
 
@@ -256,8 +260,8 @@ msgstr "Cacher"
 msgid "Inventory on this group"
 msgstr "Montrer l'inventaire de ce groupe"
 
-#: dyngroup/includes/groups.inc.php:118
 #: dyngroup/dyngroup/import_from_file.php:56
+#: dyngroup/includes/groups.inc.php:118
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
@@ -265,12 +269,12 @@ msgstr "Ce groupe est-il visible"
 msgid "List all groups of computers"
 msgstr "Lister tous les groupes d'ordinateurs"
 
-#: dyngroup/dyngroup/save.php:56
+#: dyngroup/dyngroup/save.php:63
 msgid "Name :"
 msgstr "Nom :"
 
-#: dyngroup/includes/groups.inc.php:120 dyngroup/dyngroup/creator.php:160
-#: dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/dyngroup/creator.php:160 dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/includes/groups.inc.php:120
 msgid "No"
 msgstr "Non"
 
@@ -302,7 +306,7 @@ msgstr "Enlever un ordinateur d'un groupe"
 msgid "Request saver"
 msgstr "Sauvegarde de requête"
 
-#: dyngroup/dyngroup/save.php:62
+#: dyngroup/dyngroup/save.php:69
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -363,6 +367,22 @@ msgstr "Onglet de création d'un groupe statique"
 msgid "Temporary result display"
 msgstr "Affichage temporaire du resultat"
 
+#: dyngroup/dyngroup/save.php:107
+#, php-format
+msgid "The boolean equation '%s' is not valid"
+msgstr "L'équation booléenne '%s' est invalide"
+
+#: dyngroup/dyngroup/save.php:110
+#, php-format
+msgid ""
+"The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
+"requests"
+msgstr "L'équation booléenne '%s' est invalide.<br/>Pas le même nombre de sous-requêtes"
+
+#: dyngroup/dyngroup/save.php:113
+msgid "The boolean equation is valid"
+msgstr "L'équation booléenne est valide"
+
 #: dyngroup/dyngroup/creator.php:181
 msgid "The request is : "
 msgstr "La requête est : "
@@ -377,20 +397,21 @@ msgstr "Cette requête a été sauvée en tant que %s (id=%s)"
 msgid "This result has been saved as %s (id=%s)"
 msgstr "Ce résultat a été sauvegardé en tant que %s (id=%s)"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:71
+#: dyngroup/dyngroup/ajaxListGroups.php:70
 msgid "Type"
 msgstr "Type"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/ajaxListGroups.php:60
 msgid "Visible"
 msgstr "Visible"
 
-#: dyngroup/includes/groups.inc.php:119 dyngroup/dyngroup/creator.php:159
-#: dyngroup/dyngroup/creator.php:165 dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/dyngroup/creator.php:159 dyngroup/dyngroup/creator.php:165
+#: dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/includes/groups.inc.php:119
 msgid "Yes"
 msgstr "Oui"
 
-#: dyngroup/dyngroup/save.php:67 dyngroup/dyngroup/add_groups.php:119
+#: dyngroup/dyngroup/add_groups.php:119 dyngroup/dyngroup/save.php:74
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
@@ -399,32 +420,32 @@ msgstr "Le nom du groupe est obligatoire"
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
-#: dyngroup/dyngroup/save.php:58
+#: dyngroup/dyngroup/save.php:65
 msgid "hidden"
 msgstr "caché"
 
-#: dyngroup/dyngroup/save.php:58
+#: dyngroup/dyngroup/save.php:65
 msgid "it should be"
 msgstr "le groupe sera"
 
-#: dyngroup/dyngroup/save.php:57 dyngroup/dyngroup/ajaxListGroups.php:57
+#: dyngroup/dyngroup/ajaxListGroups.php:56 dyngroup/dyngroup/save.php:64
 msgid "query"
 msgstr "requête"
 
-#: dyngroup/dyngroup/save.php:57
+#: dyngroup/dyngroup/save.php:64
 msgid "result"
 msgstr "résultat"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:57
+#: dyngroup/dyngroup/ajaxListGroups.php:56
 #, php-format
 msgid "result (%s)"
 msgstr "résultat (%s)"
 
-#: dyngroup/dyngroup/save.php:57
+#: dyngroup/dyngroup/save.php:64
 msgid "save as"
 msgstr "sauver en tant que"
 
-#: dyngroup/dyngroup/ajaxListGroups.php:59
+#: dyngroup/dyngroup/ajaxListGroups.php:58
 msgid "static group"
 msgstr "groupe statique"
 
@@ -440,9 +461,7 @@ msgstr "le résultat"
 msgid "the static group"
 msgstr "le groupe statique"
 
-#: dyngroup/dyngroup/save.php:58
+#: dyngroup/dyngroup/save.php:65
 msgid "visible"
 msgstr "visible"
 
-#~ msgid "You will delete group <b>%s</b>."
-#~ msgstr "Vous allez supprimer le groupe <b>%s</b>."
