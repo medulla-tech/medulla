@@ -72,12 +72,6 @@ def start_launcher(name, config):
         print >> sys.stderr, "daemonization part #1 failed: %d (%s)" % (error.errno, error.strerror)
         sys.exit(1)
 
-    # drop privs
-    os.seteuid(0)
-    os.setegid(0)
-    os.setgid(config.daemon_group)
-    os.setuid(config.daemon_user)
-
     # decouple from parent environment
     os.close(sys.stdin.fileno())
     os.close(sys.stdout.fileno())
@@ -99,6 +93,12 @@ def start_launcher(name, config):
         logger.error('daemonization part #2 failed: %d (%s)' % (error.errno, error.strerror))
         print >> sys.stderr, "daemonization part #2 failed: %d (%s)" % (error.errno, error.strerror)
         sys.exit(1)
+
+    # drop privs
+    os.seteuid(0)
+    os.setegid(0)
+    os.setgid(config.daemon_group)
+    os.setuid(config.daemon_user)
 
     logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
     os.execv(launcher_path, (launcher_path, '--id', name))
