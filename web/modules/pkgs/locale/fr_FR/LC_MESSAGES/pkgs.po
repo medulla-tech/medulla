@@ -3,20 +3,20 @@
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
 # Olivier Roussy <oroussy@mandriva.com>, 2008.
-#
-#
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Packages Web Interface 1.2.0rc4\n"
+"Project-Id-Version: Pulse 2 - Packages Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-12 14:50+0200\n"
-"PO-Revision-Date: 2008-08-24 22:10+0200\n"
+"PO-Revision-Date: 2008-10-24 19:01+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);"
 
 #: pkgs/pkgs/localSidebar.php:6 pkgs/pkgs/edit.php:75
 #: pkgs/infoPackage.inc.php:44
@@ -153,3 +153,4 @@ msgstr "Le package a été supprimé."
 #: pkgs/pkgs/ajaxPackageList.php:65 pkgs/pkgs/ajaxPendingPackageList.php:66
 msgid "Versions"
 msgstr "Versions"
+
