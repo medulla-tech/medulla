@@ -500,7 +500,7 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Modele':
             return [[self.model.c.name, query[3]]]
         elif query[2] == 'Lieu':
-            return [[self.locations.c.name, query[3]]]
+            return [[self.locations.c.completename, query[3]]]
         elif query[2] == 'ServicePack':
             return [[self.os_sp.c.name, query[3]]]
         elif query[2] == 'Groupe': # TODO double join on ENTITY
