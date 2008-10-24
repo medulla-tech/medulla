@@ -192,6 +192,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
             self.working = False
 
         if self.working: 
+            self.logger.debug("already running")
             return
         self.working = True
         self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
@@ -256,19 +257,26 @@ class ThreadLauncher(Singleton):
 
         if self.config.package_mirror_activate:
             self.logger.debug("Starting package mirror thread")
-            threadpm = ThreadPackageMirror(config, sync_status)
-            threadpm.setDaemon(True)
-            threadpm.start()
+            self.threadpm = ThreadPackageMirror(config, sync_status)
+            self.threadpm.setDaemon(True)
+            #self.threadpm.start()
             self.logger.debug("Package mirror thread started")
 
             if self.config.package_global_mirror_activate:
                 self.logger.debug("Starting global package mirror thread")
-                threadgp = ThreadPackageGlobalMirror(config)
-                threadgp.setDaemon(True)
-                threadgp.start()
+                self.threadgp = ThreadPackageGlobalMirror(config)
+                self.threadgp.setDaemon(True)
+                #self.threadgp.start()
                 self.logger.debug("Global package mirror thread started")
 
         thread_webserver.initialize(self.config)
         # FIXME: Little sleep because sometimes Python exits before the
         # threads have the time to start
         time.sleep(5)
+        
+    def runThreads(self):
+        self.logger.debug("Package mirror thread start")
+        self.threadpm.start()
+        self.logger.debug("Global package mirror thread start")
+        self.threadgp.start()
+        
