@@ -163,24 +163,62 @@ def localProxyMayCleanup(myCommandOnHostID):
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
-    session = sqlalchemy.create_session()
-    database = MscDatabase()
+    if myCoH.order_in_proxy != None and myCoH.fk_use_as_proxy ==  myCoH.id: # to prevent further SA failure, we check only if we may be are proxy server
+        logging.getLogger().debug("scheduler %s: checking if we may cleanup coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
+        session = sqlalchemy.create_session()
+        database = MscDatabase()
+        # iterate over CoH which
+        # are linked to the same command
+        # are not our CoH
+        # have not finished their upload
+        # have not totally failed
+        # and be:
+        #  - a potential local proxy server (order_in_proxy != NULL) which is our client (fk_use_as_proxy = myCommandOnHostID)
+        #  - a potential local proxy client (order_in_proxy == NULL) which is our client (fk_use_as_proxy = myCommandOnHostID)
+        #  - a potential local proxy server (order_in_proxy != NULL) which may become our client (fk_use_as_proxy = NULL and higher order_in_proxy)
+        #  - a potential local proxy client (order_in_proxy == NULL) which is our client (fk_use_as_proxy = NULL and order_in_proxy = NULL)
+        # in fact, Im doing several requests as MySQL told me that NULL < 0 (which is quite normal)
 
-    # iterate over CoH which
-    # are linked to the same command
-    # are not our CoH
-    # are our client
-    # have finished their upload or totally failed
-    res = session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
-        filter(database.commands.c.id == myC.id).\
-        filter(database.commands_on_host.c.id != myCoH.id).\
-        filter(database.commands_on_host.c.uploaded != 'DONE').\
-        filter(database.commands_on_host.c.current_state != 'failed').\
-        filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.id).\
-        all()
-    session.close()
-    return len(res) == 0
+        # first request: clients which decided to use me
+        our_realclient_count = session.query(CommandsOnHost).\
+            select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+            filter(database.commands.c.id == myC.id).\
+            filter(database.commands_on_host.c.id != myCoH.id).\
+            filter(database.commands_on_host.c.uploaded != 'DONE').\
+            filter(database.commands_on_host.c.current_state != 'failed').\
+            filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.id).\
+            count()
+        logging.getLogger().debug("scheduler %s: found %s coh using coh #%s" % (SchedulerConfig().name, our_realclient_count, myCommandOnHostID))
+
+        # second request: clients which *may* decide to use me
+        our_lpclient_count = session.query(CommandsOnHost).\
+            select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+            filter(database.commands.c.id == myC.id).\
+            filter(database.commands_on_host.c.id != myCoH.id).\
+            filter(database.commands_on_host.c.uploaded != 'DONE').\
+            filter(database.commands_on_host.c.current_state != 'failed').\
+            filter(database.commands_on_host.c.fk_use_as_proxy == None).\
+            filter(database.commands_on_host.c.order_in_proxy == None).\
+            count()
+        logging.getLogger().debug("scheduler %s: found %s coh lpserver which may use coh #%s" % (SchedulerConfig().name, our_lpclient_count, myCommandOnHostID))
+
+        # third request: servers which *may* decide to use me
+        our_lpserver_count = session.query(CommandsOnHost).\
+            select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+            filter(database.commands.c.id == myC.id).\
+            filter(database.commands_on_host.c.id != myCoH.id).\
+            filter(database.commands_on_host.c.uploaded != 'DONE').\
+            filter(database.commands_on_host.c.current_state != 'failed').\
+            filter(database.commands_on_host.c.fk_use_as_proxy == None).\
+            filter(database.commands_on_host.c.order_in_proxy != None).\
+            filter(database.commands_on_host.c.order_in_proxy > myCoH.order_in_proxy).\
+            count()
+        logging.getLogger().debug("scheduler %s: found %s coh lpserver which may use coh #%s" % (SchedulerConfig().name, our_lpserver_count, myCommandOnHostID))
+
+        session.close()
+        return our_realclient_count + our_lpclient_count + our_lpserver_count == 0
+    else:
+        return True
 
 def startAllCommands(scheduler_name, commandIDs = []):
     session = sqlalchemy.create_session()
@@ -410,6 +448,10 @@ def stopCommand(myCommandOnHostID):
 def startCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
+    if myCoH.scheduler not in [SchedulerConfig().name, '', None]:
+        logger.warn("attempt to start command_on_host #%s from command #%s using the wrong scheduler" % (myCoH.getId(), myCoH.getIdCommand()))
+        return False
+
     logger.info("going to start command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
     logger.debug("command state is %s" % myC.toH())

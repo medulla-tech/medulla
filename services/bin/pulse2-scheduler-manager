@@ -91,6 +91,11 @@ def start_scheduler(config):
         print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
+    # drop privs
+    os.seteuid(0)
+    os.setegid(0)
+    os.setgid(config.daemon_group)
+    os.setuid(config.daemon_user)
 
     logger.info('daemonization ended: switching to %s' % [scheduler_path])
     os.execv(scheduler_path, (scheduler_path,))
