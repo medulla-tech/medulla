@@ -26,7 +26,7 @@ import logging
 import time
 
 # uses SA to handle sessions
-import sqlalchemy
+import sqlalchemy.orm
 
 """ Class to map msc.commands_history to SA
 """
@@ -46,7 +46,7 @@ class CommandsHistory(object):
 
     def flush(self):
         """ Handle SQL flushing """
-        session = sqlalchemy.create_session()
+        session = sqlalchemy.orm.create_session()
         session.save_or_update(self)
         session.flush()
         session.close()

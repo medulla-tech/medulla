@@ -27,7 +27,7 @@
 import logging
 import time
 import datetime
-import sqlalchemy
+import sqlalchemy.orm
 
 class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
@@ -423,7 +423,7 @@ class CommandsOnHost(object):
 
     def flush(self):
         """ Handle SQL flushing """
-        session = sqlalchemy.create_session()
+        session = sqlalchemy.orm.create_session()
         session.save_or_update(self)
         session.flush()
         session.close()
@@ -466,7 +466,7 @@ class CommandsOnHost(object):
         self.flush()
 
 def startCommandOnHost(coh_id):
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
     myCommandOnHost.setScheduled()
@@ -474,7 +474,7 @@ def startCommandOnHost(coh_id):
     myCommandOnHost.flush()
 
 def stopCommandOnHost(coh_id):
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
     myCommandOnHost.setStop()
@@ -488,7 +488,7 @@ def stopCommandOnHost(coh_id):
     myCommandOnHost.flush()
 
 def togglePauseCommandOnHost(coh_id):
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
     myCommandOnHost.togglePause()

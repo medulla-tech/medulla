@@ -27,7 +27,7 @@ import re
 import os.path
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, ForeignKey
+from sqlalchemy import *
 from sqlalchemy.orm import create_session, mapper, relation
 
 from twisted.internet import defer
@@ -730,9 +730,11 @@ class MscDatabase(Singleton):
         """
         Built a part of the query for the *AllCommandsonhost* methods
         """
-        q = session.query(CommandsOnHost, Commands, Target).select_from(self.commands.join(self.commands_on_host.join(self.target)))
-        q = self.__queryUsersFilter(ctx, q)
-        return q
+
+        #q = session.query(CommandsOnHost, Commands, Target).select_from(self.commands.join(self.commands_on_host.join(self.target)))
+        #q = self.__queryUsersFilter(ctx, q)
+        #return q
+        return self.__queryUsersFilter(ctx, session.query(CommandsOnHost, Commands, Target))
 
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
