@@ -30,14 +30,14 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
 
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy import *
+from sqlalchemy.orm import *
 
 import logging
 import re
 from sets import Set
 
-SA_MAYOR = 0
+SA_MAJOR = 0
 SA_MINOR = 4
 
 class Glpi(DyngroupDatabaseHelper):
@@ -49,7 +49,7 @@ class Glpi(DyngroupDatabaseHelper):
 
     def db_check(self):
         if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
+            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
             return False
 
         conn = self.connected()
@@ -63,7 +63,7 @@ class Glpi(DyngroupDatabaseHelper):
         try:
             import sqlalchemy
             a_version = sqlalchemy.__version__.split('.')
-            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
                 return True
         except:
             pass
@@ -77,7 +77,7 @@ class Glpi(DyngroupDatabaseHelper):
             return None
         self.logger.info("Glpi is activating")
         self.config = GlpiConfig("glpi", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, echo = True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -276,7 +276,7 @@ class Glpi(DyngroupDatabaseHelper):
 
     def __filter_on_entity_filter(self, query, ctx):
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        return self.machine.c.FK_entities.in_(*entities)
+        return self.machine.c.FK_entities.in_(entities)
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
@@ -312,7 +312,7 @@ class Glpi(DyngroupDatabaseHelper):
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
                 else:
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
-                query = query.filter(self.machine.c.ID.in_(*machines))
+                query = query.filter(self.machine.c.ID.in_(machines))
 
             except KeyError:
                 pass
@@ -323,7 +323,7 @@ class Glpi(DyngroupDatabaseHelper):
                 if filt.has_key('equ_bool'):
                     bool = filt['equ_bool']
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-                query = query.filter(self.machine.c.ID.in_(*machines))
+                query = query.filter(self.machine.c.ID.in_(machines))
             except KeyError, e:
                 pass
 
@@ -367,7 +367,7 @@ class Glpi(DyngroupDatabaseHelper):
                         session.close()
                         return None
                 else:
-                    query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(*locs))
+                    query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(locs))
             elif location != None:
                 join_query = join_query.join(self.location)
 
@@ -400,9 +400,9 @@ class Glpi(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.ID.in_(*map(lambda x:fromUUID(x), computers))
+            return Machine.c.ID.in_(map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.c.ID.not_(in_(*map(lambda x:fromUUID(x), computers)))
+            return Machine.c.ID.not_(in_(map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, ctx, query):
         """
@@ -548,13 +548,17 @@ class Glpi(DyngroupDatabaseHelper):
         """
         Get the size of the computer list that match filters parameters
         """
+        self.logger.debug("getRestrictedComputersListLen")
         session = create_session()
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         if query == None:
             return 0
-        count = query.group_by([self.machine.c.name, self.machine.c.domain]).count()
+        query = query.group_by([self.machine.c.name, self.machine.c.domain]).all()
+        self.logger.debug(query)
         session.close()
-        return count
+        # I didn't find how to easily count() all the computers after the
+        # group_by.
+        return query
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """
@@ -622,7 +626,7 @@ class Glpi(DyngroupDatabaseHelper):
         Modify the given query to filter on the machine UUID
         """
         if type(uuid) == list:
-            return query.filter(self.machine.c.ID.in_(*map(lambda a:int(str(a).replace("UUID", "")), uuid)))
+            return query.filter(self.machine.c.ID.in_(map(lambda a:int(str(a).replace("UUID", "")), uuid)))
         else:
             return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
 
@@ -726,14 +730,14 @@ class Glpi(DyngroupDatabaseHelper):
             # (which is not declared explicitly in glpi...
             # we have to emulate it...)
             session = create_session()
-            entids = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
+            entids = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles)).all()
             for entid in entids:
                 if entid.FK_entities == 0 and entid.recursive == 1:
                     session.close()
                     return self.__get_all_locations()
 
             # the normal case...
-            plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
+            plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles)).all()
             for ploc in plocs:
                 if ploc[1]:
                     # The user profile link to the location is recursive, and so
@@ -807,7 +811,7 @@ class Glpi(DyngroupDatabaseHelper):
             for location in locations:
                 inloc.append(location.name)
             session = create_session()
-            q = session.query(User).select_from(self.user.join(self.userprofile).join(self.location)).filter(self.location.c.name.in_(*inloc)).filter(self.user.c.name != userid).distinct().all()
+            q = session.query(User).select_from(self.user.join(self.userprofile).join(self.location)).filter(self.location.c.name.in_(inloc)).filter(self.user.c.name != userid).distinct().all()
             session.close()
             # Only returns the user names
             ret = map(lambda u: u.name, q)
@@ -842,7 +846,7 @@ class Glpi(DyngroupDatabaseHelper):
         a_locations = map(lambda loc:loc.name, self.getUserLocations(userid))
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.location))
-        query = query.filter(self.location.c.name.in_(*a_locations))
+        query = query.filter(self.location.c.name.in_(a_locations))
         query = self.filterOnUUID(query, a_machine_uuid)
         ret = query.group_by(self.machine.c.ID).all()
         size = 1
@@ -950,7 +954,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.software.c.FK_entities.in_(*entities))
+        query = query.filter(self.software.c.FK_entities.in_(entities))
         if filter != '':
             query = query.filter(self.software.c.name.like('%'+filt+'%'))
         ret = query.group_by(self.software.c.name).all()
@@ -1173,7 +1177,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.group.c.FK_entities.in_(*entities))
+        query = query.filter(self.group.c.FK_entities.in_(entities))
         if filter != '':
             query = query.filter(self.group.c.name.like('%'+filt+'%'))
         ret = query.group_by(self.group.c.name).all()
@@ -1187,7 +1191,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.group.c.FK_entities.in_(*entities))
+        query = query.filter(self.group.c.FK_entities.in_(entities))
         query = query.filter(self.group.c.name == filt)
         ret = query.all()
         session.close()
