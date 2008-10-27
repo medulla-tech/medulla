@@ -77,7 +77,7 @@ class Glpi(DyngroupDatabaseHelper):
             return None
         self.logger.info("Glpi is activating")
         self.config = GlpiConfig("glpi", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, echo = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -283,50 +283,8 @@ class Glpi(DyngroupDatabaseHelper):
         Get the sqlalchemy query to get a list of computers with some filters
         """
         query = session.query(Machine)
-        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         if filt:
-            # filtering on machines (name or uuid)
-            try:
-                query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
-            except KeyError:
-                pass
-            try:
-                query = query.filter(self.machine.c.name.like(filt['name']+'%'))
-            except KeyError:
-                pass
-            try:
-                query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
-            except KeyError:
-                pass
-
-            try:
-                query = self.filterOnUUID(query, filt['uuid'])
-            except KeyError:
-                pass
-
-            try:
-                gid = filt['gid']
-                machines = []
-                if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
-                else:
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
-                query = query.filter(self.machine.c.ID.in_(machines))
-
-            except KeyError:
-                pass
-
-            try:
-                request = filt['request']
-                bool = None
-                if filt.has_key('equ_bool'):
-                    bool = filt['equ_bool']
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-                query = query.filter(self.machine.c.ID.in_(machines))
-            except KeyError, e:
-                pass
-
             # filtering on query
             join_query = self.machine
             query_filter = None
@@ -373,11 +331,51 @@ class Glpi(DyngroupDatabaseHelper):
 
                 location = self.__getName(location)
                 query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
-
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
+
+            # filtering on machines (name or uuid)
+            try:
+                query = query.filter(self.machine.c.name.like(filt['hostname']+'%'))
+            except KeyError:
+                pass
+            try:
+                query = query.filter(self.machine.c.name.like(filt['name']+'%'))
+            except KeyError:
+                pass
+            try:
+                query = query.filter(self.machine.c.name.like(filt['filter']+'%'))
+            except KeyError:
+                pass
+
+            try:
+                query = self.filterOnUUID(query, filt['uuid'])
+            except KeyError:
+                pass
+
+            try:
+                gid = filt['gid']
+                machines = []
+                if ComputerGroupManager().isrequest_group(ctx, gid):
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                else:
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                query = query.filter(self.machine.c.ID.in_(machines))
+
+            except KeyError:
+                pass
+
+            try:
+                request = filt['request']
+                bool = None
+                if filt.has_key('equ_bool'):
+                    bool = filt['equ_bool']
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                query = query.filter(self.machine.c.ID.in_(machines))
+            except KeyError, e:
+                pass
 
         return query
 
