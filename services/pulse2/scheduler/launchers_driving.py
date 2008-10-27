@@ -23,7 +23,7 @@
 
 import logging
 import random
-import sqlalchemy
+import sqlalchemy.orm
 
 # My functions
 from pulse2.scheduler.config import SchedulerConfig
@@ -218,7 +218,7 @@ def callOnLauncher(coh_id, launcher, method, *args):
     # coh_id to keep a track of the command, set to None if we don't want to keep a track
 
     if coh_id: # FIXME: we may want to log launcher_name instead of launcher_uri
-        session = sqlalchemy.create_session()
+        session = sqlalchemy.orm.create_session()
         myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
         session.close()
         myCommandOnHost.setCurrentLauncher(launcher)

@@ -23,12 +23,14 @@
 
 # Big modules
 import logging
-import sqlalchemy
 import time
 import re
 import os
 import random
 import datetime
+
+import sqlalchemy
+import sqlalchemy.orm
 
 # Twisted modules
 import twisted.internet
@@ -52,14 +54,14 @@ from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 
 def gatherStuff():
     """ handy function to gather widely used objects """
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
     return (session, database, logger)
 
 def gatherCoHStuff(idCommandOnHost):
     """ same as gatherStuff(), this time for a particular CommandOnHost """
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
     myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
@@ -70,7 +72,7 @@ def gatherCoHStuff(idCommandOnHost):
 def getDependancies(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
     # look for CoH from same bundle
@@ -104,7 +106,7 @@ def localProxyUploadStatus(myCommandOnHostID):
         logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
         return 'keeping'
 
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
     smallest_done_upload_order_in_proxy = None
@@ -165,7 +167,7 @@ def localProxyMayCleanup(myCommandOnHostID):
 
     if myCoH.order_in_proxy != None and myCoH.fk_use_as_proxy ==  myCoH.id: # to prevent further SA failure, we check only if we may be are proxy server
         logging.getLogger().debug("scheduler %s: checking if we may cleanup coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
-        session = sqlalchemy.create_session()
+        session = sqlalchemy.orm.create_session()
         database = MscDatabase()
         # iterate over CoH which
         # are linked to the same command
@@ -221,7 +223,7 @@ def localProxyMayCleanup(myCommandOnHostID):
         return True
 
 def startAllCommands(scheduler_name, commandIDs = []):
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
     if commandIDs:
@@ -397,7 +399,7 @@ def sortCommands(commands_to_perform):
 def stopElapsedCommands(scheduler_name):
     # we return a list of deferred
     deffereds = [] # will hold all deferred
-    session = sqlalchemy.create_session()
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
     logger.debug("MSC_Scheduler->stopElapsedCommands()...")
