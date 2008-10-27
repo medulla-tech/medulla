@@ -26,9 +26,7 @@ from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
-from sqlalchemy import create_engine
-from sqlalchemy import MetaData, Table, Column, String, Integer, ForeignKey
-from sqlalchemy import and_, asc, or_
+from sqlalchemy import *
 from sqlalchemy.orm import create_session, mapper
 
 import sqlalchemy
