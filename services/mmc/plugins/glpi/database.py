@@ -29,13 +29,16 @@ from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
-from sqlalchemy import *
+
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import create_session, mapper
+
 import logging
 import re
 from sets import Set
 
 SA_MAYOR = 0
-SA_MINOR = 3
+SA_MINOR = 4
 
 class Glpi(DyngroupDatabaseHelper):
     """
@@ -62,7 +65,7 @@ class Glpi(DyngroupDatabaseHelper):
             a_version = sqlalchemy.__version__.split('.')
             if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
                 return True
-        except: 
+        except:
             pass
         return False
 
@@ -75,10 +78,10 @@ class Glpi(DyngroupDatabaseHelper):
         self.logger.info("Glpi is activating")
         self.config = GlpiConfig("glpi", conffile)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
-        self.is_activated = True        
+        self.is_activated = True
         self.logger.debug("Glpi finish activation")
 
     def connected(self):
@@ -216,7 +219,7 @@ class Glpi(DyngroupDatabaseHelper):
         # model
         self.model = Table("glpi_dropdown_model", self.metadata, autoload = True)
         mapper(Model, self.model)
-        
+
         # group
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
@@ -249,7 +252,7 @@ class Glpi(DyngroupDatabaseHelper):
             return query
         else:
             return query.filter(ret)
-        
+
     def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
@@ -367,10 +370,10 @@ class Glpi(DyngroupDatabaseHelper):
                     query_filter = self.__addQueryFilter(query_filter, self.location.c.name.in_(*locs))
             elif location != None:
                 join_query = join_query.join(self.location)
-                
+
                 location = self.__getName(location)
                 query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
-                
+
             query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
             query = self.__filter_on(query)
@@ -384,7 +387,7 @@ class Glpi(DyngroupDatabaseHelper):
         if type(obj) != str and type(obj) != unicode:
             return obj.name
         return obj
-        
+
     def __addQueryFilter(self, query_filter, eq):
         if str(query_filter) == None: # don't remove the str, sqlalchemy.sql._BinaryExpression == None return True!
             query_filter = eq
@@ -394,7 +397,7 @@ class Glpi(DyngroupDatabaseHelper):
 
     def computersTable(self):
         return [self.machine]
-        
+
     def computersMapping(self, computers, invert = False):
         if not invert:
             return Machine.c.ID.in_(*map(lambda x:fromUUID(x), computers))
@@ -461,7 +464,7 @@ class Glpi(DyngroupDatabaseHelper):
                 if r1.search(query[3]):
                     like = True
                     query[3] = r1.sub('%', query[3])
-                
+
             parts = self.__getPartsFromQuery(query)
             ret = []
             for part in parts:
@@ -512,7 +515,7 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Version': # TODO double join on ENTITY
             return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
         return []
- 
+
 
     def __getTable(self, table):
         if table == 'OS':
@@ -522,7 +525,7 @@ class Glpi(DyngroupDatabaseHelper):
         elif table == 'SOFTWARE':
             return self.software.c.name
         raise Exception("dont know table for %s"%(table))
-        
+
     ##################### machine list management
     def getComputer(self, ctx, filt):
         """
@@ -630,7 +633,7 @@ class Glpi(DyngroupDatabaseHelper):
         """
 
         uuid = self.getMachineUUID(machine)
-            
+
         if get != None:
             ma = {}
             for field in get:
@@ -641,7 +644,7 @@ class Glpi(DyngroupDatabaseHelper):
                 if field == 'cn':
                     ma[field] = machine.name
             return ma
-         
+
         ret = {
             'cn': [machine.name],
             'displayName': [machine.comments],
@@ -651,7 +654,7 @@ class Glpi(DyngroupDatabaseHelper):
             net = self.getMachineNetwork(uuid)
             ret['macAddress'] = map(lambda n: n['ifmac'], net) #self.getMachineMac(uuid)
             ret['ipHostNumber'] = map(lambda n: n['ifaddr'], net) #self.getMachineIp(uuid)
-            ret['subnetMask'] = map(lambda n: n['netmask'], net) 
+            ret['subnetMask'] = map(lambda n: n['netmask'], net)
             domain = self.getMachineDomain(machine.ID)
             if domain == None:
                 domain = ''
@@ -719,8 +722,8 @@ class Glpi(DyngroupDatabaseHelper):
         if user == 'root':
             ret = self.__get_all_locations()
         else:
-            # check if user is linked to the root entity 
-            # (which is not declared explicitly in glpi... 
+            # check if user is linked to the root entity
+            # (which is not declared explicitly in glpi...
             # we have to emulate it...)
             session = create_session()
             entids = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
@@ -728,7 +731,7 @@ class Glpi(DyngroupDatabaseHelper):
                 if entid.FK_entities == 0 and entid.recursive == 1:
                     session.close()
                     return self.__get_all_locations()
-            
+
             # the normal case...
             plocs = session.query(Location).add_column(self.userprofile.c.recursive).select_from(self.location.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(*self.config.activeProfiles)).all()
             for ploc in plocs:
@@ -852,7 +855,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret = Set(map(lambda m:toUUID(str(m.ID)), ret))
         self.logger.info("dont have permissions on %s"%(str(Set(a_machine_uuid) - ret)))
         return False
-        
+
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
         """
         Check if the user has correct permissions to access this machine
@@ -1008,9 +1011,9 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     def getAllContacts(self, ctx, filt = ''):
-        """          
+        """
         @return: all hostnames defined in the GLPI database
-        """          
+        """
         session = create_session()
         query = session.query(Machine)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
@@ -1037,9 +1040,9 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     def getAllContactNums(self, ctx, filt = ''):
-        """          
+        """
         @return: all hostnames defined in the GLPI database
-        """          
+        """
         session = create_session()
         query = session.query(Machine)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
@@ -1066,28 +1069,28 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     def getAllComments(self, ctx, filt = ''):
-        """                                            
+        """
         @return: all hostnames defined in the GLPI database
-        """                      
-        session = create_session()   
-        query = session.query(Machine)                 
+        """
+        session = create_session()
+        query = session.query(Machine)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        if filter != '':                               
+        if filter != '':
             query = query.filter(self.machine.c.comments.like('%'+filt+'%'))
         ret = query.group_by(self.machine.c.comments).all()
         session.close()
         return ret
     def getMachineByComment(self, ctx, comment):
-        """                                            
+        """
         @return: all machines that have this contact number
-        """                 
-        # TODO use the ctx...    
-        session = create_session()   
-        query = session.query(Machine)                 
+        """
+        # TODO use the ctx...
+        session = create_session()
+        query = session.query(Machine)
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
-        query = self.__filter_on(query)                
+        query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.machine.c.comments == comment)
         ret = query.all()
@@ -1212,8 +1215,8 @@ class Glpi(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-    
-        
+
+
     ##################### for msc
     def getMachineNetwork(self, uuid):
         """
@@ -1225,7 +1228,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret = unique(map(lambda m: m.toH(), query.all()))
         session.close()
         return ret
-        
+
     def getMachineMac(self, uuid):
         """
         Get a machine mac addresses
@@ -1348,7 +1351,7 @@ class Network(object):
             'gateway': self.gateway,
             'subnet': self.subnet
         }
-       
+
     def to_a(self):
         return [
             ['name', self.name],

@@ -26,7 +26,9 @@ from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
-from sqlalchemy import *
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import create_session, mapper
+
 import sqlalchemy
 import logging
 import datetime
@@ -34,7 +36,7 @@ import time
 import re
 
 SA_MAYOR = 0
-SA_MINOR = 3
+SA_MINOR = 4
 
 MAX_REQ_NUM = 100
 
@@ -97,7 +99,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.info("Inventory is activating")
         self.config = InventoryConfig("inventory", conffile)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
         self.is_activated = True

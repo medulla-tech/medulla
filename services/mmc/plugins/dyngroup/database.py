@@ -22,7 +22,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # SqlAlchemy
-from sqlalchemy import *
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import create_session, mapper, relation
 
 from sqlalchemy.exceptions import NoSuchTableError
 
@@ -37,7 +38,7 @@ import logging
 import re
 
 SA_MAYOR = 0
-SA_MINOR = 3
+SA_MINOR = 4
 DATABASEVERSION = 2
 
 class DyngroupDatabase(Singleton):
@@ -74,7 +75,7 @@ class DyngroupDatabase(Singleton):
         self.logger.info("Dyngroup database is connecting")
         self.config = DGConfig("dyngroup", conffile)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         try:
             self.initMappers()
         except NoSuchTableError, e:
@@ -215,7 +216,7 @@ class DyngroupDatabase(Singleton):
             session.flush()
         session.close()
         return user.id
-        
+
     def __getUser(self, login, t = 0, session = None):
         if not session:
             session = create_session()
@@ -244,23 +245,23 @@ class DyngroupDatabase(Singleton):
         if params.has_key('gid'):
             return self.__getMachines(ctx, params['gid'])
         return []
-        
+
     def __getMachinesFirstStep(self, ctx, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         select_from = self.machines.join(self.results).join(self.groups)
         (join_tables, filter_on) = self.__permissions_query(ctx, session)
         return (self.__merge_join_query(select_from, join_tables), filter_on)
-        
+
     def __getMachines(self, ctx, gid, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.id == gid, filter_on)).all()
-        
+
     def __getMachinesByGroupName(self, ctx, groupname, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.name == groupname, filter_on)).all()
 
@@ -272,7 +273,7 @@ class DyngroupDatabase(Singleton):
 
     def __getOrCreateMachine(self, uuid, name, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         machine = self.__getMachine(uuid, session)
         if not machine:
             machine = Machines()
@@ -308,14 +309,14 @@ class DyngroupDatabase(Singleton):
 
     def __deleteShares(self, group_id, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         users = self.__getUsersInGroup(group_id, session)
         for user in users:
             self.__deleteShare(group_id, user.id, session)
 
     def __deleteShare(self, group_id, user_id, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         shares = session.query(ShareGroup).filter(self.shareGroup.c.FK_user == user_id).filter(self.shareGroup.c.FK_group == group_id).all()
         for share in shares:
             session.delete(share)
@@ -342,14 +343,14 @@ class DyngroupDatabase(Singleton):
 
     def __deleteResults(self, ctx, group_id, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         machines = self.__getMachines(ctx, group_id, session)
         for machine in machines:
             self.__deleteResult(group_id, machine.id, session)
 
     def __deleteResult(self, group_id, machine_id, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         results = session.query(Results).filter(self.results.c.FK_machine == machine_id).filter(self.results.c.FK_group == group_id).all()
         for result in results:
             session.delete(result)
@@ -381,10 +382,10 @@ class DyngroupDatabase(Singleton):
     def __getGroupInSessionFirstStep(self, ctx, session):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
-        
+
         group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_user == self.users.c.id).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_group))
         return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
-        
+
     def __getGroupByNameInSession(self, ctx, session, name):
         group = self.__getGroupInSessionFirstStep(ctx, session)
         if re.search("\*", name):
@@ -393,12 +394,12 @@ class DyngroupDatabase(Singleton):
         else:
             group = group.filter(self.groups.c.name == name).first()
         return group
-    
+
     def __getGroupInSession(self, ctx, session, id):
         group = self.__getGroupInSessionFirstStep(ctx, session)
         group = group.filter(self.groups.c.id == id).first()
         return group
-        
+
     def __result_group_query(self, ctx, session, id, filter = ''):
         result = session.query(Machines).select_from(self.machines.join(self.results))
         result = result.filter(self.results.c.FK_group == id)
@@ -406,7 +407,7 @@ class DyngroupDatabase(Singleton):
             result = result.filter(self.machines.c.name.like('%'+filter+'%'))
         result = result.order_by(asc(self.machines.c.name))
         return result
-    
+
     def __merge_join_query(self, select_from, join_tables):
         for table in join_tables:
             if type(table) == list:
@@ -429,7 +430,7 @@ class DyngroupDatabase(Singleton):
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
-        
+
     def __allgroups_query(self, ctx, params, session = None):
         if not session:
             session = create_session()
@@ -500,7 +501,7 @@ class DyngroupDatabase(Singleton):
         session.close()
         return ret
 
-    def groupNameExists(self, ctx, name, id = None): 
+    def groupNameExists(self, ctx, name, id = None):
         """
         return True if a group with this name exists and does not have the same id
         """
@@ -513,7 +514,7 @@ class DyngroupDatabase(Singleton):
             if str(grp.id) != str(id):
                 return True
         return False
-        
+
     def get_group(self, ctx, id):
         # FIXME: Is the next line used ?
         user_id = self.__getOrCreateUser(ctx)
@@ -591,13 +592,13 @@ class DyngroupDatabase(Singleton):
         session.close()
 
         connection = self.getDbConnection()
-        trans = connection.begin()        
+        trans = connection.begin()
         # Delete the previous results for this group in the Results table
         connection.execute(self.results.delete(self.results.c.FK_group == gid))
         # Update the Machines table to remove ghost records
         self.__updateMachinesTable(connection)
         trans.commit()
-        
+
         return group.id
 
     def bool_group(self, ctx, id):
@@ -625,7 +626,7 @@ class DyngroupDatabase(Singleton):
 
     def request(self, ctx, query, bool, min, max, filter, queryManager):
         return self.__request(ctx, query, bool, min, max, filter, queryManager)
-    
+
     def requestresult_group(self, ctx, id, start, end, filter, queryManager):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
@@ -639,7 +640,7 @@ class DyngroupDatabase(Singleton):
 
     def __request(self, ctx, query, bool, start, end, filter, queryManager, session = None):
         if not session:
-            session = create_session()        
+            session = create_session()
         query = queryManager.getQueryTree(query, bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end, True)
         if type(result) == dict:
@@ -763,7 +764,7 @@ class DyngroupDatabase(Singleton):
                 id_sequence = id_sequence + 1
             # Insert into Results table only if there is something to insert
             connection.execute(self.results.insert(), into_results)
-        
+
     def reload_group(self, ctx, id, queryManager):
         connection = self.getDbConnection()
         trans = connection.begin()
@@ -775,7 +776,7 @@ class DyngroupDatabase(Singleton):
         self.__insert_into_machines_and_results(connection, result, group.id)
         trans.commit()
         return True
-    
+
     def addmembers_to_group(self, ctx, id, uuids):
         """
         Add member computers specified by a uuids list to a group.
@@ -835,7 +836,7 @@ class DyngroupDatabase(Singleton):
         group = self.get_group(ctx, id)
         session = create_session()
         for login, t in shares:
-            user = self.__getUser(login, t, session) 
+            user = self.__getUser(login, t, session)
             if user:
                 self.__deleteShare(group.id, user.id, session)
             else:

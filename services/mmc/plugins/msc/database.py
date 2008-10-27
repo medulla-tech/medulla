@@ -27,7 +27,8 @@ import re
 import os.path
 
 # SqlAlchemy
-from sqlalchemy import *
+from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, ForeignKey
+from sqlalchemy.orm import create_session, mapper, relation
 
 from twisted.internet import defer
 
@@ -57,7 +58,7 @@ import pulse2.time_intervals
 import logging
 
 SA_MAYOR = 0
-SA_MINOR = 3
+SA_MINOR = 4
 DATABASEVERSION = 13
 NB_DB_CONN_TRY = 2
 
@@ -102,7 +103,7 @@ class MscDatabase(Singleton):
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True)
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
         self.metadata.create_all()
