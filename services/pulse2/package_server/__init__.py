@@ -68,9 +68,9 @@ class ThreadPackageDetect(ThreadPackageHelper):
         if self.config.package_detect_tmp_activate:
             Common().moveCorrectPackages()
         Common().detectNewPackages()
-        self.logger.debug("ThreadPackageDetect end")                
+        self.logger.debug("ThreadPackageDetect end")
         self.working = False
-        
+
     def run(self):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_detect_loop)
@@ -94,11 +94,11 @@ class ThreadPackageGlobalMirror(ThreadPackageHelper):
             d.addCallback(self.onSuccess, (target, root))
             d.addErrback(self.onError, (target, root))
             return d
-        
+
         def cbEnding(result, self):
             self.logger.debug("ThreadPackageGlobalMirror end mirroring")
             self.working = False
-        
+
         if self.working:
             return
 
@@ -122,7 +122,7 @@ class ThreadPackageGlobalMirror(ThreadPackageHelper):
         dl = defer.DeferredList(dlist)
         dl.addCallback(cbEnding, (self))
         return dl
-        
+
     def runSub(self):
         try:
             self._runSub()
@@ -133,7 +133,7 @@ class ThreadPackageGlobalMirror(ThreadPackageHelper):
     def run(self):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_global_mirror_loop)
- 
+
 class ThreadPackageMirror(ThreadPackageHelper):
     def __init__(self, config, sync_status):
         ThreadPackageHelper.__init__(self, config)
@@ -154,7 +154,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
             Common().removePackagesFromRsyncList(pid, target)
         else:
             self.logger.error("ThreadPackageMirror mirroring command failed %s"%(str(result)))
-        
+
     def _runSub(self):
         def mirror_level0(result, args):
             pid, target, is_deletion = args
@@ -191,7 +191,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                 self.logger.debug("ThreadPackageMirror end mirroring: %s" % str(result))
             self.working = False
 
-        if self.working: 
+        if self.working:
             self.logger.debug("already running")
             return
         self.working = True
@@ -206,7 +206,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                 os.mkdir(p_dir)
                 # mark as deletion
                 is_deletion = True
-                
+
             for target in targets:
                 if target == '':
                     continue
@@ -235,7 +235,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
     def run(self):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_mirror_loop)
-    
+
 class ThreadLauncher(Singleton):
     def initialize(self, config):
         self.logger = logging.getLogger()
@@ -243,12 +243,12 @@ class ThreadLauncher(Singleton):
         config_addons(config)
         Common().init(config)
         sync_status = PkgsRsyncStateSerializer().init(Common())
-        
+
         if self.config.package_detect_activate:
             self.logger.debug("Package detect is activated")
             if self.config.package_detect_tmp_activate:
                 self.logger.debug("Package detect in temporary folder is activated")
-    
+
             self.logger.debug("Starting package detect thread")
             threadpd = ThreadPackageDetect(config)
             threadpd.setDaemon(True)
@@ -259,24 +259,24 @@ class ThreadLauncher(Singleton):
             self.logger.debug("Starting package mirror thread")
             self.threadpm = ThreadPackageMirror(config, sync_status)
             self.threadpm.setDaemon(True)
-            #self.threadpm.start()
             self.logger.debug("Package mirror thread started")
 
             if self.config.package_global_mirror_activate:
                 self.logger.debug("Starting global package mirror thread")
                 self.threadgp = ThreadPackageGlobalMirror(config)
                 self.threadgp.setDaemon(True)
-                #self.threadgp.start()
                 self.logger.debug("Global package mirror thread started")
 
         thread_webserver.initialize(self.config)
         # FIXME: Little sleep because sometimes Python exits before the
         # threads have the time to start
         time.sleep(5)
-        
+
     def runThreads(self):
-        self.logger.debug("Package mirror thread start")
-        self.threadpm.start()
-        self.logger.debug("Global package mirror thread start")
-        self.threadgp.start()
-        
+        if self.config.package_mirror_activate:
+            self.logger.debug("Package mirror thread start")
+            self.threadpm.start()
+            if self.config.package_global_mirror_activate:
+                self.logger.debug("Global package mirror thread start")
+                self.threadgp.start()
+
