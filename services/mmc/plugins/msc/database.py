@@ -28,7 +28,7 @@ import os.path
 
 # SqlAlchemy
 from sqlalchemy import *
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import create_session, mapper
 
 from twisted.internet import defer
 
@@ -57,7 +57,7 @@ import pulse2.time_intervals
 # Imported last
 import logging
 
-SA_MAYOR = 0
+SA_MAJOR = 0
 SA_MINOR = 4
 DATABASEVERSION = 13
 NB_DB_CONN_TRY = 2
@@ -74,7 +74,7 @@ class MscDatabase(Singleton):
 
     def db_check(self):
         if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
+            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
             return False
 
         conn = self.connected()
@@ -91,7 +91,7 @@ class MscDatabase(Singleton):
     def __checkSqlalchemy(self):
         import sqlalchemy
         a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
             return True
         return False
 

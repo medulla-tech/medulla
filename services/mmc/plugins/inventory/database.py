@@ -26,7 +26,9 @@ from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.support.mmctools import Singleton
 
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
+from sqlalchemy import create_engine
+from sqlalchemy import MetaData, Table, Column, String, Integer, ForeignKey
+from sqlalchemy import and_, asc, or_
 from sqlalchemy.orm import create_session, mapper
 
 import sqlalchemy
@@ -35,7 +37,7 @@ import datetime
 import time
 import re
 
-SA_MAYOR = 0
+SA_MAJOR = 0
 SA_MINOR = 4
 
 MAX_REQ_NUM = 100
@@ -70,7 +72,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def db_check(self):
         if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
+            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
             return False
 
         conn = self.connected()
@@ -84,7 +86,7 @@ class Inventory(DyngroupDatabaseHelper):
         try:
             import sqlalchemy
             a_version = sqlalchemy.__version__.split('.')
-            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
                 return True
         except:
             pass
