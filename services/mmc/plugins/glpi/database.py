@@ -554,11 +554,10 @@ class Glpi(DyngroupDatabaseHelper):
         if query == None:
             return 0
         query = query.group_by([self.machine.c.name, self.machine.c.domain]).all()
-        self.logger.debug(query)
         session.close()
         # I didn't find how to easily count() all the computers after the
         # group_by.
-        return query
+        return len(query)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """
