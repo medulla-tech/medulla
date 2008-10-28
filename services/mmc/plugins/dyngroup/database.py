@@ -755,7 +755,7 @@ class DyngroupDatabase(Singleton):
         # Insert needed Machines rows
         if into_machines:
             ret = connection.execute(self.machines.insert(), into_machines)
-            id_sequence = ret.last_inserted_ids()[0]
+            id_sequence = ret.cursor.lastrowid
             # Prepare remaining insert for Results table
             for elt in into_machines:
                 into_results.append({
