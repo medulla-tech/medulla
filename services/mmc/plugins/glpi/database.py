@@ -275,13 +275,20 @@ class Glpi(DyngroupDatabaseHelper):
         return query.filter(ret)
 
     def __filter_on_entity_filter(self, query, ctx):
-        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        return self.machine.c.FK_entities.in_(entities)
+        # FIXME: I put the locationsid in the security context to optimize the
+        # number of requests. locationsid is set by
+        # glpi.utilities.complete_ctx, but when querying via the dyngroup
+        # plugin it is not called.
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
+        return self.machine.c.FK_entities.in_(ctx.locationsid)
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
         Get the sqlalchemy query to get a list of computers with some filters
         """
+        if session == None:
+            session = create_session()
         query = session.query(Machine)
         query = self.__filter_on(query)
         if filt:
