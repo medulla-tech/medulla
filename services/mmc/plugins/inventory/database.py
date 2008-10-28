@@ -98,7 +98,7 @@ class Inventory(DyngroupDatabaseHelper):
             return None
         self.logger.info("Inventory is activating")
         self.config = InventoryConfig("inventory", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True, echo=False)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -226,56 +226,66 @@ class Inventory(DyngroupDatabaseHelper):
         return False
 
     def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session(), count = False):
-
         query = session.query(Machine)
-        if pattern:
-            if 'hostname' in pattern:
-                query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
-            if 'filter' in pattern:
-                query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
-            if 'uuid' in pattern:
-                query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
-            if 'request' in pattern:
-                request = pattern['request']
-                if 'equ_bool' in pattern:
-                    bool = pattern['equ_bool']
-                else:
-                    bool = None
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-                query = query.filter(self.machine.c.id.in_(machines))
-            if 'gid' in pattern:
-                gid = pattern['gid']
+        try:
+            query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+        except KeyError, e:
+            pass
 
-                machines = list()
-                if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
-                else:
-                     filt = ''
-                     if pattern.has_key('hostname'):
-                         filt = pattern['hostname']
-                     if pattern.has_key('filter'):
-                         filt = pattern['filter']
-                     if count:
-                         return ComputerGroupManager().countresult_group(ctx, gid, filt)
-                     else:
-                         min = 0
-                         max = -1
-                         if pattern.has_key('min'):
-                             min = pattern['min']
-                         if pattern.has_key('max'):
-                             max = pattern['max']
-                         machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
+        try:
+            query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
+        except KeyError, e:
+            pass
 
-                query = query.filter(self.machine.c.id.in_(machines))
-                if not ComputerGroupManager().isrequest_group(ctx, gid):
-                    if count:
-                        return query.count()
-                    else:
-                        return query
+        try:
+            query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+        except KeyError, e:
+            pass
+
+        try:
+            request = pattern['request']
+            bool = None
+            if pattern.has_key('equ_bool'):
+                bool = pattern['equ_bool']
+            machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+            query = query.filter(self.machine.c.id.in_(*machines))
+        except KeyError, e:
+            pass
+
+        try:
+            gid = pattern['gid']
+            machines = []
+            if ComputerGroupManager().isrequest_group(ctx, gid):
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+            else:
+                 filt = ''
+                 if pattern.has_key('hostname'):
+                     filt = pattern['hostname']
+                 if pattern.has_key('filter'):
+                     filt = pattern['filter']
+                 if count:
+                     return ComputerGroupManager().countresult_group(ctx, gid, filt)
+                 else:
+                     min = 0
+                     max = -1
+                     if pattern.has_key('min'):
+                         min = pattern['min']
+                     if pattern.has_key('max'):
+                         max = pattern['max']
+                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
+
+            query = query.filter(self.machine.c.id.in_(*machines))
+            if not ComputerGroupManager().isrequest_group(ctx, gid):
+                if count:
+                    return query.count()
+                else:
+                    return query
+        except KeyError, e:
+            pass
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
-        query = query.select_from(join_query).filter(query_filter)
+        query = query.select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
         # end of dyngroups
         if count:
             return query.count()
@@ -705,9 +715,8 @@ class Inventory(DyngroupDatabaseHelper):
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
-        # FIXME: disabled for now !
-        #for grp in grp_by:
-        #    result = result.group_by(grp)
+        for grp in grp_by:
+            result = result.group_by(grp)
         result = result.count()
         session.close()
         return result
@@ -742,7 +751,6 @@ class Inventory(DyngroupDatabaseHelper):
             result = result.group_by(grp)
         result = result.order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
         session.close()
-
         if result:
             # Build the result as a simple dictionary
             # We return only the information from the latest inventory
@@ -784,24 +792,23 @@ class Inventory(DyngroupDatabaseHelper):
         haspartKlass = self.klass["has" + part]
         grp_by = [partTable.c.id, haspartTable.c.machine]
 
-        # prepare wanted fields
-        result = session.query(partKlass).\
-            add_column(self.machine.c.Name).\
-            add_column(self.machine.c.id).\
-            add_column(haspartTable.c.inventory.label("inventoryid")).\
-            add_column(self.inventory.c.Date)
+        # This SQL query has been built using the one from the LRS inventory module
+        # TODO : this request has to be done on Machine and then add the columns so that the left join works...
+        #result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.outerjoin(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
+        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date)
 
-        # add more columns if needed
         noms = getInventoryNoms()
-        select_from = haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
+        select_from = haspartTable.join(self.inventory).join(partTable)
         if noms.has_key(part):
             for nom in noms[part]:
-                nomTable = self.table['nom%s%s' % (part, nom)]
+                nomTableName = 'nom%s%s' % (part, nom)
+                nomTable = self.table[nomTableName]
                 select_from = select_from.join(nomTable)
                 result = result.add_column(getattr(nomTable.c, nom))
                 grp_by.append(nomTable.c.id)
 
-        result = self.__filterQuery(ctx, result.select_from(select_from).filter(self.inventory.c.Last == 1), params)
+        result = result.select_from(self.machine.outerjoin(select_from)).filter(self.inventory.c.Last == 1)
+        result = self.__filterQuery(ctx, result, params)
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
         if params.has_key('where') and params['where'] != '':
