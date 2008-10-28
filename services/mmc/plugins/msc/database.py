@@ -732,10 +732,11 @@ class MscDatabase(Singleton):
         Built a part of the query for the *AllCommandsonhost* methods
         """
 
-        #q = session.query(CommandsOnHost, Commands, Target).select_from(self.commands.join(self.commands_on_host.join(self.target)))
-        #q = self.__queryUsersFilter(ctx, q)
-        #return q
-        return self.__queryUsersFilter(ctx, session.query(CommandsOnHost, Commands, Target))
+        join = self.commands_on_host.join(self.commands).join(self.target)
+        q = session.query(CommandsOnHost, Commands, Target)
+        q = q.select_from(join)
+        q = self.__queryUsersFilter(ctx, q)
+        return q
 
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
