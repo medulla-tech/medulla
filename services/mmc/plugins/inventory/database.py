@@ -248,7 +248,7 @@ class Inventory(DyngroupDatabaseHelper):
             if pattern.has_key('equ_bool'):
                 bool = pattern['equ_bool']
             machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-            query = query.filter(self.machine.c.id.in_(*machines))
+            query = query.filter(self.machine.c.id.in_(machines))
         except KeyError, e:
             pass
 
@@ -274,7 +274,7 @@ class Inventory(DyngroupDatabaseHelper):
                          max = pattern['max']
                      machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
 
-            query = query.filter(self.machine.c.id.in_(*machines))
+            query = query.filter(self.machine.c.id.in_(machines))
             if not ComputerGroupManager().isrequest_group(ctx, gid):
                 if count:
                     return query.count()
@@ -285,11 +285,12 @@ class Inventory(DyngroupDatabaseHelper):
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
-        query = query.select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
+        query = query.select_from(join_query).filter(query_filter)
         # end of dyngroups
         if count:
             return query.count()
-        return query
+        else:
+            return query.group_by(self.machine.c.id)
 
     def getMachinesOnly(self, ctx, pattern = None):
         """
@@ -298,16 +299,16 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         query = self.__machinesOnlyQuery(ctx, pattern, session)
         query = query.order_by(asc(self.machine.c.Name))
-        try:
+        if 'max' in pattern:
             if pattern['max'] != -1:
-                if (pattern.has_key('gid') and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) or not pattern.has_key('gid'):
+                if ('gid' in pattern and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) or 'gid' not in pattern:
                     query = query.offset(pattern['min'])
                     query = query.limit(int(pattern['max']) - int(pattern['min']))
                 else:
                     query = query.all()
             else:
                 query = query.all()
-        except KeyError, e:
+        else:
             query = query.all()
         session.close()
         return query
@@ -548,7 +549,12 @@ class Inventory(DyngroupDatabaseHelper):
                 filters.append(getattr(partKlass.c, field) == value)
 
         session = create_session()
-        query = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
+        query = session.query(Machine).\
+            add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
+            add_column(func.min(self.inventory.c.Date)).\
+            select_from(
+                self.machine.join(haspartTable.join(self.inventory).join(partTable))
+            )
 
         # apply filters
         for filter in filters:
@@ -572,13 +578,24 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[table]
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
+
+        result = session.query(Machine).\
+            add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
+            add_column(func.min(self.inventory.c.Date)).\
+            select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
+
         import re
         p1 = re.compile('\*')
         if p1.search(value):
-            value = p1.sub('%', value)
-            result = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable))).filter( getattr(partKlass.c, field).like(value)).group_by(self.machine.c.Name).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+            result = result.filter(getattr(partKlass.c, field).like(p1.sub('%', value)))
         else:
-            result = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable))).filter( getattr(partKlass.c, field) == value).group_by(self.machine.c.Name).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+            result = result.filter(getattr(partKlass.c, field) == value)
+
+        result = result.group_by(self.machine.c.Name).\
+            group_by(haspartTable.c.machine).\
+            order_by(haspartTable.c.machine).\
+            order_by(desc("inventoryid")).\
+            order_by(haspartTable.c.inventory)
         session.close()
 
         if result:
