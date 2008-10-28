@@ -24,6 +24,7 @@
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.sql import *
 
 from sqlalchemy.exceptions import NoSuchTableError
 
@@ -37,7 +38,7 @@ from mmc.support.mmctools import Singleton
 import logging
 import re
 
-SA_MAYOR = 0
+SA_MAJOR = 0
 SA_MINOR = 4
 DATABASEVERSION = 2
 
@@ -90,7 +91,7 @@ class DyngroupDatabase(Singleton):
     def __checkSqlalchemy(self):
         import sqlalchemy
         a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
             return True
         return False
 
@@ -212,7 +213,7 @@ class DyngroupDatabase(Singleton):
             user = Users()
             user.login = user_id
             user.type = t
-            session.save(user)
+            session.save_or_update(user)
             session.flush()
         session.close()
         return user.id
@@ -228,9 +229,9 @@ class DyngroupDatabase(Singleton):
             session = create_session()
         users = session.query(Users)
         if t == None:
-            users = users.filter(self.users.c.login.in_(*logins))
+            users = users.filter(self.users.c.login.in_(logins))
         else:
-            users = users.filter(self.users.c.login.in_(*logins)).filter(self.users.c.type == t)
+            users = users.filter(self.users.c.login.in_(logins)).filter(self.users.c.type == t)
         return users
 
     def __getUsersInGroup(self, gid, session = None):
@@ -279,7 +280,7 @@ class DyngroupDatabase(Singleton):
             machine = Machines()
             machine.uuid = uuid
             machine.name = name
-            session.save(machine)
+            session.save_or_update(machine)
             session.flush()
         session.close()
         return machine.id
@@ -302,7 +303,7 @@ class DyngroupDatabase(Singleton):
         share.FK_user = user_id
         if type_id != None:
             share.FK_type = type_id
-        session.save(share)
+        session.save_or_update(share)
         session.flush()
         session.close()
         return share.id
@@ -336,7 +337,7 @@ class DyngroupDatabase(Singleton):
         result = Results()
         result.FK_group = group_id
         result.FK_machine = machine_id
-        session.save(result)
+        session.save_or_update(result)
         session.flush()
         session.close()
         return result.id
@@ -384,7 +385,7 @@ class DyngroupDatabase(Singleton):
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
         group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_user == self.users.c.id).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_group))
-        return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(ug_ids)))
 
     def __getGroupByNameInSession(self, ctx, session, name):
         group = self.__getGroupInSessionFirstStep(ctx, session)
@@ -429,7 +430,7 @@ class DyngroupDatabase(Singleton):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
 
-        return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(*ug_ids)))
+        return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(ug_ids)))
 
     def __allgroups_query(self, ctx, params, session = None):
         if not session:
@@ -545,7 +546,7 @@ class DyngroupDatabase(Singleton):
         group.name = name
         group.display_in_menu = visibility
         group.FK_user = user_id
-        session.save(group)
+        session.save_or_update(group)
         session.flush()
         session.close()
         return group.id
@@ -557,7 +558,7 @@ class DyngroupDatabase(Singleton):
         group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
         if group:
             group.name = name
-            session.save(group)
+            session.save_or_update(group)
             session.flush()
             session.close()
             return True
@@ -571,7 +572,7 @@ class DyngroupDatabase(Singleton):
         group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
         if group:
             group.display_in_menu = visibility
-            session.save(group)
+            session.save_or_update(group)
             session.flush()
             session.close()
             return True
@@ -587,7 +588,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = session.query(Groups).filter(self.groups.c.id == gid).filter(self.groups.c.FK_user == user_id).first()
         group.query = request
-        session.save(group)
+        session.save_or_update(group)
         session.flush()
         session.close()
 
@@ -610,7 +611,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
         group.bool = bool
-        session.save(group)
+        session.save_or_update(group)
         session.flush()
         session.close()
         return group.id
@@ -683,7 +684,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
         group.display_in_menu = 1
-        session.save(group)
+        session.save_or_update(group)
         session.flush()
         session.close()
         return group.id
@@ -692,7 +693,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = self.__getGroupInSession(ctx, session, id)
         group.display_in_menu = 0
-        session.save(group)
+        session.save_or_update(group)
         session.flush()
         session.close()
         return group.id
@@ -732,7 +733,7 @@ class DyngroupDatabase(Singleton):
         """
         # Get already registered machines
         uuids = map(lambda x: x["uuid"], computers)
-        existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(*uuids)))
+        existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(uuids)))
         # Prepare insert for the Results table
         into_results = []
         existing_uuids_hash = {}
@@ -799,7 +800,7 @@ class DyngroupDatabase(Singleton):
         trans = connection.begin()
         uuids = map(lambda x: x["uuid"], uuids.values())
         # Delete the selected machines from the Results table
-        connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine.in_(select([self.machines.c.id], self.machines.c.uuid.in_(*uuids))))))
+        connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
         # Update the Machines table
         self.__updateMachinesTable(connection)
         trans.commit()
