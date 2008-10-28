@@ -7,7 +7,7 @@ class DatabaseHelper(Singleton):
     config = None
     def db_check(self):
         if not checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
+            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
             return False
 
         conn = self.connected()

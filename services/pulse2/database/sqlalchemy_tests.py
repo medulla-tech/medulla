@@ -1,8 +1,9 @@
 from sqlalchemy import *
+from sqlalchemy.orm import *
 from pulse2.database.utilities import create_method
 
-SA_MAYOR = 0
-SA_MINOR = 3
+SA_MAJOR = 0
+SA_MINOR = 4
 
 for m in ['first', 'count', 'all']:
     try:
@@ -15,7 +16,7 @@ def checkSqlalchemy():
     try:
         import sqlalchemy
         a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
+        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
             return True
     except:
         pass

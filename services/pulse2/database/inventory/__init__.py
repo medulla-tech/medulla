@@ -23,11 +23,12 @@ from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.utilities import unique, create_method, toH, DbObject
-from pulse2.database.sqlalchemy_tests import checkSqlalchemy, SA_MAYOR, SA_MINOR
+from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import Singleton
 
 from sqlalchemy import *
+from sqlalchemy.orm import *
 
 import datetime
 import time
@@ -53,7 +54,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.config = config
         PossibleQueries().init(self.config)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
-        self.metadata = BoundMetaData(self.db)
+        self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
         self.is_activated = True
@@ -141,7 +142,9 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
         
-    def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session()):
+    def __machinesOnlyQuery(self, ctx, pattern = None, session = None):
+        if session == None:
+            session = create_session()
         query = session.query(Machine)
         try:
             query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
@@ -491,7 +494,9 @@ class Inventory(DyngroupDatabaseHelper):
                 ret.append(res[1])
         return unique(ret)
 
-    def __getValuesWhereQuery(self, table, field1, value1, field2, session = create_session()):
+    def __getValuesWhereQuery(self, table, field1, value1, field2, session = None):
+        if session == None:
+            session = create_session()
         if table == 'Machine':
             partKlass = Machine
             partTable = self.machine
