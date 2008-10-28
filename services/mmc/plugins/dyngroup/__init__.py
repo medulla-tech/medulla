@@ -273,7 +273,9 @@ class RpcProxy(RpcProxyI):
         b = BoolRequest()
         try:
             b.parse(bool)
-        except:
+        except Exception, e:
+            self.logger.debug('checkBoolean failed : ')
+            self.logger.debug(e)
             return [False, -1]
         return xmlrpcCleanup([b.isValid(), b.countOps()])
     

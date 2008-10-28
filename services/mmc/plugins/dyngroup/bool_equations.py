@@ -48,6 +48,7 @@ class BoolRequest(object):
         
     def isValid(self):
         if self.equ == None:
+            self.logger.debug("isValid: no equation")
             return False
         return self.equ.check()
 
@@ -167,7 +168,7 @@ class BoolEquation(BoolElement):
             self.parse(str)
     
     def check(self): # ids are always in a range from 1 to count
-        return map(lambda x:int(x), self.getVals()) == range(1,1+self.count())
+        return Set(map(lambda x:int(x), self.getVals())) == Set(range(1,1+self.count()))
         
     def count(self):
         return len(self.getVals())
