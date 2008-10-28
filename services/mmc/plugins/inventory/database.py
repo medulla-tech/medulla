@@ -795,19 +795,24 @@ class Inventory(DyngroupDatabaseHelper):
         # This SQL query has been built using the one from the LRS inventory module
         # TODO : this request has to be done on Machine and then add the columns so that the left join works...
         #result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.outerjoin(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
-        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date)
+        result = session.query(partKlass).\
+            add_column(self.machine.c.Name).\
+            add_column(self.machine.c.id).\
+            add_column(haspartTable.c.inventory.label("inventoryid")).\
+            add_column(self.inventory.c.Date)
 
+        # add more columns if needed
         noms = getInventoryNoms()
-        select_from = haspartTable.join(self.inventory).join(partTable)
+        select_from = haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
         if noms.has_key(part):
             for nom in noms[part]:
-                nomTableName = 'nom%s%s' % (part, nom)
-                nomTable = self.table[nomTableName]
+                nomTable = self.table['nom%s%s' % (part, nom)]
                 select_from = select_from.join(nomTable)
                 result = result.add_column(getattr(nomTable.c, nom))
                 grp_by.append(nomTable.c.id)
 
-        result = result.select_from(self.machine.outerjoin(select_from)).filter(self.inventory.c.Last == 1)
+        result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
+
         result = self.__filterQuery(ctx, result, params)
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...

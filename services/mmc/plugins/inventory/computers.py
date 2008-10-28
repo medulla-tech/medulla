@@ -34,6 +34,7 @@ class InventoryComputers(ComputerI):
 
     def getComputer(self, ctx, filt = None):
         ret = self.inventory.getMachinesOnly(ctx, filt)
+
         if type(ret) == list and len(ret) == 1:
             return ret[0].toDN(ctx, True)
         else:
@@ -111,7 +112,7 @@ class InventoryComputers(ComputerI):
 
     def canAssociateComputer2Location(self):
         return True
-        
+
     def addComputer(self, ctx, params):
         name = params["computername"]
         comment = params["computerdescription"].encode("utf-8")
@@ -123,7 +124,7 @@ class InventoryComputers(ComputerI):
             location = params['location_uuid']
         ret = self.inventory.addMachine(name, ip, mac, net, comment, location)
         return ret
-    
+
     def neededParamsAddComputer(self):
         return [
             ['computerip', 'string', 'computer\'s ip address'],
@@ -139,8 +140,8 @@ class InventoryComputers(ComputerI):
 
     def getComputersListHeaders(self, ctx):
         """
-        Computers list header is just hostname as Computer Name and Description as Description 
+        Computers list header is just hostname as Computer Name and Description as Description
         """
-        return self.config.display 
+        return self.config.display
 
 
