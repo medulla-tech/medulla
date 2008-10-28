@@ -183,6 +183,8 @@ class BoolEquation(BoolElement):
                 vals.append(b.getValue())
             elif type(b) == int:
                 vals.append(b)
+            elif type(b) == BoolEquation:
+                vals.extend(b._getVals())
             else:
                 vals.extend(b._count())
         return vals
