@@ -28,7 +28,7 @@ import os.path
 
 # SqlAlchemy
 from sqlalchemy import *
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import *
 
 from twisted.internet import defer
 
@@ -528,7 +528,7 @@ class MscDatabase(Singleton):
             session.close()
 
             r = connection.execute(self.target.insert(), targets_to_insert)
-            first_target_id = r.last_inserted_ids()[0]
+            first_target_id = r.cursor.lastrowid
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
                 try:
                     order_in_proxy = proxies.index(atarget["target_uuid"])
