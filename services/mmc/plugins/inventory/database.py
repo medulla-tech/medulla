@@ -705,8 +705,9 @@ class Inventory(DyngroupDatabaseHelper):
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
-        for grp in grp_by:
-            result = result.group_by(grp)
+        # FIXME: disabled for now !
+        #for grp in grp_by:
+        #    result = result.group_by(grp)
         result = result.count()
         session.close()
         return result
