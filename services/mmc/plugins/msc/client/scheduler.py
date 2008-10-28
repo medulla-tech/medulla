@@ -26,6 +26,7 @@ import twisted.web.xmlrpc
 import twisted.internet.defer
 
 from sqlalchemy import *
+from sqlalchemy.orm import *
 import logging
 
 # our stuff
