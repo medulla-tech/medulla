@@ -225,68 +225,60 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
 
-    def __machinesOnlyQuery(self, ctx, pattern = None, session = create_session(), count = False):
-        query = session.query(Machine)
-        try:
-            query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
-        except KeyError, e:
-            pass
-
-        try:
-            query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
-        except KeyError, e:
-            pass
-
-        try:
-            query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
-        except KeyError, e:
-            pass
-
-        try:
-            request = pattern['request']
-            bool = None
-            if pattern.has_key('equ_bool'):
-                bool = pattern['equ_bool']
-            machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
-            query = query.filter(self.machine.c.id.in_(machines))
-        except KeyError, e:
-            pass
-
-        try:
-            gid = pattern['gid']
-            machines = []
-            if ComputerGroupManager().isrequest_group(ctx, gid):
-                machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
-            else:
-                 filt = ''
-                 if pattern.has_key('hostname'):
-                     filt = pattern['hostname']
-                 if pattern.has_key('filter'):
-                     filt = pattern['filter']
-                 if count:
-                     return ComputerGroupManager().countresult_group(ctx, gid, filt)
-                 else:
-                     min = 0
-                     max = -1
-                     if pattern.has_key('min'):
-                         min = pattern['min']
-                     if pattern.has_key('max'):
-                         max = pattern['max']
-                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
-
-            query = query.filter(self.machine.c.id.in_(machines))
-            if not ComputerGroupManager().isrequest_group(ctx, gid):
-                if count:
-                    return query.count()
-                else:
-                    return query
-        except KeyError, e:
-            pass
+    def __machinesOnlyQuery(self, ctx, pattern = None, session = None, count = False):
+        if not session:
+            session = create_session()
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
-        query = query.select_from(join_query).filter(query_filter)
+        query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
+
+        if pattern:
+            if 'hostname' in pattern:
+                query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+            if 'filter' in pattern:
+                query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
+            if 'uuid' in pattern:
+                query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+            if 'request' in pattern:
+                request = pattern['request']
+                if 'equ_bool' in pattern:
+                    bool = pattern['equ_bool']
+                else:
+                    bool = None
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                query = query.filter(self.machine.c.id.in_(machines))
+            if 'gid' in pattern:
+                gid = pattern['gid']
+
+                machines = list()
+                if ComputerGroupManager().isrequest_group(ctx, gid):
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                else:
+                     filt = ''
+                     if pattern.has_key('hostname'):
+                         filt = pattern['hostname']
+                     if pattern.has_key('filter'):
+                         filt = pattern['filter']
+                     if count:
+                         return ComputerGroupManager().countresult_group(ctx, gid, filt)
+                     else:
+                         min = 0
+                         max = -1
+                         if pattern.has_key('min'):
+                             min = pattern['min']
+                         if pattern.has_key('max'):
+                             max = pattern['max']
+                         machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
+
+                query = query.filter(self.machine.c.id.in_(machines))
+                if not ComputerGroupManager().isrequest_group(ctx, gid):
+                    if count:
+                        return query.count()
+                    else:
+                        return query
+
         if count:
             return query.count()
         else:
