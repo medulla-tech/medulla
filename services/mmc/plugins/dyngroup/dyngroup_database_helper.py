@@ -101,7 +101,7 @@ class DyngroupDatabaseHelper(Singleton):
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                filter_on.append(grpby.in_(*res))
+                filter_on.append(grpby.in_(res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
@@ -141,13 +141,13 @@ class DyngroupDatabaseHelper(Singleton):
                     result_set.intersection_update(Set(res))
                 else:
                     result_set = Set(res)
-                filter_on.append(grpby.in_(*res))
+                filter_on.append(grpby.in_(res))
             else:
                 optimize = False
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
         if optimize:
-            query_filter = grpby.in_(*result_set)
+            query_filter = grpby.in_(result_set)
         else:
             query_filter = and_(*filter_on)
         return (query_filter, join_tables)
@@ -179,7 +179,7 @@ class DyngroupDatabaseHelper(Singleton):
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                filter_on.append(not_(grpby.in_(*res)))
+                filter_on.append(not_(grpby.in_(res)))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables, not invert)
                 filter_on.append(query_filter)

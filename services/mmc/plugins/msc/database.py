@@ -102,7 +102,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True, echo=False)
         self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
@@ -247,6 +247,7 @@ class MscDatabase(Singleton):
     def doCommandOnHostExist(self, id):
         session = create_session()
         query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).all()
+
         # FIXME: use query.count() instead of len(query.all())
         ret = len(query) > 0
         session.close()
@@ -642,10 +643,10 @@ class MscDatabase(Singleton):
         trans = conn.begin()
         c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
         c_ids = map(lambda x:x[0], c_ids)
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute({self.commands_on_host.c.current_state:"stop", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(*c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute({self.commands_on_host.c.current_state:"stop", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
         trans.commit()
 
     def stopCommand(self, c_id):
@@ -669,7 +670,7 @@ class MscDatabase(Singleton):
         c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
         c_ids = map(lambda x:x[0], c_ids)
         self.logger.debug("Will stop these commands : %s" % (c_ids))
-        result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands.in_(*c_ids)).execute()
+        result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands.in_(c_ids)).execute()
         schedulers = {}
         for row in result:
             coh, scheduler = row
@@ -713,7 +714,7 @@ class MscDatabase(Singleton):
             elif ctx.locationsCount not in [None, 0, 1] and ctx.userids:
                 # We have multiple locations, and a list of userids sharing the
                 # same locations of the current user
-                q = q.filter(self.commands.c.creator.in_(*ctx.userids))
+                q = q.filter(self.commands.c.creator.in_(ctx.userids))
             # else if we have just one location, we don't apply any filter. The
             #     user can see the commands of all users
 
@@ -985,7 +986,7 @@ class MscDatabase(Singleton):
 
                 query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
                 query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
-                query = query.filter(self.commands.c.id.in_(*ids))
+                query = query.filter(self.commands.c.id.in_(ids))
                 if params['uuid']:
                     # Filter target according to the given UUID
                     query = query.filter(self.target.c.target_uuid == params['uuid'])
@@ -1019,7 +1020,7 @@ class MscDatabase(Singleton):
 
                 query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
                 query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
-                query = query.filter(self.commands.c.id.in_(*ids))
+                query = query.filter(self.commands.c.id.in_(ids))
                 query = query.order_by(desc(params['order_by']))
                 ret = query.group_by(self.commands.c.id).all()
 
