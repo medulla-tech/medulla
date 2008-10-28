@@ -763,8 +763,9 @@ class DyngroupDatabase(Singleton):
                     "FK_machine" : id_sequence
                 })
                 id_sequence = id_sequence + 1
-        # Insert into Results table
-        connection.execute(self.results.insert(), into_results)
+        if into_results:
+            # Insert into Results table only if there is something to insert
+            connection.execute(self.results.insert(), into_results)
 
     def reload_group(self, ctx, id, queryManager):
         connection = self.getDbConnection()
