@@ -36,7 +36,7 @@ $mod->setPriority(700);
 
 
 $submod = new SubModule("logs");
-$submod->setDescription(_T("MSC", "msc"));
+$submod->setDescription(_T("MSC logs", "msc"));
 $submod->setImg('modules/msc/img/navbar/msc');
 $submod->setDefaultPage("msc/logs/all");
 
@@ -52,17 +52,6 @@ $submod->addPage($page);
 $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
 $submod->addPage($page);
 
-/*
-$page = new Page("repository",_T("Repository","msc"));
-$submod->addPage($page);
-
-$page = new Page("download",_T("Download", "msc"));
-$page->setOptions(array("visible"=>False, "noHeader"=>True));
-$submod->addPage($page);
-$page = new Page("edit",_T("Edit","msc"));
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
-*/
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
