@@ -223,7 +223,7 @@ function createAclAttrTemplate($module_name, $aclattr, $form) {
     $base = &$MMCApp->getModule($module_name);
     $form->add(new TitleElement(_($base->getDescription())));
     $form->push(new Table());
-    $form->add(new TrTitleElement(array(0=>_("description"),1=>_("read only"),2=>_("read/write"),3=>_("hide"))));
+    $form->add(new TrTitleElement(array(0=>_("Attribute description"),1=>_("read only"),2=>_("read/write"),3=>_("hide"))));
     foreach ($aclArray[$module_name] as $key => $value) {
         $rowNum++;
         $radio=new AclRadioTpl("aclattr[".$key."]");
@@ -250,7 +250,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
     $value = $redirArray[$module_name];
     $MMCApp =&MMCApp::getInstance();
     $base = &$MMCApp->getModule($module_name);
-    $form->add(new ModuleTitleElement(_($base->getDescription())));
+    $form->add(new ModuleTitleElement(_($base->getDescription()) . sprintf(_(" (%s module)"), $module_name)));
     foreach ($value as $subkey => $subvalue) {
         $rowNum=1;
         $submod = &$base->getSubmod($subkey);
@@ -260,7 +260,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
             $form->add(new SelectElement("acl[".$module_name."][".$subkey."]", "acltab[".$module_name."][".$subkey."]"));
         }
         $form->push(new Table());
-        $form->add(new TrTitleElement(array(0=>_("description"),1=>_("Authorization"))));
+        $form->add(new TrTitleElement(array(0=>_("Web page description"),1=>_("Authorization"))));
         foreach ($subvalue as $actionkey => $actionvalue) {
             if ($descArray[$key][$subkey][$actionkey]) {
                 if ($acl[$key][$subkey][$actionkey]["right"]=='on'){

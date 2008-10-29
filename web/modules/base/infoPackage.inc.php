@@ -31,7 +31,7 @@ $mod = new Module("base");
 $mod->setVersion("2.3.1");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("6:0:2");
-$mod->setDescription(_("User and group"));
+$mod->setDescription(_("User, group and computer management"));
 $mod->setPriority(1);
 
 /**
