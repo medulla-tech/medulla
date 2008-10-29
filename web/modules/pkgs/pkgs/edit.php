@@ -36,7 +36,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $p_api_id = base64_decode($p_api_id);
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -58,7 +58,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 $package = $ret[3];
             }
             if (isset($_POST["bassoc"])) {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'pid'=>base64_encode($package['id']), 'mode'=>$_POST['mode'])));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/associate_files", array('p_api'=>base64_encode($p_api_id), 'pid'=>base64_encode($ret[3]['id']), 'plabel'=>base64_encode($ret[3]['label']), 'pversion'=>base64_encode($ret[3]['version']), 'mode'=>$_POST['mode'])));
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
@@ -115,10 +115,7 @@ $f->add(
         array("value" => $p_api_id, "required" => True)
         );
 
-$f->add(
-        new TrFormElement(_T("Package Id", "pkgs"), $formElt),
-        array("value" => $package['id'], "required" => True)
-        );
+$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
 if ($_GET["action"]=="add") {
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));

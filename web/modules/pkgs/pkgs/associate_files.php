@@ -31,6 +31,8 @@ $package = array();
 
 $p_api_id = base64_decode(quickGet('p_api'));
 $pid = base64_decode(quickGet('pid'));
+$plabel = base64_decode(quickGet('plabel'));
+$pversion = base64_decode(quickGet('pversion'));
 $mode = quickGet('mode');
 $level = 0;
 if ($mode == "creation") { $level = 1; }
@@ -48,7 +50,7 @@ if (isset($_POST["bassoc"])) {
     $ret = associatePackages($p_api_id, $pid, $cbx, $level);
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
-            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package %s", "pkgs"), $pid));
+            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
             header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
         } else {
             new NotifyWidgetFailure($ret[1]);
@@ -61,7 +63,7 @@ if (isset($_POST["bassoc"])) {
 # temporary files
 $files = getTemporaryFiles($p_api_id);
 
-$p = new PageGenerator(sprintf(_T("Associate files to package %s", "pkgs"), $pid));
+$p = new PageGenerator(sprintf(_T("Associate files to package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -96,6 +98,10 @@ $hidden = new HiddenTpl("p_api");
 $f->add($hidden, array("value" => $p_api_id, "hide" => True));
 $hidden = new HiddenTpl("pid");
 $f->add($hidden, array("value" => $pid, "hide" => True));
+$hidden = new HiddenTpl("plabel");
+$f->add($hidden, array("value" => $plabel, "hide" => True));
+$hidden = new HiddenTpl("pversion");
+$f->add($hidden, array("value" => $pversion, "hide" => True));
 
 $f->pop();
 $f->addButton("bassoc", _T("Associate", 'pkgs'));
