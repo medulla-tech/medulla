@@ -250,7 +250,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
     $value = $redirArray[$module_name];
     $MMCApp =&MMCApp::getInstance();
     $base = &$MMCApp->getModule($module_name);
-    $form->add(new ModuleTitleElement(_($base->getDescription()) . sprintf(_(" (%s module)"), $module_name)));
+    $form->add(new ModuleTitleElement(_($base->getDescription()) . " " . sprintf(_(" (%s module)"), $module_name)));
     foreach ($value as $subkey => $subvalue) {
         $rowNum=1;
         $submod = &$base->getSubmod($subkey);
