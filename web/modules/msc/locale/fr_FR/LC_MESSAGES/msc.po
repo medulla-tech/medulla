@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-10-29 17:30+0100\n"
-"PO-Revision-Date: 2008-10-29 17:34+0100\n"
+"PO-Revision-Date: 2008-10-29 17:41+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -529,7 +529,7 @@ msgstr "Onglet de lancement pour une machine dans un groupe"
 
 #: msc/infoPackage.inc.php:39
 msgid "MSC logs"
-msgstr "Journaux MSC"
+msgstr "MSC"
 
 #: msc/infoPackage.inc.php:79
 msgid "MSC logs tab for a group"
