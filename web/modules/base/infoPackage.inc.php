@@ -40,6 +40,7 @@ $mod->setPriority(1);
 
 $submod = new SubModule("main");
 $submod->setVisibility(False);
+$submod->setDescription(_("Home page"));
 
 $page = new Page("default",_("Home page"));
 $page->setFile("main_content.php");
