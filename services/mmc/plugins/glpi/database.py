@@ -558,11 +558,12 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         if query == None:
             return 0
-        query = query.group_by([self.machine.c.name, self.machine.c.domain]).all()
+        query = query.group_by([self.machine.c.name, self.machine.c.domain])
+        # The alias is needed for MySQL
+        s = select([func.count(text('*'))]).select_from(query.compile().alias('foo'))
+        result = session.execute(s)
         session.close()
-        # I didn't find how to easily count() all the computers after the
-        # group_by.
-        return len(query)
+        return result.fetchone()[0]
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """
