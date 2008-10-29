@@ -660,10 +660,7 @@ class Glpi(DyngroupDatabaseHelper):
             'objectUUID': [uuid]
         }
         if advanced:
-            net = self.getMachineNetwork(uuid)
-            ret['macAddress'] = map(lambda n: n['ifmac'], net) #self.getMachineMac(uuid)
-            ret['ipHostNumber'] = map(lambda n: n['ifaddr'], net) #self.getMachineIp(uuid)
-            ret['subnetMask'] = map(lambda n: n['netmask'], net)
+            (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask']) = self.orderIpAdresses(self.getMachineNetwork(uuid))
             domain = self.getMachineDomain(machine.ID)
             if domain == None:
                 domain = ''
@@ -1249,11 +1246,27 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def orderIpAdresses(self, netiface):
+        ret_ifmac = list()
+        ret_ifaddr = list()
+        ret_netmask = list()
+        for iface in netiface:
+            if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
+                if same_network(iface['ifaddr'], iface['gateway'], iface['netmask']):
+                    ret_ifmac.insert(0, iface['ifmac'])
+                    ret_ifaddr.insert(0, iface['ifaddr'])
+                    ret_netmask.insert(0, iface['netmask'])
+                else:
+                    ret_ifmac.append(iface['ifmac'])
+                    ret_ifaddr.append(iface['ifaddr'])
+                    ret_netmask.append(iface['netmask'])
+        return (ret_ifmac, ret_ifaddr, ret_netmask)
+
     def getMachineIp(self, uuid):
         """
         Get a machine ip addresses
         """
-        # FIXME: order IP adresses, first one should be on the "defaut" network (ie with the default gw)
+        # FIXME: should be done on the same model as orderIpAdresses
         session = create_session()
         query = session.query(Network).select_from(self.machine.join(self.network))
         query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuid)
@@ -1264,9 +1277,9 @@ class Glpi(DyngroupDatabaseHelper):
                 ret_gw.append(m.ifaddr)
             else:
                 ret_nogw.append(m.ifaddr)
-
         ret_gw = unique(ret_gw)
         ret_gw.extend(unique(ret_nogw))
+
         session.close()
         return ret_gw
 
