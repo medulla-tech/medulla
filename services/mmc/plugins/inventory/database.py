@@ -98,7 +98,7 @@ class Inventory(DyngroupDatabaseHelper):
             return None
         self.logger.info("Inventory is activating")
         self.config = InventoryConfig("inventory", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True, echo=False)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -726,9 +726,11 @@ class Inventory(DyngroupDatabaseHelper):
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
         for grp in grp_by:
             result = result.group_by(grp)
-        result = result.count()
+        # The alias is needed for MySQL
+        s = select([func.count(text('*'))]).select_from(result.compile().alias('foo'))
+        result = session.execute(s)
         session.close()
-        return result
+        return result.fetchone()[0]
 
     def getLastMachineInventoryPart(self, ctx, part, params):
         return self.__getLastMachineInventoryPart(part, params, ctx)
