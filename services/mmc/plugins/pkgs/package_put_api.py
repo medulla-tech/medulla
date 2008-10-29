@@ -10,6 +10,7 @@ from mmc.support.mmctools import Singleton
 import mmc.plugins.pkgs.config
 
 from mmc.client import XmlrpcSslProxy, makeSSLContext
+from mmc.support.uuid import uuid1
 
 class PackagePutA:
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
@@ -56,6 +57,8 @@ class PackagePutA:
     def putPackageDetail(self, package, need_assign = True):
         if self.initialized_failed:
             return -1
+        if package.has_key('mode') and package['mode'] == 'creation' and package['id'] == '':
+            package['id'] = str(uuid1())
         d = self.ppaserver.callRemote("putPackageDetail", package, need_assign)
         d.addErrback(self.onError, "putPackageDetail", package, -1)
         return d
