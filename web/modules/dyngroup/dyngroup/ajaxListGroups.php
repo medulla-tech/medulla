@@ -61,6 +61,7 @@ foreach ($list as $group) {
 }
 
 $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
+$n->setTableHeaderPadding(0);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
