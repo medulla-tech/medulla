@@ -31,6 +31,9 @@ $p = new PageGenerator(_T("Temporary result display", "dyngroup"));
 $p->setSideMenu($sidemenu);
 $p->display();
 $get = "&request=".$_GET['request'];
+if (strlen($_GET['id'])) {
+    $get = "&id=".$_GET['id'];
+}
 print "<a href='main.php?module=base&submod=computers&action=computersgroupcreator$get'>"._T('back', 'dyngroup')."</a>";
 
 include("modules/pulse2/pulse2/computers_list.php");
