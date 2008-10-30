@@ -476,9 +476,10 @@ class DyngroupDatabase(Singleton):
     def countallgroups(self, ctx, params):
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session)
-        count = groups.count()
+        s = select([func.count(text('*'))]).select_from(groups.compile().alias('foo'))
+        result = session.execute(s)
         session.close()
-        return count
+        return result.fetchone()[0]
 
     def getallgroups(self, ctx, params):
         session = create_session()
