@@ -29,6 +29,9 @@ if ($ret === False) {
 } else {
     $filename = $ret[0];
     ob_end_clean();
+    /* The two following lines make the CSV export works for IE 6.x on HTTPS ! */
+    header("Pragma: ");
+    header("Cache-Control: ");
     header("Content-type: application/octet-stream");
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     print $ret[1]->scalar;
