@@ -108,6 +108,7 @@ $n->setParamInfo($params);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter['filter']));
 $n->setTableHeaderPadding(1);
+$n->disableFirstColumnActionLink();
 $n->start = 0;
 $n->end = $count;
 
