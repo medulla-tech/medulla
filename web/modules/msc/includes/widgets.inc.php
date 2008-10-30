@@ -263,14 +263,18 @@ class AjaxFilterCommands extends AjaxFilter {
 
 ?>
 <form name="Form" id="Form" action="#">
+
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+
     <div id="searchSpan" class="searchbox" style="float: right;">
     <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+
     <span class="searchfield">
 <?php
         $this->commands->display();
 ?>
     </span>&nbsp;
+
     <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
     onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
@@ -279,37 +283,59 @@ class AjaxFilterCommands extends AjaxFilter {
 
     <script type="text/javascript">
         document.getElementById('param').focus();
-
+        var refreshtimer = null;
+        var refreshparamtimer = null;
+        var refreshdelay = <?= $this->refresh ?>;
 
         /**
-        * update div with user
-        */
+         * Clear the timers set vith setTimeout
+         */
+        function clearTimers() {
+            if (refreshtimer != null) {
+                clearTimeout(refreshtimer);
+            }
+            if (refreshparamtimer != null) {
+                clearTimeout(refreshparamtimer);
+            }
+        }
+
+        /**
+         * Update div
+         */
         function updateSearch() {
-            launch--;
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
 
-                if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
-                }
-            }
+<?
+if ($this->refresh) {
+?>
+            refreshtimer = setTimeout("updateSearch()", refreshdelay)
+<?
+}
+?>
+        }
 
         /**
-        * provide navigation in ajax for user
-        */
-
+         * Update div when clicking previous / next
+         */
         function updateSearchParam(filter, start, end) {
-            var reg = new RegExp("##", "g");
-            var tableau = filter.split(reg);
-            filter = tableau[0];
+            clearTimers();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+document.Form.<?= $this->paramname ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
-            }
+
+<?
+if ($this->refresh) {
+?>
+            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
+<?
+}
+?>
+        }
 
         /**
-        * wait 500ms and update search
-        */
-
+         * wait 500ms and update search
+         */
         function pushSearch() {
-            launch++;
-            setTimeout("updateSearch()",500);
+            clearTimers();
+            refreshtimer = setTimeout("updateSearch()", 500);
         }
 
         pushSearch();
@@ -360,15 +386,19 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 
 ?>
 <form name="Form" id="Form" action="#">
+
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+
     <div id="searchSpan" class="searchbox" style="float: right;">
     <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+
     <span class="searchfield">
 <?php
         $this->commands->display();
         $this->states->display();
 ?>
     </span>&nbsp;
+
     <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
     onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
@@ -377,37 +407,59 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 
     <script type="text/javascript">
         document.getElementById('param').focus();
-
+        var refreshtimer = null;
+        var refreshparamtimer = null;
+        var refreshdelay = <?= $this->refresh ?>;
 
         /**
-        * update div with user
-        */
+         * Clear the timers set vith setTimeout
+         */
+        function clearTimers() {
+            if (refreshtimer != null) {
+                clearTimeout(refreshtimer);
+            }
+            if (refreshparamtimer != null) {
+                clearTimeout(refreshparamtimer);
+            }
+        }
+
+        /**
+         * Update div
+         */
         function updateSearch() {
-            launch--;
+            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
 
-                if (launch==0) {
-                    new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
-                }
-            }
+<?
+if ($this->refresh) {
+?>
+            refreshtimer = setTimeout("updateSearch()", refreshdelay)
+<?
+}
+?>
+        }
 
         /**
-        * provide navigation in ajax for user
-        */
-
+         * Update div when clicking previous / next
+         */
         function updateSearchParam(filter, start, end) {
-            var reg = new RegExp("##", "g");
-            var tableau = filter.split(reg);
-            filter = tableau[0];
+            clearTimers();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
-            }
+
+<?
+if ($this->refresh) {
+?>
+            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
+<?
+}
+?>
+        }
 
         /**
-        * wait 500ms and update search
-        */
-
+         * wait 500ms and update search
+         */
         function pushSearch() {
-            launch++;
-            setTimeout("updateSearch()",500);
+            clearTimers();
+            refreshtimer = setTimeout("updateSearch()", 500);
         }
 
         pushSearch();
@@ -416,6 +468,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 </form>
 <?
           }
+
 }
 
 ?>
