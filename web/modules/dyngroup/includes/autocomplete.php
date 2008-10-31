@@ -23,9 +23,10 @@
  */
 
 class Autocomplete {
-    function Autocomplete($module, $criterion) {
+    function Autocomplete($module, $criterion, $value = '') {
         $this->module = $module;
         $this->criterion = $criterion;
+        $this->val = $value;
     }
     
     function display() {
@@ -33,14 +34,14 @@ class Autocomplete {
 
     <td style="text-align:right;"><?= _T("Add a value", "dyngroup");?></td><td>
 
-    <input type="text" id="autocomplete" name="value" class="textfield" size="23" /> 
+    <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?=$this->val?>" /> 
     <div id="autocomplete_choices" class="autocomplete">
         <ul>
             <li>A</li>
             <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>" />   
+    <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>"/> 
     </td></tr>
     </table>
     

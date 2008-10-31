@@ -34,11 +34,11 @@ if ($edition) {
 $id = idGet();
 $group = new Group($id, true);
 $request = quickGet('request');
-if ($request) {
+if (strlen($request)) {
     $r = new Request();
     $r->parse($request);
     $request = $r;
-} elseif ($id) {
+} elseif (strlen($id)) {
    $r = new Request();
    $r->parse($group->getRequest());
    $request = $r;
@@ -47,8 +47,17 @@ if ($request) {
 }
 
 // a part of the request has to be removed 
-if (quickGet('delete')) {
-    $request->removeSub(quickGet('delete'));
+if ($_GET['action'] == 'computersgroupsubedit') {
+    if (strlen(quickGet('sub_id'))) {
+        $sub = $request->getSub(quickGet('sub_id'));
+        quickSet('req', $sub->module);
+        quickSet('add_param', $sub->crit);
+        quickSet('value', $sub->val);
+        $request->removeSub(quickGet('sub_id'));
+    }
+}
+if ($_GET['action'] == 'compusersgroupsubdel') {
+    $request->removeSub(quickGet('sub_id'));
 }
 
 // a new part has to be added to the request
@@ -137,14 +146,14 @@ if (quickGet('add_param')) {
             $module = clean(quickGet('req'));
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/autocomplete.php");
-            $auto = new Autocomplete($module, $criterion);
+            $auto = new Autocomplete($module, $criterion, quickGet('value'));
             $auto->display();
             break;
         case 'double':
             $module = clean(quickGet('req'));
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/double.php");
-            $auto = new DoubleAutocomplete($module, $criterion);
+            $auto = new DoubleAutocomplete($module, $criterion, quickGet('value'));
             $auto->display();
             break;
         case 'halfstatic':
@@ -179,7 +188,7 @@ if (quickGet('add_param')) {
 if (!$request->isEmpty()) {
     print "<hr/>";
     print "<h3>"._T("The request is : ", "dyngroup")."</h3>";
-    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'request'=>$request->toS()));
+    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupsubedit', 'target_del'=>'computersgroupsubdel', 'request'=>$request->toS()));
 }
 
 // display action buttons in the bottom

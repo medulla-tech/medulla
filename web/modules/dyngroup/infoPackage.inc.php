@@ -51,17 +51,18 @@ if (isDynamicEnable()) {
     $page = new Page("computersgroupedit",_T("Computers Group Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/edithead.php");
     $page->setOptions(array("visible"=>False));
-
-    $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
-    $page->addTab($tab);
-
-    $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
-    $page->addTab($tab);
-
-    $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
-    $page->addTab($tab);
     $submod->addPage($page);
 
+    $page = new Page("computersgroupsubedit",_T("Computers Group Sub Request Editor","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+    $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
+    
+    $page = new Page("computersgroupsubdel",_T("Computers Group Sub Request Delete","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/edithead.php");
+    $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
+    
     $page = new Page("tmpdisplay",_T("Temporary result display","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/tmpdisplay.php");
     $page->setOptions(array("visible"=>False));

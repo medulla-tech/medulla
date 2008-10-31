@@ -54,6 +54,9 @@ class Request {
         return $this->subs[$id];
     }
     function toS() {
+        if (count($this->subs) == 0) {
+            return 'EMPTY';
+        }
         return implode('||', array_map('to_s', $this->subs));
     }
     function toURL() {
@@ -66,12 +69,16 @@ class Request {
         return count($this->subs);
     }
     function parse($str) {
-        $a_reqs = explode('||', $str);
-        $this->subs = array();
-        foreach ($a_reqs as $req) {
-            $sub = parse_subrequest($req);
-            $sub->id = $this->nextSubId++;
-            $this->subs[$sub->id] = $sub;
+        if ($str == 'EMPTY') {
+            $this->subs = array();
+        } else {
+            $a_reqs = explode('||', $str);
+            $this->subs = array();
+            foreach ($a_reqs as $req) {
+                $sub = parse_subrequest($req);
+                $sub->id = $this->nextSubId++;
+                $this->subs[$sub->id] = $sub;
+            }
         }
     }
     function display() {
@@ -90,14 +97,16 @@ class Request {
         foreach ($this->subs as $id => $sub) {
             array_push($parts, $sub->display());
             $p = $default_params;
-            $p['delete'] = $id;
+            #$p['delete'] = $id;
+            $p['sub_id'] = $id;
             $p['request'] = $this->toS();
             array_push($parameters, $p);
         }
         $n = new ListInfos($parts, _T('Search part', 'dyngroup'));
         if ($canbedeleted) {
             $n->setParamInfo($parameters);
-            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), $default_params['target'], "delete", "params"));
+            $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), $default_params['target_edit'], "edit", "params", ""));
+            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), $default_params['target_del'], "delete", "params"));
         }
 
         $n->disableFirstColumnActionLink();
