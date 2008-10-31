@@ -704,83 +704,107 @@ def runUploadPhase(myCommandOnHostID):
             return None
         mirror = mirrors[0]
         fbmirror = mirrors[1]
-        choosen_mirror = None
 
-        # Test package availability on the two mirrors, primary and fallback
-        available = mmc.plugins.msc.mirror_api.Mirror(mirror).isAvailable(myC.package_id)
-        if available:
-            logger.debug("command_on_host #%s: Package '%s' is available on %s" % (myCommandOnHostID, myC.package_id, mirror))
-            choosen_mirror = mirror
-        else:
-            if fbmirror != mirror:
-                available = mmc.plugins.msc.mirror_api.Mirror(fbmirror).isAvailable(myC.package_id)
-                if available:
-                    logger.debug("command_on_host #%s: Package '%s' is available on %s" % (myCommandOnHostID, myC.package_id, fbmirror))
-                    choosen_mirror = fbmirror
-        if not choosen_mirror:
-            logger.warn("command_on_host #%s: Package '%s' is not available on mirrors %s and %s" % (myCommandOnHostID, myC.package_id, mirror, fbmirror))
-            return None
-        logger.debug("command_on_host #%s: mirror '%s' has been choosen" % (myCommandOnHostID, choosen_mirror))
+        ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
+        d = ma.isAvailable(myC.package_id)
+        d.addCallback(_cbRunUploadPhaseTestMirror, mirror, fbmirror, client, myC, myCoH)
+        return d
 
-        mirror_api = mmc.plugins.msc.mirror_api.Mirror(choosen_mirror)
-        files_list = map(lambda x: mirror_api.getFileURI(x.split('##')[0]), myC.files.split("\n"))
+def _cbRunUploadPhaseTestMirror(result, mirror, fbmirror, client, myC, myCoH):
+    if result:
+        return _runUploadPhase(mirror, client, myC, myCoH)
+    else:
+        # Test the fallback mirror
+        return _runUploadPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myCoH)
 
-        if not False in files_list and not '' in files_list:
-            # build a dict with the protocol and the files uris
-            if re.compile('^http://').match(choosen_mirror) or re.compile('^https://').match(choosen_mirror): # HTTP download
-                file_uris = {'protocol': 'wget', 'files': files_list}
-            elif re.compile('^smb://').match(choosen_mirror): # TODO: NET download
-                pass
-            elif re.compile('^ftp://').match(choosen_mirror): # FIXME: check that wget may handle FTP as HTTP
-                file_uris = {'protocol': 'wget', 'files': files_list}
-            elif re.compile('^nfs://').match(choosen_mirror): # TODO: NFS download
-                pass
-            elif re.compile('^ssh://').match(choosen_mirror): # TODO: SSH download
-                pass
-            elif re.compile('^rsync://').match(choosen_mirror): # TODO: RSYNC download
-                pass
-            else: # do nothing
-                pass
+def _runUploadPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myCoH):
+    if fbmirror != mirror:
+        # Test the fallback mirror only if the URL is the different than the
+        # primary mirror
+        ma = mmc.plugins.msc.mirror_api.MirrorApi(fbmirror)
+        d = ma.isAvailable(myC.package_id)
+        d.addCallback(_cbRunUploadPhase, fbmirror, client, myC, myCoH)
+        return d
+    else:
+        # Go to upload phase, but pass False to tell that the package is not
+        # available on the fallback mirror too
+        _cbRunUploadPhase(False, mirror, client, myC, myCoH)
 
-        # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
-        if not file_uris:
-            logger.warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCommandOnHostID))
-            return None
+def _cbRunUploadPhase(result, mirror, client, myC, myCoH):
+    if result:
+        # The package is available on a mirror, start upload phase
+        return _runUploadPhase(mirror, client, myC, myCoH)
+    else:
+        logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
-        client['protocol'] = file_uris['protocol']
-        files_list = file_uris['files']
+def _runUploadPhase(mirror, client, myC, myCoH):
+    logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
+    ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
+    fids = []
+    for line in myC.files.split("\n"):
+        fids.append(line.split('##')[0])
+    d = ma.getFilesURI(fids)
+    d.addCallback(_cbRunUploadPhasePushPull, mirror, client, myC, myCoH)
 
-        myCoH.setUploadInProgress()
-        myCoH.setCommandStatut('upload_in_progress')
-        # upload starts here
-        if SchedulerConfig().mode == 'sync':
-            updateHistory(myCommandOnHostID, 'upload_in_progress')
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'sync_remote_pull',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePullResult, myCommandOnHostID).\
-                addErrback(parsePullError, myCommandOnHostID)
-        elif SchedulerConfig().mode == 'async':
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'async_remote_pull',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePullOrder, myCommandOnHostID).\
-                addErrback(parsePullError, myCommandOnHostID)
-        else:
-            return None
-        return mydeffered
+def _cbRunUploadPhasePushPull(result, mirror, client, myC, myCoH):
+    files_list = result
+    choosen_mirror = mirror
+    if not False in files_list and not '' in files_list:
+        # build a dict with the protocol and the files uris
+        if re.compile('^http://').match(choosen_mirror) or re.compile('^https://').match(choosen_mirror): # HTTP download
+            file_uris = {'protocol': 'wget', 'files': files_list}
+        elif re.compile('^smb://').match(choosen_mirror): # TODO: NET download
+            pass
+        elif re.compile('^ftp://').match(choosen_mirror): # FIXME: check that wget may handle FTP as HTTP
+            file_uris = {'protocol': 'wget', 'files': files_list}
+        elif re.compile('^nfs://').match(choosen_mirror): # TODO: NFS download
+            pass
+        elif re.compile('^ssh://').match(choosen_mirror): # TODO: SSH download
+            pass
+        elif re.compile('^rsync://').match(choosen_mirror): # TODO: RSYNC download
+            pass
+        else: # do nothing
+            pass
+
+    # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
+    if not file_uris:
+        logger.warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCoH.id))
+        return None
+
+    client['protocol'] = file_uris['protocol']
+    files_list = file_uris['files']
+
+    myCoH.setUploadInProgress()
+    myCoH.setCommandStatut('upload_in_progress')
+    # upload starts here
+    if SchedulerConfig().mode == 'sync':
+        updateHistory(myCoH.id, 'upload_in_progress')
+        mydeffered = callOnBestLauncher(
+            myCoH.id,
+            'sync_remote_pull',
+            myCoH.id,
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePullResult, myCoH.id).\
+            addErrback(parsePullError, myCoH.id)
+    elif SchedulerConfig().mode == 'async':
+        mydeffered = callOnBestLauncher(
+            myCoH.id,
+            'async_remote_pull',
+            myCoH.id,
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePullOrder, myCoH.id).\
+            addErrback(parsePullError, myCoH.id)
+    else:
+        return None
+    return mydeffered    
 
 def runExecutionPhase(myCommandOnHostID):
     # Second step : execute file
