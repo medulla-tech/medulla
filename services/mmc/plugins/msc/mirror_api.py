@@ -1,43 +1,69 @@
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2008 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import re
 import dircache
 import os
 import logging
 
-import xmlrpclib
 from twisted.web.xmlrpc import Proxy
 
 import mmc.plugins.msc
-from mmc.support.mmctools import Singleton
 
 from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
-class MirrorApi(Singleton):
-    def __init__(self):
+class MirrorApi:
+
+    def __init__(self, url = None):
         self.logger = logging.getLogger()
-        self.config = mmc.plugins.msc.MscConfig("msc")
-
-        if self.config.ma_enablessl:
-            self.server_addr = 'https://'
-        else:
-            self.server_addr = 'http://'
-
-        if self.config.ma_username != '':
-            self.server_addr += self.config.ma_username
-            if self.config.ma_password != '':
-                self.server_addr += ":"+self.config.ma_password
-            self.server_addr += "@"
-
-        self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
-        self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
-
-        if self.config.ma_verifypeer:
-            self.maserver = XmlrpcSslProxy(self.server_addr)
-            self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)
-            self.maserver.setSSLClientContext(self.sslctx)
-        else:
+        if url:
+            self.server_addr = str(url)
             self.maserver = Proxy(self.server_addr)
+        else:
+            self.config = mmc.plugins.msc.MscConfig("msc")
+
+            if self.config.ma_enablessl:
+                self.server_addr = 'https://'
+            else:
+                self.server_addr = 'http://'
+
+            if self.config.ma_username != '':
+                self.server_addr += self.config.ma_username
+                if self.config.ma_password != '':
+                    self.server_addr += ":"+self.config.ma_password
+                self.server_addr += "@"
+
+            self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
+
+            if self.config.ma_verifypeer:
+                self.maserver = XmlrpcSslProxy(self.server_addr)
+                self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)
+                self.maserver.setSSLClientContext(self.sslctx)
+            else:
+                self.maserver = Proxy(self.server_addr)
+        self.logger.debug('MirrorApi will connect to %s' % (self.server_addr))
         # FIXME: still needed ?
         self.initialized_failed = False
 
@@ -99,59 +125,20 @@ class MirrorApi(Singleton):
             machine = {'uuid':machine}
         return machine
 
-class Mirror:
-    def __init__(self, server):
-        self.logger = logging.getLogger()
-        self.logger.debug('Mirror will connect to %s' % (server))
-        try:
-            self.server = xmlrpclib.Server(server)
-            #self.xmlrpc = self.server.xmlrpc
-            self.xmlrpc = self.server
-            self.initialized_failed = False
-        except:
-            self.logger.warn("Mirror cant connect to %s" % (server))
-            self.initialized_failed = True
-
-    def isInitialized(self):
-        """ True if inititialized, or False if something goes wrong """
-        return not self.initialized_failed
-
-    def getServerDetails(self):
-        """ gather stuff about our mirror """
-        if self.initialized_failed:
-            return False
-        try:
-            return self.xmlrpc.getServerDetails()
-        except: # when the api is not available, the package is also unavailable
-            self.logger.warn("Mirror:getServerDetails fails")
-            return False
-
     def isAvailable(self, pid):
         """ Is my package (identified by pid) available ? """
-        if self.initialized_failed:
-            return False
-        try:
-            return self.xmlrpc.isAvailable(pid)
-        except: # when the api is not available, the package is also unavailable
-            self.logger.warn("Mirror:isAvailable %s fails"%(pid))
-            return False
+        d = self.maserver.callRemote("isAvailable", pid)
+        d.addErrback(self.onError, "MirrorApi:isAvailable", pid)
+        return d
 
     def getFileURI(self, fid):
         """ convert from a fid (File ID) to a file URI """
-        if self.initialized_failed:
-            return False
-        try:
-            return self.xmlrpc.getFileURI(fid)
-        except:
-            self.logger.warn("Mirror:getFileURI %s fails" % fid)
-            return False
+        d = self.maserver.callRemote("getFileURI", fid)
+        d.addErrback(self.onError, "MirrorApi:getFileURI", fid)
+        return d
 
     def getFilesURI(self, fids):
         """ convert from a list of fids (File ID) to a list of files URI """
-        if self.initialized_failed:
-            return False
-        try:
-            return self.xmlrpc.getFilesURI(fids)
-        except:
-            self.logger.warn("Mirror:getFilesURI %s fails " % fids)
-            return False
+        d = self.maserver.callRemote("getFilesURI", fids)
+        d.addErrback(self.onError, "MirrorApi:getFilesURI", fids)
+        return d

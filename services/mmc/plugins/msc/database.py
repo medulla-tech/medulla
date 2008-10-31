@@ -36,7 +36,7 @@ from twisted.internet import defer
 from mmc.plugins.pulse2.location import ComputerLocationManager
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.config import MscConfig
-from mmc.plugins.msc.mirror_api import MirrorApi, Mirror
+from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc import blacklist
 from mmc.support.mmctools import Singleton
@@ -102,7 +102,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True, echo=False)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode = True)
         self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
