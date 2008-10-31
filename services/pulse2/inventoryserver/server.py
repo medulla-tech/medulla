@@ -47,10 +47,13 @@ class InventoryServer:
 
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
-        cont = [content, self.headers['Content-Type']]
         resp = ''
-        if self.headers['Content-Type'] == 'application/x-compress':
+
+        # handle compressed inventories
+        if self.headers['Content-Type'].lower() == 'application/x-compress':
             content = decompressobj().decompress(content)
+
+        cont = [content, self.headers['Content-Type']]
 
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
@@ -86,7 +89,7 @@ class InventoryServer:
         elif query == 'INVENTORY':
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
             Common().addInventory(deviceid, cont)
-    
+
         self.send_response(200)
         self.end_headers()
         self.wfile.write(compress(resp))
@@ -127,9 +130,7 @@ class TreatInv(Thread):
 
     def treatinv(self, deviceid, cont):
         content = cont[0]
-        if cont[1] == 'application/x-compress':
-            content = decompressobj().decompress(content)
-                        
+
         try:
             inv_data, encoding, date = '', '', strftime("%Y-%m-%d %H:%M:%S")
             self.logger.debug("%s inventory" % (time.time()))
@@ -137,24 +138,24 @@ class TreatInv(Thread):
                 inv_data = re.compile(r'<CONTENT>(.+)</CONTENT>', re.DOTALL).search(content).group(1)
             except AttributeError, e:
                 pass
-    
+
             try:
                 encoding = re.search(r' encoding="([^"]+)"', content).group(1)
             except AttributeError, e:
                 pass
-    
+
             try:
                 date = re.compile(r'<LOGDATE>(.+)</LOGDATE>', re.DOTALL).search(inv_data).group(1)
             except AttributeError, e:
                 pass
-    
+
             self.logger.debug("%s regex" % (time.time()))
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
             inventory = re.sub(r'</?HISTORY>', '', inventory)
             inventory = re.sub(r'</?DOWNLOAD>', '', inventory)
-    
+
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
-    
+
             # Store data on the server
             inventory = OcsMapping().parse(inventory)
             self.logger.debug("%s parsed" % (time.time()))
@@ -180,7 +181,7 @@ class TreatInv(Thread):
                 date = inventory['ACCESSLOG'][1]['LOGDATE']
             except:
                 pass
-                
+
             ret = InventoryCreator().createNewInventory(hostname, inventory, date)
             # TODO if ret == False : reply something else
             if not ret:
@@ -192,34 +193,34 @@ class TreatInv(Thread):
             self.logger.error(e.orig)
         except Exception, e:
             self.logger.error(e)
-            
+
         return True
 
 class Common(Singleton):
     inventories = []
     sem = Semaphore()
     shutdownRequest = False
-    
+
     def addInventory(self, deviceId, content):
         self.sem.acquire()
         self.inventories.append([deviceId, content])
         self.sem.release()
-        
+
     def countInventories(self):
         self.sem.acquire()
         count = len(self.inventories)
         self.sem.release()
         return count
-        
+
     def popInventory(self):
         self.sem.acquire()
         deviceId, content = self.inventories.pop()
         self.sem.release()
         return (deviceId, content)
-    
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
-    
+
 class InventoryGetService(Singleton):
     def initialise(self, config):
         self.logger = logging.getLogger()
@@ -245,7 +246,7 @@ class InventoryGetService(Singleton):
         # Install SIGTERM handler
         signal.signal(signal.SIGTERM, self.handler)
         signal.signal(signal.SIGINT, self.handler)
-        
+
         self.logger.debug("Start launching of treat inventory thread")
         self.treatinv = TreatInv(self.config)
         self.treatinv.setDaemon(True)
@@ -264,7 +265,7 @@ class InventoryGetService(Singleton):
         if hasattr(self.httpd, 'daemon_threads'):
             self.httpd.daemon_threads = True
         self.httpd.serve_forever()
-        
+
     def handler(self, signum, frame):
         """
         SIGTERM handler
