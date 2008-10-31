@@ -27,6 +27,7 @@ import logging
 
 class GlpiConfig(PluginConfig):
     dbpoolrecycle = 60
+    dbpoolsize = 5
     dbport = None
     dbsslenable = False
     
@@ -51,7 +52,7 @@ class GlpiConfig(PluginConfig):
         except NoOptionError:
             # put the GLPI default values for actives profiles
             self.activeProfiles = ['admin', 'normal', 'post-only', 'super-admin']
-        for option in ["dbport", "dbpoolrecycle"]:
+        for option in ["dbport", "dbpoolrecycle", "dbpoolsize"]:
             try:
                 self.__dict__[option] = self.getint("main", option)
             except NoOptionError:

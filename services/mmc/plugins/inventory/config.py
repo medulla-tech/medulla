@@ -75,6 +75,10 @@ class InventoryConfig(PluginConfig):
             self.dbpoolrecycle = self.getint("inventory", "dbpoolrecycle")
         except NoOptionError:
             self.dbpoolrecycle = 60
+        try:
+            self.dbpoolsize = self.getint("inventory", "dbpoolsize")
+        except NoOptionError:
+            self.dbpoolsize = 5
                                                                         
         try:
             self.dbport = self.getint("inventory", "dbport")

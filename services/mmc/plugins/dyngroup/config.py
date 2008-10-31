@@ -27,6 +27,8 @@ class DGConfig(PluginConfig):
             self.dbport = None
         if self.has_option("database", "dbpoolrecycle"):
             self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
+        if self.has_option("database", "dbpoolsize"):
+            self.dbpoolsize = self.getint("database", "dbpoolsize")
 
         if self.has_option("database", "dbsslenable"):
             self.dbsslenable = self.getboolean("database", "dbsslenable")
@@ -51,4 +53,5 @@ class DGConfig(PluginConfig):
         PluginConfig.setDefault(self)
         self.dbsslenable = False
         self.dbpoolrecycle = 60
+        self.dbpoolsize = 5
 

@@ -77,7 +77,7 @@ class Glpi(DyngroupDatabaseHelper):
             return None
         self.logger.info("Glpi is activating")
         self.config = GlpiConfig("glpi", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()

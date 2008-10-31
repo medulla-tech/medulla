@@ -75,7 +75,7 @@ class DyngroupDatabase(Singleton):
 
         self.logger.info("Dyngroup database is connecting")
         self.config = DGConfig("dyngroup", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, echo=False)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, echo=False)
         self.metadata = MetaData(self.db)
         try:
             self.initMappers()

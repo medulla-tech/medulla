@@ -98,7 +98,7 @@ class Inventory(DyngroupDatabaseHelper):
             return None
         self.logger.info("Inventory is activating")
         self.config = InventoryConfig("inventory", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
