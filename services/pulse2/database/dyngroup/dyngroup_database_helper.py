@@ -1,4 +1,4 @@
-#   
+#
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
@@ -41,15 +41,15 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
     def filter(self, ctx, join_query, filt, query, grpby):
         query_filter = None
+
         try:
-            query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
-            for table in join_tables:
-                join_query = join_query.join(table)
-        except KeyError, e:
-            self.logger.error(e)
+            if 'query' in filt:
+                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
+                for table in join_tables:
+                    join_query = join_query.join(table)
         except TypeError, e:
-            self.logger.error(e)
-       
+            self.logger.exception(e)
+
         return (join_query, query_filter)
 
     def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = [], invert = False):
@@ -143,7 +143,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 for table in join_tab:
                     if table != join_query:
                         join_q = join_q.join(table)
-                                            
+
                 query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
                 res = map(lambda x: x[1], query)
                 filter_on.append(not_(grpby.in_(*res)))
@@ -183,7 +183,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         return the sqlalchemy equation to exec in a select_from()
         """
         raise "mapping has to be defined"
- 
+
     def computersTable(self):
         """
         return the computers table mapping
@@ -202,9 +202,9 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         return the sqlalchemy equation to exec in a select_from()
         """
         raise "computersMapping has to be defined"
-       
+
 ############################################
-## specific code has to be defined 
+## specific code has to be defined
 ## for these two last method
 ############################################
 #
