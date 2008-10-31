@@ -37,7 +37,7 @@ foreach ($groups as $group) {
     
     $s = new SideMenuItemNoAclCheck(
              sprintf(_T("Display %s '%s'", "dyngroup"), $isA, $group->getName()),
-             "base", "computers", "display&gid=".$group->id
+             "base", "computers", "display&gid=".$group->id."&groupname=".$group->name
     );
     $s->setCssId("displayid".$group->id);
     $items[$group->id] = $s;
