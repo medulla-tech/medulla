@@ -132,8 +132,10 @@ class TreatInv(Thread):
         content = cont[0]
 
         try:
+            start_date = time.time()
+            threadname = threading.currentThread().getName().split("-")[1]
             inv_data, encoding, date = '', '', strftime("%Y-%m-%d %H:%M:%S")
-            self.logger.debug("%s inventory" % (time.time()))
+            self.logger.debug("Thread %s : starting process : %s " % (threadname, time.time()))
             try:
                 inv_data = re.compile(r'<CONTENT>(.+)</CONTENT>', re.DOTALL).search(content).group(1)
             except AttributeError, e:
@@ -149,7 +151,7 @@ class TreatInv(Thread):
             except AttributeError, e:
                 pass
 
-            self.logger.debug("%s regex" % (time.time()))
+            self.logger.debug("Thread %s : regex : %s " % (threadname, time.time()))
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
             inventory = re.sub(r'</?HISTORY>', '', inventory)
             inventory = re.sub(r'</?DOWNLOAD>', '', inventory)
@@ -158,22 +160,29 @@ class TreatInv(Thread):
 
             # Store data on the server
             inventory = OcsMapping().parse(inventory)
-            self.logger.debug("%s parsed" % (time.time()))
+            self.logger.debug("Thread %s : parsed : %s " % (threadname, time.time()))
             hostname = '-'.join(deviceid.split('-')[0:-6])
-            self.logger.debug("hostname %s"%hostname)
+            self.logger.debug("Thread %s : Original hostname : %s" % (threadname, hostname))
             try:
                 path = Pulse2OcsserverConfigParser().hostname
                 # WARNING : no fallback if the tag does not exists....
                 if len(path) == 3:
                     if path[0] in inventory:
+                        found_tag = False
                         for tag in inventory[path[0]]:
                             self.logger.debug("tag = %s" % tag)
-                            if tag.has_key(path[2][0]) and tag[path[2][0]] == path[2][1]:
+                            if path[2][0] in tag and tag[path[2][0]] == path[2][1]:
+                                found_tag = True
                                 hostname = tag[path[1]]
-                                self.logger.debug("hostname modified into %s"%hostname)
+                        if not found_tag:
+                            self.logger.warn("Thread %s : Can't alter hostname for %s using tag: tag %s was not found in %s" % (threadname, hostname, path[2][1], tag))
+                    else:
+                        self.logger.warn("Thread %s : Can't find %s in inventory to alter hostname for %s" % (threadname, path[0], hostname))
+
+                    self.logger.debug("Thread %s : Final hostname, 3 components path: %s" % (threadname, hostname))
                 else:
                     hostname = inventory[path[0]][0][path[1]]
-                    self.logger.debug("hostname modified into %s"%hostname)
+                    self.logger.debug("Thread %s : Final hostname, 2 components path: %s" % (threadname, hostname))
             except Exception, e:
                 self.logger.exception(e)
                 self.logger.error("inventory = %s" % inventory)
@@ -182,17 +191,23 @@ class TreatInv(Thread):
             except:
                 pass
 
+            self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
             ret = InventoryCreator().createNewInventory(hostname, inventory, date)
+            self.logger.debug("Thread %s : done : %s " % (threadname, time.time()))
             # TODO if ret == False : reply something else
+            end_date = time.time()
+
+            self.logger.debug("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
+
             if not ret:
                 self.logger.error("no inventory created!")
                 return False
 
         except IOError, e:
-            self.logger.error(e)
+            self.logger.exception(e)
             self.logger.error(e.orig)
         except Exception, e:
-            self.logger.error(e)
+            self.logger.exception(e)
 
         return True
 
