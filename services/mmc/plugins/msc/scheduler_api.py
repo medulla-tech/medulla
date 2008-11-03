@@ -48,10 +48,10 @@ class SchedulerApi(Singleton):
         self.logger.debug("Looking up scheduler id using: " + str(scheduler))
         ret = None
         if type(scheduler) == dict:
-            if "mountpoint" in scheduler and scheduler["mountpoint"]:
-                ret = scheduler["mountpoint"]
-            elif "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
+            if "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
                 scheduler = makeURL(scheduler)
+            elif "mountpoint" in scheduler and scheduler["mountpoint"]:
+                ret = scheduler["mountpoint"]
         elif type(scheduler) in (str, unicode):
             ret = scheduler
         if not ret:
