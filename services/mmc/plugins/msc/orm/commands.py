@@ -47,13 +47,13 @@ class Commands(object):
         return self.id
 
     def getBundleId(self):
-        return self.bundle_id
+        return self.fk_bundle
 
     def getOrderInBundle(self):
         return self.order_in_bundle
 
     def isPartOfABundle(self):
-        return self.bundle_id != None
+        return self.fk_bundle != None
 
     def getNextConnectionDelay(self):
         return self.next_connection_delay
@@ -140,7 +140,8 @@ class Commands(object):
             'on_failure_hook': self.on_failure_hook,
             'maxbw': self.maxbw,
             'deployment_intervals': self.deployment_intervals,
-            'bundle_id': self.bundle_id,
+            'bundle_id': self.fk_bundle, # keep it for compatibility
+            'fk_bundle': self.fk_bundle,
             'order_in_bundle': self.order_in_bundle,
             'use_local_proxy': self.use_local_proxy
         }

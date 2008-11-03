@@ -59,7 +59,7 @@ import logging
 
 SA_MAJOR = 0
 SA_MINOR = 4
-DATABASEVERSION = 13
+DATABASEVERSION = 14
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -153,7 +153,7 @@ class MscDatabase(Singleton):
         # commands
         self.commands = Table("commands", self.metadata,
                             Column('dispatched', String(32), default='YES'),
-                            Column('bundle_id', Integer, ForeignKey('bundle.id')),
+                            Column('fk_bundle', Integer, ForeignKey('bundle.id')),
                             autoload = True)
         # commands_history
         self.commands_history = Table(
@@ -296,7 +296,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle, proxies):
+    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies):
         """
         Return a Command object
         """
@@ -324,7 +324,7 @@ class MscDatabase(Singleton):
         cmd.do_inventory = do_inventory
         cmd.maxbw = maxbw
         cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
-        cmd.bundle_id = bundle_id
+        cmd.fk_bundle = fk_bundle
         cmd.order_in_bundle = order_in_bundle
         if proxies:
             cmd.use_local_proxy = 'yes'
@@ -380,7 +380,7 @@ class MscDatabase(Singleton):
                 maxbw = 0,
                 root = MscConfig("msc").repopath,
                 deployment_intervals = "",
-                bundle_id = None,
+                fk_bundle = None,
                 order_in_bundle = None,
                 proxies = []
             ):
@@ -525,7 +525,7 @@ class MscDatabase(Singleton):
                 targets_to_insert.append(targetsdata[i])
 
             session = create_session()
-            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, bundle_id, order_in_bundle, proxies)
+            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies)
             session.close()
 
             r = connection.execute(self.target.insert(), targets_to_insert)
@@ -632,7 +632,7 @@ class MscDatabase(Singleton):
                    "id_group" : groupID }
         return target
 
-    def stopBundle(self, bundle_id):
+    def stopBundle(self, fk_bundle):
         """
         Stop a bundle, by stopping all its related commands_on_host.
         """
@@ -641,7 +641,7 @@ class MscDatabase(Singleton):
         #"""
         conn = self.getDbConnection()
         trans = conn.begin()
-        c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
+        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
         c_ids = map(lambda x:x[0], c_ids)
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state ="stop", next_launch_date = "2031-12-31 23:59:59")
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
@@ -663,11 +663,11 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
         trans.commit()
 
-    def getCommandsonhostsAndSchedulersOnBundle(self, bundle_id):
+    def getCommandsonhostsAndSchedulersOnBundle(self, fk_bundle):
         """
         """
         conn = self.getDbConnection()
-        c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
+        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
         c_ids = map(lambda x:x[0], c_ids)
         self.logger.debug("Will stop these commands : %s" % (c_ids))
         result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands.in_(c_ids)).execute()
@@ -809,9 +809,9 @@ class MscDatabase(Singleton):
         session.close()
         return l
 
-    def countAllCommandsOnHostBundle(self, ctx, uuid, bundle_id, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+    def countAllCommandsOnHostBundle(self, ctx, uuid, fk_bundle, filt, history): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands.c.creator == ctx.userid).filter(self.commands.c.bundle_id == bundle_id)
+        ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid).filter(self.commands.c.creator == ctx.userid).filter(self.commands.c.fk_bundle == fk_bundle)
 #        ret = ret.filter(self.commands_on_host.c.id == self.target.c.fk_commands_on_host)
         if filt != '':
             ret = ret.filter(self.commands.c.title.like('%'+filt+'%'))
@@ -883,10 +883,10 @@ class MscDatabase(Singleton):
         if params['cmd_id'] != None: # COH
             filter = [self.commands.c.id == params['cmd_id']]
             if params['b_id'] != None:
-                filter.append(self.commands.c.bundle_id == params['b_id'])
+                filter.append(self.commands.c.fk_bundle == params['b_id'])
         else: # CMD
             if params['b_id'] != None:
-                filter = [self.commands.c.bundle_id == params['b_id']]
+                filter = [self.commands.c.fk_bundle == params['b_id']]
             group_by = self.commands.c.id
 
         if params['gid'] != None: # Filter on a machines group id
@@ -921,21 +921,21 @@ class MscDatabase(Singleton):
         ids = []
         defined = {}
         for cmd in cmds:
-            id, bundle_id = cmd
+            id, fk_bundle = cmd
             if max != -1 and max-1 < i:
                 break
             if i < min:
-                if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
-                    defined[bundle_id] = id
+                if (fk_bundle != 'NULL' or fk_bundle != None) and not defined.has_key(fk_bundle):
+                    defined[fk_bundle] = id
                     i += 1
-                elif bundle_id == 'NULL' or bundle_id == None:
+                elif fk_bundle == 'NULL' or fk_bundle == None:
                     i += 1
                 continue
-            if (bundle_id != 'NULL' or bundle_id != None) and not defined.has_key(bundle_id):
-                defined[bundle_id] = id
+            if (fk_bundle != 'NULL' or fk_bundle != None) and not defined.has_key(fk_bundle):
+                defined[fk_bundle] = id
                 ids.append(id)
                 i += 1
-            elif bundle_id == 'NULL' or bundle_id == None:
+            elif fk_bundle == 'NULL' or fk_bundle == None:
                 ids.append(id)
                 i += 1
         return ids
@@ -977,7 +977,7 @@ class MscDatabase(Singleton):
                 # Get all commands related to the given computer UUID or group
                 # id
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
-                cmds = map(lambda c: (c.id, c.bundle_id), ret)
+                cmds = map(lambda c: (c.id, c.fk_bundle), ret)
 
                 size = []
                 size.extend(cmds)
@@ -1011,7 +1011,7 @@ class MscDatabase(Singleton):
                 return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
             else:                               # we want all informations about everything
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
-                cmds = map(lambda c: (c.id, c.bundle_id), ret)
+                cmds = map(lambda c: (c.id, c.fk_bundle), ret)
 
                 size = []
                 size.extend(cmds)
@@ -1054,10 +1054,10 @@ class MscDatabase(Singleton):
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def getBundle(self, ctx, bundle_id):
+    def getBundle(self, ctx, fk_bundle):
         session = create_session()
-        ret = session.query(Bundle).filter(self.bundle.c.id == bundle_id).first().toH()
-        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.bundle_id == bundle_id).all())
+        ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
+        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).all())
         session.close()
         try:
             ret['creation_date'] = cmds[0]['creation_date']
@@ -1116,9 +1116,9 @@ class MscDatabase(Singleton):
         session.close()
         return ret
 
-    def getCommandOnBundleStatus(self, ctx, bundle_id):
+    def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
-        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.bundle_id == bundle_id)
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle)
         ret = self.__getStatus(ctx, query)
         session.close()
         return ret
