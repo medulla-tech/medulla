@@ -1,0 +1,21 @@
+
+ALTER TABLE `commands` \
+    CHANGE `bundle_id` `fk_bundle` INT DEFAULT NULL;
+--    ADD COLUMN `end_action` ENUM("nothing", "reboot", "halt") DEFAULT "nothing" NOT NULL;
+
+--UPDATE `commands` SET `end_action` = 'reboot' WHERE `do_reboot` = 'enable';
+
+--ALTER TABLE `commands` DROP COLUMN `do_reboot`;
+
+--ALTER TABLE `bundle` \
+--    ADD COLUMN `end_action` ENUM("nothing", "reboot", "halt") DEFAULT "nothing" NOT NULL;
+
+--UPDATE `bundle` SET `end_action` = 'reboot' WHERE `do_reboot` = 'enable';
+
+--ALTER TABLE `bundle` DROP COLUMN `do_reboot`;
+
+--ALTER TABLE `target` DROP COLUMN `scheduler`;
+
+DELETE FROM version;
+INSERT INTO version VALUES( "14" );
+
