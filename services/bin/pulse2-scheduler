@@ -231,6 +231,10 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.startTheseCommands(self.name, commands))
     def xmlrpc_start_command(self, id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(id))
+    def xmlrpc_start_commands(self, cmdids):
+        for cid in cmdids:
+            mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.startCommand(cid))
+        return True
     def xmlrpc_stop_command(self, id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.scheduling.stopCommand(id))
     def xmlrpc_stop_commands(self, cmdids):
