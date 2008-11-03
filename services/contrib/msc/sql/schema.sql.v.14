@@ -1,21 +1,34 @@
-
 ALTER TABLE `commands` \
-    CHANGE `bundle_id` `fk_bundle` INT DEFAULT NULL;
---    ADD COLUMN `end_action` ENUM("nothing", "reboot", "halt") DEFAULT "nothing" NOT NULL;
+    CHANGE `bundle_id` `fk_bundle` INT DEFAULT NULL, \
+    ADD COLUMN `do_halt` SET("on_done", "on_failed", "on_over_timed", "on_out_of_time_interval") DEFAULT "" NOT NULL AFTER `do_reboot`, \
+    ADD COLUMN `state` ENUM("active", "archived", "disabled", "template") DEFAULT "active" NOT NULL AFTER id;
 
---UPDATE `commands` SET `end_action` = 'reboot' WHERE `do_reboot` = 'enable';
+ALTER TABLE `target` \
+    DROP COLUMN `scheduler`;
 
---ALTER TABLE `commands` DROP COLUMN `do_reboot`;
+ALTER TABLE `commands_on_host` \
+    ADD COLUMN `wol` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `current_state`, \
+    ADD COLUMN `inventory` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `deleted`, \
+    ADD COLUMN `reboot` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `inventory`, \
+    ADD COLUMN `halt` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `reboot`, \
+    MODIFY `current_state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "reboot_in_progress", "reboot_done", "reboot_failed", "halt_in_progress", "halt_done", "halt_failed", "not_reachable", "done", "pause", "paused", "stop", "stopped", "scheduled", "re_scheduled", "failed", "over_timed") DEFAULT "scheduled" NOT NULL, \
+    ADD COLUMN `stage` ENUM("pending", "wol_pending", "wol_running", "wol_requeued", "upload_pending", "upload_running", "upload_requeued", "execution_pending", "execution_running", "execution_requeued", "delete_pending", "delete_running", "delete_requeued", "inventory_pending", "inventory_running", "inventory_requeued", "reboot_pending", "reboot_in_progress", "reboot_requeued", "halt_pending", "halt_running", "halt_requeued", "ended") DEFAULT "pending" NOT NULL AFTER current_state;
 
---ALTER TABLE `bundle` \
---    ADD COLUMN `end_action` ENUM("nothing", "reboot", "halt") DEFAULT "nothing" NOT NULL;
+UPDATE `commands_on_host` SET `stage` = "wol_running" where current_state = "wol_in_progress";
+UPDATE `commands_on_host` SET `stage` = "upload_running" where uploaded="WORK_IN_PROGRESS";
+UPDATE `commands_on_host` SET `stage` = "upload_requeued" where current_state = "scheduled" and uploaded="FAILED";
+UPDATE `commands_on_host` SET `stage` = "execution_pending" where uploaded="DONE" and executed="TODO";
+UPDATE `commands_on_host` SET `stage` = "execution_running" where executed="WORK_IN_PROGRESS";
+UPDATE `commands_on_host` SET `stage` = "execution_requeued" where current_state = "scheduled" and executed="FAILED";
+UPDATE `commands_on_host` SET `stage` = "delete_pending" where executed="DONE" and deleted="TODO";
+UPDATE `commands_on_host` SET `stage` = "delete_running" where deleted="WORK_IN_PROGRESS";
+UPDATE `commands_on_host` SET `stage` = "delete_requeued" where current_state = "scheduled" and deleted="FAILED";
+UPDATE `commands_on_host` SET `stage` = "ended" where `current_state` = "failed" or `current_state` = "done";
+UPDATE `commands_on_host` SET `current_state` = "stopped" where `current_state` = "stop";
+UPDATE `commands_on_host` SET `current_state` = "paused" where `current_state` = "pause";
 
---UPDATE `bundle` SET `end_action` = 'reboot' WHERE `do_reboot` = 'enable';
-
---ALTER TABLE `bundle` DROP COLUMN `do_reboot`;
-
---ALTER TABLE `target` DROP COLUMN `scheduler`;
 
 DELETE FROM version;
 INSERT INTO version VALUES( "14" );
+
 
