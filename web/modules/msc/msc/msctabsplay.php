@@ -101,7 +101,6 @@ if (isset($_POST["bconfirm"])) {
     $coh_id = $_GET["coh_id"];
     $gid = $_GET["gid"];
     $bundle_id = $_GET['bundle_id'];
-
     
     if (empty($gid)) {
         $title = sprintf(_T("Start action on host %s", 'msc'), $hostname);

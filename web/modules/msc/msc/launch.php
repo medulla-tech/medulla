@@ -33,7 +33,7 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 
-function start_command($proxy = array()) {
+function start_a_command($proxy = array()) {
     // Vars seeding
     $post = $_POST;
     $from = $post['from'];
@@ -93,7 +93,7 @@ if (isset($_POST["bconfirmproxy"])) {
             $proxy[] = $computer[1];
         }
     }
-    start_command($proxy);
+    start_a_command($proxy);
 }
 
 
@@ -116,7 +116,7 @@ if (isset($_POST['local_proxy']))
 
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
-    start_command();
+    start_a_command();
 }
 
 /* Advanced action: form display */
