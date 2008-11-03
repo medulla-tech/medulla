@@ -197,7 +197,7 @@ class TreatInv(Thread):
             # TODO if ret == False : reply something else
             end_date = time.time()
 
-            self.logger.debug("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
+            self.logger.info("Injected inventory for %s in %s seconds" % (hostname, end_date - start_date))
 
             if not ret:
                 self.logger.error("no inventory created!")
