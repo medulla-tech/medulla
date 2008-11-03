@@ -49,6 +49,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     max_probe_time = 20
     ping_path = "/usr/sbin/pulse2-ping"
     reboot_command = "shutdown.exe -f -r 1 || shutdown -r now"
+    halt_command = "shutdown.exe -f -s 1 || shutdown -h now"
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
     temp_folder_prefix = "MDVPLS"
@@ -155,6 +156,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('launchers', 'ping_path', 'ping_path')
         self.setoption('launchers', 'source_path', 'source_path')
         self.setoption('launchers', 'reboot_command', 'reboot_command')
+        self.setoption('launchers', 'halt_command', 'halt_command')
         self.setoption('launchers', 'target_path', 'target_path')
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
 

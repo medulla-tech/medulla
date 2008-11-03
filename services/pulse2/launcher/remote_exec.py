@@ -664,6 +664,72 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             )
     return None
 
+def sync_remote_halt(command_id, client, wrapper_timeout):
+    """ Handle remote halt on target, sync mode """
+    return remote_halt(command_id, client, 'sync', wrapper_timeout)
+
+def async_remote_halt(command_id, client, wrapper_timeout):
+    """ Handle remote halt on target, async mode """
+    return remote_halt(command_id, client, 'async', wrapper_timeout)
+
+def remote_halt(command_id, client, mode, wrapper_timeout):
+    """ Handle remote halt on target
+    """
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    halt_command = LauncherConfig().halt_command
+    if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        if not LauncherConfig().is_ssh_available:
+            return False
+
+        # Built "thru" command
+        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list += client['transp_args']
+        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+
+        # Build "exec" command
+        real_command = halt_command
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--max-log-size',
+            str(LauncherConfig().wrapper_max_log_size),
+            '--max-exec-time',
+            str(wrapper_timeout),
+            '--thru',
+            SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+        ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
+        if mode == 'async':
+            return pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_halt',
+                LauncherConfig().max_command_age,
+                client['group'],
+                'halt'
+            )
+        elif mode == 'sync':
+            return pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
+    return None
+
 def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrapper_timeout):
     """
     Recursive copy of a directory from a client to the launcher using scp.
