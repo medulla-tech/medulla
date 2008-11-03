@@ -804,7 +804,7 @@ def _cbRunUploadPhasePushPull(result, mirror, client, myC, myCoH):
             addErrback(parsePullError, myCoH.id)
     else:
         return None
-    return mydeffered    
+    return mydeffered
 
 def runExecutionPhase(myCommandOnHostID):
     # Second step : execute file
@@ -1253,6 +1253,16 @@ def parseDeleteOrder(taken_in_account, myCommandOnHostID):
         myCoH.setDeleteToDo()
         myCoH.setCommandStatut('scheduled')
         logging.getLogger().warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
+        return None
+
+def parseInventoryOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'inventory_in_progress')
+        logging.getLogger().info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        logging.getLogger().warn("command_on_host #%s: inventory order not taken in account" % myCommandOnHostID)
         return None
 
 def parseRebootOrder(taken_in_account, myCommandOnHostID):
