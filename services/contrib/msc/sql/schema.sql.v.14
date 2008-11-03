@@ -14,6 +14,9 @@ ALTER TABLE `commands_on_host` \
     MODIFY `current_state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "reboot_in_progress", "reboot_done", "reboot_failed", "halt_in_progress", "halt_done", "halt_failed", "not_reachable", "done", "pause", "paused", "stop", "stopped", "scheduled", "re_scheduled", "failed", "over_timed") DEFAULT "scheduled" NOT NULL, \
     ADD COLUMN `stage` ENUM("pending", "wol_pending", "wol_running", "wol_requeued", "upload_pending", "upload_running", "upload_requeued", "execution_pending", "execution_running", "execution_requeued", "delete_pending", "delete_running", "delete_requeued", "inventory_pending", "inventory_running", "inventory_requeued", "reboot_pending", "reboot_in_progress", "reboot_requeued", "halt_pending", "halt_running", "halt_requeued", "ended") DEFAULT "pending" NOT NULL AFTER current_state;
 
+ALTER TABLE `commands_history` \
+    MODIFY `state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "reboot_in_progress", "reboot_done", "reboot_failed", "halt_in_progress", "halt_done", "halt_failed");
+
 UPDATE `commands_on_host` SET `stage` = "wol_running" where current_state = "wol_in_progress";
 UPDATE `commands_on_host` SET `stage` = "upload_running" where uploaded="WORK_IN_PROGRESS";
 UPDATE `commands_on_host` SET `stage` = "upload_requeued" where current_state = "scheduled" and uploaded="FAILED";
