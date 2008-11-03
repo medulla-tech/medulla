@@ -643,10 +643,10 @@ class MscDatabase(Singleton):
         trans = conn.begin()
         c_ids = select([self.commands.c.id], self.commands.c.bundle_id == bundle_id).execute()
         c_ids = map(lambda x:x[0], c_ids)
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute({self.commands_on_host.c.current_state:"stop", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state ="stop", next_launch_date = "2031-12-31 23:59:59")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
         trans.commit()
 
     def stopCommand(self, c_id):
@@ -657,10 +657,10 @@ class MscDatabase(Singleton):
         """
         conn = self.getDbConnection()
         trans = conn.begin()
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute({self.commands_on_host.c.current_state:"stop", self.commands_on_host.c.next_launch_date:"2031-12-31 23:59:59"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.uploaded:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.executed:"FAILED"})
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute({self.commands_on_host.c.deleted:"FAILED"})
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "stop", next_launch_date = "2031-12-31 23:59:59")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
         trans.commit()
 
     def getCommandsonhostsAndSchedulersOnBundle(self, bundle_id):
@@ -863,12 +863,12 @@ class MscDatabase(Singleton):
         if params['filt'] != None:
             query = query.filter(self.commands.c.title.like('%'+params['filt']+'%'))
         if params['finished']:
-            query = query.filter(self.commands_on_host.c.current_state.in_('done', 'failed'))
+            query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
             if params['b_id'] == None:
-                query = query.filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed')))
+                query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed'])))
         query = self.__queryUsersFilter(ctx, query)
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
@@ -899,12 +899,12 @@ class MscDatabase(Singleton):
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
 
         if params['finished']: # Filter on finished commands only
-            filter.append(self.commands_on_host.c.current_state.in_('done', 'failed'))
+            filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
             if params['b_id'] == None:
-                filter.append(not_(self.commands_on_host.c.current_state.in_('done', 'failed')))
+                filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed'])))
 
         query = self.__queryUsersFilter(ctx, query)
         query = query.filter(and_(*filter))
