@@ -328,7 +328,7 @@ class CommandsOnHost(object):
             self.setFailed()
         else: # reschedule in other cases
             self.attempts_left -= 1
-            self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60)) # FIXME: should be made configurable
+            self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
             self.flush()
             self.setScheduled()
 
