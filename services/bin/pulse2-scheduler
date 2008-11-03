@@ -260,6 +260,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_inventory(launcher, (exitcode, stdout, stderr), id))
     def xmlrpc_completed_reboot(self, launcher, (exitcode, stdout, stderr), id):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_reboot(launcher, (exitcode, stdout, stderr), id))
+    def xmlrpc_completed_halt(self, launcher, (exitcode, stdout, stderr), id):
+        return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launcher.completed_halt(launcher, (exitcode, stdout, stderr), id))
 
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))

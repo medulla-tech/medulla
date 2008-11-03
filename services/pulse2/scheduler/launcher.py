@@ -57,11 +57,16 @@ def completed_deletion(launcher, (exitcode, stdout, stderr), id):
     return True
 
 def completed_inventory(launcher, (exitcode, stdout, stderr), id):
-    logging.getLogger().info("Scheduler: launcher %s tells us that inventory after of CoH #%s is done" % (launcher, id))
+    logging.getLogger().info("Scheduler: launcher %s tells us that inventory after CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_reboot(launcher, (exitcode, stdout, stderr), id):
-    logging.getLogger().info("Scheduler: launcher %s tells us that reboot after of CoH #%s is done" % (launcher, id))
+    logging.getLogger().info("Scheduler: launcher %s tells us that reboot after CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseRebootResult((exitcode, stdout, stderr), id)
+    return True
+
+def completed_halt(launcher, (exitcode, stdout, stderr), id):
+    logging.getLogger().info("Scheduler: launcher %s tells us that halt after CoH #%s is done" % (launcher, id))
+    pulse2.scheduler.scheduling.parseHaltResult((exitcode, stdout, stderr), id)
     return True

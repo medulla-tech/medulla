@@ -291,7 +291,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
             database.commands_on_host.c.scheduler == None)
         )
     if commandIDs:
-        commands_query = commands_query.filter(database.commands.c.id.in_(*commandIDs))
+        commands_query = commands_query.filter(database.commands.c.id.in_(commandIDs))
     commands_to_perform = []
     for q in commands_query.all():
         commands_to_perform.append(q.id)
