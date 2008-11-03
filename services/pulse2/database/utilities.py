@@ -22,6 +22,8 @@
 # MA 02110-1301, USA.
 
 from sqlalchemy import *
+from sqlalchemy import exceptions
+from sqlalchemy.orm import *
 
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
