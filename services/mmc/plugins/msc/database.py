@@ -632,13 +632,22 @@ class MscDatabase(Singleton):
                    "id_group" : groupID }
         return target
 
+    def startBundle(self, fk_bundle):
+        """
+        Start a bundle. In fact we set all its related commands_on_host to the
+        scheduled state, and set next_launch_date to immediately.
+        """
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
+        c_ids = map(lambda x:x[0], c_ids)
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
+        trans.commit()
+
     def stopBundle(self, fk_bundle):
         """
         Stop a bundle, by stopping all its related commands_on_host.
         """
-        #@returns: the list of all related commands_on_host
-        #@rtype: list
-        #"""
         conn = self.getDbConnection()
         trans = conn.begin()
         c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
@@ -647,6 +656,16 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
+        trans.commit()
+
+    def startCommand(self, c_id):
+        """
+        Start a command. In fact we set all its related commands_on_host to the
+        scheduled state, and set next_launch_date to immediately.
+        """
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_id), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
         trans.commit()
 
     def stopCommand(self, c_id):
@@ -669,7 +688,6 @@ class MscDatabase(Singleton):
         conn = self.getDbConnection()
         c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
         c_ids = map(lambda x:x[0], c_ids)
-        self.logger.debug("Will stop these commands : %s" % (c_ids))
         result = select([self.commands_on_host.c.id, self.commands_on_host.c.scheduler], self.commands_on_host.c.fk_commands.in_(c_ids)).execute()
         schedulers = {}
         for row in result:

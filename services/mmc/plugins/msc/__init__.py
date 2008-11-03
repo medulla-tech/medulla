@@ -469,6 +469,16 @@ def action_on_command(id, f_name, f_database, f_scheduler):
         d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
 
+def action_on_bundle(id, f_name, f_database, f_scheduler):
+    # Update command in database
+    getattr(MscDatabase(), f_database)(id)
+    # Stop related commands_on_host on related schedulers
+    scheds = MscDatabase().getCommandsonhostsAndSchedulersOnBundle(id)
+    logger = logging.getLogger()
+    for sched in scheds:
+        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
+        d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
+
 ### Commands handling ###
 def stop_command(c_id):
     return action_on_command(c_id, 'stop_command', 'stopCommand', 'stopCommands')
@@ -485,10 +495,12 @@ def restart_command(c_id):
 
 ### Bundle handling ###
 def stop_bundle(bundle_id):
-    return action_on_command(bundle_id, 'stop_bundle', 'stopBundle', 'stopCommands')
+    action_on_bundle(bundle_id, 'stop_bundle', 'stopBundle', 'stopCommands')
+    return True
 
-def start_bundle(c_id):
-    return action_on_bundle(c_id, 'start_bundle', 'startBundle', 'startCommands')
+def start_bundle(bundle_id):
+    action_on_bundle(bundle_id, 'start_bundle', 'startBundle', 'startCommands')
+    return True
 
 def pause_bundle(c_id):
     return action_on_bundle(c_id, 'pause_bundle', 'pauseBundle', 'pauseCommands')

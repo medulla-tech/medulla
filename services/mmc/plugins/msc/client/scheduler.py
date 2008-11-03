@@ -190,6 +190,26 @@ def stopCommands(scheduler, command_ids):
     mydeffered.addCallback(parseResult).addErrback(parseResult)
     return mydeffered
 
+def startCommands(scheduler, command_ids):
+    """
+    Connect to the specified scheduler to start lots of commands_on_host, given
+    their ids.
+    """
+    def parseResult(result):
+        logging.getLogger().debug('Starting commands %s' % command_ids)
+        logging.getLogger().debug(result)
+        return result
+    def parseError(reason):
+        # FIXME: handle error
+        logging.getLogger().debug(reason)
+        return False
+    mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
+        'start_commands',
+        command_ids
+    )
+    mydeffered.addCallback(parseResult).addErrback(parseResult)
+    return mydeffered
+
 def startCommand(scheduler, command_id):
     def parseResult(result):
         logging.getLogger().debug('Start command %s: %s' % (command_id, result))
