@@ -159,14 +159,13 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         if config['max-log-size']:
             self.max_log_size = int(config['max-log-size'])
         self.size = 0
+        self.output_exhausted = False
         self.end = False
 
     def truncate_to_max_log_size(self, line):
         if not self.max_log_size: # no trunc
             self.size += len(line)
             return line
-        if self.size == self.max_log_size: # limit exhausted
-            return ''
         spaceleft = self.max_log_size-self.size
         self.size += len(line)
         return line[0:spaceleft]
@@ -177,7 +176,12 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         if self.end:
             return True
         for line in data.splitlines():
-            format(self.truncate_to_max_log_size(line), 'O')
+            if not self.output_exhausted:
+                if self.size >= self.max_log_size: # limit exhausted
+                    self.output_exhausted = True
+                    format("Max buffer size reach, remaining output suppressed", 'W')
+                else:
+                    format(self.truncate_to_max_log_size(line), 'O')
         return True
 
     def errReceived(self, data):
@@ -186,7 +190,12 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         if self.end:
             return True
         for line in data.splitlines():
-            format(self.truncate_to_max_log_size(line), 'E')
+            if not self.output_exhausted:
+                if self.size >= self.max_log_size: # limit exhausted
+                    self.output_exhausted = True
+                    format("Max buffer size reach, remaining output suppressed", 'W')
+                else:
+                    format(self.truncate_to_max_log_size(line), 'E')
         return True
 
     def processEnded(self, reason):
