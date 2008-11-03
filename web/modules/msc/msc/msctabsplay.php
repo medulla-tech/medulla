@@ -33,42 +33,92 @@ if (isset($_POST["bconfirm"])) {
     $submod = $path[1];
     $page = $path[2];
     $tab = $path[3];
+    $url = array();
+    foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
+        $url[$post] = $_POST[$post];
+    }
+    $url['tab'] = $tab;
 
-    if ($_POST['gid'] != '') {
-        $coh_id = $_POST["coh_id"];
-        $cmd_id = $_POST["cmd_id"];
-        $gid = $_POST["gid"];
-        start_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'coh_id'=>$coh_id, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+    if (strlen($_POST['bundle_id'])) {
+        $bundle_id = $_POST['bundle_id'];
+        if (strlen($_POST['gid'])) {
+            if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
+                start_bundle($bundle_id);
+                
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'gid'=>$gid)));
+            } elseif (strlen($_POST["cmd_id"]) and !strlen($_POST["coh_id"])) {
+                $cmd_id = $_POST["cmd_id"];
+                start_command($cmd_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id)));
+            } else {
+                $coh_id = $_POST["coh_id"];
+                $cmd_id = $_POST["cmd_id"];
+                start_command_on_host($coh_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'gid'=>$gid, 'bundle_id'=>$bundle_id, 'cmd_id'=>$cmd_id)));
+            }
+        } elseif (strlen($_POST["uuid"])) {
+            $hostname = $_POST["hostname"];
+            $uuid = $_POST["uuid"];
+            if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
+                start_bundle($bundle_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            } else {
+                $coh_id = $_POST["coh_id"];
+                start_command_on_host($coh_id);
+                header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            }
+        }
     } else {
-        $hostname = $_POST["hostname"];
-        $uuid = $_POST["uuid"];
-        $coh_id = $_POST["coh_id"];
-        start_command_on_host($coh_id);
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'coh_id'=>$coh_id, 'cmd_id'=>$cmd_id, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        if (strlen($_POST['gid']) && !strlen($_POST["coh_id"])) {
+            /* The start command must be done on a group of computers */
+            $cmd_id = $_POST["cmd_id"];
+            $gid = $_POST["gid"];
+            start_command($cmd_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'gid'=>$gid)));
+        } else if (strlen($_POST['gid'])) {
+            /* The start command is done on a commands_on_host for a group of
+               computers */
+            $coh_id = $_POST["coh_id"];
+            $cmd_id = $_POST["cmd_id"];
+            $gid = $_POST["gid"];
+            start_command_on_host($coh_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'cmd_id'=>$cmd_id, 'gid'=>$gid)));
+        } else {
+            $hostname = $_POST["hostname"];
+            $uuid = $_POST["uuid"];
+            $coh_id = $_POST["coh_id"];
+            start_command_on_host($coh_id);
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        }
     }
 } else {
     /* Form displaying */
     $from = $_GET['from'];
     $hostname = $_GET["hostname"];
+    $groupname = $_GET["groupname"];
     $uuid = $_GET["uuid"];
     $cmd_id = $_GET["cmd_id"];
     $coh_id = $_GET["coh_id"];
     $gid = $_GET["gid"];
-    $cmd = command_detail($cmd_id);
-    $name = $cmd['title'];
+    $bundle_id = $_GET['bundle_id'];
 
-    $f = new PopupForm(sprintf(_T("Start action %s on host %s", 'msc'), $name, $hostname));
+    
+    if (empty($gid)) {
+        $title = sprintf(_T("Start action on host %s", 'msc'), $hostname);
+    } else {
+        $title = _T("Start action on this group", 'msc');
+    }
+
+    $f = new PopupForm($title);
     $f->add(new HiddenTpl("name"),      array("value" => $hostname, "hide" => True));
     $f->add(new HiddenTpl("from"),      array("value" => $from,     "hide" => True));
     $f->add(new HiddenTpl("cmd_id"),    array("value" => $cmd_id,   "hide" => True));
     $f->add(new HiddenTpl("coh_id"),    array("value" => $coh_id,   "hide" => True));
     $f->add(new HiddenTpl("uuid"),      array("value" => $uuid,     "hide" => True));
     $f->add(new HiddenTpl("gid"),       array("value" => $gid,      "hide" => True));
+    $f->add(new HiddenTpl("bundle_id"), array("value" => $bundle_id,"hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
-
-
 ?>

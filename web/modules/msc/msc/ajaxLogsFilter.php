@@ -135,12 +135,14 @@ if ($areCommands) {
             $a_executed[] ='';
             $a_deleted[] = '';
             $astop = $actionempty;
+            $astart = $actionempty;
             if (!$history) {
                 if (strlen($gid)) {
                     if (!strlen($cmd['bundle_id'])) {
                         $status = get_command_on_group_status($cmd['id']);
                         # FIXME: a true status has to be build !!!
                         $astop = $actionstop;
+                        $astart = $actionplay;
                     } elseif (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
                         $status = get_command_on_group_status($cmd['id']);
                         # FIXME: a true status has to be build !!!
@@ -160,12 +162,13 @@ if ($areCommands) {
                         $status = get_command_on_bundle_status($cmd['bundle_id']);
                         # FIXME: a true status has to be build !!!
                         $astop = $actionstop;
+                        $astart = $actionplay;
                     }
                 }
             }
             $a_stop[] = $astop;
             $a_current[] = '';
-            $a_start[] = $actionempty;
+            $a_start[] = $astart;
             $a_pause[] = $actionempty;
         } else {
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';

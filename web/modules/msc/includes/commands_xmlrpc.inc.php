@@ -121,8 +121,16 @@ function restart_command_on_host($id) {
 }
 /* /Command on host handling */
 
+function start_command($id) {
+    return xmlCall('msc.start_command', array($id));
+}
+
 function stop_command($id) {
     return xmlCall('msc.stop_command', array($id));
+}
+
+function start_bundle($bundle_id) {
+    return xmlCall('msc.start_bundle', array($bundle_id));
 }
 
 function stop_bundle($bundle_id) {
