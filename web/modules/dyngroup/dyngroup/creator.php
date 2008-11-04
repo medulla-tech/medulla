@@ -47,7 +47,7 @@ if (strlen($request)) {
 }
 
 // a part of the request has to be removed 
-if ($_GET['action'] == 'computersgroupsubedit') {
+if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersgroupcreatesubedit') {
     if (strlen(quickGet('sub_id'))) {
         $sub = $request->getSub(quickGet('sub_id'));
         quickSet('req', $sub->module);
@@ -56,7 +56,7 @@ if ($_GET['action'] == 'computersgroupsubedit') {
         $request->removeSub(quickGet('sub_id'));
     }
 }
-if ($_GET['action'] == 'compusersgroupsubdel') {
+if ($_GET['action'] == 'computersgroupsubdel' || $_GET['action'] == 'computersgroupcreatesubdel') {
     $request->removeSub(quickGet('sub_id'));
 }
 
@@ -188,7 +188,11 @@ if (quickGet('add_param')) {
 if (!$request->isEmpty()) {
     print "<hr/>";
     print "<h3>"._T("The request is : ", "dyngroup")."</h3>";
-    $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupsubedit', 'target_del'=>'computersgroupsubdel', 'request'=>$request->toS()));
+    if ($edition) {
+        $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupsubedit', 'target_del'=>'computersgroupsubdel', 'request'=>$request->toS()));
+    } else {
+        $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupcreatesubedit', 'target_del'=>'computersgroupcreatesubdel', 'request'=>$request->toS(), 'tab'=>'tabdyn'));
+    }
 }
 
 // display action buttons in the bottom

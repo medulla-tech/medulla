@@ -92,6 +92,9 @@ class Request {
         if (!$default_params['target']) {
             $default_params['target'] = 'creator';
         }
+        if (!strlen($default_params['tab'])) {
+            $default_params['tab'] = null;
+        }
         $parameters = array();
         $parts = array();
         foreach ($this->subs as $id => $sub) {
@@ -105,8 +108,8 @@ class Request {
         $n = new ListInfos($parts, _T('Search part', 'dyngroup'));
         if ($canbedeleted) {
             $n->setParamInfo($parameters);
-            $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), $default_params['target_edit'], "edit", "params", ""));
-            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), $default_params['target_del'], "delete", "params"));
+            $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), $default_params['target_edit'], "edit", "params", null, null, $default_params['tab']));
+            $n->addActionItem(new ActionItem(_T("Delete", 'dyngroup'), $default_params['target_del'], "delete", "params", null, null, $default_params['tab']));
         }
 
         $n->disableFirstColumnActionLink();

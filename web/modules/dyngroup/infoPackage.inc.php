@@ -48,6 +48,40 @@ if (isDynamicEnable()) {
     $page->addTab($tab);
     $submod->addPage($page);
 
+    $page = new Page("computersgroupcreatesubedit",_T("Computers Group Creator Sub Request Editor","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/tab.php");
+    $page->setOptions(array("visible"=>False, "noACL"=>True));
+
+    $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+
+    $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+
+    $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+    $submod->addPage($page);
+    
+    $page = new Page("computersgroupcreatesubdel",_T("Computers Group Creator Sub Request Delete","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/tab.php");
+    $page->setOptions(array("visible"=>False, "noACL"=>True));
+
+    $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+
+    $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+
+    $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
+    $page->setOptions(array("noACL"=>True));
+    $page->addTab($tab);
+    $submod->addPage($page);
+
     $page = new Page("computersgroupedit",_T("Computers Group Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/edithead.php");
     $page->setOptions(array("visible"=>False));
@@ -55,12 +89,12 @@ if (isDynamicEnable()) {
 
     $page = new Page("computersgroupsubedit",_T("Computers Group Sub Request Editor","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/edithead.php");
-    $page->setOptions(array("visible"=>False));
+    $page->setOptions(array("visible"=>False, "noACL"=>True));
     $submod->addPage($page);
     
     $page = new Page("computersgroupsubdel",_T("Computers Group Sub Request Delete","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/edithead.php");
-    $page->setOptions(array("visible"=>False));
+    $page->setOptions(array("visible"=>False, "noACL"=>True));
     $submod->addPage($page);
     
     $page = new Page("tmpdisplay",_T("Temporary result display","dyngroup"));
