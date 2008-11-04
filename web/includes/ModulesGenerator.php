@@ -668,6 +668,9 @@ class Page {
         foreach($this->_tab as $tab) {
             $tabAclArray[$module][$submod][$this->_action][$tab->getName()] = 1;
             $tabDescArray[$module][$submod][$this->_action][$tab->getName()] = $tab->getDescription();
+            if ($tab->_options["noACL"]) {
+                $noAclArray[$module][$submod][$this->_action][$tab->getName()] = 1;
+            }
         }
     }
 
@@ -684,6 +687,7 @@ class Tab {
     function Tab($name, $description) {
         $this->_name = $name;
         $this->_desc = $description;
+        $this->_options["noACL"] = False;	
     }
 
     function getName() {
@@ -694,5 +698,14 @@ class Tab {
         return $this->_desc;
     }
 
+    /**
+     * @see setFile
+     * @param $options same as describe in setFile member
+     */
+    function setOptions($options = array()) {
+        foreach($options as $key => $value) {	  
+            $this->_options[$key] = $value;
+        }
+    }
 }
 ?>

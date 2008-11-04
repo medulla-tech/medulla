@@ -67,7 +67,9 @@ function hasCorrectAcl($module,$submod,$action) {
 }
 
 function hasCorrectTabAcl($module, $submod, $action, $tab) {
+    global $noAclArray;
     return (($_SESSION["login"] == "root")
+            || (isset($noAclArray[$module][$submod][$action][$tab]))
             || (isset($_SESSION["acltab"][$module][$submod][$action][$tab]["right"])));
 }
 
