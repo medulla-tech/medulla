@@ -82,6 +82,10 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
+    elif type(data) == set:
+        ret = []
+        for item in data:
+            ret.append(xmlrpcCleanup(item))
     elif type(data) == datetime.date:
         ret = tuple(data.timetuple())
     elif type(data) == datetime.datetime:
