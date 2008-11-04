@@ -305,7 +305,7 @@ class MscDatabase(Singleton):
 
         cmd = Commands()
         now = time.localtime()
-        cmd.creation_date = "%s-%s-%s %s:%s:%s" % (now[0], now[1], now[2], now[3], now[4], now[5])
+        cmd.creation_date = time.strftime("%Y-%m-%d %H:%M:%S")
         cmd.package_id = package_id
         cmd.start_file = start_file
         cmd.parameters = parameters
@@ -338,7 +338,7 @@ class MscDatabase(Singleton):
             "host" : target_name,
             "start_date" : None,
             "end_date" : None,
-            "next_launch_date" : "0000-00-00 00:00:00",
+            "next_launch_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
             "current_state" : "scheduled",
             "uploaded" : "TODO",
             "executed" : "TODO",

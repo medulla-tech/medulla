@@ -402,28 +402,31 @@ class CommandsOnHost(object):
 ### /Handle local proxy stuff ###
 
 ### Misc state changes handling  ###
-    def reSchedule(self, delay):
+    def reSchedule(self, delay, decrement):
         """ Reschedule when something went wrong """
-        if self.attempts_left < 1: # no attempts left
-            self.setFailed()
-        elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
-            self.attempts_left -= 1
-            self.flush()
-            self.setFailed()
-        else: # reschedule in other cases
-            self.attempts_left -= 1
-            self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
-            self.flush()
-            self.setScheduled()
+        if decrement:
+            if self.attempts_left < 1: # no attempts left
+                self.setFailed()
+                return # nothing more to do, give up
+            elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
+                self.attempts_left -= 1
+                self.flush()
+                self.setFailed()
+                return # nothing more to do, give up
+            else: # reschedule in other cases
+                self.attempts_left -= 1
+        self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
+        self.flush()
+        self.setScheduled()
 
-    def switchToUploadFailed(self, delay = 0):
+    def switchToUploadFailed(self, delay = 0, decrement = True):
         """
             goes in "upload_failed" state only if we where in
             "upload_in_progress" state, reschedule stuff.
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay)                              # always reschedule
+        self.reSchedule(delay, decrement)                   # always reschedule
         self.setUploadFailed()                              # set task status
         if self.getCommandStatut() == 'upload_in_progress': # normal flow
             self.setCommandStatut('upload_failed')          # set command status
@@ -445,14 +448,14 @@ class CommandsOnHost(object):
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow
 
-    def switchToExecutionFailed(self, delay = 0):
+    def switchToExecutionFailed(self, delay = 0, decrement = True):
         """
             goes in "execution_failed" state only if we where in
             "execution_in_progress" state, reschedule stuff.
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay)                              # always reschedule
+        self.reSchedule(delay, decrement)                   # always reschedule
         self.setExecutionFailed()                           # set task status
         if self.getCommandStatut() == 'execution_in_progress': # normal flow
             self.setCommandStatut('execution_failed')       # set command status
@@ -474,14 +477,14 @@ class CommandsOnHost(object):
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow
 
-    def switchToDeleteFailed(self, delay = 0):
+    def switchToDeleteFailed(self, delay = 0, decrement = True):
         """
             goes in "delete_failed" state only if we where in
             "delete_in_progress" state, reschedule stuff.
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay)                              # always reschedule
+        self.reSchedule(delay, decrement)                   # always reschedule
         self.setDeleteFailed()                              # set task status
         if self.getCommandStatut() == 'delete_in_progress': # normal flow
             self.setCommandStatut('delete_failed')          # set command status
@@ -499,6 +502,35 @@ class CommandsOnHost(object):
         self.setDeleteDone()                                # set task status
         if self.getCommandStatut() == 'delete_in_progress': # normal flow
             self.setCommandStatut('delete_done')            # set command status
+            return True                                     # continue command flow
+        else:                                               # other state (pause, stop, etc ...)
+            return False                                    # simply break flow
+
+    def switchToHaltFailed(self, delay = 0, decrement = True):
+        """
+            goes in "halt_failed" state only if we where in
+            "halt_in_progress" state, reschedule stuff.
+            Returns True if processing can continue (most likely never),
+            False else.
+        """
+        self.reSchedule(delay, decrement)                   # always reschedule
+        self.sethaltFailed()                                # set task status
+        if self.getCommandStatut() == 'halt_in_progress':   # normal flow
+            self.setCommandStatut('halt_failed')            # set command status
+            return False                                    # break flow
+        else:                                               # other state (pause, stop, etc ...)
+            return False                                    # simply break flow
+
+    def switchToHaltDone(self):
+        """
+            goes in "halt_done" state only if we where in
+            "halt_in_progress" state.
+            Returns True if processing can continue,
+            False else.
+        """
+        self.setHaltDone()                                  # set task status
+        if self.getCommandStatut() == 'halt_in_progress':   # normal flow
+            self.setCommandStatut('halt_done')              # set command status
             return True                                     # continue command flow
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow

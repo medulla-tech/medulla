@@ -163,7 +163,7 @@ def stopCommand(scheduler, command_id):
     ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
     session.close()
     if ret:
-        mydeffered = getProxy(__select_scheduler(ret[1].scheduler)).callRemote(
+        mydeffered = getProxy(__select_scheduler(ret[0].scheduler)).callRemote(
             'stop_command',
             command_id
         )
@@ -221,7 +221,7 @@ def startCommand(scheduler, command_id):
     ret = session.query(CommandsOnHost, Target).filter(CommandsOnHost.c.id == command_id).first()
     session.close()
     if ret:
-        mydeffered = getProxy(__select_scheduler(ret[1].scheduler)).callRemote(
+        mydeffered = getProxy(__select_scheduler(ret[0].scheduler)).callRemote(
             'start_command',
             command_id
         )
