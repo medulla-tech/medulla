@@ -1109,19 +1109,20 @@ def runHaltPhase(myCommandOnHostID):
         return None
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
         logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
-        return None # FIXEME: nextstage
+        return runEndPhase(myCommandOnHostID)
     if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
-        return None # FIXME: nextstage
+        return runEndPhase(myCommandOnHostID)
     if not myC.hasToHalt(): # do not run halt
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
-        return None # FIXME: nextstage
+        return runEndPhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseHaltError, myCommandOnHostID)
 
     if SchedulerConfig().mode == 'sync':
+        myCoH.setHaltInProgress()
         updateHistory(myCommandOnHostID, 'halt_in_progress')
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
@@ -1262,9 +1263,13 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
-        return None
+        if myCoH.switchToHaltDone():
+            return runEndPhase(myCommandOnHostID)
+        else:
+            return None
     logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
+    myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
     return None
 
 def parsePushOrder(taken_in_account, myCommandOnHostID):
@@ -1342,6 +1347,8 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
         return None
     else: # failed: launcher seems to have rejected it
+        myCoH.setHaltToDo()
+        myCoH.setCommandStatut('scheduled')
         logging.getLogger().warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1415,6 +1422,7 @@ def parseHaltError(reason, myCommandOnHostID):
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.reSchedule(myC.getNextConnectionDelay())
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
+    myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
     return None
 
