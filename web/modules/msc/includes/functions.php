@@ -81,155 +81,75 @@ function return_icon($state)
 
 function state2icon($current_state) {
     switch ($current_state) {
-        case "upload_in_progress" :
-            return "led_circle_orange.png";
-            break;
-        case "upload_done" :
-            return "led_circle_green.png";
-            break;
-        case "upload_failed" :
-            return "led_circle_red.png";
-            break;
-        case "execution_in_progress":
-            return "led_circle_orange.png";
-            break;
-        case "execution_done":
-            return "led_circle_green.png";
-            break;
-        case "execution_failed":
-            return "led_circle_red.png";
-            break;
-        case "delete_in_progress":
-            return "led_circle_orange.png";
-            break;
-        case "delete_done":
-            return "led_circle_green.png";
-            break;
-        case "delete_failed":
-            return "led_circle_red.png";
-            break;
-        case "not_reachable":
-            return "led_circle_red.png";
-            break;
-        case "inventory_done";
-            return "led_circle_green.png";
-            break;
-        case "inventory_failed";
-            return "led_circle_red.png";
-            break;
-        case "inventory_in_progress";
-            return "led_circle_orange.png";
-            break;
-        case "wol_done";
-            return "led_circle_green.png";
-            break;
-        case "wol_failed";
-            return "led_circle_red.png";
-            break;
         case "wol_in_progress";
-            return "led_circle_orange.png";
-            break;
-        case "reboot_done";
-            return "led_circle_green.png";
-            break;
-        case "reboot_failed";
-            return "led_circle_red.png";
-            break;
+        case "upload_in_progress" :
+        case "execution_in_progress":
+        case "delete_in_progress":
+        case "inventory_in_progress";
         case "reboot_in_progress";
             return "led_circle_orange.png";
-            break;
+
+        case "wol_done";
+        case "upload_done" :
+        case "execution_done":
+        case "delete_done":
+        case "inventory_done";
+        case "reboot_done";
         case "done":
             return "led_circle_green.png";
-            break;
+
+        case "not_reachable":
+        case "wol_failed";
+        case "upload_failed" :
+        case "execution_failed":
+        case "delete_failed":
+        case "inventory_failed";
+        case "reboot_failed";
+            return "led_circle_red.png";
         case "pause":
-            return "led_circle_black.png";
-            break;
         case "stop":
             return "led_circle_black.png";
-            break;
+
         case "rescheduled":
-            return "led_circle_grey.png";
-            break;
         case "scheduled":
             return "led_circle_grey.png";
-            break;
-        default:
-            return "led_circle_orange.png";
-            break;
     }
 }
 function history_stat2icon($state) {
     switch ($state) {
-        case "upload_in_progress" :
-            return "led_circle_green.png";
-            break;
-        case "upload_done" :
-            return "led_circle_green.png";
-            break;
-        case "upload_failed" :
-            return "led_circle_red.png";
-            break;
-        case "execution_in_progress":
-            return "led_circle_green.png";
-            break;
-        case "execution_done":
-            return "led_circle_green.png";
-            break;
-        case "execution_failed":
-            return "led_circle_red.png";
-            break;
-        case "delete_in_progress":
-            return "led_circle_green.png";
-            break;
-        case "delete_done":
-            return "led_circle_green.png";
-            break;
-        case "delete_failed":
-            return "led_circle_red.png";
-            break;
-        case "not_reachable":
-            return "led_circle_red.png";
-            break;
-        case "inventory_done";
-            return "led_circle_green.png";
-            break;
-        case "inventory_failed";
-            return "led_circle_red.png";
-            break;
-        case "inventory_in_progress";
-            return "led_circle_orange.png";
-            break;
         case "wol_done";
-            return "led_circle_green.png";
-            break;
-        case "wol_failed";
-            return "led_circle_red.png";
-            break;
-        case "wol_in_progress";
-            return "led_circle_orange.png";
-            break;
+        case "upload_done" :
+        case "delete_done":
+        case "execution_done":
+        case "inventory_done";
         case "reboot_done";
-            return "led_circle_green.png";
-            break;
-        case "reboot_failed";
-            return "led_circle_red.png";
-            break;
-        case "reboot_in_progress";
-            return "led_circle_orange.png";
-            break;
         case "done":
             return "led_circle_green.png";
-            break;
+
+        case "not_reachable":
+        case "wol_failed";
+        case "upload_failed" :
+        case "execution_failed":
+        case "delete_failed":
+        case "inventory_failed";
+        case "reboot_failed";
+            return "led_circle_red.png";
+
+        case "wol_in_progress";
+        case "upload_in_progress" :
+        case "execution_in_progress":
+        case "delete_in_progress":
+        case "inventory_in_progress";
+        case "reboot_in_progress";
+            return "led_circle_orange.png";
+
         case "pause":
-            return "led_circle_black.png";
-            break;
         case "stop":
             return "led_circle_black.png";
-            break;
+
         case "rescheduled":
         case "scheduled":
             return "led_circle_gray.png";
-            break;
     }
 }
 

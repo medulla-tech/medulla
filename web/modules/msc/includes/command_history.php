@@ -290,8 +290,8 @@ class CommandHistory {
 
             $n = new ListInfos($purge_errors, $history);
 
-            $n->setTableHeaderPadding(1);
-            $n->setRowsPerPage(999); // FIXME: Ugly, should try to find another way to do this
+            $n->setTableHeaderPadding(0);
+            $n->setRowsPerPage(count($purge_errors) + 1);
             if (count($hist["stderr"]) > 0  &&
                 !(count($hist["stderr"]) == 1 && $hist["stderr"][0] == '')
                ) {
@@ -303,7 +303,7 @@ class CommandHistory {
 function _values($a) { return $a[1]; }
 function _names($a) { return $a[0]; }
 function _colorise($line) {
-    if (preg_match_all("|^(.*) ([ECOXTP]):(.*)$|", $line, $matches)) {
+    if (preg_match_all("|^(.*) ([A-Z]):(.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;
 
@@ -333,8 +333,13 @@ function _colorise($line) {
             $out .= '<font color=teal face=sans-serif>';
             $out .= join(split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
+        } elseif ($matches[2][0] == "W") {
+            $out .= '<font color=grey>' . $date . '</font>&nbsp;';
+            $out .= '<font color=orange face=sans-serif>';
+            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
-            $out .= '<font color=black face=sans-serif>' . sprintf(_T("Exit code was: %s", "msc"), $matches[3][0]) . '</font>';
+            $out .= '<font color=black face=sans-serif>' . sprintf(_T("Exit code : %s", "msc"), $matches[3][0]) . '</font>';
         }
     } else {
         $out .= '<font color=black face=sans-serif>' . $line . '</font>';

@@ -31,7 +31,7 @@ if (strlen($_GET['uuid'])) {
 /*
  * display stuff for a single client
  */
-    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) {
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) { # bundle display
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
@@ -40,7 +40,7 @@ if (strlen($_GET['uuid'])) {
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
-    } elseif (strlen($_GET['coh_id'])) {
+    } elseif (strlen($_GET['coh_id'])) { # command display
         $params = array('tab'=>$_GET['tab'], 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'bundle_id'=>$_GET['bundle_id']);
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
