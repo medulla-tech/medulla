@@ -82,7 +82,7 @@ def getDependancies(myCommandOnHostID):
     coh_dependencies = []
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
-        filter(database.commands.c.bundle_id == myC.bundle_id).\
+        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
         filter(database.commands.c.order_in_bundle < myC.order_in_bundle).\
         filter(database.commands_on_host.c.current_state !=  'done').\
         filter(database.target.c.target_uuid ==  myT.target_uuid).\
