@@ -358,7 +358,7 @@ def sortCommands(commands_to_perform):
             # then raise all groups to this level
             # the calculs are done here, but please read carefuly:
             # !!!!! DO NOT USE THIS VALUE !!!!!
-            # IT MAY PREVENT SCHEDULER TO RUN AT FULL CAPACITY IF A GROUP ALMOST EMPTY
+            # IT MAY PREVENT SCHEDULER TO RUN AT FULL CAPACITY IF A GROUP IS ALMOST EMPTY
             # to_reach = min(map(lambda(x,y): y['current'] + y['tocome'], aggregated_distribution.items()))
 
             # we can now obtain the full list of command_id
@@ -584,7 +584,7 @@ def runUploadPhase(myCommandOnHostID):
             return None
         elif proxystatus == 'server':
             logger.info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
-            myCoH.setUsedProxy(myCommandOnHostID) # special case: this way we now we were server
+            myCoH.setUsedProxy(myCommandOnHostID) # special case: this way we know we were server
         elif proxystatus == 'keeping':
             logger.info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
         else:
@@ -735,9 +735,12 @@ def _cbRunUploadPhase(result, mirror, client, myC, myCoH):
         # The package is available on a mirror, start upload phase
         return _runUploadPhase(mirror, client, myC, myCoH)
     else:
+        updateHistory(myCoH.id, 'upload_failed', '255', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
+        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
 def _runUploadPhase(mirror, client, myC, myCoH):
+    updateHistory(myCoH.id, 'upload_in_progress', '0', '', 'Package \'%s\' is available on %s' % (myC.package_id, mirror))
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
     ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
     fids = []
@@ -1240,7 +1243,7 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
     myCoH.setInventoryFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
     return runRebootPhase(myCommandOnHostID)
 
@@ -1254,7 +1257,7 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     return None
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1400,7 +1403,7 @@ def parseInventoryError(reason, myCommandOnHostID):
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.setInventoryFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
     # FIXME: should return a failure (but which one ?)
     return None
@@ -1410,7 +1413,7 @@ def parseRebootError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
     # FIXME: should return a failure (but which one ?)
     return None
@@ -1420,7 +1423,7 @@ def parseHaltError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.reSchedule(myC.getNextConnectionDelay())
+    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
