@@ -65,10 +65,16 @@ class Group {
     function Group($id = null, $load = false) {
         if ($id && $load) {
             $params = __xmlrpc_get_group($id);
-            $this->id = $params['id'];
-            $this->name = $params['name'];
+            if ($params == False) {
+                $this->exists = False;
+            } else {
+                $this->id = $params['id'];
+                $this->name = $params['name'];
+                $this->exists = True;
+            }
         } elseif ($id) {
             $this->id = $id;
+            $this->exists = True;
         }
     }
     function delete() { return __xmlrpc_delete_group($this->id); }
