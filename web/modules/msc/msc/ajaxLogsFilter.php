@@ -144,9 +144,11 @@ if ($areCommands) {
                         $astop = $actionstop;
                         $astart = $actionplay;
                     } elseif (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
+                        /* The line is about a bundle */
                         $status = get_command_on_group_status($cmd['id']);
                         # FIXME: a true status has to be build !!!
                         $astop = $actionstop;
+                        $astart = $actionplay;
                     } elseif (strlen($cmd['bundle_id']) and strlen($_GET['bundle_id'])) {
                         $status = get_command_on_group_status($cmd['id']);
                         # FIXME: a true status has to be build !!!
