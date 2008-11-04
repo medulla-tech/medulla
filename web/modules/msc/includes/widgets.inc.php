@@ -60,6 +60,24 @@ class RenderedMSCHost extends RenderedLabel {
 }
 
 /* HTML display for UNknown MSC host */
+class RenderedMSCGroupDontExists extends HtmlElement {
+    function RenderedMSCGroupDontExists($name) {
+        $this->name = $name;
+        $this->str = sprintf(_T('group "%s" is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
+    }
+    function display() {
+        $this->headerDisplay();
+    }
+    function headerDisplay() {
+        $buffer = '<div class="indent"><table>';
+        $buffer .= '<tr><td><span style="color:red;">';
+        $buffer .= $this->str;
+        $buffer .= '</span></td></tr>';
+        $buffer .= '</table></div>';
+        print $buffer;
+    }
+}
+
 class RenderedMSCHostDontExists extends HtmlElement {
     function RenderedMSCHostDontExists($name) {
         $this->name = $name;

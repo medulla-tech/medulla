@@ -146,10 +146,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
-        $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
-
-        $f->push(new Table());
-        $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
+        if ($group->exists != False) {
+            $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
+            $f->push(new Table());
+            $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
+        }
     }
     $label->display();
 
@@ -216,14 +217,19 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 /* group display */
 if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
-    // Display the actions list
-    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid"=>$_GET['gid']));
-    $msc_actions->display();
+    if ($group->exists != False) {
+        // Display the actions list
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid"=>$_GET['gid']));
+        $msc_actions->display();
 
-    $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php", "container", array("gid"=>$_GET['gid']));
-    $ajax->display();
-    print "<br/>";
-    $ajax->displayDivToUpdate();
+        $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php", "container", array("gid"=>$_GET['gid']));
+        $ajax->display();
+        print "<br/>";
+        $ajax->displayDivToUpdate();
+    } else {
+        $msc_host = new RenderedMSCGroupDontExists();
+        $msc_host->headerDisplay();
+    }
 }
 
 
