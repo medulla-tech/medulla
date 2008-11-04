@@ -1070,7 +1070,7 @@ def runRebootPhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseRebootError, myCommandOnHostID)
 
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
@@ -1095,6 +1095,55 @@ def runRebootPhase(myCommandOnHostID):
         mydeffered.\
             addCallback(parseRebootOrder, myCommandOnHostID).\
             addErrback(parseRebootError, myCommandOnHostID)
+    else:
+        return None
+    return mydeffered
+
+def runHaltPhase(myCommandOnHostID):
+    # Run reboot if needed
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logger = logging.getLogger()
+    logger.info("command_on_host #%s: halt phase" % myCommandOnHostID)
+    if myCoH.isHaltRunning(): # halt still running, immediately returns
+        logging.getLogger().info("command_on_host #%s: still halting" % myCommandOnHostID)
+        return None
+    if myCoH.isHaltDone(): # halt has already be done, jump to next stage
+        logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
+        return None # FIXEME: nextstage
+    if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
+        logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        return None # FIXME: nextstage
+    if not myC.hasToHalt(): # do not run halt
+        logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        return None # FIXME: nextstage
+
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseHaltError, myCommandOnHostID)
+
+    if SchedulerConfig().mode == 'sync':
+        updateHistory(myCommandOnHostID, 'halt_in_progress')
+        mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
+            'sync_remote_halt',
+            myCommandOnHostID,
+            client,
+            SchedulerConfig().max_command_time
+        )
+        mydeffered.\
+            addCallback(parseHaltResult, myCommandOnHostID).\
+            addErrback(parseHaltError, myCommandOnHostID)
+    elif SchedulerConfig().mode == 'async':
+        mydeffered = callOnBestLauncher(
+            myCommandOnHostID,
+            'async_remote_halt',
+            myCommandOnHostID,
+            client,
+            SchedulerConfig().max_command_time
+        )
+        mydeffered.\
+            addCallback(parseHaltOrder, myCommandOnHostID).\
+            addErrback(parseHaltError, myCommandOnHostID)
     else:
         return None
     return mydeffered
@@ -1207,6 +1256,17 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     myCoH.reSchedule(myC.getNextConnectionDelay())
     return None
 
+def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logger = logging.getLogger()
+    if exitcode == 0: # success
+        logging.getLogger().info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
+        return None
+    logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
+    updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
+    return None
+
 def parsePushOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if taken_in_account: # success
@@ -1275,6 +1335,16 @@ def parseRebootOrder(taken_in_account, myCommandOnHostID):
         logging.getLogger().warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
         return None
 
+def parseHaltOrder(taken_in_account, myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if taken_in_account: # success
+        updateHistory(myCommandOnHostID, 'halt_in_progress')
+        logging.getLogger().info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
+        return None
+    else: # failed: launcher seems to have rejected it
+        logging.getLogger().warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
+        return None
+
 def parseWOLError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
@@ -1335,6 +1405,16 @@ def parseRebootError(reason, myCommandOnHostID):
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     myCoH.reSchedule(myC.getNextConnectionDelay())
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
+    # FIXME: should return a failure (but which one ?)
+    return None
+
+def parseHaltError(reason, myCommandOnHostID):
+    # something goes really wrong: immediately give up
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logger = logging.getLogger()
+    logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    myCoH.reSchedule(myC.getNextConnectionDelay())
+    updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
     # FIXME: should return a failure (but which one ?)
     return None
 
