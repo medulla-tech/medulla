@@ -132,6 +132,10 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
+    elif type(data) == set:
+        ret = []
+        for item in data:
+            ret.append(xmlrpcCleanup(item))
     elif type(data) == datetime.date:
         ret = tuple(data.timetuple())
     elif type(data) == datetime.datetime:
@@ -494,7 +498,7 @@ class ContextMakerI:
         self.request = request
         self.session = session
         self.userid = userid
-    
+
     def getContext(self):
         """
         Must return a SecurityContext object according to the request, the
