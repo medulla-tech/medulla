@@ -997,8 +997,8 @@ class MscDatabase(Singleton):
             elif params['b_id']:                # we want informations about one bundle on one group / host
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
-                ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
-                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
+                size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
             else:                               # we want all informations about on one group / host
@@ -1032,9 +1032,9 @@ class MscDatabase(Singleton):
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
             elif params['b_id']:                # we want all informations about one bundle
-                ret = self.__displayLogsQuery2(ctx, params, session).all()
+                ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).all()
                 # FIXME: using distinct, size will always return 1 ...
-                size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
+                size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
                 session.close()
                 return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
             else:                               # we want all informations about everything
@@ -1085,7 +1085,7 @@ class MscDatabase(Singleton):
     def getBundle(self, ctx, fk_bundle):
         session = create_session()
         ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
-        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).all())
+        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
         session.close()
         try:
             ret['creation_date'] = cmds[0]['creation_date']
