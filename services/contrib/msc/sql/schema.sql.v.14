@@ -9,8 +9,8 @@ ALTER TABLE `target` \
 ALTER TABLE `commands_on_host` \
     ADD COLUMN `awoken` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `current_state`, \
     ADD COLUMN `inventoried` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `deleted`, \
-    ADD COLUMN `rebooted` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `inventory`, \
-    ADD COLUMN `halted` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `reboot`, \
+    ADD COLUMN `rebooted` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `inventoried`, \
+    ADD COLUMN `halted` ENUM("TODO", "IGNORED", "DONE", "FAILED", "WORK_IN_PROGRESS") DEFAULT "TODO" NOT NULL AFTER `rebooted`, \
     MODIFY `current_state` ENUM("wol_in_progress", "wol_done", "wol_failed", "upload_in_progress", "upload_done", "upload_failed", "execution_in_progress", "execution_done", "execution_failed", "delete_in_progress", "delete_done", "delete_failed", "inventory_in_progress", "inventory_done", "inventory_failed", "reboot_in_progress", "reboot_done", "reboot_failed", "halt_in_progress", "halt_done", "halt_failed", "not_reachable", "done", "pause", "paused", "stop", "stopped", "scheduled", "re_scheduled", "failed", "over_timed") DEFAULT "scheduled" NOT NULL, \
     ADD COLUMN `stage` ENUM("pending", "wol_pending", "wol_running", "wol_requeued", "upload_pending", "upload_running", "upload_requeued", "execution_pending", "execution_running", "execution_requeued", "delete_pending", "delete_running", "delete_requeued", "inventory_pending", "inventory_running", "inventory_requeued", "reboot_pending", "reboot_in_progress", "reboot_requeued", "halt_pending", "halt_running", "halt_requeued", "ended") DEFAULT "pending" NOT NULL AFTER current_state;
 
