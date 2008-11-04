@@ -932,7 +932,7 @@ class MscDatabase(Singleton):
 
         return query
 
-    def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1):
+    def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1, params = {}):
         i = 0
         min = int(min)
         max = int(max)
@@ -943,14 +943,24 @@ class MscDatabase(Singleton):
             if max != -1 and max-1 < i:
                 break
             if i < min:
-                if (fk_bundle != 'NULL' or fk_bundle != None) and not defined.has_key(fk_bundle):
+                if fk_bundle != 'NULL' and fk_bundle != None and not defined.has_key(fk_bundle):
                     defined[fk_bundle] = id
                     i += 1
                 elif fk_bundle == 'NULL' or fk_bundle == None:
                     i += 1
                 continue
-            if (fk_bundle != 'NULL' or fk_bundle != None) and not defined.has_key(fk_bundle):
+            if fk_bundle != 'NULL' and fk_bundle != None and not defined.has_key(fk_bundle):
                 defined[fk_bundle] = id
+                if 'finished' in params and params['finished']:
+                    # Check that the bundle has all its commands_on_host set
+                    # to state done or failed.
+                    session = create_session()
+                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed'))).count()
+                    session.close()
+                    if count_query > 0:
+                        # Some CoH are not in the done or failed states, so
+                        # we won't display this bundle.
+                        continue
                 ids.append(id)
                 i += 1
             elif fk_bundle == 'NULL' or fk_bundle == None:
@@ -999,9 +1009,9 @@ class MscDatabase(Singleton):
 
                 size = []
                 size.extend(cmds)
-                size = len(self.__displayLogsQueryGetIds(size))
+                size = len(self.__displayLogsQueryGetIds(size, params = params))
 
-                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
+                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'], params)
 
                 query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
                 query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
@@ -1035,7 +1045,7 @@ class MscDatabase(Singleton):
                 size.extend(cmds)
                 size = len(self.__displayLogsQueryGetIds(size))
 
-                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'])
+                ids = self.__displayLogsQueryGetIds(cmds, params['min'], params['max'], params = params)
 
                 query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
                 query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
