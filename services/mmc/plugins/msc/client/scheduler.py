@@ -178,7 +178,7 @@ def stopCommands(scheduler, command_ids):
     given their ids.
     """
     def parseResult(result):
-        logging.getLogger().debug('Stopping commands %s' % command_ids)
+        logging.getLogger().debug('Stopping commands %s on %s' % (command_ids, scheduler))
         return result
     def parseError(reason):
         # FIXME: handle error
@@ -196,8 +196,7 @@ def startCommands(scheduler, command_ids):
     their ids.
     """
     def parseResult(result):
-        logging.getLogger().debug('Starting commands %s' % command_ids)
-        logging.getLogger().debug(result)
+        logging.getLogger().debug('Starting commands %s on %s' % (command_ids, scheduler))
         return result
     def parseError(reason):
         # FIXME: handle error
