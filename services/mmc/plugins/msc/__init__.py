@@ -466,7 +466,7 @@ def action_on_command(id, f_name, f_database, f_scheduler):
     scheds = MscDatabase().getCommandsonhostsAndSchedulers(id)
     logger = logging.getLogger()
     for sched in scheds:
-        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
+        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(sched, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
 
 def action_on_bundle(id, f_name, f_database, f_scheduler):
@@ -476,7 +476,7 @@ def action_on_bundle(id, f_name, f_database, f_scheduler):
     scheds = MscDatabase().getCommandsonhostsAndSchedulersOnBundle(id)
     logger = logging.getLogger()
     for sched in scheds:
-        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(None, scheds[sched])
+        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(sched, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
 
 ### Commands handling ###
