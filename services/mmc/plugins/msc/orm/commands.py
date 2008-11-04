@@ -114,6 +114,7 @@ class Commands(object):
     def toH(self):
         return {
             'id': self.id,
+            'state': self.state,
             'creation_date': self.creation_date,
             'start_file': self.start_file,
             'parameters': self.parameters,
@@ -130,6 +131,7 @@ class Commands(object):
             'do_inventory': self.do_inventory,
             'do_reboot': self.do_reboot,
             'do_wol': self.do_wol,
+            'do_halt': self.do_halt,
             'next_connection_delay': self.next_connection_delay,
             'max_connection_attempt': self.max_connection_attempt,
             'pre_command_hook': self.pre_command_hook,

@@ -180,6 +180,7 @@ class CommandsOnHost(object):
 ### /Handle deletion states ###
 
 ### Handle inventory states ###
+# FIXME: from current_state to "inventoried"
     def setInventoryFailed(self):
         self.setCommandStatut('inventory_failed')
     def isInventoryFailed(self):
@@ -204,6 +205,7 @@ class CommandsOnHost(object):
 
 
 ### Handle wol states ###
+# FIXME: from current_state to "awoken"
     def setLastWOLAttempt(self):
         self.last_wol_attempt = datetime.datetime.now()
         self.flush()
@@ -225,7 +227,89 @@ class CommandsOnHost(object):
         result = (self.getCommandStatut() == 'wol_in_progress')
         logging.getLogger().debug("isWOLRunning(#%s): %s" % (self.getId(), result))
         return result
-### /Handle inventory states ###
+### /Handle wol states ###
+
+### Handle reboot states ###
+    def setRebootIgnored(self):
+        self.setRebootIgnored('IGNORED')
+    def isRebootIgnored(self):
+        result = (self.rebooted == 'IGNORED')
+        logging.getLogger().debug("isRebootIgnored(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setRebootFailed(self):
+        self.setRebootStatut('FAILED')
+    def isRebootFailed(self):
+        result = (self.rebooted == 'FAILED')
+        logging.getLogger().debug("isRebootFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setRebootDone(self):
+        self.setRebootStatut('DONE')
+    def isRebootDone(self):
+        result = (self.rebooted == 'DONE')
+        logging.getLogger().debug("isRebootDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setRebootInProgress(self):
+        self.setRebootStatut('WORK_IN_PROGRESS')
+    def isRebootRunning(self):
+        result = (self.rebooted == 'WORK_IN_PROGRESS')
+        logging.getLogger().debug("isRebootRunning(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setRebootToDo(self):
+        self.setRebootStatut('TODO')
+    def isRebootToDo(self):
+        result = (self.rebooted == 'TODO')
+        logging.getLogger().debug("isHRebootToDo(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setRebootStatut(self, halted):
+        self.rebooted = rebooted
+        self.flush()
+### /Handle halt states ###
+
+### Handle halt states ###
+    def setHaltIgnored(self):
+        self.setHaltIgnored('IGNORED')
+    def isHaltIgnored(self):
+        result = (self.halted == 'IGNORED')
+        logging.getLogger().debug("isHaltIgnored(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setHaltFailed(self):
+        self.setHaltStatut('FAILED')
+    def isHaltFailed(self):
+        result = (self.halted == 'FAILED')
+        logging.getLogger().debug("isHaltFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setHaltDone(self):
+        self.setHaltStatut('DONE')
+    def isHaltDone(self):
+        result = (self.halted == 'DONE')
+        logging.getLogger().debug("isHaltDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setHaltInProgress(self):
+        self.setHaltStatut('WORK_IN_PROGRESS')
+    def isHaltRunning(self):
+        result = (self.halted == 'WORK_IN_PROGRESS')
+        logging.getLogger().debug("isUploadRunning(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setHaltToDo(self):
+        self.setHaltStatut('TODO')
+    def isHaltToDo(self):
+        result = (self.halted == 'TODO')
+        logging.getLogger().debug("isHaltToDo(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setHaltStatut(self, halted):
+        self.halted = halted
+        self.flush()
+### /Handle halt states ###
 
 ### Handle general states ###
     def setScheduled(self):
@@ -436,9 +520,14 @@ class CommandsOnHost(object):
             'start_date': self.start_date,
             'end_date': self.end_date,
             'current_state': self.current_state,
+            'stage': self.stage,
+            'awoken': self.awoken,
             'uploaded': self.uploaded,
             'executed': self.executed,
             'deleted': self.deleted,
+            'rebooted': self.rebooted,
+            'inventoried': self.inventoried,
+            'halted': self.halted,
             'next_launch_date': self.next_launch_date,
             'attempts_left': self.attempts_left,
             'next_attempt_date_time': self.next_attempt_date_time,
