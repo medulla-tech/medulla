@@ -36,11 +36,16 @@ from mmc.support.mmcException import mmcException
 import logging
 from twisted.internet import protocol
 
+# python 2.3 fallback for set() in xmlrpcleanup
+try:
+    set
+except NameError:
+    from sets import Set as set
+
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
     mxDateTime = None
-
 
 def cleanFilter(f):
     for char in "()&=":
