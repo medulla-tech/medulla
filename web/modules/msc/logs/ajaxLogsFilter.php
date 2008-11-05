@@ -49,7 +49,6 @@ if (!empty($_GET["commands"]))
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
     $cmds = get_all_commandsonhost_by_currentstate($current_state, $start, $start + $maxperpage, $filter);
-    $filter = $filter.'##'.$current_state;
 } else {
     $count = count_all_commandsonhost_by_type($type, $filter);
     $cmds = get_all_commandsonhost_by_type($type, $start, $start + $maxperpage, $filter);
