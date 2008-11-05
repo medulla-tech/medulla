@@ -27,6 +27,13 @@ from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser(
 import datetime
 import re
 from time import time, struct_time
+
+# python 2.3 fallback for set() in xmlrpcleanup
+try:
+    set
+except NameError:
+    from sets import Set as set
+
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
