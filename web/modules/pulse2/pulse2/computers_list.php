@@ -48,7 +48,7 @@ print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
-    ?><a href='<?= urlStr("base/computers/csv", array('groupname'=>$_GET['groupname'], 'gid'=>$_GET['gid'])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?= urlStr("base/computers/csv", array('groupname'=>$_GET['groupname'], 'gid'=>$_GET['gid'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
 }
 
 ?>
