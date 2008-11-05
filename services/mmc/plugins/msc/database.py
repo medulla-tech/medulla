@@ -103,7 +103,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True, echo=False)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True)
         self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
@@ -468,8 +468,6 @@ class MscDatabase(Singleton):
                 group_id,
                 )
 
-        connection = self.getDbConnection()
-        trans = connection.begin()
         targets_to_insert = []
         targets_scheduler = []
         targets_name = []
@@ -529,6 +527,8 @@ class MscDatabase(Singleton):
             cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies)
             session.close()
 
+            connection = self.getDbConnection()
+            trans = connection.begin()
             r = connection.execute(self.target.insert(), targets_to_insert)
             first_target_id = r.cursor.lastrowid
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
@@ -666,7 +666,7 @@ class MscDatabase(Singleton):
         """
         conn = self.getDbConnection()
         trans = conn.begin()
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_id), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
         trans.commit()
 
     def stopCommand(self, c_id):
