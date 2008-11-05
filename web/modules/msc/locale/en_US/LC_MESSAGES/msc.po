@@ -3,10 +3,6 @@
 msgid "%3.1f %s%s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:240 msc/msc/ajaxLogsFilter.php:242
-msgid "%a %d %b %Y %T"
-msgstr ""
-
 #: msc/includes/command_history.php:216
 #, php-format
 msgid "%s %s"
@@ -17,19 +13,19 @@ msgstr ""
 msgid "%s <i>(no additionnal parameter given)</i>"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:66
+#: msc/includes/widgets.inc.php:84
 #, php-format
 msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
 "access it"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:98 msc/msc/ajaxLogsFilter.php:247
+#: msc/logs/ajaxLogsFilter.php:98 msc/msc/ajaxLogsFilter.php:251
 #, php-format
 msgid "%s on %s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:245
+#: msc/msc/ajaxLogsFilter.php:249
 #, php-format
 msgid "%s on %s (Bundle #%s)"
 msgstr ""
@@ -39,12 +35,12 @@ msgstr ""
 msgid "%s status"
 msgstr ""
 
-#: msc/msc/tabs.php:36 msc/msc/tabs.php:43
+#: msc/msc/tabs.php:37 msc/msc/tabs.php:44
 #, php-format
 msgid "%s's computer secure control"
 msgstr ""
 
-#: msc/msc/tabs.php:55
+#: msc/msc/tabs.php:60
 #, php-format
 msgid "%s's group secure control"
 msgstr ""
@@ -93,7 +89,7 @@ msgstr ""
 msgid "<i>to</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:361
+#: msc/includes/command_history.php:366
 msgid "<i>undefined</i>"
 msgstr ""
 
@@ -121,12 +117,11 @@ msgstr ""
 msgid "All computers of this group"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:331
+#: msc/includes/widgets.inc.php:256 msc/includes/widgets.inc.php:375
 msgid "All users commands"
 msgstr ""
 
-#: msc/includes/command_history.php:355 msc/logs/ajaxLogsFilter.php:93
-#: msc/msc/ajaxLogsFilter.php:238
+#: msc/includes/command_history.php:360 msc/logs/ajaxLogsFilter.php:93
 msgid "As soon as possible"
 msgstr ""
 
@@ -171,8 +166,8 @@ msgstr ""
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:210
-#: msc/msc/ajaxLogsFilter.php:286 msc/msc/package_detail.php:36
+#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:215
+#: msc/msc/ajaxLogsFilter.php:290 msc/msc/package_detail.php:36
 msgid "Command"
 msgstr ""
 
@@ -190,7 +185,7 @@ msgid "Command line to run"
 msgstr ""
 
 #: msc/includes/command_history.php:108 msc/includes/command_history.php:228
-#: msc/msc/launch.php:159
+#: msc/msc/launch.php:160
 msgid "Command name"
 msgstr ""
 
@@ -206,7 +201,7 @@ msgstr ""
 msgid "Command state"
 msgstr ""
 
-#: msc/infoPackage.inc.php:171
+#: msc/infoPackage.inc.php:160
 msgid "Command status"
 msgstr ""
 
@@ -218,7 +213,7 @@ msgstr ""
 msgid "Connection failed !"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:342 msc/msc/launch.php:179
+#: msc/includes/bundle_widgets.php:342 msc/msc/launch.php:180
 msgid "Copy Mode"
 msgstr ""
 
@@ -230,7 +225,7 @@ msgstr ""
 msgid "Creation date"
 msgstr ""
 
-#: msc/infoPackage.inc.php:228
+#: msc/infoPackage.inc.php:217
 msgid "Csv's export"
 msgstr ""
 
@@ -246,7 +241,7 @@ msgstr ""
 msgid "Delay between two connections"
 msgstr ""
 
-#: msc/msc/launch.php:167
+#: msc/msc/launch.php:168
 msgid "Delay between two connections (minutes)"
 msgstr ""
 
@@ -266,7 +261,7 @@ msgstr ""
 msgid "Delete file"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:324 msc/msc/launch.php:163
+#: msc/includes/bundle_widgets.php:324 msc/msc/launch.php:164
 msgid "Delete files after a successful execution"
 msgstr ""
 
@@ -283,25 +278,25 @@ msgstr ""
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:347 msc/msc/launch.php:184
+#: msc/includes/bundle_widgets.php:347 msc/msc/launch.php:185
 msgid "Deploy using a local proxy"
 msgstr ""
 
 #: msc/includes/command_history.php:231 msc/includes/bundle_widgets.php:331
-#: msc/msc/launch.php:170
+#: msc/msc/launch.php:171
 msgid "Deployment interval"
 msgstr ""
 
 #: msc/logs/ajaxLogsFilter.php:69 msc/logs/ajaxLogsFilter.php:70
 #: msc/msc/ajaxLogsFilter.php:87 msc/msc/ajaxLogsFilter.php:89
-#: msc/msc/ajaxPackageFilter.php:115 msc/msc/history.php:48
+#: msc/msc/ajaxPackageFilter.php:116 msc/msc/history.php:48
 #: msc/msc/history.php:78 msc/msc/history.php:83 msc/msc/history.php:99
 #: msc/msc/logs.php:47 msc/msc/logs.php:57 msc/msc/logs.php:91
 #: msc/msc/logs.php:96 msc/msc/logs.php:114 msc/msc/packages.php:22
 msgid "Details"
 msgstr ""
 
-#: msc/msc/launch.php:164
+#: msc/msc/launch.php:165
 msgid "Do an inventory after a successful execution"
 msgstr ""
 
@@ -317,11 +312,11 @@ msgstr ""
 msgid "Download file"
 msgstr ""
 
-#: msc/infoPackage.inc.php:128
+#: msc/infoPackage.inc.php:117
 msgid "Download file from a computer"
 msgstr ""
 
-#: msc/msc/download_file.php:33 msc/infoPackage.inc.php:223
+#: msc/msc/download_file.php:33 msc/infoPackage.inc.php:212
 msgid "Download file page"
 msgstr ""
 
@@ -329,7 +324,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:130 msc/msc/ajaxLogsFilter.php:281
+#: msc/logs/ajaxLogsFilter.php:130 msc/msc/ajaxLogsFilter.php:285
 msgid "End date"
 msgstr ""
 
@@ -337,7 +332,7 @@ msgstr ""
 msgid "End of validity"
 msgstr ""
 
-#: msc/infoPackage.inc.php:146
+#: msc/infoPackage.inc.php:135
 msgid "Establish a VNC connection"
 msgstr ""
 
@@ -345,7 +340,7 @@ msgstr ""
 msgid "Establish a VNC connection to this computer"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:153
+#: msc/includes/widgets.inc.php:171
 msgid "Execute action..."
 msgstr ""
 
@@ -373,9 +368,9 @@ msgstr ""
 msgid "Execution in progress"
 msgstr ""
 
-#: msc/includes/command_history.php:337
+#: msc/includes/command_history.php:342
 #, php-format
-msgid "Exit code was: %s"
+msgid "Exit code : %s"
 msgstr ""
 
 #: msc/includes/functions.php:50 msc/includes/functions.php:54
@@ -390,16 +385,16 @@ msgstr ""
 msgid "From computer"
 msgstr ""
 
-#: msc/infoPackage.inc.php:140
+#: msc/infoPackage.inc.php:129
 msgid "Get a downloaded file"
 msgstr ""
 
-#: msc/msc/launch.php:149
+#: msc/msc/launch.php:150
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr ""
 
-#: msc/msc/tabs.php:47 msc/msc/tabs.php:59
+#: msc/msc/tabs.php:48 msc/msc/tabs.php:64
 msgid "History"
 msgstr ""
 
@@ -407,7 +402,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: msc/infoPackage.inc.php:218
+#: msc/infoPackage.inc.php:207
 msgid "IP Addr."
 msgstr ""
 
@@ -431,23 +426,23 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: msc/msc/ajaxPackageFilter.php:114 msc/msc/packages.php:21
+#: msc/msc/ajaxPackageFilter.php:115 msc/msc/packages.php:21
 msgid "Launch"
 msgstr ""
 
-#: msc/msc/tabs.php:44 msc/msc/tabs.php:56
+#: msc/msc/tabs.php:45 msc/msc/tabs.php:61
 msgid "Launch Actions"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:199 msc/msc/tabs.php:45 msc/msc/tabs.php:57
+#: msc/includes/bundle_widgets.php:199 msc/msc/tabs.php:46 msc/msc/tabs.php:62
 msgid "Launch Bundle"
 msgstr ""
 
-#: msc/infoPackage.inc.php:182
+#: msc/infoPackage.inc.php:171
 msgid "Launch a command"
 msgstr ""
 
-#: msc/infoPackage.inc.php:188
+#: msc/infoPackage.inc.php:177
 msgid "Launch a quick action command"
 msgstr ""
 
@@ -459,75 +454,75 @@ msgstr ""
 msgid "Local proxies"
 msgstr ""
 
-#: msc/msc/tabs.php:46 msc/msc/tabs.php:58
+#: msc/msc/tabs.php:47 msc/msc/tabs.php:63
 msgid "Logs"
 msgstr ""
 
-#: msc/infoPackage.inc.php:213
+#: msc/infoPackage.inc.php:202
 msgid "MAC Addr."
 msgstr ""
 
-#: msc/infoPackage.inc.php:39
-msgid "MSC"
-msgstr ""
-
-#: msc/infoPackage.inc.php:87
+#: msc/infoPackage.inc.php:76
 msgid "MSC bundle tab for a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:117
+#: msc/infoPackage.inc.php:106
 msgid "MSC bundle tab for a machine"
 msgstr ""
 
-#: msc/infoPackage.inc.php:99
+#: msc/infoPackage.inc.php:88
 msgid "MSC bundle tab for a machine in a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:93
+#: msc/infoPackage.inc.php:82
 msgid "MSC history tab for a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:123
+#: msc/infoPackage.inc.php:112
 msgid "MSC history tab for a machine"
 msgstr ""
 
-#: msc/infoPackage.inc.php:105
+#: msc/infoPackage.inc.php:94
 msgid "MSC history tab for a machine in a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:84
+#: msc/infoPackage.inc.php:73
 msgid "MSC launch tab for a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:114
+#: msc/infoPackage.inc.php:103
 msgid "MSC launch tab for a machine"
 msgstr ""
 
-#: msc/infoPackage.inc.php:96
+#: msc/infoPackage.inc.php:85
 msgid "MSC launch tab for a machine in a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:90
+#: msc/infoPackage.inc.php:39
+msgid "MSC logs"
+msgstr ""
+
+#: msc/infoPackage.inc.php:79
 msgid "MSC logs tab for a group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:120
+#: msc/infoPackage.inc.php:109
 msgid "MSC logs tab for a machine"
 msgstr ""
 
-#: msc/infoPackage.inc.php:102
+#: msc/infoPackage.inc.php:91
 msgid "MSC logs tab for a machine in a group"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:332 msc/msc/launch.php:171
+#: msc/includes/bundle_widgets.php:332 msc/msc/launch.php:172
 msgid "Max bandwidth (b/s)"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:327 msc/msc/launch.php:166
+#: msc/includes/bundle_widgets.php:327 msc/msc/launch.php:167
 msgid "Maximum number of connection attempt"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:238 msc/includes/widgets.inc.php:331
+#: msc/includes/widgets.inc.php:256 msc/includes/widgets.inc.php:375
 msgid "My commands"
 msgstr ""
 
@@ -540,7 +535,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: msc/includes/command_history.php:352
+#: msc/includes/command_history.php:357
 msgid "Never"
 msgstr ""
 
@@ -548,7 +543,7 @@ msgstr ""
 msgid "Next attempt"
 msgstr ""
 
-#: msc/msc/tabs.php:65
+#: msc/msc/tabs.php:71
 msgid "Not enough informations"
 msgstr ""
 
@@ -568,7 +563,7 @@ msgstr ""
 msgid "Package size"
 msgstr ""
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:193
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:182
 msgid "Packages"
 msgstr ""
 
@@ -577,7 +572,7 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: msc/infoPackage.inc.php:159
+#: msc/infoPackage.inc.php:148
 msgid "Pause a command"
 msgstr ""
 
@@ -586,19 +581,19 @@ msgstr ""
 msgid "Pause action %s on host %s"
 msgstr ""
 
-#: msc/infoPackage.inc.php:203
+#: msc/infoPackage.inc.php:192
 msgid "Ping"
 msgstr ""
 
-#: msc/infoPackage.inc.php:198
+#: msc/infoPackage.inc.php:187
 msgid "Ping and probe"
 msgstr ""
 
-#: msc/infoPackage.inc.php:208
+#: msc/infoPackage.inc.php:197
 msgid "Platform"
 msgstr ""
 
-#: msc/infoPackage.inc.php:153
+#: msc/infoPackage.inc.php:142
 msgid "Play a command"
 msgstr ""
 
@@ -618,11 +613,11 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:176
+#: msc/includes/widgets.inc.php:194
 msgid "Quick action list is empty"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:143
+#: msc/includes/widgets.inc.php:161
 #, php-format
 msgid "Quick action on %s"
 msgstr ""
@@ -636,7 +631,7 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: msc/msc/launch.php:165
+#: msc/msc/launch.php:166
 msgid "Reboot client after a successful deletion"
 msgstr ""
 
@@ -664,7 +659,7 @@ msgstr ""
 msgid "Remote control of :"
 msgstr ""
 
-#: msc/infoPackage.inc.php:134
+#: msc/infoPackage.inc.php:123
 msgid "Remove a downloaded file"
 msgstr ""
 
@@ -680,7 +675,7 @@ msgstr ""
 msgid "Scheduled"
 msgstr ""
 
-#: msc/msc/launch.php:160
+#: msc/msc/launch.php:161
 msgid "Script parameters"
 msgstr ""
 
@@ -688,11 +683,11 @@ msgstr ""
 msgid "Secure Control"
 msgstr ""
 
-#: msc/infoPackage.inc.php:80
+#: msc/infoPackage.inc.php:69
 msgid "Secure control on a group of computers"
 msgstr ""
 
-#: msc/infoPackage.inc.php:110
+#: msc/infoPackage.inc.php:99
 msgid "Secure control on computer"
 msgstr ""
 
@@ -736,7 +731,7 @@ msgstr ""
 msgid "Show finished task's logs"
 msgstr ""
 
-#: msc/infoPackage.inc.php:176
+#: msc/infoPackage.inc.php:165
 msgid "Show package's details"
 msgstr ""
 
@@ -758,16 +753,20 @@ msgid "Start"
 msgstr ""
 
 #: msc/includes/command_history.php:115 msc/includes/command_history.php:234
-#: msc/msc/launch.php:161
+#: msc/msc/launch.php:162
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 
-#: msc/msc/msctabsplay.php:61
+#: msc/msc/msctabsplay.php:106
 #, php-format
-msgid "Start action %s on host %s"
+msgid "Start action on host %s"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:283
+#: msc/msc/msctabsplay.php:108
+msgid "Start action on this group"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:132 msc/msc/ajaxLogsFilter.php:287
 msgid "Start date"
 msgstr ""
 
@@ -788,7 +787,7 @@ msgstr ""
 msgid "Start inventory agent"
 msgstr ""
 
-#: msc/msc/launch.php:162
+#: msc/msc/launch.php:163
 msgid "Start script"
 msgstr ""
 
@@ -814,7 +813,7 @@ msgstr ""
 msgid "Stop %s %s on this group"
 msgstr ""
 
-#: msc/infoPackage.inc.php:165
+#: msc/infoPackage.inc.php:154
 msgid "Stop a command"
 msgstr ""
 
@@ -822,11 +821,11 @@ msgstr ""
 msgid "Stopped"
 msgstr ""
 
-#: msc/msc/launch.php:168
+#: msc/msc/launch.php:169
 msgid "The command may start after"
 msgstr ""
 
-#: msc/msc/launch.php:169
+#: msc/msc/launch.php:170
 msgid "The command must stop before"
 msgstr ""
 
@@ -926,7 +925,7 @@ msgstr ""
 msgid "Y-m-d H:i:s"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:83
+#: msc/includes/widgets.inc.php:101
 msgid "You don't have the right permissions to display this command"
 msgstr ""
 
@@ -963,12 +962,12 @@ msgid "computers were successfully deployed"
 msgstr ""
 
 #: msc/includes/command_history.php:36 msc/logs/ajaxLogsFilter.php:136
-#: msc/msc/ajaxLogsFilter.php:212 msc/msc/ajaxLogsFilter.php:287
+#: msc/msc/ajaxLogsFilter.php:217 msc/msc/ajaxLogsFilter.php:291
 msgid "current_state"
 msgstr ""
 
 #: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:139
-#: msc/msc/ajaxLogsFilter.php:215 msc/msc/ajaxLogsFilter.php:290
+#: msc/msc/ajaxLogsFilter.php:220 msc/msc/ajaxLogsFilter.php:294
 msgid "deleted"
 msgstr ""
 
@@ -985,7 +984,7 @@ msgid "error : cmd_id or bundle_id must be given"
 msgstr ""
 
 #: msc/includes/command_history.php:38 msc/logs/ajaxLogsFilter.php:138
-#: msc/msc/ajaxLogsFilter.php:214 msc/msc/ajaxLogsFilter.php:289
+#: msc/msc/ajaxLogsFilter.php:219 msc/msc/ajaxLogsFilter.php:293
 msgid "executed"
 msgstr ""
 
@@ -999,6 +998,13 @@ msgstr ""
 
 #: msc/msc/msctabsstatus.php:68 msc/msc/statuscsv.php:40
 msgid "failed during upload"
+msgstr ""
+
+#: msc/includes/widgets.inc.php:66
+#, php-format
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions "
+"to access it"
 msgstr ""
 
 #: msc/includes/bundle_widgets.php:283 msc/msc/start_command.php:135
@@ -1025,11 +1031,11 @@ msgstr ""
 msgid "packages installation were successful"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:339 msc/msc/launch.php:176
+#: msc/includes/bundle_widgets.php:339 msc/msc/launch.php:177
 msgid "push"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:339 msc/msc/launch.php:176
+#: msc/includes/bundle_widgets.php:339 msc/msc/launch.php:177
 msgid "push / pull"
 msgstr ""
 
@@ -1045,7 +1051,7 @@ msgstr ""
 msgid "running upload"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:211
+#: msc/msc/ajaxLogsFilter.php:216
 msgid "start_date"
 msgstr ""
 
@@ -1070,7 +1076,7 @@ msgid "unreacheable during execution"
 msgstr ""
 
 #: msc/includes/command_history.php:37 msc/logs/ajaxLogsFilter.php:137
-#: msc/msc/ajaxLogsFilter.php:213 msc/msc/ajaxLogsFilter.php:288
+#: msc/msc/ajaxLogsFilter.php:218 msc/msc/ajaxLogsFilter.php:292
 msgid "uploaded"
 msgstr ""
 

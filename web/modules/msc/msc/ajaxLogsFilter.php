@@ -239,13 +239,12 @@ if ($areCommands) {
             } else {
                 $d = $coh["next_launch_date"];
             }
-            if (empty($d) && !$history) {
-                $a_date[] = _T("As soon as possible", "msc");
-            } elseif (empty($d)) { # TODO find a label!
-                $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
-            } else {
-                $a_date[] = strftime(_T("%a %d %b %Y %T", "msc"), mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
-            }
+
+            if (!is_array($d))
+                $a_date[] = _toDate(array(1970, 1, 1, 0, 0, 0));
+            else
+                $a_date[] = _toDate($d);
+
             if (strlen($cmd['bundle_id'])) {
                 $a_cmd[] = sprintf(_T("%s on %s (Bundle #%s)", 'msc'), $cmd['title'], $coh['host'], $cmd['bundle_id']);
             } else {
