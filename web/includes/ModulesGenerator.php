@@ -638,6 +638,7 @@ class Page {
         global $redirArray;
         global $noAclArray;
         global $tabAclArray;
+        global $noAclTabArray;
         global $tabDescArray;
 
         $descArray[$module][$submod][$this->_action] = $this->_desc;
@@ -669,7 +670,7 @@ class Page {
             $tabAclArray[$module][$submod][$this->_action][$tab->getName()] = 1;
             $tabDescArray[$module][$submod][$this->_action][$tab->getName()] = $tab->getDescription();
             if ($tab->_options["noACL"]) {
-                $noAclArray[$module][$submod][$this->_action][$tab->getName()] = 1;
+                $noAclTabArray[join("/", array($module, $submod, $this->_action, $tab->getName()))] = 1;
             }
         }
     }
