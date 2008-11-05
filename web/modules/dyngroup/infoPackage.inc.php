@@ -53,15 +53,15 @@ if (isDynamicEnable()) {
     $page->setOptions(array("visible"=>False, "noACL"=>True));
 
     $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
 
     $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
 
     $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
     $submod->addPage($page);
     
@@ -70,15 +70,15 @@ if (isDynamicEnable()) {
     $page->setOptions(array("visible"=>False, "noACL"=>True));
 
     $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
 
     $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
 
     $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
-    $page->setOptions(array("noACL"=>True));
+    $tab->setOptions(array("noACL"=>True));
     $page->addTab($tab);
     $submod->addPage($page);
 
