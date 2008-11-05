@@ -87,7 +87,10 @@ class RpcProxy(RpcProxyI):
         
     def get_group(self, id):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().get_group(ctx, id).toH())
+        grp = DyngroupDatabase().get_group(ctx, id)
+        if grp:
+            return xmlrpcCleanup(grp.toH())
+        return xmlrpcCleanup(False)
         
     def delete_group(self, id):
         ctx = self.currentContext
