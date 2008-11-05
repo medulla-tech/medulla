@@ -35,13 +35,22 @@ import datetime
 from mmc.support.mmcException import mmcException
 import logging
 from twisted.internet import protocol
-from sqlalchemy import util
 
 # python 2.3 fallback for set() in xmlrpcleanup
+# also try sqlalchemy.util Sets
 try:
-    set
-except NameError:
-    from sets import Set as set
+    from sqlalchemy.util import Set as sa_set
+    try:
+        set
+    except NameError:
+        from sets import Set as set
+    set_types = set, sa_set
+except ImportError:
+    try:
+        set
+    except NameError:
+        from sets import Set as set
+    set_types = set,
 
 try:
     import mx.DateTime as mxDateTime
@@ -138,7 +147,7 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-    elif type(data) == set or type(data) == util.Set:
+    elif type(data) in set_types:
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
