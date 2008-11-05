@@ -268,7 +268,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = ['rm']
@@ -347,7 +347,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command  = ['cd', target_path, ';', command]
@@ -411,7 +411,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = command
@@ -475,7 +475,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = command
@@ -554,7 +554,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = inventory_command
@@ -620,7 +620,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = reboot_command
@@ -686,7 +686,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
         # Built "thru" command
         thru_command_list  = ['/usr/bin/ssh']
         thru_command_list += client['transp_args']
-        thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+        thru_command_list += [client['host']]
 
         # Build "exec" command
         real_command = halt_command

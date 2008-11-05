@@ -102,7 +102,7 @@ def establishProxy(client, requestor_ip, requested_port):
     thru_command_list  = ['/usr/bin/ssh']
     for option in client['transp_args']:
         thru_command_list += ['-o', option]
-    thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
+    thru_command_list += [client['host']]
 
     command_list = [
         LauncherConfig().wrapper_path,

@@ -208,7 +208,7 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert'], '-o', 'User=%s' % client['user']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         if LauncherConfig().ssh_forward_key == 'always' or \
@@ -217,7 +217,7 @@ def setDefaultClientOptions(client):
         else:
             client['transp_args'] += ['-a']
 
-    # TCP forwarding through SSH, mainly used sor VNC proxying
+    # TCP forwarding through SSH, mainly used for VNC proxying
     if client['protocol'] == 'tcpsproxy':
         if not 'port' in client:
             client['port'] = 22
@@ -225,7 +225,7 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['IdentityFile=%s' % client['cert'], 'User=%s' % client['user']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += [option]
         client['transp_args'] += ["UserKnownHostsFile=/dev/null"] # required to prevent tcp forwarding failure
@@ -248,7 +248,7 @@ def setDefaultClientOptions(client):
             client['proto_args'] += LauncherConfig().wget_options
         if 'maxbw' in client: # FIXME: handle low values of BWLimit (see mechanism below for rsync)
             client['proto_args'] += ['--limit-rate', '%d' % int(client['maxbw'] / 8) ] # bwlimit arg in B/s
-        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert'], '-o', 'User=%s' % client['user']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
 
@@ -260,7 +260,7 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['-T', '-o', 'IdentityFile=%s' % client['cert'], '-o', 'User=%s' % client['user']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         client['transp_args'] += ['-A'] # always forward TCP key
@@ -276,7 +276,7 @@ def setDefaultClientOptions(client):
             client['user'] = 'root'
         if not 'cert' in client:
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
-        client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert']]
+        client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert'], '-o', 'User=%s' % client['user']]
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=u=rwx,g=,o=']
         if LauncherConfig().rsync_resume:
