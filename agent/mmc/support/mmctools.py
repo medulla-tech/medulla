@@ -35,6 +35,7 @@ import datetime
 from mmc.support.mmcException import mmcException
 import logging
 from twisted.internet import protocol
+from sqlalchemy import util
 
 # python 2.3 fallback for set() in xmlrpcleanup
 try:
@@ -137,7 +138,7 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-    elif type(data) == set:
+    elif type(data) == set or type(data) == util.Set:
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
