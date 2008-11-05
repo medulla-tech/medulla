@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-24 18:52+0200\n"
+"POT-Creation-Date: 2008-11-04 17:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,12 +21,12 @@ msgstr ""
 msgid "%s's details"
 msgstr ""
 
-#: dyngroup/includes/request.php:136
+#: dyngroup/includes/request.php:148
 #, php-format
 msgid "%s) Search %s = %s in module %s"
 msgstr ""
 
-#: dyngroup/includes/request.php:134
+#: dyngroup/includes/request.php:146
 #, php-format
 msgid "%s) Search %s = (%s) in module %s"
 msgstr ""
@@ -41,8 +41,8 @@ msgstr ""
 msgid "A group already exists with name '%s'"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:134 dyngroup/dyngroup/creator.php:162
-#: dyngroup/dyngroup/creator.php:166 dyngroup/includes/autocomplete.php:43
+#: dyngroup/dyngroup/creator.php:143 dyngroup/dyngroup/creator.php:171
+#: dyngroup/dyngroup/creator.php:175 dyngroup/includes/autocomplete.php:44
 #: dyngroup/includes/double.php:70
 msgid "Add"
 msgstr ""
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Add a static group"
 msgstr ""
 
-#: dyngroup/includes/autocomplete.php:34
+#: dyngroup/includes/autocomplete.php:35
 msgid "Add a value"
 msgstr ""
 
@@ -88,11 +88,11 @@ msgstr ""
 msgid "Check"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:72
+#: dyngroup/dyngroup/creator.php:81
 msgid "Choose the module you want to query : "
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:98
+#: dyngroup/dyngroup/creator.php:107
 msgid "Choose your field : "
 msgstr ""
 
@@ -100,12 +100,28 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:70
+#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:105
 msgid "Computers Group Creator"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:74
+#: dyngroup/infoPackage.inc.php:68
+msgid "Computers Group Creator Sub Request Delete"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:51
+msgid "Computers Group Creator Sub Request Editor"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:85 dyngroup/infoPackage.inc.php:109
 msgid "Computers Group Editor"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:95
+msgid "Computers Group Sub Request Delete"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:90
+msgid "Computers Group Sub Request Editor"
 msgstr ""
 
 #: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
@@ -117,19 +133,19 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:83
+#: dyngroup/dyngroup/ajaxListGroups.php:89
 msgid "Csv export"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:129
+#: dyngroup/infoPackage.inc.php:164
 msgid "Csv's export"
 msgstr ""
 
-#: dyngroup/includes/request.php:100
+#: dyngroup/includes/request.php:112
 msgid "Delete"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:104
+#: dyngroup/infoPackage.inc.php:139
 msgid "Delete a group of computers"
 msgstr ""
 
@@ -137,15 +153,15 @@ msgstr ""
 msgid "Delete group"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:82
+#: dyngroup/dyngroup/ajaxListGroups.php:88
 msgid "Delete this group"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:95
+#: dyngroup/infoPackage.inc.php:130
 msgid "Detailed page of save a group of computers"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:71
+#: dyngroup/dyngroup/ajaxListGroups.php:72
 msgid "Display"
 msgstr ""
 
@@ -154,11 +170,11 @@ msgstr ""
 msgid "Display %s '%s'"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:80
+#: dyngroup/infoPackage.inc.php:115
 msgid "Display a groups of computers"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:199
+#: dyngroup/dyngroup/creator.php:212
 msgid "Display content"
 msgstr ""
 
@@ -167,7 +183,7 @@ msgstr ""
 msgid "Display group '%s' content"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:74
+#: dyngroup/dyngroup/ajaxListGroups.php:75
 msgid "Display this group's content"
 msgstr ""
 
@@ -176,7 +192,12 @@ msgid "Dynamic group creation"
 msgstr ""
 
 #: dyngroup/infoPackage.inc.php:41 dyngroup/infoPackage.inc.php:55
+#: dyngroup/infoPackage.inc.php:72
 msgid "Dynamic group creation's tab"
+msgstr ""
+
+#: dyngroup/includes/request.php:111
+msgid "Edit"
 msgstr ""
 
 #: dyngroup/dyngroup/edithead.php:34
@@ -187,7 +208,7 @@ msgstr ""
 msgid "Edit a static group"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:76
+#: dyngroup/dyngroup/ajaxListGroups.php:82
 msgid "Edit this group"
 msgstr ""
 
@@ -195,7 +216,7 @@ msgstr ""
 msgid "Enter boolean operator between groups"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:194
+#: dyngroup/dyngroup/creator.php:207
 msgid "Go to save step"
 msgstr ""
 
@@ -225,7 +246,7 @@ msgstr ""
 msgid "Group name"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:109
+#: dyngroup/infoPackage.inc.php:144
 msgid "Group of computers details"
 msgstr ""
 
@@ -254,7 +275,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:75
+#: dyngroup/dyngroup/ajaxListGroups.php:77
 msgid "Inventory on this group"
 msgstr ""
 
@@ -263,7 +284,7 @@ msgstr ""
 msgid "Is the group visible"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:100
+#: dyngroup/infoPackage.inc.php:135
 msgid "List all groups of computers"
 msgstr ""
 
@@ -271,7 +292,7 @@ msgstr ""
 msgid "Name :"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:160 dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/dyngroup/creator.php:169 dyngroup/dyngroup/import_from_file.php:53
 #: dyngroup/includes/groups.inc.php:120
 msgid "No"
 msgstr ""
@@ -280,7 +301,7 @@ msgstr ""
 msgid "Please chose the type of group you want to create"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:79
+#: dyngroup/dyngroup/ajaxListGroups.php:85
 msgid "Read log"
 msgstr ""
 
@@ -296,7 +317,7 @@ msgstr ""
 msgid "Remove a computer"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:114
+#: dyngroup/infoPackage.inc.php:149
 msgid "Remove a computer from a computers group"
 msgstr ""
 
@@ -308,11 +329,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:90
+#: dyngroup/infoPackage.inc.php:125
 msgid "Save a group of computers"
 msgstr ""
 
-#: dyngroup/includes/request.php:97
+#: dyngroup/includes/request.php:108
 msgid "Search part"
 msgstr ""
 
@@ -324,7 +345,7 @@ msgstr ""
 msgid "Select what is inside the file"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:85
+#: dyngroup/infoPackage.inc.php:120
 msgid "Share a group of computers"
 msgstr ""
 
@@ -333,7 +354,7 @@ msgstr ""
 msgid "Share groupe '%s' with"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:77
+#: dyngroup/dyngroup/ajaxListGroups.php:83
 msgid "Share this group"
 msgstr ""
 
@@ -341,7 +362,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:80
+#: dyngroup/dyngroup/ajaxListGroups.php:86
 msgid "Software deployment on this group"
 msgstr ""
 
@@ -353,15 +374,17 @@ msgstr ""
 msgid "Static group creation from import"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:47 dyngroup/infoPackage.inc.php:61
+#: dyngroup/infoPackage.inc.php:47 dyngroup/infoPackage.inc.php:63
+#: dyngroup/infoPackage.inc.php:80
 msgid "Static group creation from import's tab"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:58
+#: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:59
+#: dyngroup/infoPackage.inc.php:76
 msgid "Static group creation's tab"
 msgstr ""
 
-#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:65
+#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:100
 msgid "Temporary result display"
 msgstr ""
 
@@ -381,7 +404,7 @@ msgstr ""
 msgid "The boolean equation is valid"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:181
+#: dyngroup/dyngroup/creator.php:190
 msgid "The request is : "
 msgstr ""
 
@@ -395,7 +418,7 @@ msgstr ""
 msgid "This result has been saved as %s (id=%s)"
 msgstr ""
 
-#: dyngroup/dyngroup/ajaxListGroups.php:70
+#: dyngroup/dyngroup/ajaxListGroups.php:71
 msgid "Type"
 msgstr ""
 
@@ -403,7 +426,7 @@ msgstr ""
 msgid "Visible"
 msgstr ""
 
-#: dyngroup/dyngroup/creator.php:159 dyngroup/dyngroup/creator.php:165
+#: dyngroup/dyngroup/creator.php:168 dyngroup/dyngroup/creator.php:174
 #: dyngroup/dyngroup/import_from_file.php:53
 #: dyngroup/includes/groups.inc.php:119
 msgid "Yes"
@@ -416,6 +439,10 @@ msgstr ""
 #: dyngroup/dyngroup/remove_machine.php:44
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
+msgstr ""
+
+#: dyngroup/dyngroup/tmpdisplay.php:37
+msgid "back"
 msgstr ""
 
 #: dyngroup/dyngroup/save.php:65
