@@ -27,9 +27,6 @@ UPDATE `commands_on_host` SET `stage` = "delete_pending" where executed="DONE" a
 UPDATE `commands_on_host` SET `stage` = "delete_running" where deleted="WORK_IN_PROGRESS";
 UPDATE `commands_on_host` SET `stage` = "delete_requeued" where current_state = "scheduled" and deleted="FAILED";
 UPDATE `commands_on_host` SET `stage` = "ended" where `current_state` = "failed" or `current_state` = "done";
-UPDATE `commands_on_host` SET `current_state` = "stopped" where `current_state` = "stop";
-UPDATE `commands_on_host` SET `current_state` = "paused" where `current_state` = "pause";
-
 
 DELETE FROM version;
 INSERT INTO version VALUES( "14" );
