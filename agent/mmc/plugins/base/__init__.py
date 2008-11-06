@@ -964,21 +964,24 @@ class ldapUserGroupControl:
         self.l.add_s(entry, attributes)
         return gidNumber
 
-    def delUserFromGroup(self,cngroup,uiduser):
+    def delUserFromGroup(self, cngroup, uiduser):
         """
-         Remove an user from a posixGroup account in ldapdir
+        Remove a user from a posixGroup account.
+        Remove memberUid in LDAP entry attributes.
 
-         remove memberUid in ldap entry attributes
+        @param cngroup: name of the group (not full ldap path)
+        @type cngroup: unicode
 
-         @param cngroup: name of the group (not full ldap path)
-         @type cngroup: unicode
-
-         @param uiduser: user uid (not full ldap path)
-         @type uiduser: unicode
+        @param uiduser: user uid (not full ldap path)
+        @type uiduser: unicode
         """
         cngroup = cngroup.encode("utf-8")
         uiduser = uiduser.encode("utf-8")
-        self.l.modify_s('cn=' + cngroup + ',' + self.baseGroupsDN, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
+        try:
+            self.l.modify_s('cn=' + cngroup + ',' + self.baseGroupsDN, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
+        except ldap.NO_SUCH_ATTRIBUTE:
+            # There are no member in this group
+            pass
 
     def delUserFromAllGroups(self, uid):
         """
