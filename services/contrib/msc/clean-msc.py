@@ -3,6 +3,7 @@
 
 import sys
 from sqlalchemy import *
+import sqlalchemy
 import logging
 import datetime
 
@@ -20,7 +21,10 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
     @rtype: list
     @returns: list of bundle ids and command ids to remove
     """
-    to_delete = select([commands.c.fk_bundle, commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(commands_on_host.c.current_state.in_(['done', 'failed']), commands.c.fk_bundle != None, commands.c.creation_date < creation_timestamp )).distinct()
+    if sqlalchemy.__version__.startswith('0.3'):
+        to_delete = select([commands.c.fk_bundle, commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, commands_on_host.c.current_state.in_(*['done', 'failed']), commands.c.fk_bundle != None, commands.c.creation_date < creation_timestamp ), distinct = True)
+    else:
+        to_delete = select([commands.c.fk_bundle, commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(commands_on_host.c.current_state.in_(['done', 'failed']), commands.c.fk_bundle != None, commands.c.creation_date < creation_timestamp )).distinct()
     ret = to_delete.execute().fetchall()
     return ret
 
@@ -31,7 +35,10 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
     @rtype: list
     @returns: list of command ids to delete
     """
-    to_delete = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(commands_on_host.c.current_state.in_(['done', 'failed']), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp )).distinct()
+    if sqlalchemy.__version__.startswith('0.3'):
+        to_delete = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, commands_on_host.c.current_state.in_(*['done', 'failed']), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
+    else:
+        to_delete = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(commands_on_host.c.current_state.in_(['done', 'failed']), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp )).distinct()
     ret = to_delete.execute().fetchall()
     return ret
 
@@ -41,20 +48,29 @@ def run_query(msg, connection, query):
     logger.info('Count of deleted rows: %ld' % ret.rowcount)
     
 def msc_delete(connection, bundles_to_delete, commands_to_delete, bundle, commands, target, commands_on_host, commands_history):
-    query = commands_history.delete(commands_history.c.fk_commands_on_host.in_(select([commands_on_host.c.id]).where(commands_on_host.c.fk_commands.in_(commands_to_delete))))
+    if sqlalchemy.__version__.startswith('0.3'):
+        in_coh_op = commands_on_host.c.fk_commands.in_(*commands_to_delete)
+        in_c_op = commands.c.id.in_(*commands_to_delete)
+        in_b_op = bundle.c.id.in_(*bundles_to_delete)
+    else:
+        in_coh_op = commands_on_host.c.fk_commands.in_(commands_to_delete)
+        in_c_op = commands.c.id.in_(commands_to_delete)
+        in_b_op = bundle.c.id.in_(bundles_to_delete)
+
+    query = commands_history.delete(commands_history.c.fk_commands_on_host.in_(select([commands_on_host.c.id], in_coh_op)))
     run_query('Purging commands_history table', connection, query)
     
-    query = target.delete(target.c.id.in_(select([commands_on_host.c.fk_target]).where(commands_on_host.c.fk_commands.in_(commands_to_delete))))
+    query = target.delete(target.c.id.in_(select([commands_on_host.c.fk_target], in_coh_op)))
     run_query('Purging target table', connection, query)
     
-    query = commands_on_host.delete(commands_on_host.c.fk_commands.in_(commands_to_delete))
+    query = commands_on_host.delete(in_coh_op)
     run_query('Purging commands_on_host table', connection, query)
 
-    query = commands.delete(commands.c.id.in_(commands_to_delete))
+    query = commands.delete(in_c_op)
     run_query('Purging commands table', connection, query)
 
     if bundles_to_delete:
-        query = bundle.delete(bundle.c.id.in_(bundles_to_delete))
+        query = bundle.delete(in_b_op)
         run_query('Purging bundle table', connection, query)
 
 def usage(argv):
