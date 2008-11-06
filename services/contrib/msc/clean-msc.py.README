@@ -1,0 +1,13 @@
+Pulse 2 MSC Database Cleanup Script
+
+This script will purge all terminated commands where the creation date is
+older than x days. A terminated command is on the "done" or on the "failed"
+state.
+
+Example:
+% python clean-msc.py <mysql_uri> <days>
+
+With [mysql_uri]:
+mysql://<user>:<password>@127.0.0.1/<inventory_database>
+
+Post-cleanup, you may want to optimize your database using optim.sql.
