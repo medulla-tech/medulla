@@ -51,6 +51,10 @@ import pulse2.scheduler.network
 import pulse2.scheduler.launcher
 import pulse2.scheduler.launchers_driving
 
+# Filter SA warns to prevent trivial (hex/dec notation) error printing on STDOUT
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.xmlrpc import makeSSLContext, SchedulerSite
