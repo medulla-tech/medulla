@@ -441,7 +441,7 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Groupe':
             return base + [self.group]
         elif query[2] == 'Reseau':
-            return base + [self.network]
+            return base + [self.net]
         elif query[2] == 'Logiciel':
             return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Version':
@@ -514,7 +514,7 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Groupe': # TODO double join on ENTITY
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Reseau':
-            return [[self.network.c.name, query[3]]]
+            return [[self.net.c.name, query[3]]]
         elif query[2] == 'Logiciel': # TODO double join on ENTITY
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Version': # TODO double join on ENTITY
