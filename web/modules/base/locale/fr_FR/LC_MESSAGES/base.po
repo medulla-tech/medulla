@@ -1,21 +1,21 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-29 17:49+0100\n"
-"PO-Revision-Date: 2008-10-29 17:52+0100\n"
+"POT-Creation-Date: 2008-11-07 18:09+0100\n"
+"PO-Revision-Date: 2008-11-07 18:26+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=2; plural=(n > 1);\n"
+"Plural-Forms:  nplurals=2; plural=(n > 1);"
 
 #: modules/base/users/editacl.php:253
 #, php-format
 msgid " (%s module)"
-msgstr "(module %s)"
+msgstr " (module %s)"
 
 #: includes/PageGenerator.php:458 includes/PageGenerator.php:665
 #, php-format
@@ -77,7 +77,7 @@ msgstr "Ajout"
 
 #: modules/base/computers/edit.php:40
 msgid "Add a computer"
-msgstr "Ajout d'un ordinateur"
+msgstr "Ajouter un ordinateur"
 
 #: modules/base/infoPackage.inc.php:168
 msgid "Add a group"
@@ -155,7 +155,7 @@ msgstr "Sauvegarde des fichiers de l'utilisateur"
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr ""
-"La sauvegarde du répertoire de l'utilisateur %s a été lancée en arrière plan."
+"La sauvegarde du répertoire de l'utilisateur <b>%s</b> a été lancée en arrière plan."
 
 #: modules/base/infoPackage.inc.php:136
 msgid "Backup user files"
@@ -178,8 +178,8 @@ msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
 #: includes/PageGenerator.php:104 includes/PageGenerator.php:1925
-#: includes/PageGenerator.php:1991 modules/base/groups/members.php:182
-#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
+#: includes/PageGenerator.php:1991 modules/base/groups/delete.php:52
+#: modules/base/groups/members.php:182 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:438
 msgid "Cancel"
 msgstr "Annuler"
@@ -188,8 +188,8 @@ msgstr "Annuler"
 msgid "Change user password"
 msgstr "Changement du mot de passe utilisateur"
 
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:71
-#: modules/base/users/localSidebar.php:32
+#: modules/base/users/localSidebar.php:32 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:71
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
 
@@ -235,7 +235,7 @@ msgstr "Nom de l'ordinateur"
 
 #: modules/base/computers/edit.php:33
 msgid "Computer successfully added"
-msgstr "L'ordinateur %s a été ajouté avec succès"
+msgstr "L'ordinateur a été ajouté avec succès"
 
 #: modules/base/infoPackage.inc.php:196
 msgid "Computers"
@@ -246,8 +246,8 @@ msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
 #: includes/PageGenerator.php:1921 includes/PageGenerator.php:1987
-#: includes/PageGenerator.php:2014 modules/base/groups/members.php:181
-#: modules/base/groups/edit.php:106 modules/base/users/edit.php:437
+#: includes/PageGenerator.php:2014 modules/base/groups/edit.php:106
+#: modules/base/groups/members.php:181 modules/base/users/edit.php:437
 msgid "Confirm"
 msgstr "Valider"
 
@@ -257,7 +257,7 @@ msgstr "Confirmation du mot de passe"
 
 #: modules/base/users/passwd.php:66 modules/base/infoPackage.inc.php:250
 msgid "Confirm your password"
-msgstr "Confirmation du mot de passe"
+msgstr "Confirmez votre mot de passe"
 
 #: index.php:226
 msgid "Connect"
@@ -285,7 +285,7 @@ msgstr "Date"
 
 #: includes/FormGenerator.php:373
 msgid "Day: "
-msgstr "Jour:"
+msgstr "Jour: "
 
 #: modules/base/infoPackage.inc.php:65
 msgid "Default status page"
@@ -334,7 +334,7 @@ msgstr "Supprimer cet ordinateur"
 msgid "Delete user"
 msgstr "Supprimer un utilisateur"
 
-#: modules/base/groups/edit.php:91 modules/base/computers/edit.php:64
+#: modules/base/computers/edit.php:64 modules/base/groups/edit.php:91
 msgid "Description"
 msgstr "Description"
 
@@ -426,8 +426,7 @@ msgstr "Prénom"
 
 #: graph/header.inc.php:210
 msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
-"Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
+msgstr "Le formulaire ne peut être envoyé. Les champs invalides sont en rouges."
 
 #: modules/base/includes/computers_list.inc.php:30
 #: modules/base/includes/computers_list.inc.php:37
@@ -489,10 +488,9 @@ msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
 #: modules/base/groups/ajaxFilter.php:41
-#: modules/base/views/roGroups.tpl.php:37
 #: modules/base/views/editGroups.tpl.php:52
 #: modules/base/views/norightGroups.tpl.php:28
-#: modules/base/infoPackage.inc.php:158
+#: modules/base/views/roGroups.tpl.php:37 modules/base/infoPackage.inc.php:158
 msgid "Groups"
 msgstr "Groupes"
 
@@ -522,7 +520,7 @@ msgstr "Numéro de téléphone personnel"
 
 #: includes/FormGenerator.php:374
 msgid "Hour: "
-msgstr "heure:"
+msgstr "Heure: "
 
 #: graph/navbar.inc.php:117
 msgid ""
@@ -567,7 +565,7 @@ msgstr "Lancement de la sauvegarde"
 #: modules/base/groups/localSidebar.php:28
 #: modules/base/users/localSidebar.php:28
 msgid "List"
-msgstr "Gestion"
+msgstr "Liste"
 
 #: modules/base/computers/edit.php:83
 msgid "Location"
@@ -604,13 +602,11 @@ msgstr "Problème de communication avec l'agent MMC"
 
 #: includes/xmlrpc.inc.php:151
 msgid "MMC agent seems to be down or not correctly configured."
-msgstr ""
-"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
+msgstr "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
 #: includes/xmlrpc.inc.php:164
 msgid "MMC agent seems to be not correctly configured."
-msgstr ""
-"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
+msgstr "L'agent MMC semble ne pas être correctement configuré."
 
 #: modules/base/users/ajaxFilter.php:82 modules/base/views/index.tpl.php:91
 msgid "MMC rights"
@@ -646,7 +642,7 @@ msgstr "Numéro de mobile"
 
 #: includes/FormGenerator.php:373
 msgid "Month: "
-msgstr "Mois:"
+msgstr "Mois: "
 
 #: modules/base/users/ajaxFilter.php:77 modules/base/users/edit.php:316
 #: modules/base/views/index.tpl.php:84
@@ -657,9 +653,9 @@ msgstr "Nom"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
 #: includes/PageGenerator.php:739 includes/PageGenerator.php:745
 #: includes/PageGenerator.php:798 includes/PageGenerator.php:802
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
 msgid "Next"
 msgstr "Suivant"
 
@@ -720,8 +716,7 @@ msgstr "Veuillez contacter votre administrateur."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
-msgstr ""
-"Veuillez consulter la page de statut pour vérifier le processus de "
+msgstr "Veuillez consulter la page de statut pour vérifier le processus de "
 "sauvegarde."
 
 #: modules/base/users/backup.php:79
@@ -738,14 +733,14 @@ msgstr ""
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 #: includes/PageGenerator.php:728 includes/PageGenerator.php:735
 #: includes/PageGenerator.php:790 includes/PageGenerator.php:794
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 msgid "Previous"
 msgstr "Précédent"
 
-#: modules/base/views/roGroups.tpl.php:32
 #: modules/base/views/editGroups.tpl.php:38
+#: modules/base/views/roGroups.tpl.php:32
 msgid "Primary group"
 msgstr "Groupe primaire"
 
@@ -857,8 +852,7 @@ msgstr "Cet ordinateur a été supprimé"
 
 #: modules/base/users/edit.php:80
 msgid "The confirmation password does not match the new password."
-msgstr ""
-"Le mot de passe de confirmation n'est pas identique au nouveau mot de passe."
+msgstr "Le mot de passe de confirmation n'est pas identique au nouveau mot de passe."
 
 #: modules/base/users/backup.php:56
 #, php-format
@@ -1064,8 +1058,7 @@ msgstr ""
 
 #: modules/base/users/editacl.php:272
 msgid "Warning no desc found in infoPackage.inc.php :"
-msgstr ""
-"Attention, aucune description n'a pu être trouvée dans le fichier "
+msgstr "Attention, aucune description n'a pu être trouvée dans le fichier "
 "infoPackage.inc.php :"
 
 #: modules/base/users/editacl.php:263
@@ -1080,7 +1073,7 @@ msgstr "Année:"
 msgid "You are going to change your password"
 msgstr "Vous allez changer votre mot de passe"
 
-#: includes/acl.inc.php:116
+#: includes/acl.inc.php:118
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
 
@@ -1139,7 +1132,7 @@ msgstr "allemand"
 
 #: modules/base/users/editacl.php:226
 msgid "hide"
-msgstr "caché"
+msgstr "cacher"
 
 #: modules/base/status/index.php:119
 msgid "hour"
@@ -1226,3 +1219,4 @@ msgstr "value=\"immediat\";'>immediat</a>"
 #: includes/FormGenerator.php:197
 msgid "yes"
 msgstr "oui"
+
