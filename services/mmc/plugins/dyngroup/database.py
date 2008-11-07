@@ -544,7 +544,7 @@ class DyngroupDatabase(Singleton):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
         group = Groups()
-        group.name = name
+        group.name = name.encode('utf-8')
         group.display_in_menu = visibility
         group.FK_user = user_id
         session.save_or_update(group)
@@ -558,7 +558,7 @@ class DyngroupDatabase(Singleton):
         session = create_session()
         group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
         if group:
-            group.name = name
+            group.name = name.encode('utf-8')
             session.save_or_update(group)
             session.flush()
             session.close()
