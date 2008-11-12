@@ -37,7 +37,7 @@ import re
 
 SA_MAJOR = 0
 SA_MINOR = 4
-
+DATABASEVERSION = 3;
 MAX_REQ_NUM = 100
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -75,6 +75,10 @@ class Inventory(DyngroupDatabaseHelper):
 
         conn = self.connected()
         if conn:
+            if conn != DATABASEVERSION:                                                                                  
+                self.logger.error("Inventory database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))           
+                return False
+        else:
             self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check inventory.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
             return False
 
@@ -108,8 +112,8 @@ class Inventory(DyngroupDatabaseHelper):
 
     def connected(self):
         try:
-            if (self.db != None) and (session != None):
-                return True
+            if (self.db != None):
+                return self.version.select().execute().fetchone()[0]
             return False
         except:
             return False
