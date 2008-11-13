@@ -5,13 +5,17 @@ import logging
 class DatabaseHelper(Singleton):
     is_activated = False
     config = None
-    def db_check(self):
+    def db_check(self, required_version = -1):
         if not checkSqlalchemy():
             self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
             return False
 
         conn = self.connected()
         if conn:
+            if required_version != -1 and conn != required_version:
+                self.logger.error("Database version error: v.%s needeed, v.%s found; please update your schema !" % (required_version, conn))
+                return False
+        else:
             self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check inventory.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
             return False
         
@@ -19,10 +23,12 @@ class DatabaseHelper(Singleton):
     
     def connected(self):
         try:
-            if (self.db != None) and (session != None):
-                return True
+            if self.db != None:
+                return self.version.select().execute().fetchone()[0]
             return False
         except:
+            if (self.db != None) and (session != None):
+                return True
             return False
 
     def makeConnectionPath(self):
