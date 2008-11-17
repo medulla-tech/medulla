@@ -553,7 +553,6 @@ class Glpi(DyngroupDatabaseHelper):
         """
         Get the size of the computer list that match filters parameters
         """
-        self.logger.debug("getRestrictedComputersListLen")
         session = create_session()
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
         if query == None:
@@ -589,9 +588,9 @@ class Glpi(DyngroupDatabaseHelper):
             ret = map(lambda m: m.toH(), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
         else:
             if filt.has_key('get'):
-                ret = map(lambda m: self.__formatMachine(m, advanced, filt['get']), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+                ret = self.__formatMachines(query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)), advanced, filt['get'])
             else:
-                ret = map(lambda m: self.__formatMachine(m, advanced), query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)))
+                ret = self.__formatMachines(query.group_by([self.machine.c.name, self.machine.c.domain]).order_by(asc(self.machine.c.name)), advanced)
         session.close()
         return ret
 
@@ -636,6 +635,44 @@ class Glpi(DyngroupDatabaseHelper):
             return query.filter(self.machine.c.ID == int(str(uuid).replace("UUID", "")))
 
     ##################### Machine output format (for ldap compatibility)
+    def __getAttr(self, machine, get):
+        ma = {}
+        for field in get:
+            if hasattr(machine, field):
+                ma[field] = getattr(machine, field)
+            if field == 'uuid' or field == 'objectUUID':
+                ma[field] = uuid
+            if field == 'cn':
+                ma[field] = machine.name
+        return ma
+       
+    def __formatMachines(self, machines, advanced, get = None):
+        """
+        Give an LDAP like version of machines
+        """
+        ret = {}
+        if get != None:
+            for m in machines:
+                ret[m.getUUID()] = self.__getAttr(m, get)
+            return ret
+
+        for m in machines:
+            ret[m.getUUID()] = [None, {
+                'cn': [m.name],
+                'displayName': [m.comments],
+                'objectUUID': [m.getUUID()]
+            }]
+        if advanced:
+            uuids = map(lambda m: m.getUUID(), machines)
+            nets = self.getMachinesNetwork(uuids)
+            for uuid in ret:
+                (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain']) = self.orderIpAdresses(nets[uuid])
+                if ret[uuid][1]['domain'] != '':
+                    ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
+                else:
+                    ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
+        return ret
+        
     def __formatMachine(self, machine, advanced, get = None):
         """
         Give an LDAP like version of the machine
@@ -644,15 +681,7 @@ class Glpi(DyngroupDatabaseHelper):
         uuid = self.getMachineUUID(machine)
 
         if get != None:
-            ma = {}
-            for field in get:
-                if hasattr(machine, field):
-                    ma[field] = getattr(machine, field)
-                if field == 'uuid' or field == 'objectUUID':
-                    ma[field] = uuid
-                if field == 'cn':
-                    ma[field] = machine.name
-            return ma
+            return self.__getAttr(machine, get)
 
         ret = {
             'cn': [machine.name],
@@ -660,8 +689,7 @@ class Glpi(DyngroupDatabaseHelper):
             'objectUUID': [uuid]
         }
         if advanced:
-            (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask']) = self.orderIpAdresses(self.getMachineNetwork(uuid))
-            domain = self.getMachineDomain(machine.ID)
+            (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask'], domain) = self.orderIpAdresses(self.getMachineNetwork(uuid))
             if domain == None:
                 domain = ''
             elif domain != '':
@@ -1224,6 +1252,26 @@ class Glpi(DyngroupDatabaseHelper):
 
 
     ##################### for msc
+    def getMachinesNetwork(self, uuids):
+        """
+        return a dict uuid:[macAddress, ipHostNumber, subnetMask, domain]
+        """
+        session = create_session()
+        query = session.query(Network).add_column(self.machine.c.ID).add_column(self.domain.c.name).select_from(self.machine.join(self.network).outerjoin(self.domain))
+        query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuids)
+        ret = {}
+        for n in query.all():
+            net = n[0].toH()
+            if n[2] != None:
+                net['domain'] = n[2]
+            else:
+                net['domain'] = ''
+            uuid = toUUID(n[1])
+            if uuid not in ret:
+                ret[uuid] = [net]
+            ret[uuid].append(net)
+        return ret
+
     def getMachineNetwork(self, uuid):
         """
         Get a machine network
@@ -1250,17 +1298,26 @@ class Glpi(DyngroupDatabaseHelper):
         ret_ifmac = list()
         ret_ifaddr = list()
         ret_netmask = list()
+        ret_domain = list()
         for iface in netiface:
             if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
                 if same_network(iface['ifaddr'], iface['gateway'], iface['netmask']):
                     ret_ifmac.insert(0, iface['ifmac'])
                     ret_ifaddr.insert(0, iface['ifaddr'])
                     ret_netmask.insert(0, iface['netmask'])
+                    if 'domain' in iface:
+                        ret_domain.insert(0, iface['domain'])
+                    else:
+                        ret_domain.insert(0, '')
                 else:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
                     ret_netmask.append(iface['netmask'])
-        return (ret_ifmac, ret_ifaddr, ret_netmask)
+                    if 'domain' in iface:
+                        ret_domain.append(iface['domain'])
+                    else:
+                        ret_domain.append('')
+        return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain)
 
     def getMachineIp(self, uuid):
         """
@@ -1320,6 +1377,8 @@ def toUUID(id):
 
 # Class for SQLalchemy mapping
 class Machine(object):
+    def getUUID(self):
+        return toUUID(self.ID)
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.ID) }
     def to_a(self):
