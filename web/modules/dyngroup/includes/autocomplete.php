@@ -23,10 +23,14 @@
  */
 
 class Autocomplete {
-    function Autocomplete($module, $criterion, $value = '') {
+    function Autocomplete($module, $criterion, $value = '', $edition = false) {
         $this->module = $module;
         $this->criterion = $criterion;
         $this->val = $value;
+        $this->b_label = _T("Add", "dyngroup");
+        if ($edition) {
+            $this->b_label = _T("Modify", "dyngroup");
+        }
     }
     
     function display() {
@@ -41,7 +45,7 @@ class Autocomplete {
             <li>B</li>
         </ul>
     </div>
-    <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>"/> 
+    <input name="buser" type="submit" class="btnPrimary" value="<?= $this->b_label; ?>"/> 
     </td></tr>
     </table>
     

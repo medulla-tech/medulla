@@ -29,6 +29,8 @@ if ($edition) {
 } else {
     $target = 'computersgroupcreator';
 }
+$subedition = false;
+if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') { $subedition = true; }
 
 // getting request and id parameters
 $id = idGet();
@@ -146,24 +148,28 @@ if (quickGet('add_param')) {
             $module = clean(quickGet('req'));
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/autocomplete.php");
-            $auto = new Autocomplete($module, $criterion, quickGet('value'));
+            $auto = new Autocomplete($module, $criterion, quickGet('value'), $subedition);
             $auto->display();
             break;
         case 'double':
             $module = clean(quickGet('req'));
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/double.php");
-            $auto = new DoubleAutocomplete($module, $criterion, quickGet('value'));
+            $auto = new DoubleAutocomplete($module, $criterion, quickGet('value'), $subedition);
             $auto->display();
             break;
         case 'halfstatic':
             $module = clean(quickGet('req'));
             $criterion = clean(quickGet('add_param'));
             include("modules/dyngroup/includes/autocomplete.php");
-            $auto = new Autocomplete($module, $criterion);
+            $auto = new Autocomplete($module, $criterion, quickGet('value'), $subedition);
             $auto->display();
             break;
         case 'bool':
+            $b_label = _T("Add", "dyngroup");
+            if ($subedition) {
+                $b_label = _T("Modify", "dyngroup");
+            }
             print "<select name='value'>";
             print "<option name='True' value='True'>"._T("Yes", "dyngroup")."</option>";
             print "<option name='False' value='False'>"._T("No", "dyngroup")."</option>";

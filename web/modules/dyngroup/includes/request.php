@@ -100,6 +100,7 @@ class Request {
         foreach ($this->subs as $id => $sub) {
             array_push($parts, $sub->display());
             $p = $default_params;
+            $p['subedition'] = 1;
             #$p['delete'] = $id;
             $p['sub_id'] = $id;
             $p['request'] = $this->toS();

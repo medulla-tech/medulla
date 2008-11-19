@@ -23,7 +23,7 @@
  */
 
 class DoubleAutocomplete {
-    function DoubleAutocomplete($module, $criterion) {
+    function DoubleAutocomplete($module, $criterion, $edition = false) {
         $this->module = $module;
         $this->criterion = $criterion;
 
@@ -33,6 +33,10 @@ class DoubleAutocomplete {
         $this->table = $first[0];
         $this->field1 = $second[0];
         $this->field2 = $second[1];
+        $this->b_label = _T("Add", "dyngroup");
+        if ($edition) {
+            $this->b_label = _T("Modify", "dyngroup");
+        }
     }
     
     function display() {
@@ -67,7 +71,7 @@ class DoubleAutocomplete {
             </div>
         </td>
         <td id='secondPart3'>
-            <input name="buser" type="submit" class="btnPrimary" value="<?= _T("Add", "dyngroup"); ?>" />   
+            <input name="buser" type="submit" class="btnPrimary" value="<?= $this->b_label; ?>" />   
         </td>
         </tr></table>
     </div>
