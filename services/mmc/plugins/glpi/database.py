@@ -457,8 +457,6 @@ class Glpi(DyngroupDatabaseHelper):
             like = False
             if type(query[3]) == list:
                 q3 = []
-                query[3][0] = re.sub('^\(', '', query[3][0])
-                query[3][-1] = re.sub('\)$', '', query[3][-1])
                 for q in query[3]:
                     if r1.search(q):
                         like = True

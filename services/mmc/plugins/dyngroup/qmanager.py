@@ -267,12 +267,15 @@ class QueryManager(Singleton):
         p2 = re.compile('::')
         p3 = re.compile('==')
         p4 = re.compile(', ')
+        p_sep_plural = '(^>|<$)' # multiple entries are surounded by > and <
+        
         queries = p1.split(query)
         ret = []
         for q in queries:
             a = p2.split(q)
             b = p3.split(a[0])
             c = p3.split(a[1])
+            c[1] = re.sub(p_sep_plural, '', c[1])
             val = p4.split(c[1])
             if len(val) == 1:
                 val = val[0]
