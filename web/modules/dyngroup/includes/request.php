@@ -121,6 +121,7 @@ class Request {
 
 class SubRequest {
     function SubRequest($module = null, $criterion = null, $value = null, $value2 = null) {
+        $this->sep_plural = array('>', '<');
         $this->module = $module;
         $this->crit = $criterion;
         $this->val = $value;
@@ -131,7 +132,7 @@ class SubRequest {
     }
     function toS() {
         if (is_array($this->val)) {
-            return $this->id."==".$this->module."::".$this->crit."==(".implode(', ', $this->val).")";
+            return $this->id."==".$this->module."::".$this->crit."==".$this->sep_plural[0].implode(', ', $this->val).$this->sep_plural[1];
         } else {
             return $this->id."==".$this->module."::".$this->crit."==".$this->val;
         }
@@ -156,7 +157,7 @@ class SubRequest {
         $this->id = $b[0];
         $this->module = $b[1];
         $this->crit = $c[0];
-        $this->val = explode(', ', rtrim(ltrim($c[1], '('), ')'));
+        $this->val = explode(', ', rtrim(ltrim($c[1], $this->sep_plural[0]), $this->sep_plural[1]));
         #$this->val = explode(', ', $c[1]);
         if (is_array($this->val) && count($this->val) == 1) {
             $this->val = $this->val[0];
