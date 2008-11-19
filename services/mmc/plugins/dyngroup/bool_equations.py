@@ -168,7 +168,10 @@ class BoolEquation(BoolElement):
             self.parse(str)
     
     def check(self): # ids are always in a range from 1 to count
-        return Set(map(lambda x:int(x), self.getVals())) == Set(range(1,1+self.count()))
+        try:
+            return Set(map(lambda x:int(x), self.getVals())) == Set(range(1,1+self.count()))
+        except:
+            return False
         
     def count(self):
         return len(self.getVals())
