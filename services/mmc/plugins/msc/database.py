@@ -1158,6 +1158,9 @@ class MscDatabase(Singleton):
             'success':{
                 'total':[0]
             },
+            'stopped':{
+                'total':[0]
+            },
             'running':{
                 'total':[0],
                 'wait_up':[0],
@@ -1187,6 +1190,8 @@ class MscDatabase(Singleton):
             ret['total'] += 1
             if coh.current_state == 'done': # success
                 ret['success']['total'][0] += 1
+            elif coh.current_state == 'stop': # stopped coh
+                ret['stopped']['total'][0] += 1
             elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
                 ret['failure']['total'][0] += 1
                 if coh.uploaded == 'FAILED':
@@ -1233,7 +1238,7 @@ class MscDatabase(Singleton):
                     else:
                         ret['running']['wait_up'][0] += 1
 
-        for i in ['success', 'running', 'failure']:
+        for i in ['success', 'stopped', 'running', 'failure']:
             if ret['total'] == 0:
                 ret[i]['total'].append(0)
             else:
@@ -1252,6 +1257,7 @@ class MscDatabase(Singleton):
 
         # nombre total de coh
         # succes (nb, %)
+        # stopped (nb, %)
         # en cours (nb, %)
         #   attente up (nb, %)
         #   cours d'up (nb, %)
