@@ -973,7 +973,30 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwares(self, ctx, filt = ''):
+    def getAllVersion4Software(self, ctx, softname, version = ''):
+        """
+        @return: all softwares defined in the GLPI database
+        """
+        session = create_session()
+        query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
+        query = query.filter(self.software.c.FK_entities.in_(entities))
+        r1 = re.compile('\*')
+        if r1.search(softname):
+            softname = r1.sub('%', softname)
+            query = query.filter(self.software.c.name.like(softname))
+        else:
+            query = query.filter(self.software.c.name == softname)
+        if version != '':
+            query = query.filter(self.licenses.c.version.like('%'+version+'%'))
+        ret = query.group_by(self.licenses.c.version).all()
+        ret = query.all()
+        session.close()
+        return ret
+        
+    def getAllSoftwares(self, ctx, softname = ''):
         """
         @return: all softwares defined in the GLPI database
         """
@@ -983,8 +1006,8 @@ class Glpi(DyngroupDatabaseHelper):
         query = self.__filter_on_entity(query, ctx)
         entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
         query = query.filter(self.software.c.FK_entities.in_(entities))
-        if filter != '':
-            query = query.filter(self.software.c.name.like('%'+filt+'%'))
+        if softname != '':
+            query = query.filter(self.software.c.name.like('%'+softname+'%'))
         ret = query.group_by(self.software.c.name).all()
         ret = query.all()
         session.close()

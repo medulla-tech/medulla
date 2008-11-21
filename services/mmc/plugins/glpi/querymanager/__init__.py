@@ -25,7 +25,7 @@ def queryPossibilities():
     ret['Groupe'] = ['list', getAllGroups]
     ret['Reseau'] = ['list', getAllNetworks]
     ret['Logiciel'] = ['list', getAllSoftwares, 3]
-    ret['Version'] = ['double', getAllSoftwaresAndVersions]
+    ret['Version'] = ['double', getAllSoftwaresAndVersions, 3, 2]
     
 #    ret['OS'] = ['list', getAllOs]
 #    ret['ENTITY'] = ['list', getAllEntities]
@@ -77,8 +77,11 @@ def getAllEntities(ctx, value = ''):
 def getAllSoftwares(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value))
 
-def getAllSoftwaresAndVersions(ctx, value = ""):
-    return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value))
+def getAllSoftwaresAndVersions(ctx, softname = "", version = None):
+    if version == None:
+        return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname))
+    else:
+        return map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version))
     
 def getAllHostnames(ctx, value = ''):
     return map(lambda x:x.name, Glpi().getAllHostnames(ctx, value))

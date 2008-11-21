@@ -113,12 +113,20 @@ class QueryManager(Singleton):
         ret = self.queryPossibilities[moduleName][criterion]
         return ret[0]
         
-    def getPossiblesValuesForCriterionInModule(self, ctx, moduleName, criterion, value = ''):
+    def getPossiblesValuesForCriterionInModule(self, ctx, moduleName, criterion, value1 = '', value2 = None):
         ret = self.queryPossibilities[moduleName][criterion]
-        if len(ret) == 3:
-            if len(value) < ret[2]:
+        if ret[0] == 'list' and len(ret) == 3:
+            if len(value1) < ret[2]:
                 return [ret[0], []]
-        return [ret[0], ret[1](ctx, value)]
+        elif ret[0] == 'double' and len(ret) > 2:
+            if value2 == None:
+                if len(value1) < ret[2]:
+                    return [ret[0], []]
+            elif len(ret) > 3 and len(value2) < ret[3]:
+               return [ret[0], []]
+        if value2 == None:
+            return [ret[0], ret[1](ctx, value1)]
+        return [ret[0], ret[1](ctx, value1, value2)]
 
     def replyToQuery(self, ctx, query, bool = None, min = 0, max = 10):
         return self._replyToQuery(ctx, query, bool)[int(min):int(max)]
