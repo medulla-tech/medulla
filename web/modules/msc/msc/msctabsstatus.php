@@ -42,27 +42,66 @@ if (strlen($_GET['cmd_id'])) {
 if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
     /* Change labels when displaying a bundle summary */
     $labels = array(
-        array('success',_T('packages installation were successful', 'msc')),
-        array('running',_T('packages installation are being done', 'msc')),
-        array('failure',_T('packages installation failed', 'msc')),
+        array('success', array(
+            _T("<b>No</b> package installation was successful", "msc"),
+            _T("<b>One</b> package installation was successful", "msc"),
+            _T('<b>%s</b> packages installation were successful', 'msc')
+        )),
+        array('stopped', array(
+            _T("<b>No</b> package installation is stopped", "msc"),
+            _T("<b>One</b> package installation is stopped", "msc"),
+            _T('<b>%s</b> packages installation are stopped', 'msc')
+        )),
+        array('running', array(
+            _T("<b>No</b> package installation is being done", "msc"),
+            _T("<b>One</b> package installation is being done", "msc"),
+            _T('<b>%s</b> packages installation are being done', 'msc')
+        )),
+        array('failure', array(
+            _T('<b>No</b> package installation failed', 'msc'),
+            _T('<b>One</b> package installation failed', 'msc'),
+            _T('<b>%s</b> packages installation failed', 'msc')
+        )),
         );
 } else {
     $labels = array(
-        array('success',_T('computers were successfully deployed', 'msc')),
-        array('running',_T('computers are running a deploiement', 'msc')),
-        array('failure',_T('computers failed to deploy', 'msc')),
+        array('success', array(
+            _T('<b>No</b> computer was successfully deployed', 'msc'),
+            _T('<b>One</b> computer was successfully deployed', 'msc'),
+            _T('<b>%s</b> computers were successfully deployed', 'msc')
+        )),
+        array('stopped', array(
+            _T('<b>No</b> computer is stopped', 'msc'),
+            _T('<b>One</b> computer is stopped', 'msc'),
+            _T('<b>%s</b> computers are stopped', 'msc')
+        )),
+        array('running', array(
+            _T('<b>No</b> computer is running a deploiement', 'msc'),
+            _T('<b>One</b> computer is running a deploiement', 'msc'),
+            _T('<b>%s</b> computers are running a deploiement', 'msc')
+        )),
+        array('failure', array(
+            _T('<b>No</b> computer failed to deploy', 'msc'),
+            _T('<b>One</b> computer failed to deploy', 'msc'),
+            _T('<b>%s</b> computers failed to deploy', 'msc')
+        )),
         );
 }
 
+$verbs = array(
+    'running'=>array(_T('is', 'msc'), _T('are', 'msc')),
+    'failure'=>array(_T('has', 'msc'), _T('have', 'msc'))
+);
 $slabels = array(
     'success'=>array(),
+    'stopped'=>array(),
     'running'=>array(
         array('wait_up', _T('waiting to upload', 'msc'), 'sec_up', _T('(with %s already try)', 'msc')),
-        array('run_up', _T('running upload', 'msc')),
+        array('run_up', _T('uploading', 'msc')),
         array('wait_ex', _T('waiting to execute', 'msc'), 'sec_ex', _T('(with %s already try)', 'msc')),
-        array('run_ex', _T('running execution', 'msc')),
+        array('run_ex', _T('executing', 'msc')),
         array('wait_rm', _T('waiting to suppress', 'msc'), 'sec_rm', _T('(with %s already try)', 'msc')),
-        array('run_rm', _T('running suppression', 'msc'))
+        array('run_rm', _T('suppressing', 'msc'))
     ),
     'failure'=>array(
         array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s beeing unreachable)', 'msc')),
@@ -79,14 +118,29 @@ $slabels = array(
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];
-    print "<tr><td><b>".$s['total'][0]."</b> (".$s['total'][1]."%)</td><td></td><td>".$l[1]."</td></tr>";
+    if ($s['total'][0] == '0') {
+        print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td></tr>";
+    } elseif ($s['total'][0] == '1') {
+        print "<tr><td colspan='3'>".$l[1][1]." (".$s['total'][1]."%)</td></tr>";
+    } else {
+        print "<tr><td colspan='3'>".sprintf($l[1][2], $s['total'][0])." (".$s['total'][1]."%)</td></tr>";
+    }
 
     foreach ($slabels[$l[0]] as $sl) {
         $ss = $status[$l[0]][$sl[0]];
-        print "<tr><td></td><td>".$ss[0]." (".$ss[1]."%)</td><td>".$sl[1];
+        print "<tr><td>&nbsp;&nbsp;&nbsp;</td><td colspan='2'>";
+        if ($ss[0] == '0') {
+            print _T('None', 'msc')." ".$verbs[$l[0]][0]." ";
+        } elseif ($ss[0] == '1') {
+            print _T('One', 'msc')." ".$verbs[$l[0]][0]." ";
+        } else {
+            print $ss[0]." ".$verbs[$l[0]][1]." ";
+        }
+        print $sl[1];
         if (count($sl) == 4) {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
+        print " (".$ss[1]."%)";
         print "</td></tr>";
     }
 }
