@@ -83,6 +83,13 @@ class DoubleAutocomplete {
             var autocomplete = document.getElementById(id);
             var value = autocomplete.getValue();
             autocomplete.setAttribute('readonly', true);
+
+            /* slave */
+            new Ajax.Autocompleter('autocomplete2','autocomplete2_choices',
+                'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>&value1='+value, {paramName: "value"});
+                
+            var secondPart = document.getElementById('secondPart');
+
             var secondButton = document.getElementById('secondButton');
             var secondPart3 = document.getElementById('secondPart3');
             var secondPart2 = document.getElementById('secondPart2');
@@ -92,20 +99,11 @@ class DoubleAutocomplete {
             parent.replaceChild(secondPart3, secondButton);
             parent.insertBefore(secondPart2, secondPart3);
             parent.insertBefore(secondPart1, secondPart2);
-            // slave
-            var groups2 = new Array();
-            new Ajax.Autocompleter('autocomplete2','autocomplete2_choices',
-                'main.php?module=base&submod=computers&action=ajaxAutocompleteSearchWhere&value1='+value+'&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value2"});
         }
         
         //primary
-        var groups = new Array();
         <?php
             include_once("modules/dyngroup/includes/xmlrpc.php");
-            /*foreach (getPossiblesValuesForCriterionInModuleFuzzy($this->module, $this->criterion, '') as $res)
-            {   
-                echo "groups.push('" . htmlentities($res, ENT_QUOTES) . "');\n";
-            }*/
         ?>
         new Ajax.Autocompleter('autocomplete','autocomplete_choices',
             'main.php?module=base&submod=computers&action=ajaxAutocompleteSearch&modulename=<?= $this->module ?>&criterion=<?= $this->criterion ?>', {paramName: "value"});

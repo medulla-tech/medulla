@@ -34,7 +34,11 @@ if (!$search) { $search = '' ; }
 $value1 = quickGet("value1");
 $res = array();
 if (strlen($search) > 2) {
-    $res = getPossiblesValuesForCriterionInModuleFuzzy($module, $criterion, $search);
+    if (strlen($value1)) {
+        $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $value1, $search);
+    } else {
+        $res = getPossiblesValuesForCriterionInModuleFuzzy($module, $criterion, $search);
+    }
 }
 
 print '<ul>';
