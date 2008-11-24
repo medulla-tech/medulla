@@ -71,7 +71,12 @@ def chooseLauncher():
             stats.update({current_launcher: result})
         # if there is at least one launcher to process, do it
         if launchers:
-            (next_launcher_name, next_launcher_uri) = launchers.popitem()
+            # shuffle launchers
+            a = launchers.items()
+            random.shuffle(a)
+            (next_launcher_name, next_launcher_uri) = a.popitem()
+            launchers = dict(a)
+
             d = callOnLauncher(None, next_launcher_uri, 'get_health')
             d.addCallback(_callback, stats, launchers, next_launcher_name).\
             addErrback(_eb, stats, launchers, next_launcher_name)
