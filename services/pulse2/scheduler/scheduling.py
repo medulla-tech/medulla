@@ -927,6 +927,7 @@ def runDeletePhase(myCommandOnHostID):
     if myC.hasToUseProxy():
         if not localProxyMayCleanup(myCommandOnHostID):
             logger.info("command_on_host #%s: cleanup postponed, waiting for some clients" % myCommandOnHostID)
+            myCoH.setScheduled()
             return None
 
     # if we are here, deletion has either previously failed or never be done
