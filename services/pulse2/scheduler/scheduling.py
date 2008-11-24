@@ -373,12 +373,13 @@ def sortCommands(commands_to_perform):
         except: # hum, something goes weird, try to get ids_list anyway
             logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
+        logging.getLogger().info("Scheduler: %d tasks to start" % len(ids_list))
         deffereds = [] # will hold all deferred
         for id in ids_list:
             deffered = runCommand(id)
             if deffered:
                 deffereds.append(deffered)
-        logging.getLogger().info("Scheduler: %d tasks to start" % len(deffereds))
+        logging.getLogger().debug("Scheduler: %d tasks started" % len(ids_list))
         return len(deffereds)
 
 
@@ -410,6 +411,7 @@ def stopElapsedCommands(scheduler_name):
     # gather candidates:
     # retain tasks already in progress
     # take tasks with end_date in the future, but not null
+    ids = list()
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host).\
         filter(sqlalchemy.or_(
@@ -424,22 +426,22 @@ def stopElapsedCommands(scheduler_name):
         ).all():
         # enter the maze: tag command as to-be-stopped if relevant
 
-        deffered = None
         (myCoH, myC, myT) = gatherCoHStuff(q.id)
         if not myC.inDeploymentInterval(): # stops command not in interval
-            deffered = stopCommand(q.id)# stops command no valid anymore
+            ids.append(q.id)
         elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
-            deffered = stopCommand(q.id)
+            ids.append(q.id)
 
-        if deffered:
-            deffereds.append(deffered)
     session.close()
-    logging.getLogger().info("Scheduler: %d tasks to stop" % len(deffereds))
-    return deffereds
+    logging.getLogger().info("Scheduler: %d tasks to stop" % len(ids))
+    logging.getLogger().debug("Scheduler: stopping %s" % ids)
+    stopCommandsOnHosts(ids)
+    return True
 
 def stopCommandsOnHosts(ids):
-    for launcher in SchedulerConfig().launchers_uri.values():
-        callOnLauncher(None, launcher, 'term_processes', ids)
+    if len(ids) > 0:
+        for launcher in SchedulerConfig().launchers_uri.values():
+            callOnLauncher(None, launcher, 'term_processes', ids)
 
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
