@@ -37,6 +37,20 @@ from mmc.plugins.msc.orm.commands_history import CommandsHistory
 def chooseLauncher():
     """ return a good launcher, URI form """
 
+    def _extract_best_candidate(launchers):
+        # return the best launcher, return the corresponding key
+
+        best_launcher = None
+        best_score = 0
+
+        for (k, v) in launchers.items():
+            score = v['slottotal'] - v['slotused'] # score computed using free slots
+            if score > best_score:
+                best_score = score
+                best_launcher = k
+
+        return best_launcher
+
     def _finalback(stats):
         used_slots = 0
         if len(stats.keys()) == 0:
@@ -51,8 +65,7 @@ def chooseLauncher():
             raise Exception("Gone beyond our max of %s slots used" % SchedulerConfig().max_slots)
         if len(stats.keys()) == 0:
             raise Exception("No free slots on launchers")
-        best_launcher = stats.keys()[random.randint(0, len(stats.keys())-1)]
-        return SchedulerConfig().launchers_uri[best_launcher]
+        return SchedulerConfig().launchers_uri[_extract_best_candidate(stats)]
 
     def _eb(reason, stats, launchers, current_launcher):
         logging.getLogger().error("scheduler %s: while talking to launcher %s: %s" % (SchedulerConfig().name, current_launcher, reason.getErrorMessage()))
