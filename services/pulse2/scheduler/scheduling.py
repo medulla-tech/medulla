@@ -384,6 +384,10 @@ def sortCommands(commands_to_perform):
 
     # build array of commands to perform
     tocome_distribution = dict()
+
+    # a few pre-randomization to avoid dead locks
+    random.shuffle(commands_to_perform)
+
     for command_id in commands_to_perform:
         (myCoH, myC, myT) = gatherCoHStuff(command_id)
         command_group = getClientGroup(myT)
