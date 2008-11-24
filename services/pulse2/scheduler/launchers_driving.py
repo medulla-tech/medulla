@@ -74,7 +74,7 @@ def chooseLauncher():
             # shuffle launchers
             a = launchers.items()
             random.shuffle(a)
-            (next_launcher_name, next_launcher_uri) = a.popitem()
+            (next_launcher_name, next_launcher_uri) = a.pop()
             launchers = dict(a)
 
             d = callOnLauncher(None, next_launcher_uri, 'get_health')
