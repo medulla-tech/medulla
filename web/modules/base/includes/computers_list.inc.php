@@ -25,21 +25,13 @@
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false, $msc_vnc_show_icon = false) {
 
     $emptyAction = new EmptyActionItem();
-    if ($is_group) {
-        $inventAction = new ActionItem(_("Inventory"),"groupinvtabs","inventory","inventory", "base", "computers");
-        $glpiAction = new ActionItem(_("GLPI Inventory"),"groupglpitabs","inventory","inventory", "base", "computers");
-        $logAction = new ActionItem(_("Read log"),"groupmsctabs","logfile","computer", "base", "computers", "tablogs");
-        $mscAction = new ActionItem(_("Software deployment"),"groupmsctabs","install","computer", "base", "computers");
-        $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
-        $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
-    } else {
-        $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-        $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-        $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
-        $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
-        $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
-        $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
-    }
+    $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
+    $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
+    $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+    $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+    $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
+    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
+
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
