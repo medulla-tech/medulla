@@ -565,6 +565,8 @@ class Glpi(DyngroupDatabaseHelper):
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         """
         Get the computer list that match filters parameters between min and max
+
+        FIXME: may return a list or a dict according to the parameters
         """
         session = create_session()
         ret = {}
