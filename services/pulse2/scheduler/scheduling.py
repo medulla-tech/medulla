@@ -729,24 +729,28 @@ def _runUploadPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myC
         # primary mirror
         ma = mmc.plugins.msc.mirror_api.MirrorApi(fbmirror)
         d = ma.isAvailable(myC.package_id)
-        d.addCallback(_cbRunUploadPhase, fbmirror, client, myC, myCoH)
+        d.addCallback(_cbRunUploadPhase, fbmirror, client, myC, myCoH, True)
         return d
     else:
         # Go to upload phase, but pass False to tell that the package is not
         # available on the fallback mirror too
         _cbRunUploadPhase(False, mirror, client, myC, myCoH)
 
-def _cbRunUploadPhase(result, mirror, client, myC, myCoH):
+def _cbRunUploadPhase(result, mirror, client, myC, myCoH, useFallback = False):
     if result:
         # The package is available on a mirror, start upload phase
-        return _runUploadPhase(mirror, client, myC, myCoH)
+        return _runUploadPhase(mirror, client, myC, myCoH, useFallback)
     else:
         updateHistory(myCoH.id, 'upload_failed', '255', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
-def _runUploadPhase(mirror, client, myC, myCoH):
-    updateHistory(myCoH.id, 'upload_in_progress', '0', '', 'Package \'%s\' is available on %s' % (myC.package_id, mirror))
+def _runUploadPhase(mirror, client, myC, myCoH, useFallback = False):
+    if useFallback:
+        msg = 'Package \'%s\' is available on fallback mirror %s' % (myC.package_id, mirror)
+    else:
+        msg = 'Package \'%s\' is available on %s' % (myC.package_id, mirror)
+    updateHistory(myCoH.id, 'upload_in_progress', '0', '', msg)
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
     ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
     fids = []
@@ -757,6 +761,7 @@ def _runUploadPhase(mirror, client, myC, myCoH):
 
 def _cbRunUploadPhasePushPull(result, mirror, client, myC, myCoH):
     files_list = result
+    file_uris = {}
     choosen_mirror = mirror
     if not False in files_list and not '' in files_list:
         # build a dict with the protocol and the files uris
@@ -777,7 +782,7 @@ def _cbRunUploadPhasePushPull(result, mirror, client, myC, myCoH):
 
     # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
     if not file_uris:
-        logger.warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCoH.id))
+        logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCoH.id))
         return None
 
     client['protocol'] = file_uris['protocol']
