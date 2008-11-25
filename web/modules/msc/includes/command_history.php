@@ -270,8 +270,19 @@ class CommandHistory {
         # display command history
         # display log files
         $statusTable = getStatusTable();
+        $i = 1;
         foreach ($this->db_ch as $hist) {
-            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/status/'.history_stat2icon($hist['state']).'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
+            if (($hist['state'] == 'upload_in_progress') && ($hist['error_code'] == '0') && (array_key_exists('stderr', $hist)) && ($i != count($this->db_ch)) && (strpos($hist['stderr'], 'is available on') !== False)) {
+                /*
+                  We are displaying which package server was used in push pull
+                  mode. We want to keep the led green instead of orange to
+                  tell the user that there was no problem.
+                */
+                $staticon = history_stat2icon("upload_done");
+            } else {
+                $staticon = history_stat2icon($hist['state']);
+            }
+            $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/status/'.$staticon.'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
             if (gettype($hist["stdout"]) != 'array')
                 $hist["stdout"] = split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
@@ -297,6 +308,7 @@ class CommandHistory {
                ) {
                 $n->drawTable(0);
             }
+            $i++;
         }
     }
 }
