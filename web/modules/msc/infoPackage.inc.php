@@ -82,18 +82,6 @@ $page->addTab($tab);
 $tab = new Tab("grouptabhistory", _T("MSC history tab for a group", "msc"));
 $page->addTab($tab);
 
-$tab = new Tab("tablaunch", _T("MSC launch tab for a machine in a group", "msc"));
-$page->addTab($tab);
-
-$tab = new Tab("tabbundle", _T("MSC bundle tab for a machine in a group", "msc"));
-$page->addTab($tab);
-
-$tab = new Tab("tablogs", _T("MSC logs tab for a machine in a group", "msc"));
-$page->addTab($tab);
-
-$tab = new Tab("tabhistory", _T("MSC history tab for a machine in a group", "msc"));
-$page->addTab($tab);
-
 $submod->addPage($page);
 
 $page = new Page("msctabs", _T("Secure control on computer", "msc"));
