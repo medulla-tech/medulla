@@ -213,10 +213,6 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";
-    $b = new Button('base', 'computers', 'tmpdisplay');
-    $url = urlStr("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$request->toS()));
-    print $b->getOnClickButton(_T("Display content", "dyngroup"), $url, "btnSecondary");
-    
     print "</td></tr>";
     print "</table>";
 }

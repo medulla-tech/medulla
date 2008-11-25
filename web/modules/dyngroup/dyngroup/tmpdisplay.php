@@ -30,11 +30,23 @@ require("modules/base/graph/computers/index.css");
 $p = new PageGenerator(_T("Temporary result display", "dyngroup"));
 $p->setSideMenu($sidemenu);
 $p->display();
-$get = "&request=".$_GET['request'];
-if (strlen($_GET['id'])) {
-    $get = "&id=".$_GET['id'];
+
+$get = '';
+$bool = quickGet('equ_bool', true);
+if (strlen($_GET['id']) && !strlen($bool)) {
+    $group = new Group($id, true);
+    $bool = $group->getBool();
 }
-print "<a href='main.php?module=base&submod=computers&action=computersgroupcreator$get'>"._T('back', 'dyngroup')."</a>";
+if (strlen($bool)) { $get = "&equ_bool=".$bool; }
+
+$get .= "&request=".$_GET['request'];
+$get .= "&name=".quickGet('name');
+$get .= "&save_type=".quickGet('save_type', true);
+$get .= "&visible=".quickGet('visible', true);
+if (strlen($_GET['id'])) {
+    $get .= "&id=".$_GET['id'];
+}
+print "<a href='main.php?module=base&submod=computers&action=save$get'>"._T('back', 'dyngroup')."</a>";
 
 include("modules/pulse2/pulse2/computers_list.php");
 # TODO put bool in the first page whereas it is actualy in the second

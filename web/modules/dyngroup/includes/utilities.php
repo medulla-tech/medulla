@@ -24,8 +24,12 @@
 
 function clean($val) { return urlencode(urldecode($val)); }
 
-function quickGet($name) {
-    if (isset($_GET[$name])) { $res = $_GET[$name]; } elseif (isset($_POST[$name])) { $res = $_POST[$name]; } else { $res = null; }
+function quickGet($name, $p_first = false) {
+    if ($p_first) {
+        if (strlen($_POST[$name])) { $res = $_POST[$name]; } elseif (strlen($_GET[$name])) { $res = $_GET[$name]; } else { $res = null; }
+    } else {
+        if (isset($_GET[$name])) { $res = $_GET[$name]; } elseif (isset($_POST[$name])) { $res = $_POST[$name]; } else { $res = null; }
+    }
     return urldecode($res);
 }
 

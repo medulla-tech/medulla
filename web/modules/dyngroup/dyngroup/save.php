@@ -38,12 +38,12 @@ $request = quickGet('request');
 if (!$request) { $request = $group->getRequest(); }
 if (!$request) { exit(0); }
 
-$save_type = quickGet('save_type');
+$save_type = quickGet('save_type', true);
 if (!$save_type && $group) { $save_type = ($group->isRequest() ? 1 : 2); }
-$name = quickGet('name');
-$visible = quickGet('visible'); # TODO check all this!
+$name = quickGet('name', true);
+$visible = quickGet('visible', true); # TODO check all this!
 if (!$visible && $group) { $visible = $group->show; }
-$bool = quickGet('equ_bool');
+$bool = quickGet('equ_bool', true);
 if (!$bool && $group) {
     if (isset($_POST['checkBool']) || isset($_POST['btnPrimary'])) {
         $bool = '';
@@ -54,21 +54,29 @@ if (!$bool && $group) {
 
 $r = new Request();
 $r->parse($request);
+
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
-if ($name == '' || xmlrpc_group_name_exists($name, $group->id) || !$check || isset($_POST['checkBool'])) {
+if ($check && isset($_POST['displayTmp'])) {
+    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$r->toS(), 'equ_bool'=>$bool, 'name'=>$name, 'save_type'=>$save_type, 'visible'=>$visible)));
+}
+
+$name_exists = xmlrpc_group_name_exists($name, $group->id);
+if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['checkBool']) || isset($_POST['displayTmp'])) {
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
     $r->displayReqListInfos();
     // TODO : put in class
     print "<hr/><table><form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
         "<tr><td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value='$name'/></td>".
         "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
-        "<td>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+        "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
     if ($r->countPart() > 0) {
         drawBoolEquation($bool);
     }
+    drawTemporaryButton();
+    
     print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
         "</form></table>";
-    if (xmlrpc_group_name_exists($name, $group->id)) {
+    if ($name_exists && !isset($_POST['displayTmp'])) { 
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
     } elseif (isset($_POST['btnPrimary']) && $check) {
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
@@ -116,4 +124,7 @@ function checkBoolEquation($bool, $r, $display_success) {
     return True;
 }
 
+function drawTemporaryButton() {
+     print "<td><input name='displayTmp' value='"._T("Display content", "dyngroup")."' type='submit'/></td>";
+}
 ?>
