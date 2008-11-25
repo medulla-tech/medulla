@@ -545,7 +545,7 @@ class Glpi(DyngroupDatabaseHelper):
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
-        return ret[0]
+        return ret.values()[0]
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
         """
@@ -639,7 +639,7 @@ class Glpi(DyngroupDatabaseHelper):
             if hasattr(machine, field):
                 ma[field] = getattr(machine, field)
             if field == 'uuid' or field == 'objectUUID':
-                ma[field] = uuid
+                ma[field] = toUUID(str(machine.ID))
             if field == 'cn':
                 ma[field] = machine.name
         return ma
