@@ -595,10 +595,12 @@ class DyngroupDatabase(Singleton):
 
         connection = self.getDbConnection()
         trans = connection.begin()
-        # Delete the previous results for this group in the Results table
-        connection.execute(self.results.delete(self.results.c.FK_group == gid))
-        # Update the Machines table to remove ghost records
-        self.__updateMachinesTable(connection)
+        c = session.query(Results).filter(self.results.c.FK_group == gid).count()
+        if c > 0:
+            # Delete the previous results for this group in the Results table
+            connection.execute(self.results.delete(self.results.c.FK_group == gid))
+            # Update the Machines table to remove ghost records
+            self.__updateMachinesTable(connection)
         trans.commit()
 
         return group.id
