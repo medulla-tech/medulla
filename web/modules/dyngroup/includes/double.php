@@ -23,9 +23,10 @@
  */
 
 class DoubleAutocomplete {
-    function DoubleAutocomplete($module, $criterion, $edition = false) {
+    function DoubleAutocomplete($module, $criterion, $value = '', $edition = false) {
         $this->module = $module;
         $this->criterion = $criterion;
+        $this->val = $value;
 
         $first = explode('/', urldecode($criterion));
         $second = explode(':', $first[1]);
@@ -34,6 +35,7 @@ class DoubleAutocomplete {
         $this->field1 = $second[0];
         $this->field2 = $second[1];
         $this->b_label = _T("Add", "dyngroup");
+        $this->edition = $edition;
         if ($edition) {
             $this->b_label = _T("Modify", "dyngroup");
         }
@@ -44,7 +46,7 @@ class DoubleAutocomplete {
 
     <td style="text-align:right;"><?= $this->field1;?> : </td>
     <td>
-        <input type="text" id="autocomplete" name="value" class="textfield" size="23" /> 
+        <input type="text" id="autocomplete" name="value" class="textfield" size="23" value="<?=$this->val?>" /> 
         <div id="autocomplete_choices" class="autocomplete">
             <ul>
                 <li>A</li>
