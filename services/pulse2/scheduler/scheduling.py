@@ -539,6 +539,7 @@ def runWOLPhase(myCommandOnHostID):
     if not myC.hasToWOL(): # don't have to WOL
         logger.info("command_on_host #%s: do not wol" % myCoH.getId())
         myCoH.setWOLIgnored()
+        myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
 
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
@@ -581,6 +582,7 @@ def runUploadPhase(myCommandOnHostID):
     if not myC.hasSomethingToUpload(): # nothing to upload here, jump to next stage
         logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
         myCoH.setUploadIgnored()
+        myCoH.setStateScheduled()
         return runExecutionPhase(myCommandOnHostID)
 
     # check if we may reach client
@@ -849,6 +851,7 @@ def runExecutionPhase(myCommandOnHostID):
     if not myC.hasSomethingToExecute(): # nothing to execute here, jump to next stage
         logger.info("command_on_host #%s: nothing to execute" % myCommandOnHostID)
         myCoH.setExecutionIgnored()
+        myCoH.setStateScheduled()
         return runDeletePhase(myCommandOnHostID)
 
     # if we are here, execution has either previously failed or never be done
@@ -939,7 +942,9 @@ def runDeletePhase(myCommandOnHostID):
     if not myC.hasSomethingToDelete(): # nothing to delete here, jump to next stage
         logger.info("command_on_host #%s: nothing to delete" % myCommandOnHostID)
         myCoH.setDeleteIgnored()
+        myCoH.setStateScheduled()
         return runInventoryPhase(myCommandOnHostID)
+
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
@@ -1032,7 +1037,9 @@ def runDeletePhase(myCommandOnHostID):
             pass
         else: # do nothing
             pass
+
     myCoH.setDeleteIgnored()
+    myCoH.setStateScheduled()
     return runInventoryPhase(myCommandOnHostID)
 
 def runInventoryPhase(myCommandOnHostID):
@@ -1054,8 +1061,9 @@ def runInventoryPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: nothing to inventory right now" % myCoH.getId())
         return None
     if not myC.hasToRunInventory(): # no inventory to perform, jump to next stage
-        logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
+        logger.info("command_on_host #%s: nothing to inventory" % myCoH.getId())
         myCoH.setInventoryIgnored()
+        myCoH.setStateScheduled()
         return runRebootPhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
@@ -1097,13 +1105,31 @@ def runRebootPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: reboot phase" % myCommandOnHostID)
-    if not myC.hasToReboot(): # do not run reboot
-        logger.info("command_on_host #%s: reboot ignored" % myCommandOnHostID)
-        return runEndPhase(myCommandOnHostID)
+
+    if myCoH.isRebootRunning(): # reboot still running, immediately returns
+        logger.info("command_on_host #%s: still rebooting" % myCoH.getId())
+        return None
+    if myCoH.isRebootIgnored(): # reboot has already been ignored, jump to next stage
+        logger.info("command_on_host #%s: reboot ignored" % myCoH.getId())
+        return runHaltPhase(myCommandOnHostID)
+    if myCoH.isRebootDone(): # reboot has already been done, jump to next stage
+        logger.info("command_on_host #%s: reboot done" % myCoH.getId())
+        return runHaltPhase(myCommandOnHostID)
+    if not myCoH.isRebootImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: do not reboot right now" % myCoH.getId())
+        return None
+    if not myC.hasToReboot(): # no reboot to perform, jump to next stage
+        logger.info("command_on_host #%s: do not reboot" % myCoH.getId())
+        myCoH.setRebootIgnored()
+        myCoH.setStateScheduled()
+        return runHaltPhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseRebootError, myCommandOnHostID)
+
+    myCoH.setRebootInProgress()
+    myCoH.setStateRebootInProgress()
 
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
@@ -1140,22 +1166,29 @@ def runHaltPhase(myCommandOnHostID):
     if myCoH.isHaltRunning(): # halt still running, immediately returns
         logging.getLogger().info("command_on_host #%s: still halting" % myCommandOnHostID)
         return None
-    if myCoH.isHaltDone(): # halt has already be done, jump to next stage
-        logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
-        return runEndPhase(myCommandOnHostID)
     if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
         return runEndPhase(myCommandOnHostID)
+    if myCoH.isHaltDone(): # halt has already be done, jump to next stage
+        logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
+        return runEndPhase(myCommandOnHostID)
+    if not myCoH.isHaltImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: do not halt right now" % myCoH.getId())
+        return None
     if not myC.hasToHalt(): # do not run halt
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
+        myCoH.setHaltIgnored()
+        myCoH.setStateScheduled()
         return runEndPhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseHaltError, myCommandOnHostID)
 
+    myCoH.setHaltInProgress()
+    myCoH.setStateHaltInProgress()
+
     if SchedulerConfig().mode == 'sync':
-        myCoH.setHaltInProgress()
         updateHistory(myCommandOnHostID, 'halt_in_progress')
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
@@ -1285,11 +1318,14 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
-        return runEndPhase(myCommandOnHostID)
+        if myCoH.switchToRebootDone():
+            return runEndPhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
-    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
+    myCoH.switchToRebootFailed()
     return None
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1374,6 +1410,8 @@ def parseRebootOrder(taken_in_account, myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
         return None
     else: # failed: launcher seems to have rejected it
+        myCoH.setRebootToDo()
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: reboot order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1445,8 +1483,8 @@ def parseRebootError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
+    myCoH.switchToRebootFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
     return None
 
