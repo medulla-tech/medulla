@@ -231,10 +231,10 @@ def startAllCommands(scheduler_name, commandIDs = []):
     else:
         logger.debug("MSC_Scheduler->startAllCommands()...")
     # gather candidates:
-    # ignore completed tasks
+    # ignore completed tasks (done / failed)
     # ignore paused tasks
     # ignore stopped tasks
-    # ignore tasks already in progress
+    # ignore tasks already in progress (excepted WOL in progress 'cause of the tempo)
     # ignore tasks which failed
     # ignore tasks with no retries left
     # take tasks with next launch time in the future
@@ -270,10 +270,8 @@ def startAllCommands(scheduler_name, commandIDs = []):
         filter(database.commands_on_host.c.current_state != 'execution_in_progress').\
         filter(database.commands_on_host.c.current_state != 'delete_in_progress').\
         filter(database.commands_on_host.c.current_state != 'inventory_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'upload_failed').\
-        filter(database.commands_on_host.c.current_state != 'execution_failed').\
-        filter(database.commands_on_host.c.current_state != 'delete_failed').\
-        filter(database.commands_on_host.c.current_state != 'inventory_failed').\
+        filter(database.commands_on_host.c.current_state != 'reboot_in_progress').\
+        filter(database.commands_on_host.c.current_state != 'halt_in_progress').\
         filter(database.commands_on_host.c.next_launch_date <= now).\
         filter(sqlalchemy.or_(
             database.commands.c.start_date == soon,
@@ -519,6 +517,7 @@ def runWOLPhase(myCommandOnHostID):
                 # we already pass the delay from at least 300 seconds, let's continue
                 # FIXME: dirty fix, better use a sem system to handle collision situations :/
                 logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
+                myCoH.setWOLDone()
                 myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
         else: # WOL marked as "in progress", but no time given ?!
@@ -1493,7 +1492,6 @@ def parseHaltError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
