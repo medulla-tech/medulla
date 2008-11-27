@@ -1,0 +1,3 @@
+ALTER TABLE `commands` MODIFY `do_halt` VARCHAR(255) NOT NULL DEFAULT '';
+
+
