@@ -314,8 +314,13 @@ class CommandsOnHost(object):
 ### /Handle wol states ###
 
 ### Handle reboot states ###
+    def isRebootImminent(self):
+        result = ((self.isStateScheduled() or self.isStateInventoryDone()) and self.isInTimeSlot())
+        logging.getLogger().debug("isRebootImminent(#%s): %s" % (self.getId(), result))
+        return result
+
     def setRebootIgnored(self):
-        self.setRebootIgnored('IGNORED')
+        self.setRebootStatut('IGNORED')
     def isRebootIgnored(self):
         result = (self.rebooted == 'IGNORED')
         logging.getLogger().debug("isRebootIgnored(#%s): %s" % (self.getId(), result))
@@ -349,14 +354,19 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isHRebootToDo(#%s): %s" % (self.getId(), result))
         return result
 
-    def setRebootStatut(self, halted):
+    def setRebootStatut(self, rebooted):
         self.rebooted = rebooted
         self.flush()
 ### /Handle halt states ###
 
 ### Handle halt states ###
+    def isHaltImminent(self):
+        result = ((self.isStateScheduled() or self.isStateRebootDone()) and self.isInTimeSlot())
+        logging.getLogger().debug("isHaltImminent(#%s): %s" % (self.getId(), result))
+        return result
+
     def setHaltIgnored(self):
-        self.setHaltIgnored('IGNORED')
+        self.setHaltStatut('IGNORED')
     def isHaltIgnored(self):
         result = (self.halted == 'IGNORED')
         logging.getLogger().debug("isHaltIgnored(#%s): %s" % (self.getId(), result))
