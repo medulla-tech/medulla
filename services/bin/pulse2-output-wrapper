@@ -247,7 +247,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         else:                       # something goes bad, prin pre-command output then exits
             if config.thru_string:
                 format(SEPARATOR.join(config.thru_string), 'T')
-            format("PRE-COMMAND FAILED CLIENT SIDE: exicode = %s !" % (exitcode), 'P')
+            format("PRE-COMMAND FAILED CLIENT SIDE: exitcode = %s !" % (exitcode), 'P')
             format(SEPARATOR.join(config.check_command), 'P')
             for line in self.stdout.splitlines():
                 format(line, 'P')
