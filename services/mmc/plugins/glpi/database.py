@@ -1283,7 +1283,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Network).add_column(self.machine.c.ID).add_column(self.domain.c.name).select_from(self.machine.join(self.network).outerjoin(self.domain))
         query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuids)
         ret = {}
-        for n in query.all():
+        for n in query.group_by(self.network.c.ID).all():
             net = n[0].toH()
             if n[2] != None:
                 net['domain'] = n[2]
@@ -1292,7 +1292,8 @@ class Glpi(DyngroupDatabaseHelper):
             uuid = toUUID(n[1])
             if uuid not in ret:
                 ret[uuid] = [net]
-            ret[uuid].append(net)
+            else:
+                ret[uuid].append(net)
         return ret
 
     def getMachineNetwork(self, uuid):
