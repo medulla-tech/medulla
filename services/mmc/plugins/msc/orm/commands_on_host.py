@@ -43,7 +43,7 @@ class CommandsOnHost(object):
 
 ### Handle upload states ###
     def isUploadImminent(self):
-        result = (self.isStateScheduled() and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateWOLDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isUploadImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -89,7 +89,7 @@ class CommandsOnHost(object):
 
 ### Handle execution states ###
     def isExecutionImminent(self):
-        result = ((self.isStateScheduled() or self.getCommandStatut() == 'upload_done') and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateUploadDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isExecutionImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -135,7 +135,7 @@ class CommandsOnHost(object):
 
 ### Handle deletion states ###
     def isDeleteImminent(self):
-        result = ((self.isStateScheduled() or self.getCommandStatut() == 'execution_done') and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateExecutionDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isDeleteImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -181,7 +181,7 @@ class CommandsOnHost(object):
 
 ### Handle inventory states ###
     def isInventoryImminent(self):
-        result = ((self.isStateScheduled() or self.getCommandStatut() == 'deletion_done') and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateDeleteDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isInventoryImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -438,25 +438,25 @@ class CommandsOnHost(object):
         else:
             self.setStatePaused()
 
-    def setStateWolInProgress(self):
+    def setStateWOLInProgress(self):
         self.setCommandStatut('wol_in_progress')
-    def isStateWolInProgress(self):
+    def isStateWOLInProgress(self):
         result = (self.getCommandStatut() == 'wol_in_progress')
-        logging.getLogger().debug("isStateWolInProgress(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateWOLInProgress(#%s): %s" % (self.getId(), result))
         return result
 
-    def setStateWolDone(self):
+    def setStateWOLDone(self):
         self.setCommandStatut('wol_done')
-    def isStateWolDone(self):
+    def isStateWOLDone(self):
         result = (self.getCommandStatut() == 'wol_done')
-        logging.getLogger().debug("isStateWolDone(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateWOLDone(#%s): %s" % (self.getId(), result))
         return result
 
-    def setStateWolFailed(self):
+    def setStateWOLFailed(self):
         self.setCommandStatut('wol_failed')
-    def isStateWolFailed(self):
+    def isStateWOLFailed(self):
         result = (self.getCommandStatut() == 'wol_failed')
-        logging.getLogger().debug("isStateWolFailed(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateWOLFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateUploadInProgress(self):

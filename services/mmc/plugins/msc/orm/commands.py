@@ -68,8 +68,7 @@ class Commands(object):
         return self.do_reboot == 'enable'
 
     def hasToHalt(self):
-        logging.getLogger().debug("hasToHalt : %s" % (do_halt))
-        return False
+        return self.do_halt == 'enable'
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
