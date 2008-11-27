@@ -25,10 +25,10 @@ from pulse2.scheduler.config import SchedulerConfig
 
 def getAnnounceCheck(announce):
     if not announce:
-        return '';
+        return ''
     if not announce in SchedulerConfig().announce_check:
-        return '';
-    return SchedulerConfig().announce_check[announce];
+        return ''
+    return SchedulerConfig().announce_check[announce]
 
 def getCheck(check, target):
     """
@@ -43,14 +43,15 @@ def getCheck(check, target):
 
     ret = {}
     if not check:
-        return ret;
+        return ret
     for key in check:
         if check[key] == 'ipaddr':
-            ret.update({key: target['ip']})
+            if target['ips'] and target['ips'] != ['']:
+                ret.update({key: target['ips'][0]})
         if check[key] == 'name':
             ret.update({key: target['shortname']})
         if check[key] == 'uuid':
             ret.update({key: target['uuid']})
         if check[key] == 'macaddr':
             ret.update({key: target['macs'][0]})
-    return ret;
+    return ret
