@@ -43,7 +43,7 @@ class CommandsOnHost(object):
 
 ### Handle upload states ###
     def isUploadImminent(self):
-        result = ((self.isStateScheduled() or self.isStateWOLDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateUploadFailed() or self.isStateWOLDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isUploadImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -89,7 +89,7 @@ class CommandsOnHost(object):
 
 ### Handle execution states ###
     def isExecutionImminent(self):
-        result = ((self.isStateScheduled() or self.isStateUploadDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateExecutionFailed() or self.isStateUploadDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isExecutionImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -135,7 +135,7 @@ class CommandsOnHost(object):
 
 ### Handle deletion states ###
     def isDeleteImminent(self):
-        result = ((self.isStateScheduled() or self.isStateExecutionDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateDeleteFailed() or self.isStateExecutionDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isDeleteImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -181,7 +181,7 @@ class CommandsOnHost(object):
 
 ### Handle inventory states ###
     def isInventoryImminent(self):
-        result = ((self.isStateScheduled() or self.isStateDeleteDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateInventoryFailed() or self.isStateDeleteDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isInventoryImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -250,7 +250,7 @@ class CommandsOnHost(object):
 
 ### Handle WOL states ###
     def isWOLImminent(self):
-        result = (self.isStateScheduled() and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateWOLFailed()) and self.isInTimeSlot())
         logging.getLogger().debug("isWOLImminent(#%s): %s" % (self.getId(), result))
         return result
     def wasWOLPreviouslyRan(self):
@@ -315,7 +315,7 @@ class CommandsOnHost(object):
 
 ### Handle reboot states ###
     def isRebootImminent(self):
-        result = ((self.isStateScheduled() or self.isStateInventoryDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateRebootFailed() or self.isStateInventoryDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isRebootImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -361,7 +361,7 @@ class CommandsOnHost(object):
 
 ### Handle halt states ###
     def isHaltImminent(self):
-        result = ((self.isStateScheduled() or self.isStateRebootDone()) and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.isStateHaltFailed() or self.isStateRebootDone()) and self.isInTimeSlot())
         logging.getLogger().debug("isHaltImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -672,7 +672,6 @@ class CommandsOnHost(object):
                 self.attempts_left -= 1
         self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
         self.flush()
-        self.setStateScheduled()
 
     def switchToWOLFailed(self, delay = 0, decrement = True):
         """
@@ -681,10 +680,10 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setWOLFailed()                                 # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateWOLInProgress():                     # normal flow
-            self.setStateWOLFailed                          # set command status
+            self.setStateWOLFailed()                        # set command status
             return False                                    # break flow
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow
@@ -710,10 +709,10 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setUploadFailed()                              # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateUploadInProgress():                  # normal flow
-            self.setStateUploadFailed                       # set command status
+            self.setStateUploadFailed()                     # set command status
             return False                                    # break flow
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow
@@ -739,8 +738,8 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setExecutionFailed()                           # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateExecutionInProgress():               # normal flow
             self.setStateExecutionFailed()                  # set command status
             return False                                    # break flow
@@ -768,8 +767,8 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setDeleteFailed()                              # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateDeleteInProgress():                  # normal flow
             self.setStateDeleteFailed()                     # set command status
             return False                                    # break flow
@@ -797,8 +796,8 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setInventoryFailed()                           # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateInventoryInProgress():               # normal flow
             self.setStateInventoryFailed()                  # set command status
             return False                                    # break flow
@@ -826,8 +825,8 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setRebootFailed()                              # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateRebootInProgress():                  # normal flow
             self.setStateRebootFailed()                     # set command status
             return False                                    # break flow
@@ -855,8 +854,8 @@ class CommandsOnHost(object):
             Returns True if processing can continue (most likely never),
             False else.
         """
-        self.reSchedule(delay, decrement)                   # always reschedule
         self.setHaltFailed()                                # set task status
+        self.reSchedule(delay, decrement)                   # always reschedule
         if self.isStateHaltInProgress():                    # normal flow
             self.setStateHaltFailed()                       # set command status
             return False                                    # break flow
