@@ -103,7 +103,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True, echo_pool = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True)
         self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
