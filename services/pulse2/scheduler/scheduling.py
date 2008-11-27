@@ -521,7 +521,7 @@ def runWOLPhase(myCommandOnHostID):
             else:
                 # we already pass the delay, let's continue
                 logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
-                myCoH.setScheduled()
+                myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
         else: # WOL marked as "in progress", but no time given ?!
             # return None to avoid some possible race conditions
@@ -938,7 +938,7 @@ def runDeletePhase(myCommandOnHostID):
     if myC.hasToUseProxy():
         if not localProxyMayCleanup(myCommandOnHostID):
             logger.info("command_on_host #%s: cleanup postponed, waiting for some clients" % myCommandOnHostID)
-            myCoH.setScheduled()
+            myCoH.setStateScheduled()
             return None
 
     # if we are here, deletion has either previously failed or never be done
@@ -1168,7 +1168,7 @@ def runEndPhase(myCommandOnHostID):
     # Last step : end file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: end phase" % myCommandOnHostID)
-    myCoH.setDone()
+    myCoH.setStateDone()
     return None
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1176,7 +1176,7 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     def setstate(myCommandOnHostID, stdout, stderr):
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
-        myCoH.setScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
+        myCoH.setStateScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
         runUploadPhase(myCommandOnHostID)
 
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
@@ -1372,7 +1372,7 @@ def parseWOLError(reason, myCommandOnHostID):
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
 
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    myCoH.setScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
+    myCoH.setStateScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
     return runUploadPhase(myCommandOnHostID)
 
 def parsePushError(reason, myCommandOnHostID):
