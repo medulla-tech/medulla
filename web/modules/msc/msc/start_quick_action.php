@@ -39,11 +39,14 @@ function action($action, $target) {
     if ($id != -1) {
         scheduler_start_these_commands("", array($id));
         // if on a single computer
-        $tab = 'tablogs';
         if (count($_GET["gid"]) > 0) {
+            $actionpage = 'groupmsctabs';
             $tab = 'grouptablogs';
+        } else {
+            $actionpage = 'msctabs';
+            $tab = 'tablogs';            
         }
-        header("Location: ".urlStrRedirect("base/computers/msctabs", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
+        header("Location: ".urlStrRedirect("base/computers/$actionpage", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
     }
 }
 
