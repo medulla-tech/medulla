@@ -103,7 +103,7 @@ class MscDatabase(Singleton):
 
         self.logger.info("Msc database is connecting")
         self.config = MscConfig("msc", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True, echo_pool = True)
         self.metadata = MetaData(self.db)
         self.initTables()
         self.initMappers()
@@ -540,6 +540,7 @@ class MscDatabase(Singleton):
                 first_target_id = first_target_id + 1
             connection.execute(self.commands_on_host.insert(), coh_to_insert)
             trans.commit()
+            connection.close()
             return cmd.getId()
 
         d = self.getMachinesSchedulers(targets)
