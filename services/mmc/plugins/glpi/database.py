@@ -666,10 +666,17 @@ class Glpi(DyngroupDatabaseHelper):
             uuids = map(lambda m: m.getUUID(), machines)
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
-                (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain']) = self.orderIpAdresses(nets[uuid])
-                if ret[uuid][1]['domain'] != '':
-                    ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
-                else:
+                try:
+                    (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain']) = self.orderIpAdresses(nets[uuid])
+                    if ret[uuid][1]['domain'] != '':
+                        ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
+                    else:
+                        ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
+                except KeyError, e:
+                    ret[uuid][1]['macAddress'] = []
+                    ret[uuid][1]['ipHostNumber'] = []
+                    ret[uuid][1]['subnetMask'] = []
+                    ret[uuid][1]['domain'] = ''
                     ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
         return ret
         
