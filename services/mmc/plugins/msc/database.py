@@ -297,7 +297,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies):
+    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies):
         """
         Return a Command object
         """
@@ -318,6 +318,7 @@ class MscDatabase(Singleton):
         cmd.connect_as = connect_as
         cmd.creator = creator
         cmd.title = title
+        cmd.do_halt = ','.join(do_halt)
         cmd.do_reboot = do_reboot
         cmd.do_wol = do_wol
         cmd.next_connection_delay = next_connection_delay
@@ -373,6 +374,7 @@ class MscDatabase(Singleton):
                 end_date = "0000-00-00 00:00:00",
                 connect_as = "root",
                 title = "",
+                do_halt = "done",
                 do_reboot = 'disable',
                 do_wol = 'enable',
                 next_connection_delay = 60,
@@ -524,7 +526,7 @@ class MscDatabase(Singleton):
                 targets_to_insert.append(targetsdata[i])
 
             session = create_session()
-            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies)
+            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies)
             session.close()
 
             connection = self.getDbConnection()
@@ -609,6 +611,7 @@ class MscDatabase(Singleton):
             "0000-00-00 00:00:00",
             "root",     # FIXME: this should be the effective user we want to connect with
             desc,
+            self.config.web_def_issue_halt_to,
             "disable",
             "disable",
             60,

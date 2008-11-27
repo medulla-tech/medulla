@@ -432,6 +432,9 @@ class RpcProxy(RpcProxyI):
     def get_web_def_allow_local_proxy(self):
         return xmlrpcCleanup(MscConfig("msc").web_allow_local_proxy)
 
+    def get_web_def_issue_halt_to(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_issue_halt_to)
+
 ##
 # machines
 ##

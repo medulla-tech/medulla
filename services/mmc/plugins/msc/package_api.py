@@ -63,10 +63,25 @@ class PackageA:
         except:
             return []
 
+    def __convertDoReboot(self, pkg):
+        try:
+            do_reboot = pkg['reboot']
+            if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
+                pkg['do_reboot'] = 'disable'
+            elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
+                pkg['do_reboot'] = 'enable'
+            else:
+                self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot)) 
+            del pkg['reboot']
+        except KeyError:
+            pkg['do_reboot'] = 'disable'
+        return pkg
+        
     def getPackageDetail(self, pid):
         if self.initialized_failed:
             return False
         d = self.paserver.callRemote("getPackageDetail", pid)
+        d.addCallback(self.__convertDoReboot)
         d.addErrback(self.onError, "getPackageDetail", pid, False)
         return d
 
@@ -280,6 +295,7 @@ class SendPackageCommand:
         self.a_files = package['files']
         self.label = package['label']
         self.version = package['version']
+        self.do_reboot = package['do_reboot']
         d = PackageA(self.p_api).getLocalPackagePath(self.pid)
         d.addCallbacks(self.setRoot, self.onError)
 
@@ -292,10 +308,10 @@ class SendPackageCommand:
         start_script = (self.params['start_script'] == 'on' and 'enable' or 'disable')
         clean_on_success = (self.params['clean_on_success'] == 'on' and 'enable' or 'disable')
         do_wol = (self.params['do_wol'] == 'on' and 'enable' or 'disable')
-        do_reboot = (self.params['do_reboot'] == 'on' and 'enable' or 'disable')
         next_connection_delay = self.params['next_connection_delay']
         max_connection_attempt = self.params['max_connection_attempt']
         do_inventory = (self.params['do_inventory'] == 'on' and 'enable' or 'disable')
+        issue_halt_to = self.params['issue_halt_to']
         maxbw = self.params['maxbw']
 
         try:
@@ -353,7 +369,8 @@ class SendPackageCommand:
             end_date,
             "root", # TODO: may use another login name
             title,
-            do_reboot,
+            issue_halt_to,
+            self.do_reboot,
             do_wol,
             next_connection_delay,
             max_connection_attempt,
