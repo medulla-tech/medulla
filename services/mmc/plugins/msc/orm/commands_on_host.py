@@ -43,7 +43,7 @@ class CommandsOnHost(object):
 
 ### Handle upload states ###
     def isUploadImminent(self):
-        result = (self.isScheduled() and self.isInTimeSlot())
+        result = (self.isStateScheduled() and self.isInTimeSlot())
         logging.getLogger().debug("isUploadImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -89,7 +89,7 @@ class CommandsOnHost(object):
 
 ### Handle execution states ###
     def isExecutionImminent(self):
-        result = ((self.isScheduled() or self.getCommandStatut() == 'upload_done') and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.getCommandStatut() == 'upload_done') and self.isInTimeSlot())
         logging.getLogger().debug("isExecutionImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -135,7 +135,7 @@ class CommandsOnHost(object):
 
 ### Handle deletion states ###
     def isDeleteImminent(self):
-        result = ((self.isScheduled() or self.getCommandStatut() == 'execution_done') and self.isInTimeSlot())
+        result = ((self.isStateScheduled() or self.getCommandStatut() == 'execution_done') and self.isInTimeSlot())
         logging.getLogger().debug("isDeleteImminent(#%s): %s" % (self.getId(), result))
         return result
 
@@ -180,7 +180,51 @@ class CommandsOnHost(object):
 ### /Handle deletion states ###
 
 ### Handle inventory states ###
-# FIXME: from current_state to "inventoried"
+    def isInventoryImminent(self):
+        result = ((self.isStateScheduled() or self.getCommandStatut() == 'deletion_done') and self.isInTimeSlot())
+        logging.getLogger().debug("isInventoryImminent(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryIgnored(self):
+        self.setInventoryStatut('IGNORED')
+    def isInventoryIgnored(self):
+        result = (self.inventoried == 'IGNORED')
+        logging.getLogger().debug("isInventoryIgnored(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryFailed(self):
+        self.setInventoryStatut('FAILED')
+    def isInventoryFailed(self):
+        result = (self.inventoried == 'FAILED')
+        logging.getLogger().debug("isInventoryFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryDone(self):
+        self.setInventoryStatut('DONE')
+    def isInventoryDone(self):
+        result = (self.inventoried == 'DONE')
+        logging.getLogger().debug("isInventoryDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryInProgress(self):
+        self.setInventoryStatut('WORK_IN_PROGRESS')
+    def isInventoryRunning(self):
+        result = (self.inventoried == 'WORK_IN_PROGRESS')
+        logging.getLogger().debug("isInventoryRunning(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryToDo(self):
+        self.setInventoryStatut('TODO')
+    def isInventoryToDo(self):
+        result = (self.inventoried == 'TODO')
+        logging.getLogger().debug("isInventoryToDo(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setInventoryStatut(self, inventoried):
+        self.inventoried = inventoried
+        self.flush()
+
+    """
     def setInventoryFailed(self):
         self.setCommandStatut('inventory_failed')
     def isInventoryFailed(self):
@@ -201,19 +245,12 @@ class CommandsOnHost(object):
         result = (self.getCommandStatut() == 'inventory_in_progress')
         logging.getLogger().debug("isInventoryRunning(#%s): %s" % (self.getId(), result))
         return result
+    """
 ### /Handle inventory states ###
 
-
-### Handle wol states ###
-# FIXME: from current_state to "awoken"
-    def setLastWOLAttempt(self):
-        self.last_wol_attempt = datetime.datetime.now()
-        self.flush()
-    def getLastWOLAttempt(self):
-        return self.last_wol_attempt
-
+### Handle WOL states ###
     def isWOLImminent(self):
-        result = (self.isScheduled() and self.isInTimeSlot())
+        result = (self.isStateScheduled() and self.isInTimeSlot())
         logging.getLogger().debug("isWOLImminent(#%s): %s" % (self.getId(), result))
         return result
     def wasWOLPreviouslyRan(self):
@@ -221,12 +258,59 @@ class CommandsOnHost(object):
         logging.getLogger().debug("wasWOLPreviouslyRan(#%s): %s" % (self.getId(), result))
         return result
 
+    def setWOLIgnored(self):
+        self.setWOLStatut('IGNORED')
+    def isWOLIgnored(self):
+        result = (self.awoken == 'IGNORED')
+        logging.getLogger().debug("isWOLIgnored(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setWOLFailed(self):
+        self.setWOLStatut('FAILED')
+    def isWOLFailed(self):
+        result = (self.awoken == 'FAILED')
+        logging.getLogger().debug("isWOLFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setWOLDone(self):
+        self.setWOLStatut('DONE')
+    def isWOLDone(self):
+        result = (self.awoken == 'DONE')
+        logging.getLogger().debug("isWOLDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setWOLInProgress(self):
+        self.setWOLStatut('WORK_IN_PROGRESS')
+    def isWOLRunning(self):
+        result = (self.awoken == 'WORK_IN_PROGRESS')
+        logging.getLogger().debug("isWOLRunning(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setLastWOLAttempt(self):
+        self.last_wol_attempt = datetime.datetime.now()
+        self.flush()
+    def getLastWOLAttempt(self):
+        return self.last_wol_attempt
+
+    def setWOLToDo(self):
+        self.setWOLStatut('TODO')
+    def isWOLToDo(self):
+        result = (self.awoken == 'TODO')
+        logging.getLogger().debug("isWOLToDo(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setWOLStatut(self, awoken):
+        self.awoken = awoken
+        self.flush()
+
+    """
     def setWOLInProgress(self):
         self.setCommandStatut('wol_in_progress')
     def isWOLRunning(self):
         result = (self.getCommandStatut() == 'wol_in_progress')
         logging.getLogger().debug("isWOLRunning(#%s): %s" % (self.getId(), result))
         return result
+    """
 ### /Handle wol states ###
 
 ### Handle reboot states ###
@@ -312,46 +396,207 @@ class CommandsOnHost(object):
 ### /Handle halt states ###
 
 ### Handle general states ###
-    def setScheduled(self):
+    def setStateScheduled(self):
         self.setCommandStatut('scheduled')
-    def isScheduled(self):
-        result = (self.getCommandStatut() == 'scheduled')
-        logging.getLogger().debug("isScheduled(#%s): %s" % (self.getId(), result))
+    def isStateScheduled(self):
+        result = (self.getCommandStatut() == 'scheduled' or self.getCommandStatut() == 're_scheduled')
+        logging.getLogger().debug("isStateScheduled(#%s): %s" % (self.getId(), result))
         return result
 
-    def setDone(self):
+    def setStateDone(self):
         self.setCommandStatut('done')
         self.setEndDate() # final state: we may write the date down
-    def isDone(self):
+    def isStateDone(self):
         result = (self.getCommandStatut() == 'done')
-        logging.getLogger().debug("isDone(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateDone(#%s): %s" % (self.getId(), result))
         return result
 
-    def setFailed(self):
+    def setStateFailed(self):
         self.setCommandStatut('failed')
         self.setEndDate() # final state: we may write the date down
-    def isFailed(self):
+    def isStateFailed(self):
         result = (self.getCommandStatut() == 'failed')
-        logging.getLogger().debug("isFailed(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateFailed(#%s): %s" % (self.getId(), result))
         return result
 
-    def setStop(self):
+    def setStateStopped(self):
         self.setCommandStatut('stop')
-    def isStopped(self):
-        result = (self.getCommandStatut() == 'stop')
-        logging.getLogger().debug("isStopped(#%s): %s" % (self.getId(), result))
+    def isStateStopped(self):
+        result = (self.getCommandStatut() == 'stop' or self.getCommandStatut() == 'stopped')
+        logging.getLogger().debug("isStateStopped(#%s): %s" % (self.getId(), result))
         return result
 
-    def setPause(self):
+    def setStatePaused(self):
         self.setCommandStatut('pause')
-    def togglePause(self):
-        if self.isPaused():
-            self.setScheduled()
+    def isStatePaused(self):
+        result = (self.getCommandStatut() == 'pause' or self.getCommandStatut() == 'paused')
+        logging.getLogger().debug("isStatePaused(#%s): %s" % (self.getId(), result))
+        return result
+    def toggleStatePaused(self):
+        if self.isStatePaused():
+            self.setStateScheduled()
         else:
-            self.setPause()
-    def isPaused(self):
-        result = (self.getCommandStatut() == 'pause')
-        logging.getLogger().debug("isPaused(#%s): %s" % (self.getId(), result))
+            self.setStatePaused()
+
+    def setStateWolInProgress(self):
+        self.setCommandStatut('wol_in_progress')
+    def isStateWolInProgress(self):
+        result = (self.getCommandStatut() == 'wol_in_progress')
+        logging.getLogger().debug("isStateWolInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateWolDone(self):
+        self.setCommandStatut('wol_done')
+    def isStateWolDone(self):
+        result = (self.getCommandStatut() == 'wol_done')
+        logging.getLogger().debug("isStateWolDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateWolFailed(self):
+        self.setCommandStatut('wol_failed')
+    def isStateWolFailed(self):
+        result = (self.getCommandStatut() == 'wol_failed')
+        logging.getLogger().debug("isStateWolFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateUploadInProgress(self):
+        self.setCommandStatut('upload_in_progress')
+    def isStateUploadInProgress(self):
+        result = (self.getCommandStatut() == 'upload_in_progress')
+        logging.getLogger().debug("isStateUploadInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateUploadDone(self):
+        self.setCommandStatut('upload_done')
+    def isStateUploadDone(self):
+        result = (self.getCommandStatut() == 'upload_done')
+        logging.getLogger().debug("isStateUploadDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateUploadFailed(self):
+        self.setCommandStatut('upload_failed')
+    def isStateUploadFailed(self):
+        result = (self.getCommandStatut() == 'upload_failed')
+        logging.getLogger().debug("isStateUploadFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateExecutionInProgress(self):
+        self.setCommandStatut('execution_in_progress')
+    def isStateExecutionInProgress(self):
+        result = (self.getCommandStatut() == 'execution_in_progress')
+        logging.getLogger().debug("isStateExecutionInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateExecutionDone(self):
+        self.setCommandStatut('execution_done')
+    def isStateExecutionDone(self):
+        result = (self.getCommandStatut() == 'execution_done')
+        logging.getLogger().debug("isStateExecutionDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateExecutionFailed(self):
+        self.setCommandStatut('execution_failed')
+    def isStateExecutionFailed(self):
+        result = (self.getCommandStatut() == 'execution_failed')
+        logging.getLogger().debug("isStateExecutionFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateDeleteInProgress(self):
+        self.setCommandStatut('delete_in_progress')
+    def isStateDeleteInProgress(self):
+        result = (self.getCommandStatut() == 'delete_in_progress')
+        logging.getLogger().debug("isStateDeleteInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateDeleteDone(self):
+        self.setCommandStatut('delete_done')
+    def isStateDeleteDone(self):
+        result = (self.getCommandStatut() == 'delete_done')
+        logging.getLogger().debug("isStateDeleteDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateDeleteFailed(self):
+        self.setCommandStatut('delete_failed')
+    def isStateDeleteFailed(self):
+        result = (self.getCommandStatut() == 'delete_failed')
+        logging.getLogger().debug("isStateDeleteFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateInventoryInProgress(self):
+        self.setCommandStatut('inventory_in_progress')
+    def isStateInventoryInProgress(self):
+        result = (self.getCommandStatut() == 'inventory_in_progress')
+        logging.getLogger().debug("isStateInventoryInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateInventoryDone(self):
+        self.setCommandStatut('inventory_done')
+    def isStateInventoryDone(self):
+        result = (self.getCommandStatut() == 'inventory_done')
+        logging.getLogger().debug("isStateInventoryDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateInventoryFailed(self):
+        self.setCommandStatut('inventory_failed')
+    def isStateInventoryFailed(self):
+        result = (self.getCommandStatut() == 'inventory_failed')
+        logging.getLogger().debug("isStateInventoryFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateRebootInProgress(self):
+        self.setCommandStatut('reboot_in_progress')
+    def isStateRebootInProgress(self):
+        result = (self.getCommandStatut() == 'reboot_in_progress')
+        logging.getLogger().debug("isStateRebootInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateRebootDone(self):
+        self.setCommandStatut('reboot_done')
+    def isStateRebootDone(self):
+        result = (self.getCommandStatut() == 'reboot_done')
+        logging.getLogger().debug("isStateRebootDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateRebootFailed(self):
+        self.setCommandStatut('reboot_failed')
+    def isStateRebootFailed(self):
+        result = (self.getCommandStatut() == 'reboot_failed')
+        logging.getLogger().debug("isStateRebootFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateHaltInProgress(self):
+        self.setCommandStatut('halt_in_progress')
+    def isStateHaltInProgress(self):
+        result = (self.getCommandStatut() == 'halt_in_progress')
+        logging.getLogger().debug("isStateHaltInProgress(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateHaltDone(self):
+        self.setCommandStatut('halt_done')
+    def isStateHaltDone(self):
+        result = (self.getCommandStatut() == 'halt_done')
+        logging.getLogger().debug("isStateHaltDone(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateHaltFailed(self):
+        self.setCommandStatut('halt_failed')
+    def isStateHaltFailed(self):
+        result = (self.getCommandStatut() == 'halt_failed')
+        logging.getLogger().debug("isStateHaltFailed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateOverTimed(self):
+        self.setCommandStatut('over_timed')
+    def isStateOverTimed(self):
+        result = (self.getCommandStatut() == 'over_timed')
+        logging.getLogger().debug("isStateOverTimed(#%s): %s" % (self.getId(), result))
+        return result
+
+    def setStateUnreachable(self):
+        self.setCommandStatut('not_reachable')
+    def isStateUnreachable(self):
+        result = (self.getCommandStatut() == 'not_reachable')
+        logging.getLogger().debug("isStateUnreachable(#%s): %s" % (self.getId(), result))
         return result
 
     def setCommandStatut(self, current_state):
@@ -406,18 +651,18 @@ class CommandsOnHost(object):
         """ Reschedule when something went wrong """
         if decrement:
             if self.attempts_left < 1: # no attempts left
-                self.setFailed()
+                self.setStateFailed()
                 return # nothing more to do, give up
             elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
                 self.attempts_left -= 1
                 self.flush()
-                self.setFailed()
+                self.setStateFailed()
                 return # nothing more to do, give up
             else: # reschedule in other cases
                 self.attempts_left -= 1
         self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
         self.flush()
-        self.setScheduled()
+        self.setStateScheduled()
 
     def switchToUploadFailed(self, delay = 0, decrement = True):
         """
@@ -590,7 +835,7 @@ def startCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
-    myCommandOnHost.setScheduled()
+    myCommandOnHost.setStateScheduled()
     myCommandOnHost.next_launch_date = "0000-00-00 00:00:00"
     myCommandOnHost.flush()
 
@@ -598,7 +843,7 @@ def stopCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
-    myCommandOnHost.setStop()
+    myCommandOnHost.setStateStopped()
     if myCommandOnHost.isUploadRunning():
         myCommandOnHost.setUploadFailed()
     if myCommandOnHost.isExecutionRunning():
@@ -612,5 +857,5 @@ def togglePauseCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
-    myCommandOnHost.togglePause()
+    myCommandOnHost.togglePaused()
 
