@@ -293,10 +293,19 @@ class CommandHistory {
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
-            if (($hist['state'] == 'execution_failed') && ($hist['error_code'] == '255')) {
-                /* When SSH returns 255, an error occured while connecting to
-                   the host. */
-                $hist['stderr'][] = _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc');
+            if ($hist['state'] == 'execution_failed') {
+                $msgs = array(
+                              /* When SSH returns 255, an error occured while
+                                 connecting to the host. */
+                              255 => _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc'),
+                              /* Known exit codes */
+                              128 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
+                              128 + 2 => _T("The current host IP address doesn't match the IP address from the inventory database.", 'msc'),
+                              128 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc')
+                              );
+                if (array_key_exists($hist['error_code'], $msgs)) {
+                    $hist['stderr'][] = $msgs[$hist['error_code']];
+                }
             }
             $raw_errors = array_map('_colorise', array_filter($hist["stderr"]));
             $purge_errors = array();
