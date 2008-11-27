@@ -45,6 +45,14 @@ function start_a_command($proxy = array()) {
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $post[$param];
     }
+    $halt_to = array();
+    foreach ($post as $p=>$v) {
+        if (preg_match('/^issue_halt_to_/', $p)) {
+            $p = preg_replace('/^issue_halt_to_/', '', $p);
+            $halt_to[] = $p;
+        }
+    }
+    $params['issue_halt_to'] = $halt_to;
     $p_api = new ServerAPI();
     $p_api->fromURI($post['papi']);
 
@@ -164,6 +172,12 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement(_T('Reboot client after a successful deletion', 'msc'),   new CheckboxTpl("do_reboot")), array("value" => $_GET['do_reboot'] == 'on' ? 'checked' : ''));
+
+    $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_GET['issue_halt_to_done'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_GET['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));
+
     $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
     $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
     $f->add(new TrFormElement(_T('The command may start after', 'msc'),                 new DynamicDateTpl('start_date')), array('ask_for_now' => 1));

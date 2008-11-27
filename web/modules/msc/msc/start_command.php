@@ -47,6 +47,15 @@ if (isset($_POST["bconfirm"])) {
     foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
+    
+    $halt_to = array();
+    foreach ($_POST as $p=>$v) {
+        if (preg_match('/^issue_halt_to_/', $p)) {
+            $p = preg_replace('/^issue_halt_to_/', '', $p);
+            $halt_to[] = $p;
+        }
+    }
+    $params['issue_halt_to'] = $halt_to;
 
     $hostname = $_POST['hostname'];
     $uuid = $_POST['uuid'];
@@ -76,7 +85,7 @@ if (isset($_POST["badvanced"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals') as $param) {
+    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals', 'issue_halt_to_done', 'issue_halt_to_failed', 'issue_halt_to_over_time', 'issue_halt_to_out_of_interval') as $param) {
         $params[$param] = $_POST[$param];
     }
     $prefix = '';
@@ -129,6 +138,10 @@ $f->add(new HiddenTpl("max_connection_attempt"),                array("value" =>
 $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
 $f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));
 $f->add(new HiddenTpl("deployment_intervals"),                  array("value" => web_def_deployment_intervals(),    "hide" => True));
+$halt = web_def_issue_halt_to();
+foreach ($halt as $h) {
+    $f->add(new HiddenTpl("issue_halt_to_".$h),                 array("value" => 'on',                              "hide" => True));
+}
 
 $check = new TrFormElement(_T('awake', 'msc'), new CheckboxTpl("do_wol"));
 $f->add($check,                                                 array("value" => web_def_awake() ? "checked" : ""));

@@ -159,6 +159,12 @@ class Command {
     }
 }
 
+function my_convert($str) {
+    return _T($str, 'msc');
+}
+function i18nparts($str) {
+    return implode(', ', array_map('my_convert', explode(',', $str)));
+}
 class CommandHistory {
     function CommandHistory($coh_id) {
         // TODO : ch is a list, we have to chose the good one (ie : the most recent date)
@@ -222,6 +228,10 @@ class CommandHistory {
         // gettext obfucation
         _T('enable', 'msc');
         _T('disable', 'msc');
+        _T('done', 'msc');
+        _T('failed', 'msc');
+        _T('over_time', 'msc');
+        _T('out_of_interval', 'msc');
         $static_values = array(
             array(_T('Command state', 'msc'),                                   $state),
             array('',                                                           ''),
@@ -235,6 +245,7 @@ class CommandHistory {
             array(_T('Execute command line ?', 'msc'),                          _T($this->db_cmd['start_script'], 'msc')),
             array(_T('Delete files after a successful execution ?', 'msc'),     _T($this->db_cmd['clean_on_success'], 'msc')),
             array(_T('Do an inventory after a successful execution ?', 'msc'),  _T($this->db_cmd['do_inventory'], 'msc')),
+            array(_T('Halt client after :', 'msc'),                             i18nparts($this->db_cmd['do_halt'])),
             array(_T('Reboot client after a successful deletion ?', 'msc'),     _T($this->db_cmd['do_reboot'], 'msc')),
             array('',                                                           ''),
             array(_T('Remaining connection attempts', 'msc'),                   $this->db_coh['attempts_left']),

@@ -48,6 +48,10 @@ function web_def_mode() {
     return __web_def_in_session("mode");
 }
 
+function web_def_issue_halt_to() {
+    return __web_def_in_session("issue_halt_to");
+}
+
 function web_force_mode() {
     return __web_def_in_session("force_mode");
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-13 10:48+0200\n"
+"POT-Creation-Date: 2008-08-16 16:31+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -21,12 +21,12 @@ msgstr ""
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
 
-#: msc/includes/command_history.php:216
+#: msc/includes/command_history.php:222
 #, fuzzy, php-format
 msgid "%s %s"
 msgstr "%s na %s"
 
-#: msc/includes/command_history.php:218
+#: msc/includes/command_history.php:224
 #, php-format
 msgid "%s <i>(no additionnal parameter given)</i>"
 msgstr ""
@@ -187,44 +187,44 @@ msgstr ""
 msgid "<b>One</b> package installation was successful"
 msgstr ""
 
-#: msc/includes/command_history.php:211
+#: msc/includes/command_history.php:217
 #, fuzzy
 msgid "<i>as soon as possible</i>"
 msgstr "Tka szybko, jak tylko możliwe"
 
-#: msc/includes/command_history.php:193
+#: msc/includes/command_history.php:199
 msgid "<i>forever</i>"
 msgstr ""
 
-#: msc/includes/command_history.php:188
+#: msc/includes/command_history.php:194
 #, php-format
 msgid "<i>from</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:186
+#: msc/includes/command_history.php:192
 #, php-format
 msgid "<i>from</i> %s <i>to</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:220 msc/includes/command_history.php:241
+#: msc/includes/command_history.php:226 msc/includes/command_history.php:252
 msgid "<i>not set</i>"
 msgstr ""
 
-#: msc/includes/command_history.php:229
+#: msc/includes/command_history.php:239
 #, php-format
 msgid "<i>on</i> %s <i>by</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:191
+#: msc/includes/command_history.php:197
 #, php-format
 msgid "<i>to</i> %s"
 msgstr ""
 
-#: msc/includes/command_history.php:366
+#: msc/includes/command_history.php:404
 msgid "<i>undefined</i>"
 msgstr ""
 
-#: msc/includes/command_history.php:198 msc/includes/command_history.php:203
+#: msc/includes/command_history.php:204 msc/includes/command_history.php:209
 msgid "<i>whole day</i>"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Actions in bundle"
 msgstr ""
 
-#: msc/msc/start_command.php:140
+#: msc/msc/start_command.php:152
 msgid "Advanced"
 msgstr "Zaawansowane"
 
@@ -254,7 +254,7 @@ msgstr "Zatrzymaj akcje %s na hoście %s"
 msgid "All users commands"
 msgstr "Pauzuj polecenie"
 
-#: msc/logs/ajaxLogsFilter.php:92 msc/includes/command_history.php:360
+#: msc/logs/ajaxLogsFilter.php:92 msc/includes/command_history.php:398
 msgid "As soon as possible"
 msgstr "Tka szybko, jak tylko możliwe"
 
@@ -314,12 +314,13 @@ msgstr "Polecenie %s określające stan <b>%s</b> komputerów"
 msgid "Command expiry date"
 msgstr "Czas wygaśnięcia polecenia"
 
-#: msc/includes/command_history.php:232
+#: msc/includes/command_history.php:242
 #, fuzzy
 msgid "Command line to run"
 msgstr "Nastepne uruchomienie polecenia"
 
-#: msc/includes/command_history.php:108 msc/includes/command_history.php:228
+#: msc/msc/launch.php:168 msc/includes/command_history.php:108
+#: msc/includes/command_history.php:238
 msgid "Command name"
 msgstr "Nazwa polecenia"
 
@@ -331,12 +332,12 @@ msgstr "Parametry polecenia"
 msgid "Command start date"
 msgstr "Data uruchomienia polecenia"
 
-#: msc/includes/command_history.php:226
+#: msc/includes/command_history.php:236
 #, fuzzy
 msgid "Command state"
 msgstr "Stan polecenia"
 
-#: msc/infoPackage.inc.php:160
+#: msc/infoPackage.inc.php:148
 msgid "Command status"
 msgstr "Stan polecenia"
 
@@ -350,11 +351,11 @@ msgstr "Wykonanie nieudane"
 msgid "Connection failed !"
 msgstr "Wykonanie nieudane"
 
-#: msc/includes/bundle_widgets.php:342
+#: msc/msc/launch.php:194 msc/includes/bundle_widgets.php:342
 msgid "Copy Mode"
 msgstr "Tryb kopiowania"
 
-#: msc/includes/command_history.php:229
+#: msc/includes/command_history.php:239
 #, fuzzy
 msgid "Creation"
 msgstr "Data utworzenia"
@@ -363,7 +364,7 @@ msgstr "Data utworzenia"
 msgid "Creation date"
 msgstr "Data utworzenia"
 
-#: msc/infoPackage.inc.php:217
+#: msc/infoPackage.inc.php:205
 msgid "Csv's export"
 msgstr "Export csv"
 
@@ -371,7 +372,7 @@ msgstr "Export csv"
 msgid "Date"
 msgstr "Data"
 
-#: msc/includes/command_history.php:241
+#: msc/includes/command_history.php:252
 #, fuzzy
 msgid "Delay between two attempts (minutes)"
 msgstr "Opóźnienie między połączeniami"
@@ -379,6 +380,11 @@ msgstr "Opóźnienie między połączeniami"
 #: msc/includes/command_history.php:116
 msgid "Delay between two connections"
 msgstr "Opóźnienie między 2 połączeniami"
+
+#: msc/msc/launch.php:182
+#, fuzzy
+msgid "Delay between two connections (minutes)"
+msgstr "Opóźnienie między połączeniami"
 
 #: msc/includes/bundle_widgets.php:326
 #, fuzzy
@@ -398,11 +404,11 @@ msgstr "Usuwanie nieudane"
 msgid "Delete file"
 msgstr "Usuwanie nieudane"
 
-#: msc/includes/bundle_widgets.php:324
+#: msc/msc/launch.php:172 msc/includes/bundle_widgets.php:324
 msgid "Delete files after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
 
-#: msc/includes/command_history.php:236
+#: msc/includes/command_history.php:246
 #, fuzzy
 msgid "Delete files after a successful execution ?"
 msgstr "Usuń pliki po zakończeniu wykonywania"
@@ -411,16 +417,17 @@ msgstr "Usuń pliki po zakończeniu wykonywania"
 msgid "Delete in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/msc/start_command.php:109
+#: msc/msc/start_command.php:118
 #, php-format
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Wdroż  <b>%s w.%s</b><br/> na <b>%s</b>"
 
-#: msc/includes/bundle_widgets.php:347
+#: msc/msc/launch.php:199 msc/includes/bundle_widgets.php:347
 msgid "Deploy using a local proxy"
 msgstr ""
 
-#: msc/includes/command_history.php:231 msc/includes/bundle_widgets.php:331
+#: msc/msc/launch.php:185 msc/includes/command_history.php:241
+#: msc/includes/bundle_widgets.php:331
 msgid "Deployment interval"
 msgstr ""
 
@@ -433,7 +440,12 @@ msgstr ""
 msgid "Details"
 msgstr "Szczegóły"
 
-#: msc/includes/command_history.php:237
+#: msc/msc/launch.php:173
+#, fuzzy
+msgid "Do an inventory after a successful execution"
+msgstr "Usuń pliki po zakończeniu wykonywania"
+
+#: msc/includes/command_history.php:247
 #, fuzzy
 msgid "Do an inventory after a successful execution ?"
 msgstr "Usuń pliki po zakończeniu wykonywania"
@@ -447,11 +459,11 @@ msgstr "Zrobione"
 msgid "Download file"
 msgstr "Wysyłanie nieudane"
 
-#: msc/infoPackage.inc.php:117
+#: msc/infoPackage.inc.php:105
 msgid "Download file from a computer"
 msgstr ""
 
-#: msc/msc/download_file.php:33 msc/infoPackage.inc.php:212
+#: msc/msc/download_file.php:33 msc/infoPackage.inc.php:200
 msgid "Download file page"
 msgstr ""
 
@@ -467,7 +479,13 @@ msgstr "Data zakończenia"
 msgid "End of validity"
 msgstr ""
 
-#: msc/infoPackage.inc.php:135
+#: msc/includes/command_history.php:311
+msgid ""
+"Error while connecting to secure agent on this host. Please check network "
+"connectivity, and that the secure agent is installed on this host."
+msgstr ""
+
+#: msc/infoPackage.inc.php:123
 msgid "Establish a VNC connection"
 msgstr ""
 
@@ -479,7 +497,7 @@ msgstr ""
 msgid "Execute action..."
 msgstr "Wykonaj akcje"
 
-#: msc/includes/command_history.php:235
+#: msc/includes/command_history.php:245
 #, fuzzy
 msgid "Execute command line ?"
 msgstr "Wykonanie zakończone"
@@ -504,7 +522,7 @@ msgstr "Wykonanie nieudane"
 msgid "Execution in progress"
 msgstr "W trakcie wykonywania"
 
-#: msc/includes/command_history.php:342
+#: msc/includes/command_history.php:380
 #, fuzzy, php-format
 msgid "Exit code : %s"
 msgstr "Kod zakońćzenia to: %s"
@@ -521,8 +539,21 @@ msgstr ""
 msgid "From computer"
 msgstr ""
 
-#: msc/infoPackage.inc.php:129
+#: msc/infoPackage.inc.php:117
 msgid "Get a downloaded file"
+msgstr ""
+
+#: msc/msc/launch.php:158
+#, fuzzy, php-format
+msgid "Group Advanced launch : action \"%s\" on \"%s\""
+msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
+
+#: msc/msc/launch.php:176
+msgid "Halt client after"
+msgstr ""
+
+#: msc/includes/command_history.php:248
+msgid "Halt client after :"
 msgstr ""
 
 #: msc/msc/tabs.php:48 msc/msc/tabs.php:64
@@ -533,7 +564,7 @@ msgstr "Historia"
 msgid "Host"
 msgstr "Host"
 
-#: msc/infoPackage.inc.php:207
+#: msc/infoPackage.inc.php:195
 msgid "IP Addr."
 msgstr "Adr IP"
 
@@ -570,11 +601,11 @@ msgstr "Akcje Uruchaiania"
 msgid "Launch Bundle"
 msgstr "Uruchom"
 
-#: msc/infoPackage.inc.php:171
+#: msc/infoPackage.inc.php:159
 msgid "Launch a command"
 msgstr "Wykonaj polecenie"
 
-#: msc/infoPackage.inc.php:177
+#: msc/infoPackage.inc.php:165
 msgid "Launch a quick action command"
 msgstr "Wykonaj polecenie szybkeij akcji"
 
@@ -590,7 +621,7 @@ msgstr ""
 msgid "Logs"
 msgstr "Logi"
 
-#: msc/infoPackage.inc.php:202
+#: msc/infoPackage.inc.php:190
 msgid "MAC Addr."
 msgstr "Adr MAC"
 
@@ -599,42 +630,30 @@ msgstr "Adr MAC"
 msgid "MSC bundle tab for a group"
 msgstr "Zakładka wykonywania MSC"
 
-#: msc/infoPackage.inc.php:106
+#: msc/infoPackage.inc.php:94
 #, fuzzy
 msgid "MSC bundle tab for a machine"
 msgstr "Zakładka wykonywania MSC"
-
-#: msc/infoPackage.inc.php:88
-msgid "MSC bundle tab for a machine in a group"
-msgstr ""
 
 #: msc/infoPackage.inc.php:82
 #, fuzzy
 msgid "MSC history tab for a group"
 msgstr "Zakładka Histori MSC"
 
-#: msc/infoPackage.inc.php:112
+#: msc/infoPackage.inc.php:100
 #, fuzzy
 msgid "MSC history tab for a machine"
 msgstr "Zakładka Histori MSC"
-
-#: msc/infoPackage.inc.php:94
-msgid "MSC history tab for a machine in a group"
-msgstr ""
 
 #: msc/infoPackage.inc.php:73
 #, fuzzy
 msgid "MSC launch tab for a group"
 msgstr "Zakładka wykonywania MSC"
 
-#: msc/infoPackage.inc.php:103
+#: msc/infoPackage.inc.php:91
 #, fuzzy
 msgid "MSC launch tab for a machine"
 msgstr "Zakładka wykonywania MSC"
-
-#: msc/infoPackage.inc.php:85
-msgid "MSC launch tab for a machine in a group"
-msgstr ""
 
 #: msc/infoPackage.inc.php:39
 msgid "MSC logs"
@@ -645,21 +664,17 @@ msgstr ""
 msgid "MSC logs tab for a group"
 msgstr "Zakładka logów MSC"
 
-#: msc/infoPackage.inc.php:109
+#: msc/infoPackage.inc.php:97
 #, fuzzy
 msgid "MSC logs tab for a machine"
 msgstr "Zakładka logów MSC"
 
-#: msc/infoPackage.inc.php:91
-msgid "MSC logs tab for a machine in a group"
-msgstr ""
-
-#: msc/includes/bundle_widgets.php:332
+#: msc/msc/launch.php:186 msc/includes/bundle_widgets.php:332
 #, fuzzy
 msgid "Max bandwidth (b/s)"
 msgstr "Maksymalna przepustowość"
 
-#: msc/includes/bundle_widgets.php:327
+#: msc/msc/launch.php:181 msc/includes/bundle_widgets.php:327
 msgid "Maximum number of connection attempt"
 msgstr "Maksymalna liczba prób połączenia"
 
@@ -673,16 +688,16 @@ msgid "N/A"
 msgstr "N/D"
 
 #: msc/msc/package_detail.php:39 msc/includes/command_history.php:46
-#: msc/includes/command_history.php:130 msc/includes/command_history.php:248
+#: msc/includes/command_history.php:130 msc/includes/command_history.php:259
 msgid "Name"
 msgstr "Nazwa"
 
-#: msc/includes/command_history.php:357
+#: msc/includes/command_history.php:395
 #, fuzzy
 msgid "Never"
 msgstr "nigdy"
 
-#: msc/includes/command_history.php:242
+#: msc/includes/command_history.php:253
 msgid "Next attempt"
 msgstr ""
 
@@ -715,7 +730,7 @@ msgstr "Opakowanie"
 msgid "Package size"
 msgstr "Rozmiwa opakowania"
 
-#: msc/msc/packages.php:7 msc/infoPackage.inc.php:182
+#: msc/msc/packages.php:7 msc/infoPackage.inc.php:170
 msgid "Packages"
 msgstr "Pakiety"
 
@@ -724,7 +739,7 @@ msgstr "Pakiety"
 msgid "Pause"
 msgstr "Pauza"
 
-#: msc/infoPackage.inc.php:148
+#: msc/infoPackage.inc.php:136
 msgid "Pause a command"
 msgstr "Pauzuj polecenie"
 
@@ -733,19 +748,19 @@ msgstr "Pauzuj polecenie"
 msgid "Pause action %s on host %s"
 msgstr "Pauzuj akcję %s na hoście %s"
 
-#: msc/infoPackage.inc.php:192
+#: msc/infoPackage.inc.php:180
 msgid "Ping"
 msgstr "Ping"
 
-#: msc/infoPackage.inc.php:187
+#: msc/infoPackage.inc.php:175
 msgid "Ping and probe"
 msgstr "Pinguj i sprawdzaj"
 
-#: msc/infoPackage.inc.php:197
+#: msc/infoPackage.inc.php:185
 msgid "Platform"
 msgstr "Platforma"
 
-#: msc/infoPackage.inc.php:142
+#: msc/infoPackage.inc.php:130
 msgid "Play a command"
 msgstr "Odtwórz polecenie"
 
@@ -783,7 +798,12 @@ msgstr "Scieżka szybkiej akcji na %s nie isntnieje"
 msgid "Ready"
 msgstr ""
 
-#: msc/includes/command_history.php:238
+#: msc/msc/launch.php:174
+#, fuzzy
+msgid "Reboot client after a successful deletion"
+msgstr "Usuń pliki po zakończeniu wykonywania"
+
+#: msc/includes/command_history.php:249
 #, fuzzy
 msgid "Reboot client after a successful deletion ?"
 msgstr "Usuń pliki po zakończeniu wykonywania"
@@ -803,7 +823,7 @@ msgstr "Usuwanie nieudane"
 msgid "Reboot in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/includes/command_history.php:240
+#: msc/includes/command_history.php:251
 #, fuzzy
 msgid "Remaining connection attempts"
 msgstr "Pozostałe próby"
@@ -812,7 +832,7 @@ msgstr "Pozostałe próby"
 msgid "Remote control of :"
 msgstr "Zdalne sterowanie:"
 
-#: msc/infoPackage.inc.php:123
+#: msc/infoPackage.inc.php:111
 msgid "Remove a downloaded file"
 msgstr ""
 
@@ -828,6 +848,11 @@ msgstr "Przeniesione na"
 msgid "Scheduled"
 msgstr "Zaplanowane na"
 
+#: msc/msc/launch.php:169
+#, fuzzy
+msgid "Script parameters"
+msgstr "Parametry polecenia"
+
 #: msc/infoPackage.inc.php:33
 msgid "Secure Control"
 msgstr "Bezpieczna kontrola"
@@ -837,7 +862,7 @@ msgstr "Bezpieczna kontrola"
 msgid "Secure control on a group of computers"
 msgstr "Bezpieczna kontrola całej grupy maszyn "
 
-#: msc/infoPackage.inc.php:99
+#: msc/infoPackage.inc.php:87
 #, fuzzy
 msgid "Secure control on computer"
 msgstr "Bezpieczna kontrola maszyny "
@@ -883,7 +908,7 @@ msgstr "Pokaż logi stanu własnych zadań"
 msgid "Show finished task's logs"
 msgstr "Pokaż logi zakończoncyh zadań"
 
-#: msc/infoPackage.inc.php:165
+#: msc/infoPackage.inc.php:153
 msgid "Show package's details"
 msgstr "Pokaż szczegóły pakietu"
 
@@ -895,11 +920,17 @@ msgstr "Pokaż logi zadań oczekujących"
 msgid "Show running task's logs"
 msgstr "Pokaż logi trwających zadań"
 
+#: msc/msc/launch.php:149
+#, fuzzy, php-format
+msgid "Single advanced launch : action \"%s\" on \"%s\""
+msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
+
 #: msc/msc/ajaxLogsFilter.php:81 msc/logs/ajaxLogsFilter.php:65
 msgid "Start"
 msgstr "Start"
 
-#: msc/includes/command_history.php:115 msc/includes/command_history.php:234
+#: msc/msc/launch.php:170 msc/includes/command_history.php:115
+#: msc/includes/command_history.php:244
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Uruchom zapytanie \"Wake On Lan\" jeżeli nie uda się połączyć"
 
@@ -934,6 +965,11 @@ msgstr "Rozpocznij inwentaryzację"
 msgid "Start inventory agent"
 msgstr "Rozpocznij agenta inwentaryzacji"
 
+#: msc/msc/launch.php:171
+#, fuzzy
+msgid "Start script"
+msgstr "Rozpocznik skrypt"
+
 #: msc/includes/bundle_widgets.php:323
 msgid "Start the script"
 msgstr "Rozpocznik skrypt"
@@ -956,7 +992,7 @@ msgstr "Zatrzymaj akcje %s na hoście %s"
 msgid "Stop %s %s on this group"
 msgstr "Zatrzymaj akcje %s na hoście %s"
 
-#: msc/infoPackage.inc.php:154
+#: msc/infoPackage.inc.php:142
 msgid "Stop a command"
 msgstr "Zatrzymaj polecenie"
 
@@ -964,6 +1000,34 @@ msgstr "Zatrzymaj polecenie"
 #, fuzzy
 msgid "Stopped"
 msgstr "Stop"
+
+#: msc/msc/launch.php:183
+#, fuzzy
+msgid "The command may start after"
+msgstr "Data uruchomienia polecenia"
+
+#: msc/msc/launch.php:184
+#, fuzzy
+msgid "The command must stop before"
+msgstr "Data uruchomienia polecenia"
+
+#: msc/includes/command_history.php:314
+msgid ""
+"The current host IP address doesn't match the IP address from the inventory "
+"database."
+msgstr ""
+
+#: msc/includes/command_history.php:315
+msgid ""
+"The current host MAC address doesn't match the MAC address from the "
+"inventory database."
+msgstr ""
+
+#: msc/includes/command_history.php:313
+msgid ""
+"The current host name doesn't match the host name from the inventory "
+"database."
+msgstr ""
 
 #: msc/msc/download_file.php:45 msc/msc/download_file_get.php:28
 msgid "The download has failed."
@@ -1000,11 +1064,11 @@ msgstr ""
 msgid "To do"
 msgstr ""
 
-#: msc/includes/command_history.php:263
+#: msc/includes/command_history.php:274
 msgid "Transferred files list"
 msgstr "Lista przeniesionych plików"
 
-#: msc/includes/command_history.php:255
+#: msc/includes/command_history.php:266
 msgid "Transferred files list empty."
 msgstr "Lista przeniesionych plików jest pusta"
 
@@ -1024,12 +1088,12 @@ msgstr "W trakcie wysyłania"
 msgid "User command creator"
 msgstr "Twórca poleceń użytkownika"
 
-#: msc/includes/command_history.php:230
+#: msc/includes/command_history.php:240
 msgid "Validity period"
 msgstr ""
 
 #: msc/msc/package_detail.php:40 msc/includes/command_history.php:47
-#: msc/includes/command_history.php:131 msc/includes/command_history.php:249
+#: msc/includes/command_history.php:131 msc/includes/command_history.php:260
 msgid "Value"
 msgstr "Wartość"
 
@@ -1061,7 +1125,7 @@ msgstr "Wake on lan"
 msgid "Work in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/includes/command_history.php:310
+#: msc/includes/command_history.php:348
 msgid "Y-m-d H:i:s"
 msgstr "R-m-d.G:i.s"
 
@@ -1079,7 +1143,7 @@ msgstr "Akcje Uruchaiania"
 msgid "are"
 msgstr ""
 
-#: msc/msc/start_command.php:134 msc/includes/bundle_widgets.php:281
+#: msc/msc/start_command.php:146 msc/includes/bundle_widgets.php:281
 msgid "awake"
 msgstr "budź"
 
@@ -1088,7 +1152,7 @@ msgstr "budź"
 msgid "bundle"
 msgstr "Uruchom"
 
-#: msc/includes/command_history.php:236
+#: msc/includes/command_history.php:246
 msgid "clean_on_success"
 msgstr ""
 
@@ -1121,24 +1185,29 @@ msgstr "obecny_stan"
 msgid "deleted"
 msgstr "usunięto"
 
-#: msc/includes/command_history.php:224
+#: msc/includes/command_history.php:230
 msgid "disable"
 msgstr ""
 
-#: msc/includes/command_history.php:237
+#: msc/includes/command_history.php:247
 #, fuzzy
 msgid "do_inventory"
 msgstr "Rozpocznij inwentaryzację"
 
-#: msc/includes/command_history.php:238
+#: msc/includes/command_history.php:249
 msgid "do_reboot"
 msgstr ""
 
-#: msc/includes/command_history.php:234
+#: msc/includes/command_history.php:244
 msgid "do_wol"
 msgstr ""
 
-#: msc/includes/command_history.php:223
+#: msc/msc/launch.php:176 msc/includes/command_history.php:231
+#, fuzzy
+msgid "done"
+msgstr "Zrobione"
+
+#: msc/includes/command_history.php:229
 msgid "enable"
 msgstr ""
 
@@ -1155,6 +1224,11 @@ msgstr "wykonano"
 #, fuzzy
 msgid "executing"
 msgstr "wykonano"
+
+#: msc/msc/launch.php:177 msc/includes/command_history.php:232
+#, fuzzy
+msgid "failed"
+msgstr "Usuwanie nieudane"
 
 #: msc/msc/statuscsv.php:43 msc/msc/msctabsstatus.php:108
 msgid "failed during execution"
@@ -1185,7 +1259,7 @@ msgstr ""
 msgid "have"
 msgstr ""
 
-#: msc/msc/start_command.php:136 msc/includes/bundle_widgets.php:283
+#: msc/msc/start_command.php:148 msc/includes/bundle_widgets.php:283
 msgid "invent."
 msgstr "inwent."
 
@@ -1193,11 +1267,35 @@ msgstr "inwent."
 msgid "is"
 msgstr ""
 
-#: msc/includes/bundle_widgets.php:339
+#: msc/msc/launch.php:62
+msgid "never"
+msgstr "nigdy"
+
+#: msc/msc/launch.php:60
+msgid "now"
+msgstr "teraz"
+
+#: msc/msc/launch.php:179
+msgid "out of interval"
+msgstr ""
+
+#: msc/includes/command_history.php:234
+msgid "out_of_interval"
+msgstr ""
+
+#: msc/msc/launch.php:178
+msgid "over time"
+msgstr ""
+
+#: msc/includes/command_history.php:233
+msgid "over_time"
+msgstr ""
+
+#: msc/msc/launch.php:191 msc/includes/bundle_widgets.php:339
 msgid "push"
 msgstr "pchnij"
 
-#: msc/includes/bundle_widgets.php:339
+#: msc/msc/launch.php:191 msc/includes/bundle_widgets.php:339
 msgid "push / pull"
 msgstr "pchnij / pobierz"
 
@@ -1217,7 +1315,7 @@ msgstr "w trakcie wysyłania"
 msgid "start_date"
 msgstr "data_rozpoczęcia"
 
-#: msc/includes/command_history.php:235
+#: msc/includes/command_history.php:245
 #, fuzzy
 msgid "start_script"
 msgstr "Rozpocznik skrypt"
@@ -1297,20 +1395,8 @@ msgstr "oczekiwanie na wysłanie"
 #~ msgstr "Tytuł polecenia"
 
 #, fuzzy
-#~ msgid "Delay between two connections (minutes)"
-#~ msgstr "Opóźnienie między połączeniami"
-
-#, fuzzy
 #~ msgid "Delay betwen connections (minuts)"
 #~ msgstr "Opóźnienie między połączeniami"
-
-#, fuzzy
-#~ msgid "Do an inventory after a successful execution"
-#~ msgstr "Usuń pliki po zakończeniu wykonywania"
-
-#, fuzzy
-#~ msgid "Group Advanced launch : action \"%s\" on \"%s\""
-#~ msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 
 #~ msgid "MSC"
 #~ msgstr "MSC"
@@ -1320,40 +1406,14 @@ msgstr "oczekiwanie na wysłanie"
 #~ msgstr "Wykonanie zakończone"
 
 #, fuzzy
-#~ msgid "Reboot client after a successful deletion"
-#~ msgstr "Usuń pliki po zakończeniu wykonywania"
-
-#, fuzzy
-#~ msgid "Script parameters"
-#~ msgstr "Parametry polecenia"
-
-#, fuzzy
-#~ msgid "Single advanced launch : action \"%s\" on \"%s\""
-#~ msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
-
-#, fuzzy
-#~ msgid "Start script"
-#~ msgstr "Rozpocznik skrypt"
-
-#, fuzzy
 #~ msgid "Start script ?"
 #~ msgstr "Rozpocznik skrypt"
-
-#, fuzzy
-#~ msgid "The command may start after"
-#~ msgstr "Data uruchomienia polecenia"
 
 #~ msgid "These packages can be installed on machine \"%s\""
 #~ msgstr "Te pakiety można zainstalować na maszynie \"%s\""
 
 #~ msgid "mode"
 #~ msgstr "tryb"
-
-#~ msgid "never"
-#~ msgstr "nigdy"
-
-#~ msgid "now"
-#~ msgstr "teraz"
 
 #~ msgid "p/p"
 #~ msgstr "p/p"
