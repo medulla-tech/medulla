@@ -478,7 +478,7 @@ class MscDatabase(Singleton):
         # Rebuild the targets list, and get computers data
         tmp = []
         targetsdata = []
-        for computer in computers.values():
+        for computer in computers:
             if 'fullname' in computer[1]:
                 hostname = computer[1]['fullname']
             else:

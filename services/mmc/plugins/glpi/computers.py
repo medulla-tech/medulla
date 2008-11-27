@@ -54,7 +54,7 @@ class GlpiComputers(ComputerI):
             raise e
 
     def getComputersNetwork(self, ctx, params):
-        return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] })
+        return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values()
     
     def getMachineMac(self, ctx, params):
         return self.getMachineMac(params['uuid'])
