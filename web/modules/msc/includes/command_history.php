@@ -283,6 +283,7 @@ class CommandHistory {
                 $staticon = history_stat2icon($hist['state']);
             }
             $history = '<img style="vertical-align: middle;" alt="'.$hist['state'].'" src="modules/msc/graph/images/status/'.$staticon.'"/> '.date("Y-m-d H:i:s", $hist['date']).': <b>'.$statusTable[$hist['state']].'</b>';
+            /* Split lines in stdout and stderr */
             if (gettype($hist["stdout"]) != 'array')
                 $hist["stdout"] = split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
@@ -291,6 +292,11 @@ class CommandHistory {
                 !(count($hist["stdout"]) == 1 && $hist["stdout"][0] == '')
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
+            }
+            if (($hist['state'] == 'execution_failed') && ($hist['error_code'] == '255')) {
+                /* When SSH returns 255, an error occured while connecting to
+                   the host. */
+                $hist['stderr'][] = _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc');
             }
             $raw_errors = array_map('_colorise', array_filter($hist["stderr"]));
             $purge_errors = array();
