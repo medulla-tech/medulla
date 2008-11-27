@@ -858,7 +858,7 @@ def runExecutionPhase(myCommandOnHostID):
 
     if myC.isQuickAction(): # should be a standard script
         myCoH.setExecutionInProgress()
-        myCoH.setCommandStatut('execution_in_progress')
+        myCoH.setStateExecutionInProgress()
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
@@ -889,7 +889,7 @@ def runExecutionPhase(myCommandOnHostID):
         return mydeffered
     else:
         myCoH.setExecutionInProgress()
-        myCoH.setCommandStatut('execution_in_progress')
+        myCoH.setStateExecutionInProgress()
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'execution_in_progress')
             mydeffered = callOnBestLauncher(
@@ -955,7 +955,7 @@ def runDeletePhase(myCommandOnHostID):
         files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
 
         myCoH.setDeleteInProgress()
-        myCoH.setCommandStatut('delete_in_progress')
+        myCoH.setStateDeleteInProgress()
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'delete_in_progress')
             mydeffered = callOnBestLauncher(
@@ -991,7 +991,7 @@ def runDeletePhase(myCommandOnHostID):
             files_list = map(lambda(a): a.split('/').pop(), myC.files.split("\n"))
 
             myCoH.setDeleteInProgress()
-            myCoH.setCommandStatut('delete_in_progress')
+            myCoH.setStateDeleteInProgress()
             if SchedulerConfig().mode == 'sync':
                 updateHistory(myCommandOnHostID, 'delete_in_progress')
                 mydeffered = callOnBestLauncher(
@@ -1040,14 +1040,22 @@ def runInventoryPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
-    if not myC.hasToRunInventory(): # do not run inventory
-        logger.info("command_on_host #%s: inventory ignored" % myCommandOnHostID)
-        return runRebootPhase(myCommandOnHostID)
+
     if myCoH.isInventoryRunning(): # inventory still running, immediately returns
-        logger.info("command_on_host #%s: still inventoring" % myCommandOnHostID)
+        logger.info("command_on_host #%s: still inventoriing" % myCoH.getId())
         return None
-    if myCoH.isInventoryDone(): # inventory has already be done, jump to next stage
-        logger.info("command_on_host #%s: inventory done" % myCommandOnHostID)
+    if myCoH.isInventoryIgnored(): # inventory has already been ignored, jump to next stage
+        logger.info("command_on_host #%s: inventory ignored" % myCoH.getId())
+        return runRebootPhase(myCommandOnHostID)
+    if myCoH.isInventoryDone(): # inventory has already already done, jump to next stage
+        logger.info("command_on_host #%s: inventory done" % myCoH.getId())
+        return runRebootPhase(myCommandOnHostID)
+    if not myCoH.isInventoryImminent(): # nothing to do right now, give out
+        logger.info("command_on_host #%s: nothing to inventory right now" % myCoH.getId())
+        return None
+    if not myC.hasToRunInventory(): # no inventory to perform, jump to next stage
+        logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
+        myCoH.setInventoryIgnored()
         return runRebootPhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
@@ -1056,6 +1064,7 @@ def runInventoryPhase(myCommandOnHostID):
 
     # if we are here, inventory has either previously failed or never be done
     myCoH.setInventoryInProgress()
+    myCoH.setStateInventoryInProgress()
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
         mydeffered = callOnBestLauncher(
@@ -1257,17 +1266,17 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
-        myCoH.setInventoryDone()
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
-        return runRebootPhase(myCommandOnHostID)
+        if myCoH.switchToInventoryDone():
+            return runRebootPhase(myCommandOnHostID)
+        else:
+            return None
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
-    myCoH.setInventoryFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
+    myCoH.switchToInventoryFailed()
     return runRebootPhase(myCommandOnHostID)
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1330,7 +1339,7 @@ def parseExecutionOrder(taken_in_account, myCommandOnHostID):
         return None
     else: # failed: launcher seems to have rejected it
         myCoH.setExecutionToDo()
-        myCoH.setCommandStatut('scheduled')
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: execution order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1342,7 +1351,7 @@ def parseDeleteOrder(taken_in_account, myCommandOnHostID):
         return None
     else: # failed: launcher seems to have rejected it
         myCoH.setDeleteToDo()
-        myCoH.setCommandStatut('scheduled')
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: delete order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1353,6 +1362,8 @@ def parseInventoryOrder(taken_in_account, myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
         return None
     else: # failed: launcher seems to have rejected it
+        myCoH.setInventoryToDo()
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: inventory order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1374,7 +1385,7 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
         return None
     else: # failed: launcher seems to have rejected it
         myCoH.setHaltToDo()
-        myCoH.setCommandStatut('scheduled')
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1424,9 +1435,8 @@ def parseInventoryError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
-    myCoH.setInventoryFailed()
-    myCoH.reSchedule(myC.getNextConnectionDelay(), True)
     updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
+    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
     return None
 
