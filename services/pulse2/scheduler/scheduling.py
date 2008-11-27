@@ -510,16 +510,14 @@ def runWOLPhase(myCommandOnHostID):
     # check for WOL condition in order to give up if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
-    if not myC.hasToWOL():              # do not perform WOL
-        logger.info("command_on_host #%s: WOL ignored" % myCommandOnHostID)
-        return runUploadPhase(myCommandOnHostID)
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
-            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < SchedulerConfig().max_wol_time:
+            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < (SchedulerConfig().max_wol_time + 300):
                 # we should wait a little more
                 return None
             else:
-                # we already pass the delay, let's continue
+                # we already pass the delay from at least 300 seconds, let's continue
+                # FIXME: dirty fix, better use a sem system to handle collision situations :/
                 logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
                 myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
@@ -529,15 +527,26 @@ def runWOLPhase(myCommandOnHostID):
 
         logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
         return None
+    if myCoH.isWOLIgnored(): # wol has already been ignored, jump to next stage
+        logger.info("command_on_host #%s: wol ignored" % myCoH.getId())
+        return runUploadPhase(myCommandOnHostID)
+    if myCoH.isWOLDone(): # wol has already already done, jump to next stage
+        logger.info("command_on_host #%s: wol done" % myCoH.getId())
+        return runUploadPhase(myCommandOnHostID)
     if not myCoH.isWOLImminent():       # nothing to do right now, give out
         logger.info("command_on_host #%s: not the right time to WOL" % myCoH.getId())
         return None
+    if not myC.hasToWOL(): # don't have to WOL
+        logger.info("command_on_host #%s: do not wol" % myCoH.getId())
+        myCoH.setWOLIgnored()
+        return runUploadPhase(myCommandOnHostID)
 
     logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
 
     myCoH.setLastWOLAttempt()
+    myCoH.setWOLInProgress()
     updateHistory(myCommandOnHostID, 'wol_in_progress')
-    myCoH.setCommandStatut('wol_in_progress')
+    myCoH.setStateWOLInProgress()
 
     # perform call
     mydeffered = callOnBestLauncher(myCommandOnHostID, 'wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
@@ -623,7 +632,7 @@ def runUploadPhase(myCommandOnHostID):
             files_list.append(fname)
 
         myCoH.setUploadInProgress()
-        myCoH.setCommandStatut('upload_in_progress')
+        myCoH.setStateUploadInProgress()
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
@@ -664,7 +673,7 @@ def runUploadPhase(myCommandOnHostID):
             files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname))
 
         myCoH.setUploadInProgress()
-        myCoH.setCommandStatut('upload_in_progress')
+        myCoH.setStateUploadInProgress()
         if SchedulerConfig().mode == 'sync':
             updateHistory(myCommandOnHostID, 'upload_in_progress')
             mydeffered = callOnBestLauncher(
@@ -789,7 +798,7 @@ def _cbRunUploadPhasePushPull(result, mirror, client, myC, myCoH):
     files_list = file_uris['files']
 
     myCoH.setUploadInProgress()
-    myCoH.setCommandStatut('upload_in_progress')
+    myCoH.setStateUploadInProgress()
     # upload starts here
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCoH.id, 'upload_in_progress')
@@ -1176,8 +1185,10 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     def setstate(myCommandOnHostID, stdout, stderr):
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
-        myCoH.setStateScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
-        runUploadPhase(myCommandOnHostID)
+        if myCoH.switchToWOLDone():
+            return runUploadPhase(myCommandOnHostID)
+        else:
+            return None
 
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
@@ -1295,7 +1306,7 @@ def parsePushOrder(taken_in_account, myCommandOnHostID):
         return None
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
-        myCoH.setCommandStatut('scheduled')
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: push order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1307,7 +1318,7 @@ def parsePullOrder(taken_in_account, myCommandOnHostID):
         return None
     else: # failed: launcher seems to have rejected it
         myCoH.setUploadToDo()
-        myCoH.setCommandStatut('scheduled')
+        myCoH.setStateScheduled()
         logging.getLogger().warn("command_on_host #%s: pull order not taken in account" % myCommandOnHostID)
         return None
 
@@ -1370,10 +1381,9 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
 def parseWOLError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
-
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    myCoH.setStateScheduled() # as WOL is not mandatory, set to "scheduled" for the upload to be performed
-    return runUploadPhase(myCommandOnHostID)
+    myCoH.switchToWOLFailed(myC.getNextConnectionDelay())
+    return None
 
 def parsePushError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
