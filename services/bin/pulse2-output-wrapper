@@ -239,18 +239,22 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                         format(SEPARATOR.join(config.check_command), 'P')
                         for line in self.stdout.splitlines():
                             format(line, 'P')
-                        ExitCode().set(1)
+                        ExitCode().set(self._getPrecommandExitCode(verif))
                         if twisted.internet.reactor.running:
                             twisted.internet.reactor.stop()
                         return
             runCommand(self.config)
-        else:                       # something goes bad, prin pre-command output then exits
+        else: # something goes bad, print pre-command output then exits
             if config.thru_string:
                 format(SEPARATOR.join(config.thru_string), 'T')
             format("PRE-COMMAND FAILED CLIENT SIDE: exitcode = %s !" % (exitcode), 'P')
             format(SEPARATOR.join(config.check_command), 'P')
             for line in self.stdout.splitlines():
                 format(line, 'P')
+            if exitcode == 1:
+                # A failure in pre-command should return 1, else something bad
+                # happened and we don't touch the exit code
+                exitcode = self._getPrecommandExitCode(line)
             ExitCode().set(exitcode)
             if twisted.internet.reactor.running:
                 twisted.internet.reactor.stop()
@@ -261,6 +265,22 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
 
     def outReceived(self, data):
         self.stdout += data
+
+    def _getPrecommandExitCode(self, check):
+        """
+        Return special known exit code for pre-command
+        """
+        EX_PRECOMMAND = 128 # Base precommand exit code range
+        # Exit codes for pre-defined checks
+        EX_CHECKS = { 'HOSTNAME' : 1,
+                     'IP' : 2,
+                     'MAC' : 3 }
+        exitcode = 1
+        for label in EX_CHECKS:
+            if check.startswith(label):
+                exitcode = EX_PRECOMMAND + EX_CHECKS[label]
+        return exitcode
+        
 
 def format(line, tag):
     """ Format a line as expected (see upper)
