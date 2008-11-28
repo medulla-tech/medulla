@@ -1257,11 +1257,13 @@ def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runExecutionPhase(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up
-    logging.getLogger().info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
-    updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
+        updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
+        if myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1272,11 +1274,13 @@ def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runExecutionPhase(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up
-    logging.getLogger().info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
-    updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
+        updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
+        if myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1287,11 +1291,13 @@ def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runDeletePhase(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up
-    logging.getLogger().info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
-    updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
-    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
+        if myCoH.switchToExecutionFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1302,11 +1308,13 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runInventoryPhase(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up
-    logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
-    updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
-    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
+        if myCoH.switchToDeleteFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1317,11 +1325,13 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runRebootPhase(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up (FIXME: should not care of this failure)
-    logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
-    updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
-    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay())
-    return runRebootPhase(myCommandOnHostID)
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
+        if myCoH.switchToInventoryFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1333,11 +1343,13 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runHaltOnDone(myCommandOnHostID)
         else:
             return None
-    # failure: immediately give up (FIXME: should not care of this failure)
-    logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
-    updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
-    myCoH.switchToRebootFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
+        if myCoH.switchToRebootFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1349,10 +1361,13 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
             return runDonePhase(myCommandOnHostID)
         else:
             return None
-    logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
-    updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
-    myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
-    return None
+    else: # failure: immediately give up
+        logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
+        updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
+        if myCoH.switchToHaltFailed(myC.getNextConnectionDelay()):
+            return None
+        else:
+            return runFailedPhase(myCommandOnHostID)
 
 def parsePushOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1442,7 +1457,7 @@ def parseWOLError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToWOLFailed(myC.getNextConnectionDelay())
+    myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
 
 def parsePushError(reason, myCommandOnHostID):
@@ -1450,7 +1465,7 @@ def parsePushError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
 
 def parsePullError(reason, myCommandOnHostID):
@@ -1458,7 +1473,7 @@ def parsePullError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay())
+    myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
 
 def parseExecutionError(reason, myCommandOnHostID):
@@ -1466,7 +1481,7 @@ def parseExecutionError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay())
+    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
     return None
 
@@ -1475,7 +1490,7 @@ def parseDeleteError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay())
+    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
     return None
 
@@ -1485,7 +1500,7 @@ def parseInventoryError(reason, myCommandOnHostID):
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay())
+    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
     return None
 
@@ -1495,7 +1510,7 @@ def parseRebootError(reason, myCommandOnHostID):
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToRebootFailed(myC.getNextConnectionDelay())
+    myCoH.switchToRebootFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
     return None
 
@@ -1505,7 +1520,7 @@ def parseHaltError(reason, myCommandOnHostID):
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
+    myCoH.switchToHaltFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
     return None
 
