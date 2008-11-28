@@ -173,9 +173,9 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
 
     $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_GET['issue_halt_to_done'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
+    /*$f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_GET['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
 
     $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
     $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
