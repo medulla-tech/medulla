@@ -224,28 +224,6 @@ class CommandsOnHost(object):
         self.inventoried = inventoried
         self.flush()
 
-    """
-    def setInventoryFailed(self):
-        self.setCommandStatut('inventory_failed')
-    def isInventoryFailed(self):
-        result = (self.getCommandStatut() == 'inventory_failed')
-        logging.getLogger().debug("isInventoryFailed(#%s): %s" % (self.getId(), result))
-        return result
-
-    def setInventoryDone(self):
-        self.setCommandStatut('inventory_done')
-    def isInventoryDone(self):
-        result = (self.getCommandStatut() == 'inventory_done')
-        logging.getLogger().debug("isInventoryDone(#%s): %s" % (self.getId(), result))
-        return result
-
-    def setInventoryInProgress(self):
-        self.setCommandStatut('inventory_in_progress')
-    def isInventoryRunning(self):
-        result = (self.getCommandStatut() == 'inventory_in_progress')
-        logging.getLogger().debug("isInventoryRunning(#%s): %s" % (self.getId(), result))
-        return result
-    """
 ### /Handle inventory states ###
 
 ### Handle WOL states ###
@@ -302,15 +280,6 @@ class CommandsOnHost(object):
     def setWOLStatut(self, awoken):
         self.awoken = awoken
         self.flush()
-
-    """
-    def setWOLInProgress(self):
-        self.setCommandStatut('wol_in_progress')
-    def isWOLRunning(self):
-        result = (self.getCommandStatut() == 'wol_in_progress')
-        logging.getLogger().debug("isWOLRunning(#%s): %s" % (self.getId(), result))
-        return result
-    """
 ### /Handle wol states ###
 
 ### Handle reboot states ###
@@ -658,20 +627,24 @@ class CommandsOnHost(object):
 
 ### Misc state changes handling  ###
     def reSchedule(self, delay, decrement):
-        """ Reschedule when something went wrong """
+        """ Reschedule when something went wrong
+            return True if processing can continue
+            else return False
+        """
         if decrement:
             if self.attempts_left < 1: # no attempts left
                 self.setStateFailed()
-                return # nothing more to do, give up
+                return False # nothing more to do
             elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
                 self.attempts_left -= 1
                 self.flush()
                 self.setStateFailed()
-                return # nothing more to do, give up
+                myC.getNextConnectionDelay()
             else: # reschedule in other cases
                 self.attempts_left -= 1
         self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
         self.flush()
+        return True
 
     def switchToWOLFailed(self, delay = 0, decrement = True):
         """
@@ -681,12 +654,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setWOLFailed()                                 # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateWOLInProgress():                     # normal flow
             self.setStateWOLFailed()                        # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToWOLDone(self):
         """
@@ -710,12 +681,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setUploadFailed()                              # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateUploadInProgress():                  # normal flow
             self.setStateUploadFailed()                     # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToUploadDone(self):
         """
@@ -739,12 +708,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setExecutionFailed()                           # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateExecutionInProgress():               # normal flow
             self.setStateExecutionFailed()                  # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToExecutionDone(self):
         """
@@ -768,12 +735,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setDeleteFailed()                              # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateDeleteInProgress():                  # normal flow
             self.setStateDeleteFailed()                     # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToDeleteDone(self):
         """
@@ -797,12 +762,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setInventoryFailed()                           # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateInventoryInProgress():               # normal flow
             self.setStateInventoryFailed()                  # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToInventoryDone(self):
         """
@@ -826,12 +789,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setRebootFailed()                              # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateRebootInProgress():                  # normal flow
             self.setStateRebootFailed()                     # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToRebootDone(self):
         """
@@ -855,12 +816,10 @@ class CommandsOnHost(object):
             False else.
         """
         self.setHaltFailed()                                # set task status
-        self.reSchedule(delay, decrement)                   # always reschedule
+        ret = self.reSchedule(delay, decrement)             # always reschedule
         if self.isStateHaltInProgress():                    # normal flow
             self.setStateHaltFailed()                       # set command status
-            return False                                    # break flow
-        else:                                               # other state (pause, stop, etc ...)
-            return False                                    # simply break flow
+        return ret                                          # returns is processing may be continued
 
     def switchToHaltDone(self):
         """
@@ -869,9 +828,9 @@ class CommandsOnHost(object):
             Returns True if processing can continue,
             False else.
         """
-        self.setHaltDone()                             # set task status
-        if self.isStateHaltInProgress():               # normal flow
-            self.setStateHaltDone()                    # set command status
+        self.setHaltDone()                                  # set task status
+        if self.isStateHaltInProgress():                    # normal flow
+            self.setStateHaltDone()                         # set command status
             return True                                     # continue command flow
         else:                                               # other state (pause, stop, etc ...)
             return False                                    # simply break flow
