@@ -1110,10 +1110,10 @@ def runRebootPhase(myCommandOnHostID):
         return None
     if myCoH.isRebootIgnored(): # reboot has already been ignored, jump to next stage
         logger.info("command_on_host #%s: reboot ignored" % myCoH.getId())
-        return runHaltPhase(myCommandOnHostID)
+        return runHaltOnDone(myCommandOnHostID)
     if myCoH.isRebootDone(): # reboot has already been done, jump to next stage
         logger.info("command_on_host #%s: reboot done" % myCoH.getId())
-        return runHaltPhase(myCommandOnHostID)
+        return runHaltOnDone(myCommandOnHostID)
     if not myCoH.isRebootImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: do not reboot right now" % myCoH.getId())
         return None
@@ -1121,7 +1121,7 @@ def runRebootPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: do not reboot" % myCoH.getId())
         myCoH.setRebootIgnored()
         myCoH.setStateScheduled()
-        return runHaltPhase(myCommandOnHostID)
+        return runHaltOnDone(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
@@ -1157,8 +1157,17 @@ def runRebootPhase(myCommandOnHostID):
         return None
     return mydeffered
 
-def runHaltPhase(myCommandOnHostID):
-    # Run reboot if needed
+def runHaltOnDone(myCommandOnHostID): # supposed to be called at the very end of the process
+    logger = logging.getLogger()
+    logger.info("command_on_host #%s: halt-on-done phase" % myCommandOnHostID)
+    return runHaltPhase(myCommandOnHostID, 'done')
+
+def runHaltOnFailed(myCommandOnHostID): # supposed to be called when the command is trashed
+    logger = logging.getLogger()
+    logger.info("command_on_host #%s: halt-on-failed phase" % myCommandOnHostID)
+    return runHaltPhase(myCommandOnHostID, 'failed')
+
+def runHaltPhase(myCommandOnHostID, condition):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: halt phase" % myCommandOnHostID)
@@ -1167,10 +1176,10 @@ def runHaltPhase(myCommandOnHostID):
         return None
     if myCoH.isHaltIgnored(): # halt has already be ignored, jump to next stage
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
-        return runEndPhase(myCommandOnHostID)
+        return runDonePhase(myCommandOnHostID)
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
         logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
-        return runEndPhase(myCommandOnHostID)
+        return runDonePhase(myCommandOnHostID)
     if not myCoH.isHaltImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: do not halt right now" % myCoH.getId())
         return None
@@ -1178,7 +1187,17 @@ def runHaltPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: halt ignored" % myCommandOnHostID)
         myCoH.setHaltIgnored()
         myCoH.setStateScheduled()
-        return runEndPhase(myCommandOnHostID)
+        return runDonePhase(myCommandOnHostID)
+    if condition == 'done' and not myC.hasToHaltIfDone(): # halt on done and we do not have to halt on done
+        logger.info("command_on_host #%s: halt-on-done ignored" % myCommandOnHostID)
+        myCoH.setHaltIgnored()
+        myCoH.setStateScheduled()
+        return runDonePhase(myCommandOnHostID)
+    if condition == 'failed' and not myC.hasToHaltIfFailed(): # halt on failed and we do not have to halt on failure
+        logger.info("command_on_host #%s: halt-on-failed ignored" % myCommandOnHostID)
+        myCoH.setHaltIgnored()
+        myCoH.setStateScheduled()
+        return runDonePhase(myCommandOnHostID)
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
@@ -1213,13 +1232,6 @@ def runHaltPhase(myCommandOnHostID):
     else:
         return None
     return mydeffered
-
-def runEndPhase(myCommandOnHostID):
-    # Last step : end file
-    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: end phase" % myCommandOnHostID)
-    myCoH.setStateDone()
-    return None
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1308,7 +1320,7 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
-    myCoH.switchToInventoryFailed()
+    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay())
     return runRebootPhase(myCommandOnHostID)
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1318,13 +1330,13 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
         if myCoH.switchToRebootDone():
-            return runHaltPhase(myCommandOnHostID)
+            return runHaltOnDone(myCommandOnHostID)
         else:
             return None
     # failure: immediately give up (FIXME: should not care of this failure)
     logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
     updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
-    myCoH.switchToRebootFailed()
+    myCoH.switchToRebootFailed(myC.getNextConnectionDelay())
     return None
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
@@ -1334,7 +1346,7 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
         if myCoH.switchToHaltDone():
-            return runEndPhase(myCommandOnHostID)
+            return runDonePhase(myCommandOnHostID)
         else:
             return None
     logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
@@ -1495,6 +1507,20 @@ def parseHaltError(reason, myCommandOnHostID):
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToHaltFailed(myC.getNextConnectionDelay())
     # FIXME: should return a failure (but which one ?)
+    return None
+
+def runDonePhase(myCommandOnHostID):
+    # Last step : end file
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: end (done) phase" % myCommandOnHostID)
+    myCoH.setStateDone()
+    return None
+
+def runFailedPhase(myCommandOnHostID):
+    # Last step : end file
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: end (failed) phase" % myCommandOnHostID)
+    myCoH.setStateFailed()
     return None
 
 def updateHistory(id, state, error_code=0, stdout='', stderr=''):
