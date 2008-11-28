@@ -633,13 +633,11 @@ class CommandsOnHost(object):
         """
         if decrement:
             if self.attempts_left < 1: # no attempts left
-                self.setStateFailed()
                 return False # nothing more to do
             elif self.attempts_left == 1: # was the last attempt: tag as done, no rescheduling
                 self.attempts_left -= 1
                 self.flush()
-                self.setStateFailed()
-                myC.getNextConnectionDelay()
+                return False # nothing more to do
             else: # reschedule in other cases
                 self.attempts_left -= 1
         self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
