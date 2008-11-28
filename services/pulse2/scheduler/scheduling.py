@@ -1318,7 +1318,7 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
         logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
         if myCoH.switchToRebootDone():
-            return runEndPhase(myCommandOnHostID)
+            return runHaltPhase(myCommandOnHostID)
         else:
             return None
     # failure: immediately give up (FIXME: should not care of this failure)
