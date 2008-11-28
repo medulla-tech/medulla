@@ -38,6 +38,15 @@ function launch_bundle($cible, $orders, $gid = null, $proxy = array()) {
     foreach (array('start_date', 'end_date', 'create_directory', 'start_script', 'delete_file_after_execute_successful', 'wake_on_lan', 'next_connection_delay', 'max_connection_attempt', 'start_inventory', 'maxbw', 'deployment_intervals', 'copy_mode', 'clean_on_success', 'do_wol', 'do_inventory', 'do_reboot', 'bundle_title') as $param) {
         $params[$param] = $_POST[$param];
     }
+    $halt_to = array();
+    foreach ($_POST as $p=>$v) {
+        if (preg_match('/^issue_halt_to_/', $p)) {
+            $p = preg_replace('/^issue_halt_to_/', '', $p);
+            $halt_to[] = $p;
+        }
+    }
+    $params['issue_halt_to'] = $halt_to;
+
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid, $proxy);
     if (is_array($ret) && !empty($ret)) {

@@ -278,6 +278,11 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
         $f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));
         $f->add(new HiddenTpl("deployment_intervals"),                  array("value" => web_def_deployment_intervals(),    "hide" => True));
 
+        $halt = web_def_issue_halt_to();
+        foreach ($halt as $h) {
+            $f->add(new HiddenTpl("issue_halt_to_".$h),                 array("value" => 'on',                              "hide" => True));
+        }
+
         $check = new TrFormElement(_T('awake', 'msc'), new CheckboxTpl("do_wol"));
         $f->add($check, array("value" => web_def_awake() ? "checked" : ""));
         $check = new TrFormElement(_T('invent.', 'msc'), new CheckboxTpl("do_inventory"));
@@ -331,7 +336,12 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_POST['deployment_intervals']));
         $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
         $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',              "hide" => True));
-        $f->add(new HiddenTpl("do_reboot"),             array("value" => '',                "hide" => True));
+
+        $f->add(new TrFormElement(_T('Halt client after', 'msc'),                           new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_POST['issue_halt_to_done'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_POST['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_POST['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_POST['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));
+
         if (web_force_mode()) {
             $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(),    "hide" => True));
         } else {

@@ -171,7 +171,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement(_T('Start script', 'msc'),                                new CheckboxTpl("start_script")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
     $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Reboot client after a successful deletion', 'msc'),   new CheckboxTpl("do_reboot")), array("value" => $_GET['do_reboot'] == 'on' ? 'checked' : ''));
 
     $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_GET['issue_halt_to_done'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
