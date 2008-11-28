@@ -847,7 +847,7 @@ class MscDatabase(Singleton):
         return c
 
     def countAllCommandsOnHost(self, ctx, uuid, filt):
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx, uuid):
             session = create_session()
             ret = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.target.c.target_uuid == uuid)
             #.filter(self.commands.c.creator == ctx.userid)
@@ -860,7 +860,7 @@ class MscDatabase(Singleton):
         return False
 
     def getAllCommandsOnHost(self, ctx, uuid, min, max, filt):
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx, uuid):
             session = create_session()
             query = session.query(Commands).add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
             query = query.select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.target_uuid == uuid)
@@ -972,7 +972,19 @@ class MscDatabase(Singleton):
                 ids.append(id)
                 i += 1
         return ids
-
+    
+    def __displayLogReturn(self, ctx, list): 
+        # list is : cmd, cohid, cohstate
+        cohids = map(lambda x: x[1], list)
+        cohs = self.getCommandsOnHosts(ctx, cohids)
+        ret = []
+        for element in list:
+            if cohs.has_key(element[1]):
+                ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH()))
+            else:
+                ret.append((element[0].toH(), element[1], element[2], False))
+        return ret
+ 
     def displayLogs(self, ctx, params = {}): # TODO USE ctx
         session = create_session()
         for i in ('b_id', 'cmd_id', 'coh_id', 'gid', 'uuid', 'filt'):
@@ -998,14 +1010,14 @@ class MscDatabase(Singleton):
                 ret = self.__displayLogsQuery2(ctx, params, session).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
                 size = self.__displayLogsQuery2(ctx, params, session).count()
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
             elif params['b_id']:                # we want informations about one bundle on one group / host
                 # Using min/max, we get a range of commands, but we always want
                 # the total count of commands.
                 ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).offset(int(params['min'])).limit(int(params['max'])-int(params['min'])).all()
                 size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
             else:                               # we want all informations about on one group / host
                 # Get all commands related to the given computer UUID or group
                 # id
@@ -1028,20 +1040,20 @@ class MscDatabase(Singleton):
                 ret = query.group_by(self.commands.c.id).all()
 
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
         else:                                   # we want all informations
             if params['cmd_id']:                # we want all informations about one command
                 ret = self.__displayLogsQuery2(ctx, params, session).all()
                 # FIXME: using distinct, size will always return 1 ...
                 size = self.__displayLogsQuery2(ctx, params, session).distinct().count()
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
             elif params['b_id']:                # we want all informations about one bundle
                 ret = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).all()
                 # FIXME: using distinct, size will always return 1 ...
                 size = self.__displayLogsQuery2(ctx, params, session).order_by(self.commands.c.order_in_bundle).distinct().count()
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
             else:                               # we want all informations about everything
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
                 cmds = map(lambda c: (c.id, c.fk_bundle), ret)
@@ -1059,19 +1071,36 @@ class MscDatabase(Singleton):
                 ret = query.group_by(self.commands.c.id).all()
 
                 session.close()
-                return size, map(lambda x: (x[0].toH(), x[1], x[2], self.getCommandsOnHost(ctx, x[1]).toH()), ret)
+                return size, self.__displayLogReturn(ctx, ret)
 
     ###################
-
+    def getCommandsOnHosts(self, ctx, coh_ids):
+        session = create_session()
+        cohs = session.query(CommandsOnHost).add_column(self.commands_on_host.c.id).filter(self.commands_on_host.c.id.in_(coh_ids)).all()
+        session.close()
+        targets = self.getTargetsForCoh(ctx, coh_ids)
+        if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, map(lambda t:t.target_uuid, targets), False):
+            ret = {}
+            for e in cohs:
+                ret[e[1]] = e[0]
+            return ret
+        return {}
+                
     def getCommandsOnHost(self, ctx, coh_id):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
         session.close()
         target = self.getTargetForCoh(ctx, coh_id)
-        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, target.target_uuid):
+        if ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target.target_uuid):
             return coh
         self.logger.warn("User %s does not have right permissions to access '%s'" % (ctx.userid, target.target_name))
         return False
+
+    def getTargetsForCoh(self, ctx, coh_ids): # FIXME should we use the ctx
+        session = create_session()
+        targets = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.id.in_(coh_ids)).all()
+        session.close()
+        return targets
 
     def getTargetForCoh(self, ctx, coh_id): # FIXME should we use the ctx
     # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
@@ -1100,7 +1129,7 @@ class MscDatabase(Singleton):
 
     def getCommands(self, ctx, cmd_id):
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
-        if ComputerLocationManager().doesUserHaveAccessToMachines(ctx.userid, a_targets):
+        if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):
             session = create_session()
             ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
             session.close()

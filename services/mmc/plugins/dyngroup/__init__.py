@@ -298,7 +298,7 @@ def __addCtxFilters(ctx, filt = {}):
             location = ctx.locations
             if type(location) != list:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt['ctxlocation'] = map(lambda l: l.toH(), location)
     except exceptions.AttributeError:
         pass
     return filt

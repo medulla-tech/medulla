@@ -870,7 +870,7 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def doesUserHaveAccessToMachines(self, userid, a_machine_uuid, all = True):
+    def doesUserHaveAccessToMachines(self, ctx, a_machine_uuid, all = True):
         """
         Check if the user has correct permissions to access more than one or to all machines
 
@@ -878,9 +878,9 @@ class Glpi(DyngroupDatabaseHelper):
 
         @rtype: bool
         """
-        if not self.displayLocalisationBar or userid == "root":
+        if not self.displayLocalisationBar or ctx.userid == "root":
             return True
-        a_locations = map(lambda loc:loc.name, self.getUserLocations(userid))
+        a_locations = map(lambda loc:loc.name, ctx.locations)
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.location))
         query = query.filter(self.location.c.name.in_(a_locations))
@@ -897,13 +897,13 @@ class Glpi(DyngroupDatabaseHelper):
         self.logger.info("dont have permissions on %s"%(str(Set(a_machine_uuid) - ret)))
         return False
 
-    def doesUserHaveAccessToMachine(self, userid, machine_uuid):
+    def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
         """
         Check if the user has correct permissions to access this machine
 
         @rtype: bool
         """
-        return self.doesUserHaveAccessToMachines(userid, [machine_uuid])
+        return self.doesUserHaveAccessToMachines(ctx, [machine_uuid])
 
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
     def getLastMachineInventoryFull(self, uuid):
@@ -990,8 +990,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
-        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.software.c.FK_entities.in_(entities))
+        query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         r1 = re.compile('\*')
         if r1.search(softname):
             softname = r1.sub('%', softname)
@@ -1013,8 +1012,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Software).select_from(self.software.join(self.licenses).join(self.inst_software).join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
-        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.software.c.FK_entities.in_(entities))
+        query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
         ret = query.group_by(self.software.c.name).all()
@@ -1236,8 +1234,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = session.query(Group).select_from(self.group.join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         query = self.__filter_on_entity(query, ctx)
-        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.group.c.FK_entities.in_(entities))
+        query = query.filter(self.group.c.FK_entities.in_(ctx.locationsid))
         if filter != '':
             query = query.filter(self.group.c.name.like('%'+filt+'%'))
         ret = query.group_by(self.group.c.name).all()
@@ -1250,8 +1247,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        entities = map(lambda e: e.ID, self.getUserLocations(ctx.userid))
-        query = query.filter(self.group.c.FK_entities.in_(entities))
+        query = query.filter(self.group.c.FK_entities.in_(ctx.locationsid))
         query = query.filter(self.group.c.name == filt)
         ret = query.all()
         session.close()

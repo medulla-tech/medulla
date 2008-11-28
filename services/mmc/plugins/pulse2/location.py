@@ -90,17 +90,17 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return None        
         
-    def doesUserHaveAccessToMachine(self, userid, machine_uuid):
+    def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
         try:
             klass = self.components[self.main]
-            return klass().doesUserHaveAccessToMachine(userid, machine_uuid)
+            return klass().doesUserHaveAccessToMachine(ctx, machine_uuid)
         except KeyError:
             return True
 
-    def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True):
+    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all = True):
         try:
             klass = self.components[self.main]
-            return klass().doesUserHaveAccessToMachines(userid, machine_uuid, all)
+            return klass().doesUserHaveAccessToMachines(ctx, machine_uuid, all)
         except KeyError:
             return True
 
@@ -129,11 +129,11 @@ class ComputerLocationI(Singleton):
         """ Returns the total count of locations """
         pass
 
-    def doesUserHaveAccessToMachine(self, userid, machine_uuid):
+    def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
         """ should return true if the machine is accessible for this user """
         pass
 
-    def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True):
+    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all = True):
         """ should return true if more than one or all machines are accessible for this user """
         pass
 
