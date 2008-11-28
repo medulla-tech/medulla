@@ -68,7 +68,19 @@ class Commands(object):
         return self.do_reboot == 'enable'
 
     def hasToHalt(self):
-        return self.do_halt == 'enable'
+        return self.do_halt != ''
+
+    def hasToHaltIfDone(self):
+        return 'done' in self.do_halt.split(',')
+
+    def hasToHaltIfFailed(self):
+        return 'failed' in self.do_halt.split(',')
+
+    def hasToHaltIfOverTime(self):
+        return 'over_time' in self.do_halt.split(',')
+
+    def hasToHaltIfOutOfInterval(self):
+        return 'out_of_interval' in self.do_halt.split(',')
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
