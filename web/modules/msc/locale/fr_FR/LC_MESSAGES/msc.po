@@ -1175,7 +1175,7 @@ msgstr "Échec"
 
 #: msc/msc/statuscsv.php:43 msc/msc/msctabsstatus.php:108
 msgid "failed during execution"
-msgstr "ont échoué durant l'exécution"
+msgstr "échoué durant l'exécution"
 
 #: msc/msc/statuscsv.php:45 msc/msc/msctabsstatus.php:109
 msgid "failed during suppression"
