@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-01 16:57+0100\n"
-"PO-Revision-Date: 2008-12-01 16:58+0100\n"
+"PO-Revision-Date: 2008-12-01 17:24+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1179,11 +1179,11 @@ msgstr "ont échoué durant l'exécution"
 
 #: msc/msc/statuscsv.php:45 msc/msc/msctabsstatus.php:109
 msgid "failed during suppression"
-msgstr "ont échoué durant la suppression"
+msgstr "échoué durant la suppression"
 
 #: msc/msc/statuscsv.php:41 msc/msc/msctabsstatus.php:107
 msgid "failed during upload"
-msgstr "ont échoué durant le téléchargement"
+msgstr "échoué durant le téléchargement"
 
 #: msc/includes/widgets.inc.php:66
 #, php-format
