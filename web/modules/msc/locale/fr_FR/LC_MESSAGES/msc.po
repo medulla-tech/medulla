@@ -1268,15 +1268,15 @@ msgstr "total"
 
 #: msc/msc/statuscsv.php:46
 msgid "unreachable during suppression"
-msgstr "ont échoué durant la suppression"
+msgstr "échoué durant la suppression"
 
 #: msc/msc/statuscsv.php:42
 msgid "unreachable during upload"
-msgstr "ont échoué durant le téléchargement"
+msgstr "échoué durant le téléchargement"
 
 #: msc/msc/statuscsv.php:44
 msgid "unreacheable during execution"
-msgstr "ont échoué durant l'exécution"
+msgstr "échoué durant l'exécution"
 
 #: msc/msc/ajaxLogsFilter.php:218 msc/msc/ajaxLogsFilter.php:292
 #: msc/logs/ajaxLogsFilter.php:136 msc/includes/command_history.php:37
