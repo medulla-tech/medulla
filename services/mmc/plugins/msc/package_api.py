@@ -207,7 +207,7 @@ class SendBundleCommand:
         self.bundle_id = None
         self.proxies = proxies
         
-    def onError(error):
+    def onError(self, error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
         return self.deferred.callback([])
 
