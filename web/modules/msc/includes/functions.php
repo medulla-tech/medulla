@@ -41,6 +41,9 @@ function getStatusTable() {
                      "wol_in_progress" => _T("WOL in progress", "msc"),
                      "wol_failed" => _T("WOL failed", "msc"),
                      "wol_done" => _T("WOL done", "msc"),
+                     "halt_in_progress" => _T("Halt in progress", "msc"),
+                     "halt_done" => _T("Halt done", "msc"),
+                     "halt_failed" => _T("Halt failed", "msc"),
                      "not_reachable" => _T("Not reachable", "msc"),
                      "done" => _T("Done", "msc"),
                      "pause" => _T("Pause", "msc"),
@@ -85,16 +88,18 @@ function state2icon($current_state) {
         case "upload_in_progress" :
         case "execution_in_progress":
         case "delete_in_progress":
-        case "inventory_in_progress";
-        case "reboot_in_progress";
+        case "inventory_in_progress":
+        case "reboot_in_progress":
+        case "halt_in_progress":
             return "led_circle_orange.png";
 
         case "wol_done";
         case "upload_done" :
         case "execution_done":
         case "delete_done":
-        case "inventory_done";
-        case "reboot_done";
+        case "inventory_done":
+        case "reboot_done":
+        case "halt_done":
         case "done":
             return "led_circle_green.png";
 
@@ -103,8 +108,9 @@ function state2icon($current_state) {
         case "upload_failed" :
         case "execution_failed":
         case "delete_failed":
-        case "inventory_failed";
-        case "reboot_failed";
+        case "inventory_failed":
+        case "reboot_failed":
+        case "halt_failed":
             return "led_circle_red.png";
         case "pause":
         case "stop":
@@ -121,8 +127,9 @@ function history_stat2icon($state) {
         case "upload_done" :
         case "delete_done":
         case "execution_done":
-        case "inventory_done";
-        case "reboot_done";
+        case "inventory_done":
+        case "reboot_done":
+        case "halt_done":
         case "done":
             return "led_circle_green.png";
 
@@ -131,8 +138,9 @@ function history_stat2icon($state) {
         case "upload_failed" :
         case "execution_failed":
         case "delete_failed":
-        case "inventory_failed";
-        case "reboot_failed";
+        case "inventory_failed":
+        case "reboot_failed":
+        case "halt_failed":
             return "led_circle_red.png";
 
         case "wol_in_progress";
@@ -140,7 +148,8 @@ function history_stat2icon($state) {
         case "execution_in_progress":
         case "delete_in_progress":
         case "inventory_in_progress";
-        case "reboot_in_progress";
+        case "reboot_in_progress":
+        case "halt_in_progress":
             return "led_circle_orange.png";
 
         case "pause":
@@ -179,7 +188,9 @@ function state_tmpl($current_state) {
             'wol_failed',
             'wol_done',
             'reboot_failed',
-            'reboot_done'
+            'reboot_done',
+            'halt_failed',
+            'halt_done'
         )
     ))
         $ret = array(
@@ -198,6 +209,7 @@ function state_tmpl($current_state) {
             'inventory_in_progress',
             'reboot_in_progress',
             'wol_in_progress',
+            'halt_in_progress',
         )
     ))
         $ret = array(
