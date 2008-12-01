@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-01 10:09+0100\n"
-"PO-Revision-Date: 2008-12-01 10:14+0100\n"
+"PO-Revision-Date: 2008-12-01 10:59+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -391,11 +391,11 @@ msgstr "Supprimer le fichier"
 
 #: msc/msc/launch.php:172 msc/includes/bundle_widgets.php:329
 msgid "Delete files after a successful execution"
-msgstr "Détruire les fichiers après une commande réussie"
+msgstr "Supprimer les fichiers après une commande réussie"
 
 #: msc/includes/command_history.php:248
 msgid "Delete files after a successful execution ?"
-msgstr "Détruire les fichiers après une exécution réussie ?"
+msgstr "Supprimer les fichiers après une exécution réussie ?"
 
 #: msc/includes/functions.php:32
 msgid "Delete in progress"
