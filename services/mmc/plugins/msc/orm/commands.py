@@ -68,19 +68,31 @@ class Commands(object):
         return self.do_reboot == 'enable'
 
     def hasToHalt(self):
-        return self.do_halt != ''
+        return len(self.do_halt) > 0
 
     def hasToHaltIfDone(self):
-        return 'done' in self.do_halt.split(',')
+        try:
+            return 'done' in self.do_halt.split(',')
+        except AttributeError: # workaround for buggy v.14 database
+            return 'done' in self.do_halt
 
     def hasToHaltIfFailed(self):
-        return 'failed' in self.do_halt.split(',')
+        try:
+            return 'failed' in self.do_halt.split(',')
+        except AttributeError: # workaround for buggy v.14 database
+            return 'failed' in self.do_halt
 
     def hasToHaltIfOverTime(self):
-        return 'over_time' in self.do_halt.split(',')
+        try:
+            return 'over_time' in self.do_halt.split(',')
+        except AttributeError: # workaround for buggy v.14 database
+            return 'over_time' in self.do_halt
 
     def hasToHaltIfOutOfInterval(self):
-        return 'out_of_interval' in self.do_halt.split(',')
+        try:
+            return 'out_of_interval' in self.do_halt.split(',')
+        except AttributeError:
+            return 'out_of_interval' in self.do_halt
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)

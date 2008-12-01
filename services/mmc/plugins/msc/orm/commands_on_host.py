@@ -320,7 +320,7 @@ class CommandsOnHost(object):
         self.setRebootStatut('TODO')
     def isRebootToDo(self):
         result = (self.rebooted == 'TODO')
-        logging.getLogger().debug("isHRebootToDo(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isRebootToDo(#%s): %s" % (self.getId(), result))
         return result
 
     def setRebootStatut(self, rebooted):
@@ -359,7 +359,7 @@ class CommandsOnHost(object):
         self.setHaltStatut('WORK_IN_PROGRESS')
     def isHaltRunning(self):
         result = (self.halted == 'WORK_IN_PROGRESS')
-        logging.getLogger().debug("isUploadRunning(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isHaltRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setHaltToDo(self):
