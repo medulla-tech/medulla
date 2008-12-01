@@ -163,7 +163,9 @@ function my_convert($str) {
     return _T($str, 'msc');
 }
 function i18nparts($str) {
-    if (!empty($str))
+    if (is_array($str)) {
+        return implode(', ', array_map('my_convert', $str));
+    } elseif (!empty($str))
         return implode(', ', array_map('my_convert', explode(',', $str)));
     else return '';
 }
