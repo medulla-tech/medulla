@@ -242,6 +242,10 @@ class SendBundleCommand:
 
         # treat bundle inventory and halt (put on the last command)
         do_inventory = self.params['do_inventory']
+        try:
+            issue_halt_to = self.params['issue_halt_to']
+        except: # just in case issue_halt_to has not been set
+            issue_halt_to = ''
 
         bundle = MscDatabase().createBundle(title)
         self.bundle_id = bundle.id
@@ -251,8 +255,10 @@ class SendBundleCommand:
             p_api, pid, order = self.porders[id]
             if order == last_order:
                 self.params['do_inventory'] = do_inventory
+                self.params['issue_halt_to'] = issue_halt_to
             else:
                 self.params['do_inventory'] = 'off'
+                self.params['issue_halt_to'] = ''
             g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order, self.proxies)
             g.deferred = defer.Deferred()
             g.send()
