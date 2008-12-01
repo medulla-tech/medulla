@@ -88,7 +88,7 @@ class MscConfig(PluginConfig):
     web_def_delay = "60"
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
-    web_def_issue_halt_to = "done"
+    web_def_issue_halt_to = ""
     web_dlpath = []
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
@@ -234,7 +234,8 @@ class MscConfig(PluginConfig):
             self.web_def_attempts = self.get("web", "web_def_attempts")
         if self.has_option("web", "web_def_issue_halt_to"):
             self.web_def_issue_halt_to = []
-            p_wdiht = ['done', 'failed', 'over_time', 'out_of_interval']
+            #p_wdiht = ['done', 'failed', 'over_time', 'out_of_interval']
+            p_wdiht = ['done']
             for wdiht in self.get("web", "web_def_issue_halt_to").split(','):
                 if wdiht in p_wdiht:
                     self.web_def_issue_halt_to.append(wdiht)
