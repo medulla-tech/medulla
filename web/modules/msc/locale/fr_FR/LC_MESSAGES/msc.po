@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.0rc6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-01 10:09+0100\n"
-"PO-Revision-Date: 2008-12-01 10:59+0100\n"
+"POT-Creation-Date: 2008-12-01 16:57+0100\n"
+"PO-Revision-Date: 2008-12-01 16:58+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,12 @@ msgstr ""
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
 
-#: msc/includes/command_history.php:224
+#: msc/includes/command_history.php:226
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: msc/includes/command_history.php:226
+#: msc/includes/command_history.php:228
 #, php-format
 msgid "%s <i>(no additionnal parameter given)</i>"
 msgstr "%s <i>(pas de paramètre supplémentaire donné)</i>"
@@ -182,43 +182,43 @@ msgstr "<b>Une</b> installation de packages a échoué"
 msgid "<b>One</b> package installation was successful"
 msgstr "<b>Une</b> installation de packages a réussi"
 
-#: msc/includes/command_history.php:219
+#: msc/includes/command_history.php:221
 msgid "<i>as soon as possible</i>"
 msgstr "<i>Dès que possible</i>"
 
-#: msc/includes/command_history.php:201
+#: msc/includes/command_history.php:203
 msgid "<i>forever</i>"
 msgstr "<i>toujours</i>"
 
-#: msc/includes/command_history.php:196
+#: msc/includes/command_history.php:198
 #, php-format
 msgid "<i>from</i> %s"
 msgstr "<i>de</i> %s"
 
-#: msc/includes/command_history.php:194
+#: msc/includes/command_history.php:196
 #, php-format
 msgid "<i>from</i> %s <i>to</i> %s"
 msgstr "<i>de</i> %s <i>à</i> %s"
 
-#: msc/includes/command_history.php:228 msc/includes/command_history.php:254
+#: msc/includes/command_history.php:230 msc/includes/command_history.php:256
 msgid "<i>not set</i>"
 msgstr "<i>non renseigné</i>"
 
-#: msc/includes/command_history.php:241
+#: msc/includes/command_history.php:243
 #, php-format
 msgid "<i>on</i> %s <i>by</i> %s"
 msgstr "<i>le</i> %s <i>par</i> %s"
 
-#: msc/includes/command_history.php:199
+#: msc/includes/command_history.php:201
 #, php-format
 msgid "<i>to</i> %s"
 msgstr "<i>à</i> %s"
 
-#: msc/includes/command_history.php:406
+#: msc/includes/command_history.php:408
 msgid "<i>undefined</i>"
 msgstr "<i>indéfini</i>"
 
-#: msc/includes/command_history.php:206 msc/includes/command_history.php:211
+#: msc/includes/command_history.php:208 msc/includes/command_history.php:213
 msgid "<i>whole day</i>"
 msgstr "<i>toute la journée</i>"
 
@@ -246,11 +246,11 @@ msgstr "Tous les ordinateurs de ce groupe"
 msgid "All users commands"
 msgstr "Commandes de tous les utilisateurs"
 
-#: msc/logs/ajaxLogsFilter.php:92 msc/includes/command_history.php:400
+#: msc/logs/ajaxLogsFilter.php:92 msc/includes/command_history.php:402
 msgid "As soon as possible"
 msgstr "Dès que possible"
 
-#: msc/includes/bundle_widgets.php:334
+#: msc/includes/bundle_widgets.php:340
 msgid "Beginning of validity"
 msgstr "Début de validité"
 
@@ -308,16 +308,16 @@ msgstr "État de la commande '%s' sur <b>%s</b> machines"
 msgid "Command expiry date"
 msgstr "Date d'expiration de la commande"
 
-#: msc/includes/command_history.php:244
+#: msc/includes/command_history.php:246
 msgid "Command line to run"
 msgstr "Ligne de commande à exécuter"
 
 #: msc/msc/launch.php:168 msc/includes/command_history.php:108
-#: msc/includes/command_history.php:240
+#: msc/includes/command_history.php:242
 msgid "Command name"
 msgstr "Nom de la commande"
 
-#: msc/includes/bundle_widgets.php:333
+#: msc/includes/bundle_widgets.php:339
 msgid "Command parameters"
 msgstr "Paramètres du script"
 
@@ -325,7 +325,7 @@ msgstr "Paramètres du script"
 msgid "Command start date"
 msgstr "Date de démarrage de la commande"
 
-#: msc/includes/command_history.php:238
+#: msc/includes/command_history.php:240
 msgid "Command state"
 msgstr "État de la commande"
 
@@ -345,7 +345,7 @@ msgstr "Échec de la connexion"
 msgid "Copy Mode"
 msgstr "Mode de transfert"
 
-#: msc/includes/command_history.php:241
+#: msc/includes/command_history.php:243
 msgid "Creation"
 msgstr "Création"
 
@@ -361,7 +361,7 @@ msgstr "Export csv"
 msgid "Date"
 msgstr "Date"
 
-#: msc/includes/command_history.php:254
+#: msc/includes/command_history.php:256
 msgid "Delay between two attempts (minutes)"
 msgstr "Délais entre deux tentatives (minutes)"
 
@@ -373,7 +373,7 @@ msgstr "Délai entre deux connexions"
 msgid "Delay between two connections (minutes)"
 msgstr "Délai entre deux connexions (minutes)"
 
-#: msc/includes/bundle_widgets.php:331
+#: msc/includes/bundle_widgets.php:337
 msgid "Delay betwen connections (minutes)"
 msgstr "Délai entre les connexions (minutes)"
 
@@ -393,7 +393,7 @@ msgstr "Supprimer le fichier"
 msgid "Delete files after a successful execution"
 msgstr "Supprimer les fichiers après une commande réussie"
 
-#: msc/includes/command_history.php:248
+#: msc/includes/command_history.php:250
 msgid "Delete files after a successful execution ?"
 msgstr "Supprimer les fichiers après une exécution réussie ?"
 
@@ -410,8 +410,8 @@ msgstr "Déploiement de <b>%s v.%s</b><br/> sur <b>%s</b>"
 msgid "Deploy using a local proxy"
 msgstr "Déploiement par proxy local"
 
-#: msc/msc/launch.php:184 msc/includes/bundle_widgets.php:336
-#: msc/includes/command_history.php:243
+#: msc/msc/launch.php:184 msc/includes/bundle_widgets.php:342
+#: msc/includes/command_history.php:245
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
@@ -428,7 +428,7 @@ msgstr "Détails"
 msgid "Do an inventory after a successful execution"
 msgstr "Faire un inventaire après une commande réussie"
 
-#: msc/includes/command_history.php:249
+#: msc/includes/command_history.php:251
 msgid "Do an inventory after a successful execution ?"
 msgstr "Faire un inventaire après une exécution réussie ?"
 
@@ -456,11 +456,11 @@ msgstr "Téléchargement en cours"
 msgid "End date"
 msgstr "Date de fin"
 
-#: msc/includes/bundle_widgets.php:335
+#: msc/includes/bundle_widgets.php:341
 msgid "End of validity"
 msgstr "Fin de validité"
 
-#: msc/includes/command_history.php:313
+#: msc/includes/command_history.php:315
 msgid ""
 "Error while connecting to secure agent on this host. Please check network "
 "connectivity, and that the secure agent is installed on this host."
@@ -481,7 +481,7 @@ msgstr "Établir une connexion VNC vers cet ordinateur"
 msgid "Execute action..."
 msgstr "Lancer une action..."
 
-#: msc/includes/command_history.php:247
+#: msc/includes/command_history.php:249
 msgid "Execute command line ?"
 msgstr "Exécuter la ligne de commande ?"
 
@@ -505,7 +505,7 @@ msgstr "Échec de l'exécution"
 msgid "Execution in progress"
 msgstr "Exécution en cours"
 
-#: msc/includes/command_history.php:382
+#: msc/includes/command_history.php:384
 #, php-format
 msgid "Exit code : %s"
 msgstr "Code de retour : %s"
@@ -531,13 +531,13 @@ msgstr "Récupérer un fichier téléchargé"
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur groupe : action \"%s\" sur \"%s\""
 
-#: msc/msc/launch.php:175 msc/includes/bundle_widgets.php:340
+#: msc/msc/launch.php:175 msc/includes/bundle_widgets.php:332
 msgid "Halt client after"
-msgstr "Stopper la machine après"
+msgstr "Arrêter la machine après"
 
-#: msc/includes/command_history.php:250
+#: msc/includes/command_history.php:252
 msgid "Halt client after :"
-msgstr "Stopper la machine après : "
+msgstr "Arrêter la machine après : "
 
 #: msc/msc/tabs.php:48 msc/msc/tabs.php:64
 msgid "History"
@@ -643,11 +643,11 @@ msgstr "Onglet des journaux pour un groupe"
 msgid "MSC logs tab for a machine"
 msgstr "Onglet des journaux pour une machine"
 
-#: msc/msc/launch.php:185 msc/includes/bundle_widgets.php:337
+#: msc/msc/launch.php:185 msc/includes/bundle_widgets.php:343
 msgid "Max bandwidth (b/s)"
 msgstr "Bande passante maximale (b/s)"
 
-#: msc/msc/launch.php:180 msc/includes/bundle_widgets.php:332
+#: msc/msc/launch.php:180 msc/includes/bundle_widgets.php:338
 msgid "Maximum number of connection attempt"
 msgstr "Nombre de tentatives de connexions"
 
@@ -660,15 +660,15 @@ msgid "N/A"
 msgstr "N/A"
 
 #: msc/msc/package_detail.php:39 msc/includes/command_history.php:46
-#: msc/includes/command_history.php:130 msc/includes/command_history.php:261
+#: msc/includes/command_history.php:130 msc/includes/command_history.php:263
 msgid "Name"
 msgstr "Nom"
 
-#: msc/includes/command_history.php:397
+#: msc/includes/command_history.php:399
 msgid "Never"
 msgstr "Jamais"
 
-#: msc/includes/command_history.php:255
+#: msc/includes/command_history.php:257
 msgid "Next attempt"
 msgstr "Prochaine tentative"
 
@@ -768,7 +768,7 @@ msgstr "Le répertoire des actions rapide %s n'existe pas"
 msgid "Ready"
 msgstr "Prêt"
 
-#: msc/includes/command_history.php:251
+#: msc/includes/command_history.php:253
 msgid "Reboot client after a successful deletion ?"
 msgstr "Redémarrer le poste après une commande réussie ?"
 
@@ -784,7 +784,7 @@ msgstr "Échec du redémarrage"
 msgid "Reboot in progress"
 msgstr "Redémarrage en cours"
 
-#: msc/includes/command_history.php:253
+#: msc/includes/command_history.php:255
 msgid "Remaining connection attempts"
 msgstr "Nombre de tentatives restantes"
 
@@ -886,7 +886,7 @@ msgid "Start"
 msgstr "Démarrer"
 
 #: msc/msc/launch.php:170 msc/includes/command_history.php:115
-#: msc/includes/command_history.php:246
+#: msc/includes/command_history.php:248
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
@@ -962,7 +962,7 @@ msgstr "La commande pourra démarrer à partir de"
 msgid "The command must stop before"
 msgstr "La commande doit s'arrêter avant"
 
-#: msc/includes/command_history.php:316
+#: msc/includes/command_history.php:318
 msgid ""
 "The current host IP address doesn't match the IP address from the inventory "
 "database."
@@ -970,7 +970,7 @@ msgstr ""
 "L'adresse ip de l'ordinateur ne correspond pas à celle présente dans "
 "l'inventaire."
 
-#: msc/includes/command_history.php:317
+#: msc/includes/command_history.php:319
 msgid ""
 "The current host MAC address doesn't match the MAC address from the "
 "inventory database."
@@ -978,7 +978,7 @@ msgstr ""
 "L'adresse MAC de l'ordinateur ne correspond pas à celle présente dans "
 "l'inventaire."
 
-#: msc/includes/command_history.php:315
+#: msc/includes/command_history.php:317
 msgid ""
 "The current host name doesn't match the host name from the inventory "
 "database."
@@ -1019,11 +1019,11 @@ msgstr "Horodatage"
 msgid "To do"
 msgstr "À faire"
 
-#: msc/includes/command_history.php:276
+#: msc/includes/command_history.php:278
 msgid "Transferred files list"
 msgstr "Liste des fichiers transférés"
 
-#: msc/includes/command_history.php:268
+#: msc/includes/command_history.php:270
 msgid "Transferred files list empty."
 msgstr "La liste des fichiers transférés est vide"
 
@@ -1043,12 +1043,12 @@ msgstr "Envoi en cours"
 msgid "User command creator"
 msgstr "Créateur de la commande"
 
-#: msc/includes/command_history.php:242
+#: msc/includes/command_history.php:244
 msgid "Validity period"
 msgstr "Période de validité"
 
 #: msc/msc/package_detail.php:40 msc/includes/command_history.php:47
-#: msc/includes/command_history.php:131 msc/includes/command_history.php:262
+#: msc/includes/command_history.php:131 msc/includes/command_history.php:264
 msgid "Value"
 msgstr "Valeur"
 
@@ -1077,7 +1077,7 @@ msgstr "Réveil réseau (WOL)"
 msgid "Work in progress"
 msgstr "En cours"
 
-#: msc/includes/command_history.php:350
+#: msc/includes/command_history.php:352
 msgid "Y-m-d H:i:s"
 msgstr "Y-m-d H:i:s"
 
@@ -1101,7 +1101,7 @@ msgstr "réveil"
 msgid "bundle"
 msgstr "du bundle"
 
-#: msc/includes/command_history.php:248
+#: msc/includes/command_history.php:250
 msgid "clean_on_success"
 msgstr ""
 
@@ -1131,28 +1131,28 @@ msgstr "État"
 msgid "deleted"
 msgstr "Suppression"
 
-#: msc/includes/command_history.php:232
+#: msc/includes/command_history.php:234
 msgid "disable"
 msgstr "désactivé"
 
-#: msc/includes/command_history.php:249
+#: msc/includes/command_history.php:251
 msgid "do_inventory"
 msgstr "Démarrer un inventaire"
 
-#: msc/includes/command_history.php:251
+#: msc/includes/command_history.php:253
 msgid "do_reboot"
 msgstr "Redémarrage"
 
-#: msc/includes/command_history.php:246
+#: msc/includes/command_history.php:248
 msgid "do_wol"
 msgstr "Lancement d'un réveil réseau"
 
-#: msc/msc/launch.php:175 msc/includes/bundle_widgets.php:340
-#: msc/includes/command_history.php:233
+#: msc/msc/launch.php:175 msc/includes/bundle_widgets.php:332
+#: msc/includes/command_history.php:235
 msgid "done"
 msgstr "Terminé"
 
-#: msc/includes/command_history.php:231
+#: msc/includes/command_history.php:233
 msgid "enable"
 msgstr "activé"
 
@@ -1169,7 +1169,7 @@ msgstr "Exécution"
 msgid "executing"
 msgstr "en cours d'exécution"
 
-#: msc/includes/command_history.php:234
+#: msc/includes/command_history.php:236
 msgid "failed"
 msgstr "Échec"
 
@@ -1218,11 +1218,11 @@ msgstr "jamais"
 msgid "now"
 msgstr "maintenant"
 
-#: msc/includes/command_history.php:236
+#: msc/includes/command_history.php:238
 msgid "out_of_interval"
 msgstr "en dehors de l'intervalle de déploiement"
 
-#: msc/includes/command_history.php:235
+#: msc/includes/command_history.php:237
 msgid "over_time"
 msgstr ""
 
@@ -1250,7 +1250,7 @@ msgstr "en cours de téléchargement"
 msgid "start_date"
 msgstr "Date de démarrage"
 
-#: msc/includes/command_history.php:247
+#: msc/includes/command_history.php:249
 msgid "start_script"
 msgstr "Démarrer le script"
 
