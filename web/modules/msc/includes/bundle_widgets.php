@@ -328,6 +328,12 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
         $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
         $f->add(new TrFormElement(_T('Start inventory', 'msc'),                             new CheckboxTpl("do_inventory")), array("value" => $_POST['do_inventory'] == 'on' ? 'checked' : ''));
+
+        $f->add(new TrFormElement(_T('Halt client after', 'msc'),                           new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_POST['issue_halt_to_done'] == 'on' ? 'checked' : ''));
+        /*$f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_POST['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_POST['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
+        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_POST['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
+
         $f->add(new TrFormElement(_T('Delay betwen connections (minutes)', 'msc'),          new InputTpl("next_connection_delay")), array("value" => $_POST['next_connection_delay']));
         $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_POST['max_connection_attempt']));
         $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));
@@ -336,12 +342,6 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_POST['deployment_intervals']));
         $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
         $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',              "hide" => True));
-
-        $f->add(new TrFormElement(_T('Halt client after', 'msc'),                           new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_POST['issue_halt_to_done'] == 'on' ? 'checked' : ''));
-        /*$f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_POST['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
-        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_POST['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
-        $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_POST['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
-
         if (web_force_mode()) {
             $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(),    "hide" => True));
         } else {
