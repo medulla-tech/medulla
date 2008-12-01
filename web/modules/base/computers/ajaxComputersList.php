@@ -53,7 +53,16 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         }
     }
 }
-$names = array_map("join_value", array_values(getRestrictedComputersList($start, $start + $maxperpage, $filter, False)));
+$cl = getRestrictedComputersList($start, $start + $maxperpage, $filter, False);
+$cl1 = array();
+foreach ($cl as $k => $v) {
+    $cl1[$v[1]['cn'][0].$k] = $k;
+}
+$names = array();
+ksort($cl1);
+foreach ($cl1 as $k1 =>$k) {
+    $names[] = join_value($cl[$k]);
+}
 $count = getComputerCount($filter);
 
 /* Check:
