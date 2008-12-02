@@ -156,11 +156,20 @@ def startService():
     # Start periodic logging, called every 60 seconds
     delay = 60 - time.time() % 60
     twisted.internet.reactor.callLater(delay, logStats)
+    # add shutdown cleaner
+    twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp)
 
     logger.info('launcher %s: %d slots, listening on %s:%d' % (name, slots, bind, port))
 
     twisted.internet.reactor.run()
     return 0
+
+def cleanUp():
+    logger = logging.getLogger()
+    logger.info('launcher %s: Shuting down and cleaning up' % (LauncherConfig().name))
+    pulse2.launcher.ssh_agent.killSSHAgent()
+    logger.info('launcher %s: End' % (LauncherConfig().name))
+
 
 class Launcher(twisted.web.xmlrpc.XMLRPC):
     """Our launcher
@@ -386,3 +395,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

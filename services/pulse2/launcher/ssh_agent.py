@@ -23,7 +23,9 @@
 
 import re
 import popen2
-import os # for adding / removing a ssh key
+import os       # for adding / removing a ssh key
+import signal   # to kill ssh agent
+import time
 import logging
 
 from pulse2.launcher.config import LauncherConfig
@@ -41,9 +43,8 @@ def setupSSHAgent():
         if re.match(ssh_agent_auth_sock_re, line):
             LauncherConfig().ssh_agent_sock = re.search(ssh_agent_auth_sock_re, line).group(1)
         if re.match(ssh_agent_pid_re, line):
-            LauncherConfig().ssh_agent_pid = re.search(ssh_agent_pid_re, line).group(1)
+            LauncherConfig().ssh_agent_pid = int(re.search(ssh_agent_pid_re, line).group(1))
 
-    # FIXME: I should kill the agent if I'm taken down
     if not LauncherConfig().ssh_agent_sock:
         logging.getLogger().info("launcher %s: Successfully run the ssh-agent binary but can't find auth socket" % (LauncherConfig().name))
         return
@@ -56,6 +57,22 @@ def setupSSHAgent():
             logging.getLogger().info("launcher %s: Successfuly declared the ssh key '%s' to your ssh agent" % (LauncherConfig().name, keyname))
         else:
             logging.getLogger().warn("launcher %s: Couldn't declare the ssh key '%s' to your ssh agent, hope you won't need to forward it !" % (LauncherConfig().name, keyname))
+
+def killSSHAgent():
+    logger = logging.getLogger()
+
+    if LauncherConfig().ssh_agent_pid:
+        logging.getLogger().info("launcher %s: terminating the ssh-agent binary (pid is %s)" % (LauncherConfig().name, LauncherConfig().ssh_agent_pid))
+        try:
+            os.kill(LauncherConfig().ssh_agent_pid, signal.SIGTERM)
+            time.sleep(1) # give ssh-agent 1 second to exit
+            try:
+                os.kill(LauncherConfig().ssh_agent_pid, signal.SIGKILL)
+                logging.getLogger().warn("launcher %s: Had to kill the ssh-agent binary" % (LauncherConfig().name))
+            except OSError: # pid do not exists anymore
+                logging.getLogger().info("launcher %s: Successfully terminated the ssh-agent binary" % (LauncherConfig().name))
+        except OSError: # agent do not exists anymore
+            logging.getLogger().warn("launcher %s: the ssh-agent binary seems already down" % (LauncherConfig().name))
 
 def addPrivKeyToSSHAgent(key_name):
     """
