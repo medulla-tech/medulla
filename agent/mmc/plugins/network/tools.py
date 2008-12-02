@@ -32,11 +32,11 @@ from mmc.support.mmctools import shlaunch
 
 def dottedQuadToNum(ip):
     """Convert decimal dotted quad string to long integer"""
-    return socket.ntohl(struct.unpack('L', socket.inet_aton(ip))[0])
+    return socket.ntohl(struct.unpack('=L', socket.inet_aton(ip))[0])
 
 def numToDottedQuad(n):
     """Convert long int to dotted quad string"""
-    return socket.inet_ntoa(struct.pack('L', socket.htonl(n)))
+    return socket.inet_ntoa(struct.pack('=L', socket.htonl(n)))
 
 def makeMask(n):
     """Return a mask of n bits as a long integer"""
