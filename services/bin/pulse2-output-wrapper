@@ -249,12 +249,20 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                 format(SEPARATOR.join(config.thru_string), 'T')
             format("PRE-COMMAND FAILED CLIENT SIDE: exitcode = %s !" % (exitcode), 'P')
             format(SEPARATOR.join(config.check_command), 'P')
-            for line in self.stdout.splitlines():
+            stdout_split = self.stdout.splitlines()
+            stderr_split = self.stderr.splitlines()
+            for line in stdout_split:
+                format(line, 'P')
+            for line in stderr_split:
                 format(line, 'P')
             if exitcode == 1:
                 # A failure in pre-command should return 1, else something bad
                 # happened and we don't touch the exit code
-                exitcode = self._getPrecommandExitCode(line)
+                
+                if len(stdout_split) > 0:
+                    exitcode = self._getPrecommandExitCode(stdout_split[0])
+                elif len(stderr_split) > 0:
+                    exitcode = self._getPrecommandExitCode(stderr_split[0])
             ExitCode().set(exitcode)
             if twisted.internet.reactor.running:
                 twisted.internet.reactor.stop()
