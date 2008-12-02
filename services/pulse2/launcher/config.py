@@ -29,6 +29,7 @@ import grp          # for getgrpnam
 import string       # for atoi
 import logging      # logging stuff
 import os
+import stat
 
 # Others Pulse2 Stuff
 import pulse2.utils
@@ -200,7 +201,12 @@ class LauncherConfig(pulse2.utils.Singleton):
             for option in self.cp.options('ssh'):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
                     keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
-                    self.ssh_keys[keyname] = self.cp.get('ssh', option)
+                    keyfile = self.cp.get('ssh', option)
+                    if checkKeyPerm(keyfile):
+                        self.ssh_keys[keyname] = keyfile
+                        logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+                    else:
+                        logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
 
         # Parse "wget" section
         if self.cp.has_section("wget"):
@@ -326,4 +332,25 @@ class LauncherConfig(pulse2.utils.Singleton):
         for path in paths:
             if not os.path.exists(path):
                 raise Exception("Configuration error: path %s does not exists" % path)
+
+def checkKeyPerm(keyfile):
+    try:
+        stats = os.stat(keyfile)
+    except:
+        logging.getLogger().warn("launcher %s: something goes wrong while performing stat() on %s !" % (LauncherConfig().name, keyfile))
+        return False
+
+    if stats.st_uid != os.getuid():
+        logging.getLogger().debug("launcher %s: ssh key '%s' owner is %s, my uid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.getuid()))
+        return False
+
+    if stats.st_uid != os.geteuid():
+        logging.getLogger().debug("launcher %s: ssh key '%s' owner is %s, my euid is %s, dropping the key from the keyring" % (LauncherConfig().name, keyfile, stats.st_uid, os.geteuid()))
+        return False
+
+    if stat.S_IMODE(os.stat(keyfile).st_mode) & ~(stat.S_IRUSR | stat.S_IWUSR): # check if perm are at most rw-------
+        logging.getLogger().debug("launcher %s: ssh key '%s' perms are not *exactly* rw-------, dropping the key from the keyring" % (LauncherConfig().name, keyfile))
+        return False
+
+    return True
 
