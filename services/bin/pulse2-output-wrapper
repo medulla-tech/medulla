@@ -260,9 +260,9 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
                 # happened and we don't touch the exit code
                 
                 if len(stdout_split) > 0:
-                    exitcode = self._getPrecommandExitCode(stdout_split[0])
+                    exitcode = self._getPrecommandExitCode(stdout_split.pop())
                 elif len(stderr_split) > 0:
-                    exitcode = self._getPrecommandExitCode(stderr_split[0])
+                    exitcode = self._getPrecommandExitCode(stderr_split.pop())
             ExitCode().set(exitcode)
             if twisted.internet.reactor.running:
                 twisted.internet.reactor.stop()
