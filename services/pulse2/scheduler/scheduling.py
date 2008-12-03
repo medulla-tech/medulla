@@ -711,12 +711,12 @@ def runUploadPhase(myCommandOnHostID):
         try:
             mirrors = myT.mirrors.split('||')
         except:
-            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%', skipping command" % (myCommandOnHostID, myT.mirrors))
+            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCommandOnHostID, myT.mirrors))
             return None
 
         # Check mirrors
         if len(mirrors) != 2:
-            logger.warn("command_on_host #%s: we need two mirrors ! '%'" % (myCommandOnHostID, myT.mirrors))
+            logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCommandOnHostID, myT.mirrors))
             return None
         mirror = mirrors[0]
         fbmirror = mirrors[1]
@@ -728,7 +728,7 @@ def runUploadPhase(myCommandOnHostID):
 
 def _cbRunUploadPhaseTestMirror(result, mirror, fbmirror, client, myC, myCoH):
     if result:
-        return _runUploadPhase(mirror, client, myC, myCoH)
+        return _runUploadPhase(mirror, fbmirror, client, myC, myCoH)
     else:
         # Test the fallback mirror
         return _runUploadPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myCoH)
@@ -739,27 +739,28 @@ def _runUploadPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myC
         # primary mirror
         ma = mmc.plugins.msc.mirror_api.MirrorApi(fbmirror)
         d = ma.isAvailable(myC.package_id)
-        d.addCallback(_cbRunUploadPhase, fbmirror, client, myC, myCoH, True)
+        d.addCallback(_cbRunUploadPhase, mirror, fbmirror, client, myC, myCoH, True)
         return d
     else:
         # Go to upload phase, but pass False to tell that the package is not
         # available on the fallback mirror too
-        _cbRunUploadPhase(False, mirror, client, myC, myCoH)
+        _cbRunUploadPhase(False, mirror, fbmirror, client, myC, myCoH)
 
-def _cbRunUploadPhase(result, mirror, client, myC, myCoH, useFallback = False):
+def _cbRunUploadPhase(result, mirror, fbmirror, client, myC, myCoH, useFallback = False):
     if result:
         # The package is available on a mirror, start upload phase
-        return _runUploadPhase(mirror, client, myC, myCoH, useFallback)
+        return _runUploadPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
         updateHistory(myCoH.id, 'upload_failed', '255', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
-def _runUploadPhase(mirror, client, myC, myCoH, useFallback = False):
+def _runUploadPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False):
     if useFallback:
-        msg = 'Package \'%s\' is available on fallback mirror %s' % (myC.package_id, mirror)
+        msg = 'Package \'%s\' is not available on mirror %s\nPackage \'%s\' is available on fallback mirror %s' % (myC.package_id, mirror, myC.package_id, fbmirror)
+        mirror = fbmirror
     else:
-        msg = 'Package \'%s\' is available on %s' % (myC.package_id, mirror)
+        msg = 'Package \'%s\' is available on mirror %s' % (myC.package_id, mirror)
     updateHistory(myCoH.id, 'upload_in_progress', '0', '', msg)
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
     ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
