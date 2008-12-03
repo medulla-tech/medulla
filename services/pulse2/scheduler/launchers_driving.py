@@ -242,6 +242,7 @@ def callOnLauncher(coh_id, launcher, method, *args):
         for (k,v) in SchedulerConfig().launchers_uri.items():
             if v == launcher:
                 myCommandOnHost.setCurrentLauncher(k)
+                break
 
     def _eb(reason):
         logging.getLogger().warn("scheduler %s: while sending command to launcher %s : %s" % (SchedulerConfig().name, launcher, reason.getErrorMessage()))
