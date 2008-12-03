@@ -751,7 +751,7 @@ def _cbRunUploadPhase(result, mirror, fbmirror, client, myC, myCoH, useFallback 
         # The package is available on a mirror, start upload phase
         return _runUploadPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
-        updateHistory(myCoH.id, 'upload_failed', '255', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
+        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
