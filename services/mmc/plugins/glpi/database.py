@@ -986,6 +986,8 @@ class Glpi(DyngroupDatabaseHelper):
         """
         @return: all softwares defined in the GLPI database
         """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
         session = create_session()
         query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
@@ -1008,10 +1010,10 @@ class Glpi(DyngroupDatabaseHelper):
         """
         @return: all softwares defined in the GLPI database
         """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
         session = create_session()
-        query = session.query(Software).select_from(self.software.join(self.licenses).join(self.inst_software).join(self.machine))
-        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
-        query = self.__filter_on_entity(query, ctx)
+        query = session.query(Software).select_from(self.software.join(self.licenses))
         query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
