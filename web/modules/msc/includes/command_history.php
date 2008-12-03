@@ -308,10 +308,11 @@ class CommandHistory {
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
-            if ($hist['state'] == 'execution_failed') {
+            if (strpos($hist['state'], '_failed') !== False) {
                 $msgs = array(
                               /* When SSH returns 255, an error occured while
-                                 connecting to the host. */
+                                 connecting to the host. On some platforms like
+                                 RHEL 4, buggy SSH returns 1 */
                               255 => _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc'),
                               /* Known exit codes */
                               128 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
