@@ -287,7 +287,7 @@ class CommandHistory {
         $statusTable = getStatusTable();
         $i = 1;
         foreach ($this->db_ch as $hist) {
-            if (($hist['state'] == 'upload_in_progress') && ($hist['error_code'] == '0') && (array_key_exists('stderr', $hist)) && ($i != count($this->db_ch)) && (strpos($hist['stderr'], 'is available on') !== False)) {
+            if (($hist['state'] == 'upload_in_progress') && ($hist['error_code'] == '0') && (array_key_exists('stderr', $hist)) && ($i != count($this->db_ch)) && (strpos($hist['stderr'], 'is available on mirror') !== False)) {
                 /*
                   We are displaying which package server was used in push pull
                   mode. We want to keep the led green instead of orange to
