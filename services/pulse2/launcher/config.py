@@ -202,10 +202,11 @@ class LauncherConfig(pulse2.utils.Singleton):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
                     keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
                     keyfile = self.cp.get('ssh', option)
+                    self.ssh_keys[keyname] = keyfile
                     if checkKeyPerm(keyfile):
-                        self.ssh_keys[keyname] = keyfile
                         logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
                     else:
+                        del self.ssh_keys[keyname]
                         logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
 
         # Parse "wget" section
