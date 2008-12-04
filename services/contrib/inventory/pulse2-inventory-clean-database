@@ -2,7 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from sqlalchemy import *
+
+try:
+    from sqlalchemy import *
+except ImportError:
+    print "SqlAlchemy was not found, please install it !"
+    sys.exit(1)
+
+import sqlalchemy
 import logging
 
 # The inventory tables we wish to purge
@@ -270,6 +277,23 @@ def deleteEmptyMachines(machine):
     else:
         logger.info("deleteEmptyMachines : no rows to purge")
 
+def optimizeTables():
+
+    for table in tables_elements:
+        logger.info("optimizeTables : will optimize %s" % (table))
+        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
+        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+
+    for table in map(lambda x: 'has%s' % x, tables_elements):
+        logger.info("optimizeTables : will optimize %s" % (table))
+        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
+        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+
+    for table in ['Inventory', 'Machine']:
+        logger.info("optimizeTables : will optimize %s" % (table))
+        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
+        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+
 def usage(argv):
     print >> sys.stderr, 'Usage: %s [db_conn_string]' % argv[0]
     print >> sys.stderr, 'Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database'
@@ -278,6 +302,11 @@ def usage(argv):
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(usage(sys.argv))
+
+    if not sqlalchemy.__version__.startswith('0.3'):
+        print "Wrong version of SqlAlchemy found, please install a 0.3 version !"
+        sys.exit(1)
+
     mysql_db = create_engine(sys.argv[1])
     metadata = MetaData(mysql_db)
 
@@ -319,3 +348,8 @@ if __name__ == "__main__":
     logger.info("Cleaning up inventory parts...")
     cleanUpInventoryParts(inventory)
     logger.info("Done !")
+
+    logger.info("Optimizing tables")
+    optimizeTables()
+    logger.info("Done !")
+
