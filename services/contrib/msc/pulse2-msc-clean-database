@@ -7,6 +7,8 @@ import sqlalchemy
 import logging
 import datetime
 
+STATES_TO_CLEANUP = ['done', 'failed', 'stop']
+
 logger = logging.getLogger(sys.argv[0])
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
@@ -25,7 +27,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         if msc_dbversion > 13:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.fk_bundle], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*['done', 'failed'])), commands.c.fk_bundle != None), distinct = True)
+            not_finished_bundles = select([commands.c.fk_bundle], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.fk_bundle != None), distinct = True)
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.fk_bundle], and_(not_(commands.c.fk_bundle.in_(not_finished_bundles)), commands.c.creation_date >= creation_timestamp), distinct = True)
             # The finished and expired bundles are those that are finished, and
@@ -34,7 +36,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         else:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.bundle_id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*['done', 'failed'])), commands.c.bundle_id != None), distinct = True)
+            not_finished_bundles = select([commands.c.bundle_id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.bundle_id != None), distinct = True)
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.bundle_id], and_(not_(commands.c.bundle_id.in_(not_finished_bundles)), commands.c.creation_date >= creation_timestamp), distinct = True)
             # The finished and expired bundles are those that are finished, and
@@ -44,7 +46,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         if msc_dbversion > 13:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.fk_bundle]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(['done', 'failed'])), commands.c.fk_bundle != None)).distinct()
+            not_finished_bundles = select([commands.c.fk_bundle]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.fk_bundle != None)).distinct()
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.fk_bundle]).where(and_(commands.c.creation_date >= creation_timestamp, commands.c.fk_bundle != None)).distinct()
             # The finished and expired bundles are those that are finished, and
@@ -53,7 +55,7 @@ def query_bundles_to_delete(commands, commands_on_host, creation_timestamp):
         else:
             # The not finished bundles are those that own commands where all
             # commands_on_host state are not in the done or failed state
-            not_finished_bundles = select([commands.c.bundle_id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(['done', 'failed'])), commands.c.bundle_id != None)).distinct()
+            not_finished_bundles = select([commands.c.bundle_id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.bundle_id != None)).distinct()
             # Get the finished bundles with commands that haven't expired
             finished_bundles_not_expired = select([commands.c.bundle_id]).where(and_(commands.c.creation_date >= creation_timestamp, commands.c.bundle_id != None)).distinct()
             # The finished and expired bundles are those that are finished, and
@@ -71,17 +73,17 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
     """
     if sqlalchemy.__version__.startswith('0.3'):
         if msc_dbversion > 13:
-            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*['done', 'failed'])), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
+            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
             to_delete = select([commands.c.id], and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp), distinct = True)
         else:
-            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*['done', 'failed'])), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
+            not_finished_commands = select([commands.c.id], and_(commands_on_host.c.fk_commands == commands.c.id, not_(commands_on_host.c.current_state.in_(*STATES_TO_CLEANUP)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
             to_delete = select([commands.c.id], and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp), distinct = True)
     else:
         if msc_dbversion > 13:
-            not_finished_commands = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(['done', 'failed'])), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp)).distinct()
+            not_finished_commands = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp)).distinct()
             to_delete = select([commands.c.id]).where(and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.fk_bundle == None, commands.c.creation_date < creation_timestamp)).distinct()
         else:
-            not_finished_commands = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(['done', 'failed'])), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp)).distinct()
+            not_finished_commands = select([commands.c.id]).select_from(commands.join(commands_on_host)).where(and_(not_(commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp)).distinct()
             to_delete = select([commands.c.id]).where(and_(not_(commands.c.id.in_(not_finished_commands)), commands.c.bundle_id == None, commands.c.creation_date < creation_timestamp)).distinct()
     ret = to_delete.execute().fetchall()
     return ret
