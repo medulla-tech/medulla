@@ -3,7 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  *
- * $Id: cmd_state.php 24 2007-10-17 08:23:42Z nrueff $
+ * $Id$
  *
  * This file is part of LMC.
  *

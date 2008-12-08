@@ -2,7 +2,7 @@
 /**
  * (c) 2008 Mandriva, http://www.mandriva.com/
  *
- * $Id: vnc_client.php 377 2008-09-25 09:24:04Z cdelfosse $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
