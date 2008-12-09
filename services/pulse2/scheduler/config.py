@@ -202,3 +202,4 @@ class SchedulerConfig(pulse2.utils.Singleton):
                     uri += '%s:%s@' % (self.launchers[section]['username'], self.launchers[section]['password'])
                 uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
                 self.launchers_uri.update({section: uri})
+
