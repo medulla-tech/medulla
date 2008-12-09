@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 import xmlrpclib
 
 import twisted.web.xmlrpc
@@ -19,7 +41,7 @@ class P2PHTTPChannel(http.HTTPChannel):
     We inherit from http.HTTPChannel to log incoming connections when the MMC
     agent is in DEBUG mode, and to log connection errors.
     """
-    
+
     def connectionMade(self):
         logger = logging.getLogger()
         logger.debug("Connection from %s" % (self.transport.getHost().host,))
@@ -41,7 +63,7 @@ def makeSSLContext(verifypeer, cacert, localcert, log = True):
     @returns: a SSL context
     @rtype: twisted.internet.ssl.ContextFactory
     """
-    logger = logging.getLogger()    
+    logger = logging.getLogger()
     if verifypeer:
         logger.debug(localcert)
         fd = open(localcert)

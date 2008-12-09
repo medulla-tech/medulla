@@ -1,5 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8; -*-
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 import os
 import os.path
@@ -12,7 +33,7 @@ import twisted
 from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP, config_addons
 
-def running(inifile, deamonize):   
+def running(inifile, deamonize):
     config = P2PServerCP()
     config.setup(inifile)
 
@@ -20,7 +41,7 @@ def running(inifile, deamonize):
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
-                                    
+
     # Try to create the default log directory
     LOGDIR = '/var/log/mmc'
     if not os.path.exists(LOGDIR):
@@ -34,14 +55,14 @@ def running(inifile, deamonize):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
-    
+
     if config.real_package_deletion:
         logger.warning("Real package deletion is activated")
 
     # When starting, we log to stderr too
     hdlr2 = logging.StreamHandler()
     logger.addHandler(hdlr2)
-        
+
 
     ThreadLauncher().initialize(config)
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
@@ -55,16 +76,16 @@ def running(inifile, deamonize):
     ThreadLauncher().runThreads()
     twisted.internet.reactor.run()
     return 0
-                                                                                
+
 def cleanUp(config):
     logger = logging.getLogger()
     logger.info('Pulse package server shutting down, cleaning up...')
 
     # Unlink pidfile if it exists
     if os.path.isfile(config.pidfile):
-        os.seteuid(0)            
+        os.seteuid(0)
         os.setegid(0)
-        os.unlink(config.pidfile)    
+        os.unlink(config.pidfile)
 
 def daemon(config):
     """
@@ -74,13 +95,13 @@ def daemon(config):
     @type pidfile: str
     """
     pidfile = config.pidfile
-        
+
     # Test if mmcagent has been already launched in daemon mode
     if os.path.isfile(pidfile):
         print pidfile+" pid already exist. Maybe pulse2-package-server is already running\n"
         print "use /etc/init.d script to stop and relaunch it"
         sys.exit(0)
-        
+
     # do the UNIX double-fork magic, see Stevens' "Advanced
     # Programming in the UNIX Environment" for details (ISBN 0201563177)
     try:
@@ -91,22 +112,22 @@ def daemon(config):
     except OSError, e:
         print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
-        
+
     # decouple from parent environment
     os.close(sys.stdin.fileno())
     os.close(sys.stdout.fileno())
     os.close(sys.stderr.fileno())
     os.chdir("/")
     os.setsid()
-    
+
     # do second fork
     try:
         pid = os.fork()
         if pid > 0:
             # exit from second parent, print eventual PID before
             print "Daemon PID %d" % pid
-            os.seteuid(0)            
-            os.setegid(0)            
+            os.seteuid(0)
+            os.setegid(0)
             os.system("echo " + str(pid) + " > " + pidfile)
             sys.exit(0)
     except OSError, e:
@@ -129,7 +150,7 @@ if __name__ == "__main__":
     if not os.path.exists(inifile):
         print "File '%s' does not exist." % inifile
         sys.exit(3)
- 
+
     # Start the daemon main loop
     sys.exit(running(inifile, daemonize))
 
