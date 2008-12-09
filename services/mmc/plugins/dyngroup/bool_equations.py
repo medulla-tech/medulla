@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 import re
 import logging
 from random import randint
@@ -28,7 +50,7 @@ s2x6 = re.compile('</p>$')
 class BoolRequest(object):
     def __init__(self):
         self.equ = None
-        
+
     def parse(self, str):
         self.equ = BoolEquation(self.clean(str))
         logging.getLogger().debug(self.equ.toXML())
@@ -45,7 +67,7 @@ class BoolRequest(object):
         # remove userless \n
         str = p11.sub('', str)
         return str
-        
+
     def isValid(self):
         if self.equ == None:
             self.logger.debug("isValid: no equation")
@@ -62,7 +84,7 @@ class BoolRequest(object):
 
     def countOps(self):
         return self.equ.count()
-        
+
     def toS(self):
         return self.equ.toS()
     def toXML(self):
@@ -78,7 +100,7 @@ class BoolOperator(object): # abstract
         pass
     def getTree(self, lists):
         pass
-        
+
 class BoolOperatorAnd(BoolOperator):
     def toS(self, list):
         return "AND ("+(', '.join(map(to_s, list.values())))+")"
@@ -117,14 +139,14 @@ class BoolOperatorOr(BoolOperator):
                 for x in list:
                     retour.append(x)
             retour = unique(retour)
-            
+
             for list in neg: # don't know what to do with neg values...
                 pass
-            
+
         return [retour, True]
     def getTree(self, lists):
         return ['OR', lists]
-                
+
 class BoolOperatorNot(BoolOperator):
     def toS(self, list):
         return "NOT ("+(', '.join(map(to_s, list.values())))+")"
@@ -136,7 +158,7 @@ class BoolOperatorNot(BoolOperator):
         return list
     def getTree(self, lists):
         return ['NOT', lists]
-        
+
 def to_xml(obj):
     return obj.toXML()
 def to_s(obj):
@@ -151,7 +173,7 @@ class BoolElement(object): # abstract
         pass
     def getTree(self, lists):
         pass
-    
+
 class BoolEquation(BoolElement):
     def __init__(self, str, is_xml = False):
         self.h_op = {
@@ -166,16 +188,16 @@ class BoolEquation(BoolElement):
             self.parseXML(str)
         else:
             self.parse(str)
-    
+
     def check(self): # ids are always in a range from 1 to count
         try:
             return Set(map(lambda x:int(x), self.getVals())) == Set(range(1,1+self.count()))
         except:
             return False
-        
+
     def count(self):
         return len(self.getVals())
-        
+
     def getVals(self):
         return Set(self._getVals())
 
@@ -199,7 +221,7 @@ class BoolEquation(BoolElement):
             dom = dom.firstChild
         else:
             dom = xml
-            
+
         if self.h_op[dom.getAttribute('t')]: # should be a node AND/OR/NOT
             self.op = self.h_op[dom.getAttribute('t')]()
             for child in dom.childNodes: # node p
@@ -211,13 +233,13 @@ class BoolEquation(BoolElement):
                     self.list[be.id] = be
         else:
             raise "unknown"
-        
-    
+
+
     def parse(self, str):
         # as XML parse better, and convertion from STR to XML is quite easy, we use the XML parser
         xml = s2x6.sub('', s2x5.sub('</p></b>', s2x4.sub('</p><p>', s2x3.sub('<b t="NOT"><p>', s2x2.sub('<b t="OR"><p>', s2x1.sub('<b t="AND"><p>', str))))))
         return self.parseXML(xml)
-            
+
     def merge(self, lists):
         retour = []
         for beid in self.list:
@@ -225,26 +247,26 @@ class BoolEquation(BoolElement):
         retour = self.op.merge(retour)
         logging.getLogger().debug('>>>> new one')
         return retour
-        
+
     def getTree(self, lists):
         retour = []
         for beid in self.list:
             retour.append(self.list[beid].getTree(lists))
         retour = self.op.getTree(retour)
         return retour
-    
+
     def toS(self):
         func = getattr(self.op, 'toS')
         return func(self.list)
     def toXML(self):
         func = getattr(self.op, 'toXML')
         return func(self.list)
-    
+
 class BoolValue(BoolElement):
     def __init__(self, value):
         self.setValue(value)
         self.id = randint(0, 100000)
-    def toS(self): 
+    def toS(self):
         return self.getValue()
     def toXML(self):
         return self.val

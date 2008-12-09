@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 import re
 import dircache
 import os
@@ -71,12 +93,12 @@ class PackageA:
             elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
                 pkg['do_reboot'] = 'enable'
             else:
-                self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot)) 
+                self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
             del pkg['reboot']
         except KeyError:
             pkg['do_reboot'] = 'disable'
         return pkg
-        
+
     def getPackageDetail(self, pid):
         if self.initialized_failed:
             return False
@@ -206,7 +228,7 @@ class SendBundleCommand:
         self.gid = gid
         self.bundle_id = None
         self.proxies = proxies
-        
+
     def onError(self, error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
         return self.deferred.callback([])

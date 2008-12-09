@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 from mmc.support.mmctools import shLaunch
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
@@ -58,7 +80,7 @@ def activate_2():
         queryManager = QueryManager()
         queryManager.activate()
     return True
-    
+
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -84,18 +106,18 @@ class RpcProxy(RpcProxyI):
     def group_name_exists(self, name, gid = None):
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
-        
+
     def get_group(self, id):
         ctx = self.currentContext
         grp = DyngroupDatabase().get_group(ctx, id)
         if grp:
             return xmlrpcCleanup(grp.toH())
         return xmlrpcCleanup(False)
-        
+
     def delete_group(self, id):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
-        
+
     def create_group(self, name, visibility):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility))
@@ -103,15 +125,15 @@ class RpcProxy(RpcProxyI):
     def tos_group(self, id):
         ctx = self.currentContext
         self.logger.error('tos_group is not implemented')
-        
+
     def setname_group(self, id, name):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().setname_group(ctx, id, name))
-        
+
     def setvisibility_group(self, id, visibility):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().setvisibility_group(ctx, id, visibility))
-    
+
     def request_group(self, id):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().request_group(ctx, id))
@@ -181,7 +203,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(DyngroupDatabase().delmembers_to_group(ctx, id, uuids))
 
     def importmembers_to_group(self, id, elt, values):
-        ctx = self.currentContext               
+        ctx = self.currentContext
         # get machines uuids from values
         request, bool, optimization = forgeRequest(elt, values)
         req = {'request':request, 'equ_bool':bool, 'optimization' : optimization}
@@ -218,17 +240,17 @@ class RpcProxy(RpcProxyI):
             return False
         result = queryManager.getQueryPossibilities(ctx)
         return xmlrpcCleanup(result)
-    
+
     def getPossiblesModules(self):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
         return xmlrpcCleanup(queryManager.getPossiblesModules(ctx))
-    
+
     def getPossiblesCriterionsInMainModule(self):
         moduleName = ComputerManager().main
         return self.getPossiblesCriterionsInModule(moduleName)
-    
+
     def getPossiblesCriterionsInModule(self, moduleName):
         ctx = self.currentContext
         if not isDynamicEnable():
@@ -240,13 +262,13 @@ class RpcProxy(RpcProxyI):
         if not isDynamicEnable():
             return False
         return xmlrpcCleanup(queryManager.getTypeForCriterionInModule(ctx, moduleName, criterion))
-    
+
     def getPossiblesValuesForCriterionInModule(self, moduleName, criterion):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
         return xmlrpcCleanup(queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion))
-    
+
     def getPossiblesValuesForCriterionInModuleFuzzy(self, moduleName, criterion, search = ''):
         ctx = self.currentContext
         if not isDynamicEnable():
@@ -257,18 +279,18 @@ class RpcProxy(RpcProxyI):
         # FIXME: maybe the range limitation could be done on the queryManager ?
         ret = ret[:100]
         return xmlrpcCleanup(ret)
-    
+
     def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, value1, value2 = ''): # not used anymore ?
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        result = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(value1), unescape(value2)) 
+        result = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(value1), unescape(value2))
         ret = result[1]
         # Only returns the 100 first results
         # FIXME: maybe the range limitation could be done on the queryManager ?
         ret = ret[:100]
         return xmlrpcCleanup(ret)
-        
+
     def checkBoolean(self, bool):
         if bool == None or bool == '':
             return [True, -1]
@@ -280,7 +302,7 @@ class RpcProxy(RpcProxyI):
             logging.getLogger().debug(e)
             return [False, -1]
         return xmlrpcCleanup([b.isValid(), b.countOps()])
-    
+
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:

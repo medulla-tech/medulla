@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 import re
 import os
 import logging
@@ -17,29 +39,29 @@ class SchedulerApi(Singleton):
     def __init__(self):
         self.logger = logging.getLogger()
         self.config = mmc.plugins.msc.MscConfig("msc")
-        
+
         if self.config.sa_enable:
             if self.config.sa_enablessl:
                 self.server_addr = 'https://'
             else:
                 self.server_addr = 'http://'
-    
+
             if self.config.sa_username != '':
                 self.server_addr += self.config.sa_username
                 if self.config.sa_password != '':
-                    self.server_addr += ":"+self.config.sa_password 
+                    self.server_addr += ":"+self.config.sa_password
                 self.server_addr += "@"
-    
+
             self.server_addr += self.config.sa_server+':'+str(self.config.sa_port) + self.config.sa_mountpoint
             self.logger.debug('SchedulerApi will connect to %s' % (self.server_addr))
-    
+
             if self.config.sa_verifypeer:
                 self.saserver = XmlrpcSslProxy(self.server_addr)
                 self.sslctx = makeSSLContext(self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert, False)
                 self.saserver.setSSLClientContext(self.sslctx)
             else:
                 self.saserver = Proxy(self.server_addr)
-    
+
     def onError(self, error, funcname, args):
         self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
         return error
@@ -63,7 +85,7 @@ class SchedulerApi(Singleton):
             ret = self.config.default_scheduler
         self.logger.debug("Using scheduler '%s'" % ret)
         return ret
-    
+
     def cb_convert2id(self, result):
         if type(result) == list:
             return map(lambda s: self.convert2id(s), result)
@@ -79,7 +101,7 @@ class SchedulerApi(Singleton):
             return d
         else:
             return defer.succeed(MscConfig("msc").default_scheduler)
-        
+
     def getSchedulers(self, machines):
         if self.config.sa_enable:
             machines = map(lambda m: self.convertMachineIntoH(m), machines)

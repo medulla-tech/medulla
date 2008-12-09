@@ -1,3 +1,25 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.plugins.glpi.auth import GlpiAuthenticator
@@ -30,7 +52,7 @@ class GlpiProvisioner(ProvisionerI):
     This provisioner can connect to the GLPI login page to force a GLPI user
     creation/sync, and update MMC user right according to the user GLPI profile
     """
-    
+
     def __init__(self, conffile = None, name = "glpi"):
         if not conffile:
             conffile = getConfigFile(name)
@@ -61,7 +83,7 @@ class GlpiProvisioner(ProvisionerI):
             except KeyError:
                 acls = None
             if not acls:
-                self.logger.info("No ACL to apply for the GLPI profile %s" % selected)                
+                self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
             else:
                 l = ldapUserGroupControl()
                 self.logger.info("Setting MMC ACL corresponding to GLPI profile %s: %s" % (selected, acls))
