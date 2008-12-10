@@ -176,7 +176,7 @@ class AclRadioTpl extends RadioTpl {
 $aclString = getAcl($_GET["user"]);
 list($acl, $acltab, $aclattr) = createAclArray($aclString);
 
-if ($_POST["buser"]) {
+if (isset($_POST["buser"])) {
     foreach ($_SESSION['supportModList'] as $mod) {
         unset($acl[$mod]);
     }
@@ -203,7 +203,7 @@ if ($_POST["buser"]) {
     }
     $aclString = getAcl($_GET["user"]);
     list($acl, $acltab, $aclattr) = createAclArray($aclString);
-} elseif ($_POST["bgetacl"]) {
+} elseif (isset($_POST["bgetacl"])) {
     ob_end_clean();
     header("Pragma: ");
     header("Cache-Control: ");
@@ -217,27 +217,27 @@ function createAclAttrTemplate($module_name, $aclattr, $form) {
     global $aclArray;
     $rowNum=1;
     
-    if ($aclArray[$module_name]!=NULL)
-    {
-    $MMCApp =&MMCApp::getInstance();
-    $base = &$MMCApp->getModule($module_name);
-    $form->add(new TitleElement(_($base->getDescription())));
-    $form->push(new Table());
-    $form->add(new TrTitleElement(array(0=>_("Attribute description"),1=>_("read only"),2=>_("read/write"),3=>_("hide"))));
-    foreach ($aclArray[$module_name] as $key => $value) {
-        $rowNum++;
-        $radio=new AclRadioTpl("aclattr[".$key."]");
+    if (!empty($aclArray[$module_name])) {
+        $MMCApp =&MMCApp::getInstance();
+        $base = &$MMCApp->getModule($module_name);
+        $form->add(new TitleElement(_($base->getDescription())));
+        $form->push(new Table());
+        $form->add(new TrTitleElement(array(0=>_("Attribute description"),1=>_("read only"),2=>_("read/write"),3=>_("hide"))));
+        foreach ($aclArray[$module_name] as $key => $value) {
+            $rowNum++;
+            $radio=new AclRadioTpl("aclattr[".$key."]");
             $radio->setValues(array("0"=>"ro","1"=>"rw","2"=>""));
-        if ($aclattr[$key]=="ro") {
-            $radio->setSelected("ro");
-        } else if ($aclattr[$key]=="rw"){
-            $radio->setSelected("ro");
-        } else {
             $radio->setSelected("");
+            if (isset($aclattr[$key])) {
+                if ($aclattr[$key]=="ro") {
+                    $radio->setSelected("ro");
+                } else if ($aclattr[$key]=="rw"){
+                    $radio->setSelected("rw");
+                }
+            }
+            $form->add(new TrAclFormElement(_($value), $radio, $rowNum));
         }
-        $form->add(new TrAclFormElement(_($value), $radio, $rowNum));
-    }
-    $form->pop();
+        $form->pop();
     }
 }
 
@@ -263,7 +263,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
         $form->add(new TrTitleElement(array(0=>_("Web page description"),1=>_("Authorization"))));
         foreach ($subvalue as $actionkey => $actionvalue) {
             if ($descArray[$key][$subkey][$actionkey]) {
-                if ($acl[$key][$subkey][$actionkey]["right"]=='on'){
+                if (isset($acl[$key][$subkey][$actionkey]["right"]) && ($acl[$key][$subkey][$actionkey]["right"]=='on')) {
                     $form->add(new TrAclFormElement(_( $descArray[$key][$subkey][$actionkey]), new CheckboxTpl("acl[".$key."][".$subkey."][".$actionkey."][right]"), $rowNum, array("value" => "checked")));
                 } else {
                     $form->add(new TrAclFormElement(_($descArray[$key][$subkey][$actionkey]),  new CheckboxTpl("acl[".$key."][".$subkey."][".$actionkey."][right]"),$rowNum,array("value" => "")));

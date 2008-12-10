@@ -56,8 +56,10 @@ function createAclArray($aclString) {
     if (strlen($aclattr)) {
         $arrayAttr=split(':',$aclattr);
         foreach($arrayAttr as $items) {
-            list($attrName,$value) = split('=',$items);
-            $retaclattr[$attrName]=$value;
+            if (!empty($items)) {
+                list($attrName,$value) = split('=',$items);
+                $retaclattr[$attrName]=$value;
+            }
         }
     }
     
@@ -71,18 +73,18 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
     $res = "";
     //fetch all modules in $arrAcl
     foreach ($arrAcl as $modKey => $valKey ){
-        if ($arrAcl[$modKey]["right"]) {
+        if (isset($arrAcl[$modKey]["right"])) {
             $res.=":$modKey";
         }
         //fetch all submodules in $valKey
         else foreach ($valKey as $submodKey => $submodvalKey ){
-            if ($arrAcl[$modKey][$submodKey]["right"]) {
+            if (isset($arrAcl[$modKey][$submodKey]["right"])) {
                 $res.=":$modKey#$submodKey";
             }
 
             //fetch all action in
             else foreach ($submodvalKey as $actionKey => $actionvalKey) {
-                if ($arrAcl[$modKey][$submodKey][$actionKey]["right"]) {
+                if (isset($arrAcl[$modKey][$submodKey][$actionKey]["right"])) {
                     $res.=":$modKey#$submodKey#$actionKey";
                 }
             }
@@ -95,7 +97,7 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
                    set too */
                 if (isset($arrAcl[$modKey][$submodKey][$actionKey])) {
                     foreach ($actionvalKey as $tabKey => $tabValue) {
-                        if ($arrAclTab[$modKey][$submodKey][$actionKey][$tabKey]["right"]) {
+                        if (isset($arrAclTab[$modKey][$submodKey][$actionKey][$tabKey]["right"])) {
                             $res.=":$modKey#$submodKey#$actionKey#$tabKey";
                         }
                     }
