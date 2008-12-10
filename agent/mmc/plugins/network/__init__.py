@@ -190,8 +190,20 @@ def modifyRecord(zone, hostname, ip):
 def getSOARecord(zone):
     return Dns().getSOARecord(zone)
 
-def setNSRecord(zone, nameserver):
-    Dns().setNSRecord(zone, nameserver)
+def setSOANSRecord(zone, nameserver):
+    Dns().setSOANSRecord(zone, nameserver)
+
+def setNSRecords(zone, nameservers):
+    Dns().setNSRecords(zone, nameservers)
+
+def setMXRecords(zone, mxservers):
+    Dns().setMXRecords(zone, mxservers)
+
+def getNSRecords(zone):
+    return Dns().getNSRecords(zone)
+
+def getMXRecords(zone):
+    return Dns().getMXRecords(zone)
 
 def setZoneDescription(zone, description):
     Dns().setZoneDescription(zone, description)

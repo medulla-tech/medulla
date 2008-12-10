@@ -216,13 +216,13 @@ zone "%(zone)s" {
             "minimum" : "1H",
             }
         self.setSOARecord(name, rec)
-        self.setNSRecord(name, ns)
+        self.setSOANSRecord(name, ns)
 
         # Fill SOA for reverse zone too
         if reverse:
             self.addSOA(reverseZone, name)
             self.setSOARecord(reverseZone, rec)
-            self.setNSRecord(reverseZone, ns)
+            self.setSOANSRecord(reverseZone, ns)
 
         if nameserverip:
             # Add a A record for the primary nameserver
@@ -288,7 +288,12 @@ zone "%(zone)s" {
             s = "%(nameserver)s %(emailaddr)s %(serial)s %(refresh)s %(retry)s %(expiry)s %(minimum)s" % record
             self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "sOARecord", [s])])
 
-    def setNSRecord(self, zoneName, nameserver):
+    def setSOANSRecord(self, zoneName, nameserver):
+        """
+        Set the name server for the SOA record.
+        It updates the SOARecord field and nsRecord field of the @ LDAP entry
+        of this given zone.
+        """
         soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
         if soa:
             soaDN = soa[0][0]
@@ -298,6 +303,33 @@ zone "%(zone)s" {
         if soaRecord:
             soaRecord["nameserver"] = nameserver
             self.setSOARecord(zoneName, soaRecord)
+            self.updateZoneSerial(zoneName)
+
+    def setNSRecords(self, zoneName, nameservers):
+        """
+        Update the nSRecord fields of the @ LDAP entry of the given zone.
+        The nsRecord corresponding to the name server containted into the
+        SOARecord field won't be deleted. Use the setSOANSRecord to update it.
+        """
+        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if soa:
+            soaDN = soa[0][0]
+            soanameserver = soa[0][1]["sOARecord"][0].split()[0]
+            # Assert that the name server contained into the SOA record won't
+            # be deleted
+            if soanameserver not in nameservers:
+                nameservers.append(soanameserver)
+            self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "nSRecord", nameservers)])
+            self.updateZoneSerial(zoneName)
+
+    def setMXRecords(self, zoneName, mxservers):
+        """
+        Update the mXRecord fields of the @ LDAP entry of the given zone.
+        """
+        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if soa:
+            soaDN = soa[0][0]
+            self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "mXRecord", mxservers)])
             self.updateZoneSerial(zoneName)
 
     def setZoneDescription(self, zoneName, description):
@@ -328,6 +360,31 @@ zone "%(zone)s" {
             except KeyError:
                 pass
         return ret            
+
+    def getNSRecords(self, zoneName):
+        """
+        Get the name servers of a zone
+        """
+        ret = []
+        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if soa:
+            soaDN = soa[0][0]
+            ret = soa[0][1]["nSRecord"]
+        return ret
+
+    def getMXRecords(self, zoneName):
+        """
+        Get the MX servers of a zone
+        """
+        ret = []
+        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if soa:
+            soaDN = soa[0][0]
+            try:
+                ret = soa[0][1]["mXRecord"]
+            except KeyError:
+                pass
+        return ret
 
     def searchReverseZone(self, ip):
         """
