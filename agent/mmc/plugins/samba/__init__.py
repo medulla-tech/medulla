@@ -249,7 +249,7 @@ def smbInfoSave(pdc, homes, options):
 
 def isPdc():
     try: smbObj = smbConf(SambaConfig("samba").samba_conf_file)
-    except: raise mmcException('cannot open conffile')
+    except: raise Exception("Can't open SAMBA configuration file")
     return smbObj.isPdc()
 
 def backupShare(share, media, login):
