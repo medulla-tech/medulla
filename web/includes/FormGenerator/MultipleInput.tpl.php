@@ -35,7 +35,11 @@ require_once("../session.inc.php");
 require_once ("../PageGenerator.php");
 require_once ("../FormGenerator.php");
 
-$arr = $_POST[$name];
+if (isset($_POST[$name])) {
+    $arr = $_POST[$name];
+} else {
+    $arr = array();
+}
 
 if (isset($_POST['del'])) {
     if (count($arr)>1) {
@@ -56,6 +60,8 @@ if (!isset($aclArray)) {
     $aclArray = array();
 }
 
-$test = new FormElement(_T($name,"mail"),new MultipleInputTpl($name,urldecode($_POST['desc'])));
-$test->setCssError($name);
-$test->display($arr);
+$mtpl = new MultipleInputTpl($name, urldecode($_POST['desc']));
+$mtpl->setRegexp(stripslashes(urldecode($_POST['regexp'])));
+$fe = new FormElement(_T($name,"mail"), $mtpl);
+$fe->setCssError($name);
+$fe->display($arr);

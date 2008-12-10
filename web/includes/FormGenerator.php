@@ -28,7 +28,7 @@
 
 function displayErrorCss($name) {
     global $formErrorArray;
-    if ($formErrorArray[$name]==1) {
+    if (isset($formErrorArray[$name]) && ($formErrorArray[$name]==1)) {
         print ' style="color: #C00; text-align:right;"';
     }
 }
@@ -187,6 +187,9 @@ class CheckboxTpl extends AbstractTpl{
      */
     function display($arrParam = array()) {
         if (empty($arrParam)) $arrParam = $this->options;
+        if (!isset($arrParam['extraArg'])) {
+            $arrParam["extraArg"] = '';
+        }
         print '<input '.$arrParam["value"].' name="'.$this->name.'" id="'.$this->name.'" type="checkbox" class="checkbox" '.$arrParam["extraArg"].' />';
         if (isset($this->rightlabel)) print $this->rightlabel . "\n<br/>\n";
     }
@@ -236,8 +239,10 @@ class InputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
         print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" '.$arrParam["disabled"].' /></span>';
-
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
         if (!isset($arrParam["required"]))
@@ -246,9 +251,9 @@ class InputTpl extends AbstractTpl{
                     if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
                         return true
                     }';
-        if (false) print alert("' . $this->name . '"); // Used for debug only
+        if (false) print 'alert("' . $this->name . '");'; // Used for debug only
         print '
-                    var rege = '.$this->regexp.'
+                    var rege = '.$this->regexp.';
                     if ((rege.exec($(\''.$this->name.'\').value))!=null) {
                         return true
                     } else {
@@ -350,7 +355,7 @@ class HiddenTpl extends AbstractTpl{
     function display($arrParam = array()) {
         if (empty($arrParam)) $arrParam = $this->options;
         /* FIXME: ??? */
-        if ($arrParam=='') {
+        if (($arrParam == '') && isset($_POST[$this->name])) {
             $arrParam = $_POST[$this->name];
         }
         if (!isset($arrParam["hide"])) print $arrParam['value'];
@@ -485,15 +490,15 @@ class MultipleInputTpl extends AbstractTpl {
 
     function display($arrParam) {
         print '<div id="'.$this->name.'">';
-        print '<table cellspacing="0">';
+        print '<table cellspacing="0">';        
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement($this->desc,
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
                                                array('key'=>$key,
                                                      'name'=> $this->name)
                                                );
-            $test->setCssError($name.$key);
-            $test->display(array("value"=>$param));
+            $test->setCssError($this->name . $key);
+            $test->display(array("value" => $param));
         }
         print '<tr><td width="40%" style="text-align:right;">';
         if (count($arrParam) == 0) {
@@ -502,7 +507,7 @@ class MultipleInputTpl extends AbstractTpl {
         print '</td><td>';
         print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc).'\' }); return false;"/>';
+        { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.urlencode($this->regexp) . '\' }); return false;"/>';
         print '</td></tr>';
         print '</table>';
         print '</div>';
@@ -664,10 +669,12 @@ class FormElement extends HtmlElement {
     var $template;
     var $desc;
     var $cssErrorName;
+    var $tooltip;
 
     function FormElement($desc,$tpl) {
-        $this->desc=$desc;
-        $this->template=&$tpl;
+        $this->desc = $desc;
+        $this->template = &$tpl;
+        $this->tooltip = False;
     }
 
     function setCssError($name) {
@@ -742,6 +749,8 @@ class DeletableTrFormElement extends FormElement{
 
         if ($this->key==0) {
             $desc = $this->desc;
+        } else {
+            $desc = '';
         }
         print '<tr><td width="40%" ';
         print displayErrorCss($this->cssErrorName);
@@ -803,6 +812,7 @@ class TrFormElement extends FormElement{
     function TrFormElement($desc,$tpl,$extraInfo = array()) {
         $this->desc=$desc;
         $this->template=&$tpl;
+        $this->tooltip = False;
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
