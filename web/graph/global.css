@@ -1292,7 +1292,7 @@ a.tooltip:hover{
 a.tooltip
 {
 	padding: 0px;
-	border-bottom: 1px dotted #FF3300;
+	border-bottom: 1px dotted #0033FF;
 }
 
 a.tooltip:hover span{
