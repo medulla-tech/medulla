@@ -31,7 +31,9 @@ import logging
 import mmc.support.mmctools
 from pulse2.utils import Singleton, Pulse2ConfigParser
 
-class DatabaseConfig(Singleton):
+class DatabaseConfig(Pulse2ConfigParser):
+    dbsection = "database"
+    
     dbdriver = 'mysql'
     dbhost = "127.0.0.1"
     dbname = None
@@ -40,6 +42,7 @@ class DatabaseConfig(Singleton):
     dbpasswd = 'mmc'
 
     dbpoolrecycle = 60
+    dbpoolsize = 5 
     dbsslenable = False
     dbsslca = None
     dbsslcert = None
@@ -50,25 +53,28 @@ class DatabaseConfig(Singleton):
         self.cp = Pulse2ConfigParser()
         self.cp.read(config_file)
                                 
-        if self.cp.has_section("database"):
-            if self.cp.has_option("database", "dbdriver"):
-                self.dbdriver = self.cp.get("database", "dbdriver")
-            if self.cp.has_option("database", "dbhost"):
-                self.dbhost = self.cp.get("database", "dbhost")
-            if self.cp.has_option("database", "dbname"):
-                self.dbname = self.cp.get("database", "dbname")
-            if self.cp.has_option("database", "dbuser"):
-                self.dbuser = self.cp.get("database", "dbuser")
-            if self.cp.has_option("database", "dbpasswd"):
-                self.dbpasswd = self.cp.getpassword("database", "dbpasswd")
+        if self.cp.has_section(self.dbsection):
+            if self.cp.has_option(self.dbsection, "dbdriver"):
+                self.dbdriver = self.cp.get(self.dbsection, "dbdriver")
+            if self.cp.has_option(self.dbsection, "dbhost"):
+                self.dbhost = self.cp.get(self.dbsection, "dbhost")
+            if self.cp.has_option(self.dbsection, "dbname"):
+                self.dbname = self.cp.get(self.dbsection, "dbname")
+            if self.cp.has_option(self.dbsection, "dbuser"):
+                self.dbuser = self.cp.get(self.dbsection, "dbuser")
+            if self.cp.has_option(self.dbsection, "dbpasswd"):
+                self.dbpasswd = self.cp.getpassword(self.dbsection, "dbpasswd")
 
-            if self.cp.has_option("database", "dbpoolrecycle"):
-                self.dbpoolrecycle = self.cp.getint("database", "dbpoolrecycle")
-                                     
-            if self.cp.has_option("database", "dbsslenable"):
-                self.dbsslenable = self.cp.getboolean("database", "dbsslenable")
+            if self.cp.has_option(self.dbsection, "dbpoolrecycle"):
+                self.dbpoolrecycle = self.cp.getint(self.dbsection, "dbpoolrecycle")
+
+            if self.cp.has_option(self.dbsection,  "dbpoolsize"):
+                self.dbpoolsize = self.cp.getint(self.dbsection, "dbpoolsize")
+
+            if self.cp.has_option(self.dbsection, "dbsslenable"):
+                self.dbsslenable = self.cp.getboolean(self.dbsection, "dbsslenable")
                 if self.dbsslenable:
-                    self.dbsslca = self.cp.get("database", "dbsslca")
-                    self.dbsslcert = self.cp.get("database", "dbsslcert")
-                    self.dbsslkey = self.cp.get("database", "dbsslkey")
+                    self.dbsslca = self.cp.get(self.dbsection, "dbsslca")
+                    self.dbsslcert = self.cp.get(self.dbsection, "dbsslcert")
+                    self.dbsslkey = self.cp.get(self.dbsection, "dbsslkey")
 

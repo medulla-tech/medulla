@@ -57,11 +57,14 @@ class InventoryDatabaseConfig(DatabaseConfig):
     graph = {}
     display = [['cn', 'Computer Name'], ['displayName', 'Description']]
     content = {}
-    
+
+    dbname = "inventory"
 
     def setup(self, config_file):
+        # read the database configuration
         DatabaseConfig.setup(self, config_file)
 
+        # read the other inventory default parameters
         if self.cp.has_section("graph"):
             for i in self.getInventoryParts():
                 if self.cp.has_option("graph", i):

@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from sets import Set
 from sqlalchemy import *
 from sqlalchemy.exceptions import SQLError
 from mmc.plugins.pulse2.group import ComputerGroupManager
@@ -37,18 +38,23 @@ from pulse2.database.database_helper import DatabaseHelper
 
 class DyngroupDatabaseHelper(DatabaseHelper):
     def init(self):
-        self.logger = logging.getLogger()
+        self.filters = {}
 
-    def filter(self, ctx, join_query, filt, query, grpby):
+    def filter(self, ctx, join_query, filt, query, grpby, filters = None):
+        if filters != None:
+            self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
         try:
-            if 'query' in filt:
-                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
-                for table in join_tables:
-                    join_query = join_query.join(table)
+            if not filt.has_key('query'):
+                return (join_query, query_filter)
+            query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
+            for table in join_tables:
+                join_query = join_query.join(table)
+        except KeyError, e:
+            self.logger.error(e)
         except TypeError, e:
-            self.logger.exception(e)
+            self.logger.error(e)
 
         return (join_query, query_filter)
 
@@ -81,16 +87,22 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
 
-                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                filter_on.append(grpby.in_(*res))
+                filter_on.append(grpby.in_(res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
@@ -102,6 +114,8 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         Build AND queries
         """
         filter_on = []
+        result_set = None
+        optimize = True
         for q in queries:
             if len(q) == 4:
                 if q[1] == 'dyngroup':
@@ -109,20 +123,34 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
 
-                q = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                filter_on.append(grpby.in_(*res))
+                if result_set != None:
+                    result_set.intersection_update(Set(res))
+                else:
+                    result_set = Set(res)
+                filter_on.append(grpby.in_(res))
             else:
+                optimize = False
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables)
                 filter_on.append(query_filter)
-        query_filter = and_(*filter_on)
+        if optimize:
+            query_filter = grpby.in_(result_set)
+        else:
+            query_filter = and_(*filter_on)
         return (query_filter, join_tables)
 
     def __treatQueryLevelNOT(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
@@ -137,16 +165,22 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     computers = ComputerGroupManager().result_group_by_name(ctx, q[3])
                     filt = self.computersMapping(computers, invert)
                 else:
-                    join_tab = self.mappingTable(q)
-                    filt = self.mapping(q, invert)
+                    join_tab = self.mappingTable(ctx, q)
+                    filt = self.mapping(ctx, q, invert)
                 join_q = join_query
-                for table in join_tab:
-                    if table != join_query:
-                        join_q = join_q.join(table)
+                if type(join_tab) == list:
+                    for table in join_tab:
+                        if table != join_query:
+                            join_q = join_q.join(table)
+                else:
+                    join_q = join_q.join(join_tab)
 
-                query = query.add_column(grpby).select_from(join_q).filter(filt).group_by(grpby).all()
-                res = map(lambda x: x[1], query)
-                filter_on.append(not_(grpby.in_(*res)))
+                q = query.add_column(grpby).select_from(join_q).filter(filt)
+                if self.filters.has_key(ctx.userid):
+                    q = q.filter(self.filters[ctx.userid])
+                q = q.group_by(grpby).all()
+                res = map(lambda x: x[1], q)
+                filter_on.append(not_(grpby.in_(res)))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, q, join_tables, not invert)
                 filter_on.append(query_filter)
@@ -160,10 +194,10 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         ret = []
         for query in queries:
             if len(query) == 4:
-                self.mappingTable(query)
+                self.mappingTable(query) #TODO check
         return ret
 
-    def mappingTable(self, query):
+    def mappingTable(self, ctx, query):
         """
         Map a table name on a table mapping
 
@@ -173,7 +207,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         """
         raise "mappingTable has to be defined"
 
-    def mapping(self, query, invert = False):
+    def mapping(self, ctx, query, invert = False):
         """
         Map a name and request parameters on a sqlalchemy request
 
@@ -208,7 +242,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 ## for these two last method
 ############################################
 #
-#    def mappingTable(self, query):
+#    def mappingTable(self, ctx, query):
 #        """
 #        Map a table name on a table mapping
 #        """
@@ -220,7 +254,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 #            return [self.inst_software, self.licenses, self.software]
 #        return []
 #
-#    def mapping(self, query, invert = False):
+#    def mapping(self, ctx, query, invert = False):
 #        """
 #        Map a name and request parameters on a sqlalchemy request
 #        """

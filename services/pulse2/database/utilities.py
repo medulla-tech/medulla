@@ -24,6 +24,7 @@
 from sqlalchemy import *
 from sqlalchemy import exceptions
 from sqlalchemy.orm import *
+from sqlalchemy.exceptions import SQLError
 
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
@@ -93,26 +94,33 @@ def unique(s):
             u.append(x)
     return u
 
-NB_DB_CONN_TRY = 2
-
 def create_method(m):
     def method(self, already_in_loop = False):
-        ret = None
+        NB_DB_CONN_TRY = 2
+        NORESULT = "__noresult__"
+        ret = NORESULT
         try:
-            old_m = getattr(Query, '_old_'+m)
-            ret = old_m(self)
-        except exceptions.SQLError, e:
+            old_m = getattr(self, '_old_'+m)
+            ret = old_m()
+        except SQLError, e:
+            reconnect = False
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(Query, m)
-                    ret = new_m(self, True)
+                logging.getLogger().warn("SQLError Lost connection")
+                reconnect = True
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("SQLError MySQL server has gone away (%s)" % m)
+                logging.getLogger().warn("SQLError MySQL server has gone away")
+                reconnect = True
+            if reconnect:
                 for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(Query, m)
-                    ret = new_m(self, True)
-            if ret:
+                    logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
+                    new_m = getattr(self, m)
+                    try:
+                        ret = new_m(True)
+                        break
+                    except Exception, e:
+                        # Try again
+                        continue
+            if ret != NORESULT:
                 return ret
             raise e
         return ret
@@ -133,4 +141,3 @@ class DbObject(object):
                 ret[i] = getattr(self, i)
         ret['uuid'] = toUUID(getattr(self, 'id'))
         return ret
-

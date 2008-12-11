@@ -22,7 +22,7 @@
 from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, create_method, toH, DbObject
+from pulse2.database.utilities import unique, toH, DbObject
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import Singleton
@@ -35,6 +35,11 @@ import time
 import re
 import logging
 
+SA_MAJOR = 0
+SA_MINOR = 4
+DATABASEVERSION = 3
+MAX_REQ_NUM = 100
+
 class Inventory(DyngroupDatabaseHelper):
     """
     Class to query the LRS/Pulse2 inventory database, populated by OCS inventory.
@@ -44,15 +49,19 @@ class Inventory(DyngroupDatabaseHelper):
     This class does not read the inventory files created by the LRS during a boot phase (/tftpboot/revoboot/log/*.ini)
     """
 
+    def db_check(self):
+        return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
+
     def activate(self, config):
         self.logger = logging.getLogger()
+        DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Inventory don't need activation")
             return None
         self.logger.info("Inventory is activating")
         self.config = config
         PossibleQueries().init(self.config)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -141,41 +150,64 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
 
-    def __machinesOnlyQuery(self, ctx, pattern = None, session = None):
-        if session == None:
+    def __machinesOnlyQuery(self, ctx, pattern = None, session = None, count = False):
+        if not session:
             session = create_session()
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
-        query = session.query(Machine).select_from(join_query).filter(query_filter).group_by(self.machine.c.id)
+        query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
-        if 'hostname' in pattern:
-            query = query.filter(self.machine.c.Name.like("%%%s%%" % pattern['hostname']))
+        if pattern:
+            if 'hostname' in pattern:
+                query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
+            if 'filter' in pattern:
+                query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
+            if 'uuid' in pattern:
+                query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+            if 'request' in pattern:
+                request = pattern['request']
+                if 'equ_bool' in pattern:
+                    bool = pattern['equ_bool']
+                else:
+                    bool = None
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                query = query.filter(self.machine.c.id.in_(machines))
+            if 'gid' in pattern:
+                gid = pattern['gid']
 
-        if 'filter' in pattern:
-            query = query.filter(self.machine.c.Name.like("%%%s%%" % pattern['filter']))
+                machines = list()
+                if ComputerGroupManager().isrequest_group(ctx, gid):
+                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                else:
+                     filt = ''
+                     if pattern.has_key('hostname'):
+                         filt = pattern['hostname']
+                     if pattern.has_key('filter'):
+                         filt = pattern['filter']
+                     if count:
+                         return ComputerGroupManager().countresult_group(ctx, gid, filt)
+                     else:
+                         min = 0
+                         max = -1
+                         if pattern.has_key('min'):
+                             min = pattern['min']
+                         if pattern.has_key('max'):
+                             max = pattern['max']
+                         machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
 
-        if 'uuid' in pattern:
-            query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
-
-        if 'request' in pattern:
-            bool = None
-            if 'equ_bool' in pattern:
-                bool = pattern['equ_bool']
-            machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().request(ctx, pattern['request'], bool, 0, -1, ''))
-            query = query.filter(self.machine.c.id.in_(machines))
-
-        if 'gid' in pattern:
-            if ComputerGroupManager().isrequest_group(ctx, pattern['gid']):
-                self.logger.info("isrequest_group")
-                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, pattern['gid'], 0, -1, ''))
-                self.logger.info("isrequest_group")
-            else:
-                machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, pattern['gid'], 0, -1, ''))
-            query = query.filter(self.machine.c.id.in_(machines))
-
-        return query
+                query = query.filter(self.machine.c.id.in_(machines))
+                if not ComputerGroupManager().isrequest_group(ctx, gid):
+                    if count:
+                        return query.count()
+                    else:
+                        return query
+                                                                                                                                                                                                                  
+        if count:                                                                                                                                                                                                 
+            return query.count()                                                                                                                                                                                  
+        else:
+            return query.group_by(self.machine.c.id)
 
     def getMachinesOnly(self, ctx, pattern = None):
         """
@@ -186,9 +218,15 @@ class Inventory(DyngroupDatabaseHelper):
 
         query = query.order_by(asc(self.machine.c.Name))
 
-        if min in pattern and max in pattern and pattern['max'] != -1:
-            query = query.offset(pattern['min'])
-            query = query.limit(int(pattern['max']) - int(pattern['min']))
+        if 'max' in pattern:
+            if pattern['max'] != -1:
+                if ('gid' in pattern and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) or 'gid' not in pattern:
+                    query = query.offset(pattern['min'])
+                    query = query.limit(int(pattern['max']) - int(pattern['min']))
+                else:
+                    query = query.all()
+            else:
+                query = query.all()
         else:
             query = query.all()
         session.close()
@@ -199,9 +237,75 @@ class Inventory(DyngroupDatabaseHelper):
         Return the number of available machines
         """
         session = create_session()
-        query = self.__machinesOnlyQuery(ctx, pattern, session)
-        ret = len(query.all())
+        ret = self.__machinesOnlyQuery(ctx, pattern, session, True)
         session.close()
+        return ret
+
+    def optimizedQuery(self, ctx, filt):                                                                                                                                                                          
+        """
+        @returns: a list of couples (UUID, hostname)
+        @rtype: list
+        """
+        criterion = filt['optimization']['criterion']
+        criterion = ["Path", criterion.split("/")[2]]
+        values = ['Value', filt['optimization']['data']]
+        result = self.getLastMachineInventoryPart(
+            ctx, 'Registry',
+            {'where' : [criterion, values] } )
+        # Just returns a list of couple (UUID, hostname)
+        ret = map(lambda x: (x[0], x[2]), result)
+        return ret
+
+    def getComputersOptimized(self, ctx, filt):
+        """
+        Return a list of computers, but try to optimize the way we get its
+        inventory.
+        """
+        optimization = False
+        if 'optimization' in filt:
+            if 'criterion' in filt['optimization']:
+                if filt['optimization']['criterion'].startswith('Registry/Value/'):
+                    optimization = True
+        if optimization:
+            # In optimized mode, we don't return the full of inventory of the
+            # computers corresponding to the request, but just list of couples
+            # (UUID, hostname)
+            return self.optimizedQuery(ctx, filt)
+        else:
+            result = self.getMachinesOnly(ctx, filt)
+
+        tables = self.config.content
+        if len(tables) == 1 and "Registry" in tables:
+            # The inventory to display is to be taken from the same Registry
+            # table
+            computers = {}
+            ids = []
+            uuids = []
+            for machine in result:
+                ids.append(machine.id)
+                uuid = toUUID(machine.id)
+                tmp = [ False,
+                        { 'cn' : [machine.Name],
+                          'objectUUID' : [uuid] } ]
+                computers[uuid] = tmp
+                # Keep UUID order
+                uuids.append(uuid)
+            if len(uuids):
+                # For all resulting machines ids, get the inventory part
+                inventoryResult = self.getLastMachineInventoryPart(ctx, tables.keys()[0], {'ids' : ids })
+                # Process each row, one row == one computer inventory
+                for row in inventoryResult:
+                    uuid = row[2]
+                    # Process inventory content
+                    for inv in row[1]:
+                        computers[uuid][1][inv["Path"]] = inv["Value"]
+            # Build the result
+            ret = []
+            for uuid in uuids:
+                ret.append(computers[uuid])
+        else:
+            result = self.getMachinesOnly(ctx, filt)
+            ret = map(lambda m: m.toDN(ctx), result)
         return ret
 
     # needed by DyngroupDatabaseHelper
@@ -210,25 +314,25 @@ class Inventory(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers))
+            return Machine.c.id.in_(*map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(getComputerDict(x)['uuid']), computers)))
+            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x), computers)))
 
-    def mappingTable(self, query):
+    def mappingTable(self, ctx, query):
         q = query[2].split('/')
         table, field = q[0:2]
         self.logger.debug("### >> table %s, field %s"%(table, field))
         if len(q) > 2:
             self.logger.debug("##### >> semi static name : %s"%(q[2]))
         if table == 'Machine':
-            return [self.machine]
+            return [self.machine, self.table['hasHardware'], self.inventory]
         else:
             partTable = self.table[table]
             haspartTable = self.table["has" + table]
         if self.config.getInventoryNoms(table) == None:
             return [haspartTable, partTable]
         self.logger.debug("### Nom")
-        ret = [haspartTable, partTable]
+        ret = [haspartTable, partTable, self.inventory]
         for nom in self.config.getInventoryNoms(table):
             nomTableName = 'nom%s%s' % (table, nom)
             self.logger.debug("### nomTableName %s"%(nomTableName))
@@ -236,14 +340,14 @@ class Inventory(DyngroupDatabaseHelper):
             ret.append(nomTable)
         return ret
 
-    def mapping(self, query, invert = False):
+    def mapping(self, ctx, query, invert = False):
         q = query[2].split('/')
         table, field = q[0:2]
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
-            return and_(
-                self.mapping([None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping([None, None, value[1][0], query[3][1].replace(')', '')])
+            return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
+                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')])
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
@@ -253,17 +357,18 @@ class Inventory(DyngroupDatabaseHelper):
             value = query[3]
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return getattr(partKlass.c, field) > value
+                return and_(getattr(partKlass.c, field) > value, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return getattr(partKlass.c, field) < value
+                return and_(getattr(partKlass.c, field) < value, self.inventory.c.Last == 1)
             elif invert:
-                return getattr(partKlass.c, field) != value
+                return and_(getattr(partKlass.c, field) != value, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return getattr(partKlass.c, field).like(value)
-                return getattr(partKlass.c, field) == value
+                    return and_(getattr(partKlass.c, field).like(value), self.inventory.c.Last == 1)
+                return and_(getattr(partKlass.c, field) == value, self.inventory.c.Last == 1)
+
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
                 partKlass = Machine
@@ -288,17 +393,17 @@ class Inventory(DyngroupDatabaseHelper):
 
             if value.startswith('>') and not invert or value.startswith('<') and invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) > value, condition)
+                return and_(getattr(partKlass.c, field) > value, condition, self.inventory.c.Last == 1)
             elif value.startswith('>') and invert or value.startswith('<') and not invert:
                 value = value.replace('>', '').replace('<', '')
-                return and_(getattr(partKlass.c, field) < value, condition)
+                return and_(getattr(partKlass.c, field) < value, condition, self.inventory.c.Last == 1)
             elif invert:
-                return and_(getattr(partKlass.c, field) != value, condition)
+                return and_(getattr(partKlass.c, field) != value, condition, self.inventory.c.Last == 1)
             else:
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass.c, field).like(value), condition)
-                return and_(getattr(partKlass.c, field) == value, condition)
+                    return and_(getattr(partKlass.c, field).like(value), condition, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass.c, field) == value, condition, self.inventory.c.Last == 1)
 
     def getMachines(self, ctx, pattern = None):
         """
@@ -364,7 +469,12 @@ class Inventory(DyngroupDatabaseHelper):
                 filters.append(getattr(partKlass.c, field) == value)
 
         session = create_session()
-        query = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
+        query = session.query(Machine).\
+            add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
+            add_column(func.min(self.inventory.c.Date)).\
+            select_from(
+                self.machine.join(haspartTable.join(self.inventory).join(partTable))
+            )
 
         # apply filters
         for filter in filters:
@@ -388,13 +498,24 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[table]
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
+
+        result = session.query(Machine).\
+            add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
+            add_column(func.min(self.inventory.c.Date)).\
+            select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
+           
         import re
         p1 = re.compile('\*')
         if p1.search(value):
-            value = p1.sub('%', value)
-            result = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable))).filter( getattr(partKlass.c, field).like(value)).group_by(self.machine.c.Name).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+            result = result.filter(getattr(partKlass.c, field).like(p1.sub('%', value)))
         else:
-            result = session.query(Machine).add_column(func.max(haspartTable.c.inventory).label("inventoryid")).add_column(func.min(self.inventory.c.Date)).select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable))).filter( getattr(partKlass.c, field) == value).group_by(self.machine.c.Name).group_by(haspartTable.c.machine).order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
+            result = result.filter(getattr(partKlass.c, field) == value)
+
+        result = result.group_by(self.machine.c.Name).\
+            group_by(haspartTable.c.machine).\
+            order_by(haspartTable.c.machine).\
+            order_by(desc("inventoryid")).\
+            order_by(haspartTable.c.inventory)
         session.close()
 
         if result:
@@ -416,7 +537,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
 
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field))
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -437,7 +558,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
             partTable = self.table[table]
 
-        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%'))
+        result = session.query(partKlass).add_column(getattr(partKlass.c, field)).filter(getattr(partKlass.c, field).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM).all()
         session.close()
 
         if result:
@@ -456,7 +577,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = self.klass[table]
         session = create_session()
         result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
-        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%'))
+        result = result.filter(getattr(partKlass.c, field2).like('%'+fuzzy_value+'%')).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -471,7 +592,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         session = create_session()
-        result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
+        result = self.__getValuesWhereQuery(table, field1, value1, field2, session).limit(MAX_REQ_NUM)
         session.close()
 
         if result:
@@ -530,15 +651,14 @@ class Inventory(DyngroupDatabaseHelper):
 
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
-        partKlass = self.klass[part]
-        partTable = self.table[part]
-        haspartTable = self.table["has" + part]
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
         for grp in grp_by:
             result = result.group_by(grp)
-        result = result.count()
+        # The alias is needed for MySQL
+        s = select([func.count(text('*'))]).select_from(result.compile().alias('foo'))
+        result = session.execute(s)
         session.close()
-        return result
+        return result.fetchone()[0]
 
     def getLastMachineInventoryPart(self, ctx, part, params):
         return self.__getLastMachineInventoryPart(part, params, ctx)
@@ -600,7 +720,6 @@ class Inventory(DyngroupDatabaseHelper):
                         for i in range(5, len(res)):
                             tmp[noms[part][i-5]] = res[i]
                 machine_inv[res[1]].append(tmp)
-                self.logger.debug(machine_inv[res[1]])
             for name in machine_uuid:
                 ret.append([name, machine_inv[name], machine_uuid[name]])
         return ret
@@ -615,26 +734,33 @@ class Inventory(DyngroupDatabaseHelper):
         # This SQL query has been built using the one from the LRS inventory module
         # TODO : this request has to be done on Machine and then add the columns so that the left join works...
         #result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date).select_from(partTable.outerjoin(haspartTable.join(self.inventory).join(self.machine))).filter(self.inventory.c.Last == 1)
-        result = session.query(partKlass).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(haspartTable.c.inventory.label("inventoryid")).add_column(self.inventory.c.Date)
+        result = session.query(partKlass).\
+            add_column(self.machine.c.Name).\
+            add_column(self.machine.c.id).\
+            add_column(haspartTable.c.inventory.label("inventoryid")).\
+            add_column(self.inventory.c.Date)
 
         noms = self.config.getInventoryNoms()
-        select_from = haspartTable.join(self.inventory).join(partTable)
+        select_from = haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
         if noms.has_key(part):
             for nom in noms[part]:
-                nomTableName = 'nom%s%s' % (part, nom)
-                nomTable = self.table[nomTableName]
+                nomTable = self.table['nom%s%s' % (part, nom)]
                 select_from = select_from.join(nomTable)
                 result = result.add_column(getattr(nomTable.c, nom))
                 grp_by.append(nomTable.c.id)
 
-        result = result.select_from(self.machine.outerjoin(select_from)).filter(self.inventory.c.Last == 1)
+        result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
+
         result = self.__filterQuery(ctx, result, params)
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
         if params.has_key('where') and params['where'] != '':
             for where in params['where']:
                 if hasattr(partTable.c, where[0]):
-                    result = result.filter(getattr(partTable.c, where[0]) == where[1])
+                    if type(where[1]) == list:
+                        result = result.filter(getattr(partTable.c, where[0]).in_(where[1]))
+                    else:
+                        result = result.filter(getattr(partTable.c, where[0]) == where[1])
                 else:
                     if noms.has_key(part):
                         try:
@@ -659,12 +785,18 @@ class Inventory(DyngroupDatabaseHelper):
             query = query.filter(Machine.c.Name.like('%'+params['filter']+'%'))
         if params.has_key('uuid') and params['uuid'] != '':
             query = query.filter(Machine.c.id==fromUUID(params['uuid']))
+        if params.has_key('uuids') and len(params['uuids']):
+            uuids = map(lambda m: fromUUID(m), params['uuids'])
+            query = query.filter(Machine.c.id.in_(uuids))
         if params.has_key('gid') and params['gid'] != '':
             if ComputerGroupManager().isrequest_group(ctx, params['gid']):
-                machines = map(lambda m: fromUUID(m['uuid']), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
             else:
-                machines = map(lambda m: fromUUID(m.uuid), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
-            query = query.filter(self.machine.c.id.in_(*machines))
+                machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
+            query = query.filter(self.machine.c.id.in_(machines))
+        # Filter using a list of machine ids                                                                                                                                                                      
+        if params.has_key('ids') and len(params['ids']):                                                                                                                                                          
+            query = query.filter(self.machine.c.id.in_(params['ids']))  
         return query
 
     def getIdInTable(self, tableName, values, session = None):
@@ -684,10 +816,9 @@ class Inventory(DyngroupDatabaseHelper):
         if sessionCreator:
             session.close()
         try:
-            ret = res.id
+            return res.id
         except:
-            ret = None
-        return ret
+            return None
 
     def isElemInTable(self, tableName, values, session = None):
         sessionCreator = False
@@ -709,7 +840,7 @@ class Inventory(DyngroupDatabaseHelper):
         except:
             return None
 
-    def addMachine(self, name, ip, mac, comment = None, location = None): # TODO add the location association
+    def addMachine(self, name, ip, mac, netmask, comment = None, location = None): # TODO add the location association
         session = create_session()
         m = Machine()
         m.Name = name
@@ -728,6 +859,7 @@ class Inventory(DyngroupDatabaseHelper):
         n = net()
         n.MACAddress = mac
         n.IP = ip
+        n.SubnetMask = netmask
         session.save(n)
         session.flush()
         h = hasNet()
@@ -781,6 +913,16 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return m
 
+    def getLocationsCount(self):
+        session = create_session()
+        count = session.query(self.klass['Entity']).count()
+        session.close()
+        return count
+
+    def getUsersInSameLocations(self, userid):
+        # TODO
+        return [userid]
+
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
 
@@ -799,6 +941,9 @@ def getComputerDict(c):
 class Machine(object):
     def toH(self):
         return { 'hostname':self.Name, 'uuid':toUUID(self.id) }
+
+    def uuid(self):
+        return toUUID(self.id)
 
     def toDN(self, ctx, advanced = False):
         ret = [ False, {'cn':[self.Name], 'objectUUID':[toUUID(self.id)]} ]
@@ -829,15 +974,19 @@ class Machine(object):
             if len(net) == 0:
                 ret[1]['ipHostNumber'] = ''
                 ret[1]['macAddress'] = ''
+                ret[1]['subnetMask'] = ''
             else:
                 net = net[0]
                 ret[1]['ipHostNumber'] = []
                 ret[1]['macAddress'] = []
+                ret[1]['subnetMask'] = []
                 for n in net[1]:
                     if n['IP'] != None:
                         ret[1]['ipHostNumber'].append(n['IP'])
                     if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
                         ret[1]['macAddress'].append(n['MACAddress'])
+                    if n['SubnetMask'] != None:
+                        ret[1]['subnetMask'].append(n['SubnetMask'])
         return ret
 
     def toCustom(self, get):

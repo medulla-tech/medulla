@@ -5,6 +5,7 @@ import logging
 class DatabaseHelper(Singleton):
     is_activated = False
     config = None
+
     def db_check(self, required_version = -1):
         if not checkSqlalchemy():
             self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
@@ -16,7 +17,7 @@ class DatabaseHelper(Singleton):
                 self.logger.error("Database version error: v.%s needeed, v.%s found; please update your schema !" % (required_version, conn))
                 return False
         else:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check inventory.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
+            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check your configuration file." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
             return False
         
         return True
