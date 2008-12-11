@@ -30,8 +30,8 @@ import logging
 import datetime
 import time
 
-from mmc.plugins.inventory.config import InventoryExpertModeConfig, InventoryConfig
-from mmc.plugins.inventory.database import Inventory
+from mmc.plugins.inventory.config import InventoryConfig
+from pulse2.database.inventory import Inventory
 from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
 from mmc.plugins.inventory.locations import InventoryLocation
@@ -123,11 +123,11 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
                
     def getInventoryEM(self, col):
-        conf = InventoryExpertModeConfig("inventory", None)
+        conf = InventoryConfig("inventory")
         return conf.expert_mode[col]
     
     def getInventoryGraph(self, col):
-        conf = InventoryExpertModeConfig("inventory", None)
+        conf = InventoryConfig("inventory")
         return conf.graph[col]
     
     def getMachinesBy(self, table, field, value):

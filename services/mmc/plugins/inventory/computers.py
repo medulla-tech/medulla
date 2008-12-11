@@ -21,7 +21,7 @@
 
 from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
-from mmc.plugins.inventory.database import Inventory
+from pulse2.database.inventory import Inventory
 import logging
 import time
 import exceptions

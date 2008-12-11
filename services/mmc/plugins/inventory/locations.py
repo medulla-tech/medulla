@@ -21,13 +21,13 @@
 
 import logging
 from mmc.plugins.pulse2.location import ComputerLocationI
-from mmc.plugins.inventory.database import Inventory
+from pulse2.database.inventory import Inventory
 
 class InventoryLocation(ComputerLocationI):
     def init(self, config):
         self.logger = logging.getLogger()
         self.config = config
-        Inventory().activate()
+        Inventory().activate(config)
 
     def getUserProfile(self, userid):
         return Inventory().getUserProfile(userid)
