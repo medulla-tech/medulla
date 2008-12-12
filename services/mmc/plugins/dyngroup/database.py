@@ -33,7 +33,7 @@ from mmc.plugins.base import getUserGroups
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.dyngroup
-from mmc.support.mmctools import Singleton
+from pulse2.database.database_helper import DatabaseHelper
 # Imported last
 import logging
 import re
@@ -42,7 +42,7 @@ SA_MAJOR = 0
 SA_MINOR = 4
 DATABASEVERSION = 2
 
-class DyngroupDatabase(Singleton):
+class DyngroupDatabase(DatabaseHelper):
     """
     Singleton Class to query the dyngroup database.
 
@@ -50,24 +50,10 @@ class DyngroupDatabase(Singleton):
     is_activated = False
 
     def db_check(self):
-        if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
-            return False
-
-        conn = self.connected()
-        if conn:
-            if conn != DATABASEVERSION:
-                self.logger.error("Dyngroup database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))
-                return False
-            elif type(conn) != int and type(conn) != long:
-                self.logger.error("Dyngroup database version error: v.%s needeed, v.alpha found; please update your schema !" % (DATABASEVERSION))
-                return False
-        else:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check dyngroup.ini." % (self.config.dbhost, self.config.dbport, self.config.dbname, self.config.dbuser))
-            return False
-
-        return True
-
+        self.my_name = "Dyngroup"
+        self.configfile = "dyngroup.ini"
+        return DatabaseHelper.db_check(self, DATABASEVERSION)
+    
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
         if self.is_activated:
@@ -94,21 +80,6 @@ class DyngroupDatabase(Singleton):
         if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
             return True
         return False
-
-    def makeConnectionPath(self):
-        """
-        Build and return the db connection path according to the plugin configuration
-
-        @rtype: str
-        """
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbsslenable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
-        return url
 
     def initMappers(self):
         """
@@ -151,16 +122,6 @@ class DyngroupDatabase(Singleton):
         # version
         self.version = Table("version", self.metadata, autoload = True)
 
-    def connected(self):
-        try:
-            if (self.db != None) and (self.session != None):
-                return self.version.select().execute().fetchone()[0]
-            elif (self.db != None):
-                return True
-            return False
-        except:
-            return False
-
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
         ret = None
@@ -178,21 +139,6 @@ class DyngroupDatabase(Singleton):
 
     def myfunctions(self):
         pass
-
-    def enableLogging(self, level = None):
-        """
-        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
-        The SQL queries will be loggued.
-        """
-        if not level:
-            level = self.config.dbdebug
-        logging.getLogger("sqlalchemy.engine").setLevel(level)
-
-    def disableLogging(self):
-        """
-        Disable log for sqlalchemy.engine module
-        """
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
     ####################################
     def doThings(self):
