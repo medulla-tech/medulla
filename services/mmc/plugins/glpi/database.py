@@ -25,7 +25,6 @@ from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
-#from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 
