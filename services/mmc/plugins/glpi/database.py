@@ -25,7 +25,8 @@ from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
-from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+#from mmc.plugins.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.plugins.pulse2.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
@@ -37,9 +38,6 @@ import logging
 import re
 from sets import Set
 
-SA_MAJOR = 0
-SA_MINOR = 4
-
 class Glpi(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database.
@@ -48,27 +46,10 @@ class Glpi(DyngroupDatabaseHelper):
     is_activated = False
 
     def db_check(self):
-        if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
-            return False
-
-        conn = self.connected()
-        if conn:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check glpi.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
-            return False
-
-        return True
-
-    def __checkSqlalchemy(self):
-        try:
-            import sqlalchemy
-            a_version = sqlalchemy.__version__.split('.')
-            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
-                return True
-        except:
-            pass
-        return False
-
+        self.my_name = "Glpi"
+        self.configfile = "glpi.ini"
+        return DyngroupDatabaseHelper.db_check(self)
+    
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
@@ -83,29 +64,6 @@ class Glpi(DyngroupDatabaseHelper):
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
-
-    def connected(self):
-        try:
-            if (self.db != None) and (self.session != None):
-                return True
-            return False
-        except:
-            return False
-
-    def makeConnectionPath(self):
-        """
-        Build and return the db connection path according to the plugin configuration
-
-        @rtype: str
-        """
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbsslenable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
-        return url
 
     def initMappers(self):
         """
@@ -223,23 +181,6 @@ class Glpi(DyngroupDatabaseHelper):
         # group
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
-
-
-
-    def enableLogging(self, level = None):
-        """
-        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
-        The SQL queries will be loggued.
-        """
-        if not level:
-            level = logging.INFO
-        logging.getLogger("sqlalchemy.engine").setLevel(level)
-
-    def disableLogging(self):
-        """
-        Disable log for sqlalchemy.engine module
-        """
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
     ##################### internal query generators
     def __filter_on(self, query):

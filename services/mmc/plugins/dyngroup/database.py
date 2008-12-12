@@ -74,13 +74,6 @@ class DyngroupDatabase(DatabaseHelper):
         self.is_activated = True
         self.logger.debug("Dyngroup database connected")
 
-    def __checkSqlalchemy(self):
-        import sqlalchemy
-        a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
-            return True
-        return False
-
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
