@@ -14,10 +14,10 @@ class DatabaseHelper(Singleton):
         conn = self.connected()
         if conn:
             if required_version != -1 and conn != required_version:
-                self.logger.error("Database version error: v.%s needeed, v.%s found; please update your schema !" % (required_version, conn))
+                self.logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
                 return False
         else:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check your configuration file." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
+            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser, self.configfile))
             return False
         
         return True
@@ -55,7 +55,10 @@ class DatabaseHelper(Singleton):
         The SQL queries will be loggued.
         """
         if not level:
-            level = logging.INFO
+            if self.config.has_attr("dbdebug"):
+                level = self.config.dbdebug
+            else:
+                level = logging.INFO
         logging.getLogger("sqlalchemy.engine").setLevel(level)
 
     def disableLogging(self):

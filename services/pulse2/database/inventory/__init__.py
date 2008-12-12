@@ -50,6 +50,8 @@ class Inventory(DyngroupDatabaseHelper):
     """
 
     def db_check(self):
+        self.my_name = "Inventory"
+        self.configfile = "inventory.ini"
         return DyngroupDatabaseHelper.db_check(self, DATABASEVERSION)
 
     def activate(self, config):
