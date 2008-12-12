@@ -25,10 +25,13 @@ class DatabaseHelper(Singleton):
     def connected(self):
         try:
             if self.db != None:
-                return self.version.select().execute().fetchone()[0]
+                if hasattr(self, "version"):
+                    return self.version.select().execute().fetchone()[0]
+                else:
+                    return True
             return False
         except:
-            if (self.db != None) and (session != None):
+            if (self.db != None) and (self.session != None):
                 return True
             return False
 
@@ -55,7 +58,7 @@ class DatabaseHelper(Singleton):
         The SQL queries will be loggued.
         """
         if not level:
-            if self.config.has_attr("dbdebug"):
+            if hasattr(self.config, "dbdebug"):
                 level = self.config.dbdebug
             else:
                 level = logging.INFO
