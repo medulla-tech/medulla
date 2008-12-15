@@ -70,8 +70,8 @@ INI = "/etc/mmc/plugins/base.ini"
 
 modList= None
 
-VERSION = "2.3.1"
-APIVERSION = "6:0:2"
+VERSION = "2.3.2"
+APIVERSION = "7:0:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
 def getVersion(): return VERSION
