@@ -1,3 +1,11 @@
+mmc-web-base 2.3.2
+------------------
+
+ * Pulse 2 related fixes and features
+ * New ACL edit page
+ * TLS support with certificate check for the XML-RPC connection to the MMC
+   agents (requires PHP5)
+
 mmc-web-base 2.3.1
 ------------------
 
