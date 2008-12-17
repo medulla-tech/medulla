@@ -1,3 +1,21 @@
+mmc-agent 2.3.2
+---------------
+
+ * Multi-threading support
+ * TLS support with certificate check for incoming XML-RPC connections
+ * base plugin:
+   * Add change password hook for changeUserPasswd in base plugin
+     (Original patch from Jan Gehring)
+   * Default used LDAP user password scheme is now SSHA instead of CRYPT
+ * network plugin:
+   * Add support for NS and MX records edition
+   * Fix issues with 64 bits platform when computing the next free IP address
+     of a zone
+ * provisioning:
+   * Add profile to group mapping capability when provisioning a user from a
+     external LDAP
+   * Network timeout for external LDAP connection
+
 mmc-agent 2.3.1
 ---------------
 

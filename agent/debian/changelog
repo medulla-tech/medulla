@@ -1,3 +1,9 @@
+mmc-agent (2.3.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Cédric Delfosse <cdelfosse@mandriva.com>  Wed, 17 Dec 2008 10:28:09 +0100
+
 mmc-agent (2.3.1-1) unstable; urgency=low
 
   * New upstream release
