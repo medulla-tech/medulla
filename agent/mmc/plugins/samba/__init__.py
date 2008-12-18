@@ -878,7 +878,7 @@ class smbConf:
                 contentArr[section] = {}
             else:
                 # Get statement
-                stmt = re.search("^(.+?)=(.+)$", line)
+                stmt = re.search("^(.+?)=(.*)$", line)
                 if stmt:
                     option = stmt.group(1).strip()
                     value = stmt.group(2).strip()
