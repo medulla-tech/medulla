@@ -11,6 +11,8 @@ mmc-agent 2.3.2
    * Add support for NS and MX records edition
    * Fix issues with 64 bits platform when computing the next free IP address
      of a zone
+ * samba plugin
+   * SAMBA configuration parser is more robust
  * provisioning:
    * Add profile to group mapping capability when provisioning a user from a
      external LDAP
