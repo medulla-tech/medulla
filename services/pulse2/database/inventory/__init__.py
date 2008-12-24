@@ -37,7 +37,7 @@ import logging
 
 SA_MAJOR = 0
 SA_MINOR = 4
-DATABASEVERSION = 3
+DATABASEVERSION = 9
 MAX_REQ_NUM = 100
 
 class Inventory(DyngroupDatabaseHelper):
@@ -205,9 +205,9 @@ class Inventory(DyngroupDatabaseHelper):
                         return query.count()
                     else:
                         return query
-                                                                                                                                                                                                                  
-        if count:                                                                                                                                                                                                 
-            return query.count()                                                                                                                                                                                  
+
+        if count:
+            return query.count()
         else:
             return query.group_by(self.machine.c.id)
 
@@ -243,7 +243,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def optimizedQuery(self, ctx, filt):                                                                                                                                                                          
+    def optimizedQuery(self, ctx, filt):
         """
         @returns: a list of couples (UUID, hostname)
         @rtype: list
@@ -505,7 +505,7 @@ class Inventory(DyngroupDatabaseHelper):
             add_column(func.max(haspartTable.c.inventory).label("inventoryid")).\
             add_column(func.min(self.inventory.c.Date)).\
             select_from(self.machine.join(haspartTable.join(self.inventory).join(partTable)))
-           
+
         import re
         p1 = re.compile('\*')
         if p1.search(value):
@@ -796,9 +796,9 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(machines))
-        # Filter using a list of machine ids                                                                                                                                                                      
-        if params.has_key('ids') and len(params['ids']):                                                                                                                                                          
-            query = query.filter(self.machine.c.id.in_(params['ids']))  
+        # Filter using a list of machine ids
+        if params.has_key('ids') and len(params['ids']):
+            query = query.filter(self.machine.c.id.in_(params['ids']))
         return query
 
     def getIdInTable(self, tableName, values, session = None):
