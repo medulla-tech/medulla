@@ -121,6 +121,9 @@ class MmcServer(xmlrpc.XMLRPC,object):
 
         if not s.loggedin:
             self.logger.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
+            # Save the first sent HTTP headers, as they contain some
+            # informations
+            s.http_headers = request.received_headers.copy()
         else:
             self.logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
         try:
