@@ -23,6 +23,7 @@
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
+from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.pulse2.group import ComputerGroupManager
 from mmc.plugins.pulse2.location import ComputerLocationManager
 
@@ -34,6 +35,7 @@ from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
 from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
+from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
@@ -63,6 +65,7 @@ def activate():
     logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)
 
     ComputerManager().register("inventory", InventoryComputers)
+    ProvisioningManager().register('inventory', InventoryProvisioner)
     if config.displayLocalisationBar:
         ComputerLocationManager().register('inventory', InventoryLocation)
         
