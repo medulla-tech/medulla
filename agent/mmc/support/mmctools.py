@@ -491,10 +491,14 @@ class RpcProxyI:
     def __init__(self, request, mod):
         self.request = request
         self.session = request.getSession()
-        self.userid = self.session.userid
+        try:
+            self.userid = self.session.userid
+        except AttributeError:
+            # The user ID may not be set if the user is being authenticated
+            self.userid = None
         try:
             self.currentContext = self.session.contexts[mod]
-        except KeyError:
+        except (KeyError, AttributeError):
             self.currentContext = None
 
     def getFunction(self, funcname):

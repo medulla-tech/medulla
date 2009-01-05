@@ -1730,17 +1730,6 @@ class ldapUserGroupControl:
 ############## ldap authentification
 ###########################################################################################
 
-def ldapAuth(uiduser, passwd):
-    """
-    Authenticate an user with her/his password against a LDAP server.
-    Return a Deferred resulting to true if the user has been successfully
-    authenticated, else false.
-    """
-    d = defer.maybeDeferred(AuthenticationManager().authenticate, uiduser, passwd)
-    d.addCallback(ProvisioningManager().doProvisioning)
-    d.addCallback(lambda token: token.isAuthenticated())
-    return d
-
 class BaseLdapAuthenticator(AuthenticatorI):
 
     def __init__(self, conffile = INI, name = "baseldap"):
@@ -2132,6 +2121,17 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
+
+    def ldapAuth(self, uiduser, passwd):
+        """
+        Authenticate an user with her/his password against a LDAP server.
+        Return a Deferred resulting to true if the user has been successfully
+        authenticated, else false.
+        """
+        d = defer.maybeDeferred(AuthenticationManager().authenticate, uiduser, passwd, self.session)
+        d.addCallback(ProvisioningManager().doProvisioning)
+        d.addCallback(lambda token: token.isAuthenticated())
+        return d
 
     def hasComputerManagerWorking(self):
         """

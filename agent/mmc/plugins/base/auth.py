@@ -82,7 +82,7 @@ class AuthenticationManager(Singleton):
                         tmp.append((n, k))
         self.components = tmp
 
-    def authenticate(self, user, password):
+    def authenticate(self, user, password, session):
         """
         Loops on the authenticator chains until one successfully authenticates
         the user.
@@ -110,6 +110,7 @@ class AuthenticationManager(Singleton):
             if token.authenticated:
                 # the authentication succeeded
                 break
+        token.session = session
         return token
 
 
@@ -191,12 +192,14 @@ class AuthenticationToken:
     @ivar authenticated: True if the authenticated succeeded, else False
     @ivar login: the user login
     @ivar infos: User informations (e.g. user LDAP entry)
+    @ivar session: User session information (may be used during provisioning)
     """
-    def __init__(self, authenticated = False, login = None, password = None, infos = None):
+    def __init__(self, authenticated = False, login = None, password = None, infos = None, session = None):
         self.authenticated = authenticated
         self.login = login
         self.infos = infos
         self.password = password
+        self.session = None
 
     def isAuthenticated(self):
         return self.authenticated
@@ -210,6 +213,8 @@ class AuthenticationToken:
     def getPassword(self):
         return self.password
 
+    def getSession(self):
+        return self.session
 
 class AuthenticationError(Exception):
     """
