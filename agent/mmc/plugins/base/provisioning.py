@@ -149,7 +149,7 @@ class ProvisionerConfig(ConfigParser):
 
     def setDefault(self):
         self.mandatory = True
-        self.exclude = None        
+        self.exclude = []
 
 
 class ProvisionerI:
