@@ -4,7 +4,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 195 2007-09-10 08:20:59Z cedric $
+# $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
 #
