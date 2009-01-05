@@ -124,13 +124,14 @@ function xmlCall($method, $params = null) {
     $host= $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
     $url = "/";
     $httpQuery = "POST ". $url ." HTTP/1.0\r\n";
-    $httpQuery .= "User-Agent: xmlrpc\r\n";
+    $httpQuery .= "User-Agent: MMC web interface\r\n";
     $httpQuery .= "Host: ". $host ."\r\n";
     $httpQuery .= "Content-Type: text/xml\r\n";
     $httpQuery .= "Content-Length: ". strlen($request) . "\r\n";
     /* Don't set the RPC session cookie if the user is on the login page */
     if ($method == "base.ldapAuth") {
         unset($_SESSION["RPCSESSION"]);
+        $httpQuery .= "X-Browser-IP: " . $_SERVER["REMOTE_ADDR"] . "\r\n";
     } else {
         $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";
     }
