@@ -40,6 +40,12 @@ SA_MINOR = 4
 DATABASEVERSION = 9
 MAX_REQ_NUM = 100
 
+class UserTable(object):
+    pass
+
+class UserEntitiesTable(object):
+    pass
+
 class Inventory(DyngroupDatabaseHelper):
     """
     Class to query the LRS/Pulse2 inventory database, populated by OCS inventory.
@@ -81,6 +87,8 @@ class Inventory(DyngroupDatabaseHelper):
         self.version = Table("Version", self.metadata, autoload = True)
         self.machine = Table("Machine", self.metadata, autoload = True)
         self.inventory = Table("Inventory", self.metadata, autoload = True)
+        self.user = Table("User", self.metadata, autoload = True)
+        self.userentities = Table("UserEntities", self.metadata, autoload = True)
 
         noms = self.config.getInventoryNoms()
 
@@ -125,6 +133,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         mapper(Machine, self.machine)
         mapper(InventoryTable, self.inventory)
+        mapper(UserTable, self.user)
+        mapper(UserEntitiesTable, self.userentities)
 
     def getInventoryDatabaseVersion(self):
         """
@@ -908,6 +918,74 @@ class Inventory(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return True
+
+    # User management method
+    
+    def setUserEntities(self, userid, entities):
+        """
+        Set entities associated to a user.
+        A user that doesn't exist in the database will be added.
+        Entities that doesn't exist in the database will be added below the
+        root entity. The dot character '.' is the root entity.
+
+        @param userid: the user id (login)
+        @param entities: list of entity string
+        """
+        class RootEntity:
+            def __init__(self):
+                self.id = 1
+
+        session = create_session()
+        # Start transaction
+        session.begin()
+        # Create/get user
+        try:
+            u = session.query(UserTable).filter_by(uid = userid).one()
+        except Exception:
+            u = UserTable()
+            u.uid = userid
+            session.save(u)
+            session.flush()
+        
+        # Create/get entities
+        elist = []
+        for entity in entities:
+            if entity == '.':
+                e = RootEntity()
+            else:
+                try:
+                    e = session.query(self.klass['Entity']).filter_by(Label = entity).one()
+                except Exception:
+                    e = self.klass['Entity']()
+                    e.Label = entity
+                    session.save(e)
+                    session.flush()
+            elist.append(e)
+        # Look for the user to entities mappings that need to be added or
+        # removed in database
+        toadd = elist[:]
+        todel = []
+        for ue in session.query(UserEntitiesTable).filter_by(fk_User = u.id):
+            found = False
+            for entity in elist:
+                if entity.id == ue.fk_Entity:
+                    # The mapping already exists
+                    toadd.remove(entity)
+                    found = True
+                    break
+            if not found:
+                # The mapping should be removed
+                todel.append(ue)
+        # Apply changes
+        for ue in todel:
+            session.delete(ue)
+        for entity in toadd:
+            ue = UserEntitiesTable()
+            ue.fk_User = u.id
+            ue.fk_Entity = entity.id
+            session.save(ue)
+        session.commit()
+        session.close()
 
     def getUserLocations(self, userid):
         session = create_session()
