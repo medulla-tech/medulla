@@ -987,6 +987,19 @@ class Inventory(DyngroupDatabaseHelper):
         session.commit()
         session.close()
 
+    def locationExists(self, location):
+        """
+        Returns true if the given location exists in database
+        """
+        session = create_session()
+        ret = True
+        try:
+            e = session.query(self.klass['Entity']).filter_by(Label = location).one()
+        except:
+            ret = False
+        session.close()
+        return ret
+                
     def getUserLocations(self, userid):
         session = create_session()
         m = session.query(self.klass['Entity']).all()
@@ -1232,6 +1245,7 @@ class InventoryCreator(Inventory):
                         logging.getLogger().exception(e)
                         pass
                 # closes for block
+            # closes for block on inventory parts
         except Exception, e:
             transaction.rollback()
             session.close()
