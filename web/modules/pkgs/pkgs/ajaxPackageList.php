@@ -29,8 +29,9 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 ######
 require_once("../../../modules/pkgs/includes/xmlrpc.php");
-require_once("../../../modules/msc/includes/package_api.php");
 require_once("../../../modules/pkgs/graph/index.css");
+require_once("../../../modules/msc/includes/package_api.php");
+require_once("../../../modules/msc/includes/utilities.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -52,18 +53,20 @@ $packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];
 
-$desc = $params = $names = $versions = array();
+$desc = $params = $names = $versions = $size = array();
 foreach ($packages as $p) {
     $p = $p[0];
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
+    $size[] = prettyOctetDisplay($p['size']);
     $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
 }
 
 $n = new OptimizedListInfos($names, _T("Names", "pkgs"));
 $n->addExtraInfo($versions, _T("Versions", "pkgs"));
 $n->addExtraInfo($desc, _T("Descriptions", "pkgs"));
+$n->addExtraInfo($size, _T("Package size", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
