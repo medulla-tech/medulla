@@ -40,7 +40,7 @@ class PluginEntities(PluginEntitiesI):
 
 class NetworkRules(EntitiesRules):
 
-    def _getValue(self, input, parameter):
+    def _getValues(self, input, parameter):
         """
         Return the value of the given parameter from input.
         In this implementation, we are only able to get value from the user
@@ -49,9 +49,9 @@ class NetworkRules(EntitiesRules):
         aliases = { 'ip' : 'session.http_headers.x-browser-ip' }
         if parameter in aliases:
             parameter = aliases[parameter]
-        ret = None
+        ret = []
         if parameter.startswith('session.http_headers.'):
             param = parameter.split('.')[2]
             if param in input.session.http_headers:
-                ret = input.session.http_headers[param]
+                ret = [input.session.http_headers[param]]
         return ret
