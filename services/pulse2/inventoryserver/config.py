@@ -45,6 +45,11 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
     localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
 
+    # The default assigned entity is the root entity
+    default_entity = 'root'
+    # By default there is no rules file for computer to entity mapping
+    entities_rules_file = None
+
     pidfile = '/var/run/pulse2-inventory-server.pid'
     umask = 0007
     daemon_user = 0
@@ -85,7 +90,11 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.cp.has_option('main', 'localcert'):
             self.localcert = self.cp.get('main', 'localcert')
 
-                            
+        if self.cp.has_option('main', 'default_entity'):
+            self.default_entity = self.cp.get('main', 'default_entity')
+        if self.cp.has_option('main', 'entities_rules_file'):
+            self.entities_rules_file = self.cp.get('main', 'entities_rules_file')
+
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
             self.hostname = path[0].split('/')

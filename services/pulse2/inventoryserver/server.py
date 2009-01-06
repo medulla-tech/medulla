@@ -37,6 +37,7 @@ import threading
 
 from pulse2.database.inventory import InventoryCreator
 from pulse2.database.inventory.mapping import OcsMapping
+from pulse2.database.inventory.entitiesrules import EntitiesRules, DefaultEntityRules
 from pulse2.utils import Singleton
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import *
@@ -191,6 +192,14 @@ class TreatInv(Thread):
             except:
                 pass
 
+            # Assign an entity to the computer
+            entities = InventoryCreator().rules.compute(inventory)
+            if entities:
+                entity = entities[0]
+            else:
+                entity = InventoryCreator().config.default_entity
+            inventory['Entity'] = [ { 'Label' : entity } ]
+
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
             ret = InventoryCreator().createNewInventory(hostname, inventory, date)
             self.logger.debug("Thread %s : done : %s " % (threadname, time.time()))
@@ -253,6 +262,19 @@ class InventoryGetService(Singleton):
         if not InventoryCreator().db_check():
             return False
         self.config = config
+        # Initialize the computer to entity mapping
+        if self.config.entities_rules_file:
+            try:
+                InventoryCreator().rules = EntitiesRules(self.config.entities_rules_file)
+            except Exception, e:
+                self.logger.error(e)
+                return False
+        else:
+            InventoryCreator().rules = DefaultEntityRules(self.config.default_entity)
+        # Check that the default assigned entity exists
+        if not InventoryCreator().locationExists(self.config.default_entity):
+            self.logger.error("Default entity '%s' does not exist in database" % self.config.default_entity)
+            return False
         self.bind = config.bind
         self.port = int(config.port)
         return True
