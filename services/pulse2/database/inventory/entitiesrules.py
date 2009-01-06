@@ -27,6 +27,13 @@ import re
 
 class EntitiesRules:
 
+    """
+    Class for object that computes an inventory entity list according to a
+    computer inventory and rules.
+
+    It allows the inventory server to assign a computer to an entity.
+    """
+
     def __init__(self, conffile = '/etc/mmc/pulse2/inventory-server/entities-rules'):
         self.logger = logging.getLogger()
         self.conf = conffile
@@ -41,7 +48,13 @@ class EntitiesRules:
         self.logger.debug("Reading inventory rules file %s" % self.conf)
         for line in file(self.conf):
             try:
-                entities, rule = line.split(None, 1)
+                # The first column may contain the quoted entity list
+                m = re.search('^"(.+)"\W+(.*)$', line)
+                if m:
+                    entities = m.group(1)
+                    rule = m.group(2)
+                else:
+                    entities, rule = line.split(None, 1)
                 entitieslist = entities.split(',')
                 if entitieslist:
                     words = rule.split()
@@ -61,7 +74,6 @@ class EntitiesRules:
                             else:
                                 operand1, operator, operand2 = words[0:3]
                                 operator = operator.lower()
-                                operand1 = operand1.lower()
                                 if operator in self.operators:
                                     # TODO: Maybe check operand1 value
                                     if operator == 'match':
@@ -74,19 +86,27 @@ class EntitiesRules:
                     self.rules.append((entitieslist, prefix, subexprs))
             except Exception, e:
                 self.logger.error("Error while reading this rule: %s" % line)
-                self.logger.error(str(e))
+                raise
 
     def printRules(self):
         self.logger.debug(self.rules)
 
-    def _getValue(self, input, parameter):
+    def _getValues(self, input, parameter):
         """
-        Return the value of the given parameter from input.
+        Return the values of the given parameter from input, or an empty list
+        if no value found.
 
-        In this implementation, input must be the inventory of a computer.
+        In this implementation, input must be the inventory of a computer (i.e.
+        a dict with all inventory components)
         """
-        # TODO for inventory server
-        return None
+        ret = []
+        section, option = parameter.split('/', 1)
+        if section in input:
+            items = input[section]
+            for item in items:
+                if option in item:
+                    ret.append(item[option])
+        return ret
 
     def compute(self, input):
         """
@@ -98,16 +118,21 @@ class EntitiesRules:
             result = None
             for rule in rules:
                 operand1, operator, operand2 = rule
-                # Get the value of the first operand
-                value = self._getValue(input, operand1)
-                if value == None:
+                # Get the values of the first operand
+                values = self._getValues(input, operand1)
+                if values == []:
                     # No corresponding value found, we break the loop
                     self.logger.debug("No corresponding value found for operand '%s', skipping the line" % operand1)
                     break
-                if operator == 'match':
-                    tmpresult = operand2.match(value) != None
-                else:
-                    pass
+                # Loop over all the values, and break the loop if one value
+                # makes the expression returns True
+                tmpresult = False
+                for value in values:
+                    if operator == 'match':
+                        tmpresult = operand2.match(value) != None
+                    else:
+                        pass
+                    if tmpresult: break
                 if mainop == 'none':
                     result = tmpresult
                 elif mainop == 'and':
@@ -123,5 +148,20 @@ class EntitiesRules:
                 else:
                     pass
             if result:
-                ret.extend(entities)
+                ret = entities
+                # We exit as soon as a line match
+                break
         return ret
+
+
+class DefaultEntityRules:
+
+    """
+    This default class assign all computers to the same entity.
+    """
+
+    def __init__(self, default_entity):
+        self.entity = default_entity
+
+    def compute(self, input):
+        return [self.entity]
