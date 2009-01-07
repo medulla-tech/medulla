@@ -911,6 +911,9 @@ class ldapUserGroupControl:
         try:
             # Write into the directory
             self.l.add_s(ident, attributes)
+            if self.config.passwordscheme == "passmod":
+                # Set the users password using ldap extended command
+                self.l.passwd_s(ident, None, str(password))
             # Add user to her/his group primary group
             self.addUserToGroup(primaryGroup, uid)
         except ldap.LDAPError, error:
@@ -1149,8 +1152,11 @@ class ldapUserGroupControl:
         @param passwd: non encrypted password
         @type  passwd: str
         """
-        userpassword = self._generatePassword(passwd)
-        self.l.modify_s('uid=' + uid + ',' + self.baseUsersDN, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
+        if self.config.passwordscheme == "passmod":
+            self.l.passwd_s('uid=' + uid + ',' + self.baseUsersDN, None, str(passwd))
+        else:
+            userpassword = self._generatePassword(passwd)
+            self.l.modify_s('uid=' + uid + ',' + self.baseUsersDN, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
         # Run ChangeUserPassword hook
         self.runHook("base.changeuserpassword", uid, passwd)
 
