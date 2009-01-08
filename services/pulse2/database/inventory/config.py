@@ -33,7 +33,6 @@ import string
 from pulse2.database.config import DatabaseConfig
 
 class InventoryDatabaseConfig(DatabaseConfig):
-    displayLocalisationBar = False
     list = {
             'Software/ProductName':['string'],
             'Hardware/ProcessorType':['string'],
@@ -75,10 +74,6 @@ class InventoryDatabaseConfig(DatabaseConfig):
                     self.expert_mode[i] = self.cp.get("expert_mode", i).split('|')
                 else:
                     self.expert_mode[i] = []
-
-        if self.cp.has_option('main', 'displayLocalisationBar'):
-            self.displayLocalisationBar = self.cp.getboolean('main', 'displayLocalisationBar')
-
 
         if self.cp.has_section("computers"):
             if self.cp.has_option("computers", "display"):
