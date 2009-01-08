@@ -44,12 +44,16 @@ def activate():
     if config.disable:
         logger.warning("Plugin pulse2: disabled by configuration.")
         return False
-
-    if config.location != None:
-        ComputerLocationManager().select(config.location)
-
     updateQueryClass()
+    return True
 
+def activate_2():
+    config = Pulse2Config("pulse2")
+    try:
+        ComputerLocationManager().select(config.location)
+    except Exception, e:
+        logging.getLogger().error(e)
+        return False
     return True
 
 def updateQueryClass():
