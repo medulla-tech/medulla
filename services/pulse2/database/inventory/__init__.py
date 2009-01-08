@@ -1012,9 +1012,11 @@ class Inventory(DyngroupDatabaseHelper):
                 
     def getUserLocations(self, userid):
         session = create_session()
-        m = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
+        q = session.query(self.klass['Entity'])
+        if userid != 'root':
+            q = q.select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
         session.close()
-        return m
+        return q
 
     def getLocationsCount(self):
         session = create_session()
