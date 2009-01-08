@@ -66,8 +66,7 @@ def activate():
 
     ComputerManager().register("inventory", InventoryComputers)
     ProvisioningManager().register('inventory', InventoryProvisioner)
-    if config.displayLocalisationBar:
-        ComputerLocationManager().register('inventory', InventoryLocation)
+    ComputerLocationManager().register('inventory', InventoryLocation)
         
     PossibleQueries().init(config)
     return True

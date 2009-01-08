@@ -33,7 +33,7 @@ class InventoryLocation(ComputerLocationI):
         return Inventory().getUserProfile(userid)
 
     def getUserLocations(self, userid):
-        return map(lambda l: convertLocations(l.toH()), Inventory().getUserLocations(userid))
+        return map(lambda l: convertLocations(l), Inventory().getUserLocations(userid))
 
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
         return Inventory().doesUserHaveAccessToMachine(userid, machine_uuid)
@@ -42,7 +42,7 @@ class InventoryLocation(ComputerLocationI):
         return Inventory().doesUserHaveAccessToMachines(userid, machine_uuid, all)
 
     def displayLocalisationBar(self):
-        return self.config.displayLocalisationBar
+        return True
 
     def getLocationsCount(self):
         return Inventory().getLocationsCount()
@@ -52,8 +52,9 @@ class InventoryLocation(ComputerLocationI):
 
 
 def convertLocations(hloc):
+    logging.getLogger().debug(hloc)
     return {
-        'name':hloc['Label'],
-        'uuid':hloc['uuid']
+        'name': hloc.Label,
+        'uuid': hloc.id
     }
     
