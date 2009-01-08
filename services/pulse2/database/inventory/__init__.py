@@ -88,7 +88,10 @@ class Inventory(DyngroupDatabaseHelper):
         self.machine = Table("Machine", self.metadata, autoload = True)
         self.inventory = Table("Inventory", self.metadata, autoload = True)
         self.user = Table("User", self.metadata, autoload = True)
-        self.userentities = Table("UserEntities", self.metadata, autoload = True)
+        self.userentities = Table('UserEntities',
+                                  self.metadata,
+                                  Column('fk_User', Integer, ForeignKey('User.id'), primary_key = True),
+                                  Column('fk_Entity', Integer, ForeignKey('Entity.id'), primary_key = True))
 
         noms = self.config.getInventoryNoms()
 
@@ -168,6 +171,11 @@ class Inventory(DyngroupDatabaseHelper):
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
+
+        if 'location' in pattern:
+            # Join on table for location search
+            join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
+        
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
@@ -178,6 +186,8 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
                 query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+            if 'location' in pattern:
+                query = query.filter(self.table['Entity'].c.Label == pattern['location']).filter(self.inventory.c.Last == 1)
             if 'request' in pattern:
                 request = pattern['request']
                 if 'equ_bool' in pattern:
@@ -1002,7 +1012,7 @@ class Inventory(DyngroupDatabaseHelper):
                 
     def getUserLocations(self, userid):
         session = create_session()
-        m = session.query(self.klass['Entity']).all()
+        m = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
         session.close()
         return m
 
