@@ -24,13 +24,18 @@ from mmc.support.mmctools import Singleton
 
 class ComputerLocationManager(Singleton):
     components = {}
-    main = 'glpi'
+    main = None
 
     def __init__(self):
         Singleton.__init__(self)
         self.logger = logging.getLogger()
 
-    def select(self, name):
+    def select(self, name = None):
+        if not name:
+            if len(self.components) == 1:
+                name = self.components.keys()[0]
+            else:
+                raise Exception("Can't auto-select a computer location manager, please configure one in pulse2.ini.")
         self.logger.info("Selecting computer location manager: %s" % name)
         self.main = name
 
@@ -44,9 +49,10 @@ class ComputerLocationManager(Singleton):
     def displayLocalisationBar(self):
         if self.components.has_key(self.main):
             klass = self.components[self.main]
-            if hasattr(klass, "displayLocalisationBar"):
-                return klass().displayLocalisationBar()
-        return False
+            ret = klass().displayLocalisationBar()
+        else:
+            ret = False
+        return ret
 
     def getUserProfile(self, userid):
         try:
