@@ -927,6 +927,35 @@ if ($this->refresh) {
     }
 }
 
+class NoLocationTpl extends AbstractTpl {
+
+    function NoLocationTpl($name) {
+        $this->name = $name;
+        $this->size = '13';
+    }
+
+    function display($param) {
+        print '<span class="error">' . _("No entity available") . '</span>';
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
+    }
+
+}
+
+class SingleLocationTpl extends AbstractTpl {
+
+    function SingleLocationTpl($name, $value) {
+        $this->name = $name;
+        $this->value = $value;
+        $this->size = '23';
+    }
+
+    function display($param) {
+        print $this->value;
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="'. $this->value .'" class="searchfieldreal" />';
+    }
+
+}
+
 class AjaxFilterLocation extends AjaxFilter {
     function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
         $this->AjaxFilter($url, $divid, $params);
@@ -935,11 +964,20 @@ class AjaxFilterLocation extends AjaxFilter {
     }
 
     function setElements($elt) {
-        $this->location->setElements($elt);
+        if (count($elt) == 0) {
+            $this->location = new NoLocationTpl($this->paramname);
+        } else if (count($elt) == 1) {
+            $loc = array_values($elt);
+            $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
+        } else {
+            $this->location->setElements($elt);
+        }
     }
 
     function setElementsVal($elt) {
-        $this->location->setElementsVal($elt);
+        if (count($elt) > 1) {
+            $this->location->setElementsVal($elt);
+        }
     }
 
     function setSelected($elemnt) {
@@ -949,7 +987,6 @@ class AjaxFilterLocation extends AjaxFilter {
     function display() {
         global $conf;
         $root = $conf["global"]["root"];
-
 ?>
 <form name="Form" id="Form" action="#">
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
@@ -957,7 +994,7 @@ class AjaxFilterLocation extends AjaxFilter {
     <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
     <span class="searchfield">
 <?php
-        $this->location->display();
+     $this->location->display();
 ?>
     </span>&nbsp;
     <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
