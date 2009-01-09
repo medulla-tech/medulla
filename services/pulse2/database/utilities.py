@@ -132,6 +132,9 @@ def toH(w):
         ret[i] = getattr(w, i)
     return ret
 
+def toUUID(id):
+    return "UUID%s" % (str(id))
+
 class DbObject(object):
     def toH(self):
         ret = {}
