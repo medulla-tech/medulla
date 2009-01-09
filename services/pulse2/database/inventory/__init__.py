@@ -1011,12 +1011,27 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
                 
     def getUserLocations(self, userid):
+
+        def __addChildren(session, rootid):
+            # Search children of the root id
+            ret = []
+            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.parentId == rootid)
+            for entity in q:
+                ret.append(entity)
+                ret.extend(__addChildren(session, entity.id))
+            return ret
+        
         session = create_session()
-        q = session.query(self.klass['Entity'])
+        ret = session.query(self.klass['Entity'])
         if userid != 'root':
-            q = q.select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
+            ret = []
+            q = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
+            for entity in q:
+                ret.append(entity)
+                # Also add entity children
+                ret.extend(__addChildren(session, entity.id))
         session.close()
-        return q
+        return ret
 
     def getLocationsCount(self):
         session = create_session()
