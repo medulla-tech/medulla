@@ -76,6 +76,8 @@ class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
+        s.locations = Inventory().getUserLocations(s.userid)
+        s.locationsid = map(lambda e: e.id, s.locations)
         return s
 
 class RpcProxy(RpcProxyI):
