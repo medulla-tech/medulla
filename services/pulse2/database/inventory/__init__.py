@@ -165,20 +165,33 @@ class Inventory(DyngroupDatabaseHelper):
             return True
         return False
 
+    def complete_ctx(self, ctx):
+        """
+        Set user locations in current security context.
+        """
+        if not hasattr(ctx, "locations") or ctx.locations == None:
+            logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
+            ctx.locations = self.getUserLocations(ctx.userid)
+            ctx.locationsid = map(lambda e: e.id, ctx.locations)
+
     def __machinesOnlyQuery(self, ctx, pattern = None, session = None, count = False):
+        self.complete_ctx(ctx)
         if not session:
             session = create_session()
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(ctx, self.machine, pattern, session.query(Machine), self.machine.c.id)
 
-        if 'location' in pattern:
-            # Join on table for location search
-            join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
+        # Join on entity table for location support
+        join_query = join_query.join(self.table['hasEntity']).join(self.table['Entity']).join(self.inventory)
         
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
+        # We first filter the computer list according to the entities the user
+        # has the right to see.
+        query = query.filter(self.table['Entity'].c.id.in_(ctx.locationsid))
+        # Then we apply extra filter according to pattern content
         if pattern:
             if 'hostname' in pattern:
                 query = query.filter(self.machine.c.Name.like("%" + pattern['hostname'] + "%"))
@@ -764,6 +777,10 @@ class Inventory(DyngroupDatabaseHelper):
 
         noms = self.config.getInventoryNoms()
         select_from = haspartTable.join(self.inventory).join(partTable).outerjoin(self.machine)
+        # Also join on the entity related table to filter on the computers the
+        # user has the right to see
+        select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
+        
         if noms.has_key(part):
             for nom in noms[part]:
                 nomTable = self.table['nom%s%s' % (part, nom)]
@@ -772,7 +789,9 @@ class Inventory(DyngroupDatabaseHelper):
                 grp_by.append(nomTable.c.id)
 
         result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
-
+        # Filter on the entities the user has the right to see
+        result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+        # Apply other filters
         result = self.__filterQuery(ctx, result, params)
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
@@ -1017,8 +1036,9 @@ class Inventory(DyngroupDatabaseHelper):
             ret = []
             q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.parentId == rootid)
             for entity in q:
-                ret.append(entity)
-                ret.extend(__addChildren(session, entity.id))
+                if entity.id != 1:
+                    ret.append(entity)
+                    ret.extend(__addChildren(session, entity.id))
             return ret
         
         session = create_session()
