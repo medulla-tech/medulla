@@ -405,8 +405,8 @@ class MscDatabase(Singleton):
             return '.'.join(map(lambda x: str(x), a_ip))
 
         def prepareTarget(computer):
-            h_mac2bcast = {}
-            h_mac2netmask = {}
+            h_mac2bcast = []
+            h_mac2netmask = []
             bcastAddresses = []
             netmasks = []
             ipAddresses = computer[1]['ipHostNumber']
@@ -419,11 +419,11 @@ class MscDatabase(Singleton):
                     self.logger.debug("Can't compute broadcast address for %s: %s" % (str(computer), str(e)))
                     bcastAddress = "255.255.255.255"
                     self.logger.debug("Using default broadcast address %s" % bcastAddress)
-                h_mac2bcast[computer[1]['macAddress'][i]] = bcastAddress
+                h_mac2bcast.append(bcastAddress)
                 try:
-                    h_mac2netmask[computer[1]['macAddress'][i]] = netmask[i]
+                    h_mac2netmask.append(netmask[i])
                 except:
-                    h_mac2netmask[computer[1]['macAddress'][i]] = '0.0.0.0'
+                    h_mac2netmask.append('0.0.0.0')
 
             self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
             # Apply IP addresses blacklist
@@ -448,9 +448,13 @@ class MscDatabase(Singleton):
             macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
             self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
 
-            for mac in macAddresses:
-                bcastAddresses.append(h_mac2bcast[mac])
-                netmasks.append(h_mac2netmask[mac])
+            # Fill bcastAddresses and netmasks lists
+            for i in range(len(computer[1]['macAddress'])):
+                macAddress = computer[1]['macAddress'][i]
+                # Only select non-filtered MAC addresses
+                if macAddress in macAddresses:
+                    bcastAddresses.append(h_mac2bcast[i])
+                    netmasks.append(h_mac2netmask[i])
 
             # Multiple IP addresses or IP addresses may be separated by "||"
             targetMac = '||'.join(macAddresses)
