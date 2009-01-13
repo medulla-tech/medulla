@@ -760,7 +760,7 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def __lastMachineInventoryPartQuery(self, session, ctx, part, params):
-        self.complete_ctx(self, ctx)
+        self.complete_ctx(ctx)
         partKlass = self.klass[part]
         partTable = self.table[part]
         haspartTable = self.table["has" + part]
