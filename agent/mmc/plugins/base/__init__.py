@@ -1744,7 +1744,7 @@ class BaseLdapAuthenticator(AuthenticatorI):
     def authenticate(self, user, password):
         ldapObj = ldapAuthen(user, password)
         if ldapObj.isRightPass():
-            ret = AuthenticationToken(True, user, password, ldapObj.getUserEntry())
+            ret = AuthenticationToken(True, user, password, ldapObj.getUserEntry()[0])
         else:
             ret = AuthenticationToken()
         return ret
