@@ -46,10 +46,10 @@ def wolClient(mac_addrs, target_bcast = None):
         return (True, "mac addresses: %s, target broadcasts: %s" % (mac_addrs, target_bcast), "")
 
     def cbReturn(result):
-        ret = True
+        ret = (True, "mac addresses: %s, target broadcasts: %s" % (mac_addrs, target_bcast), "")
         for res in result:
             if not res[1]:
-                ret = False
+                return (False, "mac addresses: %s, target broadcasts: %s" % (mac_addrs, target_bcast), "")
         return ret
 
     command_list = [
