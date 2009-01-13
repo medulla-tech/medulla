@@ -1059,9 +1059,26 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return count
 
-    def getUsersInSameLocations(self, userid):
-        # TODO
-        return [userid]
+    def getUsersInSameLocations(self, userid, locations = None):
+        """
+        Returns all the users id that share the same locations than the given
+        user. 
+        """
+        if locations == None:
+            locations = self.getUserLocations(userid)
+        ret = []
+        if locations:
+            inloc = []
+            for location in locations:
+                inloc.append(location.id)
+            session = create_session()
+            q = session.query(UserTable).select_from(self.user.join(self.userentities)).filter(self.userentities.c.fk_Entity.in_(inloc)).filter(self.user.c.uid != userid).distinct().all()
+            session.close()
+            # Only returns the user id
+            ret = map(lambda u: u.uid, q)
+        # Always append the given userid
+        ret.append(userid)
+        return ret
 
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
