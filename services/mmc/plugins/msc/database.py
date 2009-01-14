@@ -60,7 +60,7 @@ import logging
 
 SA_MAJOR = 0
 SA_MINOR = 4
-DATABASEVERSION = 14
+DATABASEVERSION = 15
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -976,8 +976,8 @@ class MscDatabase(Singleton):
                 ids.append(id)
                 i += 1
         return ids
-    
-    def __displayLogReturn(self, ctx, list): 
+
+    def __displayLogReturn(self, ctx, list):
         # list is : cmd, cohid, cohstate
         cohids = map(lambda x: x[1], list)
         cohs = self.getCommandsOnHosts(ctx, cohids)
@@ -988,7 +988,7 @@ class MscDatabase(Singleton):
             else:
                 ret.append((element[0].toH(), element[1], element[2], False))
         return ret
- 
+
     def displayLogs(self, ctx, params = {}): # TODO USE ctx
         session = create_session()
         for i in ('b_id', 'cmd_id', 'coh_id', 'gid', 'uuid', 'filt'):
@@ -1089,7 +1089,7 @@ class MscDatabase(Singleton):
                 ret[e[1]] = e[0]
             return ret
         return {}
-                
+
     def getCommandsOnHost(self, ctx, coh_id):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)

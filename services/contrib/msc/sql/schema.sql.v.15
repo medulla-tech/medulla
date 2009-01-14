@@ -20,5 +20,17 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- deprecated: commented out in favor of v.15
--- ALTER TABLE `commands` MODIFY `do_halt` VARCHAR(255) NOT NULL DEFAULT '';
+-- taken from old "14b" dummy version
+ALTER TABLE `commands` \
+    MODIFY `do_halt` VARCHAR(255) NOT NULL DEFAULT '';
+
+-- to limit client number on a same proxy the same time
+ALTER TABLE `commands_on_host` \
+    ADD COLUMN `max_clients_per_proxy` INT NOT NULL DEFAULT 0;
+
+-- to speed-up MSC cleanups (see http://pulse2.mandriva.org/ticket/493)
+CREATE INDEX fk_target_idx ON commands_on_host(fk_target);
+
+-- Bump version
+DELETE FROM version;
+INSERT INTO version VALUES( "15" );
