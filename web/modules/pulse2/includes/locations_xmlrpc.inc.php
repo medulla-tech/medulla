@@ -24,7 +24,15 @@
 
 function getUserLocations() {
     if (!isset($_SESSION["pulse2.getUserLocations"])) {
-        $_SESSION["pulse2.getUserLocations"] = xmlCall("pulse2.getUserLocations");
+        $locations = xmlCall("pulse2.getUserLocations");
+        $ret = array();
+        foreach($locations as $loc) {
+            if (isset($loc["isrootentity"])) {
+                $loc["altname"] = _T("Root entity", "pulse2");
+            }
+            $ret[] = $loc;
+        }
+        $_SESSION["pulse2.getUserLocations"] = $ret;
     }
     return $_SESSION["pulse2.getUserLocations"];
 }
