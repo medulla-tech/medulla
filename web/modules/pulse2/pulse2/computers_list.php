@@ -34,11 +34,17 @@ if (displayLocalisationBar()) {
     $ajax = new AjaxFilterLocation("modules/base/computers/ajaxComputersList.php", "container", 'location', $param);
 
     $list = array();
+    $values = array();
     foreach (getUserLocations() as $loc) {
-        $list[$loc['uuid']] = $loc['name'];
+        $values[$loc['uuid']] = $loc['name'];
+        if (isset($loc['altname'])) {
+            $list[$loc['uuid']] = $loc['altname'];
+        } else {
+            $list[$loc['uuid']] = $loc['name'];
+        }
     }
     $ajax->setElements($list);
-    $ajax->setElementsVal($list);
+    $ajax->setElementsVal($values);
 } else {
     $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
 }
