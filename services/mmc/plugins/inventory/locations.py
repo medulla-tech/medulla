@@ -53,8 +53,11 @@ class InventoryLocation(ComputerLocationI):
 
 def convertLocations(hloc):
     logging.getLogger().debug(hloc)
-    return {
+    ret = {
         'name': hloc.Label,
-        'uuid': hloc.id
-    }
-    
+        'uuid': 'UUID' + str(hloc.id)
+        }
+    # Tag the root entity to easily recognize it
+    if hloc.id == 1:
+        ret['isrootentity'] = True
+    return ret
