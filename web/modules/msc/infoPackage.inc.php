@@ -208,8 +208,9 @@ if (!empty($submod)) {
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $page->setFile("modules/msc/msc/statuscsv.php");
     $submod->addPage($page);
+
+    unset($submod);
 }
 
-unset($submod);
 
 ?>
