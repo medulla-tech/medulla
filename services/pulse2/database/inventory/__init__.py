@@ -69,7 +69,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.info("Inventory is activating")
         self.config = config
         PossibleQueries().init(self.config)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True, echo = True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -1030,16 +1030,27 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return ret
                 
-    def getUserLocations(self, userid):
+    def getUserLocations(self, userid, with_level = False):
+        """
+        Returns all the locations granted for a given userid.
 
-        def __addChildren(session, rootid):
+        @param with_level: if True, the locations level are also returned
+        @returns: a list of locations, or a list of couples (location, level)
+                  if with_level is true
+        """
+
+        def __addChildren(session, rootid, level):
             # Search children of the root id
             ret = []
+            level = level + 1
             q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.parentId == rootid)
             for entity in q:
                 if entity.id != 1:
-                    ret.append(entity)
-                    ret.extend(__addChildren(session, entity.id))
+                    if with_level:
+                        ret.append((entity, level))
+                    else:
+                        ret.append(entity)
+                    ret.extend(__addChildren(session, entity.id, level))
             return ret
         
         session = create_session()
@@ -1047,10 +1058,14 @@ class Inventory(DyngroupDatabaseHelper):
         if userid != 'root':
             ret = []
             q = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
+            level = 1
             for entity in q:
-                ret.append(entity)
+                if with_level:
+                    ret.append((entity, level))
+                else:
+                    ret.append(entity)
                 # Also add entity children
-                ret.extend(__addChildren(session, entity.id))
+                ret.extend(__addChildren(session, entity.id, level))
         session.close()
         return ret
 
