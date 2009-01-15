@@ -332,7 +332,7 @@ $phoneregexp = "/^[a-zA-Z0-9(-/ ]*$/";
 if (!isset($detailArr['telephoneNumber'])) $detailArr['telephoneNumber'] = array('');
 $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
 $tn->setRegexp($phoneregexp);
-$phone = new FormElement(_("Telephone Number"), $tn);
+$phone = new FormElement(_("Telephone number"), $tn);
 $phone->display($detailArr['telephoneNumber']);
 print '<table cellspacing="0">';
 
