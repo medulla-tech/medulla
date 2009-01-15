@@ -313,7 +313,7 @@ $test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
 $test->setCssError("Photo");
 $test->display(array("value" => $detailArr["uid"][0], "action" => $_GET["action"]));
 
-$test = new TrFormElement(_("Name"),new InputTpl("name"));
+$test = new TrFormElement(_("Last name"),new InputTpl("name"));
 $test->display(array("value"=>$detailArr["sn"][0]));
 
 $test = new TrFormElement(_("First name"),new InputTpl("firstname"));
