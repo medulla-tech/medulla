@@ -33,7 +33,7 @@ class InventoryLocation(ComputerLocationI):
         return Inventory().getUserProfile(userid)
 
     def getUserLocations(self, userid):
-        return map(lambda l: convertLocations(l), Inventory().getUserLocations(userid))
+        return map(lambda l: convertLocations(l), Inventory().getUserLocations(userid, with_level = True))
 
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
         return Inventory().doesUserHaveAccessToMachine(userid, machine_uuid)
@@ -52,12 +52,14 @@ class InventoryLocation(ComputerLocationI):
 
 
 def convertLocations(hloc):
-    logging.getLogger().debug(hloc)
+    location = hloc[0]
+    level = hloc[1]
     ret = {
-        'name': hloc.Label,
-        'uuid': 'UUID' + str(hloc.id)
+        'name': location.Label,
+        'uuid': 'UUID' + str(location.id),
+        'level': level
         }
     # Tag the root entity to easily recognize it
-    if hloc.id == 1:
+    if location.id == 1:
         ret['isrootentity'] = True
     return ret
