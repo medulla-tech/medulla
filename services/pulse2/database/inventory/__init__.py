@@ -69,7 +69,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger.info("Inventory is activating")
         self.config = config
         PossibleQueries().init(self.config)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True, echo = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
