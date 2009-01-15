@@ -28,7 +28,9 @@ function getUserLocations() {
         $ret = array();
         foreach($locations as $loc) {
             if (isset($loc["isrootentity"])) {
-                $loc["altname"] = _T("Root entity", "pulse2");
+                $loc["altname"] =  _T("Root entity", "pulse2");
+            } else if (isset($loc["level"])) {
+                $loc["altname"] = str_repeat("&nbsp;", 2 * ($loc["level"] - 1)) . $loc["name"];
             }
             $ret[] = $loc;
         }
@@ -38,4 +40,3 @@ function getUserLocations() {
 }
 
 ?>
-
