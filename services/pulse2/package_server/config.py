@@ -64,6 +64,19 @@ class P2PServerCP(Singleton):
 
     package_detect_loop = 60
     package_detect_activate = False
+    
+    SMART_DETECT_NONE = 0
+    SMART_DETECT_LAST = 1
+    SMART_DETECT_LOOP = 2
+    SMART_DETECT_SIZE = 3
+
+    detectSmartMethod = ['none', 'last', 'loop', 'size']
+    def packageDetectSmartMethod(self):
+        return ', '.join(map(lambda x:self.detectSmartMethod[x], self.package_detect_smart_method))
+
+    package_detect_smart = False
+    package_detect_smart_method = []
+    package_detect_smart_time = 60
 
     package_detect_tmp_activate = False
 
@@ -187,8 +200,25 @@ class P2PServerCP(Singleton):
             self.package_detect_activate = self.cp.getboolean("main", "package_detect_activate")
             if self.package_detect_activate and self.cp.has_option("main", "package_detect_loop"):
                 self.package_detect_loop = self.cp.getint("main", "package_detect_loop")
-                
 
+            if self.cp.has_option("main", "package_detect_smart_method"):
+                package_detect_smart_method = self.cp.get("main", "package_detect_smart_method")
+                if package_detect_smart_method != 'none':
+                    package_detect_smart_method = package_detect_smart_method.split(',')
+                    self.package_detect_smart = True
+                    if 'last_time_modification' in package_detect_smart_method:
+                        self.package_detect_smart_method.append(self.SMART_DETECT_LAST)
+                    if 'check_in_loop' in package_detect_smart_method:
+                        self.package_detect_smart_method.append(self.SMART_DETECT_LOOP)
+                    if 'check_size' in package_detect_smart_method:
+                        self.package_detect_smart_method.append(self.SMART_DETECT_SIZE)
+                    else:
+                        logging.getLogger().info("dont know the package_detect_smart_method '%s'")
+                    if self.cp.has_option("main", "package_detect_smart_time"):
+                        self.package_detect_smart_time = self.cp.getint("main", "package_detect_smart_time")
+                else:
+                    self.package_detect_smart = False
+                        
         if self.cp.has_option("main", "package_mirror_target"):
             self.package_mirror_target = self.cp.get("main", "package_mirror_target").split(' ')
             if (type(self.package_mirror_target) == str and self.package_mirror_target != '') or \

@@ -61,14 +61,15 @@ class ThreadPackageHelper(Thread):
 class ThreadPackageDetect(ThreadPackageHelper):
     def runSub(self):
         if self.working:
-            self.logger.debug("ThreadPackageDetect already running")
+            self.logger.debug("###############= ThreadPackageDetect already running")
             return
         self.working = True
-        self.logger.debug("ThreadPackageDetect is running")
+        logging.getLogger().debug("\n")
+        logging.getLogger().debug("###############> ThreadPackageDetect is running")
         if self.config.package_detect_tmp_activate:
             Common().moveCorrectPackages()
         Common().detectNewPackages()
-        self.logger.debug("ThreadPackageDetect end")
+        logging.getLogger().debug("###############< ThreadPackageDetect end\n")
         self.working = False
 
     def run(self):
@@ -248,6 +249,8 @@ class ThreadLauncher(Singleton):
             self.logger.debug("Package detect is activated")
             if self.config.package_detect_tmp_activate:
                 self.logger.debug("Package detect in temporary folder is activated")
+            if self.config.package_detect_smart:
+                self.logger.debug("Package smart detect is using method '%s' (%s)"%(self.config.packageDetectSmartMethod(), str(self.config.package_detect_smart_time)))
 
             self.logger.debug("Starting package detect thread")
             threadpd = ThreadPackageDetect(config)

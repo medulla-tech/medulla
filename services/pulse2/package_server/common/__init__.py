@@ -28,10 +28,13 @@
 import twisted.web.html
 import twisted.web.xmlrpc
 import os
+import stat
+import time
 import re
 import shutil
 import md5
 import logging
+import random
 from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
@@ -43,6 +46,12 @@ class Common(Singleton):
     MD5SUMS = "MD5SUMS"
     CONFXML = "conf.xml"
 
+    SMART_DETECT_NOTPLUGGED = 0
+    SMART_DETECT_NOCHANGES  = 1
+    SMART_DETECT_PATHPB     = 2
+    SMART_DETECT_CHANGES    = 3
+    SMART_DETECT_ERROR      = 4
+    
     def init(self, config):
         self.working = True
         self.working_pkgs = []
@@ -62,6 +71,7 @@ class Common(Singleton):
         self.already_declared = {}
         self.dontgivepkgs = {}
         self.need_assign = {}
+        self.temp_check_changes = {'LAST':{}, 'LOOP':{}, 'SIZE':{}}
 
         try:
             self._detectPackages()
@@ -98,6 +108,7 @@ class Common(Singleton):
         self.logger.debug("# END ##################")
 
     def _detectPackages(self, new = False):
+        runid = int(random.random()*50000)
         if len(self.config.mirrors) > 0:
             for mirror_params in self.config.mirrors:
                 try:
@@ -124,7 +135,8 @@ class Common(Singleton):
                         mirror_params['mount_point'],
                         mirror_params['src'],
                         access,
-                        new
+                        new,
+                        runid
                     )
                 except Exception, e:
                     self.logger.error(e)
@@ -132,14 +144,22 @@ class Common(Singleton):
         if len(self.config.package_api_get) > 0:
             for mirror_params in self.config.package_api_get:
                 try:
-                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new)
+                    self.logger.debug("Getting packages for %s %s" % (
+                        mirror_params['mount_point'],
+                        mirror_params['src']
+                    ))
+                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     self.logger.error(e)
 
         if len(self.config.package_api_put) > 0:
             for mirror_params in self.config.package_api_put:
                 try:
-                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new)
+                    self.logger.debug("Getting packages for %s %s" % (
+                        mirror_params['mount_point'],
+                        mirror_params['src']
+                    ))
+                    self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     self.logger.error(e)
 
@@ -515,12 +535,12 @@ class Common(Singleton):
                 self.logger.debug("New valid temporary package detected")
                 shutil.copytree(file, os.path.join(src, l_package.id))
 
-    def _getPackages(self, mp, src, access = {}, new = False):
+    def _getPackages(self, mp, src, access = {}, new = False, runid = -1):
         if not os.path.exists(src):
             raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
 
         if new:
-            Find().find(src, self._treatNewConfFile, (mp, access))
+            Find().find(src, self._treatNewConfFile, (mp, access, runid))
         else:
             self.mp2p[mp] = []
             Find().find(src, self._treatConfFile, (mp, access))
@@ -548,19 +568,116 @@ class Common(Singleton):
                 fmd5.write("%s  %s\n" % (md5hash, name))
             fmd5.close()
 
-    def _treatNewConfFile(self, file, mp, access):
+    def _hasChanged(self, dir, pid, runid = -1):
+        if not self.config.package_detect_smart:
+            return self.SMART_DETECT_NOTPLUGGED
+        if not os.path.exists(dir) or not os.path.isdir(dir):
+            return self.SMART_DETECT_PATHPB
+
+        t = time.time()
+        known_action = False
+        failure = False
+        # check that the last modification date is old enough
+        if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
+            self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
+            # start by checking the package directory
+            self.__subHasChangedLast(dir, pid, t)
+            # then if it has not changed, we check what's inside
+            if not self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###']:
+                Find().find(dir, self.__subHasChangedLast, [pid,t])
+            # something has changed in the last X secondes
+            if self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###']:
+                self.logger.debug("package '%s' was modified in the last %s seconds"%(str(pid), str(self.config.package_detect_smart_time)))
+                failure = True
+            known_action = True
+
+        # check that the package size has not change between two detect loop (detected one loop after the package is here for real)
+        if self.config.SMART_DETECT_SIZE in self.config.package_detect_smart_method:
+            if not self.temp_check_changes['SIZE'].has_key(pid):
+                self.temp_check_changes['SIZE'][pid] = [0, 0]
+            previous, previous_t = self.temp_check_changes['SIZE'][pid]
+            if (t - previous_t) < (self.config.package_detect_loop - 1): # only try this method once per detect loop
+                failure = True
+            else:
+                self.temp_check_changes['SIZE'][pid] = [0, previous_t]
+                Find().find(dir, self.__subHasChangedGetSize, [pid])
+                size, t2 = self.temp_check_changes['SIZE'][pid]
+                if previous != size:
+                    self.temp_check_changes['SIZE'][pid] = [size, t]
+                    self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
+                    failure = True
+            known_action = True
+
+        if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
+            if not self.temp_check_changes['LOOP'].has_key(pid):
+                self.temp_check_changes['LOOP'][pid] = {}
+            self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = False
+            Find().find(dir, self.__subHasChangedLoop, [pid,time.time(),runid])
+            if self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###']:
+                failure = True
+            else:
+                del self.temp_check_changes['LOOP'][pid]
+            known_action = True
+
+        # if one of the action fail (detect that at least one file changed)
+        if failure:
+            return self.SMART_DETECT_CHANGES
+        
+        # if some of the actions have been executed and we are still there, that mean that they succeed, ie: no changes detected
+        if known_action:
+            # clean data
+            if self.temp_check_changes['LAST'].has_key(pid):
+                del self.temp_check_changes['LAST'][pid]
+            if self.temp_check_changes['SIZE'].has_key(pid):
+                del self.temp_check_changes['SIZE'][pid]
+            
+            return self.SMART_DETECT_NOCHANGES
+        
+        self.logger.debug("smart detect hasChange, dont know this smart method : %s"%(str(self.config.packageDetectSmartMethod)))
+        return self.SMART_DETECT_ERROR
+
+    def __subHasChangedGetSize(self, file, pid):
+        self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
+        
+    def __subHasChangedLast(self, file, pid, t):
+        """
+        check if the file has change in the last X secondes
+        if yes, ###HASCHANGED_LAST### is set to true
+        """
+        s = os.stat(file)[stat.ST_MTIME]
+        if (t - s) < self.config.package_detect_smart_time:
+            self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
+
+    def __subHasChangedLoop(self, file, pid, t, runid = -1):
+        s = os.stat(file)[stat.ST_MTIME]
+        if self.temp_check_changes['LOOP'][pid].has_key(file):
+            if s != self.temp_check_changes['LOOP'][pid][file][0]:
+                self.temp_check_changes['LOOP'][pid][file][0] = s
+                self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
+            elif runid == self.temp_check_changes['LOOP'][pid][file][1]:
+                self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
+        else:
+            self.temp_check_changes['LOOP'][pid][file] = [s, runid]
+            self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
+        self.temp_check_changes['LOOP'][pid][file][1] = runid
+        
+    def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == 'conf.xml':
             if not self.already_declared.has_key(file):
                 l_package = self.parser.parse(file)
-                if not self.need_assign.has_key(l_package.id):
-                    self._createMD5File(os.path.dirname(file))
-                    pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
-                    self.associatePackage2mp(pid, mp)
-                    self.already_declared[file] = True
-                    if self.config.package_mirror_activate:
-                        Common().rsyncPackageOnMirrors(pid)
+                isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
+                if isReady == self.SMART_DETECT_CHANGES:
+                    self.logger.debug("'%s' has changed"%(str(l_package.id)))
                 else:
-                    self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
+                    if not self.need_assign.has_key(l_package.id):
+                        self._createMD5File(os.path.dirname(file))
+                        pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
+                        self.associatePackage2mp(pid, mp)
+                        self.already_declared[file] = True
+                        if self.config.package_mirror_activate:
+                            Common().rsyncPackageOnMirrors(pid)
+                    else:
+                        self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
