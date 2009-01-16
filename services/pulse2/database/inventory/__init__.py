@@ -1195,7 +1195,17 @@ class PossibleQueries(Singleton):
                 return getattr(self, value)
             return []
 
+class InventoryContext:
+    pass
+
 class InventoryCreator(Inventory):
+
+    def __init__(self):
+        Inventory.__init__(self)
+        if not hasattr(self, 'ctx'):
+            self.ctx = InventoryContext()
+            self.ctx.userid = 'root'
+
     def createNewInventory(self, hostname, inventory, date):
         """
         Add a new inventory for a computer
@@ -1212,7 +1222,7 @@ class InventoryCreator(Inventory):
         session = create_session()
         transaction = session.create_transaction()
         try:
-            m = self.getMachinesOnly(None, {'hostname': hostname}) # TODO uuids!
+            m = self.getMachinesOnly(self.ctx, {'hostname': hostname}) # TODO uuids!
             if len(m) == 0:
                 # If this computer is not in the Machine table, add it
                 m = Machine()
