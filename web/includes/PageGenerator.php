@@ -943,15 +943,20 @@ class NoLocationTpl extends AbstractTpl {
 
 class SingleLocationTpl extends AbstractTpl {
 
-    function SingleLocationTpl($name, $value) {
+    function SingleLocationTpl($name, $label) {
         $this->name = $name;
-        $this->value = $value;
-        $this->size = '23';
+        $this->label = $label;
+        $this->value = null;
+    }
+
+    function setElementsVal($value) {
+        $this->value = array_values($value);
+        $this->value = $this->value[0];
     }
 
     function display($param) {
-        print $this->value;
-        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="'. $this->value .'" class="searchfieldreal" />';
+        print $this->label;
+        print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" value="'. $this->value .'" class="searchfieldreal" />';
     }
 
 }
@@ -975,7 +980,7 @@ class AjaxFilterLocation extends AjaxFilter {
     }
 
     function setElementsVal($elt) {
-        if (count($elt) > 1) {
+        if (count($elt) >= 1) {
             $this->location->setElementsVal($elt);
         }
     }
