@@ -1054,18 +1054,19 @@ class Inventory(DyngroupDatabaseHelper):
             return ret
         
         session = create_session()
-        ret = session.query(self.klass['Entity'])
+        ret = []
         if userid != 'root':
-            ret = []
             q = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
-            level = 1
-            for entity in q:
-                if with_level:
-                    ret.append((entity, level))
-                else:
-                    ret.append(entity)
-                # Also add entity children
-                ret.extend(__addChildren(session, entity.id, level))
+        else:
+            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1)
+        level = 1
+        for entity in q:
+            if with_level:
+                ret.append((entity, level))
+            else:
+                ret.append(entity)
+            # Also add entity children
+            ret.extend(__addChildren(session, entity.id, level))
         session.close()
         return ret
 
