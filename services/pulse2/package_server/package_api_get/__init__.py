@@ -28,6 +28,7 @@
 import twisted.web.html
 import twisted.web.xmlrpc
 import logging
+import os
 from pulse2.package_server.common import Common
 
 class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
@@ -57,7 +58,7 @@ class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
         return Common().package(pid, self.mp).toH()
 
     def xmlrpc_getLocalPackagePath(self, pid):
-        return Common().package(pid, self.mp).root
+        return os.path.dirname(Common().package(pid, self.mp).root)
 
     def xmlrpc_getPackageLabel(self, pid):
         return Common().package(pid, self.mp).label

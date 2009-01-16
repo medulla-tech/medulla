@@ -72,6 +72,7 @@ class Common(Singleton):
         self.dontgivepkgs = {}
         self.need_assign = {}
         self.temp_check_changes = {'LAST':{}, 'LOOP':{}, 'SIZE':{}}
+        self.packageDetectionDate = {}
 
         try:
             self._detectPackages()
@@ -105,6 +106,10 @@ class Common(Singleton):
         self.logger.debug(self.dontgivepkgs)
         self.logger.debug(">> self.need_assign")
         self.logger.debug(self.need_assign)
+        self.logger.debug(">> self.temp_check_changes")
+        self.logger.debug(self.temp_check_changes)
+        self.logger.debug(">> self.packageDetectionDate")
+        self.logger.debug(self.packageDetectionDate)
         self.logger.debug("# END ##################")
 
     def _detectPackages(self, new = False):
@@ -170,19 +175,16 @@ class Common(Singleton):
         todelete = []
         for pid in self.packages:
             proot = self._getPackageRoot(pid)
-            confxml = os.path.join(proot, pid, "conf.xml")
-            if not os.path.exists(confxml):
+            confxml = os.path.join(proot, "conf.xml")
+            if os.path.exists(confxml):
+                if self.packageDetectionDate[pid] != self.__getDate(confxml):
+                    self.__removePackage(pid, proot)
+                    todelete.append(pid)
+                    if confxml in self.already_declared:
+                        del self.already_declared[confxml]
+            else:
                 self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
-                # Remove the package from the mirror
-                done = []
-                for desc in self.descBySrc(proot):
-                    if desc['type'] != 'mirror_files':
-                        mp = desc['mp']
-                        if pid in self.mp2p[mp]:
-                            if mp not in done:
-                                self.dropPackage(pid, mp)
-                                self.desassociatePackage2mp(pid, mp)
-                                done.append(mp)
+                self.__removePackage(pid, proot)
                 todelete.append(pid)
                 if confxml in self.already_declared:
                     del self.already_declared[confxml]
@@ -190,7 +192,31 @@ class Common(Singleton):
             # For the mirror stuff to work, we do not remove the package from
             # our main packages dict
             for pid in todelete:
-                del self.packages[pid]
+                self.suppressFromInternal(pid)
+        else:
+            self.logger.debug("Package %s has to be removed from mirrors before removing it from internal hashes"%(pid))
+
+
+    def suppressFromInternal(self, pid):
+        self.logger.debug("Package %s removed from internal hashes"%(pid))
+        pkg = self.packages[pid]
+        del self.reverse[pkg.label][pkg.version]
+        if len(self.reverse[pkg.label].keys()) == 0:
+            del self.reverse[pkg.label]
+        del self.packageDetectionDate[pid]
+        del self.packages[pid]
+
+    def __removePackage(self, pid, proot):
+        # Remove the package from the mirror
+        done = []
+        for desc in self.descBySrc(os.path.dirname(proot)):
+            if desc['type'] != 'mirror_files':
+                mp = desc['mp']
+                if pid in self.mp2p[mp]:
+                    if mp not in done:
+                        self.dropPackage(pid, mp)
+                        self.desassociatePackage2mp(pid, mp)
+                        done.append(mp)
 
     def moveCorrectPackages(self):
         """
@@ -316,10 +342,10 @@ class Common(Singleton):
                 modif = True
                 self.logger.info("PackageMirror: package %s successfully mirrored everywhere" % pid)
                 pkg = self.packages[pid]
-                p_dir = os.path.join(pkg.root, pid)
+                p_dir = pkg.root
                 if not os.path.exists(p_dir):
                     self.logger.debug("PackageMirror: removing package %s from available packages" % pid)
-                    del self.packages[pid]
+                    self.suppressFromInternal(pid)
             if modif:
                 PkgsRsyncStateSerializer().serialize()
             return True
@@ -378,7 +404,7 @@ class Common(Singleton):
         path = params['src']
 
         confdir = os.path.join(path, pid)
-        self.packages[pid].setRoot(path)
+        self.packages[pid].setRoot(confdir)
         confxml = os.path.join(confdir, "conf.xml")
         confxmltmp = confxml + '.tmp'
         if not os.path.exists(confdir):
@@ -660,6 +686,9 @@ class Common(Singleton):
             self.temp_check_changes['LOOP'][pid][file] = [s, runid]
             self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
         self.temp_check_changes['LOOP'][pid][file][1] = runid
+
+    def __getDate(self, conffile):
+        return os.stat(conffile)[stat.ST_MTIME]
         
     def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == 'conf.xml':
@@ -674,6 +703,7 @@ class Common(Singleton):
                         pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
                         self.associatePackage2mp(pid, mp)
                         self.already_declared[file] = True
+                        self.packageDetectionDate[pid] = self.__getDate(file)
                         if self.config.package_mirror_activate:
                             Common().rsyncPackageOnMirrors(pid)
                     else:
@@ -682,14 +712,15 @@ class Common(Singleton):
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             self._createMD5File(os.path.dirname(file))
-            self._treatDir(os.path.dirname(file), mp, access)
+            pid = self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
+            self.packageDetectionDate[pid] = self.__getDate(file)
 
     def _treatFiles(self, files, mp, pid, access):
         conf = self.h_desc(mp)
         toRelative = self.packages[pid].root
         for f in files:
-            path = '/'+re.sub(re.escape("%s%s%s%s" % (toRelative, os.sep, pid, os.sep)), '', os.path.dirname(f))
+            path = re.sub('//', '/', '/'+re.sub(re.escape(toRelative), '', os.path.dirname(f)))
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
 
@@ -701,7 +732,7 @@ class Common(Singleton):
                 if l_package == None:
                     confxml = os.path.join(file, "conf.xml")
                     l_package = self.parser.parse(confxml)
-                l_package.setRoot(os.path.dirname(file))
+                l_package.setRoot(file)
                 if l_package == None:
                     self.logger.debug("package failed to parse in %s"%(file))
                     return False
@@ -757,7 +788,7 @@ class Common(Singleton):
             raise err
         return str(pid)
 
-    def _treatFile(self, pid, f, path, access = {}, fid = None): #file_access_proto, file_access_uri, file_access_port, file_access_path, fid = None):
+    def _treatFile(self, pid, f, path, access = {}, fid = None):
         (fsize, fmd5) = [0,0]
         if not self.file_properties.has_key(f):
             fsize = os.path.getsize(f)
