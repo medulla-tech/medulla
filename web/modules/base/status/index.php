@@ -26,25 +26,20 @@
 /* définition des fonctions pour cette page */
 
 function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
-  $wused = ($used / $max) * $width;
-
-  if ($title != "")
-    {
-      echo $title." :";
+    $wused = ($used / $max) * $width;
+    if ($title != "") {
+        echo $title." :";
     }
-  echo "<div class=\"membarfree\" style=\"width: ".$width."px\">";
-  if ($cache > 0)
-    {
-      printf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
-      $wused = (($used - $cache) / $max) * $width;
+    echo "<div class=\"membarfree\" style=\"width: ".$width."px\">";
+    if ($cache > 0) {
+        printf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
+        $wused = (($used - $cache) / $max) * $width;
     }
-  printf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
-
-  if ($cache > 0)
-    {
-      echo "</div>";
+    printf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
+    if ($cache > 0) {
+            echo "</div>";
     }
-  echo "</div>\n";
+    echo "</div>\n";
 }
 
 function print_disk_info() {
@@ -126,7 +121,9 @@ function print_health() {
   $m = preg_split("/[ ]+/", $mem[1]);
   print_mem_bar(_("Memory"), $m[1], $m[2],$m[5]+$m[6]);
   $m = preg_split("/[ ]+/", $mem[3]);
-  print_mem_bar(_("Swap"), $m[1], $m[2]);
+  if ($m[1] > 0) {
+      print_mem_bar(_("Swap"), $m[1], $m[2]);
+  }
 }
 
 
