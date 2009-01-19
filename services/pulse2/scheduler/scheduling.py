@@ -103,9 +103,10 @@ def localProxyUploadStatus(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
 
     # as for now, if we previously found a proxy, use it
-    if myCoH.getUsedProxy() != None:
-        logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
-        return 'keeping'
+    # commented out: may break the split proxy model
+    #if myCoH.getUsedProxy() != None:
+    #    logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
+    #    return 'keeping'
 
     # see what to do next
     proxy_mode = getProxyModeForCommand(myCommandOnHostID)
@@ -118,6 +119,7 @@ def localProxyUploadStatus(myCommandOnHostID):
         return 'dead'
         
 def localProxyAttemptQueueMode(myCommandOnHostID):
+    # queue mode (serial) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
@@ -152,31 +154,60 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
     # a proxy that might be used
     # let's take a decision about our future
 
-    if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server
-        if best_ready_proxy_server_coh != None:                         # a proxy seems ready => PROXY CLIENT MODE
-            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
-            return best_ready_proxy_server_coh
-        elif potential_proxy_server_coh != None:                        # but one may become ready => WAITING
+    if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server ...
+        if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
+            (current_client_number, max_client_number) = getClientUsageForProxy(best_ready_proxy_server_coh)
+            if current_client_number < max_client_number:
+                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+                return best_ready_proxy_server_coh
+            else:
+                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
+                return 'waiting'
+        elif potential_proxy_server_coh != None:                        # ... and one may become ready => WAITING
             logging.getLogger().debug("scheduler %s: coh #%s still waiting for a local proxy to use" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
-        else:                                                           # and all seems dead => ERROR
+        else:                                                           # ... but all seems dead => ERROR
             logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
             return 'dead'
-    else:                                                               # I'm a server: I MAY use a proxy
-        if best_ready_proxy_server_coh != None:                         # a proxy seems ready => PROXY CLIENT MODE
-            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
-            return best_ready_proxy_server_coh
-        elif potential_proxy_server_coh:                                # but one better candidate may become ready => WAITING
+    else:                                                               # I'm a server: I MAY use a proxy ...
+        if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
+            (current_client_number, max_client_number) = getClientUsageForProxy(best_ready_proxy_server_coh)
+            if current_client_number < max_client_number:
+                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID))
+                return best_ready_proxy_server_coh
+            else:
+                logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % (SchedulerConfig().name, best_ready_proxy_server_coh, myCommandOnHostID, current_client_number))
+                return 'waiting'
+        elif potential_proxy_server_coh:                                # ... but a better candidate may become ready => WAITING
             logging.getLogger().debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
-        else:                                                           # and others better candidates seems dead => PROXY SERVER MODE
+        else:                                                           # ... and other best candidates seems dead => PROXY SERVER MODE
             logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'server'
 
 def localProxyAttemptSplitMode(myCommandOnHostID):
+    # split mode (parallel) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().debug("scheduler %s: command #%s using split mode which is not yep implemented" % (SchedulerConfig().name, myC.id))
     return 'dead'
+
+def getClientUsageForProxy(proxyCommandOnHostID):
+    # count the (current number, max number) of clients using this proxy
+    # a client is using a proxy if:
+    # - getUsedProxy == proxyCommandOnHostID
+    # current_state == upload_in_progress
+    # to save some time, iteration is done as usual (on command from coh)
+    (myCoH, myC, myT) = gatherCoHStuff(proxyCommandOnHostID)
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+    client_count = session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+        filter(database.commands.c.id == myC.id).\
+        filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.id).\
+        filter(database.commands_on_host.c.current_state == 'upload_in_progress').\
+        count()
+    session.close()
+    return (client_count, myCoH.getMaxClientsPerProxy())
 
 def getProxyModeForCommand(myCommandOnHostID):
     # Preliminar iteration to gather information about this command
