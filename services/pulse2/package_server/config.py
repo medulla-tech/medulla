@@ -41,8 +41,8 @@ class P2PServerCP(Singleton):
     """
     Class to hold configuration directives
     """
-    cacert = '/etc/mmc/pulse2/pserver/keys/cacert.pem'
-    localcert = '/etc/mmc/pulse2/pserver/keys/privkey.pem'
+    cacert = '/etc/mmc/pulse2/package-server/keys/cacert.pem'
+    localcert = '/etc/mmc/pulse2/package-server/keys/privkey.pem'
     
 
     # default values
