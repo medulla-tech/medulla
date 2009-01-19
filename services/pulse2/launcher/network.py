@@ -69,7 +69,7 @@ def wolClient(mac_addrs, target_bcast = None):
             sorted[bcast].append(mac_addrs[i])
     for bcat in sorted:
         mac_addresses = sorted[bcat]
-        cmd = command_list + ['--ipaddr=%s' % bcast] + mac_addresses
+        cmd = command_list + ['--ipaddr=%s' % bcat] + mac_addresses
         logging.getLogger().debug("WOL  : %s"%(str(cmd)))
         dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
 
