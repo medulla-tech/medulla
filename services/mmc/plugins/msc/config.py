@@ -95,6 +95,8 @@ class MscConfig(PluginConfig):
 
     # local proxy
     web_allow_local_proxy = False
+    web_def_local_proxy_mode = "queue"
+    web_def_max_clients_per_proxy = "25"
 
     # VNC applet behavior
     web_vnc_show_icon = True
@@ -260,6 +262,10 @@ class MscConfig(PluginConfig):
                 logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
         if self.has_option("web", "web_allow_local_proxy"):
             self.web_allow_local_proxy = self.get("web", "web_allow_local_proxy")
+        if self.has_option("web", "web_def_local_proxy_mode"):
+            self.web_def_local_proxy_mode = self.get("web", "web_def_local_proxy_mode")
+        if self.has_option("web", "web_def_max_clients_per_proxy"):
+            self.web_def_max_clients_per_proxy = self.getint("web", "web_def_max_clients_per_proxy")
 
         # VNC stuff
         if self.has_option("web", "vnc_show_icon"):

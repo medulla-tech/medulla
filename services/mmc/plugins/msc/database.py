@@ -334,7 +334,7 @@ class MscDatabase(Singleton):
         session.flush()
         return cmd
 
-    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, scheduler = None, order_in_proxy = None):
+    def createCommandsOnHost(self, command, target, target_id, target_name, cmd_max_connection_attempt, scheduler = None, order_in_proxy = None, max_clients_per_proxy = 0):
         logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
@@ -349,6 +349,7 @@ class MscDatabase(Singleton):
             "next_attempt_date_time" : 0,
             "scheduler" : scheduler,
             "order_in_proxy" : order_in_proxy,
+            "max_clients_per_proxy": max_clients_per_proxy,
             "fk_target" : target_id,
             "fk_commands" : command
             }
@@ -538,11 +539,16 @@ class MscDatabase(Singleton):
             r = connection.execute(self.target.insert(), targets_to_insert)
             first_target_id = r.cursor.lastrowid
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
+                order_in_proxy = None
+                max_clients_per_proxy = 0
                 try:
-                    order_in_proxy = proxies.index(atarget["target_uuid"])
+                    candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
+                    if len(candidates) == 1:
+                        max_clients_per_proxy = candidates[0]['max_clients']
+                        order_in_proxy = candidates[0]['priority']
                 except ValueError:
-                    order_in_proxy = None
-                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, ascheduler, order_in_proxy))
+                    pass
+                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, ascheduler, order_in_proxy, max_clients_per_proxy))
                 first_target_id = first_target_id + 1
             connection.execute(self.commands_on_host.insert(), coh_to_insert)
             trans.commit()
