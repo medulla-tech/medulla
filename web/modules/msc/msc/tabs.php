@@ -23,10 +23,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require('modules/msc/includes/machines.inc.php');
+require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
-require("modules/base/computers/localSidebar.php");
-require("graph/navbar.inc.php");
+require_once('modules/base/computers/localSidebar.php');
+require_once('graph/navbar.inc.php');
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }

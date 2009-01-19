@@ -92,4 +92,12 @@ function web_allow_local_proxy() {
     return __web_def_in_session("allow_local_proxy");
 }
 
+function web_local_proxy_mode() {
+    return __web_def_in_session("local_proxy_mode");
+}
+
+function web_max_clients_per_proxy() {
+    return __web_def_in_session("max_clients_per_proxy");
+}
+
 ?>

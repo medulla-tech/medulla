@@ -42,7 +42,7 @@ function start_a_command($proxy = array()) {
     $submod = $path[1];
     $page = $path[2];
     $params = array();
-    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals') as $param) {
+    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy') as $param) {
         $params[$param] = $post[$param];
     }
     $halt_to = array();
@@ -83,7 +83,22 @@ function start_a_command($proxy = array()) {
         $gid = $post['gid'];
         $tab = 'grouptablogs';
         // record new command
-        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $proxy);
+        // given a proxy list and a proxy style, we now have to build or proxy chain
+        // target structure is an dict using the following stucture: "priority" => array(proxies)
+        
+        $ordered_proxies = array();
+        if ($_POST['local_proxy_mode'] == 'split') { // first case: split mode; every proxy got the same priority (1 in our case)
+            foreach ($proxy as $p) {
+                array_push($ordered_proxies, array('uuid' => $p, 'priority' => 1, 'max_clients' => $_POST['max_clients_per_proxy']));
+            }
+        } elseif ($_POST['local_proxy_mode'] == 'queue') { // second case: queue mode; one priority level per proxy, starting by 1
+            $current_priority = 1;
+            foreach ($proxy as $p) {
+                array_push($ordered_proxies, array('uuid' => $p, 'priority' => $current_priority, 'max_clients' => $_POST['max_clients_per_proxy']));
+                $current_priority += 1;
+            }
+        }
+        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));

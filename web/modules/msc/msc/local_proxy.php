@@ -23,7 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/dyngroup/includes/groups.inc.php");
+require_once("modules/dyngroup/includes/groups.inc.php");
+require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
 
 class DisplayComputerSelector extends HtmlElement {
 
@@ -32,19 +33,18 @@ class DisplayComputerSelector extends HtmlElement {
         $this->members = $members;
         $this->diff = $diff;
         $this->gid = $gid;
-            
     }
 
     function display($params = array()) {
 ?>
 
-<h2><?= _T("Select local proxies", "msc");?></h2>
+<h2><?= _T("Local Proxy Settings", "msc");?></h2>
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
 <tr>
  <td style="border: none;">
   <div class="list">
-    <h3><?= _T("All computers of this group", "msc");?></h3>
+    <h3><?= _T("Computers in this command", "msc");?></h3>
     <select multiple size="15" class="list" name="machines[]">
     <?php
     foreach ($this->diff as $idx => $machine) {
@@ -168,14 +168,36 @@ $left = array_diff_assoc($machines, $right);
 natcasesort($left);
 
 $f = new Form();
+$f->push(new Table());
+
+$rb = new RadioTpl("local_proxy_mode");
+$rb->setChoices(array(_T('Serial', 'msc'), _T('Parallel', 'msc')));
+$rb->setvalues(array('queue', 'split'));
+if (!empty($_POST["local_proxy_mode"])) {
+    $rb->setSelected($_POST["local_proxy_mode"]);
+    unset($_POST["local_proxy_mode"]); // to prevent hidden field setting below
+} else {
+    $rb->setSelected(web_local_proxy_mode());
+}
+$f->add(new TrFormElement(_T('Local Proxy Mode', 'msc'), $rb));
+
+$ni = new NumericInputTpl("max_clients_per_proxy");
+$ni->setSize(2);
+unset($_POST["max_clients_per_proxy"]); // to prevent hidden field setting below
+
+$tr = new TrFormElement(_T('Max. clients per proxy', 'msc'), $ni, array("value" =>"rien", "required" => True));
+$f->add($tr);
+
 $d = new DisplayComputerSelector($machines, $right, $left, $group->id);
-$f->add($d);
+$f->add(new TrFormElement(_T('Proxies selection', 'msc'), $d));
+
 /* Add hidden input field to propagate the POST values from the previous
    page */
 foreach($_POST as $key => $value) {
     if (!in_array($key, array("machines", "members", "lpmachines", "lpmembers", "baddmachine", "baddmachine_x", "baddmachine_y", "bdelmachine", "bdelmachine_x", "bdelmachine_y")))
         $f->add(new HiddenTpl($key), array("value" => $value, "hide" => True));
 }
+
 $f->pop();
 $f->addValidateButton("bconfirmproxy");
 $f->addCancelButton("bback");
