@@ -618,6 +618,9 @@ class CommandsOnHost(object):
     def getOrderInProxy(self):
         return self.order_in_proxy
 
+    def getMaxClientsPerProxy(self):
+        return self.max_clients_per_proxy
+
     def setUsedProxy(self, coh_id):
         self.fk_use_as_proxy = coh_id
     def getUsedProxy(self):
@@ -865,7 +868,8 @@ class CommandsOnHost(object):
             'scheduler': self.scheduler,
             'last_wol_attempt': self.last_wol_attempt,
             'order_in_proxy': self.order_in_proxy,
-            'fk_use_as_proxy': self.fk_use_as_proxy
+            'fk_use_as_proxy': self.fk_use_as_proxy,
+            'max_clients_per_proxy': self.max_clients_per_proxy
         }
 
     def setStartDate(self):
