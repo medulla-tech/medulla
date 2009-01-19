@@ -97,6 +97,7 @@ def localProxyUploadStatus(myCommandOnHostID):
         - 'waiting': my time is not yet come
         - 'server': I'm an active proxy server
         - 'dead': I'm a client and all proxies seems dead
+        - 'error': Something wrong was found in the command (usually mess in priorities)
         - an int: I'm a client and the returned value is the CoH I will use
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -106,6 +107,18 @@ def localProxyUploadStatus(myCommandOnHostID):
         logging.getLogger().debug("scheduler %s: keeping coh #%s as local proxy for #%s" % (SchedulerConfig().name, myCoH.getUsedProxy(), myCommandOnHostID))
         return 'keeping'
 
+    # see what to do next
+    proxy_mode = getProxyModeForCommand(myCommandOnHostID)
+    if proxy_mode == 'queue':
+        return localProxyAttemptQueueMode(myCommandOnHostID)
+    elif proxy_mode == 'split':
+        return localProxyAttemptSplitMode(myCommandOnHostID)
+    else:
+        logging.getLogger().debug("scheduler %s: command #%s seems to be wrong (bad priorities ?)" % (SchedulerConfig().name, myC.id))
+        return 'dead'
+        
+def localProxyAttemptQueueMode(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
@@ -159,6 +172,49 @@ def localProxyUploadStatus(myCommandOnHostID):
         else:                                                           # and others better candidates seems dead => PROXY SERVER MODE
             logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
             return 'server'
+
+def localProxyAttemptSplitMode(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    logging.getLogger().debug("scheduler %s: command #%s using split mode which is not yep implemented" % (SchedulerConfig().name, myC.id))
+    return 'dead'
+
+def getProxyModeForCommand(myCommandOnHostID):
+    # Preliminar iteration to gather information about this command
+    # the idea being to obtain some informations about what's going on
+    # we are looking for the following elements
+    # - the amount of priorities:
+    #   + only one => split mode (returns "split")
+    #   + as many as proxies => queue mode (returns "queue")
+    #   + no / not enough priorities => error condition (returns False)
+
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    spotted_priorities = dict()
+
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+    for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+        filter(database.commands.c.id == myC.id).\
+        filter(database.commands_on_host.c.id != myCoH.id).\
+        all():
+            if q.order_in_proxy != None: # some potential proxy
+                if q.order_in_proxy in spotted_priorities:
+                    spotted_priorities[q.order_in_proxy] += 1
+                else:
+                    spotted_priorities[q.order_in_proxy] = 1
+    session.close()
+
+    if len(spotted_priorities) == 0:
+        return False
+    elif len(spotted_priorities) == 1: # only one priority => split mode
+        logging.getLogger().debug("scheduler %s: command #%s is in split proxy mode" % (SchedulerConfig().name, myC.id))
+        return 'split'
+    elif len(spotted_priorities) == reduce(lambda x, y: x+y, spotted_priorities.values()): # one priority per proxy => queue mode
+        logging.getLogger().debug("scheduler %s: command #%s is in queue proxy mode" % (SchedulerConfig().name, myC.id))
+        return 'queue'
+    else: # other combinations are errors
+        return False
 
 def localProxyMayCleanup(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
