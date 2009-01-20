@@ -78,7 +78,7 @@ class Bundle {
         }
     }
     function quickDisplay($actions = array(), $params = array()) {
-        if (!$this->db_bundle) { # use does not have the good permissions
+        if (!$this->db_bundle || $this->db_bundle[0] == null) { # user does not have the good permissions
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
             return false;

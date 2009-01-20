@@ -111,11 +111,15 @@ if ($areCommands) {
                 $a_cmd[] = $cmd['title'];
             } else {
                 $bundle = bundle_detail($cmd['bundle_id']);
-                $bundle = $bundle[0];
-                if (!strlen($bundle['title'])) {
-                    $a_cmd[] = sprintf(_T("Bundle #%s", "msc"), $cmd['bundle_id']);
+                if ($bundle[0] == null) {
+                    new NotifyWidgetFailure(_T("Can't get bundle for the requested id", "msc"));
                 } else {
-                    $a_cmd[] = $bundle['title'];
+                    $bundle = $bundle[0];
+                    if (!strlen($bundle['title'])) {
+                        $a_cmd[] = sprintf(_T("Bundle #%s", "msc"), $cmd['bundle_id']);
+                    } else {
+                        $a_cmd[] = $bundle['title'];
+                    }
                 }
             }
         } elseif (!strlen($cmd['bundle_id']) and !strlen($gid)) {

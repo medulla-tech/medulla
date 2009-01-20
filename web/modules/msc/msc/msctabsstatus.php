@@ -32,9 +32,13 @@ if (strlen($_GET['cmd_id'])) {
 } elseif (strlen($_GET['bundle_id'])) {
     $status = get_command_on_bundle_status($_GET['bundle_id']);
     $bdl = bundle_detail($_GET['bundle_id']);
-    $cmd_nb = count($bdl[1]);
-    $machines_nb = $status['total'] / count($bdl[1]);
-    $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers", "msc"), $bdl[0]['title'], $cmd_nb, $machines_nb);
+    if ($bdl[0] == null) {
+        print _T("error : the bundle_id given does not exists in the database.", 'msc');
+    } else {
+        $cmd_nb = count($bdl[1]);
+        $machines_nb = $status['total'] / count($bdl[1]);
+        $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers", "msc"), $bdl[0]['title'], $cmd_nb, $machines_nb);
+    }
 } else {
     print _T("error : cmd_id or bundle_id must be given", "msc");
 }

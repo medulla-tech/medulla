@@ -31,7 +31,11 @@ if (strlen($_GET['cmd_id'])) {
 } elseif (strlen($_GET['bundle_id'])) {
     $s = get_command_on_bundle_status($_GET['bundle_id']);
     $bdl = bundle_detail($_GET['bundle_id']);
-    $title = $bdl[0]['title'];
+    if ($bdl[0] == null) {
+        $title = '';
+    } else {
+        $title = $bdl[0]['title'];
+    }
 }
 
 ob_end_clean();
