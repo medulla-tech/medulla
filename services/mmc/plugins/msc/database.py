@@ -493,6 +493,9 @@ class MscDatabase(Singleton):
             tmp.append([computer[1]['objectUUID'][0], hostname])
             targetsdata.append(prepareTarget(computer))
         targets = tmp[:]
+        if len(targets) == 0:
+            self.logger.error("The machine list is empty, does your machines have a network interface ?")
+            return -1
 
         def cbGetTargetsMirrors(schedulers):
             args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
@@ -1128,8 +1131,16 @@ class MscDatabase(Singleton):
 
     def getBundle(self, ctx, fk_bundle):
         session = create_session()
-        ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
-        cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
+        try:
+            ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
+        except:
+            self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            return [None, []]
+        try:
+            cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
+        except:
+            self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            return [ret, []]
         session.close()
         try:
             ret['creation_date'] = cmds[0]['creation_date']
