@@ -35,6 +35,9 @@ if ($res == 2) {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("WORK_IN_PROGRESS").'"/>';
 } elseif ($res == 0) { 
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("FAILED").'"/>';
+} elseif ($res == 11) { # connection refused
+    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("IGNORED").'"/>';
+    new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
 } else {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("IGNORED").'"/>';
 }

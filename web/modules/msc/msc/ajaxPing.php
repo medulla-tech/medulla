@@ -27,7 +27,11 @@ require("modules/msc/includes/machines.inc.php");
 require("modules/msc/includes/command_history.php");
 require("modules/msc/includes/scheduler_xmlrpc.php");
 
-if (scheduler_ping_client('', $_GET["uuid"])) {
+$ret = scheduler_ping_client('', $_GET["uuid"]);
+if ($res == 11) { # connection refused
+    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("IGNORED").'"/>';
+    new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to ping the machine", "msc"));
+} elseif ($ret ) {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("DONE").'"/>';
 } else {
     print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("FAILED").'"/>';
