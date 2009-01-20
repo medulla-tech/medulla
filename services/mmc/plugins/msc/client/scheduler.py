@@ -28,6 +28,7 @@ import twisted.internet.defer
 from sqlalchemy import *
 from sqlalchemy.orm import *
 import logging
+import re
 
 # our stuff
 from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
@@ -121,6 +122,12 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         logging.getLogger().debug('%s %s: %s' % (function, computer, result))
         return result
 
+    def parseError(reason):
+        if re.compile('Connection was refused by other side: 111').search(str(reason)):
+            logging.getLogger().error("%s %s: %s" %(function, computer, "Connection was refused by other side: 111"))
+            return 11
+        return reason
+
     def runResult(result):
         # attempt to fall back on something known
 
@@ -145,7 +152,7 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
             computer[1]['macAddress'],
             *args
         )
-        mydeffered.addCallback(parseResult).addErrback(lambda reason: reason)
+        mydeffered.addCallback(parseResult).addErrback(parseError)
         return mydeffered
 
     mydeffered = SchedulerApi().getScheduler(computer[1]['objectUUID'][0])
