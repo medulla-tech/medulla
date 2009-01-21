@@ -233,6 +233,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().del_share(ctx, id, shares))
 
+    def can_edit(self, id):
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().can_edit(ctx, id))
+
     ################## dyngroup part
     def getQueryPossibilities(self):
         ctx = self.currentContext

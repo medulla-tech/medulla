@@ -788,6 +788,11 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return True
 
+    def can_edit(self, ctx, id):
+        session = create_session()
+        group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_user == self.users.c.id)).filter(and_(self.users.c.login == ctx.userid, self.groups.c.id == id)).count()
+        return group == 1
+
 class Groups(object):
     def toH(self):
         return {
