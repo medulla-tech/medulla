@@ -121,8 +121,6 @@ def localProxyUploadStatus(myCommandOnHostID):
 def localProxyAttemptQueueMode(myCommandOnHostID):
     # queue mode (serial) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    session = sqlalchemy.orm.create_session()
-    database = MscDatabase()
 
     smallest_done_upload_order_in_proxy = None
     best_ready_proxy_server_coh = None
@@ -131,6 +129,8 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
     # iterate over CoH which
     # are linked to the same command
     # are not our CoH
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
@@ -188,8 +188,48 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
 def localProxyAttemptSplitMode(myCommandOnHostID):
     # split mode (parallel) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().debug("scheduler %s: command #%s using split mode which is not yep implemented" % (SchedulerConfig().name, myC.id))
-    return 'dead'
+    if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server ...
+        available_proxy = list()
+        free_proxy = list()
+
+        # iterate over CoH which
+        # are linked to the same command
+        # are not our CoH
+        # are proxy server
+        # have done their upload
+        session = sqlalchemy.orm.create_session()
+        database = MscDatabase()
+        for q in session.query(CommandsOnHost).\
+            select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+            filter(database.commands.c.id == myC.id).\
+            filter(database.commands_on_host.c.id != myCoH.id).\
+            filter(database.commands_on_host.c.order_in_proxy != None).\
+            filter(database.commands_on_host.c.uploaded == 'DONE').\
+            all():
+                available_proxy.append(q.id)
+        session.close()
+
+        if len(available_proxy) == 0: # not proxy at all, give up
+            logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'dead'
+
+        # remove full proxy
+        for proxy in available_proxy:
+            (current_client_number, max_client_number) = getClientUsageForProxy(proxy)
+            if current_client_number < max_client_number:
+                free_proxy.append(proxy)
+
+        if len(free_proxy) == 0: # not free proxy, wait
+            logging.getLogger().debug("scheduler %s: still waiting for a free proxy for #%s, so I'm waiting" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'waiting'
+        else: # take a proxy in free proxyes
+            final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
+            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, final_proxy, myCommandOnHostID))
+            return final_proxy
+            
+    else:                                                               # I'm a server: let's upload
+        logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
+        return 'server'
 
 def getClientUsageForProxy(proxyCommandOnHostID):
     # count the (current number, max number) of clients using this proxy
