@@ -139,6 +139,9 @@ class Group {
         }
         return __xmlrpc_del_share($this->id, $sha);
     }
+    function canEdit() {
+        return __xmlrpc_can_edit($this->id);
+    }
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
         include("modules/pulse2/pulse2/computers_list.php");
     }
@@ -187,7 +190,7 @@ function __xmlrpc_importmembers_to_group($id, $elt, $values) { return xmlCall("d
 function __xmlrpc_share_with($id) { return xmlCall("dyngroup.share_with", array($id)); }
 function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", array($id, $share)); }
 function __xmlrpc_del_share($id, $share) { return xmlCall("dyngroup.del_share", array($id, $share)); }
-
+function __xmlrpc_can_edit($id) { return xmlCall("dyngroup.can_edit", array($id)); }
 function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
 
 ?>

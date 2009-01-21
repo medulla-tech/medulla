@@ -27,23 +27,37 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
 $gid = idGet();
-$group = new Group($gid);
+$group = new Group($gid, True);
 $edition = True;
 
-if ($group->isDyn()) {
-    $title = _T("Edit a dynamic group", 'dyngroup');
+if (! $group->canEdit()) {
+    $title = _T("Group edition", 'dyngroup');
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    require("creator.php");
+    $buffer = '<div class="indent"><table>';
+    $buffer .= '<tr><td><span style="color:red;">';
+    $buffer .= sprintf(_T("You cant edit '%s' because you are not this group's owner.", 'dyngroup'), $group->name);
+    $buffer .= '</span></td></tr>';
+    $buffer .= '</table></div>';
+    print $buffer;
 } else {
-    $title = _T("Edit a static group", 'dyngroup');
-    $p = new PageGenerator($title);
-    $p->setSideMenu($sidemenu);
-    $p->display();
+    if ($group->isDyn()) {
+        $title = _T("Edit a dynamic group", 'dyngroup');
+        $p = new PageGenerator($title);
+        $p->setSideMenu($sidemenu);
+        $p->display();
 
-    require("add_groups.php");
+        require("creator.php");
+    } else {
+        $title = _T("Edit a static group", 'dyngroup');
+        $p = new PageGenerator($title);
+        $p->setSideMenu($sidemenu);
+        $p->display();
+
+        require("add_groups.php");
+    }
 }
 
 ?>
