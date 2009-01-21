@@ -110,6 +110,9 @@ class LauncherConfig(pulse2.utils.Singleton):
 
     # rsync stuff
     rsync_resume = True
+    rsync_set_executable = 'yes'
+    rsync_set_access = 'private'
+    
 
     # launchers (empty for now)
     launchers = {
@@ -218,6 +221,43 @@ class LauncherConfig(pulse2.utils.Singleton):
 
         # Parse "rsync" section
         self.setoption('rsync', 'resume', 'rsync_resume', 'bool')
+        self.setoption('rsync', 'set_executable', 'rsync_set_executable')
+        if not self.rsync_set_executable in ('yes', 'no', 'keep'):
+            self.logger.warning("set_executable can have '%s' for value (yes|no|keep)"%(self.rsync_set_executable))
+            self.rsync_set_executable = 'yes'
+        self.setoption('rsync', 'set_access', 'rsync_set_access')
+        if not self.rsync_set_access in ('private', 'restricted', 'public'):
+            self.logger.warning("set_access can have '%s' for value (private|restricted|public)"%(self.rsync_set_access))
+            self.rsync_set_access = 'private'
+
+        # +----------------+------------------+---------------------+------------------+
+        # | set_executable |                  |                     |                  | 
+        # +--------------\ |       yes        |         no          |        keep      |
+        # | set_access    \|                  |                     |                  |
+        # +----------------+------------------+---------------------+------------------+
+        # | private        | u=rwx,g=,o=  (1) | u=rw,g=,o=          | u=rwX,g=,o=      |
+        # +----------------+------------------+---------------------+------------------+
+        # | restricted     | u=rwx,g=rx,o=    | u=rw,g=r,o=         | u=rwX,g=rX,o=    |
+        # +----------------+------------------+---------------------+------------------+
+        # | public         | u=rwx,g=rwx,o=rx | u=rw,g=rw,o=r       | u=rwX,g=rwX,o=rX |
+        # +----------------+------------------+---------------------+------------------+ 
+        # (1) : default value
+        exe = 'X'
+        if self.rsync_set_executable == 'yes':
+            exe = 'x'
+        elif self.rsync_set_executable == 'no':
+            exe = ''
+
+        other = ',o='
+        group = ',g='
+        if self.rsync_set_access == 'public':
+            other += "r%s"%(exe)
+            group += "rw%s"%(exe)
+        elif self.rsync_set_access == 'restricted':
+            group += "r%s"%(exe)
+        self.rsync_set_chmod = 'u=rw%s%s%s'%(exe, group, other)
+
+        logging.getLogger().debug("config metavalue 'rsync_set_chmod' = %s"%(self.rsync_set_chmod))
 
         # Parse "daemon" section
         if self.cp.has_section("daemon"):
