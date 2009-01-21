@@ -914,5 +914,5 @@ def togglePauseCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
-    myCommandOnHost.togglePaused()
+    myCommandOnHost.toggleStatePaused()
 
