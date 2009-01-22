@@ -1362,8 +1362,8 @@ def runHaltPhase(myCommandOnHostID, condition):
     return mydeffered
 
 def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
-    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     def setstate(myCommandOnHostID, stdout, stderr):
+        (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
         if myCoH.switchToWOLDone():
@@ -1371,9 +1371,9 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
         else:
             return None
 
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
-
     return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
