@@ -57,6 +57,7 @@ if (strlen($_GET['uuid'])) {
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")), $params);
         }
         print "<hr/><br/>";
+        if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         $coh_ids = get_command_on_host_in_commands($_GET['cmd_id']);
         $coh_id = $coh_ids[0]; # we know there is only one because we are in uuid (one machine)
         $ch = new CommandHistory($coh_id);
@@ -92,6 +93,7 @@ if (strlen($_GET['uuid'])) {
         }
 
         $params['cmd_id'] = $_GET['cmd_id'];
+        if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
         if ($act) {
@@ -115,6 +117,7 @@ if (strlen($_GET['uuid'])) {
             $bdlink = "&bundle_id=".$_GET['bundle_id'];
         }
 
+        if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay();
         if ($act) {
