@@ -495,7 +495,7 @@ class MscDatabase(Singleton):
         targets = tmp[:]
         if len(targets) == 0:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
-            return -1
+            return -2
 
         def cbGetTargetsMirrors(schedulers):
             args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
@@ -1102,6 +1102,9 @@ class MscDatabase(Singleton):
     def getCommandsOnHost(self, ctx, coh_id):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
+        if coh == None:
+            self.logger.warn("User %s try to access an coh that don't exists '%s'" % (ctx.userid, coh_id))
+            return False
         session.close()
         target = self.getTargetForCoh(ctx, coh_id)
         if ComputerLocationManager().doesUserHaveAccessToMachine(ctx, target.target_uuid):
@@ -1149,6 +1152,8 @@ class MscDatabase(Singleton):
         return [ret, cmds]
 
     def getCommands(self, ctx, cmd_id):
+        if cmd_id == None or cmd_id == '':
+            return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):
             session = create_session()
@@ -1160,7 +1165,8 @@ class MscDatabase(Singleton):
 
     def getCommandsByGroup(self, gid):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
-        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid).all()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
+        ret = ret.order_by(desc(self.commands.c.start_date)).all()
         session.close()
         return ret
 

@@ -382,7 +382,7 @@ class SendPackageCommand:
 
         files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
 
-        MscDatabase().addCommand(  # TODO: refactor to get less args
+        addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
             start_file,
@@ -409,7 +409,11 @@ class SendPackageCommand:
             self.bundle_id,
             self.order_in_bundle,
             self.proxies
-        ).addCallbacks(self.sendResult, self.onError)
+        )
+        if type(addCmd) != int:
+            addCmd.addCallbacks(self.sendResult, self.onError)
+        else:
+            return self.deferred.callback(addCmd)
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:
