@@ -165,7 +165,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
 
         # check for a few binaries availability
-        rsync_version = os.popen("rsync --version | head -n 1 | awk '{print $3}'", "r").read().split('\n')[0].split('.')
+        rsync_version = os.popen("rsync --version", 'r').read().split('\n')[0].split(' ')[3].split('.')
         if len(rsync_version) != 3:
             logging.getLogger().warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
             self.is_rsync_available = False
