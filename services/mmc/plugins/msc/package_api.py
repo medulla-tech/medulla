@@ -257,12 +257,16 @@ class SendBundleCommand:
             )
 
         last_order = 0
+        first_order = len(self.porders)
         for id in self.porders:
             p_api, pid, order = self.porders[id]
-            if order > last_order:
+            if int(order) > int(last_order):
                 last_order = order
+            if int(order) < int(first_order):
+                first_order = order
 
         # treat bundle inventory and halt (put on the last command)
+        do_wol = self.params['do_wol']
         do_inventory = self.params['do_inventory']
         try:
             issue_halt_to = self.params['issue_halt_to']
@@ -275,6 +279,11 @@ class SendBundleCommand:
         ret = []
         for id in self.porders:
             p_api, pid, order = self.porders[id]
+            if order == first_order:
+                self.params['do_wol'] = do_wol
+            else:
+                self.params['do_wol'] = 'off'
+
             if order == last_order:
                 self.params['do_inventory'] = do_inventory
                 self.params['issue_halt_to'] = issue_halt_to
