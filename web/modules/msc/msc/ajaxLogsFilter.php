@@ -217,15 +217,17 @@ if ($areCommands) {
             $a_date[] = _toDate($cmd['start_date']);
     }
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
-    $n->addExtraInfo($a_date, _T("start_date", "msc"));
+    if (!$history) {
+        $n->addExtraInfo($a_date, _T("start_date", "msc"));
+    }
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
     $n->addExtraInfo($a_executed, _T("executed", "msc"));
     $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
 
     $n->addActionItemArray($a_details);
-    $n->addActionItemArray($a_start);
     if (!$history) {
+        $n->addActionItemArray($a_start);
         $n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
@@ -298,8 +300,8 @@ if ($areCommands) {
     $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
 
     $n->addActionItemArray($a_details);
-    $n->addActionItemArray($a_start);
     if (!$history) {
+        $n->addActionItemArray($a_start);
         $n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
