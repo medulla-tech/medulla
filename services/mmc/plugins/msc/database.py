@@ -824,7 +824,7 @@ class MscDatabase(Singleton):
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))
         c = ret.count()
         session.close()
         return c
@@ -841,7 +841,7 @@ class MscDatabase(Singleton):
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
         ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
@@ -903,12 +903,12 @@ class MscDatabase(Singleton):
         if params['filt'] != None:
             query = query.filter(self.commands.c.title.like('%'+params['filt']+'%'))
         if params['finished']:
-            query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed']))
+            query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
             if params['b_id'] == None:
-                query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed'])))
+                query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
         query = self.__queryUsersFilter(ctx, query)
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
@@ -939,12 +939,12 @@ class MscDatabase(Singleton):
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
 
         if params['finished']: # Filter on finished commands only
-            filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed']))
+            filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
             if params['b_id'] == None:
-                filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed'])))
+                filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
 
         query = self.__queryUsersFilter(ctx, query)
         query = query.filter(and_(*filter))
@@ -977,7 +977,7 @@ class MscDatabase(Singleton):
                     # Check that the bundle has all its commands_on_host set
                     # to state done or failed.
                     session = create_session()
-                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed'))).count()
+                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))).count()
                     session.close()
                     if count_query > 0:
                         # Some CoH are not in the done or failed states, so
@@ -1020,6 +1020,7 @@ class MscDatabase(Singleton):
 
         size = 0
 
+#   msc.displayLogs({'max': 10, 'finished': '', 'filt': '', 'uuid': 'UUID1620', 'min': 0},)
         if params['gid'] or params['uuid']:     # we want informations about one group / host
             if params['cmd_id']:                # we want informations about one command on one group / host
                 # Using min/max, we get a range of commands, but we always want
@@ -1244,7 +1245,8 @@ class MscDatabase(Singleton):
                 'fail_ex':[0],
                 'conn_ex':[0],
                 'fail_rm':[0],
-                'conn_rm':[0]
+                'conn_rm':[0],
+                'over_timed':[0]
 
             }
         }
@@ -1256,6 +1258,9 @@ class MscDatabase(Singleton):
                 ret['success']['total'][0] += 1
             elif coh.current_state == 'stop': # stopped coh
                 ret['stopped']['total'][0] += 1
+            elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
+                ret['failure']['total'][0] += 1
+                ret['failure']['over_timed'][0] += 1
             elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
                 ret['failure']['total'][0] += 1
                 if coh.uploaded == 'FAILED':
@@ -1312,7 +1317,7 @@ class MscDatabase(Singleton):
                 ret['running'][i].append(0)
             else:
                 ret['running'][i].append(ret['running'][i][0] * 100 / ret['total'])
-        for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm']:
+        for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm', 'over_timed']:
             if ret['total'] == 0:
                 ret['failure'][i].append(0)
             else:
