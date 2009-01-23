@@ -165,11 +165,19 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
 
         # check for a few binaries availability
-        if not os.access('/usr/bin/rsync', os.X_OK): # FIXME: hardcoded and so on
-            logging.getLogger().warn("launcher %s: can't find RSYNC (looking for %s), disabling all rsync-related stuff" % (self.name, '/usr/bin/rsync'))
+        rsync_version = os.popen("rsync --version | head -n 1 | awk '{print $3}'", "r").read().split('\n')[0].split('.')
+        if len(rsync_version) != 3:
+            logging.getLogger().warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
             self.is_rsync_available = False
         else:
-            self.is_rsync_available = True
+            if rsync_version[0] < 2 or rsync_version[0] == 2 and rsync_version[1] < 6: # version < 2.6.0 => dont work
+                self.is_rsync_available = False
+            elif rsync_version[0] == 2 and rsync_version[1] == 6 and rsync_version[2] < 7: # version between 2.6.0 and 2.6.7 => work but limited
+                self.is_rsync_available = True
+                self.is_rsync_limited = True
+            else:
+                self.is_rsync_available = True
+                self.is_rsync_limited = False
         if not os.access('/usr/bin/ssh', os.X_OK): # FIXME: hardcoded and so on
             logging.getLogger().warn("launcher %s: can't find SSH (looking for %s), disabling all ssh-related stuff" % (self.name, '/usr/bin/ssh'))
             self.is_ssh_available = False

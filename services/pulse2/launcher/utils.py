@@ -265,7 +265,7 @@ def setDefaultClientOptions(client):
             client['transp_args'] += ['-o', option]
         client['transp_args'] += ['-A'] # always forward TCP key
         if not 'proto_args' in client:
-            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=%s'%(LauncherConfig().rsync_set_chmod)]
+            client['proto_args'] = ['--archive', '--verbose']
         # inside ssh get the same args as outside ssh
         client['proto_args'] += ['--rsh="/usr/bin/ssh %s"' % ' '.join(map(lambda x:'-o %s' % x, LauncherConfig().ssh_options))]
 
@@ -278,7 +278,9 @@ def setDefaultClientOptions(client):
             client['cert'] = LauncherConfig().ssh_keys[LauncherConfig().ssh_defaultkey]
         client['transp_args'] = ['-o', 'IdentityFile=%s' % client['cert'], '-o', 'User=%s' % client['user']]
         if not 'proto_args' in client:
-            client['proto_args'] = ['--archive', '--verbose', '--no-group',  '--no-owner',  '--chmod=%s'%(LauncherConfig().rsync_set_chmod)]
+            client['proto_args'] = ['--archive', '--verbose']
+            if not LauncherConfig().is_rsync_limited:
+                client['proto_args'].extend(['--no-group',  '--no-owner',  '--chmod=%s'%(LauncherConfig().rsync_set_chmod)])
         if LauncherConfig().rsync_resume:
             client['proto_args'] += ['--partial', '--append']
         for option in LauncherConfig().ssh_options:
