@@ -47,7 +47,7 @@ if (isset($_POST["bconfirm"])) {
     foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
-    
+
     $halt_to = array();
     foreach ($_POST as $p=>$v) {
         if (preg_match('/^issue_halt_to_/', $p)) {

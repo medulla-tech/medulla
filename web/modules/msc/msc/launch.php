@@ -85,18 +85,20 @@ function start_a_command($proxy = array()) {
         // record new command
         // given a proxy list and a proxy style, we now have to build or proxy chain
         // target structure is an dict using the following stucture: "priority" => array(proxies)
-        
+
         $ordered_proxies = array();
-        if ($_POST['local_proxy_mode'] == 'split') { // first case: split mode; every proxy got the same priority (1 in our case)
+        if ($_POST['proxy_mode'] == 'split') { // first case: split mode; every proxy got the same priority (1 in our case)
             foreach ($proxy as $p) {
                 array_push($ordered_proxies, array('uuid' => $p, 'priority' => 1, 'max_clients' => $_POST['max_clients_per_proxy']));
             }
-        } elseif ($_POST['local_proxy_mode'] == 'queue') { // second case: queue mode; one priority level per proxy, starting by 1
+            $params['proxy_mode'] = 'split';
+        } elseif ($_POST['proxy_mode'] == 'queue') { // second case: queue mode; one priority level per proxy, starting at 1
             $current_priority = 1;
             foreach ($proxy as $p) {
                 array_push($ordered_proxies, array('uuid' => $p, 'priority' => $current_priority, 'max_clients' => $_POST['max_clients_per_proxy']));
                 $current_priority += 1;
             }
+            $params['proxy_mode'] = 'queue';
         }
         $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
         scheduler_start_these_commands('', array($id));

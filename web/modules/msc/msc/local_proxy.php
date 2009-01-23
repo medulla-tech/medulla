@@ -182,12 +182,12 @@ natcasesort($left);
 $f = new ValidatingForm();
 $f->push(new Table());
 
-$rb = new RadioTpl("local_proxy_mode");
+$rb = new RadioTpl("proxy_mode");
 $rb->setChoices(array(_T('Single with fallback', 'msc'), _T('Multiple', 'msc')));
 $rb->setvalues(array('queue', 'split'));
-if (!empty($_POST["local_proxy_mode"])) {
-    $rb->setSelected($_POST["local_proxy_mode"]);
-    unset($_POST["local_proxy_mode"]); // to prevent hidden field setting below
+if (!empty($_POST["proxy_mode"])) {
+    $rb->setSelected($_POST["proxy_mode"]);
+    unset($_POST["proxy_mode"]); // to prevent hidden field setting below
 } else {
     $rb->setSelected(web_local_proxy_mode());
 }
