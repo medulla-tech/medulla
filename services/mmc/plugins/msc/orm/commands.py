@@ -110,8 +110,18 @@ class Commands(object):
         return result
 
     def hasToUseProxy(self):
-        result = (self.use_local_proxy == 'yes')
+        result = (self.proxy_mode == 'queue' or self.proxy_mode == 'split')
         logging.getLogger().debug("hasToUseProxy(#%s): %s" % (self.getId(), result))
+        return result
+
+    def hasToUseQueueProxy(self):
+        result = (self.proxy_mode == 'queue')
+        logging.getLogger().debug("hasToUseQueueProxy(#%s): %s" % (self.getId(), result))
+        return result
+
+    def hasToUseSplitProxy(self):
+        result = (self.proxy_mode == 'split')
+        logging.getLogger().debug("hasToUseSplitProxy(#%s): %s" % (self.getId(), result))
         return result
 
     def isQuickAction(self):
@@ -172,7 +182,7 @@ class Commands(object):
             'bundle_id': self.fk_bundle, # keep it for compatibility
             'fk_bundle': self.fk_bundle,
             'order_in_bundle': self.order_in_bundle,
-            'use_local_proxy': self.use_local_proxy
+            'proxy_mode': self.proxy_mode
         }
 
 def stopCommand(c_id):

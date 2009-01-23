@@ -342,14 +342,19 @@ class SendPackageCommand:
         issue_halt_to = self.params['issue_halt_to']
         maxbw = self.params['maxbw']
 
-        try:
+        if 'proxy_mode' in self.params:
+            proxy_mode = self.params['proxy_mode']
+        else:
+            proxy_mode = 'none'
+
+        if 'deployment_intervals' in self.params:
             deployment_intervals = self.params['deployment_intervals']
-        except KeyError:
+        else:
             deployment_intervals = ''
 
-        try:
+        if 'parameters' in self.params:
             parameters = self.params['parameters']
-        except KeyError:
+        else:
             parameters = ''
 
         try:
@@ -362,10 +367,10 @@ class SendPackageCommand:
         except:
             end_date = '0000-00-00 00:00:00' # ie. "no end date"
 
-        try:
+        if 'title' in self.params:
             title = self.params['title']
-        except:
-            title = '' # ie. "no title"
+        else:
+            title = ''
 
         if title == None or title == '':
             localtime = time.localtime()
@@ -408,6 +413,7 @@ class SendPackageCommand:
             deployment_intervals,
             self.bundle_id,
             self.order_in_bundle,
+            proxy_mode,
             self.proxies
         )
         if type(addCmd) != int:

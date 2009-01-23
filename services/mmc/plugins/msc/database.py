@@ -297,7 +297,7 @@ class MscDatabase(Singleton):
         session.flush()
         return bdl
 
-    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies):
+    def createCommand(self, session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, creator, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode):
         """
         Return a Command object
         """
@@ -328,8 +328,7 @@ class MscDatabase(Singleton):
         cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
         cmd.fk_bundle = fk_bundle
         cmd.order_in_bundle = order_in_bundle
-        if proxies:
-            cmd.use_local_proxy = 'yes'
+        cmd.proxy_mode = proxy_mode # FIXME: we may add some code to check everything is OK
         session.save(cmd)
         session.flush()
         return cmd
@@ -386,6 +385,7 @@ class MscDatabase(Singleton):
                 deployment_intervals = "",
                 fk_bundle = None,
                 order_in_bundle = None,
+                proxy_mode = 'none',
                 proxies = []
             ):
         """
@@ -534,7 +534,7 @@ class MscDatabase(Singleton):
                 targets_to_insert.append(targetsdata[i])
 
             session = create_session()
-            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies)
+            cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode)
             session.close()
 
             connection = self.getDbConnection()
@@ -618,8 +618,8 @@ class MscDatabase(Singleton):
             targets,
             'push',
             gid,
-            'enable',
             True,
+            'enable',
             "0000-00-00 00:00:00",
             "0000-00-00 00:00:00",
             "root",     # FIXME: this should be the effective user we want to connect with
@@ -632,7 +632,11 @@ class MscDatabase(Singleton):
             "disable",
             0,
             0,
-            ''
+            '',
+            None,
+            None,
+            'none',
+            []
         )
 
     def addTarget(self, targetName, targetUuid, targetIp, targetMac, targetBCast, targetNetmask, mirror, groupID = None):
