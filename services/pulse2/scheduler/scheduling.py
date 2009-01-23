@@ -64,13 +64,22 @@ def gatherCoHStuff(idCommandOnHost):
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     myCommandOnHost = session.query(CommandsOnHost).get(idCommandOnHost)
+    if type(myCommandOnHost) != CommandsOnHost:
+        session.close()
+        logging.getLogger().error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
+        return (None, None, None)
     myCommand = session.query(Commands).get(myCommandOnHost.getIdCommand())
     myTarget = session.query(Target).get(myCommandOnHost.getIdTarget())
     session.close()
+    if type(myCommand) != Commands or type(myTarget) != Target:
+        logging.getLogger().error("trying to gather CoH on an inexisting CoH '%s' !! (Maybe you are currently cleaning the database?)"%(str(idCommandOnHost)))
+        return (None, None, None)
     return (myCommandOnHost, myCommand, myTarget)
 
 def getDependancies(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return []
 
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
@@ -101,6 +110,8 @@ def localProxyUploadStatus(myCommandOnHostID):
         - an int: I'm a client and the returned value is the CoH I will use
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return 'error'
 
     # as for now, if we previously found a proxy, use it
     # commented out: may break the split proxy model
@@ -121,6 +132,8 @@ def localProxyUploadStatus(myCommandOnHostID):
 def localProxyAttemptQueueMode(myCommandOnHostID):
     # queue mode (serial) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return 'error'
 
     smallest_done_upload_order_in_proxy = None
     best_ready_proxy_server_coh = None
@@ -188,6 +201,8 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
 def localProxyAttemptSplitMode(myCommandOnHostID):
     # split mode (parallel) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return 'error'
     if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server ...
         available_proxy = list()
         free_proxy = list()
@@ -238,6 +253,8 @@ def getClientUsageForProxy(proxyCommandOnHostID):
     # current_state == upload_in_progress
     # to save some time, iteration is done as usual (on command from coh)
     (myCoH, myC, myT) = gatherCoHStuff(proxyCommandOnHostID)
+    if myCoH == None: # current_client_number == max_client_number => dont use this target as a possible proxy
+        return (0, 0)
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     client_count = session.query(CommandsOnHost).\
@@ -259,6 +276,8 @@ def getProxyModeForCommand(myCommandOnHostID):
     #   + no / not enough priorities => error condition (returns False)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return False
 
     spotted_priorities = dict()
 
@@ -291,6 +310,8 @@ def localProxyMayCleanup(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return False # TODO : when an error occur, do we want to clean the local proxy ?
 
     if myCoH.order_in_proxy != None and myCoH.fk_use_as_proxy ==  myCoH.id: # to prevent further SA failure, we check only if we may be are proxy server
         logging.getLogger().debug("scheduler %s: checking if we may cleanup coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
@@ -516,6 +537,8 @@ def sortCommands(commands_to_perform):
 
     for command_id in commands_to_perform:
         (myCoH, myC, myT) = gatherCoHStuff(command_id)
+        if myCoH == None:
+            continue
         command_group = getClientGroup(myT)
         if not command_group in tocome_distribution:
             tocome_distribution[command_group] = [command_id]
@@ -552,6 +575,8 @@ def stopElapsedCommands(scheduler_name):
         # enter the maze: tag command as to-be-stopped if relevant
 
         (myCoH, myC, myT) = gatherCoHStuff(q.id)
+        if myCoH == None:
+            continue
         if not myC.inDeploymentInterval(): # stops command not in interval
             ids.append(q.id)
         elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
@@ -570,6 +595,8 @@ def stopCommandsOnHosts(ids):
 
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return False
     logger = logging.getLogger()
     logger.info("going to terminate command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
@@ -580,6 +607,8 @@ def stopCommand(myCommandOnHostID):
 
 def startCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return False
     logger = logging.getLogger()
     if myCoH.scheduler not in [SchedulerConfig().name, '', None]:
         logger.warn("attempt to start command_on_host #%s from command #%s using the wrong scheduler" % (myCoH.getId(), myCoH.getIdCommand()))
@@ -602,6 +631,8 @@ def runCommand(myCommandOnHostID):
         Just a simple start point, chain-load on Upload Phase
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return
     logger = logging.getLogger()
 
     # FIXME: those tests are performed way too late !
@@ -614,6 +645,9 @@ def runCommand(myCommandOnHostID):
     else: # command is part of a bundle, let's check the bundle state
         logger.debug("command_on_host #%s: part of bundle %s, order %s " % (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
         deps =  getDependancies(myCommandOnHostID)
+        if type(deps) == bool and not deps:
+            logger.debug("command_on_host #%s: failed to get dependencies" % (myCoH.getId()))
+            return True
         if len(deps) != 0:
             logger.debug("command_on_host #%s: depends on %s " % (myCoH.getId(), deps))
             return True # give up, some deps has to be done
@@ -634,6 +668,8 @@ def runWOLPhase(myCommandOnHostID):
 
     # check for WOL condition in order to give up if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     logger = logging.getLogger()
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
@@ -691,6 +727,8 @@ def runUploadPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
 
     # check for upload condition in order to give up if needed
     if myCoH.isUploadRunning(): # upload still running, immediately returns
@@ -741,6 +779,8 @@ def runUploadPhase(myCommandOnHostID):
         client['protocol'] = 'rsyncproxy'
         # get informations about our proxy
         (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
+        if proxyCoH == None:
+            return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCommandOnHostID)
         proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
         if not proxy['host']: # We couldn't get an IP address for the target host
             return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCommandOnHostID)
@@ -963,6 +1003,8 @@ def runExecutionPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: execution phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     if myCoH.isExecutionRunning(): # execution still running, immediately returns
         logger.info("command_on_host #%s: still running" % myCommandOnHostID)
         return None
@@ -1054,6 +1096,8 @@ def runDeletePhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: delete phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     if myCoH.isDeleteRunning(): # delete still running, immediately returns
         logging.getLogger().info("command_on_host #%s: still deleting" % myCommandOnHostID)
         return None
@@ -1174,6 +1218,8 @@ def runInventoryPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: inventory phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
 
     if myCoH.isInventoryRunning(): # inventory still running, immediately returns
         logger.info("command_on_host #%s: still inventoriing" % myCoH.getId())
@@ -1232,6 +1278,8 @@ def runRebootPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: reboot phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
 
     if myCoH.isRebootRunning(): # reboot still running, immediately returns
         logger.info("command_on_host #%s: still rebooting" % myCoH.getId())
@@ -1299,6 +1347,8 @@ def runHaltPhase(myCommandOnHostID, condition):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: halt phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     if myCoH.isHaltRunning(): # halt still running, immediately returns
         logging.getLogger().info("command_on_host #%s: still halting" % myCommandOnHostID)
         return None
@@ -1365,19 +1415,22 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
     def setstate(myCommandOnHostID, stdout, stderr):
         (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
+        if myCoH == None:
+            return None
         updateHistory(myCommandOnHostID, 'wol_done', 0, stdout, stderr)
         if myCoH.switchToWOLDone():
             return runUploadPhase(myCommandOnHostID)
         else:
             return None
 
-    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
     return None
 
 def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: push done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
@@ -1395,6 +1448,8 @@ def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
@@ -1412,6 +1467,8 @@ def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: execution done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
@@ -1429,6 +1486,8 @@ def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: delete done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
@@ -1446,6 +1505,8 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: inventory done (exitcode == 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
@@ -1463,6 +1524,8 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     logger = logging.getLogger()
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: reboot done (exitcode == 0)" % (myCommandOnHostID))
@@ -1481,6 +1544,8 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     logger = logging.getLogger()
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: halt done (exitcode == 0)" % (myCommandOnHostID))
@@ -1499,6 +1564,8 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
 
 def parsePushOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
         logging.getLogger().info("command_on_host #%s: push order taken in account" % myCommandOnHostID)
@@ -1511,6 +1578,8 @@ def parsePushOrder(taken_in_account, myCommandOnHostID):
 
 def parsePullOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'upload_in_progress')
         logging.getLogger().info("command_on_host #%s: pull order taken in account" % myCommandOnHostID)
@@ -1523,6 +1592,8 @@ def parsePullOrder(taken_in_account, myCommandOnHostID):
 
 def parseExecutionOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'execution_in_progress')
         logging.getLogger().info("command_on_host #%s: execution order taken in account" % myCommandOnHostID)
@@ -1535,6 +1606,8 @@ def parseExecutionOrder(taken_in_account, myCommandOnHostID):
 
 def parseDeleteOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'delete_in_progress')
         logging.getLogger().info("command_on_host #%s: delete order taken in account" % myCommandOnHostID)
@@ -1547,6 +1620,8 @@ def parseDeleteOrder(taken_in_account, myCommandOnHostID):
 
 def parseInventoryOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'inventory_in_progress')
         logging.getLogger().info("command_on_host #%s: inventory order taken in account" % myCommandOnHostID)
@@ -1559,6 +1634,8 @@ def parseInventoryOrder(taken_in_account, myCommandOnHostID):
 
 def parseRebootOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'reboot_in_progress')
         logging.getLogger().info("command_on_host #%s: reboot order taken in account" % myCommandOnHostID)
@@ -1571,6 +1648,8 @@ def parseRebootOrder(taken_in_account, myCommandOnHostID):
 
 def parseHaltOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return None
     if taken_in_account: # success
         updateHistory(myCommandOnHostID, 'halt_in_progress')
         logging.getLogger().info("command_on_host #%s: halt order taken in account" % myCommandOnHostID)
@@ -1584,6 +1663,8 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
 def parseWOLError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
@@ -1592,6 +1673,8 @@ def parsePushError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
@@ -1600,6 +1683,8 @@ def parsePullError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     return None
@@ -1608,6 +1693,8 @@ def parseExecutionError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToExecutionFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
@@ -1617,6 +1704,8 @@ def parseDeleteError(reason, myCommandOnHostID):
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToDeleteFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
@@ -1627,6 +1716,8 @@ def parseInventoryError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToInventoryFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
@@ -1637,6 +1728,8 @@ def parseRebootError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToRebootFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
@@ -1647,6 +1740,8 @@ def parseHaltError(reason, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
+    if myCoH == None:
+        return None
     updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
     myCoH.switchToHaltFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
     # FIXME: should return a failure (but which one ?)
@@ -1656,6 +1751,8 @@ def runDonePhase(myCommandOnHostID):
     # Last step : end file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: end (done) phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     myCoH.setStateDone()
     return None
 
@@ -1663,6 +1760,8 @@ def runFailedPhase(myCommandOnHostID):
     # Last step : end file
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: end (failed) phase" % myCommandOnHostID)
+    if myCoH == None:
+        return None
     myCoH.setStateFailed()
     return None
 
