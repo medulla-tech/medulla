@@ -96,7 +96,7 @@ class MscConfig(PluginConfig):
     # local proxy
     web_allow_local_proxy = False
     web_def_local_proxy_mode = "queue"
-    web_def_max_clients_per_proxy = "25"
+    web_def_max_clients_per_proxy = "10"
 
     # VNC applet behavior
     web_vnc_show_icon = True
