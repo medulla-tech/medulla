@@ -580,7 +580,30 @@ def stopElapsedCommands(scheduler_name):
         if not myC.inDeploymentInterval(): # stops command not in interval
             ids.append(q.id)
         elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
+            # change the CoH current_state (we are not going to be able to try to start this coh ever again)
+            myCoH.setStateOverTimed()
             ids.append(q.id)
+
+    # this loop only put the currentÃ_state in over_timed, but as the coh are not running, we dont need to stop them.
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    for q in session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)).\
+        filter(sqlalchemy.or_(
+            database.commands_on_host.c.scheduler == '',
+            database.commands_on_host.c.scheduler == scheduler_name,
+            database.commands_on_host.c.scheduler == None)
+        ).filter(
+            database.commands.c.end_date <= now
+        ).filter(sqlalchemy.or_(
+            database.commands_on_host.c.current_state != 'failed',
+            database.commands_on_host.c.current_state != 'over_timed',
+            database.commands_on_host.c.current_state != 'done')
+        ).all():
+        
+        (myCoH, myC, myT) = gatherCoHStuff(q.id)
+        if myCoH == None:
+            continue
+        myCoH.setStateOverTimed()
 
     session.close()
     logging.getLogger().info("Scheduler: %d tasks to stop" % len(ids))
