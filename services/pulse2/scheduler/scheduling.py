@@ -117,7 +117,7 @@ def localProxyUploadStatus(myCommandOnHostID):
     else:
         logging.getLogger().debug("scheduler %s: command #%s seems to be wrong (bad priorities ?)" % (SchedulerConfig().name, myC.id))
         return 'dead'
-        
+
 def localProxyAttemptQueueMode(myCommandOnHostID):
     # queue mode (serial) implementation of proxy mode
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -226,7 +226,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
             final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
             logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, final_proxy, myCommandOnHostID))
             return final_proxy
-            
+
     else:                                                               # I'm a server: let's upload
         logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
         return 'server'
@@ -267,7 +267,6 @@ def getProxyModeForCommand(myCommandOnHostID):
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
-        filter(database.commands_on_host.c.id != myCoH.id).\
         all():
             if q.order_in_proxy != None: # some potential proxy
                 if q.order_in_proxy in spotted_priorities:
@@ -278,13 +277,14 @@ def getProxyModeForCommand(myCommandOnHostID):
 
     if len(spotted_priorities) == 0:
         return False
-    elif len(spotted_priorities) == 1: # only one priority => split mode
+    elif len(spotted_priorities) == 1: # only one priority for all => split mode
         logging.getLogger().debug("scheduler %s: command #%s is in split proxy mode" % (SchedulerConfig().name, myC.id))
         return 'split'
     elif len(spotted_priorities) == reduce(lambda x, y: x+y, spotted_priorities.values()): # one priority per proxy => queue mode
         logging.getLogger().debug("scheduler %s: command #%s is in queue proxy mode" % (SchedulerConfig().name, myC.id))
         return 'queue'
     else: # other combinations are errors
+        logging.getLogger().debug("scheduler %s: can'f guess proxy mode for command #%s" % (SchedulerConfig().name, myC.id))
         return False
 
 def localProxyMayCleanup(myCommandOnHostID):
