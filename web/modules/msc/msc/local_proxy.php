@@ -26,6 +26,18 @@
 require_once("modules/dyngroup/includes/groups.inc.php");
 require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
 
+/**
+ * Input with a bigger check for a valid numeric value
+ */
+class MyNumericInputTpl extends InputTpl {
+
+    function MyNumericInputTpl($name) {
+        $this->InputTpl($name, '/^[1-9][0-9]*$/');
+        $this->size = 2;
+    }
+}
+
+
 class DisplayComputerSelector extends HtmlElement {
 
     function DisplayComputerSelector($machines, $members, $diff, $gid) {
@@ -167,11 +179,11 @@ ksort($machines);
 $left = array_diff_assoc($machines, $right);
 natcasesort($left);
 
-$f = new Form();
+$f = new ValidatingForm();
 $f->push(new Table());
 
 $rb = new RadioTpl("local_proxy_mode");
-$rb->setChoices(array(_T('Serial', 'msc'), _T('Parallel', 'msc')));
+$rb->setChoices(array(_T('Single with fallback', 'msc'), _T('Multiple', 'msc')));
 $rb->setvalues(array('queue', 'split'));
 if (!empty($_POST["local_proxy_mode"])) {
     $rb->setSelected($_POST["local_proxy_mode"]);
@@ -181,12 +193,20 @@ if (!empty($_POST["local_proxy_mode"])) {
 }
 $f->add(new TrFormElement(_T('Local Proxy Mode', 'msc'), $rb));
 
-$ni = new NumericInputTpl("max_clients_per_proxy");
-$ni->setSize(2);
-unset($_POST["max_clients_per_proxy"]); // to prevent hidden field setting below
-
-$tr = new TrFormElement(_T('Max. clients per proxy', 'msc'), $ni, array("value" =>"rien", "required" => True));
-$f->add($tr);
+if (!empty($_POST["max_clients_per_proxy"])) {
+    $max_clients_per_proxy_value = $_POST["max_clients_per_proxy"];
+    unset($_POST["max_clients_per_proxy"]); // to prevent hidden field setting below
+} else {
+    $max_clients_per_proxy_value = web_max_clients_per_proxy();
+}
+$f->add(new TrFormElement(
+            _T('Max. clients per proxy', 'msc'),
+            new MyNumericInputTpl("max_clients_per_proxy")
+        ), array(
+            "value" => $max_clients_per_proxy_value,
+            "required" => True,
+        )
+    );
 
 $d = new DisplayComputerSelector($machines, $right, $left, $group->id);
 $f->add(new TrFormElement(_T('Proxies selection', 'msc'), $d));
