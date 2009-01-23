@@ -94,7 +94,8 @@ if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
 
 $verbs = array(
     'running'=>array(_T('is', 'msc'), _T('are', 'msc')),
-    'failure'=>array(_T('has', 'msc'), _T('have', 'msc'))
+    'failure'=>array(_T('has', 'msc'), _T('have', 'msc')),
+    'failure#over_timed'=>array(_T('is', 'msc'), _T('are', 'msc'))
 );
 $slabels = array(
     'success'=>array(),
@@ -110,7 +111,8 @@ $slabels = array(
     'failure'=>array(
         array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s beeing unreachable)', 'msc')),
         array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s beeing unreachable)', 'msc')),
-        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s beeing unreachable)', 'msc'))
+        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s beeing unreachable)', 'msc')),
+        array('over_timed', _T('out of the valid period of execution', 'msc'))
     )
 
 );
@@ -133,12 +135,16 @@ foreach ($labels as $l) {
     foreach ($slabels[$l[0]] as $sl) {
         $ss = $status[$l[0]][$sl[0]];
         print "<tr><td>&nbsp;&nbsp;&nbsp;</td><td colspan='2'>";
+        $verb = $verbs[$l[0]];
+        if (in_array($l[0]."#".$sl[0], array_keys($verbs))) {
+            $verb = $verbs[$l[0]."#".$sl[0]];
+        }
         if ($ss[0] == '0') {
-            print _T('None', 'msc')." ".$verbs[$l[0]][0]." ";
+            print _T('None', 'msc')." ".$verb[0]." ";
         } elseif ($ss[0] == '1') {
-            print _T('One', 'msc')." ".$verbs[$l[0]][0]." ";
+            print _T('One', 'msc')." ".$verb[0]." ";
         } else {
-            print $ss[0]." ".$verbs[$l[0]][1]." ";
+            print $ss[0]." ".$verb[1]." ";
         }
         print $sl[1];
         if (count($sl) == 4) {
