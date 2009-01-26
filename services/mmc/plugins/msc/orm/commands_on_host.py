@@ -611,18 +611,25 @@ class CommandsOnHost(object):
         # I'm a server if:
         # order_in_proxy is set (ie I have chance to become a server)
         # fk_use_as_proxy is equal to my id (ie the proxy server is me)
-        result = (self.order_in_proxy != None and self.id == self.fk_use_as_proxy)
+        result = (self.order_in_proxy != None and self.fk_use_as_proxy == self.id)
         logging.getLogger().debug("isProxyServer(#%s): %s" % (self.getId(), result))
         return result
 
+    def setOrderInProxy(order_in_proxy):
+        self.order_in_proxy = int(order_in_proxy)
+        self.flush()
     def getOrderInProxy(self):
         return self.order_in_proxy
 
+    def setMaxClientsPerProxy(max_clients_per_proxy):
+        self.max_clients_per_proxy = int(max_clients_per_proxy)
+        self.flush()
     def getMaxClientsPerProxy(self):
         return self.max_clients_per_proxy
 
     def setUsedProxy(self, coh_id):
-        self.fk_use_as_proxy = coh_id
+        self.fk_use_as_proxy = int(coh_id)
+        self.flush()
     def getUsedProxy(self):
         return self.fk_use_as_proxy
 
