@@ -25,7 +25,7 @@
 function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
 ?>
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-<input name='name' value='<?= $name ?>' type='hidden'/>
+<input name="name" value="<?= $name ?>" type="hidden" />
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
 <tr>
@@ -114,7 +114,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
-<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name='name' value='<?= $name ?>' type='text'/></td></tr>
+<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name="name" value="<?= $name ?>" type="text"/></td></tr>
 <tr><td><?= _T('Is the group visible', 'dyngroup') ?></td><td></td><td>
     <input name='visible' value='show' <? if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
     <input name='visible' value='hide' <? if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
