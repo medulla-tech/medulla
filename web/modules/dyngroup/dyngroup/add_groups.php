@@ -24,7 +24,7 @@
 
 require("modules/dyngroup/includes/groups.inc.php");
 
-$name = quickGet('name');
+$name = quickGet('name', $p_first = True, $urldecode = False);
 $id = quickGet('id');
 $visibility = quickGet('visible');
 $already_exists = false;
@@ -149,7 +149,7 @@ ksort($machines);
 $diff = array_diff_assoc($machines, $members);
 natcasesort($diff);
 
-drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, $name, $_POST['filter']);
+drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter']);
 
 ?>
 
