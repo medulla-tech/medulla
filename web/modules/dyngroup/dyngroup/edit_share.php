@@ -52,18 +52,6 @@ if (isset($_POST["bdeluser_x"])) {
             unset($listOfMembers[$ma[1]]);
         }
     }
-/*} elseif (isset($_POST['bfiltmachine_x'])) {
-    $truncate_limit = 2000;
-    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
-    $count = getRestrictedComputersListLen();
-    if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Machine list has been truncated at %d machines", "dyngroup"), $truncate_limit));
-    }
-    $machines = array();
-    foreach ($listOfMachines as $machine) {
-        $machines[$machine['cn']."##".$machine['objectUUID']] = $machine['cn'];
-    }
-*/
 } elseif (isset($_POST["badduser_x"])) {
     if (isset($_POST["nonmemb"])) {
         foreach ($_POST["nonmemb"] as $user) {
@@ -97,6 +85,8 @@ if (isset($_POST["bdeluser_x"])) {
     } else {
         new NotifyWidgetFailure(_T("Group failed to share", "dyngroup"));
     }
+    /* Redirect to computer groups list */
+    header("Location: " . urlStrRedirect("base/computers/list"));
 } else {
     $list = $group->shareWith();
     $members = array();
