@@ -48,6 +48,8 @@ if (strlen($_GET['uuid'])) {
         }
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
+        $coh = new CommandOnHost($_GET['coh_id']);
+        $coh->quickDisplay(); 
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } elseif (strlen($_GET['cmd_id'])) {
@@ -60,6 +62,8 @@ if (strlen($_GET['uuid'])) {
         if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         $coh_ids = get_command_on_host_in_commands($_GET['cmd_id']);
         $coh_id = $coh_ids[0]; # we know there is only one because we are in uuid (one machine)
+        $coh = new CommandOnHost($coh_id);
+        $coh->quickDisplay(); 
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else {
