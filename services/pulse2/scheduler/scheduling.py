@@ -592,8 +592,9 @@ def stopElapsedCommands(scheduler_name):
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
-        ).filter(
-            database.commands.c.end_date <= now
+        ).filter(sqlalchemy.and_(
+            database.commands.c.end_date <= now,
+            database.commands.c.end_date != '0000-00-00 00:00:00')
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.current_state != 'failed',
             database.commands_on_host.c.current_state != 'over_timed',
@@ -603,6 +604,7 @@ def stopElapsedCommands(scheduler_name):
         (myCoH, myC, myT) = gatherCoHStuff(q.id)
         if myCoH == None:
             continue
+        logging.getLogger().info("Scheduler: over timed command_on_host #%s"%(str(q.id)))
         myCoH.setStateOverTimed()
 
     session.close()
