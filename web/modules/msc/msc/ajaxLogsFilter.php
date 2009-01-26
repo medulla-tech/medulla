@@ -59,7 +59,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('uuid'=>$uuid, 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
         $areCommands = True;
     }
-} elseif ($gid) { # FIXME: same think to do on groups
+} elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
         list($count, $cmds) = displayLogs(array('gid'=>$gid, 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
     } else {
@@ -251,11 +251,8 @@ if ($areCommands) {
             else
                 $a_date[] = _toDate($d);
 
-            if (strlen($cmd['bundle_id'])) {
-                $a_cmd[] = sprintf(_T("%s on %s (Bundle #%s)", 'msc'), $cmd['title'], $coh['host'], $cmd['bundle_id']);
-            } else {
-                $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
-            }
+            $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
             $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
