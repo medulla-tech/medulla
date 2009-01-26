@@ -376,8 +376,8 @@ class SendPackageCommand:
         except:
             end_date = '0000-00-00 00:00:00' # ie. "no end date"
 
-        if 'title' in self.params:
-            title = self.params['title']
+        if 'ltitle' in self.params:
+            title = self.params['ltitle']
         else:
             title = ''
 
