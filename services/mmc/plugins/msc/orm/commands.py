@@ -44,55 +44,77 @@ class Commands(object):
     """ Mapping between msc.commands and SA
     """
     def getId(self):
-        return self.id
+        result = self.id
+        return result
 
     def getBundleId(self):
-        return self.fk_bundle
+        result = self.fk_bundle
+        return result
 
     def getOrderInBundle(self):
-        return self.order_in_bundle
+        result = self.order_in_bundle
+        return result
 
     def isPartOfABundle(self):
-        return self.fk_bundle != None
+        result = self.fk_bundle != None
+        logging.getLogger().debug("isPartOfABundle(#%s): %s" % (self.id, result))
+        return result
 
     def getNextConnectionDelay(self):
-        return self.next_connection_delay
+        result = self.next_connection_delay
+        return result
 
     def hasToWOL(self):
-        return self.do_wol == 'enable'
+        result = self.do_wol == 'enable'
+        logging.getLogger().debug("hasToWOL(#%s): %s" % (self.id, result))
+        return result
 
     def hasToRunInventory(self):
-        return self.do_inventory == 'enable'
+        result = self.do_inventory == 'enable'
+        logging.getLogger().debug("hasToRunInventory(#%s): %s" % (self.id, result))
+        return result
 
     def hasToReboot(self):
-        return self.do_reboot == 'enable'
+        result = self.do_reboot == 'enable'
+        logging.getLogger().debug("hasToReboot(#%s): %s" % (self.id, result))
+        return result
 
     def hasToHalt(self):
-        return len(self.do_halt) > 0
+        result = len(self.do_halt) > 0
+        logging.getLogger().debug("hasToHalt(#%s): %s" % (self.id, result))
+        return result
 
     def hasToHaltIfDone(self):
         try:
-            return 'done' in self.do_halt.split(',')
+            result = 'done' in self.do_halt.split(',')
         except AttributeError: # workaround for buggy v.14 database
-            return 'done' in self.do_halt
+            result = 'done' in self.do_halt
+        logging.getLogger().debug("hasToHaltIfDone(#%s): %s" % (self.id, result))
+        return result
 
     def hasToHaltIfFailed(self):
         try:
-            return 'failed' in self.do_halt.split(',')
+            result = 'failed' in self.do_halt.split(',')
         except AttributeError: # workaround for buggy v.14 database
-            return 'failed' in self.do_halt
+            result = 'failed' in self.do_halt
+        logging.getLogger().debug("hasToHaltIfFailed(#%s): %s" % (self.id, result))
+        return result
 
     def hasToHaltIfOverTime(self):
         try:
-            return 'over_time' in self.do_halt.split(',')
+            result = 'over_time' in self.do_halt.split(',')
         except AttributeError: # workaround for buggy v.14 database
-            return 'over_time' in self.do_halt
+            result = 'over_time' in self.do_halt
+        logging.getLogger().debug("hasToHaltIfOverTime(#%s): %s" % (self.id, result))
+        return result
 
     def hasToHaltIfOutOfInterval(self):
         try:
-            return 'out_of_interval' in self.do_halt.split(',')
+            result = 'out_of_interval' in self.do_halt.split(',')
         except AttributeError:
-            return 'out_of_interval' in self.do_halt
+            result = 'out_of_interval' in self.do_halt
+        logging.getLogger().debug("hasToHaltIfOutOfInterval(#%s): %s" % (self.id, result))
+        return result
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
