@@ -279,12 +279,12 @@ class SendBundleCommand:
         ret = []
         for id in self.porders:
             p_api, pid, order = self.porders[id]
-            if order == first_order:
+            if int(order) == int(first_order):
                 self.params['do_wol'] = do_wol
             else:
                 self.params['do_wol'] = 'off'
 
-            if order == last_order:
+            if int(order) == int(last_order):
                 self.params['do_inventory'] = do_inventory
                 self.params['issue_halt_to'] = issue_halt_to
             else:
