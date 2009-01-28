@@ -76,6 +76,29 @@ def gatherCoHStuff(idCommandOnHost):
         return (None, None, None)
     return (myCommandOnHost, myCommand, myTarget)
 
+def isLastToInventoryInBundle(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return []
+
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+
+    futur_states = ['reboot_in_progress', 'reboot_done', 'reboot_failed', 'halt_in_progress', 'halt_done', 'halt_failed', 'done', 'failed', 'over_timed']
+
+    nb = session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)).\
+        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
+        filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
+        filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(futur_states))).\
+        count()
+
+    session.close()
+    if nb != 1:
+        logging.getLogger().debug("isLastToInventoryInBundle on %s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
+        return False
+    return True
+
 def isLastToHaltInBundle(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
@@ -92,11 +115,10 @@ def isLastToHaltInBundle(myCommandOnHostID):
             database.commands_on_host.c.current_state != 'failed', \
             database.commands_on_host.c.current_state != 'over_timed')).\
         count()
-        # TODO : check for failed coh + no retry
 
-    logging.getLogger().debug("isLastToHaltInBundle on %s : still %s"%(str(myCommandOnHostID), str(nb)))
     session.close()
     if nb != 1:
+        logging.getLogger().debug("isLastToHaltInBundle on %s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -1250,6 +1272,11 @@ def runInventoryPhase(myCommandOnHostID):
         return runRebootPhase(myCommandOnHostID)
     if myCoH.isInventoryDone(): # inventory has already already done, jump to next stage
         logger.info("command_on_host #%s: inventory done" % myCoH.getId())
+        return runRebootPhase(myCommandOnHostID)
+    if not isLastToInventoryInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to launch inventory, jump to next stage
+        logger.info("command_on_host #%s: another coh from the same bundle will launch the inventory" % myCommandOnHostID)
+        myCoH.setInventoryIgnored()
+        myCoH.setStateScheduled()
         return runRebootPhase(myCommandOnHostID)
     if not myCoH.isInventoryImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: nothing to inventory right now" % myCoH.getId())
