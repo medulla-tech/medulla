@@ -76,6 +76,28 @@ def gatherCoHStuff(idCommandOnHost):
         return (None, None, None)
     return (myCommandOnHost, myCommand, myTarget)
 
+def isLastToHaltInBundle(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+    if myCoH == None:
+        return []
+
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+
+    nb = session.query(CommandsOnHost).\
+        select_from(database.commands_on_host.join(database.commands)).\
+        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
+        filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
+        filter(database.commands_on_host.c.current_state != 'done').\
+        count()
+        # TODO : check for failed coh + no retry
+
+    logging.getLogger().debug("isLastToHaltInBundle on %s : still %s"%(str(myCommandOnHostID), str(nb)))
+    session.close()
+    if nb != 1:
+        return False
+    return True
+
 def getDependancies(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
@@ -1354,6 +1376,9 @@ def runHaltPhase(myCommandOnHostID, condition):
         return runDonePhase(myCommandOnHostID)
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
         logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
+        return runDonePhase(myCommandOnHostID)
+    if not isLastToHaltInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to halt, jump to next stage
+        logger.info("command_on_host #%s: another coh from the same bundle will do the halt" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
     if not myCoH.isHaltImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: do not halt right now" % myCoH.getId())
