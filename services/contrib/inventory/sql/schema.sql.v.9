@@ -74,6 +74,11 @@ CREATE TABLE UserEntities (
 -- Initialize the Entity table with the root entity
 INSERT INTO Entity (Label, parentId) VALUES ("root", 1);
 
+-- Some columns are too small to contain the data
+ALTER TABLE `Storage` CHANGE `VolumeName` `VolumeName` VARCHAR(64) DEFAULT NULL;
+ALTER TABLE `Storage` CHANGE `Model` `Model` VARCHAR(64) DEFAULT NULL;
+ALTER TABLE `Slot` CHANGE `Connector` `Connector` VARCHAR(64) DEFAULT NULL;
+
 --
 -- Database version
 --
