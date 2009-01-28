@@ -199,7 +199,7 @@ class RpcProxy(RpcProxyI):
 
     def get_downloaded_file(self, node):
         mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
-        return mscdlfiles.getFile(node)        
+        return mscdlfiles.getFile(node)
 
     def remove_downloaded_files(self, ids):
         mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
@@ -437,6 +437,12 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_max_clients_per_proxy(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_max_clients_per_proxy)
+
+    def get_web_def_single_proxy_number(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_single_proxy_number)
+
+    def get_web_def_multiple_proxy_number(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_multiple_proxy_number)
 
     def get_web_def_issue_halt_to(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_issue_halt_to)
