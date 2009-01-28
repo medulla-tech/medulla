@@ -88,7 +88,9 @@ def isLastToHaltInBundle(myCommandOnHostID):
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands.c.fk_bundle == myC.fk_bundle).\
         filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
-        filter(database.commands_on_host.c.current_state != 'done').\
+        filter(sqlalchemy.and_(database.commands_on_host.c.current_state != 'done', \
+            database.commands_on_host.c.current_state != 'failed', \
+            database.commands_on_host.c.current_state != 'over_timed').\
         count()
         # TODO : check for failed coh + no retry
 
