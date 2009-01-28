@@ -614,6 +614,13 @@ class CommandsOnHost(object):
         result = (self.order_in_proxy != None and self.fk_use_as_proxy == self.id)
         logging.getLogger().debug("isProxyServer(#%s): %s" % (self.getId(), result))
         return result
+    def isLocalProxy(self):
+        # I'm a server if:
+        # order_in_proxy is set (ie I have chance to become a server)
+        # fk_use_as_proxy is equal to my id (ie the proxy server is me)
+        result = (self.order_in_proxy != None)
+        logging.getLogger().debug("isLocalProxy(#%s): %s" % (self.getId(), result))
+        return result
 
     def setOrderInProxy(order_in_proxy):
         self.order_in_proxy = int(order_in_proxy)
