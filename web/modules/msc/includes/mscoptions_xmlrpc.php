@@ -100,4 +100,12 @@ function web_max_clients_per_proxy() {
     return __web_def_in_session("max_clients_per_proxy");
 }
 
+function web_single_proxy_number() {
+    return __web_def_in_session("single_proxy_number");
+}
+
+function web_multiple_proxy_number() {
+    return __web_def_in_session("multiple_proxy_number");
+}
+
 ?>

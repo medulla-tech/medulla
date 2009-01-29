@@ -87,12 +87,12 @@ function start_a_command($proxy = array()) {
         // target structure is an dict using the following stucture: "priority" => array(proxies)
 
         $ordered_proxies = array();
-        if ($_POST['proxy_mode'] == 'split') { // first case: split mode; every proxy got the same priority (1 in our case)
+        if ($_POST['proxy_mode'] == 'multiple') { // first case: split mode; every proxy got the same priority (1 in our case)
             foreach ($proxy as $p) {
                 array_push($ordered_proxies, array('uuid' => $p, 'priority' => 1, 'max_clients' => $_POST['max_clients_per_proxy']));
             }
             $params['proxy_mode'] = 'split';
-        } elseif ($_POST['proxy_mode'] == 'queue') { // second case: queue mode; one priority level per proxy, starting at 1
+        } elseif ($_POST['proxy_mode'] == 'single') { // second case: queue mode; one priority level per proxy, starting at 1
             $current_priority = 1;
             foreach ($proxy as $p) {
                 array_push($ordered_proxies, array('uuid' => $p, 'priority' => $current_priority, 'max_clients' => $_POST['max_clients_per_proxy']));

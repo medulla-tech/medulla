@@ -47,8 +47,26 @@ function launch_bundle($cible, $orders, $gid = null, $proxy = array()) {
     }
     $params['issue_halt_to'] = $halt_to;
 
+    // given a proxy list and a proxy style, we now have to build or proxy chain
+    // target structure is an dict using the following stucture: "priority" => array(proxies)
+
+    $ordered_proxies = array();
+    if ($_POST['proxy_mode'] == 'multiple') { // first case: split mode; every proxy got the same priority (1 in our case)
+        foreach ($proxy as $p) {
+            array_push($ordered_proxies, array('uuid' => $p, 'priority' => 1, 'max_clients' => $_POST['max_clients_per_proxy']));
+        }
+        $params['proxy_mode'] = 'split';
+    } elseif ($_POST['proxy_mode'] == 'single') { // second case: queue mode; one priority level per proxy, starting at 1
+        $current_priority = 1;
+        foreach ($proxy as $p) {
+            array_push($ordered_proxies, array('uuid' => $p, 'priority' => $current_priority, 'max_clients' => $_POST['max_clients_per_proxy']));
+            $current_priority += 1;
+        }
+        $params['proxy_mode'] = 'queue';
+    }
+
     // TODO: activate this  : msc_command_set_pause($cmd_id);
-    $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid, $proxy);
+    $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid, $ordered_proxies);
     if (is_array($ret) && !empty($ret)) {
         $commands = $ret[1];
         $ids = array();
