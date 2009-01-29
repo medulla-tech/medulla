@@ -34,7 +34,7 @@ $p->display();
 $get = '';
 $bool = quickGet('equ_bool', true);
 if (strlen($_GET['id']) && !strlen($bool)) {
-    $group = new Group($id, true);
+    $group = new Group($_GET['id'], true);
     $bool = $group->getBool();
 }
 if (strlen($bool)) { $get = "&equ_bool=".$bool; }
