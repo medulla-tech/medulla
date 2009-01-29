@@ -138,44 +138,18 @@ if ($areCommands) {
             $a_uploaded[] ='';
             $a_executed[] ='';
             $a_deleted[] = '';
-            $astop = $actionempty;
-            $astart = $actionempty;
             if (!$history) {
-                if (strlen($gid)) {
-                    if (!strlen($cmd['bundle_id'])) {
-                        $status = get_command_on_group_status($cmd['id']);
-                        # FIXME: a true status has to be build !!!
-                        $astop = $actionstop;
-                        $astart = $actionplay;
-                    } elseif (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
-                        /* The line is about a bundle */
-                        $status = get_command_on_group_status($cmd['id']);
-                        # FIXME: a true status has to be build !!!
-                        $astop = $actionstop;
-                        $astart = $actionplay;
-                    } elseif (strlen($cmd['bundle_id']) and strlen($_GET['bundle_id'])) {
-                        $status = get_command_on_group_status($cmd['id']);
-                        # FIXME: a true status has to be build !!!
-                        $astop = $actionstop;
-                    } elseif (!strlen($_GET['cmd_id'])) {
-                        $status = get_command_on_bundle_status($cmd['bundle_id']);
-                        # FIXME: a true status has to be build !!!
-                        $astop = $actionempty;
-                    }
-                } elseif (strlen($uuid)) {
-                    if (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
-                        // display all commands on a commputer: "bundle" case
-                        $status = get_command_on_bundle_status($cmd['bundle_id']);
-                        # FIXME: a true status has to be build !!!
-                        $astop = $actionstop;
-                        $astart = $actionplay;
-                    }
+                if (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
+                    $status = get_command_on_bundle_status($cmd['bundle_id']);
+                } elseif (strlen($gid)) {
+                    $status = get_command_on_group_status($cmd['id']);
                 }
             }
-            $a_stop[] = $astop;
+            $icons = state_tmpl_macro($status);
+            $icons['play']  == '' ? $a_start[] = $actionempty : $a_start[] = $actionplay;
+            $icons['stop']  == '' ? $a_stop[]  = $actionempty : $a_stop[]  = $actionstop;
+            $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
             $a_current[] = '';
-            $a_start[] = $astart;
-            $a_pause[] = $actionempty;
         } else {
             $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
             $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';

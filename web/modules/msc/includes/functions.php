@@ -162,43 +162,80 @@ function history_stat2icon($state) {
     }
 }
 
+function state_tmpl_macro($status) {
+    # based on http://pulse2.mandriva.org/ticket/473
+    $ret = array(
+        'play' => 'BUTTON_START',
+        'stop' => 'BUTTON_STOP',
+        'pause' => 'BUTTON_PAUSE'
+    );
+    
+    $total = $status['total'];
+    $failed = $status['failure']['total'][0];
+    $done = $status['success']['total'][0];
+    $stopped = $status['stopped']['total'][0];
+    $pause = $status['paused']['total'][0];
+    $run = 0;
+    foreach (array('run_up', 'run_ex', 'run_rm') as $r) {
+        $run += $status['running'][$r][0];
+    }
+    
+    if ($total == $failed + $done + $run) { # not play
+        $ret['play'] = '';
+    }
+    if ($total == $failed + $done + $stopped) { # not stop
+        $ret['stop'] = '';
+    }
+    if ($total == $failed + $done + $pause + $stopped) { # not pause
+        $ret['pause'] = '';
+    }
+
+    return $ret;
+}
+
 function state_tmpl($current_state) {
     # based on http://pulse2.mandriva.org/ticket/29
-    $ret = array(
-        'play' => '',
-        'stop' => '',
-        'pause' => ''
-    );
-
-    # task is scheduled
+    # and http://pulse2.mandriva.org/ticket/473
+    # task is completed
     if (in_array(
         $current_state,
         array(
-            'scheduled',
-            'rescheduled',
-            'not_reachable',
-            'upload_done',
-            'upload_failed',
-            'execution_done',
-            'execution_failed',
-            'delete_done',
-            'delete_failed',
-            'inventory_failed',
-            'inventory_done',
-            'wol_failed',
-            'wol_done',
-            'reboot_failed',
-            'reboot_done',
-            'halt_failed',
-            'halt_done'
+            'failed',
+            'done'
         )
     ))
-        $ret = array(
+        return array(
+            'play' => '',
+            'stop' => '',
+            'pause' => ''
+        );
+        
+    if (in_array(
+        $current_state,
+        array(
+            'stop'
+        )
+    ))
+        return array(
+            'play' => 'BUTTON_START',
+            'stop' => '',
+            'pause' => ''
+        );
+       
+
+    # task is paused
+    if (in_array(
+        $current_state,
+        array(
+            'pause',
+        )
+    ))
+        return array(
             'play' => 'BUTTON_START',
             'stop' => 'BUTTON_STOP',
-            'pause' => 'BUTTON_PAUSE'
+            'pause' => ''
         );
-
+        
     # task is running
     if (in_array(
         $current_state,
@@ -212,40 +249,18 @@ function state_tmpl($current_state) {
             'halt_in_progress',
         )
     ))
-        $ret = array(
+        return array(
             'play' => '',
             'stop' => 'BUTTON_STOP',
             'pause' => 'BUTTON_PAUSE'
         );
 
-    # task is completed
-    if (in_array(
-        $current_state,
-        array(
-            'stop',
-            'done',
-            'failed'
-        )
-    ))
-        $ret = array(
-            'play' => 'BUTTON_START',
-            'stop' => '',
-            'pause' => ''
-        );
-
-    # task is paused
-    if (in_array(
-        $current_state,
-        array(
-            'pause',
-        )
-    ))
-        $ret = array(
-            'play' => 'BUTTON_START',
-            'stop' => 'BUTTON_STOP',
-            'pause' => 'BUTTON_PAUSE'
-        );
-    return $ret;
+    # task is scheduled
+    return array(
+        'play' => 'BUTTON_START',
+        'stop' => 'BUTTON_STOP',
+        'pause' => 'BUTTON_PAUSE'
+    );
 }
 
 function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_page) {
