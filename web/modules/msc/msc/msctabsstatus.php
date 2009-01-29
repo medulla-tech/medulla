@@ -56,6 +56,11 @@ if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
             _T("<b>One</b> package installation is stopped", "msc"),
             _T('<b>%s</b> packages installation are stopped', 'msc')
         )),
+        array('paused', array(
+            _T("<b>No</b> package installation is paused", "msc"),
+            _T("<b>One</b> package installation is paused", "msc"),
+            _T('<b>%s</b> packages installation are paused', 'msc')
+        )),
         array('running', array(
             _T("<b>No</b> package installation is being done", "msc"),
             _T("<b>One</b> package installation is being done", "msc"),
@@ -79,6 +84,11 @@ if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
             _T('<b>One</b> computer is stopped', 'msc'),
             _T('<b>%s</b> computers are stopped', 'msc')
         )),
+        array('paused', array(
+            _T('<b>No</b> computer is paused', 'msc'),
+            _T('<b>One</b> computer is paused', 'msc'),
+            _T('<b>%s</b> computers are paused', 'msc')
+        )),
         array('running', array(
             _T('<b>No</b> computer is running a deployement', 'msc'),
             _T('<b>One</b> computer is running a deployement', 'msc'),
@@ -100,6 +110,7 @@ $verbs = array(
 $slabels = array(
     'success'=>array(),
     'stopped'=>array(),
+    'paused'=>array(),
     'running'=>array(
         array('wait_up', _T('waiting to upload', 'msc'), 'sec_up', _T('(with %s already try)', 'msc')),
         array('run_up', _T('uploading', 'msc')),

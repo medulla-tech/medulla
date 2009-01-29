@@ -53,6 +53,7 @@ $header = array(
                 _T('total', 'msc'),
                 _T('computers successfully deployed', 'msc'),
                 _T('computers stopped', 'msc'),
+                _T('computers paused', 'msc'),
                 _T('computers out of the valid period', 'msc'),
                 _T('computers running a deploiement', 'msc'),
                 _T('waiting to upload', 'msc'),
@@ -73,7 +74,7 @@ $header = array(
                 _T('unreachable during suppression', 'msc')
                 );
 
-$content = array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
+$content = array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
 
 
 print '"'.join('";"', $header)."\"\n";
