@@ -1226,6 +1226,9 @@ class MscDatabase(Singleton):
             'stopped':{
                 'total':[0]
             },
+            'paused':{
+                'total':[0]
+            },
             'running':{
                 'total':[0],
                 'wait_up':[0],
@@ -1258,6 +1261,8 @@ class MscDatabase(Singleton):
                 ret['success']['total'][0] += 1
             elif coh.current_state == 'stop': # stopped coh
                 ret['stopped']['total'][0] += 1
+            elif coh.current_state == 'pause':
+                ret['paused']['total'][0] += 1
             elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
                 ret['failure']['total'][0] += 1
                 ret['failure']['over_timed'][0] += 1
@@ -1307,7 +1312,7 @@ class MscDatabase(Singleton):
                     else:
                         ret['running']['wait_up'][0] += 1
 
-        for i in ['success', 'stopped', 'running', 'failure']:
+        for i in ['success', 'stopped', 'running', 'failure', 'paused']:
             if ret['total'] == 0:
                 ret[i]['total'].append(0)
             else:
@@ -1327,6 +1332,7 @@ class MscDatabase(Singleton):
         # nombre total de coh
         # succes (nb, %)
         # stopped (nb, %)
+        # paused  (nb, %)
         # en cours (nb, %)
         #   attente up (nb, %)
         #   cours d'up (nb, %)
