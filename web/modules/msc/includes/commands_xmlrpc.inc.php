@@ -129,12 +129,20 @@ function stop_command($id) {
     return xmlCall('msc.stop_command', array($id));
 }
 
+function pause_command($id) {
+    return xmlCall('msc.pause_command', array($id));
+}
+
 function start_bundle($bundle_id) {
     return xmlCall('msc.start_bundle', array($bundle_id));
 }
 
 function stop_bundle($bundle_id) {
     return xmlCall('msc.stop_bundle', array($bundle_id));
+}
+
+function pause_bundle($bundle_id) {
+        return xmlCall('msc.pause_bundle', array($bundle_id));
 }
 
 function get_command_on_group_status($cmd_id) {
