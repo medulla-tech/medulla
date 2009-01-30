@@ -40,7 +40,10 @@ def cleanLdap():
     os.system("/etc/init.d/slapd stop")
     os.system("killall -9 slapd")
     os.system("rm -f /var/lib/ldap/*")
+    os.system("rm -fr /var/backups/*.ldapdb")
     os.system("cp contrib/ldap/*.schema /etc/ldap/schema")
+    os.system("echo slapd slapd/password1 string secret | debconf-set-selections")
+    os.system("echo slapd slapd/password2 string secret | debconf-set-selections")
     os.system("dpkg-reconfigure -pcritical slapd")
     os.system("cp contrib/ldap/slapd.conf.samba /etc/ldap/slapd.conf")
     os.system("/etc/init.d/slapd restart")
@@ -129,7 +132,7 @@ class testSambaLdap(unittest.TestCase):
         self.assertEqual(self.s.isEnabledUser("usertest"), True)
         self.s.unlockUser("usertest")
         self.assertEqual(self.s.isLockedUser("usertest"), False)
-        # Hooks
+        # Hooks
         self.assertEqual(os.path.exists("tmp/samba_add_attr_usertestuserpass"), True)
         self.s.changeUserPasswd("usertest", "userpass2")
         self.assertEqual(os.path.exists("tmp/samba_change_pwd_usertestuserpass2"), True)
