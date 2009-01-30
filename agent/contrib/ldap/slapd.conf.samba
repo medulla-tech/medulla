@@ -13,25 +13,22 @@ include         /etc/ldap/schema/cosine.schema
 include         /etc/ldap/schema/nis.schema
 include         /etc/ldap/schema/inetorgperson.schema
 # Printer schema
-include         /etc/ldap/schema/printer.schema 
-# LMC specific schema
+include         /etc/ldap/schema/printer.schema
+# Mail schema
+include         /etc/ldap/schema/mail.schema
+# MMC specific schema
 include         /etc/ldap/schema/mmc.schema
 # Samba schema
 include         /etc/ldap/schema/samba.schema
 # If open-xchange
 #include         /usr/local/openxchange/share/openxchange.schema
 
-
-# Schema check allows for forcing entries to
-# match schemas for their objectClasses's
-schemacheck     on
-
 # Where the pid file is put. The init.d script
 # will not stop the server if you change this.
 pidfile         /var/run/slapd/slapd.pid
 
 # List of arguments that were passed to the server
-argsfile        /var/run/slapd.args
+argsfile        /var/run/slapd/slapd.args
 
 # Read slapd.conf(5) for possible values
 loglevel        0
@@ -39,6 +36,13 @@ loglevel        0
 # Where the dynamically loaded modules are stored
 modulepath	/usr/lib/ldap
 moduleload	back_bdb
+
+# The maximum number of entries that is returned for a search operation
+sizelimit 500
+
+# The tool-threads parameter sets the actual amount of cpu's that is used
+# for indexing.
+tool-threads 1
 
 #######################################################################
 # Specific Backend Directives for bdb:
@@ -62,8 +66,27 @@ database        bdb
 # The base of your directory in database #1
 suffix          "dc=mandriva,dc=com"
 
+# rootdn directive for specifying a superuser on the database. This is needed
+# for syncrepl.
+# rootdn          "cn=admin,dc=mandriva,dc=com"
+
 # Where the database file are physically stored for database #1
 directory       "/var/lib/ldap"
+
+# For the Debian package we use 2MB as default but be sure to update this
+# value if you have plenty of RAM
+dbconfig set_cachesize 0 2097152 0
+
+# Sven Hartge reported that he had to set this value incredibly high
+# to get slapd running at all. See http://bugs.debian.org/303057
+# for more information.
+
+# Number of objects that can be locked at the same time.
+dbconfig set_lk_max_objects 1500
+# Number of locks (both requested and granted)
+dbconfig set_lk_max_locks 1500
+# Number of lockers
+dbconfig set_lk_max_lockers 1500
 
 # Indexing options for database #1
 index      objectClass,uidNumber,gidNumber                  eq
@@ -82,7 +105,7 @@ lastmod         on
 # Others should not be able to see it, except the
 # admin entry below
 # These access lines apply to database #1 only
-access to attrs=userPassword,sambaLMPassword,sambaNTPassword
+access to attrs=userPassword,shadowLastChange,sambaLMPassword,sambaNTPassword
         by dn="cn=admin,dc=mandriva,dc=com" write
         by anonymous auth
         by self write
