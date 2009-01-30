@@ -119,7 +119,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         for section in self.cp.sections():
             if re.compile('^option_[0-9]+$').match(section):
                 params = []
-                for param in self.cp.options('option_01'):
+                for param in self.cp.options(section):
                     if re.compile('^param_[0-9]+$').match(param):
                          attrs, value = self.cp.get(section, param).split('##')
                          params.append({'param':map(lambda x: x.split('::'), attrs.split('||')), 'value':value})
