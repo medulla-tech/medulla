@@ -680,6 +680,23 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
         trans.commit()
 
+
+    def pauseBundle(self, fk_bundle):
+        """
+        Pause a bundle, by pausing all its related commands_on_host.
+        """
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
+        c_ids = map(lambda x:x[0], c_ids)
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids),\
+                self.commands_on_host.c.current_state != 'done',\
+                self.commands_on_host.c.current_state != 'failed',\
+                self.commands_on_host.c.current_state != 'stop',\
+                self.commands_on_host.c.current_state != 'stopped'
+                )).execute(current_state ="pause")
+        trans.commit()
+
     def startCommand(self, c_id):
         """
         Start a command. In fact we set all its related commands_on_host to the
@@ -702,6 +719,22 @@ class MscDatabase(Singleton):
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
         self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id, self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
+        trans.commit()
+
+    def pauseCommand(self, c_id):
+        """
+        Pause a command, by pausing all its related commands_on_host.
+        @returns: the list of all related commands_on_host
+        @rtype: list
+        """
+        conn = self.getDbConnection()
+        trans = conn.begin()
+        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands == c_id,\
+                self.commands_on_host.c.current_state != 'done',\
+                self.commands_on_host.c.current_state != 'failed',\
+                self.commands_on_host.c.current_state != 'stopped',\
+                self.commands_on_host.c.current_state != 'stop'\
+                )).execute(current_state = "pause")
         trans.commit()
 
     def getCommandsonhostsAndSchedulersOnBundle(self, fk_bundle):

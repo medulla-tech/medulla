@@ -159,6 +159,12 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
     mydeffered.addCallback(runResult).addErrback(lambda reason: reason)
     return mydeffered
 
+def pauseCommands(scheduler, command_ids):
+    """
+    dont have to do anything rigth now, the scheduler just wait for the end of the step
+    """
+    return twisted.internet.defer.Deferred()
+
 def stopCommand(scheduler, command_id):
     def parseResult(result):
         logging.getLogger().debug('Stop command %s: %s' % (command_id, result))
