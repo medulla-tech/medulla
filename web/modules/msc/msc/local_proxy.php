@@ -38,59 +38,79 @@ class MyNumericInputTpl extends InputTpl {
 }
 
 
-class DisplayComputerSelector extends HtmlElement {
+class ProxySelector extends HtmlElement {
 
-    function DisplayComputerSelector($machines, $members, $diff, $gid) {
+    function ProxySelector($machines, $members, $diff, $gid, $proxy_number,$local_proxy_selection_mode) {
         $this->machines = $machines;
         $this->members = $members;
         $this->diff = $diff;
         $this->gid = $gid;
+        $this->proxy_number = $proxy_number;
+        $this->local_proxy_selection_mode = $local_proxy_selection_mode;
     }
 
     function display($params = array()) {
 ?>
 
-<h2><?= _T("Local Proxy Settings", "msc");?></h2>
 <div id="grouplist">
-<table style="border: none;" cellspacing="0">
-<tr>
- <td style="border: none;">
-  <div class="list">
-    <h3><?= _T("Computers in this command", "msc");?></h3>
-    <select multiple size="15" class="list" name="machines[]">
-    <?php
-    foreach ($this->diff as $idx => $machine) {
-        if ($machine == "") { unset($this->machines[$idx]); continue; }
-        echo "<option value=\"".$idx."\">".$machine."</option>\n";
-    }
-    ?>
-    </select>
-    <br/>
-  </div>
- </td>
- <td style="border: none;">
-  <div>
-   <input type="image" name="bdelmachine" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
-   <input type="image" name="baddmachine" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
-  </div>
- </td>
- <td style="border: none;">
-  <div class="list" style="padding-left: 10px;">
-    <h3><?= _T("Local proxies", "msc"); ?></h3>
-    <select multiple size="15" class="list" name="members[]">
-    <?php
-    foreach ($this->members as $idx => $member) {
-        if ($member == "") { unset($this->members[$idx]); continue; }
-        echo "<option value=\"".$idx."\">".$member."</option>\n";
-    }
-    ?>
-    </select>
-    <br/>
-  </div>
-  <div class="clearer"></div>
- </td>
-</tr>
-</table>
+
+<script lang=javascript>
+function disableLocalProxyForm() {
+    changeObjectDisplay('localproxytable', 'none');
+    changeObjectDisplay('container_input_proxy_number', 'inline');
+}
+function enableLocalProxyForm() {
+    changeObjectDisplay('localproxytable', 'inline');
+    changeObjectDisplay('container_input_proxy_number', 'none');
+}
+</script>
+<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?= _T("Random : ", "msc");?>
+<?
+$num = new MyNumericInputTpl("proxy_number");
+$num->display(array('value' => $this->proxy_number));
+?>
+<br />
+<input type="radio" name="local_proxy_selection_mode" value="manual" onClick="javascript:enableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "checked" : "";?>><?= _T("Or choose below : ", "msc");?></input>
+    <table style="border: none;" cellspacing="0" id='localproxytable'>
+    <tr>
+     <td style="border: none;">
+      <div class="list">
+        <h3><?= _T("Computers in this command", "msc");?></h3>
+        <select multiple size="15" class="list" name="machines[]">
+        <?php
+        foreach ($this->diff as $idx => $machine) {
+            if ($machine == "") { unset($this->machines[$idx]); continue; }
+            echo "<option value=\"".$idx."\">".$machine."</option>\n";
+        }
+        ?>
+        </select>
+        <br/>
+      </div>
+     </td>
+     <td style="border: none;">
+      <div>
+       <input type="image" name="bdelmachine" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
+       <input type="image" name="baddmachine" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
+      </div>
+     </td>
+     <td style="border: none;">
+      <div class="list" style="padding-left: 10px;">
+        <h3><?= _T("Local proxies", "msc"); ?></h3>
+        <select multiple size="15" class="list" name="members[]">
+        <?php
+        foreach ($this->members as $idx => $member) {
+            if ($member == "") { unset($this->members[$idx]); continue; }
+            echo "<option value=\"".$idx."\">".$member."</option>\n";
+        }
+        ?>
+        </select>
+        <br/>
+      </div>
+      <div class="clearer"></div>
+     </td>
+    </tr>
+    </table>
+</input>
 </div>
 
 <input type="hidden" name="lpmachines" value="<?php echo base64_encode(serialize($this->machines)); ?>" />
@@ -186,11 +206,12 @@ $rb = new RadioTpl("proxy_mode");
 $rb->setChoices(array(_T('Single with fallback', 'msc'), _T('Multiple', 'msc')));
 $rb->setvalues(array('single', 'multiple'));
 if (!empty($_POST["proxy_mode"])) {
-    $rb->setSelected($_POST["proxy_mode"]);
+    $proxy_mode = $_POST["proxy_mode"];
     unset($_POST["proxy_mode"]); // to prevent hidden field setting below
 } else {
-    $rb->setSelected(web_local_proxy_mode());
+    $proxy_mode = web_local_proxy_mode();
 }
+$rb->setSelected($proxy_mode);
 $f->add(new TrFormElement(_T('Local Proxy Mode', 'msc'), $rb));
 
 if (!empty($_POST["max_clients_per_proxy"])) {
@@ -200,7 +221,7 @@ if (!empty($_POST["max_clients_per_proxy"])) {
     $max_clients_per_proxy_value = web_max_clients_per_proxy();
 }
 $f->add(new TrFormElement(
-            _T('Max. clients per proxy', 'msc'),
+            _T('Maximum number of clients per local proxy', 'msc'),
             new MyNumericInputTpl("max_clients_per_proxy")
         ), array(
             "value" => $max_clients_per_proxy_value,
@@ -208,8 +229,20 @@ $f->add(new TrFormElement(
         )
     );
 
-$d = new DisplayComputerSelector($machines, $right, $left, $group->id);
-$f->add(new TrFormElement(_T('Proxies selection', 'msc'), $d));
+if (!empty($_POST["proxy_number"])) {
+    $proxy_number = $_POST["proxy_number"];
+    unset($_POST["proxy_number"]); // to prevent hidden field setting below
+} else {
+    $proxy_number = web_proxy_number();
+}
+if (!empty($_POST["local_proxy_selection_mode"])) {
+    $local_proxy_selection_mode = $_POST["local_proxy_selection_mode"];
+    unset($_POST["local_proxy_selection_mode"]); // to prevent hidden field setting below
+} else {
+    $local_proxy_selection_mode = web_proxy_selection_mode();
+}
+$d = new ProxySelector($machines, $right, $left, $group->id, $proxy_number, $local_proxy_selection_mode);
+$f->add(new TrFormElement(_T('Local proxies selection', 'msc'), $d));
 
 /* Add hidden input field to propagate the POST values from the previous
    page */
@@ -222,5 +255,14 @@ $f->pop();
 $f->addValidateButton("bconfirmproxy");
 $f->addCancelButton("bback");
 $f->display();
-
+if ($local_proxy_selection_mode != "manual") {
+    ?>
+<script lang=javascript>
+disableLocalProxyForm(); // table is disabled when entering the page
+</script></script>
+    <? } elseif ($local_proxy_selection_mode == "manual") { ?>
+<script lang=javascript>
+enableLocalProxyForm(); // table is disabled when entering the page
+</script></script>
+    <? }
 ?>

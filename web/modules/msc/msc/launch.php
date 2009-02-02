@@ -100,6 +100,7 @@ function start_a_command($proxy = array()) {
             }
             $params['proxy_mode'] = 'queue';
         }
+
         $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
@@ -111,11 +112,21 @@ function start_a_command($proxy = array()) {
 if (isset($_POST["bconfirmproxy"])) {
     $proxy = array();
     if (isset($_POST["lpmembers"])) {
-        $lmachines = unserialize(base64_decode($_POST["lpmachines"]));
-        $members = unserialize(base64_decode($_POST["lpmembers"]));
-        foreach($members as $member => $name) {
-            $computer = preg_split("/##/", $member);
-            $proxy[] = $computer[1];
+        if ($_POST["local_proxy_selection_mode"] == "semi_auto") {
+            $members = unserialize(base64_decode($_POST["lpmachines"]));
+            foreach($members as $member => $name) {
+                $computer = preg_split("/##/", $member);
+                $proxy[] = $computer[1];
+            }
+
+            shuffle($proxy);
+            $proxy = array_splice($proxy, 0, $_POST['proxy_number']);
+        } elseif ($_POST["local_proxy_selection_mode"] == "manual") {
+            $members = unserialize(base64_decode($_POST["lpmembers"]));
+            foreach($members as $member => $name) {
+                $computer = preg_split("/##/", $member);
+                $proxy[] = $computer[1];
+            }
         }
     }
     start_a_command($proxy);
