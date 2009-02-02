@@ -97,8 +97,8 @@ class MscConfig(PluginConfig):
     web_allow_local_proxy = False
     web_def_local_proxy_mode = "multiple"
     web_def_max_clients_per_proxy = 10
-    web_def_single_proxy_number = 2
-    web_def_multiple_proxy_number = 2
+    web_def_proxy_number = 2
+    web_def_proxy_selection_mode = "semi_auto"
     # VNC applet behavior
     web_vnc_show_icon = True
     web_vnc_view_only = True
@@ -267,10 +267,10 @@ class MscConfig(PluginConfig):
             self.web_def_local_proxy_mode = self.get("web", "web_def_local_proxy_mode")
         if self.has_option("web", "web_def_max_clients_per_proxy"):
             self.web_def_max_clients_per_proxy = self.getint("web", "web_def_max_clients_per_proxy")
-        if self.has_option("web", "web_def_single_proxy_number"):
-            self.web_def_single_proxy_number = self.getint("web", "web_def_single_proxy_number")
-        if self.has_option("web", "web_def_multiple_proxy_number"):
-            self.web_def_multiple_proxy_number = self.getint("web", "web_def_multiple_proxy_number")
+        if self.has_option("web", "web_def_proxy_number"):
+            self.web_def_proxy_number = self.getint("web", "web_def_proxy_number")
+        if self.has_option("web", "web_def_proxy_selection_mode"):
+            self.web_def_proxy_selection_mode = self.get("web", "web_def_proxy_selection_mode")
 
         # VNC stuff
         if self.has_option("web", "vnc_show_icon"):

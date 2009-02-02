@@ -438,11 +438,11 @@ class RpcProxy(RpcProxyI):
     def get_web_def_max_clients_per_proxy(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_max_clients_per_proxy)
 
-    def get_web_def_single_proxy_number(self):
-        return xmlrpcCleanup(MscConfig("msc").web_def_single_proxy_number)
+    def get_web_def_proxy_number(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_proxy_number)
 
-    def get_web_def_multiple_proxy_number(self):
-        return xmlrpcCleanup(MscConfig("msc").web_def_multiple_proxy_number)
+    def get_web_def_proxy_selection_mode(self):
+        return xmlrpcCleanup(MscConfig("msc").web_def_proxy_selection_mode)
 
     def get_web_def_issue_halt_to(self):
         return xmlrpcCleanup(MscConfig("msc").web_def_issue_halt_to)
