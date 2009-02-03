@@ -95,7 +95,7 @@ $a_pause = array();
 $a_stop = array();
 $a_details = array();
 $a_status = array();
-
+$a_progression = array();
 $n = null;
 
 if ($areCommands) {
@@ -244,10 +244,12 @@ if ($areCommands) {
                 $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             }
 
-
-            $a_uploaded[] ='<img style="vertical-align: middle;" title="'.$statusTable[$coh['uploaded']].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
-            $a_executed[] ='<img style="vertical-align: middle;" title="'.$statusTable[$coh['executed']].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
-            $a_deleted[] = '<img style="vertical-align: middle;" title="'.$statusTable[$coh['deleted']].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+            $a_progression[] =
+                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['uploaded']].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> '
+                .
+                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['executed']].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> '
+                .
+                '<img style="vertical-align: middle;" title="'.$statusTable[$coh['deleted']].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
 
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
@@ -282,12 +284,10 @@ if ($areCommands) {
         $datelabel = _T("Start date", "msc");
     }
     $n = new OptimizedListInfos($a_date, $datelabel);
-    $n->addExtraInfo($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_client, _T("Client", "msc"));
+    $n->addExtraInfo($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_current, _T("Current State", "msc"));
-    $n->addExtraInfo($a_uploaded, _T("Uploaded", "msc"));
-    $n->addExtraInfo($a_executed, _T("Executed", "msc"));
-    $n->addExtraInfo($a_deleted, _T("Deleted", "msc"));
+    $n->addExtraInfo($a_progression, _T("Progression", "msc"));
     $n->addExtraInfo($a_mode, _T("Mode", "msc"));
 
     $n->addActionItemArray($a_details);
