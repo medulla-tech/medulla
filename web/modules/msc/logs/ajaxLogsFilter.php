@@ -132,7 +132,7 @@ if ($type == -1 || $type == 0) {
 }
 $n = new OptimizedListInfos($a_date, $datelabel);
 $n->addExtraInfo($a_cmd, _T("Command", "msc"));
-$n->addExtraInfo($a_current, _T("current_state", "msc"));
+$n->addExtraInfo($a_current, _T("Current state", "msc"));
 $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
 $n->addExtraInfo($a_executed, _T("executed", "msc"));
 $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
