@@ -24,6 +24,7 @@
  */
 
 require_once("functions.php"); # for return_icon
+require_once("utilities.php"); # for pretty bw display
 require_once("mscoptions_xmlrpc.php"); # to read msc.ini
 
 class CommandOnHost {
@@ -33,10 +34,14 @@ class CommandOnHost {
         #$this->db_cmd = command_detail($this->db_coh['fk_commands']);
         $this->values = array(
             array(_T('Host', 'msc'), $this->db_coh['host'], 1),
-            array(_T('current_state', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
+            array(_T('Current State', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
+            array(_T('awoken', 'msc'), _plusIcon($this->db_coh['awoken']), 1),
             array(_T('uploaded', 'msc'), _plusIcon($this->db_coh['uploaded']), 1),
             array(_T('executed', 'msc'), _plusIcon($this->db_coh['executed']), 1),
-            array(_T('deleted', 'msc'), _plusIcon($this->db_coh['deleted']), 1)
+            array(_T('deleted', 'msc'), _plusIcon($this->db_coh['deleted']), 1),
+            array(_T('inventoried', 'msc'), _plusIcon($this->db_coh['inventoried']), 1),
+            array(_T('rebooted', 'msc'), _plusIcon($this->db_coh['rebooted']), 1),
+            array(_T('halted', 'msc'), _plusIcon($this->db_coh['halted']), 1)
         );
     }
     function display() {
@@ -167,13 +172,17 @@ function i18nparts($str) {
         return implode(', ', array_map('my_convert', $str));
     } elseif (!empty($str))
         return implode(', ', array_map('my_convert', explode(',', $str)));
-    else return '';
+    else return _T('<i>not set</i>', 'msc');
 }
 class CommandHistory {
     function CommandHistory($coh_id) {
         // TODO : ch is a list, we have to chose the good one (ie : the most recent date)
         $this->db_ch = get_command_history($coh_id);
         $this->db_coh = get_commands_on_host($coh_id);
+        if ($this->db_coh['fk_use_as_proxy'])
+            $this->db_lproxy = get_commands_on_host($this->db_coh['fk_use_as_proxy']);
+        else
+            $this->db_lproxy = NULL;
         $this->db_cmd = command_detail($this->db_coh['fk_commands']);
     }
     function display() {
@@ -184,7 +193,7 @@ class CommandHistory {
             return;
         }
 
-        # FIXME: stolen from ajaxLogsFiler.php, should be factorized
+        # FIXME: stolen from ajaxLogsFilter.php, should be factorized
         $a_uploaded ='<img style="vertical-align: middle;" alt="'.$this->db_coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['uploaded']).'"/> ';
         $a_executed ='<img style="vertical-align: middle;" alt="'.$this->db_coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['executed']).'"/> ';
         $a_deleted = '<img style="vertical-align: middle;" alt="'.$this->db_coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($this->db_coh['deleted']).'"/> ';
@@ -220,6 +229,20 @@ class CommandHistory {
             else
                 $next_launch_date = _T('<i>as soon as possible</i>', 'msc');
 
+        if ($this->db_coh['start_date'])
+            $start_date = _toDate($this->db_coh['start_date']);
+        else
+            $start_date = _T('<i>not yet available</i>', 'msc');
+
+        if ($this->db_coh['end_date'])
+            $end_date = _toDate($this->db_coh['end_date']);
+        else
+            $end_date = _T('<i>not yet available</i>', 'msc');
+
+        if ($this->db_coh['last_wol_attempt'])
+            $last_wol_attempt = _toDate($this->db_coh['last_wol_attempt']);
+        else
+            $last_wol_attempt = _T('<i>not available</i>', 'msc');
 
         if ($this->db_cmd['start_file'])
             if ($this->db_cmd['parameters'])
@@ -229,6 +252,40 @@ class CommandHistory {
         else
             $command_line = _T('<i>not set</i>', 'msc');
 
+        if ($this->db_coh['order_in_proxy'] == '')
+            $proxy_priority = _T('None (Local Proxy Client)', 'msc');
+        else
+            $proxy_priority = sprintf(_T('%s (Local Proxy Server)', 'msc'), $this->db_coh['order_in_proxy']);
+
+        if ($this->db_cmd['proxy_mode'] == 'split')
+            $proxy_mode = _T('Multiple', 'msc');
+        elseif ($this->db_cmd['proxy_mode'] == 'queue')
+            $proxy_mode = _T('Single with fallback', 'msc');
+        elseif ($this->db_cmd['proxy_mode'] == 'none') {
+            $proxy_mode = _T('No proxy', 'msc');
+            $proxy_priority = _T('None', 'msc');
+        } else {
+            $proxy_mode = _T('<i>not available</i>', 'msc');
+            $proxy_priority = _T('<i>not available</i>', 'msc');
+        }
+
+        if ($this->db_lproxy)
+            $current_proxy = $this->db_lproxy['host'];
+        else
+            $current_proxy = _T('<i>not available</i>', 'msc');
+
+        if ($this->db_cmd['proxy_mode'] == 'split')
+            $proxy_mode = _T('Multiple', 'msc');
+        elseif ($this->db_cmd['proxy_mode'] == 'queue')
+            $proxy_mode = _T('Single with fallback', 'msc');
+        elseif ($this->db_cmd['proxy_mode'] == 'none') {
+            $proxy_mode = _T('No proxy', 'msc');
+            $proxy_priority = _T('None', 'msc');
+        } else {
+            $proxy_mode = _T('<i>not available</i>', 'msc');
+            $proxy_priority = _T('<i>not available</i>', 'msc');
+        }
+
         // gettext obfucation
         _T('enable', 'msc');
         _T('disable', 'msc');
@@ -236,37 +293,73 @@ class CommandHistory {
         _T('failed', 'msc');
         _T('over_time', 'msc');
         _T('out_of_interval', 'msc');
-        $static_values = array(
-            array(_T('Command state', 'msc'),                                   $state),
-            array('',                                                           ''),
-            array(_T('Command name', 'msc'),                                    $this->db_cmd['title']),
-            array(_T('Creation', 'msc'),                                        sprintf(_T('<i>on</i> %s <i>by</i> %s', 'msc'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
-            array(_T('Validity period', 'msc'),                                 $validity),
-            array(_T('Deployment interval', 'msc'),                             $deploy_interv),
-            array(_T('Command line to run', 'msc'),                             $command_line),
-            array('',                                                           ''),
-            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),   _T($this->db_cmd['do_wol'], 'msc')),
-            array(_T('Execute command line ?', 'msc'),                          _T($this->db_cmd['start_script'], 'msc')),
-            array(_T('Delete files after a successful execution ?', 'msc'),     _T($this->db_cmd['clean_on_success'], 'msc')),
-            array(_T('Do an inventory after a successful execution ?', 'msc'),  _T($this->db_cmd['do_inventory'], 'msc')),
-            array(_T('Halt client after :', 'msc'),                             i18nparts($this->db_cmd['do_halt'])),
-            array(_T('Reboot client after a successful deletion ?', 'msc'),     _T($this->db_cmd['do_reboot'], 'msc')),
-            array('',                                                           ''),
-            array(_T('Remaining connection attempts', 'msc'),                   $this->db_coh['attempts_left']),
-            array(_T('Delay between two attempts (minutes)', 'msc'),             $this->db_cmd['next_connection_delay'] ? $this->db_cmd['next_connection_delay'] : _T('<i>not set</i>', 'msc')),
-            array(_T('Next attempt', 'msc'),                                    $next_launch_date),
+
+        ### Display command overview ###
+        $values = array(
+            array(_T('State', 'msc'),               $state),
+            array(_T('Command name', 'msc'),        $this->db_cmd['title']),
+            array(_T('Creation', 'msc'),            sprintf(_T('<i>on</i> %s <i>by</i> %s', 'msc'), _toDate($this->db_cmd['creation_date']),$this->db_cmd['creator'])),
+            array(_T('Validity period', 'msc'),     $validity),
+            array(_T('Deployment interval', 'msc'), $deploy_interv),
         );
-
-        $static_name = array_map("_names", $static_values);
-        $static_value = array_map("_values", $static_values);
-
-        $n = new ListInfos($static_name, _T('Name', 'msc'));
-        $n->addExtraInfo($static_value, _T('Value', 'msc'));
-        $n->setRowsPerPage(count($static_values));
-        $n->setTableHeaderPadding(1);
+        $n = new ListInfos(array_map("_names", $values), _T('<b>Command Overview</b>', 'msc'));
+        $n->addExtraInfo(array_map("_values", $values), '', '400px');
+        $n->setTableHeaderPadding(0);
+        $n->setRowsPerPage(count($values));
         $n->drawTable(0);
+        print "<hr/><br/>";
 
-        // display files
+        ### Display command stages ###
+        $values = array(
+            array(_T('Command line to run', 'msc'),                             $command_line),
+            array(_T('Start "Wake On Lan" query if connection fails', 'msc'),   $this->db_cmd['do_wol'] == 'enable'             ? _T('yes', 'msc') : _T('no', 'msc')),
+            array(_T('Execute command line ?', 'msc'),                          $this->db_cmd['start_script'] == 'enable'       ? _T('yes', 'msc') : _T('no', 'msc')),
+            array(_T('Delete files after a successful execution ?', 'msc'),     $this->db_cmd['clean_on_success'] == 'enable'   ? _T('yes', 'msc') : _T('no', 'msc')),
+            array(_T('Do an inventory after a successful execution ?', 'msc'),  $this->db_cmd['do_inventory'] == 'enable'       ? _T('yes', 'msc') : _T('no', 'msc')),
+            array(_T('Reboot client after a successful deletion ?', 'msc'),     $this->db_cmd['do_reboot'] == 'enable'          ? _T('yes', 'msc') : _T('no', 'msc')),
+            array(_T('Halt client after :', 'msc'),                             i18nparts($this->db_cmd['do_halt'])),
+        );
+        $n = new ListInfos(array_map("_names", $values), _T('<b>Command Stages</b>', 'msc'));
+        $n->addExtraInfo(array_map("_values", $values), '', '400px');
+        $n->setTableHeaderPadding(0);
+        $n->setRowsPerPage(count($values));
+        $n->drawTable(0);
+        print "<hr/><br/>";
+
+        ### Display command environment ###
+        $values = array(
+            array(_T('Reserved bandswidth', 'msc'),                     $this->db_cmd['maxbw'] == '0' ? _T('<i>none</i>', 'msc') : prettyOctetDisplay($this->db_cmd['maxbw'], 1024, _T('bit/s', 'msc'))),
+            array(_T('Proxy Mode', 'msc'),                              $proxy_mode),
+            array(_T('Proxy Priority', 'msc'),                          $proxy_priority),
+            array(_T('Scheduler', 'msc'),                               $this->db_coh['scheduler']),
+            array(_T('Current Launcher', 'msc'),                        $this->db_coh['launcher'] == '' ? _T('<i>not available</i>', 'msc') : $this->db_coh['launcher']),
+            array(_T('Current Proxy', 'msc'),                           $current_proxy),
+        );
+        $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
+        $n->addExtraInfo(array_map("_values", $values), '', '400px');
+        $n->setTableHeaderPadding(0);
+        $n->setRowsPerPage(count($values));
+        $n->drawTable(0);
+        print "<hr/><br/>";
+
+
+        ### Display command life cycle ###
+        $values = array(
+            array(_T('First operation at', 'msc'),                      $start_date),
+            array(_T('Remaining connection attempts', 'msc'),           sprintf(_T('%s (on %s)', 'msc'), $this->db_coh['attempts_left'], $this->db_cmd['max_connection_attempt'])),
+            array(_T('Delay between two attempts (minutes)', 'msc'),    $this->db_cmd['next_connection_delay'] ? $this->db_cmd['next_connection_delay'] : _T('<i>not set</i>', 'msc')),
+            array(_T('Last WOL attempt', 'msc'),                        $last_wol_attempt),
+            array(_T('Next attempt', 'msc'),                            $next_launch_date),
+            array(_T('Last operation at', 'msc'),                       $end_date),
+        );
+        $n = new ListInfos(array_map("_names", $values), _T('<b>Command Life Cycle</b>', 'msc'));
+        $n->addExtraInfo(array_map("_values", $values), '', '400px');
+        $n->setTableHeaderPadding(0);
+        $n->setRowsPerPage(count($values));
+        $n->drawTable(0);
+        print "<hr/><br/>";
+
+        ### Display transfered files ###
         $files = array(_T('Transferred files list empty.', 'msc'));
         if ($this->db_cmd["files"]!="" && $this->db_cmd["files"]!=array()) {
             if (gettype($command["files"]) != 'array') {
@@ -275,10 +368,9 @@ class CommandHistory {
                 $files = $this->db_cmd["files"];
             }
         }
-        $n = new ListInfos($files, _T('Transferred files list', 'msc'));
-        $n->setRowsPerPage(count($files) +1);
-        $n->setTableHeaderPadding(1);
-        print "<hr/><br/>";
+        $n = new ListInfos($files, _T('<b>Transfered Files</b>', 'msc'));
+        $n->setTableHeaderPadding(0);
+        $n->setRowsPerPage(count($values));
         $n->drawTable(0);
         print "<hr/><br/>";
 
