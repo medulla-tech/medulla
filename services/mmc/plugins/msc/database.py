@@ -816,16 +816,28 @@ class MscDatabase(Singleton):
     def getAllCommandsonhostCurrentstate(self, ctx): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
-        ret = ret.filter(self.commands_on_host.c.current_state <> '').group_by(self.commands_on_host.c.current_state).order_by(asc(self.commands_on_host.c.next_launch_date))
-        # x[0] contains a commands_on_host object
-        l = map(lambda x: x[0].current_state, ret.all())
+        ret = ret.add_column(self.commands.c.max_connection_attempt).filter(self.commands_on_host.c.current_state <> ''). \
+                group_by([self.commands_on_host.c.current_state, self.commands_on_host.c.attempts_left, self.commands.c.max_connection_attempt]). \
+                order_by(asc(self.commands_on_host.c.next_launch_date))
+        # x[0] contains a commands_on_host object x[1] contains commands
+        l = []
+        for x in ret.all(): # patch to have rescheduled as a "state" ... must be emulated
+            if x[0].current_state == 'scheduled' and x[0].attempts_left != x[1].max_connection_attempt and not 'rescheduled' in l:
+                l.append('rescheduled')
+            elif not x[0].current_state in l:
+                l.append(x[0].current_state)
         session.close()
         return l
 
     def countAllCommandsonhostByCurrentstate(self, ctx, current_state, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
-        ret = ret.filter(self.commands_on_host.c.current_state == current_state)
+        if current_state == 'rescheduled': # patch to have rescheduled as a "state" ... must be emulated
+            ret = ret.filter(and_(self.commands.c.max_connection_attempt != self.commands_on_host.c.attempts_left, self.commands_on_host.c.current_state == 'scheduled'))
+        elif current_state == 'scheduled':
+            ret = ret.filter(and_(self.commands.c.max_connection_attempt == self.commands_on_host.c.attempts_left, self.commands_on_host.c.current_state == 'scheduled'))
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state == current_state)
         # the join in itself is useless here, but we want to have exactly
         # the same result as in getAllCommandsonhostByCurrentstate
         if filt != '':
@@ -837,7 +849,12 @@ class MscDatabase(Singleton):
     def getAllCommandsonhostByCurrentstate(self, ctx, current_state, min = 0, max = 10, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
-        ret = ret.filter(self.commands_on_host.c.current_state == current_state)
+        if current_state == 'rescheduled': # patch to have rescheduled as a "state" ... must be emulated
+            ret = ret.filter(and_(self.commands.c.max_connection_attempt != self.commands_on_host.c.attempts_left, self.commands_on_host.c.current_state == 'scheduled'))
+        elif current_state == 'scheduled':
+            ret = ret.filter(and_(self.commands.c.max_connection_attempt == self.commands_on_host.c.attempts_left, self.commands_on_host.c.current_state == 'scheduled'))
+        else:
+            ret = ret.filter(self.commands_on_host.c.current_state == current_state)
         if filt != '':
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         ret = ret.offset(int(min))
