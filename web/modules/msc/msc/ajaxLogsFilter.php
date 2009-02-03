@@ -98,13 +98,15 @@ $a_status = array();
 $a_progression = array();
 $n = null;
 
-if ($areCommands) {
-    foreach ($cmds as $cmd) {
+if ($areCommands) { // display several commands
+    foreach ($cmds as $cmd) { //iterate over each command
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
         $p = array('tab'=>$tab, 'hostname'=>$hostname, 'uuid'=>$uuid, 'from'=>'base|computers|'.$_GET['action'].'|'.$tab, 'gid'=>$gid);
-        if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) {
+
+        ### gathering command components ###
+        if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case
             $p['bundle_id'] = $cmd['bundle_id'];
             if (strlen($_GET['bundle_id'])) {
                 $p['cmd_id'] = $cmd['id'];
@@ -122,7 +124,7 @@ if ($areCommands) {
                     }
                 }
             }
-        } elseif (!strlen($cmd['bundle_id']) and !strlen($gid)) {
+        } elseif (!strlen($cmd['bundle_id']) and !strlen($gid)) { // SINGLE COMMAND case
             $a_cmd[] = $cmd['title'];
             $p['cmd_id'] = $cmd['id'];
             $p['coh_id'] = $coh_id;
@@ -179,7 +181,6 @@ if ($areCommands) {
         } else {
             $a_details[] = $actiondetails;
             if (!strlen($gid) and !strlen($cmd['bundle_id'])) {
-                #if (!strlen($gid) or (strlen($gid) and strlen($cmd['bundle_id']))) {
                 $a_status[] = $actionempty;
             } else {
                 $a_status[] = $actionstatus;
@@ -206,7 +207,7 @@ if ($areCommands) {
         $n->addActionItemArray($a_stop);
     }
     $n->addActionItemArray($a_status);
-} else {
+} else { // display only one command
     foreach ($cmds as $cmd) {
 
         $coh_id = $cmd[1];
@@ -226,7 +227,6 @@ if ($areCommands) {
                 $a_date[] = _toDate($d);
 
             $a_client[] = $coh['host'];
-            $a_cmd[] = $cmd['title'];
 
             if ($cmd['proxy_mode'] == 'none') {
                 $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
@@ -283,12 +283,11 @@ if ($areCommands) {
     } else {
         $datelabel = _T("Start date", "msc");
     }
-    $n = new OptimizedListInfos($a_date, $datelabel);
+    $n = new OptimizedListInfos($a_mode, _T("Mode", "msc"));
     $n->addExtraInfo($a_client, _T("Client", "msc"));
-    $n->addExtraInfo($a_cmd, _T("Command", "msc"));
+    $n->addExtraInfo($a_date, $datelabel);
     $n->addExtraInfo($a_current, _T("Current State", "msc"));
     $n->addExtraInfo($a_progression, _T("Progression", "msc"));
-    $n->addExtraInfo($a_mode, _T("Mode", "msc"));
 
     $n->addActionItemArray($a_details);
     if (!$history) {
