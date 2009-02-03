@@ -229,19 +229,19 @@ if ($areCommands) {
             $a_cmd[] = $cmd['title'];
 
             if ($cmd['proxy_mode'] == 'none') {
-                $a_mode[] = _T('normal', 'msc');
+                $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'split') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] = _T('mult. / client', 'msc');
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, client', 'msc').'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] = _T('mult. / server', 'msc');
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, server', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'queue') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] = _T('sing. / client', 'msc');
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, client', 'msc').'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] = _T('sing. / server', 'msc');
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, server', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } else {
-                $a_mode[] = _T('normal', 'msc');
+                $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             }
 
 
@@ -284,11 +284,11 @@ if ($areCommands) {
     $n = new OptimizedListInfos($a_date, $datelabel);
     $n->addExtraInfo($a_cmd, _T("Command", "msc"));
     $n->addExtraInfo($a_client, _T("Client", "msc"));
-    $n->addExtraInfo($a_mode, _T("Mode", "msc"));
     $n->addExtraInfo($a_current, _T("Current State", "msc"));
     $n->addExtraInfo($a_uploaded, _T("Uploaded", "msc"));
     $n->addExtraInfo($a_executed, _T("Executed", "msc"));
     $n->addExtraInfo($a_deleted, _T("Deleted", "msc"));
+    $n->addExtraInfo($a_mode, _T("Mode", "msc"));
 
     $n->addActionItemArray($a_details);
     if (!$history) {
