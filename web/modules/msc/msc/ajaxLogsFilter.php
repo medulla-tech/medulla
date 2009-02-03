@@ -225,11 +225,29 @@ if ($areCommands) {
             else
                 $a_date[] = _toDate($d);
 
-            $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+            $a_client[] = $coh['host'];
+            $a_cmd[] = $cmd['title'];
 
-            $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
-            $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
-            $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+            if ($cmd['proxy_mode'] == 'none') {
+                $a_mode[] = _T('normal', 'msc');
+            } elseif ($cmd['proxy_mode'] == 'split') {
+                if ($coh['order_in_proxy'] == '')
+                    $a_mode[] = _T('mult. / client', 'msc');
+                else
+                    $a_mode[] = _T('mult. / server', 'msc');
+            } elseif ($cmd['proxy_mode'] == 'queue') {
+                if ($coh['order_in_proxy'] == '')
+                    $a_mode[] = _T('sing. / client', 'msc');
+                else
+                    $a_mode[] = _T('sing. / server', 'msc');
+            } else {
+                $a_mode[] = _T('normal', 'msc');
+            }
+
+
+            $a_uploaded[] ='<img style="vertical-align: middle;" title="'.$statusTable[$coh['uploaded']].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
+            $a_executed[] ='<img style="vertical-align: middle;" title="'.$statusTable[$coh['executed']].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
+            $a_deleted[] = '<img style="vertical-align: middle;" title="'.$statusTable[$coh['deleted']].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
 
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
@@ -265,10 +283,12 @@ if ($areCommands) {
     }
     $n = new OptimizedListInfos($a_date, $datelabel);
     $n->addExtraInfo($a_cmd, _T("Command", "msc"));
-    $n->addExtraInfo($a_current, _T("current_state", "msc"));
-    $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
-    $n->addExtraInfo($a_executed, _T("executed", "msc"));
-    $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
+    $n->addExtraInfo($a_client, _T("Client", "msc"));
+    $n->addExtraInfo($a_mode, _T("Mode", "msc"));
+    $n->addExtraInfo($a_current, _T("Current State", "msc"));
+    $n->addExtraInfo($a_uploaded, _T("Uploaded", "msc"));
+    $n->addExtraInfo($a_executed, _T("Executed", "msc"));
+    $n->addExtraInfo($a_deleted, _T("Deleted", "msc"));
 
     $n->addActionItemArray($a_details);
     if (!$history) {

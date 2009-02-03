@@ -274,18 +274,6 @@ class CommandHistory {
         else
             $current_proxy = _T('<i>not available</i>', 'msc');
 
-        if ($this->db_cmd['proxy_mode'] == 'split')
-            $proxy_mode = _T('Multiple', 'msc');
-        elseif ($this->db_cmd['proxy_mode'] == 'queue')
-            $proxy_mode = _T('Single with fallback', 'msc');
-        elseif ($this->db_cmd['proxy_mode'] == 'none') {
-            $proxy_mode = _T('No proxy', 'msc');
-            $proxy_priority = _T('None', 'msc');
-        } else {
-            $proxy_mode = _T('<i>not available</i>', 'msc');
-            $proxy_priority = _T('<i>not available</i>', 'msc');
-        }
-
         // gettext obfucation
         _T('enable', 'msc');
         _T('disable', 'msc');
