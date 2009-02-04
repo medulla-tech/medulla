@@ -297,7 +297,7 @@ class ListInfos extends HtmlElement {
     var $end, $start;
 
     var $description; /**< list of description (not an obligation) */
-    var $col_witdh; /**can specify column width
+    var $col_width; /**can specify column width
 
     /**
      * constructor
@@ -504,7 +504,7 @@ class ListInfos extends HtmlElement {
                 $width_styl = 'width: '.$this->col_width[$key].';';
             } else {
                 $width_styl = '';
-            }	
+            }
             if (!$first) {
 
                 if (!isset($this->first_elt_padding)) {
@@ -519,7 +519,9 @@ class ListInfos extends HtmlElement {
         }
 
         if (count($this->arrAction)!=0) { //if we have actions
-            echo "<td style=\"text-align:right;\"><span style=\"color: #AAA;\" >Actions</span></td>";
+            $width_styl = $this->col_width[count($this->col_width)-1];
+            $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
+            echo "<td style=\"text-align: right; $width_styl\"><span style=\"color: #AAA;\" >Actions</span></td>";
         }
 
         echo "</tr></thead>";
@@ -1815,7 +1817,7 @@ class HtmlContainer {
     }
 
     function hasBeenPopped() {
-        
+
         if ($this->popped) $ret = True;
         else if ($this->index == -1) $ret = False;
         else $ret = False;
