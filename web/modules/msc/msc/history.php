@@ -32,7 +32,10 @@ require_once('modules/msc/includes/widgets.inc.php');
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
 if (strlen($_GET['uuid'])) {
-    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) {
+/*
+ * display stuff for a single client
+ */
+    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) { # bundle display
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
         if ($act) {
@@ -49,16 +52,21 @@ if (strlen($_GET['uuid'])) {
         }
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
+        $coh = new CommandOnHost($coh_id);
+        $coh->quickDisplay(); 
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else { # Display history for a specific host
-        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?hostname=".$_GET['hostname']."&uuid=".$_GET['uuid']."&history=1&tab=tabhistory&action=msctabs");
+        $ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&history=1&tab=tabhistory&action=msctabs");
         $ajax->setRefresh(30000);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
 } elseif (strlen($_GET['gid'])) {
+/*
+ * display stuff for a single group
+ */
     if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle       
         $bdl = new Bundle($_GET['bundle_id']);
         $act = $bdl->quickDisplay();
@@ -69,7 +77,7 @@ if (strlen($_GET['uuid'])) {
             $ajax->displayDivToUpdate();
         }
     } elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
-        $params = array('cmd_id'=> $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
+        $params = array('cmd_id' => $_GET['cmd_id'], 'tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
 
         if (strlen($_GET['bundle_id'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
@@ -78,17 +86,20 @@ if (strlen($_GET['uuid'])) {
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","detail","msc", "base", "computers")), $params);
         }
 
+        if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         // display the selected command
         $cmd = new Command($_GET['cmd_id']);
-        $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","display","msc", "base", "computers")), $params);
-        // display the selected command on host
-        $coh = new CommandOnHost($_GET['coh_id']);
-        $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
-        // display the command on host details
-        print "<hr/><br/>";
-        $coh_id = $_GET['coh_id'];
-        $ch = new CommandHistory($coh_id);
-        $ch->display();
+        $act = $cmd->quickDisplay(array(new ActionItem(_T("Details", "msc"),"groupmsctabs","display","msc", "base", "computers")), $params);
+        if ($act) {
+            // display the selected command on host
+            $coh = new CommandOnHost($_GET['coh_id']);
+            $coh->quickDisplay(); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
+            // display the command on host details
+            print "<hr/><br/>";
+            $coh_id = $_GET['coh_id'];
+            $ch = new CommandHistory($coh_id);
+            $ch->display();
+        }
     } elseif (strlen($_GET['cmd_id'])) { # Display a specific command for a specific group
         $params = array('tab'=>$_GET['tab'], 'gid'=>$_GET['gid']);
         $bdlink = '';
@@ -100,6 +111,7 @@ if (strlen($_GET['uuid'])) {
             $bdlink = "&bundle_id=".$_GET['bundle_id'];
         }
 
+        if ($_GET['cmd_id'] == -2) { new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc")); }
         // display just the selected command
         $cmd = new Command($_GET['cmd_id']);
         $act = $cmd->quickDisplay();
@@ -117,6 +129,7 @@ if (strlen($_GET['uuid'])) {
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
+} else {
+    // Display an error message
 }
-
 ?>

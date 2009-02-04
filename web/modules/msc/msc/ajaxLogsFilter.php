@@ -41,10 +41,11 @@ $filter = $_GET["filter"];
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
-$uuid = $_GET['uuid'];
-$gid = $_GET['gid'];
-$history = $_GET['history'];
-$tab = $_GET['tab'];
+$uuid       = isset($_GET['uuid']) ? $_GET['uuid'] : '';
+$gid        = isset($_GET['gid']) ? $_GET['gid'] : '';
+$history    = isset($_GET['history']) ? $_GET['history'] : '';
+$tab        = isset($_GET['tab']) ? $_GET['tab'] : '';
+
 $areCommands = False;
 
 if (isset($_GET["commands"])) {
@@ -283,18 +284,19 @@ if ($areCommands) { // display several commands
     } else {
         $datelabel = _T("Start date", "msc");
     }
+
     $n = new OptimizedListInfos($a_mode, _T("Mode", "msc"));
     $n->addExtraInfo($a_client, _T("Client", "msc"));
     $n->addExtraInfo($a_date, $datelabel);
     $n->addExtraInfo($a_current, _T("Current State", "msc"));
     $n->addExtraInfo($a_progression, _T("Progression", "msc"));
-
     $n->addActionItemArray($a_details);
     if (!$history) {
         $n->addActionItemArray($a_start);
         $n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
+    $n->col_width = array("30px", "", "", "", "80px", "0");
 }
 
 if ($n != null) {
