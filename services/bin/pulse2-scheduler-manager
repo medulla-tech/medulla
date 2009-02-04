@@ -23,6 +23,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# Big modules
 import os
 import os.path
 import sys
@@ -33,6 +34,11 @@ import logging
 import logging.config
 import optparse
 import signal
+import time
+import errno
+
+time_to_wait = 2 # first stage: check of it is alive / dead after having being run /stopped for time_to_wait seconds
+check_count = 5 # second stage: attempts to obtain a good result (check_count tries) to a XMLRPC call
 
 from pulse2.scheduler.config import SchedulerConfig
 
@@ -49,20 +55,35 @@ def start_scheduler(config):
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
 
-    pid_file = os.path.join(pid_path, '%s.pid' % name)
-    scheduler_path = config.scheduler_path
-    # Test if this scheduler already exists
-    if os.path.isfile(pid_file):
-        logger.warning('failed to start scheduler "%s": pid file "%s" already exist' % (name, pid_file))
-        print ('failed to start scheduler "%s": pid file "%s" already exist' % (name, pid_file))
-        return False
+    pid = get_pidfile(config)
+    if pid:
+        if pid_is_alive(pid):
+            logger.error('failed to start scheduler "%s": seems to be running under pid %d' % (name, pid))
+            print 'failed to start scheduler "%s": seems to be running under pid %d' % (name, pid)
+            return False
+        else:
+            clear_pidfile(config)
+            logger.error('while starting scheduler "%s": clearing old pid file (pid was %d)' % (name, pid))
 
+    # as a scheduler itself do not fork(), fork is done here
     # do the UNIX double-fork magic, see Stevens' "Advanced
     # Programming in the UNIX Environment" for details (ISBN 0201563177)
     try:
         pid = os.fork()
         if pid > 0:
             # first parent stays alive
+            # let's check if it is realy alive
+            # check is done in two stages:
+
+            # let's do the first stage
+            time.sleep(time_to_wait)
+            pid = get_pidfile(config)
+            if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
+                logger.error('daemonization part #2 failed: scheduler "%s" died in less than %d seconds' % (name, time_to_wait))
+                clear_pidfile(config)
+                return False
+
+            # TODO: implement second stage here !
             return True
     except OSError, e:
         logger.error('daemonization part #1 failed: %d (%s)' % (e.errno, e.strerror))
@@ -80,15 +101,11 @@ def start_scheduler(config):
     try:
         pid = os.fork()
         if pid > 0:
-            # exit from second parent, print eventual PID before
-            logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
-            os.seteuid(0)
-            os.setegid(0)
-            os.system("echo " + str(pid) + " > " + pid_file)
+            logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) ) # exit from second parent, print eventual PID before
+            set_pidfile(config, pid) # records the PID from here, as it is the only place where we know it
             sys.exit(0)
     except OSError, e:
         logger.error('daemonization part #2 failed: %d (%s)' % (e.errno, e.strerror))
-        print >>sys.stderr, "daemonization part #2 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
     # drop privs
@@ -97,6 +114,7 @@ def start_scheduler(config):
     os.setgid(config.daemon_group)
     os.setuid(config.daemon_user)
 
+    scheduler_path = config.scheduler_path
     logger.info('daemonization ended: switching to %s' % [scheduler_path])
     os.execv(scheduler_path, (scheduler_path,))
 
@@ -105,20 +123,65 @@ def stop_scheduler(config):
     logger = logging.getLogger()
     os.seteuid(0)
     os.setegid(0)
-    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
-    f = open(pid_file)
+
+    pid = get_pidfile(config)
+    if pid:
+        if pid_is_alive(pid):
+            logger.info('attempt to kill scheduler "%s" (pid %d)' % (name, pid))
+            kill_pid(pid, signal.SIGTERM) # TODO: check that kill was successful
+            logger.info('scheduler "%s" killed using SIGTERM' % name)
+            clear_pidfile(config)
+            return True
+        else:
+            clear_pidfile(config)
+            return False
+    else:
+        clear_pidfile(config)
+        return False
+
+def clear_pidfile(config):
+    pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
+    if os.path.isfile(pid_file):
+        os.unlink(pid_file)
+
+def set_pidfile(config, pid):
+    pid_path = config.pid_path
+    pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
+    if not os.path.isdir(pid_path):
+        os.makedirs(pid_path)
+    os.system("echo %d > %s" % (pid, pid_file))
+
+
+def pid_is_alive(pid):
+    return kill_pid(pid, 0)
+
+def kill_pid(pid, signal):
     try:
-        for line in f:
-            try:
-                logger.info('attempt to kill scheduler "%s" (pid %d)' % (name, int(line)))
-                os.kill(int(line), signal.SIGTERM)
-                logger.info('scheduler "%s" killed using SIGTERM' % name)
-            except OSError:
-                pass
-            os.unlink(pid_file)
-    finally:
-        f.close()
-    return True
+        os.kill(pid, signal)
+    except OSError, err:
+        if err.errno == errno.ESRCH:
+            return False
+        elif err.errno == errno.EPERM: # WTF ? I *am* root, am I ?
+            return True
+        else:
+            return False
+    else:
+        return True
+
+def get_pidfile(config):
+    name = config.name
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    if not os.path.isfile(pid_file):
+        return False
+    f = open(pid_file)
+    for line in f:
+        try:
+            ret = int(line)
+            f.close()
+            return ret
+        except ValueError:
+            pass
+    return False
 
 if __name__ == "__main__":
     parser = optparse.OptionParser()
@@ -160,12 +223,11 @@ if __name__ == "__main__":
     if args[0] == "start":
         logger.info('Starting Pulse2 Scheduler')
         print('Starting Pulse2 Scheduler:')
-        # parse sections to keep launchers-specifics
         if start_scheduler(config):
             logger.info('Scheduler started')
             print('OK')
         else:
-            logger.info('Failed to start scheduler')
+            logger.warn('Failed to start scheduler')
             print('FAILED')
     elif args[0] == "stop":
         logger.info('stopping Pulse2 Scheduler')
@@ -174,7 +236,7 @@ if __name__ == "__main__":
             logger.info('Scheduler stopped')
             print('OK')
         else:
-            logger.info('Failed to stop scheduler')
+            logger.warn('Failed to stop scheduler')
             print('FAILED')
 
 
