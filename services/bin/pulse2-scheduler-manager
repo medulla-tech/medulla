@@ -140,47 +140,72 @@ def stop_scheduler(config):
         return False
 
 def clear_pidfile(config):
+    os.setegid(0)
+    os.seteuid(0)
     pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
     if os.path.isfile(pid_file):
         os.unlink(pid_file)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
 
 def set_pidfile(config, pid):
+    os.setegid(0)
+    os.seteuid(0)
     pid_path = config.pid_path
     pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
     os.system("echo %d > %s" % (pid, pid_file))
-
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
 
 def pid_is_alive(pid):
     return kill_pid(pid, 0)
 
 def kill_pid(pid, signal):
+    os.setegid(0)
+    os.seteuid(0)
     try:
         os.kill(pid, signal)
     except OSError, err:
         if err.errno == errno.ESRCH:
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
             return False
         elif err.errno == errno.EPERM: # WTF ? I *am* root, am I ?
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
             return True
         else:
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
             return False
     else:
+        os.setegid(config.daemon_group)
+        os.seteuid(config.daemon_user)
         return True
 
 def get_pidfile(config):
+    os.setegid(0)
+    os.seteuid(0)
     name = config.name
     pid_file = os.path.join(config.pid_path, '%s.pid' % name)
     if not os.path.isfile(pid_file):
+        os.setegid(config.daemon_group)
+        os.seteuid(config.daemon_user)
         return False
     f = open(pid_file)
     for line in f:
         try:
             ret = int(line)
             f.close()
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
             return ret
         except ValueError:
             pass
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
     return False
 
 if __name__ == "__main__":
@@ -215,9 +240,6 @@ if __name__ == "__main__":
             # Maybe we are not root, so it may not be a problem if the mkdir
             # failed
             pass
-
-    # Start logger
-    logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
 
     if args[0] == "start":

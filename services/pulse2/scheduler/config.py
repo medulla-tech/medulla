@@ -111,6 +111,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.cp = MMCConfigParser()
         self.cp.read(config_file)
 
+        logging.config.fileConfig(config_file)
+
         # [scheduler] section parsing
         self.name = self.cp.get("scheduler", "id")
 
