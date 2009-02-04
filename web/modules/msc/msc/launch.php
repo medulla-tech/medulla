@@ -32,8 +32,28 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+function quick_get($param, $is_checkbox = False) {
+    if ($is_checkbox) { return $_GET[$param]; }
+    if (isset($_POST[$param]) && $_POST[$param] != '') { return $_POST[$param]; }
+    return $_GET[$param];
+}
 
 function start_a_command($proxy = array()) {
+    $error = "";
+    if (!check_date($_POST)) {
+        $error .= _T("Your start and end dates are not coherant, please check them.<br/>", "msc");
+    }
+    # should add some other tests on fields (like int are int? ...)
+    if ($error != '') {
+        new NotifyWidgetFailure($error);
+        complete_post();
+        $url = "base/computers/msctabs?";
+        foreach ($_GET as $k => $v) {
+            $url .= "$v=$k";
+        }
+        header("Location: " . urlStrRedirect("base/computers/msctabs", array_merge($_GET, $_POST, array('failure'=>True))));
+        return False;
+    }
     // Vars seeding
     $post = $_POST;
     $from = $post['from'];
@@ -107,6 +127,46 @@ function start_a_command($proxy = array()) {
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
     }
 }
+function complete_post() {
+    foreach (array( 'start_script', 'clean_on_success', 'do_wol', 'do_inventory', 'issue_halt_to_done') as $mandatory) {
+        if (!isset($_POST[$mandatory])) {
+            $_POST[$mandatory] = '';
+        }
+    }
+}
+function check_date($post) {
+    $start = "0000-00-00 00:00:00";
+    $end = "0000-00-00 00:00:00";
+    $now = getdate();
+    $now = $now['year'].'-'.$now['mon'].'-'.$now['mday'].' '.$now['hours'].':'.$now['minutes'].':'.$now['seconds'];
+    if ($post['start_date'] != _T("now", "msc") && $post['start_date'] != "") {
+        $start = $post['start_date'];
+    }
+    if ($post['end_date'] != _T("never", "msc") && $post['end_date'] != "") {
+        $end = $post['end_date'];
+    }
+    if ($end == "0000-00-00 00:00:00") { # never end
+        return True;
+    }
+    if ($start == "0000-00-00 00:00:00" and $end != "0000-00-00 00:00:00") {
+        if (!check_for_real($now, $end)) { return False; } # start now, but finish in the past
+    }
+    return check_for_real($start, $end);
+}
+function check_for_real($s, $e) {
+    $start = preg_split("/[ :-]/", $s);
+    $end   = preg_split("/[ :-]/", $e);
+    
+    for ($i = 0; $i < 6; $i++) {
+        if ($start[$i] > $end[$i]) {
+            return False;
+        } else if ($start[$i] < $end[$i]) {
+            return True;
+        }
+    }
+    return False;
+}
+
 
 /* Validation on local proxies selection page */
 if (isset($_POST["bconfirmproxy"])) {
@@ -158,11 +218,14 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['l
 /* Advanced action: form display */
 if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     // Vars seeding
-    $from = $_GET['from'];
-    $pid = $_GET['pid'];
+    $from = quick_get('from');
+    $pid = quick_get('pid');
     $p_api = new ServerAPI();
-    $p_api->fromURI($_GET["papi"]);
-    $name = getPackageLabel($p_api, $_GET['pid']);
+    $p_api->fromURI(quick_get("papi"));
+    $name = quick_get('ltitle');
+    if (!isset($name) || $name == '') {
+        $name = getPackageLabel($p_api, quick_get('pid'));
+    }
 
     // form design
     $f = new Form();
@@ -191,26 +254,35 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $label->display();
 
     $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
-    $f->add(new HiddenTpl("papi"),  array("value" => $_GET["papi"], "hide" => True));
+    $f->add(new HiddenTpl("papi"),  array("value" => quick_get("papi"), "hide" => True));
     $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
     $f->add(new TrFormElement(_T('Command name', 'msc'),                                new InputTpl('ltitle')), array("value" => $name));
-    $f->add(new TrFormElement(_T('Script parameters', 'msc'),                           new InputTpl('parameters')), array("value" => ''));
-    $f->add(new TrFormElement(_T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl("do_wol")), array("value" => $_GET['do_wol'] == 'on' ? 'checked' : ''));
-    $f->add(new TrFormElement(_T('Start script', 'msc'),                                new CheckboxTpl("start_script")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
-    $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => $_GET['do_inventory'] == 'on' ? 'checked' : ''));
-
-    $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => $_GET['issue_halt_to_done'] == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Script parameters', 'msc'),                           new InputTpl('parameters')), array("value" => quick_get('parameters')));
+    $f->add(new TrFormElement(_T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl("do_wol")), array("value" => (quick_get('do_wol', True) == 'on' ? 'checked' : '')));
+    
+    
+    $start_script = 'on';
+    $clean_on_success = 'on';
+    if (quick_get('failure') == '1') {
+        $start_script = quick_get('start_script', True);
+        $clean_on_success = quick_get('clean_on_success', True);
+    }
+    $f->add(new TrFormElement(_T('Start script', 'msc'),                                new CheckboxTpl("start_script")), array("value" => $start_script == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => $clean_on_success == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Do an inventory after a successful execution', 'msc'),new CheckboxTpl("do_inventory")), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : ''));
+    $f->add(new TrFormElement(_T('Halt client after', 'msc'), new CheckboxTpl("issue_halt_to_done", _T("done", "msc"))), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : ''));
     /*$f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_failed", _T("failed", "msc"))), array("value" => $_GET['issue_halt_to_failed'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_GET['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
 
-    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => $_GET['max_connection_attempt']));
-    $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => $_GET['next_connection_delay']));
-    $f->add(new TrFormElement(_T('The command may start after', 'msc'),                 new DynamicDateTpl('start_date')), array('ask_for_now' => 1));
-    $f->add(new TrFormElement(_T('The command must stop before', 'msc'),                new DynamicDateTpl('end_date')), array('ask_for_never' => 1));
-    $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_GET['deployment_intervals']));
-    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
+    $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => quick_get('max_connection_attempt')));
+    $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => quick_get('next_connection_delay')));
+    $f->add(new TrFormElement(_T('The command may start after', 'msc'),                 new DynamicDateTpl('start_date')), array('ask_for_now' => 1, "value"=>quick_get('start_date')));
+    $f->add(new TrFormElement(_T('The command must stop before', 'msc'),                new DynamicDateTpl('end_date')), array('ask_for_never' => 1, "value"=>quick_get('end_date')));
+    $f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => quick_get('deployment_intervals')));
+    $max_bw = quick_get('maxbw');
+    if (!isset($max_bw) || $max_bw == '') { $max_bw = web_def_maxbw(); }
+    $f->add(new TrFormElement(_T('Max bandwidth (b/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => $max_bw));
     if (web_force_mode()) {
         $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(), "hide" => True));
     } else {
