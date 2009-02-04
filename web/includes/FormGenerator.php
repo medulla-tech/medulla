@@ -436,7 +436,7 @@ class DynamicDateTpl extends InputTpl {
 
         print '
             <span id="container_input_'.$this->name.'">
-                <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="" readonly=1 />
+                <input name="'.$this->name.'" id="'.$this->name.'" type="' . $this->fieldType . '" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" readonly=1 />
                 <input
                     type="image"
                     style="vertical-align: bottom;"
