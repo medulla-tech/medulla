@@ -125,12 +125,6 @@ def startService():
     logger.info('scheduler %s: starting' % config.name)
     try:
         if config.enablessl:
-            if not os.path.isfile(config.localcert):
-                logger.error('scheduler "%s": can\'t read SSL key "%s"' % (config.name, config.localcert))
-                return 1
-            if not os.path.isfile(config.cacert):
-                logger.error('scheduler "%s": can\'t read SSL certificate "%s"' % (config.name, config.cacert))
-                return 1
             sslContext = makeSSLContext(config)
             twisted.internet.reactor.listenSSL(
                 config.port,

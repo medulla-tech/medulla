@@ -224,6 +224,7 @@ if __name__ == "__main__":
 
     # Load configuration file
     config = SchedulerConfig()
+    logging.config.fileConfig(config_file)
     config.setup(options.config_file)
 
     # Set umask and effective UID and GID values

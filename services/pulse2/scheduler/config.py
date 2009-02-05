@@ -27,6 +27,7 @@ import re           # fo re.compil
 import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
+import os.path      # for file checking
 
 # MMC
 from mmc.support.config import MMCConfigParser
@@ -111,8 +112,6 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.cp = MMCConfigParser()
         self.cp.read(config_file)
 
-        logging.config.fileConfig(config_file)
-
         # [scheduler] section parsing
         self.name = self.cp.get("scheduler", "id")
 
@@ -138,8 +137,20 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 self.cacert = self.cp.get("scheduler", "cacert")
             if self.cp.has_option("scheduler", "verifypeer"):
                 self.verifypeer = self.cp.get("scheduler", "verifypeer")
+            if not os.path.isfile(self.localcert):
+                raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.name, self.localcert))
+                return False
+            if not os.path.isfile(self.cacert):
+                raise Exception('scheduler "%s": can\'t read SSL certificate "%s"' % (self.name, self.cacert))
+                return False
+            if self.verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+                import twisted.internet.ssl
+                if not hasattr(twisted.internet.ssl, "Certificate"):
+                    raise Exception('scheduler "%s": I need at least Python Twisted 2.5 to handle peer checking' % (self.name))
+                    return False
+
         if self.cp.has_option("scheduler", "listen"): # TODO remove in a future version
-            logging.getLogger().warning("'listen' is obslete, please replace it in your config file by 'host'")
+            logging.getLogger().warning("'listen' is obsolete, please replace it in your config file by 'host'")
             self.setoption("scheduler", "listen", "host")
         else:
             self.setoption("scheduler", "host", "host")
@@ -177,7 +188,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
             if self.cp.has_option("daemon", "group"):
                 self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
-                logging.getLogger().warning("'pid_path' is obslete, please replace it in your config file by 'pidfile'")
+                logging.getLogger().warning("'pid_path' is obsolete, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
