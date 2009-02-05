@@ -28,6 +28,7 @@ import re
 import sys
 from pulse2.package_server.utilities import Singleton
 import logging
+import os
 
 if sys.platform != "win32":
     import pwd
@@ -43,7 +44,7 @@ class P2PServerCP(Singleton):
     """
     cacert = '/etc/mmc/pulse2/package-server/keys/cacert.pem'
     localcert = '/etc/mmc/pulse2/package-server/keys/privkey.pem'
-    
+
 
     # default values
     bind = ''
@@ -64,7 +65,7 @@ class P2PServerCP(Singleton):
 
     package_detect_loop = 60
     package_detect_activate = False
-    
+
     SMART_DETECT_NONE = 0
     SMART_DETECT_LAST = 1
     SMART_DETECT_LOOP = 2
@@ -106,7 +107,7 @@ class P2PServerCP(Singleton):
     mirror_api = {}
     user_package_api = {}
     scheduler_api = {}
-    
+
     def setup(self, config_file):
         # Load configuration file
         if sys.platform != "win32":
@@ -133,7 +134,7 @@ class P2PServerCP(Singleton):
                     self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
                 if self.cp.has_option("daemon", "umask"):
                     self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
-    
+
         if self.cp.has_option('ssl', 'enablessl'):
             self.enablessl = self.cp.getboolean('ssl', 'enablessl')
         if self.enablessl:
@@ -154,6 +155,17 @@ class P2PServerCP(Singleton):
                 self.localcert = self.cp.get('ssl', 'localcert')
             if self.cp.has_option('ssl', 'verifypeer'):
                 self.verifypeer = self.cp.getboolean('ssl', 'verifypeer')
+            if not os.path.isfile(self.localcert):
+                raise Exception('can\'t read SSL key "%s"' % (self.localcert))
+                return False
+            if not os.path.isfile(self.cacert):
+                raise Exception('can\'t read SSL certificate "%s"' % (self.cacert))
+                return False
+            if self.verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+                import twisted.internet.ssl
+                if not hasattr(twisted.internet.ssl, "Certificate"):
+                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                    return False
 
         if self.cp.has_option('mirror_api', 'mount_point'):
             self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
@@ -173,7 +185,7 @@ class P2PServerCP(Singleton):
             self.tmp_input_dir = self.cp.get('main', 'tmp_input_dir')
 
         for section in self.cp.sections():
-            if re.compile('^mirror:[0-9]+$').match(section):                
+            if re.compile('^mirror:[0-9]+$').match(section):
                 mount_point = self.cp.get(section, 'mount_point')
                 src = self.cp.get(section, 'src')
                 mirror = {'mount_point':mount_point, 'src':src}
@@ -194,8 +206,8 @@ class P2PServerCP(Singleton):
                     pap_tmp_input_dir = self.cp.get(section, 'tmp_input_dir')
 
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
-                
-        if self.cp.has_option("main", "package_detect_activate"): 
+
+        if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
             self.package_detect_activate = self.cp.getboolean("main", "package_detect_activate")
             if self.package_detect_activate and self.cp.has_option("main", "package_detect_loop"):
@@ -218,7 +230,7 @@ class P2PServerCP(Singleton):
                         self.package_detect_smart_time = self.cp.getint("main", "package_detect_smart_time")
                 else:
                     self.package_detect_smart = False
-                        
+
         if self.cp.has_option("main", "package_mirror_target"):
             self.package_mirror_target = self.cp.get("main", "package_mirror_target").split(' ')
             if (type(self.package_mirror_target) == str and self.package_mirror_target != '') or \
@@ -260,7 +272,7 @@ def config_addons(conf):
             map(lambda x: add_access(x, conf), conf.mirrors)
     if len(conf.package_api_get) > 0:
 #        for mirror_params in conf.package_api_get:
-            map(lambda x: add_server(x, conf), conf.package_api_get)            
+            map(lambda x: add_server(x, conf), conf.package_api_get)
     return conf
 
 def add_access(mirror_params, conf):
