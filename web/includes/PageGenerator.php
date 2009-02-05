@@ -941,6 +941,8 @@ class NoLocationTpl extends AbstractTpl {
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
     }
 
+    function setSelected($elemnt) {
+    }
 }
 
 class SingleLocationTpl extends AbstractTpl {
@@ -954,6 +956,9 @@ class SingleLocationTpl extends AbstractTpl {
     function setElementsVal($value) {
         $this->value = array_values($value);
         $this->value = $this->value[0];
+    }
+
+    function setSelected($elemnt) {
     }
 
     function display($param) {
