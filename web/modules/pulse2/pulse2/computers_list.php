@@ -45,6 +45,9 @@ if (displayLocalisationBar()) {
     }
     $ajax->setElements($list);
     $ajax->setElementsVal($values);
+    if (!empty($_SESSION["computers.selected_location"])) {
+        $ajax->setSelected($_SESSION["computers.selected_location"]);
+    }
 } else {
     $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
 }
