@@ -24,6 +24,7 @@
 # big modules
 import logging
 import re
+import os.path # for SSL cert files checking
 
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
@@ -69,4 +70,11 @@ class PkgsConfig(PluginConfig):
                 self.upaa_cacert = self.get("user_package_api", "cacert")
             if self.has_option("user_package_api", "localcert"):
                 self.upaa_localcert = self.get("user_package_api", "localcert")
-
+            if not os.path.isfile(self.upaa_localcert):
+                raise Exception('can\'t read SSL key "%s"' % (self.upaa_localcert))
+            if not os.path.isfile(self.upaa_cacert):
+                raise Exception('can\'t read SSL certificate "%s"' % (self.upaa_cacert))
+            if self.upaa_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+                import twisted.internet.ssl
+                if not hasattr(twisted.internet.ssl, "Certificate"):
+                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
