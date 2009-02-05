@@ -27,33 +27,19 @@ import re
 import os.path
 
 from ConfigParser import NoOptionError
-from mmc.support.config import PluginConfig
+from mmc.support import mmctools
+from pulse2.database.msc.config import MscDatabaseConfig                
 
 # Pulse 2 stuff
 import pulse2.time_intervals
 
-class MscConfig(PluginConfig):
+class MscConfig(MscDatabaseConfig):
+    disable = True
 
     # default folder values
     qactionspath = "/var/lib/pulse2/qactions"
     repopath = "/var/lib/pulse2/packages"
     download_directory_path = "/var/lib/pulse2/downloads"
-
-    # default DB options
-    db_driver = "mysql"
-    db_host = "127.0.0.1"
-    db_port = "3306"
-    db_name = "msc"
-    db_user = "msc"
-    db_passwd = "msc"
-    db_debug = "ERROR"
-    dbpoolrecycle = 60
-    dbpoolsize = 5
-    # SSL support
-    db_ssl_enable = False
-    db_ssl_ca = None
-    db_ssl_cert = None
-    db_ssl_key = None
 
     # Mirror API stuff
     ma_server = "127.0.0.1"
@@ -133,90 +119,75 @@ class MscConfig(PluginConfig):
     schedulers = {
     }
 
-    def readConf(self):
+    
+    def __init__(self, name, conffile = None):
+        self.dbsection = "msc"
+        MscDatabaseConfig.__init__(self)
+        self.name = name
+        if not conffile: self.conffile = mmctools.getConfigFile(name)
+        else: self.conffile = conffile
+
+        MscDatabaseConfig.setup(self, self.conffile)
+        self.setup(self.conffile)
+
+    def setup(self, conf_file):
         """
         Read the module configuration
         """
-        PluginConfig.readConf(self)
+        
+        self.disable = self.cp.getboolean("main", "disable")
 
         # folders
-        if self.has_option("msc", "qactionspath"):
-            self.qactionspath = self.get("msc", "qactionspath")
-        if self.has_option("msc", "repopath"):
-            self.repopath = self.get("msc", "repopath")
-
-        # DB connection
-        if self.has_option("msc", "db_driver"):
-            self.db_driver = self.get("msc", "db_driver")
-        if self.has_option("msc", "db_host"):
-            self.db_host = self.get("msc", "db_host")
-        if self.has_option("msc", "db_port"):
-            self.db_port = self.get("msc", "db_port")
-        if self.has_option("msc", "db_name"):
-            self.db_name = self.get("msc", "db_name")
-        if self.has_option("msc", "db_user"):
-            self.db_user = self.get("msc", "db_user")
-        if self.has_option("msc", "db_passwd"):
-            self.db_passwd = self.getpassword("msc", "db_passwd")
-        if self.has_option("msc", "db_debug"):
-            self.db_debug = self.get("msc", "db_debug")
-        if self.has_option("msc", "db_pool_recycle"):
-            self.dbpoolrecycle = self.getint("msc", "db_pool_recycle")
-        if self.has_option("msc", "db_pool_size"):
-            self.dbpoolsize = self.getint("msc", "db_pool_size")
-        # SSL connection support
-        if self.has_option("msc", "db_ssl_enable"):
-            self.db_ssl_enable = self.getboolean("msc", "db_ssl_enable")
-            if self.db_ssl_enable:
-                self.db_ssl_ca = self.get("msc", "db_ssl_ca")
-                self.db_ssl_cert = self.get("msc", "db_ssl_cert")
-                self.db_ssl_key = self.get("msc", "db_ssl_key")
+        if self.cp.has_option("msc", "qactionspath"):
+            self.qactionspath = self.cp.get("msc", "qactionspath")
+        if self.cp.has_option("msc", "repopath"):
+            self.repopath = self.cp.get("msc", "repopath")
 
         # IP address blacklists
-        if self.has_option("msc", "ignore_non_rfc2780"):
-            self.ignore_non_rfc2780 = self.getboolean("msc", "ignore_non_rfc2780")
-        if self.has_option("msc", "ignore_non_rfc1918"):
-            self.ignore_non_rfc1918 = self.getboolean("msc", "ignore_non_rfc1918")
-        if self.has_option("msc", "exclude_ipaddr"):
-            self.exclude_ipaddr = self.get("msc", "exclude_ipaddr")
-        if self.has_option("msc", "include_ipaddr"):
-            self.include_ipaddr = self.get("msc", "include_ipaddr")
+        if self.cp.has_option("msc", "ignore_non_rfc2780"):
+            self.ignore_non_rfc2780 = self.cp.getboolean("msc", "ignore_non_rfc2780")
+        if self.cp.has_option("msc", "ignore_non_rfc1918"):
+            self.ignore_non_rfc1918 = self.cp.getboolean("msc", "ignore_non_rfc1918")
+        if self.cp.has_option("msc", "exclude_ipaddr"):
+            self.exclude_ipaddr = self.cp.get("msc", "exclude_ipaddr")
+        if self.cp.has_option("msc", "include_ipaddr"):
+            self.include_ipaddr = self.cp.get("msc", "include_ipaddr")
 
         # Host name blacklists
-        if self.has_option("msc", "ignore_non_fqdn"):
-            self.ignore_non_fqdn = self.getboolean("msc", "ignore_non_fqdn")
-        if self.has_option("msc", "ignore_invalid_hostname"):
-            self.ignore_invalid_hostname = self.getboolean("msc", "ignore_invalid_hostname")
-        if self.has_option("msc", "exclude_hostname"):
-            self.exclude_hostname = self.get("msc", "exclude_hostname")
-        if self.has_option("msc", "include_hostname"):
-            self.include_hostname = self.get("msc", "include_hostname")
+        if self.cp.has_option("msc", "ignore_non_fqdn"):
+            self.ignore_non_fqdn = self.cp.getboolean("msc", "ignore_non_fqdn")
+        if self.cp.has_option("msc", "ignore_invalid_hostname"):
+            self.ignore_invalid_hostname = self.cp.getboolean("msc", "ignore_invalid_hostname")
+        if self.cp.has_option("msc", "exclude_hostname"):
+            self.exclude_hostname = self.cp.get("msc", "exclude_hostname")
+        if self.cp.has_option("msc", "include_hostname"):
+            self.include_hostname = self.cp.get("msc", "include_hostname")
 
         # MAC address blacklist
-        if self.has_option("msc", "wol_macaddr_blacklist"):
-            self.wol_macaddr_blacklist = self.get("msc", "wol_macaddr_blacklist")
+        if self.cp.has_option("msc", "wol_macaddr_blacklist"):
+            self.wol_macaddr_blacklist = self.cp.get("msc", "wol_macaddr_blacklist")
 
         # schedulers
-        if self.has_option("msc", "default_scheduler"):
-            self.default_scheduler = self.get("msc", "default_scheduler")
+        if self.cp.has_option("msc", "default_scheduler"):
+            self.default_scheduler = self.cp.get("msc", "default_scheduler")
         for section in self.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
                 if self.default_scheduler == "":
                     self.default_scheduler = section
                 self.schedulers[section] = {
-                        'port': self.get(section, "port"),
-                        'host': self.get(section, "host"),
-                        'username': self.get(section, "username"),
-                        'password': self.getpassword(section, "password"),
-                        'enablessl': self.getboolean(section, "enablessl"),
+                        'port': self.cp.get(section, "port"),
+                        'host': self.cp.get(section, "host"),
+                        'username': self.cp.get(section, "username"),
+                        'password': self.cp.getpassword(section, "password"),
+                        'enablessl': self.cp.getboolean(section, "enablessl"),
                         'verifypeer': False
                     }
-                if self.has_option(section, "verifypeer"):
-                    self.schedulers[section]["verifypeer"] = self.getboolean(section, "verifypeer")
+                if self.cp.has_option(section, "verifypeer"):
+                    self.schedulers[section]["verifypeer"] = self.cp.getboolean(section, "verifypeer")
                 if self.has_option(section, "cacert"):
-                    self.schedulers[section]["cacert"] = self.get(section, "cacert")
-                if self.has_option(section, "localcert"):
-                    self.schedulers[section]["localcert"] = self.get(section, "localcert")
+                    self.schedulers[section]["cacert"] = self.cp.get(section, "cacert")
+                if self.cp.has_option(section, "localcert"):
+                    self.schedulers[section]["localcert"] = self.cp.get(section, "localcert")
                 if not os.path.isfile(self.schedulers[section]["localcert"]):
                     raise Exception('can\'t read SSL key "%s"' % (self.schedulers[section]["localcert"]))
                 if not os.path.isfile(self.schedulers[section]["cacert"]):
@@ -227,88 +198,88 @@ class MscConfig(PluginConfig):
                         raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # some default web interface values
-        if self.has_option("web", "web_def_awake"):
-            self.web_def_awake = self.getint("web", "web_def_awake")
-        if self.has_option("web", "web_def_date_fmt"):
-            self.web_def_date_fmt = self.get("web", "web_def_date_fmt")
-        if self.has_option("web", "web_def_inventory"):
-            self.web_def_inventory = self.getint("web", "web_def_inventory")
-        if self.has_option("web", "web_def_mode"):
-            self.web_def_mode = self.get("web", "web_def_mode")
-        if self.has_option("web", "web_force_mode"):
-            self.web_force_mode = self.getboolean("web", "web_force_mode")
-        if self.has_option("web", "web_def_maxbw"):
-            self.web_def_maxbw = self.get("web", "web_def_maxbw")
-        if self.has_option("web", "web_def_delay"):
-            self.web_def_delay = self.get("web", "web_def_delay")
-        if self.has_option("web", "web_def_attempts"):
-            self.web_def_attempts = self.get("web", "web_def_attempts")
-        if self.has_option("web", "web_def_issue_halt_to"):
+        if self.cp.has_option("web", "web_def_awake"):
+            self.web_def_awake = self.cp.getint("web", "web_def_awake")
+        if self.cp.has_option("web", "web_def_date_fmt"):
+            self.web_def_date_fmt = self.cp.get("web", "web_def_date_fmt")
+        if self.cp.has_option("web", "web_def_inventory"):
+            self.web_def_inventory = self.cp.getint("web", "web_def_inventory")
+        if self.cp.has_option("web", "web_def_mode"):
+            self.web_def_mode = self.cp.get("web", "web_def_mode")
+        if self.cp.has_option("web", "web_force_mode"):
+            self.web_force_mode = self.cp.getboolean("web", "web_force_mode")
+        if self.cp.has_option("web", "web_def_maxbw"):
+            self.web_def_maxbw = self.cp.get("web", "web_def_maxbw")
+        if self.cp.has_option("web", "web_def_delay"):
+            self.web_def_delay = self.cp.get("web", "web_def_delay")
+        if self.cp.has_option("web", "web_def_attempts"):
+            self.web_def_attempts = self.cp.get("web", "web_def_attempts")
+        if self.cp.has_option("web", "web_def_issue_halt_to"):
             self.web_def_issue_halt_to = []
             #p_wdiht = ['done', 'failed', 'over_time', 'out_of_interval']
             p_wdiht = ['done']
-            for wdiht in self.get("web", "web_def_issue_halt_to").split(','):
+            for wdiht in self.cp.get("web", "web_def_issue_halt_to").split(','):
                 if wdiht in p_wdiht:
                     self.web_def_issue_halt_to.append(wdiht)
                 else:
                     logging.getLogger().warn("Plugin MSC: web_def_issue_halt_to cannot be '%s' (possible choices : %s)"%(wdiht, str(p_wdiht)))
-        if self.has_option("web", "web_dlpath"):
+        if self.cp.has_option("web", "web_dlpath"):
             self.web_dlpath = []
-            dlpaths = self.get("web", "web_dlpath")
+            dlpaths = self.cp.get("web", "web_dlpath")
             for path in dlpaths.split(","):
                 self.web_dlpath.append(path.strip())
             if not os.path.exists(self.download_directory_path):
                 logging.getLogger().warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
 
-        if self.has_option("web", "web_def_dlmaxbw"):
-            self.web_def_dlmaxbw = self.getint("web", "web_def_dlmaxbw")
-        if self.has_option("web", "web_def_deployment_intervals"):
-            time_intervals = pulse2.time_intervals.normalizeinterval(self.get("web", "web_def_deployment_intervals"))
+        if self.cp.has_option("web", "web_def_dlmaxbw"):
+            self.web_def_dlmaxbw = self.cp.getint("web", "web_def_dlmaxbw")
+        if self.cp.has_option("web", "web_def_deployment_intervals"):
+            time_intervals = pulse2.time_intervals.normalizeinterval(self.cp.get("web", "web_def_deployment_intervals"))
             if time_intervals:
                 self.web_def_deployment_intervals = time_intervals
             else:
                 self.web_def_deployment_intervals = ""
                 logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
-        if self.has_option("web", "web_allow_local_proxy"):
-            self.web_allow_local_proxy = self.get("web", "web_allow_local_proxy")
-        if self.has_option("web", "web_def_local_proxy_mode"):
-            self.web_def_local_proxy_mode = self.get("web", "web_def_local_proxy_mode")
-        if self.has_option("web", "web_def_max_clients_per_proxy"):
-            self.web_def_max_clients_per_proxy = self.getint("web", "web_def_max_clients_per_proxy")
-        if self.has_option("web", "web_def_proxy_number"):
-            self.web_def_proxy_number = self.getint("web", "web_def_proxy_number")
-        if self.has_option("web", "web_def_proxy_selection_mode"):
-            self.web_def_proxy_selection_mode = self.get("web", "web_def_proxy_selection_mode")
+        if self.cp.has_option("web", "web_allow_local_proxy"):
+            self.web_allow_local_proxy = self.cp.get("web", "web_allow_local_proxy")
+        if self.cp.has_option("web", "web_def_local_proxy_mode"):
+            self.web_def_local_proxy_mode = self.cp.get("web", "web_def_local_proxy_mode")
+        if self.cp.has_option("web", "web_def_max_clients_per_proxy"):
+            self.web_def_max_clients_per_proxy = self.cp.getint("web", "web_def_max_clients_per_proxy")
+        if self.cp.has_option("web", "web_def_proxy_number"):
+            self.web_def_proxy_number = self.cp.getint("web", "web_def_proxy_number")
+        if self.cp.has_option("web", "web_def_proxy_selection_mode"):
+            self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_proxy_selection_mode")
 
         # VNC stuff
-        if self.has_option("web", "vnc_show_icon"):
-            self.web_vnc_show_icon = self.getboolean("web", "vnc_show_icon")
-        if self.has_option("web", "vnc_view_only"):
-            self.web_vnc_view_only = self.getboolean("web", "vnc_view_only")
-        if self.has_option("web", "vnc_network_connectivity"):
-            self.web_vnc_network_connectivity = self.get("web", "vnc_network_connectivity")
-        if self.has_option("web", "vnc_allow_user_control"):
-            self.web_vnc_allow_user_control = self.getboolean("web", "vnc_allow_user_control")
+        if self.cp.has_option("web", "vnc_show_icon"):
+            self.web_vnc_show_icon = self.cp.getboolean("web", "vnc_show_icon")
+        if self.cp.has_option("web", "vnc_view_only"):
+            self.web_vnc_view_only = self.cp.getboolean("web", "vnc_view_only")
+        if self.cp.has_option("web", "vnc_network_connectivity"):
+            self.web_vnc_network_connectivity = self.cp.get("web", "vnc_network_connectivity")
+        if self.cp.has_option("web", "vnc_allow_user_control"):
+            self.web_vnc_allow_user_control = self.cp.getboolean("web", "vnc_allow_user_control")
 
         # API Package
-        if self.has_option("package_api", "mserver"):
-            self.ma_server = self.get("package_api", "mserver")
-        if self.has_option("package_api", "mport"):
-            self.ma_port = self.get("package_api", "mport")
-        if self.has_option("package_api", "mmountpoint"):
-            self.ma_mountpoint = self.get("package_api", "mmountpoint")
-        if self.has_option("package_api", "username"):
-            self.ma_username = self.get("package_api", "username")
-        if self.has_option("package_api", "password"):
-            self.ma_password = self.get("package_api", "password")
-        if self.has_option("package_api", "enablessl"):
-            self.ma_enablessl = self.getboolean("package_api", "enablessl")
-        if self.has_option("package_api", "verifypeer"):
-            self.ma_verifypeer = self.getboolean("package_api", "verifypeer")
-        if self.has_option("package_api", "cacert"):
-            self.ma_cacert = self.get("package_api", "cacert")
-        if self.has_option("package_api", "localcert"):
-            self.ma_localcert = self.get("package_api", "localcert")
+        if self.cp.has_option("package_api", "mserver"):
+            self.ma_server = self.cp.get("package_api", "mserver")
+        if self.cp.has_option("package_api", "mport"):
+            self.ma_port = self.cp.get("package_api", "mport")
+        if self.cp.has_option("package_api", "mmountpoint"):
+            self.ma_mountpoint = self.cp.get("package_api", "mmountpoint")
+        if self.cp.has_option("package_api", "username"):
+            self.ma_username = self.cp.get("package_api", "username")
+        if self.cp.has_option("package_api", "password"):
+            self.ma_password = self.cp.get("package_api", "password")
+        if self.cp.has_option("package_api", "enablessl"):
+            self.ma_enablessl = self.cp.getboolean("package_api", "enablessl")
+        if self.cp.has_option("package_api", "verifypeer"):
+            self.ma_verifypeer = self.cp.getboolean("package_api", "verifypeer")
+        if self.cp.has_option("package_api", "cacert"):
+            self.ma_cacert = self.cp.get("package_api", "cacert")
+        if self.cp.has_option("package_api", "localcert"):
+            self.ma_localcert = self.cp.get("package_api", "localcert")
         if not os.path.isfile(self.ma_localcert):
             raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.ma_localcert))
         if not os.path.isfile(self.ma_cacert):
@@ -321,24 +292,24 @@ class MscConfig(PluginConfig):
         # Scheduler API
         if self.has_section("scheduler_api"):
             self.sa_enable = True
-            if self.has_option("scheduler_api", "host"):
-                self.sa_server = self.get("scheduler_api", "host")
-            if self.has_option("scheduler_api", "port"):
-                self.sa_port = self.get("scheduler_api", "port")
-            if self.has_option("scheduler_api", "mountpoint"):
-                self.sa_mountpoint = self.get("scheduler_api", "mountpoint")
-            if self.has_option("scheduler_api", "username"):
-                self.sa_username = self.get("scheduler_api", "username")
-            if self.has_option("scheduler_api", "password"):
-                self.sa_password = self.get("scheduler_api", "password")
-            if self.has_option("scheduler_api", "enablessl"):
-                self.sa_enablessl = self.getboolean("scheduler_api", "enablessl")
-            if self.has_option("scheduler_api", "verifypeer"):
-                self.sa_verifypeer = self.getboolean("scheduler_api", "verifypeer")
-            if self.has_option("scheduler_api", "cacert"):
-                self.sa_cacert = self.get("scheduler_api", "cacert")
-            if self.has_option("scheduler_api", "localcert"):
-                self.sa_localcert = self.get("scheduler_api", "localcert")
+            if self.cp.has_option("scheduler_api", "host"):
+                self.sa_server = self.cp.get("scheduler_api", "host")
+            if self.cp.has_option("scheduler_api", "port"):
+                self.sa_port = self.cp.get("scheduler_api", "port")
+            if self.cp.has_option("scheduler_api", "mountpoint"):
+                self.sa_mountpoint = self.cp.get("scheduler_api", "mountpoint")
+            if self.cp.has_option("scheduler_api", "username"):
+                self.sa_username = self.cp.get("scheduler_api", "username")
+            if self.cp.has_option("scheduler_api", "password"):
+                self.sa_password = self.cp.get("scheduler_api", "password")
+            if self.cp.has_option("scheduler_api", "enablessl"):
+                self.sa_enablessl = self.cp.getboolean("scheduler_api", "enablessl")
+            if self.cp.has_option("scheduler_api", "verifypeer"):
+                self.sa_verifypeer = self.cp.getboolean("scheduler_api", "verifypeer")
+            if self.cp.has_option("scheduler_api", "cacert"):
+                self.sa_cacert = self.cp.get("scheduler_api", "cacert")
+            if self.cp.has_option("scheduler_api", "localcert"):
+                self.sa_localcert = self.cp.get("scheduler_api", "localcert")
             if not os.path.isfile(self.sa_localcert):
                 raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.sa_localcert))
             if not os.path.isfile(self.sa_cacert):

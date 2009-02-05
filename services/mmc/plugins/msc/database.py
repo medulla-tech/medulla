@@ -119,13 +119,13 @@ class MscDatabase(Singleton):
 
         @rtype: str
         """
-        if self.config.db_port:
-            port = ":" + str(self.config.db_port)
+        if self.config.dbport:
+            port = ":" + str(self.config.dbport)
         else:
             port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.db_driver, self.config.db_user, self.config.db_passwd, self.config.db_host, port, self.config.db_name)
-        if self.config.db_ssl_enable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.db_ssl_ca, self.config.db_ssl_key, self.config.db_ssl_cert)
+        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        if self.config.dbsslenable:
+            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
         return url
 
     def connected(self):
@@ -216,11 +216,11 @@ class MscDatabase(Singleton):
 
     def enableLogging(self, level = None):
         """
-        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
+        Enable log for sqlalchemy.engine module using the level configured by the dbdebug option of the plugin configuration file.
         The SQL queries will be loggued.
         """
         if not level:
-            level = self.config.db_debug
+            level = self.config.dbdebug
         logging.getLogger("sqlalchemy.engine").setLevel(level)
 
     def disableLogging(self):

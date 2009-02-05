@@ -69,7 +69,7 @@ def activate():
     """
     config = MscConfig("msc")
     logger = logging.getLogger()
-    if config.disabled:
+    if config.disable:
         logger.warning("Plugin msc: disabled by configuration.")
         return False
 
