@@ -213,10 +213,18 @@ class MscConfig(PluginConfig):
                     }
                 if self.has_option(section, "verifypeer"):
                     self.schedulers[section]["verifypeer"] = self.getboolean(section, "verifypeer")
-                if self.schedulers[section]["verifypeer"]:
+                if self.has_option(section, "cacert"):
                     self.schedulers[section]["cacert"] = self.get(section, "cacert")
+                if self.has_option(section, "localcert"):
                     self.schedulers[section]["localcert"] = self.get(section, "localcert")
-
+                if not os.path.isfile(self.schedulers[section]["localcert"]):
+                    raise Exception('can\'t read SSL key "%s"' % (self.schedulers[section]["localcert"]))
+                if not os.path.isfile(self.schedulers[section]["cacert"]):
+                    raise Exception('can\'t read SSL certificate "%s"' % (self.schedulers[section]["cacert"]))
+                if self.schedulers[section]["verifypeer"]:
+                    import twisted.internet.ssl
+                    if not hasattr(twisted.internet.ssl, "Certificate"):
+                        raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # some default web interface values
         if self.has_option("web", "web_def_awake"):
@@ -301,6 +309,14 @@ class MscConfig(PluginConfig):
             self.ma_cacert = self.get("package_api", "cacert")
         if self.has_option("package_api", "localcert"):
             self.ma_localcert = self.get("package_api", "localcert")
+        if not os.path.isfile(self.ma_localcert):
+            raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.ma_localcert))
+        if not os.path.isfile(self.ma_cacert):
+            raise Exception('can\'t read SSL certificate "%s"' % (self.ma_cacert))
+        if self.ma_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+            import twisted.internet.ssl
+            if not hasattr(twisted.internet.ssl, "Certificate"):
+                raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # Scheduler API
         if self.has_section("scheduler_api"):
@@ -323,6 +339,14 @@ class MscConfig(PluginConfig):
                 self.sa_cacert = self.get("scheduler_api", "cacert")
             if self.has_option("scheduler_api", "localcert"):
                 self.sa_localcert = self.get("scheduler_api", "localcert")
+            if not os.path.isfile(self.sa_localcert):
+                raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.sa_localcert))
+            if not os.path.isfile(self.sa_cacert):
+                raise Exception('can\'t read SSL certificate "%s"' % (self.sa_cacert))
+            if self.sa_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+                import twisted.internet.ssl
+                if not hasattr(twisted.internet.ssl, "Certificate"):
+                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
             self.scheduler_url2id = {}
 
