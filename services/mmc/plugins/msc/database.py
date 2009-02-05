@@ -1035,6 +1035,16 @@ class MscDatabase(Singleton):
                         # Some CoH are not in the done or failed states, so
                         # we won't display this bundle.
                         continue
+                else:
+                    # Check that the bundle has all its commands_on_host set
+                    # to state done or failed.
+                    session = create_session()
+                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed')).count()
+                    session.close()
+                    if count_query > 0:
+                        # Some CoH are not in the done or failed states, so
+                        # we won't display this bundle.
+                        continue
                 ids.append(id)
                 i += 1
             elif fk_bundle == 'NULL' or fk_bundle == None:
