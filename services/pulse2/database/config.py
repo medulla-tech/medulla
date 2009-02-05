@@ -41,8 +41,10 @@ class DatabaseConfig(Pulse2ConfigParser):
     dbuser = 'mmc'
     dbpasswd = 'mmc'
 
+    dbdebug = "ERROR"
     dbpoolrecycle = 60
     dbpoolsize = 5 
+    # SSL support
     dbsslenable = False
     dbsslca = None
     dbsslcert = None
@@ -65,6 +67,9 @@ class DatabaseConfig(Pulse2ConfigParser):
             if self.cp.has_option(self.dbsection, "dbpasswd"):
                 self.dbpasswd = self.cp.getpassword(self.dbsection, "dbpasswd")
 
+            if self.cp.has_option(self.dbsection, "dbdebug"):
+                self.dbdebug = self.cp.get(self.dbsection, "dbdebug")
+                        
             if self.cp.has_option(self.dbsection, "dbpoolrecycle"):
                 self.dbpoolrecycle = self.cp.getint(self.dbsection, "dbpoolrecycle")
 
