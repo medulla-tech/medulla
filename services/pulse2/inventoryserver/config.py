@@ -28,6 +28,7 @@ import logging
 import pwd
 import grp
 import string
+import os.path
 
 from pulse2.database.inventory.config import InventoryDatabaseConfig
 
@@ -35,7 +36,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     """
     Singleton Class to hold configuration directives
     """
-                
+
     # default values
     bind = ''
     port = 9999
@@ -58,7 +59,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     options = {}
 
     hostname = ['Hardware', 'Host']
-    
+
 
     def setup(self, config_file):
         InventoryDatabaseConfig.setup(self, config_file)
@@ -90,6 +91,18 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.cp.has_option('main', 'localcert'):
             self.localcert = self.cp.get('main', 'localcert')
 
+        if not os.path.isfile(self.localcert):
+            raise Exception('can\'t read SSL key "%s"' % (self.localcert))
+            return False
+        if not os.path.isfile(self.cacert):
+            raise Exception('can\'t read SSL certificate "%s"' % (self.cacert))
+            return False
+        if self.verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+            import twisted.internet.ssl
+            if not hasattr(twisted.internet.ssl, "Certificate"):
+                raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                return False
+
         if self.cp.has_option('main', 'default_entity'):
             self.default_entity = self.cp.get('main', 'default_entity')
         if self.cp.has_option('main', 'entities_rules_file'):
@@ -100,15 +113,15 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.hostname = path[0].split('/')
             if len(path) == 2:
                 self.hostname.append(path[1].split(':'))
-                
+
             if len(self.hostname) == 3:
                 nom = self.getInventoryNoms()
                 if nom.has_key(self.hostname[0]):
                     self.hostname[2][0] = ('nom%s%s' % (self.hostname[0], self.hostname[2][0]), self.hostname[2][0])
-        
+
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "pid_path"):
-                self.pid_path = self.cp.get("daemon", "pid_path")  
+                self.pid_path = self.cp.get("daemon", "pid_path")
             if self.cp.has_option("daemon", "user"):
                 self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
             if self.cp.has_option("daemon", "group"):
