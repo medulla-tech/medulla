@@ -264,6 +264,7 @@ def setDefaultClientOptions(client):
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         client['transp_args'] += ['-A'] # always forward TCP key
+        client['transp_args'] += ['-o', 'UserKnownHostsFile=/dev/null'] # required to prevent key forwarding failure
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
         # inside ssh get the same args as outside ssh

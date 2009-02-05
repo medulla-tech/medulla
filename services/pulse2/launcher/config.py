@@ -112,7 +112,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     rsync_resume = True
     rsync_set_executable = 'yes'
     rsync_set_access = 'private'
-    
+
 
     # launchers (empty for now)
     launchers = {
@@ -239,7 +239,7 @@ class LauncherConfig(pulse2.utils.Singleton):
             self.rsync_set_access = 'private'
 
         # +----------------+------------------+---------------------+------------------+
-        # | set_executable |                  |                     |                  | 
+        # | set_executable |                  |                     |                  |
         # +--------------\ |       yes        |         no          |        keep      |
         # | set_access    \|                  |                     |                  |
         # +----------------+------------------+---------------------+------------------+
@@ -248,7 +248,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         # | restricted     | u=rwx,g=rx,o=    | u=rw,g=r,o=         | u=rwX,g=rX,o=    |
         # +----------------+------------------+---------------------+------------------+
         # | public         | u=rwx,g=rwx,o=rx | u=rw,g=rw,o=r       | u=rwX,g=rwX,o=rX |
-        # +----------------+------------------+---------------------+------------------+ 
+        # +----------------+------------------+---------------------+------------------+
         # (1) : default value
         exe = 'X'
         if self.rsync_set_executable == 'yes':
@@ -333,22 +333,29 @@ class LauncherConfig(pulse2.utils.Singleton):
                             'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler),
                         }
                     if self.launchers[section]['enablessl']:
-                        try:
+                        if self.cp.has_option(section, 'verifypeer'):
                             self.launchers[section]['verifypeer'] = self.cp.getboolean(section, 'verifypeer')
-                        except ConfigParser.NoOptionError:
+                        else:
                             self.launchers[section]['verifypeer'] = False
-                        try:
+                        if self.cp.has_option(section, 'cacert'):
                             self.launchers[section]['cacert'] = self.cp.get(section, 'cacert')
-                        except ConfigParser.NoOptionError:
+                        else:
                             self.launchers[section]['cacert'] = self.cp.get(section, 'certfile')
+                        if self.cp.has_option(section, 'localcert'):
+                            self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
+                        else:
+                            self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
                         if not os.path.exists(self.launchers[section]['cacert']):
                             raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['cacert'])
-                        try:
-                            self.launchers[section]['localcert'] = self.cp.get(section, 'localcert')
-                        except ConfigParser.NoOptionError:
-                            self.launchers[section]['localcert'] = self.cp.get(section, 'privkey')
+                            return False
                         if not os.path.exists(self.launchers[section]['localcert']):
                             raise Exception("Configuration error: path %s does not exists" % self.launchers[section]['localcert'])
+                            return False
+                        if self.launchers[section]['verifypeer']: # we need twisted.internet.ssl.Certificate to activate certs
+                            import twisted.internet.ssl
+                            if not hasattr(twisted.internet.ssl, "Certificate"):
+                                raise Exception('Configuration error in section "%s": I need at least Python Twisted 2.5 to handle peer checking' % (section))
+                                return False
 
                         maxslots = (os.sysconf('SC_OPEN_MAX') - 50) / 2 # "should work in most case" formulae
                         if self.launchers[section]['slots'] > maxslots:
