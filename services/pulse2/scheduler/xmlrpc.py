@@ -43,7 +43,7 @@ class SchedulerHTTPChannel(http.HTTPChannel):
 
     def connectionMade(self):
         logger = logging.getLogger()
-        logger.debug("Connection from %s" % (self.transport.getHost().host,))
+        logger.debug("Connection from %s" % (self.transport.getPeer().host,))
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
