@@ -1043,7 +1043,7 @@ class Inventory(DyngroupDatabaseHelper):
             # Search children of the root id
             ret = []
             level = level + 1
-            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.parentId == rootid)
+            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.parentId == rootid).order_by(self.table['Entity'].c.Label)
             for entity in q:
                 if entity.id != 1:
                     if with_level:
@@ -1056,9 +1056,9 @@ class Inventory(DyngroupDatabaseHelper):
         session = create_session()
         ret = []
         if userid != 'root':
-            q = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid)
+            q = session.query(self.klass['Entity']).select_from(self.table['Entity'].join(self.userentities).join(self.user)).filter(self.user.c.uid == userid).order_by(self.table['Entity'].c.Label)
         else:
-            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1)
+            q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1).order_by(self.table['Entity'].c.Label)
         level = 1
         for entity in q:
             if with_level:
