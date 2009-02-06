@@ -191,6 +191,7 @@ class Inventory(DyngroupDatabaseHelper):
         # We first filter the computer list according to the entities the user
         # has the right to see.
         query = query.filter(self.table['Entity'].c.id.in_(ctx.locationsid))
+
         # Then we apply extra filter according to pattern content
         if pattern:
             if 'hostname' in pattern:
@@ -365,7 +366,7 @@ class Inventory(DyngroupDatabaseHelper):
             partTable = self.table[table]
             haspartTable = self.table["has" + table]
         if self.config.getInventoryNoms(table) == None:
-            return [haspartTable, partTable]
+            return [haspartTable, partTable, self.inventory]
         self.logger.debug("### Nom")
         ret = [haspartTable, partTable, self.inventory]
         for nom in self.config.getInventoryNoms(table):
