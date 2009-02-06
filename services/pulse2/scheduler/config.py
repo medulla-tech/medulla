@@ -136,7 +136,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
             if self.cp.has_option("scheduler", "cacert"):
                 self.cacert = self.cp.get("scheduler", "cacert")
             if self.cp.has_option("scheduler", "verifypeer"):
-                self.verifypeer = self.cp.get("scheduler", "verifypeer")
+                self.verifypeer = self.cp.getboolean("scheduler", "verifypeer")
             if not os.path.isfile(self.localcert):
                 raise Exception('scheduler "%s": can\'t read SSL key "%s"' % (self.name, self.localcert))
                 return False
