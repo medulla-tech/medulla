@@ -38,6 +38,10 @@ import pulse2.utils
 class OpenSSLContext(pulse2.utils.Singleton):
     """
     Singleton Class to hold OpenSSL stuff, preventing further reopening of client certs
+
+    use pulse2.xmlrpc.OpenSSLContext().setup(cacert_path, localcert_path, verifypeer) to setup (first time usage)
+    use pulse2.xmlrpc.OpenSSLContext().getContext() to get ctx
+
     """
     ctx = None
     verifypeer = False
@@ -65,16 +69,16 @@ class OpenSSLContext(pulse2.utils.Singleton):
         else:
             return ssl.DefaultOpenSSLContextFactory(self.localcert_path, self.cacert_path)
 
-    def setup(self, config):
+    def setup(self, localcert_path, cacert_path, verifypeer):
         """
         Just load the certs in verifypeer mode
         do nothing in standart mode
         """
         logger = logging.getLogger()
 
-        self.verifypeer = config.verifypeer
-        self.cacert_path = config.cacert
-        self.localcert_path = config.localcert
+        self.localcert_path = localcert_path
+        self.cacert_path = cacert_path
+        self.verifypeer = verifypeer
 
         if self.verifypeer:
             fd = open(self.cacert_path)
@@ -93,9 +97,4 @@ class OpenSSLContext(pulse2.utils.Singleton):
             logger.info("SSL enabled, and peer verification is enabled.")
         else:
             logger.warning("SSL enabled, but peer verification is disabled.")
-
-def makeSSLContext(config, log = True):
-    if log:
-        OpenSSLContext().setup(config)
-    return OpenSSLContext().getContext()
 
