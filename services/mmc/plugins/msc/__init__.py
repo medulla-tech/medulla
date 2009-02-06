@@ -53,7 +53,7 @@ from mmc.plugins.msc.MSC_File import MSC_File
 import mmc.plugins.msc.client.scheduler
 
 # ORM mappings
-import mmc.plugins.msc.orm.commands_on_host
+import pulse2.database.msc.orm.commands_on_host
 
 VERSION = '2.0.0'
 APIVERSION = '0:0:0'
@@ -67,7 +67,8 @@ def activate():
     """
     Run some tests to ensure the module is ready to operate.
     """
-    config = MscConfig("msc")
+    config = MscConfig()
+    config.init("msc")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin msc: disabled by configuration.")
@@ -77,7 +78,7 @@ def activate():
         logger.error("Quick Actions config is invalid: %s is not a directory. Please check msc.ini." % config.qactionspath)
         return False
 
-    MscDatabase().activate()
+    MscDatabase().activate(config)
     if not MscDatabase().db_check():
         return False
 
@@ -459,17 +460,17 @@ def pingMachine(uuid):
 ### Commands on host handling ###
 # FIXME: we should realy rationalize this stuff !
 def start_command_on_host(coh_id):
-    mmc.plugins.msc.orm.commands_on_host.startCommandOnHost(coh_id)
+    pulse2.database.msc.orm.commands_on_host.startCommandOnHost(coh_id)
     mmc.plugins.msc.client.scheduler.startCommand(None, coh_id)
     return xmlrpcCleanup(True)
 def pause_command_on_host(coh_id):
-    mmc.plugins.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
+    pulse2.database.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
 def restart_command_on_host(coh_id):
-    mmc.plugins.msc.orm.commands_on_host.restartCommandOnHost(coh_id)
+    pulse2.database.msc.orm.commands_on_host.restartCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
 def stop_command_on_host(coh_id):
-    mmc.plugins.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
+    pulse2.database.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
     mmc.plugins.msc.client.scheduler.stopCommand(None, coh_id)
     return xmlrpcCleanup(True)
 ### Command on host handling ###

@@ -35,8 +35,8 @@ from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
 from mmc.plugins.msc.config import MscConfig, makeURL
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.database import MscDatabase
-from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
-from mmc.plugins.msc.orm.target import Target
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.target import Target
 
 def getProxy(schedulerConfig):
     """
