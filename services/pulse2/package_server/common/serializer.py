@@ -22,9 +22,9 @@
 import pickle
 import os
 import logging
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 
-class PkgsRsyncStateSerializer(Singleton):
+class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
     def init(self, common):
         self.logger = logging.getLogger()
         self.logger.debug("PkgsRsyncStateSerializer is initializing")
@@ -64,5 +64,5 @@ class PkgsRsyncStateSerializer(Singleton):
         except:
             self.logger.debug("PkgsRsyncStateSerializer unserialize failed")
             return False
-    
+
 

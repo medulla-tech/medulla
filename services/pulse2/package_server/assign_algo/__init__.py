@@ -27,12 +27,12 @@
 """
 
 import logging
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 from distutils.sysconfig import get_python_lib
 import imp
 import os
 
-class MMAssignAlgo(Singleton):
+class MMAssignAlgo(pulse2.utils.Singleton):
     def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
         self.logger = logging.getLogger()
         self.mirrors = mirrors
@@ -41,7 +41,7 @@ class MMAssignAlgo(Singleton):
         self.url2mirrors = url2mirrors
         self.url2mirrors_fallback = url2mirrors_fallback
         self.url2package_apis = url2package_apis
-        
+
     def getMachineMirror(self, machine):
         raise Exception("getMachineMirror not defined")
 
@@ -51,7 +51,7 @@ class MMAssignAlgo(Singleton):
     def getMachinePackageApi(self, machine):
         raise Exception("getMachinePackageApi not defined")
 
-class UPAssignAlgo(Singleton):
+class UPAssignAlgo(pulse2.utils.Singleton):
     def init(self, package_api_put):
         self.logger = logging.getLogger()
         self.package_api_put = map(lambda x: x.toH(), package_api_put)
@@ -59,7 +59,7 @@ class UPAssignAlgo(Singleton):
     def getUserPackageApi(self, user):
         raise Exception("getUserPackageApi not defined")
 
-class IntAssignAlgoManager(Singleton):
+class IntAssignAlgoManager(pulse2.utils.Singleton):
     name = ''
     def getAlgo(self, assign_algo):
         wanted = assign_algo
@@ -98,10 +98,10 @@ class IntAssignAlgoManager(Singleton):
                 logging.getLogger().error("Cant load any %s Assign Algorythm"%(self.name))
                 ret = None
         return (ret, assign_algo)
-    
+
     def getClassInModule(self, mod):
         raise Exception("getClassInModule not defined")
-    
+
 class MMAssignAlgoManager(IntAssignAlgoManager):
     name = 'Machine/Mirrors'
     def getClassInModule(self, mod):
@@ -111,4 +111,4 @@ class UPAssignAlgoManager(IntAssignAlgoManager):
     name = 'User/PackagePut'
     def getClassInModule(self, mod):
         return mod.UPUserAssignAlgo()
-    
+

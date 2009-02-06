@@ -26,7 +26,7 @@
 import ConfigParser
 import re
 import sys
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 import logging
 import os
 
@@ -38,7 +38,7 @@ if sys.platform != "win32":
     from mmc.support.config import MMCConfigParser
 
 
-class P2PServerCP(Singleton):
+class P2PServerCP(pulse2.utils.Singleton):
     """
     Class to hold configuration directives
     """

@@ -38,10 +38,11 @@ import random
 from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
-from pulse2.package_server.utilities import md5file, md5sum, Singleton
+import pulse2.utils
+from pulse2.package_server.utilities import md5file, md5sum
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 
-class Common(Singleton):
+class Common(pulse2.utils.Singleton):
 
     MD5SUMS = "MD5SUMS"
     CONFXML = "conf.xml"
@@ -51,7 +52,7 @@ class Common(Singleton):
     SMART_DETECT_PATHPB     = 2
     SMART_DETECT_CHANGES    = 3
     SMART_DETECT_ERROR      = 4
-    
+
     def init(self, config):
         self.working = True
         self.working_pkgs = []
@@ -300,7 +301,7 @@ class Common(Singleton):
             if m.has_key('src') and not ret.has_key(m['src']):
                 ret[m['src']] = None
         return ret.keys()
-    
+
     def rsyncPackageOnMirrors(self, pid = None):
         if pid == None:
             self.logger.debug("rsyncPackageOnMirrors for all packages")
@@ -648,7 +649,7 @@ class Common(Singleton):
         # if one of the action fail (detect that at least one file changed)
         if failure:
             return self.SMART_DETECT_CHANGES
-        
+
         # if some of the actions have been executed and we are still there, that mean that they succeed, ie: no changes detected
         if known_action:
             # clean data
@@ -656,15 +657,15 @@ class Common(Singleton):
                 del self.temp_check_changes['LAST'][pid]
             if self.temp_check_changes['SIZE'].has_key(pid):
                 del self.temp_check_changes['SIZE'][pid]
-            
+
             return self.SMART_DETECT_NOCHANGES
-        
+
         self.logger.debug("smart detect hasChange, dont know this smart method : %s"%(str(self.config.packageDetectSmartMethod)))
         return self.SMART_DETECT_ERROR
 
     def __subHasChangedGetSize(self, file, pid):
         self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
-        
+
     def __subHasChangedLast(self, file, pid, t):
         """
         check if the file has change in the last X secondes
@@ -689,7 +690,7 @@ class Common(Singleton):
 
     def __getDate(self, conffile):
         return os.stat(conffile)[stat.ST_MTIME]
-        
+
     def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == 'conf.xml':
             if not self.already_declared.has_key(file):

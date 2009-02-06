@@ -31,7 +31,6 @@ import twisted.web.server
 import logging
 import random
 from pulse2.package_server.types import Mirror, Machine
-from pulse2.package_server.utilities import Singleton
 from pulse2.package_server.assign_algo import MMAssignAlgoManager
 
 class SchedulerApi(twisted.web.xmlrpc.XMLRPC):
@@ -56,7 +55,7 @@ class SchedulerApi(twisted.web.xmlrpc.XMLRPC):
         if not self.assign.has_key(machine.uuid):
             self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
         return self.assign[machine.uuid]
-        
+
     def xmlrpc_getSchedulers(self, machines):
         ret = []
         for m in machines:
@@ -65,4 +64,4 @@ class SchedulerApi(twisted.web.xmlrpc.XMLRPC):
                 self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
             ret.append(self.assign[machine.uuid])
         return ret
-        
+

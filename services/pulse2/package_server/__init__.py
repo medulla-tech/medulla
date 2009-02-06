@@ -35,7 +35,7 @@ import shutil
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 import pulse2.package_server.thread_webserver
 from threading import Thread, Semaphore
 import threading
@@ -237,7 +237,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
         l = task.LoopingCall(self.runSub)
         l.start(self.config.package_mirror_loop)
 
-class ThreadLauncher(Singleton):
+class ThreadLauncher(pulse2.utils.Singleton):
     def initialize(self, config):
         self.logger = logging.getLogger()
         self.config = config

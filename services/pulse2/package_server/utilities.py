@@ -54,11 +54,3 @@ def md5file(fname):
 
 def md5sum(str):
     return md5.md5(str).hexdigest()
-
-
-class Singleton(object):
-
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance

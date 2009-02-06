@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 from sqlalchemy import *
 import sqlalchemy
 import logging
@@ -63,14 +63,14 @@ class DbObject(object):
             if t == str or t == dict or t == unicode or t == tuple or t == int or t == long:
                 ret[i] = getattr(self, i)
         ret['uuid'] = toUUID(getattr(self, 'id'))
-        return ret 
+        return ret
 
-class PluginInventoryAADatabase(Singleton):
+class PluginInventoryAADatabase(pulse2.utils.Singleton):
     def db_check(self):
         if not self.__checkSqlalchemy():
             self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
             return False
-            
+
         conn = self.connected()
         if conn:
             self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check inventory.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
@@ -141,7 +141,7 @@ class PluginInventoryAADatabase(Singleton):
             self.klass[item] = eval(item)
             # Map the python class to the SQL table
             mapper(self.klass[item], self.table[item])
-            
+
             # Declare the has* SQL table
             hasitem = "has" + item
             has_columns = [
@@ -162,9 +162,9 @@ class PluginInventoryAADatabase(Singleton):
                 self.klass[nomitem] = eval(nomitem)
                 # Map the python class to the SQL table
                 mapper(eval(nomitem), self.table[nomitem])
-               
+
             self.table[hasitem] = Table(hasitem, self.metadata, *has_columns)
-            
+
             # Create the class that will be mapped
             # This will create the hasBios, hasBootDisk, etc. classes
             exec "class %s(object): pass" % hasitem
@@ -212,7 +212,7 @@ class PluginInventoryAADatabase(Singleton):
             ret.append(self.__getMachineType(uuid, session))
         session.close()
         return ret
-        
+
     def __getMachineType(self, uuid, session):
         query = session.query(self.klass['Registry'])
         query = query.select_from(self.table['Registry'].join(self.table['hasRegistry'].join(self.table['nomRegistryPath'])).join(self.machine).join(self.inventory))

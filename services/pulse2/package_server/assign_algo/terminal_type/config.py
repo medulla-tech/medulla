@@ -19,7 +19,7 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from pulse2.package_server.utilities import Singleton
+import pulse2.utils
 from mmc.support.config import PluginConfig
 import logging
 import sys
@@ -32,7 +32,7 @@ if sys.platform != "win32":
     # MMC
     from mmc.support.config import MMCConfigParser
 
-class PluginInventoryAAConfig(Singleton):
+class PluginInventoryAAConfig(pulse2.utils.Singleton):
     dbdriver = "mysql"
     dbhost = "localhost"
     dbname = "inventory"
@@ -50,7 +50,7 @@ class PluginInventoryAAConfig(Singleton):
         # Load configuration file
         if sys.platform != "win32":
             self.cp = MMCConfigParser()
-        else:   
+        else:
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
 
@@ -85,7 +85,7 @@ class PluginInventoryAAConfig(Singleton):
                     continue
                 if not self.cp.has_option(section, 'kind'):
                     continue
-                
+
                 types = self.cp.get(section, 'terminal_types').split('||')
                 url = self.cp.get(section, 'mirror')
                 kind = self.cp.get(section, 'kind')
@@ -97,4 +97,4 @@ class PluginInventoryAAConfig(Singleton):
                     self.type2url[type][kind].append(url)
         if len(self.type2url.keys()) == 0:
             raise Exception("Please put some associations in your config file")
-                    
+
