@@ -31,8 +31,8 @@ from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 import pulse2.scheduler.xmlrpc
 
-from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
-from mmc.plugins.msc.orm.commands_history import CommandsHistory
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.commands_history import CommandsHistory
 
 def chooseLauncher():
     """ return a good launcher, URI form """

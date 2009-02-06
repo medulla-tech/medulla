@@ -40,10 +40,10 @@ from mmc.plugins.msc.database import MscDatabase
 import mmc.plugins.msc.mirror_api
 
 # ORM mappings
-from mmc.plugins.msc.orm.commands import Commands
-from mmc.plugins.msc.orm.commands_on_host import CommandsOnHost
-from mmc.plugins.msc.orm.commands_history import CommandsHistory
-from mmc.plugins.msc.orm.target import Target
+from pulse2.database.msc.orm.commands import Commands
+from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
+from pulse2.database.msc.orm.commands_history import CommandsHistory
+from pulse2.database.msc.orm.target import Target
 
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
