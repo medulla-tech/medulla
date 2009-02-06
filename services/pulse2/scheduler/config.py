@@ -107,10 +107,24 @@ class SchedulerConfig(pulse2.utils.Singleton):
             else:
                 logging.getLogger().warn("scheduler %s: section %s, option %s not set, using default value" % (self.name, section, key))
 
-    def setup(self, config_file):
-        # Load configuration file
+    def presetup(self, config_file):
+        """
+            used to pre-parse conf file to gather enough data to setuid() soon
+        """
         self.cp = MMCConfigParser()
         self.cp.read(config_file)
+
+        if self.cp.has_option("daemon", "user"):
+            self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+        if self.cp.has_option("daemon", "group"):
+            self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+        if self.cp.has_option("daemon", "umask"):
+            self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+
+    def setup(self, config_file):
+        # Load configuration file
+        if not self.cp: # self.cp is set if presetup() was already called
+            self.presetup(config_file)
 
         # [scheduler] section parsing
         self.name = self.cp.get("scheduler", "id")
@@ -183,19 +197,13 @@ class SchedulerConfig(pulse2.utils.Singleton):
                 self.announce_check[key] = val
             logging.getLogger().info("scheduler %s: section %s, option %s set using given value" % (self.name, 'server_check', self.server_check))
 
-        # [daemon] section parsing
+        # [daemon] section parsing (parsing ofr user, group, and umask is done above in presetup)
         if self.cp.has_section("daemon"):
-            if self.cp.has_option("daemon", "group"):
-                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
                 logging.getLogger().warning("'pid_path' is obsolete, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
-            if self.cp.has_option("daemon", "umask"):
-                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
-            if self.cp.has_option("daemon", "user"):
-                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
 
         # [launcher_xxx] section parsing
         for section in self.cp.sections():
@@ -215,4 +223,3 @@ class SchedulerConfig(pulse2.utils.Singleton):
                     uri += '%s:%s@' % (self.launchers[section]['username'], self.launchers[section]['password'])
                 uri += '%s:%d' % (self.launchers[section]['host'], int(self.launchers[section]['port']))
                 self.launchers_uri.update({section: uri})
-

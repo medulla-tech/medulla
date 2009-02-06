@@ -133,9 +133,13 @@ def stop_scheduler(config):
             clear_pidfile(config)
             return True
         else:
+            logger.error('failed to stop scheduler "%s": was supposed to be running under pid %d' % (name, pid))
+            print 'failed to start scheduler "%s": was supposed to be running under pid %d' % (name, pid)
             clear_pidfile(config)
             return False
     else:
+        logger.error('failed to stop scheduler "%s": was not running' % (name))
+        print 'failed to stop scheduler "%s": was not running' % (name)
         clear_pidfile(config)
         return False
 
@@ -222,15 +226,23 @@ if __name__ == "__main__":
         print "command is missing"
         sys.exit(2)
 
-    # Load configuration file
+    # we have to advance carefully here in order not to break the logging system
+    # hypothesis: the logging folder already exists with proper permissions
+    # instanciate object
     config = SchedulerConfig()
-    logging.config.fileConfig(config_file)
-    config.setup(options.config_file)
 
-    # Set umask and effective UID and GID values
+    # gather right user and password
+    config.presetup(options.config_file)
+
+    # set umask and effective UID and GID values RIGHT NOW
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
+     # we changed our identify a few lines above, log file will be created with proper uid/gid/umask
+    logging.config.fileConfig(options.config_file)
+
+    # last step: parse conf
+    config.setup(options.config_file)
 
     # Try to create the default log directory
     LOGDIR = '/var/log/mmc'
