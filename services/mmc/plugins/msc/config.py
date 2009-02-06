@@ -120,9 +120,7 @@ class MscConfig(MscDatabaseConfig):
     }
 
 
-    def __init__(self, name, conffile = None):
-        self.dbsection = "msc"
-        MscDatabaseConfig.__init__(self)
+    def init(self, name, conffile = None):
         self.name = name
         if not conffile: self.conffile = mmctools.getConfigFile(name)
         else: self.conffile = conffile
@@ -189,11 +187,11 @@ class MscConfig(MscDatabaseConfig):
                         self.schedulers[section]["cacert"] = self.cp.get(section, "cacert")
                     if self.cp.has_option(section, "localcert"):
                         self.schedulers[section]["localcert"] = self.cp.get(section, "localcert")
-                    if not os.path.isfile(self.schedulers[section]["localcert"]):
+                    if "localcert" in self.schedulers[section] and not os.path.isfile(self.schedulers[section]["localcert"]):
                         raise Exception('can\'t read SSL key "%s"' % (self.schedulers[section]["localcert"]))
-                    if not os.path.isfile(self.schedulers[section]["cacert"]):
+                    if "cacert" in self.schedulers[section] and not os.path.isfile(self.schedulers[section]["cacert"]):
                         raise Exception('can\'t read SSL certificate "%s"' % (self.schedulers[section]["cacert"]))
-                    if self.schedulers[section]["verifypeer"]:
+                    if "verifypeer" in self.schedulers[section] and self.schedulers[section]["verifypeer"]:
                         import twisted.internet.ssl
                         if not hasattr(twisted.internet.ssl, "Certificate"):
                             raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
@@ -292,7 +290,7 @@ class MscConfig(MscDatabaseConfig):
                     raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # Scheduler API
-        if self.has_section("scheduler_api"):
+        if self.cp.has_section("scheduler_api"):
             self.sa_enable = True
             if self.cp.has_option("scheduler_api", "host"):
                 self.sa_server = self.cp.get("scheduler_api", "host")
