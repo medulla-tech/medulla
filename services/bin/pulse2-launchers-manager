@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#
 # -*- coding: utf-8; -*-
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
@@ -29,6 +30,7 @@
     * stop (kill)
 """
 
+# Big modules
 import os
 import os.path
 import sys
@@ -38,6 +40,11 @@ import logging
 import logging.config
 import optparse
 import signal
+import time
+import errno
+
+time_to_wait = 2 # first stage: check of it is alive / dead after having being run /stopped for time_to_wait seconds
+check_count = 5 # second stage: attempts to obtain a good result (check_count tries) to a XMLRPC call
 
 from pulse2.launcher.config import LauncherConfig
 
@@ -46,30 +53,46 @@ def start_launcher(name, config):
     daemonize a launcher
     """
     logger = logging.getLogger()
+
     logger.info('daemonization started: launcher "%s"' % name)
 
     pid_path = config.pid_path
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
 
-    pid_file = os.path.join(pid_path, '%s.pid' % name)
-    launcher_path = config.launcher_path
-    # Test if this launcher already exists
-    if os.path.isfile(pid_file):
-        logger.error('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
-        print ('failed to start launcher "%s": pid file "%s" already exist' % (name, pid_file))
-        return
+    pid = get_pidfile(config, name)
+    if pid:
+        if pid_is_alive(pid):
+            logger.error('failed to start launcher "%s": seems to be running under pid %d' % (name, pid))
+            print 'failed to start launcher "%s": seems to be running under pid %d' % (name, pid)
+            return False
+        else:
+            clear_pidfile(config, name)
+            logger.error('while starting launcher "%s": clearing old pid file (pid was %d)' % (name, pid))
 
+    # as a launcher itself do not fork(), fork is done here
     # do the UNIX double-fork magic, see Stevens' "Advanced
     # Programming in the UNIX Environment" for details (ISBN 0201563177)
     try:
         pid = os.fork()
         if pid > 0:
             # first parent stays alive
+            # let's check if it is realy alive
+            # check is done in two stages:
+
+            # let's do the first stage
+            time.sleep(time_to_wait)
+            pid = get_pidfile(config, name)
+            if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
+                logger.error('daemonization part #2 failed: launcher "%s" died in less than %d seconds' % (name, time_to_wait))
+                clear_pidfile(config, name)
+                return False
+
+            # TODO: implement second stage here !
             return True
-    except OSError, error:
-        logger.error('daemonization part #1 failed: %d (%s)' % (error.errno, error.strerror))
-        print >> sys.stderr, "daemonization part #1 failed: %d (%s)" % (error.errno, error.strerror)
+    except OSError, e:
+        logger.error('daemonization part #1 failed: %d (%s)' % (e.errno, e.strerror))
+        print >> sys.stderr, "daemonization part #1 failed: %d (%s)" % (e.errno, e.strerror)
         sys.exit(1)
 
     # decouple from parent environment
@@ -83,15 +106,11 @@ def start_launcher(name, config):
     try:
         pid = os.fork()
         if pid > 0:
-            # exit from second parent, print eventual PID before
-            logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) )
-            os.seteuid(0)
-            os.setegid(0)
-            os.system("echo " + str(pid) + " > " + pid_file)
+            logger.info('daemonization succedeed: "%s", pid %d' % (name, pid) ) # exit from second parent, print eventual PID before
+            set_pidfile(config, name, pid) # records the PID from here, as it is the only place where we know it
             sys.exit(0)
-    except OSError, error:
-        logger.error('daemonization part #2 failed: %d (%s)' % (error.errno, error.strerror))
-        print >> sys.stderr, "daemonization part #2 failed: %d (%s)" % (error.errno, error.strerror)
+    except OSError, e:
+        logger.error('daemonization part #2 failed: %d (%s)' % (e.errno, e.strerror))
         sys.exit(1)
 
     # drop privs
@@ -100,26 +119,102 @@ def start_launcher(name, config):
     os.setgid(config.daemon_group)
     os.setuid(config.daemon_user)
 
+    launcher_path = config.launcher_path
     logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
     os.execv(launcher_path, (launcher_path, '--id', name))
 
 def stop_launcher(name, config):
     logger = logging.getLogger()
-    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
     os.seteuid(0)
     os.setegid(0)
-    f = open(pid_file)
+
+    pid = get_pidfile(config,name)
+    if pid:
+        if pid_is_alive(pid):
+            logger.info('attempt to kill launcher "%s" (pid %d)' % (name, pid))
+            kill_pid(pid, signal.SIGTERM) # TODO: check that kill was successful
+            logger.info('launcher "%s" killed using SIGTERM' % name)
+            clear_pidfile(config, name)
+            return True
+        else:
+            logger.error('failed to stop launcher "%s": was supposed to be running under pid %d' % (name, pid))
+            print 'failed to stop launcher "%s": was supposed to be running under pid %d' % (name, pid)
+            clear_pidfile(config, name)
+            return False
+    else:
+        logger.error('failed to stop launcher "%s": was not running' % (name))
+        print 'failed to stop launcher "%s": was not running' % (name)
+        clear_pidfile(config, name)
+        return False
+
+
+def clear_pidfile(config, name):
+    os.setegid(0)
+    os.seteuid(0)
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    if os.path.isfile(pid_file):
+        os.unlink(pid_file)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+
+def set_pidfile(config, name, pid):
+    os.setegid(0)
+    os.seteuid(0)
+    pid_path = config.pid_path
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    if not os.path.isdir(pid_path):
+        os.makedirs(pid_path)
+    os.system("echo %d > %s" % (pid, pid_file))
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+
+def pid_is_alive(pid):
+    return kill_pid(pid, 0)
+
+def kill_pid(pid, signal):
+    os.setegid(0)
+    os.seteuid(0)
     try:
-        for line in f:
-            try:
-                logger.info('attempt to kill launcher "%s" (pid %d)' % (name, int(line)))
-                os.kill(int(line), signal.SIGTERM)
-                logger.info('launcher "%s" killed using SIGTERM' % name)
-            except OSError:
-                pass
-            os.unlink(pid_file)
-    finally:
-        f.close()
+        os.kill(pid, signal)
+    except OSError, err:
+        if err.errno == errno.ESRCH:
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
+            return False
+        elif err.errno == errno.EPERM: # WTF ? I *am* root, am I ?
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
+            return True
+        else:
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
+            return False
+    else:
+        os.setegid(config.daemon_group)
+        os.seteuid(config.daemon_user)
+        return True
+
+def get_pidfile(config, name):
+    os.setegid(0)
+    os.seteuid(0)
+    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    if not os.path.isfile(pid_file):
+        os.setegid(config.daemon_group)
+        os.seteuid(config.daemon_user)
+        return False
+    f = open(pid_file)
+    for line in f:
+        try:
+            ret = int(line)
+            f.close()
+            os.setegid(config.daemon_group)
+            os.seteuid(config.daemon_user)
+            return ret
+        except ValueError:
+            pass
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+    return False
 
 if __name__ == "__main__":
     parser = optparse.OptionParser()
@@ -135,15 +230,24 @@ if __name__ == "__main__":
         print "command is missing"
         sys.exit(2)
 
-    # Load configuration file
+    # we have to advance carefully here in order not to break the logging system
+    # hypothesis: the logging folder already exists with proper permissions
+    # instanciate object
     config = LauncherConfig()
-    config.setup(options.config_file)
-    config.check()
 
-    # Set umask and effective UID and GID values
+    # gather right user and password
+    config.presetup(options.config_file)
+
+    # set umask and effective UID and GID values RIGHT NOW
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
+     # we changed our identify a few lines above, log file will be created with proper uid/gid/umask
+    logging.config.fileConfig(options.config_file)
+
+    # last step: parse conf
+    config.setup(options.config_file)
+    config.check()
 
     # Try to create the default log directory
     LOGDIR = '/var/log/mmc'
@@ -154,9 +258,6 @@ if __name__ == "__main__":
             # Maybe we are not root, so it may not be a problem if the mkdir
             # failed
             pass
-
-    # Start logger
-    logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
 
     if args[0] == "start":
@@ -164,21 +265,21 @@ if __name__ == "__main__":
         print('Starting Pulse2 Launchers:')
         # parse sections to keep launchers-specifics
         for section in config.launchers:
-            #if re.compile("^launcher_[0-9]+$").match(section):
             print('\t%s' % section)
-            start_launcher(section, config)
-        logger.info('Launchers started')
+            if start_launcher(section, config):
+                logger.info('Launcher "%s" started' % section)
+                print('OK')
+            else:
+                logger.warn('Failed to start launcher "%s"' % section)
+                print('FAILED')
     elif args[0] == "stop":
         logger.info('stopping Pulse2 Launchers')
         print('Stopping Pulse2 Launchers:')
-        pid_path = config.pid_path
-        if os.path.isdir(pid_path):
-            for root, dirs, files in os.walk(pid_path):
-                for myfile in files:
-                    if re.compile('^launcher_[0-9]+\.pid$').match(myfile):
-                        name = re.search('^(launcher_[0-9]+)\.pid$', myfile).group(1)
-                        print('\t%s' % name)
-                        stop_launcher(name, config)
-        logger.info('Launchers stopped')
-
-
+        for section in config.launchers:
+            print('\t%s' % section)
+            if stop_launcher(section, config):
+                logger.info('Launcher "%s" started' % section)
+                print('OK')
+            else:
+                logger.warn('Failed to stop launcher "%s"' % section)
+                print('FAILED')

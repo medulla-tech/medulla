@@ -29,7 +29,7 @@ import grp          # for getgrpnam
 import string       # for atoi
 import logging      # logging stuff
 import os
-import stat
+import stat         # for owner checking
 
 # Others Pulse2 Stuff
 import pulse2.utils
@@ -37,9 +37,8 @@ import pulse2.utils
 class LauncherConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
-    """
 
-    # default values
+    """
     name = None
     cp = None
 
@@ -92,7 +91,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     tcp_sproxy_connect_delay = 60
     tcp_sproxy_session_lenght = 3600
 
-    # daemon stuff
+    # [daemon] section
     daemon_group = 0
     pid_path = "/var/run/pulse2"
     umask = 0077
@@ -114,7 +113,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     rsync_set_access = 'private'
 
 
-    # launchers (empty for now)
+    # [launcher_xxx] section
     launchers = {
     }
 
@@ -124,30 +123,44 @@ class LauncherConfig(pulse2.utils.Singleton):
                 setattr(self, attrib, self.cp.get(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to '%s'" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value '%s'" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'bool':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getboolean(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'int':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getint(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set to %s" % (self.name, section, key, getattr(self, attrib)))
             else:
-                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value %s" % (self.name, section, key, getattr(self, attrib)))
         elif type == 'pass':
             if self.cp.has_option(section, key):
                 setattr(self, attrib, self.cp.getpassword(section, key))
                 logging.getLogger().info("launcher %s: section %s, option %s set using given value" % (self.name, section, key))
             else:
-                logging.getLogger().info("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
+                logging.getLogger().warn("launcher %s: section %s, option %s not set, using default value" % (self.name, section, key))
+
+    def presetup(self, config_file):
+        """
+            used to pre-parse conf file to gather enough data to setuid() soon
+        """
+        self.cp = pulse2.utils.Pulse2ConfigParser()
+        self.cp.read(config_file)
+
+        if self.cp.has_option("daemon", "user"):
+            self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+        if self.cp.has_option("daemon", "group"):
+            self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+        if self.cp.has_option("daemon", "umask"):
+            self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
     def setup(self, config_file, name = None):
         # Load configuration file
-        self.cp = pulse2.utils.Pulse2ConfigParser()
-        self.cp.read(config_file)
+        if not self.cp: # self.cp is set if presetup() was already called
+            self.presetup(config_file)
 
         self.name = name
 
@@ -267,19 +280,13 @@ class LauncherConfig(pulse2.utils.Singleton):
 
         logging.getLogger().debug("config metavalue 'rsync_set_chmod' = %s"%(self.rsync_set_chmod))
 
-        # Parse "daemon" section
+        # [daemon] section parsing (parsing ofr user, group, and umask is done above in presetup)
         if self.cp.has_section("daemon"):
-            if self.cp.has_option("daemon", "group"):
-                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
             if self.cp.has_option('daemon', 'pid_path'):
                 logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
-            if self.cp.has_option("daemon", "umask"):
-                self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
-            if self.cp.has_option("daemon", "user"):
-                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
 
         # Parse "wol" section
         self.setoption('wol', 'wol_bcast', 'wol_bcast')

@@ -121,7 +121,7 @@ def startService():
     slots = config.launchers[config.name]['slots']
     max_command_age = config.max_command_age
 
-    # Starting XMLRPC server
+    # Starts XMLRPC server
     launcher = Launcher(name)
     try:
         if enablessl:
@@ -144,8 +144,7 @@ def startService():
                 interface = bind
                 )
     except Exception, e:
-        logger.error('launcher %s: can\'t bind to %s:%d' % (name, bind, port))
-        logger.error(e)
+        logger.error('launcher %s: can\'t bind to %s:%d, reason is %s' % (name, bind, port, e))
         return 1
 
     pulse2.launcher.process_control.ProcessList().setup(slots, max_command_age)
@@ -169,15 +168,14 @@ def cleanUp():
     pulse2.launcher.ssh_agent.killSSHAgent()
     logger.info('launcher %s: End' % (LauncherConfig().name))
 
-
 class Launcher(twisted.web.xmlrpc.XMLRPC):
     """Our launcher
     """
 
     def __init__(self, name):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
-        self.name = name
         self.logger = logging.getLogger()
+        self.name = name
         self.config = LauncherConfig().launchers[name]
 
     def getRevision(self):
@@ -394,5 +392,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
