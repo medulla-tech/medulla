@@ -199,7 +199,7 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
                 query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
-            if 'location' in pattern:
+            if 'location' in pattern and pattern['location']:
                 query = query.filter(self.table['Entity'].c.Label == pattern['location']).filter(self.inventory.c.Last == 1)
             if 'request' in pattern:
                 request = pattern['request']
