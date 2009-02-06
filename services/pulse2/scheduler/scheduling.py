@@ -36,7 +36,7 @@ import sqlalchemy.orm
 import twisted.internet
 
 # MMC plugins
-from mmc.plugins.msc.database import MscDatabase
+from pulse2.database.msc import MscDatabase
 import mmc.plugins.msc.mirror_api
 
 # ORM mappings
