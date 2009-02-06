@@ -70,3 +70,18 @@ class DatabaseHelper(Singleton):
         """
         logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
+    def getDbConnection(self):
+        ret = None
+        for i in range(NB_DB_CONN_TRY):
+            try:
+                ret = self.db.connect()
+            except exceptions.SQLError, e:
+                self.logger.error(e)
+            except Exception, e:
+                self.logger.error(e)
+            if ret: break
+        if not ret:
+            raise "Database connection error"
+        return ret
+
+

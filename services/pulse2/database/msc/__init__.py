@@ -43,6 +43,7 @@ from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.bundle import Bundle
+from pulse2.database.database_helper import DatabaseHelper
 
 # Pulse 2 stuff
 import pulse2.time_intervals
@@ -51,43 +52,13 @@ from pulse2.utils import Singleton
 # Imported last
 import logging
 
-SA_MAJOR = 0
-SA_MINOR = 4
-DATABASEVERSION = 15
-NB_DB_CONN_TRY = 2
-
 # TODO need to check for useless function (there should be many unused one...)
 
-class MscDatabase(Singleton):
+class MscDatabase(DatabaseHelper):
     """
     Singleton Class to query the msc database.
 
     """
-    # TODO: scheduler algo should move somewhere else
-    is_activated = False
-
-    def db_check(self):
-        if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAJOR, SA_MINOR))
-            return False
-
-        conn = self.connected()
-        if conn:
-            if conn != DATABASEVERSION:
-                self.logger.error("Msc database version error: v.%s needeed, v.%s found; please update your schema !" % (DATABASEVERSION, conn))
-                return False
-        else:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check msc.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
-            return False
-
-        return True
-
-    def __checkSqlalchemy(self):
-        import sqlalchemy
-        a_version = sqlalchemy.__version__.split('.')
-        if len(a_version) > 2 and str(a_version[0]) == str(SA_MAJOR) and str(a_version[1]) == str(SA_MINOR):
-            return True
-        return False
 
     def activate(self, config):
         self.logger = logging.getLogger()
@@ -105,40 +76,6 @@ class MscDatabase(Singleton):
         self.session = create_session()
         self.is_activated = True
         self.logger.debug("Msc database connected")
-
-    def makeConnectionPath(self):
-        """
-        Build and return the db connection path according to the plugin configuration
-
-        @rtype: str
-        """
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbsslenable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
-        return url
-
-    def connected(self):
-        if (self.db != None):
-            return self.version.select().execute().fetchone()[0]
-        return False
-
-    def getDbConnection(self):
-        ret = None
-        for i in range(NB_DB_CONN_TRY):
-            try:
-                ret = self.db.connect()
-            except exceptions.SQLError, e:
-                self.logger.error(e)
-            except Exception, e:
-                self.logger.error(e)
-            if ret: break
-        if not ret:
-            raise "Database connection error"
-        return ret
 
     def initTables(self):
         """
@@ -203,24 +140,6 @@ class MscDatabase(Singleton):
             }
         )
         # FIXME: Version is missing
-
-    def myfunctions(self):
-        pass
-
-    def enableLogging(self, level = None):
-        """
-        Enable log for sqlalchemy.engine module using the level configured by the dbdebug option of the plugin configuration file.
-        The SQL queries will be loggued.
-        """
-        if not level:
-            level = self.config.dbdebug
-        logging.getLogger("sqlalchemy.engine").setLevel(level)
-
-    def disableLogging(self):
-        """
-        Disable log for sqlalchemy.engine module
-        """
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
     ####################################
 
