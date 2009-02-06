@@ -42,7 +42,7 @@ class MirrorApi:
             self.server_addr = str(url)
             self.maserver = Proxy(self.server_addr)
         else:
-            self.config = mmc.plugins.msc.MscConfig("msc")
+            self.config = mmc.plugins.msc.MscConfig()
 
             if self.config.ma_enablessl:
                 self.server_addr = 'https://'
