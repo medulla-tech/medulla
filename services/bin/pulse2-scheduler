@@ -57,10 +57,11 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Other stuff
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.xmlrpc import makeSSLContext, SchedulerSite
+from pulse2.scheduler.xmlrpc import SchedulerSite
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
+import pulse2.xmlrpc
 
 # Logging
 import logging
@@ -125,7 +126,7 @@ def startService():
     logger.info('scheduler %s: starting' % config.name)
     try:
         if config.enablessl:
-            sslContext = makeSSLContext(config)
+            sslContext = pulse2.xmlrpc.makeSSLContext(config)
             twisted.internet.reactor.listenSSL(
                 config.port,
                 SchedulerSite(Scheduler(config.name)),
