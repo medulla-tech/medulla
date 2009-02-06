@@ -89,7 +89,7 @@ class MscDatabase(msc.MscDatabase):
                 max_connection_attempt = 3,
                 do_inventory = 'disable',
                 maxbw = 0,
-                root = MscConfig("msc").repopath,
+                root = None,
                 deployment_intervals = "",
                 fk_bundle = None,
                 order_in_bundle = None,
@@ -101,6 +101,8 @@ class MscDatabase(msc.MscDatabase):
 
         Return a Deferred object resulting to the command id
         """
+        if root == None:
+            root = self.config.repopath
 
         def getBCast(ip, netmask):
             a_ip = ip.split('.')
