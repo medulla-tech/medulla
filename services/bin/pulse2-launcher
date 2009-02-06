@@ -50,7 +50,8 @@ import pulse2.launcher.process_control
 import pulse2.launcher.network
 import pulse2.launcher.tcp_sproxy
 
-from pulse2.launcher.xmlrpc import LauncherSite, makeSSLContext, getProxy
+from pulse2.launcher.xmlrpc import LauncherSite, getProxy
+import pulse2.xmlrpc
 
 # Logging
 import logging
@@ -124,18 +125,16 @@ def startService():
     launcher = Launcher(name)
     try:
         if enablessl:
-            if not os.path.isfile(config.launchers[config.name]["localcert"]):
-                logger.error('launcher %s: can\'t read SSL key "%s"' % (name, config.launchers[config.name]["localcert"]))
-                return 1
-            if not os.path.isfile(config.launchers[config.name]["cacert"]):
-                logger.error('launcher %s: can\'t read SSL certificate "%s"' % (name, config.launchers[config.name]["cacert"]))
-                return 1
-            sslContext = makeSSLContext(config.launchers[config.name])
+            pulse2.xmlrpc.OpenSSLContext().setup(
+                config.launchers[config.name]['localcert'],
+                config.launchers[config.name]['cacert'],
+                config.launchers[config.name]['verifypeer']
+            )
             twisted.internet.reactor.listenSSL(
                 port,
                 LauncherSite(launcher),
                 interface = bind,
-                contextFactory = sslContext
+                contextFactory = pulse2.xmlrpc.OpenSSLContext().getContext()
                 )
             logger.info('launcher %s: activating SSL mode' % (name))
         else:

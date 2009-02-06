@@ -34,7 +34,8 @@ try:
 except ImportError:
     from twisted.protocols import http
 
-from pulse2.launcher.config import LauncherConfig
+import pulse2.launcher.config
+import pulse2.xmlrpc
 
 class LauncherHTTPChannel(http.HTTPChannel):
     """
@@ -55,40 +56,6 @@ class LauncherHTTPChannel(http.HTTPChannel):
 
 class LauncherSite(twisted.web.server.Site):
     protocol = LauncherHTTPChannel
-
-def makeSSLContext(config, log = True):
-    """
-    Make the SSL context for the server, according to the configuration.
-
-    @returns: a SSL context
-    @rtype: twisted.internet.ssl.ContextFactory
-    """
-    logger = logging.getLogger()
-    if config["verifypeer"]:
-        fd = open(config["localcert"])
-        localcert = ssl.PrivateCertificate.loadPEM(fd.read())
-        fd.close()
-        fd = open(config["cacert"])
-        cacert = ssl.Certificate.loadPEM(fd.read())
-        fd.close()
-        ctx = localcert.options(cacert)
-        ctx.verify = True
-        ctx.verifyDepth = 9
-        ctx.requireCertification = True
-        ctx.verifyOnce = True
-        ctx.enableSingleUseKeys = True
-        ctx.enableSessions = True
-        ctx.fixBrokenPeers = False
-        if log:
-            logger.debug("CA certificate informations: %s" % config["cacert"])
-            logger.debug(cacert.inspect())
-            logger.debug("Launcher certificate: %s" % config["localcert"])
-            logger.debug(localcert.inspect())
-    else:
-        if log:
-            logger.warning("SSL enabled, but peer verification is disabled.")
-        ctx = ssl.DefaultOpenSSLContextFactory(config["localcert"], config["cacert"])
-    return ctx
 
 class LauncherProxy(twisted.web.xmlrpc.Proxy):
 
@@ -120,10 +87,10 @@ def getProxy(url):
     if url.startswith("http://"):
         ret = twisted.web.xmlrpc.Proxy(url)
     else:
-        config = LauncherConfig()
+        config = pulse2.launcher.config.LauncherConfig()
         if config.launchers[config.name]['verifypeer']:
             # We have to build the SSL context to include launcher certificates
-            ctx = makeSSLContext(config.launchers[config.name], False)
+            ctx = pulse2.xmlrpc.OpenSSLContext().getContext()
             ret = LauncherProxy(url)
             ret.setSSLClientContext(ctx)
         else:
