@@ -34,6 +34,7 @@ except ImportError:
     from twisted.protocols import http
 
 from pulse2.scheduler.config import SchedulerConfig
+import pulse2.utils
 
 class SchedulerHTTPChannel(http.HTTPChannel):
     """
@@ -55,39 +56,70 @@ class SchedulerHTTPChannel(http.HTTPChannel):
 class SchedulerSite(twisted.web.server.Site):
     protocol = SchedulerHTTPChannel
 
-def makeSSLContext(config, log = True):
+class OpenSSLContext(pulse2.utils.Singleton):
     """
-    Make the SSL context for the server, according to the configuration.
+    Singleton Class to hold OpenSSL stuff, preventing further reopening of client certs
+    """
+    ctx = None
+    verifypeer = False
+    cacert_path = None
+    localcert_path = None
+    cacert_content = None
+    localcert_content = None
 
-    @returns: a SSL context
-    @rtype: twisted.internet.ssl.ContextFactory
-    """
-    logger = logging.getLogger()
-    if config.verifypeer:
-        fd = open(config.localcert)
-        localcert = ssl.PrivateCertificate.loadPEM(fd.read())
-        fd.close()
-        fd = open(config.cacert)
-        cacert = ssl.Certificate.loadPEM(fd.read())
-        fd.close()
-        ctx = localcert.options(cacert)
-        ctx.verify = True
-        ctx.verifyDepth = 9
-        ctx.requireCertification = True
-        ctx.verifyOnce = True
-        ctx.enableSingleUseKeys = True
-        ctx.enableSessions = True
-        ctx.fixBrokenPeers = False
-        if log:
-            logger.debug("CA certificate informations: %s" % config.cacert)
-            logger.debug(cacert.inspect())
-            logger.debug("Scheduler certificate: %s" % config.localcert)
-            logger.debug(localcert.inspect())
-    else:
-        if log:
+    def getContext(self):
+        """
+            Create an SSL context.
+        """
+        if self.verifypeer:
+            localcert = ssl.PrivateCertificate.loadPEM(self.localcert_content)
+            cacert = ssl.Certificate.loadPEM(self.cacert_content)
+            ctx = localcert.options(cacert)
+            ctx.verify = True
+            ctx.verifyDepth = 9
+            ctx.requireCertification = True
+            ctx.verifyOnce = True
+            ctx.enableSingleUseKeys = True
+            ctx.enableSessions = True
+            ctx.fixBrokenPeers = False
+            return ctx
+        else:
+            return ssl.DefaultOpenSSLContextFactory(self.localcert_path, self.cacert_path)
+
+    def setup(self, config):
+        """
+        Just load the certs in verifypeer mode
+        do nothing in standart mode
+        """
+        logger = logging.getLogger()
+
+        self.verifypeer = config.verifypeer
+        self.cacert_path = config.cacert
+        self.localcert_path = config.localcert
+
+        if self.verifypeer:
+            fd = open(self.cacert_path)
+            self.cacert_content = fd.read()
+            fd.close()
+            fd = open(self.localcert_path)
+            self.localcert_content = fd.read()
+            fd.close()
+
+            cacert = ssl.Certificate.loadPEM(self.cacert_content)
+            logger.info("CA certificate: %s" % self.cacert_path)
+            logger.info(cacert.inspect())
+            localcert = ssl.PrivateCertificate.loadPEM(self.localcert_content)
+            logger.info("My certificate: %s" % self.localcert_path)
+            logger.info(localcert.inspect())
+            logger.info("SSL enabled, and peer verification is enabled.")
+        else:
             logger.warning("SSL enabled, but peer verification is disabled.")
-        ctx = ssl.DefaultOpenSSLContextFactory(config.localcert, config.cacert)
-    return ctx
+
+def makeSSLContext(config, log = True):
+    if log:
+        OpenSSLContext().setup(config)
+    return OpenSSLContext().getContext()
+
 
 class SchedulerProxy(twisted.web.xmlrpc.Proxy):
 
