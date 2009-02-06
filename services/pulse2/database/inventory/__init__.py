@@ -188,6 +188,9 @@ class Inventory(DyngroupDatabaseHelper):
         query = session.query(Machine).select_from(join_query).filter(query_filter)
         # end of dyngroups
 
+        # Always select the last inventory
+        query = query.filter(self.inventory.c.Last == 1)
+
         # We first filter the computer list according to the entities the user
         # has the right to see.
         query = query.filter(self.table['Entity'].c.id.in_(ctx.locationsid))
@@ -201,7 +204,7 @@ class Inventory(DyngroupDatabaseHelper):
             if 'uuid' in pattern:
                 query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
             if 'location' in pattern and pattern['location']:
-                query = query.filter(self.table['Entity'].c.Label == pattern['location']).filter(self.inventory.c.Last == 1)
+                query = query.filter(self.table['Entity'].c.Label == pattern['location'])
             if 'request' in pattern:
                 request = pattern['request']
                 if 'equ_bool' in pattern:
