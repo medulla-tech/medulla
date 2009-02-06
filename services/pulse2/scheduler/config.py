@@ -27,15 +27,12 @@ import re           # fo re.compil
 import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
+import logging      # logging stuff
 import os.path      # for file checking
-
-# MMC
-from mmc.support.config import MMCConfigParser
 
 # Others Pulse2 Stuff
 import pulse2.utils
 
-import logging      # logging stuff
 
 class SchedulerConfig(pulse2.utils.Singleton):
     """
@@ -111,7 +108,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
         """
             used to pre-parse conf file to gather enough data to setuid() soon
         """
-        self.cp = MMCConfigParser()
+        self.cp = pulse2.utils.Pulse2ConfigParser()
         self.cp.read(config_file)
 
         if self.cp.has_option("daemon", "user"):
@@ -199,8 +196,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
 
         # [daemon] section parsing (parsing ofr user, group, and umask is done above in presetup)
         if self.cp.has_section("daemon"):
-            if self.cp.has_option('daemon', 'pid_path'): # TODO remove in a future version
-                logging.getLogger().warning("'pid_path' is obsolete, please replace it in your config file by 'pidfile'")
+            if self.cp.has_option('daemon', 'pid_path'):
+                logging.getLogger().warning("'pid_path' is deprecated, please replace it in your config file by 'pidfile'")
                 self.setoption('daemon', 'pid_path', 'pid_path')
             else:
                 self.setoption('daemon', 'pidfile', 'pid_path')
