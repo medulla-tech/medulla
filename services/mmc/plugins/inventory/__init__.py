@@ -50,7 +50,8 @@ def getRevision(): return REVISION
 
 def activate():
     logger = logging.getLogger()
-    config = InventoryConfig("inventory")
+    config = InventoryConfig()
+    config.init("inventory")
     logger.debug("Inventory %s"%str(config.disable))
     if config.disable:
         logger.warning("Plugin inventory: disabled by configuration.")
