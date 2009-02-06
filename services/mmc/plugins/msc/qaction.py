@@ -59,7 +59,7 @@ class Qaction:
         f.close()
 
 def qa_list_files():
-    path = MscConfig("msc").qactionspath
+    path = MscConfig().qactionspath
     if not os.path.exists(path):
         return [False, "Quick action path don't exists", path]
 
