@@ -35,7 +35,12 @@ if (displayLocalisationBar()) {
 
     $list = array();
     $values = array();
-    foreach (getUserLocations() as $loc) {
+    $locations = getUserLocations();
+    if (count($locations) > 1) {
+        $list[-1] = _T('All my entities', 'pulse2');
+        $values[-1] = '';
+    }
+    foreach ($locations as $loc) {
         $values[$loc['uuid']] = $loc['name'];
         if (isset($loc['altname'])) {
             $list[$loc['uuid']] = $loc['altname'];
