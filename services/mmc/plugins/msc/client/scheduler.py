@@ -42,7 +42,7 @@ def getProxy(schedulerConfig):
     """
     Return a suitable Proxy object to communicate with the scheduler
     """
-    config = MscConfig("msc")
+    config = MscConfig()
 
     url =  makeURL(schedulerConfig)
 
@@ -134,16 +134,16 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         if not result or result == '':
             scheduler_name = proposed_scheduler_name
             if not scheduler_name or scheduler_name == '':
-                scheduler_name = MscConfig("msc").default_scheduler
+                scheduler_name = MscConfig().default_scheduler
         else:
             scheduler_name = result
         logging.getLogger().debug("got %s as scheduler for client %s" % (scheduler_name, computer[1]['objectUUID'][0]))
 
-        if scheduler_name not in MscConfig('msc').schedulers:
+        if scheduler_name not in MscConfig().schedulers:
             logging.getLogger().warn("scheduler %s does not exist" % (scheduler_name))
             return twisted.internet.defer.fail(twisted.python.failure.Failure("Invalid scheduler %s (does not seem to exist)" % (scheduler_name)))
 
-        mydeffered = getProxy(MscConfig('msc').schedulers[scheduler_name]).callRemote(
+        mydeffered = getProxy(MscConfig().schedulers[scheduler_name]).callRemote(
             function,
             computer[1]['objectUUID'][0],
             computer[1]['fullname'],
@@ -245,7 +245,7 @@ def startCommand(scheduler, command_id):
 
 def __select_scheduler(scheduler_name):
     if not scheduler_name:
-        scheduler_name = MscConfig("msc").default_scheduler
+        scheduler_name = MscConfig().default_scheduler
     if scheduler_name == '':
-        scheduler_name = MscConfig("msc").default_scheduler
-    return MscConfig('msc').schedulers[scheduler_name]
+        scheduler_name = MscConfig().default_scheduler
+    return MscConfig().schedulers[scheduler_name]

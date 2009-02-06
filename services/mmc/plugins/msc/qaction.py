@@ -31,7 +31,7 @@ class Qaction:
     def __init__(self, filename):
         self.logger = logging.getLogger()
         self.filename = filename
-        self.fullfilename = os.path.join(MscConfig("msc").qactionspath, filename)
+        self.fullfilename = os.path.join(MscConfig().qactionspath, filename)
         self.result = {}
         self._parse()
 

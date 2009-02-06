@@ -38,7 +38,7 @@ from twisted.internet import defer
 class SchedulerApi(Singleton):
     def __init__(self):
         self.logger = logging.getLogger()
-        self.config = mmc.plugins.msc.MscConfig("msc")
+        self.config = MscConfig()
 
         if self.config.sa_enable:
             if self.config.sa_enablessl:
@@ -100,7 +100,7 @@ class SchedulerApi(Singleton):
             d.addCallback(self.cb_convert2id)
             return d
         else:
-            return defer.succeed(MscConfig("msc").default_scheduler)
+            return defer.succeed(MscConfig().default_scheduler)
 
     def getSchedulers(self, machines):
         if self.config.sa_enable:
@@ -110,7 +110,7 @@ class SchedulerApi(Singleton):
             d.addCallback(self.cb_convert2id)
             return d
         else:
-            return defer.succeed(map(lambda m: MscConfig("msc").default_scheduler, machines))
+            return defer.succeed(map(lambda m: MscConfig().default_scheduler, machines))
 
     def convertMachineIntoH(self, machine):
         if type(machine) != dict:

@@ -29,7 +29,7 @@ import exceptions
 class InventoryComputers(ComputerI):
     def __init__(self, conffile = None):
         self.logger = logging.getLogger()
-        self.config = InventoryConfig("inventory")
+        self.config = InventoryConfig()
         self.inventory = Inventory()
 
     def getComputer(self, ctx, filt = None):

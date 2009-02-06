@@ -31,7 +31,7 @@ from mmc.support.mmctools import Singleton
 
 class Machine:
     def __init__(self, h_params):
-        self.config = MscConfig("msc")
+        self.config = MscConfig()
         self.logger = logging.getLogger()
         self.logger.debug("new machine: |%s|" % h_params)
         self.ip = None
@@ -70,7 +70,7 @@ class Machine:
 class Machines(Singleton):
     def __init__(self):
         self.logger = logging.getLogger()
-        self.config = MscConfig("msc")
+        self.config = MscConfig()
 
     def getAllMachines(self, ctx):
         """

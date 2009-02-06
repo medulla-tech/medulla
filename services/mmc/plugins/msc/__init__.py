@@ -109,9 +109,7 @@ class ContextMaker(ContextMakerI):
 # config
 ##
 def getRepositoryPath():
-    conf = MscConfig()
-    conf.init('msc')
-    return xmlrpcCleanup(conf.repopath)
+    return xmlrpcCleanup(MscConfig().repopath)
 
 ##
 # msc_script
@@ -132,8 +130,6 @@ def msc_scp(user, ip, source, destination):
     return xmlrpcCleanup(mmc.plugins.msc.actions.msc_scp(user, ip, source, destination))
 
 class RpcProxy(RpcProxyI):
-    conf = MscConfig()
-    conf.init('msc')
     ##
     # machines
     ##
@@ -180,16 +176,16 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer))
 
     def can_download_file(self):
-        path = conf.web_dlpath
-        return (len(path) > 0) and os.path.exists(conf.download_directory_path)
+        path = MscConfig().web_dlpath
+        return (len(path) > 0) and os.path.exists(MscConfig().download_directory_path)
 
     def download_file(self, uuid):
-        path = conf.web_dlpath
+        path = MscConfig().web_dlpath
         ctx = self.currentContext
         if not path:
             ret = False
         else:
-            bwlimit = conf.web_def_dlmaxbw
+            bwlimit = MscConfig().web_def_dlmaxbw
             ctx = self.currentContext
             computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
             try: # FIXME: dirty bugfix, should be factorized upstream
@@ -398,61 +394,61 @@ class RpcProxy(RpcProxyI):
     #
 
     def get_web_def_awake(self):
-        return xmlrpcCleanup(conf.web_def_awake)
+        return xmlrpcCleanup(MscConfig().web_def_awake)
 
     def get_web_def_date_fmt(self):
-        return xmlrpcCleanup(conf.web_def_date_fmt)
+        return xmlrpcCleanup(MscConfig().web_def_date_fmt)
 
     def get_web_def_inventory(self):
-        return xmlrpcCleanup(conf.web_def_inventory)
+        return xmlrpcCleanup(MscConfig().web_def_inventory)
 
     def get_web_def_mode(self):
-        return xmlrpcCleanup(conf.web_def_mode)
+        return xmlrpcCleanup(MscConfig().web_def_mode)
 
     def get_web_def_force_mode(self):
-        return xmlrpcCleanup(conf.web_force_mode)
+        return xmlrpcCleanup(MscConfig().web_force_mode)
 
     def get_web_def_maxbw(self):
-        return xmlrpcCleanup(conf.web_def_maxbw)
+        return xmlrpcCleanup(MscConfig().web_def_maxbw)
 
     def get_web_def_delay(self):
-        return xmlrpcCleanup(conf.web_def_delay)
+        return xmlrpcCleanup(MscConfig().web_def_delay)
 
     def get_web_def_attempts(self):
-        return xmlrpcCleanup(conf.web_def_attempts)
+        return xmlrpcCleanup(MscConfig().web_def_attempts)
 
     def get_web_def_deployment_intervals(self):
-        return xmlrpcCleanup(conf.web_def_deployment_intervals)
+        return xmlrpcCleanup(MscConfig().web_def_deployment_intervals)
 
     def get_web_def_vnc_view_only(self):
-        return xmlrpcCleanup(conf.web_vnc_view_only)
+        return xmlrpcCleanup(MscConfig().web_vnc_view_only)
 
     def get_web_def_vnc_show_icon(self):
-        return xmlrpcCleanup(conf.web_vnc_show_icon)
+        return xmlrpcCleanup(MscConfig().web_vnc_show_icon)
 
     def get_web_def_vnc_network_connectivity(self):
-        return xmlrpcCleanup(conf.web_vnc_network_connectivity)
+        return xmlrpcCleanup(MscConfig().web_vnc_network_connectivity)
 
     def get_web_def_vnc_allow_user_control(self):
-        return xmlrpcCleanup(conf.web_vnc_allow_user_control)
+        return xmlrpcCleanup(MscConfig().web_vnc_allow_user_control)
 
     def get_web_def_allow_local_proxy(self):
-        return xmlrpcCleanup(conf.web_allow_local_proxy)
+        return xmlrpcCleanup(MscConfig().web_allow_local_proxy)
 
     def get_web_def_local_proxy_mode(self):
-        return xmlrpcCleanup(conf.web_def_local_proxy_mode)
+        return xmlrpcCleanup(MscConfig().web_def_local_proxy_mode)
 
     def get_web_def_max_clients_per_proxy(self):
-        return xmlrpcCleanup(conf.web_def_max_clients_per_proxy)
+        return xmlrpcCleanup(MscConfig().web_def_max_clients_per_proxy)
 
     def get_web_def_proxy_number(self):
-        return xmlrpcCleanup(conf.web_def_proxy_number)
+        return xmlrpcCleanup(MscConfig().web_def_proxy_number)
 
     def get_web_def_proxy_selection_mode(self):
-        return xmlrpcCleanup(conf.web_def_proxy_selection_mode)
+        return xmlrpcCleanup(MscConfig().web_def_proxy_selection_mode)
 
     def get_web_def_issue_halt_to(self):
-        return xmlrpcCleanup(conf.web_def_issue_halt_to)
+        return xmlrpcCleanup(MscConfig().web_def_issue_halt_to)
 
 ##
 # machines

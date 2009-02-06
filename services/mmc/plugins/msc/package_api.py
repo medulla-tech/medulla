@@ -56,7 +56,7 @@ class PackageA:
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.logger.debug('PackageA will connect to %s' % (self.server_addr))
 
-        self.config = MscConfig("msc")
+        self.config = MscConfig()
         if self.config.ma_verifypeer:
             self.paserver = XmlrpcSslProxy(self.server_addr)
             self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)

@@ -128,11 +128,11 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
                
     def getInventoryEM(self, col):
-        conf = InventoryConfig("inventory")
+        conf = InventoryConfig()
         return conf.expert_mode[col]
     
     def getInventoryGraph(self, col):
-        conf = InventoryConfig("inventory")
+        conf = InventoryConfig()
         return conf.graph[col]
     
     def getMachinesBy(self, table, field, value):
