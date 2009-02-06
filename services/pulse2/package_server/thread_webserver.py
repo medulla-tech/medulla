@@ -30,7 +30,7 @@ import SimpleHTTPServer
 from twisted.web import xmlrpc, resource, static, server
 from twisted.internet import reactor
 
-from pulse2.package_server.server import P2PSite, makeSSLContext
+from pulse2.package_server.server import P2PSite
 from pulse2.package_server.description import Description
 from pulse2.package_server.common import Common
 from pulse2.package_server.mirror_api import MirrorApi
@@ -40,6 +40,8 @@ from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
 from pulse2.package_server.user_package_api import UserPackageApi
 from pulse2.package_server.config import config_addons
+
+import pulse2.xmlrpc
 
 """
     Pulse2 PackageServer
@@ -52,9 +54,9 @@ class MyServer(resource.Resource):
 
 def initialize(config):
     logger = logging.getLogger()
-    
+
     port = int(config.port)
-            
+
     server = MyServer()
     services = []
     if len(config.mirrors) > 0:
@@ -76,12 +78,12 @@ def initialize(config):
             p_api = PackageApiPut(mirror_params['mount_point'], mirror_params['mount_point'], mirror_params['tmp_input_dir'])
             server.register(p_api, mirror_params['mount_point'])
             services.append({'type':'package_api_put', 'mp':mirror_params['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'url':'%s://%s:%s%s'%(config.proto, config.bind, config.port, mirror_params['mount_point'])})
- 
+
     if config.user_package_api.has_key('mount_point'):
         mirror = UserPackageApi(services, config.user_package_api['mount_point'], config.up_assign_algo)
         server.register(mirror, config.user_package_api['mount_point'])
         services.append({'type':'user_package_api', 'mp':config.user_package_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
-        
+
     if config.mirror_api.has_key('mount_point'):
         mirror = MirrorApi(services, config.mirror_api['mount_point'], config.mm_assign_algo)
         server.register(mirror, config.mirror_api['mount_point'])
@@ -94,25 +96,18 @@ def initialize(config):
         server.register(scheduler, config.scheduler_api['mount_point'])
         services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         logger.info("package server initialized with scheduler api")
- 
+
     server.register(Description(services), 'desc')
     Common().setDesc(services)
-    
+
     try:
         if config.enablessl:
-            logger.debug(config.localcert + " " + config.cacert)
-            if not os.path.isfile(config.localcert):
-                logger.error('can\'t read SSL key "%s"' % (config.localcert))
-                return 1
-            if not os.path.isfile(config.cacert):
-                logger.error('can\'t read SSL certificate "%s"' % (config.cacert))
-                return 1
-            sslContext = makeSSLContext(config.verifypeer, config.cacert, config.localcert)
+            pulse2.xmlrpc.OpenSSLContext().setup(config.localcert, config.cacert, config.verifypeer)
             twisted.internet.reactor.listenSSL(
                 port,
                 P2PSite(server),
                 interface = config.bind,
-                contextFactory = sslContext
+                contextFactory = pulse2.xmlrpc.OpenSSLContext().getContext()
                 )
             logger.info('activating SSL mode')
         else:
