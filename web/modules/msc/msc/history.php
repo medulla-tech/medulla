@@ -53,7 +53,7 @@ if (strlen($_GET['uuid'])) {
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $coh = new CommandOnHost($coh_id);
-        $coh->quickDisplay(); 
+        $coh->quickDisplay();
         $ch = new CommandHistory($coh_id);
         $ch->display();
     } else { # Display history for a specific host

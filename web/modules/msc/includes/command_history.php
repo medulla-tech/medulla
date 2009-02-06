@@ -33,25 +33,21 @@ class CommandOnHost {
         $this->db_coh = get_commands_on_host($coh);
         #$this->db_cmd = command_detail($this->db_coh['fk_commands']);
         $this->values = array(
-            array(_T('Host', 'msc'), $this->db_coh['host'], 1),
-            array(_T('Current State', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
-            array(_T('awoken', 'msc'), _plusIcon($this->db_coh['awoken']), 1),
-            array(_T('uploaded', 'msc'), _plusIcon($this->db_coh['uploaded']), 1),
-            array(_T('executed', 'msc'), _plusIcon($this->db_coh['executed']), 1),
-            array(_T('deleted', 'msc'), _plusIcon($this->db_coh['deleted']), 1),
-            array(_T('inventoried', 'msc'), _plusIcon($this->db_coh['inventoried']), 1),
-            array(_T('rebooted', 'msc'), _plusIcon($this->db_coh['rebooted']), 1),
-            array(_T('halted', 'msc'), _plusIcon($this->db_coh['halted']), 1)
+            array(_T('Host', 'msc'),            $this->db_coh['host'], 1),
+            array(_T('Current State', 'msc'),   $statusTable[$this->db_coh['current_state']], 1),
+            array(_T('awoken', 'msc'),          _plusIcon($this->db_coh['awoken']), 1),
+            array(_T('uploaded', 'msc'),        _plusIcon($this->db_coh['uploaded']), 1),
+            array(_T('executed', 'msc'),        _plusIcon($this->db_coh['executed']), 1),
+            array(_T('deleted', 'msc'),         _plusIcon($this->db_coh['deleted']), 1),
+            array(_T('inventoried', 'msc'),     _plusIcon($this->db_coh['inventoried']), 1),
+            array(_T('rebooted', 'msc'),        _plusIcon($this->db_coh['rebooted']), 1),
+            array(_T('halted', 'msc'),          _plusIcon($this->db_coh['halted']), 1)
         );
     }
     function display() {
-        $name = array_map("_names", $this->values);
-        $value = array_map("_values", $this->values);
-
-        $n = new ListInfos($name, _T('Name', 'msc'));
-        $n->addExtraInfo($value, _T('Value', 'msc'));
+        $n = new ListInfos(array_map("_names", $this->values), _T('Name', 'msc'));
+        $n->addExtraInfo(array_map("_values", $this->values), _T('Value', 'msc'));
         $n->setRowsPerPage(count($this->values));
-
         $n->drawTable(0);
     }
     function quickDisplay($actions = array(), $params = array()) {
@@ -71,6 +67,7 @@ class CommandOnHost {
         foreach ($actions as $a) {
             $n->addActionItem($a);
         }
+        $n->col_width=array("50px", "50px", "50px", "50px", "50px", "50px", "50px", "50px", "50px");
         $n->drawTable(0);
     }
 }
@@ -492,5 +489,5 @@ function _toDate($a) {
 
 function _plusIcon($a) {
     $statusTable = getStatusTable();
-    return '<img alt="'.$a.'" src="modules/msc/graph/images/status/'.return_icon($a).'"/> ' . $statusTable[$a];
+    return sprintf('<img title="%s" alt="%s" src="modules/msc/graph/images/status/%s" />', $statusTable[$a], $a, return_icon($a));
 }
