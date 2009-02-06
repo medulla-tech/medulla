@@ -1,6 +1,7 @@
 from pulse2.utils import Singleton
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 import logging
+NB_DB_CONN_TRY = 2
 
 class DatabaseHelper(Singleton):
     is_activated = False
