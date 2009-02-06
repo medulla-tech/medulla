@@ -31,7 +31,7 @@ import logging
 import mmc.support.mmctools
 from pulse2.utils import Singleton, Pulse2ConfigParser
 
-class DatabaseConfig(Pulse2ConfigParser):
+class DatabaseConfig(Singleton):
     dbsection = "database"
     
     dbdriver = 'mysql'

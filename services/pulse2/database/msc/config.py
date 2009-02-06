@@ -35,6 +35,7 @@ from pulse2.database.config import DatabaseConfig
 class MscDatabaseConfig(DatabaseConfig):
 
     dbname = "msc"
+    dbsection = "msc"
 
     def setup(self, config_file):
         # read the database configuration
