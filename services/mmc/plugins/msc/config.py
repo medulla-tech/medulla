@@ -134,7 +134,6 @@ class MscConfig(MscDatabaseConfig):
         """
         Read the module configuration
         """
-
         self.disable = self.cp.getboolean("main", "disable")
 
         # folders
@@ -170,7 +169,8 @@ class MscConfig(MscDatabaseConfig):
         # schedulers
         if self.cp.has_option("msc", "default_scheduler"):
             self.default_scheduler = self.cp.get("msc", "default_scheduler")
-        for section in self.sections():
+
+        for section in self.cp.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
                 if self.default_scheduler == "":
                     self.default_scheduler = section
@@ -185,7 +185,7 @@ class MscConfig(MscDatabaseConfig):
                 if self.schedulers[section]["enablessl"]:
                     if self.cp.has_option(section, "verifypeer"):
                         self.schedulers[section]["verifypeer"] = self.cp.getboolean(section, "verifypeer")
-                    if self.has_option(section, "cacert"):
+                    if self.cp.has_option(section, "cacert"):
                         self.schedulers[section]["cacert"] = self.cp.get(section, "cacert")
                     if self.cp.has_option(section, "localcert"):
                         self.schedulers[section]["localcert"] = self.cp.get(section, "localcert")
@@ -327,7 +327,6 @@ class MscConfig(MscDatabaseConfig):
             for id in self.schedulers:
                 url = makeURL(self.schedulers[id])
                 self.scheduler_url2id[url] = id
-
 
 # static config ...
 COMMAND_STATES_LIST = {
