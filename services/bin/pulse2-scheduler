@@ -126,12 +126,12 @@ def startService():
     logger.info('scheduler %s: starting' % config.name)
     try:
         if config.enablessl:
-            sslContext = pulse2.xmlrpc.makeSSLContext(config)
+            pulse2.xmlrpc.OpenSSLContext().setup(config.localcert, config.cacert, config.verifypeer)
             twisted.internet.reactor.listenSSL(
                 config.port,
                 SchedulerSite(Scheduler(config.name)),
                 interface = config.host,
-                contextFactory = sslContext
+                contextFactory = pulse2.xmlrpc.OpenSSLContext().getContext()
                 )
             logger.info('scheduler %s: activating SSL mode' % (config.name))
         else:

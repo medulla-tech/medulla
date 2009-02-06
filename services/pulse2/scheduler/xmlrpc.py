@@ -90,7 +90,7 @@ def getProxy(url):
         if config.verifypeer:
             # We have to build the SSL context to include scheduler
             # certificates
-            ctx = pulse2.xmlrpc.makeSSLContext(config, False)
+            ctx = pulse2.xmlrpc.OpenSSLContext().getContext()
             ret = SchedulerProxy(url)
             ret.setSSLClientContext(ctx)
         else:
