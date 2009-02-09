@@ -120,8 +120,11 @@ def start_launcher(name, config):
     os.setuid(config.daemon_user)
 
     launcher_path = config.launcher_path
-    logger.info('daemonization ended: switching to %s' % [launcher_path, '--id', name])
-    os.execv(launcher_path, (launcher_path, '--id', name))
+    cmd = [launcher_path, '--id', name]
+    if config.launchers[name]['logconffile']:
+        cmd.extend(['--log-config-file', config.launchers[name]['logconffile']])
+    logger.info('daemonization ended: switching to %s' % cmd)
+    os.execv(launcher_path, cmd)
 
 def stop_launcher(name, config):
     logger = logging.getLogger()
@@ -258,6 +261,7 @@ if __name__ == "__main__":
             # Maybe we are not root, so it may not be a problem if the mkdir
             # failed
             pass
+
     logger = logging.getLogger()
 
     if args[0] == "start":

@@ -338,6 +338,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                             'slots': self.getvaluedefaulted(section, 'slots', 300, 'int'),
                             'username': self.getvaluedefaulted(section, 'username', 'username'),
                             'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler),
+                            'logconffile' : self.getvaluedefaulted(section, 'logconffile', None),
                         }
                     if self.launchers[section]['enablessl']:
                         if self.cp.has_option(section, 'verifypeer'):
