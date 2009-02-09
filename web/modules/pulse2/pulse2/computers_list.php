@@ -27,6 +27,7 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 $param = array();
 if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }
+if (isset($_GET['groupname'])) { $param['groupname'] = $_GET['groupname']; }
 if (isset($_GET['request'])) { $param['request'] = $_GET['request']; }
 if (isset($_GET['equ_bool'])) { $param['equ_bool'] = $_GET['equ_bool']; }
 
@@ -60,9 +61,5 @@ if (displayLocalisationBar()) {
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-
-if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
-    ?><a href='<?= urlStr("base/computers/csv", array('groupname'=>$_GET['groupname'], 'gid'=>$_GET['gid'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
-}
 
 ?>
