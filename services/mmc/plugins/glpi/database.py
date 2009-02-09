@@ -831,6 +831,8 @@ class Glpi(DyngroupDatabaseHelper):
             size = len(ret)
         if all and size == len(a_machine_uuid):
             return True
+        elif (not all) and len(a_machine_uuid) == 0:
+            return True
         elif (not all) and len(ret) > 0:
             return True
         ret = Set(map(lambda m:toUUID(str(m.ID)), ret))
