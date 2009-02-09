@@ -86,7 +86,7 @@ foreach ($packages as $c_package) {
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
     $a_sizes[] = prettyOctetDisplay($package->size);
-    if ($machine) {
+    if ($_GET['uuid']) {
         $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
         $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
