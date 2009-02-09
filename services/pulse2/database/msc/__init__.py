@@ -30,12 +30,13 @@ import os.path
 from sqlalchemy import *
 from sqlalchemy import exceptions
 from sqlalchemy.orm import *
+from sqlalchemy.exceptions import NoSuchTableError
 
 from twisted.internet import defer
 
 # MMC modules
 # TODO has to be move to pulse2-common
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.location import ComputerLocationManager
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -74,57 +75,64 @@ class MscDatabase(DatabaseHelper):
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True)
         self.metadata = MetaData(self.db)
-        self.initTables()
+        if not self.initTables():
+            return False
         self.initMappers()
         self.metadata.create_all()
         # FIXME: should be removed
         self.session = create_session()
         self.is_activated = True
         self.logger.debug("Msc database connected")
+        return False
 
     def initTables(self):
         """
         Initialize all SQLalchemy tables
         """
-        # commands
-        self.commands = Table("commands", self.metadata,
-                            Column('dispatched', String(32), default='YES'),
-                            Column('fk_bundle', Integer, ForeignKey('bundle.id')),
-                            autoload = True)
-        # commands_history
-        self.commands_history = Table(
-            "commands_history",
-            self.metadata,
-            Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
-            autoload = True
-        )
-        # target
-        self.target = Table(
-            "target",
-            self.metadata,
-            autoload = True
-        )
-        # bundle
-        self.bundle = Table(
-            "bundle",
-            self.metadata,
-            autoload = True
-        )
-        # commands_on_host
-        self.commands_on_host = Table(
-            "commands_on_host",
-            self.metadata,
-            Column('fk_commands', Integer, ForeignKey('commands.id')),
-            Column('fk_target', Integer, ForeignKey('target.id')),
-            autoload = True
-        )
-        # version
-        self.version = Table(
-            "version",
-            self.metadata,
-            autoload = True
-        )
-
+        try:
+            # commands
+            self.commands = Table("commands", self.metadata,
+                                Column('dispatched', String(32), default='YES'),
+                                Column('fk_bundle', Integer, ForeignKey('bundle.id')),
+                                autoload = True)
+            # commands_history
+            self.commands_history = Table(
+                "commands_history",
+                self.metadata,
+                Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
+                autoload = True
+            )
+            # target
+            self.target = Table(
+                "target",
+                self.metadata,
+                autoload = True
+            )
+            # bundle
+            self.bundle = Table(
+                "bundle",
+                self.metadata,
+                autoload = True
+            )
+            # commands_on_host
+            self.commands_on_host = Table(
+                "commands_on_host",
+                self.metadata,
+                Column('fk_commands', Integer, ForeignKey('commands.id')),
+                Column('fk_target', Integer, ForeignKey('target.id')),
+                autoload = True
+            )
+            # version
+            self.version = Table(
+                "version",
+                self.metadata,
+                autoload = True
+            )
+        except NoSuchTableError, e:
+            self.logger.error("Cant load the msc database : table '%s' does not exists"%(str(e.args[0])))
+            return False
+        return True
+ 
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the msc database

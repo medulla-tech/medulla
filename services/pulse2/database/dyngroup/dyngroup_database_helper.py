@@ -24,7 +24,7 @@ import logging
 from sets import Set
 from sqlalchemy import *
 from sqlalchemy.exceptions import SQLError
-from mmc.plugins.pulse2.group import ComputerGroupManager
+from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.database_helper import DatabaseHelper
 
