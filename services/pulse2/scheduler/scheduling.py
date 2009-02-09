@@ -250,14 +250,15 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
     if myCoH == None:
         return 'error'
     if myCoH.getOrderInProxy() == None:                                 # I'm a client: I MUST use a proxy server ...
-        available_proxy = list()
-        free_proxy = list()
+        temp_dysfunc_proxy = list() # proxies with no data (UPLOADED != DONE)
+        def_dysfunc_proxy = list()  # proxies with no data (UPLOADED != DONE) and which definitely wont't process further (current_state != scheduled)
+        available_proxy = list()    # proxies with complete data (UPLOADED = DONE)
+        free_proxy = list()         # proxies with complete data (UPLOADED = DONE) and free to use
 
         # iterate over CoH which
         # are linked to the same command
         # are not our CoH
         # are proxy server
-        # have done their upload
         session = sqlalchemy.orm.create_session()
         database = MscDatabase()
         for q in session.query(CommandsOnHost).\
@@ -265,27 +266,41 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
             filter(database.commands.c.id == myC.id).\
             filter(database.commands_on_host.c.id != myCoH.id).\
             filter(database.commands_on_host.c.order_in_proxy != None).\
-            filter(database.commands_on_host.c.uploaded == 'DONE').\
             all():
-                available_proxy.append(q.id)
+                # got 4 categories here:
+                #  - DONE and not DONE
+                #  - scheduled and not scheduled
+                # => upload DONE, (scheduled or not): proxy free to use (depnding on nb of clients, see below)
+                # => upload !DONE + (failed, over_timed) => will never be available => defin. failed
+                # => upload !DONE + ! (failed or over_timed) => may be available in some time => temp. failed
+                if q.uploaded == 'DONE':
+                    available_proxy.append(q.id)
+                elif q.current_state in ('failed', 'over_timed'):
+                    def_dysfunc_proxy.append(q.id)
+                else:
+                    temp_dysfunc_proxy.append(q.id)
         session.close()
 
-        if len(available_proxy) == 0: # not proxy at all, give up
-            logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
-            return 'dead'
+        if len(available_proxy) == 0: # not proxy seems ready ?
+            if len(temp_dysfunc_proxy) == 0: # and others seems dead
+                logging.getLogger().debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (SchedulerConfig().name, myCommandOnHostID))
+                return 'dead'
+            else:
+                logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy to be ready" % (SchedulerConfig().name, myCommandOnHostID))
+                return 'waiting'
 
-        # remove full proxy
+        # remove full proxy (available_proxy => free_proxy)
         for proxy in available_proxy:
             (current_client_number, max_client_number) = getClientUsageForProxy(proxy)
             if current_client_number < max_client_number:
                 free_proxy.append(proxy)
 
         if len(free_proxy) == 0: # not free proxy, wait
-            logging.getLogger().debug("scheduler %s: still waiting for a free proxy for #%s, so I'm waiting" % (SchedulerConfig().name, myCommandOnHostID))
+            logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy for to be free" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else: # take a proxy in free proxyes
             final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
-            logging.getLogger().debug("scheduler %s: found coh #%s as local proxy for #%s" % (SchedulerConfig().name, final_proxy, myCommandOnHostID))
+            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy" % (SchedulerConfig().name, myCommandOnHostID, final_proxy))
             return final_proxy
 
     else:                                                               # I'm a server: let's upload
@@ -352,7 +367,7 @@ def getProxyModeForCommand(myCommandOnHostID):
         logging.getLogger().debug("scheduler %s: can'f guess proxy mode for command #%s" % (SchedulerConfig().name, myC.id))
         return False
 
-def localProxyMayCleanup(myCommandOnHostID):
+def localProxyMayContinue(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -369,7 +384,7 @@ def localProxyMayCleanup(myCommandOnHostID):
     # to prevent race condition, not check is perform to count only our clients but everybody client
 
     if myCoH.isLocalProxy(): # roxy server, way for clients to be done
-        logging.getLogger().debug("scheduler %s: checking if we may cleanup coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
+        logging.getLogger().debug("scheduler %s: checking if we may continue coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
         session = sqlalchemy.orm.create_session()
         database = MscDatabase()
         our_client_count = session.query(CommandsOnHost).\
@@ -1066,6 +1081,12 @@ def runExecutionPhase(myCommandOnHostID):
         myCoH.setStateScheduled()
         return runDeletePhase(myCommandOnHostID)
 
+    if myC.hasToUseProxy():
+        if not localProxyMayContinue(myCommandOnHostID):
+            logger.info("command_on_host #%s: execution postponed, waiting for some clients" % myCommandOnHostID)
+            myCoH.setStateScheduled()
+            return None
+
     # if we are here, execution has either previously failed or never be done
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('execute'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
@@ -1162,12 +1183,6 @@ def runDeletePhase(myCommandOnHostID):
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
-
-    if myC.hasToUseProxy():
-        if not localProxyMayCleanup(myCommandOnHostID):
-            logger.info("command_on_host #%s: cleanup postponed, waiting for some clients" % myCommandOnHostID)
-            myCoH.setStateScheduled()
-            return None
 
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
