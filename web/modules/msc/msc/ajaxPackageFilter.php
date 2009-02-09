@@ -35,11 +35,9 @@ require_once('../../../modules/msc/includes/mirror_api.php');
 require_once('../../../modules/msc/includes/machines.inc.php');
 require_once('../../../modules/msc/includes/widgets.inc.php');
 require_once('../../../modules/msc/includes/utilities.php');
-$machine = null;
+
 $group = null;
-if ($_GET['uuid']) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname']), false); // should be changed in uuid
-} elseif ($_GET['gid']) {
+if ($_GET['gid']) {
     require_once("../../../modules/dyngroup/includes/utilities.php");
     require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
     require_once("../../../modules/dyngroup/includes/xmlrpc.php");
@@ -49,8 +47,8 @@ if ($_GET['uuid']) {
 }
 
 require_once("../../../modules/msc/includes/package_api.php");
-if ($machine) {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $machine->hostname));
+if ($_GET['uuid']) {
+    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
 } else {
     $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
 }
@@ -71,9 +69,9 @@ if (isset($_GET["start"])) {
 }
 
 $filter['filter'] = $_GET["filter"];
-if ($machine) {
-    $filter['machine'] = $machine->hostname;
-    $filter['uuid'] = $machine->uuid;
+if ($_GET['uuid']) {
+    $filter['machine'] = $_GET['hostname'];
+    $filter['uuid'] = $_GET['uuid'];
 } else {
     $filter['group'] = $group->id;
 }
@@ -89,7 +87,7 @@ foreach ($packages as $c_package) {
     $a_pversions[] = $package->version;
     $a_sizes[] = prettyOctetDisplay($package->size);
     if ($machine) {
-        $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+        $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
         $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
     }

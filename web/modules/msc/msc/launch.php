@@ -309,22 +309,19 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
 /* single target: form display */
 if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
-    if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
-        $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
-        $msc_host->headerDisplay();
-    } else { // We found a matching computer, display QActions and available packages
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
-        $msc_host = new RenderedMSCHost($machine);
-        $msc_host->ajaxDisplay();
+    $machine = new Machine();
+    $machine->uuid = $_GET['uuid'];
+    $machine->hostname = $_GET['hostname'];
+    $msc_host = new RenderedMSCHost($machine);
+    $msc_host->ajaxDisplay();
+    
+    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
+    $msc_actions->display();
+    
+    $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
+    $ajax->display();
+    $ajax->displayDivToUpdate();
 
-        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
-        $msc_actions->display();
-
-        $ajax = new AjaxFilter("modules/msc/msc/ajaxPackageFilter.php?uuid=".$machine->uuid."&hostname=".$machine->hostname);
-        $ajax->display();
-        $ajax->displayDivToUpdate();
-    }
 }
 
 /* group display */

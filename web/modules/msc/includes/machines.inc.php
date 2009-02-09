@@ -27,7 +27,7 @@ function getMachine($h_params, $ping = true) { return new Machine(rpcGetMachine(
 
 // Machine object
 class Machine {
-    function Machine($h_params, $ping = true) {
+    function Machine($h_params, $ping = False) {
         $this->ping = false;
         $this->hostname = $h_params['hostname'][0];
         $this->uuid = $h_params['uuid'];
