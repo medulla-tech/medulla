@@ -70,14 +70,19 @@ import logging.config
 
 VERSION = "0.0.0"
 
-def reschedule_awake_scheduling((deffered)):
-    start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
-    twisted.internet.reactor.callLater(start_commands_in, run_awake_scheduling)
-    # FIXME: Little sleep because sometimes Python exits before the
-    # callLater have the time to start
-    time.sleep(2)
+def start_all_callbacks():
+    startup_delay = 2
+    logger = logging.getLogger()
+    logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, startup_delay))
+    time.sleep(startup_delay)
+    scheduleAwakeScheduling()
+    logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
-def run_awake_scheduling():
+def scheduleAwakeScheduling():
+    start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
+    twisted.internet.reactor.callLater(start_commands_in, awakeScheduling)
+
+def awakeScheduling():
     logger = logging.getLogger()
     logger.info('scheduler "%s": wake-up' % (SchedulerConfig().name))
     # start command, gather deffered
@@ -91,9 +96,7 @@ def run_awake_scheduling():
     except Exception, e:
         logger.error("Error while running stopElapsedCommands")
         logger.error(e)
-    # FIXME: should perhaps be called without waiting for deferreds ?
-    # adds a end hook to reschedule awake_scheduling
-    reschedule_awake_scheduling(None)
+    scheduleAwakeScheduling()
 
 def startService():
     conffile = mmc.support.mmctools.getConfigFile("msc")
@@ -149,10 +152,8 @@ def startService():
         logger.error('scheduler %s: can\'t bind to %s:%d, reason is %s' % (config.name, config.host, config.port, e))
         return 1
 
-    # start periodic scheduler, called every awake_time seconds
-    reschedule_awake_scheduling(None)
+    twisted.internet.reactor.callWhenRunning(start_all_callbacks)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
-
     twisted.internet.reactor.run()
     return 0
 
