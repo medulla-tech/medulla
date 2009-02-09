@@ -110,7 +110,6 @@ def startService():
         logger.warn('scheduler %s: no username set !!' % (config.name))
     if not config.password:
         logger.warn('scheduler %s: no password set !!' % (config.name))
-
     # check versus MySQLdb version
     import MySQLdb
     (v1, v2, v3, v4, v5) = MySQLdb.version_info

@@ -152,6 +152,11 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
     return callOnBestLauncher(None, 'probe', client)
 
 def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
+    """ returns
+        0 => ping NOK
+        1 => ping OK, ssh NOK
+        2 => ping OK, ssh OK
+    """
     def _pingcb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
         def _probecb(result, uuid=uuid, fqdn=fqdn, shortname=shortname, ips=ips, macs=macs):
             if not result == "Not available":

@@ -51,6 +51,7 @@ from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLaunche
 import pulse2.scheduler.network
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
+from pulse2.scheduler.launchers_driving import pingAndProbeClient
 
 def gatherStuff():
     """ handy function to gather widely used objects """
@@ -723,12 +724,34 @@ def runWOLPhase(myCommandOnHostID):
     """
         Attempt do see if a wake-on-lan should be done
     """
+    def _cb(result):
+        """ results
+            0 => ping NOK => do WOL
+            1 => ping OK, ssh NOK  => do WOL (computer may just have awoken)
+            2 => ping OK, ssh OK => don't do WOL
+        """
+        if result == 2:
+            logger.info("command_on_host #%s: do not wol (target already up)" % myCommandOnHostID)
+            updateHistory(myCommandOnHostID, 'wol_done', 0, "skipped: host already up", "")
+            myCoH.setWOLIgnored()
+            myCoH.setStateScheduled()
+            return runUploadPhase(myCommandOnHostID)
+        logger.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
+        return performWOLPhase(myCommandOnHostID)
+
+    def _eb(reason):
+        logger.warn("command_on_host #%s: while probing: %s" % (myCommandOnHostID, reason))
+        logger.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
+        return performWOLPhase(myCommandOnHostID)
 
     # check for WOL condition in order to give up if needed
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return None
+
     logger = logging.getLogger()
+    logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
+
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
             if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < (SchedulerConfig().max_wol_time + 300):
@@ -762,20 +785,37 @@ def runWOLPhase(myCommandOnHostID):
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
 
-    logger.info("command_on_host #%s: WOL phase" % myCommandOnHostID)
+    # WOL has to be performed, but only if computer is down (ie. no ping)
+    uuid = myT.target_uuid
+    fqdn = myT.target_name
+    shortname = myT.target_name
+    ips = myT.target_ipaddr.split('||')
+    macs = myT.target_macaddr.split('||')
+    mydeffered = pingAndProbeClient(uuid, fqdn, shortname, ips, macs)
+    mydeffered.\
+        addCallback(_cb).\
+        addErrback(_eb)
+    return mydeffered
 
+def performWOLPhase(myCommandOnHostID):
+    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     myCoH.setLastWOLAttempt()
     myCoH.setWOLInProgress()
     updateHistory(myCommandOnHostID, 'wol_in_progress')
     myCoH.setStateWOLInProgress()
 
     # perform call
-    mydeffered = callOnBestLauncher(myCommandOnHostID, 'wol', myT.target_macaddr.split('||'), myT.target_bcast.split('||'))
+    mydeffered = callOnBestLauncher(myCommandOnHostID,
+        'wol',
+        myT.target_macaddr.split('||'),
+        myT.target_bcast.split('||')
+    )
 
     mydeffered.\
         addCallback(parseWOLResult, myCommandOnHostID).\
         addErrback(parseWOLError, myCommandOnHostID)
     return mydeffered
+
 
 def runUploadPhase(myCommandOnHostID):
     """
