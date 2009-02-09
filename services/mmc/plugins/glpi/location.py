@@ -21,7 +21,7 @@
 # MA 02110-1301, USA.
 
 import logging
-from mmc.plugins.pulse2.location import ComputerLocationI
+from pulse2.managers.location import ComputerLocationI
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
 

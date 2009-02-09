@@ -26,7 +26,7 @@ from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
 import logging
 

@@ -21,7 +21,7 @@
 # MA 02110-1301, USA.
 
 import logging
-from mmc.plugins.pulse2.group import ComputerGroupI
+from pulse2.managers.group import ComputerGroupI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.qmanager import QueryManager
 

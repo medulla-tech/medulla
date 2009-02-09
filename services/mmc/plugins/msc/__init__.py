@@ -35,8 +35,8 @@ from mmc.support.mmctools import shLaunch, xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.base.computers import ComputerManager
-from mmc.plugins.pulse2.group import ComputerGroupManager
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.group import ComputerGroupManager
+from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.qaction import qa_list_files
@@ -78,7 +78,8 @@ def activate():
         logger.error("Quick Actions config is invalid: %s is not a directory. Please check msc.ini." % config.qactionspath)
         return False
 
-    MscDatabase().activate(config)
+    if not MscDatabase().activate(config):
+        return False
     if not MscDatabase().db_check():
         return False
 

@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-from mmc.plugins.pulse2.location import ComputerLocationI
+from pulse2.managers.location import ComputerLocationI
 from pulse2.database.inventory import Inventory
 
 class InventoryLocation(ComputerLocationI):

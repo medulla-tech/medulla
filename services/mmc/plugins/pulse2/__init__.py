@@ -27,8 +27,8 @@ import logging
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
-from mmc.plugins.pulse2.group import ComputerGroupManager
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.group import ComputerGroupManager
+from pulse2.managers.location import ComputerLocationManager
 
 VERSION = "2.0.0"
 APIVERSION = "0:0:0"

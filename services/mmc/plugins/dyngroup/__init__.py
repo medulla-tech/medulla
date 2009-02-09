@@ -41,7 +41,7 @@ from mmc.plugins.dyngroup.group import DyngroupGroup
 from mmc.plugins.dyngroup.computers import DyngroupComputers
 
 from mmc.plugins.base.computers import ComputerManager
-from mmc.plugins.pulse2.group import ComputerGroupManager
+from pulse2.managers.group import ComputerGroupManager
 
 
 VERSION = '2.0.0'

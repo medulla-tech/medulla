@@ -26,7 +26,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import unique, same_network, complete_ctx, onlyAddNew
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from mmc.plugins.pulse2.group import ComputerGroupManager
+from pulse2.managers.group import ComputerGroupManager
 
 from ConfigParser import NoOptionError
 

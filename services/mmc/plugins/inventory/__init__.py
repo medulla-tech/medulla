@@ -24,8 +24,8 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
-from mmc.plugins.pulse2.group import ComputerGroupManager
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.group import ComputerGroupManager
+from pulse2.managers.location import ComputerLocationManager
 
 import logging
 import datetime

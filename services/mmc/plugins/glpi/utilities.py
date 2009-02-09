@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from mmc.plugins.pulse2.location import ComputerLocationManager
+from pulse2.managers.location import ComputerLocationManager
 import logging
 
 def unique(s):

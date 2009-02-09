@@ -38,7 +38,7 @@ from mmc.plugins.msc.mirror_api import MirrorApi
 
 from mmc.client import XmlrpcSslProxy, makeSSLContext
 
-from mmc.plugins.pulse2.group import ComputerGroupManager
+from pulse2.managers.group import ComputerGroupManager
 
 
 class PackageA:
