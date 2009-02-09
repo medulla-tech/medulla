@@ -99,7 +99,8 @@ def startService():
     conffile = mmc.support.mmctools.getConfigFile("msc")
     confmsc = MscDatabaseConfig()
     confmsc.setup(conffile)
-    MscDatabase().activate(confmsc)
+    if not MscDatabase().activate(confmsc):
+        return 1
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.username:
