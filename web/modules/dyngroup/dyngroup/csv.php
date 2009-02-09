@@ -26,6 +26,7 @@ require_once("modules/dyngroup/includes/dyngroup.php");
 
 $name = quickGet('groupname');
 $gid = quickGet('gid');
+$location = quickGet('location');
 
 ob_end_clean();
 
@@ -52,7 +53,7 @@ function get_values($h, $values) {
 $headers = getComputersListHeaders();
 print "\"".implode('","', array_map("get_second", $headers))."\"\n";
 
-$datum = getRestrictedComputersList(0, -1, array('gid'=>$gid), False);
+$datum = getRestrictedComputersList(0, -1, array('gid'=>$gid, 'location' => $location), False);
 foreach ($datum as $machine) {
     print "\"".implode('","', get_values(array_map("get_first", $headers), $machine[1]))."\"\n";
 }
