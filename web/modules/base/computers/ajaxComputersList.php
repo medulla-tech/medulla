@@ -94,4 +94,8 @@ function join_value($n) {
     return $ret;
 }
 
+if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
+    ?><a href='<?= urlStr("base/computers/csv", array('gid'=>$_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
+}
+
 ?>
