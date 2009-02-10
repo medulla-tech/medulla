@@ -22,24 +22,69 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/msc/includes/functions.php");
-require("modules/msc/includes/machines.inc.php");
-require("modules/msc/includes/command_history.php");
-require("modules/msc/includes/scheduler_xmlrpc.php");
+require_once("modules/msc/includes/functions.php");
+require_once("modules/msc/includes/machines.inc.php");
+require_once("modules/msc/includes/command_history.php");
+require_once("modules/msc/includes/scheduler_xmlrpc.php");
+require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
-$res = scheduler_ping_and_probe_client('', $_GET["uuid"]);
+# depending on probe wishes, probe system differs
+$probe_order = web_probe_order();
 
-if ($res == 2) {
-    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("DONE").'"/>';
-} elseif ($res == 1) {
-    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("WORK_IN_PROGRESS").'"/>';
-} elseif ($res == 0) { 
-    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("FAILED").'"/>';
-} elseif ($res == 11) { # connection refused
-    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("IGNORED").'"/>';
-    new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
+if ($probe_order == "ping") {
+    $res = scheduler_ping_client('', $_GET["uuid"]);
+    if ($res === 11) {
+        new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
+        $icon = return_icon("IGNORED");
+        $title = _T('Error scheduler-side !');
+    } elseif ($res === false) {
+        $icon = return_icon("FAILED");
+        $title = _T('Ping failed');
+    } else {
+        $icon = return_icon("DONE");
+        $title = _T('Ping succeedeed');
+    }
+} elseif ($probe_order == "ssh") {
+    $res = scheduler_probe_client('', $_GET["uuid"]);
+    if ($res === 11) {
+        new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
+        $icon = return_icon("IGNORED");
+        $title = _T('Error scheduler-side !');
+    } elseif ($res === "Not available") {
+        $icon = return_icon("FAILED");
+        $title = _T('SSH connection failed');
+    } else {
+        $icon = return_icon("DONE");
+        $title = sprintf(_T('Target plateform is %s'), $res);
+    }
+} elseif ($probe_order == "ping_ssh") {
+    $res = scheduler_ping_client('', $_GET["uuid"]);
+    if ($res === 11) {
+        new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
+        $icon = return_icon("IGNORED");
+        $title = _T('Error scheduler-side !');
+    } elseif ($res === false) {
+        $icon = return_icon("FAILED");
+        $title = _T('Ping failed');
+    } else {
+        $res = scheduler_probe_client('', $_GET["uuid"]);
+        if ($res === 11) {
+            new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
+            $icon = return_icon("IGNORED");
+            $title = _T('Error scheduler-side !');
+        } elseif ($res === "Not available") {
+            $icon = return_icon("WORK_IN_PROGRESS");
+            $title = _T('Ping succeedeed, SSH connection failed');
+        } else {
+            $icon = return_icon("DONE");
+            $title = sprintf(_T('Target plateform is %s'), $res);
+        }
+    }
 } else {
-    print '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon("IGNORED").'"/>';
+    $icon = return_icon("IGNORED");
+    $title = _T('No probe performed');
 }
+
+printf('<img style="vertical-align: sub;" title="%s"src="modules/msc/graph/images/status/%s"/>', $title, $icon);
 
 ?>

@@ -108,4 +108,8 @@ function web_proxy_selection_mode() {
     return __web_def_in_session("proxy_selection_mode");
 }
 
+function web_probe_order() {
+    return __web_def_in_session("probe_order");
+}
+
 ?>
