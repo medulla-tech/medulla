@@ -1078,6 +1078,15 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return count
 
+    def getRootLocation(self):
+        """
+        Returns the root location
+        """
+        session = create_session()
+        q = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == 1)
+        session.close()
+        return q.first()
+    
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all the users id that share the same locations than the given
