@@ -61,7 +61,6 @@ class EntitiesRules:
                     prefix = 'none'
                     subexprs = []
                     while words:
-                        self.logger.debug(words)
                         if words[0] in ['and', 'or']:
                             if prefix == 'none':
                                 prefix = words[0].lower()
@@ -140,6 +139,8 @@ class EntitiesRules:
                         result = False
                         # Exit AND because we have a False
                         break
+                    else:
+                        result = True
                 elif mainop == 'or':
                     if result != None:
                         result = result or tmpresult
