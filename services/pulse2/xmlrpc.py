@@ -23,6 +23,7 @@
 
 import logging # to log stuff
 
+import twisted
 import twisted.web.server
 import twisted.internet.error
 import twisted.web.xmlrpc
@@ -97,4 +98,13 @@ class OpenSSLContext(pulse2.utils.Singleton):
             logger.info("SSL enabled, and peer verification is enabled.")
         else:
             logger.warning("SSL enabled, but peer verification is disabled.")
+
+def isTwistedEnoughForLoginPass():
+    min = (2, 3)
+    try:
+        if twisted.version.major > min[0] or twisted.version.major == min[0] and twisted.version.minor > min[1]:
+            return True
+        return False
+    except:
+        return False
 
