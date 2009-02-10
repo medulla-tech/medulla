@@ -96,7 +96,7 @@ def isLastToInventoryInBundle(myCommandOnHostID):
 
     session.close()
     if nb != 1:
-        logging.getLogger().debug("isLastToInventoryInBundle on %s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
+        logging.getLogger().debug("isLastToInventoryInBundle on #%s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -119,7 +119,7 @@ def isLastToHaltInBundle(myCommandOnHostID):
 
     session.close()
     if nb != 1:
-        logging.getLogger().debug("isLastToHaltInBundle on %s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
+        logging.getLogger().debug("isLastToHaltInBundle on #%s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -1328,7 +1328,7 @@ def runInventoryPhase(myCommandOnHostID):
     if myCoH.isInventoryDone(): # inventory has already already done, jump to next stage
         logger.info("command_on_host #%s: inventory done" % myCoH.getId())
         return runRebootPhase(myCommandOnHostID)
-    if not isLastToInventoryInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to launch inventory, jump to next stage
+    if myC.isPartOfABundle() and not isLastToInventoryInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to launch inventory, jump to next stage
         logger.info("command_on_host #%s: another coh from the same bundle will launch the inventory" % myCommandOnHostID)
         myCoH.setInventoryIgnored()
         myCoH.setStateScheduled()
@@ -1461,7 +1461,7 @@ def runHaltPhase(myCommandOnHostID, condition):
     if myCoH.isHaltDone(): # halt has already be done, jump to next stage
         logger.info("command_on_host #%s: halt done" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
-    if not isLastToHaltInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to halt, jump to next stage
+    if myC.isPartOfABundle() and not isLastToHaltInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to halt, jump to next stage
         logger.info("command_on_host #%s: another coh from the same bundle will do the halt" % myCommandOnHostID)
         return runDonePhase(myCommandOnHostID)
     if not myCoH.isHaltImminent(): # nothing to do right now, give out
