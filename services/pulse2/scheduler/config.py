@@ -32,7 +32,7 @@ import os.path      # for file checking
 
 # Others Pulse2 Stuff
 import pulse2.utils
-
+from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 class SchedulerConfig(pulse2.utils.Singleton):
     """
@@ -165,15 +165,25 @@ class SchedulerConfig(pulse2.utils.Singleton):
             self.setoption("scheduler", "listen", "host")
         else:
             self.setoption("scheduler", "host", "host")
-        self.setoption("scheduler", "mode", "mode")
-        self.setoption("scheduler", "password", "password", 'pass')
         self.setoption("scheduler", "port", "port")
         self.port = int(self.port)
+        self.setoption("scheduler", "username", "username")
+        self.setoption("scheduler", "password", "password", 'pass')
+        if not isTwistedEnoughForLoginPass():
+            if self.username != '':
+                if self.username != 'username':
+                    logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler/username)")
+                self.username = ''
+            if self.password != '':
+                if self.password != 'password':
+                    logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler/password)")
+                self.password = ''
+
+        self.setoption("scheduler", "mode", "mode")
         self.setoption("scheduler", "resolv_order", "resolv_order")
         if not type(self.resolv_order) == type([]):
             self.resolv_order = self.resolv_order.split(' ')
         self.setoption("scheduler", "scheduler_path", "scheduler_path")
-        self.setoption("scheduler", "username", "username")
 
         if self.cp.has_option("scheduler", "client_check"):
             self.client_check = {}
@@ -205,11 +215,21 @@ class SchedulerConfig(pulse2.utils.Singleton):
         # [launcher_xxx] section parsing
         for section in self.cp.sections():
             if re.compile("^launcher_[0-9]+$").match(section):
+                username = self.cp.get(section, "username")
+                password = self.cp.getpassword(section, "password")
+                if not isTwistedEnoughForLoginPass():
+                    if username != '':
+                        logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                        username = ''
+                    if password != '':
+                        logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                        password = ''
+
                 self.launchers[section] = {
                         'enablessl':self.cp.getboolean(section, "enablessl"),
                         'host':self.cp.get(section, "host"),
-                        'username':self.cp.get(section, "username"),
-                        'password':self.cp.getpassword(section, "password"),
+                        'username':username,
+                        'password':password,
                         'port':self.cp.get(section, "port")
                     }
                 if self.launchers[section]["enablessl"]:
