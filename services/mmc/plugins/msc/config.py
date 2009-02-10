@@ -29,6 +29,7 @@ import os.path
 from ConfigParser import NoOptionError
 from mmc.support import mmctools
 from pulse2.database.msc.config import MscDatabaseConfig
+from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 # Pulse 2 stuff
 import pulse2.time_intervals
@@ -275,9 +276,17 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("package_api", "mmountpoint"):
             self.ma_mountpoint = self.cp.get("package_api", "mmountpoint")
         if self.cp.has_option("package_api", "username"):
-            self.ma_username = self.cp.get("package_api", "username")
+            if not isTwistedEnoughForLoginPass():
+                logging.getLogger().warning("your version of twisted is not high enough to use login (package_api/username)")
+                self.ma_username = ""
+            else:
+                self.ma_username = self.cp.get("package_api", "username")
         if self.cp.has_option("package_api", "password"):
-            self.ma_password = self.cp.get("package_api", "password")
+            if not isTwistedEnoughForLoginPass():
+                logging.getLogger().warning("your version of twisted is not high enough to use password (package_api/password)")
+                self.ma_password = ""
+            else:
+                self.ma_password = self.cp.get("package_api", "password")
         if self.cp.has_option("package_api", "enablessl"):
             self.ma_enablessl = self.cp.getboolean("package_api", "enablessl")
         if self.ma_enablessl:
@@ -306,9 +315,17 @@ class MscConfig(MscDatabaseConfig):
             if self.cp.has_option("scheduler_api", "mountpoint"):
                 self.sa_mountpoint = self.cp.get("scheduler_api", "mountpoint")
             if self.cp.has_option("scheduler_api", "username"):
-                self.sa_username = self.cp.get("scheduler_api", "username")
+                if not isTwistedEnoughForLoginPass():
+                    logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler_api/username)")
+                    self.sa_username = ""
+                else:
+                    self.sa_username = self.cp.get("scheduler_api", "username")
             if self.cp.has_option("scheduler_api", "password"):
-                self.sa_password = self.cp.get("scheduler_api", "password")
+                if not isTwistedEnoughForLoginPass():
+                    logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler_api/password)")
+                    self.sa_password = ""
+                else:
+                    self.sa_password = self.cp.get("scheduler_api", "password")
             if self.cp.has_option("scheduler_api", "enablessl"):
                 self.sa_enablessl = self.cp.getboolean("scheduler_api", "enablessl")
             if self.sa_enablessl:

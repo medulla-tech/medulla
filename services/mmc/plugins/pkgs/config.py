@@ -28,6 +28,7 @@ import os.path # for SSL cert files checking
 
 from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
+from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 class PkgsConfig(PluginConfig):
 
@@ -57,9 +58,17 @@ class PkgsConfig(PluginConfig):
             self.upaa_mountpoint = self.get("user_package_api", "mountpoint")
 
         if self.has_option("user_package_api", "username"):
-            self.upaa_username = self.get("user_package_api", "username")
+            if not isTwistedEnoughForLoginPass():
+                logging.getLogger().warning("your version of twisted is not high enough to use login (user_package_api/username)")
+                self.upaa_username = ""
+            else:
+                self.upaa_username = self.get("user_package_api", "username")
         if self.has_option("user_package_api", "password"):
-            self.upaa_password = self.get("user_package_api", "password")
+            if not isTwistedEnoughForLoginPass():
+                logging.getLogger().warning("your version of twisted is not high enough to use password (user_package_api/password)")
+                self.upaa_password = ""
+            else:
+                self.upaa_password = self.get("user_package_api", "password")
         if self.has_option("user_package_api", "enablessl"):
             self.upaa_enablessl = self.getboolean("user_package_api", "enablessl")
 
