@@ -53,8 +53,6 @@ from pulse2.utils import Singleton
 # Imported last
 import logging
 
-SA_MAJOR = 0
-SA_MINOR = 4
 DATABASEVERSION = 15
 NB_DB_CONN_TRY = 2
 

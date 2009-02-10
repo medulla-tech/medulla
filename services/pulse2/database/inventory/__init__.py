@@ -35,8 +35,6 @@ import time
 import re
 import logging
 
-SA_MAJOR = 0
-SA_MINOR = 4
 DATABASEVERSION = 9
 MAX_REQ_NUM = 100
 
