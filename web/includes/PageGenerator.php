@@ -937,7 +937,7 @@ class NoLocationTpl extends AbstractTpl {
     }
 
     function display($param) {
-        print '<span class="error">' . _("No entity available") . '</span>';
+        print '<span class="error">' . _("No item available") . '</span>';
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
     }
 
