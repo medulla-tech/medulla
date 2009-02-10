@@ -47,7 +47,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
 
     # The default assigned entity is the root entity
-    default_entity = 'root'
+    default_entity = '.'
     # By default there is no rules file for computer to entity mapping
     entities_rules_file = None
 
