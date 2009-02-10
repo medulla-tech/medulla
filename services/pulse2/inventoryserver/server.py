@@ -198,6 +198,7 @@ class TreatInv(Thread):
                 entity = entities[0]
             else:
                 entity = InventoryCreator().config.default_entity
+            self.logger.debug("Computer '%s' assigned to entity '%s'" % (hostname, entity))
             inventory['Entity'] = [ { 'Label' : entity } ]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
@@ -262,6 +263,17 @@ class InventoryGetService(Singleton):
         if not InventoryCreator().db_check():
             return False
         self.config = config
+
+        # Translate the default entity to its real name if the dot character
+        # has been used in the configuration file
+        if self.config.default_entity == '.':
+            rootEntity = InventoryCreator().getRootLocation()
+            self.config.default_entity = rootEntity.Label
+        # Check that the default assigned entity exists
+        if not InventoryCreator().locationExists(self.config.default_entity):
+            self.logger.error("Default entity '%s' does not exist in database" % self.config.default_entity)
+            return False
+
         # Initialize the computer to entity mapping
         if self.config.entities_rules_file:
             try:
@@ -271,10 +283,7 @@ class InventoryGetService(Singleton):
                 return False
         else:
             InventoryCreator().rules = DefaultEntityRules(self.config.default_entity)
-        # Check that the default assigned entity exists
-        if not InventoryCreator().locationExists(self.config.default_entity):
-            self.logger.error("Default entity '%s' does not exist in database" % self.config.default_entity)
-            return False
+
         self.bind = config.bind
         self.port = int(config.port)
         return True
