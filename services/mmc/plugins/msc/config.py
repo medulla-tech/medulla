@@ -85,11 +85,15 @@ class MscConfig(MscDatabaseConfig):
     web_def_max_clients_per_proxy = 10
     web_def_proxy_number = 2
     web_def_proxy_selection_mode = "semi_auto"
+
     # VNC applet behavior
     web_vnc_show_icon = True
     web_vnc_view_only = True
     web_vnc_network_connectivity = "lan"
     web_vnc_allow_user_control = False
+
+    # Probe behavior
+    web_probe_order =  "ping_ssh"
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
@@ -259,6 +263,9 @@ class MscConfig(MscDatabaseConfig):
             self.web_vnc_network_connectivity = self.cp.get("web", "vnc_network_connectivity")
         if self.cp.has_option("web", "vnc_allow_user_control"):
             self.web_vnc_allow_user_control = self.cp.getboolean("web", "vnc_allow_user_control")
+
+        if self.cp.has_option("web", "probe_order"):
+            self.web_probe_order = self.cp.get("web", "probe_order")
 
         # API Package
         if self.cp.has_option("package_api", "mserver"):
