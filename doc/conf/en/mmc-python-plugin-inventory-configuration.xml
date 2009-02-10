@@ -18,7 +18,7 @@
     </affiliation>
 
     <copyright>
-      <year>2008 Olivier Roussy - Mandriva</year>
+      <year>2008-2009 Olivier Roussy - Mandriva</year>
     </copyright>
 
     <revhistory>
@@ -243,6 +243,67 @@ option2 = plop      </screen></para>
 
             <entry>mmc</entry>
           </row>
+
+          <row>
+            <entry>dbpoolrecycle</entry>
+
+            <entry>This setting causes the pool to recycle connections after the given number of seconds has passed</entry>
+
+            <entry>yes</entry>
+
+            <entry>60</entry>
+          </row>
+
+          <row>
+            <entry>dbpoolsize</entry>
+
+            <entry>The number of connections to keep open inside the connection pool</entry>
+
+            <entry>yes</entry>
+
+            <entry>5</entry>
+          </row>
+
+          <row>
+            <entry>dbsslenable</entry>
+
+            <entry>SSL connection to the database</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+
+          <row>
+            <entry>dbsslca</entry>
+
+            <entry>CA certificate for SSL connection</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>dbsslcert</entry>
+
+            <entry>Public key certificate for SSL connection</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
+          <row>
+            <entry>dbsslkey</entry>
+
+            <entry>Private key certificate for SSL connection</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+
         </tbody>
       </tgroup>
     </table>
@@ -380,4 +441,153 @@ display = cn::Computer Name||displayName::Description||srvcomment::Name||regdn::
       </tgroup>
     </table>
   </section>
+
+
+  <section>
+
+    <title>provisioning_inventory</title>
+
+    <para>
+      This section defines some configuration directives for user provisioning with the inventory database. It allows to set access rights for users to the entities of the inventory database.
+    </para>
+    <para>
+      To enable the inventory provisioning system, you have to set this in <filename>/etc/mmc/plugins/base.ini</filename>:
+    </para>
+
+    <screen>
+[provisioning]
+method = inventory
+# Multiple provisining method can be used, for example:
+# method = externalldap inventory
+    </screen>
+
+    <table>
+      <title>Available options for the "provisioning_inventory" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>exclude</entry>
+
+            <entry>space-separated list of login that won't be provisioned by this provisioner.</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+	  <row>
+            <entry>profile_attr</entry>
+
+            <entry>LDAP user attribute that is used to get the user profile</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+	  <row>
+            <entry>profile_entity_x</entry>
+
+            <entry>Space-separated list of entities assigned to the user profile "x". See the example below for more information</entry>
+
+            <entry>yes</entry>
+
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>
+      If the entity does not exist, it is created automatically in the database, as a child of the root entity (the root entity always exists).
+    </para>
+
+    <para>For example:</para>
+    
+    <screen>
+[provisioning_inventory]
+exclude = root
+profile_attr = pulse2profile
+profile_entity_admin = .
+profile_entity_agent = entityA entityB
+profile_entity_tech = %pulse2entity%
+profile_entity_manager = plugin:network_to_entity
+profile_entity_none =
+    </screen>
+
+    <para>
+      In this example, the root user is never provisioned. The LDAP attribute used to get the user profile is called "pulse2profile".
+    </para>
+    <para>
+      The users with the "admin" profile are linked to the root entity, which is represented by the dot character. These users have access the root entity and all its sub-entities.
+    </para>
+    <para>
+      The users with the "agent" profile are linked to both entities "entityA" and "entityB" character. These users have access to entities "entityA" and "entityB", and all their sub-entities.
+    </para>
+    <para>
+      The users with the "tech" profile are linked to entities defined in the "pulse2entity" LDAP attribute values of these users.
+    </para>
+    <para>
+      The users with the "manager" profile are linked to entities computed by the "network_to_entity" provisioning plugin. See the next sub-section for more informations.
+    </para>
+    <para>
+      The users with the "none" profile are linked to no entity.
+    </para>
+    <para>
+      A user that doesn't have any profile (for example the pulse2profile attribute of her/his entry is empty), or that has an undefined profile, will be linked to no entity.
+    </para>
+
+    <section>
+
+      <title>"network_to_entity" provisioning plugin</title>
+
+      <para>
+	This plugin for the inventory provisioning system allows to link users to entities according to their IP when connecting to the MMC web interface.
+      </para>
+      <para>
+	The IP address of the user is determined by the Apache server running the MMC web interface thanks to the remote address of the HTTP connection. Then this IP address is forwarded to the MMC agent when authenticating and provisioning the user.
+      </para>
+      <para>
+	The IP address to entities mapping is done thanks to a rules file, similar to the one used by the inventory server to affect a computer inventory to an entity.
+      </para>
+      <para>
+	The rules file must be called <filename>/etc/mmc/plugins/provisioning-inventory</filename>. There is now to specify an alternate rules file.
+      </para>
+      
+      <para>Here is an example of rules file:</para>
+    
+      <screen>
+entityA              ip      match   ^192\.168\.1\..*$
+entityB,entityC      ip      match   ^192\.168\.0\.19$
+.                    ip      match   ^.*$
+      </screen>
+
+      <para>
+	Each line of the rules file is processing starting from the top of the file, until one rule is valid. The user IP address is matched against a regular expression. If no rule match, the user is linked to no entity.
+      </para>
+      <para>
+	The first line links users connecting from the 192.168.1.0/24 to the entity called "entityA".
+      </para>
+      <para>
+	The second line links users connecting from the IP address 192.168.0.19 to the entity called "entityA".
+      </para>
+      <para>
+	The third line is a kind of catch-all rule.
+      </para>
+
+    </section>
+
+  </section>
+
 </article>
