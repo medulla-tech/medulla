@@ -33,6 +33,7 @@ import stat         # for owner checking
 
 # Others Pulse2 Stuff
 import pulse2.utils
+from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 class LauncherConfig(pulse2.utils.Singleton):
     """
@@ -312,11 +313,23 @@ class LauncherConfig(pulse2.utils.Singleton):
         for section in self.cp.sections():
             if re.compile('^scheduler_[0-9]+$').match(section):
                 try:
+                    username = self.getvaluedefaulted(section, 'username', 'username')
+                    password = self.getvaluedefaulted(section, 'password', "password", 'pass')
+                    if not isTwistedEnoughForLoginPass():
+                        if username != '':
+                            if username != 'username':
+                                logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                            username = ''
+                        if password != '':
+                            if password != 'password':
+                                logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                            password = ''
+
                     self.schedulers[section] = {
                         'host' : self.getvaluedefaulted(section, 'host', '127.0.0.1'),
                         'port' : self.getvaluedefaulted(section, 'port', "8000"),
-                        'username' : self.getvaluedefaulted(section, 'username', "username"),
-                        'password' : self.getvaluedefaulted(section, 'password', "password", 'pass'),
+                        'username' : username,
+                        'password' : password,
                         'enablessl' : self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
                         'awake_time' : self.getvaluedefaulted(section, 'awake_time', 600, 'int'),
                         'defer_results' : self.getvaluedefaulted(section, 'defer_results', False, 'bool')
@@ -330,15 +343,28 @@ class LauncherConfig(pulse2.utils.Singleton):
         for section in self.cp.sections():
             if re.compile('^launcher_[0-9]+$').match(section):
                 try:
+                    username = self.getvaluedefaulted(section, 'username', 'username')
+                    password = self.getvaluedefaulted(section, 'password', "password", 'pass')
+                    if not isTwistedEnoughForLoginPass():
+                        if username != '':
+                            if username != 'username':
+                                logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                            username = ''
+                        if password != '':
+                            if password != 'password':
+                                logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                            password = ''
+
                     self.launchers[section] = {
                             'bind': self.getvaluedefaulted(section, 'bind', '127.0.0.1'),
-                            'enablessl': self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
-                            'password': self.getvaluedefaulted(section, 'password', "password", 'pass'),
                             'port': self.cp.get(section, 'port'),
+                            'username': username,
+                            'password': password,
+                            'enablessl': self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
                             'slots': self.getvaluedefaulted(section, 'slots', 300, 'int'),
-                            'username': self.getvaluedefaulted(section, 'username', 'username'),
                             'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler),
                             'logconffile' : self.getvaluedefaulted(section, 'logconffile', None),
+                            password = ''
                         }
                     if self.launchers[section]['enablessl']:
                         if self.cp.has_option(section, 'verifypeer'):
