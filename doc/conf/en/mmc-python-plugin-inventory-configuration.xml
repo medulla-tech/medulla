@@ -580,7 +580,7 @@ entityB,entityC      ip      match   ^192\.168\.0\.19$
 	The first line links users connecting from the 192.168.1.0/24 to the entity called "entityA".
       </para>
       <para>
-	The second line links users connecting from the IP address 192.168.0.19 to the entity called "entityA".
+	The second line links users connecting from the IP address 192.168.0.19 to the entities called "entityB" and "entityC".
       </para>
       <para>
 	The third line is a kind of catch-all rule.
