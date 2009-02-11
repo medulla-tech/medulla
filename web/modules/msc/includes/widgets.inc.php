@@ -215,7 +215,15 @@ class RenderedMSCActions extends HtmlElement {
 class RenderedMSCAction extends HtmlElement {
     function RenderedMSCAction($script) {
         $this->filename = $script['filename'];
-        $this->title = $script['title'];
+        /* Try to find a localized version of the quick action title */
+        if (!empty($script['title' . $_SESSION['lang']])) {
+            $this->title = $script['title' . $_SESSION['lang']];
+        } else if ((strlen($_SESSION['lang']) == 5) && !empty($script['title' . substr($_SESSION['lang'], 0, 2)])) {
+            $this->title = $script['title' . substr($_SESSION['lang'], 0, 2)];
+        } else {
+            /* Use the default English title */
+            $this->title = $script['title'];
+        }
     }
 
     function display() {
