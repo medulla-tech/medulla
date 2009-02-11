@@ -180,9 +180,8 @@ msgid "<b>No</b> package installation is being done"
 msgstr "<b>Aucune</b> installation de package n'est en cours"
 
 #: msc/msc/msctabsstatus.php:60
-#, fuzzy
 msgid "<b>No</b> package installation is paused"
-msgstr "<b>Aucune</b> installation de package n'est arrétée"
+msgstr "<b>Aucune</b> installation de package n'est en pause"
 
 #: msc/msc/msctabsstatus.php:55
 msgid "<b>No</b> package installation is stopped"
@@ -454,7 +453,6 @@ msgid "Current State"
 msgstr "État Actuel"
 
 #: msc/logs/ajaxLogsFilter.php:135
-#, fuzzy
 msgid "Current state"
 msgstr "État Actuel"
 
