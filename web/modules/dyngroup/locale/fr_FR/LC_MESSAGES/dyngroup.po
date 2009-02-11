@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.0rc6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-12 10:36+0200\n"
+"POT-Creation-Date: 2008-10-23 20:39+0200\n"
 "PO-Revision-Date: 2008-11-05 12:11+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
@@ -21,27 +21,27 @@ msgstr ""
 msgid "%s's details"
 msgstr "Détails de %s"
 
-#: dyngroup/includes/request.php:149
+#: dyngroup/includes/request.php:150
 #, php-format
 msgid "%s) Search %s = %s in module %s"
 msgstr "%s) Recherche %s = %s dans le module %s"
 
-#: dyngroup/includes/request.php:147
+#: dyngroup/includes/request.php:148
 #, php-format
 msgid "%s) Search %s = (%s) in module %s"
 msgstr "%s) Recherche %s = (%s) dans le module %s"
 
-#: dyngroup/includes/double.php:57
+#: dyngroup/includes/double.php:58
 msgid "->"
 msgstr "->"
 
-#: dyngroup/dyngroup/save.php:72 dyngroup/dyngroup/import_from_file.php:44
+#: dyngroup/dyngroup/save.php:80 dyngroup/dyngroup/import_from_file.php:44
 #: dyngroup/dyngroup/add_groups.php:121
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
 
-#: dyngroup/includes/double.php:36 dyngroup/includes/autocomplete.php:30
+#: dyngroup/includes/double.php:37 dyngroup/includes/autocomplete.php:30
 #: dyngroup/dyngroup/creator.php:145 dyngroup/dyngroup/creator.php:169
 #: dyngroup/dyngroup/creator.php:177 dyngroup/dyngroup/creator.php:181
 msgid "Add"
@@ -86,7 +86,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
-#: dyngroup/dyngroup/save.php:101
+#: dyngroup/dyngroup/save.php:109
 msgid "Check"
 msgstr "Vérifier"
 
@@ -102,27 +102,27 @@ msgstr "Sélectionner votre champ : "
 msgid "Close"
 msgstr "Fermer"
 
-#: dyngroup/infoPackage.inc.php:38 dyngroup/infoPackage.inc.php:105
+#: dyngroup/infoPackage.inc.php:40 dyngroup/infoPackage.inc.php:107
 msgid "Computers Group Creator"
 msgstr "Créateur de groupe d'ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:68
+#: dyngroup/infoPackage.inc.php:70
 msgid "Computers Group Creator Sub Request Delete"
 msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
 
-#: dyngroup/infoPackage.inc.php:51
+#: dyngroup/infoPackage.inc.php:53
 msgid "Computers Group Creator Sub Request Editor"
 msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
 
-#: dyngroup/infoPackage.inc.php:85 dyngroup/infoPackage.inc.php:109
+#: dyngroup/infoPackage.inc.php:87 dyngroup/infoPackage.inc.php:111
 msgid "Computers Group Editor"
 msgstr "Éditeur de groupe d'ordinateurs"
 
-#: dyngroup/infoPackage.inc.php:95
+#: dyngroup/infoPackage.inc.php:97
 msgid "Computers Group Sub Request Delete"
 msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
 
-#: dyngroup/infoPackage.inc.php:90
+#: dyngroup/infoPackage.inc.php:92
 msgid "Computers Group Sub Request Editor"
 msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
 
@@ -139,7 +139,7 @@ msgstr "Confirmer"
 msgid "Csv export"
 msgstr "Export CSV"
 
-#: dyngroup/infoPackage.inc.php:164
+#: dyngroup/infoPackage.inc.php:166
 msgid "Csv's export"
 msgstr "Export CSV"
 
@@ -147,7 +147,7 @@ msgstr "Export CSV"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: dyngroup/infoPackage.inc.php:139
+#: dyngroup/infoPackage.inc.php:141
 msgid "Delete a group of computers"
 msgstr "Supprimer un groupe d'ordinateurs"
 
@@ -159,7 +159,7 @@ msgstr "Supprimer le groupe"
 msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
-#: dyngroup/infoPackage.inc.php:130
+#: dyngroup/infoPackage.inc.php:132
 msgid "Detailed page of save a group of computers"
 msgstr "Page détaillée pour l'enregistrement d'un groupe d'ordinateurs"
 
@@ -172,11 +172,11 @@ msgstr "Montrer"
 msgid "Display %s '%s'"
 msgstr "Afficher %s '%s'"
 
-#: dyngroup/infoPackage.inc.php:115
+#: dyngroup/infoPackage.inc.php:117
 msgid "Display a groups of computers"
 msgstr "Montrer un groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/creator.php:218
+#: dyngroup/dyngroup/save.php:128
 msgid "Display content"
 msgstr "Voir le contenu"
 
@@ -189,12 +189,12 @@ msgstr "Voir le contenu du groupe '%s'"
 msgid "Display this group's content"
 msgstr "Montrer le contenu de ce groupe"
 
-#: dyngroup/dyngroup/tab.php:9
+#: dyngroup/dyngroup/tab.php:31
 msgid "Dynamic group creation"
 msgstr "Création d'un groupe dynamique"
 
-#: dyngroup/infoPackage.inc.php:41 dyngroup/infoPackage.inc.php:55
-#: dyngroup/infoPackage.inc.php:72
+#: dyngroup/infoPackage.inc.php:43 dyngroup/infoPackage.inc.php:57
+#: dyngroup/infoPackage.inc.php:74
 msgid "Dynamic group creation's tab"
 msgstr "Onglet de création d'un groupe dynamique"
 
@@ -202,11 +202,11 @@ msgstr "Onglet de création d'un groupe dynamique"
 msgid "Edit"
 msgstr "Éditer"
 
-#: dyngroup/dyngroup/edithead.php:34
+#: dyngroup/dyngroup/edithead.php:47
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe dynamique"
 
-#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
+#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:54
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
@@ -214,7 +214,7 @@ msgstr "Éditer un groupe statique"
 msgid "Edit this group"
 msgstr "Éditer ce groupe"
 
-#: dyngroup/dyngroup/save.php:101
+#: dyngroup/dyngroup/save.php:109
 msgid "Enter boolean operator between groups"
 msgstr "Spécifier un opérateur booléen entre les groupes"
 
@@ -222,15 +222,19 @@ msgstr "Spécifier un opérateur booléen entre les groupes"
 msgid "Go to save step"
 msgstr "Sauvegarder"
 
-#: dyngroup/dyngroup/tab.php:8
+#: dyngroup/dyngroup/tab.php:30
 msgid "Group creation"
 msgstr "Création d'un groupe"
+
+#: dyngroup/dyngroup/edithead.php:34
+msgid "Group edition"
+msgstr "Édition d'un groupe"
 
 #: dyngroup/dyngroup/add_groups.php:116
 msgid "Group failed to modify"
 msgstr "Erreur à la modification du groupe"
 
-#: dyngroup/dyngroup/edit_share.php:98
+#: dyngroup/dyngroup/edit_share.php:85
 msgid "Group failed to share"
 msgstr "Erreur à la modification des partages du groupe"
 
@@ -248,7 +252,7 @@ msgstr "Membres du groupe"
 msgid "Group name"
 msgstr "Nom du groupe"
 
-#: dyngroup/infoPackage.inc.php:144
+#: dyngroup/infoPackage.inc.php:146
 msgid "Group of computers details"
 msgstr "Détails du groupe d'ordinateurs"
 
@@ -265,7 +269,7 @@ msgstr "Groupe créé avec succès"
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
-#: dyngroup/dyngroup/edit_share.php:90
+#: dyngroup/dyngroup/edit_share.php:77
 msgid "Group successfully shared"
 msgstr "Groupe partagé avec succès"
 
@@ -286,16 +290,16 @@ msgstr "Montrer l'inventaire de ce groupe"
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
-#: dyngroup/infoPackage.inc.php:135
+#: dyngroup/infoPackage.inc.php:137
 msgid "List all groups of computers"
 msgstr "Lister tous les groupes d'ordinateurs"
 
-#: dyngroup/includes/double.php:38 dyngroup/includes/autocomplete.php:32
+#: dyngroup/includes/double.php:40 dyngroup/includes/autocomplete.php:32
 #: dyngroup/dyngroup/creator.php:171
 msgid "Modify"
 msgstr "Modifier"
 
-#: dyngroup/dyngroup/save.php:63
+#: dyngroup/dyngroup/save.php:69
 msgid "Name :"
 msgstr "Nom :"
 
@@ -324,7 +328,7 @@ msgstr "Enlever l'ordinateur"
 msgid "Remove a computer"
 msgstr "Enlever un ordinateur"
 
-#: dyngroup/infoPackage.inc.php:149
+#: dyngroup/infoPackage.inc.php:151
 msgid "Remove a computer from a computers group"
 msgstr "Enlever un ordinateur d'un groupe"
 
@@ -332,11 +336,11 @@ msgstr "Enlever un ordinateur d'un groupe"
 msgid "Request saver"
 msgstr "Sauvegarde de requête"
 
-#: dyngroup/dyngroup/save.php:69
+#: dyngroup/dyngroup/save.php:77
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: dyngroup/infoPackage.inc.php:125
+#: dyngroup/infoPackage.inc.php:127
 msgid "Save a group of computers"
 msgstr "Sauvegarder un groupe d'ordinateurs"
 
@@ -352,11 +356,11 @@ msgstr "Sélectionnez le fichier que vous désirez importer"
 msgid "Select what is inside the file"
 msgstr "Sélectionnez le type de donnée qui se trouve dans le fichier"
 
-#: dyngroup/infoPackage.inc.php:120
+#: dyngroup/infoPackage.inc.php:122
 msgid "Share a group of computers"
 msgstr "Partager un groupe d'ordinateurs"
 
-#: dyngroup/dyngroup/edit_share.php:38
+#: dyngroup/dyngroup/edit_share.php:37
 #, php-format
 msgid "Share groupe '%s' with"
 msgstr "Partager le groupe '%s' avec"
@@ -373,34 +377,34 @@ msgstr "Afficher"
 msgid "Software deployment on this group"
 msgstr "Déploiement de logiciels sur ce groupe"
 
-#: dyngroup/dyngroup/tab.php:10
+#: dyngroup/dyngroup/tab.php:32
 msgid "Static group creation"
 msgstr "Création d'un groupe statique"
 
-#: dyngroup/dyngroup/tab.php:11
+#: dyngroup/dyngroup/tab.php:33
 msgid "Static group creation from import"
 msgstr "Création d'un groupe statique a partir d'un import"
 
-#: dyngroup/infoPackage.inc.php:47 dyngroup/infoPackage.inc.php:63
-#: dyngroup/infoPackage.inc.php:80
+#: dyngroup/infoPackage.inc.php:49 dyngroup/infoPackage.inc.php:65
+#: dyngroup/infoPackage.inc.php:82
 msgid "Static group creation from import's tab"
 msgstr "Onglet de création d'un groupe statique a partir d'un import"
 
-#: dyngroup/infoPackage.inc.php:44 dyngroup/infoPackage.inc.php:59
-#: dyngroup/infoPackage.inc.php:76
+#: dyngroup/infoPackage.inc.php:46 dyngroup/infoPackage.inc.php:61
+#: dyngroup/infoPackage.inc.php:78
 msgid "Static group creation's tab"
 msgstr "Onglet de création d'un groupe statique"
 
-#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:100
+#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:102
 msgid "Temporary result display"
 msgstr "Affichage temporaire du resultat"
 
-#: dyngroup/dyngroup/save.php:107
+#: dyngroup/dyngroup/save.php:115
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr "L'équation booléenne '%s' est invalide"
 
-#: dyngroup/dyngroup/save.php:110
+#: dyngroup/dyngroup/save.php:118
 #, php-format
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
@@ -409,7 +413,7 @@ msgstr ""
 "L'équation booléenne '%s' est invalide.<br/>Pas le même nombre de sous-"
 "requêtes"
 
-#: dyngroup/dyngroup/save.php:113
+#: dyngroup/dyngroup/save.php:121
 msgid "The boolean equation is valid"
 msgstr "L'équation booléenne est valide"
 
@@ -440,7 +444,12 @@ msgstr "Visible"
 msgid "Yes"
 msgstr "Oui"
 
-#: dyngroup/dyngroup/save.php:74 dyngroup/dyngroup/add_groups.php:119
+#: dyngroup/dyngroup/edithead.php:41
+#, php-format
+msgid "You cant edit '%s' because you are not this group's owner."
+msgstr ""
+
+#: dyngroup/dyngroup/save.php:82 dyngroup/dyngroup/add_groups.php:119
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
@@ -449,23 +458,23 @@ msgstr "Le nom du groupe est obligatoire"
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
-#: dyngroup/dyngroup/tmpdisplay.php:37
+#: dyngroup/dyngroup/tmpdisplay.php:49
 msgid "back"
 msgstr "retour"
 
-#: dyngroup/dyngroup/save.php:65
+#: dyngroup/dyngroup/save.php:71
 msgid "hidden"
 msgstr "caché"
 
-#: dyngroup/dyngroup/save.php:65
+#: dyngroup/dyngroup/save.php:71
 msgid "it should be"
 msgstr "le groupe sera"
 
-#: dyngroup/dyngroup/save.php:64 dyngroup/dyngroup/ajaxListGroups.php:56
+#: dyngroup/dyngroup/save.php:70 dyngroup/dyngroup/ajaxListGroups.php:56
 msgid "query"
 msgstr "requête"
 
-#: dyngroup/dyngroup/save.php:64
+#: dyngroup/dyngroup/save.php:70
 msgid "result"
 msgstr "résultat"
 
@@ -474,7 +483,7 @@ msgstr "résultat"
 msgid "result (%s)"
 msgstr "résultat (%s)"
 
-#: dyngroup/dyngroup/save.php:64
+#: dyngroup/dyngroup/save.php:70
 msgid "save as"
 msgstr "sauver en tant que"
 
@@ -494,6 +503,6 @@ msgstr "le résultat"
 msgid "the static group"
 msgstr "le groupe statique"
 
-#: dyngroup/dyngroup/save.php:65
+#: dyngroup/dyngroup/save.php:71
 msgid "visible"
 msgstr "visible"
