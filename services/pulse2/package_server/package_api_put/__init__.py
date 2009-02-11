@@ -63,15 +63,16 @@ class PackageApiPut(PackageApiGet):
         if not ret:
             return [False, 'Some files are missing']
                 
-        ret = Common().associateFiles(self.mp, pid, files, level)
-        # Run the detectNewPackages stuff to register our new package
-        # FIXME: the next line force the new package to be detected
-        del Common().packages[pid]
-        for i in range(10):
-            ret = Common().detectNewPackages()
-            if ret: break
-            time.sleep(1)
-        return [ret]
+        ret_assoc = Common().associateFiles(self.mp, pid, files, level)
+        if not self.config.package_detect_activate:
+            # Run the detectNewPackages stuff to register our new package
+            # FIXME: the next line force the new package to be detected
+            del Common().packages[pid]
+            for i in range(10):
+                ret = Common().detectNewPackages()
+                if ret: break
+                time.sleep(1)
+        return [ret_assoc]
 
     def xmlrpc_putPackageDetail(self, package, need_assign = True):
         self.logger.debug("xmlrpc_putPackageDetail")
