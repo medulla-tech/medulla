@@ -10,7 +10,7 @@ Release:	1.el5
 License:	GPL
 Group:		System/Servers
 URL:		http://mds.mandriva.org/
-Source0:	%{name}-2.3.1.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 Source1:	mmc-agent.init
 Patch0:		mmc-agent-Makefile_fix.diff
 Patch1:		mmc-agent_mdv_conf.diff
@@ -98,7 +98,7 @@ Contains common tools needed by some plugins of mmc-agent package.
 
 %prep
 
-%setup -q -n %{name}-2.3.1
+%setup -q -n %{name}-%{version}
 
 for i in `find . -type d -name .svn`; do
     if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
