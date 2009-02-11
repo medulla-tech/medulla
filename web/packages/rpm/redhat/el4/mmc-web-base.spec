@@ -8,7 +8,7 @@ Release:	1.RHEL4
 License:	GPL
 Group:		System/Servers
 URL:		http://mds.mandriva.org/
-Source0:	%{name}-2.3.1.tar.gz
+Source0:	%{name}-${version}.tar.gz
 Patch0:		mmc-web-base-Makefile_fix.diff
 Requires:	httpd >= 2.0.52
 Requires:	php-xmlrpc
@@ -20,7 +20,7 @@ Mandriva Management Console web interface designed by Linbox.
 
 %prep
 
-%setup -q -n %{name}-2.3.1
+%setup -q -n %{name}-${version}
 
 for i in `find . -type d -name .svn`; do
     if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
