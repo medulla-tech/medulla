@@ -447,7 +447,7 @@ msgstr "Oui"
 #: dyngroup/dyngroup/edithead.php:41
 #, php-format
 msgid "You cant edit '%s' because you are not this group's owner."
-msgstr ""
+msgstr "Vous ne pouvez pas éditer '%s' parce que vous n'etes pas le propriétaire du groupe."
 
 #: dyngroup/dyngroup/save.php:82 dyngroup/dyngroup/add_groups.php:119
 msgid "You must specify a group name"
