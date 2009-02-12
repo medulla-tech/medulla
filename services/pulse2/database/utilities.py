@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 57 2008-07-17 13:36:26Z oroussy $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #

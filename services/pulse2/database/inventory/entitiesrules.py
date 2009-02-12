@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #

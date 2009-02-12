@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2008-2009 Mandriva, http://www.mandriva.com/
 #
-# $Id: xmlrpc.py 307 2009-02-06 09:09:43Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #

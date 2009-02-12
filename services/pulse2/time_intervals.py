@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2008-2009 Mandriva, http://www.mandriva.com/
 #
-# $Id: process_control.py 203 2008-08-11 14:39:05Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
