@@ -490,7 +490,7 @@ class MultipleInputTpl extends AbstractTpl {
 
     function display($arrParam) {
         print '<div id="'.$this->name.'">';
-        print '<table cellspacing="0">';        
+        print '<table cellspacing="0">';
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement($this->desc,
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
@@ -809,10 +809,11 @@ class TrFormElement extends FormElement{
     var $desc;
     var $cssErrorName;
 
-    function TrFormElement($desc,$tpl,$extraInfo = array()) {
+    function TrFormElement($desc, $tpl, $extraInfo = array()) {
         $this->desc=$desc;
         $this->template=&$tpl;
         $this->tooltip = False;
+        $this->firstColWidth = "40%";
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
@@ -827,7 +828,7 @@ class TrFormElement extends FormElement{
         if (empty($arrParam)) $arrParam = $this->options;
         if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
-        print '<tr><td width="40%" ';
+        printf('<tr><td width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
 
@@ -850,7 +851,7 @@ class TrFormElement extends FormElement{
 
     function displayRo($arrParam) {
 
-        print '<tr><td width="40%" ';
+        printf('<tr><td width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
 
