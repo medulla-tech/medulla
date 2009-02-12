@@ -64,7 +64,7 @@ function enableLocalProxyForm() {
     changeObjectDisplay('container_input_proxy_number', 'none');
 }
 </script>
-<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?= _T("Random (indicate # of proxies) ", "msc");?>
+<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?= _T("Random (indicate number of proxies) : ", "msc");?>
 <?
 $num = new MyNumericInputTpl("proxy_number");
 $num->display(array('value' => $this->proxy_number));
