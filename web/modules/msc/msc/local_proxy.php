@@ -64,13 +64,13 @@ function enableLocalProxyForm() {
     changeObjectDisplay('container_input_proxy_number', 'none');
 }
 </script>
-<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?= _T("Random : ", "msc");?>
+<input type="radio" name="local_proxy_selection_mode" value="semi_auto" onClick="javascript:disableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "" : "checked";?>><?= _T("Random (indicate # of proxies) ", "msc");?>
 <?
 $num = new MyNumericInputTpl("proxy_number");
 $num->display(array('value' => $this->proxy_number));
 ?>
 <br />
-<input type="radio" name="local_proxy_selection_mode" value="manual" onClick="javascript:enableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "checked" : "";?>><?= _T("Or choose below : ", "msc");?></input>
+<input type="radio" name="local_proxy_selection_mode" value="manual" onClick="javascript:enableLocalProxyForm();" <?= $this->local_proxy_selection_mode == "manual" ? "checked" : "";?>><?= _T("Or designate the proxies manually below : ", "msc");?></input>
     <table style="border: none;" cellspacing="0" id='localproxytable'>
     <tr>
      <td style="border: none;">
@@ -201,6 +201,7 @@ natcasesort($left);
 
 $f = new ValidatingForm();
 $f->push(new Table());
+$trOptions = array('firstColWidth' => '200px');
 
 $rb = new RadioTpl("proxy_mode");
 $rb->setChoices(array(_T('Single with fallback', 'msc'), _T('Multiple', 'msc')));
@@ -212,7 +213,7 @@ if (!empty($_POST["proxy_mode"])) {
     $proxy_mode = web_local_proxy_mode();
 }
 $rb->setSelected($proxy_mode);
-$f->add(new TrFormElement(_T('Local Proxy Mode', 'msc'), $rb));
+$f->add(new TrFormElement(_T('Local Proxy Mode', 'msc'), $rb, $trOptions));
 
 if (!empty($_POST["max_clients_per_proxy"])) {
     $max_clients_per_proxy_value = $_POST["max_clients_per_proxy"];
@@ -221,8 +222,9 @@ if (!empty($_POST["max_clients_per_proxy"])) {
     $max_clients_per_proxy_value = web_max_clients_per_proxy();
 }
 $f->add(new TrFormElement(
-            _T('Maximum number of clients per local proxy', 'msc'),
-            new MyNumericInputTpl("max_clients_per_proxy")
+            _T('Maximum number of simultaneous connections to a proxy', 'msc'),
+            new MyNumericInputTpl("max_clients_per_proxy"),
+            $trOptions
         ), array(
             "value" => $max_clients_per_proxy_value,
             "required" => True,
@@ -242,7 +244,7 @@ if (!empty($_POST["local_proxy_selection_mode"])) {
     $local_proxy_selection_mode = web_proxy_selection_mode();
 }
 $d = new ProxySelector($machines, $right, $left, $group->id, $proxy_number, $local_proxy_selection_mode);
-$f->add(new TrFormElement(_T('Local proxies selection', 'msc'), $d));
+$f->add(new TrFormElement(_T('Local proxies selection', 'msc'), $d, $trOptions));
 
 /* Add hidden input field to propagate the POST values from the previous
    page */
