@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-12 15:07+0100\n"
-"PO-Revision-Date: 2009-02-12 15:11+0100\n"
+"PO-Revision-Date: 2009-02-12 19:18+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -733,11 +733,11 @@ msgstr "Mode proxy local"
 
 #: msc/msc/local_proxy.php:98
 msgid "Local proxies"
-msgstr "Proxy locaux"
+msgstr "Proxys locaux"
 
 #: msc/msc/local_proxy.php:247
 msgid "Local proxies selection"
-msgstr "Sélection des proxy locaux"
+msgstr "Sélection des proxys locaux"
 
 #: msc/msc/tabs.php:47 msc/msc/tabs.php:63
 msgid "Logs"
@@ -866,7 +866,7 @@ msgstr "Une"
 
 #: msc/msc/local_proxy.php:73
 msgid "Or designate the proxies manually below : "
-msgstr "Ou désignez manuellement les proxy ci-dessous : "
+msgstr "Ou désignez manuellement les proxys ci-dessous : "
 
 #: msc/includes/widgets.inc.php:33
 msgid "Other/N.A."
