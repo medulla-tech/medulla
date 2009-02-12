@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-12 14:53+0100\n"
-"PO-Revision-Date: 2009-02-12 14:56+0100\n"
+"POT-Creation-Date: 2009-02-12 15:07+0100\n"
+"PO-Revision-Date: 2009-02-12 15:11+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -977,8 +977,8 @@ msgid "Quick action path %s don't exists"
 msgstr "Le répertoire des actions rapide %s n'existe pas"
 
 #: msc/msc/local_proxy.php:67
-msgid "Random (indicate # of proxies) "
-msgstr "Choix aléatoire (indiquez le nb de proxy) "
+msgid "Random (indicate number of proxies) : "
+msgstr "Choix aléatoire (indiquez le nombre de proxys) : "
 
 #: msc/msc/ajaxDownloadFile.php:72
 msgid "Ready"
@@ -1107,7 +1107,7 @@ msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
 #: msc/includes/command_history.php:260 msc/msc/local_proxy.php:207
 msgid "Single with fallback"
-msgstr "Simple avec replie"
+msgstr "Simple avec redondance"
 
 #: msc/msc/ajaxLogsFilter.php:241
 msgid "Single, client"
