@@ -55,7 +55,7 @@ class Common(pulse2.utils.Singleton):
 
     def init(self, config):
         self.working = True
-        self.working_pkgs = []
+        self.working_pkgs = {}
         self.logger = logging.getLogger()
         self.logger.info("Loading PackageServer > Common")
         self.config = config
@@ -74,6 +74,8 @@ class Common(pulse2.utils.Singleton):
         self.need_assign = {}
         self.temp_check_changes = {'LAST':{}, 'LOOP':{}, 'SIZE':{}}
         self.packageDetectionDate = {}
+        self.newAssociation = {}
+        self.inEdition = {}
 
         try:
             self._detectPackages()
@@ -111,6 +113,10 @@ class Common(pulse2.utils.Singleton):
         self.logger.debug(self.temp_check_changes)
         self.logger.debug(">> self.packageDetectionDate")
         self.logger.debug(self.packageDetectionDate)
+        self.logger.debug(">> self.newAssociation")
+        self.logger.debug(self.newAssociation)
+        self.logger.debug(">> self.inEdition")
+        self.logger.debug(self.inEdition)
         self.logger.debug("# END ##################")
 
     def _detectPackages(self, new = False):
@@ -169,7 +175,7 @@ class Common(pulse2.utils.Singleton):
                 except Exception, e:
                     self.logger.error(e)
 
-    def _detectRemovedPackages(self):
+    def _detectRemovedAndEditedPackages(self):
         """
         Look for no more available conf.xml files, and unregister packages.
         """
@@ -177,13 +183,13 @@ class Common(pulse2.utils.Singleton):
         for pid in self.packages:
             proot = self._getPackageRoot(pid)
             confxml = os.path.join(proot, "conf.xml")
-            if os.path.exists(confxml):
-                if self.packageDetectionDate[pid] != self.__getDate(confxml):
-                    self.__removePackage(pid, proot)
-                    todelete.append(pid)
-                    if confxml in self.already_declared:
-                        del self.already_declared[confxml]
-            else:
+            if os.path.exists(confxml) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(confxml): # EDITED
+                self.logger.debug("Package %s has been modified (%s)" % (pid, confxml))
+                #self.__removePackage(pid, proot)
+                #todelete.append(pid)
+                #if confxml in self.already_declared:
+                #    del self.already_declared[confxml]
+            elif not os.path.exists(confxml): # SUPPRESSED
                 self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
                 self.__removePackage(pid, proot)
                 todelete.append(pid)
@@ -199,13 +205,19 @@ class Common(pulse2.utils.Singleton):
 
 
     def suppressFromInternal(self, pid):
-        self.logger.debug("Package %s removed from internal hashes"%(pid))
-        pkg = self.packages[pid]
-        del self.reverse[pkg.label][pkg.version]
-        if len(self.reverse[pkg.label].keys()) == 0:
-            del self.reverse[pkg.label]
-        del self.packageDetectionDate[pid]
-        del self.packages[pid]
+        if not self.packages.has_key(pid):
+            self.logger.debug("Package %s is not in Common().packages"%(pid))
+            if self.packageDetectionDate.has_key(pid):
+                del self.packageDetectionDate[pid]
+        else:
+            self.logger.debug("Package %s removed from internal hashes"%(pid))
+            pkg = self.packages[pid]
+            del self.reverse[pkg.label][pkg.version]
+            if len(self.reverse[pkg.label].keys()) == 0:
+                del self.reverse[pkg.label]
+            if self.packageDetectionDate.has_key(pid):
+                del self.packageDetectionDate[pid]
+            del self.packages[pid]
 
     def __removePackage(self, pid, proot):
         # Remove the package from the mirror
@@ -240,17 +252,27 @@ class Common(pulse2.utils.Singleton):
 
     def detectNewPackages(self):
         if self.working:
-            self.logger.debug("Common : already working")
+            self.logger.debug("Common.detectNewPackages : already working")
             return False
-        self.working = True
-        self.working_pkgs = []
-        self.logger.debug("Common : detecting new packages...")
-        self._detectPackages(True)
-        self._detectRemovedPackages()
-        self._buildReverse()
-        self._buildFileList()
-        self.working = False
-        return True
+        try:
+            self.working = True
+            self.working_pkgs = {}
+            self.logger.debug("Common.detectNewPackages : detecting new packages...")
+            self._detectPackages(True)
+            self.logger.debug("Common.detectNewPackages : detecting removed or edited packages...")
+            self._detectRemovedAndEditedPackages()
+            self.logger.debug("Common.detectNewPackages : build reverse list...")
+            self._buildReverse()
+            self.logger.debug("Common.detectNewPackages : build file list...")
+            self._buildFileList()
+            self.logger.debug("Common.detectNewPackages : done")
+            self.working = False
+            return True
+        except Exception, e:
+            self.working = False
+            self.logger.error("Common.detectNewPackages : an exception happened")
+            self.logger.info(e)
+        return False
 
     def setDesc(self, description):
         self.desc = description
@@ -376,6 +398,23 @@ class Common(pulse2.utils.Singleton):
             raise e
         return pid
 
+    def reloadPackage(self, pid, pack):
+        try:
+            old = self.packages[pid]
+            self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+            pack.setFiles(old.files)
+            pack.size = old.size
+            if self.config.package_mirror_activate:
+                Common().rsyncPackageOnMirrors(pid)
+            self.packages[pid] = pack
+            if not self.reverse.has_key(pack.label):
+                self.reverse[pack.label] = {}
+            self.reverse[pack.label][pack.version] = pid
+        except Exception, e:
+            self.logger.error(e)
+            raise e
+        return pid
+    
     def editPackage(self, pid, pack, need_assign = True):
         try:
             if self.packages.has_key(pid):
@@ -419,10 +458,16 @@ class Common(pulse2.utils.Singleton):
             self.logger.error(e)
             if os.path.exists(confxmltmp):
                 os.remove(confxmltmp)
+            del self.inEdition[pid]
             return (None, None)
         if os.path.exists(confxml):
             os.remove(confxml)
+        # notify it's an edition
+        self.inEdition[pid] = True
         shutil.move(confxmltmp, confxml)
+        self.packageDetectionDate[pid] = self.__getDate(confxml)
+        if not os.path.exists(confxml):
+            self.logger.error("Error while moving the new conf.xml file")
 
         return [pid, confdir]
 
@@ -431,17 +476,18 @@ class Common(pulse2.utils.Singleton):
             return [False, "This package don't exists"]
         params = self.h_desc(mp)
         path = self._getPackageRoot(pid)
+        self.logger.debug("File association will put files in %s"%(path))
         files_out = []
         for f in files:
             if level == 0:
-                fo = os.path.join(path, pid, os.path.basename(f))
+                fo = os.path.join(path, os.path.basename(f))
                 self.logger.debug("File association will move %s to %s" % (f, fo))
                 files_out.append(fo)
                 shutil.move(f, fo)
             elif level == 1:
                 for f1 in os.listdir(f):
                     f1 = os.path.join(f, f1)
-                    fo = os.path.join(path, pid, os.path.basename(f1))
+                    fo = os.path.join(path, os.path.basename(f1))
                     self.logger.debug("File association will move %s to %s" % (f1, fo))
                     files_out.append(fo)
                     shutil.move(f1, fo)
@@ -449,6 +495,7 @@ class Common(pulse2.utils.Singleton):
 
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
+        Common().newAssociation[pid] = True
         if self.config.package_mirror_activate:
             Common().rsyncPackageOnMirrors(pid)
         return [True]
@@ -464,7 +511,7 @@ class Common(pulse2.utils.Singleton):
         params = self.h_desc(mp)
         path = params['src']
 
-        if self.config.real_package_deletion:
+        if self.config.real_package_deletion: # TODO : why do we pass here when modifying!
             p_dir = os.path.join(path, pid)
             self.logger.debug("is going to delete %s" % (p_dir))
             shutil.rmtree(p_dir, ignore_errors = True)
@@ -503,7 +550,7 @@ class Common(pulse2.utils.Singleton):
         ret = {}
         try:
             for k in self.packages:
-                is_acc = self.isPackageAccessible(k)
+                is_acc = self.isPackageAccessible(k) and not self.newAssociation.has_key(k) and not self.inEdition.has_key(k)
                 if (is_acc and not pending) or (not is_acc and pending):
                     try:
                         self.mp2p[mp].index(k)
@@ -606,7 +653,10 @@ class Common(pulse2.utils.Singleton):
         failure = False
         # check that the last modification date is old enough
         if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
-            self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
+            if self.temp_check_changes['LAST'].has_key(pid):
+                self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = False
+            else:
+                self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
             # start by checking the package directory
             self.__subHasChangedLast(dir, pid, t)
             # then if it has not changed, we check what's inside
@@ -626,13 +676,14 @@ class Common(pulse2.utils.Singleton):
             if (t - previous_t) < (self.config.package_detect_loop - 1): # only try this method once per detect loop
                 failure = True
             else:
-                self.temp_check_changes['SIZE'][pid] = [0, previous_t]
-                Find().find(dir, self.__subHasChangedGetSize, [pid])
+                self.__subHasChangedGetGlobalSize(dir, pid, previous_t)
                 size, t2 = self.temp_check_changes['SIZE'][pid]
                 if previous != size:
                     self.temp_check_changes['SIZE'][pid] = [size, t]
                     self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
                     failure = True
+            if failure and (self.newAssociation.has_key(pid) or self.inEdition.has_key(pid)):
+                failure = False
             known_action = True
 
         if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
@@ -652,31 +703,48 @@ class Common(pulse2.utils.Singleton):
 
         # if some of the actions have been executed and we are still there, that mean that they succeed, ie: no changes detected
         if known_action:
-            # clean data
-            if self.temp_check_changes['LAST'].has_key(pid):
-                del self.temp_check_changes['LAST'][pid]
-            if self.temp_check_changes['SIZE'].has_key(pid):
-                del self.temp_check_changes['SIZE'][pid]
-
             return self.SMART_DETECT_NOCHANGES
 
         self.logger.debug("smart detect hasChange, dont know this smart method : %s"%(str(self.config.packageDetectSmartMethod)))
         return self.SMART_DETECT_ERROR
 
+    def __subHasChangedGetGlobalSize(self, dir, pid, previous_t=None):
+        if previous_t == None:
+            previous_t = time.time() - self.config.package_detect_loop
+        self.temp_check_changes['SIZE'][pid] = [0, previous_t]
+        Find().find(dir, self.__subHasChangedGetSize, [pid])
+        
     def __subHasChangedGetSize(self, file, pid):
         self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
 
+    def __initialiseChangedLast(self, pid, file, s = None):
+        if s == None:
+            s = self.__getDate(file)
+        if not self.temp_check_changes['LAST'].has_key(pid):
+            self.temp_check_changes['LAST'][pid] = { '###DATE###' : s }
+        elif not self.temp_check_changes['LAST'][pid].has_key('###DATE###') or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
+            self.temp_check_changes['LAST'][pid]['###DATE###'] = s
+            
     def __subHasChangedLast(self, file, pid, t):
         """
         check if the file has change in the last X secondes
         if yes, ###HASCHANGED_LAST### is set to true
         """
-        s = os.stat(file)[stat.ST_MTIME]
+        s = self.__getDate(file)
         if (t - s) < self.config.package_detect_smart_time:
-            self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
+            # if the file has just been associated
+            # TODO check if the file has just been edited
+            if self.newAssociation.has_key(pid) or self.inEdition.has_key(pid):
+                self.__initialiseChangedLast(pid, file, s)
+                self.logger.debug("\t")
+
+            if not self.temp_check_changes['LAST'][pid].has_key('###DATE###'):
+                self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
+            elif self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
+                self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
 
     def __subHasChangedLoop(self, file, pid, t, runid = -1):
-        s = os.stat(file)[stat.ST_MTIME]
+        s = self.__getDate(file)
         if self.temp_check_changes['LOOP'][pid].has_key(file):
             if s != self.temp_check_changes['LOOP'][pid][file][0]:
                 self.temp_check_changes['LOOP'][pid][file][0] = s
@@ -693,29 +761,69 @@ class Common(pulse2.utils.Singleton):
 
     def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == 'conf.xml':
+            l_package = self.parser.parse(file)
+            if self.working_pkgs.has_key(l_package.id):
+                return
+            isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
             if not self.already_declared.has_key(file):
-                l_package = self.parser.parse(file)
-                isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
                 if isReady == self.SMART_DETECT_CHANGES:
-                    self.logger.debug("'%s' has changed"%(str(l_package.id)))
+                    self.logger.debug("'%s' has changed recently"%(str(l_package.id)))
                 else:
                     if not self.need_assign.has_key(l_package.id):
+                        self.logger.debug("detect a new package %s"%(l_package.id))
                         self._createMD5File(os.path.dirname(file))
                         pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
                         self.associatePackage2mp(pid, mp)
                         self.already_declared[file] = True
+                        if self.newAssociation.has_key(pid):
+                            del self.newAssociation[pid]
+                        if self.inEdition.has_key(pid):
+                            del self.inEdition[pid]
                         self.packageDetectionDate[pid] = self.__getDate(file)
                         if self.config.package_mirror_activate:
                             Common().rsyncPackageOnMirrors(pid)
                     else:
                         self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
+            else:
+                if self.inEdition.has_key(l_package.id): # the config file has been changed from the gui, only need to get new date and size
+                    pid = l_package.id
+                    self.logger.debug("detect an already detected package (edition mode) : %s"%(pid))
+                    del self.inEdition[pid]
+                    # put the new date/size
+                    self.packageDetectionDate[pid] = self.__getDate(file)
+                    self.__subHasChangedGetGlobalSize(l_package.root, pid)
+                    self.temp_check_changes['LAST'][pid]['###DATE###'] = self.packageDetectionDate[pid]
+                    
+                    if self.config.package_mirror_activate:
+                        Common().rsyncPackageOnMirrors(pid)
+                elif isReady == self.SMART_DETECT_CHANGES: # reload the content of the config file
+                    self.logger.debug("'%s' has changed"%(str(l_package.id)))
+                    self._createMD5File(os.path.dirname(file))
+                    pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package, True) # force loading
+                    self.associatePackage2mp(pid, mp)
+                    self.packageDetectionDate[pid] = self.__getDate(file)
+                    if self.config.package_mirror_activate:
+                        Common().rsyncPackageOnMirrors(pid)
+                        
 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
+            if self.already_declared.has_key(file) and self.already_declared[file]:
+                self._treatDir(os.path.dirname(file), mp, access)
+                return
+            
+            self.logger.debug("_treatConfFile %s"%(file))
             self._createMD5File(os.path.dirname(file))
             pid = self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
+            if self.newAssociation.has_key(pid):
+                del self.newAssociation[pid]
+            if self.inEdition.has_key(pid):
+                del self.inEdition[pid]
             self.packageDetectionDate[pid] = self.__getDate(file)
+            l_package = self.packages[pid]
+            self.__subHasChangedGetGlobalSize(l_package.root, l_package.id)
+            self.temp_check_changes['LAST'][pid] = {'###DATE###': self.packageDetectionDate[pid]}
 
     def _treatFiles(self, files, mp, pid, access):
         conf = self.h_desc(mp)
@@ -725,7 +833,7 @@ class Common(pulse2.utils.Singleton):
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
 
-    def _treatDir(self, file, mp, access, new = False, l_package = None):
+    def _treatDir(self, file, mp, access, new = False, l_package = None, force = False):
         pid = None
         try:
             if os.path.isdir(file):
@@ -739,16 +847,18 @@ class Common(pulse2.utils.Singleton):
                     return False
 
                 pid = l_package.id
-                self.working_pkgs.append(l_package)
+                if not pid in self.working_pkgs:
+                    self.working_pkgs[pid] = l_package
 
                 self.mp2p[mp].append(pid)
-                if self.packages.has_key(pid):
+                if not force and self.packages.has_key(pid) and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid):
                     if new:
                         self.logger.debug("package '%s' already exists" % (pid))
                     return False
 
                 toRelative = os.path.dirname(file)
                 size = 0
+                self.logger.debug("declare %s in packages"%(pid))
                 self.packages[pid] = l_package
                 if len(self.packages[pid].specifiedFiles) > 0:
                     # just get sizes and md5
@@ -816,15 +926,14 @@ class Common(pulse2.utils.Singleton):
         return files
 
     def _buildReverse(self):
-        for package in self.working_pkgs:
+        for package in self.working_pkgs.values():
             if not self.reverse.has_key(package.label):
                 self.reverse[package.label] = {}
             self.reverse[package.label][package.version] = package.id
 
     def _buildFileList(self):
-        for package in self.working_pkgs:
+        for package in self.working_pkgs.values():
             self.logger.debug("Building file list for package %s" % package.id)
             for file in package.files.internals: # TODO dont access to internals !
                 self.logger.debug("file id %s => %s" % (file.id, file.toURI()))
                 self.files[file.id] = file.toURI()
-
