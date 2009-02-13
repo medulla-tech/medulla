@@ -65,6 +65,11 @@ class MscDatabase(DatabaseHelper):
 
     """
 
+    def db_check(self):
+        self.my_name = "Msc"
+        self.configfile = "msc.ini"
+        return DatabaseHelper.db_check(self, DATABASEVERSION)
+                            
     def activate(self, config):
         self.logger = logging.getLogger()
         if self.is_activated:
