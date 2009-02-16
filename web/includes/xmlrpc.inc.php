@@ -81,10 +81,12 @@ function openSocket($proto, $conf) {
         stream_context_set_option($context, "ssl", "verify_peer", True);
         stream_context_set_option($context, "ssl", "cafile", $conf[$_SESSION["agent"]]["cacert"]);
         stream_context_set_option($context, "ssl", "local_cert", $conf[$_SESSION["agent"]]["localcert"]);
-        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, 30, STREAM_CLIENT_CONNECT, $context);
+        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     }
     error_reporting($errLevel);
+    /* Setting timeout on a SSL socket only works with PHP >= 5.2.1 */
+    stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"]);
     return $ret;
 }
 
@@ -132,6 +134,7 @@ function xmlCall($method, $params = null) {
     if ($method == "base.ldapAuth") {
         unset($_SESSION["RPCSESSION"]);
         $httpQuery .= "X-Browser-IP: " . $_SERVER["REMOTE_ADDR"] . "\r\n";
+        $httpQuery .= "X-Browser-HOSTNAME: " . gethostbyaddr($_SERVER["REMOTE_ADDR"]) . "\r\n";
     } else {
         $httpQuery .= "Cookie: " . $_SESSION["RPCSESSION"] . "\r\n";
     }
@@ -174,10 +177,29 @@ function xmlCall($method, $params = null) {
     /* Get the response from the server */
     $xmlResponse = '';
     while (!feof($sock)) {
-	if (isset($xmlResponse))
-            $xmlResponse .= fgets($sock);
-	else
-            $xmlResponse = fgets($sock);
+        $ret = fread($sock, 8192);
+        $info = stream_get_meta_data($sock);
+        if ($info['timed_out']) {
+            $errObj = new ErrorHandlingItem('');
+            $errObj->setMsg(_('MMC agent communication problem'));
+            $errObj->setAdvice(_('Timeout when reading data from the MMC agent. Please check network connectivity and server load.'));
+            $errObj->setTraceBackDisplay(false);
+            $errObj->setSize(400);
+            $errObj->process('');
+            $errorStatus = 1;
+            return FALSE;            
+        }
+        if ($ret === False) {
+            $errObj = new ErrorHandlingItem('');
+            $errObj->setMsg(_("Error while reading MMC agent XML-RPC response."));
+            $errObj->setAdvice(_("Please check network connectivity."));
+            $errObj->setTraceBackDisplay(false);
+            $errObj->setSize(400);
+            $errObj->process('');
+            $errorStatus = 1;
+            return FALSE;
+        }
+        $xmlResponse .= $ret;
     }
     fclose($sock);
 

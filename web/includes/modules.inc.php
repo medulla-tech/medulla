@@ -97,6 +97,10 @@ function fetchIniFile() {
             if (!isset($conf[$key]["localcert"])) {
                 $conf[$key]["localcert"] = "";
             }
+            /* Set default socket I/O timeout to 5 minutes */
+            if (!isset($conf[$key]["timeout"])) {
+                $conf[$key]["timeout"] = 300;
+            }
             if (($conf[$key]["verifypeer"] == 1)
                 && ($conf[$key]["cacert"] == "")
                 && ($conf[$key]["localcert"] == "")) {
