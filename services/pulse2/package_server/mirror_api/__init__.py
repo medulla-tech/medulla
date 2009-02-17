@@ -32,11 +32,12 @@ import logging
 import random
 from pulse2.package_server.types import Mirror, Machine
 from pulse2.package_server.assign_algo import MMAssignAlgoManager
+from pulse2.package_server.xmlrpc import MyXmlrpc
 
-class MirrorApi(twisted.web.xmlrpc.XMLRPC):
+class MirrorApi(MyXmlrpc):
     type = 'MirrorApi'
     def __init__(self, services = {}, name = '', assign_algo = 'default'):
-        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        MyXmlrpc.__init__(self)
         self.name = name
         self.mirrors = {}
         self.url2mirrors = {}

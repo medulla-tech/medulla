@@ -26,15 +26,15 @@
     Pulse2 Modules
 """
 import twisted.web.html
-import twisted.web.xmlrpc
 import logging
 import os
 from pulse2.package_server.common import Common
+from pulse2.package_server.xmlrpc import MyXmlrpc
 
-class PackageApiGet(twisted.web.xmlrpc.XMLRPC):
+class PackageApiGet(MyXmlrpc):
     type = 'PackageApiGet'
     def __init__(self, mp, name = ''):
-        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        MyXmlrpc.__init__(self)
         self.logger = logging.getLogger()
         self.name = name
         self.mp = mp

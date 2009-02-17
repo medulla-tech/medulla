@@ -32,12 +32,13 @@ import logging
 import random
 from pulse2.package_server.types import Mirror, Machine, User
 from pulse2.package_server.assign_algo import UPAssignAlgoManager
+from pulse2.package_server.xmlrpc import MyXmlrpc
 
 
-class UserPackageApi(twisted.web.xmlrpc.XMLRPC):
+class UserPackageApi(MyXmlrpc):
     type = 'UserPackageApi'
     def __init__(self, services = {}, name = '', assign_algo = 'default'):
-        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        MyXmlrpc.__init__(self)
         self.logger = logging.getLogger()
         self.name = name
         package_api_put = []

@@ -27,6 +27,7 @@
 """
 
 from pulse2.package_server.utilities import md5file, md5sum
+import pulse2.package_server.common
 
 class Mirror:
     def __init__(self, protocol = None, server = None, port = None, mountpoint = None):
@@ -206,6 +207,19 @@ class AFiles:
     def to_h(self):
         return self.toH()
 
+    def toURI(self, mp = None):
+        if mp == None:
+            return map(lambda x: x.toURI(), self.internals)
+        else:
+            d = pulse2.package_server.common.Common().h_desc(mp)
+            if d.has_key("mirror_url") and d['mirror_url'] != '':
+                where = d['mirror_url']
+            elif d.has_key("url") and d['url'] != '':
+                where = "%s_files"%(d['url'])
+            else:
+                where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
+            return map(lambda x: x.toURI(mp, where), self.internals)
+
 class File:
     def __init__(self, name = None, path = '/', checksum = None, size = 0, acc = {}, id = None):
         access = acc
@@ -231,8 +245,19 @@ class File:
         else:
             self.id = id
 
-    def toURI(self):
-        return ("%s%s/%s" % (self.where, self.path, self.name)).replace(' ', '%20')
+    def toURI(self, mp = None, where = None):
+        if mp == None:
+            return ("%s%s/%s" % (self.where, self.path, self.name)).replace(' ', '%20')
+        else:
+            if where == None:
+                d = pulse2.package_server.common.Common().h_desc(mp)
+                if d.has_key("mirror_url") and d['mirror_url'] != '':
+                    where = d['mirror_url']
+                elif d.has_key("mirror_mp") and d['mirror_mp'] != '':
+                    where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
+                else:
+                    where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
+            return ("%s%s/%s" % (where, self.path, self.name)).replace(' ', '%20')
 
     def toS(self):
         return "%s/%s" % (self.path, self.name)

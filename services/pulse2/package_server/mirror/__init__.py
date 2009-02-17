@@ -25,15 +25,14 @@
 """
     Pulse2 PackageServer Mirror API
 """
-import twisted.web.html
-import twisted.web.xmlrpc
 import logging
 from pulse2.package_server.common import Common
+from pulse2.package_server.xmlrpc import MyXmlrpc
 
-class Mirror(twisted.web.xmlrpc.XMLRPC):
+class Mirror(MyXmlrpc):
     type = 'Mirror'
     def __init__(self, mp, name = ''):
-        twisted.web.xmlrpc.XMLRPC.__init__(self)
+        MyXmlrpc.__init__(self)
         self.logger = logging.getLogger()
         self.name = name
         self.mp = mp
@@ -59,8 +58,7 @@ class Mirror(twisted.web.xmlrpc.XMLRPC):
         return self.xmlrpc_getFilePath(fid)
     
     def xmlrpc_getFilePath(self, fid):
-        self.logger.debug("getFilePath: %s" % str(fid))
-        f = Common().getFile(fid)
+        f = Common().getFile(fid, self.mp)
         if f == None:
             return ''
         else:

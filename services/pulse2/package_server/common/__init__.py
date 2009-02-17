@@ -585,9 +585,9 @@ class Common(pulse2.utils.Singleton):
             raise e
         return ret
 
-    def getFile(self, fid):
+    def getFile(self, fid, mp = None):
         if self.files.has_key(fid):
-            return self.files[fid]
+            return self.files[fid].toURI(mp)
         return None
 
 # private
@@ -936,4 +936,4 @@ class Common(pulse2.utils.Singleton):
             self.logger.debug("Building file list for package %s" % package.id)
             for file in package.files.internals: # TODO dont access to internals !
                 self.logger.debug("file id %s => %s" % (file.id, file.toURI()))
-                self.files[file.id] = file.toURI()
+                self.files[file.id] = file
