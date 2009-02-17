@@ -528,38 +528,39 @@ class Common(pulse2.utils.Singleton):
     def writeFileIntoPackage(self, pid, file):
         pass
 
+    def packages(self, pidlist, mp = None):
+        return self.getPackages(mp, False, True, pidlist)
+
     def package(self, pid, mp = None):
-        if mp == None:
-            if self.isPackageAccessible(pid):
-                return self.packages[pid]
-            return None
-        try:
-            if self.isPackageAccessible(pid):
-                self.mp2p[mp].index(pid)
-                return self.packages[pid]
-            return None
-        except:
-            pass
-        return None
+        return self.__packageSelection(pid, mp, False, True)
 
     def getPendingPackages(self, mp):
         ret = self.getPackages(mp, True)
         return ret
 
-    def getPackages(self, mp, pending = False): #TODO check the clone memory impact
+    def getPackages(self, mp, pending = False, all = False, pidlist = None): #TODO check the clone memory impact
+        # "all" override "pending" flag
         ret = {}
         try:
             for k in self.packages:
-                is_acc = self.isPackageAccessible(k) and not self.newAssociation.has_key(k) and not self.inEdition.has_key(k)
-                if (is_acc and not pending) or (not is_acc and pending):
-                    try:
-                        self.mp2p[mp].index(k)
-                        ret[k] = self.packages[k]
-                    except:
-                        pass
+                if pidlist != None:
+                    if not k in pidlist:
+                        continue
+                p = self.__packageSelection(k, mp, pending, all)
+                if p != None:
+                    ret[k] = p
         except Exception, e:
             self.logger.error(e)
         return ret
+    
+    def __packageSelection(self, pid, mp = None, pending = False, all = False):
+        is_acc = self.isPackageAccessible(pid) 
+        if not all:  
+            is_acc = is_acc and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid)
+        if (is_acc and not pending) or (not is_acc and pending) or (all and is_acc):
+            if (mp != None and pid in self.mp2p[mp]) or (mp == None):
+                return self.packages[pid]
+        return None
 
     def getRsyncStatus(self, pid, mp):
         if self.isPackageAccessible(pid):
@@ -567,10 +568,9 @@ class Common(pulse2.utils.Singleton):
         ret = []
         nok = self.dontgivepkgs[pid]
         for h in self.config.package_mirror_target:
-            try:
-                nok.index(h)
+            if h in nok:
                 ret.append([h, 'NOK'])
-            except:
+            else:
                 ret.append([h, 'OK'])
         return ret
 

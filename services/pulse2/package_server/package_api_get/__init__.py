@@ -54,9 +54,15 @@ class PackageApiGet(MyXmlrpc):
         ret = Common().getPendingPackages(self.mp)
         return map(lambda x: ret[x].toH(), ret)
 
+    def xmlrpc_getPackagesDetail(self, pidlist):
+        return map(lambda p: p.toH(), Common().packages(pidlist, self.mp))
+    
     def xmlrpc_getPackageDetail(self, pid):
         return Common().package(pid, self.mp).toH()
 
+    def xmlrpc_getLocalPackagesPath(self, pidlist):
+        return map(lambda p: os.path.dirname(p.root), Common().packages(pidlist))
+        
     def xmlrpc_getLocalPackagePath(self, pid):
         return os.path.dirname(Common().package(pid, self.mp).root)
 
