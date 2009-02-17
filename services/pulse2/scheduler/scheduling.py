@@ -384,23 +384,41 @@ def localProxyMayContinue(myCommandOnHostID):
     #   - over-time
     # to prevent race condition, not check is perform to count only our clients but everybody client
 
-    if myCoH.isLocalProxy(): # roxy server, way for clients to be done
+    if myCoH.isLocalProxy(): # proxy server, way for clients to be done
         logging.getLogger().debug("scheduler %s: checking if we may continue coh #%s" % (SchedulerConfig().name, myCommandOnHostID))
-        session = sqlalchemy.orm.create_session()
-        database = MscDatabase()
-        our_client_count = session.query(CommandsOnHost).\
-            select_from(database.commands_on_host.join(database.commands).join(database.target)).\
-            filter(database.commands.c.id == myC.id).\
-            filter(database.commands_on_host.c.id != myCoH.id).\
-            filter(database.commands_on_host.c.uploaded != 'DONE').\
-            filter(database.commands_on_host.c.uploaded != 'IGNORED').\
-            filter(database.commands_on_host.c.current_state != 'failed').\
-            filter(database.commands_on_host.c.current_state != 'done').\
-            filter(database.commands_on_host.c.current_state != 'over-timed').\
-            count()
-        logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
-        session.close()
-        return our_client_count == 0
+        if myC.hasToUseQueueProxy():
+            session = sqlalchemy.orm.create_session()
+            database = MscDatabase()
+            our_client_count = session.query(CommandsOnHost).\
+                select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+                filter(database.commands.c.id == myC.id).\
+                filter(database.commands_on_host.c.id != myCoH.id).\
+                filter(database.commands_on_host.c.uploaded != 'DONE').\
+                filter(database.commands_on_host.c.uploaded != 'IGNORED').\
+                filter(database.commands_on_host.c.current_state != 'failed').\
+                filter(database.commands_on_host.c.current_state != 'done').\
+                filter(database.commands_on_host.c.current_state != 'over-timed').\
+                count()
+            logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
+            session.close()
+            return our_client_count == 0
+        elif myC.hasToUseSplitProxy():
+            session = sqlalchemy.orm.create_session()
+            database = MscDatabase()
+            our_client_count = session.query(CommandsOnHost).\
+                select_from(database.commands_on_host.join(database.commands).join(database.target)).\
+                filter(database.commands.c.id == myC.id).\
+                filter(database.commands_on_host.c.id != myCoH.id).\
+                filter(database.commands_on_host.c.order_in_proxy == None).\
+                filter(database.commands_on_host.c.uploaded != 'DONE').\
+                filter(database.commands_on_host.c.uploaded != 'IGNORED').\
+                filter(database.commands_on_host.c.current_state != 'failed').\
+                filter(database.commands_on_host.c.current_state != 'done').\
+                filter(database.commands_on_host.c.current_state != 'over-timed').\
+                count()
+            logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
+            session.close()
+            return our_client_count == 0
     else:
         return True
 
