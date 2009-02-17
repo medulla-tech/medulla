@@ -892,21 +892,6 @@ def runUploadPhase(myCommandOnHostID):
     # do copy here
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient():
-        client['protocol'] = 'rsyncproxy'
-        # get informations about our proxy
-        (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
-        if proxyCoH == None:
-            return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCommandOnHostID)
-        proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
-        if not proxy['host']: # We couldn't get an IP address for the target host
-            return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCommandOnHostID)
-        # and fill struct
-        # only proxy['host'] used until now
-        client['proxy'] = {
-            'command_id': myCoH.getUsedProxy(),
-            'host': proxy['host'],
-            'uuid': proxy['uuid']
-        }
 
         files_list = []
         for file in myC.files.split("\n"):
@@ -915,40 +900,11 @@ def runUploadPhase(myCommandOnHostID):
                 fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # drop first path component
             files_list.append(fname)
 
-        myCoH.setUploadInProgress()
-        myCoH.setStateUploadInProgress()
-        if SchedulerConfig().mode == 'sync':
-            updateHistory(myCommandOnHostID, 'upload_in_progress')
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'sync_remote_pull',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePushResult, myCommandOnHostID).\
-                addErrback(parsePushError, myCommandOnHostID)
-        elif SchedulerConfig().mode == 'async':
-            # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'async_remote_pull',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePushOrder, myCommandOnHostID).\
-                addErrback(parsePushError, myCommandOnHostID)
-        else:
-            return None
-        return mydeffered
+        d = _runProxyClientPhase(files_list, client, myC, myCoH)
+        return d
+
     # local mirror starts by "file://"
     elif re.compile('^file://').match(myT.mirrors): # prepare a remote_push
-        client['protocol'] = 'rsyncssh'
 
         files_list = list()
         for file in myC.files.split("\n"):
@@ -1011,7 +967,65 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
+def _runProxyClientPhase(files_list, client, myC, myCoH):
+    # fulfill protocol
+    client['protocol'] = 'rsyncproxy'
+
+    # get informations about our proxy
+    (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
+    if proxyCoH == None:
+        return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCoH.getId())
+    proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
+    if not proxy['host']: # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCoH.getId())
+    # and fill struct
+    # only proxy['host'] used until now
+    client['proxy'] = {
+        'command_id': myCoH.getUsedProxy(),
+        'host': proxy['host'],
+        'uuid': proxy['uuid']
+    }
+
+    # update command state
+    myCoH.setUploadInProgress()
+    myCoH.setStateUploadInProgress()
+
+    # prepare deffereds
+    if SchedulerConfig().mode == 'sync':
+        updateHistory(myCoH.getId(), 'upload_in_progress')
+        mydeffered = callOnBestLauncher(
+            myCoH.getId(),
+            'sync_remote_pull',
+            myCoH.getId(),
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePushResult, myCoH.getId()).\
+            addErrback(parsePushError, myCoH.getId())
+    elif SchedulerConfig().mode == 'async':
+        # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
+        mydeffered = callOnBestLauncher(
+            myCoH.getId(),
+            'async_remote_pull',
+            myCoH.getId(),
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePushOrder, myCoH.getId()).\
+            addErrback(parsePushError, myCoH.getId())
+    else:
+        mydeffered = None
+
+    return mydeffered
+
 def _runPushPhase(files_list, client, myC, myCoH):
+    # fulfill protocol
+    client['protocol'] = 'rsyncssh'
+
     # update command state
     myCoH.setUploadInProgress()
     myCoH.setStateUploadInProgress()
