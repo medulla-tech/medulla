@@ -839,7 +839,6 @@ def runUploadPhase(myCommandOnHostID):
     """
         Handle first Phase: upload time
     """
-    # First step : copy files
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
@@ -865,10 +864,8 @@ def runUploadPhase(myCommandOnHostID):
         myCoH.setStateScheduled()
         return runExecutionPhase(myCommandOnHostID)
 
-    # check if we have enough informations to reach the client
-    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
-    if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+    # if we are here, upload has either previously failed or never be done
+    # do copy here
 
     # fullfil used proxy (if we can)
     if myC.hasToUseProxy():
@@ -888,18 +885,23 @@ def runUploadPhase(myCommandOnHostID):
             logger.info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
             myCoH.setUsedProxy(proxystatus)
 
-    # if we are here, upload has either previously failed or never be done
-    # do copy here
+    return _chooseUploadMode(myCoH, myC, myT)
+
+def _chooseUploadMode(myCoH, myC, myT):
+    logger = logging.getLogger()
+    # check if we have enough informations to reach the client
+    client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
+    if not client['host']: # We couldn't get an IP address for the target host
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
-        return _runProxyClientPhase(client, myC, myCoH)
+        d = _runProxyClientPhase(client, myC, myCoH)
     elif re.compile('^file://').match(myT.mirrors): # local mirror starts by "file://" : prepare a remote_push
-        return _runPushPhase(client, myC, myCoH, myT)
+        d = _runPushPhase(client, myC, myCoH, myT)
     else: # remote push/pull
 
-        # mirror is formated like this:
-        # https://localhost:9990/mirror1||https://localhost:9990/mirror1
-        try:
+        try: # mirror is formated like this: https://localhost:9990/mirror1||https://localhost:9990/mirror1
             mirrors = myT.mirrors.split('||')
         except:
             logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCommandOnHostID, myT.mirrors))
@@ -915,7 +917,9 @@ def runUploadPhase(myCommandOnHostID):
         ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
         d = ma.isAvailable(myC.package_id)
         d.addCallback(_cbRunPushPullPhaseTestMirror, mirror, fbmirror, client, myC, myCoH)
-        return d
+
+    return d
+
 
 def _cbRunPushPullPhaseTestMirror(result, mirror, fbmirror, client, myC, myCoH):
     if result:
