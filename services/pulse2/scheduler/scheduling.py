@@ -949,44 +949,17 @@ def runUploadPhase(myCommandOnHostID):
     # local mirror starts by "file://"
     elif re.compile('^file://').match(myT.mirrors): # prepare a remote_push
         client['protocol'] = 'rsyncssh'
-        files_list = []
+
+        files_list = list()
         for file in myC.files.split("\n"):
             fname = file.split('##')[1]
             if re.compile('^/').search(fname):
                 fname = re.compile('^/(.*)$').search(fname).group(1)
             files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname))
 
-        myCoH.setUploadInProgress()
-        myCoH.setStateUploadInProgress()
-        if SchedulerConfig().mode == 'sync':
-            updateHistory(myCommandOnHostID, 'upload_in_progress')
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'sync_remote_push',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePushResult, myCommandOnHostID).\
-                addErrback(parsePushError, myCommandOnHostID)
-        elif SchedulerConfig().mode == 'async':
-            # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
-            mydeffered = callOnBestLauncher(
-                myCommandOnHostID,
-                'async_remote_push',
-                myCommandOnHostID,
-                client,
-                files_list,
-                SchedulerConfig().max_upload_time
-            )
-            mydeffered.\
-                addCallback(parsePushOrder, myCommandOnHostID).\
-                addErrback(parsePushError, myCommandOnHostID)
-        else:
-            return None
-        return mydeffered
+        d = _runPushPhase(files_list, client, myC, myCoH)
+        return d
+
     else: # remote push/pull
 
         # mirror is formated like this:
@@ -1037,6 +1010,44 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
         updateHistory(myCoH.id, 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
+
+def _runPushPhase(files_list, client, myC, myCoH):
+    # update command state
+    myCoH.setUploadInProgress()
+    myCoH.setStateUploadInProgress()
+
+    # prepare deffereds
+    if SchedulerConfig().mode == 'sync':
+        updateHistory(myCoH.getId(), 'upload_in_progress')
+        mydeffered = callOnBestLauncher(
+            myCoH.getId(),
+            'sync_remote_push',
+            myCoH.getId(),
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePushResult, myCoH.getId()).\
+            addErrback(parsePushError, myCoH.getId())
+    elif SchedulerConfig().mode == 'async':
+        # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
+        mydeffered = callOnBestLauncher(
+            myCoH.getId(),
+            'async_remote_push',
+            myCoH.getId(),
+            client,
+            files_list,
+            SchedulerConfig().max_upload_time
+        )
+        mydeffered.\
+            addCallback(parsePushOrder, myCoH.getId()).\
+            addErrback(parsePushError, myCoH.getId())
+    else:
+        mydeffered = None
+
+    # run deffereds
+    return mydeffered
 
 def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False):
     if useFallback:
