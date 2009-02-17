@@ -865,7 +865,7 @@ def runUploadPhase(myCommandOnHostID):
         myCoH.setStateScheduled()
         return runExecutionPhase(myCommandOnHostID)
 
-    # check if we may reach client
+    # check if we have enough informations to reach the client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
@@ -891,31 +891,10 @@ def runUploadPhase(myCommandOnHostID):
     # if we are here, upload has either previously failed or never be done
     # do copy here
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
-    if myCoH.isProxyClient():
-
-        files_list = []
-        for file in myC.files.split("\n"):
-            fname = file.split('##')[1]
-            if re.compile('^/').search(fname):
-                fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # drop first path component
-            files_list.append(fname)
-
-        d = _runProxyClientPhase(files_list, client, myC, myCoH)
-        return d
-
-    # local mirror starts by "file://"
-    elif re.compile('^file://').match(myT.mirrors): # prepare a remote_push
-
-        files_list = list()
-        for file in myC.files.split("\n"):
-            fname = file.split('##')[1]
-            if re.compile('^/').search(fname):
-                fname = re.compile('^/(.*)$').search(fname).group(1)
-            files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname))
-
-        d = _runPushPhase(files_list, client, myC, myCoH)
-        return d
-
+    if myCoH.isProxyClient(): # proxy client
+        return _runProxyClientPhase(client, myC, myCoH)
+    elif re.compile('^file://').match(myT.mirrors): # local mirror starts by "file://" : prepare a remote_push
+        return _runPushPhase(client, myC, myCoH, myT)
     else: # remote push/pull
 
         # mirror is formated like this:
@@ -967,7 +946,7 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
         myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
 
-def _runProxyClientPhase(files_list, client, myC, myCoH):
+def _runProxyClientPhase(client, myC, myCoH):
     # fulfill protocol
     client['protocol'] = 'rsyncproxy'
 
@@ -985,6 +964,14 @@ def _runProxyClientPhase(files_list, client, myC, myCoH):
         'host': proxy['host'],
         'uuid': proxy['uuid']
     }
+
+    # build file list
+    files_list = []
+    for file in myC.files.split("\n"):
+        fname = file.split('##')[1]
+        if re.compile('^/').search(fname):
+            fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # keeps last compontent of path
+        files_list.append(fname)
 
     # update command state
     myCoH.setUploadInProgress()
@@ -1022,9 +1009,17 @@ def _runProxyClientPhase(files_list, client, myC, myCoH):
 
     return mydeffered
 
-def _runPushPhase(files_list, client, myC, myCoH):
+def _runPushPhase(client, myC, myCoH, myT):
     # fulfill protocol
     client['protocol'] = 'rsyncssh'
+
+    # build file list
+    files_list = list()
+    for file in myC.files.split("\n"):
+        fname = file.split('##')[1]
+        if re.compile('^/').search(fname):
+            fname = re.compile('^/(.*)$').search(fname).group(1)
+        files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname)) # get folder on mirror
 
     # update command state
     myCoH.setUploadInProgress()
