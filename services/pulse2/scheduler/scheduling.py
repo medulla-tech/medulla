@@ -156,6 +156,7 @@ def localProxyUploadStatus(myCommandOnHostID):
         - 'error': Something wrong was found in the command (usually mess in priorities)
         - an int: I'm a client and the returned value is the CoH I will use
     """
+
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return 'error'
@@ -840,51 +841,54 @@ def runUploadPhase(myCommandOnHostID):
         Handle first Phase: upload time
     """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logger = logging.getLogger()
-    logger.info("command_on_host #%s: copy phase" % myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: copy phase" % myCommandOnHostID)
     if myCoH == None:
         return None
 
     # check for upload condition in order to give up if needed
     if myCoH.isUploadRunning(): # upload still running, immediately returns
-        logger.info("command_on_host #%s: still running" % myCoH.getId())
+        logging.getLogger().info("command_on_host #%s: still running" % myCoH.getId())
         return None
     if myCoH.isUploadIgnored(): # upload has already been ignored, jump to next stage
-        logger.info("command_on_host #%s: upload ignored" % myCoH.getId())
-        return runExecutionPhase(myCommandOnHostID)
+        logging.getLogger().info("command_on_host #%s: upload ignored" % myCoH.getId())
+        return runExecutionPhase(myCoH.getId())
     if myCoH.isUploadDone(): # upload has already already done, jump to next stage
-        logger.info("command_on_host #%s: upload done" % myCoH.getId())
-        return runExecutionPhase(myCommandOnHostID)
+        logging.getLogger().info("command_on_host #%s: upload done" % myCoH.getId())
+        return runExecutionPhase(myCoH.getId())
     if not myCoH.isUploadImminent(): # nothing to do right now, give out
-        logger.info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
+        logging.getLogger().info("command_on_host #%s: nothing to upload right now" % myCoH.getId())
         return None
     if not myC.hasSomethingToUpload(): # nothing to upload here, jump to next stage
-        logger.info("command_on_host #%s: nothing to upload" % myCoH.getId())
+        logging.getLogger().info("command_on_host #%s: nothing to upload" % myCoH.getId())
         myCoH.setUploadIgnored()
         myCoH.setStateScheduled()
-        return runExecutionPhase(myCommandOnHostID)
+        return runExecutionPhase(myCoH.getId())
 
     # if we are here, upload has either previously failed or never be done
     # do copy here
 
     # fullfil used proxy (if we can)
     if myC.hasToUseProxy():
-        proxystatus = localProxyUploadStatus(myCommandOnHostID)
-        if proxystatus == 'waiting':
-            logger.info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
-            return None
-        elif proxystatus == 'dead':
-            logger.warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
-            return None
-        elif proxystatus == 'server':
-            logger.info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
-            myCoH.setUsedProxy(myCommandOnHostID) # special case: this way we know we were server
-        elif proxystatus == 'keeping':
-            logger.info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
-        else:
-            logger.info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
-            myCoH.setUsedProxy(proxystatus)
+        proxy_kind = localProxyUploadStatus(myCommandOnHostID)
+        return _cbChooseUploadMode(proxy_kind, myCoH, myC, myT)
 
+    return _chooseUploadMode(myCoH, myC, myT)
+
+def _cbChooseUploadMode(result, myCoH, myC, myT):
+    if result == 'waiting':
+        logging.getLogger().info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
+        return None
+    elif result == 'dead':
+        logging.getLogger().warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
+        return None
+    elif result == 'server':
+        logging.getLogger().info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
+        myCoH.setUsedProxy(myCoH.getId()) # special case: this way we know we were server
+    elif result == 'keeping':
+        logging.getLogger().info("command_on_host #%s: keeping previously acquiered local proxy settings" % myCoH.getId())
+    else:
+        logging.getLogger().info("command_on_host #%s: becoming local proxy client" % myCoH.getId())
+        myCoH.setUsedProxy(result)
     return _chooseUploadMode(myCoH, myC, myT)
 
 def _chooseUploadMode(myCoH, myC, myT):
@@ -919,7 +923,6 @@ def _chooseUploadMode(myCoH, myC, myT):
         d.addCallback(_cbRunPushPullPhaseTestMirror, mirror, fbmirror, client, myC, myCoH)
 
     return d
-
 
 def _cbRunPushPullPhaseTestMirror(result, mirror, fbmirror, client, myC, myCoH):
     if result:
