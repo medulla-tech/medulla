@@ -22,183 +22,14 @@
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
 import pulse2.utils
 from sqlalchemy import *
-import sqlalchemy
+from sqlalchemy.orm import create_session
 import logging
-
-SA_MAYOR = 0
-SA_MINOR = 3
 
 NB_DB_CONN_TRY = 2
 
-def create_method(m):
-    def method(self, already_in_loop = False):
-        ret = None
-        try:
-            old_m = getattr(Query, '_old_'+m)
-            ret = old_m(self)
-        except exceptions.SQLError, e:
-            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection (%s) trying to recover the connection" % m)
-                for i in range(0, NB_DB_CONN_TRY):
-                    new_m = getattr(Query, m)
-                    ret = new_m(self, True)
-            if ret:
-                return ret
-            raise e
-        return ret
-    return method
+from pulse2.database.inventory import Inventory
 
-for m in ['first', 'count', 'all']:
-    try:
-        getattr(Query, '_old_'+m)
-    except AttributeError:
-        setattr(Query, '_old_'+m, getattr(Query, m))
-        setattr(Query, m, create_method(m))
-
-class DbObject(object):
-    def toH(self):
-        ret = {}
-        for i in filter(lambda f: not f.startswith('_'), dir(self)):
-            t = type(getattr(self, i))
-            if t == str or t == dict or t == unicode or t == tuple or t == int or t == long:
-                ret[i] = getattr(self, i)
-        ret['uuid'] = toUUID(getattr(self, 'id'))
-        return ret
-
-class PluginInventoryAADatabase(pulse2.utils.Singleton):
-    def db_check(self):
-        if not self.__checkSqlalchemy():
-            self.logger.error("Sqlalchemy version error : is not %s.%s.* version" % (SA_MAYOR, SA_MINOR))
-            return False
-
-        conn = self.connected()
-        if conn:
-            self.logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check inventory.ini." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser))
-            return False
-
-        return True
-
-    def __checkSqlalchemy(self):
-        try:
-            import sqlalchemy
-            a_version = sqlalchemy.__version__.split('.')
-            if len(a_version) > 2 and str(a_version[0]) == str(SA_MAYOR) and str(a_version[1]) == str(SA_MINOR):
-                return True
-        except:
-            pass
-        return False
-
-    def activate(self, conffile = None):
-        self.logger = logging.getLogger()
-        self.config = PluginInventoryAAConfig()
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, convert_unicode=True)
-        self.metadata = BoundMetaData(self.db)
-        self.initMappers()
-        self.metadata.create_all()
-        self.dbversion = self.getInventoryDatabaseVersion()
-
-    def connected(self):
-        try:
-            if (self.db != None) and (session != None):
-                return True
-            return False
-        except:
-            return False
-
-    def makeConnectionPath(self):
-        """
-        Build and return the db connection path according to the plugin configuration
-
-        @rtype: str
-        """
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbsslenable:
-            url = url + "?ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
-        return url
-
-    def initMappers(self):
-        """
-        Initialize all SQLalchemy mappers needed for the inventory database
-        """
-        self.table = {}
-        self.klass = {}
-
-        self.version = Table("Version", self.metadata, autoload = True)
-        self.machine = Table("Machine", self.metadata, autoload = True)
-        self.inventory = Table("Inventory", self.metadata, autoload = True)
-
-        noms = {'Registry':['Path']}
-        for item in ['Registry']:
-            # Declare the SQL table
-            self.table[item] = Table(item, self.metadata, autoload = True)
-            # Create the class that will be mapped
-            # This will create the Bios, BootDisk, etc. classes
-            exec "class %s(DbObject): pass" % item
-            self.klass[item] = eval(item)
-            # Map the python class to the SQL table
-            mapper(self.klass[item], self.table[item])
-
-            # Declare the has* SQL table
-            hasitem = "has" + item
-            has_columns = [
-                          Column("machine", Integer, ForeignKey("Machine.id"), primary_key=True),
-                          Column("inventory", Integer, ForeignKey("Inventory.id"), primary_key=True),
-                          Column(item.lower(), Integer, ForeignKey(item + ".id"), primary_key=True)
-                          ]
-
-            # Declare the nom* SQL table
-            for nom in noms[item]:
-                nomitem = "nom" + item + nom
-                self.table[nomitem] = Table(nomitem, self.metadata, autoload = True)
-                # add the needed column in hasTable
-                has_columns.append(Column(nom.lower(), Integer, ForeignKey(nomitem + ".id"), primary_key=True))
-                # Create the class that will be mapped
-                # This will create the hasBios, hasBootDisk, etc. classes
-                exec "class %s(object): pass" % nomitem
-                self.klass[nomitem] = eval(nomitem)
-                # Map the python class to the SQL table
-                mapper(eval(nomitem), self.table[nomitem])
-
-            self.table[hasitem] = Table(hasitem, self.metadata, *has_columns)
-
-            # Create the class that will be mapped
-            # This will create the hasBios, hasBootDisk, etc. classes
-            exec "class %s(object): pass" % hasitem
-            self.klass[hasitem] = eval(hasitem)
-            # Map the python class to the SQL table
-            mapper(eval(hasitem), self.table[hasitem])
-
-        mapper(Machine, self.machine)
-        mapper(InventoryTable, self.inventory)
-
-    def enableLogging(self, level = None):
-        """
-        Enable log for sqlalchemy.engine module using the level configured by the db_debug option of the plugin configuration file.
-        The SQL queries will be loggued.
-        """
-        if not level:
-            level = logging.INFO
-        logging.getLogger("sqlalchemy.engine").setLevel(level)
-
-    def disableLogging(self):
-        """
-        Disable log for sqlalchemy.engine module
-        """
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
-
-    def getInventoryDatabaseVersion(self):
-        """
-        Return the inventory database version.
-        We don't use this information for now, but if we can get it this means the database connection is working.
-
-        @rtype: int
-        """
-        return self.version.select().execute().fetchone()[0]
-
+class PluginInventoryAADatabase(Inventory):
     def getMachineType(self, uuid):
         session = create_session()
         ret = self.__getMachineType(uuid, session)
@@ -224,8 +55,8 @@ class PluginInventoryAADatabase(pulse2.utils.Singleton):
     def buildPopulateCacheQuery(self):
         session = create_session()
         result = session.query(self.klass['Registry']).add_column(self.machine.c.Name).add_column(self.machine.c.id).add_column(self.table['hasRegistry'].c.inventory.label("inventoryid")).add_column(self.inventory.c.Date)
-        selectfrom = self.table['hasRegistry'].join(self.inventory).join(self.table['Registry']).join(self.table["nomRegistryPath"])
-        result = result.select_from(self.machine.outerjoin(selectfrom)).filter(self.inventory.c.Last == 1)
+        selectfrom = self.machine.outerjoin(self.table['hasRegistry']).join(self.inventory).join(self.table['Registry']).join(self.table["nomRegistryPath"])
+        result = result.select_from(selectfrom).filter(self.inventory.c.Last == 1)
         result = result.filter(self.table["nomRegistryPath"].c.Path == 'terminalType')
         return result
 
@@ -234,11 +65,5 @@ def toUUID(id): # TODO : change this method to get a value from somewhere in the
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
-
-class Machine(object):
-    pass
-
-class InventoryTable(object):
-    pass
 
 

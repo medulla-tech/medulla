@@ -20,62 +20,32 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pulse2.utils
-from mmc.support.config import PluginConfig
+#from mmc.support.config import PluginConfig
 import logging
 import sys
 import re
+from pulse2.database.inventory.config import InventoryDatabaseConfigSkel
 
-if sys.platform != "win32":
-    import pwd
-    import grp
-    import string
-    # MMC
-    from mmc.support.config import MMCConfigParser
+#if sys.platform != "win32":
+#    import pwd
+#    import grp
+#    import string
+#    # MMC
+#    from mmc.support.config import MMCConfigParser
 
-class PluginInventoryAAConfig(pulse2.utils.Singleton):
-    dbdriver = "mysql"
-    dbhost = "localhost"
-    dbname = "inventory"
-    dbuser = "mmc"
-    dbpasswd = "mmc"
-    dbpoolrecycle = None
-    dbport = None
-    dbsslenable = False
-    dbsslca = ''
-    dbsslcert = ''
-    dbsslkey = ''
+class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
     type2url = {}
+    dbsection = 'main'
 
     def setup(self, config_file):
-        # Load configuration file
-        if sys.platform != "win32":
-            self.cp = MMCConfigParser()
-        else:
-            self.cp = ConfigParser.ConfigParser()
-        self.cp.read(config_file)
-
-        if self.cp.has_option("main", "dbdriver"):
-            self.dbdriver = self.cp.get("main", "dbdriver")
-        if self.cp.has_option("main", "dbhost"):
-            self.dbhost = self.cp.get("main", "dbhost")
-        if self.cp.has_option("main", "dbname"):
-            self.dbname = self.cp.get("main", "dbname")
-        if self.cp.has_option("main", "dbuser"):
-            self.dbuser = self.cp.get("main", "dbuser")
-        if self.cp.has_option("main", "dbpasswd"):
-            self.dbpasswd = self.cp.getpassword("main", "dbpasswd")
-        if self.cp.has_option("main", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.cp.getint("main", "dbpoolrecycle")
-
-        if self.cp.has_option("main", "dbport"):
-            self.dbport = self.cp.getint("main", "dbport")
-
-        if self.cp.has_option("main", "dbsslenable"):
-            self.dbsslenable = self.cp.getboolean("main", "dbsslenable")
-            if self.dbsslenable:
-                self.dbsslca = self.cp.get("main", "dbsslca")
-                self.dbsslcert = self.cp.get("main", "dbsslcert")
-                self.dbsslkey = self.cp.get("main", "dbsslkey")
+        InventoryDatabaseConfigSkel.setup(self, config_file)
+                                
+        ## Load configuration file
+        #if sys.platform != "win32":
+        #    self.cp = MMCConfigParser()
+        #else:
+        #    self.cp = ConfigParser.ConfigParser()
+        #self.cp.read(config_file)
 
         for section in self.cp.sections():
             if re.compile('^associations:[0-9]+$').match(section):
