@@ -31,6 +31,7 @@ from pulse2.package_server.types import Mirror, Machine
 from pulse2.package_server.assign_algo import MMAssignAlgo
 from pulse2.package_server.assign_algo.terminal_type.database import PluginInventoryAADatabase
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
+import os
 
 class MMUserAssignAlgo(MMAssignAlgo):
     name = 'terminal_type'
@@ -39,7 +40,11 @@ class MMUserAssignAlgo(MMAssignAlgo):
     def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
         MMAssignAlgo.init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis)
         self.config = PluginInventoryAAConfig()
-        self.config.setup("/etc/mmc/pulse2/pserver/plugin_terminal_type.ini")
+        if os.path.exists("/etc/mmc/pulse2/pserver/plugin_terminal_type.ini") and not os.path.exists('/etc/mmc/pulse2/pserver/plugin_terminal_type.ini'):
+            self.logger.warning("Your plugin terminal_type config file is still in the wrong directory (/etc/mmc/pulse2/pserver/), please move it in /etc/mmc/pulse2/package-server/")
+            self.config.setup("/etc/mmc/pulse2/pserver/plugin_terminal_type.ini")
+        else:
+            self.config.setup('/etc/mmc/pulse2/package-server/plugin_terminal_type.ini')
         self.database = PluginInventoryAADatabase()
         self.database.activate(self.config)
         self.populateCache()
