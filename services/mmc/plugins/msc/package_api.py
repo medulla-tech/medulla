@@ -85,6 +85,14 @@ class PackageA:
         except:
             return []
 
+    # FIXME ! __convertDoReboot* shouldn't be needed
+
+    def __convertDoRebootList(self, pkgs):
+        ret = []
+        for pkg in pkgs:
+            ret.append(self.__convertDoReboot(pkg))
+        return ret
+            
     def __convertDoReboot(self, pkg):
         try:
             do_reboot = pkg['reboot']
@@ -107,6 +115,14 @@ class PackageA:
         d.addErrback(self.onError, "getPackageDetail", pid, False)
         return d
 
+    def getPackagesDetail(self, pids):
+        if self.initialized_failed:
+            return False
+        d = self.paserver.callRemote("getPackagesDetail", pids)
+        d.addCallback(self.__convertDoRebootList)
+        d.addErrback(self.onError, "getPackagesDetail", pids, False)
+        return d
+
     def getPackageLabel(self, pid):
         if self.initialized_failed:
             return False
@@ -122,6 +138,13 @@ class PackageA:
             return self.config.repopath
         d = self.paserver.callRemote("getLocalPackagePath", pid)
         d.addErrback(self._erGetLocalPackagePath)
+        return d
+
+    def getLocalPackagesPath(self, pids):
+        if self.initialized_failed:
+            return self.config.repopath
+        d = self.paserver.callRemote("getLocalPackagesPath", pids)
+        d.addErrback(self.onError, "getLocalPackagesPath", pids, False)
         return d
 
     def getPackageVersion(self, pid):
@@ -228,6 +251,7 @@ class SendBundleCommand:
         self.gid = gid
         self.bundle_id = None
         self.proxies = proxies
+        self.pids = []
 
     def onError(self, error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
@@ -237,6 +261,65 @@ class SendBundleCommand:
         return self.deferred.callback([self.bundle_id, result])
 
     def send(self):
+        self.last_order = 0
+        self.first_order = len(self.porders)
+        for id in self.porders:
+            p_api, pid, order = self.porders[id]
+            self.pids.append(pid)
+            if int(order) > int(self.last_order):
+                self.last_order = order
+            if int(order) < int(self.first_order):
+                self.first_order = order
+
+        # treat bundle inventory and halt (put on the last command)
+        self.do_wol = self.params['do_wol']
+        self.do_inventory = self.params['do_inventory']
+        try:
+            self.issue_halt_to = self.params['issue_halt_to']
+        except: # just in case issue_halt_to has not been set
+            self.issue_halt_to = ''
+
+        # Build the list of all the different package APIs to connect to
+        self.p_apis = []
+        for p in self.porders:
+            p_api, _, _ = self.porders[p]
+            if p_api not in self.p_apis:
+                self.p_apis.append(p_api)
+
+        self.packages = {}
+        self.ppaths = {}
+        self.packageApiLoop()
+
+    def packageApiLoop(self):
+        """
+        Loop over all packages package API to get package informations
+        """
+        if self.p_apis:
+            self.p_api = self.p_apis.pop()
+            # Get package ID linked to the selected package API
+            self.p_api_pids = []
+            for p in self.porders:
+                p_api, pid, _ = self.porders[p]
+                if p_api == self.p_api:
+                    self.p_api_pids.append(pid)
+            
+            d = PackageA(self.p_api).getPackagesDetail(self.p_api_pids)
+            d.addCallbacks(self.setPackagesDetail, self.onError)
+        else:
+            self.createBundle()        
+
+    def setPackagesDetail(self, packages):
+        for i in range(len(self.p_api_pids)):
+            self.packages[self.p_api_pids[i]] = packages[i]
+        d = PackageA(self.p_api).getLocalPackagesPath(self.p_api_pids)
+        d.addCallbacks(self.setLocalPackagesPath, self.onError)
+
+    def setLocalPackagesPath(self, ppaths):
+        for i in range(len(self.p_api_pids)):
+            self.ppaths[self.p_api_pids[i]] = ppaths[i]
+        self.packageApiLoop()
+
+    def createBundle(self):
         # treat bundle title
         try:
             title = self.params['bundle_title']
@@ -246,8 +329,8 @@ class SendBundleCommand:
 
         if title == None or title == '':
             localtime = time.localtime()
-            title = "Bundle (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
-                str(len(self.porders)),
+            title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
+                len(self.porders),
                 localtime[0],
                 localtime[1],
                 localtime[2],
@@ -255,53 +338,142 @@ class SendBundleCommand:
                 localtime[4],
                 localtime[5]
             )
-
-        last_order = 0
-        first_order = len(self.porders)
-        for id in self.porders:
-            p_api, pid, order = self.porders[id]
-            if int(order) > int(last_order):
-                last_order = order
-            if int(order) < int(first_order):
-                first_order = order
-
-        # treat bundle inventory and halt (put on the last command)
-        do_wol = self.params['do_wol']
-        do_inventory = self.params['do_inventory']
-        try:
-            issue_halt_to = self.params['issue_halt_to']
-        except: # just in case issue_halt_to has not been set
-            issue_halt_to = ''
-
+        # Insert bundle object
         bundle = MscDatabase().createBundle(title)
         self.bundle_id = bundle.id
 
-        ret = []
-        for id in self.porders:
-            p_api, pid, order = self.porders[id]
-            if int(order) == int(first_order):
-                self.params['do_wol'] = do_wol
+        self.loop_porders = self.porders.copy()
+        self.loop_ret = []
+        self.createCommandLoop()
+ 
+    def createCommandLoop(self, result = None):
+        if result and not isinstance(result, failure.Failure):
+            self.loop_ret.append(result)
+        if self.loop_porders:
+            _, porder = self.loop_porders.popitem()
+            p_api, pid, order = porder
+            pinfos = self.packages[pid]
+            ppath = self.ppaths[pid]
+            params = self.params.copy()
+            
+            if int(order) == int(self.first_order):
+                params['do_wol'] = self.do_wol
             else:
-                self.params['do_wol'] = 'off'
+                params['do_wol'] = 'off'
 
-            if int(order) == int(last_order):
-                self.params['do_inventory'] = do_inventory
-                self.params['issue_halt_to'] = issue_halt_to
+            if int(order) == int(self.last_order):
+                params['do_inventory'] = self.do_inventory
+                params['issue_halt_to'] = self.issue_halt_to
             else:
-                self.params['do_inventory'] = 'off'
-                self.params['issue_halt_to'] = ''
-            g = SendPackageCommand(self.ctx, p_api, pid, self.targets, self.params, self.mode, self.gid, self.bundle_id, order, self.proxies)
-            g.deferred = defer.Deferred()
-            g.send()
-            ret.append(g.deferred)
-
-        if len(ret) == 0:
-            self.onError("No order to send")
+                params['do_inventory'] = 'off'
+                params['issue_halt_to'] = ''
+            
+            cmd = prepareCommand(pinfos, params)
+            addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
+                self.ctx,
+                pid,
+                cmd['start_file'],
+                cmd['parameters'],
+                cmd['files'],
+                self.targets, # TODO : need to convert array into something that we can get back ...
+                self.mode,
+                self.gid,
+                cmd['start_script'],
+                cmd['clean_on_success'],
+                cmd['start_date'],
+                cmd['end_date'],
+                "root", # TODO: may use another login name
+                cmd['title'],
+                cmd['issue_halt_to'],
+                pinfos['do_reboot'],
+                cmd['do_wol'],
+                cmd['next_connection_delay'],
+                cmd['max_connection_attempt'],
+                cmd['do_inventory'],
+                cmd['maxbw'],
+                ppath,
+                cmd['deployment_intervals'],
+                self.bundle_id,
+                order,
+                cmd['proxy_mode'],
+                self.proxies
+            )
+            if type(addCmd) != int:
+                addCmd.addCallbacks(self.createCommandLoop, self.onError)
+            else:
+                self.onError("Error while creating a command for the bundle")
         else:
-            dl = defer.DeferredList(ret)
-            dl.addCallback(self.sendResult)
-            return dl
-        return False
+            # No more package command to create
+            self.sendResult(self.loop_ret)
+
+def prepareCommand(pinfos, params):
+    """
+    @param pinfos: getPackageDetail dict content
+    @param params: command parameters
+    @returns: dict with parameters needed to create the command in database
+    @rtype: dict
+    """
+    ret = {}
+    ret['start_file'] = pinfos['command']['command']
+    ret['do_reboot'] = pinfos['do_reboot']
+    #TODO : check that params has needed values, else put default one
+    # as long as this method is called from the MSC php, the fields should be
+    # set, but, if someone wants to call it from somewhere else...
+    ret['start_script'] = (params['start_script'] == 'on' and 'enable' or 'disable')
+    ret['clean_on_success'] = (params['clean_on_success'] == 'on' and 'enable' or 'disable')
+    ret['do_wol'] = (params['do_wol'] == 'on' and 'enable' or 'disable')
+    ret['next_connection_delay'] = params['next_connection_delay']
+    ret['max_connection_attempt'] = params['max_connection_attempt']
+    ret['do_inventory'] = (params['do_inventory'] == 'on' and 'enable' or 'disable')
+    ret['issue_halt_to'] = params['issue_halt_to']
+    ret['maxbw'] = params['maxbw']
+
+    if 'proxy_mode' in params:
+        ret['proxy_mode'] = params['proxy_mode']
+    else:
+        ret['proxy_mode'] = 'none'
+
+    if 'deployment_intervals' in params:
+        ret['deployment_intervals'] = params['deployment_intervals']
+    else:
+        ret['deployment_intervals'] = ''
+
+    if 'parameters' in params:
+        ret['parameters'] = params['parameters']
+    else:
+        ret['parameters'] = ''
+
+    try:
+        ret['start_date'] = convert_date(params['start_date'])
+    except:
+        ret['start_date'] = '0000-00-00 00:00:00' # ie. "now"
+
+    try:
+        ret['end_date'] = convert_date(params['end_date'])
+    except:
+        ret['end_date'] = '0000-00-00 00:00:00' # ie. "no end date"
+
+    if 'ltitle' in params:
+        ret['title'] = params['ltitle']
+    else:
+        ret['title'] = ''
+
+    if ret['title'] == None or ret['title'] == '':
+        localtime = time.localtime()
+        ret['title'] = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+            pinfos['label'],
+            pinfos['version'],
+            localtime[0],
+            localtime[1],
+            localtime[2],
+            localtime[3],
+            localtime[4],
+            localtime[5]
+        )
+
+    ret['files'] = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], pinfos['files'])
+    return ret    
+
 
 class SendPackageCommand:
     def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = []):
@@ -328,101 +500,42 @@ class SendPackageCommand:
         d.addCallbacks(self.setPackage, self.onError)
 
     def setPackage(self, package):
-        self.cmd = package['command']
-        self.a_files = package['files']
-        self.label = package['label']
-        self.version = package['version']
-        self.do_reboot = package['do_reboot']
+        self.pinfos = package
         d = PackageA(self.p_api).getLocalPackagePath(self.pid)
         d.addCallbacks(self.setRoot, self.onError)
 
     def setRoot(self, root):
         self.root = root
-        start_file = self.cmd['command']
-        #TODO : check that params has needed values, else put default one
-        # as long as this method is called from the MSC php, the fields should be
-        # set, but, if someone wants to call it from somewhere else...
-        start_script = (self.params['start_script'] == 'on' and 'enable' or 'disable')
-        clean_on_success = (self.params['clean_on_success'] == 'on' and 'enable' or 'disable')
-        do_wol = (self.params['do_wol'] == 'on' and 'enable' or 'disable')
-        next_connection_delay = self.params['next_connection_delay']
-        max_connection_attempt = self.params['max_connection_attempt']
-        do_inventory = (self.params['do_inventory'] == 'on' and 'enable' or 'disable')
-        issue_halt_to = self.params['issue_halt_to']
-        maxbw = self.params['maxbw']
-
-        if 'proxy_mode' in self.params:
-            proxy_mode = self.params['proxy_mode']
-        else:
-            proxy_mode = 'none'
-
-        if 'deployment_intervals' in self.params:
-            deployment_intervals = self.params['deployment_intervals']
-        else:
-            deployment_intervals = ''
-
-        if 'parameters' in self.params:
-            parameters = self.params['parameters']
-        else:
-            parameters = ''
-
-        try:
-            start_date = convert_date(self.params['start_date'])
-        except:
-            start_date = '0000-00-00 00:00:00' # ie. "now"
-
-        try:
-            end_date = convert_date(self.params['end_date'])
-        except:
-            end_date = '0000-00-00 00:00:00' # ie. "no end date"
-
-        if 'ltitle' in self.params:
-            title = self.params['ltitle']
-        else:
-            title = ''
-
-        if title == None or title == '':
-            localtime = time.localtime()
-            title = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
-                self.label,
-                self.version,
-                localtime[0],
-                localtime[1],
-                localtime[2],
-                localtime[3],
-                localtime[4],
-                localtime[5]
-            )
-
-        files = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], self.a_files)
+        # Prepare command parameters for database insertion
+        cmd = prepareCommand(self.pinfos, self.params)
 
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
-            start_file,
-            parameters,
-            files,
+            cmd['start_file'],
+            cmd['parameters'],
+            cmd['files'],
             self.targets, # TODO : need to convert array into something that we can get back ...
             self.mode,
             self.gid,
-            start_script,
-            clean_on_success,
-            start_date,
-            end_date,
+            cmd['start_script'],
+            cmd['clean_on_success'],
+            cmd['start_date'],
+            cmd['end_date'],
             "root", # TODO: may use another login name
-            title,
-            issue_halt_to,
-            self.do_reboot,
-            do_wol,
-            next_connection_delay,
-            max_connection_attempt,
-            do_inventory,
-            maxbw,
+            cmd['title'],
+            cmd['issue_halt_to'],
+            cmd['do_reboot'],
+            cmd['do_wol'],
+            cmd['next_connection_delay'],
+            cmd['max_connection_attempt'],
+            cmd['do_inventory'],
+            cmd['maxbw'],
             self.root,
-            deployment_intervals,
+            cmd['deployment_intervals'],
             self.bundle_id,
             self.order_in_bundle,
-            proxy_mode,
+            cmd['proxy_mode'],
             self.proxies
         )
         if type(addCmd) != int:
