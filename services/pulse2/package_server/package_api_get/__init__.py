@@ -55,7 +55,7 @@ class PackageApiGet(MyXmlrpc):
         return map(lambda x: ret[x].toH(), ret)
 
     def xmlrpc_getPackagesDetail(self, pidlist):
-        return map(lambda p: p.toH(), Common().packages(pidlist, self.mp))
+        return map(lambda p: p.toH(), Common().packagelist(pidlist, self.mp))
     
     def xmlrpc_getPackageDetail(self, pid):
         return Common().package(pid, self.mp).toH()

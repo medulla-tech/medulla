@@ -528,7 +528,7 @@ class Common(pulse2.utils.Singleton):
     def writeFileIntoPackage(self, pid, file):
         pass
 
-    def packages(self, pidlist, mp = None):
+    def packagelist(self, pidlist, mp = None):
         return self.getPackages(mp, False, True, pidlist)
 
     def package(self, pid, mp = None):
