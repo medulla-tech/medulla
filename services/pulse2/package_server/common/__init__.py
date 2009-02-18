@@ -543,20 +543,26 @@ class Common(pulse2.utils.Singleton):
         ret = {}
         ordered = []
         try:
-            for k in self.packages:
-                if pidlist != None:
-                    if not k in pidlist:
+            if pidlist == None:
+                for k in self.packages:
+                    if pidlist != None:
+                        if not k in pidlist:
+                            continue
+                    p = self.__packageSelection(k, mp, pending, all)
+                    if p != None:
+                        ret[k] = p
+                return ret
+            else:
+                for id in pidlist:
+                    if not self.packages.has_key(id): # shouldn't happen, but who knows...
                         continue
-                p = self.__packageSelection(k, mp, pending, all)
-                if p != None:
-                    ret[k] = p
-                    ordered.append(p)
+                    p = self.__packageSelection(id, mp, pending, all)
+                    if p != None:
+                        ordered.append(p)
+                return ordered
         except Exception, e:
             self.logger.error(e)
-        if pidlist == None:
-            return ret
-        else:
-            return ordered
+            return None
     
     def __packageSelection(self, pid, mp = None, pending = False, all = False):
         is_acc = self.isPackageAccessible(pid) 
