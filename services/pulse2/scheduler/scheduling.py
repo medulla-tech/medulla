@@ -248,6 +248,35 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
 
 def localProxyAttemptSplitMode(myCommandOnHostID):
     # split mode (parallel) implementation of proxy mode
+
+    def __processProbes(result):
+        # remove bad proxy (result => alive_proxy):
+        alive_proxy = list()
+        for (success, (probe, coh_id)) in result:
+            if success: # XMLRPC call do succeedeed
+                if probe:
+                    if probe != "Not available":
+                        alive_proxy.append(coh_id)
+
+        # remove full proxy (alive_proxy => free_proxy):
+        free_proxy = list()
+        for proxy in alive_proxy:
+            (current_client_number, max_client_number) = getClientUsageForProxy(proxy)
+            if current_client_number < max_client_number:
+                free_proxy.append(proxy)
+
+        if len(free_proxy) == 0: # not free proxy, wait
+            logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy for to be usable" % (SchedulerConfig().name, myCommandOnHostID))
+            return 'waiting'
+        else: # take a proxy in alive proxies
+            final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
+            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy" % (SchedulerConfig().name, myCommandOnHostID, final_proxy))
+            return final_proxy
+
+    def __processProbe(result, ip, proxy):
+        logging.getLogger().debug("scheduler %s: coh #%s probed using %s, got %s" % (SchedulerConfig().name, proxy, ip, result))
+        return (result, proxy)
+
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return 'error'
@@ -255,7 +284,6 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
         temp_dysfunc_proxy = list() # proxies with no data (UPLOADED != DONE)
         def_dysfunc_proxy = list()  # proxies with no data (UPLOADED != DONE) and which definitely wont't process further (current_state != scheduled)
         available_proxy = list()    # proxies with complete data (UPLOADED = DONE)
-        free_proxy = list()         # proxies with complete data (UPLOADED = DONE) and free to use
 
         # iterate over CoH which
         # are linked to the same command
@@ -291,19 +319,17 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
                 logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy to be ready" % (SchedulerConfig().name, myCommandOnHostID))
                 return 'waiting'
 
-        # remove full proxy (available_proxy => free_proxy)
+        deffered_list = list()
+        crach_test = ['192.168.0.1', '192.168.0.100']
         for proxy in available_proxy:
-            (current_client_number, max_client_number) = getClientUsageForProxy(proxy)
-            if current_client_number < max_client_number:
-                free_proxy.append(proxy)
-
-        if len(free_proxy) == 0: # not free proxy, wait
-            logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy for to be free" % (SchedulerConfig().name, myCommandOnHostID))
-            return 'waiting'
-        else: # take a proxy in free proxyes
-            final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
-            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy" % (SchedulerConfig().name, myCommandOnHostID, final_proxy))
-            return final_proxy
+            (proxyCoH, proxyC, proxyT) = gatherCoHStuff(proxy)
+            ip = proxyT.getIps().pop()
+            d = callOnBestLauncher(None, 'probe', ip)
+            d.addCallback(__processProbe, ip, proxy)
+            deffered_list.append(d)
+        dl = twisted.internet.defer.DeferredList(deffered_list)
+        dl.addCallback(__processProbes)
+        return dl
 
     else:                                                               # I'm a server: let's upload
         logging.getLogger().debug("scheduler %s: coh #%s become local proxy server" % (SchedulerConfig().name, myCommandOnHostID))
@@ -869,8 +895,9 @@ def runUploadPhase(myCommandOnHostID):
 
     # fullfil used proxy (if we can)
     if myC.hasToUseProxy():
-        proxy_kind = localProxyUploadStatus(myCommandOnHostID)
-        return _cbChooseUploadMode(proxy_kind, myCoH, myC, myT)
+        d = twisted.internet.defer.maybeDeferred(localProxyUploadStatus, myCommandOnHostID)
+        d.addCallback(_cbChooseUploadMode, myCoH, myC, myT)
+        return d
 
     return _chooseUploadMode(myCoH, myC, myT)
 
