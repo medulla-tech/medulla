@@ -61,7 +61,7 @@ class PackageApiGet(MyXmlrpc):
         return Common().package(pid, self.mp).toH()
 
     def xmlrpc_getLocalPackagesPath(self, pidlist):
-        return map(lambda p: os.path.dirname(p.root), Common().packages(pidlist))
+        return map(lambda p: os.path.dirname(p.root), Common().packagelist(pidlist))
         
     def xmlrpc_getLocalPackagePath(self, pid):
         return os.path.dirname(Common().package(pid, self.mp).root)
