@@ -31,11 +31,12 @@ import xmlrpclib
 import time
 
 # Twisted
+from twisted.internet import epollreactor
+epollreactor.install()
 import twisted.web.xmlrpc
 import twisted.web.server
 import twisted.internet.defer
 import twisted.internet.base
-import twisted.internet.reactor
 from twisted.internet import ssl
 try:
     from twisted.web import http
