@@ -32,7 +32,34 @@ import string
 # MMC
 from pulse2.database.config import DatabaseConfig
 
-class InventoryDatabaseConfig(DatabaseConfig):
+class InventoryDatabaseConfigSkel(DatabaseConfig):
+    dbname = "inventory"
+    list = {}
+    double = {}
+    halfstatic = {}
+    def getInventoryParts(self):
+        """
+        @return: Return all available inventory parts
+        @rtype: list
+        """
+        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
+           
+    def getInventoryNoms(self, table = None):
+        """
+        @return: Return all available nomenclatures tables
+        @rtype: dict
+        """ 
+        noms = {
+            'Registry':['Path']
+        }   
+            
+        if table == None:
+            return noms
+        if noms.has_key(table):
+            return noms[table]
+        return None
+ 
+class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     list = {
             'Software/ProductName':['string'],
             'Hardware/ProcessorType':['string'],
@@ -56,8 +83,6 @@ class InventoryDatabaseConfig(DatabaseConfig):
     graph = {}
     display = [['cn', 'Computer Name'], ['displayName', 'Description']]
     content = {}
-
-    dbname = "inventory"
 
     def setup(self, config_file):
         # read the database configuration
@@ -115,28 +140,6 @@ class InventoryDatabaseConfig(DatabaseConfig):
                         name, vals = l.split('::')
                         k, v = vals.split('##')
                         self.halfstatic[name] = ['string', k, v]
-
-    def getInventoryParts(self):
-        """
-        @return: Return all available inventory parts
-        @rtype: list
-        """
-        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
-           
-    def getInventoryNoms(self, table = None):
-        """
-        @return: Return all available nomenclatures tables
-        @rtype: dict
-        """ 
-        noms = {
-            'Registry':['Path']
-        }   
-            
-        if table == None:
-            return noms
-        if noms.has_key(table):
-            return noms[table]
-        return None
 
 
 def desArrayIfUnic(x):
