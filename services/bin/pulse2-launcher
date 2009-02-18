@@ -30,10 +30,11 @@ import xmlrpclib
 import time
 
 # Twisted
+from twisted.internet import epollreactor
+epollreactor.install()
 import twisted.web.xmlrpc
 import twisted.web.server
 import twisted.internet.defer
-import twisted.internet.reactor
 try:
     from twisted.web import http
 except ImportError:
