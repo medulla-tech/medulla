@@ -69,11 +69,7 @@ function launch_bundle($cible, $orders, $gid = null, $proxy = array()) {
     $ret = add_bundle_api($orders, $cible, $params, $params['copy_mode'], $gid, $ordered_proxies);
     if (is_array($ret) && !empty($ret)) {
         $commands = $ret[1];
-        $ids = array();
-        foreach($commands as $key => $value) {
-            $ids[] = $value[1];
-        }
-        scheduler_start_these_commands('', $ids);
+        scheduler_start_these_commands('', $commands);
     }
     return $ret;
 }
