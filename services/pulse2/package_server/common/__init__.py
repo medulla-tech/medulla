@@ -541,6 +541,7 @@ class Common(pulse2.utils.Singleton):
     def getPackages(self, mp, pending = False, all = False, pidlist = None): #TODO check the clone memory impact
         # "all" override "pending" flag
         ret = {}
+        ordered = []
         try:
             for k in self.packages:
                 if pidlist != None:
@@ -549,9 +550,13 @@ class Common(pulse2.utils.Singleton):
                 p = self.__packageSelection(k, mp, pending, all)
                 if p != None:
                     ret[k] = p
+                    ordered.append(p)
         except Exception, e:
             self.logger.error(e)
-        return ret
+        if pidlist == None:
+            return ret
+        else:
+            return ordered
     
     def __packageSelection(self, pid, mp = None, pending = False, all = False):
         is_acc = self.isPackageAccessible(pid) 
