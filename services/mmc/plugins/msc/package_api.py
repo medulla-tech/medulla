@@ -548,7 +548,7 @@ class SendPackageCommand:
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)
         else:
-            return self.deferred.callback(addCmd)
+            self.onError('Error while creating the command')
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:
