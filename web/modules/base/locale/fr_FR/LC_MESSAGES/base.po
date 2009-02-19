@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-11 09:11+0100\n"
-"PO-Revision-Date: 2008-12-11 09:13+0100\n"
+"POT-Creation-Date: 2009-02-19 10:03+0100\n"
+"PO-Revision-Date: 2009-02-19 10:09+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid " (%s module)"
 msgstr " (module %s)"
 
-#: includes/PageGenerator.php:458 includes/PageGenerator.php:665
+#: includes/PageGenerator.php:458 includes/PageGenerator.php:667
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
@@ -135,7 +135,7 @@ msgstr "Attributs mis à jour."
 msgid "Authorization"
 msgstr "Autorisation"
 
-#: modules/base/status/index.php:234
+#: modules/base/status/index.php:231
 msgid "Background jobs"
 msgstr "Actions en arrière plan"
 
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Backup user files"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
-#: includes/xmlrpc.inc.php:187
+#: includes/xmlrpc.inc.php:210
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
@@ -170,16 +170,16 @@ msgstr ""
 "Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
 "le bon port TCP et le bon protocole."
 
-#: includes/xmlrpc.inc.php:150
+#: includes/xmlrpc.inc.php:154
 msgid "Can't connect to MMC agent"
 msgstr "Impossible de se connecter à l'agent MMC"
 
-#: includes/xmlrpc.inc.php:163
+#: includes/xmlrpc.inc.php:167
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
-#: includes/PageGenerator.php:104 includes/PageGenerator.php:1925
-#: includes/PageGenerator.php:1991 modules/base/groups/members.php:182
+#: includes/PageGenerator.php:104 includes/PageGenerator.php:1974
+#: includes/PageGenerator.php:2040 modules/base/groups/members.php:182
 #: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:438
 msgid "Cancel"
@@ -246,8 +246,8 @@ msgstr "Ordinateurs"
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: includes/PageGenerator.php:1921 includes/PageGenerator.php:1987
-#: includes/PageGenerator.php:2014 modules/base/groups/members.php:181
+#: includes/PageGenerator.php:1970 includes/PageGenerator.php:2036
+#: includes/PageGenerator.php:2063 modules/base/groups/members.php:181
 #: modules/base/groups/edit.php:106 modules/base/users/edit.php:437
 msgid "Confirm"
 msgstr "Valider"
@@ -404,6 +404,10 @@ msgstr "Erreur pendant la phase d'authentification"
 msgid "Error while provisioning your account"
 msgstr "Erreur lors de la création ou du paramétrage de votre compte"
 
+#: includes/xmlrpc.inc.php:194
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
+
 #: main.php:88
 msgid "Error, you don't have correct rights !"
 msgstr "Erreur, vous n'avez pas les droits requis !"
@@ -437,7 +441,7 @@ msgstr "Inventaire GLPI"
 msgid "Get user photo"
 msgstr "Affichage de la photo d'un utilisateur"
 
-#: modules/base/status/index.php:212
+#: modules/base/status/index.php:209
 msgid "Global view"
 msgstr "Vue globale"
 
@@ -499,7 +503,7 @@ msgstr "Groupes"
 msgid "Groups management"
 msgstr "Gestion des groupes"
 
-#: modules/base/status/index.php:226
+#: modules/base/status/index.php:223
 msgid "Hard drive partitions"
 msgstr "Partitions sur le disque"
 
@@ -558,6 +562,10 @@ msgstr "Journal des opérations LDAP"
 msgid "Language"
 msgstr "Langue"
 
+#: modules/base/users/edit.php:316
+msgid "Last name"
+msgstr "Nom de famille"
+
 #: modules/base/users/backup.php:90
 msgid "Launch backup"
 msgstr "Lancement de la sauvegarde"
@@ -596,16 +604,17 @@ msgstr "Déconnexion"
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
 
-#: includes/xmlrpc.inc.php:186 includes/xmlrpc.inc.php:205
+#: includes/xmlrpc.inc.php:184 includes/xmlrpc.inc.php:209
+#: includes/xmlrpc.inc.php:228
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
 
-#: includes/xmlrpc.inc.php:151
+#: includes/xmlrpc.inc.php:155
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
-#: includes/xmlrpc.inc.php:164
+#: includes/xmlrpc.inc.php:168
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
@@ -625,7 +634,7 @@ msgstr "Adresse de messagerie"
 msgid "Media size"
 msgstr "Taille du médium"
 
-#: modules/base/status/index.php:127
+#: modules/base/status/index.php:122
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -645,8 +654,7 @@ msgstr "Numéro de mobile"
 msgid "Month: "
 msgstr "Mois: "
 
-#: modules/base/users/ajaxFilter.php:77 modules/base/users/edit.php:316
-#: modules/base/views/index.tpl.php:84
+#: modules/base/users/ajaxFilter.php:77 modules/base/views/index.tpl.php:84
 msgid "Name"
 msgstr "Nom"
 
@@ -655,16 +663,20 @@ msgid "New password"
 msgstr "Nouveau mot de passe"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:739 includes/PageGenerator.php:745
-#: includes/PageGenerator.php:798 includes/PageGenerator.php:802
+#: includes/PageGenerator.php:741 includes/PageGenerator.php:747
+#: includes/PageGenerator.php:800 includes/PageGenerator.php:804
 msgid "Next"
 msgstr "Suivant"
+
+#: includes/PageGenerator.php:940
+msgid "No item available"
+msgstr "Aucun élément disponible"
 
 #: includes/bgps_view.php:64
 msgid "No job."
 msgstr "Aucune action."
 
-#: includes/PageGenerator.php:1597
+#: includes/PageGenerator.php:1646
 msgid "Ok"
 msgstr "Ok"
 
@@ -711,6 +723,10 @@ msgstr ""
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
+#: includes/xmlrpc.inc.php:195
+msgid "Please check network connectivity."
+msgstr "Veuillez vérifier les connexions réseau."
+
 #: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
@@ -736,8 +752,8 @@ msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:728 includes/PageGenerator.php:735
-#: includes/PageGenerator.php:790 includes/PageGenerator.php:794
+#: includes/PageGenerator.php:730 includes/PageGenerator.php:737
+#: includes/PageGenerator.php:792 includes/PageGenerator.php:796
 msgid "Previous"
 msgstr "Précédent"
 
@@ -778,7 +794,7 @@ msgstr "Tout sélectionner"
 msgid "Server"
 msgstr "Serveur"
 
-#: modules/base/status/index.php:219
+#: modules/base/status/index.php:216
 msgid "Server status"
 msgstr "Statut du serveur"
 
@@ -826,7 +842,7 @@ msgstr ""
 msgid "Status"
 msgstr "Statut"
 
-#: modules/base/status/index.php:129
+#: modules/base/status/index.php:125
 msgid "Swap"
 msgstr "Espace d'échange"
 
@@ -834,15 +850,12 @@ msgstr "Espace d'échange"
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: modules/base/users/edit.php:335
-msgid "Telephone Number"
-msgstr "Numéro de téléphone"
-
-#: modules/base/users/edit.php:333 modules/base/infoPackage.inc.php:242
+#: modules/base/users/edit.php:333 modules/base/users/edit.php:335
+#: modules/base/infoPackage.inc.php:242
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
-#: includes/xmlrpc.inc.php:206
+#: includes/xmlrpc.inc.php:229
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
@@ -901,7 +914,7 @@ msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
 msgid "The server %s does not exist"
 msgstr "Le serveur %s n'existe pas"
 
-#: includes/xmlrpc.inc.php:287
+#: includes/xmlrpc.inc.php:310
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -959,6 +972,12 @@ msgstr ""
 msgid "This user already exists."
 msgstr "Cet utilisateur existe déjà."
 
+#: includes/xmlrpc.inc.php:185
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr "Temps dépassé lors de la réception de données en provenance de l'agent MMC. Veuillez vérifier les connexions réseau et la charge du serveur."
+
 #: modules/base/users/edit.php:322
 msgid "Title"
 msgstr "Titre"
@@ -967,7 +986,7 @@ msgstr "Titre"
 msgid "Unselect all"
 msgstr "Tout désélectionner"
 
-#: modules/base/status/index.php:110
+#: modules/base/status/index.php:105
 msgid "Uptime: "
 msgstr "Démarré depuis: "
 
@@ -1111,7 +1130,7 @@ msgstr "brésilien"
 msgid "danish"
 msgstr "danois"
 
-#: modules/base/status/index.php:114
+#: modules/base/status/index.php:109
 msgid "day"
 msgstr "jour"
 
@@ -1135,7 +1154,7 @@ msgstr "allemand"
 msgid "hide"
 msgstr "cacher"
 
-#: modules/base/status/index.php:119
+#: modules/base/status/index.php:114
 msgid "hour"
 msgstr "heure"
 
@@ -1143,7 +1162,7 @@ msgstr "heure"
 msgid "logout"
 msgstr "déconnexion"
 
-#: modules/base/status/index.php:122
+#: modules/base/status/index.php:117
 msgid "minute"
 msgstr "minute"
 
@@ -1159,7 +1178,7 @@ msgstr "norvégien"
 msgid "or <a href='#'"
 msgstr "ou <a href='#'"
 
-#: includes/PageGenerator.php:461 includes/PageGenerator.php:668
+#: includes/PageGenerator.php:461 includes/PageGenerator.php:670
 msgid "page"
 msgstr "page"
 
@@ -1191,7 +1210,7 @@ msgstr "espagnol"
 msgid "standard mode"
 msgstr "mode standard"
 
-#: includes/PageGenerator.php:457 includes/PageGenerator.php:664
+#: includes/PageGenerator.php:457 includes/PageGenerator.php:666
 msgid "to"
 msgstr "à"
 
@@ -1200,7 +1219,7 @@ msgstr "à"
 msgid "unavailable"
 msgstr "indisponible"
 
-#: includes/xmlrpc.inc.php:286
+#: includes/xmlrpc.inc.php:309
 msgid "unknown error"
 msgstr "erreur inconnue"
 
