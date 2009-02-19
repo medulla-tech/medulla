@@ -23,7 +23,7 @@
  */
  
 function machineExists($h_params) { $machine = getMachine($h_params); return ($machine->hostname != ''); }
-function getMachine($h_params, $ping = true) { return new Machine(rpcGetMachine($h_params), $ping); }
+function getMachine($h_params, $ping = False) { return new Machine(rpcGetMachine($h_params), $ping); }
 
 // Machine object
 class Machine {
