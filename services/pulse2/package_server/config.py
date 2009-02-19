@@ -29,6 +29,7 @@ import sys
 import pulse2.utils
 import logging
 import os
+from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 if sys.platform != "win32":
     import pwd
@@ -135,16 +136,24 @@ class P2PServerCP(pulse2.utils.Singleton):
                 if self.cp.has_option("daemon", "umask"):
                     self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
+        if self.cp.has_option('ssl', 'username'):
+            self.username = self.cp.get('ssl', 'username')
+            if sys.platform != "win32":
+                self.password = self.cp.getpassword('ssl', 'password')
+            else:
+                self.password = self.cp.get('ssl', 'password')
+            if not isTwistedEnoughForLoginPass():
+                if self.username:
+                    logging.getLogger().warn("your version of twisted is not high enough to use login (ssl/username)")
+                    self.username = ''
+                if self.password != '':
+                    logging.getLogger().warning("your version of twisted is not high enough to use password (ssl/password)")
+                    self.password = ''
+
         if self.cp.has_option('ssl', 'enablessl'):
             self.enablessl = self.cp.getboolean('ssl', 'enablessl')
         if self.enablessl:
             self.proto = 'https'
-            if self.cp.has_option('ssl', 'username'):
-                self.username = self.cp.get('ssl', 'username')
-                if sys.platform != "win32":
-                    self.password = self.cp.getpassword('ssl', 'password')
-                else:
-                    self.password = self.cp.get('ssl', 'password')
             if self.cp.has_option('ssl', 'certfile'):
                 self.cacert = self.cp.get('ssl', 'certfile')
             if self.cp.has_option('ssl', 'cacert'):

@@ -33,7 +33,11 @@ import twisted
 from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP, config_addons
 
-def running(inifile, deamonize):
+def running(inifile, daemonize):
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+    logger.debug("Logger loaded")
+
     config = P2PServerCP()
     config.setup(inifile)
 
@@ -52,9 +56,6 @@ def running(inifile, deamonize):
             # failed
             pass
 
-    logging.config.fileConfig(inifile)
-    logger = logging.getLogger()
-    logger.debug("Logger loaded")
 
     if config.real_package_deletion:
         logger.warning("Real package deletion is activated")
