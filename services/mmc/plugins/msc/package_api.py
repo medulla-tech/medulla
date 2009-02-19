@@ -94,17 +94,18 @@ class PackageA:
         return ret
             
     def __convertDoReboot(self, pkg):
-        try:
-            do_reboot = pkg['reboot']
-            if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
+        if pkg:
+            try:
+                do_reboot = pkg['reboot']
+                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
+                    pkg['do_reboot'] = 'disable'
+                elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
+                    pkg['do_reboot'] = 'enable'
+                else:
+                    self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
+                del pkg['reboot']
+            except KeyError:
                 pkg['do_reboot'] = 'disable'
-            elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
-                pkg['do_reboot'] = 'enable'
-            else:
-                self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
-            del pkg['reboot']
-        except KeyError:
-            pkg['do_reboot'] = 'disable'
         return pkg
 
     def getPackageDetail(self, pid):
@@ -500,11 +501,17 @@ class SendPackageCommand:
         d.addCallbacks(self.setPackage, self.onError)
 
     def setPackage(self, package):
-        self.pinfos = package
-        d = PackageA(self.p_api).getLocalPackagePath(self.pid)
-        d.addCallbacks(self.setRoot, self.onError)
+        if not package:
+            self.onError("Can't get informations on package %s" % self.pid)
+        else:
+            self.pinfos = package
+            d = PackageA(self.p_api).getLocalPackagePath(self.pid)
+            d.addCallbacks(self.setRoot, self.onError)
 
     def setRoot(self, root):
+        logging.getLogger().debug(root)
+        if not root:
+            return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
