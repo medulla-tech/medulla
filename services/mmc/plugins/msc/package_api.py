@@ -63,16 +63,12 @@ class PackageA:
             self.paserver.setSSLClientContext(self.sslctx)
         else:
             self.paserver = Proxy(self.server_addr)
-        # FIXME: still needed ?
-        self.initialized_failed = False
 
     def onError(self, error, funcname, args, value = []):
         self.logger.warn("PackageA:%s %s has failed: %s" % (funcname, args, error))
         return error
 
     def getAllPackages(self, mirror = None):
-        if self.initialized_failed:
-            return []
         d = self.paserver.callRemote("getAllPackages", mirror)
         d.addErrback(self.onError, "getAllPackages", mirror)
         return d
@@ -109,24 +105,18 @@ class PackageA:
         return pkg
 
     def getPackageDetail(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageDetail", pid)
         d.addCallback(self.__convertDoReboot)
         d.addErrback(self.onError, "getPackageDetail", pid, False)
         return d
 
     def getPackagesDetail(self, pids):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackagesDetail", pids)
         d.addCallback(self.__convertDoRebootList)
         d.addErrback(self.onError, "getPackagesDetail", pids, False)
         return d
 
     def getPackageLabel(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageLabel", pid)
         d.addErrback(self.onError, "getPackageLabel", pid, False)
         return d
@@ -135,107 +125,77 @@ class PackageA:
         return self.config.repopath
 
     def getLocalPackagePath(self, pid):
-        if self.initialized_failed:
-            return self.config.repopath
         d = self.paserver.callRemote("getLocalPackagePath", pid)
         d.addErrback(self._erGetLocalPackagePath)
         return d
 
     def getLocalPackagesPath(self, pids):
-        if self.initialized_failed:
-            return self.config.repopath
         d = self.paserver.callRemote("getLocalPackagesPath", pids)
         d.addErrback(self.onError, "getLocalPackagesPath", pids, False)
         return d
 
     def getPackageVersion(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageVersion", pid)
         d.addErrback(self.onError, "getPackageVersion", pid, False)
         return d
 
 
     def getPackageSize(self, pid):
-        if self.initialized_failed:
-            return 0
         d = self.paserver.callRemote("getPackageSize", pid)
         d.addErrback(self.onError, "getPackageSize", pid, 0)
         return d
 
     def getPackageInstallInit(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageInstallInit", pid)
         d.addErrback(self.onError, "getPackageInstallInit", pid, False)
         return d
 
     def getPackagePreCommand(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackagePreCommand", pid)
         d.addErrback(self.onError, "getPackagePreCommand", pid, False)
         return d
 
     def getPackageCommand(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageCommand", pid)
         d.addErrback(self.onError, "getPackageCommand", pid, False)
         return d
 
     def getPackagePostCommandSuccess(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackagePostCommandSuccess", pid)
         d.addErrback(self.onError, "getPackagePostCommandSuccess", pid, False)
         return d
 
     def getPackagePostCommandFailure(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackagePostCommandFailure", pid)
         d.addErrback(self.onError, "getPackagePostCommandFailure", pid, False)
         return d
 
     def getPackageHasToReboot(self, pid):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageHasToReboot", pid)
         d.addErrback(self.onError, "getPackageHasToReboot", pid, False)
         return d
 
     def getPackageFiles(self, pid):
-        if self.initialized_failed:
-            return []
         d = self.paserver.callRemote("getPackageFiles", pid)
         d.addErrback(self.onError, "getPackageFiles", pid)
         return d
 
     def getFileChecksum(self, file):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getFileChecksum", file)
         d.addErrback(self.onError, "getFileChecksum", file, False)
         return d
 
     def getPackagesIds(self, label):
-        if self.initialized_failed:
-            return []
         d = self.paserver.callRemote("getPackagesIds", label)
         d.addErrback(self.onError, "getPackagesIds", label)
         return d
 
     def getPackageId(self, label, version):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("getPackageId", label, version)
         d.addErrback(self.onError, "getPackageId", (label, version), False)
         return d
 
     def isAvailable(self, pid, mirror):
-        if self.initialized_failed:
-            return False
         d = self.paserver.callRemote("isAvailable", pid, mirror)
         d.addErrback(self.onError, "getPackageId", (pid, mirror), False)
         return d
