@@ -47,7 +47,7 @@ from pulse2.database.msc.orm.target import Target
 
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
-from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance
+from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
@@ -273,8 +273,8 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
             logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy" % (SchedulerConfig().name, myCommandOnHostID, final_proxy))
             return final_proxy
 
-    def __processProbe(result, ip, proxy):
-        logging.getLogger().debug("scheduler %s: coh #%s probed using %s, got %s" % (SchedulerConfig().name, proxy, ip, result))
+    def __processProbe(result, proxy):
+        logging.getLogger().debug("scheduler %s: coh #%s probed, got %s" % (SchedulerConfig().name, proxy, result))
         return (result, proxy)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -303,10 +303,10 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
                 # => upload DONE, (scheduled or not): proxy free to use (depnding on nb of clients, see below)
                 # => upload !DONE + (failed, over_timed) => will never be available => defin. failed
                 # => upload !DONE + ! (failed or over_timed) => may be available in some time => temp. failed
-                if q.uploaded == 'DONE':
-                    available_proxy.append(q.id)
-                elif q.current_state in ('failed', 'over_timed'):
+                if q.current_state in ('failed', 'over_timed', 'stopped', 'stop'):
                     def_dysfunc_proxy.append(q.id)
+                elif q.uploaded == 'DONE':
+                    available_proxy.append(q.id)
                 else:
                     temp_dysfunc_proxy.append(q.id)
         session.close()
@@ -320,12 +320,17 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
                 return 'waiting'
 
         deffered_list = list()
-        crach_test = ['192.168.0.1', '192.168.0.100']
+
         for proxy in available_proxy:
             (proxyCoH, proxyC, proxyT) = gatherCoHStuff(proxy)
-            ip = proxyT.getIps().pop()
-            d = callOnBestLauncher(None, 'probe', ip)
-            d.addCallback(__processProbe, ip, proxy)
+            d = probeClient(
+                proxyT.getUUID(),
+                proxyT.getFQDN(),
+                proxyT.getShortName(),
+                proxyT.getIps(),
+                proxyT.getMacs()
+            )
+            d.addCallback(__processProbe, proxy)
             deffered_list.append(d)
         dl = twisted.internet.defer.DeferredList(deffered_list)
         dl.addCallback(__processProbes)
