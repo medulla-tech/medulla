@@ -58,13 +58,31 @@ class PackageApiGet(MyXmlrpc):
         return map(lambda p: p.toH(), Common().packagelist(pidlist, self.mp))
     
     def xmlrpc_getPackageDetail(self, pid):
-        return Common().package(pid, self.mp).toH()
+        try:
+            ret = Common().package(pid, self.mp).toH()
+        except KeyError:
+            # We don't own this package
+            ret = {}
+        except Exception, e:
+            # Another unknown error
+            self.logger.exception(e)
+            ret = {}
+        return ret
 
     def xmlrpc_getLocalPackagesPath(self, pidlist):
         return map(lambda p: os.path.dirname(p.root), Common().packagelist(pidlist))
         
     def xmlrpc_getLocalPackagePath(self, pid):
-        return os.path.dirname(Common().package(pid, self.mp).root)
+        try:
+            ret = os.path.dirname(Common().package(pid, self.mp).root)
+        except KeyError:
+            # We don't own this package
+            ret = {}
+        except Exception, e:
+            # Another unknown error
+            self.logger.exception(e)
+            ret = {}
+        return ret            
 
     def xmlrpc_getPackageLabel(self, pid):
         return Common().package(pid, self.mp).label
