@@ -139,6 +139,8 @@ class MscConfig(MscDatabaseConfig):
         """
         self.disable = self.cp.getboolean("main", "disable")
 
+        is_login_and_pass = isTwistedEnoughForLoginPass()
+
         # folders
         if self.cp.has_option("msc", "qactionspath"):
             self.qactionspath = self.cp.get("msc", "qactionspath")
@@ -177,11 +179,23 @@ class MscConfig(MscDatabaseConfig):
             if re.compile("^scheduler_[0-9]+$").match(section):
                 if self.default_scheduler == "":
                     self.default_scheduler = section
+                username = self.cp.get(section, "username")
+                password = self.cp.getpassword(section, "password")
+                if not is_login_and_pass: 
+                    if username != '':
+                        if username != 'username':
+                            logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                        username = ''
+                    if password != '':
+                        if password != 'password':
+                            logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                        password = ''
+
                 self.schedulers[section] = {
                         'port': self.cp.get(section, "port"),
                         'host': self.cp.get(section, "host"),
-                        'username': self.cp.get(section, "username"),
-                        'password': self.cp.getpassword(section, "password"),
+                        'username': username,
+                        'password': password,
                         'enablessl': self.cp.getboolean(section, "enablessl"),
                         'verifypeer': False
                     }
@@ -276,13 +290,13 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("package_api", "mmountpoint"):
             self.ma_mountpoint = self.cp.get("package_api", "mmountpoint")
         if self.cp.has_option("package_api", "username"):
-            if not isTwistedEnoughForLoginPass():
+            if not is_login_and_pass:
                 logging.getLogger().warning("your version of twisted is not high enough to use login (package_api/username)")
                 self.ma_username = ""
             else:
                 self.ma_username = self.cp.get("package_api", "username")
         if self.cp.has_option("package_api", "password"):
-            if not isTwistedEnoughForLoginPass():
+            if not is_login_and_pass:
                 logging.getLogger().warning("your version of twisted is not high enough to use password (package_api/password)")
                 self.ma_password = ""
             else:
@@ -315,13 +329,13 @@ class MscConfig(MscDatabaseConfig):
             if self.cp.has_option("scheduler_api", "mountpoint"):
                 self.sa_mountpoint = self.cp.get("scheduler_api", "mountpoint")
             if self.cp.has_option("scheduler_api", "username"):
-                if not isTwistedEnoughForLoginPass():
+                if not is_login_and_pass:
                     logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler_api/username)")
                     self.sa_username = ""
                 else:
                     self.sa_username = self.cp.get("scheduler_api", "username")
             if self.cp.has_option("scheduler_api", "password"):
-                if not isTwistedEnoughForLoginPass():
+                if not is_login_and_pass:
                     logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler_api/password)")
                     self.sa_password = ""
                 else:
