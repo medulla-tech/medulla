@@ -88,17 +88,21 @@ function start_a_command($proxy = array()) {
     $pid = $post['pid'];
     $mode = $post['copy_mode'];
 
-    if (isset($post['uuid']) && $post['uuid']) { # command on a single target
+    if (isset($post['uuid']) && $post['uuid']) { // command on a single target
         $hostname = $post['hostname'];
         $uuid = $post['uuid'];
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
         $target = array($uuid);
         $tab = 'tablogs';
-        // record new command
+        /* record new command */
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
-        scheduler_start_these_commands('', array($id));
-        // then redirect to the logs page
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'cmd_id'=>$id)));
+        if (!isXMLRPCError()) {
+            scheduler_start_these_commands('', array($id));
+            /* then redirect to the logs page */
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'cmd_id'=>$id)));
+        } else {
+            /* Return to the launch tab, the backtrace will be displayed */
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname)));
+        }
     } else { # command on a whole group
         $gid = $post['gid'];
         $tab = 'grouptablogs';

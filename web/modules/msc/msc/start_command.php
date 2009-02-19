@@ -71,8 +71,13 @@ if (isset($_POST["bconfirm"])) {
 
     // TODO: activate this  : msc_command_set_pause($cmd_id);
     $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-    scheduler_start_these_commands('', array($id_command));
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    if (!isXMLRPCError()) { 
+        scheduler_start_these_commands('', array($id_command));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    } else {
+        /* Return to the launch tab, the backtrace will be displayed */
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    }
 }
 
 /* User wants do do custom stuff => display the "advanced" form */
