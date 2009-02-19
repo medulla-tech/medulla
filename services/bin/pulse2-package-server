@@ -63,8 +63,11 @@ def running(inifile, deamonize):
     hdlr2 = logging.StreamHandler()
     logger.addHandler(hdlr2)
 
-
-    ThreadLauncher().initialize(config)
+    try:
+        ThreadLauncher().initialize(config)
+    except Exception, e:
+        logger.exception(e)
+        raise
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)
 
     # Become a daemon
