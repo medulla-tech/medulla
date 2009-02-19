@@ -262,6 +262,7 @@ def callOnBestLauncher(coh_id, method, *args):
 
     def _eb(reason):
         logging.getLogger().error("scheduler %s: while choosing the best launcher : %s" % (SchedulerConfig().name, reason.getErrorMessage()))
+        return False
 
     return chooseLauncher().\
         addCallback(_cb).\
