@@ -113,7 +113,7 @@ if (isset($_POST["local_proxy"]) && isset($_POST["blaunch_bundle"])) {
 
 /* single target handling */
 if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+    $machine = getMachine(array('uuid'=>$_GET['uuid']));
     if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
@@ -157,7 +157,6 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
         // stage 1: packages selection
         } else {
             // display packages which may be put in the bundle
-            $machine = getMachine(array('uuid'=>$_GET['uuid']), $ping = False);
             $list = new RenderedMSCBundleChoiceM($machine);
             $list->display();
         }
