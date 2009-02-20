@@ -52,6 +52,7 @@ import pulse2.scheduler.network
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
+from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 
 def gatherStuff():
     """ handy function to gather widely used objects """
@@ -252,30 +253,33 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
     def __processProbes(result):
         # remove bad proxy (result => alive_proxy):
         alive_proxy = list()
-        for (success, (probe, coh_id)) in result:
+        for (success, (probe, uuid, coh_id)) in result:
             if success: # XMLRPC call do succeedeed
                 if probe:
                     if probe != "Not available":
-                        alive_proxy.append(coh_id)
+                        alive_proxy.append((uuid, coh_id))
 
-        # remove full proxy (alive_proxy => free_proxy):
-        free_proxy = list()
-        for proxy in alive_proxy:
-            (current_client_number, max_client_number) = getClientUsageForProxy(proxy)
+        # remove full proxy (alive_proxy >= free_proxy):
+        free_proxy = dict()
+        for (uuid, coh_id) in alive_proxy:
+            (current_client_number, max_client_number) = getClientUsageForProxy(coh_id)
             if current_client_number < max_client_number:
-                free_proxy.append(proxy)
+                free_proxy[uuid] = (coh_id, max_client_number)
 
-        if len(free_proxy) == 0: # not free proxy, wait
+        # map if to go from {uuid1: (coh1, max1), uuid2: (coh2, max2)} to ((uuid1, max1), (uuid2, max2))
+        # ret val is an uuid
+        final_uuid = LocalProxiesUsageTracking().take_one(map (lambda x: ((x, free_proxy[x][1])), free_proxy), myC.getId())
+        if not final_uuid: # not free proxy, wait
             logging.getLogger().debug("scheduler %s: coh #%s wait for a local proxy for to be usable" % (SchedulerConfig().name, myCommandOnHostID))
             return 'waiting'
         else: # take a proxy in alive proxies
-            final_proxy = free_proxy[random.randint(0, len(free_proxy)-1)]
-            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy" % (SchedulerConfig().name, myCommandOnHostID, final_proxy))
+            final_proxy = free_proxy[final_uuid][0]
+            logging.getLogger().debug("scheduler %s: coh #%s found coh #%s as local proxy, taking one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, final_proxy, LocalProxiesUsageTracking().how_much_left_for(final_uuid, myC.getId())))
             return final_proxy
 
-    def __processProbe(result, proxy):
-        logging.getLogger().debug("scheduler %s: coh #%s probed, got %s" % (SchedulerConfig().name, proxy, result))
-        return (result, proxy)
+    def __processProbe(result, uuid, proxy):
+        logging.getLogger().debug("scheduler %s: coh #%s probed on %s, got %s" % (SchedulerConfig().name, proxy, uuid, result))
+        return (result, uuid, proxy)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
@@ -321,7 +325,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
 
         deffered_list = list()
 
-        for proxy in available_proxy:
+        for proxy in available_proxy: # proxy is the proxy coh id
             (proxyCoH, proxyC, proxyT) = gatherCoHStuff(proxy)
             d = probeClient(
                 proxyT.getUUID(),
@@ -330,7 +334,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
                 proxyT.getIps(),
                 proxyT.getMacs()
             )
-            d.addCallback(__processProbe, proxy)
+            d.addCallback(__processProbe, proxyT.getUUID(), proxy)
             deffered_list.append(d)
         dl = twisted.internet.defer.DeferredList(deffered_list)
         dl.addCallback(__processProbes)
@@ -1633,6 +1637,16 @@ def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return None
+
+    proxy_coh_id = myCoH.getUsedProxy()
+    if proxy_coh_id:
+        (myProxyCoH, myProxyC, myProxyT) = gatherCoHStuff(proxy_coh_id)
+        proxy_uuid = myProxyT.getUUID()
+        # see if we can unload a proxy
+        # ret val is an uuid
+        final_uuid = LocalProxiesUsageTracking().untake(proxy_uuid, myC.getId())
+        logging.getLogger().debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
+
     if exitcode == 0: # success
         logging.getLogger().info("command_on_host #%s: pull done (exitcode == 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)

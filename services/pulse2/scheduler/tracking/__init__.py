@@ -23,5 +23,5 @@
 # MA 02110-1301, USA.
 
 """
-    Store proxies usage (usefull to limit proxy usage)
+    Store stuff tracking
 """
