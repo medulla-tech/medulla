@@ -172,11 +172,11 @@ class TreatInv(Thread):
                         found_tag = False
                         for tag in inventory[path[0]]:
                             self.logger.debug("tag = %s" % tag)
-                            if path[2][0] in tag and tag[path[2][0]] == path[2][1]:
+                            if path[2][0] in tag and tag[path[2][0]] == path[2][1] and path[1] in tag:
                                 found_tag = True
                                 hostname = tag[path[1]]
                         if not found_tag:
-                            self.logger.warn("Thread %s : Can't alter hostname for %s using tag: tag %s was not found in %s" % (threadname, hostname, path[2][1], tag))
+                            self.logger.warn("Thread %s : Can't alter hostname for %s using tag: tag value for %s/%s when %s/%s == %s not found" % (threadname, hostname, path[0], path[1], path[0], path[2][0], path[2][1])
                     else:
                         self.logger.warn("Thread %s : Can't find %s in inventory to alter hostname for %s" % (threadname, path[0], hostname))
 
