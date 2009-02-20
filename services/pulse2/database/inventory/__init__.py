@@ -1022,6 +1022,19 @@ class Inventory(DyngroupDatabaseHelper):
         session.commit()
         session.close()
 
+    def createEntity(self, name):
+        """
+        Create a new entity under the root entity
+        """
+        session = create_session()
+        try:
+            e = session.query(self.klass['Entity']).filter_by(Label = name).one()
+        except Exception:
+            e = self.klass['Entity']()
+            e.Label = name
+            session.save(e)
+        session.close()
+
     def locationExists(self, location):
         """
         Returns true if the given location exists in database
