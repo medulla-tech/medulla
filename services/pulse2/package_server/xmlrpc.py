@@ -34,6 +34,7 @@ Fault = xmlrpclib.Fault
 
 class MyXmlrpc(xmlrpc.XMLRPC):
     def __init__(self):
+        self.mp = ""
         xmlrpc.XMLRPC.__init__(self)
 
     def render(self, request):
@@ -84,6 +85,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
             result['faultTraceback'] = failure.getTraceback()
             return result
 
+        self.logger.debug("RPC method call for %s.%s%s"%(self.mp, functionPath, str(args)))
         defer.maybeDeferred(function, *args).addErrback(
             _ebRender, start, functionPath, args, request
         ).addCallback(
