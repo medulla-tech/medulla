@@ -222,6 +222,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('ssh', 'ssh_options', 'ssh_options')
         if not type(self.ssh_options) == type([]):
             self.ssh_options = self.ssh_options.split(' ')
+        has_sshkey = False
         if self.cp.has_section('ssh'):
             for option in self.cp.options('ssh'):
                 if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
@@ -230,9 +231,17 @@ class LauncherConfig(pulse2.utils.Singleton):
                     self.ssh_keys[keyname] = keyfile
                     if checkKeyPerm(keyfile):
                         logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+                        has_sshkey = True
                     else:
                         del self.ssh_keys[keyname]
                         logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+        if not checkKeyPerm(self.ssh_keys['default']):
+            keyfile = self.ssh_keys['default']
+            if has_sshkey:
+                del self.ssh_keys['default']
+            else:
+                del self.ssh_keys['default']
+                logging.getLogger().error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
 
         # Parse "wget" section
         if self.cp.has_section("wget"):
@@ -417,13 +426,21 @@ class LauncherConfig(pulse2.utils.Singleton):
         Raise an error if the configuration is bad
         """
         paths = [self.launcher_path, self.ping_path, self.wrapper_path, self.wol_path]
-        paths.extend(self.ssh_keys.values())
+        sshkeys = self.ssh_keys.values()
+        if len(sshkeys) == 0:
+            logging.getLogger().error("Configuration error: no ssh key has been defined")
+            raise Exception("Configuration error: no ssh key has been defined")
+        paths.extend(sshkeys)
         for path in paths:
             if not os.path.exists(path):
+                logging.getLogger().error("Configuration error: path %s does not exists" % path)
                 raise Exception("Configuration error: path %s does not exists" % path)
 
 def checkKeyPerm(keyfile):
     try:
+        if not os.path.exists(keyfile):
+            logging.getLogger().warn("launcher %s: the ssh key file %s does not exists" % (LauncherConfig().name, keyfile))
+            return False
         stats = os.stat(keyfile)
     except:
         logging.getLogger().warn("launcher %s: something goes wrong while performing stat() on %s !" % (LauncherConfig().name, keyfile))
