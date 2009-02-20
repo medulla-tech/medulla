@@ -271,8 +271,14 @@ class InventoryGetService(Singleton):
             self.config.default_entity = rootEntity.Label
         # Check that the default assigned entity exists
         if not InventoryCreator().locationExists(self.config.default_entity):
-            self.logger.error("Default entity '%s' does not exist in database" % self.config.default_entity)
-            return False
+            self.logger.warning("Default entity '%s' does not exist in database" % self.config.default_entity)
+            self.logger.warning("Creating entity '%s' in database" % self.config.default_entity)
+            try:
+                InventoryCreator().createEntity(self.config.default_entity)
+            except Exception, e:
+                self.logger.error("Can't create entity '%s'" % self.config.default_entity)
+                self.logger.error(e)
+                return False
 
         # Initialize the computer to entity mapping
         if self.config.entities_rules_file:
