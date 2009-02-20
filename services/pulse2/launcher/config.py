@@ -239,6 +239,9 @@ class LauncherConfig(pulse2.utils.Singleton):
             keyfile = self.ssh_keys['default']
             if has_sshkey:
                 del self.ssh_keys['default']
+                if self.ssh_defaultkey == 'default':
+                    self.ssh_defaultkey = self.ssh_keys.keys()[0]
+                    logging.getLogger().warning("launcher %s: the default ssh key '%s' is not valid, set '%s' as default (you should specify it with ssh_defaultkey)" % (self.name, keyfile, self.ssh_defaultkey))
             else:
                 del self.ssh_keys['default']
                 logging.getLogger().error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
