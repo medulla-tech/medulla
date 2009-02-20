@@ -23,27 +23,6 @@
 # MA 02110-1301, USA.
 
 """
-    Pulse2 PackageServer
+    A collection of object build on-top of singleton with integrated
+    refresh system
 """
-
-import random
-from pulse2.scheduler.assign_algo import MGAssignAlgo
-
-class MGUserAssignAlgo(MGAssignAlgo):
-    name = 'ip_class'
-    # functions has to be put
-    def getMachineGroup(self, myT):
-        netmask = [255, 254, 0, 0] # FIXME: netmask is hardcoded !!!
-        if myT.target_ipaddr:
-            real_target =  myT.target_ipaddr.split('||')[0]
-            try:
-                a_ip = map(lambda x: int(x), real_target.split('.'))
-                for i in range(0,4):
-                    a_ip[i] = a_ip[i] & netmask[i]
-                return '.'.join(map(lambda x: str(x), a_ip))
-            except ValueError:
-                return ''
-        return ''
-
-    def getMaxNumberOfGroups(self):
-        return 3
