@@ -61,13 +61,13 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         if not LauncherConfig().is_rsync_available:
             return False
         # Build "exec" command
-        real_command  = ['/usr/bin/rsync']
+        real_command  = [LauncherConfig().rsync_path]
         real_command += client['proto_args']
         real_command += real_files_list
         real_command += [ "%s@%s:%s/" % (client['user'], client['host'], target_path)]
 
         # Build "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
@@ -129,7 +129,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         if not LauncherConfig().is_ssh_available:
             return False
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
@@ -194,7 +194,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             )
     elif client['protocol'] == "rsyncproxy":
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 
@@ -266,7 +266,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -345,7 +345,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -409,7 +409,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -473,7 +473,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -552,7 +552,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -618,7 +618,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -684,7 +684,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
             return False
 
         # Built "thru" command
-        thru_command_list  = ['/usr/bin/ssh']
+        thru_command_list  = [LauncherConfig().ssh_path]
         thru_command_list += client['transp_args']
         thru_command_list += [client['host']]
 
@@ -739,7 +739,7 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     if not LauncherConfig().is_scp_available:
         return False
 
-    real_command = ['/usr/bin/scp']
+    real_command = [LauncherConfig().scp_path]
     real_command += client['transp_args']
     if bwlimit:
         real_command += ['-l'] + [str(bwlimit)]
@@ -752,7 +752,7 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
     real_command.remove('-a')
 
     # Built "thru" command
-    thru_command_list  = ['/usr/bin/ssh']
+    thru_command_list  = [LauncherConfig().ssh_path]
     thru_command_list += client['transp_args']
     thru_command_list += [ "%s@%s" % (client['user'], client['host'])]
 

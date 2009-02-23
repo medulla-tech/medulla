@@ -61,6 +61,9 @@ class LauncherConfig(pulse2.utils.Singleton):
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
 
     # ssh stuff
+    ssh_path_default = ssh_path = "/usr/bin/ssh"
+    scp_path_default = scp_path = "/usr/bin/scp"
+    ssh_agent_path_default = ssh_agent_path = "/usr/bin/ssh-agent"
     ssh_agent_sock = None
     ssh_agent_pid = None
     ssh_defaultkey = 'default'
@@ -104,11 +107,13 @@ class LauncherConfig(pulse2.utils.Singleton):
     }
 
     # wget stuff
+    wget_path_default = wget_path = '/usr/bin/wget'
     wget_options = ''
     wget_check_certs = False
     wget_resume = True
 
     # rsync stuff
+    rsync_path_default = rsync_path = '/usr/bin/rsync'
     rsync_resume = True
     rsync_set_executable = 'yes'
     rsync_set_access = 'private'
@@ -178,49 +183,26 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('launchers', 'target_path', 'target_path')
         self.setoption('launchers', 'temp_folder_prefix', 'temp_folder_prefix')
 
-        # check for a few binaries availability
-        rsync_version = os.popen("rsync --version", 'r').read().split('\n')[0].split(' ')[3].split('.')
-        if len(rsync_version) != 3:
-            logging.getLogger().warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
-            self.is_rsync_available = False
-        else:
-            if rsync_version[0] < 2 or rsync_version[0] == 2 and rsync_version[1] < 6: # version < 2.6.0 => dont work
-                self.is_rsync_available = False
-            elif rsync_version[0] == 2 and rsync_version[1] == 6 and rsync_version[2] < 7: # version between 2.6.0 and 2.6.7 => work but limited
-                self.is_rsync_available = True
-                self.is_rsync_limited = True
-            else:
-                self.is_rsync_available = True
-                self.is_rsync_limited = False
-        if not os.access('/usr/bin/ssh', os.X_OK): # FIXME: hardcoded and so on
-            logging.getLogger().warn("launcher %s: can't find SSH (looking for %s), disabling all ssh-related stuff" % (self.name, '/usr/bin/ssh'))
-            self.is_ssh_available = False
-        else:
-            self.is_ssh_available = True
-        if not os.access('/usr/bin/ssh-agent', os.X_OK): # FIXME: hardcoded and so on
-            logging.getLogger().warn("launcher %s: can't find SSH AGENT (looking for %s), disabling all ssh-agent-related stuff" % (self.name, '/usr/bin/ssh-agent'))
-            self.is_sshagent_available = False
-        else:
-            self.is_sshagent_available = True
-        if not os.access('/usr/bin/scp', os.X_OK): # FIXME: hardcoded and so on
-            logging.getLogger().warn("launcher %s: can't find SCP (looking for %s), disabling all scp-related stuff" % (self.name, '/usr/bin/scp'))
-            self.is_scp_available = False
-        else:
-            self.is_scp_available = True
-
         # Parse "wrapper" section
         self.setoption('wrapper', 'max_log_size', 'wrapper_max_log_size', 'int')
         self.setoption('wrapper', 'max_exec_time', 'wrapper_max_exec_time', 'int')
         self.setoption('wrapper', 'path', 'wrapper_path')
 
         # Parse "wget" section
+        self.setoption('wget', 'wget_path', 'wget_path')
         if self.cp.has_section("wget"):
             if self.cp.has_option("wget", "wget_options"):
                 self.wget_options = self.cp.get("wget", "wget_options").split(' ')
         self.setoption('wget', 'check_certs', 'wget_check_certs', 'bool')
         self.setoption('wget', 'resume', 'wget_resume', 'bool')
 
+        # Parse a part of "ssh" section 
+        self.setoption('ssh', 'ssh_path', 'ssh_path')
+        self.setoption('ssh', 'scp_path', 'scp_path')
+        self.setoption('ssh', 'ssh_agent_path', 'ssh_agent_path')
+        
         # Parse "rsync" section
+        self.setoption('rsync', 'rsync_path', 'rsync_path')
         self.setoption('rsync', 'resume', 'rsync_resume', 'bool')
         self.setoption('rsync', 'set_executable', 'rsync_set_executable')
         if not self.rsync_set_executable in ('yes', 'no', 'keep'):
@@ -376,12 +358,49 @@ class LauncherConfig(pulse2.utils.Singleton):
 
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
-                    
+                   
+        # check for a few binaries availability
+        if self.conf_or_default('rsync'):
+            rsync_version = os.popen("%s --version"%(self.rsync_path), 'r').read().split('\n')[0].split(' ')[3].split('.')
+            if len(rsync_version) != 3:
+                logging.getLogger().warn("launcher %s: can't find RSYNC (looking for rsync version), disabling all rsync-related stuff" % (self.name))
+                self.is_rsync_available = False
+            else:
+                if rsync_version[0] < 2 or rsync_version[0] == 2 and rsync_version[1] < 6: # version < 2.6.0 => dont work
+                    self.is_rsync_available = False
+                elif rsync_version[0] == 2 and rsync_version[1] == 6 and rsync_version[2] < 7: # version between 2.6.0 and 2.6.7 => work but limited
+                    self.is_rsync_available = True
+                    self.is_rsync_limited = True
+                else:
+                    self.is_rsync_available = True
+                    self.is_rsync_limited = False
+
+        for p in ("scp", "ssh", "ssh_agent"):
+            self.conf_or_default(p)
+
+    def conf_or_default(self, type):
+        label = type.upper().replace("_", " ")
+        conf = getattr(self, "%s_path"%(type))
+        default = getattr(self, "%s_path_default"%(type))
+        
+        if not os.access(conf, os.X_OK):
+            if not os.access(default, os.X_OK):
+                logging.getLogger().warn("launcher %s: can't find %s (looking for %s nor the default value %s), disabling all %s-related stuff" % (self.name, label, conf, default, type))
+                setattr(self, "is_%s_available"%(type.replace("_", "")), False)
+            else:
+                logging.getLogger().warn("launcher %s: can't find %s (looking for %s) but by using the default value" % (self.name, label, conf))
+                setattr(self, "is_%s_available"%(type.replace("_", "")), True)
+                setattr(self, "%s_path"%(type), default)
+        else:
+            setattr(self, "is_%s_available"%(type.replace("_", "")), True)
+        return getattr(self, "is_%s_available"%(type.replace("_", "")))
+
     def setup_post_permission(self):
         # Parse "ssh" sections
         self.setoption('ssh', 'default_key', 'ssh_defaultkey')
         self.setoption('ssh', 'forward_key', 'ssh_forward_key')
         self.setoption('ssh', 'scp_options', 'scp_options')
+        
         if not type(self.scp_options) == type([]):
             self.scp_options = self.scp_options.split(' ')
         self.setoption('ssh', 'ssh_options', 'ssh_options')

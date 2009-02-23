@@ -268,7 +268,7 @@ def setDefaultClientOptions(client):
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
         # inside ssh get the same args as outside ssh
-        client['proto_args'] += ['--rsh="/usr/bin/ssh %s"' % ' '.join(map(lambda x:'-o %s' % x, LauncherConfig().ssh_options))]
+        client['proto_args'] += ['--rsh="%s %s"' % (LauncherConfig().ssh_path, ' '.join(map(lambda x:'-o %s' % x, LauncherConfig().ssh_options)))]
 
     if client['protocol'] == 'rsyncssh':
         if not 'port' in client:
@@ -286,7 +286,7 @@ def setDefaultClientOptions(client):
             client['proto_args'] += ['--partial', '--append']
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
-        client['proto_args'] += ['--rsh', ' '.join(['/usr/bin/ssh'] + client['transp_args'])]
+        client['proto_args'] += ['--rsh', ' '.join([LauncherConfig().ssh_path] + client['transp_args'])]
         if 'maxbw' in client:
             if client['maxbw'] == 0: # bwlimit forced to 0 => no BW limit
                 pass
