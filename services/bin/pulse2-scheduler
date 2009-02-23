@@ -107,7 +107,7 @@ def startService():
         return 1
     if not MscDatabase().db_check():
         return 1
-                
+
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.username:
