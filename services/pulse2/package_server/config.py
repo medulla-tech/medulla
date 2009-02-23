@@ -118,7 +118,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         self.cp.read(config_file)
         
         if self.cp.has_option("handler_hand01", "args"):
-            self.logdir = os.path.dirname(self.cp.get("handler_hand01", "args").split('"')[1])
+            self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
 
     def setup(self, config_file):
         if self.cp == None:
