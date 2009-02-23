@@ -103,9 +103,7 @@ def startService():
     conffile = mmc.support.mmctools.getConfigFile("msc")
     confmsc = MscDatabaseConfig()
     confmsc.setup(conffile)
-    if not MscDatabase().activate(confmsc):
-        return 1
-    if not MscDatabase().db_check():
+    if not MscDatabase().activate(confmsc): # does the db_check
         return 1
 
     logger = logging.getLogger()
