@@ -108,14 +108,26 @@ class P2PServerCP(pulse2.utils.Singleton):
     mirror_api = {}
     user_package_api = {}
     scheduler_api = {}
-
-    def setup(self, config_file):
-        # Load configuration file
+    cp = None
+    
+    def pre_setup(self, config_file):
         if sys.platform != "win32":
             self.cp = MMCConfigParser()
         else:
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
+        
+        if self.cp.has_option("handler_hand01", "args"):
+            self.logdir = os.path.dirname(self.cp.get("handler_hand01", "args").split('"')[1])
+
+    def setup(self, config_file):
+        if self.cp == None:
+            # Load configuration file
+            if sys.platform != "win32":
+                self.cp = MMCConfigParser()
+            else:
+                self.cp = ConfigParser.ConfigParser()
+            self.cp.read(config_file)
 
         if self.cp.has_option("main", "bind"): # TODO remove in a future version
             logging.getLogger().warning("'bind' is obslete, please replace it in your config file by 'host'")

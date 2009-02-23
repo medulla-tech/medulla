@@ -34,28 +34,28 @@ from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP, config_addons
 
 def running(inifile, daemonize):
+    config = P2PServerCP()
+    config.pre_setup(inifile)
+
+    # Try to create the default log directory
+    if not os.path.exists(config.logdir):
+        try:
+            os.mkdir(config.logdir)
+        except:
+            # Maybe we are not root, so it may not be a problem if the mkdir
+            # failed
+            pass
+
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
 
-    config = P2PServerCP()
     config.setup(inifile)
 
     # Set umask and effective UID and GID values
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
-
-    # Try to create the default log directory
-    LOGDIR = '/var/log/mmc'
-    if not os.path.exists(LOGDIR):
-        try:
-            os.mkdir(LOGDIR)
-        except:
-            # Maybe we are not root, so it may not be a problem if the mkdir
-            # failed
-            pass
-
 
     if config.real_package_deletion:
         logger.warning("Real package deletion is activated")
