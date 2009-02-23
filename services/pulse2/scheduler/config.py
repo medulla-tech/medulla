@@ -117,6 +117,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
             self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
         if self.cp.has_option("daemon", "umask"):
             self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+        if self.cp.has_option("handler_hand01", "args"):
+            self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
 
     def setup(self, config_file):
         # Load configuration file

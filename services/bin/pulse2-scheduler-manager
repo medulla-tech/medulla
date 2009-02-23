@@ -240,6 +240,15 @@ if __name__ == "__main__":
 
     # gather right user and password
     config.presetup(options.config_file)
+    
+    # Try to create the default log directory
+    if not os.path.exists(config.logdir):
+        try:
+            os.mkdir(config.logdir)
+        except:
+            # Maybe we are not root, so it may not be a problem if the mkdir
+            # failed
+            pass
 
     # set umask and effective UID and GID values RIGHT NOW
     os.umask(config.umask)
@@ -251,15 +260,6 @@ if __name__ == "__main__":
     # last step: parse conf
     config.setup(options.config_file)
 
-    # Try to create the default log directory
-    LOGDIR = '/var/log/mmc'
-    if not os.path.exists(LOGDIR):
-        try:
-            os.mkdir(LOGDIR)
-        except:
-            # Maybe we are not root, so it may not be a problem if the mkdir
-            # failed
-            pass
     logger = logging.getLogger()
 
     if args[0] == "start":
