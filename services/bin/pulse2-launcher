@@ -387,6 +387,8 @@ def main():
     logger.info("launcher %s: Reading configuration file: %s" % (options.id, options.config_file))
     try:
         LauncherConfig().setup(options.config_file, options.id)
+        LauncherConfig().setup_post_permission()
+        LauncherConfig().check()
     except Exception, e:
         logger.error(e)
         logger.error("Please fix the configuration file")

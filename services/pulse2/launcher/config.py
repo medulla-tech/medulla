@@ -213,39 +213,6 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('wrapper', 'max_exec_time', 'wrapper_max_exec_time', 'int')
         self.setoption('wrapper', 'path', 'wrapper_path')
 
-        # Parse "ssh" sections
-        self.setoption('ssh', 'default_key', 'ssh_defaultkey')
-        self.setoption('ssh', 'forward_key', 'ssh_forward_key')
-        self.setoption('ssh', 'scp_options', 'scp_options')
-        if not type(self.scp_options) == type([]):
-            self.scp_options = self.scp_options.split(' ')
-        self.setoption('ssh', 'ssh_options', 'ssh_options')
-        if not type(self.ssh_options) == type([]):
-            self.ssh_options = self.ssh_options.split(' ')
-        has_sshkey = False
-        if self.cp.has_section('ssh'):
-            for option in self.cp.options('ssh'):
-                if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
-                    keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
-                    keyfile = self.cp.get('ssh', option)
-                    self.ssh_keys[keyname] = keyfile
-                    if checkKeyPerm(keyfile):
-                        logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
-                        has_sshkey = True
-                    else:
-                        del self.ssh_keys[keyname]
-                        logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
-        if not checkKeyPerm(self.ssh_keys['default']):
-            keyfile = self.ssh_keys['default']
-            if has_sshkey:
-                del self.ssh_keys['default']
-                if self.ssh_defaultkey == 'default':
-                    self.ssh_defaultkey = self.ssh_keys.keys()[0]
-                    logging.getLogger().warning("launcher %s: the default ssh key '%s' is not valid, set '%s' as default (you should specify it with ssh_defaultkey)" % (self.name, keyfile, self.ssh_defaultkey))
-            else:
-                del self.ssh_keys['default']
-                logging.getLogger().error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
-
         # Parse "wget" section
         if self.cp.has_section("wget"):
             if self.cp.has_option("wget", "wget_options"):
@@ -409,6 +376,40 @@ class LauncherConfig(pulse2.utils.Singleton):
 
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
+                    
+    def setup_post_permission(self):
+        # Parse "ssh" sections
+        self.setoption('ssh', 'default_key', 'ssh_defaultkey')
+        self.setoption('ssh', 'forward_key', 'ssh_forward_key')
+        self.setoption('ssh', 'scp_options', 'scp_options')
+        if not type(self.scp_options) == type([]):
+            self.scp_options = self.scp_options.split(' ')
+        self.setoption('ssh', 'ssh_options', 'ssh_options')
+        if not type(self.ssh_options) == type([]):
+            self.ssh_options = self.ssh_options.split(' ')
+        has_sshkey = False
+        if self.cp.has_section('ssh'):
+            for option in self.cp.options('ssh'):
+                if re.compile('^sshkey_[0-9A-Za-z]+$').match(option):
+                    keyname = re.compile('^sshkey_([0-9A-Za-z]+)$').match(option).group(1)
+                    keyfile = self.cp.get('ssh', option)
+                    self.ssh_keys[keyname] = keyfile
+                    if checkKeyPerm(keyfile):
+                        logging.getLogger().info("launcher %s: added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+                        has_sshkey = True
+                    else:
+                        del self.ssh_keys[keyname]
+                        logging.getLogger().warn("launcher %s: didn't added ssh key '%s' to keyring as key '%s'" % (self.name, keyfile, keyname))
+        if not checkKeyPerm(self.ssh_keys['default']):
+            keyfile = self.ssh_keys['default']
+            if has_sshkey:
+                del self.ssh_keys['default']
+                if self.ssh_defaultkey == 'default':
+                    self.ssh_defaultkey = self.ssh_keys.keys()[0]
+                    logging.getLogger().warning("launcher %s: the default ssh key '%s' is not valid, set '%s' as default (you should specify it with ssh_defaultkey)" % (self.name, keyfile, self.ssh_defaultkey))
+            else:
+                del self.ssh_keys['default']
+                logging.getLogger().error("launcher %s: the default ssh key '%s' is not valid" % (self.name, keyfile))
 
     def getvaluedefaulted(self, section, option, default, type = 'str'):
         """ parse value using the given type """
