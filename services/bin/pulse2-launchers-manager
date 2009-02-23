@@ -245,23 +245,22 @@ if __name__ == "__main__":
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
-     # we changed our identify a few lines above, log file will be created with proper uid/gid/umask
-    logging.config.fileConfig(options.config_file)
-
-    # last step: parse conf
-    config.setup(options.config_file)
 
     # Try to create the default log directory
-    LOGDIR = '/var/log/mmc'
-    if not os.path.exists(LOGDIR):
+    if not os.path.exists(config.logdir):
         try:
-            os.mkdir(LOGDIR)
+            os.mkdir(config.logdir)
         except:
             # Maybe we are not root, so it may not be a problem if the mkdir
             # failed
             pass
 
+    # we changed our identify a few lines above, log file will be created with proper uid/gid/umask
+    logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
+
+    # last step: parse conf
+    config.setup(options.config_file)
 
     if args[0] == "start":
         logger.info('starting Pulse2 Launchers')
