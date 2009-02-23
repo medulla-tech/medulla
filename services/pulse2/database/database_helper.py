@@ -48,7 +48,7 @@ class DatabaseHelper(Singleton):
             return False
 
         return True
-
+    
     def connected(self):
         try:
             if self.db != None:

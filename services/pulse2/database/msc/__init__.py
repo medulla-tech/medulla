@@ -87,7 +87,7 @@ class MscDatabase(DatabaseHelper):
         self.session = create_session()
         self.is_activated = True
         self.logger.debug("Msc database connected")
-        return True
+        return self.db_check()
 
     def initTables(self):
         """

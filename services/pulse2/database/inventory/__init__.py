@@ -77,6 +77,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.is_activated = True
         self.dbversion = self.getInventoryDatabaseVersion()
         self.logger.debug("Inventory finish activation")
+        return self.db_check()
 
     def initMappers(self):
         """
