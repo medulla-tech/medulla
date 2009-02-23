@@ -36,53 +36,53 @@ if ($probe_order == "ping") {
     if ($res === 11) {
         new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
         $icon = return_icon("IGNORED");
-        $title = _T('Error scheduler-side !');
+        $title = _T('Error scheduler-side !', 'msc');
     } elseif ($res === false) {
         $icon = return_icon("FAILED");
-        $title = _T('Ping failed');
+        $title = _T('Ping failed', 'msc');
     } else {
         $icon = return_icon("DONE");
-        $title = _T('Ping succeedeed');
+        $title = _T('Ping succeedeed', 'msc');
     }
 } elseif ($probe_order == "ssh") {
     $res = scheduler_probe_client('', $_GET["uuid"]);
     if ($res === 11) {
         new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
         $icon = return_icon("IGNORED");
-        $title = _T('Error scheduler-side !');
+        $title = _T('Error scheduler-side !', 'msc');
     } elseif ($res === "Not available") {
         $icon = return_icon("FAILED");
-        $title = _T('SSH connection failed');
+        $title = _T('SSH connection failed', 'msc');
     } else {
         $icon = return_icon("DONE");
-        $title = sprintf(_T('Target plateform is %s'), $res);
+        $title = sprintf(_T('Target plateform is %s', 'msc'), $res);
     }
 } elseif ($probe_order == "ping_ssh") {
     $res = scheduler_ping_client('', $_GET["uuid"]);
     if ($res === 11) {
         new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
         $icon = return_icon("IGNORED");
-        $title = _T('Error scheduler-side !');
+        $title = _T('Error scheduler-side !', 'msc');
     } elseif ($res === false) {
         $icon = return_icon("FAILED");
-        $title = _T('Ping failed');
+        $title = _T('Ping failed', 'msc');
     } else {
         $res = scheduler_probe_client('', $_GET["uuid"]);
         if ($res === 11) {
             new NotifyWidgetFailure(_T("Connection was refused by the other side while trying to probe the machine", "msc"));
             $icon = return_icon("IGNORED");
-            $title = _T('Error scheduler-side !');
+            $title = _T('Error scheduler-side !', 'msc');
         } elseif ($res === "Not available") {
             $icon = return_icon("WORK_IN_PROGRESS");
-            $title = _T('Ping succeedeed, SSH connection failed');
+            $title = _T('Ping succeedeed, SSH connection failed', 'msc');
         } else {
             $icon = return_icon("DONE");
-            $title = sprintf(_T('Target plateform is %s'), $res);
+            $title = sprintf(_T('Target plateform is %s', 'msc'), $res);
         }
     }
 } else {
     $icon = return_icon("IGNORED");
-    $title = _T('No probe performed');
+    $title = _T('No probe performed', 'msc');
 }
 
 printf('<img style="vertical-align: sub;" title="%s"src="modules/msc/graph/images/status/%s"/>', $title, $icon);
