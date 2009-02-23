@@ -138,7 +138,7 @@ def pingClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    return callOnBestLauncher(None, 'icmp', client)
+    return callOnBestLauncher(None, 'icmp', False, client)
 
 def probeClient(uuid, fqdn, shortname, ips, macs):
     # choose a way to perform the operation
@@ -149,7 +149,7 @@ def probeClient(uuid, fqdn, shortname, ips, macs):
             'ips': ips,
             'macs': macs
     })
-    return callOnBestLauncher(None, 'probe', client)
+    return callOnBestLauncher(None, 'probe', 'Unknown', client)
 
 def pingAndProbeClient(uuid, fqdn, shortname, ips, macs):
     """ returns
@@ -195,7 +195,7 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('transfert')
 
-    return callOnBestLauncher(None, 'download_file', client, path, bwlimit)
+    return callOnBestLauncher(None, 'download_file', False, client, path, bwlimit)
 
 def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_port):
     def _finalize(result):
@@ -227,7 +227,7 @@ def establishProxy(uuid, fqdn, shortname, ips, macs, requestor_ip, requested_por
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('vnc')
 
-    return callOnBestLauncher(None, 'tcp_sproxy', client, requestor_ip, requested_port).\
+    return callOnBestLauncher(None, 'tcp_sproxy', False, client, requestor_ip, requested_port).\
         addCallback(_finalize).\
         addErrback(lambda reason: reason)
 
@@ -255,14 +255,14 @@ def callOnLauncher(coh_id, launcher, method, *args):
         callRemote(method, *args).\
         addErrback(_eb)
 
-def callOnBestLauncher(coh_id, method, *args):
+def callOnBestLauncher(coh_id, method, default_error_return, *args):
 
     def _cb(launcher):
         return callOnLauncher(coh_id, launcher, method, *args)
 
     def _eb(reason):
         logging.getLogger().error("scheduler %s: while choosing the best launcher : %s" % (SchedulerConfig().name, reason.getErrorMessage()))
-        return False
+        return default_error_return
 
     return chooseLauncher().\
         addCallback(_cb).\

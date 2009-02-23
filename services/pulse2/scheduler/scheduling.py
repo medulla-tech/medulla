@@ -861,6 +861,7 @@ def performWOLPhase(myCommandOnHostID):
     # perform call
     mydeffered = callOnBestLauncher(myCommandOnHostID,
         'wol',
+        False,
         myT.target_macaddr.split('||'),
         myT.target_bcast.split('||')
     )
@@ -1026,6 +1027,7 @@ def _runProxyClientPhase(client, myC, myCoH):
         mydeffered = callOnBestLauncher(
             myCoH.getId(),
             'sync_remote_pull',
+            False,
             myCoH.getId(),
             client,
             files_list,
@@ -1039,6 +1041,7 @@ def _runProxyClientPhase(client, myC, myCoH):
         mydeffered = callOnBestLauncher(
             myCoH.getId(),
             'async_remote_pull',
+            False,
             myCoH.getId(),
             client,
             files_list,
@@ -1074,6 +1077,7 @@ def _runPushPhase(client, myC, myCoH, myT):
         mydeffered = callOnBestLauncher(
             myCoH.getId(),
             'sync_remote_push',
+            False,
             myCoH.getId(),
             client,
             files_list,
@@ -1087,6 +1091,7 @@ def _runPushPhase(client, myC, myCoH, myT):
         mydeffered = callOnBestLauncher(
             myCoH.getId(),
             'async_remote_push',
+            False,
             myCoH.getId(),
             client,
             files_list,
@@ -1153,6 +1158,7 @@ def _cbRunPushPullPhasePushPull(result, mirror, client, myC, myCoH):
         mydeffered = callOnBestLauncher(
             myCoH.id,
             'sync_remote_pull',
+            False,
             myCoH.id,
             client,
             files_list,
@@ -1165,6 +1171,7 @@ def _cbRunPushPullPhasePushPull(result, mirror, client, myC, myCoH):
         mydeffered = callOnBestLauncher(
             myCoH.id,
             'async_remote_pull',
+            False,
             myCoH.id,
             client,
             files_list,
@@ -1221,6 +1228,7 @@ def runExecutionPhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'sync_remote_quickaction',
+                False,
                 myCommandOnHostID,
                 client,
                 ' '.join([myC.start_file, myC.parameters]).strip(),
@@ -1233,6 +1241,7 @@ def runExecutionPhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'async_remote_quickaction',
+                False,
                 myCommandOnHostID,
                 client,
                 ' '.join([myC.start_file, myC.parameters]).strip(),
@@ -1252,6 +1261,7 @@ def runExecutionPhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'sync_remote_exec',
+                False,
                 myCommandOnHostID,
                 client,
                 ' '.join([myC.start_file, myC.parameters]).strip(),
@@ -1264,6 +1274,7 @@ def runExecutionPhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'async_remote_exec',
+                False,
                 myCommandOnHostID,
                 client,
                 ' '.join([myC.start_file, myC.parameters]).strip(),
@@ -1316,6 +1327,7 @@ def runDeletePhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'sync_remote_delete',
+                False,
                 myCommandOnHostID,
                 client,
                 files_list,
@@ -1328,6 +1340,7 @@ def runDeletePhase(myCommandOnHostID):
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
                 'async_remote_delete',
+                False,
                 myCommandOnHostID,
                 client,
                 files_list,
@@ -1352,6 +1365,7 @@ def runDeletePhase(myCommandOnHostID):
                 mydeffered = callOnBestLauncher(
                     myCommandOnHostID,
                     'sync_remote_delete',
+                    False,
                     myCommandOnHostID,
                     client,
                     files_list,
@@ -1364,6 +1378,7 @@ def runDeletePhase(myCommandOnHostID):
                 mydeffered = callOnBestLauncher(
                     myCommandOnHostID,
                     'async_remote_delete',
+                    False,
                     myCommandOnHostID,
                     client,
                     files_list,
@@ -1435,6 +1450,7 @@ def runInventoryPhase(myCommandOnHostID):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'sync_remote_inventory',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
@@ -1446,6 +1462,7 @@ def runInventoryPhase(myCommandOnHostID):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'async_remote_inventory',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
@@ -1495,6 +1512,7 @@ def runRebootPhase(myCommandOnHostID):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'sync_remote_reboot',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
@@ -1506,6 +1524,7 @@ def runRebootPhase(myCommandOnHostID):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'async_remote_reboot',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
@@ -1576,6 +1595,7 @@ def runHaltPhase(myCommandOnHostID, condition):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'sync_remote_halt',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
@@ -1587,6 +1607,7 @@ def runHaltPhase(myCommandOnHostID, condition):
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
             'async_remote_halt',
+            False,
             myCommandOnHostID,
             client,
             SchedulerConfig().max_command_time
