@@ -80,8 +80,6 @@ def activate():
 
     if not MscDatabase().activate(config):
         return False
-    if not MscDatabase().db_check():
-        return False
 
     return True
 

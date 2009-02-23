@@ -59,8 +59,7 @@ def activate():
                                 
     # When this module is used by the MMC agent, the global inventory variable is shared.
     # This means an Inventory instance is not created each time a XML-RPC call is done.
-    InventoryLocation().init(config) # does Inventory().activate()
-    if not Inventory().db_check():
+    if not InventoryLocation().init(config): # does Inventory().activate() (which does the Inventory().db_check())
         return False
         
     logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)

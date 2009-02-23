@@ -27,7 +27,7 @@ class InventoryLocation(ComputerLocationI):
     def init(self, config):
         self.logger = logging.getLogger()
         self.config = config
-        Inventory().activate(config)
+        return Inventory().activate(config)
 
     def getUserProfile(self, userid):
         return Inventory().getUserProfile(userid)
