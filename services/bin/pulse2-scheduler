@@ -72,6 +72,10 @@ import logging
 import logging.config
 
 VERSION = "0.0.0"
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
+
+def getVersion():  return VERSION
+def getRevision(): return REVISION
 
 def start_all_callbacks():
     startup_delay = 2
@@ -180,7 +184,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         self.name = name
 
     def getRevision(self):
-        return int("$Rev: 298 $".split(':')[1].strip(' $'))
+        return int("$Rev$".split(':')[1].strip(' $'))
 
     def getVersion(self):
         return VERSION
@@ -300,6 +304,7 @@ def main():
     # start logger
     logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
+    logger.info("Scheduler version('%s') build('%s')"%(str(getVersion()), str(getRevision())))
 
     # parse conf
     logger.info("Reading configuration file: %s" % options.config_file)
