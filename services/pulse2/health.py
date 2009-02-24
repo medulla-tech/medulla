@@ -87,7 +87,11 @@ def getLoadAvg():
     f = open("/proc/loadavg")
     data = f.read()
     f.close()
-    loadavg = float(data.split()[0])
+    loadavg = {
+        '1min': float(data.split()[0]),
+        '5min': float(data.split()[1]),
+        '15min': float(data.split()[2]),
+    }
     return loadavg
 
 def getMem():
