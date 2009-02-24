@@ -209,6 +209,7 @@ if ($areCommands) { // display several commands
     }
     $n->addActionItemArray($a_status);
 } else { // display only one command
+    $proxies = array();
     foreach ($cmds as $cmd) {
 
         $coh_id = $cmd[1];
@@ -228,19 +229,28 @@ if ($areCommands) { // display several commands
                 $a_date[] = _toDate($d);
 
             $a_client[] = $coh['host'];
+            $proxy_id = $coh['fk_use_as_proxy'];
+            $proxy_str = '';
+            if ($proxy_id != '') {
+                if ($proxies[$proxy_id] == '') {
+                    $lp = get_commands_on_host($proxy_id);
+                    $proxies[$proxy_id] = $lp['host'];
+                }
+                $proxy_str = sprintf(_T(', using proxy %s', 'msc'), $proxies[$proxy_id]);
+            }
 
             if ($cmd['proxy_mode'] == 'none') {
                 $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'split') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, client', 'msc').'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'.sprintf(_T('Multiple, client mode%s', 'msc'), $proxy_str).'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, server', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Multiple, server mode', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } elseif ($cmd['proxy_mode'] == 'queue') {
                 if ($coh['order_in_proxy'] == '')
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, client', 'msc').'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'.sprintf(_T('Single, client mode%s', 'msc'), $proxy_str).'" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';
                 else
-                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, server', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
+                    $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Single, server mode', 'msc').'" src="modules/msc/graph/images/proxy/proxy_server.png"/> ';
             } else {
                 $a_mode[] ='<img style="vertical-align: middle;" title="'._T('Normal', 'msc').'" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
             }
