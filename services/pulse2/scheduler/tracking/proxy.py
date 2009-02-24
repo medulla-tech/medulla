@@ -29,7 +29,7 @@
 # semaphore handling
 import threading
 
-# entripy stuff
+# entropy stuff
 import random
 
 # Others Pulse2 Stuff

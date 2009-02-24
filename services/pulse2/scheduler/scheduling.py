@@ -450,10 +450,10 @@ def localProxyMayContinue(myCommandOnHostID):
         # proxy tracking update
         if our_client_count != 0:
             LocalProxiesUsageTracking().create_proxy(myT.getUUID(), myCoH.getMaxClientsPerProxy(), myC.getId())
-            print ("scheduler %s: (re-)adding %s (#%s) to proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
+            logging.getLogger().debug("scheduler %s: (re-)adding %s (#%s) to proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
         else:
             LocalProxiesUsageTracking().delete_proxy(myT.getUUID(), myC.getId())
-            print("scheduler %s: (re-)removing %s (#%s) from proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
+            logging.getLogger().debug("scheduler %s: (re-)removing %s (#%s) from proxy pool" % (SchedulerConfig().name, myT.getUUID(), myC.getId()))
         return our_client_count == 0
     else:
         return True

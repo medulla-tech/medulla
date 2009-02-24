@@ -63,6 +63,8 @@ from pulse2.database.msc import MscDatabase
 from pulse2.database.msc.config import MscDatabaseConfig
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
+from pulse2.scheduler.health import getHealth
+
 import pulse2.xmlrpc
 
 # Logging
@@ -77,6 +79,7 @@ def start_all_callbacks():
     logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, startup_delay))
     time.sleep(startup_delay)
     scheduleAwakeScheduling()
+    scheduleLogStats()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
 def scheduleAwakeScheduling():
@@ -98,6 +101,15 @@ def awakeScheduling():
         logger.error("Error while running stopElapsedCommands")
         logger.error(e)
     scheduleAwakeScheduling()
+
+def scheduleLogStats():
+    """ periodicaly log stats """
+    delay = 60 - time.time() % 60
+    twisted.internet.reactor.callLater(delay, logStats)
+
+def logStats():
+    logging.getLogger().info('scheduler %s: HEALTH: %s' % (SchedulerConfig().name, getHealth()))
+    scheduleLogStats()
 
 def startService():
     conffile = mmc.support.mmctools.getConfigFile("msc")
@@ -273,6 +285,8 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
     def xmlrpc_remote_exec(self, launcher, path):
         return mmc.support.mmctools.xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
+    def xmlrpc_get_health(self):
+        return xmlrpcCleanup(getHealth())
 
 def main():
     parser = optparse.OptionParser()

@@ -21,7 +21,13 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
 """
     Give stats on-the-fly
 """
+
+from pulse2.health import basicHealth
+
+def getHealth():
+    # take basic informations
+    health = basicHealth()
+    return health
