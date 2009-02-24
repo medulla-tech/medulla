@@ -18,7 +18,7 @@
     </affiliation>
 
     <copyright>
-      <year>2008 Nicolas Rueff - Mandriva</year>
+      <year>2008,2009 Nicolas Rueff - Mandriva</year>
     </copyright>
 
     <revhistory>
@@ -449,9 +449,34 @@ option2 = plop      </screen></para>
 
             <entry>root</entry>
           </row>
+
+          <row>
+            <entry>setrlimit</entry>
+
+            <entry>Resource usage limits to apply to the scheduler process, specified by a string of triplets (resource, soft limit, hard limit). See the <ulink url="http://docs.python.org/library/resource.html">Python documentation</ulink> for more information</entry>
+
+            <entry>yes</entry>
+
+            <entry>string</entry>
+
+            <entry></entry>
+          </row>
         </tbody>
       </tgroup>
     </table>
+
+    <para>
+      Example:
+    </para>
+    <screen>
+[daemon]
+pid_path = /var/run/pulse2
+user = mmc
+group = mmc
+umask = 0007
+setrlimit = RLIMIT_NOFILE 2048 2048 RLIMIT_CORE 0 0
+    </screen>
+
   </section>
 
   <section>
