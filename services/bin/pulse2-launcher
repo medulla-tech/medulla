@@ -181,11 +181,12 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def __init__(self, name):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
         self.logger = logging.getLogger()
+        self.logger.info("Launcher version('%s') build('%s')"%(str(self.getVersion()), str(self.getRevision())))
         self.name = name
         self.config = LauncherConfig().launchers[name]
 
     def getRevision(self):
-        return int("$Rev: 298 $".split(':')[1].strip(' $'))
+        return int("$Rev$".split(':')[1].strip(' $'))
 
     def getVersion(self):
         return VERSION
