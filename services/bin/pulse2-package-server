@@ -33,7 +33,7 @@ import twisted
 from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP, config_addons
 
-REVISION = int("$Rev: 372 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 def getRevision(): return REVISION
 
 def running(inifile, daemonize):
