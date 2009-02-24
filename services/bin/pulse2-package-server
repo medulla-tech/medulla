@@ -33,6 +33,9 @@ import twisted
 from pulse2.package_server import ThreadLauncher
 from pulse2.package_server.config import P2PServerCP, config_addons
 
+REVISION = int("$Rev: 372 $".split(':')[1].strip(' $'))
+def getRevision(): return REVISION
+
 def running(inifile, daemonize):
     config = P2PServerCP()
     config.pre_setup(inifile)
@@ -49,6 +52,7 @@ def running(inifile, daemonize):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
+    logger.info("Package server build('%s')"%(str(getRevision())))
 
     config.setup(inifile)
 
