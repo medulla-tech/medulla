@@ -71,6 +71,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     pid_path = "/var/run/pulse2"
     umask = 0077
     daemon_user = 0
+    setrlimit = ''
 
     # [launcher_xxx] section
     launchers = {
@@ -119,6 +120,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
             self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
         if self.cp.has_option("handler_hand01", "args"):
             self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
+        if self.cp.has_option("daemon", "setrlimit"):
+            self.setrlimit = self.cp.get("daemon", "setrlimit")
 
     def setup(self, config_file):
         # Load configuration file

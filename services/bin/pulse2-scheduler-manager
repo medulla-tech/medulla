@@ -43,6 +43,7 @@ import optparse
 import signal
 import time
 import errno
+import resource
 
 time_to_wait = 2 # first stage: check of it is alive / dead after having being run /stopped for time_to_wait seconds
 check_count = 5 # second stage: attempts to obtain a good result (check_count tries) to a XMLRPC call
@@ -219,6 +220,42 @@ def get_pidfile(config):
     os.seteuid(config.daemon_user)
     return False
 
+def set_resource_usage(config):
+    """
+    Set scheduler process resources usage.
+    We can only do it as root.
+    """
+    limits = config.setrlimit.split()
+    while limits:
+        try:
+            res, soft, hard = limits[:3]
+        except ValueError:
+            print "Malformed resource limit expression, must be: limit soft hard (was '%s')" % config.setrlimit
+            sys.exit(3)
+        try:
+            resource.setrlimit(eval("resource." + res), (int(soft), int(hard)))
+        except Exception, e:
+            print "Can't set resource limits for resource='%s', soft='%s', hard='%s'" % (res, soft, hard)
+            print e
+            sys.exit(3)
+        limits = limits[3:]
+
+def log_resource_usage(config):
+    """
+    Log resources usage limits that have been set.
+    """
+    limits = config.setrlimit.split()
+    while limits:
+        res, soft, hard = limits[:3]
+        try:
+            resource.getrlimit(eval("resource." + res))
+            logging.getLogger().info("Resource '%s' set to soft='%s', hard='%s'" % (res, soft, hard))
+        except Exception, e:
+            print "Can't get resource limits for resource='%s'" % res
+            print e
+            sys.exit(4)
+        limits = limits[3:]
+
 if __name__ == "__main__":
     parser = optparse.OptionParser()
     parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
@@ -250,12 +287,19 @@ if __name__ == "__main__":
             # failed
             pass
 
+    if args[0] == "start":
+        set_resource_usage(config)
+
     # set umask and effective UID and GID values RIGHT NOW
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
-     # we changed our identify a few lines above, log file will be created with proper uid/gid/umask
+    # we changed our identify a few lines above, log file will be created
+    # with proper uid/gid/umask
     logging.config.fileConfig(options.config_file)
+
+    if args[0] == "start":
+        log_resource_usage(config)
 
     # last step: parse conf
     config.setup(options.config_file)
