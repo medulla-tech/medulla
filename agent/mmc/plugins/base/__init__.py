@@ -1311,7 +1311,7 @@ class ldapUserGroupControl:
          @type: dict
         """
         ret = self.search("gidNumber=" + str(id), self.baseGroupsDN)
-        resArray = []
+        newattrs = []
         if ret:
             for result in ret:
                 c,attrs=result[0]
