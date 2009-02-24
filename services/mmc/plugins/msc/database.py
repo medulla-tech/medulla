@@ -62,10 +62,218 @@ class MscDatabase(msc.MscDatabase):
 
     """
     def getMachinesSchedulers(self, target):
+        """
+        Return a deferred object resulting to a scheduler or a list of
+        schedulers.
+        """
         if type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
             return SchedulerApi().getSchedulers(map(lambda t: t[0], target))
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
+
+    def getBCast(self, ip, netmask):
+        """
+        Compute a brodcast address given a network IP and a network mask
+        """
+        a_ip = ip.split('.')
+        a_netmask = netmask.split('.')
+        a_network = [0,0,0,0]
+        for i in range(0,4):
+            a_network[i] = int(a_ip[i]) & int(a_netmask[i])
+        a_notnetmask = map(lambda i: int(i) ^ 255, netmask.split('.'))
+        for i in range(0,4):
+            a_ip[i] = int(a_network[i]) | int(a_notnetmask[i])
+        return '.'.join(map(lambda x: str(x), a_ip))
+
+
+    def prepareTarget(self, computer, group_id):
+        """
+        Use computer information to prepare data to be inserted in the MSC
+        target table.
+        """
+        h_mac2bcast = []
+        h_mac2netmask = []
+        bcastAddresses = []
+        netmasks = []
+        ipAddresses = computer[1]['ipHostNumber']
+        netmask = computer[1]['subnetMask']
+
+        # Compute broadcast address
+        for i in range(len(computer[1]['macAddress'])):
+            try:
+                bcastAddress = self.getBCast(ipAddresses[i], netmask[i])
+            except Exception, e:
+                self.logger.debug("Can't compute broadcast address for %s: %s" % (str(computer), str(e)))
+                bcastAddress = "255.255.255.255"
+                self.logger.debug("Using default broadcast address %s" % bcastAddress)
+            h_mac2bcast.append(bcastAddress)
+            try:
+                h_mac2netmask.append(netmask[i])
+            except:
+                h_mac2netmask.append('0.0.0.0')
+
+        self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
+        # Apply IP addresses blacklist
+        if self.config.ignore_non_rfc2780:
+            ipAddresses = blacklist.rfc2780Filter(ipAddresses)
+        if self.config.ignore_non_rfc1918:
+            ipAddresses = blacklist.rfc1918Filter(ipAddresses)
+        ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
+        ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
+        self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
+
+        try:
+            targetName = computer[1]['cn'][0]
+        except KeyError:
+            pass
+        try:
+            targetName = computer[1]['fullname']
+        except KeyError:
+            pass
+
+        self.logger.debug("Computer known MAC addresses before filter: " + str(computer[1]['macAddress']))
+        macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
+        self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
+
+        # Fill bcastAddresses and netmasks lists
+        for i in range(len(computer[1]['macAddress'])):
+            macAddress = computer[1]['macAddress'][i]
+            # Only select non-filtered MAC addresses
+            if macAddress in macAddresses:
+                bcastAddresses.append(h_mac2bcast[i])
+                netmasks.append(h_mac2netmask[i])
+
+        # Multiple IP addresses or IP addresses may be separated by "||"
+        targetMac = '||'.join(macAddresses)
+        targetIp = '||'.join(ipAddresses)
+        targetBCast = '||'.join(bcastAddresses)
+        targetNetmask = '||'.join(netmasks)
+
+        targetUuid = computer[1]['objectUUID'][0]
+        return self.createTarget(
+            targetName,
+            targetUuid,
+            targetIp,
+            targetMac,
+            targetBCast,
+            targetNetmask,
+            None,
+            group_id,
+            )
+
+    def getComputersData(self, ctx, targets, group_id):
+        """
+        Get all targets network information
+        """
+        computers = ComputerManager().getComputersNetwork(ctx, {"uuids" : targets})
+        # Rebuild the targets list, and get computers data
+        tmp = []
+        targetsdata = []
+        for computer in computers:
+            if 'fullname' in computer[1]:
+                hostname = computer[1]['fullname']
+            else:
+                hostname = computer[1]['cn'][0]
+            tmp.append([computer[1]['objectUUID'][0], hostname])
+            targetsdata.append(self.prepareTarget(computer, group_id))
+        targets = tmp[:]
+        return tmp, targetsdata
+
+    def addCommands(self, ctx, session, targets, commands, group_id = None):
+        """
+        Add multiple commands in one database session. Used when inserting a
+        bundle in database.
+        """
+        targets_to_insert_list = []
+        targets_scheduler = []
+        targets_name = []
+        coh_to_insert = []
+
+        targets, targetsdata = self.getComputersData(ctx, targets, group_id)
+        if len(targets) == 0:
+            self.logger.error("The machine list is empty, does your machines have a network interface ?")
+            return -2
+
+        def cbGetTargetsMirrors(schedulers, session):
+            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
+            d1 = MirrorApi().getMirrors(args)
+            d1.addCallback(cbGetTargetsFallbackMirrors, schedulers, session)
+            d1.addErrback(lambda err: err)
+            return d1
+
+        def cbGetTargetsFallbackMirrors(mirrors, schedulers, session):
+            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
+            d2 = MirrorApi().getFallbackMirrors(args)
+            d2.addCallback(cbCreateTargets, mirrors, schedulers, session)
+            d2.addErrback(lambda err: err)
+            return d2
+
+        def cbPushModeCreateTargets(schedulers, session):
+            return cbCreateTargets(None, None, schedulers, session, push_pull = False)
+
+        def cbCreateTargets(fbmirrors, mirrors, schedulers, session, push_pull = True):
+            # For each command, we prepare the targets list
+            # There is one targets list per command because the root package
+            # path may change according to the package
+            for command in commands:
+                targets_to_insert = []
+                root = command['root']
+                if root == None:
+                    root = self.config.repopath                
+                for i in range(len(targets)):
+                    if push_pull:
+                        # FIXME: we only take the the first mirrors
+                        mirror = mirrors[i]
+                        fallback = fbmirrors[i]
+                        uri = '%s://%s:%s%s' % (mirror['protocol'], mirror['server'], str(mirror['port']), mirror['mountpoint']) + \
+                              '||' + \
+                              '%s://%s:%s%s' % (fallback['protocol'], fallback['server'], str(fallback['port']), fallback['mountpoint'])
+                    else:
+                        uri = '%s://%s' % ('file', root)
+                    targetsdata[i]['mirrors'] = uri
+                    # Keep not blacklisted target name for commands_on_host
+                    # creation.
+                    targets_name.append(targets[i][1])
+                    # Maybe could be done in prepareTarget
+                    targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
+                    targets_to_insert.append(targetsdata[i])
+                targets_to_insert_list.append(targets_to_insert)
+
+            if session == None:
+                session = create_session(transactional = True)
+            ret = []
+            for cmd, targets_to_insert in zip(commands, targets_to_insert_list):
+                cobj = self.createCommand(session, cmd['package_id'], cmd['start_file'], cmd['parameters'], cmd['files'], cmd['start_script'], cmd['clean_on_success'], cmd['start_date'], cmd['end_date'], cmd['connect_as'], ctx.userid, cmd['title'], cmd['issue_halt_to'], cmd['do_reboot'], cmd['do_wol'], cmd['next_connection_delay'], cmd['max_connection_attempt'], cmd['do_inventory'], cmd['maxbw'], cmd['deployment_intervals'], cmd['fk_bundle'], cmd['order_in_bundle'], cmd['proxies'], cmd['proxy_mode'])
+                session.flush()
+                ret.append(cobj.getId())
+
+                r = session.execute(self.target.insert(), targets_to_insert)
+                first_target_id = r.cursor.lastrowid
+                for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
+                    order_in_proxy = None
+                    max_clients_per_proxy = 0
+                    try:
+                        candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], cmd['proxies'])
+                        if len(candidates) == 1:
+                            max_clients_per_proxy = candidates[0]['max_clients']
+                            order_in_proxy = candidates[0]['priority']
+                    except ValueError:
+                        pass
+                    coh_to_insert.append(self.createCommandsOnHost(cobj.getId(), atarget, first_target_id, target_name, cmd['max_connection_attempt'], ascheduler, order_in_proxy, max_clients_per_proxy))
+                    first_target_id = first_target_id + 1
+            session.execute(self.commands_on_host.insert(), coh_to_insert)
+            session.commit()
+
+            return ret
+
+        d = self.getMachinesSchedulers(targets)
+        mode = commands[0]['mode']
+        if mode == 'push_pull':
+            d.addCallback(cbGetTargetsMirrors, session)
+        else:
+            d.addCallback(cbPushModeCreateTargets, session)
+        d.addErrback(lambda err: err)
+        return d
 
     def addCommand(self,
                 ctx,
@@ -104,105 +312,12 @@ class MscDatabase(msc.MscDatabase):
         if root == None:
             root = self.config.repopath
 
-        def getBCast(ip, netmask):
-            a_ip = ip.split('.')
-            a_netmask = netmask.split('.')
-            a_network = [0,0,0,0]
-            for i in range(0,4):
-                a_network[i] = int(a_ip[i]) & int(a_netmask[i])
-            a_notnetmask = map(lambda i: int(i) ^ 255, netmask.split('.'))
-            for i in range(0,4):
-                a_ip[i] = int(a_network[i]) | int(a_notnetmask[i])
-            return '.'.join(map(lambda x: str(x), a_ip))
-
-        def prepareTarget(computer):
-            h_mac2bcast = []
-            h_mac2netmask = []
-            bcastAddresses = []
-            netmasks = []
-            ipAddresses = computer[1]['ipHostNumber']
-            netmask = computer[1]['subnetMask']
-
-            for i in range(len(computer[1]['macAddress'])):
-                try:
-                    bcastAddress = getBCast(ipAddresses[i], netmask[i])
-                except Exception, e:
-                    self.logger.debug("Can't compute broadcast address for %s: %s" % (str(computer), str(e)))
-                    bcastAddress = "255.255.255.255"
-                    self.logger.debug("Using default broadcast address %s" % bcastAddress)
-                h_mac2bcast.append(bcastAddress)
-                try:
-                    h_mac2netmask.append(netmask[i])
-                except:
-                    h_mac2netmask.append('0.0.0.0')
-
-            self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
-            # Apply IP addresses blacklist
-            if self.config.ignore_non_rfc2780:
-                ipAddresses = blacklist.rfc2780Filter(ipAddresses)
-            if self.config.ignore_non_rfc1918:
-                ipAddresses = blacklist.rfc1918Filter(ipAddresses)
-            ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
-            ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
-            self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
-
-            try:
-                targetName = computer[1]['cn'][0]
-            except KeyError:
-                pass
-            try:
-                targetName = computer[1]['fullname']
-            except KeyError:
-                pass
-
-            self.logger.debug("Computer known MAC addresses before filter: " + str(computer[1]['macAddress']))
-            macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
-            self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
-
-            # Fill bcastAddresses and netmasks lists
-            for i in range(len(computer[1]['macAddress'])):
-                macAddress = computer[1]['macAddress'][i]
-                # Only select non-filtered MAC addresses
-                if macAddress in macAddresses:
-                    bcastAddresses.append(h_mac2bcast[i])
-                    netmasks.append(h_mac2netmask[i])
-
-            # Multiple IP addresses or IP addresses may be separated by "||"
-            targetMac = '||'.join(macAddresses)
-            targetIp = '||'.join(ipAddresses)
-            targetBCast = '||'.join(bcastAddresses)
-            targetNetmask = '||'.join(netmasks)
-
-            targetUuid = computer[1]['objectUUID'][0]
-            return self.createTarget(
-                targetName,
-                targetUuid,
-                targetIp,
-                targetMac,
-                targetBCast,
-                targetNetmask,
-                None,
-                group_id,
-                )
-
         targets_to_insert = []
         targets_scheduler = []
         targets_name = []
         coh_to_insert = []
 
-        # Get all targets network information
-        computers = ComputerManager().getComputersNetwork(ctx, {"uuids" : targets})
-        # Rebuild the targets list, and get computers data
-        tmp = []
-        targetsdata = []
-        for computer in computers:
-            if 'fullname' in computer[1]:
-                hostname = computer[1]['fullname']
-            else:
-                hostname = computer[1]['cn'][0]
-            tmp.append([computer[1]['objectUUID'][0], hostname])
-            targetsdata.append(prepareTarget(computer))
-        targets = tmp[:]
+        targets, targetsdata = self.getComputersData(ctx, targets, group_id)
         if len(targets) == 0:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
             return -2
@@ -243,13 +358,11 @@ class MscDatabase(msc.MscDatabase):
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
                 targets_to_insert.append(targetsdata[i])
 
-            session = create_session()
+            session = create_session(transactional = True)
             cmd = self.createCommand(session, package_id, start_file, parameters, files, start_script, clean_on_success, start_date, end_date, connect_as, ctx.userid, title, do_halt, do_reboot, do_wol, next_connection_delay, max_connection_attempt, do_inventory, maxbw, deployment_intervals, fk_bundle, order_in_bundle, proxies, proxy_mode)
-            session.close()
+            session.flush()
 
-            connection = self.getDbConnection()
-            trans = connection.begin()
-            r = connection.execute(self.target.insert(), targets_to_insert)
+            r = session.execute(self.target.insert(), targets_to_insert)
             first_target_id = r.cursor.lastrowid
             for atarget, target_name, ascheduler in zip(targets_to_insert, targets_name, schedulers):
                 order_in_proxy = None
@@ -263,9 +376,9 @@ class MscDatabase(msc.MscDatabase):
                     pass
                 coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), atarget, first_target_id, target_name, max_connection_attempt, ascheduler, order_in_proxy, max_clients_per_proxy))
                 first_target_id = first_target_id + 1
-            connection.execute(self.commands_on_host.insert(), coh_to_insert)
-            trans.commit()
-            connection.close()
+            session.execute(self.commands_on_host.insert(), coh_to_insert)
+            session.commit()
+
             return cmd.getId()
 
         d = self.getMachinesSchedulers(targets)

@@ -31,6 +31,8 @@ from twisted.web.xmlrpc import Proxy
 from twisted.python import failure
 from twisted.internet import defer
 
+from sqlalchemy.orm import create_session
+
 from mmc.plugins.msc import MscConfig
 from mmc.support.mmctools import Singleton
 from mmc.plugins.msc.database import MscDatabase
@@ -39,7 +41,6 @@ from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 from pulse2.managers.group import ComputerGroupManager
-
 
 class PackageA:
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
@@ -213,9 +214,14 @@ class SendBundleCommand:
         self.bundle_id = None
         self.proxies = proxies
         self.pids = []
+        self.session = None
 
     def onError(self, error):
         logging.getLogger().error("SendBundleCommand: %s", str(error))
+        if self.session:
+            # Rollback the transaction
+            self.session.rollback()
+            self.session.close()
         return self.deferred.callback([])
 
     def sendResult(self, result):
@@ -300,19 +306,13 @@ class SendBundleCommand:
                 localtime[5]
             )
         # Insert bundle object
-        bundle = MscDatabase().createBundle(title)
-        self.bundle_id = bundle.id
+        self.session = create_session(transactional = True)
+        bundle = MscDatabase().createBundle(title, self.session)
+        bundle_id = bundle.id
 
-        self.loop_porders = self.porders.copy()
-        self.loop_ret = []
-        self.createCommandLoop()
- 
-    def createCommandLoop(self, result = None):
-        if result and not isinstance(result, failure.Failure):
-            self.loop_ret.append(result)
-        if self.loop_porders:
-            _, porder = self.loop_porders.popitem()
-            p_api, pid, order = porder
+        commands = []
+        for p in self.porders:
+            p_api, pid, order = self.porders[p]
             pinfos = self.packages[pid]
             ppath = self.ppaths[pid]
             params = self.params.copy()
@@ -330,43 +330,21 @@ class SendBundleCommand:
                 params['issue_halt_to'] = ''
             
             cmd = prepareCommand(pinfos, params)
-            addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
-                self.ctx,
-                pid,
-                cmd['start_file'],
-                cmd['parameters'],
-                cmd['files'],
-                self.targets, # TODO : need to convert array into something that we can get back ...
-                self.mode,
-                self.gid,
-                cmd['start_script'],
-                cmd['clean_on_success'],
-                cmd['start_date'],
-                cmd['end_date'],
-                "root", # TODO: may use another login name
-                cmd['title'],
-                cmd['issue_halt_to'],
-                pinfos['do_reboot'],
-                cmd['do_wol'],
-                cmd['next_connection_delay'],
-                cmd['max_connection_attempt'],
-                cmd['do_inventory'],
-                cmd['maxbw'],
-                ppath,
-                cmd['deployment_intervals'],
-                self.bundle_id,
-                order,
-                cmd['proxy_mode'],
-                self.proxies
-            )
-            if type(addCmd) != int:
-                addCmd.addCallbacks(self.createCommandLoop, self.onError)
-            else:
-                self.onError("Error while creating a command for the bundle")
+            command = cmd.copy()
+            command['package_id'] = pid
+            command['connect_as'] = 'root'
+            command['mode'] = self.mode
+            command['root'] = ppath
+            command['order_in_bundle'] = order
+            command['proxies'] = self.proxies
+            command['fk_bundle'] = bundle.id
+            commands.append(command)
+        add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
+        if type(add) != int:
+            add.addCallbacks(self.sendResult, self.onError)
         else:
-            # No more package command to create
-            self.sendResult(self.loop_ret)
-
+            self.onError("Error while creating the bundle")
+ 
 def prepareCommand(pinfos, params):
     """
     @param pinfos: getPackageDetail dict content
