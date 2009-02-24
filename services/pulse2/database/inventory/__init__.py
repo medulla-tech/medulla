@@ -28,7 +28,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.database.utilities import unique, toH, DbObject
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from pulse2.database.inventory.mapping import OcsMapping
-from pulse2.utils import Singleton
+from pulse2.utils import same_network, onlyAddNew, Singleton
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
@@ -1179,17 +1179,28 @@ class Machine(object):
                 ret[1]['subnetMask'] = ''
             else:
                 net = net[0]
-                ret[1]['ipHostNumber'] = []
-                ret[1]['macAddress'] = []
-                ret[1]['subnetMask'] = []
-                for n in net[1]:
-                    if n['IP'] != None:
-                        ret[1]['ipHostNumber'].append(n['IP'])
-                    if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
-                        ret[1]['macAddress'].append(n['MACAddress'])
-                    if n['SubnetMask'] != None:
-                        ret[1]['subnetMask'].append(n['SubnetMask'])
+                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask']) = self.orderIpAdresses(net[1])
         return ret
+
+    def orderIpAdresses(self, netiface):
+        ret_ifmac = list()
+        ret_ifaddr = list()
+        ret_netmask = list()
+        for iface in netiface:
+            logging.getLogger().debug(iface)
+            if 'IP' in iface and iface['IP'] and 'Gateway' in iface and iface['Gateway'] and 'SubnetMask' in iface and iface['SubnetMask'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
+                logging.getLogger().debug('can work on')
+                if same_network(iface['IP'], iface['Gateway'], iface['SubnetMask']):
+                    logging.getLogger().debug("same net")
+                    ret_ifmac.insert(0, iface['MACAddress'])
+                    ret_ifaddr.insert(0, iface['IP'])
+                    ret_netmask.insert(0, iface['SubnetMask'])
+                else:
+                    logging.getLogger().debug("inot same net")
+                    ret_ifmac.append(iface['MACAddress'])
+                    ret_ifaddr.append(iface['IP'])
+                    ret_netmask.append(iface['SubnetMask'])
+        return (ret_ifmac, ret_ifaddr, ret_netmask)
 
     def toCustom(self, get):
         ma = {}
