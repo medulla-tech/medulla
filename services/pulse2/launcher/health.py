@@ -29,6 +29,10 @@ def getHealth(config):
     # take basic informations
     health = basicHealth()
     # complete with ours
-    health.update({"slottotal" : config["slots"]})
-    health.update({"slotused" : ProcessList().getProcessCount()})
+    slots = {
+        "slottotal" : config["slots"],
+        "slotused" : ProcessList().getProcessCount()
+    }
+
+    health.update({'slots': slots})
     return health
