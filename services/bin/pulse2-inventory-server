@@ -32,6 +32,9 @@ import logging.config
 from pulse2.inventoryserver.server import InventoryGetService
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
+def getRevision(): return REVISION
+
 def running(daemonize, inifile):
     config = Pulse2OcsserverConfigParser()
     config.setup(inifile)
@@ -52,6 +55,7 @@ def running(daemonize, inifile):
     logger.addHandler(hdlr2)
 
     logger.debug("Logger loaded")
+    logger.info("Inventory server build('%s')"%(str(getRevision())))
 
     if InventoryGetService().initialise(config):
         if daemonize:
