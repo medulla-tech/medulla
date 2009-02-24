@@ -52,6 +52,8 @@ import pulse2.launcher.network
 import pulse2.launcher.tcp_sproxy
 
 from pulse2.launcher.xmlrpc import LauncherSite, getProxy
+from pulse2.launcher.health import getHealth
+from pulse2.launcher.stats import getBalance
 import pulse2.xmlrpc
 
 # Logging
@@ -100,8 +102,8 @@ def scheduleLogStats():
 
 def logStats():
     config = LauncherConfig().launchers[LauncherConfig().name]
-    logging.getLogger().info('launcher %s: BALANCE: %s' % (LauncherConfig().name, pulse2.launcher.utils.getBalance(config)))
-    logging.getLogger().info('launcher %s: HEALTH: %s' % (LauncherConfig().name, pulse2.launcher.utils.getHealth(config)))
+    logging.getLogger().info('launcher %s: BALANCE: %s' % (LauncherConfig().name, getBalance(config)))
+    logging.getLogger().info('launcher %s: HEALTH: %s' % (LauncherConfig().name, getHealth(config)))
     logging.getLogger().debug('launcher %s: PROCESSING: %s' % (LauncherConfig().name, pulse2.launcher.process_control.getProcessIds()))
     scheduleLogStats()
 
@@ -354,10 +356,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.utils.getPubKey(key_name))
 
     def xmlrpc_get_health(self):
-        return xmlrpcCleanup(pulse2.launcher.utils.getHealth(self.config))
+        return xmlrpcCleanup(getHealth(self.config))
 
     def xmlrpc_get_balance(self):
-        return xmlrpcCleanup(pulse2.launcher.utils.getBalance(self.config))
+        return xmlrpcCleanup(getBalance(self.config))
 
 def main():
     parser = optparse.OptionParser()
