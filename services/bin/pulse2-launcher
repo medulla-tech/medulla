@@ -203,7 +203,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
             result = xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
             result = (result,)
-        self.logger.debug('launcher %s: xmlrpc: %s%s => %s' % (LauncherConfig().name, self.name, func, (args), (result)))
+        self.logger.debug('launcher %s: xmlrpc: %s%s => %s' % (self.name, func, (args), (result)))
         try:
             s = xmlrpclib.dumps(result, methodresponse=1)
         except:
