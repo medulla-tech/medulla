@@ -57,6 +57,16 @@ def commandRunner(cmd, cbCommandEnd):
             { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
         )
     except OSError, e:
+        try:
+            process.handler.loseConnection()
+        except Exception, e2:
+            """ got this handling this exception:
+                ERROR launcher launcher_01: loseConnection: 'NoneType' object has no attribute 'loseConnection'
+                ERROR launcher launcher_01: failed daemonization in commandRunner: 12 (Cannot allocate memory)
+
+                testcase: dummy-1kb, 500 clients group, 10 proxies, 10 clients per proxy
+            """
+            logging.getLogger().error('launcher %s: loseConnection: %s' % (LauncherConfig().name, e2))
         logging.getLogger().error('launcher %s: failed daemonization in commandRunner: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
         return False
     logging.getLogger().debug('launcher %s: about to execute %s in commandRunner' % (LauncherConfig().name, ' '.join(cmd)))
@@ -85,6 +95,10 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
             { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
         )
     except OSError, e:
+        try:
+            process.handler.loseConnection()
+        except Exception, e2:
+            logging.getLogger().error('launcher %s: loseConnection: %s' % (LauncherConfig().name, e2))
         logging.getLogger().error('launcher %s: failed daemonization in commandForker: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
         return False
     logging.getLogger().debug('launcher %s: about to execute %s in commandForker' % (LauncherConfig().name, ' '.join(cmd)))
