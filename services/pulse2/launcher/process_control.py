@@ -35,6 +35,7 @@ import twisted.internet.protocol
 
 # Others Pulse2 Stuff
 import pulse2.utils
+from pulse2.launcher.config import LauncherConfig
 
 def commandRunner(cmd, cbCommandEnd):
     """
@@ -43,18 +44,22 @@ def commandRunner(cmd, cbCommandEnd):
     """
     process = commandProtocol(cmd)
     # FIXME: codec should be taken from conf file
-    process.handler = twisted.internet.reactor.spawnProcess(
-        process,
-        cmd[0],
-        map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
-        None, # env
-        None, # path
-        None, # uid
-        None, # gid
-        None, # usePTY
-        { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
-    )
-    logging.getLogger().debug('about to execute ' + ' '.join(cmd))
+    try:
+        process.handler = twisted.internet.reactor.spawnProcess(
+            process,
+            cmd[0],
+            map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
+            None, # env
+            None, # path
+            None, # uid
+            None, # gid
+            None, # usePTY
+            { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
+        )
+    except OSError, e:
+        logging.getLogger().error('launcher %s: failed daemonization in commandRunner: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
+        return False
+    logging.getLogger().debug('launcher %s: about to execute %s in commandRunner' % (LauncherConfig().name, ' '.join(cmd)))
     process.deferred = twisted.internet.defer.Deferred()
     process.deferred.addCallback(cbCommandEnd)
     return process.deferred
@@ -64,21 +69,25 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
     """
     process = commandProtocol(cmd)
     if not ProcessList().addProcess(process, id): # a process with the same ID already exists
-        logging.getLogger().warn('Attempt to add command %s twice' % id)
+        logging.getLogger().warn('launcher %s: attempted to add command %s twice' % (LauncherConfig().name, id))
         return False
     # FIXME: codec should be taken from conf file
-    process.handler = twisted.internet.reactor.spawnProcess(
-        process,
-        cmd[0],
-        map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
-        None, # env
-        None, # path
-        None, # uid
-        None, # gid
-        None, # usePTY
-        { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
-    )
-    logging.getLogger().debug('about to execute ' + ' '.join(cmd))
+    try:
+        process.handler = twisted.internet.reactor.spawnProcess(
+            process,
+            cmd[0],
+            map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
+            None, # env
+            None, # path
+            None, # uid
+            None, # gid
+            None, # usePTY
+            { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
+        )
+    except OSError, e:
+        logging.getLogger().error('launcher %s: failed daemonization in commandForker: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
+        return False
+    logging.getLogger().debug('launcher %s: about to execute %s in commandForker' % (LauncherConfig().name, ' '.join(cmd)))
     process.returnxmlrpcfunc = callbackName
     process.id = id
     process.defer_results = defer_results
@@ -214,12 +223,12 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
 
     def sendSignal(self, signal):
         # signal is posix signal ID, see kill -l
-        logging.getLogger().debug('Send signal %s to command %s' % (signal, self.id) )
+        logging.getLogger().debug('launcher %s: sent signal %s to command %s' % (LauncherConfig().name, signal, self.id) )
         try:
             self.handler.signalProcess(signal)
             return True
         except:
-            logging.getLogger().warn('Send signal %s to command %s which is already finished' % (signal, self.id) )
+            logging.getLogger().warn('launcher %s: sent signal %s to command %s which is already finished' % (LauncherConfig().name, signal, self.id) )
             return False
 
     def sendSigCont(self):
@@ -296,11 +305,11 @@ class ProcessList(pulse2.utils.Singleton):
                 # priority check order: use process.max_age if not 0, else use self.default_timeout if not 0
                 if not process.max_age == 0:
                     if times['age'] > process.max_age: # kill time
-                        logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], process.max_age))
+                        logging.getLogger().warn('launcher %s: killing %s (out of time: current %s, max %s)' % (LauncherConfig().name, id, times['age'], process.max_age))
                         killProcess(id)
                 elif not self.default_timeout == 0:
                     if times['age'] > self.default_timeout: # kill time
-                        logging.getLogger().warn('killing %s (out of time: current %s, max %s)' % (id, times['age'], self.default_timeout))
+                        logging.getLogger().warn('launcher %s: killing %s (out of time: current %s, max %s)' % (LauncherConfig().name, id, times['age'], self.default_timeout))
                         killProcess(id)
 
     """ Process handling """

@@ -70,7 +70,7 @@ def wolClient(mac_addrs, target_bcast = None):
     for bcat in sorted:
         mac_addresses = sorted[bcat]
         cmd = command_list + ['--ipaddr=%s' % bcat] + mac_addresses
-        logging.getLogger().debug("WOL  : %s"%(str(cmd)))
+        logging.getLogger().debug("launcher %s: WOL: %s" % (str(cmd), LauncherConfig().name))
         dl.append(pulse2.launcher.process_control.commandRunner(cmd, __cb_wol_end))
 
     if len(dl) == 1:
@@ -133,6 +133,8 @@ def probeClient(client, timeout):
         None,
         timeout
     )
+    if not mydeffered:
+        return "Not available"
     mydeffered.addCallback(__cb_probe_end)
     return mydeffered
 
