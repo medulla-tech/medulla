@@ -803,7 +803,7 @@ def __cb_async_process_end(shprocess):
     def _eb(reason, id):
         # no result can be sent, log and keep our process in our list
         shprocess.isnotifyingparent = False
-        logging.getLogger().warn('launcher "%s": failed to send results of command #%s to our scheduler at %s: %s' % (LauncherConfig().name, id, scheduler, reason.value))
+        logging.getLogger().warn('launcher %s: failed to send results of command #%s to our scheduler at %s: %s' % (LauncherConfig().name, id, scheduler, reason.value))
 
     if not shprocess.isnotifyingparent:
         shprocess.isnotifyingparent = True

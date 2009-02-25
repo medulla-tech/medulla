@@ -65,11 +65,11 @@ VERSION = "0.0.0"
 def start_all_callbacks():
     startup_delay = 2
     logger = logging.getLogger()
-    logger.info('launcher "%s": will run callbacks in %d seconds' % (LauncherConfig().name, startup_delay))
+    logger.info('launcher %s: will run callbacks in %d seconds' % (LauncherConfig().name, startup_delay))
     time.sleep(startup_delay)
     scheduleTellIAmAlive()
     scheduleLogStats()
-    logger.info('launcher "%s": all callbacks started' % (LauncherConfig().name))
+    logger.info('launcher %s: all callbacks started' % (LauncherConfig().name))
 
 def scheduleTellIAmAlive():
     """ periodicaly talk to our referent scheduler """
@@ -203,7 +203,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
             result = xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpclib.Fault):
             result = (result,)
-        self.logger.debug('%s: xmlrpc: %s%s => %s' % (self.name, func, (args), (result)))
+        self.logger.debug('launcher %s: xmlrpc: %s%s => %s' % (LauncherConfig().name, self.name, func, (args), (result)))
         try:
             s = xmlrpclib.dumps(result, methodresponse=1)
         except:
