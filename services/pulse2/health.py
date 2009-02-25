@@ -26,6 +26,7 @@
 """
 
 import os
+import logging
 from stat import * # for S_*
 
 def basicHealth():
@@ -84,7 +85,17 @@ def getFDSummary():
     return result
 
 def getLoadAvg():
-    f = open("/proc/loadavg")
+    try:
+        f = open("/proc/loadavg")
+    except IOError, e:
+        logging.getLogger().error('error opening /proc/loadavg: %d (%s)' % (e.errno, e.strerror))
+        ret = {
+            '1min': 0,
+            '5min': 0,
+            '15min': 0
+        }
+        return ret
+
     data = f.read()
     f.close()
     loadavg = {
@@ -101,7 +112,17 @@ def getMem():
     buffers = 0
     swap_total = 0
     swap_free = 0
-    meminfo = open("/proc/meminfo")
+    try:
+        meminfo = open("/proc/meminfo")
+    except IOError, e:
+        logging.getLogger().error('error opening /proc/meminfo: %d (%s)' % (e.errno, e.strerror))
+        ret = {
+            'total': 0,
+            'free': 0,
+            'swapused': 0
+        }
+        return ret
+
     for line in meminfo:
         if line.startswith("MemTotal:"):
             total = int(line.split()[1])
