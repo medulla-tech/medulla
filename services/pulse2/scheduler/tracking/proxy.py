@@ -146,7 +146,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
 
     def how_much_left_for(self, uuid, command_id):
         """ create and take lock for a given command on a given proxy """
-        ret = None
+        ret = 0 # safety mesure
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
                 cur = self.proxies[uuid][command_id]["current_client_number"]
