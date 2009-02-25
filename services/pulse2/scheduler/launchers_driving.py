@@ -44,6 +44,8 @@ def chooseLauncher():
         best_score = 0
 
         for (k, v) in launchers.items():
+            if 'slots' in v:
+                v = v['slots'] # to ensure backward compatibility with pre-20090224 launchers
             score = v['slottotal'] - v['slotused'] # score computed using free slots
             if score > best_score:
                 best_score = score
@@ -57,9 +59,12 @@ def chooseLauncher():
             raise Exception("Every launchers seems to be dead !!!")
         # remove full launchers
         for k,v in stats.items():
+            if 'slots' in v:
+                v = v['slots'] # to ensure backward compatibility with pre-20090224 launchers
             used_slots += v['slotused']
             if v['slottotal'] == v['slotused']:
                 del stats[k]
+
         # give up if we may go beyond limit
         if used_slots >= SchedulerConfig().max_slots:
             raise Exception("Gone beyond our max of %s slots used" % SchedulerConfig().max_slots)
