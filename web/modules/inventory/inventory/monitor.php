@@ -22,9 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-global $table, $label, $filter;
 $table = 'Monitor';
-$label = _T('Monitor', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");

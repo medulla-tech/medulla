@@ -25,7 +25,7 @@
 $sidemenu= new SideMenu();
 
 $sidemenu->setClass("inventory");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("General", 'inventory'), "inventory", "inventory", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Bios", 'inventory'), "inventory", "inventory", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Hardware", 'inventory'), "inventory", "inventory", "hardware"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Software", 'inventory'), "inventory", "inventory", "software"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Network", 'inventory'), "inventory", "inventory", "network"));

@@ -40,7 +40,7 @@ $submod->setDescription(_T("Inventory", "inventory"));
 $submod->setImg('modules/inventory/graph/img/inventory');
 $submod->setDefaultPage("inventory/inventory/index");
 
-$page = new Page("index",_T("General","inventory"));
+$page = new Page("index",_T("Bios","inventory"));
 $submod->addPage($page);
 $page = new Page("hardware",_T("Hardware","inventory"));
 $submod->addPage($page);

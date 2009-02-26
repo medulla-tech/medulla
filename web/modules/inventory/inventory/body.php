@@ -22,8 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-global $table, $label, $filter;
-
 require_once("modules/inventory/includes/xmlrpc.php");
 
 require("localSidebar.php");
@@ -35,8 +33,27 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get)
 }
 $ajax = new AjaxFilter($url);
 
+$titles = array('index' => _T('Bios list', 'inventory'),
+                'hardware' => _T('Hardware and OS information list', 'inventory'),
+                'software' => _T('Software list', 'inventory'),
+                'network' => _T('Network card and configuration list', 'inventory'),
+                'controller' => _T('Controller list', 'inventory'),
+                'registry' => _T('Registry keys/values list', 'inventory'),
+                'drive' => _T('Drive list', 'inventory'),
+                'input' => _T('Input device list', 'inventory'),
+                'memory' => _T('Memory module list', 'inventory'),
+                'monitor' => _T('Monitor list', 'inventory'),
+                'port' => _T('Port list', 'inventory'),
+                'printer' => _T('Printer list', 'inventory'),
+                'sound' => _T('Sound list', 'inventory'),
+                'storage' => _T('Storage medium list', 'inventory'),
+                'videocard' => _T('Video card list', 'inventory')
+);
+
+                
+
 $ajax->display();
-$p = new PageGenerator(sprintf(_T("%s list", "inventory"), $label));
+$p = new PageGenerator($titles[$_GET['action']]);
 $p->setSideMenu($sidemenu);
 $p->setNoFixHeight();
 $p->display();
