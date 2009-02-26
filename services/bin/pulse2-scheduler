@@ -61,7 +61,6 @@ from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
 from pulse2.database.msc.config import MscDatabaseConfig
-from mmc.plugins.base.computers import ComputerManager
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.health import getHealth
 
