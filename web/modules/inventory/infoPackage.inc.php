@@ -101,10 +101,6 @@ $page = new Page("ajaxViewPart");
 $page->setFile("modules/inventory/inventory/ajaxViewPart.php", array("AJAX" =>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("ajaxViewHard");
-$page->setFile("modules/inventory/inventory/ajaxViewHard.php", array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
-
 $page = new Page("header", _T('Header', "inventory"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
