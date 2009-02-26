@@ -140,8 +140,8 @@ if ($_GET['uuid'] != '') {
     }
 
     if ($n != null) {
-        $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","voir","inventory", "base", "computers"));
-        $n->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","infos","inventory", "inventory", "inventory"));
+        $n->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","display","inventory", "base", "computers"));
+        $n->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","info","inventory", "inventory", "inventory"));
         $n->setParamInfo($params);
         $n->setTableHeaderPadding(1);
         $n->setItemCount($count);
