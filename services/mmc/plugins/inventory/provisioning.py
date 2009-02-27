@@ -68,7 +68,7 @@ class InventoryProvisioner(ProvisionerI):
             try:
                 profile = userentry[self.config.profileAttr][0].lower()
             except KeyError:
-                self.logger.info('No profile information for user %s in attribute %s' % (uid, self.config.profileAttr))
+                self.logger.info("No profile information for user '%s' in attribute %s" % (uid, self.config.profileAttr))
                 profile = ''
             profile = profile.strip()
             try:
@@ -93,7 +93,12 @@ class InventoryProvisioner(ProvisionerI):
                             f, p, d = imp.find_module(plugin, [searchpath])
                             mod = imp.load_module(plugin, f, p, d)
                             klass = mod.PluginEntities
-                            tmp.extend(klass().get(authtoken))
+                            found = klass().get(authtoken)
+                            if found:
+                                self.logger.info("Plugin '%s' found these entities: %s" % (plugin, found))
+                            else:
+                                self.logger.info("Plugin '%s' found no matching entity" % plugin)
+                            tmp.extend(found)
                         except ImportError:
                             self.logger.error("The plugin '%s' can't be imported" % plugin)
                         except Exception, e:
@@ -102,5 +107,5 @@ class InventoryProvisioner(ProvisionerI):
                     else:
                         tmp.append(entity)
                 entities = tmp[:]
-                self.logger.info('Setting user entities corresponding to user profile %s: %s' % (profile, str(entities)))
+                self.logger.info("Setting user '%s' entities corresponding to user profile '%s': %s" % (uid, profile, str(entities)))
             Inventory().setUserEntities(uid, entities)
