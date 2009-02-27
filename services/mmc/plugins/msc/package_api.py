@@ -329,6 +329,9 @@ class SendBundleCommand:
                 params['do_inventory'] = 'off'
                 params['issue_halt_to'] = ''
             
+            # override possible choice of do_reboot from the gui by the one declared in the package 
+            # (in bundle mode, the gui does not offer enough choice to say when to reboot)
+            params['do_reboot'] = pinfos['do_reboot']
             cmd = prepareCommand(pinfos, params)
             command = cmd.copy()
             command['package_id'] = pid
@@ -354,7 +357,8 @@ def prepareCommand(pinfos, params):
     """
     ret = {}
     ret['start_file'] = pinfos['command']['command']
-    ret['do_reboot'] = pinfos['do_reboot']
+    ret['do_reboot'] = params['do_reboot']
+    ret['do_reboot'] = ((ret['do_reboot'] == 'enable' or ret['do_reboot'] == 'on') and 'enable' or 'disable')
     #TODO : check that params has needed values, else put default one
     # as long as this method is called from the MSC php, the fields should be
     # set, but, if someone wants to call it from somewhere else...

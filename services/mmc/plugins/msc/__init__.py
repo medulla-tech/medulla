@@ -442,6 +442,9 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_issue_halt_to(self):
         return xmlrpcCleanup(MscConfig().web_def_issue_halt_to)
+    
+    def get_web_def_show_reboot(self):
+        return xmlrpcCleanup(MscConfig().web_show_reboot)
 
     def get_web_def_probe_order(self):
         return xmlrpcCleanup(MscConfig().web_probe_order)

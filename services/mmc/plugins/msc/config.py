@@ -76,6 +76,7 @@ class MscConfig(MscDatabaseConfig):
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
     web_def_issue_halt_to = ""
+    web_show_reboot = False
     web_dlpath = []
     # Max bandwith to use to download a file
     web_def_dlmaxbw = 0
@@ -241,6 +242,8 @@ class MscConfig(MscDatabaseConfig):
                     self.web_def_issue_halt_to.append(wdiht)
                 else:
                     logging.getLogger().warn("Plugin MSC: web_def_issue_halt_to cannot be '%s' (possible choices : %s)"%(wdiht, str(p_wdiht)))
+        if self.cp.has_option("web", "web_show_reboot"):
+            self.web_show_reboot = self.cp.getboolean("web", "web_show_reboot")
         if self.cp.has_option("web", "web_dlpath"):
             self.web_dlpath = []
             dlpaths = self.cp.get("web", "web_dlpath")
