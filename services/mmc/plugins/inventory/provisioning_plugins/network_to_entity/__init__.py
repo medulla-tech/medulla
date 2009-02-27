@@ -32,7 +32,7 @@ class PluginEntities(PluginEntitiesI):
 
     def get(self, authtoken):
         nr = NetworkRules('/etc/mmc/plugins/provisioning-inventory')
-        nr.printRules()
+        self.logger.debug('HTTP headers contains:')
         self.logger.debug(authtoken.session.http_headers)
         ret = nr.compute(authtoken)
         return ret
