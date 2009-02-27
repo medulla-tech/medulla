@@ -1033,6 +1033,7 @@ class Inventory(DyngroupDatabaseHelper):
             e = self.klass['Entity']()
             e.Label = name
             session.save(e)
+            session.flush()
         session.close()
 
     def locationExists(self, location):
