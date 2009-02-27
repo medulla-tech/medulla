@@ -46,6 +46,8 @@ class EntitiesRules:
         """
         self.logger.debug("Reading inventory rules file %s" % self.conf)
         for line in file(self.conf):
+            if line.startswith('#'):
+                continue
             try:
                 # The first column may contain the quoted entity list
                 m = re.search('^"(.+)"\W+(.*)$', line)
