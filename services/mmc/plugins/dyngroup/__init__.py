@@ -210,14 +210,11 @@ class RpcProxy(RpcProxyI):
         machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, req)
         # put in the wanted format
         uuids = {}
-        if optimization:
-            for hostname, uuid in machines:
-                uuids[uuid] = {'hostname':hostname, 'uuid' : uuid}
-        else:
-            for m in machines:
-                uuid = m[1]['objectUUID'][0]
-                hostname = m[1]['cn'][0]
-                uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
+        for m in machines:
+            uuid = m[1]['objectUUID'][0]
+            hostname = m[1]['cn'][0]
+            uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
+
         # insert uuid in group with addmembers_to_group
         return self.addmembers_to_group(id, uuids)
 
