@@ -293,8 +293,7 @@ class Inventory(DyngroupDatabaseHelper):
         result = self.getLastMachineInventoryPart(
             ctx, 'Registry',
             {'where' : [criterion, values] } )
-        # Just returns a list of couple (UUID, hostname)
-        ret = map(lambda x: (x[0], x[2]), result)
+        ret = map(lambda x: (False, {'cn':[x[0]], 'objectUUID':[x[2]]}), result)
         return ret
 
     def getComputersOptimized(self, ctx, filt):
