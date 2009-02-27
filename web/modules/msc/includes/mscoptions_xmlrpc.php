@@ -32,6 +32,10 @@ function __web_def_in_session($option) {
     return $_SESSION[$option];
 }
 
+function web_def_show_reboot() {
+    return __web_def_in_session("show_reboot");
+}
+
 function web_def_awake() {
     return __web_def_in_session("awake");
 }

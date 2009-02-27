@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-23 20:31+0200\n"
+"POT-Creation-Date: 2008-10-26 08:52+0100\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -60,12 +60,12 @@ msgstr "%s na %s"
 msgid "%s status"
 msgstr "status %s"
 
-#: msc/msc/tabs.php:37 msc/msc/tabs.php:44
+#: msc/msc/tabs.php:37 msc/msc/tabs.php:45
 #, fuzzy, php-format
 msgid "%s's computer secure control"
 msgstr "bezpieczna kontrola grupy %s"
 
-#: msc/msc/tabs.php:60
+#: msc/msc/tabs.php:61
 #, php-format
 msgid "%s's group secure control"
 msgstr "bezpieczna kontrola grupy %s"
@@ -81,6 +81,11 @@ msgstr ""
 #, php-format
 msgid "(with %s beeing unreachable)"
 msgstr "(gdy %s jest niedostępne)"
+
+#: msc/msc/ajaxLogsFilter.php:239
+#, php-format
+msgid ", using proxy %s"
+msgstr ""
 
 #: msc/msc/msctabsstatus.php:90
 #, fuzzy, php-format
@@ -307,7 +312,7 @@ msgstr ""
 msgid "Actions in bundle"
 msgstr ""
 
-#: msc/msc/start_command.php:152
+#: msc/msc/start_command.php:157
 msgid "Advanced"
 msgstr "Zaawansowane"
 
@@ -315,7 +320,7 @@ msgstr "Zaawansowane"
 msgid "Advanced launch bundle"
 msgstr ""
 
-#: msc/includes/widgets.inc.php:256 msc/includes/widgets.inc.php:375
+#: msc/includes/widgets.inc.php:264 msc/includes/widgets.inc.php:383
 #, fuzzy
 msgid "All users commands"
 msgstr "Pauzuj polecenie"
@@ -366,7 +371,7 @@ msgid ""
 "download may last a long time"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:289
+#: msc/msc/ajaxLogsFilter.php:299
 #, fuzzy
 msgid "Client"
 msgstr "inwent."
@@ -394,7 +399,7 @@ msgstr "Czas wygaśnięcia polecenia"
 msgid "Command line to run"
 msgstr "Nastepne uruchomienie polecenia"
 
-#: msc/msc/launch.php:259 msc/includes/command_history.php:110
+#: msc/msc/launch.php:263 msc/includes/command_history.php:110
 #: msc/includes/command_history.php:285
 msgid "Command name"
 msgstr "Nazwa polecenia"
@@ -441,7 +446,7 @@ msgstr ""
 msgid "Connection was refused by the other side."
 msgstr ""
 
-#: msc/msc/launch.php:293 msc/includes/bundle_widgets.php:352
+#: msc/msc/launch.php:304 msc/includes/bundle_widgets.php:352
 msgid "Copy Mode"
 msgstr "Tryb kopiowania"
 
@@ -468,7 +473,7 @@ msgstr "obecny_stan"
 msgid "Current Proxy"
 msgstr "obecny_stan"
 
-#: msc/msc/ajaxLogsFilter.php:291 msc/includes/command_history.php:37
+#: msc/msc/ajaxLogsFilter.php:301 msc/includes/command_history.php:37
 #, fuzzy
 msgid "Current State"
 msgstr "obecny_stan"
@@ -491,7 +496,7 @@ msgstr "Opóźnienie między połączeniami"
 msgid "Delay between two connections"
 msgstr "Opóźnienie między 2 połączeniami"
 
-#: msc/msc/launch.php:279
+#: msc/msc/launch.php:290
 #, fuzzy
 msgid "Delay between two connections (minutes)"
 msgstr "Opóźnienie między połączeniami"
@@ -514,7 +519,7 @@ msgstr "Usuwanie nieudane"
 msgid "Delete file"
 msgstr "Usuwanie nieudane"
 
-#: msc/msc/launch.php:271 msc/includes/bundle_widgets.php:329
+#: msc/msc/launch.php:275 msc/includes/bundle_widgets.php:329
 msgid "Delete files after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
 
@@ -527,16 +532,16 @@ msgstr "Usuń pliki po zakończeniu wykonywania"
 msgid "Delete in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/msc/start_command.php:118
+#: msc/msc/start_command.php:123
 #, php-format
 msgid "Deploy <b>%s v.%s</b><br/> on <b>%s</b>"
 msgstr "Wdroż  <b>%s w.%s</b><br/> na <b>%s</b>"
 
-#: msc/msc/launch.php:298 msc/includes/bundle_widgets.php:357
+#: msc/msc/launch.php:309 msc/includes/bundle_widgets.php:357
 msgid "Deploy using a local proxy"
 msgstr ""
 
-#: msc/msc/launch.php:282 msc/includes/command_history.php:288
+#: msc/msc/launch.php:293 msc/includes/command_history.php:288
 #: msc/includes/bundle_widgets.php:342
 msgid "Deployment interval"
 msgstr ""
@@ -550,7 +555,7 @@ msgstr ""
 msgid "Details"
 msgstr "Szczegóły"
 
-#: msc/msc/launch.php:272
+#: msc/msc/launch.php:276
 #, fuzzy
 msgid "Do an inventory after a successful execution"
 msgstr "Usuń pliki po zakończeniu wykonywania"
@@ -581,7 +586,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:283 msc/logs/ajaxLogsFilter.php:129
+#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:129
 msgid "End date"
 msgstr "Data zakończenia"
 
@@ -663,12 +668,12 @@ msgstr ""
 msgid "Get a downloaded file"
 msgstr ""
 
-#: msc/msc/launch.php:249
+#: msc/msc/launch.php:253
 #, fuzzy, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 
-#: msc/msc/launch.php:273 msc/includes/bundle_widgets.php:332
+#: msc/msc/launch.php:277 msc/includes/bundle_widgets.php:332
 msgid "Halt client after"
 msgstr ""
 
@@ -691,7 +696,7 @@ msgstr "Usuwanie nieudane"
 msgid "Halt in progress"
 msgstr "Usuwanie trwa"
 
-#: msc/msc/tabs.php:48 msc/msc/tabs.php:64
+#: msc/msc/tabs.php:49 msc/msc/tabs.php:65
 msgid "History"
 msgstr "Historia"
 
@@ -736,11 +741,11 @@ msgstr "Data utworzenia"
 msgid "Launch"
 msgstr "Uruchom"
 
-#: msc/msc/tabs.php:45 msc/msc/tabs.php:61
+#: msc/msc/tabs.php:46 msc/msc/tabs.php:62
 msgid "Launch Actions"
 msgstr "Akcje Uruchaiania"
 
-#: msc/msc/tabs.php:46 msc/msc/tabs.php:62 msc/includes/bundle_widgets.php:199
+#: msc/msc/tabs.php:47 msc/msc/tabs.php:63 msc/includes/bundle_widgets.php:199
 #, fuzzy
 msgid "Launch Bundle"
 msgstr "Uruchom"
@@ -757,7 +762,7 @@ msgstr "Wykonaj polecenie szybkeij akcji"
 msgid "Length"
 msgstr ""
 
-#: msc/msc/local_proxy.php:215
+#: msc/msc/local_proxy.php:216
 msgid "Local Proxy Mode"
 msgstr ""
 
@@ -765,11 +770,11 @@ msgstr ""
 msgid "Local proxies"
 msgstr ""
 
-#: msc/msc/local_proxy.php:245
+#: msc/msc/local_proxy.php:247
 msgid "Local proxies selection"
 msgstr ""
 
-#: msc/msc/tabs.php:47 msc/msc/tabs.php:63
+#: msc/msc/tabs.php:48 msc/msc/tabs.php:64
 msgid "Logs"
 msgstr "Logi"
 
@@ -821,41 +826,41 @@ msgstr "Zakładka logów MSC"
 msgid "MSC logs tab for a machine"
 msgstr "Zakładka logów MSC"
 
-#: msc/msc/launch.php:285 msc/includes/bundle_widgets.php:343
+#: msc/msc/launch.php:296 msc/includes/bundle_widgets.php:343
 #, fuzzy
 msgid "Max bandwidth (b/s)"
 msgstr "Maksymalna przepustowość"
 
-#: msc/msc/local_proxy.php:224
-#, fuzzy
-msgid "Maximum number of clients per local proxy"
-msgstr "Maksymalna liczba prób połączenia"
-
-#: msc/msc/launch.php:278 msc/includes/bundle_widgets.php:338
+#: msc/msc/launch.php:289 msc/includes/bundle_widgets.php:338
 msgid "Maximum number of connection attempt"
 msgstr "Maksymalna liczba prób połączenia"
 
-#: msc/msc/ajaxLogsFilter.php:288
+#: msc/msc/local_proxy.php:225
+#, fuzzy
+msgid "Maximum number of simultaneous connections to a proxy"
+msgstr "Maksymalna liczba prób połączenia"
+
+#: msc/msc/ajaxLogsFilter.php:298
 #, fuzzy
 msgid "Mode"
 msgstr "tryb"
 
-#: msc/msc/local_proxy.php:206 msc/includes/command_history.php:258
+#: msc/msc/local_proxy.php:207 msc/includes/command_history.php:258
 #, fuzzy
 msgid "Multiple"
 msgstr "Tytuł polecenia"
 
-#: msc/msc/ajaxLogsFilter.php:236
-#, fuzzy
-msgid "Multiple, client"
+#: msc/msc/ajaxLogsFilter.php:246
+#, fuzzy, php-format
+msgid "Multiple, client mode%s"
 msgstr "Tytuł polecenia"
 
-#: msc/msc/ajaxLogsFilter.php:238
+#: msc/msc/ajaxLogsFilter.php:248
 #, fuzzy
-msgid "Multiple, server"
+msgid "Multiple, server mode"
 msgstr "Tytuł polecenia"
 
-#: msc/includes/widgets.inc.php:256 msc/includes/widgets.inc.php:375
+#: msc/includes/widgets.inc.php:264 msc/includes/widgets.inc.php:383
 #, fuzzy
 msgid "My commands"
 msgstr "Odtwórz polecenie"
@@ -895,11 +900,11 @@ msgstr "Zrobione"
 msgid "None (Local Proxy Client)"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:233 msc/msc/ajaxLogsFilter.php:245
+#: msc/msc/ajaxLogsFilter.php:243 msc/msc/ajaxLogsFilter.php:255
 msgid "Normal"
 msgstr ""
 
-#: msc/msc/tabs.php:71
+#: msc/msc/tabs.php:72
 msgid "Not enough informations"
 msgstr "Nie wystarczające informacje"
 
@@ -912,7 +917,7 @@ msgid "One"
 msgstr ""
 
 #: msc/msc/local_proxy.php:73
-msgid "Or choose below : "
+msgid "Or designate the proxies manually below : "
 msgstr ""
 
 #: msc/includes/widgets.inc.php:33
@@ -1000,7 +1005,7 @@ msgstr "Potwierdź, czy napewno chcesz wykonać tą akcję"
 msgid "Possible actions"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:292
+#: msc/msc/ajaxLogsFilter.php:302
 #, fuzzy
 msgid "Progression"
 msgstr "w trakcie zatrzymywania"
@@ -1029,12 +1034,17 @@ msgid "Quick action path %s don't exists"
 msgstr "Scieżka szybkiej akcji na %s nie isntnieje"
 
 #: msc/msc/local_proxy.php:67
-msgid "Random : "
+msgid "Random (indicate number of proxies) : "
 msgstr ""
 
 #: msc/msc/ajaxDownloadFile.php:72
 msgid "Ready"
 msgstr ""
+
+#: msc/msc/launch.php:284
+#, fuzzy
+msgid "Reboot client"
+msgstr "Usuwanie nieudane"
 
 #: msc/includes/command_history.php:304
 #, fuzzy
@@ -1095,7 +1105,7 @@ msgstr "Zaplanowane na"
 msgid "Scheduler"
 msgstr "Zaplanowane na"
 
-#: msc/msc/launch.php:260
+#: msc/msc/launch.php:264
 #, fuzzy
 msgid "Script parameters"
 msgstr "Parametry polecenia"
@@ -1163,28 +1173,30 @@ msgstr "Pokaż logi zadań oczekujących"
 msgid "Show running task's logs"
 msgstr "Pokaż logi trwających zadań"
 
-#: msc/msc/launch.php:240
+#: msc/msc/launch.php:244
 #, fuzzy, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Zaawansowana akcja uruchamiania  \"%s\" na \"%s\""
 
-#: msc/msc/local_proxy.php:206 msc/includes/command_history.php:260
+#: msc/msc/local_proxy.php:207 msc/includes/command_history.php:260
 msgid "Single with fallback"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:241
-msgid "Single, client"
+#: msc/msc/ajaxLogsFilter.php:251
+#, php-format
+msgid "Single, client mode%s"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:243
-msgid "Single, server"
-msgstr ""
+#: msc/msc/ajaxLogsFilter.php:253
+#, fuzzy
+msgid "Single, server mode"
+msgstr "Tytuł polecenia"
 
 #: msc/msc/ajaxLogsFilter.php:82 msc/logs/ajaxLogsFilter.php:65
 msgid "Start"
 msgstr "Start"
 
-#: msc/msc/launch.php:261 msc/includes/command_history.php:117
+#: msc/msc/launch.php:265 msc/includes/command_history.php:117
 #: msc/includes/command_history.php:300
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Uruchom zapytanie \"Wake On Lan\" jeżeli nie uda się połączyć"
@@ -1199,7 +1211,7 @@ msgstr "Uruchom akcję %s na hoście %s"
 msgid "Start action on this group"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: msc/msc/ajaxLogsFilter.php:285 msc/logs/ajaxLogsFilter.php:131
+#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:131
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -1220,7 +1232,7 @@ msgstr "Rozpocznij inwentaryzację"
 msgid "Start inventory agent"
 msgstr "Rozpocznij agenta inwentaryzacji"
 
-#: msc/msc/launch.php:270
+#: msc/msc/launch.php:274
 #, fuzzy
 msgid "Start script"
 msgstr "Rozpocznik skrypt"
@@ -1266,12 +1278,12 @@ msgstr "Stop"
 msgid "Target plateform is %s"
 msgstr ""
 
-#: msc/msc/launch.php:280
+#: msc/msc/launch.php:291
 #, fuzzy
 msgid "The command may start after"
 msgstr "Data uruchomienia polecenia"
 
-#: msc/msc/launch.php:281
+#: msc/msc/launch.php:292
 #, fuzzy
 msgid "The command must stop before"
 msgstr "Data uruchomienia polecenia"
@@ -1413,7 +1425,7 @@ msgstr "Akcje Uruchaiania"
 msgid "are"
 msgstr ""
 
-#: msc/msc/start_command.php:146 msc/includes/bundle_widgets.php:286
+#: msc/msc/start_command.php:151 msc/includes/bundle_widgets.php:286
 msgid "awake"
 msgstr "budź"
 
@@ -1473,7 +1485,7 @@ msgstr "usunięto"
 msgid "disable"
 msgstr ""
 
-#: msc/msc/launch.php:273 msc/includes/command_history.php:277
+#: msc/msc/launch.php:277 msc/includes/command_history.php:277
 #: msc/includes/bundle_widgets.php:332
 #, fuzzy
 msgid "done"
@@ -1540,7 +1552,7 @@ msgstr ""
 msgid "have"
 msgstr ""
 
-#: msc/msc/start_command.php:148 msc/includes/bundle_widgets.php:288
+#: msc/msc/start_command.php:153 msc/includes/bundle_widgets.php:288
 msgid "invent."
 msgstr "inwent."
 
@@ -1553,7 +1565,7 @@ msgstr "Inwentaryzacja nieudana"
 msgid "is"
 msgstr ""
 
-#: msc/msc/launch.php:82 msc/msc/launch.php:145
+#: msc/msc/launch.php:82 msc/msc/launch.php:149
 msgid "never"
 msgstr "nigdy"
 
@@ -1564,7 +1576,7 @@ msgstr "nigdy"
 msgid "no"
 msgstr "teraz"
 
-#: msc/msc/launch.php:80 msc/msc/launch.php:142
+#: msc/msc/launch.php:80 msc/msc/launch.php:146
 msgid "now"
 msgstr "teraz"
 
@@ -1580,11 +1592,11 @@ msgstr ""
 msgid "over_time"
 msgstr ""
 
-#: msc/msc/launch.php:290 msc/includes/bundle_widgets.php:349
+#: msc/msc/launch.php:301 msc/includes/bundle_widgets.php:349
 msgid "push"
 msgstr "pchnij"
 
-#: msc/msc/launch.php:290 msc/includes/bundle_widgets.php:349
+#: msc/msc/launch.php:301 msc/includes/bundle_widgets.php:349
 msgid "push / pull"
 msgstr "pchnij / pobierz"
 
@@ -1696,6 +1708,10 @@ msgstr "Bajtów"
 
 #~ msgid "MSC"
 #~ msgstr "MSC"
+
+#, fuzzy
+#~ msgid "Maximum number of clients per local proxy"
+#~ msgstr "Maksymalna liczba prób połączenia"
 
 #, fuzzy
 #~ msgid "Processing interval"

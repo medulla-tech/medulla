@@ -279,6 +279,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_over_time", _T("over time", "msc"))), array("value" => $_GET['issue_halt_to_over_time'] == 'on' ? 'checked' : ''));
     $f->add(new TrFormElement('', new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_GET['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
 
+    $do_reboot = quick_get('do_reboot', True);
+    if (web_def_show_reboot()) {
+        $f->add(new TrFormElement(_T('Reboot client', 'msc'), new CheckboxTpl("do_reboot")), array("value" => $do_reboot == 'on' ? 'checked' : ''));
+    } else {
+        $f->add(new HiddenTpl("do_reboot"), array("value" => $do_reboot, "hide" => True));
+    }
+
     $f->add(new TrFormElement(_T('Maximum number of connection attempt', 'msc'),        new InputTpl("max_connection_attempt")), array("value" => quick_get('max_connection_attempt')));
     $f->add(new TrFormElement(_T('Delay between two connections (minutes)', 'msc'),     new InputTpl("next_connection_delay")), array("value" => quick_get('next_connection_delay')));
     $f->add(new TrFormElement(_T('The command may start after', 'msc'),                 new DynamicDateTpl('start_date')), array('ask_for_now' => 1, "value"=>quick_get('start_date')));
