@@ -136,7 +136,7 @@ $cmds = array(
 );
 
 $options = array(
-    array('reboot', _T('Need a reboot ?', 'pkgs'))
+    array('do_reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
 foreach ($fields as $p) {
@@ -147,9 +147,10 @@ foreach ($fields as $p) {
 }
 
 foreach ($options as $p) {
+    $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] == 'enable');
     $f->add(
         new TrFormElement($p[1], new CheckboxTpl($p[0])),
-        array("value" => ($package[$p[0]] == 1 ? 'checked' : ''))
+        array("value" => ($op ? 'checked' : ''))
     );
 }
 
