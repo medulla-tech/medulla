@@ -82,17 +82,17 @@ class MscDownloadProcess:
 
     def _gotScheduler(self, result):
         if not result:
-            scheduler_name = MscConfig("msc").default_scheduler
+            scheduler_name = MscConfig().default_scheduler
         else:
             scheduler_name = result
-        if scheduler_name not in MscConfig('msc').schedulers:
+        if scheduler_name not in MscConfig().schedulers:
             return Failure("scheduler %s does not exist" % (scheduler_name))
 
         # Create the lock file
         f = file(self.lockfile, 'w+')
         f.close()        
         # Start download process
-        d = getProxy(MscConfig('msc').schedulers[scheduler_name]).callRemote(
+        d = getProxy(MscConfig().schedulers[scheduler_name]).callRemote(
             'download_file',
             self.computer[1]['objectUUID'][0],
             self.computer[1]['fullname'],
@@ -136,7 +136,7 @@ class MscDownloadedFiles:
 
     def __init__(self, userid):
         self.userid = userid
-        self.storage = os.path.join(MscConfig('msc').download_directory_path, self.userid)
+        self.storage = os.path.join(MscConfig().download_directory_path, self.userid)
 
     def isDownloadInProgress(self):
         """
