@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-02 16:57+0100\n"
-"PO-Revision-Date: 2009-03-02 17:00+0100\n"
+"PO-Revision-Date: 2009-03-02 17:59+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -147,19 +147,19 @@ msgstr "<b>%s</b> installations de packages ont réussi"
 
 #: msc/includes/command_history.php:323
 msgid "<b>Command Environment</b>"
-msgstr "<b>Environment de Command</b>"
+msgstr "<b>Environment de la commande</b>"
 
 #: msc/includes/command_history.php:340
 msgid "<b>Command Life Cycle</b>"
-msgstr "<b>Cycle de vie de la Command</b>"
+msgstr "<b>Cycle de vie de la commande</b>"
 
 #: msc/includes/command_history.php:290
 msgid "<b>Command Overview</b>"
-msgstr "<b>Survol de la Commande</b>"
+msgstr "<b>Résumé de la commande</b>"
 
 #: msc/includes/command_history.php:307
 msgid "<b>Command Stages</b>"
-msgstr "<b>Étapes de la Commande</b>"
+msgstr "<b>Étapes de la commande</b>"
 
 #: msc/msc/msctabsstatus.php:98
 msgid "<b>No</b> computer failed to deploy"
