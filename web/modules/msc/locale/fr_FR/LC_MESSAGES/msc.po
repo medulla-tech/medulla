@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-26 18:38+0100\n"
-"PO-Revision-Date: 2009-02-12 19:18+0100\n"
+"POT-Creation-Date: 2009-03-02 16:57+0100\n"
+"PO-Revision-Date: 2009-03-02 17:00+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -454,21 +454,21 @@ msgstr "Date de création"
 msgid "Csv's export"
 msgstr "Export csv"
 
+#: msc/msc/ajaxLogsFilter.php:301 msc/includes/command_history.php:37
+msgid "Current State"
+msgstr "État actuel"
+
 #: msc/includes/command_history.php:320
-msgid "Current Launcher"
+msgid "Current launcher"
 msgstr "Launcher actuel"
 
 #: msc/includes/command_history.php:321
-msgid "Current Proxy"
+msgid "Current proxy"
 msgstr "Proxy actuel"
-
-#: msc/msc/ajaxLogsFilter.php:301 msc/includes/command_history.php:37
-msgid "Current State"
-msgstr "État Actuel"
 
 #: msc/logs/ajaxLogsFilter.php:141
 msgid "Current state"
-msgstr "État Actuel"
+msgstr "État actuel"
 
 #: msc/logs/ajaxLogsFilter.php:133
 msgid "Date"
@@ -476,7 +476,7 @@ msgstr "Date"
 
 #: msc/includes/command_history.php:335
 msgid "Delay between two attempts (minutes)"
-msgstr "Délais entre deux tentatives (minutes)"
+msgstr "Délai entre deux tentatives (minutes)"
 
 #: msc/includes/command_history.php:118
 msgid "Delay between two connections"
@@ -523,16 +523,16 @@ msgstr "Déploiement de <b>%s v.%s</b><br/> sur <b>%s</b>"
 msgid "Deploy using a local proxy"
 msgstr "Déploiement par proxy local"
 
-#: msc/msc/launch.php:293 msc/includes/command_history.php:288
-#: msc/includes/bundle_widgets.php:342
+#: msc/msc/launch.php:293 msc/includes/bundle_widgets.php:342
+#: msc/includes/command_history.php:288
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
-#: msc/msc/ajaxPackageFilter.php:114 msc/msc/history.php:51
-#: msc/msc/history.php:86 msc/msc/history.php:92 msc/msc/history.php:110
-#: msc/msc/logs.php:51 msc/msc/logs.php:63 msc/msc/logs.php:100
-#: msc/msc/logs.php:106 msc/msc/logs.php:124 msc/msc/packages.php:44
-#: msc/msc/ajaxLogsFilter.php:88 msc/msc/ajaxLogsFilter.php:90
+#: msc/msc/history.php:51 msc/msc/history.php:86 msc/msc/history.php:92
+#: msc/msc/history.php:110 msc/msc/logs.php:51 msc/msc/logs.php:63
+#: msc/msc/logs.php:100 msc/msc/logs.php:106 msc/msc/logs.php:124
+#: msc/msc/ajaxPackageFilter.php:114 msc/msc/ajaxLogsFilter.php:88
+#: msc/msc/ajaxLogsFilter.php:90 msc/msc/packages.php:44
 #: msc/logs/ajaxLogsFilter.php:68 msc/logs/ajaxLogsFilter.php:69
 msgid "Details"
 msgstr "Détails"
@@ -966,12 +966,12 @@ msgid "Progression"
 msgstr "Progression"
 
 #: msc/includes/command_history.php:317
-msgid "Proxy Mode"
-msgstr "Mode de Proxy"
+msgid "Proxy mode"
+msgstr "Mode de proxy"
 
 #: msc/includes/command_history.php:318
-msgid "Proxy Priority"
-msgstr "Priorité du Proxy"
+msgid "Proxy priority"
+msgstr "Priorité du proxy"
 
 #: msc/includes/widgets.inc.php:194
 msgid "Quick action list is empty"
@@ -1036,7 +1036,7 @@ msgid "Rescheduled"
 msgstr "Re-programmé"
 
 #: msc/includes/command_history.php:316
-msgid "Reserved bandswidth"
+msgid "Reserved bandwidth"
 msgstr "Bande passante réservée"
 
 #: msc/msc/ajaxPingProbe.php:55
@@ -1071,7 +1071,7 @@ msgstr "Contrôle sécurisé de l'ordinateur"
 msgid "Set order"
 msgstr "Définir l'ordre"
 
-#: msc/logs/localSidebar.php:30 msc/logs/finished.php:33
+#: msc/logs/finished.php:33 msc/logs/localSidebar.php:30
 msgid "Show all finished task's logs"
 msgstr "Montrer toutes les actions finies"
 
@@ -1083,7 +1083,7 @@ msgstr "Montrer toutes les actions"
 msgid "Show all pending task's logs"
 msgstr "Montrer toutes les actions en attente"
 
-#: msc/logs/localSidebar.php:29 msc/logs/running.php:33
+#: msc/logs/running.php:33 msc/logs/localSidebar.php:29
 msgid "Show all running task's logs"
 msgstr "Montrer toutes les actions en cours"
 
@@ -1184,7 +1184,7 @@ msgstr "Démarrer le script"
 msgid "State"
 msgstr "État"
 
-#: msc/msc/ajaxLogsFilter.php:85 msc/msc/ajaxDownloadFile.php:85
+#: msc/msc/ajaxDownloadFile.php:85 msc/msc/ajaxLogsFilter.php:85
 msgid "Status"
 msgstr "Statut"
 
@@ -1246,7 +1246,7 @@ msgid ""
 msgstr ""
 "Le nom de l'ordinateur ne correspond pas à celui présent dans l'inventaire."
 
-#: msc/msc/download_file.php:45 msc/msc/download_file_get.php:28
+#: msc/msc/download_file_get.php:28 msc/msc/download_file.php:45
 msgid "The download has failed."
 msgstr "Le téléchargement a échoué"
 
@@ -1314,8 +1314,8 @@ msgstr "Période de validité"
 msgid "Value"
 msgstr "Valeur"
 
-#: msc/msc/ajaxPackageFilter.php:102 msc/msc/packages.php:41
-#: msc/msc/package_detail.php:36
+#: msc/msc/ajaxPackageFilter.php:102 msc/msc/package_detail.php:36
+#: msc/msc/packages.php:41
 msgid "Version"
 msgstr "Version"
 
@@ -1414,8 +1414,8 @@ msgstr "Suppression"
 msgid "disable"
 msgstr "désactivé"
 
-#: msc/msc/launch.php:277 msc/includes/command_history.php:277
-#: msc/includes/bundle_widgets.php:332
+#: msc/msc/launch.php:277 msc/includes/bundle_widgets.php:332
+#: msc/includes/command_history.php:277
 msgid "done"
 msgstr "Terminé"
 
@@ -1605,27 +1605,3 @@ msgstr "en attente de téléchargement pour la seconde fois"
 #: msc/includes/command_history.php:304
 msgid "yes"
 msgstr "oui"
-
-#~ msgid "%s on %s (Bundle #%s)"
-#~ msgstr "%s sur %s (Ensemble d'applications #%s)"
-
-#~ msgid "Maximum number of clients per local proxy"
-#~ msgstr "Nombre maximal de tentatives de connexions"
-
-#~ msgid "Or choose below : "
-#~ msgstr "Ou choissisez en dessous"
-
-#~ msgid "Random : "
-#~ msgstr "Aléatoire :"
-
-#~ msgid "Select local proxies"
-#~ msgstr "Sélectionner un proxy local"
-
-#~ msgid "do_inventory"
-#~ msgstr "Démarrer un inventaire"
-
-#~ msgid "do_wol"
-#~ msgstr "Lancement d'un réveil réseau"
-
-#~ msgid "start_script"
-#~ msgstr "Démarrer le script"
