@@ -145,6 +145,8 @@ function xmlCall($method, $params = null) {
     /* Connect to the XML-RPC server */
     if ($_SESSION["XMLRPC_agent"]["scheme"] == "https") {
         $prot = "ssl://";
+    } else {
+        $prot = "";
     }
 
     list($sock, $errNo, $errString) = openSocket($prot, $conf);
