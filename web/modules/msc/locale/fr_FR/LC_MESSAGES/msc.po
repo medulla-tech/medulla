@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-02 16:57+0100\n"
-"PO-Revision-Date: 2009-03-02 17:59+0100\n"
+"POT-Creation-Date: 2009-03-02 18:18+0100\n"
+"PO-Revision-Date: 2009-03-02 18:19+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -586,14 +586,6 @@ msgstr ""
 "Erreur lors de la connexion à l'agent sécurisé de cette machine.Veuillez "
 "vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette "
 "machine."
-
-#: msc/infoPackage.inc.php:125
-msgid "Establish a VNC connection"
-msgstr "Établir une connexion VNC"
-
-#: msc/msc/vnc_client.php:162
-msgid "Establish a VNC connection to this computer"
-msgstr "Établir une connexion VNC vers cet ordinateur"
 
 #: msc/includes/widgets.inc.php:171
 msgid "Execute action..."
@@ -1209,6 +1201,14 @@ msgstr "Stopper une commande"
 #: msc/includes/functions.php:50
 msgid "Stopped"
 msgstr "Arrêté"
+
+#: msc/infoPackage.inc.php:125
+msgid "Take control of a computer"
+msgstr "Prendre le contrôle d'un ordinateur"
+
+#: msc/msc/vnc_client.php:162
+msgid "Take control of this computer"
+msgstr "Prendre le contrôle de cet ordinateur"
 
 #: msc/msc/ajaxPingProbe.php:58 msc/msc/ajaxPingProbe.php:80
 #, php-format
