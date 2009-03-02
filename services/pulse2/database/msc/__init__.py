@@ -416,8 +416,13 @@ class MscDatabase(DatabaseHelper):
             ret = ret.filter(or_(self.commands_on_host.c.host.like('%'+filt+'%'), self.commands.c.title.like('%'+filt+'%')))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
-        ret = ret.order_by(asc(self.commands_on_host.c.next_launch_date))
-        l = map(lambda x: (x[0].toH(), x[1].toH(), x[2].toH()), ret.all())
+        ret = ret.order_by(desc(self.commands_on_host.c.id))
+        l = []
+        for x in ret.all():
+            bundle = x[3]
+            if bundle != None:
+                bundle = bundle.toH()
+            l.append([x[0].toH(), x[1].toH(), x[2].toH(), bundle])
         session.close()
         return l
 
@@ -438,7 +443,6 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return c
 
-# OLIVIER TODO
     def getAllCommandsonhostByType(self, ctx, type, min, max, filt = ''): # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         ret = self.__queryAllCommandsonhostBy(session, ctx)
@@ -454,13 +458,13 @@ class MscDatabase(DatabaseHelper):
             ret = ret.filter(self.commands_on_host.c.current_state.in_('done', 'failed', 'over_timed'))
         ret = ret.offset(int(min))
         ret = ret.limit(int(max)-int(min))
-        ret = ret.order_by(desc(self.commands_on_host.c.id)) #next_launch_date))
+        ret = ret.order_by(desc(self.commands_on_host.c.id))
         l = []
         for x in ret.all():
             bundle = x[3]
             if bundle != None:
                 bundle = bundle.toH()
-            l.append([x[0].toH(), x[1].toH(), x[2].toH(), bundle]) # = map(lambda x: (x[0].toH(), x[1].toH(), x[2].toH()), ret.all())
+            l.append([x[0].toH(), x[1].toH(), x[2].toH(), bundle])
         session.close()
         return l
 
