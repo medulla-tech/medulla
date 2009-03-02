@@ -30,9 +30,9 @@ msgid ""
 "access it"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:97
+#: msc/logs/ajaxLogsFilter.php:103
 #, php-format
-msgid "%s on %s"
+msgid "%s on %s %s"
 msgstr ""
 
 #: msc/includes/widgets.inc.php:43
@@ -65,6 +65,11 @@ msgstr ""
 #: msc/msc/ajaxLogsFilter.php:239
 #, php-format
 msgid ", using proxy %s"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:100
+#, php-format
+msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
 msgstr ""
 
 #: msc/msc/msctabsstatus.php:90
@@ -346,7 +351,7 @@ msgid "Close window"
 msgstr ""
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:195
-#: msc/logs/ajaxLogsFilter.php:134
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "Command"
 msgstr ""
 
@@ -435,11 +440,11 @@ msgstr ""
 msgid "Current State"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:141
 msgid "Current state"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:133
 msgid "Date"
 msgstr ""
 
@@ -534,7 +539,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:129
+#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:135
 msgid "End date"
 msgstr ""
 
@@ -1117,7 +1122,7 @@ msgstr ""
 msgid "Start action on this group"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:131
+#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:137
 msgid "Start date"
 msgstr ""
 
@@ -1364,7 +1369,7 @@ msgstr ""
 msgid "current_state"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:138
+#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:144
 #: msc/includes/command_history.php:41
 msgid "deleted"
 msgstr ""
@@ -1390,7 +1395,7 @@ msgstr ""
 msgid "error : the bundle_id given does not exists in the database."
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:137
+#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:143
 #: msc/includes/command_history.php:40
 msgid "executed"
 msgstr ""
@@ -1524,7 +1529,7 @@ msgstr ""
 msgid "unreacheable during execution"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:136
+#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:142
 #: msc/includes/command_history.php:39
 msgid "uploaded"
 msgstr ""

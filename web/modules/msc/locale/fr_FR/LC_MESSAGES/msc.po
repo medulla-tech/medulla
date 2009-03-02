@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-26 08:52+0100\n"
+"POT-Creation-Date: 2008-10-26 18:38+0100\n"
 "PO-Revision-Date: 2009-02-12 19:18+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
@@ -53,10 +53,10 @@ msgstr ""
 "L'ordinateur \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas "
 "la permission d'y accéder"
 
-#: msc/logs/ajaxLogsFilter.php:97
+#: msc/logs/ajaxLogsFilter.php:103
 #, php-format
-msgid "%s on %s"
-msgstr "%s sur %s"
+msgid "%s on %s %s"
+msgstr "%s sur %s %s"
 
 #: msc/includes/widgets.inc.php:43
 #, php-format
@@ -88,7 +88,12 @@ msgstr "(dont %s sont injoignables)"
 #: msc/msc/ajaxLogsFilter.php:239
 #, php-format
 msgid ", using proxy %s"
-msgstr ""
+msgstr ", utilisant le proxy %s"
+
+#: msc/logs/ajaxLogsFilter.php:100
+#, php-format
+msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
+msgstr "<a href='' class='bundle' title='%s'>(dans le bundle %s)</a>"
 
 #: msc/msc/msctabsstatus.php:90
 #, php-format
@@ -372,7 +377,7 @@ msgid "Close window"
 msgstr "Fermer la fenêtre"
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:195
-#: msc/logs/ajaxLogsFilter.php:134
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "Command"
 msgstr "Commande"
 
@@ -461,11 +466,11 @@ msgstr "Proxy actuel"
 msgid "Current State"
 msgstr "État Actuel"
 
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:141
 msgid "Current state"
 msgstr "État Actuel"
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:133
 msgid "Date"
 msgstr "Date"
 
@@ -560,7 +565,7 @@ msgstr "Téléchargement de fichiers"
 msgid "Downloading"
 msgstr "Téléchargement en cours"
 
-#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:129
+#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:135
 msgid "End date"
 msgstr "Date de fin"
 
@@ -1146,7 +1151,7 @@ msgstr "Démarrer l'action sur l'ordinateur %s"
 msgid "Start action on this group"
 msgstr "Démarrer l'action sur ce groupe"
 
-#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:131
+#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:137
 msgid "Start date"
 msgstr "Date de démarrage"
 
@@ -1400,7 +1405,7 @@ msgstr "machines ont réussi leur déploiement"
 msgid "current_state"
 msgstr "État"
 
-#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:138
+#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:144
 #: msc/includes/command_history.php:41
 msgid "deleted"
 msgstr "Suppression"
@@ -1426,7 +1431,7 @@ msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 msgid "error : the bundle_id given does not exists in the database."
 msgstr "erreur: l'id de bundle donné n'éxiste psa dans la base de donnée. "
 
-#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:137
+#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:143
 #: msc/includes/command_history.php:40
 msgid "executed"
 msgstr "Exécution"
@@ -1562,7 +1567,7 @@ msgstr "échoué durant le téléchargement"
 msgid "unreacheable during execution"
 msgstr "échoué durant l'exécution"
 
-#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:136
+#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:142
 #: msc/includes/command_history.php:39
 msgid "uploaded"
 msgstr "Envoi"

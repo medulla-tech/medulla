@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-26 08:52+0100\n"
+"POT-Creation-Date: 2008-10-26 18:38+0100\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -50,9 +50,9 @@ msgstr ""
 "Host %s nie jest zdefiniowany w module MSC lub nie masz uprawnień dostępu do "
 "niego."
 
-#: msc/logs/ajaxLogsFilter.php:97
-#, php-format
-msgid "%s on %s"
+#: msc/logs/ajaxLogsFilter.php:103
+#, fuzzy, php-format
+msgid "%s on %s %s"
 msgstr "%s na %s"
 
 #: msc/includes/widgets.inc.php:43
@@ -85,6 +85,11 @@ msgstr "(gdy %s jest niedostępne)"
 #: msc/msc/ajaxLogsFilter.php:239
 #, php-format
 msgid ", using proxy %s"
+msgstr ""
+
+#: msc/logs/ajaxLogsFilter.php:100
+#, php-format
+msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
 msgstr ""
 
 #: msc/msc/msctabsstatus.php:90
@@ -381,7 +386,7 @@ msgid "Close window"
 msgstr ""
 
 #: msc/msc/package_detail.php:36 msc/msc/ajaxLogsFilter.php:195
-#: msc/logs/ajaxLogsFilter.php:134
+#: msc/logs/ajaxLogsFilter.php:140
 msgid "Command"
 msgstr "Polecenie"
 
@@ -478,12 +483,12 @@ msgstr "obecny_stan"
 msgid "Current State"
 msgstr "obecny_stan"
 
-#: msc/logs/ajaxLogsFilter.php:135
+#: msc/logs/ajaxLogsFilter.php:141
 #, fuzzy
 msgid "Current state"
 msgstr "obecny_stan"
 
-#: msc/logs/ajaxLogsFilter.php:127
+#: msc/logs/ajaxLogsFilter.php:133
 msgid "Date"
 msgstr "Data"
 
@@ -586,7 +591,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:129
+#: msc/msc/ajaxLogsFilter.php:293 msc/logs/ajaxLogsFilter.php:135
 msgid "End date"
 msgstr "Data zakończenia"
 
@@ -1211,7 +1216,7 @@ msgstr "Uruchom akcję %s na hoście %s"
 msgid "Start action on this group"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:131
+#: msc/msc/ajaxLogsFilter.php:295 msc/logs/ajaxLogsFilter.php:137
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -1476,7 +1481,7 @@ msgstr "zakończono wdrażanie na komputerach"
 msgid "current_state"
 msgstr "obecny_stan"
 
-#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:138
+#: msc/msc/ajaxLogsFilter.php:202 msc/logs/ajaxLogsFilter.php:144
 #: msc/includes/command_history.php:41
 msgid "deleted"
 msgstr "usunięto"
@@ -1503,7 +1508,7 @@ msgstr ""
 msgid "error : the bundle_id given does not exists in the database."
 msgstr ""
 
-#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:137
+#: msc/msc/ajaxLogsFilter.php:201 msc/logs/ajaxLogsFilter.php:143
 #: msc/includes/command_history.php:40
 msgid "executed"
 msgstr "wykonano"
@@ -1649,7 +1654,7 @@ msgstr "błąd podczas wysyłania"
 msgid "unreacheable during execution"
 msgstr "nie udało się wykonać"
 
-#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:136
+#: msc/msc/ajaxLogsFilter.php:200 msc/logs/ajaxLogsFilter.php:142
 #: msc/includes/command_history.php:39
 msgid "uploaded"
 msgstr "wysłano"
