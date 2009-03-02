@@ -71,10 +71,10 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
     }
 
-    if ($filter['location']) {
+    if (isset($filter['location'])) {
         $filter = $filter['hostname'] . '##'. $filter['location'];
     } else {
-        $filter = $filter['hostname'];
+        $filter = $filter['hostname'] . '##';
     }
 
     $n = null;
