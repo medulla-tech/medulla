@@ -95,7 +95,7 @@ function displayLogs($params) {
 }
 
 function setCommandsFilter($param) {
-    if ($_SESSION["msc_commands_filter"] != $param) {
+    if (empty($_SESSION["msc_commands_filter"]) || $_SESSION["msc_commands_filter"] != $param) {
         /* Only update the value in session if changed */
         $_SESSION["msc_commands_filter"] = $param;
         xmlCall('msc.set_commands_filter', array($param));
