@@ -76,7 +76,7 @@ $a_details = array();
 $n = null;
 
 foreach ($cmds as $item) {
-    list($coh, $cmd, $target) = $item;
+    list($coh, $cmd, $target, $bundle) = $item;
     $coh_id = $coh['id'];
     $cho_status = $coh['current_state'];
 
@@ -94,7 +94,13 @@ foreach ($cmds as $item) {
     } else {
         $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
     }
-    $a_cmd[] = sprintf(_T("%s on %s", 'msc'), $cmd['title'], $coh['host']);
+
+    $bundle_str = '';
+    if ($cmd['fk_bundle']) {
+        $bundle_str = sprintf(_T("<a href='' class='bundle' title='%s'>(in bundle %s)</a>", "msc"), $bundle['title'], $cmd['fk_bundle']);
+    }
+    
+    $a_cmd[] = sprintf(_T("%s on %s %s", 'msc'), $cmd['title'], $coh['host'], $bundle_str);
     $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
     $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
     $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
@@ -167,6 +173,10 @@ li.pause_old a {
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
+}
+a.bundle {
+    text-decoration: none;
+    color: #222222;
 }
 
 
