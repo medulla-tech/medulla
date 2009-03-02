@@ -683,7 +683,7 @@ def stopElapsedCommands(scheduler_name):
         ).filter(sqlalchemy.and_(
             database.commands.c.end_date <= now,
             database.commands.c.end_date != '0000-00-00 00:00:00')
-        ).filter(sqlalchemy.or_(
+        ).filter(sqlalchemy.and_(
             database.commands_on_host.c.current_state != 'failed',
             database.commands_on_host.c.current_state != 'over_timed',
             database.commands_on_host.c.current_state != 'done')
