@@ -313,12 +313,12 @@ class CommandHistory {
 
         ### Display command environment ###
         $values = array(
-            array(_T('Reserved bandswidth', 'msc'),                     $this->db_cmd['maxbw'] == '0' ? _T('<i>none</i>', 'msc') : prettyOctetDisplay($this->db_cmd['maxbw'], 1024, _T('bit/s', 'msc'))),
-            array(_T('Proxy Mode', 'msc'),                              $proxy_mode),
-            array(_T('Proxy Priority', 'msc'),                          $proxy_priority),
+            array(_T('Reserved bandwidth', 'msc'),                     $this->db_cmd['maxbw'] == '0' ? _T('<i>none</i>', 'msc') : prettyOctetDisplay($this->db_cmd['maxbw'], 1024, _T('bit/s', 'msc'))),
+            array(_T('Proxy mode', 'msc'),                              $proxy_mode),
+            array(_T('Proxy priority', 'msc'),                          $proxy_priority),
             array(_T('Scheduler', 'msc'),                               $this->db_coh['scheduler']),
-            array(_T('Current Launcher', 'msc'),                        $this->db_coh['launcher'] == '' ? _T('<i>not available</i>', 'msc') : $this->db_coh['launcher']),
-            array(_T('Current Proxy', 'msc'),                           $current_proxy),
+            array(_T('Current launcher', 'msc'),                        $this->db_coh['launcher'] == '' ? _T('<i>not available</i>', 'msc') : $this->db_coh['launcher']),
+            array(_T('Current proxy', 'msc'),                           $current_proxy),
         );
         $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
         $n->addExtraInfo(array_map("_values", $values), '', '400px');
