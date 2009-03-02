@@ -122,7 +122,7 @@ if (!empty($submod)) {
 
     $submod->addPage($page);
 
-    $page = new Page("vnc_client", _T("Establish a VNC connection", "msc"));
+    $page = new Page("vnc_client", _T("Take control of a computer", "msc"));
     $page->setFile("modules/msc/msc/vnc_client.php");
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
 
