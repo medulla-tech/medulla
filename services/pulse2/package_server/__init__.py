@@ -172,7 +172,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                 args.extend(self.config.package_mirror_level0_command_options)
                 if type(self.config.package_mirror_command_options_ssh_options) == list:
                     args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
-                args.append(str("%s%s" % (pkg.root, os.path.sep)))
+                args.append(str("%s%s" % (os.path.dirname(pkg.root), os.path.sep)))
                 args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                 self.logger.debug("execute mirror level0: %s %s"%(exe, str(args)))
                 return createDeferred(exe, args, pid, target, False)
