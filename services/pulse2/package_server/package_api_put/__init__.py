@@ -63,7 +63,11 @@ class PackageApiPut(PackageApiGet):
         if not ret:
             return [False, 'Some files are missing']
                 
-        ret_assoc = Common().associateFiles(self.mp, pid, files, level)
+        try:
+            ret_assoc = Common().associateFiles(self.mp, pid, files, level)
+        except exceptions.OSError, e:
+           return [False, str(e)]
+
         if not self.config.package_detect_activate:
             # Run the detectNewPackages stuff to register our new package
             # FIXME: the next line force the new package to be detected
