@@ -165,15 +165,15 @@ class ThreadPackageMirror(ThreadPackageHelper):
             out, err, code = result
             if code == 0:
                 pkg = Common().packages[pid]
-                self.logger.debug("Removing %s" % os.path.join(pkg.root, pid))
-                os.rmdir(os.path.join(pkg.root, pid))
+                self.logger.debug("Removing %s" % (pkg.root))
+                os.rmdir(pkg.root)
                 exe = self.config.package_mirror_command
                 args = []
                 args.extend(self.config.package_mirror_level0_command_options)
                 if type(self.config.package_mirror_command_options_ssh_options) == list:
                     args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
                 args.append(str("%s%s" % (pkg.root, os.path.sep)))
-                args.append("%s:%s" % (target, pkg.root))
+                args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                 self.logger.debug("execute mirror level0: %s %s"%(exe, str(args)))
                 return createDeferred(exe, args, pid, target, False)
             else:
@@ -220,7 +220,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                 if type(self.config.package_mirror_command_options_ssh_options) == list:
                     args.extend(['--rsh', '/usr/bin/ssh -o %s'%(" -o ".join(self.config.package_mirror_command_options_ssh_options))])
                 args.append(str(p_dir))
-                args.append("%s:%s" % (target, pkg.root))
+                args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                 self.logger.debug("execute : %s %s"%(exe, str(args)))
 
                 dlist.append(createDeferred(exe, args, pid, target, is_deletion))
