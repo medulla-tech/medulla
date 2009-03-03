@@ -203,7 +203,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
         dlist = []
         for pid, targets, pkg in Common().getPackagesThatNeedRsync():
             exe = self.config.package_mirror_command
-            p_dir = os.path.join(pkg.root, pid)
+            p_dir = pkg.root
             is_deletion = False
             if not os.path.exists(p_dir):
                 # deletion = mirror empty dir + mirror top level on just 1 level
