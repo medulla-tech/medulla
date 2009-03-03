@@ -59,7 +59,7 @@ foreach ($packages as $p) {
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
-    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
+    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending');
 }
 
 $n = new OptimizedListInfos($names, _T("Names", "pkgs"));

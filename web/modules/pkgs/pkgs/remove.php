@@ -28,18 +28,23 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
+    $from = $_GET["from"];
     $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
     if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
     if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
-    header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('p_api'=>$p_api)));
+    $to = "index";
+    if ($from) { $to = $from; }
+    header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api'=>$p_api)));
 } else {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
+    $from = $_GET["from"];
     $f = new PopupForm(_T("Delete this package"));
     $hidden = new HiddenTpl("p_api");
     $f->add($hidden, array("value" => $p_api, "hide" => True));
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
