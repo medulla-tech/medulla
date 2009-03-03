@@ -53,7 +53,11 @@ if (isset($_POST["bassoc"])) {
             new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
             header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
         } else {
-            new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
+            $reason = '';
+            if (count($ret) > 1) {
+                $reason = sprintf(" : <br/>%s", $ret[1]);
+            }
+            new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
         }
     } else {
         new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
