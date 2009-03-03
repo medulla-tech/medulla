@@ -221,7 +221,7 @@ class RpcProxy(RpcProxyI):
     def _range(self, result, start, end):
         if end == -1:
             return (len(result), result[start:len(result)])
-        return (len(result), result[start:end])
+        return (len(result), result[start:end+1])
 
     def pa_adv_getAllPackages(self, filt, start, end):
         start = int(start)
