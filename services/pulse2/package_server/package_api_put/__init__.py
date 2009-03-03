@@ -30,6 +30,7 @@ import twisted.web.xmlrpc
 import logging
 import os
 import time
+import exceptions
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.types import Package
 from pulse2.package_server.common import Common
