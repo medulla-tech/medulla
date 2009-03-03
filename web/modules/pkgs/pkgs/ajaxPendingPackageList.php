@@ -72,6 +72,7 @@ $n->start = 0;
 $n->end = $count - 1;
 
 $n->addActionItemArray(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
+$n->addActionItemArray(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/><br/>";
 $n->display();
