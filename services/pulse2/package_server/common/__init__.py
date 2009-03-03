@@ -499,7 +499,10 @@ class Common(pulse2.utils.Singleton):
                         os.unlink(f1)
                     except:
                         self.logger.warn("File association failed to remove %s"%(f1))
-                shutil.rmtree(f)
+                try:
+                    shutil.rmtree(f)
+                except:
+                    self.logger.warn("File association failed to remove %s"%(f))
 
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
