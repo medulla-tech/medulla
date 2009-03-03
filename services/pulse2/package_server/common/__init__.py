@@ -483,14 +483,22 @@ class Common(pulse2.utils.Singleton):
                 fo = os.path.join(path, os.path.basename(f))
                 self.logger.debug("File association will move %s to %s" % (f, fo))
                 files_out.append(fo)
-                shutil.move(f, fo)
+                shutil.copy2(f, fo)
+                try:
+                    os.unlink(f)
+                except:
+                    self.logger.warn("File association failed to remove %s"%(f))
             elif level == 1:
                 for f1 in os.listdir(f):
                     f1 = os.path.join(f, f1)
                     fo = os.path.join(path, os.path.basename(f1))
                     self.logger.debug("File association will move %s to %s" % (f1, fo))
                     files_out.append(fo)
-                    shutil.move(f1, fo)
+                    shutil.copy2(f1, fo)
+                    try:
+                        os.unlink(f1)
+                    except:
+                        self.logger.warn("File association failed to remove %s"%(f1))
                 shutil.rmtree(f)
 
         self._treatFiles(files_out, mp, pid, access = {})
