@@ -46,10 +46,7 @@ if ($_GET['location']) {
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
-if (isset($_GET["end"])) $end = $_GET["end"];
-else $end = 9;
-
-$packages = advGetAllPackages($filter, $start, $end);
+$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 $count = $packages[0];
 $packages = $packages[1];
 
@@ -71,7 +68,7 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
 $n->start = 0;
-$n->end = $count - 1;
+$n->end = $count;
 
 $n->addActionItemArray(new ActionItem(_T("Edit a package", "pkgs"),"edit","edit","pkgs", "pkgs", "pkgs"));
 //$n->addActionItemArray(new ActionItem(_T("Associate files to a package", "pkgs"),"associate_files","associate_files","pkgs", "pkgs", "pkgs"));
