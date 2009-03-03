@@ -241,7 +241,7 @@ class File:
         self.checksum = checksum
         self.size = size
         if id == None:
-            self.id = md5sum(self.toS())
+            self.id = md5sum("%s%s" % (self.toS(), str(self.checksum)))
         else:
             self.id = id
 

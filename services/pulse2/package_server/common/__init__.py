@@ -587,6 +587,8 @@ class Common(pulse2.utils.Singleton):
     def getRsyncStatus(self, pid, mp):
         if self.isPackageAccessible(pid):
             return map(lambda h: [h, 'OK'], self.config.package_mirror_target)
+        if not pid in self.dontgivepkgs:
+            return map(lambda h: [h, 'NOK'], self.config.package_mirror_target)
         ret = []
         nok = self.dontgivepkgs[pid]
         for h in self.config.package_mirror_target:
@@ -851,7 +853,7 @@ class Common(pulse2.utils.Singleton):
         conf = self.h_desc(mp)
         toRelative = self.packages[pid].root
         for f in files:
-            path = re.sub('//', '/', '/'+re.sub(re.escape(toRelative), '', os.path.dirname(f)))
+            path = re.sub('//', '/', '/'+re.sub(re.escape(os.path.dirname(toRelative)), '', os.path.dirname(f)))
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
 
