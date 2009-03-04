@@ -64,7 +64,6 @@ foreach ($packages as $p) {
     } else {
         $assoc_list[] = $empty;
     }
-    print_r($p);
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
