@@ -103,6 +103,9 @@ class PackageApiPut(PackageApiGet):
         ret = Common().associatePackage2mp(package['id'], self.mp)
         if not ret: return False
 
+        if not P2PServerCP().package_detect_activate:
+            del Common().inEdition[package['id']]
+
         return (True, package['id'], confdir, pa.toH())
 
     def xmlrpc_dropPackage(self, pid):
