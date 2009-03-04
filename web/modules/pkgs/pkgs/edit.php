@@ -93,6 +93,9 @@ if ($_GET["action"]=="add") {
     # get existing package
     $pid = base64_decode($_GET['pid']);
     $package = getPackageDetail($p_api_id, $pid);
+    if ($package['do_reboot']) {
+        $package['reboot'] = $package['do_reboot'];
+    }
     $formElt = new HiddenTpl("id");
     
     $selectpapi = new HiddenTpl('p_api');
@@ -136,7 +139,7 @@ $cmds = array(
 );
 
 $options = array(
-    array('do_reboot', _T('Need a reboot ?', 'pkgs'))
+    array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
 foreach ($fields as $p) {
@@ -147,7 +150,7 @@ foreach ($fields as $p) {
 }
 
 foreach ($options as $p) {
-    $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] == 'enable');
+    $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
     $f->add(
         new TrFormElement($p[1], new CheckboxTpl($p[0])),
         array("value" => ($op ? 'checked' : ''))
