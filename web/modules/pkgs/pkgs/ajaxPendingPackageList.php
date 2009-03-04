@@ -53,13 +53,22 @@ $packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];
 
+$empty = new EmptyActionItem();
+$assoc = new ActionItem(_T("Associate package", "pkgs"), "associate_files", "associate_files", "pkgs", "pkgs", "pkgs");
+$assoc_list = array();
 $desc = $params = $names = $versions = array();
 foreach ($packages as $p) {
     $p = $p[0];
+    if ($p['why'] || $p['why'] == 'association') {
+        $assoc_list[] = $assoc;
+    } else {
+        $assoc_list[] = $empty;
+    }
+    print_r($p);
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
-    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending');
+    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
 }
 
 $n = new OptimizedListInfos($names, _T("Names", "pkgs"));
@@ -71,6 +80,7 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
 
+$n->addActionItemArray($assoc_list);
 $n->addActionItemArray(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
 $n->addActionItemArray(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
