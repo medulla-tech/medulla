@@ -122,10 +122,10 @@ callPluginFunction("verifInfo",array($_POST));
             $error.= _("This user already exists.")."<br/>";
         }
     }
-} elseif ($_POST["benable"]) {
+} elseif (isset($_POST["benable"])) {
     $ret = callPluginFunction("enableUser", $_GET["user"]);
     $result = _("User enabled.");
-} elseif ($_POST["bdisable"]) {
+} elseif (isset($_POST["bdisable"])) {
     $ret = callPluginFunction("disableUser",$_GET["user"]);
     $result = _("User disabled.");
 }
@@ -134,7 +134,7 @@ callPluginFunction("verifInfo",array($_POST));
 //if we edit a user
 // /!\ if we create a user... add smb attr or OX attr
 // it'll be consider as modification
-if ($_GET["user"]) {
+if (!empty($_GET["user"])) {
 
   if (!$error) {
       global $result;
@@ -237,7 +237,7 @@ if ($_GET["user"]) {
   $enabled = isEnabled($_GET["user"]);
 }
 
-if (strstr($_SERVER[HTTP_REFERER],'module=base&submod=users&action=add') && $_GET["user"])
+if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && $_GET["user"])
     if (!isXMLRPCError()) {
         $result = sprintf(_("User %s has been successfully created."), $_GET["user"]);
     }
