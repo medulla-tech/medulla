@@ -26,6 +26,7 @@ from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser(
 # some imports to convert stuff in xmlrpcCleanup()
 import datetime
 import re
+import os
 from time import time, struct_time
 
 # python 2.3 fallback for set() in xmlrpcleanup
@@ -208,4 +209,9 @@ def onlyAddNew(obj, value):
             obj.append(value)
     return obj
 
+
+def getConfigFile(module, path = "/etc/mmc/plugins/"):
+    """Return the path of the default config file for a plugin"""
+    return os.path.join(path, module) + ".ini"
+        
 
