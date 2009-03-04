@@ -50,7 +50,11 @@ if (isset($_POST["bassoc"])) {
     $ret = associatePackages($p_api_id, $pid, $cbx, $level);
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
-            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
+            $explain = '';
+            if (count($ret) > 1) {
+                $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+            }
+            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
             header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
         } else {
             $reason = '';
