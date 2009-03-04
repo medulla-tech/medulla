@@ -52,7 +52,15 @@ class PackageApiGet(MyXmlrpc):
 
     def xmlrpc_getAllPendingPackages(self, mirror = None):
         ret = Common().getPendingPackages(self.mp)
-        return map(lambda x: ret[x].toH(), ret)
+        r = []
+        for x in ret:
+            p = ret[x].toH()
+            self.logger.debug(Common().newAssociation)
+            self.logger.debug(Common().inEdition)
+            if Common().newAssociation.has_key(p['id']) or Common().inEdition.has_key(p['id']):
+                p['why'] = 'association'
+            r.append(p)
+        return r
 
     def xmlrpc_getPackagesDetail(self, pidlist):
         return map(lambda p: p.toH(), Common().packagelist(pidlist, self.mp))
