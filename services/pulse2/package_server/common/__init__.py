@@ -478,6 +478,7 @@ class Common(pulse2.utils.Singleton):
         path = self._getPackageRoot(pid)
         self.logger.debug("File association will put files in %s"%(path))
         files_out = []
+        err = 0
         for f in files:
             if level == 0:
                 fo = os.path.join(path, os.path.basename(f))
@@ -488,6 +489,7 @@ class Common(pulse2.utils.Singleton):
                     os.unlink(f)
                 except:
                     self.logger.warn("File association failed to remove %s"%(f))
+                    err |= 1
             elif level == 1:
                 for f1 in os.listdir(f):
                     f1 = os.path.join(f, f1)
@@ -499,17 +501,19 @@ class Common(pulse2.utils.Singleton):
                         os.unlink(f1)
                     except:
                         self.logger.warn("File association failed to remove %s"%(f1))
+                        err |= 1
                 try:
                     shutil.rmtree(f)
                 except:
                     self.logger.warn("File association failed to remove %s"%(f))
+                    err |= 1
 
         self._treatFiles(files_out, mp, pid, access = {})
         del Common().need_assign[pid]
         Common().newAssociation[pid] = True
         if self.config.package_mirror_activate:
             Common().rsyncPackageOnMirrors(pid)
-        return [True]
+        return [True, err]
 
     def dropPackage(self, pid, mp):
         """

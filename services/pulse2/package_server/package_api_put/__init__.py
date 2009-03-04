@@ -77,7 +77,13 @@ class PackageApiPut(PackageApiGet):
                 ret = Common().detectNewPackages()
                 if ret: break
                 time.sleep(1)
-        return [ret_assoc]
+        errors = []
+        if ret_assoc[1] & 1:
+            errors.append('Some files failed to be erased')
+        # COULD ADD SOME MORE FLAGS
+            
+        ret_assoc[1] = errors
+        return ret_assoc
 
     def xmlrpc_putPackageDetail(self, package, need_assign = True):
         self.logger.debug("xmlrpc_putPackageDetail")
