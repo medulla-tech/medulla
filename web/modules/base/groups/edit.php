@@ -48,6 +48,7 @@ if ($_GET["action"] == "add") {
     $title = _("Add group");
     $groupname = "";
     $groupdesc = "";
+    $detailArr = array();
 } else {
     $title = _("Edit group");
     $groupname = $_GET["group"];
@@ -75,7 +76,7 @@ $p->display();
 }
 ?>
 
-<form name="groupform" method="post" action="<? echo $PHP_SELF; ?>" onsubmit="return validateForm();">
+<form name="groupform" method="post" onsubmit="return validateForm();">
 <table cellspacing="0">
 
 <?
