@@ -275,9 +275,9 @@ class P2PServerCP(pulse2.utils.Singleton):
 
             if self.cp.has_option("main", "package_global_mirror_activate"):
                 self.package_global_mirror_activate = self.cp.getboolean("main", "package_global_mirror_activate")
-                if self.cp.has_section("main", "package_global_mirror_loop"):
+                if self.cp.has_option("main", "package_global_mirror_loop"):
                     self.package_global_mirror_loop = self.cp.getint("main", "package_global_mirror_loop")
-                if self.cp.has_section("main", "package_global_mirror_command_options"):
+                if self.cp.has_option("main", "package_global_mirror_command_options"):
                     self.package_global_mirror_loop = self.cp.get("main", "package_global_mirror_command_options").split(' ')
 
         if self.cp.has_option("main", "real_package_deletion"):
