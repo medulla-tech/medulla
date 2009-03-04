@@ -57,10 +57,9 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Other stuff
-from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
-from pulse2.database.msc.config import MscDatabaseConfig
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.health import getHealth
 
@@ -115,12 +114,6 @@ def logStats():
     scheduleLogStats()
 
 def startService():
-    conffile = mmc.support.mmctools.getConfigFile("msc")
-    confmsc = MscDatabaseConfig()
-    confmsc.setup(conffile)
-    if not MscDatabase().activate(confmsc): # does the db_check
-        return 1
-
     logger = logging.getLogger()
     config = SchedulerConfig()
     if not config.username:
@@ -309,6 +302,16 @@ def main():
     logger.info("Reading configuration file: %s" % options.config_file)
     try:
         SchedulerConfig().setup(options.config_file)
+    except Exception, e:
+        logger.error(e)
+        logger.error("Please fix the configuration file")
+        sys.exit(1)
+
+    try:
+        confmsc = SchedulerDatabaseConfig()
+        confmsc.setup(options.config_file)
+        if not MscDatabase().activate(confmsc): # does the db_check
+            sys.exit(1)
     except Exception, e:
         logger.error(e)
         logger.error("Please fix the configuration file")

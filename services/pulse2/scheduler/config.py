@@ -33,7 +33,35 @@ import os.path      # for file checking
 # Others Pulse2 Stuff
 import pulse2.utils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
+from pulse2.database.msc.config import MscDatabaseConfig
 
+
+class SchedulerDatabaseConfig(MscDatabaseConfig):
+    dbname = "msc"
+    dbsection = "database"
+            
+    def __setup_fallback(self, mscconffile):
+        logging.getLogger().info("Reading configuration file (database config): %s" % mscconffile)
+        self.dbsection = "msc"
+        MscDatabaseConfig.setup(self, mscconffile)
+        
+    def setup(self, conffile):
+        mscconffile = pulse2.utils.getConfigFile("msc")
+        if os.path.exists(conffile):
+            try:
+                logging.getLogger().info("Trying to read configuration file (database config): %s" % conffile)
+                MscDatabaseConfig.setup(self, conffile)
+            except Exception, e:
+                logging.getLogger().warn("Configuration file: %s does not contain any database config" % conffile)
+                self.__setup_fallback(mscconffile)
+            if not self.cp.has_section("database"):
+                logging.getLogger().warn("Configuration file: %s does not contain any database config" % conffile)
+                self.__setup_fallback(mscconffile)
+        elif os.path.exists(mscconffile):
+            self.__setup_fallback(mscconffile)
+        else:
+            raise Exception("can find any config file")
+    
 class SchedulerConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
