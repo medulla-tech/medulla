@@ -22,6 +22,30 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+    The inventory tables we wish to purge are organized like this:
+     - peripheral tables: Network, Bios etc ...
+     - computer table: Machine
+     - inventories table: Inventory
+     - and link tables: has* (hasNetwok, hasBios), which link for ex.
+     Component, Inventory and Machine through hasComponent
+
+    Purge is done like this:
+     - purge lines in Inventory where Last != 1
+     - purge lines in Inventory not linked to at least something from mandatory tables
+     - purge lines in Machine not linked to at least something from mandatory tables
+     - purge lines in hasSomething linked to an inexistant Inventory
+     - purge lines in hasSomething linked to an inexistant Machine
+     - purge lines in hasSomething linked to an inexistant Something
+     - purge lines in Inventory not linked to at least one hasSomething
+     - purge lines in Machine not linked to at least one hasSomething
+     - purge lines in Something not linked to at least one hasSomething
+     - and a little table optimization
+
+    There are special cases
+    -
+"""
+
 import sys
 
 try:
@@ -33,8 +57,7 @@ except ImportError:
 import sqlalchemy
 import logging
 
-# The inventory tables we wish to purge
-tables_elements = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
+peripheral_tables = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
 mandatory_elements = ["Hardware"]
 split_on = 1000
 do_execute = True
@@ -128,7 +151,7 @@ def deleteHasTablesMissingInventories(inventory):
     inventories
     """
 
-    for table in tables_elements:
+    for table in peripheral_tables:
         has_table = Table("has" + table, metadata, autoload = True)
 
         to_delete = map(lambda x: x['inventory'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
@@ -154,7 +177,7 @@ def deleteHasTablesMissingMachines(machine):
     Remove every linked tables (has*) rows referencing missing machines
     """
 
-    for table in tables_elements:
+    for table in peripheral_tables:
         has_table = Table("has" + table, metadata, autoload = True)
 
         to_delete = map(lambda x: x['machine'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
@@ -179,7 +202,7 @@ def deleteHasTablesMissingParts(machine):
     """
     Remove every linked tables (has*) rows referencing missing parts
     """
-    for table in tables_elements:
+    for table in peripheral_tables:
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
@@ -207,7 +230,7 @@ def cleanUpInventoryParts(inventory):
     """
     Clean up the inventory parts tables (Bios/hasBios, Drive/hasDrive etc)
     """
-    for table in tables_elements:
+    for table in peripheral_tables:
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
@@ -240,7 +263,7 @@ def deleteEmptyInventories(inventory):
 
     #First, build up the intersection for every machine in the has* tables
     to_delete = None
-    for table in tables_elements:
+    for table in peripheral_tables:
         # First we look for inventory parts not linked to any has*
         has_table = Table("has" + table, metadata, autoload = True)
 
@@ -271,7 +294,7 @@ def deleteEmptyMachines(machine):
 
     #First, build up the intersection for every machine in the has* tables
     to_delete = None
-    for table in tables_elements:
+    for table in peripheral_tables:
         # First we look for inventory parts not linked to any has*
         has_table = Table("has" + table, metadata, autoload = True)
 
@@ -300,12 +323,12 @@ def deleteEmptyMachines(machine):
 
 def optimizeTables():
 
-    for table in tables_elements:
+    for table in peripheral_tables:
         logger.info("optimizeTables : will optimize %s" % (table))
         res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
         logger.info("optimizeTables : %s : %s" % (table, res[3]))
 
-    for table in map(lambda x: 'has%s' % x, tables_elements):
+    for table in map(lambda x: 'has%s' % x, peripheral_tables):
         logger.info("optimizeTables : will optimize %s" % (table))
         res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
         logger.info("optimizeTables : %s : %s" % (table, res[3]))
