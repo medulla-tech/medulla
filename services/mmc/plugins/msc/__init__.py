@@ -87,11 +87,12 @@ def activate_2():
     conf = MscConfig()
     conf.init('msc')
     dldir = conf.download_directory_path
+    # Clean all lock or error status file in the download directory pool
     if os.path.exists(dldir):
         logging.getLogger().info('Cleaning lock file in %s' % dldir)
         for root, dirs, files in os.walk(dldir):
             for name in files:
-                if name.endswith(MscDownloadedFiles.LOCKEXT):
+                if name.endswith(MscDownloadedFiles.LOCKEXT) or name.endswith(MscDownloadedFiles.ERROREXT):
                     os.remove(os.path.join(root, name))
     return True
 

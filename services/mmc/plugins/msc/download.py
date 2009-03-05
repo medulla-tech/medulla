@@ -55,9 +55,13 @@ class MscDownloadProcess:
         self.mscdlfiles = MscDownloadedFiles(self.userid)
         self.storage = self.mscdlfiles.storage
         self.lockfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.LOCKEXT)
+        errorfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.ERROREXT)
         self.logger = logging.getLogger()
 
     def _cbDownloadOk(self, result):
+        """
+        If there is a result, store it into a file.
+        """
         if result != False:
             dlname, data = result
             # Convert from base64 to string
@@ -69,18 +73,36 @@ class MscDownloadProcess:
             fobj = file(fname, 'w+')
             fobj.write(data)
             fobj.close()
+        else:
+            self.logger.error("download_file: Couln't download the file")
+            self._recordError()
         return result
 
-    def _cbDownloadErr(self, failure):
+    def _cbDownloadErr(self, failure):        
         self.logger.error(failure)
+        self._recordError()
         return failure
 
+    def _recordError(self):
+        """
+        Create a file to remember there was an error during a download
+        """
+        timestamp = int(time.time())
+        errorfile = os.path.join(self.storage, '%s-%d' % (self.uuid, timestamp)+ '.' + self.mscdlfiles.ERROREXT)
+        fobj = file(errorfile, 'w+')
+        fobj.close()
+
     def _cbDownloadCleanup(self, result):
-        # Remove lock
+        """
+        Call after the download to remove the download lock file
+        """
         self.logger.debug("download_file: Removing lock file %s" % self.lockfile)
         os.remove(self.lockfile)
 
     def _gotScheduler(self, result):
+        """
+        Called when a scheduler has been found to start the download
+        """
         if not result:
             scheduler_name = MscConfig().default_scheduler
         else:
@@ -104,7 +126,7 @@ class MscDownloadProcess:
         )
         # Add callback
         d.addCallback(self._cbDownloadOk).addErrback(self._cbDownloadErr)
-        d.addBoth(self._cbDownloadCleanup)        
+        d.addBoth(self._cbDownloadCleanup)
 
     def startDownload(self):
         """
@@ -133,6 +155,7 @@ class MscDownloadedFiles:
     """
 
     LOCKEXT = 'lock'
+    ERROREXT = 'error'
 
     def __init__(self, userid):
         self.userid = userid
@@ -179,10 +202,16 @@ class MscDownloadedFiles:
             for fname in os.listdir(self.storage):
                 statinfo = os.stat(os.path.join(self.storage, fname))
                 if fname.endswith(self.LOCKEXT):
+                    # Download lock file
                     timestamp = statinfo.st_mtime
                     uuid = fname.split('.')[0]
                     tmp[timestamp] = ('', uuid, list(datetime.datetime.fromtimestamp(float(statinfo.st_mtime)).timetuple()), 0, statinfo.st_ino)
+                elif fname.endswith(self.ERROREXT):
+                    # Error status file
+                    uuid, timestamp = os.path.splitext(fname)[0].split('-')
+                    tmp[timestamp] = ('', uuid, list(datetime.datetime.fromtimestamp(float(timestamp)).timetuple()), -1, statinfo.st_ino)
                 else:
+                    # Downloaded file
                     try:
                         uuid, timestamp, name = fname.split('-', 2)
                         tmp[int(timestamp)] = (name, uuid, list(datetime.datetime.fromtimestamp(float(timestamp)).timetuple()), statinfo.st_size, statinfo.st_ino)
