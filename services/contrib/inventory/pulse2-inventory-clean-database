@@ -57,7 +57,13 @@ except ImportError:
 import sqlalchemy
 import logging
 
-peripheral_tables = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Entity", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
+# in a leaf table, both Table and hasTable can be purged
+leaves_tables = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootPart", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Pci", "Port", "Printer", "Registry", "Slot", "Software", "Sound", "Storage", "VideoCard"]
+# in a node table, only hasTable can be purged
+node_tables = ["Entity"]
+# peripheral are made from leaves and nodes
+peripheral_tables = leaves_tables + node_tables
+
 mandatory_elements = ["Hardware"]
 split_on = 1000
 do_execute = True
