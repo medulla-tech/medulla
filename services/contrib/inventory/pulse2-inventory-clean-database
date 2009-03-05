@@ -208,7 +208,7 @@ def deleteHasTablesMissingParts(machine):
     """
     Remove every linked tables (has*) rows referencing missing parts
     """
-    for table in peripheral_tables:
+    for table in leaves_tables:
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
@@ -236,7 +236,7 @@ def cleanUpInventoryParts(inventory):
     """
     Clean up the inventory parts tables (Bios/hasBios, Drive/hasDrive etc)
     """
-    for table in peripheral_tables:
+    for table in leaves_tables: # we do not want to clean up 'node tables', f.ex. "Entity"
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
