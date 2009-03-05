@@ -37,7 +37,9 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
 $start = 0;
-if ($_GET["start"]) { $start = $_GET['start']; }
+if (isset($_GET["start"])) {
+    $start = $_GET['start'];
+}
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
 $list = getAllGroups($params);
