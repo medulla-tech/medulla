@@ -1376,13 +1376,13 @@ class InventoryCreator(Inventory):
                         pass
                 # closes for block
             # closes for block on inventory parts
+            session.flush()
         except Exception, e:
             transaction.rollback()
             session.close()
             logging.getLogger().exception(e)
             raise e
 
-        session.flush()
         transaction.commit()
         session.close()
         return True
