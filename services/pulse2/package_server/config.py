@@ -109,14 +109,14 @@ class P2PServerCP(pulse2.utils.Singleton):
     user_package_api = {}
     scheduler_api = {}
     cp = None
-    
+
     def pre_setup(self, config_file):
         if sys.platform != "win32":
             self.cp = MMCConfigParser()
         else:
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
-        
+
         if self.cp.has_option("handler_hand01", "args"):
             self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
 
@@ -278,7 +278,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 if self.cp.has_option("main", "package_global_mirror_loop"):
                     self.package_global_mirror_loop = self.cp.getint("main", "package_global_mirror_loop")
                 if self.cp.has_option("main", "package_global_mirror_command_options"):
-                    self.package_global_mirror_loop = self.cp.get("main", "package_global_mirror_command_options").split(' ')
+                    self.package_global_mirror_command_options = self.cp.get("main", "package_global_mirror_command_options").split(' ')
 
         if self.cp.has_option("main", "real_package_deletion"):
             self.real_package_deletion = self.cp.getboolean("main", "real_package_deletion")
