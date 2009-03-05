@@ -61,7 +61,7 @@ class DyngroupDatabase(DatabaseHelper):
 
         self.logger.info("Dyngroup database is connecting")
         self.config = DGConfig("dyngroup", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, echo=False)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         self.metadata = MetaData(self.db)
         try:
             self.initMappers()
@@ -306,16 +306,16 @@ class DyngroupDatabase(DatabaseHelper):
         return still_linked
 
     def __deleteResult4AllGroups(self, machine_id, session = None):
+        """
+        Delete a computer from the result of all groups
+        """
         open_session = False
         if not session:
             open_session = True
             session = create_session()
-        results = session.query(Results).filter(self.results.c.FK_machine == machine_id).all()
-        for result in results:
-            session.delete(result)
-            session.flush()
-
+        session.execute(self.results.delete(self.results.c.FK_machine == machine_id))
         if open_session:
+            session.flush()
             session.close()
         return True
 
@@ -750,16 +750,27 @@ class DyngroupDatabase(DatabaseHelper):
         return True
 
     def delMachine(self, uuid):
-        session = create_session()
-        m = self.__getMachine(uuid, session)
+        """
+        Delete a computer from all the dyngroup database tables
+
+        @returns: True if the machine has been successfully deleted
+        """
+        ret = False
+        m = self.__getMachine(uuid)
         if m:
-            mid = m.id
-            session.delete(m)
-            self.__deleteResult4AllGroups(mid, session)
+            session = create_session()
+            session.begin()
+            try:
+                mid = m.id
+                session.delete(m)
+                self.__deleteResult4AllGroups(mid, session)
+                session.commit()
+                ret = True
+            except:
+                session.rollback()
+                raise
             session.close()
-            return True
-        session.close()
-        return False
+        return ret
 
     def share_with(self, ctx, id):
         session = create_session()
