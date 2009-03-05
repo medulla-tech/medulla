@@ -68,6 +68,11 @@ foreach($files as $file) {
             $flengths[] = '';
             $actionsdl[] = new EmptyActionItem();
             $actionsrm[] = new EmptyActionItem();
+        } else if (($file[0] == '') && ($file[3] == -1)) {
+            $states[] = _T('Error', 'msc');
+            $flengths[] = '';
+            $actionsdl[] = new EmptyActionItem();
+            $actionsrm[] = $actionRemove;            
         } else {
             $states[] = _T('Ready', 'msc');
             $flengths[] = $file[3];
