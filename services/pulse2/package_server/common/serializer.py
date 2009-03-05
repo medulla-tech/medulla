@@ -40,8 +40,17 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
             file = open(self.filename, 'w')
             pickle.dump(self.common.dontgivepkgs, file)
             file.close()
-        except:
-            self.logger.debug("PkgsRsyncStateSerializer serialize failed")
+        except IOError, e:
+            if e.errno == 13:
+                self.logger.warn("PkgsRsyncStateSerializer serialize failed permission denied while accessing file %s"%(self.filename))
+                return False
+            elif e.errno == 2:
+                self.logger.warn("PkgsRsyncStateSerializer serialize failed, no such file or directory %s"%(self.filename))
+                return False
+            self.logger.warn("PkgsRsyncStateSerializer serialize failed accessing file: %s"%(str(e)))
+            return False
+        except Exception, e:
+            self.logger.debug("PkgsRsyncStateSerializer serialize failed: %s"%(str(e)))
             return False
         self.logger.debug("PkgsRsyncStateSerializer serialize succeed")
         return True
