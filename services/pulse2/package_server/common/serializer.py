@@ -27,14 +27,14 @@ import pulse2.utils
 class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
     def init(self, common):
         self.logger = logging.getLogger()
-        self.logger.debug("PkgsRsyncStateSerializer is initializing")
+        self.logger.debug("Package synchro state serialization, is initializing")
         self.common = common
         self.config = common.config
         self.filename = self.config.package_mirror_status_file
         return self.unserialize()
 
     def serialize(self):
-        self.logger.debug("PkgsRsyncStateSerializer serialize")
+        self.logger.debug("Package synchro state serialization, serialize")
         # will serialize self.common.dontgivepkgs into file
         try:
             file = open(self.filename, 'w')
@@ -42,21 +42,21 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
             file.close()
         except IOError, e:
             if e.errno == 13:
-                self.logger.warn("PkgsRsyncStateSerializer serialize failed permission denied while accessing file %s"%(self.filename))
+                self.logger.warn("Package synchro state serialization, serialize failed permission denied while accessing file %s"%(self.filename))
                 return False
             elif e.errno == 2:
-                self.logger.warn("PkgsRsyncStateSerializer serialize failed, no such file or directory %s"%(self.filename))
+                self.logger.warn("Package synchro state serialization, serialize failed, no such file or directory %s"%(self.filename))
                 return False
-            self.logger.warn("PkgsRsyncStateSerializer serialize failed accessing file: %s"%(str(e)))
+            self.logger.warn("Package synchro state serialization, serialize failed accessing file: %s"%(str(e)))
             return False
         except Exception, e:
-            self.logger.debug("PkgsRsyncStateSerializer serialize failed: %s"%(str(e)))
+            self.logger.debug("Package synchro state serialization, serialize failed: %s"%(str(e)))
             return False
-        self.logger.debug("PkgsRsyncStateSerializer serialize succeed")
+        self.logger.debug("Package synchro state serialization, serialize succeed")
         return True
 
     def unserialize(self):
-        self.logger.debug("PkgsRsyncStateSerializer unserialize")
+        self.logger.debug("Package synchro state serialization, unserialize")
         # will unserialize file into self.common.dontgivepkgs
         try:
             if not os.path.exists(self.filename):
@@ -66,12 +66,21 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
             file.close()
             if type(r) == dict:
                 self.common.dontgivepkgs = r
-                self.logger.debug("PkgsRsyncStateSerializer unserialize succeed")
+                self.logger.debug("Package synchro state serialization, unserialize succeed")
                 return True
-            self.logger.debug("PkgsRsyncStateSerializer unserialize failed")
+            self.logger.debug("Package synchro state serialization, unserialize failed")
             return False
-        except:
-            self.logger.debug("PkgsRsyncStateSerializer unserialize failed")
+        except IOError, e:
+            if e.errno == 13:
+                self.logger.warn("Package synchro state serialization, unserialize failed permission denied while accessing file %s"%(self.filename))
+                return False
+            elif e.errno == 2:
+                self.logger.warn("Package synchro state serialization, unserialize failed, no such file or directory %s"%(self.filename))
+                return False
+            self.logger.warn("Package synchro state serialization, unserialize failed accessing file: %s"%(str(e)))
+            return False
+        except Exception, e:
+            self.logger.debug("Package synchro state serialization, unserialize failed: %s"%(str(e)))
             return False
 
 
