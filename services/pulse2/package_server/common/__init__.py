@@ -90,34 +90,34 @@ class Common(pulse2.utils.Singleton):
             raise e
 
     def debug(self):
-        self.logger.debug("# START ################")
-        self.logger.debug(">> self.packages")
-        self.logger.debug(self.packages)
-        self.logger.debug(">> self.mp2p")
-        self.logger.debug(self.mp2p)
-        self.logger.debug(">> self.reverse")
-        self.logger.debug(self.reverse)
-        self.logger.debug(">> self.files")
-        self.logger.debug(self.files)
-        self.logger.debug(">> self.fid2file")
-        self.logger.debug(self.fid2file)
-        self.logger.debug(">> self.desc")
-        self.logger.debug(self.desc)
-        self.logger.debug(">> self.already_declared")
-        self.logger.debug(self.already_declared)
-        self.logger.debug(">> self.dontgivepkgs")
-        self.logger.debug(self.dontgivepkgs)
-        self.logger.debug(">> self.need_assign")
-        self.logger.debug(self.need_assign)
-        self.logger.debug(">> self.temp_check_changes")
-        self.logger.debug(self.temp_check_changes)
-        self.logger.debug(">> self.packageDetectionDate")
-        self.logger.debug(self.packageDetectionDate)
-        self.logger.debug(">> self.newAssociation")
-        self.logger.debug(self.newAssociation)
-        self.logger.debug(">> self.inEdition")
-        self.logger.debug(self.inEdition)
-        self.logger.debug("# END ##################")
+        self.logger.debug2("# START ################")
+        self.logger.debug2(">> self.packages")
+        self.logger.debug2(self.packages)
+        self.logger.debug2(">> self.mp2p")
+        self.logger.debug2(self.mp2p)
+        self.logger.debug2(">> self.reverse")
+        self.logger.debug2(self.reverse)
+        self.logger.debug2(">> self.files")
+        self.logger.debug2(self.files)
+        self.logger.debug2(">> self.fid2file")
+        self.logger.debug2(self.fid2file)
+        self.logger.debug2(">> self.desc")
+        self.logger.debug2(self.desc)
+        self.logger.debug2(">> self.already_declared")
+        self.logger.debug2(self.already_declared)
+        self.logger.debug2(">> self.dontgivepkgs")
+        self.logger.debug2(self.dontgivepkgs)
+        self.logger.debug2(">> self.need_assign")
+        self.logger.debug2(self.need_assign)
+        self.logger.debug2(">> self.temp_check_changes")
+        self.logger.debug2(self.temp_check_changes)
+        self.logger.debug2(">> self.packageDetectionDate")
+        self.logger.debug2(self.packageDetectionDate)
+        self.logger.debug2(">> self.newAssociation")
+        self.logger.debug2(self.newAssociation)
+        self.logger.debug2(">> self.inEdition")
+        self.logger.debug2(self.inEdition)
+        self.logger.debug2("# END ##################")
 
     def _detectPackages(self, new = False):
         runid = int(random.random()*50000)
@@ -200,9 +200,6 @@ class Common(pulse2.utils.Singleton):
             # our main packages dict
             for pid in todelete:
                 self.suppressFromInternal(pid)
-        else:
-            self.logger.debug("Package %s has to be removed from mirrors before removing it from internal hashes"%(pid))
-
 
     def suppressFromInternal(self, pid):
         if not self.packages.has_key(pid):
@@ -257,15 +254,15 @@ class Common(pulse2.utils.Singleton):
         try:
             self.working = True
             self.working_pkgs = {}
-            self.logger.debug("Common.detectNewPackages : detecting new packages...")
+            self.logger.debug1("Common.detectNewPackages : detecting new packages...")
             self._detectPackages(True)
-            self.logger.debug("Common.detectNewPackages : detecting removed or edited packages...")
+            self.logger.debug1("Common.detectNewPackages : detecting removed or edited packages...")
             self._detectRemovedAndEditedPackages()
-            self.logger.debug("Common.detectNewPackages : build reverse list...")
+            self.logger.debug1("Common.detectNewPackages : build reverse list...")
             self._buildReverse()
-            self.logger.debug("Common.detectNewPackages : build file list...")
+            self.logger.debug1("Common.detectNewPackages : build file list...")
             self._buildFileList()
-            self.logger.debug("Common.detectNewPackages : done")
+            self.logger.debug1("Common.detectNewPackages : done")
             self.working = False
             return True
         except Exception, e:
