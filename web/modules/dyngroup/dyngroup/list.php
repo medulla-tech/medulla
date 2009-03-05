@@ -33,10 +33,14 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid'=>$_GET['gid']));
+if (isset($_GET['gid'])) {
+    $gid = $_GET['gid'];
+} else {
+    $gid = '';
+}
+$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid' => $gid));
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-                                
-# changer le style de li.display (pas bon icone)
+
 ?>
