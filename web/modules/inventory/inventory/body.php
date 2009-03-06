@@ -29,7 +29,12 @@ require("graph/navbar.inc.php");
 
 $url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table.'&from=inventory%2Finventory%2F'.strtolower($table);
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
-    $url .= "&$get=".$_GET[$get];
+    if (isset($_GET[$get])) {
+        $value = $_GET[$get];
+    } else {
+        $value = '';
+    }
+    $url .= "&$get=" . $value;
 }
 $ajax = new AjaxFilter($url);
 
