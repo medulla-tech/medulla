@@ -63,17 +63,18 @@ leaves_tables = ["Bios", "BootDisk", "BootGeneral", "BootMem", "BootPCI", "BootP
 node_tables = ["Entity"]
 # peripheral are made from leaves and nodes
 peripheral_tables = leaves_tables + node_tables
-
 mandatory_elements = ["Hardware"]
+
 split_on = 1000
 do_execute = True
+loglevel = logging.INFO
 
 # Set up logging
 logger = logging.getLogger(sys.argv[0])
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+logger.setLevel(loglevel)
 
 def deleteOldInventories(inventory):
     """
@@ -84,7 +85,7 @@ def deleteOldInventories(inventory):
         logger.info("deleteOldInventories : will purge %d inventories" % len(to_delete))
         for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
-                inventory.delete(inventory.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteOldInventories : done %d%%" % (i * 100 / (1+len(to_delete)/split_on)))
         logger.debug("deleteOldInventories : purged inventories : %s" % to_delete)
     else:
@@ -114,7 +115,7 @@ def deleteWrongInventories(inventory):
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
         for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
-                inventory.delete(inventory.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteWrongInventories : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
         logger.debug("deleteWrongInventories : purged rows : %s" % (to_delete))
     else:
@@ -145,7 +146,7 @@ def deleteWrongMachines(machine):
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
         for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
-                machine.delete(machine.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                machine.delete(machine.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteWrongMachines : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
         logger.debug("deleteWrongMachines : purged rows : %s" % (to_delete))
     else:
@@ -172,7 +173,7 @@ def deleteHasTablesMissingInventories(inventory):
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
             for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
-                    has_table.delete(has_table.c.inventory.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                    has_table.delete(has_table.c.inventory.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingInventories : done %d%% in has%s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
             logger.debug("deleteHasTablesMissingInventories : on table has%s : purged rows : %s" % (table, to_delete))
         else:
@@ -198,7 +199,7 @@ def deleteHasTablesMissingMachines(machine):
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
             for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
-                    has_table.delete(has_table.c.machine.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                    has_table.delete(has_table.c.machine.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingMachines : done %d%% in has%s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
             logger.debug("deleteHasTablesMissingMachines : on table cleanUpInventoryParts%s : purged rows : %s" % (table, to_delete))
         else:
@@ -226,7 +227,7 @@ def deleteHasTablesMissingParts(machine):
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
             for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
-                    element.delete(element.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                    element.delete(element.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingParts : done %d%% in %s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
             logger.debug("deleteHasTablesMissingParts : on table %s : purged rows : %s" % (table, to_delete))
         else:
@@ -254,7 +255,7 @@ def cleanUpInventoryParts(inventory):
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
             for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
-                    element.delete(element.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                    element.delete(element.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("cleanUpInventoryParts : done %d%% in %s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
             logger.debug("cleanUpInventoryParts : on table %s : purged rows : %s" % (table, to_delete))
         else:
@@ -290,7 +291,7 @@ def deleteEmptyInventories(inventory):
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
         for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
-                inventory.delete(inventory.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteEmptyInventories : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
         logger.debug("deleteEmptyInventories : purged rows : %s" % (to_delete))
     else:
@@ -321,7 +322,7 @@ def deleteEmptyMachines(machine):
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
         for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
-                machine.delete(machine.c.id.in_(*to_delete[i*split_on:(i+1)*split_on])).execute()
+                machine.delete(machine.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteEmptyMachines : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
         logger.debug("deleteEmptyMachines : purged rows : %s" % (to_delete))
     else:
@@ -331,18 +332,18 @@ def optimizeTables():
 
     for table in peripheral_tables:
         logger.info("optimizeTables : will optimize %s" % (table))
-        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
-        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute()
+        logger.info("optimizeTables : optimized %s" % (table))
 
     for table in map(lambda x: 'has%s' % x, peripheral_tables):
         logger.info("optimizeTables : will optimize %s" % (table))
         res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
-        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+        logger.info("optimizeTables : optimized %s" % (table))
 
     for table in ['Inventory', 'Machine']:
         logger.info("optimizeTables : will optimize %s" % (table))
         res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
-        logger.info("optimizeTables : %s : %s" % (table, res[3]))
+        logger.info("optimizeTables : optimized %s" % (table))
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s [db_conn_string]' % argv[0]
@@ -353,8 +354,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit(usage(sys.argv))
 
-    if not sqlalchemy.__version__.startswith('0.3'):
-        print "Wrong version of SqlAlchemy found, please install a 0.3 version !"
+    if not sqlalchemy.__version__.startswith('0.4'):
+        print "Wrong version of SqlAlchemy found, please install a 0.4 version !"
         sys.exit(1)
 
     mysql_db = create_engine(sys.argv[1])
