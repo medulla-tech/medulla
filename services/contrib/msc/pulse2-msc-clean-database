@@ -28,7 +28,7 @@ import sqlalchemy
 import logging
 import datetime
 
-STATES_TO_CLEANUP = ['done', 'failed', 'stop']
+STATES_TO_CLEANUP = ['done', 'failed', 'stop', 'over_timed']
 
 logger = logging.getLogger(sys.argv[0])
 handler = logging.StreamHandler()
