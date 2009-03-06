@@ -37,14 +37,24 @@ if (!$gid) { // TODO !!
     $result->displayResListInfos();
 } else {
     $group = new Group($gid, true);
-    $item = $items[$gid];
+    if (isset($items[$gid])) {
+        $item = $items[$gid];
+    } else {
+        $item = null;
+    }
     __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
     $group->prettyDisplay();
 }
 
 function __my_header($label, $sidemenu, $item) {
     $p = new PageGenerator($label);
-    $sidemenu->forceActiveItem($item->action);
+    if (!empty($item)) {
+        $sidemenu->forceActiveItem($item->action);
+    } else {
+        /* Highlight the "All groups" menu item on the left if the group is
+           not displayed on the menu bar */
+        $sidemenu->forceActiveItem('list');
+    }
     $p->setSideMenu($sidemenu);
     $p->display();
     return $p;
