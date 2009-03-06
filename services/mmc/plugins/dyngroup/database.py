@@ -224,12 +224,18 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return machine.id
 
-    def __updateMachinesTable(self, connection):
+    def __updateMachinesTable(self, connection, uuids = []):
         """
         Remove all rows in the Machines table that are no more needed
+
+        if a list of uuids is given, only ghost for the given computers are
+        looking for.
         """
         # Get all Machines id that are not a foreign key in Results
-        todelete = connection.execute(select([self.machines.c.id], not_(self.machines.c.id.in_(select([self.results.c.FK_machine]))))).fetchall()
+        if uuids:
+            todelete = connection.execute(select([self.machines.c.id], and_(self.machines.c.uuid.in_(uuids), not_(self.machines.c.id.in_(select([self.results.c.FK_machine])))))).fetchall()
+        else:
+            todelete = connection.execute(select([self.machines.c.id], not_(self.machines.c.id.in_(select([self.results.c.FK_machine]))))).fetchall()
         todelete = map(lambda x: {"id" : x[0]}, todelete)
         # Delete them if any
         if todelete:
@@ -745,7 +751,7 @@ class DyngroupDatabase(DatabaseHelper):
         # Delete the selected machines from the Results table
         connection.execute(self.results.delete(and_(self.results.c.FK_group == group.id, self.results.c.FK_machine.in_(select([self.machines.c.id], self.machines.c.uuid.in_(uuids))))))
         # Update the Machines table
-        self.__updateMachinesTable(connection)
+        self.__updateMachinesTable(connection, uuids)
         trans.commit()
         return True
 
