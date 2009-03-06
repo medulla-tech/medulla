@@ -47,7 +47,12 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 
     foreach($names as $value) {
         foreach ($headers as $header) {
-            $columns[$header[0]][]= $value[$header[0]];
+            if (!empty($value[$header[0]])) {
+                $v = $value[$header[0]];
+            } else {
+                $v = '';
+            }
+            $columns[$header[0]][]= $v;
         }
 	if (isset($filter['gid']))
 	        $value['gid'] = $filter['gid'];
