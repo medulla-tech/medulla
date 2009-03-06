@@ -151,6 +151,7 @@ class Common(pulse2.utils.Singleton):
                         runid
                     )
                 except Exception, e:
+                    self.logger.error("_detectPackages failed for mirrors")
                     self.logger.error(e)
 
         if len(self.config.package_api_get) > 0:
@@ -162,6 +163,7 @@ class Common(pulse2.utils.Singleton):
                     ))
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
+                    self.logger.error("_detectPackages failed for package api get")
                     self.logger.error(e)
 
         if len(self.config.package_api_put) > 0:
@@ -173,6 +175,7 @@ class Common(pulse2.utils.Singleton):
                     ))
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
+                    self.logger.error("_detectPackages failed for package api put")
                     self.logger.error(e)
 
     def _detectRemovedAndEditedPackages(self):
@@ -391,6 +394,7 @@ class Common(pulse2.utils.Singleton):
                 self.reverse[pa.label] = {}
             self.reverse[pa.label][pa.version] = pid
         except Exception, e:
+            self.logger.error("addPackage failed")
             self.logger.error(e)
             raise e
         return pid
@@ -408,6 +412,7 @@ class Common(pulse2.utils.Singleton):
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
+            self.logger.error("reloadPackage failed")
             self.logger.error(e)
             raise e
         return pid
@@ -428,6 +433,7 @@ class Common(pulse2.utils.Singleton):
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
+            self.logger.error("editPackage failed")
             self.logger.error(e)
             raise e
         return pid
@@ -573,6 +579,7 @@ class Common(pulse2.utils.Singleton):
                         ordered.append(p)
                 return ordered
         except Exception, e:
+            self.logger.error("getPackages failed")
             self.logger.error(e)
             return None
     
@@ -606,6 +613,7 @@ class Common(pulse2.utils.Singleton):
                 if self.mp2p.has_key(k):
                     ret.append(k)
         except Exception, e:
+            self.logger.error("reverse failed")
             self.logger.error(e)
             raise e
         return ret
@@ -740,7 +748,11 @@ class Common(pulse2.utils.Singleton):
         Find().find(dir, self.__subHasChangedGetSize, [pid])
         
     def __subHasChangedGetSize(self, file, pid):
-        self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
+        try:
+            self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
+        except Exception, e:
+            self.logger.debug("__subHasChangedGetSize except %s"%(str(e)))
+            raise e
 
     def __initialiseChangedLast(self, pid, file, s = None):
         if s == None:
@@ -787,8 +799,9 @@ class Common(pulse2.utils.Singleton):
     def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == 'conf.xml':
             l_package = self.parser.parse(file)
-            if self.working_pkgs.has_key(l_package.id):
-                return
+            if l_package == None: return
+            if self.working_pkgs.has_key(l_package.id): return
+            l_package.setRoot(os.path.dirname(file))
             isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
             if not self.already_declared.has_key(file):
                 if isReady == self.SMART_DETECT_CHANGES:
@@ -907,17 +920,21 @@ class Common(pulse2.utils.Singleton):
                     self.desassociatePackage2mp(pid, mp)
         except Exception, err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
+                self.logger.error("__treatDir failed (missing file)")
                 self.logger.error(err)
                 #"package %s won't be loaded because one of the declared file is missing"% (pid))
                 self.mp2p[mp][pid] = None
             elif hasattr(err, 'message') and err.message == 'DBLFILE':
+                self.logger.error("__treatDir failed (double file)")
                 self.logger.error(err)
                 # :"package %s won't be loaded because one of its file is already declared in an other package"%(pid))
                 self.mp2p[mp][pid] = None
             elif hasattr(err, 'message'):
+                self.logger.error("__treatDir failed")
                 self.logger.error(err.message)
                 self.mp2p[mp][pid] = None
             else:
+                self.logger.error("__treatDir failed")
                 self.logger.error(err)
                 if pid != None:
                     self.mp2p[mp][pid] = None

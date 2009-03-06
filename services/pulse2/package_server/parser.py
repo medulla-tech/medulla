@@ -118,6 +118,7 @@ class PackageParserXML:
                 reboot
             )
         except Exception, e:
+            logging.getLogger().error("parse_str failed")
             logging.getLogger().error(e)
             p = None
 
