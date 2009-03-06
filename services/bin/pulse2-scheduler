@@ -160,9 +160,15 @@ def startService():
         return 1
 
     twisted.internet.reactor.callWhenRunning(start_all_callbacks)
+    twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp)
     logger.info('scheduler %s: listening on %s:%d' % (config.name, config.host, config.port))
     twisted.internet.reactor.run()
     return 0
+
+def cleanUp():
+    logger = logging.getLogger()
+    logger.info('scheduler %s: Shuting down and cleaning up' % (SchedulerConfig().name))
+    logger.info('scheduler %s: End' % (SchedulerConfig().name))
 
 class Scheduler(twisted.web.xmlrpc.XMLRPC):
     """Our Scheduler
