@@ -137,9 +137,14 @@ def stop_scheduler(config):
         if pid_is_alive(pid):
             logger.info('attempt to kill scheduler "%s" (pid %d)' % (name, pid))
             kill_pid(pid, signal.SIGTERM) # TODO: check that kill was successful
-            logger.info('scheduler "%s" killed using SIGTERM' % name)
-            clear_pidfile(config)
-            return True
+            time.sleep(time_to_wait)
+            if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
+                logger.info('scheduler "%s" killed using SIGTERM' % name)
+                clear_pidfile(config)
+                return True
+            else:
+                logger.error('failed to kill scheduler "%s" using SIGTERM' % name)
+                return False
         else:
             logger.error('failed to stop scheduler "%s": was supposed to be running under pid %d' % (name, pid))
             print 'failed to stop scheduler "%s": was supposed to be running under pid %d' % (name, pid)
@@ -277,7 +282,7 @@ if __name__ == "__main__":
 
     # gather right user and password
     config.presetup(options.config_file)
-    
+
     # Try to create the default log directory
     if not os.path.exists(config.logdir):
         try:
