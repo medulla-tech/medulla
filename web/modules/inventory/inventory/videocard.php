@@ -23,8 +23,7 @@
  */
 
 $table = 'VideoCard';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

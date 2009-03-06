@@ -23,8 +23,7 @@
  */
 
 $table = 'Memory';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

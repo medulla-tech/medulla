@@ -23,8 +23,7 @@
  */
 
 $table = 'Printer';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

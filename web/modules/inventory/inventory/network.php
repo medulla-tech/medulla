@@ -23,8 +23,8 @@
  */
 
 $table = 'Network';
-$filter = $_GET['filter'];
 
 require("body.php");
 
 
+?>

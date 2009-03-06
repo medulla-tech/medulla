@@ -23,8 +23,7 @@
  */
 
 $table = 'Input';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

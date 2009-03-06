@@ -23,7 +23,7 @@
  */
 
 $table = 'Hardware';
-$filter = $_GET['filter'];
 
 require("body.php");
 
+?>

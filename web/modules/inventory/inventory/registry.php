@@ -23,7 +23,7 @@
  */
 
 $table = 'Registry';
-$filter = $_GET['filter'];
 
 require("body.php");
 
+?>

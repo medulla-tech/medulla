@@ -23,8 +23,7 @@
  */
 
 $table = 'Drive';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

@@ -23,8 +23,7 @@
  */
 
 $table = 'Controller';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

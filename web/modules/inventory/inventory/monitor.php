@@ -23,8 +23,7 @@
  */
 
 $table = 'Monitor';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

@@ -23,8 +23,7 @@
  */
 
 $table = 'Storage';
-$filter = $_GET['filter'];
 
 require("body.php");
 
-
+?>

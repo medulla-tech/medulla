@@ -23,12 +23,6 @@
  */
 
 $table = 'Bios';
-if (isset($_GET['filter'])) {
-    $filter = $_GET['filter'];
-} else {
-    $filter = '';
-}
-
 
 require("body.php");
 
