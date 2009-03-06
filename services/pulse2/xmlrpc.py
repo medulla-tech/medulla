@@ -99,8 +99,7 @@ class OpenSSLContext(pulse2.utils.Singleton):
         else:
             logger.warning("SSL enabled, but peer verification is disabled.")
 
-def isTwistedEnoughForLoginPass():
-    min = (2, 3)
+def __checkTwistedVersion(min):
     try:
         if twisted.version.major > min[0] or twisted.version.major == min[0] and twisted.version.minor > min[1]:
             return True
@@ -108,3 +107,10 @@ def isTwistedEnoughForLoginPass():
     except:
         return False
 
+def isTwistedEnoughForLoginPass():
+    min = (2, 3)
+    return __checkTwistedVersion(min)
+    
+def isTwistedEnoughForCert():
+    min = (2, 5)
+    return __checkTwistedVersion(min)

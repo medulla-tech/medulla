@@ -1,0 +1,161 @@
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id: package_api.py 713 2009-02-27 14:06:11Z oroussy $
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from pulse2.apis import Pulse2Api
+
+class PackageAOld(Pulse2Api):
+    def __init__(self, attr*):
+        self.name = "PackageApi"
+        Pulse2Api.__init__(self, attr*)
+    
+    def getAllPackages(self, mirror = None):
+        d = self.paserver.callRemote("getAllPackages", mirror)
+        d.addErrback(self.onError, "getAllPackages", mirror)
+        return d
+
+    def getAllPendingPackages(self, mirror = None):
+        try:
+            d = self.paserver.callRemote("getAllPendingPackages", mirror)
+            d.addErrback(self.onError, "getAllPendingPackages", mirror)
+            return d
+        except:
+            return []
+
+    # FIXME ! __convertDoReboot* shouldn't be needed
+
+    def __convertDoRebootList(self, pkgs):
+        ret = []
+        for pkg in pkgs:
+            ret.append(self.__convertDoReboot(pkg))
+        return ret
+            
+    def __convertDoReboot(self, pkg):
+        if pkg:
+            try:
+                do_reboot = pkg['reboot']
+                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
+                    pkg['do_reboot'] = 'disable'
+                elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
+                    pkg['do_reboot'] = 'enable'
+                else:
+                    self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
+                del pkg['reboot']
+            except KeyError:
+                pkg['do_reboot'] = 'disable'
+        return pkg
+
+    def getPackageDetail(self, pid):
+        d = self.paserver.callRemote("getPackageDetail", pid)
+        d.addCallback(self.__convertDoReboot)
+        d.addErrback(self.onError, "getPackageDetail", pid, False)
+        return d
+
+    def getPackagesDetail(self, pids):
+        d = self.paserver.callRemote("getPackagesDetail", pids)
+        d.addCallback(self.__convertDoRebootList)
+        d.addErrback(self.onError, "getPackagesDetail", pids, False)
+        return d
+
+    def getPackageLabel(self, pid):
+        d = self.paserver.callRemote("getPackageLabel", pid)
+        d.addErrback(self.onError, "getPackageLabel", pid, False)
+        return d
+
+    def _erGetLocalPackagePath(self):
+        return self.config.repopath
+
+    def getLocalPackagePath(self, pid):
+        d = self.paserver.callRemote("getLocalPackagePath", pid)
+        d.addErrback(self._erGetLocalPackagePath)
+        return d
+
+    def getLocalPackagesPath(self, pids):
+        d = self.paserver.callRemote("getLocalPackagesPath", pids)
+        d.addErrback(self.onError, "getLocalPackagesPath", pids, False)
+        return d
+
+    def getPackageVersion(self, pid):
+        d = self.paserver.callRemote("getPackageVersion", pid)
+        d.addErrback(self.onError, "getPackageVersion", pid, False)
+        return d
+
+
+    def getPackageSize(self, pid):
+        d = self.paserver.callRemote("getPackageSize", pid)
+        d.addErrback(self.onError, "getPackageSize", pid, 0)
+        return d
+
+    def getPackageInstallInit(self, pid):
+        d = self.paserver.callRemote("getPackageInstallInit", pid)
+        d.addErrback(self.onError, "getPackageInstallInit", pid, False)
+        return d
+
+    def getPackagePreCommand(self, pid):
+        d = self.paserver.callRemote("getPackagePreCommand", pid)
+        d.addErrback(self.onError, "getPackagePreCommand", pid, False)
+        return d
+
+    def getPackageCommand(self, pid):
+        d = self.paserver.callRemote("getPackageCommand", pid)
+        d.addErrback(self.onError, "getPackageCommand", pid, False)
+        return d
+
+    def getPackagePostCommandSuccess(self, pid):
+        d = self.paserver.callRemote("getPackagePostCommandSuccess", pid)
+        d.addErrback(self.onError, "getPackagePostCommandSuccess", pid, False)
+        return d
+
+    def getPackagePostCommandFailure(self, pid):
+        d = self.paserver.callRemote("getPackagePostCommandFailure", pid)
+        d.addErrback(self.onError, "getPackagePostCommandFailure", pid, False)
+        return d
+
+    def getPackageHasToReboot(self, pid):
+        d = self.paserver.callRemote("getPackageHasToReboot", pid)
+        d.addErrback(self.onError, "getPackageHasToReboot", pid, False)
+        return d
+
+    def getPackageFiles(self, pid):
+        d = self.paserver.callRemote("getPackageFiles", pid)
+        d.addErrback(self.onError, "getPackageFiles", pid)
+        return d
+
+    def getFileChecksum(self, file):
+        d = self.paserver.callRemote("getFileChecksum", file)
+        d.addErrback(self.onError, "getFileChecksum", file, False)
+        return d
+
+    def getPackagesIds(self, label):
+        d = self.paserver.callRemote("getPackagesIds", label)
+        d.addErrback(self.onError, "getPackagesIds", label)
+        return d
+
+    def getPackageId(self, label, version):
+        d = self.paserver.callRemote("getPackageId", label, version)
+        d.addErrback(self.onError, "getPackageId", (label, version), False)
+        return d
+
+    def isAvailable(self, pid, mirror):
+        d = self.paserver.callRemote("isAvailable", pid, mirror)
+        d.addErrback(self.onError, "getPackageId", (pid, mirror), False)
+        return d
+
