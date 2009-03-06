@@ -121,7 +121,7 @@ def setDefaultClientOptions(client):
         client['transp_args'] = ['IdentityFile=%s' % client['cert'], 'User=%s' % client['user']]
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += [option]
-        client['transp_args'] += ["UserKnownHostsFile=/dev/null"] # required to prevent tcp forwarding failure
+        client['transp_args'] += ["UserKnownHostsFile=/dev/null", 'StrictHostKeyChecking=no'] # required to prevent tcp forwarding failure
 
     # Push/pull mode using wget driven by SSH
     if client['protocol'] == 'wget':
@@ -157,7 +157,7 @@ def setDefaultClientOptions(client):
         for option in LauncherConfig().ssh_options:
             client['transp_args'] += ['-o', option]
         client['transp_args'] += ['-A'] # always forward TCP key
-        client['transp_args'] += ['-o', 'UserKnownHostsFile=/dev/null'] # required to prevent key forwarding failure
+        client['transp_args'] += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no'] # required to prevent key forwarding failure
         if not 'proto_args' in client:
             client['proto_args'] = ['--archive', '--verbose']
         # inside ssh get the same args as outside ssh

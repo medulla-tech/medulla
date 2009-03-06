@@ -76,7 +76,6 @@ class LauncherConfig(pulse2.utils.Singleton):
         'CheckHostIP=no',
         'ConnectTimeout=10'
     ]
-    scp_options = ssh_options
     ssh_keys = {
         'default': '/root/.ssh/id_dsa'
     }
@@ -198,11 +197,11 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('wget', 'check_certs', 'wget_check_certs', 'bool')
         self.setoption('wget', 'resume', 'wget_resume', 'bool')
 
-        # Parse a part of "ssh" section 
+        # Parse a part of "ssh" section
         self.setoption('ssh', 'ssh_path', 'ssh_path')
         self.setoption('ssh', 'scp_path', 'scp_path')
         self.setoption('ssh', 'ssh_agent_path', 'ssh_agent_path')
-        
+
         # Parse "rsync" section
         self.setoption('rsync', 'rsync_path', 'rsync_path')
         self.setoption('rsync', 'resume', 'rsync_resume', 'bool')
@@ -360,7 +359,7 @@ class LauncherConfig(pulse2.utils.Singleton):
 
                 except ConfigParser.NoOptionError, e:
                     logging.getLogger().warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, e))
-                   
+
         # check for a few binaries availability
         if self.conf_or_default('rsync'):
             rsync_version = os.popen("%s --version"%(self.rsync_path), 'r').read().split('\n')[0].split(' ')[3].split('.')
@@ -384,7 +383,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         label = type.upper().replace("_", " ")
         conf = getattr(self, "%s_path"%(type))
         default = getattr(self, "%s_path_default"%(type))
-        
+
         if not os.access(conf, os.X_OK):
             if not os.access(default, os.X_OK):
                 logging.getLogger().warn("launcher %s: can't find %s (looking for %s nor the default value %s), disabling all %s-related stuff" % (self.name, label, conf, default, type))
@@ -401,13 +400,11 @@ class LauncherConfig(pulse2.utils.Singleton):
         # Parse "ssh" sections
         self.setoption('ssh', 'default_key', 'ssh_defaultkey')
         self.setoption('ssh', 'forward_key', 'ssh_forward_key')
-        self.setoption('ssh', 'scp_options', 'scp_options')
-        
-        if not type(self.scp_options) == type([]):
-            self.scp_options = self.scp_options.split(' ')
+
         self.setoption('ssh', 'ssh_options', 'ssh_options')
         if not type(self.ssh_options) == type([]):
             self.ssh_options = self.ssh_options.split(' ')
+
         has_sshkey = False
         if self.cp.has_section('ssh'):
             for option in self.cp.options('ssh'):
