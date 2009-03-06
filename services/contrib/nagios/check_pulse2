@@ -1,0 +1,89 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Pulse 2.
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import sys
+import getopt
+from xmlrpclib import ServerProxy, Error
+import socket
+
+OK = 0
+WARNING = 1
+CRITICAL = 2
+UNKNOWN = 3
+
+def usage():
+    print "Nagios plugin to get Pulse 2 scheduler or launcher status."
+    print
+    print "Usage: pulse2-check -u http[s]://username:password@host:port"
+    print
+    print "Examples:"
+    print "$ check_pulse2 -u http://ip_scheduler:8000"
+    print "$ check_pulse2 -u http://ip_launcher:8001"
+    sys.exit(UNKNOWN)
+
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "u:")
+    except getopt.GetoptError, e:
+        print str(e)
+        usage()
+        sys.exit(3)
+
+    url = None
+    for o, a in opts:
+        if o in ('-u',):
+            url = a
+        else:
+            usage()
+
+    if not url:
+        usage()
+
+    s = ServerProxy(url)
+
+    try:
+        health = s.get_health()
+    except Error, e:
+        print str(e)
+        sys.exit(3)
+    except socket.error, e:
+        code, msg = e.args
+        if code == 111:
+            print msg
+        else:
+            print str(e)
+        sys.exit(CRITICAL)
+
+    if 'fd' in health and 'loadavg' in health and 'memory' in health:
+        print "OK"
+        sys.exit(OK)
+    else:
+        print "WARNING: " + str(health)
+        sys.exit(WARNING)
+
+
+if __name__ == "__main__":
+    main()
+
+
