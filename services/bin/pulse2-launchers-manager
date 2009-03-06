@@ -131,14 +131,19 @@ def stop_launcher(name, config):
     os.seteuid(0)
     os.setegid(0)
 
-    pid = get_pidfile(config,name)
+    pid = get_pidfile(config, name)
     if pid:
         if pid_is_alive(pid):
             logger.info('attempt to kill launcher "%s" (pid %d)' % (name, pid))
             kill_pid(pid, signal.SIGTERM) # TODO: check that kill was successful
-            logger.info('launcher "%s" killed using SIGTERM' % name)
-            clear_pidfile(config, name)
-            return True
+            time.sleep(time_to_wait)
+            if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
+                logger.info('launcher "%s" killed using SIGTERM' % name)
+                clear_pidfile(config, name)
+                return True
+            else:
+                logger.error('failed to kill launcher "%s" using SIGTERM' % name)
+                return False
         else:
             logger.error('failed to stop launcher "%s": was supposed to be running under pid %d' % (name, pid))
             print 'failed to stop launcher "%s": was supposed to be running under pid %d' % (name, pid)
@@ -149,7 +154,6 @@ def stop_launcher(name, config):
         print 'failed to stop launcher "%s": was not running' % (name)
         clear_pidfile(config, name)
         return False
-
 
 def clear_pidfile(config, name):
     os.setegid(0)
