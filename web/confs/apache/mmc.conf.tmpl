@@ -3,8 +3,9 @@ Alias /mmc ###DATADIR###
 
 ### Allow access to lmc web directory to everyone 
 <Directory ###DATADIR###>
-                AllowOverride None
-                Order allow,deny
-                allow from all
-		php_flag short_open_tag on
+    AllowOverride None
+    Order allow,deny
+    allow from all
+    php_flag short_open_tag on
+    php_flag magic_quotes_gpc on
 </Directory>
