@@ -178,6 +178,7 @@ class PackageParserXML:
     <!ELEMENT description (#PCDATA)>
 
     <!ELEMENT commands (preCommand?,installInit?,command,postCommandSuccess?,postCommandFailure?)>
+    <!ATTLIST commands reboot (0|1) 0>
     <!ELEMENT preCommand (#PCDATA)>
     <!ATTLIST preCommand name CDATA "">
     <!ELEMENT installInit (#PCDATA)>
