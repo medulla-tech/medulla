@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>MMC Pkgs plugin configuration file</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Olivier</firstname>
+
+      <surname>Roussy</surname>
+
+      <email>oroussy@mandriva.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+
+    <copyright>
+      <year>2008 2009 Olivier Roussy - Mandriva</year>
+    </copyright>
+
+    <revhistory>
+      <revision>
+        <revnumber>$Revision: 52 $</revnumber>
+
+        <date>$Date: 2008-08-26 14:22:25 +0200 (Tue, 26 Aug 2008) $</date>
+
+        <authorinitials>$Author: cdelfosse $</authorinitials>
+      </revision>
+    </revhistory>
+
+    <abstract>
+      <para>This document explains the content of the MMC Pkgs plugin
+      configuration file</para>
+    </abstract>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>The « Pkgs » plugin is the MMC plugin in charge of the edition,
+    suppression and creation of packages in the Pulse2 package system.</para>
+
+    <para>The plugin configuration file is
+    <filename>/etc/mmc/plugins/pkgs.ini</filename>.</para>
+
+    <para>Like all MMC related configuration file, its file format is INI
+    style. The file is made of sections, each one starting with a
+    « [sectionname] » header. In each section options can be defined like
+    this: « option = value ».</para>
+
+    <para>For example: <screen>[section1]
+option1 = 1
+option2 = 2
+
+[section2]
+option1 = foo
+option2 = plop      </screen></para>
+  </section>
+
+  <section>
+    <title>Configuration file sections</title>
+
+    <para>For now four sections are available in this configuration
+    file:</para>
+
+    <table>
+      <title>base.ini available sections</title>
+
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Section name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>main</entry>
+
+            <entry>Mostly MMC related behaviors</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>user_package_api</entry>
+
+            <entry>Describe how to reach the User package API service</entry>
+
+            <entry>yes</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« main » section</title>
+
+    <para>This section is used to give directives to the MMC agent.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>disable</entry>
+
+            <entry>Whenever use this plugin (or not)</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <para>This section defined some default web fields.</para>
+
+    <table>
+      <title>Available options for the "main" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>web_def_awake</entry>
+
+            <entry>Check "Do WOL on client" ?</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>web_def_inventory</entry>
+
+            <entry>Check "Do inventory on client" ?</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>web_def_mode</entry>
+
+            <entry>Fill default package send mode</entry>
+
+            <entry>yes</entry>
+
+            <entry>push</entry>
+          </row>
+
+          <row>
+            <entry>web_def_maxbw</entry>
+
+            <entry>Fill default max usable bw</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+
+          <row>
+            <entry>web_def_delay</entry>
+
+            <entry>Fill delay between two attempts</entry>
+
+            <entry>yes</entry>
+
+            <entry>60</entry>
+          </row>
+
+          <row>
+            <entry>web_def_attempts</entry>
+
+            <entry>Fill max number of attempts</entry>
+
+            <entry>yes</entry>
+
+            <entry>3</entry>
+          </row>
+
+          <row>
+            <entry>web_def_deployment_intervals</entry>
+
+            <entry>Fill deployment time window</entry>
+
+            <entry>yes</entry>
+
+            <entry />
+          </row>
+
+          <row>
+            <entry>web_dlpath</entry>
+
+            <entry>Directory of target computers from which a file is download
+            when a user perform the download file action in the computers
+            list. If empty, the download file action is not available on the
+            web interface.</entry>
+
+            <entry>yes</entry>
+
+            <entry />
+          </row>
+
+          <row>
+            <entry>web_def_dlmaxbw</entry>
+
+            <entry>Max bandwidth to use when download a file from a computer.
+            Set to 0 by default. If set to 0, there is no bandwidth limit
+            applied.</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+
+  <section>
+    <title>« user_package_api » section</title>
+
+    <para>This section is used to tell to the plugin where to find its User
+    Package API service.</para>
+
+    <table>
+      <title>Available options for the "user_package_api" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>server</entry>
+
+            <entry>The service IP address</entry>
+
+            <entry>yes</entry>
+
+            <entry>127.0.0.1</entry>
+          </row>
+
+          <row>
+            <entry>port</entry>
+
+            <entry>The service TCP port</entry>
+
+            <entry>yes</entry>
+
+            <entry>9990</entry>
+          </row>
+
+          <row>
+            <entry>mountpoint</entry>
+
+            <entry>The service path</entry>
+
+            <entry>yes</entry>
+
+            <entry>/upaa</entry>
+          </row>
+
+          <row>
+            <entry>username</entry>
+
+            <entry>The name to use when we send XMLRPC call</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+
+          <row>
+            <entry>password</entry>
+
+            <entry>The password to use when we send XMLRPC call</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+
+          <row>
+            <entry>enablessl</entry>
+
+            <entry>SSL mode support</entry>
+
+            <entry>yes</entry>
+
+            <entry>1</entry>
+          </row>
+
+          <row>
+            <entry>verifypeer</entry>
+
+            <entry>use SSL certificates</entry>
+
+            <entry>yes</entry>
+
+            <entry>0</entry>
+          </row>
+
+          <row>
+            <entry>cacert</entry>
+
+            <entry>path to the certificate file describing the certificate
+            authority of the SSL server</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+
+          <row>
+            <entry>localcert</entry>
+
+            <entry>path to the SSL server private certificate</entry>
+
+            <entry>yes</entry>
+
+            <entry>""</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+</article>
