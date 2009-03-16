@@ -121,6 +121,24 @@ option2 = plop      </screen></para>
 
             <entry>no</entry>
           </row>
+
+          <row>
+            <entry>querymanager</entry>
+
+            <entry>Describe which part of the inventory is going to be
+            queryable for the dyngroup plugin</entry>
+
+            <entry>yes</entry>
+          </row>
+
+          <row>
+            <entry>provisioning_inventory</entry>
+
+            <entry>Define the rules of provisioning of users from the
+            inventory</entry>
+
+            <entry>yes</entry>
+          </row>
         </tbody>
       </tgroup>
     </table>
@@ -247,7 +265,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>dbpoolrecycle</entry>
 
-            <entry>This setting causes the pool to recycle connections after the given number of seconds has passed</entry>
+            <entry>This setting causes the pool to recycle connections after
+            the given number of seconds has passed</entry>
 
             <entry>yes</entry>
 
@@ -257,7 +276,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>dbpoolsize</entry>
 
-            <entry>The number of connections to keep open inside the connection pool</entry>
+            <entry>The number of connections to keep open inside the
+            connection pool</entry>
 
             <entry>yes</entry>
 
@@ -303,7 +323,6 @@ option2 = plop      </screen></para>
 
             <entry></entry>
           </row>
-
         </tbody>
       </tgroup>
     </table>
@@ -442,17 +461,88 @@ display = cn::Computer Name||displayName::Description||srvcomment::Name||regdn::
     </table>
   </section>
 
+  <section>
+    <title>« querymanager » section</title>
+
+    <para>This section defined columns that are going to be queryable to
+    create groups from the dyngroup plugin.</para>
+
+    <table>
+      <title>Available options for the "querymanager" section</title>
+
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+
+            <entry>Description</entry>
+
+            <entry>Optional</entry>
+
+            <entry>Default value</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>list</entry>
+
+            <entry>List of simple columns to query</entry>
+
+            <entry>yes</entry>
+
+            <entry>Entity/Label||Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace</entry>
+          </row>
+
+          <row>
+            <entry>double</entry>
+
+            <entry>List of double columns to query (for exemple a software AND
+            it's version)</entry>
+
+            <entry>yes</entry>
+
+            <entry>Software/Products::Software/ProductName##Software/ProductVersion</entry>
+          </row>
+
+          <row>
+            <entry>halfstatic</entry>
+
+            <entry>List of columns to query with an hidden setted double
+            columns (for exemple software KNOWING THAT version = 3)</entry>
+
+            <entry>yes</entry>
+
+            <entry>Registry/Value/display name::Path##DisplayName</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>The separator to use between two entries is ||</para>
+
+    <para>List is a list of Table/Column that can be queryed as it.</para>
+
+    <para>Double is a list of Table1/Column1::Table2/Column2##Name. It's
+    generaly used for having a AND on the same entry in a table (all machines
+    having the software X and the version Y is not the same as all machines
+    having the software X at the version Y)</para>
+
+    <para>Halfstatic is a list of Table/Column1/name
+    complement::Column2##Value2, where the choices are on the column Column1
+    in the table Table where Column2 == Value2. The name complement is just to
+    display purpose.</para>
+  </section>
 
   <section>
-
     <title>provisioning_inventory</title>
 
-    <para>
-      This section defines some configuration directives for user provisioning with the inventory database. It allows to set access rights for users to the entities of the inventory database.
-    </para>
-    <para>
-      To enable the inventory provisioning system, you have to set this in <filename>/etc/mmc/plugins/base.ini</filename>:
-    </para>
+    <para>This section defines some configuration directives for user
+    provisioning with the inventory database. It allows to set access rights
+    for users to the entities of the inventory database.</para>
+
+    <para>To enable the inventory provisioning system, you have to set this in
+    <filename>/etc/mmc/plugins/base.ini</filename>:</para>
 
     <screen>
 [provisioning]
@@ -462,7 +552,8 @@ method = inventory
     </screen>
 
     <table>
-      <title>Available options for the "provisioning_inventory" section</title>
+      <title>Available options for the "provisioning_inventory"
+      section</title>
 
       <tgroup cols="4">
         <thead>
@@ -481,25 +572,30 @@ method = inventory
           <row>
             <entry>exclude</entry>
 
-            <entry>space-separated list of login that won't be provisioned by this provisioner.</entry>
+            <entry>space-separated list of login that won't be provisioned by
+            this provisioner.</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
           </row>
-	  <row>
+
+          <row>
             <entry>profile_attr</entry>
 
-            <entry>LDAP user attribute that is used to get the user profile</entry>
+            <entry>LDAP user attribute that is used to get the user
+            profile</entry>
 
             <entry>yes</entry>
 
             <entry></entry>
           </row>
-	  <row>
+
+          <row>
             <entry>profile_entity_x</entry>
 
-            <entry>Space-separated list of entities assigned to the user profile "x". See the example below for more information</entry>
+            <entry>Space-separated list of entities assigned to the user
+            profile "x". See the example below for more information</entry>
 
             <entry>yes</entry>
 
@@ -509,12 +605,12 @@ method = inventory
       </tgroup>
     </table>
 
-    <para>
-      If the entity does not exist, it is created automatically in the database, as a child of the root entity (the root entity always exists).
-    </para>
+    <para>If the entity does not exist, it is created automatically in the
+    database, as a child of the root entity (the root entity always
+    exists).</para>
 
     <para>For example:</para>
-    
+
     <screen>
 [provisioning_inventory]
 exclude = root
@@ -526,68 +622,70 @@ profile_entity_manager = plugin:network_to_entity
 profile_entity_none =
     </screen>
 
-    <para>
-      In this example, the root user is never provisioned. The LDAP attribute used to get the user profile is called "pulse2profile".
-    </para>
-    <para>
-      The users with the "admin" profile are linked to the root entity, which is represented by the dot character. These users have access the root entity and all its sub-entities.
-    </para>
-    <para>
-      The users with the "agent" profile are linked to both entities "entityA" and "entityB" character. These users have access to entities "entityA" and "entityB", and all their sub-entities.
-    </para>
-    <para>
-      The users with the "tech" profile are linked to entities defined in the "pulse2entity" LDAP attribute values of these users.
-    </para>
-    <para>
-      The users with the "manager" profile are linked to entities computed by the "network_to_entity" provisioning plugin. See the next sub-section for more informations.
-    </para>
-    <para>
-      The users with the "none" profile are linked to no entity.
-    </para>
-    <para>
-      A user that doesn't have any profile (for example the pulse2profile attribute of her/his entry is empty), or that has an undefined profile, will be linked to no entity.
-    </para>
+    <para>In this example, the root user is never provisioned. The LDAP
+    attribute used to get the user profile is called "pulse2profile".</para>
+
+    <para>The users with the "admin" profile are linked to the root entity,
+    which is represented by the dot character. These users have access the
+    root entity and all its sub-entities.</para>
+
+    <para>The users with the "agent" profile are linked to both entities
+    "entityA" and "entityB" character. These users have access to entities
+    "entityA" and "entityB", and all their sub-entities.</para>
+
+    <para>The users with the "tech" profile are linked to entities defined in
+    the "pulse2entity" LDAP attribute values of these users.</para>
+
+    <para>The users with the "manager" profile are linked to entities computed
+    by the "network_to_entity" provisioning plugin. See the next sub-section
+    for more informations.</para>
+
+    <para>The users with the "none" profile are linked to no entity.</para>
+
+    <para>A user that doesn't have any profile (for example the pulse2profile
+    attribute of her/his entry is empty), or that has an undefined profile,
+    will be linked to no entity.</para>
 
     <section>
-
       <title>"network_to_entity" provisioning plugin</title>
 
-      <para>
-	This plugin for the inventory provisioning system allows to link users to entities according to their IP when connecting to the MMC web interface.
-      </para>
-      <para>
-	The IP address of the user is determined by the Apache server running the MMC web interface thanks to the remote address of the HTTP connection. Then this IP address is forwarded to the MMC agent when authenticating and provisioning the user.
-      </para>
-      <para>
-	The IP address to entities mapping is done thanks to a rules file, similar to the one used by the inventory server to affect a computer inventory to an entity.
-      </para>
-      <para>
-	The rules file must be called <filename>/etc/mmc/plugins/provisioning-inventory</filename>. There is now to specify an alternate rules file.
-      </para>
-      
+      <para>This plugin for the inventory provisioning system allows to link
+      users to entities according to their IP when connecting to the MMC web
+      interface.</para>
+
+      <para>The IP address of the user is determined by the Apache server
+      running the MMC web interface thanks to the remote address of the HTTP
+      connection. Then this IP address is forwarded to the MMC agent when
+      authenticating and provisioning the user.</para>
+
+      <para>The IP address to entities mapping is done thanks to a rules file,
+      similar to the one used by the inventory server to affect a computer
+      inventory to an entity.</para>
+
+      <para>The rules file must be called
+      <filename>/etc/mmc/plugins/provisioning-inventory</filename>. There is
+      now to specify an alternate rules file.</para>
+
       <para>Here is an example of rules file:</para>
-    
+
       <screen>
 entityA              ip      match   ^192\.168\.1\..*$
 entityB,entityC      ip      match   ^192\.168\.0\.19$
 .                    ip      match   ^.*$
       </screen>
 
-      <para>
-	Each line of the rules file is processing starting from the top of the file, until one rule is valid. The user IP address is matched against a regular expression. If no rule match, the user is linked to no entity.
-      </para>
-      <para>
-	The first line links users connecting from the 192.168.1.0/24 to the entity called "entityA".
-      </para>
-      <para>
-	The second line links users connecting from the IP address 192.168.0.19 to the entities called "entityB" and "entityC".
-      </para>
-      <para>
-	The third line is a kind of catch-all rule.
-      </para>
+      <para>Each line of the rules file is processing starting from the top of
+      the file, until one rule is valid. The user IP address is matched
+      against a regular expression. If no rule match, the user is linked to no
+      entity.</para>
 
+      <para>The first line links users connecting from the 192.168.1.0/24 to
+      the entity called "entityA".</para>
+
+      <para>The second line links users connecting from the IP address
+      192.168.0.19 to the entities called "entityB" and "entityC".</para>
+
+      <para>The third line is a kind of catch-all rule.</para>
     </section>
-
   </section>
-
 </article>
