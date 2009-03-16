@@ -413,7 +413,7 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>pid_path</entry>
+            <entry>pidfile</entry>
 
             <entry>The scheduler service PID, used by scheduler-manager to
             track the scheduler service.</entry>

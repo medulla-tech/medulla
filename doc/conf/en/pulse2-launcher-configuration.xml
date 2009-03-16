@@ -553,7 +553,7 @@ option2 = plop      </screen></para>
           </row>
 
           <row>
-            <entry>pid_path</entry>
+            <entry>pidfile</entry>
 
             <entry>The launcher services PID, used by pulse2-launchers-manager
             to track the launchers services.</entry>
