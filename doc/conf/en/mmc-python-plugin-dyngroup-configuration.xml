@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>MMC MSC plugin configuration file</title>
+  <title>MMC Dyngroup plugin configuration file</title>
 
   <articleinfo>
     <author>
@@ -100,8 +100,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>querymanager</entry>
 
-            <entry>Describe how it react as a potential queriable plugin
-            </entry>
+            <entry>Describe how it react as a potential queriable
+            plugin</entry>
 
             <entry>yes</entry>
           </row>
@@ -345,60 +345,6 @@ option2 = plop      </screen></para>
             <entry>yes</entry>
 
             <entry>1</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
-
-  <section>
-    <para />
-
-    <table>
-      <title>Available options for the "main" section</title>
-
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
-
-            <entry>Description</entry>
-
-            <entry>Optional</entry>
-
-            <entry>Default value</entry>
-          </row>
-        </thead>
-
-        <tbody>
-          <row>
-            <entry>mserver</entry>
-
-            <entry>The service IP address</entry>
-
-            <entry>yes</entry>
-
-            <entry>127.0.0.1</entry>
-          </row>
-
-          <row>
-            <entry>mport</entry>
-
-            <entry>The service TCP port</entry>
-
-            <entry>yes</entry>
-
-            <entry>9990</entry>
-          </row>
-
-          <row>
-            <entry>mmountpoint</entry>
-
-            <entry>The service path</entry>
-
-            <entry>yes</entry>
-
-            <entry>/rpc</entry>
           </row>
         </tbody>
       </tgroup>
