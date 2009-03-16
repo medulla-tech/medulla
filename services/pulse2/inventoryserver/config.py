@@ -58,7 +58,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
 
     options = {}
 
-    hostname = ['Hardware', 'Host']
+    hostname = ['Hardware', 'Name']
 
 
     def setup(self, config_file):
