@@ -44,6 +44,7 @@ from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
+from pulse2.database.utilities import handle_deconnect
 
 # our modules
 from pulse2.scheduler.config import SchedulerConfig
@@ -53,6 +54,8 @@ from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
+
+handle_deconnect()
 
 def gatherStuff():
     """ handy function to gather widely used objects """
