@@ -203,24 +203,24 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry>/etc/mmc/pulse2/inventory-server/keys/cacert.pem </entry>
+            <entry>/etc/mmc/pulse2/inventory-server/keys/cacert.pem</entry>
           </row>
 
           <row>
             <entry>localcert</entry>
 
-            <entry>path to the SSL serverprivate certificate</entry>
+            <entry>path to the SSL server private certificate</entry>
 
             <entry>yes</entry>
 
-            <entry>/etc/mmc/pulse2/inventory-server/keys/privkey.pem </entry>
+            <entry>/etc/mmc/pulse2/inventory-server/keys/privkey.pem</entry>
           </row>
 
           <row>
             <entry>hostname</entry>
 
-            <entry>allow hostname overriding by an other information in the
-            </entry>
+            <entry>allow hostname overriding by an other information in
+            the</entry>
 
             <entry>yes</entry>
 
@@ -252,7 +252,7 @@ option2 = plop      </screen></para>
     </table>
 
     <para>The hostname option is a representation of the path in the inventory
-    XML. </para>
+    XML.</para>
   </section>
 
   <section>
