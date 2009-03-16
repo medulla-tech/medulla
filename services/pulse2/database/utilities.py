@@ -26,6 +26,8 @@ from sqlalchemy import exceptions
 from sqlalchemy.orm import *
 from sqlalchemy.exceptions import SQLError
 
+import logging
+
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
 
@@ -100,9 +102,12 @@ def create_method(m):
         NORESULT = "__noresult__"
         ret = NORESULT
         try:
+            #logging.getLogger().debug("1) going to try to call : %s"%m)
             old_m = getattr(self, '_old_'+m)
             ret = old_m()
+            #logging.getLogger().debug("1) success! : %s"%m)
         except SQLError, e:
+            #logging.getLogger().debug("2) failed to call : %s"%m)
             reconnect = False
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
                 logging.getLogger().warn("SQLError Lost connection")
@@ -111,8 +116,9 @@ def create_method(m):
                 logging.getLogger().warn("SQLError MySQL server has gone away")
                 reconnect = True
             if reconnect:
+                #logging.getLogger().debug("3) trying to reconnect : %s"%m)
                 for i in range(0, NB_DB_CONN_TRY):
-                    logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
+                    #logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
                     new_m = getattr(self, m)
                     try:
                         ret = new_m(True)
@@ -122,9 +128,18 @@ def create_method(m):
                         continue
             if ret != NORESULT:
                 return ret
+            #logging.getLogger().debug("4) failed to reconnect : %s"%m)
             raise e
         return ret
     return method
+
+def handle_deconnect():
+    for m in ['first', 'count', 'all', '__iter__']:
+        try:
+            getattr(Query, '_old_'+m)
+        except AttributeError:
+            setattr(Query, '_old_'+m, getattr(Query, m))
+            setattr(Query, m, create_method(m))
 
 def toH(w):
     ret = {}

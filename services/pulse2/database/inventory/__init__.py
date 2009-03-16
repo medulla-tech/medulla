@@ -25,7 +25,7 @@
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, toH, DbObject
+from pulse2.database.utilities import unique, toH, DbObject, handle_deconnect
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, onlyAddNew, Singleton
@@ -1241,6 +1241,8 @@ class InventoryCreator(Inventory):
 
     def __init__(self):
         Inventory.__init__(self)
+        handle_deconnect()
+
         if not hasattr(self, 'ctx'):
             self.ctx = InventoryContext()
             self.ctx.userid = 'root'
