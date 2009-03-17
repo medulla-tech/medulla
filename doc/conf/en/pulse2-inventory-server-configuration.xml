@@ -42,7 +42,7 @@
     importing inventory sent from ocs inventory agents.</para>
 
     <para>The service configuration file is
-    <filename>/etc/mmc/pulse2/inventoryserver.ini</filename></para>
+    <filename>/etc/mmc/pulse2/inventory-server/inventory-server.ini</filename></para>
 
     <para>Like all Pulse 2 related configuration file, its file format is INI
     style. The file is made of sections, each one starting with a
