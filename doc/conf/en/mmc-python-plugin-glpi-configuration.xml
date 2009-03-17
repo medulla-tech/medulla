@@ -101,7 +101,7 @@ option2 = plop      </screen></para>
           <row>
             <entry>authentication_glpi</entry>
 
-            <entry></entry>
+            <entry>Give the way to authenticate on glpi</entry>
 
             <entry>yes</entry>
           </row>
@@ -109,7 +109,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>provisioning_glpi</entry>
 
-            <entry></entry>
+            <entry>Give the permissions that are going to be associated with
+            users (based on permissions in glpi)</entry>
 
             <entry>yes</entry>
           </row>
@@ -284,7 +285,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>localisation</entry>
 
-            <entry></entry>
+            <entry>Tells if the glpi entities are going to be used in
+            pulse2</entry>
 
             <entry>yes</entry>
 
@@ -294,7 +296,7 @@ option2 = plop      </screen></para>
           <row>
             <entry>active_profiles</entry>
 
-            <entry></entry>
+            <entry>Tells which profiles are going to be used</entry>
 
             <entry>yes</entry>
 
@@ -304,7 +306,8 @@ option2 = plop      </screen></para>
           <row>
             <entry>filter_on</entry>
 
-            <entry></entry>
+            <entry>add a filter on the glpi_computers table when retrieving
+            machines</entry>
 
             <entry>yes</entry>
 
@@ -382,7 +385,7 @@ option2 = plop      </screen></para>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>http://glpi-server/glpi/ </entry>
           </row>
         </tbody>
       </tgroup>
@@ -415,41 +418,45 @@ option2 = plop      </screen></para>
           <row>
             <entry>exclude</entry>
 
-            <entry></entry>
+            <entry>users that are never going to be provisioned</entry>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>root</entry>
           </row>
 
           <row>
             <entry>doauth</entry>
 
-            <entry></entry>
+            <entry>Before provisioning, should we perform a GLPI
+            authentication to create or update the user's informations in the
+            GLPI database ?</entry>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>1</entry>
           </row>
 
           <row>
             <entry>profile_acl_profileX</entry>
 
-            <entry></entry>
+            <entry>MMC web interface ACLs definition according to the user
+            GLPI profile </entry>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>:##:base#main#default</entry>
           </row>
 
           <row>
             <entry>profile_order</entry>
 
-            <entry></entry>
+            <entry>If the user belong to more than one profile, the first
+            profile of this list will be used</entry>
 
             <entry>yes</entry>
 
-            <entry></entry>
+            <entry>profile1 profile2 profile3</entry>
           </row>
         </tbody>
       </tgroup>
