@@ -39,6 +39,7 @@ function getAllGroups($params = array()) { # canShow
     foreach ($groups as $group) {
         $g = new Group($group['id']);
         $g->name = $group['name'];
+        $g->is_owner = $group['is_owner'];
         $ret[] = $g;
     }
     return $ret;

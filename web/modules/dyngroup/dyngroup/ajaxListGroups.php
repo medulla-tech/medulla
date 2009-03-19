@@ -50,6 +50,9 @@ $ids  = array();
 $name = array();
 $type = array();
 $show = array();
+$action_delete = array();
+$delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+$empty = new EmptyActionItem();
 
 foreach ($list as $group) {
     $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name);
@@ -60,6 +63,11 @@ foreach ($list as $group) {
         $type[]= _T('static group', 'dyngroup');
     }
     $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
+    if ($group->is_owner == 1) {
+        $action_delete[]= $delete;
+    } else {
+        $action_delete[]= $empty;
+    }
 }
 
 $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
@@ -87,7 +95,7 @@ if (in_array("msc", $_SESSION["supportModList"])) {
     $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
     $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
 }
-$n->addActionItem(new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers"));
+$n->addActionItemArray($action_delete);
 $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
 $n->disableFirstColumnActionLink();
 
