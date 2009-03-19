@@ -444,7 +444,7 @@ class DyngroupDatabase(DatabaseHelper):
         except KeyError:
             pass
 
-        ret = groups.all()
+        ret = groups.order_by(self.groups.c.name).all()
         session.close()
         return ret
 
