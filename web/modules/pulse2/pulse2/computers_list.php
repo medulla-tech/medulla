@@ -51,7 +51,11 @@ if (displayLocalisationBar()) {
     }
     $ajax->setElements($list);
     $ajax->setElementsVal($values);
-    if (!empty($_SESSION["computers.selected_location"])) {
+    if (!empty($param['gid'])) {
+        if (!empty($_SESSION["computers.selected_location." . $param['gid']])) {
+            $ajax->setSelected($_SESSION["computers.selected_location." . $param['gid']]);
+        }
+    } else if (!empty($_SESSION["computers.selected_location"])) {
         $ajax->setSelected($_SESSION["computers.selected_location"]);
     }
 } else {
