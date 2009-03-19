@@ -39,7 +39,11 @@ $filter = array('hostname'=> $_GET["filter"]);
 if (isset($_GET["start"])) { $start = $_GET["start"]; } else { $start = 0; }
 if (isset($_GET['location'])) {
     $filter['location'] = $_GET['location'];
-    $_SESSION['computers.selected_location'] = $_GET['location'];
+    if (!empty($_GET['gid'])) {
+        $_SESSION['computers.selected_location.' . $_GET['gid']] = $_GET['location'];
+    } else {
+        $_SESSION['computers.selected_location'] = $_GET['location'];
+    }
 }
 if (isset($_GET['request'])) { $filter['request'] = $_GET['request']; }
 if (isset($_GET['equ_bool'])) { $filter['equ_bool'] = $_GET['equ_bool']; }
