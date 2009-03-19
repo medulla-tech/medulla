@@ -1,4 +1,5 @@
 # monitor the mmc-agent service
+# Contributed by Bertrand Lecervoisier
 
 check process mmc-agent
    with pidfile "/var/run/mmc-agent.pid"
