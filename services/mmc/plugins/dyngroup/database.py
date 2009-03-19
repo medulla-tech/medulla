@@ -377,13 +377,17 @@ class DyngroupDatabase(DatabaseHelper):
 
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(ug_ids)))
 
-    def __allgroups_query(self, ctx, params, session = None):
+    def __get_group_permissions_request(self, ctx, session = None):
         if not session:
             session = create_session()
         select_from = self.groups
         join_tables, filter_on = self.__permissions_query(ctx, session)
         select_from = self.__merge_join_query(select_from, join_tables)
         groups = session.query(Groups).select_from(select_from).filter(filter_on)
+        return groups
+                                
+    def __allgroups_query(self, ctx, params, session = None):
+        groups = self.__get_group_permissions_request(ctx, session)
         try:
             if params['canShow']:
                 groups = groups.filter(self.groups.c.display_in_menu == 1)
@@ -501,7 +505,7 @@ class DyngroupDatabase(DatabaseHelper):
         user_id = self.__getOrCreateUser(ctx)
 
         session = create_session()
-        group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
+        group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
         if group:
             group.name = name.encode('utf-8')
             session.save_or_update(group)
@@ -515,7 +519,7 @@ class DyngroupDatabase(DatabaseHelper):
         user_id = self.__getOrCreateUser(ctx)
 
         session = create_session()
-        group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
+        group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
         if group:
             group.display_in_menu = visibility
             session.save_or_update(group)
@@ -532,7 +536,7 @@ class DyngroupDatabase(DatabaseHelper):
     def setrequest_group(self, ctx, gid, request):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
-        group = session.query(Groups).filter(self.groups.c.id == gid).filter(self.groups.c.FK_user == user_id).first()
+        group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == gid).first()
         group.query = request.encode('utf-8')
         session.save_or_update(group)
         session.flush()
@@ -557,7 +561,7 @@ class DyngroupDatabase(DatabaseHelper):
     def setbool_group(self, ctx, id, bool):
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
-        group = session.query(Groups).filter(self.groups.c.id == id).filter(self.groups.c.FK_user == user_id).first()
+        group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
         group.bool = bool
         session.save_or_update(group)
         session.flush()
