@@ -377,17 +377,22 @@ class DyngroupDatabase(DatabaseHelper):
 
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_user], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_group]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_user == user_id, self.shareGroup.c.FK_user.in_(ug_ids)))
 
-    def __get_group_permissions_request(self, ctx, session = None):
+    def __get_group_permissions_request_first(self, ctx, session = None):
         if not session:
             session = create_session()
         select_from = self.groups
         join_tables, filter_on = self.__permissions_query(ctx, session)
         select_from = self.__merge_join_query(select_from, join_tables)
+        return (select_from, filter_on)
+    
+    def __get_group_permissions_request(self, ctx, session = None):
+        (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
         groups = session.query(Groups).select_from(select_from).filter(filter_on)
         return groups
                                 
     def __allgroups_query(self, ctx, params, session = None):
-        groups = self.__get_group_permissions_request(ctx, session)
+        (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
+        groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(filter_on)
         try:
             if params['canShow']:
                 groups = groups.filter(self.groups.c.display_in_menu == 1)
@@ -433,6 +438,7 @@ class DyngroupDatabase(DatabaseHelper):
     def getallgroups(self, ctx, params):
         session = create_session()
         groups = self.__allgroups_query(ctx, params, session)
+        
         min = 0
         try:
             if params['min']:
@@ -449,6 +455,8 @@ class DyngroupDatabase(DatabaseHelper):
             pass
 
         ret = groups.order_by(self.groups.c.name).all()
+        ret = map(lambda m: setattr(m[0], 'is_owner', m[1] == ctx.userid) or m[0], ret)
+        
         session.close()
         return ret
 
@@ -816,13 +824,15 @@ class DyngroupDatabase(DatabaseHelper):
 
 class Groups(object):
     def toH(self):
-        return {
+        ret = {
             'id':self.id,
             'name':self.name,
             'query':self.query,
             'display_in_menu':self.display_in_menu,
             'bool':self.bool
         }
+        if hasattr(self, 'is_owner'): ret['is_owner'] = self.is_owner
+        return ret
 
 class Users(object):
     def toH(self):
