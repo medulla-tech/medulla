@@ -882,7 +882,7 @@ class ldapUserGroupControl:
                      'sn':lastN,
                      'givenName':firstN,
                      'homeDirectory' : homeDir,
-                     'shadowExpire':'0', # Password never expire
+                     'shadowExpire' : '-1', # Password never expire
                      'shadowInactive':'-1',
                      'shadowWarning':'7',
                      'shadowMin':'-1',
