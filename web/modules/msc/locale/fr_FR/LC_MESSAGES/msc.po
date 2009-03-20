@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-02 18:18+0100\n"
-"PO-Revision-Date: 2009-03-02 18:19+0100\n"
+"PO-Revision-Date: 2009-03-20 10:40+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -1049,7 +1049,7 @@ msgstr "Paramètres du script"
 
 #: msc/infoPackage.inc.php:33
 msgid "Secure Control"
-msgstr "Contrôle sécurisé de"
+msgstr "Contrôle sécurisé"
 
 #: msc/infoPackage.inc.php:71
 msgid "Secure control on a group of computers"
