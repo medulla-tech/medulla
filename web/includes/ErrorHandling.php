@@ -74,6 +74,7 @@ class ErrorHandlingItem {
         if ($this->_showTraceBack) {
             $str .= '<a href="#" onClick="Effect.toggle(\'errorTraceback\',\'slide\');">'._("Show complete trackback").'</a>';
             $str .= '<div id="errorTraceback" style="display:none;"><h1 style="margin-top: 1em; margin-bottom: 0.2em;">'._("Complete Traceback").'</h1><pre>';
+            $str .= gmdate("d M Y H:i:s") . "\n\n";
             $str .= "PHP XMLRPC call: " . $xmlResponse["faultString"] . "\n\n";
             $str .= "Python Server traceback:\n";
             $str .= $xmlResponse["faultTraceback"]."\n";
