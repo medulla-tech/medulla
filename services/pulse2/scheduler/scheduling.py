@@ -543,6 +543,7 @@ def sortCommands(commands_to_perform):
     """
 
     def _cb(result, tocome_distribution):
+        deffereds = [] # will hold all deferred
 
         ids_list = [] # will contain the IDs from commands to run
         # list is pre-filled in case of something goes wrong below
@@ -550,8 +551,7 @@ def sortCommands(commands_to_perform):
             ids_list += ids
 
         if len(ids_list) == 0:
-            logging.getLogger().info("Scheduler: 0 task to start")
-            return 0
+            return deffereds
 
         logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
         try: # this code is not well tested: let's protect it :D
@@ -610,15 +610,12 @@ def sortCommands(commands_to_perform):
         except: # hum, something goes weird, try to get ids_list anyway
             logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
-        logging.getLogger().info("Scheduler: %d tasks to start" % len(ids_list))
-        deffereds = [] # will hold all deferred
         for id in ids_list:
             deffered = runCommand(id)
             if deffered:
                 deffereds.append(deffered)
         logging.getLogger().debug("Scheduler: %d tasks started" % len(ids_list))
-        return len(deffereds)
-
+        return deffereds
 
     # build array of commands to perform
     tocome_distribution = dict()
@@ -637,7 +634,7 @@ def sortCommands(commands_to_perform):
             tocome_distribution[command_group].append(command_id)
 
     # build array of commands being processed by available launchers
-    getLaunchersBalance().\
+    return getLaunchersBalance().\
         addCallback(_cb, tocome_distribution)
 
 def stopElapsedCommands(scheduler_name):

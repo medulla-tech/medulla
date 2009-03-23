@@ -78,29 +78,48 @@ def start_all_callbacks():
     logger = logging.getLogger()
     logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, startup_delay))
     time.sleep(startup_delay)
-    scheduleAwakeScheduling()
+    scheduleStartCommands()
+    scheduleStopCommands()
     scheduleLogStats()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
-def scheduleAwakeScheduling():
+def scheduleStartCommands():
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
-    twisted.internet.reactor.callLater(start_commands_in, awakeScheduling)
+    twisted.internet.reactor.callLater(start_commands_in, awakeStartCommands)
 
-def awakeScheduling():
-    logger = logging.getLogger()
-    logger.info('scheduler "%s": wake-up' % (SchedulerConfig().name))
+def scheduleStopCommands():
+    stop_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
+    twisted.internet.reactor.callLater(stop_commands_in, awakeStopCommands)
+
+def awakeStartCommands():
     # start command, gather deffered
+    logging.getLogger().info('scheduler "%s": START: waking-up' % (SchedulerConfig().name))
+
+    def _fb(result):
+        logging.getLogger().info('scheduler "%s": START: sleeping' % (SchedulerConfig().name))
+        scheduleStartCommands()
+
+    def _cb(result):
+        logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(result)))
+        dl = twisted.internet.defer.DeferredList(result)
+        dl.addCallback(_fb).addErrback(_eb)
+        return dl
+
+    def _eb(reason):
+        logging.getLogger().error('scheduler "%s": START: Error while running awakeStartCommands:'  % (SchedulerConfig().name))
+        logging.getLogger().error(reason)
+        scheduleStartCommands()
+
+    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name).addCallback(_cb).addErrback(_eb)
+
+def awakeStopCommands():
+    logging.getLogger().info('scheduler "%s": Wake up, stopping relevant commands' % (SchedulerConfig().name))
     try:
-        pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
+        print pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
     except Exception, e:
-        logger.error("Error while running startAllCommands:")
-        logger.error(e)
-    try:
-        pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
-    except Exception, e:
-        logger.error("Error while running stopElapsedCommands")
-        logger.error(e)
-    scheduleAwakeScheduling()
+        logging.getLogger().error("Error while running stopElapsedCommands")
+        logging.getLogger().error(e)
+    scheduleStopCommands()
 
 def scheduleLogStats():
     """ periodicaly log stats """
