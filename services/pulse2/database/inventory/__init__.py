@@ -228,14 +228,18 @@ class Inventory(DyngroupDatabaseHelper):
                      if pattern.has_key('filter'):
                          filt = pattern['filter']
                      if count:
-                         return ComputerGroupManager().countresult_group(ctx, gid, filt)
+                         # when the entities will be in dyngroup, we will be able to use 
+                         # ComputerGroupManager().countresult_group(ctx, gid, filt) again
+                         machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, filt))
                      else:
                          min = 0
                          max = -1
-                         if pattern.has_key('min'):
-                             min = pattern['min']
-                         if pattern.has_key('max'):
-                             max = pattern['max']
+                         if 'location' not in pattern:
+                             # this check will be useless when the entities will be in dyngroup
+                             if pattern.has_key('min'):
+                                 min = pattern['min']
+                             if pattern.has_key('max'):
+                                 max = pattern['max']
                          machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
 
                 query = query.filter(self.machine.c.id.in_(machines))
@@ -261,7 +265,11 @@ class Inventory(DyngroupDatabaseHelper):
 
         if 'max' in pattern:
             if pattern['max'] != -1:
-                if ('gid' in pattern and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) or 'gid' not in pattern:
+                if ('gid' in pattern and ComputerGroupManager().isrequest_group(ctx, pattern['gid'])) \
+                        or 'gid' not in pattern \
+                        or 'gid' in pattern and 'location' in pattern:
+                            # the last check (or 'gid' in pattern and 'location' in pattern) 
+                            # will be useless when the entities will be in dyngroup
                     query = query.offset(pattern['min'])
                     query = query.limit(int(pattern['max']) - int(pattern['min']))
                 else:
