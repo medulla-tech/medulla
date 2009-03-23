@@ -100,7 +100,6 @@ def awakeStartCommands():
         scheduleStartCommands()
 
     def _cb(result):
-        logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(result)))
         dl = twisted.internet.defer.DeferredList(result)
         dl.addCallback(_fb).addErrback(_eb)
         return dl
@@ -113,13 +112,23 @@ def awakeStartCommands():
     pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name).addCallback(_cb).addErrback(_eb)
 
 def awakeStopCommands():
-    logging.getLogger().info('scheduler "%s": Wake up, stopping relevant commands' % (SchedulerConfig().name))
-    try:
-        print pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name)
-    except Exception, e:
-        logging.getLogger().error("Error while running stopElapsedCommands")
-        logging.getLogger().error(e)
-    scheduleStopCommands()
+    logging.getLogger().info('scheduler "%s": STOP: waking-up' % (SchedulerConfig().name))
+
+    def _fb(result):
+        logging.getLogger().info('scheduler "%s": STOP: sleeping' % (SchedulerConfig().name))
+        scheduleStopCommands()
+
+    def _cb(result):
+        dl = twisted.internet.defer.DeferredList(result)
+        dl.addCallback(_fb).addErrback(_eb)
+        return dl
+
+    def _eb(reason):
+        logging.getLogger().error('scheduler "%s": STOP: Error while running awakeStopCommands:'  % (SchedulerConfig().name))
+        logging.getLogger().error(reason)
+        scheduleStopCommands()
+
+    pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name).addCallback(_cb).addErrback(_eb)
 
 def scheduleLogStats():
     """ periodicaly log stats """

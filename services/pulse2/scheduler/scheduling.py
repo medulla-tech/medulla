@@ -520,7 +520,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
         filter(sqlalchemy.or_(
             database.commands.c.end_date == soon,
             database.commands.c.end_date == later,
-            database.commands.c.end_date >= now)
+            database.commands.c.end_date > now)
         ).\
         filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
@@ -551,6 +551,7 @@ def sortCommands(commands_to_perform):
             ids_list += ids
 
         if len(ids_list) == 0:
+            logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(ids_list)))
             return deffereds
 
         logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
@@ -610,11 +611,11 @@ def sortCommands(commands_to_perform):
         except: # hum, something goes weird, try to get ids_list anyway
             logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
+        logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(ids_list)))
         for id in ids_list:
             deffered = runCommand(id)
             if deffered:
                 deffereds.append(deffered)
-        logging.getLogger().debug("Scheduler: %d tasks started" % len(ids_list))
         return deffereds
 
     # build array of commands to perform
@@ -638,8 +639,6 @@ def sortCommands(commands_to_perform):
         addCallback(_cb, tocome_distribution)
 
 def stopElapsedCommands(scheduler_name):
-    # we return a list of deferred
-    deffereds = [] # will hold all deferred
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
@@ -672,7 +671,7 @@ def stopElapsedCommands(scheduler_name):
             myCoH.setStateOverTimed()
             ids.append(q.id)
 
-    # this loop only put the currentÃ_state in over_timed, but as the coh are not running, we dont need to stop them.
+    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
@@ -696,15 +695,18 @@ def stopElapsedCommands(scheduler_name):
         myCoH.setStateOverTimed()
 
     session.close()
-    logging.getLogger().info("Scheduler: %d tasks to stop" % len(ids))
     logging.getLogger().debug("Scheduler: stopping %s" % ids)
-    stopCommandsOnHosts(ids)
-    return True
+    return twisted.internet.defer.maybeDeferred(stopCommandsOnHosts, ids)
 
 def stopCommandsOnHosts(ids):
+    deffereds = [] # will hold all deferred
+    logging.getLogger().info('scheduler "%s": STOP: stopping %d commands' % (SchedulerConfig().name, len(ids)))
     if len(ids) > 0:
         for launcher in SchedulerConfig().launchers_uri.values():
-            callOnLauncher(None, launcher, 'term_processes', ids)
+            deffered = callOnLauncher(None, launcher, 'term_processes', ids)
+            if deffered:
+                deffereds.append(deffered)
+    return deffereds
 
 def stopCommand(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
