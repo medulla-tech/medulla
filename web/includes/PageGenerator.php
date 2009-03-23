@@ -311,6 +311,7 @@ class ListInfos extends HtmlElement {
         $this->initVar();
         $this->col_width = array();
         $this->firstColumnActionLink = True;
+        $this->_addInfo = array();
     }
 
     function setAdditionalInfo($addinfo) {
@@ -489,7 +490,7 @@ class ListInfos extends HtmlElement {
             $firstAction = $this->arrAction[0][$idx];
         }
         echo $firstAction->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
-        if ($this->_addInfo[$idx]) {
+        if (isset($this->_addInfo[$idx])) {
             print $this->_addInfo[$idx];
         }
         echo "</td>";
@@ -936,7 +937,7 @@ class NoLocationTpl extends AbstractTpl {
         $this->size = '13';
     }
 
-    function display($param) {
+    function display() {
         print '<span class="error">' . _("No item available") . '</span>';
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" size="'.$this->size.'" value="" class="searchfieldreal" />';
     }
@@ -961,7 +962,7 @@ class SingleLocationTpl extends AbstractTpl {
     function setSelected($elemnt) {
     }
 
-    function display($param) {
+    function display() {
         print $this->label;
         print '<input name="'.$this->name.'" id="'.$this->name.'" type="HIDDEN" value="'. $this->value .'" class="searchfieldreal" />';
     }
