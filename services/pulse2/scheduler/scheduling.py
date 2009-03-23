@@ -116,7 +116,8 @@ def isLastToHaltInBundle(myCommandOnHostID):
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands.c.fk_bundle == myC.fk_bundle).\
         filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
-        filter(sqlalchemy.and_(database.commands_on_host.c.current_state != 'done', \
+        filter(sqlalchemy.and_(
+            database.commands_on_host.c.current_state != 'done', \
             database.commands_on_host.c.current_state != 'failed', \
             database.commands_on_host.c.current_state != 'over_timed')).\
         count()
@@ -128,6 +129,13 @@ def isLastToHaltInBundle(myCommandOnHostID):
     return True
 
 def getDependancies(myCommandOnHostID):
+    """
+        check deps, returns;
+            "dead": will never be able to complete
+            "wait": may be able to complet, but not yet
+            "run": can run now
+    """
+
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     if myCoH == None:
         return []
@@ -139,17 +147,35 @@ def getDependancies(myCommandOnHostID):
     # look for CoH from lower order
     # look for unfinished CoH
     # look for CoH on same host
-    coh_dependencies = []
+    coh_finished_deps = [] # mostly deps with 'done' status
+    coh_unfinishable_deps = [] # deps with 'failed' or 'over_timed' status
+    coh_relevant_deps = [] # other deps
+
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.fk_bundle == myC.fk_bundle).\
         filter(database.commands.c.order_in_bundle < myC.order_in_bundle).\
-        filter(database.commands_on_host.c.current_state !=  'done').\
         filter(database.target.c.target_uuid ==  myT.target_uuid).\
         all():
-        coh_dependencies.append(q.id)
+            if q.current_state in ['done']:
+                coh_finished_deps.append(q.id)
+            elif q.current_state  in ['failed', 'over_timed']:
+                coh_unfinishable_deps.append(q.id)
+            else:
+                coh_relevant_deps.append(q.id)
     session.close()
-    return coh_dependencies
+
+
+    if len(coh_unfinishable_deps) > 0: # at least one dep will never be complete, give up
+        logging.getLogger().debug("command_on_host #%s: was waiting on %s, all of them beeing unfinishable" % (myCoH.getId(), coh_unfinishable_deps))
+        return 'dead'
+
+    if len(coh_relevant_deps) > 0: # at least one dep should be completed, wait
+        logging.getLogger().debug("command_on_host #%s: was waiting on %s, to be completed" % (myCoH.getId(), coh_relevant_deps))
+        return 'wait'
+
+    logging.getLogger().debug("command_on_host #%s: was waiting on %s, all of them beeing completed" % (myCoH.getId(), coh_finished_deps))
+    return 'run'
 
 def localProxyUploadStatus(myCommandOnHostID):
     """ attempt to analyse coh in the same command in order to now how we may advance.
@@ -413,7 +439,7 @@ def localProxyMayContinue(myCommandOnHostID):
     #   - upload done
     #   - upload ignored
     #   - failed
-    #   - over-time
+    #   - over_timed
     # to prevent race condition, not check is perform to count only our clients but everybody client
 
     if myCoH.isLocalProxy(): # proxy server, way for clients to be done
@@ -430,7 +456,7 @@ def localProxyMayContinue(myCommandOnHostID):
                 filter(database.commands_on_host.c.uploaded != 'IGNORED').\
                 filter(database.commands_on_host.c.current_state != 'failed').\
                 filter(database.commands_on_host.c.current_state != 'done').\
-                filter(database.commands_on_host.c.current_state != 'over-timed').\
+                filter(database.commands_on_host.c.current_state != 'over_timed').\
                 count()
             logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
             session.close()
@@ -446,7 +472,7 @@ def localProxyMayContinue(myCommandOnHostID):
                 filter(database.commands_on_host.c.uploaded != 'IGNORED').\
                 filter(database.commands_on_host.c.current_state != 'failed').\
                 filter(database.commands_on_host.c.current_state != 'done').\
-                filter(database.commands_on_host.c.current_state != 'over-timed').\
+                filter(database.commands_on_host.c.current_state != 'over_timed').\
                 count()
             logging.getLogger().debug("scheduler %s: found %s coh to be uploaded in command #%s" % (SchedulerConfig().name, our_client_count, myC.id))
             session.close()
@@ -470,7 +496,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
     else:
         logger.debug("MSC_Scheduler->startAllCommands()...")
     # gather candidates:
-    # ignore completed tasks (done / failed)
+    # ignore completed tasks (done / failed / over_timed)
     # ignore paused tasks
     # ignore stopped tasks
     # ignore tasks already in progress (excepted WOL in progress 'cause of the tempo)
@@ -502,9 +528,10 @@ def startAllCommands(scheduler_name, commandIDs = []):
     commands_query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
+        filter(database.commands_on_host.c.current_state != 'failed').\
+        filter(database.commands_on_host.c.current_state != 'over_timed').\
         filter(database.commands_on_host.c.current_state != 'pause').\
         filter(database.commands_on_host.c.current_state != 'stop').\
-        filter(database.commands_on_host.c.current_state != 'failed').\
         filter(database.commands_on_host.c.current_state != 'upload_in_progress').\
         filter(database.commands_on_host.c.current_state != 'execution_in_progress').\
         filter(database.commands_on_host.c.current_state != 'delete_in_progress').\
@@ -745,36 +772,52 @@ def runCommand(myCommandOnHostID):
     """
         Just a simple start point, chain-load on Upload Phase
     """
+
+    if checkAndFixCommand(myCommandOnHostID):
+        return runWOLPhase(myCommandOnHostID)
+
+def checkAndFixCommand(myCommandOnHostID):
+    """
+        pass command through a filter, trying to guess is command is valid
+        four cases here:
+         - command IS valid, return True
+         - command is ALMOST valid, fix it, return True
+         - command is a little invalid, neutralize it, return False
+         - command IS completely messed-up, return False
+    """
+    logger = logging.getLogger()
+
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+
+    # a simple database checkup
     if myCoH == None:
-        return
-    logger = logging.getLogger()
+        return False
 
-    # FIXME: those tests are performed way too late !
-
+    # give up in comman not in interval
     if not myC.inDeploymentInterval():
-        return
+        return False
 
-    if not myC.isPartOfABundle(): # command is independant, we may advance
-        logger.debug("command_on_host #%s: not part of a bundle" % myCoH.getId())
-    else: # command is part of a bundle, let's check the bundle state
+    if myC.isPartOfABundle():
         logger.debug("command_on_host #%s: part of bundle %s, order %s " % (myCoH.getId(), myC.getBundleId(), myC.getOrderInBundle()))
-        deps =  getDependancies(myCommandOnHostID)
-        if type(deps) == bool and not deps:
+        deps_status = getDependancies(myCommandOnHostID)
+        # give up if bundle and can't guess dependancies
+        if type(deps_status) == bool and not deps_status:
             logger.debug("command_on_host #%s: failed to get dependencies" % (myCoH.getId()))
-            return True
-        if len(deps) != 0:
-            logger.debug("command_on_host #%s: depends on %s " % (myCoH.getId(), deps))
-            return True # give up, some deps has to be done
-        else:
-            logger.debug("command_on_host #%s: do not depends on something" % (myCoH.getId()))
+            return False
+        # give up if bundle and some dependancies remain
+        if deps_status == "dead":
+            myCoH.setStateFailed()
+            return False # give up, some deps have failed
+        if deps_status == "wait":
+            return False # wait, some deps has to be done
+        if deps_status != "run":
+            return False # werd, should not append
 
-    myCoH.setStartDate()
-    logger = logging.getLogger()
-    logger.info("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
+    logger.debug("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
     logger.debug("command state is %s" % myC.toH())
-    return runWOLPhase(myCommandOnHostID)
+    myCoH.setStartDate()
+    return True
 
 def runWOLPhase(myCommandOnHostID):
     """
