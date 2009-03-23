@@ -37,6 +37,7 @@ $ajax = new AjaxFilterLocation("modules/pkgs/pkgs/ajaxPackageList.php");
 
 $res = getUserPackageApi();
 $list = array();
+$list_val = array();
 if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
 foreach ($res as $mirror) {
     $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
@@ -50,9 +51,7 @@ $ajax->setElements($list);
 $ajax->setElementsVal($list_val);
 $ajax->display();
 
-
 $ajax->displayDivToUpdate();
-
 
 ?>
 
