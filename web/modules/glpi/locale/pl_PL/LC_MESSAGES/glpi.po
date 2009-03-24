@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 17:15+0200\n"
+"POT-Creation-Date: 2009-03-24 16:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: glpi/glpi/tabs.php:17
+#: glpi/glpi/tabs.php:39
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr ""
 
-#: glpi/glpi/tabs.php:22
+#: glpi/glpi/tabs.php:44
 msgid "Controller"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "GLPI network tab"
 msgstr ""
 
-#: glpi/glpi/tabs.php:18
+#: glpi/glpi/tabs.php:40
 msgid "Hardware"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Inventory (GLPI) on machine"
 msgstr ""
 
-#: glpi/glpi/tabs.php:22
+#: glpi/glpi/tabs.php:44
 msgid "Network"
 msgstr ""
 

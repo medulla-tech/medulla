@@ -1,9 +1,9 @@
-#: glpi/glpi/tabs.php:17
+#: glpi/glpi/tabs.php:39
 #, php-format
 msgid "%s's inventory (GLPI)"
 msgstr ""
 
-#: glpi/glpi/tabs.php:22
+#: glpi/glpi/tabs.php:44
 msgid "Controller"
 msgstr ""
 
@@ -23,7 +23,7 @@ msgstr ""
 msgid "GLPI network tab"
 msgstr ""
 
-#: glpi/glpi/tabs.php:18
+#: glpi/glpi/tabs.php:40
 msgid "Hardware"
 msgstr ""
 
@@ -35,7 +35,7 @@ msgstr ""
 msgid "Inventory (GLPI) on machine"
 msgstr ""
 
-#: glpi/glpi/tabs.php:22
+#: glpi/glpi/tabs.php:44
 msgid "Network"
 msgstr ""
 
