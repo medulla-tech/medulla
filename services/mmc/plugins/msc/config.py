@@ -75,7 +75,7 @@ class MscConfig(MscDatabaseConfig):
     web_def_delay = "60"
     web_def_attempts = "3"
     web_def_deployment_intervals = ""
-    web_def_issue_halt_to = ""
+    web_def_issue_halt_to = []
     web_show_reboot = False
     web_dlpath = []
     # Max bandwith to use to download a file
