@@ -173,7 +173,7 @@ class RenderedMSCActions extends HtmlElement {
                 $script->display();
             }
             print '</select>';
-            $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png', $buttonStyle);
+            $img = new RenderedImgInput('/mmc/modules/msc/graph/images/button_ok.png');
             if ($this->enabled) {
                 $img->display();
             } else {
