@@ -8,15 +8,15 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.0rc5\n"
+"Project-Id-Version: Pulse 2 - Inventory Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-26 16:18+0100\n"
-"PO-Revision-Date: 2009-02-26 16:23+0100\n"
+"POT-Creation-Date: 2009-03-24 16:34+0100\n"
+"PO-Revision-Date: 2009-03-24 16:34+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: French\n"
+"Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: inventory/inventory/tabs.php:38
 #, php-format
@@ -45,7 +45,7 @@ msgstr "Disponibilité"
 msgid "Bios"
 msgstr "Bios"
 
-#: inventory/inventory/body.php:36
+#: inventory/inventory/body.php:41
 msgid "Bios list"
 msgstr "Liste des BIOS"
 
@@ -139,7 +139,7 @@ msgstr "Connecteur"
 msgid "Controller"
 msgstr "Contrôleur"
 
-#: inventory/inventory/body.php:40
+#: inventory/inventory/body.php:45
 msgid "Controller list"
 msgstr "Liste des contrôleurs"
 
@@ -212,7 +212,7 @@ msgstr "Taille du disque physique"
 msgid "Drive"
 msgstr "Disque"
 
-#: inventory/inventory/body.php:42
+#: inventory/inventory/body.php:47
 msgid "Drive list"
 msgstr "Liste des lecteurs"
 
@@ -302,7 +302,7 @@ msgstr "Graphique"
 msgid "Hardware"
 msgstr "Matériel"
 
-#: inventory/inventory/body.php:37
+#: inventory/inventory/body.php:42
 msgid "Hardware and OS information list"
 msgstr "Liste des matériels et des OS"
 
@@ -347,7 +347,7 @@ msgstr "Informations"
 msgid "Input"
 msgstr "Entrée"
 
-#: inventory/inventory/body.php:43
+#: inventory/inventory/body.php:48
 msgid "Input device list"
 msgstr "Liste des périphériques d'entrée"
 
@@ -418,7 +418,7 @@ msgstr "Média"
 msgid "Memory"
 msgstr "Mémoire"
 
-#: inventory/inventory/body.php:44
+#: inventory/inventory/body.php:49
 msgid "Memory module list"
 msgstr "Liste des modules mémoire"
 
@@ -443,7 +443,7 @@ msgstr "Modem"
 msgid "Monitor"
 msgstr "Écran"
 
-#: inventory/inventory/body.php:45
+#: inventory/inventory/body.php:50
 msgid "Monitor list"
 msgstr "Liste des moniteurs"
 
@@ -456,7 +456,7 @@ msgstr "Nom"
 msgid "Network"
 msgstr "Réseau"
 
-#: inventory/inventory/body.php:39
+#: inventory/inventory/body.php:44
 msgid "Network card and configuration list"
 msgstr "Listes des cartes réseau et de leur configuration"
 
@@ -492,7 +492,7 @@ msgstr "Numéro de série de l'OS"
 msgid "OperatingSystem"
 msgstr "Système d'exploitation"
 
-#: inventory/inventory/i18n_labels.php:110 inventory/inventory/pci.php:27
+#: inventory/inventory/pci.php:27 inventory/inventory/i18n_labels.php:110
 msgid "Pci"
 msgstr "Pci"
 
@@ -509,7 +509,7 @@ msgstr "Type de périphérique de pointage"
 msgid "Port"
 msgstr "Port"
 
-#: inventory/inventory/body.php:46
+#: inventory/inventory/body.php:51
 msgid "Port list"
 msgstr "Liste des ports"
 
@@ -522,7 +522,7 @@ msgstr "Type de port"
 msgid "Printer"
 msgstr "Imprimante"
 
-#: inventory/inventory/body.php:47
+#: inventory/inventory/body.php:52
 msgid "Printer list"
 msgstr "Liste des imprimantes"
 
@@ -570,7 +570,7 @@ msgstr "Nom"
 msgid "Registry"
 msgstr "Registre"
 
-#: inventory/inventory/body.php:41
+#: inventory/inventory/body.php:46
 msgid "Registry keys/values list"
 msgstr "Listes des clés/valeurs des bases de registre"
 
@@ -602,7 +602,7 @@ msgstr "Numéro de serie"
 msgid "Size"
 msgstr "Taille"
 
-#: inventory/inventory/i18n_labels.php:129 inventory/inventory/slot.php:27
+#: inventory/inventory/slot.php:27 inventory/inventory/i18n_labels.php:129
 msgid "Slot"
 msgstr "Emplacement"
 
@@ -635,7 +635,7 @@ msgstr "Version (SMB)"
 msgid "Software"
 msgstr "Logiciel"
 
-#: inventory/inventory/body.php:38
+#: inventory/inventory/body.php:43
 msgid "Software list"
 msgstr "Liste des logiciels"
 
@@ -656,7 +656,7 @@ msgstr "Onglet logiciel pour un groupe"
 msgid "Sound"
 msgstr "Son"
 
-#: inventory/inventory/body.php:48
+#: inventory/inventory/body.php:53
 msgid "Sound list"
 msgstr "Liste des cartes son"
 
@@ -685,7 +685,7 @@ msgstr "État"
 msgid "Storage"
 msgstr "Stockage"
 
-#: inventory/inventory/body.php:49
+#: inventory/inventory/body.php:54
 msgid "Storage medium list"
 msgstr "Liste des périphériques de stockage"
 
@@ -737,7 +737,7 @@ msgstr "Utilisateur"
 msgid "VRAMSize"
 msgstr "Taille de la VRAM"
 
-#: inventory/inventory/i18n_labels.php:156 inventory/inventory/view.php:79
+#: inventory/inventory/view.php:79 inventory/inventory/i18n_labels.php:156
 msgid "Value"
 msgstr "Valeur"
 
@@ -749,7 +749,7 @@ msgstr "Vendeur"
 msgid "Version"
 msgstr "Version"
 
-#: inventory/inventory/body.php:50
+#: inventory/inventory/body.php:55
 msgid "Video card list"
 msgstr "Liste des cartes vidéo"
 
@@ -780,3 +780,4 @@ msgstr "Date de fonctionnement"
 #: inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "retour"
+
