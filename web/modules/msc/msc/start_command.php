@@ -110,8 +110,16 @@ $from = $_GET['from'];
 $name = $_GET['name'];
 $version = $_GET['version'];
 $hostname = $_GET['hostname'];
-$uuid = $_GET['uuid'];
-$gid = $_GET['gid'];
+if (!empty($_GET['uuid'])) {
+    $uuid = $_GET['uuid'];
+} else {
+    $uuid = null;
+}
+if (!empty($_GET['gid'])) {
+    $gid = $_GET['gid'];
+} else {
+    $gid = null;
+}
 $pid = $_GET['pid'];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET['papi']);
@@ -144,6 +152,7 @@ $f->add(new HiddenTpl("maxbw"),                                 array("value" =>
 $f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));
 $f->add(new HiddenTpl("deployment_intervals"),                  array("value" => web_def_deployment_intervals(),    "hide" => True));
 $halt = web_def_issue_halt_to();
+
 foreach ($halt as $h) {
     $f->add(new HiddenTpl("issue_halt_to_".$h),                 array("value" => 'on',                              "hide" => True));
 }
