@@ -83,28 +83,6 @@ function isAvailable($p_api, $pid, $mirror) {
         return xmlCall("msc.pa_isAvailable", array($p_api, $pid, $mirror));
 }
 
-class PackageFile {
-    function PackageFile($h_file) {
-    }
-}
-class PackageCommand {
-    function PackageCommand($h_cmd) {
-        $this->name = $h_cmd{'name'};
-        $this->command = $h_cmd{'command'};
-    }
-}
-class Package {
-    function Package($h_pkg) {
-        $this->label = $h_pkg{'label'};
-        $this->version = $h_pkg{'version'};
-        $this->size = $h_pkg{'size'};
-        $this->precmd = new PackageCommand($h_pkg{'precmd'});
-        $this->cmd = new PackageCommand($h_pkg{'cmd'});
-        $this->postcmd_ok = new PackageCommand($h_pkg{'postcmd_ok'});
-        $this->postcmd_ko = new PackageCommand($h_pkg{'postcmd_ko'});
-        $this->id = $h_pkg{'id'};
-    }
-}
 class ServerAPI {
     function ServerAPI($h = null) {
         if ($h) {
@@ -124,6 +102,15 @@ class ServerAPI {
         $this->port = $uri[1];
         $this->mountpoint = $uri[2];
         $this->protocol = $uri[3];
+    }
+}
+
+class Package {
+    function Package($h_pkg) {
+        $this->label = $h_pkg['label'];
+        $this->version = $h_pkg['version'];
+        $this->size = $h_pkg['size'];
+        $this->id = $h_pkg['id'];
     }
 }
 
