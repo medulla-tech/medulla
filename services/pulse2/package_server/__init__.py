@@ -292,3 +292,20 @@ class ThreadLauncher(pulse2.utils.Singleton):
                 self.logger.info("Global package mirror thread start")
                 self.threadgp.start()
 
+def init_logger_debug():
+    """
+    Add two new level of debug
+    """
+    DEBUG1 = 9
+    DEBUG2 = 8
+    setattr(logging, "DEBUG1", DEBUG1)
+    setattr(logging, "DEBUG2", DEBUG2)
+
+    logging.addLevelName(logging.DEBUG1, "DEBUG1")
+    logging.addLevelName(logging.DEBUG2, "DEBUG2")
+
+    def debug1(logger, message): return logger.log(logging.DEBUG1, message)
+    def debug2(logger, message): return logger.log(logging.DEBUG2, message)
+        
+    logging.RootLogger.debug1 = debug1
+    logging.RootLogger.debug2 = debug2
