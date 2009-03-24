@@ -320,9 +320,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
 /* single target: form display */
 if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
-    $machine = new Machine();
-    $machine->uuid = $_GET['uuid'];
-    $machine->hostname = $_GET['hostname'];
+    $machine = new Machine(array(
+                                 'uuid' => $_GET['uuid'],
+                                 'hostname' => array('0' => $_GET['hostname']),
+                                 'displayName' => $_GET['hostname'])
+                           );
     $msc_host = new RenderedMSCHost($machine);
     $msc_host->ajaxDisplay();
     
