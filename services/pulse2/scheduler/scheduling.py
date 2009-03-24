@@ -978,7 +978,7 @@ def _chooseUploadMode(myCoH, myC, myT):
     # check if we have enough informations to reach the client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCoH.getId())
 
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
@@ -990,12 +990,12 @@ def _chooseUploadMode(myCoH, myC, myT):
         try: # mirror is formated like this: https://localhost:9990/mirror1||https://localhost:9990/mirror1
             mirrors = myT.mirrors.split('||')
         except:
-            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCommandOnHostID, myT.mirrors))
+            logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
             return None
 
         # Check mirrors
         if len(mirrors) != 2:
-            logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCommandOnHostID, myT.mirrors))
+            logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
             return None
         mirror = mirrors[0]
         fbmirror = mirrors[1]
