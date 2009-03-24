@@ -62,7 +62,7 @@ class RenderedMSCBundleChoice {
 
     function display_start() {
 ?>
-<form action="<? echo $this->request_uri; ?>" method="post">
+<form method="post">
 <input name='name' value='<?= $this->name ?>' type='hidden'/>
 <div id="grouplist">
 <table style="border: none;" cellspacing="0">
