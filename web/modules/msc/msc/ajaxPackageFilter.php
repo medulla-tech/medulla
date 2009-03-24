@@ -37,7 +37,7 @@ require_once('../../../modules/msc/includes/widgets.inc.php');
 require_once('../../../modules/msc/includes/utilities.php');
 
 $group = null;
-if ($_GET['gid']) {
+if (!empty($_GET['gid'])) {
     require_once("../../../modules/dyngroup/includes/utilities.php");
     require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
     require_once("../../../modules/dyngroup/includes/xmlrpc.php");
@@ -69,7 +69,7 @@ if (isset($_GET["start"])) {
 }
 
 $filter['filter'] = $_GET["filter"];
-if ($_GET['uuid']) {
+if (!empty($_GET['uuid'])) {
     $filter['machine'] = $_GET['hostname'];
     $filter['uuid'] = $_GET['uuid'];
 } else {
@@ -86,7 +86,7 @@ foreach ($packages as $c_package) {
     $a_packages[] = $package->label;
     $a_pversions[] = $package->version;
     $a_sizes[] = prettyOctetDisplay($package->size);
-    if ($_GET['uuid']) {
+    if (!empty($_GET['uuid'])) {
         $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
     } else {
         $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
