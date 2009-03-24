@@ -33,7 +33,7 @@ import twisted
 import logging
 import logging.config
 
-from pulse2.package_server import ThreadLauncher
+from pulse2.package_server import ThreadLauncher, init_logger_debug
 from pulse2.package_server.config import P2PServerCP
 
 class Pulse2PackageServer(win32serviceutil.ServiceFramework):
@@ -64,6 +64,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         config.setup(self.inifile)
         logging.config.fileConfig(self.inifile)
         logger = logging.getLogger()
+        init_logger_debug()
         ThreadLauncher().initialize(config)
 
     def SvcDoRun(self):
