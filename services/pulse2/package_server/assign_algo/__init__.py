@@ -28,7 +28,6 @@
 
 import logging
 import pulse2.utils
-from distutils.sysconfig import get_python_lib
 import imp
 import os
 
@@ -84,7 +83,7 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
                 # And enter assign_algo directory
                 searchpath = os.path.join(searchpath, 'assign_algo')
             else:
-                searchpath = os.path.join(get_python_lib(), 'pulse2', 'package_server', 'assign_algo')
+                searchpath = os.path.dirname(__file__)
             logging.getLogger().debug("Algo search path: %s" % searchpath)
             f, p, d = imp.find_module(assign_algo, [searchpath])
             mod = imp.load_module('MyAssignAlgo', f, p, d)
