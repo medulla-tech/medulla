@@ -50,7 +50,6 @@ from pulse2.database.msc.orm.bundle import Bundle
 from mmc.plugins.msc import blacklist
 
 # Pulse 2 stuff
-import pulse2.time_intervals
 from pulse2.database import msc
 
 # Imported last
