@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-24 17:42+0100\n"
-"PO-Revision-Date: 2009-03-24 17:42+0100\n"
+"PO-Revision-Date: 2009-03-26 17:17+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1509,7 +1509,7 @@ msgstr "maintenant"
 
 #: msc/msc/msctabsstatus.php:126
 msgid "out of the valid period of execution"
-msgstr "en dehors de la période valide d'execution"
+msgstr "en dehors de la période valide d'exécution"
 
 #: msc/includes/command_history.php:280
 msgid "out_of_interval"
@@ -1594,7 +1594,7 @@ msgstr "en attente de suppression"
 
 #: msc/msc/statuscsv.php:66
 msgid "waiting to suppress and already try"
-msgstr "en attente de suppression pout la seconde fois"
+msgstr "en attente de suppression pour la seconde fois"
 
 #: msc/msc/msctabsstatus.php:115 msc/msc/statuscsv.php:59
 msgid "waiting to upload"
