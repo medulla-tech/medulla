@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #
 # (c) 2009 Mandriva, http://www.mandriva.com/
 #
@@ -73,16 +74,20 @@ class deployStats():
         "uploading",
         "executing",
         "deleting",
+        "rebooting",
         "upload_error",
         "execution_error",
         "delete_error",
+        "reboot_error",
         "upload_done",
         "execution_done",
         "delete_done",
+        "reboot_done",
         "stage0",
         "stage1",
         "stage2",
-        "stage3"
+        "stage3",
+        "stage4"
     ]
 
     __internal_data = dict()
@@ -161,6 +166,17 @@ for d in hist_data:
         elif operation == 'delete_failed':
             deploy_stats.remove('deleting', fk)
             deploy_stats.add('delete_error', fk)
+        elif operation == 'reboot_in_progress':
+            deploy_stats.remove('reboot_error', fk)
+            deploy_stats.add('rebooting', fk)
+        elif operation == 'reboot_done':
+            deploy_stats.remove('rebooting', fk)
+            deploy_stats.add('reboot_done', fk)
+            deploy_stats.remove('stage3', fk)
+            deploy_stats.add('stage4', fk)
+        elif operation == 'reboot_failed':
+            deploy_stats.remove('rebooting', fk)
+            deploy_stats.add('reboot_error', fk)
 
         if truncated_epoch != lastepoch:
             print "%s;%s;" % (
