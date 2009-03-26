@@ -87,6 +87,11 @@ class GlpiProvisioner(ProvisionerI):
             else:
                 l = ldapUserGroupControl()
                 self.logger.info("Setting MMC ACL corresponding to GLPI profile %s: %s" % (selected, acls))
+                uid = authtoken.getLogin()
+                entry = l.getDetailedUser(uid)
+                if not "lmcUserObject" in entry["objectClass"]:
+                    entry["objectClass"].append("lmcUserObject")
+                    l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
                 l.changeUserAttributes(authtoken.getLogin(), "lmcAcl", acls)
         return authtoken
 
