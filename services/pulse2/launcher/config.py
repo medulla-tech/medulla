@@ -62,6 +62,7 @@ class LauncherConfig(pulse2.utils.Singleton):
 
     # ssh stuff
     ssh_path_default = ssh_path = "/usr/bin/ssh"
+    scp_path_default = scp_path = "/usr/bin/scp"
     ssh_agent_path_default = ssh_agent_path = "/usr/bin/ssh-agent"
     ssh_agent_sock = None
     ssh_agent_pid = None
