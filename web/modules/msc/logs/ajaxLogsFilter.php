@@ -81,25 +81,16 @@ foreach ($cmds as $item) {
     $cho_status = $coh['current_state'];
 
     if ($history) {
-        $d = $coh["end_date"];
+        $a_date[] = _toDate($coh["end_date"]);
     } else {
-        $d = $coh["next_launch_date"];
-    }
-    if (empty($d)) {
-        if ($type == -1 || $type == 0 || $history) {
-            $a_date[] = _T("N/A", "msc");
-        } else {
-            $a_date[] = _T("As soon as possible", "msc");
-        }
-    } else {
-        $a_date[] = strftime("%a %d %b %Y %T", mktime($d[3], $d[4], $d[5], $d[1], $d[2], $d[0]));
+        $a_date[] = _toDate($coh["next_launch_date"]);
     }
 
     $bundle_str = '';
     if ($cmd['fk_bundle']) {
         $bundle_str = sprintf(_T("<a href='' class='bundle' title='%s'>(in bundle %s)</a>", "msc"), $bundle['title'], $cmd['fk_bundle']);
     }
-    
+
     $a_cmd[] = sprintf(_T("%s on %s %s", 'msc'), $cmd['title'], $coh['host'], $bundle_str);
     $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
     $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
