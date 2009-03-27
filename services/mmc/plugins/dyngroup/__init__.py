@@ -210,6 +210,8 @@ class RpcProxy(RpcProxyI):
         machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, req)
         # put in the wanted format
         uuids = {}
+        if type(machines) == dict:
+            machines = machines.values()
         for m in machines:
             uuid = m[1]['objectUUID'][0]
             hostname = m[1]['cn'][0]
