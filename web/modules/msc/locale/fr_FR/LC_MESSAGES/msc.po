@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 17:42+0100\n"
-"PO-Revision-Date: 2009-03-26 17:17+0100\n"
+"POT-Creation-Date: 2009-03-26 17:24+0100\n"
+"PO-Revision-Date: 2009-03-26 17:42+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr "<b>%s</b> installations de packages ont réussi"
 
 #: msc/includes/command_history.php:323
 msgid "<b>Command Environment</b>"
-msgstr "<b>Environment de la commande</b>"
+msgstr "<b>Environnement de la commande</b>"
 
 #: msc/includes/command_history.php:340
 msgid "<b>Command Life Cycle</b>"
@@ -353,7 +353,7 @@ msgstr "Octets"
 
 #: msc/msc/ajaxLogsFilter.php:118
 msgid "Can't get bundle for the requested id"
-msgstr "Ne peut acceder au bundle pour l'id demandé"
+msgstr "Ne peut accéder au bundle pour l'id demandé"
 
 #: msc/includes/bundle_widgets.php:267 msc/includes/bundle_widgets.php:368
 #: msc/includes/bundle_widgets.php:384
@@ -1232,7 +1232,7 @@ msgid ""
 "The current host IP address doesn't match the IP address from the inventory "
 "database."
 msgstr ""
-"L'adresse ip de l'ordinateur ne correspond pas à celle présente dans "
+"L'adresse IP de l'ordinateur ne correspond pas à celle présente dans "
 "l'inventaire."
 
 #: msc/includes/command_history.php:397
@@ -1354,7 +1354,7 @@ msgstr "Vous n'avez pas le droit de consulter cette commande"
 #: msc/msc/launch.php:44
 msgid "Your start and end dates are not coherant, please check them.<br/>"
 msgstr ""
-"Vos dates de début et de fin ne sont pas cohérantes, veuillez les vérifier."
+"Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier."
 "<br/>"
 
 #: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:107
@@ -1433,7 +1433,7 @@ msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 
 #: msc/msc/msctabsstatus.php:36
 msgid "error : the bundle_id given does not exists in the database."
-msgstr "erreur: l'id de bundle donné n'éxiste psa dans la base de donnée. "
+msgstr "erreur: l'id de bundle donné n'existe pas dans la base de donnée. "
 
 #: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:143
 #: msc/msc/ajaxLogsFilter.php:201
