@@ -62,13 +62,14 @@ class LauncherConfig(pulse2.utils.Singleton):
 
     # ssh stuff
     ssh_path_default = ssh_path = "/usr/bin/ssh"
-    scp_path_default = scp_path = "/usr/bin/scp"
     ssh_agent_path_default = ssh_agent_path = "/usr/bin/ssh-agent"
     ssh_agent_sock = None
     ssh_agent_pid = None
     ssh_defaultkey = 'default'
     ssh_forward_key = 'let'
     ssh_options = [ \
+        'LogLevel=ERROR',
+        'UserKnownHostsFile=/dev/null',
         'StrictHostKeyChecking=no',
         'Batchmode=yes',
         'PasswordAuthentication=no',
@@ -76,6 +77,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         'CheckHostIP=no',
         'ConnectTimeout=10'
     ]
+
     ssh_keys = {
         'default': '/root/.ssh/id_dsa'
     }
