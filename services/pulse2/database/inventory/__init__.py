@@ -362,9 +362,9 @@ class Inventory(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.c.id.in_(*map(lambda x:fromUUID(x), computers))
+            return Machine.c.id.in_(map(lambda x:fromUUID(x), computers))
         else:
-            return Machine.c.id.not_(in_(*map(lambda x:fromUUID(x), computers)))
+            return not_(Machine.c.id.in_(map(lambda x:fromUUID(x), computers)))
 
     def mappingTable(self, ctx, query):
         q = query[2].split('/')
