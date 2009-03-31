@@ -30,34 +30,20 @@ $gid = idGet();
 $group = new Group($gid, True);
 $edition = True;
 
-if (! $group->canEdit()) {
-    $title = _T("Group edition", 'dyngroup');
+if ($group->isDyn()) {
+    $title = _T("Edit a dynamic group", 'dyngroup');
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    $buffer = '<div class="indent"><table>';
-    $buffer .= '<tr><td><span style="color:red;">';
-    $buffer .= sprintf(_T("You cant edit '%s' because you are not this group's owner.", 'dyngroup'), $group->name);
-    $buffer .= '</span></td></tr>';
-    $buffer .= '</table></div>';
-    print $buffer;
+    require("creator.php");
 } else {
-    if ($group->isDyn()) {
-        $title = _T("Edit a dynamic group", 'dyngroup');
-        $p = new PageGenerator($title);
-        $p->setSideMenu($sidemenu);
-        $p->display();
+    $title = _T("Edit a static group", 'dyngroup');
+    $p = new PageGenerator($title);
+    $p->setSideMenu($sidemenu);
+    $p->display();
 
-        require("creator.php");
-    } else {
-        $title = _T("Edit a static group", 'dyngroup');
-        $p = new PageGenerator($title);
-        $p->setSideMenu($sidemenu);
-        $p->display();
-
-        require("add_groups.php");
-    }
+    require("add_groups.php");
 }
 
 ?>
