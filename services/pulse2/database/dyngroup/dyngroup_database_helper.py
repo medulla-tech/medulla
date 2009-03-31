@@ -184,11 +184,11 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
                 self.logger.debug(">>> not : %s %s"%(str(lq), str(len(res))))
-                filter_on.append(not_(grpby.in_(res)))
+                filter_on.append(grpby.in_(res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables, invert)
-                filter_on.append(not_(query_filter))
-        query_filter = and_(*filter_on)
+                filter_on.append(query_filter)
+        query_filter = not_(and_(*filter_on))
         return (query_filter, join_tables)
 
     def __mappingTables(self, queries):
