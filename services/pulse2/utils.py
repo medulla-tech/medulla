@@ -214,4 +214,16 @@ def getConfigFile(module, path = "/etc/mmc/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
         
+def isdigit(i):
+    if type(i) == int or type(i) == long:
+        return True
+    if (type(i) == str or type(i) == unicode) and re.search("^\d*$",i):
+        return True
+    return False
+
+def isalpha(s):
+    if (type(i) == str or type(i) == unicode) and re.search("^\w*$",i):
+        return True
+    return False
+
 

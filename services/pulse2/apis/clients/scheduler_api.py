@@ -32,6 +32,9 @@ class SchedulerApi(Pulse2Api): # Singleton
         self.default_scheduler = default_scheduler
         Pulse2Api.__init__(self, *attr)
 
+    def setConfig(self, config):
+        self.config = config
+
     def convert2id(self, scheduler):
         self.logger.debug("Looking up scheduler id using: " + str(scheduler))
         ret = None
