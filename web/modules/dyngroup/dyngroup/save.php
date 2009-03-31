@@ -57,11 +57,11 @@ $r->parse($request);
 
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
 if ($check && isset($_POST['displayTmp'])) {
-    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>$r->toS(), 'equ_bool'=>$bool, 'name'=>$name, 'save_type'=>$save_type, 'visible'=>$visible)));
+    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible)));
 }
 
 $name_exists = xmlrpc_group_name_exists($name, $group->id);
-if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['checkBool']) || isset($_POST['displayTmp'])) {
+if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['checkBool']) || isset($_POST['displayTmp']) || $name == '') {
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
     $r->displayReqListInfos();
     // TODO : put in class
@@ -78,6 +78,8 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
         "</form></table>";
     if ($name_exists && !isset($_POST['displayTmp'])) { 
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
+    } elseif ($name == '' && $check && $id) {
+        new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
     } elseif (isset($_POST['btnPrimary']) && $check) {
         new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
     }

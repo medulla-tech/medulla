@@ -27,24 +27,30 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require("modules/base/graph/computers/index.css");
 
-$p = new PageGenerator(_T("Temporary result display", "dyngroup"));
+function quickGet1($s) { return quickGet($s, false, false); }
+$name = quickGet1('name');
+if ($name) {
+    $p = new PageGenerator(sprintf(_T("Temporary result display for '%s'", "dyngroup"), $name));
+} else {
+    $p = new PageGenerator(_T("Temporary result display", "dyngroup"));
+}
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $get = '';
-$bool = quickGet('equ_bool', true);
+$bool = quickGet1('equ_bool', true);
 if (strlen($_GET['id']) && !strlen($bool)) {
     $group = new Group($_GET['id'], true);
     $bool = $group->getBool();
 }
-if (strlen($bool)) { $get = "&equ_bool=".$bool; }
+if (strlen($bool)) { $get = "&equ_bool=".urlencode($bool); }
 
-$get .= "&request=".$_GET['request'];
-$get .= "&name=".quickGet('name');
+$get .= "&request=".urlencode($_GET['request']);
+$get .= "&name=".urlencode($name);
 $get .= "&save_type=".quickGet('save_type', true);
 $get .= "&visible=".quickGet('visible', true);
 if (strlen($_GET['id'])) {
-    $get .= "&id=".$_GET['id'];
+    $get .= "&id=".urlencode($_GET['id']);
 }
 print "<a href='main.php?module=base&submod=computers&action=save$get'>"._T('back', 'dyngroup')."</a>";
 
