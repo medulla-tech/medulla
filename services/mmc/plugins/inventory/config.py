@@ -32,7 +32,7 @@ class InventoryConfig(InventoryDatabaseConfig):
     expert_mode = {}
     graph = {}
     
-    def init(self, name, conffile = None):
+    def init(self, name = 'inventory', conffile = None):
         self.dbsection = "inventory"
         self.name = name
         if not conffile: self.conffile = mmctools.getConfigFile(name)
