@@ -692,17 +692,29 @@ class DyngroupDatabase(DatabaseHelper):
         @type computers: list
         """
         # Get already registered machines
-        uuids = map(lambda x: x["uuid"], computers)
+        # and get a uuid to name hash
+        uuids = []
+        uuids2name = {}
+        for x in computers:
+            uuids.append(x["uuid"])
+            uuids2name[x["uuid"]] = x["hostname"]
         existing = connection.execute(self.machines.select(self.machines.c.uuid.in_(uuids)))
         # Prepare insert for the Results table
         into_results = []
         existing_uuids_hash = {}
+        need_name_update_hash = {}
         for machines_id, uuid, name in existing:
+            if name != uuids2name[uuid]:
+                # TODO update de machine
+                need_name_update_hash[uuid] = uuids2name[uuid]
             into_results.append({
                 "FK_group" : groupid,
                 "FK_machine" : machines_id
                 })
             existing_uuids_hash[uuid] = None
+        for uuid in need_name_update_hash:
+            self.logger.debug("going to update %s name to %s in dyngroup machines cache"%(uuid, need_name_update_hash[uuid]))
+            self.machines.update(self.machines.c.uuid==uuid).execute(name=need_name_update_hash[uuid])
         # Prepare insert for the Machines table
         into_machines = []
         for computer in computers:
