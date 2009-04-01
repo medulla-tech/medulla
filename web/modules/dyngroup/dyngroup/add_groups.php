@@ -53,7 +53,7 @@ if (isset($_POST["bdelmachine_x"])) {
 } elseif (isset($_POST['bfiltmachine_x'])) {
     $truncate_limit = 2000;
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
-    $count = getRestrictedComputersListLen();
+    $count = getRestrictedComputersListLen(array('filter'=>$_POST['filter']));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
     }
@@ -82,21 +82,21 @@ if (isset($_POST["bdelmachine_x"])) {
 
     $listN = array();
     $listC = array();
-    foreach ($listOfMembers as $member) { $listN[$member['uuid']] = $member; }
-    foreach ($listOfCurMembers as $member) { $listC[$member['uuid']] = $member; }
+    foreach ($listOfMembers as $member) { $listN[$member['uuid'].'##'.$member['hostname']] = $member; }
+    foreach ($listOfCurMembers as $member) { $listC[$member['uuid'].'##'.$member['hostname']] = $member; }
 
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
-
+    
     if ($group->id) {
         $group->setName($name);
         if ($visibility == 'show') { $group->show(); } else { $group->hide(); }
     } else {
         $group->create($name, ($visibility == 'show'));
     }
-
-    $res = $group->addMembers($newmem) && $group->delMembers($delmem);
-
+    
+    $res = $group->delMembers($delmem) && $group->addMembers($newmem);
+    
     if ($res) {
         if ($already_exists) {
             new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
@@ -129,7 +129,7 @@ if (isset($_POST["bdelmachine_x"])) {
 
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
-
+    
     $truncate_limit = 2000;
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID')), False);
     $count = getRestrictedComputersListLen();
@@ -139,7 +139,6 @@ if (isset($_POST["bdelmachine_x"])) {
     $machines = array();
     foreach ($listOfMachines as $machine) {
         $machines[$machine['cn']."##".$machine['objectUUID']] = $machine['cn'];
-#        $machines[$machine[1]['cn'][0]."##".$machine[1]['objectUUID'][0]] = $machine[1]['cn'][0];
     }
 }
 ksort($members);
