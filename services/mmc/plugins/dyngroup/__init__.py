@@ -306,6 +306,21 @@ class RpcProxy(RpcProxyI):
             return [False, -1]
         return xmlrpcCleanup([b.isValid(), b.countOps()])
 
+    def update_machine_cache(self):
+        ctx = self.currentContext
+        dyndatabase = DyngroupDatabase()
+    
+        cache = dyndatabase.getAllMachinesUuid()
+        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuids':cache.keys()}, False, False, True)
+    
+        need_update = {}
+        for m in machines:
+            if m['hostname'] != cache[m['uuid']]:
+                need_update[m['uuid']] = m['hostname']
+    
+        dyndatabase.updateNewNames(need_update)
+        return len(need_update)
+
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
@@ -376,3 +391,4 @@ def unescape(search):
     if type(search) == str and search != '':
         return re.sub('&lt;', '<', re.sub('&gt;', '>', search))
     return search
+

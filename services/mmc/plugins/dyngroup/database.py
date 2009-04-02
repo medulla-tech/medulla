@@ -834,6 +834,18 @@ class DyngroupDatabase(DatabaseHelper):
         group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_user == self.users.c.id)).filter(and_(self.users.c.login == ctx.userid, self.groups.c.id == id)).count()
         return group == 1
 
+    def getAllMachinesUuid(self):
+        session = create_session()
+        ret = {}
+        for m in session.query(Machines):
+            ret[m.uuid] = m.name
+        return ret
+
+    def updateNewNames(self, machines):
+        for uuid in machines:
+            self.logger.debug("going to update %s name to %s in dyngroup machines cache"%(uuid, machines[uuid]))
+            self.machines.update(self.machines.c.uuid==uuid).execute(name=machines[uuid])
+
 class Groups(object):
     def toH(self):
         ret = {
