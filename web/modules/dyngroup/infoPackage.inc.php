@@ -168,6 +168,10 @@ if (!empty($submod)) {
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $submod->addPage($page);
 
+    $page = new Page("updateMachineCache",_T("Update machine cache","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/update.php");
+    $submod->addPage($page);
+
 }
 
 unset($submod);
