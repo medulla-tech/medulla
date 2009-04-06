@@ -61,7 +61,7 @@ import pulse2.xmlrpc
 import logging
 import logging.config
 
-VERSION = "0.0.0"
+VERSION = "1.2.1"
 
 def start_all_callbacks():
     startup_delay = 2
@@ -87,13 +87,10 @@ def scheduleTellIAmAlive():
     current_time = time.time()
     # second after previous 'official' time
     next_wakeup_in = current_time % LauncherConfig().awake_time
-    logging.getLogger().info('woot0 : %s' % next_wakeup_in)
     # second before next 'official' time
     next_wakeup_in = LauncherConfig().awake_time - next_wakeup_in
-    logging.getLogger().info('woot1 : %s' % next_wakeup_in)
     # add some randomness
     next_wakeup_in = int(next_wakeup_in + random.random() * LauncherConfig().awake_incertitude_factor * LauncherConfig().awake_time)
-    logging.getLogger().info('woot2 : %s' % next_wakeup_in)
     # schedule the next event
     twisted.internet.reactor.callLater(next_wakeup_in, tellIAmAlive)
 
