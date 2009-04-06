@@ -1035,16 +1035,23 @@ class AjaxFilterLocation extends AjaxFilter {
         * provide navigation in ajax for user
         */
 
-        function updateSearchParam(filter, start, end) {
+        function updateSearchParam(filt, start, end) {
             var reg = new RegExp("##", "g");
-            var tableau = filter.split(reg);
+            var tableau = filt.split(reg);
             var location = "";
-            if (tableau.length > 1) {
-                filter = tableau[0];
-                location = tableau[1];
-            } else {
-                filter = "";
-                location = tableau[0];
+            var filter = "";
+            var reg1 = new RegExp(tableau[0]+"##", "g");
+            if (filt.match(reg1)) {
+                if (tableau[-1] != undefined) { 
+                    filter = tableau[0];
+                }
+                if (tableau[1] != undefined) {
+                    location = tableau[1];
+                }
+            } else if (tableau.length == 1) {
+                if (tableau[0] != undefined) { 
+                    location = tableau[0];
+                }
             }
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'<?= $this->params ?>&<?= $this->paramname ?>='+location+'&start='+start+'&end='+end, { asynchronous:true, evalScripts: true});
             }
