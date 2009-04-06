@@ -303,6 +303,9 @@ class Glpi(DyngroupDatabaseHelper):
             except KeyError:
                 pass
 
+            if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
+                query = self.filterOnUUID(query, filt['uuids'])
+
             try:
                 gid = filt['gid']
                 machines = []
@@ -723,11 +726,12 @@ class Glpi(DyngroupDatabaseHelper):
                     for l in self.__add_children(ploc[0]):
                         ret.append(l)
                 else:
+                    ploc[0].name = ploc[0].name.decode('latin-1')
                     ret.append(ploc[0])
             if len(ret) == 0:
                 ret = []
             session.close()
-        return ret
+        return ret #map(lambda l:l.decode('latin-1'), ret)
 
     def __get_all_locations(self):
         ret = []
@@ -735,6 +739,7 @@ class Glpi(DyngroupDatabaseHelper):
         q = session.query(Location).group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
         session.close()
         for location in q:
+            location.name = location.name.decode('latin-1')
             ret.append(location)
         return ret
 
@@ -747,6 +752,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret = [child]
         for c in children:
             for res in self.__add_children(c):
+                res.name = res.name.decode('latin-1')
                 ret.append(res)
         session.close()
         return ret
