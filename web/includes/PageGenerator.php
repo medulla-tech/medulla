@@ -1042,7 +1042,7 @@ class AjaxFilterLocation extends AjaxFilter {
             var filter = "";
             var reg1 = new RegExp(tableau[0]+"##", "g");
             if (filt.match(reg1)) {
-                if (tableau[-1] != undefined) { 
+                if (tableau[0] != undefined) { 
                     filter = tableau[0];
                 }
                 if (tableau[1] != undefined) {
