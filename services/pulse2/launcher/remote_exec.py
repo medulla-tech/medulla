@@ -64,7 +64,7 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         real_command  = [LauncherConfig().rsync_path]
         real_command += client['proto_args']
         real_command += real_files_list
-        real_command += [ "%s@%s:%s/" % (client['user'], client['host'], target_path)]
+        real_command += [ '%s@%s:%s/' % (client['user'], client['host'], target_path)]
 
         # Build "thru" command
         thru_command_list  = [LauncherConfig().ssh_path]
@@ -204,7 +204,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         real_command  = ['rsync']
         real_command += client['proto_args']
 
-        real_command += ["%s@%s:'%s'" % (client['user'], client['proxy']['host'], ' '.join(map(lambda x: "%s/%s/%s" % (LauncherConfig().target_path, src_path, x), files_list)))]
+        real_command += ['%s@%s:"%s"' % (client['user'], client['proxy']['host'], ' '.join(map(lambda x: "%s/%s/'%s'" % (LauncherConfig().target_path, src_path, x), files_list)))]
         real_command += [target_path]
 
         # Build final command line
@@ -271,20 +271,20 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         thru_command_list += [client['host']]
 
         # Build "exec" command
-        real_command = ['rm']
-        real_command  += map(lambda(a): os.path.join(target_path, a), files_list)
+        real_command =  ['rm']
+        real_command += map(lambda(a): '"%s"' % os.path.join(target_path, a), files_list)
         real_command += ['&&', 'if', '!', 'rmdir', target_path, ';']
         real_command += ['then']
         # Use the dellater command if available
-        real_command +=  ['if', '[', '-x', '/usr/bin/dellater.exe', ']', ';']
-        real_command +=  ['then']
+        real_command += ['if', '[', '-x', '/usr/bin/dellater.exe', ']', ';']
+        real_command += ['then']
         # The permissions need to be modified, else the directory can't be
         # deleted.
-        real_command +=  ['chown', 'SYSTEM.SYSTEM', target_path, ';']
+        real_command += ['chown', 'SYSTEM.SYSTEM', '"%s"' % target_path, ';']
         # The mount/grep/sed stuff is needed to get the directory name for
         # Windows.
-        real_command +=  ['dellater', '"$(mount |grep " on / type"|sed "s/ on \/ type.*$//")"' + target_path, ';']
-        real_command +=  ['fi', ';']
+        real_command += ['dellater', '"$(mount |grep " on / type"|sed "s/ on \/ type.*$//")"' + target_path, ';']
+        real_command += ['fi', ';']
         real_command += ['fi']
 
         # Build final command line
