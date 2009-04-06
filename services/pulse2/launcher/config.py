@@ -290,6 +290,14 @@ class LauncherConfig(pulse2.utils.Singleton):
                                 logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                             password = ''
 
+                    awake_incertitude_factor = self.getvaluedefaulted(section, 'awake_incertitude_factor', .2, 'float')
+                    if awake_incertitude_factor > .5:
+                        logging.getLogger().warning("in %s, awake_incertitude_factor greater than .5, setting it to .5" % (section))
+                        awake_incertitude_factor = .5
+                    if awake_incertitude_factor < 0:
+                        logging.getLogger().warning("in %s, awake_incertitude_factor lower than 0, setting it to 0" % (section))
+                        awake_incertitude_factor = 0
+
                     self.schedulers[section] = {
                         'host' : self.getvaluedefaulted(section, 'host', '127.0.0.1'),
                         'port' : self.getvaluedefaulted(section, 'port', "8000"),
@@ -297,6 +305,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                         'password' : password,
                         'enablessl' : self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
                         'awake_time' : self.getvaluedefaulted(section, 'awake_time', 600, 'int'),
+                        'awake_incertitude_factor' : awake_incertitude_factor,
                         'defer_results' : self.getvaluedefaulted(section, 'defer_results', False, 'bool')
                     }
                     if self.first_scheduler == None:
@@ -443,6 +452,8 @@ class LauncherConfig(pulse2.utils.Singleton):
                 return self.cp.getint(section, option)
             elif type == 'pass':
                 return self.cp.getpassword(section, option)
+            elif type == 'float':
+                return self.cp.getfloat(section, option)
         else:
             return default
 
