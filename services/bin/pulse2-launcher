@@ -28,6 +28,7 @@ import sys
 import optparse
 import xmlrpclib
 import time
+import random
 
 # Twisted
 from twisted.internet import epollreactor
@@ -72,9 +73,29 @@ def start_all_callbacks():
     logger.info('launcher %s: all callbacks started' % (LauncherConfig().name))
 
 def scheduleTellIAmAlive():
-    """ periodicaly talk to our referent scheduler """
-    tell_in = LauncherConfig().awake_time - time.time() % LauncherConfig().awake_time
-    twisted.internet.reactor.callLater(tell_in, tellIAmAlive)
+    """
+        periodicaly talk to our referent scheduler
+        attempt to awake every when time modulo awake_time equals 0
+        f.ex., with awake_time equals to 10 minutes (600 seconds), will
+        wake-up at 00:10:00, 00:20:00, 00:30:00 etc ...
+        awake-time is completed with a random value of more or less
+        awake_incertitude_factor
+        f.ex., with awake_incertitude_factor set to .2 (20 %), will
+        wake-up at 00:11:00 +/- 1 minutes, 00:21:00 +/- 1 minutes etc ...
+    """
+    # current time (epoch)
+    current_time = time.time()
+    # second after previous 'official' time
+    next_wakeup_in = current_time % LauncherConfig().awake_time
+    logging.getLogger().info('woot0 : %s' % next_wakeup_in)
+    # second before next 'official' time
+    next_wakeup_in = LauncherConfig().awake_time - next_wakeup_in
+    logging.getLogger().info('woot1 : %s' % next_wakeup_in)
+    # add some randomness
+    next_wakeup_in = int(next_wakeup_in + random.random() * LauncherConfig().awake_incertitude_factor * LauncherConfig().awake_time)
+    logging.getLogger().info('woot2 : %s' % next_wakeup_in)
+    # schedule the next event
+    twisted.internet.reactor.callLater(next_wakeup_in, tellIAmAlive)
 
 def tellIAmAlive():
     def _cb(result): # scheduler do answer us, check if there is some zombies to expunge around
@@ -122,6 +143,7 @@ def startService():
     scheduler = config.schedulers[config.launchers[config.name]['scheduler']]
 
     config.awake_time = scheduler['awake_time']
+    config.awake_incertitude_factor = scheduler['awake_incertitude_factor']
     config.defer_results = scheduler['defer_results']
     config.scheduler_enablessl = scheduler['enablessl']
     config.scheduler_host = scheduler['host']

@@ -297,6 +297,10 @@ class LauncherConfig(pulse2.utils.Singleton):
                     if awake_incertitude_factor < 0:
                         logging.getLogger().warning("in %s, awake_incertitude_factor lower than 0, setting it to 0" % (section))
                         awake_incertitude_factor = 0
+                    awake_time = self.getvaluedefaulted(section, 'awake_time', 600, 'int')
+                    if awake_time < 60:
+                        logging.getLogger().warning("in %s, awake_time lower than 60, setting it to 60" % (section))
+                        awake_time = 60
 
                     self.schedulers[section] = {
                         'host' : self.getvaluedefaulted(section, 'host', '127.0.0.1'),
@@ -304,7 +308,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                         'username' : username,
                         'password' : password,
                         'enablessl' : self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
-                        'awake_time' : self.getvaluedefaulted(section, 'awake_time', 600, 'int'),
+                        'awake_time' : awake_time,
                         'awake_incertitude_factor' : awake_incertitude_factor,
                         'defer_results' : self.getvaluedefaulted(section, 'defer_results', False, 'bool')
                     }
