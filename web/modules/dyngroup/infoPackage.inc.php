@@ -52,35 +52,29 @@ if (!empty($submod)) {
 
         $page = new Page("computersgroupcreatesubedit",_T("Computers Group Creator Sub Request Editor","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/tab.php");
-        $page->setOptions(array("visible"=>False, "noACL"=>True));
+        $page->setOptions(array("visible"=>False));
 
         $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
 
         $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
 
         $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
         $submod->addPage($page);
     
         $page = new Page("computersgroupcreatesubdel",_T("Computers Group Creator Sub Request Delete","dyngroup"));
         $page->setFile("modules/dyngroup/dyngroup/tab.php");
-        $page->setOptions(array("visible"=>False, "noACL"=>True));
+        $page->setOptions(array("visible"=>False));
 
         $tab = new Tab("tabdyn", _T("Dynamic group creation's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
 
         $tab = new Tab("tabsta", _T("Static group creation's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
 
         $tab = new Tab("tabfromfile", _T("Static group creation from import's tab", "dyngroup"));
-        $tab->setOptions(array("noACL"=>True));
         $page->addTab($tab);
         $submod->addPage($page);
 
