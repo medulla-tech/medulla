@@ -65,17 +65,24 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
     $r->displayReqListInfos();
     // TODO : put in class
-    print "<hr/><table><form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
-        "<tr><td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>".
-        "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
-        "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+    print "<hr/><table><tr>";
+    if (hasCorrectAcl("base", "computers", "save")) {
+        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
+            "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>".
+            "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
+            "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+    }
     if ($r->countPart() > 0) {
         drawBoolEquation($bool);
     }
-    drawTemporaryButton();
+    if (hasCorrectAcl("base", "computers", "tmpdisplay")) {
+        drawTemporaryButton();
+    }
     
-    print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td></tr>".
-        "</form></table>";
+    if (hasCorrectAcl("base", "computers", "save")) {
+        print "<td><input name='btnPrimary' value='"._T('Save', 'dyngroup')."' class='btnPrimary' type='submit'/></td>";
+    }
+    print "</tr></form></table>";
     if ($name_exists && !isset($_POST['displayTmp'])) { 
         new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
     } elseif ($name == '' && $check && $id) {

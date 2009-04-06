@@ -52,7 +52,7 @@ $get .= "&visible=".quickGet('visible', true);
 if (strlen($_GET['id'])) {
     $get .= "&id=".urlencode($_GET['id']);
 }
-print "<a href='main.php?module=base&submod=computers&action=save$get'>"._T('back', 'dyngroup')."</a>";
+print "<a href='main.php?module=base&submod=computers&action=creator_step2$get'>"._T('back', 'dyngroup')."</a>";
 
 include("modules/pulse2/pulse2/computers_list.php");
 # TODO put bool in the first page whereas it is actualy in the second

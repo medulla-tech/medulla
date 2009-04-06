@@ -208,8 +208,8 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<table>";
     print "<tr><td>";
     
-    $b = new Button('base', 'computers', 'save');
-    $url = urlStr("base/computers/save", array('id'=>$id, 'request'=>$request->toS()));
+    $b = new Button('base', 'computers', 'creator_step2');
+    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS()));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";

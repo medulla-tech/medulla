@@ -124,6 +124,11 @@ if (!empty($submod)) {
     $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
 
+    $page = new Page("creator_step2",_T("Second page of result/request group creator","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/save.php");
+    $page->setOptions(array("visible"=>False));
+    $submod->addPage($page);
+    
     $page = new Page("save",_T("Save a group of computers","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/save.php");
     $page->setOptions(array("visible"=>False));
@@ -170,6 +175,7 @@ if (!empty($submod)) {
 
     $page = new Page("updateMachineCache",_T("Update machine cache","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/update.php");
+    $page->setOptions(array("visible"=>False));
     $submod->addPage($page);
 
 }
