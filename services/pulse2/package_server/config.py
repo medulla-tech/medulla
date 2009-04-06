@@ -36,7 +36,7 @@ if sys.platform != "win32":
     import grp
     import string
     # MMC
-    from mmc.support.config import MMCConfigParser
+    from pulse2.utils import Pulse2ConfigParser
 
 
 class P2PServerCP(pulse2.utils.Singleton):
