@@ -98,11 +98,11 @@ msgstr "Vérifier"
 
 #: dyngroup/dyngroup/creator.php:83 dyngroup/dyngroup/test1/creator.php:83
 msgid "Choose the module you want to query : "
-msgstr "Sélectionner le module que vous désirez requêter : "
+msgstr "Sélectionnez le module que vous désirez requêter : "
 
 #: dyngroup/dyngroup/creator.php:109 dyngroup/dyngroup/test1/creator.php:109
 msgid "Choose your field : "
-msgstr "Sélectionner votre champ : "
+msgstr "Sélectionnez votre champ : "
 
 #: dyngroup/dyngroup/details.php:51
 msgid "Close"
