@@ -38,7 +38,7 @@ msgstr "Associer des fichiers à un package"
 #: pkgs/pkgs/associate_files.php:74
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
-msgstr "Associez des fichiers au package <b>%s (%s)</b>"
+msgstr "Associer des fichiers au package <b>%s (%s)</b>"
 
 #: pkgs/pkgs/ajaxPendingPackageList.php:57
 msgid "Associate package"
