@@ -8,89 +8,74 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Dyngroup Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 16:56+0100\n"
+"POT-Creation-Date: 2008-10-30 23:32+0100\n"
 "PO-Revision-Date: 2009-03-24 16:57+0100\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/details.php:33
 #: dyngroup/dyngroup/details.php:33
 #, php-format
 msgid "%s's details"
 msgstr "Détails de %s"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/request.php:150
 #: dyngroup/includes/request.php:150
 #, php-format
 msgid "%s) Search %s = %s in module %s"
 msgstr "%s) Recherche %s = %s dans le module %s"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/request.php:148
 #: dyngroup/includes/request.php:148
 #, php-format
 msgid "%s) Search %s = (%s) in module %s"
 msgstr "%s) Recherche %s = (%s) dans le module %s"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/double.php:58
 #: dyngroup/includes/double.php:58
 msgid "->"
 msgstr "->"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:121
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:44
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:80
+#: dyngroup/dyngroup/save.php:87 dyngroup/dyngroup/import_from_file.php:44
 #: dyngroup/dyngroup/add_groups.php:121
-#: dyngroup/dyngroup/import_from_file.php:44 dyngroup/dyngroup/save.php:80
+#: dyngroup/dyngroup/test1/creator_step2.php:86
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:145
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:169
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:177
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:181
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/autocomplete.php:30
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/double.php:37
+#: dyngroup/includes/double.php:37 dyngroup/includes/autocomplete.php:30
 #: dyngroup/dyngroup/creator.php:145 dyngroup/dyngroup/creator.php:169
 #: dyngroup/dyngroup/creator.php:177 dyngroup/dyngroup/creator.php:181
-#: dyngroup/includes/autocomplete.php:30 dyngroup/includes/double.php:37
+#: dyngroup/dyngroup/test1/creator.php:145
+#: dyngroup/dyngroup/test1/creator.php:169
+#: dyngroup/dyngroup/test1/creator.php:177
+#: dyngroup/dyngroup/test1/creator.php:181
 msgid "Add"
 msgstr "Ajouter"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:31
 #: dyngroup/dyngroup/localSidebar.php:31
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/groupshead.php:30
 #: dyngroup/dyngroup/groupshead.php:30
 msgid "Add a static group"
 msgstr "Ajouter un groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/autocomplete.php:39
 #: dyngroup/includes/autocomplete.php:39
 msgid "Add a value"
 msgstr "Ajouter une valeur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:30
 #: dyngroup/dyngroup/localSidebar.php:30
 msgid "All groups"
 msgstr "Tous les groupes"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:130
 #: dyngroup/includes/groups.inc.php:130
 msgid "All machines"
 msgstr "Tous les ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:34
 #: dyngroup/includes/groups.inc.php:34
 msgid "All share entities"
 msgstr "Partager avec"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/delete_group.php:45
 #: dyngroup/dyngroup/delete_group.php:45
 #, php-format
 msgid ""
@@ -100,433 +85,369 @@ msgstr ""
 "Etes-vous sûr de bien vouloir supprimer le groupe <b>%s</b>?<br/> (il est "
 "possible qu'il soit utilisé dans un autre groupe)."
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/delete_group.php:50
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/remove_machine.php:48
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:82
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:175
+#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
 #: dyngroup/dyngroup/delete_group.php:50
-#: dyngroup/dyngroup/remove_machine.php:48 dyngroup/includes/groups.inc.php:82
-#: dyngroup/includes/groups.inc.php:175
+#: dyngroup/dyngroup/remove_machine.php:48
 msgid "Cancel"
 msgstr "Annuler"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:109
-#: dyngroup/dyngroup/save.php:109
+#: dyngroup/dyngroup/save.php:118
+#: dyngroup/dyngroup/test1/creator_step2.php:117
 msgid "Check"
 msgstr "Vérifier"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:83
-#: dyngroup/dyngroup/creator.php:83
+#: dyngroup/dyngroup/creator.php:83 dyngroup/dyngroup/test1/creator.php:83
 msgid "Choose the module you want to query : "
 msgstr "Sélectionner le module que vous désirez requêter : "
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:109
-#: dyngroup/dyngroup/creator.php:109
+#: dyngroup/dyngroup/creator.php:109 dyngroup/dyngroup/test1/creator.php:109
 msgid "Choose your field : "
 msgstr "Sélectionner votre champ : "
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/details.php:51
 #: dyngroup/dyngroup/details.php:51
 msgid "Close"
 msgstr "Fermer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:38
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:105
-#: dyngroup/infoPackage.inc.php:40 dyngroup/infoPackage.inc.php:107
+#: dyngroup/infoPackage.inc.php:40 dyngroup/infoPackage.inc.php:101
 msgid "Computers Group Creator"
 msgstr "Créateur de groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:68
-#: dyngroup/infoPackage.inc.php:70
+#: dyngroup/infoPackage.inc.php:67
 msgid "Computers Group Creator Sub Request Delete"
 msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:51
 #: dyngroup/infoPackage.inc.php:53
 msgid "Computers Group Creator Sub Request Editor"
 msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:85
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:109
-#: dyngroup/infoPackage.inc.php:87 dyngroup/infoPackage.inc.php:111
+#: dyngroup/infoPackage.inc.php:81 dyngroup/infoPackage.inc.php:105
 msgid "Computers Group Editor"
 msgstr "Éditeur de groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:95
-#: dyngroup/infoPackage.inc.php:97
+#: dyngroup/infoPackage.inc.php:91
 msgid "Computers Group Sub Request Delete"
 msgstr "Page de suppression d'une sous requête de groupe d'ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:90
-#: dyngroup/infoPackage.inc.php:92
+#: dyngroup/infoPackage.inc.php:86
 msgid "Computers Group Sub Request Editor"
 msgstr "Page d'édition d'une sous requête de groupe d'ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:58
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:137
 #: dyngroup/dyngroup/add_groups.php:58 dyngroup/dyngroup/add_groups.php:137
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:81
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:174
 #: dyngroup/includes/groups.inc.php:81 dyngroup/includes/groups.inc.php:174
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:89
 #: dyngroup/dyngroup/ajaxListGroups.php:99
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:100
 msgid "Csv export"
 msgstr "Export CSV"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:164
-#: dyngroup/infoPackage.inc.php:166
+#: dyngroup/infoPackage.inc.php:165
 msgid "Csv's export"
 msgstr "Export CSV"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/request.php:113
 #: dyngroup/includes/request.php:113
 msgid "Delete"
 msgstr "Supprimer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:139
-#: dyngroup/infoPackage.inc.php:141
+#: dyngroup/infoPackage.inc.php:140
 msgid "Delete a group of computers"
 msgstr "Supprimer un groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/delete_group.php:36
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/delete_group.php:49
 #: dyngroup/dyngroup/delete_group.php:36 dyngroup/dyngroup/delete_group.php:49
 msgid "Delete group"
 msgstr "Supprimer le groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #: dyngroup/dyngroup/ajaxListGroups.php:54
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:54
 msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:130
-#: dyngroup/infoPackage.inc.php:132
+#: dyngroup/infoPackage.inc.php:131
 msgid "Detailed page of save a group of computers"
 msgstr "Page détaillée pour l'enregistrement d'un groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:72
 #: dyngroup/dyngroup/ajaxListGroups.php:82
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:82
 msgid "Display"
 msgstr "Montrer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:39
 #: dyngroup/dyngroup/localSidebar.php:39
 #, php-format
 msgid "Display %s '%s'"
 msgstr "Afficher %s '%s'"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:115
-#: dyngroup/infoPackage.inc.php:117
+#: dyngroup/infoPackage.inc.php:111
 msgid "Display a groups of computers"
 msgstr "Montrer un groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:128
-#: dyngroup/dyngroup/save.php:128
+#: dyngroup/dyngroup/save.php:137
+#: dyngroup/dyngroup/test1/creator_step2.php:140
 msgid "Display content"
 msgstr "Voir le contenu"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/display.php:41
 #: dyngroup/dyngroup/display.php:45
 #, php-format
 msgid "Display group '%s' content"
 msgstr "Voir le contenu du groupe '%s'"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:75
 #: dyngroup/dyngroup/ajaxListGroups.php:85
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:85
 msgid "Display this group's content"
 msgstr "Montrer le contenu de ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tab.php:31
 #: dyngroup/dyngroup/tab.php:31
 msgid "Dynamic group creation"
 msgstr "Création d'un groupe dynamique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:41
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:55
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:72
 #: dyngroup/infoPackage.inc.php:43 dyngroup/infoPackage.inc.php:57
-#: dyngroup/infoPackage.inc.php:74
+#: dyngroup/infoPackage.inc.php:71
 msgid "Dynamic group creation's tab"
 msgstr "Onglet de création d'un groupe dynamique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/request.php:112
 #: dyngroup/includes/request.php:112
 msgid "Edit"
 msgstr "Éditer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/edithead.php:34
-#: dyngroup/dyngroup/edithead.php:47
+#: dyngroup/dyngroup/edithead.php:34
 msgid "Edit a dynamic group"
 msgstr "Éditer un groupe dynamique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/edithead.php:41
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/groupshead.php:32
-#: dyngroup/dyngroup/edithead.php:54 dyngroup/dyngroup/groupshead.php:32
+#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
 msgid "Edit a static group"
 msgstr "Éditer un groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:82
 #: dyngroup/dyngroup/ajaxListGroups.php:92
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:92
 msgid "Edit this group"
 msgstr "Éditer ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:109
-#: dyngroup/dyngroup/save.php:109
+#: dyngroup/dyngroup/save.php:118
+#: dyngroup/dyngroup/test1/creator_step2.php:117
 msgid "Enter boolean operator between groups"
 msgstr "Spécifier un opérateur booléen entre les groupes"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:213
-#: dyngroup/dyngroup/creator.php:213
+#: dyngroup/dyngroup/creator.php:213 dyngroup/dyngroup/test1/creator.php:213
 msgid "Go to save step"
 msgstr "Sauvegarder"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tab.php:30
 #: dyngroup/dyngroup/tab.php:30
 msgid "Group creation"
 msgstr "Création d'un groupe"
 
-#: dyngroup/dyngroup/edithead.php:34
-msgid "Group edition"
-msgstr "Édition d'un groupe"
-
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:116
 #: dyngroup/dyngroup/add_groups.php:116
 msgid "Group failed to modify"
 msgstr "Erreur à la modification du groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/edit_share.php:98
 #: dyngroup/dyngroup/edit_share.php:85
+#: dyngroup/dyngroup/test1/edit_share.php:85
+#: dyngroup/dyngroup/edit_share_permissions.php:85
 msgid "Group failed to share"
 msgstr "Erreur à la modification des partages du groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/list.php:31
 #: dyngroup/dyngroup/list.php:31
 msgid "Group list"
 msgstr "Liste des groupes"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:153
 #: dyngroup/includes/groups.inc.php:153
 msgid "Group members"
 msgstr "Membres du groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:63
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:50
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:117
+#: dyngroup/includes/groups.inc.php:117
 #: dyngroup/dyngroup/ajaxListGroups.php:73
 #: dyngroup/dyngroup/import_from_file.php:50
-#: dyngroup/includes/groups.inc.php:117
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:73
 msgid "Group name"
 msgstr "Nom du groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:144
-#: dyngroup/infoPackage.inc.php:146
+#: dyngroup/infoPackage.inc.php:145
 msgid "Group of computers details"
 msgstr "Détails du groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:57
 #: dyngroup/includes/groups.inc.php:57
 msgid "Group share"
 msgstr "Partage du groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:104
 #: dyngroup/dyngroup/add_groups.php:104
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:102
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:41
-#: dyngroup/dyngroup/add_groups.php:102
 #: dyngroup/dyngroup/import_from_file.php:41
+#: dyngroup/dyngroup/add_groups.php:102
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/edit_share.php:90
 #: dyngroup/dyngroup/edit_share.php:77
+#: dyngroup/dyngroup/test1/edit_share.php:77
+#: dyngroup/dyngroup/edit_share_permissions.php:77
 msgid "Group successfully shared"
 msgstr "Groupe partagé avec succès"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:60
 #: dyngroup/dyngroup/ajaxListGroups.php:65
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:65
 msgid "Hidden"
 msgstr "Caché"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/details.php:57
 #: dyngroup/dyngroup/details.php:57
 msgid "Hide"
 msgstr "Cacher"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:77
 #: dyngroup/dyngroup/ajaxListGroups.php:87
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:87
 msgid "Inventory on this group"
 msgstr "Montrer l'inventaire de ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:56
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:118
-#: dyngroup/dyngroup/import_from_file.php:56
 #: dyngroup/includes/groups.inc.php:118
+#: dyngroup/dyngroup/import_from_file.php:56
 msgid "Is the group visible"
 msgstr "Ce groupe est-il visible"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:135
-#: dyngroup/infoPackage.inc.php:137
+#: dyngroup/infoPackage.inc.php:136
 msgid "List all groups of computers"
 msgstr "Lister tous les groupes d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:171
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/autocomplete.php:32
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/double.php:40
-#: dyngroup/dyngroup/creator.php:171 dyngroup/includes/autocomplete.php:32
-#: dyngroup/includes/double.php:40
+#: dyngroup/includes/double.php:40 dyngroup/includes/autocomplete.php:32
+#: dyngroup/dyngroup/creator.php:171 dyngroup/dyngroup/test1/creator.php:171
 msgid "Modify"
 msgstr "Modifier"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:69
-#: dyngroup/dyngroup/save.php:69
+#: dyngroup/dyngroup/save.php:71 dyngroup/dyngroup/test1/creator_step2.php:69
 msgid "Name :"
 msgstr "Nom :"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:175
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:53
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:120
-#: dyngroup/dyngroup/creator.php:175 dyngroup/dyngroup/import_from_file.php:53
-#: dyngroup/includes/groups.inc.php:120
+#: dyngroup/includes/groups.inc.php:120 dyngroup/dyngroup/creator.php:175
+#: dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/dyngroup/test1/creator.php:175
 msgid "No"
 msgstr "Non"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/header.php:26
 #: dyngroup/dyngroup/header.php:26
 msgid "Please chose the type of group you want to create"
 msgstr "Choisissez le type de groupe que vous voulez créer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:85
 #: dyngroup/dyngroup/ajaxListGroups.php:95
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:96
 msgid "Read log"
 msgstr "Lire les journaux"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/details.php:54
 #: dyngroup/dyngroup/details.php:54
 msgid "Regenerate"
 msgstr "Re-générer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/remove_machine.php:47
 #: dyngroup/dyngroup/remove_machine.php:47
 msgid "Remove Computer"
 msgstr "Enlever l'ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/remove_machine.php:37
 #: dyngroup/dyngroup/remove_machine.php:37
 msgid "Remove a computer"
 msgstr "Enlever un ordinateur"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:149
-#: dyngroup/infoPackage.inc.php:151
+#: dyngroup/infoPackage.inc.php:150
 msgid "Remove a computer from a computers group"
 msgstr "Enlever un ordinateur d'un groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:30
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save_detail.php:30
-#: dyngroup/dyngroup/save.php:30 dyngroup/dyngroup/save_detail.php:30
+#: dyngroup/dyngroup/save.php:30 dyngroup/dyngroup/test1/save.php:30
+#: dyngroup/dyngroup/test1/creator_step2.php:30
+#: dyngroup/dyngroup/save_detail.php:30
 msgid "Request saver"
 msgstr "Sauvegarde de requête"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:77
-#: dyngroup/dyngroup/save.php:77
+#: dyngroup/dyngroup/save.php:83 dyngroup/dyngroup/test1/creator_step2.php:81
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:125
-#: dyngroup/infoPackage.inc.php:127
+#: dyngroup/infoPackage.inc.php:126
 msgid "Save a group of computers"
 msgstr "Sauvegarder un groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/request.php:109
 #: dyngroup/includes/request.php:109
 msgid "Search part"
 msgstr "Recherche de composant"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:58
+#: dyngroup/infoPackage.inc.php:121
+msgid "Second page of result/request group creator"
+msgstr "Deuxième page de la création de groupe requète/résultat"
+
 #: dyngroup/dyngroup/import_from_file.php:58
 msgid "Select the file you want to import"
 msgstr "Sélectionnez le fichier que vous désirez importer"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:68
 #: dyngroup/dyngroup/import_from_file.php:68
 msgid "Select what is inside the file"
 msgstr "Sélectionnez le type de donnée qui se trouve dans le fichier"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:120
-#: dyngroup/infoPackage.inc.php:122
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:94
+msgid "Set special permission on this group shares"
+msgstr "Mise en place de permissions spéciales sur les partages de ce groupe"
+
+#: dyngroup/infoPackage.inc.php:116
 msgid "Share a group of computers"
 msgstr "Partager un groupe d'ordinateurs"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/edit_share.php:38
 #: dyngroup/dyngroup/edit_share.php:37
+#: dyngroup/dyngroup/test1/edit_share.php:37
+#: dyngroup/dyngroup/edit_share_permissions.php:37
 #, php-format
 msgid "Share groupe '%s' with"
 msgstr "Partager le groupe '%s' avec"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:83
 #: dyngroup/dyngroup/ajaxListGroups.php:93
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:93
 msgid "Share this group"
 msgstr "Partager ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/details.php:59
 #: dyngroup/dyngroup/details.php:59
 msgid "Show"
 msgstr "Afficher"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:86
 #: dyngroup/dyngroup/ajaxListGroups.php:96
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:97
 msgid "Software deployment on this group"
 msgstr "Déploiement de logiciels sur ce groupe"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tab.php:32
 #: dyngroup/dyngroup/tab.php:32
 msgid "Static group creation"
 msgstr "Création d'un groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tab.php:33
 #: dyngroup/dyngroup/tab.php:33
 msgid "Static group creation from import"
 msgstr "Création d'un groupe statique a partir d'un import"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:47
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:63
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:80
-#: dyngroup/infoPackage.inc.php:49 dyngroup/infoPackage.inc.php:65
-#: dyngroup/infoPackage.inc.php:82
+#: dyngroup/infoPackage.inc.php:49 dyngroup/infoPackage.inc.php:63
+#: dyngroup/infoPackage.inc.php:77
 msgid "Static group creation from import's tab"
 msgstr "Onglet de création d'un groupe statique a partir d'un import"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:44
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:59
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:76
-#: dyngroup/infoPackage.inc.php:46 dyngroup/infoPackage.inc.php:61
-#: dyngroup/infoPackage.inc.php:78
+#: dyngroup/infoPackage.inc.php:46 dyngroup/infoPackage.inc.php:60
+#: dyngroup/infoPackage.inc.php:74
 msgid "Static group creation's tab"
 msgstr "Onglet de création d'un groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tmpdisplay.php:30
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/infoPackage.inc.php:100
-#: dyngroup/dyngroup/tmpdisplay.php:30 dyngroup/infoPackage.inc.php:102
+#: dyngroup/dyngroup/tmpdisplay.php:35
+#: dyngroup/dyngroup/test1/tmpdisplay.php:53 dyngroup/infoPackage.inc.php:96
 msgid "Temporary result display"
 msgstr "Affichage temporaire du resultat"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:115
-#: dyngroup/dyngroup/save.php:115
+#: dyngroup/dyngroup/tmpdisplay.php:33
+#: dyngroup/dyngroup/test1/tmpdisplay.php:51
+#, php-format
+msgid "Temporary result display for '%s'"
+msgstr "Affichage temporaire du resultat pour '%s'"
+
+#: dyngroup/dyngroup/save.php:124 dyngroup/dyngroup/test1/save.php:120
+#: dyngroup/dyngroup/test1/tmpdisplay.php:76
+#: dyngroup/dyngroup/test1/creator_step2.php:123
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr "L'équation booléenne '%s' est invalide"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:118
-#: dyngroup/dyngroup/save.php:118
+#: dyngroup/dyngroup/save.php:127 dyngroup/dyngroup/test1/save.php:123
+#: dyngroup/dyngroup/test1/tmpdisplay.php:79
+#: dyngroup/dyngroup/test1/creator_step2.php:126
 #, php-format
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
@@ -535,126 +456,126 @@ msgstr ""
 "L'équation booléenne '%s' est invalide.<br/>Pas le même nombre de sous-"
 "requêtes"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:121
-#: dyngroup/dyngroup/save.php:121
+#: dyngroup/dyngroup/save.php:130 dyngroup/dyngroup/test1/save.php:126
+#: dyngroup/dyngroup/test1/tmpdisplay.php:82
+#: dyngroup/dyngroup/test1/creator_step2.php:129
 msgid "The boolean equation is valid"
 msgstr "L'équation booléenne est valide"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:196
-#: dyngroup/dyngroup/creator.php:196
+#: dyngroup/dyngroup/creator.php:196 dyngroup/dyngroup/test1/creator.php:196
 msgid "The request is : "
 msgstr "La requête est : "
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save_detail.php:44
 #: dyngroup/dyngroup/save_detail.php:44
 #, php-format
 msgid "This request has been saved as %s (id=%s)"
 msgstr "Cette requête a été sauvée en tant que %s (id=%s)"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save_detail.php:46
 #: dyngroup/dyngroup/save_detail.php:46
 #, php-format
 msgid "This result has been saved as %s (id=%s)"
 msgstr "Ce résultat a été sauvegardé en tant que %s (id=%s)"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:71
 #: dyngroup/dyngroup/ajaxListGroups.php:81
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:81
 msgid "Type"
 msgstr "Type"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:60
+#: dyngroup/infoPackage.inc.php:170
+msgid "Update machine cache"
+msgstr "Mise à jour du cache de machine"
+
+#: dyngroup/dyngroup/update.php:33
+msgid "Update machines name cache in dyngroup"
+msgstr "Mise à jour du cache des noms d'ordinateurs dans dyngroup"
+
 #: dyngroup/dyngroup/ajaxListGroups.php:65
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:65
 msgid "Visible"
 msgstr "Visible"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:174
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/creator.php:180
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/import_from_file.php:53
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/includes/groups.inc.php:119
-#: dyngroup/dyngroup/creator.php:174 dyngroup/dyngroup/creator.php:180
-#: dyngroup/dyngroup/import_from_file.php:53
-#: dyngroup/includes/groups.inc.php:119
+#: dyngroup/includes/groups.inc.php:119 dyngroup/dyngroup/creator.php:174
+#: dyngroup/dyngroup/creator.php:180 dyngroup/dyngroup/import_from_file.php:53
+#: dyngroup/dyngroup/test1/creator.php:174
+#: dyngroup/dyngroup/test1/creator.php:180
 msgid "Yes"
 msgstr "Oui"
 
-#: dyngroup/dyngroup/edithead.php:41
-#, php-format
-msgid "You cant edit '%s' because you are not this group's owner."
-msgstr ""
-"Vous ne pouvez pas éditer '%s' parce que vous n'etes pas le propriétaire du "
-"groupe."
-
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/add_groups.php:119
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:82
-#: dyngroup/dyngroup/add_groups.php:119 dyngroup/dyngroup/save.php:82
+#: dyngroup/dyngroup/save.php:89 dyngroup/dyngroup/save.php:91
+#: dyngroup/dyngroup/add_groups.php:119
+#: dyngroup/dyngroup/test1/creator_step2.php:88
+#: dyngroup/dyngroup/test1/creator_step2.php:90
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/remove_machine.php:44
 #: dyngroup/dyngroup/remove_machine.php:44
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Vous allez enlever l'ordinateur <b>%s</b> du groupe <b>%s</b>."
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/tmpdisplay.php:49
-#: dyngroup/dyngroup/tmpdisplay.php:49
+#: dyngroup/dyngroup/tmpdisplay.php:55
+#: dyngroup/dyngroup/test1/tmpdisplay.php:68
 msgid "back"
 msgstr "retour"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:71
-#: dyngroup/dyngroup/save.php:71
+#: dyngroup/dyngroup/save.php:73 dyngroup/dyngroup/test1/creator_step2.php:71
 msgid "hidden"
 msgstr "caché"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:71
-#: dyngroup/dyngroup/save.php:71
+#: dyngroup/dyngroup/save.php:73 dyngroup/dyngroup/test1/creator_step2.php:71
 msgid "it should be"
 msgstr "le groupe sera"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:56
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:70
-#: dyngroup/dyngroup/ajaxListGroups.php:61 dyngroup/dyngroup/save.php:70
+#: dyngroup/dyngroup/save.php:72 dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:61
+#: dyngroup/dyngroup/test1/creator_step2.php:70
 msgid "query"
 msgstr "requête"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:70
-#: dyngroup/dyngroup/save.php:70
+#: dyngroup/dyngroup/save.php:72 dyngroup/dyngroup/test1/creator_step2.php:70
 msgid "result"
 msgstr "résultat"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:56
 #: dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:61
 #, php-format
 msgid "result (%s)"
 msgstr "résultat (%s)"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:70
-#: dyngroup/dyngroup/save.php:70
+#: dyngroup/dyngroup/save.php:72 dyngroup/dyngroup/test1/creator_step2.php:70
 msgid "save as"
 msgstr "sauver en tant que"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/ajaxListGroups.php:58
 #: dyngroup/dyngroup/ajaxListGroups.php:63
+#: dyngroup/dyngroup/test1/ajaxListGroups.php:63
 msgid "static group"
 msgstr "groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:36
 #: dyngroup/dyngroup/localSidebar.php:36
 msgid "the query"
 msgstr "la requête"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:36
 #: dyngroup/dyngroup/localSidebar.php:36
 msgid "the result"
 msgstr "le résultat"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/localSidebar.php:36
 #: dyngroup/dyngroup/localSidebar.php:36
 msgid "the static group"
 msgstr "le groupe statique"
 
-#: debian/mmc-web-dyngroup/usr/share/mmc/modules/dyngroup/dyngroup/save.php:71
-#: dyngroup/dyngroup/save.php:71
+#: dyngroup/dyngroup/update.php:38
+#, php-format
+msgid "update machine cache : %s machines"
+msgstr "mise à jour du cache des noms de ordinateurs : %s ordinateurs"
+
+#: dyngroup/dyngroup/save.php:73 dyngroup/dyngroup/test1/creator_step2.php:71
 msgid "visible"
 msgstr "visible"
 
+#~ msgid "Group edition"
+#~ msgstr "Édition d'un groupe"
+
+#~ msgid "You cant edit '%s' because you are not this group's owner."
+#~ msgstr ""
+#~ "Vous ne pouvez pas éditer '%s' parce que vous n'etes pas le propriétaire "
+#~ "du groupe."
