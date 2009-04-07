@@ -415,12 +415,12 @@ msgstr "Création d'un groupe statique"
 
 #: dyngroup/dyngroup/tab.php:33
 msgid "Static group creation from import"
-msgstr "Création d'un groupe statique a partir d'un import"
+msgstr "Création d'un groupe statique à partir d'un import"
 
 #: dyngroup/infoPackage.inc.php:49 dyngroup/infoPackage.inc.php:63
 #: dyngroup/infoPackage.inc.php:77
 msgid "Static group creation from import's tab"
-msgstr "Onglet de création d'un groupe statique a partir d'un import"
+msgstr "Onglet de création d'un groupe statique à partir d'un import"
 
 #: dyngroup/infoPackage.inc.php:46 dyngroup/infoPackage.inc.php:60
 #: dyngroup/infoPackage.inc.php:74
