@@ -40,6 +40,9 @@ import logging
 import re
 from sets import Set
 
+def encode_utf8(self, str): return str
+def encode_latin1(self, str): return str.decode('utf8')
+
 def decode_utf8(self, str): return str
 def decode_latin1(self, str): return str.decode('latin-1')
 
@@ -68,9 +71,11 @@ class Glpi(DyngroupDatabaseHelper):
         try:
             self.db.execute(u'SELECT "\xe9"')
             setattr(Glpi, "decode", decode_utf8)
+            setattr(Glpi, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Glpi, "decode", decode_latin1)
+            setattr(Glpi, "encode", encode_latin1)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -409,6 +414,9 @@ class Glpi(DyngroupDatabaseHelper):
         Map a name and request parameters on a sqlalchemy request
         """
         if len(query) == 4:
+            # in case the glpi database is in latin1, don't forget dyngroup is in utf8
+            # => need to convert what comes from the dyngroup database
+            query[3] = self.encode(query[3])
             r1 = re.compile('\*')
             like = False
             if type(query[3]) == list:
