@@ -21,16 +21,20 @@
 # MA 02110-1301, USA.
 
 from pulse2.managers.location import ComputerLocationManager
+import mmc.plugins.glpi.database
 import logging
+
+def __convert(loc):
+    loc.name = mmc.plugins.glpi.database.Glpi().decode(loc.name)
+    return loc
 
 def complete_ctx(ctx):
     """
     Set GLPI user locations and profile in current security context.
     """
-    from mmc.plugins.glpi.database import Glpi
     if not hasattr(ctx, "locations") or ctx.locations == None:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
-        ctx.locations = Glpi().getUserLocations(ctx.userid)
+        ctx.locations = map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid))
         ctx.locationsid = map(lambda e: e.ID, ctx.locations)
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))

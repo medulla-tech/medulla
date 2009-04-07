@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
@@ -18,6 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# -*- coding: utf-8; -*-
 
 # TODO rename location into entity (and locations in location)
 from mmc.support.config import PluginConfig
@@ -37,6 +39,9 @@ from sqlalchemy.orm import *
 import logging
 import re
 from sets import Set
+
+def decode_utf8(self, str): return str
+def decode_latin1(self, str): return str.decode('latin-1')
 
 class Glpi(DyngroupDatabaseHelper):
     """
@@ -58,7 +63,14 @@ class Glpi(DyngroupDatabaseHelper):
             return None
         self.logger.info("Glpi is activating")
         self.config = GlpiConfig("glpi", conffile)
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        dburi = self.makeConnectionPath()
+        self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        try:
+            self.db.execute(u'SELECT "\xe9"')
+            setattr(Glpi, "decode", decode_utf8)
+        except:
+            self.logger.warn("Your database is not in utf8, will fallback in latin1")
+            setattr(Glpi, "decode", decode_latin1)
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.metadata.create_all()
@@ -726,12 +738,11 @@ class Glpi(DyngroupDatabaseHelper):
                     for l in self.__add_children(ploc[0]):
                         ret.append(l)
                 else:
-                    ploc[0].name = ploc[0].name.decode('latin-1')
                     ret.append(ploc[0])
             if len(ret) == 0:
                 ret = []
             session.close()
-        return ret #map(lambda l:l.decode('latin-1'), ret)
+        return ret
 
     def __get_all_locations(self):
         ret = []
@@ -739,7 +750,6 @@ class Glpi(DyngroupDatabaseHelper):
         q = session.query(Location).group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
         session.close()
         for location in q:
-            location.name = location.name.decode('latin-1')
             ret.append(location)
         return ret
 
@@ -752,7 +762,6 @@ class Glpi(DyngroupDatabaseHelper):
         ret = [child]
         for c in children:
             for res in self.__add_children(c):
-                res.name = res.name.decode('latin-1')
                 ret.append(res)
         session.close()
         return ret
