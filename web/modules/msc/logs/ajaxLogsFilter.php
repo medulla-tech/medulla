@@ -103,7 +103,7 @@ foreach ($cmds as $item) {
     } else {
         $a_current[] = $coh['current_state'];
     }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from");
+    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from", 'hostname'=>$target['target_name'], 'title'=>$cmd['title']);
 
 
     $icons = state_tmpl($coh['current_state']);

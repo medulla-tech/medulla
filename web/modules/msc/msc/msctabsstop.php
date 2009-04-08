@@ -103,6 +103,9 @@ if (isset($_POST["bconfirm"])) {
     $bundle_id = $_GET['bundle_id'];
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
+    if (!$name && $_GET['title']) {
+        $name = $_GET['title'];
+    }
 
     $action_type = _T('action', 'msc');
     if (strlen($bundle_id)) {
