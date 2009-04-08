@@ -288,7 +288,7 @@ class ProcessList(pulse2.utils.Singleton):
     _processArr = dict()
     _event = list()
     slots = 0           # max number of commands
-    sleepperiod = 1     # amount of second between two wake-up
+    sleepperiod = 60    # amount of second between two wake-up
     default_timeout = 0 # number of second above which we kill a process
 
     """ Singleton Setup """
