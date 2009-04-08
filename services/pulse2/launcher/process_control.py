@@ -77,10 +77,16 @@ def commandRunner(cmd, cbCommandEnd):
 def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind):
     """
     """
-    process = commandProtocol(cmd)
-    if not ProcessList().addProcess(process, id): # a process with the same ID already exists
-        logging.getLogger().warn('launcher %s: attempted to add command %s twice' % (LauncherConfig().name, id))
+    if ProcessList().existsProcess(id):
+        logging.getLogger().warn('launcher %s: attempted to add command #%s twice' % (LauncherConfig().name, id))
         return False
+
+    if not ProcessList().isOneSlotFree():
+        logging.getLogger().warn('launcher %s: running out of slot when adding command #%s' % (LauncherConfig().name, id))
+        return False
+
+    process = commandProtocol(cmd)
+    process.id = id
     # FIXME: codec should be taken from conf file
     try:
         process.handler = twisted.internet.reactor.spawnProcess(
@@ -95,15 +101,17 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
             { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
         )
     except OSError, e:
-        try:
-            process.handler.loseConnection()
-        except Exception, e2:
-            logging.getLogger().error('launcher %s: loseConnection: %s' % (LauncherConfig().name, e2))
         logging.getLogger().error('launcher %s: failed daemonization in commandForker: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
+        # do some cleanup
         return False
+
+    if not ProcessList().addProcess(process, id):
+        logging.getLogger().warn('launcher %s: attempted to add command %s twice ??' % (LauncherConfig().name, id))
+        # do some cleanup
+        return False
+
     logging.getLogger().debug('launcher %s: about to execute %s in commandForker' % (LauncherConfig().name, ' '.join(cmd)))
     process.returnxmlrpcfunc = callbackName
-    process.id = id
     process.defer_results = defer_results
     process.endback = cbCommandEnd
     process.max_age = max_exec_time
@@ -118,7 +126,7 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         self.cmd = cmd
         self.done = False
         self.isnotifyingparent = False # semaphore to handle possible thread intersections
-        self.id = id
+        self.id = None
         self.group = None
         self.kind = None
 
@@ -328,20 +336,28 @@ class ProcessList(pulse2.utils.Singleton):
 
     """ Process handling """
     def addProcess(self, obj, id):
-        if id in self._processArr.keys():
-            return False
-        if self.getProcessCount() >= self.slots:
+        if not self.canAddThisProcess(id):
             return False
         self._processArr[id] = obj
         return True
 
+    def canAddThisProcess(self, id):
+        if self.existsProcess(id):
+            return False
+        if not self.isOneSlotFree():
+            return False
+        return True
+
+    def isOneSlotFree(self):
+        return self.getProcessCount() < self.slots
+
     def getProcess(self, id):
-        if id in self._processArr:
+        if self.existsProcess(id):
             return self._processArr[id]
         return None
 
     def existsProcess(self, id):
-        return id in self._processArr
+        return id in self._processArr.keys()
 
     def removeProcess(self, id):
         del self._processArr[id]
