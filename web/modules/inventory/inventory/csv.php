@@ -53,7 +53,7 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
 
     $firstline = true;
     foreach ($range as $lower) {
-        $upper = $lower + $split - 1;
+        $upper = $lower + $split ;
 
         foreach (getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter, 'min' => $lower, 'max' => $upper )) as $machine) {
             $name = $machine[0];
