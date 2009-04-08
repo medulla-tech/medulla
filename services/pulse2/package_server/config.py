@@ -35,7 +35,6 @@ if sys.platform != "win32":
     import pwd
     import grp
     import string
-    # MMC
     from pulse2.utils import Pulse2ConfigParser
 
 
@@ -112,7 +111,7 @@ class P2PServerCP(pulse2.utils.Singleton):
 
     def pre_setup(self, config_file):
         if sys.platform != "win32":
-            self.cp = MMCConfigParser()
+            self.cp = Pulse2ConfigParser()
         else:
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
@@ -124,7 +123,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         if self.cp == None:
             # Load configuration file
             if sys.platform != "win32":
-                self.cp = MMCConfigParser()
+                self.cp = Pulse2ConfigParser()
             else:
                 self.cp = ConfigParser.ConfigParser()
             self.cp.read(config_file)
