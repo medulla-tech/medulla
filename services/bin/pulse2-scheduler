@@ -67,17 +67,18 @@ import pulse2.xmlrpc
 import logging
 import logging.config
 
-VERSION = "0.0.0"
+VERSION = "1.2.1"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
+CB_STARTUP_DELAY = 2
+LOG_STATS_DELAY = 60
 
 def getVersion():  return VERSION
 def getRevision(): return REVISION
 
 def start_all_callbacks():
-    startup_delay = 2
     logger = logging.getLogger()
-    logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, startup_delay))
-    time.sleep(startup_delay)
+    logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, CB_STARTUP_DELAY))
+    time.sleep(CB_STARTUP_DELAY)
     scheduleStartCommands()
     scheduleStopCommands()
     scheduleLogStats()
@@ -132,7 +133,7 @@ def awakeStopCommands():
 
 def scheduleLogStats():
     """ periodicaly log stats """
-    delay = 60 - time.time() % 60
+    delay = LOG_STATS_DELAY - time.time() % LOG_STATS_DELAY
     twisted.internet.reactor.callLater(delay, logStats)
 
 def logStats():
@@ -328,7 +329,7 @@ def main():
     # start logger
     logging.config.fileConfig(options.config_file)
     logger = logging.getLogger()
-    logger.info("Scheduler version('%s') build('%s')"%(str(getVersion()), str(getRevision())))
+    logger.info("Scheduler version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
     # parse conf
     logger.info("Reading configuration file: %s" % options.config_file)
