@@ -62,12 +62,17 @@ import logging
 import logging.config
 
 VERSION = "1.2.1"
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
+CB_STARTUP_DELAY = 2
+LOG_STATS_DELAY = 60
+
+def getVersion():  return VERSION
+def getRevision(): return REVISION
 
 def start_all_callbacks():
-    startup_delay = 2
     logger = logging.getLogger()
-    logger.info('launcher %s: will run callbacks in %d seconds' % (LauncherConfig().name, startup_delay))
-    time.sleep(startup_delay)
+    logger.info('launcher %s: will run callbacks in %d seconds' % (LauncherConfig().name, CB_STARTUP_DELAY))
+    time.sleep(CB_STARTUP_DELAY)
     scheduleTellIAmAlive()
     scheduleLogStats()
     logger.info('launcher %s: all callbacks started' % (LauncherConfig().name))
@@ -115,7 +120,7 @@ def tellIAmAlive():
 
 def scheduleLogStats():
     """ periodicaly log stats """
-    delay = 60 - time.time() % 60
+    delay = LOG_STATS_DELAY - time.time() % LOG_STATS_DELAY
     twisted.internet.reactor.callLater(delay, logStats)
 
 def logStats():
@@ -200,15 +205,9 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def __init__(self, name):
         twisted.web.xmlrpc.XMLRPC.__init__(self)
         self.logger = logging.getLogger()
-        self.logger.info("Launcher version('%s') build('%s')"%(str(self.getVersion()), str(self.getRevision())))
+        self.logger.info("Launcher version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
         self.name = name
         self.config = LauncherConfig().launchers[name]
-
-    def getRevision(self):
-        return int("$Rev$".split(':')[1].strip(' $'))
-
-    def getVersion(self):
-        return VERSION
 
     def _ebRender(self, failure):
         self.logger.error(failure)
