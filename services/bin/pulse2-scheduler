@@ -208,12 +208,6 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
         self.logger = logging.getLogger()
         self.name = name
 
-    def getRevision(self):
-        return int("$Rev$".split(':')[1].strip(' $'))
-
-    def getVersion(self):
-        return VERSION
-
     def _ebRender(self, failure, func, args):
         self.logger.error(failure)
         if isinstance(failure.value, xmlrpclib.Fault):
