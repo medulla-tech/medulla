@@ -27,8 +27,6 @@ import ConfigParser
 import re
 import logging
 
-# MMC
-import mmc.support.mmctools
 from pulse2.utils import Singleton, Pulse2ConfigParser
 
 class DatabaseConfig(Singleton):
