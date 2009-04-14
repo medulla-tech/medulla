@@ -1290,10 +1290,10 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     def orderIpAdresses(self, netiface):
-        ret_ifmac = list()
-        ret_ifaddr = list()
-        ret_netmask = list()
-        ret_domain = list()
+        ret_ifmac = []
+        ret_ifaddr = []
+        ret_netmask = []
+        ret_domain = []
         idx_good = 0
         for iface in netiface:
             if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
