@@ -1294,17 +1294,10 @@ class Glpi(DyngroupDatabaseHelper):
         ret_ifaddr = list()
         ret_netmask = list()
         ret_domain = list()
+        idx_good = 0
         for iface in netiface:
             if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
-                if same_network(iface['ifaddr'], iface['gateway'], iface['netmask']):
-                    ret_ifmac.insert(0, iface['ifmac'])
-                    ret_ifaddr.insert(0, iface['ifaddr'])
-                    ret_netmask.insert(0, iface['netmask'])
-                    if 'domain' in iface:
-                        ret_domain.insert(0, iface['domain'])
-                    else:
-                        ret_domain.insert(0, '')
-                else:
+                if iface['gateway'] == None:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
                     ret_netmask.append(iface['netmask'])
@@ -1312,6 +1305,25 @@ class Glpi(DyngroupDatabaseHelper):
                         ret_domain.append(iface['domain'])
                     else:
                         ret_domain.append('')
+                else:
+                    if same_network(iface['ifaddr'], iface['gateway'], iface['netmask']):
+                        idx_good += 1
+                        ret_ifmac.insert(0, iface['ifmac'])
+                        ret_ifaddr.insert(0, iface['ifaddr'])
+                        ret_netmask.insert(0, iface['netmask'])
+                        if 'domain' in iface:
+                            ret_domain.insert(0, iface['domain'])
+                        else:
+                            ret_domain.insert(0, '')
+                    else:
+                        ret_ifmac.insert(idx_good, iface['ifmac'])
+                        ret_ifaddr.insert(idx_good, iface['ifaddr'])
+                        ret_netmask.insert(idx_good, iface['netmask'])
+                        if 'domain' in iface:
+                            ret_domain.insert(idx_good, iface['domain'])
+                        else:
+                            ret_domain.insert(idx_good, '')
+
         return (ret_ifmac, ret_ifaddr, ret_netmask, ret_domain)
 
     def getMachineIp(self, uuid):
