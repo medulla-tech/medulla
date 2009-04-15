@@ -22,8 +22,10 @@
  * MA 02110-1301, USA
  */
 
+require("modules/glpi/includes/xmlrpc.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
+
 
 if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
 if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
@@ -33,10 +35,20 @@ $uuid = '';
 $hostname = '';
 if (isset($_GET['uuid'])) { $uuid = $_GET['uuid']; }
 if (isset($_GET['hostname'])) { $hostname = $_GET['hostname']; }
+    
+
+$uri = getGlpiMachineUri();
+if ($uri) {
+    $glpi_link = sprintf('<a href="%s" target="new">GLPI</a>', $uri.str_replace('UUID', '', $uuid));
+} else {
+    $glpi_link = 'GLPI';
+}
 
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
-$p->addTop(sprintf(_T("%s's inventory (GLPI)", "glpi"), $hostname), "modules/glpi/glpi/header.php");
+$p->addTop(sprintf(_T("%s's inventory (%s)", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
+
+/* TABS */
 $p->addTab("tab0", _T("Hardware", "glpi"), "", "modules/glpi/glpi/view_hardware.php", array('hostname'=>$hostname, 'uuid'=>$uuid));
 
 $i = 1;
@@ -46,6 +58,6 @@ foreach (array('Network'=>_T('Network', "glpi"), 'Controller'=>_T('Controller', 
     $i++;
 }
 
-$p->display();
+$p->display();   
 
 ?>

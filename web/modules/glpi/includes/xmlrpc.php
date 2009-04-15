@@ -38,5 +38,12 @@ function getLastMachineGlpiPart($uuid, $part) {
     return xmlCall("glpi.getLastMachineInventoryPart", array($uuid, $part));
 }
 
+function getGlpiMachineUri() {
+    if (!isset($_SESSION["glpi.getGlpiMachineUri"])) {
+        $_SESSION["glpi.getGlpiMachineUri"] = xmlCall("glpi.getGlpiMachineUri");
+    }
+    return $_SESSION["glpi.getGlpiMachineUri"];
+}
+
     
 ?>

@@ -45,19 +45,27 @@ if (isset($_GET['uuid'])) {
     $uuid = $_GET['objectUUID'];
 }
 $inv = getLastMachineGlpiFull($uuid);
-
 $prop = array();
-$val = array();
+foreach ($inv as $v) { $prop[$v[0]] = $v[1]; }
 
-foreach ($inv as $v) {
-    $prop[] = _T($v[0], 'glpi');
-    $val[] = $v[1];
+if ($prop['domain']) { $prop['name'] .= ".".$prop['domain']; }
+if ($prop['network']) { $prop['name'] .= " [".$prop['network']."]"; }
+$prop['os'] .= ' ('.$prop['os_version'] .") ". $prop['os_sp'];
+$prop['os_license'] = _T("license id : ", 'glpi').$prop['os_license_id']._T("<br/>license number : ", 'glpi').$prop['os_license_number'];
+if ($prop['type']) { $prop['model'] .= ' ('.$prop['type'].')'; }
+if ($prop['otherserial']) { $prop['serial'] .= ' ('.$prop['otherserial'].')'; }
+if ($prop['contact']) {
+    if ($prop['contact_num']) { $prop['contact'] .= " (".$prop['contact_num']; }
+    if ($prop['tech_num']) { $prop['contact'] .= " & ".$prop['tech_num'].")"; } else { $prop['contact'] .= ")"; }
 }
+if ($prop['location']) { $prop['entity'] .= ' > '.$prop['location']; }
 
-$conf["global"]["maxperpage"] += count($prop);
-
-
-$n = new ListInfos($prop, _T("Properties", "glpi"));
+$key = $val = array();
+foreach (array('name', 'os', 'os_license', 'serial', 'model', 'contact', 'entity', 'comments') as $k) {
+    $key[]= _T($k, 'glpi');
+    $val[]= $prop[$k];
+}
+$n = new ListInfos($key, _T("Properties", "glpi"));
 $n->addExtraInfo($val, _T("Value", "glpi"));
 $n->drawTable(0);
 
@@ -65,14 +73,18 @@ $n->drawTable(0);
  
 _T('name', 'glpi');
 _T('comments', 'glpi');
-_T('name', 'glpi');
 _T('serial', 'glpi');
 _T('os', 'glpi');
 _T('os_version', 'glpi');
 _T('os_sp', 'glpi');
 _T('os_license_number', 'glpi');
 _T('os_license_id', 'glpi');
+_T('os_license', 'glpi');
 _T('location', 'glpi');
+_T('model', 'glpi');
+_T('type', 'glpi');
+_T('contact', 'glpi');
+_T('entity', 'glpi');
 
 /* ****** */
 

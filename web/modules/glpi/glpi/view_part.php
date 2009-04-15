@@ -43,16 +43,58 @@ foreach ($inv as $line) {
 }
 
 $n = null;
+
+foreach (array('type', 'designation', 'name') as $i) {
+    if (array_key_exists($i, $all)) {
+        if ($n == null) {
+            $n = new ListInfos($all[$i], _T($i, 'glpi'));
+        } else {
+            $n->addExtraInfo($all[$i], _T($i, 'glpi'));
+        }
+        unset($all[$i]);
+    }
+}
+
 foreach ($all as $k => $v) {
     if ($n == null) {
-        $n = new ListInfos($v, $k);
+        $n = new ListInfos($v, _T($k, 'glpi'));
     } else {
-        $n->addExtraInfo($v, $k);
+        $n->addExtraInfo($v, _T($k, 'glpi'));
     }
 }
 if ($n) {
     $n->drawTable(0);
 }
+
+/**  to get i18n labels... */
+
+_T('name', 'glpi');
+_T('comments', 'glpi');
+_T('ifaddr', 'glpi');
+_T('ifmac', 'glpi');
+_T('netmask', 'glpi');
+_T('gateway', 'glpi');
+_T('subnet', 'glpi');
+_T('type', 'glpi');
+_T('designation', 'glpi');
+_T('specif_default', 'glpi');
+_T('frequence', 'glpi');
+_T('bandwidth', 'glpi');
+_T('is_writer', 'glpi');
+_T('interface', 'glpi');
+_T('comment', 'glpi');
+
+_T('processor', 'glpi');
+_T('ram', 'glpi');
+_T('hdd', 'glpi');
+_T('iface', 'glpi');
+_T('drive', 'glpi');
+_T('gfxcard', 'glpi');
+_T('sndcard', 'glpi');
+_T('pci', 'glpi');
+
+
+/* xxxxxxx */
 
 ?>
 
