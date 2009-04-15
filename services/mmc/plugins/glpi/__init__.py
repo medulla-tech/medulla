@@ -85,3 +85,5 @@ def getMachineIp(uuid):
 def getInventoryEM(part):
     return []
 
+def getGlpiMachineUri():
+    return Glpi().config.glpi_computer_uri

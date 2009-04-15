@@ -48,6 +48,10 @@ class GlpiConfig(PluginConfig):
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")
         try:
+            self.glpi_computer_uri = self.get("main", "glpi_computer_uri")
+        except:
+            self.glpi_computer_uri = "" #http://localhost/glpi/front/computer.form.php?ID="
+        try:
             self.activeProfiles = self.get('main', 'active_profiles').split(' ')
         except NoOptionError:
             # put the GLPI default values for actives profiles
