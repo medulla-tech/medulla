@@ -226,4 +226,11 @@ def isalpha(s):
         return True
     return False
 
+def grep(string,list):
+    expr = re.compile(string)
+    return filter(expr.search,list)
+
+def grepv(string,list):
+    expr = re.compile(string)
+    return [item for item in list if not expr.search(item)]
 
