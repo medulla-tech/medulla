@@ -27,7 +27,7 @@ from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import complete_ctx 
-from pulse2.utils import same_network, unique, onlyAddNew
+from pulse2.utils import same_network, unique, onlyAddNew, grep, grepv
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
 
@@ -45,6 +45,16 @@ def encode_latin1(self, str): return str.decode('utf8')
 
 def decode_utf8(self, str): return str
 def decode_latin1(self, str): return str.decode('latin-1')
+
+class DbTOA(object):
+    def to_a(self):
+        a = grepv('^_', dir(self))
+        ret = []
+        for i in a:
+            j = getattr(self, i)
+            if type(j) in (str, int, unicode):
+                ret.append([i, j])
+        return ret
 
 class Glpi(DyngroupDatabaseHelper):
     """
@@ -82,10 +92,21 @@ class Glpi(DyngroupDatabaseHelper):
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
 
+    def getTableName(self, name):
+        return ''.join(map(lambda x:x.capitalize(), name.split('_')))
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
+
+        self.klass = {}
+
+        for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', 'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', 'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', 'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_sndcard'):
+            setattr(self, i, Table(i, self.metadata, autoload = True))
+            j = self.getTableName(i) #''.join(map(lambda x:x.capitalize(), i.split('_')))
+            exec "class %s(DbTOA): pass" % j
+            mapper(eval(j), getattr(self, i))
+            self.klass[i] = eval(j)
 
         # entity
         self.location = Table("glpi_entities", self.metadata, autoload = True)
@@ -125,10 +146,11 @@ class Glpi(DyngroupDatabaseHelper):
             Column('ID', Integer, primary_key=True),
             Column('FK_entities', Integer, ForeignKey('glpi_entities.ID')),
             Column('FK_groups', Integer, ForeignKey('glpi_groups.ID')),
+            Column('FK_glpi_enterprise', Integer, ForeignKey('glpi_enterprises.ID')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
             Column('os', Integer, ForeignKey('glpi_dropdown_os.ID')),
-            Column('os_version', Integer, nullable=False),
+            Column('os_version', Integer, ForeignKey('glpi_dropdown_os_version.ID')),
             Column('os_sp', Integer, ForeignKey('glpi_dropdown_os_sp.ID')),
             Column('os_license_number', String(255), nullable=True),
             Column('os_license_id', String(255), nullable=True),
@@ -136,7 +158,7 @@ class Glpi(DyngroupDatabaseHelper):
             Column('domain', Integer, ForeignKey('glpi_dropdown_domain.ID')),
             Column('network', Integer, ForeignKey('glpi_dropdown_network.ID')),
             Column('model', Integer, ForeignKey('glpi_dropdown_model.ID')),
-            Column('type', Integer, nullable=False),
+            Column('type', Integer, ForeignKey('glpi_type_computers.ID')),
             Column('deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
             Column('state', Integer, nullable=False), #ForeignKey('glpi_dropdown_state.ID')),
@@ -874,9 +896,59 @@ class Glpi(DyngroupDatabaseHelper):
         return self.doesUserHaveAccessToMachines(ctx, [machine_uuid])
 
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
+    def getAllDevices(self, uuid):
+        session = create_session()
+        query = session.query(ComputerDevice).filter(self.computer_device.c.FK_computers == fromUUID(uuid)).order_by(self.computer_device.c.device_type).all()
+        session.close()
+        ret = []
+        for i in query:
+            ret.append(self.getDeviceByType(i.FK_device, i.device_type))
+        return ret
+        
+    def getDeviceByType(self, did, type):
+        types = ['', 'glpi_device_moboard', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_drive', 'glpi_device_control', 'glpi_device_gfxcard', 'glpi_device_sndcard', 'glpi_device_pci', 'glpi_device_case', 'glpi_device_power']
+        t = types[type]
+        k = getattr(self, t)
+        klass = self.klass[t]
+        session = create_session()
+        query = session.query(klass).filter(k.c.ID == did).first()
+        session.close()
+        ret = query.to_a()
+        ret.append(['type', t.replace('glpi_device_', '')])
+        return ret
+        
     def getLastMachineInventoryFull(self, uuid):
-        machine = self.getMachineByUUID(uuid)
-        return machine.to_a()
+        session = create_session()
+        query = self.filterOnUUID(session.query(Machine) \
+                .add_column(self.glpi_dropdown_os.c.name) \
+                .add_column(self.glpi_dropdown_os_sp.c.name) \
+                .add_column(self.glpi_dropdown_os_version.c.name) \
+                .add_column(self.glpi_dropdown_domain.c.name) \
+                .add_column(self.glpi_dropdown_locations.c.name) \
+                .add_column(self.glpi_dropdown_model.c.name) \
+                .add_column(self.glpi_dropdown_network.c.name) \
+                .add_column(self.glpi_type_computers.c.name) \
+                .add_column(self.glpi_enterprises.c.name) \
+                .add_column(self.location.c.completename) \
+                .select_from( \
+                        self.machine.outerjoin(self.glpi_dropdown_os).outerjoin(self.glpi_dropdown_os_sp).outerjoin(self.glpi_dropdown_os_version).outerjoin(self.glpi_type_computers) \
+                        .outerjoin(self.glpi_dropdown_domain).outerjoin(self.glpi_dropdown_locations).outerjoin(self.glpi_dropdown_model).outerjoin(self.glpi_dropdown_network) \
+                        .outerjoin(self.glpi_enterprises).join(self.location)
+                ), uuid).all()
+        ret = []
+        ind = {'os':1, 'os_sp':2, 'os_version':3, 'type':8, 'domain':4, 'location':5, 'model':6, 'network':7, 'entreprise':9, 'entity':10}
+        for m in query:
+            ma1 = m[0].to_a()
+            ma2 = []
+            for x,y in ma1:
+                if x in ind.keys():
+                    ma2.append([x,m[ind[x]]])
+                else:
+                    ma2.append([x,y])
+            ret.append(ma2)
+        if type(uuid) == list:
+            return ret
+        return ret[0]
 
     def inventoryExists(self, uuid):
         machine = self.getMachineByUUID(uuid)
@@ -891,6 +963,8 @@ class Glpi(DyngroupDatabaseHelper):
             query = self.filterOnUUID(session.query(Network).select_from(self.machine.join(self.network)), uuid).all()
             ret = map(lambda a:a.to_a(), query)
             session.close()
+        elif part == 'Controller':
+            ret = self.getAllDevices(uuid)
         else:
             ret = None
         return ret
@@ -1404,6 +1478,10 @@ class Machine(object):
             ['comments',self.comments],
             ['name',self.name],
             ['serial',self.serial],
+            ['otherserial',self.otherserial],
+            ['contact',self.contact],
+            ['contact_num',self.contact_num],
+            ['tech_num',self.tech_num],
             ['os',self.os],
             ['os_version',self.os_version],
             ['os_sp',self.os_sp],
@@ -1414,6 +1492,7 @@ class Machine(object):
             ['network',self.network],
             ['model',self.model],
             ['type',self.type],
+            ['entity',self.FK_entities],
             ['uuid',Glpi().getMachineUUID(self)]
         ]
 
