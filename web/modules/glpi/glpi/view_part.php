@@ -45,6 +45,11 @@ foreach ($inv as $line) {
 $n = null;
 
 foreach (array('type', 'designation', 'name') as $i) {
+    if ($i == 'type') {
+        $conv = array();
+        foreach ($all[$i] as $j) { $conv[] = _T($j, 'glpi'); }
+        $all[$i] = $conv;
+    }
     if (array_key_exists($i, $all)) {
         if ($n == null) {
             $n = new ListInfos($all[$i], _T($i, 'glpi'));
