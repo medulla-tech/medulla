@@ -1371,7 +1371,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret_netmask = []
         ret_domain = []
         idx_good = 0
-        failure = (True, True)
+        failure = [True, True]
         for iface in netiface:
             if 'ifaddr' in iface and 'gateway' in iface and 'netmask' in iface:
                 if iface['gateway'] == None:
