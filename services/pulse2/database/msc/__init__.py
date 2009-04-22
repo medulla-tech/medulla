@@ -531,6 +531,20 @@ class MscDatabase(DatabaseHelper):
         query = self.__queryUsersFilter(ctx, query)
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
+    def __doneBundle(self, params, session):
+        query = session.query(Commands).select_from(self.commands.join(self.commands_on_host))
+        filter = []
+        if params['b_id'] != None:
+            filter = [self.commands.c.fk_bundle == params['b_id']]
+        elif params['cmd_id'] != None:
+            filter = [self.commands.c.id == params['cmd_id']]
+        filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+        query = query.filter(and_(*filter))
+        how_much = query.count()
+        if how_much > 0:
+            return False
+        return True
+    
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
         select_from = None
@@ -557,13 +571,16 @@ class MscDatabase(DatabaseHelper):
         if params['filt'] != None: # Filter on a commande names
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
 
-        if params['finished']: # Filter on finished commands only
-            filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
-        else:
-            # If we are querying on a bundle, we also want to display the
-            # commands_on_host flagged as done
-            if params['b_id'] == None:
+        if params['b_id'] == None:
+            if params['finished']: # Filter on finished commands only
+                filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
+            else:
+                # If we are querying on a bundle, we also want to display the
+                # commands_on_host flagged as done
                 filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+#        else:
+#            is_done = self.__doneBundle(params, session)
+#            self.logger.debug("is the bundle done ? %s"%(str(is_done)))
 
         query = self.__queryUsersFilter(ctx, query)
         query = query.filter(and_(*filter))
