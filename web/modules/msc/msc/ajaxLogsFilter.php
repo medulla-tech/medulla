@@ -62,7 +62,7 @@ if ($uuid) {
     }
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
-        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
+        list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'cmd_id'=>$_GET['cmd_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
     } else {
         list($count, $cmds) = displayLogs(array('gid'=>$gid, 'b_id'=>$_GET['bundle_id'], 'min'=>$start, 'max'=>$start + $maxperpage, 'filt'=>$filter, 'finished'=>$history));
         $areCommands = True;
