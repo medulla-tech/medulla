@@ -649,7 +649,7 @@ class Glpi(DyngroupDatabaseHelper):
                 'displayName': [m.comments],
                 'objectUUID': [m.getUUID()]
             }]
-            names[uuid] = m.name
+            names[m.getUUID()] = m.name
         if advanced:
             uuids = map(lambda m: m.getUUID(), machines)
             nets = self.getMachinesNetwork(uuids)
