@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glpi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-21 09:06+0200\n"
+"POT-Creation-Date: 2009-04-23 12:05+0200\n"
 "PO-Revision-Date: 2009-04-17 16:44-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -78,7 +78,7 @@ msgstr "Largura de banda"
 msgid "comment"
 msgstr "comentário"
 
-#: glpi/glpi/view_part.php:77 glpi/glpi/view_hardware.php:75
+#: glpi/glpi/view_hardware.php:75 glpi/glpi/view_part.php:77
 msgid "comments"
 msgstr "comentários"
 
@@ -146,7 +146,7 @@ msgstr "localização"
 msgid "model"
 msgstr "modelo"
 
-#: glpi/glpi/view_part.php:76 glpi/glpi/view_hardware.php:74
+#: glpi/glpi/view_hardware.php:74 glpi/glpi/view_part.php:76
 msgid "name"
 msgstr "nome"
 
@@ -206,6 +206,6 @@ msgstr "specif_default"
 msgid "subnet"
 msgstr "subnet"
 
-#: glpi/glpi/view_part.php:83 glpi/glpi/view_hardware.php:85
+#: glpi/glpi/view_hardware.php:85 glpi/glpi/view_part.php:83
 msgid "type"
 msgstr "tipo"

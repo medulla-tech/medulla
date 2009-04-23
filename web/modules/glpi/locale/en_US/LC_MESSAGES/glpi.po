@@ -51,15 +51,15 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: glpi/glpi/view_part.php:83
+#: glpi/glpi/view_part.php:87
 msgid "bandwidth"
 msgstr ""
 
-#: glpi/glpi/view_part.php:86
+#: glpi/glpi/view_part.php:90
 msgid "comment"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:75 glpi/glpi/view_part.php:73
+#: glpi/glpi/view_hardware.php:75 glpi/glpi/view_part.php:77
 msgid "comments"
 msgstr ""
 
@@ -67,11 +67,11 @@ msgstr ""
 msgid "contact"
 msgstr ""
 
-#: glpi/glpi/view_part.php:80
+#: glpi/glpi/view_part.php:84
 msgid "designation"
 msgstr ""
 
-#: glpi/glpi/view_part.php:92
+#: glpi/glpi/view_part.php:96
 msgid "drive"
 msgstr ""
 
@@ -79,39 +79,39 @@ msgstr ""
 msgid "entity"
 msgstr ""
 
-#: glpi/glpi/view_part.php:82
+#: glpi/glpi/view_part.php:86
 msgid "frequence"
 msgstr ""
 
-#: glpi/glpi/view_part.php:77
+#: glpi/glpi/view_part.php:81
 msgid "gateway"
 msgstr ""
 
-#: glpi/glpi/view_part.php:93
+#: glpi/glpi/view_part.php:97
 msgid "gfxcard"
 msgstr ""
 
-#: glpi/glpi/view_part.php:90
+#: glpi/glpi/view_part.php:94
 msgid "hdd"
 msgstr ""
 
-#: glpi/glpi/view_part.php:91
+#: glpi/glpi/view_part.php:95
 msgid "iface"
 msgstr ""
 
-#: glpi/glpi/view_part.php:74
+#: glpi/glpi/view_part.php:78
 msgid "ifaddr"
 msgstr ""
 
-#: glpi/glpi/view_part.php:75
+#: glpi/glpi/view_part.php:79
 msgid "ifmac"
 msgstr ""
 
-#: glpi/glpi/view_part.php:85
+#: glpi/glpi/view_part.php:89
 msgid "interface"
 msgstr ""
 
-#: glpi/glpi/view_part.php:84
+#: glpi/glpi/view_part.php:88
 msgid "is_writer"
 msgstr ""
 
@@ -127,11 +127,11 @@ msgstr ""
 msgid "model"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:74 glpi/glpi/view_part.php:72
+#: glpi/glpi/view_hardware.php:74 glpi/glpi/view_part.php:76
 msgid "name"
 msgstr ""
 
-#: glpi/glpi/view_part.php:76
+#: glpi/glpi/view_part.php:80
 msgid "netmask"
 msgstr ""
 
@@ -159,15 +159,15 @@ msgstr ""
 msgid "os_version"
 msgstr ""
 
-#: glpi/glpi/view_part.php:95
+#: glpi/glpi/view_part.php:99
 msgid "pci"
 msgstr ""
 
-#: glpi/glpi/view_part.php:88
+#: glpi/glpi/view_part.php:92
 msgid "processor"
 msgstr ""
 
-#: glpi/glpi/view_part.php:89
+#: glpi/glpi/view_part.php:93
 msgid "ram"
 msgstr ""
 
@@ -175,18 +175,18 @@ msgstr ""
 msgid "serial"
 msgstr ""
 
-#: glpi/glpi/view_part.php:94
+#: glpi/glpi/view_part.php:98
 msgid "sndcard"
 msgstr ""
 
-#: glpi/glpi/view_part.php:81
+#: glpi/glpi/view_part.php:85
 msgid "specif_default"
 msgstr ""
 
-#: glpi/glpi/view_part.php:78
+#: glpi/glpi/view_part.php:82
 msgid "subnet"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:85 glpi/glpi/view_part.php:79
+#: glpi/glpi/view_hardware.php:85 glpi/glpi/view_part.php:83
 msgid "type"
 msgstr ""
