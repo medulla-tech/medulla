@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-30 23:31+0100\n"
+"POT-Creation-Date: 2009-04-23 13:48+0200\n"
 "PO-Revision-Date: 2009-04-17 16:08-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -17,24 +17,31 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: pkgs/pkgs/localSidebar.php:28 pkgs/pkgs/edit.php:75
+#: pkgs/pkgs/edit.php:75 pkgs/pkgs/localSidebar.php:28
 #: pkgs/infoPackage.inc.php:44
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:75
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/localSidebar.php:28
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
 
 #: pkgs/pkgs/associate_files.php:115
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:107
 msgid "Associate"
 msgstr "Associar"
 
 #: pkgs/pkgs/edit.php:173
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:169
 msgid "Associate files"
 msgstr "Associar arquivos"
 
 #: pkgs/infoPackage.inc.php:49
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:49
 msgid "Associate files to a package"
 msgstr "Associar arquivos a um pacote"
 
 #: pkgs/pkgs/associate_files.php:74
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:66
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
 msgstr "Associar arquivos para o pacote <b>%s (%s)</b>"
@@ -44,36 +51,49 @@ msgid "Associate package"
 msgstr "Associar pacote"
 
 #: pkgs/pkgs/edit.php:134
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:131
 msgid "Command : "
 msgstr "Comando : "
 
 #: pkgs/pkgs/edit.php:134
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:131
 msgid "Command's name : "
 msgstr "Nome de comando : "
 
 #: pkgs/pkgs/ajaxPackageList.php:75 pkgs/pkgs/ajaxPendingPackageList.php:84
 #: pkgs/infoPackage.inc.php:59
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPackageList.php:75
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:59
 msgid "Delete a package"
 msgstr "Excluir um pacote"
 
 #: pkgs/pkgs/remove.php:42
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/remove.php:38
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
 #: pkgs/pkgs/edit.php:130
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:127
 msgid "Description"
 msgstr "Descrição"
 
 #: pkgs/pkgs/ajaxPackageList.php:65 pkgs/pkgs/ajaxPendingPackageList.php:75
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPackageList.php:66
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPendingPackageList.php:67
 msgid "Descriptions"
 msgstr "Descrições"
 
 #: pkgs/pkgs/ajaxPackageList.php:73 pkgs/pkgs/edit.php:91
 #: pkgs/infoPackage.inc.php:46
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPackageList.php:73
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:91
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Editar um pacote"
 
 #: pkgs/pkgs/associate_files.php:67
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:56
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:59
 msgid "Failed to associate files"
 msgstr "Falha ao associar arquivos"
 
@@ -82,28 +102,39 @@ msgstr "Falha ao associar arquivos"
 msgid "Failed to associate files%s"
 msgstr "Falha ao associar os arquivos %s"
 
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:53
+#, fuzzy, php-format
+msgid "Files succesfully associated with package <b>%s (%s)</b>"
+msgstr "Os arquivos foram associados com sucesso com o pacote <b>%s (%s)</b>%s"
+
 #: pkgs/pkgs/associate_files.php:57
 #, php-format
 msgid "Files succesfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso com o pacote <b>%s (%s)</b>%s"
 
 #: pkgs/pkgs/ajaxPackageList.php:63 pkgs/pkgs/ajaxPendingPackageList.php:73
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPackageList.php:64
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPendingPackageList.php:65
 msgid "Names"
 msgstr "Nomes"
 
 #: pkgs/pkgs/edit.php:142
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:139
 msgid "Need a reboot ?"
 msgstr "Precisa reiniciar ?"
 
 #: pkgs/pkgs/edit.php:117
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:114
 msgid "Package API"
 msgstr "API de pacote"
 
 #: pkgs/pkgs/edit.php:67
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:67
 msgid "Package failed to save"
 msgstr "Falha ao salvar pacote"
 
 #: pkgs/pkgs/edit.php:128
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:125
 msgid "Package label"
 msgstr "Rótulo do pacote"
 
@@ -112,42 +143,55 @@ msgid "Package size"
 msgstr "Tamanho do pacote"
 
 #: pkgs/pkgs/edit.php:57
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:57
 msgid "Package successfully edited"
 msgstr "Pacote editado com sucesso"
 
 #: pkgs/pkgs/edit.php:129
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/edit.php:126
 msgid "Package version"
 msgstr "Versão do pacote"
 
 #: pkgs/infoPackage.inc.php:32 pkgs/infoPackage.inc.php:38
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:32
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:38
 msgid "Packages"
 msgstr "Pacotes"
 
-#: pkgs/pkgs/localSidebar.php:27 pkgs/pkgs/index.php:29
+#: pkgs/pkgs/index.php:29 pkgs/pkgs/localSidebar.php:27
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/index.php:29
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
-#: pkgs/pkgs/localSidebar.php:29 pkgs/pkgs/pending.php:29
+#: pkgs/pkgs/pending.php:29 pkgs/pkgs/localSidebar.php:29
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/pending.php:29
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
 #: pkgs/infoPackage.inc.php:52
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:52
 msgid "See pending packages"
 msgstr "Ver pacotes pendentes"
 
 #: pkgs/pkgs/associate_files.php:94
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/associate_files.php:86
 msgid "Select the directory you want for this package"
 msgstr "Selecione o diretório para este pacote"
 
 #: pkgs/infoPackage.inc.php:42
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:42
 msgid "Show all packages"
 msgstr "Mostrar todos os pacotes"
 
 #: pkgs/infoPackage.inc.php:55
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/infoPackage.inc.php:55
 msgid "Show mirror status"
 msgstr "Mostrar o estado de sincronização do servidor"
 
 #: pkgs/pkgs/ajaxPendingPackageList.php:83
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPendingPackageList.php:74
 msgid "Show mirrors"
 msgstr "Mostar servidores"
 
@@ -157,14 +201,17 @@ msgid "The package %s (%s) is not associated"
 msgstr "O pacote %s (%s) não está associado"
 
 #: pkgs/pkgs/remove.php:34
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/remove.php:33
 msgid "The package failed to delete"
 msgstr "Falha ao excluir o pacote"
 
 #: pkgs/pkgs/remove.php:33
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/remove.php:32
 msgid "The package has been deleted."
 msgstr "O pacote foi excluído."
 
 #: pkgs/pkgs/ajaxPackageList.php:64 pkgs/pkgs/ajaxPendingPackageList.php:74
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPackageList.php:65
+#: debian/mmc-web-pkgs/usr/share/mmc/modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 msgid "Versions"
 msgstr "Versões"
-
