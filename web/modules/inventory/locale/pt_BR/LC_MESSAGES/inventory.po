@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inventory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-23 09:26+0200\n"
+"POT-Creation-Date: 2009-04-23 13:41+0200\n"
 "PO-Revision-Date: 2009-04-22 14:38-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -491,7 +491,7 @@ msgstr "Número Serial do SO"
 msgid "OperatingSystem"
 msgstr "Sistema Operacional"
 
-#: inventory/inventory/i18n_labels.php:110 inventory/inventory/pci.php:27
+#: inventory/inventory/pci.php:27 inventory/inventory/i18n_labels.php:110
 msgid "Pci"
 msgstr "PCI"
 
@@ -601,7 +601,7 @@ msgstr "Serial"
 msgid "Size"
 msgstr "Tamanho"
 
-#: inventory/inventory/i18n_labels.php:129 inventory/inventory/slot.php:27
+#: inventory/inventory/slot.php:27 inventory/inventory/i18n_labels.php:129
 msgid "Slot"
 msgstr "Slot"
 
@@ -736,7 +736,7 @@ msgstr "Usuário"
 msgid "VRAMSize"
 msgstr "Tamanho da VRAM"
 
-#: inventory/inventory/i18n_labels.php:156 inventory/inventory/view.php:79
+#: inventory/inventory/view.php:79 inventory/inventory/i18n_labels.php:156
 msgid "Value"
 msgstr "Valor"
 
