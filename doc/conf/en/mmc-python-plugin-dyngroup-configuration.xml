@@ -2,352 +2,357 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>MMC Dyngroup plugin configuration file</title>
+    <title>MMC Dyngroup plugin configuration file</title>
 
-  <articleinfo>
-    <author>
-      <firstname>Olivier</firstname>
+    <articleinfo>
+        <productname>Pulse 2</productname>
 
-      <surname>Roussy</surname>
+        <productnumber>1.2.1</productnumber>
 
-      <email>oroussy@mandriva.com</email>
-    </author>
+        <author>
+            <firstname>Olivier</firstname>
 
-    <affiliation>
-      <orgname>Mandriva</orgname>
-    </affiliation>
+            <surname>Roussy</surname>
 
-    <copyright>
-      <year>2009 Olivier Roussy - Mandriva</year>
-    </copyright>
+            <email>oroussy@mandriva.com</email>
+        </author>
 
-    <revhistory>
-      <revision>
-        <revnumber>$Revision$</revnumber>
+        <affiliation>
+            <orgname>Mandriva</orgname>
+        </affiliation>
+
+        <copyright>
+            <year>2009 Olivier Roussy - Mandriva</year>
+        </copyright>
 
         <date>$Date$</date>
 
-        <authorinitials>$Author$</authorinitials>
-      </revision>
-    </revhistory>
+        <releaseinfo>$Id$</releaseinfo>
 
-    <abstract>
-      <para>This document explains the content of the MMC dyngroup plugin
-      configuration file</para>
-    </abstract>
-  </articleinfo>
+        <abstract>
+            <para>This document explains the content of the MMC dyngroup
+            plugin configuration file</para>
+        </abstract>
+    </articleinfo>
 
-  <section>
-    <title>Introduction</title>
+    <section>
+        <title>Introduction</title>
 
-    <para>The « dyngroup » plugin is the MMC plugin in charge of creating,
-    modifying and deleting groups of machine.</para>
+        <para>The « dyngroup » plugin is the MMC plugin in charge of creating,
+        modifying and deleting groups of machine.</para>
 
-    <para>The plugin configuration file is
-    <filename>/etc/mmc/plugins/dyngroup.ini</filename>.</para>
+        <para>The plugin configuration file is
+        <filename>/etc/mmc/plugins/dyngroup.ini</filename>.</para>
 
-    <para>Like all MMC related configuration file, its file format is INI
-    style. The file is made of sections, each one starting with a
-    « [sectionname] » header. In each section options can be defined like
-    this: « option = value ».</para>
+        <para>Like all MMC related configuration file, its file format is INI
+        style. The file is made of sections, each one starting with a
+        « [sectionname] » header. In each section options can be defined like
+        this: « option = value ».</para>
 
-    <para>For example: <screen>[section1]
+        <para>For example: <screen>[section1]
 option1 = 1
 option2 = 2
 
 [section2]
 option1 = foo
 option2 = plop      </screen></para>
-  </section>
+    </section>
 
-  <section>
-    <title>Configuration file sections</title>
+    <section>
+        <title>Configuration file sections</title>
 
-    <para>For now four sections are available in this configuration
-    file:</para>
+        <para>For now four sections are available in this configuration
+        file:</para>
 
-    <table>
-      <title>dyngroup.ini available sections</title>
+        <table>
+            <title>dyngroup.ini available sections</title>
 
-      <tgroup cols="3">
-        <thead>
-          <row>
-            <entry>Section name</entry>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Section name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
-          </row>
-        </thead>
+                        <entry>Optional</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>main</entry>
+                <tbody>
+                    <row>
+                        <entry>main</entry>
 
-            <entry>Mostly MMC related behaviors</entry>
+                        <entry>Mostly MMC related behaviors</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry>no</entry>
+                    </row>
 
-          <row>
-            <entry>database</entry>
+                    <row>
+                        <entry>database</entry>
 
-            <entry>Needed options to connect to the database</entry>
+                        <entry>Needed options to connect to the
+                        database</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry>no</entry>
+                    </row>
 
-          <row>
-            <entry>querymanager</entry>
+                    <row>
+                        <entry>querymanager</entry>
 
-            <entry>Describe how it react as a potential queriable
-            plugin</entry>
+                        <entry>Describe how it react as a potential queriable
+                        plugin</entry>
 
-            <entry>yes</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>yes</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« main » section</title>
+    <section>
+        <title>« main » section</title>
 
-    <para>This section is used to give directives to the MMC agent.</para>
+        <para>This section is used to give directives to the MMC agent.</para>
 
-    <table>
-      <title>Available options for the "main" section</title>
+        <table>
+            <title>Available options for the "main" section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>disable</entry>
+                <tbody>
+                    <row>
+                        <entry>disable</entry>
 
-            <entry>Whenever use this plugin (or not)</entry>
+                        <entry>Whenever use this plugin (or not)</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>0</entry>
-          </row>
+                        <entry>0</entry>
+                    </row>
 
-          <row>
-            <entry>dyngroup_activate</entry>
+                    <row>
+                        <entry>dyngroup_activate</entry>
 
-            <entry>Tell if the dynamic group part is activated or if there is
-            only the static group part</entry>
+                        <entry>Tell if the dynamic group part is activated or
+                        if there is only the static group part</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>1</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>1</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« database » section</title>
+    <section>
+        <title>« database » section</title>
 
-    <para>This section defines the database options.</para>
+        <para>This section defines the database options.</para>
 
-    <table>
-      <title>Available options for the "database" section</title>
+        <table>
+            <title>Available options for the "database" section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>dbdriver</entry>
+                <tbody>
+                    <row>
+                        <entry>dbdriver</entry>
 
-            <entry>DB driver to use</entry>
+                        <entry>DB driver to use</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>mysql</entry>
-          </row>
+                        <entry>mysql</entry>
+                    </row>
 
-          <row>
-            <entry>dbhost</entry>
+                    <row>
+                        <entry>dbhost</entry>
 
-            <entry>Host which hosts the DB</entry>
+                        <entry>Host which hosts the DB</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>127.0.0.1</entry>
-          </row>
+                        <entry>127.0.0.1</entry>
+                    </row>
 
-          <row>
-            <entry>dbport</entry>
+                    <row>
+                        <entry>dbport</entry>
 
-            <entry>Port on which to connect to reach the DB</entry>
+                        <entry>Port on which to connect to reach the
+                        DB</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>3306 (aka "default MySQL port")</entry>
-          </row>
+                        <entry>3306 (aka "default MySQL port")</entry>
+                    </row>
 
-          <row>
-            <entry>dbname</entry>
+                    <row>
+                        <entry>dbname</entry>
 
-            <entry>DB name</entry>
+                        <entry>DB name</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>dyngroup</entry>
-          </row>
+                        <entry>dyngroup</entry>
+                    </row>
 
-          <row>
-            <entry>dbuser</entry>
+                    <row>
+                        <entry>dbuser</entry>
 
-            <entry>Username to give while conencting to the DB</entry>
+                        <entry>Username to give while conencting to the
+                        DB</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>mmc</entry>
-          </row>
+                        <entry>mmc</entry>
+                    </row>
 
-          <row>
-            <entry>dbpasswd</entry>
+                    <row>
+                        <entry>dbpasswd</entry>
 
-            <entry>Password to give while connecting to the DB</entry>
+                        <entry>Password to give while connecting to the
+                        DB</entry>
 
-            <entry>no</entry>
+                        <entry>no</entry>
 
-            <entry>mmc</entry>
-          </row>
+                        <entry>mmc</entry>
+                    </row>
 
-          <row>
-            <entry>dbdebug</entry>
+                    <row>
+                        <entry>dbdebug</entry>
 
-            <entry>Whenever log DB related exchanges</entry>
+                        <entry>Whenever log DB related exchanges</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>ERROR</entry>
-          </row>
+                        <entry>ERROR</entry>
+                    </row>
 
-          <row>
-            <entry>dbpoolrecycle</entry>
+                    <row>
+                        <entry>dbpoolrecycle</entry>
 
-            <entry>DB connection time-to-live</entry>
+                        <entry>DB connection time-to-live</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>60 (seconds)</entry>
-          </row>
+                        <entry>60 (seconds)</entry>
+                    </row>
 
-          <row>
-            <entry>dbpoolsize</entry>
+                    <row>
+                        <entry>dbpoolsize</entry>
 
-            <entry>The number of connections to keep open inside the
-            connection pool</entry>
+                        <entry>The number of connections to keep open inside
+                        the connection pool</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>5</entry>
-          </row>
+                        <entry>5</entry>
+                    </row>
 
-          <row>
-            <entry>dbsslenable</entry>
+                    <row>
+                        <entry>dbsslenable</entry>
 
-            <entry>SSL connection to the database</entry>
+                        <entry>SSL connection to the database</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>0</entry>
-          </row>
+                        <entry>0</entry>
+                    </row>
 
-          <row>
-            <entry>dbsslca</entry>
+                    <row>
+                        <entry>dbsslca</entry>
 
-            <entry>CA certificate for SSL connection</entry>
+                        <entry>CA certificate for SSL connection</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry></entry>
-          </row>
+                        <entry></entry>
+                    </row>
 
-          <row>
-            <entry>dbsslcert</entry>
+                    <row>
+                        <entry>dbsslcert</entry>
 
-            <entry>Public key certificate for SSL connection</entry>
+                        <entry>Public key certificate for SSL
+                        connection</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry></entry>
-          </row>
+                        <entry></entry>
+                    </row>
 
-          <row>
-            <entry>dbsslkey</entry>
+                    <row>
+                        <entry>dbsslkey</entry>
 
-            <entry>Private key certificate for SSL connection</entry>
+                        <entry>Private key certificate for SSL
+                        connection</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« querymanager » section</title>
+    <section>
+        <title>« querymanager » section</title>
 
-    <para>This section define how this plugin react as a potential queriable
-    plugin.</para>
+        <para>This section define how this plugin react as a potential
+        queriable plugin.</para>
 
-    <table>
-      <title>Available options for the "querymanager" section</title>
+        <table>
+            <title>Available options for the "querymanager" section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>activate</entry>
+                <tbody>
+                    <row>
+                        <entry>activate</entry>
 
-            <entry>If queries on the group name are possible.</entry>
+                        <entry>If queries on the group name are
+                        possible.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>1</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>1</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </article>
