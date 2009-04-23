@@ -30,7 +30,7 @@ msgid ""
 "access it"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:103
+#: msc/logs/ajaxLogsFilter.php:94
 #, php-format
 msgid "%s on %s %s"
 msgstr ""
@@ -67,7 +67,7 @@ msgstr ""
 msgid ", using proxy %s"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:100
+#: msc/logs/ajaxLogsFilter.php:91
 #, php-format
 msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
 msgstr ""
@@ -297,7 +297,7 @@ msgstr ""
 msgid "All users commands"
 msgstr ""
 
-#: msc/includes/command_history.php:480 msc/logs/ajaxLogsFilter.php:92
+#: msc/includes/command_history.php:480
 msgid "As soon as possible"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:140 msc/msc/ajaxLogsFilter.php:195
+#: msc/logs/ajaxLogsFilter.php:131 msc/msc/ajaxLogsFilter.php:195
 #: msc/msc/package_detail.php:36
 msgid "Command"
 msgstr ""
@@ -440,11 +440,11 @@ msgstr ""
 msgid "Current proxy"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:141
+#: msc/logs/ajaxLogsFilter.php:132
 msgid "Current state"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:133
+#: msc/logs/ajaxLogsFilter.php:124
 msgid "Date"
 msgstr ""
 
@@ -539,7 +539,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:293
+#: msc/logs/ajaxLogsFilter.php:126 msc/msc/ajaxLogsFilter.php:293
 msgid "End date"
 msgstr ""
 
@@ -791,10 +791,6 @@ msgstr ""
 
 #: msc/includes/widgets.inc.php:264 msc/includes/widgets.inc.php:383
 msgid "My commands"
-msgstr ""
-
-#: msc/logs/ajaxLogsFilter.php:90
-msgid "N/A"
 msgstr ""
 
 #: msc/includes/command_history.php:48 msc/includes/command_history.php:132
@@ -1118,7 +1114,7 @@ msgstr ""
 msgid "Start action on this group"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:295
+#: msc/logs/ajaxLogsFilter.php:128 msc/msc/ajaxLogsFilter.php:295
 msgid "Start date"
 msgstr ""
 
@@ -1159,12 +1155,12 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: msc/msc/msctabsstop.php:114
+#: msc/msc/msctabsstop.php:117
 #, php-format
 msgid "Stop %s %s on host %s"
 msgstr ""
 
-#: msc/msc/msctabsstop.php:112
+#: msc/msc/msctabsstop.php:115
 #, php-format
 msgid "Stop %s %s on this group"
 msgstr ""
@@ -1321,7 +1317,7 @@ msgstr ""
 msgid "Your start and end dates are not coherant, please check them.<br/>"
 msgstr ""
 
-#: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:107
+#: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:110
 msgid "action"
 msgstr ""
 
@@ -1341,7 +1337,7 @@ msgstr ""
 msgid "bit/s"
 msgstr ""
 
-#: msc/msc/msctabspause.php:108 msc/msc/msctabsstop.php:109
+#: msc/msc/msctabspause.php:108 msc/msc/msctabsstop.php:112
 msgid "bundle"
 msgstr ""
 
@@ -1373,7 +1369,7 @@ msgstr ""
 msgid "current_state"
 msgstr ""
 
-#: msc/includes/command_history.php:41 msc/logs/ajaxLogsFilter.php:144
+#: msc/includes/command_history.php:41 msc/logs/ajaxLogsFilter.php:135
 #: msc/msc/ajaxLogsFilter.php:202
 msgid "deleted"
 msgstr ""
@@ -1399,7 +1395,7 @@ msgstr ""
 msgid "error : the bundle_id given does not exists in the database."
 msgstr ""
 
-#: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:143
+#: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:134
 #: msc/msc/ajaxLogsFilter.php:201
 msgid "executed"
 msgstr ""
@@ -1533,7 +1529,7 @@ msgstr ""
 msgid "unreacheable during execution"
 msgstr ""
 
-#: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:142
+#: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:133
 #: msc/msc/ajaxLogsFilter.php:200
 msgid "uploaded"
 msgstr ""

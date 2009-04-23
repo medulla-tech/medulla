@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-24 17:42+0100\n"
+"POT-Creation-Date: 2009-04-23 13:42+0200\n"
 "PO-Revision-Date: 2008-07-25 15:06+0200\n"
 "Last-Translator: Andrzej Skrzypczak <aeskrzypczak@gmail.com>\n"
 "Language-Team:  <pl@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 "Host %s nie jest zdefiniowany w module MSC lub nie masz uprawnień dostępu do "
 "niego."
 
-#: msc/logs/ajaxLogsFilter.php:103
+#: msc/logs/ajaxLogsFilter.php:94
 #, fuzzy, php-format
 msgid "%s on %s %s"
 msgstr "%s na %s"
@@ -87,7 +87,7 @@ msgstr "(gdy %s jest niedostępne)"
 msgid ", using proxy %s"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:100
+#: msc/logs/ajaxLogsFilter.php:91
 #, php-format
 msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
 msgstr ""
@@ -330,7 +330,7 @@ msgstr ""
 msgid "All users commands"
 msgstr "Pauzuj polecenie"
 
-#: msc/includes/command_history.php:480 msc/logs/ajaxLogsFilter.php:92
+#: msc/includes/command_history.php:480
 msgid "As soon as possible"
 msgstr "Tka szybko, jak tylko możliwe"
 
@@ -385,7 +385,7 @@ msgstr "inwent."
 msgid "Close window"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:140 msc/msc/ajaxLogsFilter.php:195
+#: msc/logs/ajaxLogsFilter.php:131 msc/msc/ajaxLogsFilter.php:195
 #: msc/msc/package_detail.php:36
 msgid "Command"
 msgstr "Polecenie"
@@ -483,12 +483,12 @@ msgstr "obecny_stan"
 msgid "Current proxy"
 msgstr "obecny_stan"
 
-#: msc/logs/ajaxLogsFilter.php:141
+#: msc/logs/ajaxLogsFilter.php:132
 #, fuzzy
 msgid "Current state"
 msgstr "obecny_stan"
 
-#: msc/logs/ajaxLogsFilter.php:133
+#: msc/logs/ajaxLogsFilter.php:124
 msgid "Date"
 msgstr "Data"
 
@@ -591,7 +591,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: msc/logs/ajaxLogsFilter.php:135 msc/msc/ajaxLogsFilter.php:293
+#: msc/logs/ajaxLogsFilter.php:126 msc/msc/ajaxLogsFilter.php:293
 msgid "End date"
 msgstr "Data zakończenia"
 
@@ -865,10 +865,6 @@ msgstr "Tytuł polecenia"
 #, fuzzy
 msgid "My commands"
 msgstr "Odtwórz polecenie"
-
-#: msc/logs/ajaxLogsFilter.php:90
-msgid "N/A"
-msgstr "N/D"
 
 #: msc/includes/command_history.php:48 msc/includes/command_history.php:132
 #: msc/msc/package_detail.php:39
@@ -1212,7 +1208,7 @@ msgstr "Uruchom akcję %s na hoście %s"
 msgid "Start action on this group"
 msgstr "Uruchom akcję %s na hoście %s"
 
-#: msc/logs/ajaxLogsFilter.php:137 msc/msc/ajaxLogsFilter.php:295
+#: msc/logs/ajaxLogsFilter.php:128 msc/msc/ajaxLogsFilter.php:295
 msgid "Start date"
 msgstr "Data uruchomienia"
 
@@ -1255,12 +1251,12 @@ msgstr "Stan"
 msgid "Stop"
 msgstr "Stop"
 
-#: msc/msc/msctabsstop.php:114
+#: msc/msc/msctabsstop.php:117
 #, fuzzy, php-format
 msgid "Stop %s %s on host %s"
 msgstr "Zatrzymaj akcje %s na hoście %s"
 
-#: msc/msc/msctabsstop.php:112
+#: msc/msc/msctabsstop.php:115
 #, fuzzy, php-format
 msgid "Stop %s %s on this group"
 msgstr "Zatrzymaj akcje %s na hoście %s"
@@ -1427,7 +1423,7 @@ msgstr "Nie masz uprawnień by skorzystać z tego polecenia"
 msgid "Your start and end dates are not coherant, please check them.<br/>"
 msgstr ""
 
-#: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:107
+#: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:110
 #, fuzzy
 msgid "action"
 msgstr "Akcje Uruchaiania"
@@ -1449,7 +1445,7 @@ msgstr "budź"
 msgid "bit/s"
 msgstr ""
 
-#: msc/msc/msctabspause.php:108 msc/msc/msctabsstop.php:109
+#: msc/msc/msctabspause.php:108 msc/msc/msctabsstop.php:112
 #, fuzzy
 msgid "bundle"
 msgstr "Uruchom"
@@ -1487,7 +1483,7 @@ msgstr "zakończono wdrażanie na komputerach"
 msgid "current_state"
 msgstr "obecny_stan"
 
-#: msc/includes/command_history.php:41 msc/logs/ajaxLogsFilter.php:144
+#: msc/includes/command_history.php:41 msc/logs/ajaxLogsFilter.php:135
 #: msc/msc/ajaxLogsFilter.php:202
 msgid "deleted"
 msgstr "usunięto"
@@ -1514,7 +1510,7 @@ msgstr ""
 msgid "error : the bundle_id given does not exists in the database."
 msgstr ""
 
-#: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:143
+#: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:134
 #: msc/msc/ajaxLogsFilter.php:201
 msgid "executed"
 msgstr "wykonano"
@@ -1660,7 +1656,7 @@ msgstr "błąd podczas wysyłania"
 msgid "unreacheable during execution"
 msgstr "nie udało się wykonać"
 
-#: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:142
+#: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:133
 #: msc/msc/ajaxLogsFilter.php:200
 msgid "uploaded"
 msgstr "wysłano"
@@ -1723,6 +1719,9 @@ msgstr "Bajtów"
 #, fuzzy
 #~ msgid "Maximum number of clients per local proxy"
 #~ msgstr "Maksymalna liczba prób połączenia"
+
+#~ msgid "N/A"
+#~ msgstr "N/D"
 
 #, fuzzy
 #~ msgid "Processing interval"
