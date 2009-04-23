@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mmc Base 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-19 11:19+0100\n"
+"POT-Creation-Date: 2009-04-23 13:56+0200\n"
 "PO-Revision-Date: 2009-03-19 11:19+0100\n"
 "Last-Translator: Daniele Ferro <l1ber0@hotmail.com>\n"
 "Language-Team:  <l1ber0@hotmail.com>\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid " (%s module)"
 msgstr " (modulo %s)"
 
-#: includes/PageGenerator.php:458 includes/PageGenerator.php:667
+#: includes/PageGenerator.php:459 includes/PageGenerator.php:668
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Totale <b>%s </b>"
@@ -181,9 +181,9 @@ msgstr "Non è possibile connettersi all'agent MMC"
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Non è possibile mandare richieste XML-RPC all'agent MMC"
 
-#: includes/PageGenerator.php:104 includes/PageGenerator.php:1974
-#: includes/PageGenerator.php:2040 modules/base/groups/members.php:182
-#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
+#: includes/PageGenerator.php:104 includes/PageGenerator.php:1982
+#: includes/PageGenerator.php:2048 modules/base/groups/delete.php:52
+#: modules/base/groups/members.php:182 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:438
 msgid "Cancel"
 msgstr "Annulla"
@@ -192,8 +192,8 @@ msgstr "Annulla"
 msgid "Change user password"
 msgstr "Cambia la password utente"
 
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:71
-#: modules/base/users/localSidebar.php:32
+#: modules/base/users/localSidebar.php:32 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:71
 msgid "Change your password"
 msgstr "Cambia password"
 
@@ -249,9 +249,9 @@ msgstr "Computer"
 msgid "Computers list"
 msgstr "Lista dei computer"
 
-#: includes/PageGenerator.php:1970 includes/PageGenerator.php:2036
-#: includes/PageGenerator.php:2063 modules/base/groups/members.php:181
-#: modules/base/groups/edit.php:107 modules/base/users/edit.php:437
+#: includes/PageGenerator.php:1978 includes/PageGenerator.php:2044
+#: includes/PageGenerator.php:2071 modules/base/groups/edit.php:107
+#: modules/base/groups/members.php:181 modules/base/users/edit.php:437
 msgid "Confirm"
 msgstr "Conferma"
 
@@ -338,7 +338,7 @@ msgstr "Elimina questo computer"
 msgid "Delete user"
 msgstr "Elimina utente"
 
-#: modules/base/groups/edit.php:92 modules/base/computers/edit.php:64
+#: modules/base/computers/edit.php:64 modules/base/groups/edit.php:92
 msgid "Description"
 msgstr "Descrizione"
 
@@ -498,10 +498,9 @@ msgid "Group successfully modified"
 msgstr "Gruppo modificato con successo"
 
 #: modules/base/groups/ajaxFilter.php:41
-#: modules/base/views/roGroups.tpl.php:37
 #: modules/base/views/editGroups.tpl.php:52
 #: modules/base/views/norightGroups.tpl.php:28
-#: modules/base/infoPackage.inc.php:158
+#: modules/base/views/roGroups.tpl.php:37 modules/base/infoPackage.inc.php:158
 msgid "Groups"
 msgstr "Gruppi"
 
@@ -668,13 +667,13 @@ msgstr "Nome"
 msgid "New password"
 msgstr "Nuova password"
 
+#: includes/PageGenerator.php:742 includes/PageGenerator.php:748
+#: includes/PageGenerator.php:801 includes/PageGenerator.php:805
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:741 includes/PageGenerator.php:747
-#: includes/PageGenerator.php:800 includes/PageGenerator.php:804
 msgid "Next"
 msgstr "Prossimo"
 
-#: includes/PageGenerator.php:940
+#: includes/PageGenerator.php:941
 msgid "No item available"
 msgstr "Nessuna oggetto disponibile"
 
@@ -682,7 +681,7 @@ msgstr "Nessuna oggetto disponibile"
 msgid "No job."
 msgstr "Nessuna schedulazione"
 
-#: includes/PageGenerator.php:1646
+#: includes/PageGenerator.php:1654
 msgid "Ok"
 msgstr "Ok"
 
@@ -758,14 +757,14 @@ msgstr ""
 msgid "Preferred name to be used"
 msgstr "Nome preferito da utilizzare"
 
+#: includes/PageGenerator.php:731 includes/PageGenerator.php:738
+#: includes/PageGenerator.php:793 includes/PageGenerator.php:797
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:730 includes/PageGenerator.php:737
-#: includes/PageGenerator.php:792 includes/PageGenerator.php:796
 msgid "Previous"
 msgstr "Precedente"
 
-#: modules/base/views/roGroups.tpl.php:32
 #: modules/base/views/editGroups.tpl.php:38
+#: modules/base/views/roGroups.tpl.php:32
 msgid "Primary group"
 msgstr "Gruppo primario"
 
@@ -1202,7 +1201,7 @@ msgstr "norvegese"
 msgid "or <a href='#'"
 msgstr "o <a href='#'"
 
-#: includes/PageGenerator.php:461 includes/PageGenerator.php:670
+#: includes/PageGenerator.php:462 includes/PageGenerator.php:671
 msgid "page"
 msgstr "pagina"
 
@@ -1234,7 +1233,7 @@ msgstr "spagnolo"
 msgid "standard mode"
 msgstr "Modalità standard"
 
-#: includes/PageGenerator.php:457 includes/PageGenerator.php:666
+#: includes/PageGenerator.php:458 includes/PageGenerator.php:667
 msgid "to"
 msgstr "a"
 

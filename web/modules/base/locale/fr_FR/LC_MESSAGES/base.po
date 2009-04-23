@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-19 10:03+0100\n"
+"POT-Creation-Date: 2009-04-23 13:56+0200\n"
 "PO-Revision-Date: 2009-02-19 10:09+0100\n"
 "Last-Translator: Cédric Delfosse <cdelfosse@mandriva.com>\n"
 "Language-Team: français <fr@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid " (%s module)"
 msgstr " (module %s)"
 
-#: includes/PageGenerator.php:458 includes/PageGenerator.php:667
+#: includes/PageGenerator.php:459 includes/PageGenerator.php:668
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Backup user files"
 msgstr "Sauvegarde des fichiers de l'utilisateur"
 
-#: includes/xmlrpc.inc.php:210
+#: includes/xmlrpc.inc.php:212
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
@@ -170,17 +170,17 @@ msgstr ""
 "Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
 "le bon port TCP et le bon protocole."
 
-#: includes/xmlrpc.inc.php:154
+#: includes/xmlrpc.inc.php:156
 msgid "Can't connect to MMC agent"
 msgstr "Impossible de se connecter à l'agent MMC"
 
-#: includes/xmlrpc.inc.php:167
+#: includes/xmlrpc.inc.php:169
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
-#: includes/PageGenerator.php:104 includes/PageGenerator.php:1974
-#: includes/PageGenerator.php:2040 modules/base/groups/members.php:182
-#: modules/base/groups/delete.php:52 modules/base/users/backup.php:91
+#: includes/PageGenerator.php:104 includes/PageGenerator.php:1982
+#: includes/PageGenerator.php:2048 modules/base/groups/delete.php:52
+#: modules/base/groups/members.php:182 modules/base/users/backup.php:91
 #: modules/base/users/edit.php:438
 msgid "Cancel"
 msgstr "Annuler"
@@ -189,8 +189,8 @@ msgstr "Annuler"
 msgid "Change user password"
 msgstr "Changement du mot de passe utilisateur"
 
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:71
-#: modules/base/users/localSidebar.php:32
+#: modules/base/users/localSidebar.php:32 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:71
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
 
@@ -242,13 +242,13 @@ msgstr "L'ordinateur a été ajouté avec succès"
 msgid "Computers"
 msgstr "Ordinateurs"
 
-#: modules/base/includes/computers_list.inc.php:104
+#: modules/base/includes/computers_list.inc.php:109
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: includes/PageGenerator.php:1970 includes/PageGenerator.php:2036
-#: includes/PageGenerator.php:2063 modules/base/groups/members.php:181
-#: modules/base/groups/edit.php:106 modules/base/users/edit.php:437
+#: includes/PageGenerator.php:1978 includes/PageGenerator.php:2044
+#: includes/PageGenerator.php:2071 modules/base/groups/edit.php:107
+#: modules/base/groups/members.php:181 modules/base/users/edit.php:437
 msgid "Confirm"
 msgstr "Valider"
 
@@ -268,7 +268,7 @@ msgstr "Connecter"
 msgid "Connection"
 msgstr "Connexion"
 
-#: modules/base/groups/edit.php:103
+#: modules/base/groups/edit.php:104
 msgid "Create"
 msgstr "Créer"
 
@@ -315,7 +315,7 @@ msgstr "Supprimer un utilisateur"
 msgid "Delete all user's files"
 msgstr "Supprimer tous les fichiers de l'utilisateur"
 
-#: modules/base/includes/computers_list.inc.php:120
+#: modules/base/includes/computers_list.inc.php:125
 msgid "Delete computer"
 msgstr "Supprimer un ordinateur"
 
@@ -335,7 +335,7 @@ msgstr "Supprimer cet ordinateur"
 msgid "Delete user"
 msgstr "Supprimer un utilisateur"
 
-#: modules/base/groups/edit.php:91 modules/base/computers/edit.php:64
+#: modules/base/computers/edit.php:64 modules/base/groups/edit.php:92
 msgid "Description"
 msgstr "Description"
 
@@ -380,7 +380,7 @@ msgstr "Édition d'un utilisateur"
 msgid "Edit computer "
 msgstr "Édition d'un ordinateur "
 
-#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:52
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:53
 msgid "Edit group"
 msgstr "Édition du groupe"
 
@@ -404,7 +404,7 @@ msgstr "Erreur pendant la phase d'authentification"
 msgid "Error while provisioning your account"
 msgstr "Erreur lors de la création ou du paramétrage de votre compte"
 
-#: includes/xmlrpc.inc.php:194
+#: includes/xmlrpc.inc.php:196
 msgid "Error while reading MMC agent XML-RPC response."
 msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
 
@@ -483,7 +483,7 @@ msgstr "Membres du groupe"
 msgid "Group members %s"
 msgstr "Membres du groupe %s"
 
-#: modules/base/groups/edit.php:88
+#: modules/base/groups/edit.php:89
 msgid "Group name"
 msgstr "Nom du groupe"
 
@@ -492,10 +492,9 @@ msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
 #: modules/base/groups/ajaxFilter.php:41
-#: modules/base/views/roGroups.tpl.php:37
 #: modules/base/views/editGroups.tpl.php:52
 #: modules/base/views/norightGroups.tpl.php:28
-#: modules/base/infoPackage.inc.php:158
+#: modules/base/views/roGroups.tpl.php:37 modules/base/infoPackage.inc.php:158
 msgid "Groups"
 msgstr "Groupes"
 
@@ -604,17 +603,17 @@ msgstr "Déconnexion"
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "L'agent MMC ne peut pas contacter le serveur LDAP"
 
-#: includes/xmlrpc.inc.php:184 includes/xmlrpc.inc.php:209
-#: includes/xmlrpc.inc.php:228
+#: includes/xmlrpc.inc.php:186 includes/xmlrpc.inc.php:211
+#: includes/xmlrpc.inc.php:230
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
 
-#: includes/xmlrpc.inc.php:155
+#: includes/xmlrpc.inc.php:157
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
-#: includes/xmlrpc.inc.php:168
+#: includes/xmlrpc.inc.php:170
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
@@ -662,13 +661,13 @@ msgstr "Nom"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
+#: includes/PageGenerator.php:742 includes/PageGenerator.php:748
+#: includes/PageGenerator.php:801 includes/PageGenerator.php:805
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:741 includes/PageGenerator.php:747
-#: includes/PageGenerator.php:800 includes/PageGenerator.php:804
 msgid "Next"
 msgstr "Suivant"
 
-#: includes/PageGenerator.php:940
+#: includes/PageGenerator.php:941
 msgid "No item available"
 msgstr "Aucun élément disponible"
 
@@ -676,7 +675,7 @@ msgstr "Aucun élément disponible"
 msgid "No job."
 msgstr "Aucune action."
 
-#: includes/PageGenerator.php:1646
+#: includes/PageGenerator.php:1654
 msgid "Ok"
 msgstr "Ok"
 
@@ -723,7 +722,7 @@ msgstr ""
 "                        <pre>local4.*       /var/log/ldap.log</pre>\n"
 "                        </p>"
 
-#: includes/xmlrpc.inc.php:195
+#: includes/xmlrpc.inc.php:197
 msgid "Please check network connectivity."
 msgstr "Veuillez vérifier les connexions réseau."
 
@@ -751,14 +750,14 @@ msgstr ""
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
+#: includes/PageGenerator.php:731 includes/PageGenerator.php:738
+#: includes/PageGenerator.php:793 includes/PageGenerator.php:797
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:730 includes/PageGenerator.php:737
-#: includes/PageGenerator.php:792 includes/PageGenerator.php:796
 msgid "Previous"
 msgstr "Précédent"
 
-#: modules/base/views/roGroups.tpl.php:32
 #: modules/base/views/editGroups.tpl.php:38
+#: modules/base/views/roGroups.tpl.php:32
 msgid "Primary group"
 msgstr "Groupe primaire"
 
@@ -770,7 +769,7 @@ msgstr "Consulter le journal"
 msgid "Remote control"
 msgstr "Prise en main à distance"
 
-#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:128
 msgid "Remove machine from group"
 msgstr "Enlever un ordinateur du groupe"
 
@@ -855,7 +854,7 @@ msgstr "Téléphone"
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
 
-#: includes/xmlrpc.inc.php:229
+#: includes/xmlrpc.inc.php:231
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
@@ -888,7 +887,7 @@ msgstr ""
 "Le groupe %s n'existe pas, et ne peut donc pas être utilisé en tant que "
 "groupe primaire."
 
-#: modules/base/groups/edit.php:71
+#: modules/base/groups/edit.php:72
 msgid ""
 "The group name can only contain letters and numeric, and must begin with a "
 "letter"
@@ -914,7 +913,7 @@ msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
 msgid "The server %s does not exist"
 msgstr "Le serveur %s n'existe pas"
 
-#: includes/xmlrpc.inc.php:310
+#: includes/xmlrpc.inc.php:312
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -972,11 +971,13 @@ msgstr ""
 msgid "This user already exists."
 msgstr "Cet utilisateur existe déjà."
 
-#: includes/xmlrpc.inc.php:185
+#: includes/xmlrpc.inc.php:187
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
-msgstr "Temps dépassé lors de la réception de données en provenance de l'agent MMC. Veuillez vérifier les connexions réseau et la charge du serveur."
+msgstr ""
+"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
+"Veuillez vérifier les connexions réseau et la charge du serveur."
 
 #: modules/base/users/edit.php:322
 msgid "Title"
@@ -1122,7 +1123,7 @@ msgstr "Votre mot de passe a été changé"
 msgid "Your session will be closed"
 msgstr "Votre session va être fermée"
 
-#: includes/i18n.inc.php:56
+#: includes/i18n.inc.php:57
 msgid "brazilian"
 msgstr "brésilien"
 
@@ -1142,7 +1143,7 @@ msgstr "anglais"
 msgid "expert mode"
 msgstr "mode expert"
 
-#: includes/i18n.inc.php:52
+#: includes/i18n.inc.php:53
 msgid "french"
 msgstr "français"
 
@@ -1158,6 +1159,11 @@ msgstr "cacher"
 msgid "hour"
 msgstr "heure"
 
+#: includes/i18n.inc.php:54
+#, fuzzy
+msgid "italian"
+msgstr "brésilien"
+
 #: graph/navbar.inc.php:48
 msgid "logout"
 msgstr "déconnexion"
@@ -1170,7 +1176,7 @@ msgstr "minute"
 msgid "no"
 msgstr "non"
 
-#: includes/i18n.inc.php:54
+#: includes/i18n.inc.php:55
 msgid "norwegian"
 msgstr "norvégien"
 
@@ -1178,11 +1184,11 @@ msgstr "norvégien"
 msgid "or <a href='#'"
 msgstr "ou <a href='#'"
 
-#: includes/PageGenerator.php:461 includes/PageGenerator.php:670
+#: includes/PageGenerator.php:462 includes/PageGenerator.php:671
 msgid "page"
 msgstr "page"
 
-#: includes/i18n.inc.php:55
+#: includes/i18n.inc.php:56
 msgid "polish"
 msgstr "polonais"
 
@@ -1194,7 +1200,7 @@ msgstr "lecture seule"
 msgid "read/write"
 msgstr "lecture/écriture"
 
-#: includes/i18n.inc.php:57
+#: includes/i18n.inc.php:58
 msgid "russian"
 msgstr "russe"
 
@@ -1202,7 +1208,7 @@ msgstr "russe"
 msgid "smbpasswd failed to change your password entry"
 msgstr "smbpasswd n'a pas réussi a changé le mot de passe"
 
-#: includes/i18n.inc.php:53
+#: includes/i18n.inc.php:52
 msgid "spanish"
 msgstr "espagnol"
 
@@ -1210,7 +1216,7 @@ msgstr "espagnol"
 msgid "standard mode"
 msgstr "mode standard"
 
-#: includes/PageGenerator.php:457 includes/PageGenerator.php:666
+#: includes/PageGenerator.php:458 includes/PageGenerator.php:667
 msgid "to"
 msgstr "à"
 
@@ -1219,7 +1225,7 @@ msgstr "à"
 msgid "unavailable"
 msgstr "indisponible"
 
-#: includes/xmlrpc.inc.php:309
+#: includes/xmlrpc.inc.php:311
 msgid "unknown error"
 msgstr "erreur inconnue"
 
