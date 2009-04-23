@@ -5,10 +5,6 @@
     <title>MMC Dyngroup plugin configuration file</title>
 
     <articleinfo>
-        <productname>Pulse 2</productname>
-
-        <productnumber>1.2.1</productnumber>
-
         <author>
             <firstname>Olivier</firstname>
 
@@ -25,9 +21,16 @@
             <year>2009 Olivier Roussy - Mandriva</year>
         </copyright>
 
-        <date>$Date$</date>
+        <revhistory>
+            <revision>
+                <revnumber>$Revision$</revnumber>
 
-        <releaseinfo>$Id$</releaseinfo>
+                <date>$Date: 2009-03-19 12:10:27 +0100 (jeu 19 mar 2009)
+                $</date>
+
+                <authorinitials>$Author$</authorinitials>
+            </revision>
+        </revhistory>
 
         <abstract>
             <para>This document explains the content of the MMC dyngroup
