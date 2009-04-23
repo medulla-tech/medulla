@@ -23,10 +23,9 @@
 
         <revhistory>
             <revision>
-                <revnumber>$Revision$</revnumber>
+                <revnumber>$Revision: 113$</revnumber>
 
-                <date>$Date: 2009-03-19 12:10:27 +0100 (jeu 19 mar 2009)
-                $</date>
+                <date>$Date$</date>
 
                 <authorinitials>$Author$</authorinitials>
             </revision>
