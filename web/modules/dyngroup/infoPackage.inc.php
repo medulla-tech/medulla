@@ -24,6 +24,14 @@
 
 require_once("modules/dyngroup/includes/includes.php");
 
+$mod = new Module("dyngroup");
+$mod->setVersion("2.0.0");
+$mod->setRevision('$Rev$');
+$mod->setDescription(_T("Dyngroup", "dyngroup"));
+$mod->setAPIVersion("0:0:0");
+$mod->setPriority(700);
+
+
 $MMCApp =& MMCApp::getInstance();
 
 /* Get the base module instance */
