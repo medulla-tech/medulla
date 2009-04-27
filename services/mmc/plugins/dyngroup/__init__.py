@@ -344,6 +344,7 @@ def __addCtxFilters(ctx, filt = {}):
     return filt
 
 def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH = False):
+    if query == None: return []
     if __onlyIn(query, ComputerManager().main):
         module = ComputerManager().main
         filt = __addCtxFilters(ctx)
@@ -353,6 +354,7 @@ def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 
 def replyToQueryLen(ctx, query, bool = None):
+    if query == None: return 0
     if __onlyIn(query, ComputerManager().main):
         module = ComputerManager().main
         filt = __addCtxFilters(ctx)

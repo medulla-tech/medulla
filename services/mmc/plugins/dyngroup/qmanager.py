@@ -268,7 +268,11 @@ class QueryManager(Singleton):
             bool = 'AND('+','.join(map(lambda a:a, values))+')'
             br.parse(bool)                                     
             
-        return br.getTree(values)
+        try:
+            return br.getTree(values)
+        except KeyError, e:
+            self.logger.error("Your boolean equation does not match your request (if you are using a group please check it's correct)")
+            return None
             
     def parse(self, query):
         p1 = re.compile('\|\|')
