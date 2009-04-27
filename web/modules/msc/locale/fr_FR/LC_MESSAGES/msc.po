@@ -894,12 +894,12 @@ msgstr "Mettre en pause"
 #: msc/msc/msctabspause.php:113
 #, php-format
 msgid "Pause %s %s on host %s"
-msgstr "Mise en pause de l'action %s %s sur %s"
+msgstr "Mise en pause %s %s sur %s"
 
 #: msc/msc/msctabspause.php:111
 #, php-format
 msgid "Pause %s %s on this group"
-msgstr "Mettre en pause de %s %s sur ce groupe"
+msgstr "Mettre en pause %s %s sur ce groupe"
 
 #: msc/infoPackage.inc.php:138
 msgid "Pause a command"
@@ -1187,12 +1187,12 @@ msgstr "Arrêter"
 #: msc/msc/msctabsstop.php:117
 #, php-format
 msgid "Stop %s %s on host %s"
-msgstr "Arrêt de %s %s sur %s"
+msgstr "Arrêt%s %s sur %s"
 
 #: msc/msc/msctabsstop.php:115
 #, php-format
 msgid "Stop %s %s on this group"
-msgstr "Arrêt de %s %s sur ce groupe"
+msgstr "Arrêt%s %s sur ce groupe"
 
 #: msc/infoPackage.inc.php:144
 msgid "Stop a command"
@@ -1355,7 +1355,7 @@ msgstr ""
 
 #: msc/msc/msctabspause.php:106 msc/msc/msctabsstop.php:110
 msgid "action"
-msgstr "l'action"
+msgstr "de l'action"
 
 #: msc/msc/msctabsstatus.php:106 msc/msc/msctabsstatus.php:108
 msgid "are"
