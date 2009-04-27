@@ -101,6 +101,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
         $gid = $group->create($name, $visible);
     }
 
+    $request = $r->toS();
     if ($save_type == 1) { // request save
         $group->setRequest($request);
         $group->setBool($bool);
