@@ -577,6 +577,7 @@ class DyngroupDatabase(DatabaseHelper):
         return group.id
 
     def __getContent(self, ctx, group, queryManager):
+        if group == None: return []
         session = create_session()
         if self.isrequest_group(ctx, group.id):
             ret = self.__request(ctx, group.query, group.bool, 0, -1, '', queryManager, session)
