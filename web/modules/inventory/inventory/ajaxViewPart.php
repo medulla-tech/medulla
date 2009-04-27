@@ -111,8 +111,8 @@ if ($_GET['uuid'] != '') {
                 }
             }
             $index += 1;
+            $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
         }
-        $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
     }
     $n = null;
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
