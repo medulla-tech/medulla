@@ -96,6 +96,7 @@ class MscDatabase(msc.MscDatabase):
         netmasks = []
         ipAddresses = computer[1]['ipHostNumber']
         netmask = computer[1]['subnetMask']
+        macAddresses = computer[1]['macAddress']
 
         # Compute broadcast address
         for i in range(len(computer[1]['macAddress'])):
@@ -111,16 +112,6 @@ class MscDatabase(msc.MscDatabase):
             except:
                 h_mac2netmask.append('0.0.0.0')
 
-        self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
-        # Apply IP addresses blacklist
-        if self.config.ignore_non_rfc2780:
-            ipAddresses = blacklist.rfc2780Filter(ipAddresses)
-        if self.config.ignore_non_rfc1918:
-            ipAddresses = blacklist.rfc1918Filter(ipAddresses)
-        ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
-        ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
-        self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
-
         try:
             targetName = computer[1]['cn'][0]
         except KeyError:
@@ -130,8 +121,23 @@ class MscDatabase(msc.MscDatabase):
         except KeyError:
             pass
 
-        self.logger.debug("Computer known MAC addresses before filter: " + str(computer[1]['macAddress']))
-        macAddresses = blacklist.macAddressesFilter(computer[1]['macAddress'], self.config.wol_macaddr_blacklist)
+        self.logger.debug("Computer known IP addresses before filter: " + str(ipAddresses))
+        # Apply IP addresses blacklist
+        if self.config.ignore_non_rfc2780:
+            ipAddresses = blacklist.rfc2780Filter(ipAddresses)
+        if self.config.ignore_non_rfc1918:
+            ipAddresses = blacklist.rfc1918Filter(ipAddresses)
+        ipAddresses = blacklist.excludeFilter(ipAddresses, self.config.exclude_ipaddr)
+        ipAddresses = blacklist.mergeWithIncludeFilter(computer[1]['ipHostNumber'], ipAddresses, self.config.include_ipaddr)
+        macs = []
+        for i in range(len(computer[1]['ipHostNumber'])):
+            if computer[1]['ipHostNumber'][i] in ipAddresses:
+                macs.append(macAddresses[i])
+        macAddresses = macs
+        self.logger.debug("Computer known IP addresses after filter: " + str(ipAddresses))
+
+        self.logger.debug("Computer known MAC addresses before filter: " + str(macAddresses))
+        macAddresses = blacklist.macAddressesFilter(macAddresses, self.config.wol_macaddr_blacklist)
         self.logger.debug("Computer known MAC addresses after filter: " + str(macAddresses))
 
         # Fill bcastAddresses and netmasks lists
