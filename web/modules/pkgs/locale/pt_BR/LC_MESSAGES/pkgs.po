@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-23 13:53+0200\n"
-"PO-Revision-Date: 2009-04-17 16:08-0300\n"
+"POT-Creation-Date: 2008-10-30 23:31+0100\n"
+"PO-Revision-Date: 2009-04-27 13:55-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: pkgs/pkgs/edit.php:75 pkgs/pkgs/localSidebar.php:28
+#: pkgs/pkgs/localSidebar.php:28 pkgs/pkgs/edit.php:75
 #: pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
@@ -49,7 +49,7 @@ msgstr "Comando : "
 
 #: pkgs/pkgs/edit.php:134
 msgid "Command's name : "
-msgstr "Nome de comando : "
+msgstr "Nome do comando : "
 
 #: pkgs/pkgs/ajaxPackageList.php:75 pkgs/pkgs/ajaxPendingPackageList.php:84
 #: pkgs/infoPackage.inc.php:59
@@ -85,7 +85,7 @@ msgstr "Falha ao associar os arquivos %s"
 #: pkgs/pkgs/associate_files.php:57
 #, php-format
 msgid "Files succesfully associated with package <b>%s (%s)</b>%s"
-msgstr "Os arquivos foram associados com sucesso com o pacote <b>%s (%s)</b>%s"
+msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
 #: pkgs/pkgs/ajaxPackageList.php:63 pkgs/pkgs/ajaxPendingPackageList.php:73
 msgid "Names"
@@ -93,7 +93,7 @@ msgstr "Nomes"
 
 #: pkgs/pkgs/edit.php:142
 msgid "Need a reboot ?"
-msgstr "Precisa reiniciar ?"
+msgstr "Necessita reiniciar ?"
 
 #: pkgs/pkgs/edit.php:117
 msgid "Package API"
@@ -123,11 +123,11 @@ msgstr "Versão do pacote"
 msgid "Packages"
 msgstr "Pacotes"
 
-#: pkgs/pkgs/index.php:29 pkgs/pkgs/localSidebar.php:27
+#: pkgs/pkgs/localSidebar.php:27 pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
-#: pkgs/pkgs/pending.php:29 pkgs/pkgs/localSidebar.php:29
+#: pkgs/pkgs/localSidebar.php:29 pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
@@ -168,7 +168,3 @@ msgstr "O pacote foi excluído."
 msgid "Versions"
 msgstr "Versões"
 
-#, fuzzy
-#~ msgid "Files succesfully associated with package <b>%s (%s)</b>"
-#~ msgstr ""
-#~ "Os arquivos foram associados com sucesso com o pacote <b>%s (%s)</b>%s"
