@@ -37,7 +37,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     Singleton Class to hold configuration directives
     """
 
-    # default values
+    # main section
     bind = ''
     port = 9999
     ocsmapping = '/etc/mmc/pulse2/inventory-server/OcsNGMap.xml'
@@ -46,19 +46,20 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
     localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
 
+    hostname = ['Hardware', 'Name']
+
     # The default assigned entity is the root entity
     default_entity = '.'
     # By default there is no rules file for computer to entity mapping
     entities_rules_file = None
 
+    # daemon section
     pidfile = '/var/run/pulse2-inventory-server.pid'
     umask = 0007
     daemon_user = 0
     daemon_group = 0
 
     options = {}
-
-    hostname = ['Hardware', 'Name']
 
 
     def setup(self, config_file):
