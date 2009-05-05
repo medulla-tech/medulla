@@ -59,7 +59,7 @@ class InventoryComputers(ComputerI):
         return ret
 
     def getComputersNetwork(self, ctx, filt):
-        computers = self.inventory.getMachineNetwork(ctx, filt)
+        computers = self.inventory.getMachinesNetworkSorted(ctx, filt)
         ret = []
         for item in computers:
             tmp = [False, {'cn' : [item[0]], 'objectUUID':[item[2]]}]
@@ -68,16 +68,9 @@ class InventoryComputers(ComputerI):
                 tmp[1]['macAddress'] = ''
                 tmp[1]['subnetMask'] = ''
             else:
-                tmp[1]['ipHostNumber'] = []
-                tmp[1]['macAddress'] = []
-                tmp[1]['subnetMask'] = []
-                for n in item[1]:
-                    if n['IP'] != None:
-                        tmp[1]['ipHostNumber'].append(n['IP'])
-                    if n['MACAddress'] != None and n['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
-                        tmp[1]['macAddress'].append(n['MACAddress'])
-                    if n['SubnetMask'] != None:
-                        tmp[1]['subnetMask'].append(n['SubnetMask'])
+                tmp[1]['ipHostNumber'] = item[1]['IP']
+                tmp[1]['macAddress'] = item[1]['MACAddress']
+                tmp[1]['subnetMask'] = item[1]['SubnetMask']
             ret.append(tmp)
         return ret
 
