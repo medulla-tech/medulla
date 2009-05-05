@@ -43,17 +43,24 @@ class LauncherConfig(pulse2.utils.Singleton):
     name = None
     cp = None
 
-    inventory_command = "echo Doing inventory"
+    # launchers section
+    halt_command = "/bin/shutdown.exe -f -s 1 || shutdown -h now"
+    inventory_command = "export PULSE2_SERVER=`echo $SSH_CONNECTION | cut -f1 -d\ `; export PULSE2_PORT=21999; /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe /server:$PULSE2_SERVER /pnum:$PULSE2_PORT /debug || /usr/bin/ocsinventory-agent --server=http://$PULSE2_SERVER:$PULSE2_PORT --debug"
     launcher_path = "/usr/sbin/pulse2-launcher"
     max_command_age = 86400
     max_ping_time = 4
     max_probe_time = 20
     ping_path = "/usr/sbin/pulse2-ping"
     reboot_command = "/bin/shutdown.exe -f -r 1 || shutdown -r now"
-    halt_command = "/bin/shutdown.exe -f -s 1 || shutdown -h now"
     source_path = "/var/lib/pulse2/packages"
     target_path = "/tmp"
     temp_folder_prefix = "MDVPLS"
+
+    # [daemon] section
+    daemon_group = 0
+    pid_path = "/var/run/pulse2"
+    umask = 0077
+    daemon_user = 0
 
     # wrapper stuff
     wrapper_max_exec_time = 21600
@@ -61,13 +68,15 @@ class LauncherConfig(pulse2.utils.Singleton):
     wrapper_path = "/usr/sbin/pulse2-output-wrapper"
 
     # ssh stuff
-    ssh_path_default = ssh_path = "/usr/bin/ssh"
     scp_path_default = scp_path = "/usr/bin/scp"
     ssh_agent_path_default = ssh_agent_path = "/usr/bin/ssh-agent"
     ssh_agent_sock = None
     ssh_agent_pid = None
     ssh_defaultkey = 'default'
     ssh_forward_key = 'let'
+    ssh_keys = {
+        'default': '/root/.ssh/id_dsa'
+    }
     ssh_options = [ \
         'LogLevel=ERROR',
         'UserKnownHostsFile=/dev/null',
@@ -78,35 +87,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         'CheckHostIP=no',
         'ConnectTimeout=10'
     ]
-
-    ssh_keys = {
-        'default': '/root/.ssh/id_dsa'
-    }
-
-    # WOL stuff
-    wol_path = '/usr/sbin/pulse2-wol'
-    wol_port = '40000'
-    wol_bcast = '255.255.255.255'
-
-    # SSH Proxy stuff
-    tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
-    tcp_sproxy_host = None
-    tcp_sproxy_port_range_start = 8100
-    tcp_sproxy_port_range_end = 8200
-    tcp_sproxy_establish_delay = 20
-    tcp_sproxy_connect_delay = 60
-    tcp_sproxy_session_lenght = 3600
-
-    # [daemon] section
-    daemon_group = 0
-    pid_path = "/var/run/pulse2"
-    umask = 0077
-    daemon_user = 0
-
-    # scheduler stuff
-    first_scheduler = None
-    schedulers = {
-    }
+    ssh_path_default = ssh_path = "/usr/bin/ssh"
 
     # wget stuff
     wget_path_default = wget_path = '/usr/bin/wget'
@@ -120,6 +101,24 @@ class LauncherConfig(pulse2.utils.Singleton):
     rsync_set_executable = 'yes'
     rsync_set_access = 'private'
 
+    # WOL stuff
+    wol_bcast = '255.255.255.255'
+    wol_path = '/usr/sbin/pulse2-wol'
+    wol_port = '40000'
+
+    # SSH Proxy stuff
+    tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
+    tcp_sproxy_host = None
+    tcp_sproxy_port_range_start = 8100
+    tcp_sproxy_port_range_end = 8200
+    tcp_sproxy_establish_delay = 20
+    tcp_sproxy_connect_delay = 60
+    tcp_sproxy_session_lenght = 3600
+
+    # scheduler stuff
+    first_scheduler = None
+    schedulers = {
+    }
 
     # [launcher_xxx] section
     launchers = {
