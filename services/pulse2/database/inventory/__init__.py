@@ -205,6 +205,8 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.Name.like("%" + pattern['filter'] + "%"))
             if 'uuid' in pattern:
                 query = query.filter(self.machine.c.id == fromUUID(pattern['uuid']))
+            if 'uuids' in pattern and type(pattern['uuids']) == list and len(pattern['uuids']) > 0:
+                query = query.filter(self.machine.c.id.in_(map(lambda m:fromUUID(m), pattern['uuids'])))
             if 'location' in pattern and pattern['location']:
                 query = query.filter(self.table['Entity'].c.Label == pattern['location'])
             if 'request' in pattern:
@@ -685,6 +687,14 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             return getattr(partKlass.c, field) == value
 
+    def getMachinesNetworkSorted(self, ctx, params):
+        net = self.getLastMachineInventoryPart(ctx, 'Network', params)
+        ret = []
+        for item in net:
+            (ifmac, ifaddr, netmask) = orderIpAdresses(item[1])
+            ret.append([item[0], {'IP':ifaddr, 'MACAddress':ifmac, 'SubnetMask':netmask }, item[2]])
+        return ret
+        
     def getMachineNetwork(self, ctx, params):
         return self.getLastMachineInventoryPart(ctx, 'Network', params)
 
@@ -1187,28 +1197,8 @@ class Machine(object):
                 ret[1]['subnetMask'] = ''
             else:
                 net = net[0]
-                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask']) = self.orderIpAdresses(net[1])
+                (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask']) = orderIpAdresses(net[1])
         return ret
-
-    def orderIpAdresses(self, netiface):
-        ret_ifmac = list()
-        ret_ifaddr = list()
-        ret_netmask = list()
-        for iface in netiface:
-            logging.getLogger().debug(iface)
-            if 'IP' in iface and iface['IP'] and 'Gateway' in iface and iface['Gateway'] and 'SubnetMask' in iface and iface['SubnetMask'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
-                logging.getLogger().debug('can work on')
-                if same_network(iface['IP'], iface['Gateway'], iface['SubnetMask']):
-                    logging.getLogger().debug("same net")
-                    ret_ifmac.insert(0, iface['MACAddress'])
-                    ret_ifaddr.insert(0, iface['IP'])
-                    ret_netmask.insert(0, iface['SubnetMask'])
-                else:
-                    logging.getLogger().debug("inot same net")
-                    ret_ifmac.append(iface['MACAddress'])
-                    ret_ifaddr.append(iface['IP'])
-                    ret_netmask.append(iface['SubnetMask'])
-        return (ret_ifmac, ret_ifaddr, ret_netmask)
 
     def toCustom(self, get):
         ma = {}
@@ -1220,6 +1210,34 @@ class Machine(object):
             if field == 'cn':
                 ma[field] = self.Name
         return ma
+
+def orderIpAdresses(netiface):
+    ret_ifmac = []
+    ret_ifaddr = []
+    ret_netmask = []
+    idx_good = 0
+    for iface in netiface:
+        logging.getLogger().debug(iface)
+        if 'IP' in iface and iface['IP'] and 'SubnetMask' in iface and iface['SubnetMask'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
+            logging.getLogger().debug('can work on')
+            if iface['Gateway'] == None or iface['Gateway'] == '':
+                logging.getLogger().debug("no gateway")
+                ret_ifmac.append(iface['MACAddress'])
+                ret_ifaddr.append(iface['IP'])
+                ret_netmask.append(iface['SubnetMask'])
+            else:
+                if same_network(iface['IP'], iface['Gateway'], iface['SubnetMask']):
+                    idx_good += 1
+                    logging.getLogger().debug("same net")
+                    ret_ifmac.insert(0, iface['MACAddress'])
+                    ret_ifaddr.insert(0, iface['IP'])
+                    ret_netmask.insert(0, iface['SubnetMask'])
+                else:
+                    logging.getLogger().debug("not same net")
+                    ret_ifmac.insert(idx_good, iface['MACAddress'])
+                    ret_ifaddr.insert(idx_good, iface['IP'])
+                    ret_netmask.insert(idx_good, iface['SubnetMask'])
+    return (ret_ifmac, ret_ifaddr, ret_netmask)
 
 class InventoryTable(object):
     pass
