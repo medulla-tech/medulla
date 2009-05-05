@@ -689,6 +689,8 @@ class ldapUserGroupControl:
                     dn = result_set[0][0][0]
                     entries = result_set[0][0][1]
                     if password:
+                        if isinstance(password, xmlrpclib.Binary):
+                            password = str(password)
                         # Put user password in clear text in ldif
                         entries["userPassword"] = [password]
                     writer = ldif.LDIFWriter(fob)
