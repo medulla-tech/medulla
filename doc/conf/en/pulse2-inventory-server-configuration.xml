@@ -2,606 +2,526 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Pulse 2 Inventory server configuration file</title>
+    <title>Pulse 2 Inventory server configuration file</title>
 
-  <articleinfo>
-    <author>
-      <firstname>Olivier Roussy</firstname>
+    <articleinfo>
+        <author>
+            <firstname>Olivier Roussy</firstname>
 
-      <email>oroussy@mandriva.com</email>
-    </author>
+            <email>oroussy@mandriva.com</email>
+        </author>
 
-    <affiliation>
-      <orgname>Mandriva</orgname>
-    </affiliation>
+        <affiliation>
+            <orgname>Mandriva</orgname>
+        </affiliation>
 
-    <copyright>
-      <year>2008-2009 Olivier Roussy - Mandriva</year>
-    </copyright>
+        <copyright>
+            <year>2008-2009 Mandriva</year>
+        </copyright>
 
-    <revhistory>
-      <revision>
-        <revnumber>$Revision$</revnumber>
+        <revhistory>
+            <revision>
+                <revnumber>1.2.1</revnumber>
 
-        <date>$Date$</date>
+                <date>2009-04-23</date>
 
-        <authorinitials>$Author$</authorinitials>
-      </revision>
-    </revhistory>
+                <authorinitials>NR</authorinitials>
 
-    <abstract>
-      <para>This document explains the content of the configuration file of
-      the inventory server service from Pulse 2</para>
-    </abstract>
-  </articleinfo>
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Initial release</para>
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+        </revhistory>
 
-  <section>
-    <title>Introduction</title>
+        <abstract>
+            <para>This document explains the content of the configuration file
+            of the inventory server service from Pulse 2</para>
+        </abstract>
 
-    <para>The « inventory server » service is the Pulse 2 daemon in charge
-    importing inventory sent from ocs inventory agents.</para>
+        <releaseinfo>$Id: pulse2-scheduler-configuration.xml 116 2009-05-05
+        08:38:07Z nrueff $</releaseinfo>
+    </articleinfo>
 
-    <para>The service configuration file is
-    <filename>/etc/mmc/pulse2/inventory-server/inventory-server.ini</filename></para>
+    <section>
+        <title>Introduction</title>
 
-    <para>Like all Pulse 2 related configuration file, its file format is INI
-    style. The file is made of sections, each one starting with a
-    « [sectionname] » header. In each section options can be defined like
-    this: « option = value ».</para>
+        <para>The « inventory server » service is the Pulse 2 daemon in charge
+        importing inventory sent from ocs inventory agents.</para>
 
-    <para>For example: <screen>[section1]
+        <para>The service configuration file is
+        <filename>/etc/mmc/pulse2/inventory-server/inventory-server.ini</filename></para>
+
+        <para>Like all Pulse 2 related configuration file, its file format is
+        INI style. The file is made of sections, each one starting with a
+        « [sectionname] » header. In each section options can be defined like
+        this: « option = value ».</para>
+
+        <para>For example: <screen>[section1]
 option1 = 1
 option2 = 2
 
 [section2]
 option1 = foo
-option2 = plop      </screen></para>
-  </section>
+option2 = plop</screen></para>
+    </section>
 
-  <section>
-    <title>Configuration file sections</title>
+    <section>
+        <title>Configuration file sections</title>
 
-    <para>For now four sections are available in this configuration file. The
-    section describing the option can be duplicated if you need to pass more
-    than one kind of option to the OCS inventory agent.</para>
+        <para>For now four sections are available in this configuration file.
+        The section describing the option can be duplicated if you need to
+        pass more than one kind of option to the OCS inventory agent.</para>
 
-    <table>
-      <title>inventory-server.ini available sections</title>
+        <table>
+            <title>inventory-server.ini available sections</title>
 
-      <tgroup cols="3">
-        <thead>
-          <row>
-            <entry>Section name</entry>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Section name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
-          </row>
-        </thead>
+                        <entry>Optional</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>main</entry>
+                <tbody>
+                    <row>
+                        <entry>main</entry>
 
-            <entry>Common inventory server configuration directives</entry>
+                        <entry>Common inventory server configuration
+                        directives</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+                    </row>
 
-          <row>
-            <entry>database</entry>
+                    <row>
+                        <entry>database</entry>
 
-            <entry>Database connection parameters</entry>
+                        <entry>Database connection parameters</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+                    </row>
 
-          <row>
-            <entry>daemon</entry>
+                    <row>
+                        <entry>daemon</entry>
 
-            <entry>Inventory server daemon related behaviors</entry>
+                        <entry>Inventory server daemon related
+                        behaviors</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+                    </row>
 
-          <row>
-            <entry>option_XXX</entry>
+                    <row>
+                        <entry>option_XXX</entry>
 
-            <entry>Inventory agent option XXX</entry>
+                        <entry>Inventory agent option XXX</entry>
 
-            <entry>yes</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+                        <entry>yes</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-    <para>All the other sections (loggers, handlers, ...) are related to
-    Python language logging framework. See <ulink
-    url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
-    .</para>
-  </section>
+        <para>All the other sections (loggers, handlers, ...) are related to
+        Python language logging framework. See <ulink
+        url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
+        .</para>
+    </section>
 
-  <section>
-    <title>« main » section</title>
+    <section>
+        <title>« main » section</title>
 
-    <para>This section is used to configure the inventory server
-    services.</para>
+        <para>This section is used to configure the inventory server
+        services.</para>
 
-    <table>
-      <title>Available options for the "main" section</title>
+        <table>
+            <title>Available options for the "main" section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Type</entry>
 
-        <tbody>
-          <row>
-            <entry>host</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>The hostname or ip address where the inventory.</entry>
+                <tbody>
+                    <row>
+                        <entry>host</entry>
 
-            <entry>yes</entry>
+                        <entry>The hostname or ip address where the
+                        inventory.</entry>
 
-            <entry>localhost</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>port</entry>
+                        <entry>string</entry>
 
-            <entry>The port on which the inventory listen.</entry>
+                        <entry>localhost</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>port</entry>
 
-            <entry>9999</entry>
-          </row>
+                        <entry>The port on which the inventory listen.</entry>
 
-          <row>
-            <entry>ocsmapping</entry>
+                        <entry>yes</entry>
 
-            <entry>The mapping file betwen ocs inventory agent xml output and
-            the database schema</entry>
+                        <entry>int</entry>
 
-            <entry>yes</entry>
+                        <entry>9999</entry>
+                    </row>
 
-            <entry>/etc/mmc/pulse2/inventory-server/OcsNGMap.xml</entry>
-          </row>
+                    <row>
+                        <entry>ocsmapping</entry>
 
-          <row>
-            <entry>enablessl</entry>
+                        <entry>The mapping file betwen ocs inventory agent xml
+                        output and the database schema</entry>
 
-            <entry>SSL mode support</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>path</entry>
 
-            <entry>0</entry>
-          </row>
+                        <entry>/etc/mmc/pulse2/inventory-server/OcsNGMap.xml</entry>
+                    </row>
 
-          <row>
-            <entry>verifypeer</entry>
+                    <row>
+                        <entry>enablessl</entry>
 
-            <entry>use SSL certificates</entry>
+                        <entry>SSL mode support</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>0</entry>
-          </row>
+                        <entry>boolean</entry>
 
-          <row>
-            <entry>cacert</entry>
+                        <entry>False</entry>
+                    </row>
 
-            <entry>path to the certificate file describing the certificate
-            authority of the SSL server</entry>
+                    <row>
+                        <entry>verifypeer</entry>
 
-            <entry>yes</entry>
+                        <entry>use SSL certificates</entry>
 
-            <entry>/etc/mmc/pulse2/inventory-server/keys/cacert.pem</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>localcert</entry>
+                        <entry>boolean</entry>
 
-            <entry>path to the SSL server private certificate</entry>
+                        <entry>False</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>cacert</entry>
 
-            <entry>/etc/mmc/pulse2/inventory-server/keys/privkey.pem</entry>
-          </row>
+                        <entry>path to the certificate file describing the
+                        certificate authority of the SSL server</entry>
 
-          <row>
-            <entry>hostname</entry>
+                        <entry>yes</entry>
 
-            <entry>allow hostname overriding by an other information in
-            the</entry>
+                        <entry>path</entry>
 
-            <entry>yes</entry>
+                        <entry>/etc/mmc/pulse2/inventory-server/keys/cacert.pem</entry>
+                    </row>
 
-            <entry>Hardware/Name</entry>
-          </row>
+                    <row>
+                        <entry>localcert</entry>
 
-          <row>
-            <entry>default_entity</entry>
+                        <entry>path to the SSL server private
+                        certificate</entry>
 
-            <entry>Default entity where computers are stored</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>path</entry>
 
-            <entry>.</entry>
-          </row>
+                        <entry>/etc/mmc/pulse2/inventory-server/keys/privkey.pem</entry>
+                    </row>
 
-          <row>
-            <entry>entities_rules_file</entry>
+                    <row>
+                        <entry>hostname</entry>
 
-            <entry>Rules file defining computer to entity mappings. See
-            specific section to learn how it works.</entry>
+                        <entry>allow hostname in incoming inventory to be
+                        overridden by an other information from the inventory,
+                        for exemple Registry/Value|Path:DisplayName .</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>None</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+                        <entry>string</entry>
 
-    <para>The hostname option is a representation of the path in the inventory
-    XML.</para>
-  </section>
+                        <entry>Hardware/Name</entry>
+                    </row>
 
-  <section>
-    <title>« database » section</title>
+                    <row>
+                        <entry>default_entity</entry>
 
-    <para>This section defines some global options..</para>
+                        <entry>Default entity where computers are
+                        stored</entry>
 
-    <table>
-      <title>Available options for the "database" section</title>
+                        <entry>yes</entry>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>string</entry>
 
-            <entry>Description</entry>
+                        <entry>"." (root entity)</entry>
+                    </row>
 
-            <entry>Optional</entry>
+                    <row>
+                        <entry>entities_rules_file</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Rules file defining computer to entity
+                        mappings. See specific section to learn how it
+                        works.</entry>
 
-        <tbody>
-          <row>
-            <entry>dbdriver</entry>
+                        <entry>yes</entry>
 
-            <entry>DB driver to use</entry>
+                        <entry>path</entry>
 
-            <entry>no</entry>
+                        <entry>"" (no mapping)</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-            <entry>mysql</entry>
-          </row>
+        <para>The hostname option is a representation of the path in the
+        inventory XML.</para>
+    </section>
 
-          <row>
-            <entry>dbhost</entry>
+    <section>
+        <title>« database » section</title>
 
-            <entry>Host which hosts the DB</entry>
+        <para>This section is documented into the MSC inventory plugin
+        configuration documentation (see section « inventory »).</para>
+    </section>
 
-            <entry>no</entry>
+    <section>
+        <title>« daemon » section</title>
 
-            <entry>127.0.0.1</entry>
-          </row>
+        <para>This section sets the inventory service run-time options and
+        privileges.</para>
 
-          <row>
-            <entry>dbport</entry>
+        <table>
+            <title>Available options for the "daemon" section</title>
 
-            <entry>Port on which to connect to reach the DB</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>yes</entry>
+                        <entry>Description</entry>
 
-            <entry>3306 (aka "default MySQL port")</entry>
-          </row>
+                        <entry>Optional</entry>
 
-          <row>
-            <entry>dbname</entry>
+                        <entry>Type</entry>
 
-            <entry>DB name</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>no</entry>
+                <tbody>
+                    <row>
+                        <entry>pidfile</entry>
 
-            <entry>inventory</entry>
-          </row>
+                        <entry>The inventory service store its PID in the
+                        given file.</entry>
 
-          <row>
-            <entry>dbuser</entry>
+                        <entry>yes</entry>
 
-            <entry>Username to give while conencting to the DB</entry>
+                        <entry>path</entry>
 
-            <entry>no</entry>
+                        <entry>/var/run/pulse2-inventoryserver.pid</entry>
+                    </row>
 
-            <entry>mmc</entry>
-          </row>
+                    <row>
+                        <entry>user</entry>
 
-          <row>
-            <entry>dbpasswd</entry>
+                        <entry>The inventory service runs as this specified
+                        user.</entry>
 
-            <entry>Password to give while connecting to the DB</entry>
+                        <entry>yes</entry>
 
-            <entry>no</entry>
+                        <entry>string</entry>
 
-            <entry>mmc</entry>
-          </row>
+                        <entry>root</entry>
+                    </row>
 
-          <row>
-            <entry>dbpoolrecycle</entry>
+                    <row>
+                        <entry>group</entry>
 
-            <entry>This setting causes the pool to recycle connections after
-            the given number of seconds has passed</entry>
+                        <entry>The inventory service runs as this specified
+                        group.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>60</entry>
-          </row>
+                        <entry>string (can be base64 encoded)</entry>
 
-          <row>
-            <entry>dbpoolsize</entry>
+                        <entry>root</entry>
+                    </row>
 
-            <entry>The number of connections to keep open inside the
-            connection pool</entry>
+                    <row>
+                        <entry>umask</entry>
 
-            <entry>yes</entry>
+                        <entry>The inventory service umask defines the right
+                        of the new files it creates (log files for
+                        example).</entry>
 
-            <entry>5</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>dbsslenable</entry>
+                        <entry>octal</entry>
 
-            <entry>SSL connection to the database</entry>
+                        <entry>0077</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>yes</entry>
+    <section>
+        <title>« option_XXX » section</title>
 
-            <entry>0</entry>
-          </row>
+        <para>This section define options that has to be given to the ocs
+        inventory agent.</para>
 
-          <row>
-            <entry>dbsslca</entry>
+        <para>At the moment the only option which return will be inserted in
+        the database is REGISTRY.</para>
 
-            <entry>CA certificate for SSL connection</entry>
+        <para>Each PARAM_YYY is for an XML tag PARAM in the inventory request.
+        It is made of two values separated by ##. The first value is PARAM XML
+        attributes, the second one is the content of the PARAM XML tag. The
+        attributes are a list of couple attribute name, attribute value, the
+        name and the value are separated by ::, each couple is separated by
+        ||.</para>
 
-            <entry>yes</entry>
+        <table>
+            <title>Available options for the "option_XXX" section</title>
 
-            <entry></entry>
-          </row>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-          <row>
-            <entry>dbsslcert</entry>
+                        <entry>Description</entry>
 
-            <entry>Public key certificate for SSL connection</entry>
+                        <entry>Optional</entry>
 
-            <entry>yes</entry>
+                        <entry>Type</entry>
 
-            <entry></entry>
-          </row>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-          <row>
-            <entry>dbsslkey</entry>
+                <tbody>
+                    <row>
+                        <entry>NAME</entry>
 
-            <entry>Private key certificate for SSL connection</entry>
+                        <entry>The option name.</entry>
 
-            <entry>yes</entry>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>string</entry>
 
-  <section>
-    <title>« daemon » section</title>
+                        <entry></entry>
+                    </row>
 
-    <para>This section sets the inventory service run-time options and
-    privileges.</para>
+                    <row>
+                        <entry>PARAM_YYY</entry>
 
-    <table>
-      <title>Available options for the "daemon" section</title>
+                        <entry>The option params.</entry>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>yes</entry>
 
-            <entry>Description</entry>
+                        <entry>string</entry>
 
-            <entry>Optional</entry>
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+        <para>For example :</para>
 
-        <tbody>
-          <row>
-            <entry>pidfile</entry>
-
-            <entry>The inventory service store its PID in the given
-            file.</entry>
-
-            <entry>yes</entry>
-
-            <entry>/var/run/pulse2-inventoryserver.pid</entry>
-          </row>
-
-          <row>
-            <entry>user</entry>
-
-            <entry>The inventory service runs as this specified user.</entry>
-
-            <entry>yes</entry>
-
-            <entry>root</entry>
-          </row>
-
-          <row>
-            <entry>group</entry>
-
-            <entry>The inventory service runs as this specified group.</entry>
-
-            <entry>yes</entry>
-
-            <entry>root</entry>
-          </row>
-
-          <row>
-            <entry>umask</entry>
-
-            <entry>The inventory service umask defines the right of the new
-            files it creates (log files for example).</entry>
-
-            <entry>yes</entry>
-
-            <entry>0077</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
-
-  <section>
-    <title>« option_XXX » section</title>
-
-    <para>This section define options that has to be given to the ocs
-    inventory agent.</para>
-
-    <para>At the moment the only option which return will be inserted in the
-    database is REGISTRY.</para>
-
-    <para>Each PARAM_YYY is for an XML tag PARAM in the inventory request. It
-    is made of two values separated by ##. The first value is PARAM XML
-    attributes, the second one is the content of the PARAM XML tag. The
-    attributes are a list of couple attribute name, attribute value, the name
-    and the value are separated by ::, each couple is separated by ||.</para>
-
-    <table>
-      <title>Available options for the "option_XXX" section</title>
-
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
-
-            <entry>Description</entry>
-
-            <entry>Optional</entry>
-
-            <entry>Default value</entry>
-          </row>
-        </thead>
-
-        <tbody>
-          <row>
-            <entry>NAME</entry>
-
-            <entry>The option name.</entry>
-
-            <entry>no</entry>
-
-            <entry></entry>
-          </row>
-
-          <row>
-            <entry>PARAM_YYY</entry>
-
-            <entry>The option params.</entry>
-
-            <entry>yes</entry>
-
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-
-    <para>For example :</para>
-
-    <para><screen>
-[option_01]
+        <para><screen>[option_01]
 NAME = REGISTRY
 PARAM_01 = NAME::srvcomment||REGKEY::SYSTEM\CurrentControlSet\Services\lanmanserver\parameters||REGTREE::2##srvcomment
-PARAM_02 = NAME::DisplayName||REGKEY::SYSTEM\CurrentControlSet\Services\lanmanserver||REGTREE::2##DisplayName
-    </screen></para>
-  </section>
+PARAM_02 = NAME::DisplayName||REGKEY::SYSTEM\CurrentControlSet\Services\lanmanserver||REGTREE::2##DisplayName    </screen></para>
+    </section>
 
-  <section>
-    <title>Rules file for computer to entity mapping</title>
+    <section>
+        <title>Rules file for computer to entity mapping</title>
 
-    <para>This file defines a set of rules to assign a computer to an entity
-    according to its inventory content.</para>
+        <para>This file defines a set of rules to assign a computer to an
+        entity according to its inventory content.</para>
 
-    <para>Each line of the rules file is processing starting from the top of
-    the file, until one rule is valid. When a rule matches, the processing
-    stop, and the computer is linked to the entity. If no rule match, the user
-    is linked to no entity.</para>
+        <para>Each line of the rules file is processing starting from the top
+        of the file, until one rule is valid. When a rule matches, the
+        processing stop, and the computer is linked to the entity. If no rule
+        match, the user is linked to no entity.</para>
 
-    <para>If no rule matches, the computer is assigned to the default entity.
-    If the entity does not exist, it is created automatically in the database,
-    as a child of the root entity (the root entity always exists).</para>
+        <para>If no rule matches, the computer is assigned to the default
+        entity. If the entity does not exist, it is created automatically in
+        the database, as a child of the root entity (the root entity always
+        exists).</para>
 
-    <para>This file is made of four or more columns. Each column is separated
-    by space or tab characters.</para>
+        <para>This file is made of four or more columns. Each column is
+        separated by space or tab characters.</para>
 
-    <itemizedlist>
-      <listitem>
-        <para>The first column is the entity that will be assigned to the
-        computer if the rule is valid. The root entity is specified by the dot
-        character.</para>
-      </listitem>
+        <itemizedlist>
+            <listitem>
+                <para>The first column is the entity that will be assigned to
+                the computer if the rule is valid. The root entity is
+                specified by the dot character.</para>
+            </listitem>
 
-      <listitem>
-        <para>The second column is the inventory component value that will be
-        tested by the rule. This component is made of the name of an inventory
-        table, the "/" character, and a column of this table. For example:
-        Network/IP, Bios/ChipVendor, ... The <filename>OcsNGMap.xml</filename>
-        file can also be used to get the available inventory component
-        value.</para>
-      </listitem>
+            <listitem>
+                <para>The second column is the inventory component value that
+                will be tested by the rule. This component is made of the name
+                of an inventory table, the "/" character, and a column of this
+                table. For example: Network/IP, Bios/ChipVendor, ... The
+                <filename>OcsNGMap.xml</filename> file can also be used to get
+                the available inventory component value.</para>
+            </listitem>
 
-      <listitem>
-        <para>The third column is the operator of the rules. For the moment,
-        only the "match" operator is available. The "match" operator allows to
-        test the inventory component value with a regexp.</para>
-      </listitem>
+            <listitem>
+                <para>The third column is the operator of the rules. For the
+                moment, only the "match" operator is available. The "match"
+                operator allows to test the inventory component value with a
+                regexp.</para>
+            </listitem>
 
-      <listitem>
-        <para>The fourth column is a value that will be used by the operator.
-        For the "match" operator, the value must be a regular
-        expression.</para>
-      </listitem>
-    </itemizedlist>
+            <listitem>
+                <para>The fourth column is a value that will be used by the
+                operator. For the "match" operator, the value must be a
+                regular expression.</para>
+            </listitem>
+        </itemizedlist>
 
-    <para>For example:</para>
+        <para>For example:</para>
 
-    <screen>
+        <screen>
 .               Network/IP      match   ^192\.168\.0\..*$
 "entity A"      Network/IP      match   ^172\.16\..*$
 entityB         Network/IP      match   ^10\..*$          and        Hardware/OperatingSystem     match       ^Linux$
     </screen>
 
-    <para>The first line links all computers with an IP address starting with
-    192.168.0. (network 192.168.0.0/24) to the inventory root entity.</para>
+        <para>The first line links all computers with an IP address starting
+        with 192.168.0. (network 192.168.0.0/24) to the inventory root
+        entity.</para>
 
-    <para>The second line links all computers with an IP address starting with
-    172.16. (network 172.16.0.0/24) to the entity called "entity A". Entity
-    name can be written between double-quotes if they contains space
-    characters in their name.</para>
+        <para>The second line links all computers with an IP address starting
+        with 172.16. (network 172.16.0.0/24) to the entity called "entity A".
+        Entity name can be written between double-quotes if they contains
+        space characters in their name.</para>
 
-    <para>The third line links all computers with an IP address starting with
-    "10." (network 10.0.0.0/8) and with the "Linux" OS to the entity called
-    entityB.</para>
-  </section>
+        <para>The third line links all computers with an IP address starting
+        with "10." (network 10.0.0.0/8) and with the "Linux" OS to the entity
+        called entityB.</para>
+    </section>
 </article>
