@@ -2,572 +2,687 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Pulse 2 Scheduler configuration file</title>
+    <title>Pulse 2 Scheduler configuration file</title>
 
-  <articleinfo>
-    <author>
-      <firstname>Nicolas</firstname>
+    <articleinfo>
+        <author>
+            <firstname>Nicolas</firstname>
 
-      <surname>Rueff</surname>
+            <surname>Rueff</surname>
 
-      <email>nrueff@mandriva.com</email>
-    </author>
+            <email>nrueff@mandriva.com</email>
+        </author>
 
-    <affiliation>
-      <orgname>Mandriva</orgname>
-    </affiliation>
+        <affiliation>
+            <orgname>Mandriva</orgname>
+        </affiliation>
 
-    <copyright>
-      <year>2008,2009 Nicolas Rueff - Mandriva</year>
-    </copyright>
+        <copyright>
+            <year>2008-2009 Mandriva</year>
+        </copyright>
 
-    <revhistory>
-      <revision>
-        <revnumber>$Revision$</revnumber>
+        <revhistory>
+            <revision>
+                <revnumber>1.2.1</revnumber>
 
-        <date>$Date$</date>
+                <date>2009-04-23</date>
 
-        <authorinitials>$Author$</authorinitials>
-      </revision>
-    </revhistory>
+                <authorinitials>NR</authorinitials>
 
-    <abstract>
-      <para>This document explains the content of the configuration file of
-      the scheduler service from Pulse 2</para>
-    </abstract>
-  </articleinfo>
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            <para>database section is now described into the MSC
+                            MMC plugin conf doc</para>
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+        </revhistory>
 
-  <section>
-    <title>Introduction</title>
+        <abstract>
+            <para>This document explains the content of the configuration file
+            of the scheduler service from Pulse 2</para>
+        </abstract>
 
-    <para>The « Scheduler » service is the Pulse 2 daemon in charge of reading
-    the MSC database, dispatching commands over available launchers and
-    writing results in the MSC database.</para>
+        <releaseinfo>$Id$</releaseinfo>
+    </articleinfo>
 
-    <para>The service configuration file is
-    <filename>/etc/mmc/pulse2/scheduler.ini</filename>.</para>
+    <section>
+        <title>Introduction</title>
 
-    <para>Like all Pulse 2 related configuration file, its file format is INI
-    style. The file is made of sections, each one starting with a
-    « [sectionname] » header. In each section options can be defined like
-    this: « option = value ».</para>
+        <para>The « Scheduler » service is the Pulse 2 daemon in charge of
+        reading the MSC database, dispatching commands over available
+        launchers and writing results in the MSC database.</para>
 
-    <para>For example: <screen>[section1]
+        <para>The main service configuration file is
+        <filename>/etc/mmc/pulse2/scheduler/scheduler.ini</filename>.</para>
+
+        <para>Optionnaly, the database configuration may also be defined into
+        <filename>/etc/mmc/plugins/msc.ini</filename></para>
+
+        <para>Like all Pulse 2 related configuration file, its file format is
+        INI style. The file is made of sections, each one starting with a
+        « [sectionname] » header. In each section options can be defined like
+        this: « option = value ».</para>
+
+        <para>For example: <screen>[section1]
 option1 = 1
 option2 = 2
 
 [section2]
 option1 = foo
-option2 = plop      </screen></para>
-  </section>
+option2 = plop</screen></para>
+    </section>
 
-  <section>
-    <title>Configuration file sections</title>
+    <section>
+        <title>Configuration file sections</title>
 
-    <para>For now only section is available in this configuration file. Some
-    sections describing the different available launchers may appear, their
-    name must begin with "launcher_".</para>
+        <para>The configuration file is splitted into several sections: Some
+        sections describing the different available launchers may appear,
+        their name must begin with "launcher_".</para>
 
-    <table>
-      <title>scheduler.ini available sections</title>
+        <itemizedlist>
+            <listitem>
+                <para>scheduler, daemon, database and logging,</para>
+            </listitem>
 
-      <tgroup cols="3">
-        <thead>
-          <row>
-            <entry>Section name</entry>
+            <listitem>
+                <para>launchers declaration (describing the different
+                available launchers may appear, their name must begin with
+                "launcher_").</para>
+            </listitem>
+        </itemizedlist>
 
-            <entry>Description</entry>
+        <table>
+            <title>scheduler.ini available sections</title>
 
-            <entry>Optional</entry>
-          </row>
-        </thead>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Section name</entry>
 
-        <tbody>
-          <row>
-            <entry>scheduler</entry>
+                        <entry>Description</entry>
 
-            <entry>Mostly scheduler related behaviors</entry>
+                        <entry>Optional</entry>
+                    </row>
+                </thead>
 
-            <entry>no</entry>
-          </row>
+                <tbody>
+                    <row>
+                        <entry>scheduler</entry>
 
-          <row>
-            <entry>daemon</entry>
+                        <entry>Mostly scheduler related behaviors</entry>
 
-            <entry>Scheduler service related behaviors</entry>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+                    </row>
 
-            <entry>no</entry>
-          </row>
+                    <row>
+                        <entry>daemon</entry>
 
-          <row>
-            <entry>launcher_XXX</entry>
+                        <entry>Scheduler service related behaviors</entry>
 
-            <entry>A way to talk to launcher_XXX</entry>
+                        <entry>yes</entry>
+                    </row>
 
-            <entry>no</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+                    <row>
+                        <entry>database</entry>
 
-    <para>All the other sections (loggers, handlers, ...) are related to
-    Python language logging framework. See <ulink
-    url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
-    .</para>
-  </section>
+                        <entry>Scheduler database access</entry>
 
-  <section>
-    <title>« scheduler » section</title>
+                        <entry>yes (see below)</entry>
+                    </row>
 
-    <para>This section is used to give directives to the scheduler
-    service.</para>
+                    <row>
+                        <entry>launcher_XXX</entry>
 
-    <table>
-      <title>Available options for the "main" section</title>
+                        <entry>A way to talk to launcher_XXX</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-            <entry>Description</entry>
+        <para>All the other sections (loggers, handlers, ...) are related to
+        Python language logging framework. See <ulink
+        url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
+        .</para>
+    </section>
 
-            <entry>Optional</entry>
+    <section>
+        <title>« scheduler » section</title>
 
-            <entry>Type</entry>
+        <para>This section is used to give directives to the scheduler
+        service.</para>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+        <table>
+            <title>Available options for the "main" section</title>
 
-        <tbody>
-          <row>
-            <entry>id</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>This scheduler name, used to take the right jobs in the
-            database.</entry>
+                        <entry>Description</entry>
 
-            <entry>no</entry>
+                        <entry>Optional</entry>
 
-            <entry>string</entry>
+                        <entry>Type</entry>
 
-            <entry></entry>
-          </row>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-          <row>
-            <entry>awake_time</entry>
+                <tbody>
+                    <row>
+                        <entry>id</entry>
 
-            <entry>The scheduler will periodicaly awake (for exemple to poll
-            the database), with this key a specific periodicity can be
-            given.</entry>
+                        <entry>This scheduler name, used to take the right
+                        jobs in the database.</entry>
 
-            <entry>yes</entry>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-            <entry>int, seconds</entry>
+                        <entry>string</entry>
 
-            <entry>600 (ie 10 minuts)</entry>
-          </row>
+                        <entry></entry>
+                    </row>
 
-          <row>
-            <entry>client_check</entry>
+                    <row>
+                        <entry>announce_check</entry>
 
-            <entry>comma-separated list of &lt;key&gt;=&lt;value&gt; tokens to
-            ask to the client; value (as part ot the 'target' table' may be
-            name, uuid, ipaddr, mac; only the first value are used for the
-            last two.</entry>
+                        <entry>To announce what we are currently try to do on
+                        client, for each stage.<para>For example TRANFERT
+                        while transfering something: announce_check =
+                        transfert=TRANFERT (comma-separated list as for
+                        previous options).</para><para>currently available
+                        keywords: transfert, execute, delete,
+                        inventory</para></entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>string</entry>
 
-            <entry></entry>
-          </row>
+                        <entry></entry>
+                    </row>
 
-          <row>
-            <entry>dbencoding</entry>
+                    <row>
+                        <entry>awake_time</entry>
 
-            <entry>The encoding to use when injecting logs into the MSC
-            database.</entry>
+                        <entry>The scheduler will periodicaly awake (for
+                        exemple to poll the database), with this key a
+                        specific periodicity can be given.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>int, seconds</entry>
 
-            <entry>utf-8</entry>
-          </row>
+                        <entry>600 (ten minuts)</entry>
+                    </row>
 
-          <row>
-            <entry>enablessl</entry>
+                    <row>
+                        <entry>cacert</entry>
 
-            <entry>SSL mode support</entry>
+                        <entry>path to the certificate file describing the
+                        certificate authority of the SSL server</entry>
 
-            <entry>yes</entry>
+                        <entry>yes, and used only if <emphasis
+                        role="bold">enablessl</emphasis> is set</entry>
 
-            <entry>boolean</entry>
+                        <entry>path</entry>
 
-            <entry>1</entry>
-          </row>
+                        <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
+                    </row>
 
-          <row>
-            <entry>certfile</entry>
+                    <row>
+                        <entry>client_check</entry>
 
-            <entry>path to the certificate file describing the certificate
-            authority of the SSL server</entry>
+                        <entry>comma-separated list of
+                        &lt;key&gt;=&lt;value&gt; tokens to ask to the client;
+                        value (as part ot the 'target' table' may be name,
+                        uuid, ipaddr, mac; only the first value are used for
+                        the last two.</entry>
 
-            <entry>yes, and used only if enablessl is set</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
-          </row>
+                        <entry></entry>
+                    </row>
 
-          <row>
-            <entry>privkey</entry>
+                    <row>
+                        <entry>dbencoding</entry>
 
-            <entry>path to the SSL serverprivate certificate</entry>
+                        <entry>The encoding to use when injecting logs into
+                        the MSC database.</entry>
 
-            <entry>yes, and used only if enablessl is set</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
-          </row>
+                        <entry>utf-8</entry>
+                    </row>
 
-          <row>
-            <entry>listen</entry>
+                    <row>
+                        <entry>enablessl</entry>
 
-            <entry>This scheduler listing binding IP address.</entry>
+                        <entry>SSL mode support</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>boolean</entry>
 
-            <entry>127.0.0.1</entry>
-          </row>
+                        <entry>True</entry>
+                    </row>
 
-          <row>
-            <entry>max_command_time</entry>
+                    <row>
+                        <entry>localcert</entry>
 
-            <entry>Command max authorized time, used by the launcher</entry>
+                        <entry>path to the SSL server private
+                        certificate</entry>
 
-            <entry>yes</entry>
+                        <entry>yes, and used only if <emphasis
+                        role="bold">enablessl</emphasis> is set</entry>
 
-            <entry>int</entry>
+                        <entry>path</entry>
 
-            <entry>3600</entry>
-          </row>
+                        <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
+                    </row>
 
-          <row>
-            <entry>max_upload_time</entry>
+                    <row>
+                        <entry>host</entry>
 
-            <entry>Upload max authorized time, used by the launcher</entry>
+                        <entry>This scheduler listing binding IP
+                        address</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int</entry>
+                        <entry>string</entry>
 
-            <entry>21600</entry>
-          </row>
+                        <entry>127.0.0.1</entry>
+                    </row>
 
-          <row>
-            <entry>max_slots</entry>
+                    <row>
+                        <entry>max_command_time</entry>
 
-            <entry>The max number of slot to use for all launchers</entry>
+                        <entry>Command max authorized time, used by the
+                        launcher</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int</entry>
+                        <entry>int</entry>
 
-            <entry>300</entry>
-          </row>
+                        <entry>3600 (one hour)</entry>
+                    </row>
 
-          <row>
-            <entry>mode</entry>
+                    <row>
+                        <entry>max_upload_time</entry>
 
-            <entry>The scheduler way-of-giving-task-to-its-launchers (see
-            doc).</entry>
+                        <entry>Upload max authorized time, used by the
+                        launcher</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>int</entry>
 
-            <entry>async</entry>
-          </row>
+                        <entry>21600 (six hours)</entry>
+                    </row>
 
-          <row>
-            <entry>password</entry>
+                    <row>
+                        <entry>max_slots</entry>
 
-            <entry>The password to use when sending XMLRPC commands to this
-            scheduler.</entry>
+                        <entry>The max number of slot to use for all
+                        launchers</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string or base64</entry>
+                        <entry>int</entry>
 
-            <entry>password</entry>
-          </row>
+                        <entry>300</entry>
+                    </row>
 
-          <row>
-            <entry>port</entry>
+                    <row>
+                        <entry>max_wol_time</entry>
 
-            <entry>This scheduler listing TCP port.</entry>
+                        <entry>WOL wait time</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int</entry>
+                        <entry>int</entry>
 
-            <entry>8000</entry>
-          </row>
+                        <entry>300 (five minuts)</entry>
+                    </row>
 
-          <row>
-            <entry>resolv_order</entry>
+                    <row>
+                        <entry>mg_assign_algo</entry>
 
-            <entry>The different means used to find a client on the network
-            (see doc).</entry>
+                        <entry>The plugin the scheduler will use to assign a
+                        computer to a group. See doc.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>list of string, separator is space</entry>
+                        <entry>string</entry>
 
-            <entry>fqdn hosts netbios ip</entry>
-          </row>
+                        <entry>default (ie. use
+                        scheduler/assign_algo/default)</entry>
+                    </row>
 
-          <row>
-            <entry>scheduler_path</entry>
+                    <row>
+                        <entry>mode</entry>
 
-            <entry>The Scheduler main script location, used by
-            scheduler-manager to start and daemonize the service.</entry>
+                        <entry>The scheduler
+                        way-of-giving-task-to-its-launchers (see doc).</entry>
 
-            <entry>no</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/usr/sbin/pulse2-scheduler</entry>
-          </row>
+                        <entry>async</entry>
+                    </row>
 
-          <row>
-            <entry>server_check</entry>
+                    <row>
+                        <entry>password</entry>
 
-            <entry>see client_check for option formating, the main differente
-            is that checks are done server-side, not client-side.</entry>
+                        <entry>The password to use when sending XMLRPC
+                        commands to this scheduler.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>string or base64</entry>
 
-            <entry></entry>
-          </row>
+                        <entry>password</entry>
+                    </row>
 
-          <row>
-            <entry>username</entry>
+                    <row>
+                        <entry>port</entry>
 
-            <entry>The name to use when sending XMLRPC commands to this
-            scheduler.</entry>
+                        <entry>This scheduler listing TCP port.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>int</entry>
 
-            <entry>username</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>8000</entry>
+                    </row>
 
-  <section>
-    <title>« daemon » section</title>
+                    <row>
+                        <entry>resolv_order</entry>
 
-    <para>This section sets the scheduler service run-time options and
-    privileges.</para>
+                        <entry>The different means used to find a client on
+                        the network (see doc).</entry>
 
-    <table>
-      <title>Available options for the "daemon" section</title>
+                        <entry>yes</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>list of string, separator is space</entry>
 
-            <entry>Description</entry>
+                        <entry>fqdn hosts netbios ip</entry>
+                    </row>
 
-            <entry>Optional</entry>
+                    <row>
+                        <entry>scheduler_path</entry>
 
-            <entry>Type</entry>
+                        <entry>The Scheduler main script location, used by
+                        scheduler-manager to start and daemonize the
+                        service.</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>no</entry>
 
-        <tbody>
-          <row>
-            <entry>group</entry>
+                        <entry>path</entry>
 
-            <entry>The scheduler service runs as this specified group.</entry>
+                        <entry>/usr/sbin/pulse2-scheduler</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>server_check</entry>
 
-            <entry>group</entry>
+                        <entry>see client_check for option formating, the main
+                        differente is that checks are done server-side, not
+                        client-side.</entry>
 
-            <entry>root</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>pidfile</entry>
+                        <entry>string</entry>
 
-            <entry>The scheduler service PID, used by scheduler-manager to
-            track the scheduler service.</entry>
+                        <entry></entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>username</entry>
 
-            <entry>path</entry>
+                        <entry>The name to use when sending XMLRPC commands to
+                        this scheduler.</entry>
 
-            <entry>/var/run/pulse2</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>umask</entry>
+                        <entry>string</entry>
 
-            <entry>The scheduler service umask defines the right of the new
-            files it creates (log files for example).</entry>
+                        <entry>username</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>verifypeer</entry>
 
-            <entry>octal</entry>
+                        <entry>SSL cert verirfication (if set to True, you
+                        will have to build and use a PKI)</entry>
 
-            <entry>0077</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>user</entry>
+                        <entry>boolean</entry>
 
-            <entry>The scheduler service runs as this specified user.</entry>
+                        <entry>False</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>yes</entry>
+    <section>
+        <title>« daemon » section</title>
 
-            <entry>user</entry>
+        <para>This section sets the scheduler service run-time options and
+        privileges.</para>
 
-            <entry>root</entry>
-          </row>
+        <table>
+            <title>Available options for the "daemon" section</title>
 
-          <row>
-            <entry>setrlimit</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Resource usage limits to apply to the scheduler process, specified by a string of triplets (resource, soft limit, hard limit). See the <ulink url="http://docs.python.org/library/resource.html">Python documentation</ulink> for more information</entry>
+                        <entry>Description</entry>
 
-            <entry>yes</entry>
+                        <entry>Optional</entry>
 
-            <entry>string</entry>
+                        <entry>Type</entry>
 
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-    <para>
-      Example:
-    </para>
-    <screen>
-[daemon]
+                <tbody>
+                    <row>
+                        <entry>group</entry>
+
+                        <entry>The scheduler service runs as this specified
+                        group.</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>group</entry>
+
+                        <entry>root</entry>
+                    </row>
+
+                    <row>
+                        <entry>pidfile</entry>
+
+                        <entry>The scheduler service PID, used by
+                        scheduler-manager to track the scheduler
+                        service.</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>path</entry>
+
+                        <entry>/var/run/pulse2</entry>
+                    </row>
+
+                    <row>
+                        <entry>umask</entry>
+
+                        <entry>The scheduler service umask defines the right
+                        of the new files it creates (log files for
+                        example).</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>octal</entry>
+
+                        <entry>0077</entry>
+                    </row>
+
+                    <row>
+                        <entry>user</entry>
+
+                        <entry>The scheduler service runs as this specified
+                        user.</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>user</entry>
+
+                        <entry>root</entry>
+                    </row>
+
+                    <row>
+                        <entry>setrlimit</entry>
+
+                        <entry>Resource usage limits to apply to the scheduler
+                        process, specified by a string of triplets (resource,
+                        soft limit, hard limit). See the <ulink
+                        url="http://docs.python.org/library/resource.html">Python
+                        documentation</ulink> for more information</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <para>Example:</para>
+
+        <screen>[daemon]
 pid_path = /var/run/pulse2
 user = mmc
 group = mmc
 umask = 0007
-setrlimit = RLIMIT_NOFILE 2048 2048 RLIMIT_CORE 0 0
-    </screen>
+setrlimit = RLIMIT_NOFILE 2048 2048 RLIMIT_CORE 0 0</screen>
+    </section>
 
-  </section>
+    <section>
+        <title>« database » section</title>
 
-  <section>
-    <title>« launcher_XXX » section</title>
+        <para>This section can eihther be defined in scheduler.ini, or in
+        msc.ini (in that order).</para>
 
-    <para>This section define available launchers (one per launcher, "XXX"
-    must be an integer).</para>
+        <para>This section is documented into the MSC MMC plugin configuration
+        documentation.</para>
+    </section>
 
-    <table>
-      <title>Available options for the "launcher_XXX" section</title>
+    <section>
+        <title>« launcher_XXX » section</title>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+        <para>This section define available launchers (one per launcher, "XXX"
+        must be an integer). By default, no launcher is defined.</para>
 
-            <entry>Description</entry>
+        <table>
+            <title>Available options for the "launcher_XXX" section</title>
 
-            <entry>Optional</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Type</entry>
+                        <entry>Description</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Optional</entry>
 
-        <tbody>
-          <row>
-            <entry>enablessl</entry>
+                        <entry>Type</entry>
 
-            <entry>Flag telling if SSL mode should be used to connect to the
-            launcher.</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>no</entry>
+                <tbody>
+                    <row>
+                        <entry>enablessl</entry>
 
-            <entry>boolean</entry>
+                        <entry>Flag telling if SSL mode should be used to
+                        connect to the launcher.</entry>
 
-            <entry></entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-          <row>
-            <entry>host</entry>
+                        <entry>boolean</entry>
 
-            <entry>The launcher IP address.</entry>
+                        <entry></entry>
+                    </row>
 
-            <entry>no</entry>
+                    <row>
+                        <entry>host</entry>
 
-            <entry>string</entry>
+                        <entry>The launcher IP address.</entry>
 
-            <entry></entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-          <row>
-            <entry>password</entry>
+                        <entry>string</entry>
 
-            <entry>The password to use when we send XMLRPC commands to this
-            launcher.</entry>
+                        <entry></entry>
+                    </row>
 
-            <entry>no</entry>
+                    <row>
+                        <entry>password</entry>
 
-            <entry>string or base64</entry>
+                        <entry>The password to use when we send XMLRPC
+                        commands to this launcher.</entry>
 
-            <entry></entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-          <row>
-            <entry>port</entry>
+                        <entry>string or base64</entry>
 
-            <entry>The launcher TCP port.</entry>
+                        <entry></entry>
+                    </row>
 
-            <entry>no</entry>
+                    <row>
+                        <entry>port</entry>
 
-            <entry>string</entry>
+                        <entry>The launcher TCP port.</entry>
 
-            <entry></entry>
-          </row>
+                        <entry><emphasis role="bold">no</emphasis></entry>
 
-          <row>
-            <entry>username</entry>
+                        <entry>string</entry>
 
-            <entry>The name to use when we send XMLRPC commands to this
-            launcher.</entry>
+                        <entry></entry>
+                    </row>
 
-            <entry>no</entry>
+                    <row>
+                        <entry>username</entry>
 
-            <entry>string</entry>
+                        <entry>The name to use when we send XMLRPC commands to
+                        this launcher.</entry>
 
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry><emphasis role="bold">no</emphasis></entry>
+
+                        <entry>string</entry>
+
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </article>
