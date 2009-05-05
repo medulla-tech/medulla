@@ -32,8 +32,7 @@
                 <revdescription>
                     <itemizedlist>
                         <listitem>
-                            <para>database section is now described into the MSC
-                            MMC plugin conf doc</para>
+                            <para>Initial release</para>
                         </listitem>
                     </itemizedlist>
                 </revdescription>
