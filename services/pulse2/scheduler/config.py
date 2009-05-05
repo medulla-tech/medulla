@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -39,12 +39,12 @@ from pulse2.database.msc.config import MscDatabaseConfig
 class SchedulerDatabaseConfig(MscDatabaseConfig):
     dbname = "msc"
     dbsection = "database"
-            
+
     def __setup_fallback(self, mscconffile):
         logging.getLogger().info("Reading configuration file (database config): %s" % mscconffile)
         self.dbsection = "msc"
         MscDatabaseConfig.setup(self, mscconffile)
-        
+
     def setup(self, conffile):
         mscconffile = pulse2.utils.getConfigFile("msc")
         if os.path.exists(conffile):
@@ -61,7 +61,7 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
             self.__setup_fallback(mscconffile)
         else:
             raise Exception("can find any config file")
-    
+
 class SchedulerConfig(pulse2.utils.Singleton):
     """
     Singleton Class to hold configuration directives
@@ -70,20 +70,20 @@ class SchedulerConfig(pulse2.utils.Singleton):
     name = None
     cp = None
 
-    # [scheduler] section
+    # [scheduler] section default values
     announce_check = dict()
     awake_time = 600
+    cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'
     enablessl = True
-    verifypeer = False
-    cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     localcert = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     host = "127.0.0.1"
-    max_slots = 300
     max_command_time = 3600
+    max_slots = 300
     max_upload_time = 21600
     max_wol_time = 300
+    mg_assign_algo = 'default'
     mode = 'async'
     password = 'password'
     port = 8000
@@ -91,8 +91,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     scheduler_path = '/usr/sbin/pulse2-scheduler'
     server_check = None
     username = 'username'
-
-    mg_assign_algo = 'default'
+    verifypeer = False
 
     # [daemon] section
     daemon_group = 0
@@ -259,11 +258,11 @@ class SchedulerConfig(pulse2.utils.Singleton):
                         password = ''
 
                 self.launchers[section] = {
-                        'enablessl':self.cp.getboolean(section, "enablessl"),
-                        'host':self.cp.get(section, "host"),
-                        'username':username,
-                        'password':password,
-                        'port':self.cp.get(section, "port")
+                        'enablessl': self.cp.getboolean(section, "enablessl"),
+                        'host': self.cp.get(section, "host"),
+                        'username': username,
+                        'password': password,
+                        'port': self.cp.get(section, "port")
                     }
                 if self.launchers[section]["enablessl"]:
                     uri = "https://"
