@@ -2,1080 +2,1386 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Pulse 2 Launcher configuration file</title>
+    <title>Pulse 2 Launcher configuration file</title>
 
-  <articleinfo>
-    <author>
-      <firstname>Nicolas</firstname>
+    <articleinfo>
+        <author>
+            <firstname>Nicolas</firstname>
 
-      <surname>Rueff</surname>
+            <surname>Rueff</surname>
 
-      <email>nrueff@mandriva.com</email>
-    </author>
+            <email>nrueff@mandriva.com</email>
+        </author>
 
-    <affiliation>
-      <orgname>Mandriva</orgname>
-    </affiliation>
+        <affiliation>
+            <orgname>Mandriva</orgname>
+        </affiliation>
 
-    <copyright>
-      <year>2008 Nicolas Rueff - Mandriva</year>
-    </copyright>
+        <copyright>
+            <year>2008-2009 Mandriva</year>
+        </copyright>
 
-    <revhistory>
-      <revision>
-        <revnumber>$Revision$</revnumber>
+        <revhistory>
+            <revision>
+                <revnumber>1.2.1</revnumber>
 
-        <date>$Date$</date>
+                <date>2009-04-23</date>
 
-        <authorinitials>$Author$</authorinitials>
-      </revision>
-    </revhistory>
+                <authorinitials>NR</authorinitials>
 
-    <abstract>
-      <para>This document explains the content of the configuration file of
-      the launcher service from Pulse 2</para>
-    </abstract>
-  </articleinfo>
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            <para>database section is now described into the MSC
+                            MMC plugin conf doc</para>
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+        </revhistory>
 
-  <section>
-    <title>Introduction</title>
+        <abstract>
+            <para>This document explains the content of the configuration file
+            of the launcher service from Pulse 2</para>
+        </abstract>
 
-    <para>The « Launcher » service is the Pulse 2 daemon in charge of doing
-    jobs on clients on scheduler orders.</para>
+        <releaseinfo>$Id: pulse2-scheduler-configuration.xml 116 2009-05-05
+        08:38:07Z nrueff $</releaseinfo>
+    </articleinfo>
 
-    <para>The service configuration file is
-    <filename>/etc/mmc/pulse2/launchers.ini</filename> (please note the ending
-    "s").</para>
+    <section>
+        <title>Introduction</title>
 
-    <para>Like all Pulse 2 related configuration file, its file format is INI
-    style. The file is made of sections, each one starting with a
-    « [sectionname] » header. In each section options can be defined like
-    this: « option = value ».</para>
+        <para>The « Launcher » service is the Pulse 2 daemon in charge of
+        doing jobs on clients on scheduler orders.</para>
 
-    <para>For example: <screen>[section1]
+        <para>The service configuration file is
+        <filename>/etc/mmc/pulse2/launchers.ini</filename> (please note the
+        ending "s").</para>
+
+        <para>Like all Pulse 2 related configuration file, its file format is
+        INI style. The file is made of sections, each one starting with a
+        « [sectionname] » header. In each section options can be defined like
+        this: « option = value ».</para>
+
+        <para>For example: <screen>[section1]
 option1 = 1
 option2 = 2
 
 [section2]
 option1 = foo
-option2 = plop      </screen></para>
-  </section>
+option2 = plop</screen></para>
+    </section>
 
-  <section>
-    <title>Configuration file sections</title>
+    <section>
+        <title>Configuration file sections</title>
 
-    <para>For now three sections are available in this configuration file.
-    Some sections describing the different available launchers may appear,
-    their name must begin with "launcher_". The idea behind this is that the
-    main section controls the common behavior of launchers, the others control
-    the specific behaviors.</para>
+        <para>For now three sections are available in this configuration file.
+        Some sections describing the different available launchers may appear,
+        their name must begin with "launcher_". The idea behind this is that
+        the main section controls the common behavior of launchers, the others
+        control the specific behaviors.</para>
 
-    <table>
-      <title>launchers.ini available sections</title>
+        <table>
+            <title>launchers.ini available sections</title>
 
-      <tgroup cols="3">
-        <thead>
-          <row>
-            <entry>Section name</entry>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Section name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
-          </row>
-        </thead>
+                        <entry>Optional</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>launchers</entry>
+                <tbody>
+                    <row>
+                        <entry>launchers</entry>
 
-            <entry>Common launchers configuration directives</entry>
+                        <entry>Common launchers configuration
+                        directives</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>wrapper</entry>
+                    <row>
+                        <entry>wrapper</entry>
 
-            <entry>wrapper related options</entry>
+                        <entry>wrapper related options</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>ssh</entry>
+                    <row>
+                        <entry>ssh</entry>
 
-            <entry>ssh modus-operandi related section</entry>
+                        <entry>ssh modus-operandi related section</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>daemon</entry>
+                    <row>
+                        <entry>daemon</entry>
 
-            <entry>Launchers services related behaviors</entry>
+                        <entry>Launchers services related behaviors</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>wol</entry>
+                    <row>
+                        <entry>wol</entry>
 
-            <entry>WOL related behaviors</entry>
+                        <entry>WOL related behaviors</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>wget</entry>
+                    <row>
+                        <entry>wget</entry>
 
-            <entry>Wget related options</entry>
+                        <entry>Wget related options</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>scheduler_XXX</entry>
+                    <row>
+                        <entry>scheduler_XXX</entry>
 
-            <entry>Referent scheduler location</entry>
+                        <entry>Referent scheduler location</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry>no</entry>
+                    </row>
 
-          <row>
-            <entry>launcher_XXX</entry>
+                    <row>
+                        <entry>launcher_XXX</entry>
 
-            <entry>Configuration for launcher_XXX</entry>
+                        <entry>Configuration for launcher_XXX</entry>
 
-            <entry>no</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+                        <entry>no</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-    <para>All the other sections (loggers, handlers, ...) are related to
-    Python language logging framework. See <ulink
-    url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
-    .</para>
-  </section>
+        <para>All the other sections (loggers, handlers, ...) are related to
+        Python language logging framework. See <ulink
+        url="http://docs.python.org/lib/logging-config-fileformat.html">http://docs.python.org/lib/logging-config-fileformat.html</ulink>
+        .</para>
+    </section>
 
-  <section>
-    <title>« launchers » section</title>
+    <section>
+        <title>« launchers » section</title>
 
-    <para>This section is used to give directives to the all launcher
-    services.</para>
+        <para>This section is used to give directives common to every launcher
+        service.</para>
 
-    <table>
-      <title>Available options for the "launchers" section</title>
+        <table>
+            <title>Available options for the "launchers" section</title>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Type</entry>
+                        <entry>Type</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>inventory_command</entry>
+                <tbody>
+                    <row>
+                        <entry>halt_command</entry>
 
-            <entry>The inventory command to use on a client, after a
-            successful deployment.</entry>
+                        <entry>The halt command to use on a client, after a
+                        successful deployment.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>string</entry>
 
-            <entry>echo Doing inventory</entry>
-          </row>
+                        <entry>/bin/shutdown.exe -f -s 1 || shutdown -h
+                        now</entry>
+                    </row>
 
-          <row>
-            <entry>launcher_path</entry>
+                    <row>
+                        <entry>inventory_command</entry>
 
-            <entry>The Launcher main script location, used by
-            launchers-manager to start and daemonize the services.</entry>
+                        <entry>The inventory command to use on a client, after
+                        a successful deployment.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/usr/sbin/pulse2-launcher</entry>
-          </row>
+                        <entry>export PULSE2_SERVER=`echo $SSH_CONNECTION |
+                        cut -f1 -d\ `; export PULSE2_PORT=21999;
+                        /cygdrive/c/Program\ Files/OCS\ Inventory\
+                        Agent/OCSInventory.exe /server:$PULSE2_SERVER
+                        /pnum:$PULSE2_PORT /debug ||
+                        /usr/bin/ocsinventory-agent
+                        --server=http://$PULSE2_SERVER:$PULSE2_PORT
+                        --debug</entry>
+                    </row>
 
-          <row>
-            <entry>max_command_age</entry>
+                    <row>
+                        <entry>launcher_path</entry>
 
-            <entry>The parameter which limits a command's time lenght. Above
-            this amount of seconds the command will automatically be killed.
-            Only works for ASYNC commands.</entry>
+                        <entry>The Launcher main script location, used by
+                        launchers-manager to start and daemonize the
+                        services.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, seconds</entry>
+                        <entry>path</entry>
 
-            <entry>86400 (1 day)</entry>
-          </row>
+                        <entry>/usr/sbin/pulse2-launcher</entry>
+                    </row>
 
-          <row>
-            <entry>max_ping_time</entry>
+                    <row>
+                        <entry>max_command_age</entry>
 
-            <entry>Timeout when attempting to ping a client: above this value
-            a computer will be considered as unreachable.</entry>
+                        <entry><para>The parameter which limits a command's
+                        time lenght.</para><para>A command must take less than
+                        this value (in seconds), or being
+                        killed;</para><para>High values mean that the command
+                        will have more time to complete, thus may also stay
+                        blocked longer.</para><para>Only works for ASYNC
+                        commands.</para></entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, seconds</entry>
+                        <entry>int, seconds</entry>
 
-            <entry>2</entry>
-          </row>
+                        <entry>86400 (one day)</entry>
+                    </row>
 
-          <row>
-            <entry>max_probe_time</entry>
+                    <row>
+                        <entry>max_ping_time</entry>
 
-            <entry>Timeout when attempting to probe a client: above this value
-            a computer will be considered as without SSH agent
-            installed.</entry>
+                        <entry>Timeout when attempting to ping a
+                        client:<para>A ping is aborded if it takes more that
+                        this value (in seconds).</para><para>High values will
+                        minimize false-positives (aborded probe even if the
+                        client if obviously reachable).</para><para>Lower
+                        values will enhance interface reponse time (but lead
+                        to more false-positives).</para></entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, seconds</entry>
+                        <entry>int, seconds</entry>
 
-            <entry>5</entry>
-          </row>
+                        <entry>4 (seconds)</entry>
+                    </row>
 
-          <row>
-            <entry>ping_path</entry>
+                    <row>
+                        <entry>max_probe_time</entry>
 
-            <entry>Path to Pulse 2 PIng tool</entry>
+                        <entry>Timeout when attempting to probe a
+                        client:<para>A probe is aborded if it takes more that
+                        this value (in seconds).</para><para>High values will
+                        minimize false-positives (aborded probe even if the
+                        client if obviously reachable).</para><para>Lower
+                        values will enhance interface reponse time (but lead
+                        to more false-positives).</para><para>Please note that
+                        even if the client is not far (less than 10 ms), the
+                        probe may last a very long ime as sshd perform a
+                        reverse DNS query for each incoming connection, which
+                        may be problematic with a badly configured
+                        DNS.</para></entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>int, seconds</entry>
 
-            <entry>/usr/sbin/pulse2-ping</entry>
-          </row>
+                        <entry>20 (seconds)</entry>
+                    </row>
 
-          <row>
-            <entry>source_path</entry>
+                    <row>
+                        <entry>ping_path</entry>
 
-            <entry>Packages source path target path (used for upload
-            purpose).</entry>
+                        <entry>Path to Pulse 2 PIng tool</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>path</entry>
 
-            <entry>/var/lib/pulse2/packages</entry>
-          </row>
+                        <entry>/usr/sbin/pulse2-ping</entry>
+                    </row>
 
-          <row>
-            <entry>target_path</entry>
+                    <row>
+                        <entry>reboot_command</entry>
 
-            <entry>Client target path (used for upload purpose).</entry>
+                        <entry>The reboot command to use on a client, after a
+                        successful deployment.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/tmp</entry>
-          </row>
+                        <entry>/bin/shutdown.exe -f -r 1 || shutdown -r
+                        now</entry>
+                    </row>
 
-          <row>
-            <entry>temp_folder_prefix</entry>
+                    <row>
+                        <entry>source_path</entry>
 
-            <entry>During a deployment, if a folder has to be created, its
-            name will begin by this string.</entry>
+                        <entry>Packages source path target path (used for
+                        upload purpose).</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>path</entry>
 
-            <entry>MDVPLS</entry>
-          </row>
+                        <entry>/var/lib/pulse2/packages</entry>
+                    </row>
 
-          <row>
-            <entry>wrapper_max_exec_time</entry>
+                    <row>
+                        <entry>target_path</entry>
 
-            <entry>Default max exec time in seconds, older process are killed
-            using SIGKILL, only works in ASYNC mode</entry>
+                        <entry>Client target path (used for upload
+                        purpose).</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, in seconds</entry>
+                        <entry>path</entry>
 
-            <entry>0 ("no limit")</entry>
-          </row>
+                        <entry>/tmp</entry>
+                    </row>
 
-          <row>
-            <entry>wrapper_max_log_size</entry>
+                    <row>
+                        <entry>temp_folder_prefix</entry>
 
-            <entry>Cap generated logs to this value</entry>
+                        <entry>During a deployment, if a folder has to be
+                        created, its name will begin by this string.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, in bytes</entry>
+                        <entry>string</entry>
 
-            <entry>0 ("no limit")</entry>
-          </row>
+                        <entry>MDVPLS</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-          <row>
-            <entry>wrapper_path</entry>
+    <section>
+        <title>« daemon » section</title>
 
-            <entry>Pulse 2 launcher wrapper (ie "job launcher")
-            location.</entry>
+        <para>This section sets the pulse2-launchers-manager and
+        pulse2-launchers service run-time options and privileges.</para>
 
-            <entry>yes</entry>
+        <table>
+            <title>Available options for the "daemon" section</title>
 
-            <entry>path</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>/usr/sbin/pulse2-output-wrapper</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>Description</entry>
 
-  <section>
-    <title>« wrapper » section</title>
+                        <entry>Optional</entry>
 
-    <para>This section define the wrapper flags.</para>
+                        <entry>Type</entry>
 
-    <table>
-      <title>Available options for the "wrapper" section</title>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                <tbody>
+                    <row>
+                        <entry>group</entry>
 
-            <entry>Description</entry>
+                        <entry>The pulse2-launchers-manager and
+                        pulse2-launchers services run as this specified
+                        group.</entry>
 
-            <entry>Optional</entry>
+                        <entry>yes</entry>
 
-            <entry>Type</entry>
+                        <entry>group</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>root</entry>
+                    </row>
 
-        <tbody>
-          <row>
-            <entry>max_exec_time</entry>
+                    <row>
+                        <entry>pidfile</entry>
 
-            <entry>Default max exec time in seconds, older process are killed
-            using SIGKILL. Different from max_command_age as beeing handled by
-            the wrapper itself, so it also works for SYNC commandS.</entry>
+                        <entry>The launcher services PID, used by
+                        pulse2-launchers-manager to track the launchers
+                        services.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, in seconds</entry>
+                        <entry>path</entry>
 
-            <entry>21600 (6 hours)</entry>
-          </row>
+                        <entry>/var/run/pulse2</entry>
+                    </row>
 
-          <row>
-            <entry>max_log_size</entry>
+                    <row>
+                        <entry>umask</entry>
 
-            <entry>Cap generated logs to this value</entry>
+                        <entry>The pulse2-launchers-manager and
+                        pulse2-launchers services umask defines the right of
+                        the new files they create (log files for
+                        example).</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>int, in bytes</entry>
+                        <entry>octal</entry>
 
-            <entry>512000 (500 kB)</entry>
-          </row>
+                        <entry>0077</entry>
+                    </row>
 
-          <row>
-            <entry>path</entry>
+                    <row>
+                        <entry>user</entry>
 
-            <entry>Pulse 2 launcher wrapper (ie "job launcher")
-            location.</entry>
+                        <entry>The pulse2-launchers-manager and
+                        pulse2-launchers service run as this specified
+                        user.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>user</entry>
 
-            <entry>/usr/sbin/pulse2-output-wrapper</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>root</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« ssh » section</title>
+    <section>
+        <title>« wrapper » section</title>
 
-    <para>This section define global ssh (and scp) options.</para>
+        <para>This section define the wrapper behavior.</para>
 
-    <table>
-      <title>Available options for the "ssh" section</title>
+        <table>
+            <title>Available options for the "wrapper" section</title>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Type</entry>
+                        <entry>Type</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>default_key</entry>
+                <tbody>
+                    <row>
+                        <entry>max_exec_time</entry>
 
-            <entry>The default SSHv2 key to use, the config code will look for
-            an "ssh_&lt;default_key&gt;" entry in the config file.</entry>
+                        <entry>Default max exec time in seconds, older process
+                        are killed using SIGKILL. Different from
+                        max_command_age as beeing handled by the wrapper
+                        itself, so it also works for SYNC commandS.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>int, in seconds</entry>
 
-            <entry>default</entry>
-          </row>
+                        <entry>21600 (6 hours)</entry>
+                    </row>
 
-          <row>
-            <entry>forward_key</entry>
+                    <row>
+                        <entry>max_log_size</entry>
 
-            <entry>Should we perform key-forwarding (never, always, or let =
-            let the scheduler take its decision)</entry>
+                        <entry>Cap generated logs to this value</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>int, in bytes</entry>
 
-            <entry>let</entry>
-          </row>
+                        <entry>512000 (500 kB)</entry>
+                    </row>
 
-          <row>
-            <entry>scp_options</entry>
+                    <row>
+                        <entry>path</entry>
 
-            <entry>Options passed to OpenSCP binary (-o option).</entry>
+                        <entry>Pulse 2 launcher wrapper (ie "job launcher")
+                        location.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>list of space separated strings</entry>
+                        <entry>path</entry>
 
-            <entry>same as ssh_options</entry>
-          </row>
+                        <entry>/usr/sbin/pulse2-output-wrapper</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-          <row>
-            <entry>ssh_options</entry>
+    <section>
+        <title>« ssh » section</title>
 
-            <entry>Options passed to OpenSSH binary (-o option).</entry>
+        <para>This section define global ssh (and scp) options.</para>
 
-            <entry>yes</entry>
+        <table>
+            <title>Available options for the "ssh" section</title>
 
-            <entry>list of space separated strings</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>StrictHostKeyChecking=no Batchmode=yes
-            PasswordAuthentication=no ServerAliveInterval=10 CheckHostIP=no
-            ConnectTimeout=10</entry>
-          </row>
+                        <entry>Description</entry>
 
-          <row>
-            <entry>sshkey_default</entry>
+                        <entry>Optional</entry>
 
-            <entry>The "default" ssh key path.</entry>
+                        <entry>Type</entry>
 
-            <entry>yes</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>path</entry>
+                <tbody>
+                    <row>
+                        <entry>default_key</entry>
 
-            <entry>/root/.ssh/id_dsa</entry>
-          </row>
+                        <entry>The default SSHv2 key to use, the config code
+                        will look for an "ssh_&lt;default_key&gt;" entry in
+                        the config file.<para>ssh_* are ssh keys, * her names,
+                        f.ex. by using sshkey_default = /root/.ssh/id_dsa,
+                        /root/.ssh/id_dsa will be known as the 'default'
+                        key.</para></entry>
 
-          <row>
-            <entry>sshkey_XXXX</entry>
+                        <entry>yes</entry>
 
-            <entry>The "XXXX" ssh key path (when more than one key may be
-            used).</entry>
+                        <entry>string</entry>
 
-            <entry>yes</entry>
+                        <entry>default</entry>
+                    </row>
 
-            <entry>string</entry>
+                    <row>
+                        <entry>forward_key</entry>
 
-            <entry></entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>Should we perform key-forwarding (never,
+                        always, or let = let the scheduler take its
+                        decision)</entry>
 
-  <section>
-    <title>« daemon » section</title>
+                        <entry>yes</entry>
 
-    <para>This section sets the pulse2-launchers-manager and pulse2-launchers
-    service run-time options and privileges.</para>
+                        <entry>string</entry>
 
-    <table>
-      <title>Available options for the "daemon" section</title>
+                        <entry>let</entry>
+                    </row>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                    <row>
+                        <entry>scp_path</entry>
 
-            <entry>Description</entry>
+                        <entry>Path to the SCP binary</entry>
 
-            <entry>Optional</entry>
+                        <entry>yes</entry>
 
-            <entry>Type</entry>
+                        <entry>string</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>/usr/bin/scp</entry>
+                    </row>
 
-        <tbody>
-          <row>
-            <entry>group</entry>
+                    <row>
+                        <entry>ssh_options</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers services
-            run as this specified group.</entry>
+                        <entry>Options passed to OpenSSH binary (-o
+                        option).</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>group</entry>
+                        <entry>list of space separated strings</entry>
 
-            <entry>root</entry>
-          </row>
+                        <entry>LogLevel=ERROR UserKnownHostsFile=/dev/null
+                        StrictHostKeyChecking=no Batchmode=yes
+                        PasswordAuthentication=no ServerAliveInterval=10
+                        CheckHostIP=no ConnectTimeout=10</entry>
+                    </row>
 
-          <row>
-            <entry>pidfile</entry>
+                    <row>
+                        <entry>ssh_agent_path</entry>
 
-            <entry>The launcher services PID, used by pulse2-launchers-manager
-            to track the launchers services.</entry>
+                        <entry>Path to the SSH agent</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>string</entry>
 
-            <entry>/var/run/pulse2</entry>
-          </row>
+                        <entry>/usr/bin/ssh-agent</entry>
+                    </row>
 
-          <row>
-            <entry>umask</entry>
+                    <row>
+                        <entry>ssh_path</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers services
-            umask defines the right of the new files they create (log files
-            for example).</entry>
+                        <entry>Path to the SSH binary</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>octal</entry>
+                        <entry>string</entry>
 
-            <entry>0077</entry>
-          </row>
+                        <entry>/usr/bin/ssh</entry>
+                    </row>
 
-          <row>
-            <entry>user</entry>
+                    <row>
+                        <entry>sshkey_default</entry>
 
-            <entry>The pulse2-launchers-manager and pulse2-launchers service
-            run as this specified user.</entry>
+                        <entry>The "default" ssh key path.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>user</entry>
+                        <entry>path</entry>
 
-            <entry>root</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>/root/.ssh/id_dsa</entry>
+                    </row>
 
-  <section>
-    <title>« wol » section</title>
+                    <row>
+                        <entry>sshkey_XXXX</entry>
 
-    <para>This section sets the pulse2-launchers-manager and pulse2-launchers
-    service run-time options and privileges.</para>
+                        <entry>The "XXXX" ssh key path (when more than one key
+                        may be used).</entry>
 
-    <table>
-      <title>Available options for the "daemon" section</title>
+                        <entry>yes</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>string</entry>
 
-            <entry>Description</entry>
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>Optional</entry>
+    <section>
+        <title>«wget » section</title>
 
-            <entry>Type</entry>
+        <para>This section sets the pulse2-launchers wget options (for the
+        pull part of the push/pull mode)</para>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+        <table>
+            <title>Available options for the "wget" section</title>
 
-        <tbody>
-          <row>
-            <entry>wol_bcast</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>WOL IP BCast adress.</entry>
+                        <entry>Description</entry>
 
-            <entry>yes</entry>
+                        <entry>Optional</entry>
 
-            <entry>string</entry>
+                        <entry>Type</entry>
 
-            <entry>255.255.255.255</entry>
-          </row>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-          <row>
-            <entry>wol_path</entry>
+                <tbody>
+                    <row>
+                        <entry>check_certs</entry>
 
-            <entry>Pulse 2 scheduler awaker (via WOL "magic packet").</entry>
+                        <entry>Put the check certificate flag.</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>path</entry>
+                        <entry>boolean</entry>
 
-            <entry>/usr/sbin/pulse2-wol</entry>
-          </row>
+                        <entry>False</entry>
+                    </row>
 
-          <row>
-            <entry>wol_port</entry>
+                    <row>
+                        <entry>resume</entry>
 
-            <entry>WOL TCP port.</entry>
+                        <entry>Attempt to resume a partialy completed
+                        transfert</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>string</entry>
+                        <entry>boolean</entry>
 
-            <entry>40000</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>True</entry>
+                    </row>
 
-  <section>
-    <title>«wget » section</title>
+                    <row>
+                        <entry>wget_options</entry>
 
-    <para>This section sets the pulse2-launchers wget options (for the pull
-    part of the push/pull mode)</para>
+                        <entry>Options passed to wget binary.</entry>
 
-    <table>
-      <title>Available options for the "wget" section</title>
+                        <entry>yes</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>string</entry>
 
-            <entry>Description</entry>
+                        <entry>""</entry>
+                    </row>
 
-            <entry>Optional</entry>
+                    <row>
+                        <entry>wget_path</entry>
 
-            <entry>Type</entry>
+                        <entry>wget binary path (on client)</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>yes</entry>
 
-        <tbody>
-          <row>
-            <entry>wget_options</entry>
+                        <entry>string</entry>
 
-            <entry>Options passed to wget binary.</entry>
+                        <entry>/usr/bin/wget</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>yes</entry>
+    <section>
+        <title>«rsync » section</title>
 
-            <entry>string</entry>
+        <para>This section sets the pulse2-launchers rsync options (for the
+        push mode)</para>
 
-            <entry></entry>
-          </row>
+        <table>
+            <title>Available options for the "rsync" section</title>
 
-          <row>
-            <entry>check_certs</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Put the check certificate flag.</entry>
+                        <entry>Description</entry>
 
-            <entry>yes</entry>
+                        <entry>Optional</entry>
 
-            <entry>boolean</entry>
+                        <entry>Type</entry>
 
-            <entry>False</entry>
-          </row>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-          <row>
-            <entry>resume</entry>
+                <tbody>
+                    <row>
+                        <entry>resume</entry>
 
-            <entry>Attempt to resume a partial completed transfert</entry>
+                        <entry>Attempt to resume a partial completed
+                        transfert</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>boolean</entry>
+                        <entry>boolean</entry>
 
-            <entry>True</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>True</entry>
+                    </row>
 
-  <section>
-    <title>«rsync » section</title>
+                    <row>
+                        <entry>rsync_path</entry>
 
-    <para>This section sets the pulse2-launchers rsync options (for the push
-    mode)</para>
+                        <entry>rsync binary path (on server)</entry>
 
-    <table>
-      <title>Available options for the "wget" section</title>
+                        <entry>yes</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>string</entry>
 
-            <entry>Description</entry>
+                        <entry>/usr/bin/rsync</entry>
+                    </row>
 
-            <entry>Optional</entry>
+                    <row>
+                        <entry>set_executable</entry>
 
-            <entry>Type</entry>
+                        <entry>Do we force +/-X on uploaded files
+                        (yes/no/keep). See below.</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>yes</entry>
 
-        <tbody>
-          <row>
-            <entry>resume</entry>
+                        <entry>string</entry>
 
-            <entry>Attempt to resume a partial completed transfert</entry>
+                        <entry>yes</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>set_access</entry>
 
-            <entry>boolean</entry>
+                        <entry>Do we enforce permissions of uploaded files
+                        (private/restricted/public). See below.</entry>
 
-            <entry>True</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>yes</entry>
 
-  <section>
-    <title>« scheduler_XXX » section</title>
+                        <entry>string</entry>
 
-    <para>This section define how the launchers may reach their referent
-    scheduler.</para>
+                        <entry>private</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
 
-    <table>
-      <title>Available options for the "scheduler" section</title>
+        <table>
+            <title>uploaded file permissions</title>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <tbody>
+                    <row>
+                        <entry>set_access \ set_executable</entry>
 
-            <entry>Description</entry>
+                        <entry>yes</entry>
 
-            <entry>Optional</entry>
+                        <entry>no</entry>
 
-            <entry>Type</entry>
+                        <entry>keep</entry>
+                    </row>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                    <row>
+                        <entry>private</entry>
 
-        <tbody>
-          <row>
-            <entry>awake_time</entry>
+                        <entry> u=rwx,g=,o=</entry>
 
-            <entry>The launcher will periodicaly awake (for exemple to send
-            results to is scheduler), with this key a specific periodicity can
-            be given. Field unit is the "second".</entry>
+                        <entry> u=rw,g=,o=</entry>
 
-            <entry>yes</entry>
+                        <entry>u=rwX,g=,o=</entry>
+                    </row>
 
-            <entry>int</entry>
+                    <row>
+                        <entry>restricted</entry>
 
-            <entry>600</entry>
-          </row>
+                        <entry>u=rwx,g=rx,o=</entry>
 
-          <row>
-            <entry>defer_results</entry>
+                        <entry>u=rw,g=r,o=</entry>
 
-            <entry>In async mode, whenever immedialetly send results to
-            referent scheduler upon job completion or wait for being waked up
-            (see above)</entry>
+                        <entry>u=rwX,g=rX,o=</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>public</entry>
 
-            <entry>string</entry>
+                        <entry>u=rwx,g=rwx,o=rx</entry>
 
-            <entry>no</entry>
-          </row>
+                        <entry>u=rw,g=rw,o=r</entry>
 
-          <row>
-            <entry>enablessl</entry>
+                        <entry>u=rwX,g=rwX,o=rX</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>Flag that tells if SSL should be used to connect to the
-            scheduler</entry>
+    <section>
+        <title>« wol » section</title>
 
-            <entry>yes</entry>
+        <para>This section sets the wol feature handling.</para>
 
-            <entry>boolean</entry>
+        <table>
+            <title>Available options for the "wol" section</title>
 
-            <entry>1</entry>
-          </row>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-          <row>
-            <entry>host</entry>
+                        <entry>Description</entry>
 
-            <entry>The referent scheduler IP address</entry>
+                        <entry>Optional</entry>
 
-            <entry>yes</entry>
+                        <entry>Type</entry>
 
-            <entry>string</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>127.0.0.1</entry>
-          </row>
+                <tbody>
+                    <row>
+                        <entry>wol_bcast</entry>
 
-          <row>
-            <entry>password</entry>
+                        <entry>WOL IP BCast adress.</entry>
 
-            <entry>The password to use when authenticating vs our referent
-            scheduler</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>string</entry>
 
-            <entry>string or base64</entry>
+                        <entry>255.255.255.255</entry>
+                    </row>
 
-            <entry>password</entry>
-          </row>
+                    <row>
+                        <entry>wol_path</entry>
 
-          <row>
-            <entry>port</entry>
+                        <entry>Pulse 2 scheduler awaker (via WOL "magic
+                        packet").</entry>
 
-            <entry>The referent scheduler TCP port</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>path</entry>
 
-            <entry>string</entry>
+                        <entry>/usr/sbin/pulse2-wol</entry>
+                    </row>
 
-            <entry>8000</entry>
-          </row>
+                    <row>
+                        <entry>wol_port</entry>
 
-          <row>
-            <entry>username</entry>
+                        <entry>WOL TCP port.</entry>
 
-            <entry>The login name to use when authenticating vs our referent
-            scheduler</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>string</entry>
 
-            <entry>string</entry>
+                        <entry>40000</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>username</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+    <section>
+        <title>« tcp_sproxy » section</title>
 
-  <section>
-    <title>« launcher_XXX » section</title>
+        <para>This section sets the tcp_sproxy feature handling, mainly used
+        by the VNC feature.</para>
 
-    <para>This section define specific options for all launchers on the
-    server.</para>
+        <table>
+            <title>Available options for the "tcp_sproxy" section</title>
 
-    <table>
-      <title>Available options for the "launcher_XXX" section</title>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-      <tgroup cols="5">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+                        <entry>Description</entry>
 
-            <entry>Description</entry>
+                        <entry>Optional</entry>
 
-            <entry>Optional</entry>
+                        <entry>Type</entry>
 
-            <entry>Type</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                <tbody>
+                    <row>
+                        <entry>tcp_sproxy_path</entry>
 
-        <tbody>
-          <row>
-            <entry>bind</entry>
+                        <entry>Pulse 2 TCP Secure Proxy (woot !) path</entry>
 
-            <entry>The launcher binding IP address.</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>path</entry>
 
-            <entry>string</entry>
+                        <entry>/usr/sbin/pulse2-tcp-sproxy</entry>
+                    </row>
 
-            <entry>127.0.0.1</entry>
-          </row>
+                    <row>
+                        <entry>tcp_sproxy_host</entry>
 
-          <row>
-            <entry>cacert</entry>
+                        <entry>Fill-in the following option if you plan to use
+                        VNC, it will be the "external" IP from the VNC client
+                        point-of-view</entry>
 
-            <entry>path to the certificate file describing the certificate
-            authority of the SSL server</entry>
+                        <entry>yes</entry>
 
-            <entry>no if enablessl is set</entry>
+                        <entry>string</entry>
 
-            <entry>path</entry>
+                        <entry>""</entry>
+                    </row>
 
-            <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
-          </row>
+                    <row>
+                        <entry>tcp_sproxy_port_range</entry>
 
-          <row>
-            <entry>certfile</entry>
+                        <entry>The proxy uses a port range to establish proxy
+                        to the client: 2 ports used per connection</entry>
 
-            <entry>deprecated (see cacert)</entry>
+                        <entry>yes</entry>
 
-            <entry></entry>
+                        <entry>int range</entry>
 
-            <entry></entry>
+                        <entry>8100-8200</entry>
+                    </row>
 
-            <entry></entry>
-          </row>
+                    <row>
+                        <entry>tcp_sproxy_establish_delay</entry>
 
-          <row>
-            <entry>enablessl</entry>
+                        <entry>The initial ssh connection to the client
+                        timeout</entry>
 
-            <entry>SSL mode support</entry>
+                        <entry>yes</entry>
 
-            <entry>no</entry>
+                        <entry>seconds</entry>
 
-            <entry>boolean</entry>
+                        <entry>20</entry>
+                    </row>
 
-            <entry>1</entry>
-          </row>
+                    <row>
+                        <entry>tcp_sproxy_connect_delay</entry>
 
-          <row>
-            <entry>localcert</entry>
+                        <entry>The proxy allow the initial connection to be
+                        established within N seconds (ie. a client as N
+                        seconds to connect to the proxy after a port has bee
+                        found, then the connection is dropped and further
+                        connections will be impossible</entry>
 
-            <entry>path to the SSL serverprivate certificate</entry>
+                        <entry>yes</entry>
 
-            <entry>no if enablessl is set</entry>
+                        <entry>seconds</entry>
 
-            <entry>path</entry>
+                        <entry>60</entry>
+                    </row>
 
-            <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
-          </row>
+                    <row>
+                        <entry>tcp_sproxy_session_lenght</entry>
 
-          <row>
-            <entry>password</entry>
+                        <entry>The number of seconds a connection will stay
+                        open after the initial handshake, conenction will be
+                        closed after this delay even if still in use</entry>
 
-            <entry>The password to use when authenticating vs this
-            launcher</entry>
+                        <entry>yes</entry>
 
-            <entry>yes</entry>
+                        <entry>seconds</entry>
 
-            <entry>string or base64</entry>
+                        <entry>3600 (one hour)</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-            <entry>password</entry>
-          </row>
+    <section>
+        <title>« scheduler_XXX » section</title>
 
-          <row>
-            <entry>port</entry>
+        <para>This section define how the launchers may reach their referent
+        scheduler.</para>
 
-            <entry>The launcher binding TCP port.</entry>
+        <table>
+            <title>Available options for the "scheduler" section</title>
 
-            <entry>no</entry>
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>int</entry>
+                        <entry>Description</entry>
 
-            <entry></entry>
-          </row>
+                        <entry>Optional</entry>
 
-          <row>
-            <entry>privkey</entry>
+                        <entry>Type</entry>
 
-            <entry>deprecated (see localcert)</entry>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-            <entry></entry>
+                <tbody>
+                    <row>
+                        <entry>awake_incertitude_factor</entry>
 
-            <entry></entry>
+                        <entry>As our awake_time can be the same that the
+                        scheduler awake_time, add a little randomness
+                        here<para>default value is .2, ie +/- 20
+                        %</para><para>For example we will awake every 10
+                        minutes, more or less 2 minutes</para><para>Values
+                        lower than 0 or greater than .5 are
+                        rejected</para><para>Use this if your scheduler has
+                        the same awake time and busy each time we have to send
+                        our results</para></entry>
 
-            <entry></entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>slots</entry>
+                        <entry>float</entry>
 
-            <entry>The number of available slots (ie. maximum number of
-            concurrent jobs)</entry>
+                        <entry>.2</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>awake_time</entry>
 
-            <entry>int</entry>
+                        <entry>The launcher will periodicaly awake (for
+                        exemple to send results to is scheduler), with this
+                        key a specific periodicity can be given. Field unit is
+                        the "second".</entry>
 
-            <entry>300</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>scheduler</entry>
+                        <entry>int</entry>
 
-            <entry>The referent scheduler</entry>
+                        <entry>600</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>defer_results</entry>
 
-            <entry>string</entry>
+                        <entry>In async mode, whenever immedialetly send
+                        results to referent scheduler upon job completion or
+                        wait for being waked up (see above)</entry>
 
-            <entry>the first defined scheduler</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>username</entry>
+                        <entry>string</entry>
 
-            <entry>The login name to use when authenticating vs this
-            launcher</entry>
+                        <entry>no</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>enablessl</entry>
 
-            <entry>string</entry>
+                        <entry>Flag that tells if SSL should be used to
+                        connect to the scheduler</entry>
 
-            <entry>username</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>verifypeer</entry>
+                        <entry>boolean</entry>
 
-            <entry>Check that our parent scheduler present a signed
-            certificate</entry>
+                        <entry>True</entry>
+                    </row>
 
-            <entry>no if enablessl is set</entry>
+                    <row>
+                        <entry>host</entry>
 
-            <entry>boolean</entry>
+                        <entry>The referent scheduler IP address</entry>
 
-            <entry>False</entry>
-          </row>
+                        <entry>yes</entry>
 
-          <row>
-            <entry>logconffile</entry>
+                        <entry>string</entry>
 
-            <entry>path to the file containing the logging configuration of this launcher (the format of this file is described in the <ulink url="http://docs.python.org/library/logging.html#configuration-file-format">Python documentation</ulink>. If it is not set, the default logging configuration is read from the launchers.ini file.</entry>
+                        <entry>127.0.0.1</entry>
+                    </row>
 
-            <entry>yes</entry>
+                    <row>
+                        <entry>password</entry>
 
-            <entry>string</entry>
+                        <entry>The password to use when authenticating vs our
+                        referent scheduler</entry>
 
-            <entry></entry>
-          </row>
+                        <entry>yes</entry>
 
-	  
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>string or base64</entry>
+
+                        <entry>password</entry>
+                    </row>
+
+                    <row>
+                        <entry>port</entry>
+
+                        <entry>The referent scheduler TCP port</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry>8000</entry>
+                    </row>
+
+                    <row>
+                        <entry>username</entry>
+
+                        <entry>The login name to use when authenticating vs
+                        our referent scheduler</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry>username</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+
+    <section>
+        <title>« launcher_XXX » section</title>
+
+        <para>This section define specific options for all launchers on the
+        server.</para>
+
+        <table>
+            <title>Available options for the "launcher_XXX" section</title>
+
+            <tgroup cols="5">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
+
+                        <entry>Description</entry>
+
+                        <entry>Optional</entry>
+
+                        <entry>Type</entry>
+
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
+
+                <tbody>
+                    <row>
+                        <entry>bind</entry>
+
+                        <entry>The launcher binding IP address.</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry>127.0.0.1</entry>
+                    </row>
+
+                    <row>
+                        <entry>cacert</entry>
+
+                        <entry>path to the certificate file describing the
+                        certificate authority of the SSL server</entry>
+
+                        <entry><emphasis role="bold">no if enablessl is
+                        set</emphasis></entry>
+
+                        <entry>path</entry>
+
+                        <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
+                    </row>
+
+                    <row>
+                        <entry>certfile</entry>
+
+                        <entry>deprecated (see cacert)</entry>
+
+                        <entry></entry>
+
+                        <entry></entry>
+
+                        <entry></entry>
+                    </row>
+
+                    <row>
+                        <entry>enablessl</entry>
+
+                        <entry>SSL mode support</entry>
+
+                        <entry><emphasis role="bold">no</emphasis></entry>
+
+                        <entry>boolean</entry>
+
+                        <entry>1</entry>
+                    </row>
+
+                    <row>
+                        <entry>localcert</entry>
+
+                        <entry>path to the SSL serverprivate
+                        certificate</entry>
+
+                        <entry><emphasis role="bold">no if enablessl is
+                        set</emphasis></entry>
+
+                        <entry>path</entry>
+
+                        <entry>/etc/mmc/pulse2/scheduler/keys/privkey.pem</entry>
+                    </row>
+
+                    <row>
+                        <entry>password</entry>
+
+                        <entry>The password to use when authenticating vs this
+                        launcher</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string or base64</entry>
+
+                        <entry>password</entry>
+                    </row>
+
+                    <row>
+                        <entry>port</entry>
+
+                        <entry>The launcher binding TCP port.</entry>
+
+                        <entry><emphasis role="bold">no</emphasis></entry>
+
+                        <entry>int</entry>
+
+                        <entry></entry>
+                    </row>
+
+                    <row>
+                        <entry>privkey</entry>
+
+                        <entry>deprecated (see localcert)</entry>
+
+                        <entry></entry>
+
+                        <entry></entry>
+
+                        <entry></entry>
+                    </row>
+
+                    <row>
+                        <entry>slots</entry>
+
+                        <entry>The number of available slots (ie. maximum
+                        number of concurrent jobs)</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>int</entry>
+
+                        <entry>300</entry>
+                    </row>
+
+                    <row>
+                        <entry>scheduler</entry>
+
+                        <entry>The referent scheduler</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry>the first defined scheduler</entry>
+                    </row>
+
+                    <row>
+                        <entry>username</entry>
+
+                        <entry>The login name to use when authenticating vs
+                        this launcher</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry>username</entry>
+                    </row>
+
+                    <row>
+                        <entry>verifypeer</entry>
+
+                        <entry>Check that our parent scheduler present a
+                        signed certificate</entry>
+
+                        <entry><emphasis role="bold">no if enablessl is
+                        set</emphasis></entry>
+
+                        <entry>boolean</entry>
+
+                        <entry>False</entry>
+                    </row>
+
+                    <row>
+                        <entry>logconffile</entry>
+
+                        <entry>path to the file containing the logging
+                        configuration of this launcher (the format of this
+                        file is described in the <ulink
+                        url="http://docs.python.org/library/logging.html#configuration-file-format">Python
+                        documentation</ulink>. If it is not set, the default
+                        logging configuration is read from the launchers.ini
+                        file.</entry>
+
+                        <entry>yes</entry>
+
+                        <entry>string</entry>
+
+                        <entry></entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </article>
