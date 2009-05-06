@@ -2135,7 +2135,7 @@
             <dia:string>#DB Dyngroup v2
 $Rev$
 $Author$
-$Daye$#</dia:string>
+$Date$#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="monospace" style="0" name="Courier"/>
