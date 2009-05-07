@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -123,6 +123,12 @@ class LauncherConfig(pulse2.utils.Singleton):
     # [launcher_xxx] section
     launchers = {
     }
+
+    ## initialize additionnal vars ##
+
+    # base idea: rsync is NOT available
+    is_rsync_available = False
+    is_rsync_limited = True
 
     def setoption(self, section, key, attrib, type = 'str'):
         if type == 'str':
