@@ -488,10 +488,14 @@ class DyngroupDatabase(DatabaseHelper):
         user_id = self.__getOrCreateUser(ctx)
         connection = self.getDbConnection()
         trans = connection.begin()
+        # get machines to possibly delete 
+        session = create_session()
+        to_delete = map(lambda x: x.id, session.query(Machines).select_from(self.machines.join(self.results)).filter(self.results.c.FK_group == id))
+        session.close()
         # Delete the previous results for this group in the Results table
         connection.execute(self.results.delete(self.results.c.FK_group == id))
         # Update the Machines table to remove ghost records
-        self.__updateMachinesTable(connection)
+        self.__updateMachinesTable(connection, to_delete)
         # Delete the group from the Groups table
         connection.execute(self.groups.delete(self.groups.c.id == id))
         trans.commit()
