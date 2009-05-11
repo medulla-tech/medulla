@@ -25,7 +25,7 @@
 
         <revhistory>
             <revision revisionflag="off">
-                <revnumber>1.1.0</revnumber>
+                <revnumber>2</revnumber>
 
                 <date>2008-10-06</date>
 
@@ -37,7 +37,7 @@
             </revision>
 
             <revision revisionflag="off">
-                <revnumber>1.0.0</revnumber>
+                <revnumber>1</revnumber>
 
                 <date>2008-03-05</date>
 
