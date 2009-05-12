@@ -2,830 +2,581 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-    <title>MSC database documentation</title>
-
-    <articleinfo>
-        <author>
-            <firstname>Nicolas</firstname>
-
-            <surname>Rueff</surname>
-
-            <email>nrueff@mandriva.com</email>
-        </author>
-
-        <affiliation>
-            <orgname>Mandriva</orgname>
-        </affiliation>
-
-        <copyright>
-            <year>2008-2009 Mandriva</year>
-        </copyright>
-
-        <legalnotice>
-            <para>my licence here</para>
-        </legalnotice>
-
-        <revhistory>
-            <revision revisionflag="off">
-                <revnumber>15</revnumber>
-
-                <date>2008-10-06</date>
-
-                <authorinitials>NN</authorinitials>
-
-                <revdescription>
-                    <para>Documentation updated for schema v.15</para>
-                </revdescription>
-            </revision>
-        </revhistory>
-
-        <abstract>
-            <para>Documentation for Pulse2 MSC schema.</para>
-        </abstract>
-
-        <releaseinfo>$Id: pulse2-scheduler-configuration.xml 116 2009-05-05
-        08:38:07Z nrueff $</releaseinfo>
-    </articleinfo>
-
-    <section>
-        <title>The MSC database design</title>
-
-        <screenshot>
-            <screeninfo>The MSC database design</screeninfo>
-
-            <mediaobject>
-                <imageobject>
-                    <imagedata fileref="database_schema.png" />
-                </imageobject>
-            </mediaobject>
-        </screenshot>
-    </section>
-
-    <section>
-        <title>The "commands" table</title>
-
-        <para>This table holds a whole command, one command per line.</para>
-
-        <variablelist>
-            <varlistentry>
-                <term>id</term>
-
-                <listitem>
-                    <para>The table primary key</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>state</term>
-
-                <listitem>
-                    <para>Represents whenever a command is archived (or not),
-                    not yet used,</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>creation_date</term>
-
-                <listitem>
-                    <para>The command date creation</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>start_file</term>
-
-                <listitem>
-                    <para>The command to launch to start installation of the
-                    package</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>parameters</term>
-
-                <listitem>
-                    <para>The command line switches</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>start_script</term>
-
-                <listitem>
-                    <para>Do we run command line on client, mainly used for
-                    packages debug purpose</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>clean_on_success</term>
-
-                <listitem>
-                    <para>Do we erase copied files after a successful run,
-                    mainly used for packages debug purpose</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>files</term>
-
-                <listitem>
-                    <para>The list of files for the package, with MD5 control
-                    sums</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>start_date</term>
-
-                <listitem>
-                    <para>Date from which we may run our command</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>end_date</term>
-
-                <listitem>
-                    <para>Date until which we may run our command</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>connect_as</term>
-
-                <listitem>
-                    <para>Login name used to connect our client</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>creator</term>
-
-                <listitem>
-                    <para>Holds the command initiator name</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>dispatched</term>
-
-                <listitem>
-                    <para>Tell if the command has been field into relevant
-                    computers</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>title</term>
-
-                <listitem>
-                    <para>The command title</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>do_inventory</term>
-
-                <listitem>
-                    <para>Whether to start an inventory command on the client
-                    once the command has suceeded</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>do_wol</term>
-
-                <listitem>
-                    <para>Whether to perform a Wake On Lan (WOL) on the client
-                    before attempting to connect to it</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>next_connection_delay</term>
-
-                <listitem>
-                    <para>Interval between two connection attempts</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>max_connection_attempt</term>
-
-                <listitem>
-                    <para>How many time do we try to perform a command before
-                    giving up</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>pre_command_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>post_command_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>pre_run_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>post_run_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>on_success_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>on_failure_hook</term>
-
-                <listitem>
-                    <para>?</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>maxbw</term>
-
-                <listitem>
-                    <para>When we have something to send to the client, do not
-                    go over this BW rate (b/s), default is 0</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>deployment_intervals</term>
-
-                <listitem>
-                    <para>The interval of time between two deployment
-                    attempts</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>do_reboot</term>
-
-                <listitem>
-                    <para>Whether to reboot the machine after the command
-                    succeeded</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>do_halt</term>
-
-                <listitem>
-                    <para>Whether to halt the machine after the command
-                    succeeded</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>fk_bundle</term>
-
-                <listitem>
-                    <para>The Bundle ID the command belongs to</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>order_in_bundle</term>
-
-                <listitem>
-                    <para>The command's order inside its bundle</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>package_id</term>
-
-                <listitem>
-                    <para>The identifier of the package deployed by the
-                    command, or NULL in case the command is a quick
-                    action</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>proxy_mode</term>
-
-                <listitem>
-                    <para>used to store the commande proxy mode (can be none,
-                    split, queue)</para>
-                </listitem>
-            </varlistentry>
-        </variablelist>
-    </section>
-
-    <section>
-        <title>The "commands_on_host" table</title>
-
-        <para>This table contains the running status of a command for a
-        particular host.</para>
-
-        <para>It is linked to the "commands" table using fk_commands as
-        constraint.</para>
-
-        <para>It is linked to the "target" table using fk_target as
-        constraint.</para>
-
-        <variablelist>
-            <varlistentry>
-                <term>id</term>
-
-                <listitem>
-                    <para>The table primary key</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>fk_commands</term>
-
-                <listitem>
-                    <para>A FK to the commands table</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>host</term>
-
-                <listitem>
-                    <para>The target host to run the command on.</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>start_date</term>
-
-                <listitem>
-                    <para>The command **effective** start date (??)</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>end_date</term>
-
-                <listitem>
-                    <para>The command **effective** end date (??)</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>current_state</term>
-
-                <listitem>
-                    <para>Used to hold our command status on this
-                    client</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>stage</term>
-
-                <listitem>
-                    <para>Another representaion os the command state, used by
-                    the interface</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>awoken</term>
-
-                <listitem>
-                    <para>Tell if we already did something in WOL stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>uploaded</term>
-
-                <listitem>
-                    <para>Tell if we already did something in upload
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>executed</term>
-
-                <listitem>
-                    <para>Tell if we already did something in execution
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>deleted</term>
-
-                <listitem>
-                    <para>Tell if we already did something in deletion
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>inventoried</term>
-
-                <listitem>
-                    <para>Tell if we already did something in inventory
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>rebooted</term>
-
-                <listitem>
-                    <para>Tell if we already did something in reboot
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>halted</term>
-
-                <listitem>
-                    <para>Tell if we already did something in halt
-                    stage</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>next_launch_date</term>
-
-                <listitem>
-                    <para>If for any reason the command has been postponed,
-                    the command may be run from this time</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>attempts_left</term>
-
-                <listitem>
-                    <para>The amount of tries left</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>next_attempt_date_time</term>
-
-                <listitem>
-                    <para>A command can't be scheduled before this
-                    timestamp</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>current_launcher</term>
-
-                <listitem>
-                    <para>The in-charge launcher</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>fk_target</term>
-
-                <listitem>
-                    <para>A foreign key to the "target" table</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>scheduler</term>
-
-                <listitem>
-                    <para>The scheduler in charge of this command</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>last_wol_attempt</term>
-
-                <listitem>
-                    <para>Keep track of when the last WOL impulsion was
-                    done</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>fk_use_as_proxy</term>
-
-                <listitem>
-                    <para>A (self) FK to the commands_on_host rows used as
-                    proxy</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>order_in_proxy</term>
-
-                <listitem>
-                    <para>Describe when activate this command_on_host as
-                    proxy</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>max_clients_per_proxy</term>
-
-                <listitem>
-                    <para>If this command_on_host is becoming a proxy, store
-                    how much max clients it may serve</para>
-                </listitem>
-            </varlistentry>
-        </variablelist>
-    </section>
-
-    <section>
-        <title>The "commands_history" table</title>
-
-        <para>This table contains the stdout/stderr of each stage of a command
-        for a particular host.</para>
-
-        <para>It is linked to the "commands_on_host" table using
-        fk_commands_on_host as constraint.</para>
-
-        <variablelist>
-            <varlistentry>
-                <term>id</term>
-
-                <listitem>
-                    <para>The table primary key</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>fk_commands_on_host</term>
-
-                <listitem>
-                    <para>A FK to the commands_on_host table</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>date</term>
-
-                <listitem>
-                    <para>The time at which the command was run</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>stderr</term>
-
-                <listitem>
-                    <para>The command error (mostly a Python TB)</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>stdout</term>
-
-                <listitem>
-                    <para>The command output</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>state</term>
-
-                <listitem>
-                    <para>The command state</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>error code</term>
-
-                <listitem>
-                    <para>The command error code (if relevant)</para>
-                </listitem>
-            </varlistentry>
-        </variablelist>
-    </section>
-
-    <section>
-        <title>The "target" table</title>
-
-        <para>This table contains directions to deploy a package.</para>
-
-        <variablelist>
-            <varlistentry>
-                <term>id</term>
-
-                <listitem>
-                    <para>The table primary key</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_name</term>
-
-                <listitem>
-                    <para>the target fqdn</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>mirrors</term>
-
-                <listitem>
-                    <para>the packages location. This field must be formatted
-                    as follow:</para>
-
-                    <itemizedlist>
-                        <listitem>
-                            <para>several tockens, separator is '<emphasis
-                            role="bold">||</emphasis>' (<emphasis
-                            role="bold">double-pipe</emphasis>)</para>
-                        </listitem>
-
-                        <listitem>
-                            <para>tockens are URI formatted like this:</para>
-
-                            <para>&lt;protocol&gt;://&lt;login&gt;:&lt;pass&gt;@&lt;server&gt;&lt;path&gt;</para>
-
-                            <para>Protocol may be one of the following: ssh,
-                            http, ftp, smb, file. Each protocol corresponds to a
-                            different way to gather a package:</para>
-
-                            <variablelist>
-                                <varlistentry>
-                                    <term>HTTP</term>
-
-                                    <listitem>
-                                        <para>Package is pulled by the client (using for
-                                        exemple wget). the URI represents exacty the root
-                                        place from where to download package
-                                        components.</para>
-                                    </listitem>
-                                </varlistentry>
-
-                                <varlistentry>
-                                    <term>FTP</term>
-
-                                    <listitem>
-                                        <para>Same as HTTP.</para>
-                                    </listitem>
-                                </varlistentry>
-
-                                <varlistentry>
-                                    <term>SSH</term>
-
-                                    <listitem>
-                                        <para>Same as HTTP, using scp to dowload components.
-                                        Password unsupported.</para>
-                                    </listitem>
-                                </varlistentry>
-
-                                <varlistentry>
-                                    <term>SMB</term>
-
-                                    <listitem>
-                                        <para>Same as HTTP, using SAMBA (CIFS) protocol.
-                                        Currently unsupported.</para>
-                                    </listitem>
-                                </varlistentry>
-
-                                <varlistentry>
-                                    <term>FILE</term>
-
-                                    <listitem>
-                                        <para>Package is pushed on the client by the server,
-                                        using scp. In this case, the rightmost part of the
-                                        URI represent the full package root path <emphasis
-                                        role="bold">on the server</emphasis>.</para>
-                                    </listitem>
-                                </varlistentry>
-                            </variablelist>
-                        </listitem>
-                    </itemizedlist>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>id_group</term>
-
-                <listitem>
-                    <para>Commands may be grouped using some criteria (IP
-                    adress, ...), this field holds their group id</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>scheduler</term>
-
-                <listitem>
-                    <para>The scheduler for this target</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_uuid</term>
-
-                <listitem>
-                    <para>The target UUID</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_ipaddr</term>
-
-                <listitem>
-                    <para>The target IP adresses, with '||' as separator, the
-                    first one beeing the most relevant</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_macaddr</term>
-
-                <listitem>
-                    <para>The target MAC adresses, with '||' as separator,
-                    used to perform WOL</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_bcast</term>
-
-                <listitem>
-                    <para>The target's broadcast IP, if relevant</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>target_network</term>
-
-                <listitem>
-                    <para>The target's netmask, if relevant</para>
-                </listitem>
-            </varlistentry>
-        </variablelist>
-    </section>
-
-    <section>
-        <title>The "bundle" table</title>
-
-        <para>This table holds Bundle (sets of commands) IDs.</para>
-
-        <variablelist>
-            <varlistentry>
-                <term>id</term>
-
-                <listitem>
-                    <para>The table's primary key.</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>title</term>
-
-                <listitem>
-                    <para>The bundle's title</para>
-                </listitem>
-            </varlistentry>
-
-            <varlistentry>
-                <term>do_reboot</term>
-
-                <listitem>
-                    <para>Whether the target should be rebooted once the
-                    bundle has been deployed</para>
-                </listitem>
-            </varlistentry>
-        </variablelist>
-    </section>
-
-    <section>
-        <title>The "version" table</title>
-
-        <para>Used to hold the database version, in the table Number.</para>
-    </section>
+  <title>MSC database documentation</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+      <surname>Rueff</surname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2008-2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para>my licence here</para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>15</revnumber>
+        <date>2008-10-06</date>
+        <authorinitials>NN</authorinitials>
+        <revdescription>
+          <para>Documentation updated for schema v.15</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>Documentation for Pulse2 MSC schema.</para>
+    </abstract>
+    <releaseinfo>$Id$</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>The MSC database design</title>
+    <screenshot>
+      <screeninfo>The MSC database design</screeninfo>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="database_schema.png" />
+        </imageobject>
+      </mediaobject>
+    </screenshot>
+  </section>
+  <section>
+    <title>The "commands" table</title>
+    <para>This table holds a whole command, one command per line.</para>
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>state</term>
+        <listitem>
+          <para>Represents whenever a command is archived (or not), not yet used,</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>creation_date</term>
+        <listitem>
+          <para>The command date creation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>start_file</term>
+        <listitem>
+          <para>The command to launch to start installation of the package</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>parameters</term>
+        <listitem>
+          <para>The command line switches</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>start_script</term>
+        <listitem>
+          <para>Do we run command line on client, mainly used for packages debug purpose</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>clean_on_success</term>
+        <listitem>
+          <para>Do we erase copied files after a successful run, mainly used for packages debug purpose</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>files</term>
+        <listitem>
+          <para>The list of files for the package, with MD5 control sums</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>start_date</term>
+        <listitem>
+          <para>Date from which we may run our command</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>end_date</term>
+        <listitem>
+          <para>Date until which we may run our command</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>connect_as</term>
+        <listitem>
+          <para>Login name used to connect our client</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>creator</term>
+        <listitem>
+          <para>Holds the command initiator name</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>dispatched</term>
+        <listitem>
+          <para>Tell if the command has been field into relevant computers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>title</term>
+        <listitem>
+          <para>The command title</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>do_inventory</term>
+        <listitem>
+          <para>Whether to start an inventory command on the client once the command has suceeded</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>do_wol</term>
+        <listitem>
+          <para>Whether to perform a Wake On Lan (WOL) on the client before attempting to connect to it</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>next_connection_delay</term>
+        <listitem>
+          <para>Interval between two connection attempts</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>max_connection_attempt</term>
+        <listitem>
+          <para>How many time do we try to perform a command before giving up</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>pre_command_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>post_command_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>pre_run_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>post_run_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>on_success_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>on_failure_hook</term>
+        <listitem>
+          <para>?</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>maxbw</term>
+        <listitem>
+          <para>When we have something to send to the client, do not go over this BW rate (b/s), default is 0</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>deployment_intervals</term>
+        <listitem>
+          <para>The interval of time between two deployment attempts</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>do_reboot</term>
+        <listitem>
+          <para>Whether to reboot the machine after the command succeeded</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>do_halt</term>
+        <listitem>
+          <para>Whether to halt the machine after the command succeeded</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fk_bundle</term>
+        <listitem>
+          <para>The Bundle ID the command belongs to</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>order_in_bundle</term>
+        <listitem>
+          <para>The command's order inside its bundle</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>package_id</term>
+        <listitem>
+          <para>The identifier of the package deployed by the command, or NULL in case the command is a quick action</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>proxy_mode</term>
+        <listitem>
+          <para>used to store the commande proxy mode (can be none, split, queue)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>The "commands_on_host" table</title>
+    <para>This table contains the running status of a command for a particular host.</para>
+    <para>It is linked to the "commands" table using fk_commands as constraint.</para>
+    <para>It is linked to the "target" table using fk_target as constraint.</para>
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fk_commands</term>
+        <listitem>
+          <para>A FK to the commands table</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>The target host to run the command on.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>start_date</term>
+        <listitem>
+          <para>The command **effective** start date (??)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>end_date</term>
+        <listitem>
+          <para>The command **effective** end date (??)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>current_state</term>
+        <listitem>
+          <para>Used to hold our command status on this client</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>stage</term>
+        <listitem>
+          <para>Another representaion os the command state, used by the interface</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>awoken</term>
+        <listitem>
+          <para>Tell if we already did something in WOL stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>uploaded</term>
+        <listitem>
+          <para>Tell if we already did something in upload stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>executed</term>
+        <listitem>
+          <para>Tell if we already did something in execution stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>deleted</term>
+        <listitem>
+          <para>Tell if we already did something in deletion stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>inventoried</term>
+        <listitem>
+          <para>Tell if we already did something in inventory stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>rebooted</term>
+        <listitem>
+          <para>Tell if we already did something in reboot stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>halted</term>
+        <listitem>
+          <para>Tell if we already did something in halt stage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>next_launch_date</term>
+        <listitem>
+          <para>If for any reason the command has been postponed, the command may be run from this time</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>attempts_left</term>
+        <listitem>
+          <para>The amount of tries left</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>next_attempt_date_time</term>
+        <listitem>
+          <para>A command can't be scheduled before this timestamp</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>current_launcher</term>
+        <listitem>
+          <para>The in-charge launcher</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fk_target</term>
+        <listitem>
+          <para>A foreign key to the "target" table</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>scheduler</term>
+        <listitem>
+          <para>The scheduler in charge of this command</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>last_wol_attempt</term>
+        <listitem>
+          <para>Keep track of when the last WOL impulsion was done</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fk_use_as_proxy</term>
+        <listitem>
+          <para>A (self) FK to the commands_on_host rows used as proxy</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>order_in_proxy</term>
+        <listitem>
+          <para>Describe when activate this command_on_host as proxy</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>max_clients_per_proxy</term>
+        <listitem>
+          <para>If this command_on_host is becoming a proxy, store how much max clients it may serve</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>The "commands_history" table</title>
+    <para>This table contains the stdout/stderr of each stage of a command for a particular host.</para>
+    <para>It is linked to the "commands_on_host" table using fk_commands_on_host as constraint.</para>
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fk_commands_on_host</term>
+        <listitem>
+          <para>A FK to the commands_on_host table</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>date</term>
+        <listitem>
+          <para>The time at which the command was run</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>stderr</term>
+        <listitem>
+          <para>The command error (mostly a Python TB)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>stdout</term>
+        <listitem>
+          <para>The command output</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>state</term>
+        <listitem>
+          <para>The command state</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>error code</term>
+        <listitem>
+          <para>The command error code (if relevant)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>The "target" table</title>
+    <para>This table contains directions to deploy a package.</para>
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>The table primary key</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_name</term>
+        <listitem>
+          <para>the target fqdn</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>mirrors</term>
+        <listitem>
+          <para>the packages location. This field must be formatted as follow:</para>
+          <itemizedlist>
+            <listitem>
+              <para>several tockens, separator is '<emphasis role="bold">||</emphasis>' (<emphasis role="bold">double-pipe</emphasis>)</para>
+            </listitem>
+            <listitem>
+              <para>tockens are URI formatted like this:</para>
+              <para>&lt;protocol&gt;://&lt;login&gt;:&lt;pass&gt;@&lt;server&gt;&lt;path&gt;</para>
+              <para>Protocol may be one of the following: ssh, http, ftp, smb, file. Each protocol corresponds to a different way to gather a package:</para>
+              <variablelist>
+                <varlistentry>
+                  <term>HTTP</term>
+                  <listitem>
+                    <para>Package is pulled by the client (using for exemple wget). the URI represents exacty the root place from where to download package components.</para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>FTP</term>
+                  <listitem>
+                    <para>Same as HTTP.</para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>SSH</term>
+                  <listitem>
+                    <para>Same as HTTP, using scp to dowload components. Password unsupported.</para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>SMB</term>
+                  <listitem>
+                    <para>Same as HTTP, using SAMBA (CIFS) protocol. Currently unsupported.</para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>FILE</term>
+                  <listitem>
+                    <para>Package is pushed on the client by the server, using scp. In this case, the rightmost part of the URI represent the full package root path <emphasis role="bold">on the server</emphasis>.</para>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>id_group</term>
+        <listitem>
+          <para>Commands may be grouped using some criteria (IP adress, ...), this field holds their group id</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>scheduler</term>
+        <listitem>
+          <para>The scheduler for this target</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_uuid</term>
+        <listitem>
+          <para>The target UUID</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_ipaddr</term>
+        <listitem>
+          <para>The target IP adresses, with '||' as separator, the first one beeing the most relevant</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_macaddr</term>
+        <listitem>
+          <para>The target MAC adresses, with '||' as separator, used to perform WOL</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_bcast</term>
+        <listitem>
+          <para>The target's broadcast IP, if relevant</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>target_network</term>
+        <listitem>
+          <para>The target's netmask, if relevant</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>The "bundle" table</title>
+    <para>This table holds Bundle (sets of commands) IDs.</para>
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>The table's primary key.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>title</term>
+        <listitem>
+          <para>The bundle's title</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>do_reboot</term>
+        <listitem>
+          <para>Whether the target should be rebooted once the bundle has been deployed</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>The "version" table</title>
+    <para>Used to hold the database version, in the table Number.</para>
+  </section>
 </article>
