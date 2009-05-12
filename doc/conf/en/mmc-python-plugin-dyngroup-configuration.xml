@@ -18,17 +18,24 @@
         </affiliation>
 
         <copyright>
-            <year>2009 Olivier Roussy - Mandriva</year>
+            <year>2009 Mandriva</year>
         </copyright>
 
         <revhistory>
             <revision>
-                <revnumber>$Rev$</revnumber>
+                <revnumber>1.2.1</revnumber>
 
-                <date>$Date: 2009-04-23 15:24:51 +0200 (jeu 23 avr 2009)
-                $</date>
+                <date>2009-05-12</date>
 
-                <authorinitials>$Author$</authorinitials>
+                <authorinitials>OR</authorinitials>
+
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Initial official release</para>
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
             </revision>
         </revhistory>
 
@@ -36,6 +43,9 @@
             <para>This document explains the content of the MMC dyngroup
             plugin configuration file</para>
         </abstract>
+
+        <releaseinfo>$Id: pulse2-scheduler-configuration.xml 116 2009-05-05
+        08:38:07Z nrueff $</releaseinfo>
     </articleinfo>
 
     <section>

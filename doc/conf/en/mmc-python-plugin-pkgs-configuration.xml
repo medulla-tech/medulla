@@ -2,256 +2,272 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>MMC Pkgs plugin configuration file</title>
+    <title>MMC Pkgs plugin configuration file</title>
 
-  <articleinfo>
-    <author>
-      <firstname>Olivier</firstname>
+    <articleinfo>
+        <author>
+            <firstname>Olivier</firstname>
 
-      <surname>Roussy</surname>
+            <surname>Roussy</surname>
 
-      <email>oroussy@mandriva.com</email>
-    </author>
+            <email>oroussy@mandriva.com</email>
+        </author>
 
-    <affiliation>
-      <orgname>Mandriva</orgname>
-    </affiliation>
+        <affiliation>
+            <orgname>Mandriva</orgname>
+        </affiliation>
 
-    <copyright>
-      <year>2008 2009 Olivier Roussy - Mandriva</year>
-    </copyright>
+        <copyright>
+            <year>2008-2009 Mandriva</year>
+        </copyright>
 
-    <revhistory>
-      <revision>
-        <revnumber>$Revision$</revnumber>
+        <revhistory>
+            <revision>
+                <revnumber>1.2.1</revnumber>
 
-        <date>$Date$</date>
+                <date>2009-05-12</date>
 
-        <authorinitials>$Author$</authorinitials>
-      </revision>
-    </revhistory>
+                <authorinitials>OR</authorinitials>
 
-    <abstract>
-      <para>This document explains the content of the MMC Pkgs plugin
-      configuration file</para>
-    </abstract>
-  </articleinfo>
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            <para>Initial official release</para>
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+        </revhistory>
 
-  <section>
-    <title>Introduction</title>
+        <abstract>
+            <para>This document explains the content of the MMC Pkgs plugin
+            configuration file</para>
+        </abstract>
 
-    <para>The « Pkgs » plugin is the MMC plugin in charge of the edition,
-    removal and creation of packages in the Pulse2 package system.</para>
+        <releaseinfo>$Id: pulse2-scheduler-configuration.xml 116 2009-05-05
+        08:38:07Z nrueff $</releaseinfo>
+    </articleinfo>
 
-    <para>The plugin configuration file is
-    <filename>/etc/mmc/plugins/pkgs.ini</filename>.</para>
+    <section>
+        <title>Introduction</title>
 
-    <para>Like all MMC related configuration file, its file format is INI
-    style. The file is made of sections, each one starting with a
-    « [sectionname] » header. In each section options can be defined like
-    this: « option = value ».</para>
+        <para>The « Pkgs » plugin is the MMC plugin in charge of the edition,
+        removal and creation of packages in the Pulse2 package system.</para>
 
-    <para>For example: <screen>[section1]
+        <para>The plugin configuration file is
+        <filename>/etc/mmc/plugins/pkgs.ini</filename>.</para>
+
+        <para>Like all MMC related configuration file, its file format is INI
+        style. The file is made of sections, each one starting with a
+        « [sectionname] » header. In each section options can be defined like
+        this: « option = value ».</para>
+
+        <para>For example: <screen>[section1]
 option1 = 1
 option2 = 2
 
 [section2]
 option1 = foo
 option2 = plop      </screen></para>
-  </section>
+    </section>
 
-  <section>
-    <title>Configuration file sections</title>
+    <section>
+        <title>Configuration file sections</title>
 
-    <para>For now two sections are available in this configuration
-    file:</para>
+        <para>For now two sections are available in this configuration
+        file:</para>
 
-    <table>
-      <title>pkgs.ini available sections</title>
+        <table>
+            <title>pkgs.ini available sections</title>
 
-      <tgroup cols="3">
-        <thead>
-          <row>
-            <entry>Section name</entry>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Section name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
-          </row>
-        </thead>
+                        <entry>Optional</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>main</entry>
+                <tbody>
+                    <row>
+                        <entry>main</entry>
 
-            <entry>Mostly MMC related behaviors</entry>
+                        <entry>Mostly MMC related behaviors</entry>
 
-            <entry>yes</entry>
-          </row>
+                        <entry>yes</entry>
+                    </row>
 
-          <row>
-            <entry>user_package_api</entry>
+                    <row>
+                        <entry>user_package_api</entry>
 
-            <entry>Describe how to reach the User package API service</entry>
+                        <entry>Describe how to reach the User package API
+                        service</entry>
 
-            <entry>yes</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>yes</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« main » section</title>
+    <section>
+        <title>« main » section</title>
 
-    <para>This section is used to give directives to the MMC agent.</para>
+        <para>This section is used to give directives to the MMC agent.</para>
 
-    <table>
-      <title>Available options for the "main" section</title>
+        <table>
+            <title>Available options for the "main" section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>disable</entry>
+                <tbody>
+                    <row>
+                        <entry>disable</entry>
 
-            <entry>Whenever use this plugin (or not)</entry>
+                        <entry>Whenever use this plugin (or not)</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>0</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>0</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 
-  <section>
-    <title>« user_package_api » section</title>
+    <section>
+        <title>« user_package_api » section</title>
 
-    <para>This section is used to tell to the plugin where to find its User
-    Package API service.</para>
+        <para>This section is used to tell to the plugin where to find its
+        User Package API service.</para>
 
-    <table>
-      <title>Available options for the "user_package_api" section</title>
+        <table>
+            <title>Available options for the "user_package_api"
+            section</title>
 
-      <tgroup cols="4">
-        <thead>
-          <row>
-            <entry>Option name</entry>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Option name</entry>
 
-            <entry>Description</entry>
+                        <entry>Description</entry>
 
-            <entry>Optional</entry>
+                        <entry>Optional</entry>
 
-            <entry>Default value</entry>
-          </row>
-        </thead>
+                        <entry>Default value</entry>
+                    </row>
+                </thead>
 
-        <tbody>
-          <row>
-            <entry>server</entry>
+                <tbody>
+                    <row>
+                        <entry>server</entry>
 
-            <entry>The service IP address</entry>
+                        <entry>The service IP address</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>127.0.0.1</entry>
-          </row>
+                        <entry>127.0.0.1</entry>
+                    </row>
 
-          <row>
-            <entry>port</entry>
+                    <row>
+                        <entry>port</entry>
 
-            <entry>The service TCP port</entry>
+                        <entry>The service TCP port</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>9990</entry>
-          </row>
+                        <entry>9990</entry>
+                    </row>
 
-          <row>
-            <entry>mountpoint</entry>
+                    <row>
+                        <entry>mountpoint</entry>
 
-            <entry>The service path</entry>
+                        <entry>The service path</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>/upaa</entry>
-          </row>
+                        <entry>/upaa</entry>
+                    </row>
 
-          <row>
-            <entry>username</entry>
+                    <row>
+                        <entry>username</entry>
 
-            <entry>The name to use when we send XMLRPC call</entry>
+                        <entry>The name to use when we send XMLRPC
+                        call</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>""</entry>
-          </row>
+                        <entry>""</entry>
+                    </row>
 
-          <row>
-            <entry>password</entry>
+                    <row>
+                        <entry>password</entry>
 
-            <entry>The password to use when we send XMLRPC call</entry>
+                        <entry>The password to use when we send XMLRPC
+                        call</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>""</entry>
-          </row>
+                        <entry>""</entry>
+                    </row>
 
-          <row>
-            <entry>enablessl</entry>
+                    <row>
+                        <entry>enablessl</entry>
 
-            <entry>SSL mode support</entry>
+                        <entry>SSL mode support</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>1</entry>
-          </row>
+                        <entry>1</entry>
+                    </row>
 
-          <row>
-            <entry>verifypeer</entry>
+                    <row>
+                        <entry>verifypeer</entry>
 
-            <entry>use SSL certificates</entry>
+                        <entry>use SSL certificates</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>0</entry>
-          </row>
+                        <entry>0</entry>
+                    </row>
 
-          <row>
-            <entry>cacert</entry>
+                    <row>
+                        <entry>cacert</entry>
 
-            <entry>path to the certificate file describing the certificate
-            authority of the SSL server</entry>
+                        <entry>path to the certificate file describing the
+                        certificate authority of the SSL server</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>""</entry>
-          </row>
+                        <entry>""</entry>
+                    </row>
 
-          <row>
-            <entry>localcert</entry>
+                    <row>
+                        <entry>localcert</entry>
 
-            <entry>path to the SSL server private certificate</entry>
+                        <entry>path to the SSL server private
+                        certificate</entry>
 
-            <entry>yes</entry>
+                        <entry>yes</entry>
 
-            <entry>""</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
-  </section>
+                        <entry>""</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
 </article>
