@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-04-30 11:19+0200\n"
-"PO-Revision-Date: 2009-04-30 11:19+0200\n"
+"PO-Revision-Date: 2009-05-04 10:36-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -200,9 +200,8 @@ msgid "Dynamic group creation's tab"
 msgstr "Aba de criação de grupo dinâmico"
 
 #: dyngroup/infoPackage.inc.php:30
-#, fuzzy
 msgid "Dyngroup"
-msgstr "Excluir grupo"
+msgstr "Grupo Dinâmico"
 
 #: dyngroup/includes/request.php:112
 msgid "Edit"
@@ -420,8 +419,7 @@ msgstr "A equação booleana '%s' é inválida"
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
-msgstr ""
-"Equação booleana '%s' inválida. <br/>Não é o mesmo número de sub- consultas"
+msgstr "Equação booleana '%s' inválida. <br/>Não é o mesmo número de sub- consultas"
 
 #: dyngroup/dyngroup/save.php:131
 msgid "The boolean equation is valid"
@@ -451,7 +449,7 @@ msgstr "Atualizar cache do computador"
 
 #: dyngroup/dyngroup/update.php:33
 msgid "Update machines name cache in dyngroup"
-msgstr "Atualizar cache de nome de computadores em dyngroup"
+msgstr "Atualizar cache de nome de computadores no grupo dinâmico"
 
 #: dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Visible"
@@ -526,3 +524,4 @@ msgstr "atualizar cache do computador: %s computadores"
 #: dyngroup/dyngroup/save.php:73
 msgid "visible"
 msgstr "visível"
+
