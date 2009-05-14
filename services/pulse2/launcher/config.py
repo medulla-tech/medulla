@@ -45,7 +45,7 @@ class LauncherConfig(pulse2.utils.Singleton):
 
     # launchers section
     halt_command = "/bin/shutdown.exe -f -s 1 || shutdown -h now"
-    inventory_command = "export PULSE2_SERVER=`echo $SSH_CONNECTION | cut -f1 -d\ `; export PULSE2_PORT=21999; /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe /server:$PULSE2_SERVER /pnum:$PULSE2_PORT /debug || /usr/bin/ocsinventory-agent --server=http://$PULSE2_SERVER:$PULSE2_PORT --debug"
+    inventory_command = "export PULSE2_SERVER=`echo $SSH_CONNECTION | cut -f1 -d\ `; export PULSE2_PORT=9999; /cygdrive/c/Program\ Files/OCS\ Inventory\ Agent/OCSInventory.exe /server:$PULSE2_SERVER /pnum:$PULSE2_PORT /debug || /usr/bin/ocsinventory-agent --server=http://$PULSE2_SERVER:$PULSE2_PORT --debug"
     launcher_path = "/usr/sbin/pulse2-launcher"
     max_command_age = 86400
     max_ping_time = 4

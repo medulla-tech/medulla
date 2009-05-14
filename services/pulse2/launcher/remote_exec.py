@@ -260,7 +260,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
     client = pulse2.launcher.utils.setDefaultClientOptions(client)
     target_path = os.path.join(LauncherConfig().target_path, pulse2.launcher.utils.getTempFolderName(command_id, client['uuid']))
     if client['protocol'] == "ssh":
-        # command is issued though our wrapper, time to build it
+        # command is issued through our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
             return False
