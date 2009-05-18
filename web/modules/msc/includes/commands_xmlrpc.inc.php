@@ -161,5 +161,8 @@ function get_command_on_host_in_commands($cmd_id) {
     return xmlCall('msc.get_command_on_host_in_commands', array($cmd_id));
 }
 
+function get_def_package_label($label, $version) {
+    return xmlCall('msc.get_def_package_label', array($label, $version));
+}
 
 ?>

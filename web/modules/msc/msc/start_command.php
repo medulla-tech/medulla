@@ -44,7 +44,7 @@ if (isset($_POST["bconfirm"])) {
     $p_api->fromURI($_POST["papi"]);
 
     $params = array();
-    foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
+    foreach (array('ltitle', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'maxbw', 'deployment_intervals') as $param) {
         $params[$param] = $_POST[$param];
     }
 
@@ -90,7 +90,7 @@ if (isset($_POST["badvanced"])) {
     $tab = $path[3];
 
     $params = array();
-    foreach (array('hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals', 'issue_halt_to_done', 'issue_halt_to_failed', 'issue_halt_to_over_time', 'issue_halt_to_out_of_interval') as $param) {
+    foreach (array('ltitle', 'hostname', 'gid', 'uuid', 'hostname', 'from', 'pid', 'create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'papi', 'copy_mode', 'deployment_intervals', 'issue_halt_to_done', 'issue_halt_to_failed', 'issue_halt_to_over_time', 'issue_halt_to_out_of_interval') as $param) {
         $params[$param] = $_POST[$param];
     }
     $prefix = '';
@@ -142,6 +142,7 @@ $f->add(new HiddenTpl("uuid"),                                  array("value" =>
 $f->add(new HiddenTpl("gid"),                                   array("value" => $gid,                              "hide" => True));
 $f->add(new HiddenTpl("from"),                                  array("value" => $from,                             "hide" => True));
 $f->add(new HiddenTpl("pid"),                                   array("value" => $pid,                              "hide" => True));
+$f->add(new HiddenTpl("ltitle"),                                array("value" => get_def_package_label($name, $version), "hide" => True));
 $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
 $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
 $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
