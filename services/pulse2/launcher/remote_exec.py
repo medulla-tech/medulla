@@ -271,21 +271,34 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         thru_command_list += [client['host']]
 
         # Build "exec" command
-        real_command =  ['rm']
+        # The permissions need to be modified, else the directory can't be
+        # deleted.
+        real_command = ['chown', 'SYSTEM.SYSTEM', '"%s"' % target_path, ';']
+
+        if LauncherConfig().is_smart_cleaner_available:
+            real_command += ['if', '[', '-x', LauncherConfig().smart_cleaner_path, ']', ';']
+            real_command += ['then']
+            real_command += [ LauncherConfig().smart_cleaner_path ]
+            real_command += ['--directory', '"%s"' % target_path]
+            real_command += ['--files', ','.join(files_list)]
+            real_command += LauncherConfig().smart_cleaner_options
+            real_command += [';']
+            real_command += ['else']
+
+        real_command += ['rm']
         real_command += map(lambda(a): '"%s"' % os.path.join(target_path, a), files_list)
         real_command += ['&&', 'if', '!', 'rmdir', target_path, ';']
         real_command += ['then']
         # Use the dellater command if available
         real_command += ['if', '[', '-x', '/usr/bin/dellater.exe', ']', ';']
         real_command += ['then']
-        # The permissions need to be modified, else the directory can't be
-        # deleted.
-        real_command += ['chown', 'SYSTEM.SYSTEM', '"%s"' % target_path, ';']
         # The mount/grep/sed stuff is needed to get the directory name for
         # Windows.
-        real_command += ['dellater', '"$(mount |grep " on / type"|sed "s/ on \/ type.*$//")"' + target_path, ';']
+        real_command += ['dellater', '"$(mount | grep " on / type" | sed "s| on / type.*$||")"' + target_path, ';']
         real_command += ['fi', ';']
-        real_command += ['fi']
+        real_command += ['fi', ';']
+        if LauncherConfig().is_smart_cleaner_available:
+            real_command += ['fi', ';']
 
         # Build final command line
         command_list = [

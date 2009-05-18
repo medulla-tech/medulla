@@ -115,6 +115,11 @@ class LauncherConfig(pulse2.utils.Singleton):
     tcp_sproxy_connect_delay = 60
     tcp_sproxy_session_lenght = 3600
 
+    # Smart Cleaner Stuff
+    is_smart_cleaner_available = True
+    smart_cleaner_path = "/usr/bin/pulse2-smart-cleaner.sh"
+    smart_cleaner_options = []
+
     # scheduler stuff
     first_scheduler = None
     schedulers = {
@@ -278,6 +283,14 @@ class LauncherConfig(pulse2.utils.Singleton):
                 else:
                     (self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end) = range
         logging.getLogger().info("launcher %s: section %s, option %s set to %d-%d" % (self.name, 'tcp_sproxy', 'tcp_sproxy_port_range', self.tcp_sproxy_port_range_start, self.tcp_sproxy_port_range_end))
+
+        # Parse "smart_cleaner" section
+        self.setoption('smart_cleaner', 'smart_cleaner_path', 'smart_cleaner_path')
+        if self.smart_cleaner_path == '':
+            LauncherConfig().is_smart_cleaner_available = False
+        if self.cp.has_section("smart_cleaner"):
+            if self.cp.has_option("smart_cleaner", "smart_cleaner_options"):
+                self.smart_cleaner_options = self.cp.get("smart_cleaner", "smart_cleaner_options").split(' ')
 
         # Parse "scheduler_XXXX" sections
         for section in self.cp.sections():
