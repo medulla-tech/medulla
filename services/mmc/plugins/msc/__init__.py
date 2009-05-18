@@ -23,6 +23,7 @@
 
 # Big modules
 import logging
+import time
 import re
 import os
 
@@ -386,6 +387,18 @@ class RpcProxy(RpcProxyI):
     #
     # default WEB values handling
     #
+    def get_def_package_label(self, label, version):
+        localtime = time.localtime()
+        return "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+            label,
+            version,
+            localtime[0],
+            localtime[1],
+            localtime[2],
+            localtime[3],
+            localtime[4],
+            localtime[5]
+        )
 
     def get_web_def_awake(self):
         return xmlrpcCleanup(MscConfig().web_def_awake)
