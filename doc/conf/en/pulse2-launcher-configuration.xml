@@ -17,6 +17,18 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.2</revnumber>
+        <date>2009-05-18</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>Introducing section [smart_cleaner]</para>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.1</revnumber>
         <date>2009-04-23</date>
         <authorinitials>NR</authorinitials>
@@ -89,6 +101,16 @@ option2 = plop</screen></para>
           <row>
             <entry>wget</entry>
             <entry>Wget related options</entry>
+            <entry>yes</entry>
+          </row>
+          <row>
+            <entry>tcp_sproxy</entry>
+            <entry>Wget related options</entry>
+            <entry>yes</entry>
+          </row>
+          <row>
+            <entry>smart_cleaner</entry>
+            <entry>Smart cleaning options</entry>
             <entry>yes</entry>
           </row>
           <row>
@@ -593,6 +615,40 @@ option2 = plop</screen></para>
             <entry>yes</entry>
             <entry>seconds</entry>
             <entry>3600 (one hour)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+  </section>
+  <section>
+    <title>« smart_cleaner » section</title>
+    <para>This section sets the wol feature handling.</para>
+    <table>
+      <title>Available options for the "wol" section</title>
+      <tgroup cols="5">
+        <thead>
+          <row>
+            <entry>Option name</entry>
+            <entry>Description</entry>
+            <entry>Optional</entry>
+            <entry>Type</entry>
+            <entry>Default value</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>smart_cleaner_path</entry>
+            <entry>Pulse 2 smart cleaner path (on client), not used if empty</entry>
+            <entry>yes</entry>
+            <entry>path</entry>
+            <entry>/usr/bin/pulse2-smart-cleaner.sh</entry>
+          </row>
+          <row>
+            <entry>smart_cleaner_options</entry>
+            <entry>Pulse 2 smart cleaner option (see win32 agent doc)</entry>
+            <entry>yes</entry>
+            <entry>array, space-separated</entry>
+            <entry>''</entry>
           </row>
         </tbody>
       </tgroup>
