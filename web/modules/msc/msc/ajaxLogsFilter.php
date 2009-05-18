@@ -228,7 +228,11 @@ if ($areCommands) { // display several commands
             else
                 $a_date[] = _toDate($d);
 
-            $a_client[] = $coh['host'];
+            if ($uuid) {
+                $a_client[] = $cmd['title'];
+            } else {
+                $a_client[] = $coh['host'];
+            }
             $proxy_id = $coh['fk_use_as_proxy'];
             $proxy_str = '';
             if ($proxy_id != '') {
@@ -296,7 +300,11 @@ if ($areCommands) { // display several commands
     }
 
     $n = new OptimizedListInfos($a_mode, _T("Mode", "msc"));
-    $n->addExtraInfo($a_client, _T("Client", "msc"));
+    if ($uuid) {
+        $n->addExtraInfo($a_client, _T("Command", "msc"));
+    } else {
+        $n->addExtraInfo($a_client, _T("Client", "msc"));
+    }
     $n->addExtraInfo($a_date, $datelabel);
     $n->addExtraInfo($a_current, _T("Current State", "msc"));
     $n->addExtraInfo($a_progression, _T("Progression", "msc"));
