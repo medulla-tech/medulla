@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-23 11:59+0200\n"
+"POT-Creation-Date: 2009-05-19 18:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:118
+#: dyngroup/dyngroup/save.php:119
 msgid "Check"
 msgstr ""
 
@@ -100,27 +100,27 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:40 dyngroup/infoPackage.inc.php:101
+#: dyngroup/infoPackage.inc.php:48 dyngroup/infoPackage.inc.php:109
 msgid "Computers Group Creator"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:67
+#: dyngroup/infoPackage.inc.php:75
 msgid "Computers Group Creator Sub Request Delete"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:53
+#: dyngroup/infoPackage.inc.php:61
 msgid "Computers Group Creator Sub Request Editor"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:81 dyngroup/infoPackage.inc.php:105
+#: dyngroup/infoPackage.inc.php:89 dyngroup/infoPackage.inc.php:113
 msgid "Computers Group Editor"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:91
+#: dyngroup/infoPackage.inc.php:99
 msgid "Computers Group Sub Request Delete"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:86
+#: dyngroup/infoPackage.inc.php:94
 msgid "Computers Group Sub Request Editor"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Csv export"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:165
+#: dyngroup/infoPackage.inc.php:173
 msgid "Csv's export"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:140
+#: dyngroup/infoPackage.inc.php:148
 msgid "Delete a group of computers"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Delete this group"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:131
+#: dyngroup/infoPackage.inc.php:139
 msgid "Detailed page of save a group of computers"
 msgstr ""
 
@@ -170,11 +170,11 @@ msgstr ""
 msgid "Display %s '%s'"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:111
+#: dyngroup/infoPackage.inc.php:119
 msgid "Display a groups of computers"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:137
+#: dyngroup/dyngroup/save.php:138
 msgid "Display content"
 msgstr ""
 
@@ -191,9 +191,13 @@ msgstr ""
 msgid "Dynamic group creation"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:43 dyngroup/infoPackage.inc.php:57
-#: dyngroup/infoPackage.inc.php:71
+#: dyngroup/infoPackage.inc.php:51 dyngroup/infoPackage.inc.php:65
+#: dyngroup/infoPackage.inc.php:79
 msgid "Dynamic group creation's tab"
+msgstr ""
+
+#: dyngroup/infoPackage.inc.php:30
+msgid "Dyngroup"
 msgstr ""
 
 #: dyngroup/includes/request.php:112
@@ -212,7 +216,7 @@ msgstr ""
 msgid "Edit this group"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:118
+#: dyngroup/dyngroup/save.php:119
 msgid "Enter boolean operator between groups"
 msgstr ""
 
@@ -246,7 +250,7 @@ msgstr ""
 msgid "Group name"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:145
+#: dyngroup/infoPackage.inc.php:153
 msgid "Group of computers details"
 msgstr ""
 
@@ -284,7 +288,7 @@ msgstr ""
 msgid "Is the group visible"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:136
+#: dyngroup/infoPackage.inc.php:144
 msgid "List all groups of computers"
 msgstr ""
 
@@ -322,7 +326,7 @@ msgstr ""
 msgid "Remove a computer"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:150
+#: dyngroup/infoPackage.inc.php:158
 msgid "Remove a computer from a computers group"
 msgstr ""
 
@@ -334,7 +338,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:126
+#: dyngroup/infoPackage.inc.php:134
 msgid "Save a group of computers"
 msgstr ""
 
@@ -342,7 +346,7 @@ msgstr ""
 msgid "Search part"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:121
+#: dyngroup/infoPackage.inc.php:129
 msgid "Second page of result/request group creator"
 msgstr ""
 
@@ -354,7 +358,7 @@ msgstr ""
 msgid "Select what is inside the file"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:116
+#: dyngroup/infoPackage.inc.php:124
 msgid "Share a group of computers"
 msgstr ""
 
@@ -383,17 +387,17 @@ msgstr ""
 msgid "Static group creation from import"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:49 dyngroup/infoPackage.inc.php:63
-#: dyngroup/infoPackage.inc.php:77
+#: dyngroup/infoPackage.inc.php:57 dyngroup/infoPackage.inc.php:71
+#: dyngroup/infoPackage.inc.php:85
 msgid "Static group creation from import's tab"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:46 dyngroup/infoPackage.inc.php:60
-#: dyngroup/infoPackage.inc.php:74
+#: dyngroup/infoPackage.inc.php:54 dyngroup/infoPackage.inc.php:68
+#: dyngroup/infoPackage.inc.php:82
 msgid "Static group creation's tab"
 msgstr ""
 
-#: dyngroup/dyngroup/tmpdisplay.php:35 dyngroup/infoPackage.inc.php:96
+#: dyngroup/dyngroup/tmpdisplay.php:35 dyngroup/infoPackage.inc.php:104
 msgid "Temporary result display"
 msgstr ""
 
@@ -402,19 +406,19 @@ msgstr ""
 msgid "Temporary result display for '%s'"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:124
+#: dyngroup/dyngroup/save.php:125
 #, php-format
 msgid "The boolean equation '%s' is not valid"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:127
+#: dyngroup/dyngroup/save.php:128
 #, php-format
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
 msgstr ""
 
-#: dyngroup/dyngroup/save.php:130
+#: dyngroup/dyngroup/save.php:131
 msgid "The boolean equation is valid"
 msgstr ""
 
@@ -436,7 +440,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: dyngroup/infoPackage.inc.php:170
+#: dyngroup/infoPackage.inc.php:178
 msgid "Update machine cache"
 msgstr ""
 

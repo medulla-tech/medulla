@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-30 11:19+0200\n"
+"POT-Creation-Date: 2009-05-19 18:46+0200\n"
 "PO-Revision-Date: 2009-05-04 10:36-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -36,15 +36,15 @@ msgstr "%s) Procurar %s = (%s) no módulo %s"
 msgid "->"
 msgstr "->"
 
-#: dyngroup/dyngroup/import_from_file.php:44 dyngroup/dyngroup/save.php:87
 #: dyngroup/dyngroup/add_groups.php:121
+#: dyngroup/dyngroup/import_from_file.php:44 dyngroup/dyngroup/save.php:87
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Já existe um grupo com o nome '%s'"
 
-#: dyngroup/includes/double.php:37 dyngroup/includes/autocomplete.php:30
 #: dyngroup/dyngroup/creator.php:145 dyngroup/dyngroup/creator.php:169
 #: dyngroup/dyngroup/creator.php:177 dyngroup/dyngroup/creator.php:181
+#: dyngroup/includes/autocomplete.php:30 dyngroup/includes/double.php:37
 msgid "Add"
 msgstr "Adicionar"
 
@@ -81,9 +81,9 @@ msgstr ""
 "Tem certeza que deseja remover o grupo <b>%s</b>? <br/> (ele pode estar "
 "sendo usado em outro grupo)."
 
-#: dyngroup/includes/groups.inc.php:82 dyngroup/includes/groups.inc.php:175
 #: dyngroup/dyngroup/delete_group.php:50
-#: dyngroup/dyngroup/remove_machine.php:48
+#: dyngroup/dyngroup/remove_machine.php:48 dyngroup/includes/groups.inc.php:82
+#: dyngroup/includes/groups.inc.php:175
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -211,7 +211,7 @@ msgstr "Editar"
 msgid "Edit a dynamic group"
 msgstr "Editar um grupo dinâmico"
 
-#: dyngroup/dyngroup/groupshead.php:32 dyngroup/dyngroup/edithead.php:41
+#: dyngroup/dyngroup/edithead.php:41 dyngroup/dyngroup/groupshead.php:32
 msgid "Edit a static group"
 msgstr "Editar um grupo estático"
 
@@ -247,9 +247,9 @@ msgstr "Lista de grupos"
 msgid "Group members"
 msgstr "Membros do grupo"
 
-#: dyngroup/includes/groups.inc.php:117
-#: dyngroup/dyngroup/import_from_file.php:50
 #: dyngroup/dyngroup/ajaxListGroups.php:73
+#: dyngroup/dyngroup/import_from_file.php:50
+#: dyngroup/includes/groups.inc.php:117
 msgid "Group name"
 msgstr "Nome do grupo"
 
@@ -265,8 +265,8 @@ msgstr "Compartilhamento de grupo"
 msgid "Group successfully created"
 msgstr "Grupo criado com sucesso"
 
-#: dyngroup/dyngroup/import_from_file.php:41
 #: dyngroup/dyngroup/add_groups.php:102
+#: dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully modified"
 msgstr "Grupo modificado com sucesso"
 
@@ -286,8 +286,8 @@ msgstr "Ocultar"
 msgid "Inventory on this group"
 msgstr "Mostrar o inventário deste grupo"
 
-#: dyngroup/includes/groups.inc.php:118
 #: dyngroup/dyngroup/import_from_file.php:56
+#: dyngroup/includes/groups.inc.php:118
 msgid "Is the group visible"
 msgstr "O grupo é visível ?"
 
@@ -295,8 +295,8 @@ msgstr "O grupo é visível ?"
 msgid "List all groups of computers"
 msgstr "Listar todos os grupos de computadores"
 
-#: dyngroup/includes/double.php:40 dyngroup/includes/autocomplete.php:32
-#: dyngroup/dyngroup/creator.php:171
+#: dyngroup/dyngroup/creator.php:171 dyngroup/includes/autocomplete.php:32
+#: dyngroup/includes/double.php:40
 msgid "Modify"
 msgstr "Modificar"
 
@@ -304,8 +304,8 @@ msgstr "Modificar"
 msgid "Name :"
 msgstr "Nome :"
 
+#: dyngroup/dyngroup/creator.php:175 dyngroup/dyngroup/import_from_file.php:53
 #: dyngroup/includes/groups.inc.php:120
-#: dyngroup/dyngroup/import_from_file.php:53 dyngroup/dyngroup/creator.php:175
 msgid "No"
 msgstr "Não"
 
@@ -419,7 +419,8 @@ msgstr "A equação booleana '%s' é inválida"
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
-msgstr "Equação booleana '%s' inválida. <br/>Não é o mesmo número de sub- consultas"
+msgstr ""
+"Equação booleana '%s' inválida. <br/>Não é o mesmo número de sub- consultas"
 
 #: dyngroup/dyngroup/save.php:131
 msgid "The boolean equation is valid"
@@ -455,14 +456,14 @@ msgstr "Atualizar cache de nome de computadores no grupo dinâmico"
 msgid "Visible"
 msgstr "Visível"
 
+#: dyngroup/dyngroup/creator.php:174 dyngroup/dyngroup/creator.php:180
+#: dyngroup/dyngroup/import_from_file.php:53
 #: dyngroup/includes/groups.inc.php:119
-#: dyngroup/dyngroup/import_from_file.php:53 dyngroup/dyngroup/creator.php:174
-#: dyngroup/dyngroup/creator.php:180
 msgid "Yes"
 msgstr "Sim"
 
-#: dyngroup/dyngroup/save.php:89 dyngroup/dyngroup/save.php:91
-#: dyngroup/dyngroup/add_groups.php:119
+#: dyngroup/dyngroup/add_groups.php:119 dyngroup/dyngroup/save.php:89
+#: dyngroup/dyngroup/save.php:91
 msgid "You must specify a group name"
 msgstr "Você precisa especificar um nome de grupo"
 
@@ -483,7 +484,7 @@ msgstr "oculto"
 msgid "it should be"
 msgstr "deveria ser"
 
-#: dyngroup/dyngroup/save.php:72 dyngroup/dyngroup/ajaxListGroups.php:61
+#: dyngroup/dyngroup/ajaxListGroups.php:61 dyngroup/dyngroup/save.php:72
 msgid "query"
 msgstr "consulta"
 
@@ -524,4 +525,3 @@ msgstr "atualizar cache do computador: %s computadores"
 #: dyngroup/dyngroup/save.php:73
 msgid "visible"
 msgstr "visível"
-
