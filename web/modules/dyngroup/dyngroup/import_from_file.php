@@ -28,7 +28,7 @@ require_once("modules/dyngroup/includes/querymanager_xmlrpc.php");
 $groupname = quickGet('groupname');
 $visibility = quickGet('visible');
 if (!isset($visibility) || $visibility == '') {
-    $visibility = 'visible';
+    $visibility = 'hidden';
 }
 $elementare = quickGet('elementare');
 # check group name
