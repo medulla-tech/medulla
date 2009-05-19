@@ -17,6 +17,18 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.2</revnumber>
+        <date>2009-05-19</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>New Pulse 2 Release, but no new option</para>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.1</revnumber>
         <date>2009-04-23</date>
         <authorinitials>NR</authorinitials>
