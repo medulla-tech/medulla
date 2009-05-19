@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-30 23:31+0100\n"
+"POT-Creation-Date: 2009-05-19 18:46+0200\n"
 "PO-Revision-Date: 2009-04-27 13:55-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: pkgs/pkgs/localSidebar.php:28 pkgs/pkgs/edit.php:75
+#: pkgs/pkgs/edit.php:75 pkgs/pkgs/localSidebar.php:28
 #: pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
@@ -123,11 +123,11 @@ msgstr "Versão do pacote"
 msgid "Packages"
 msgstr "Pacotes"
 
-#: pkgs/pkgs/localSidebar.php:27 pkgs/pkgs/index.php:29
+#: pkgs/pkgs/index.php:29 pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
-#: pkgs/pkgs/localSidebar.php:29 pkgs/pkgs/pending.php:29
+#: pkgs/pkgs/pending.php:29 pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
@@ -167,4 +167,3 @@ msgstr "O pacote foi excluído."
 #: pkgs/pkgs/ajaxPackageList.php:64 pkgs/pkgs/ajaxPendingPackageList.php:74
 msgid "Versions"
 msgstr "Versões"
-
