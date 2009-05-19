@@ -46,7 +46,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     cacert = '/etc/mmc/pulse2/inventory-server/keys/cacert.pem'
     localcert = '/etc/mmc/pulse2/inventory-server/keys/privkey.pem'
 
-    hostname = ['Hardware', 'Name']
+    hostname = ['Hardware', 'Host']
 
     # The default assigned entity is the root entity
     default_entity = '.'
