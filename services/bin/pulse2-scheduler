@@ -67,7 +67,7 @@ import pulse2.xmlrpc
 import logging
 import logging.config
 
-VERSION = "1.2.1"
+VERSION = "1.2.2"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 CB_STARTUP_DELAY = 2
 LOG_STATS_DELAY = 60
