@@ -423,7 +423,7 @@ class CommandHistory {
 function _values($a) { return $a[1]; }
 function _names($a) { return $a[0]; }
 function _colorise($line) {
-    if (preg_match_all("|^(.*) ([A-Z]):(.*)$|", $line, $matches)) {
+    if (preg_match_all("|^(.*) ([A-Z]): (.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;
 
