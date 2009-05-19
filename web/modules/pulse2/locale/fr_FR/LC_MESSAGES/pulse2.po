@@ -8,28 +8,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Pulse2 Web Interface 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-23 13:54+0200\n"
+"POT-Creation-Date: 2008-12-20 22:23+0100\n"
 "PO-Revision-Date: 2009-04-23 13:55+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: pulse2/pulse2/computers_list.php:41
 msgid "All my entities"
 msgstr "Toutes mes entités"
 
-#: pulse2/infoPackage.inc.php:36
+#: pulse2/infoPackage.inc.php:44
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: pulse2/infoPackage.inc.php:41
+#: pulse2/infoPackage.inc.php:49
 msgid "Location selection in computer edit"
 msgstr "Sélection de l'entité d'un ordinateur"
+
+#: pulse2/infoPackage.inc.php:33
+msgid "Pulse2"
+msgstr "Pulse2"
 
 #: pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entité racine"
-
