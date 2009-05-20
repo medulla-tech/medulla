@@ -45,7 +45,7 @@ foreach ($inv as $line) {
 $n = null;
 
 foreach (array('type', 'designation', 'name') as $i) {
-    if ($i == 'type') {
+    if ($i == 'type' && array_key_exists($i, $all)) {
         $conv = array();
         foreach ($all[$i] as $j) { $conv[] = _T($j, 'glpi'); }
         $all[$i] = $conv;
