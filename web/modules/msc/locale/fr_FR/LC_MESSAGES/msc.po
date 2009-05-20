@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-19 18:46+0200\n"
-"PO-Revision-Date: 2009-05-19 19:05+0200\n"
+"PO-Revision-Date: 2009-05-20 13:59+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1403,12 +1403,12 @@ msgstr "machines ont réussi leur déploiement"
 
 #: msc/msc/ajaxLogsFilter.php:199
 msgid "current_state"
-msgstr "État"
+msgstr "état"
 
 #: msc/includes/command_history.php:41 msc/logs/ajaxLogsFilter.php:135
 #: msc/msc/ajaxLogsFilter.php:202
 msgid "deleted"
-msgstr "Suppression"
+msgstr "suppression"
 
 #: msc/includes/command_history.php:276
 msgid "disable"
@@ -1434,7 +1434,7 @@ msgstr "erreur: l'id de bundle donné n'existe pas dans la base de donnée. "
 #: msc/includes/command_history.php:40 msc/logs/ajaxLogsFilter.php:134
 #: msc/msc/ajaxLogsFilter.php:201
 msgid "executed"
-msgstr "Exécution"
+msgstr "exécution"
 
 #: msc/msc/msctabsstatus.php:118
 msgid "executing"
@@ -1442,7 +1442,7 @@ msgstr "en cours d'exécution"
 
 #: msc/includes/command_history.php:278
 msgid "failed"
-msgstr "Échec"
+msgstr "échec"
 
 #: msc/msc/msctabsstatus.php:124 msc/msc/statuscsv.php:71
 msgid "failed during execution"
@@ -1462,7 +1462,7 @@ msgid ""
 "group \"%s\" is not defined in the MSC module, or you don't have permissions "
 "to access it"
 msgstr ""
-"Le groupe \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la "
+"le groupe \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la "
 "permission d'y accéder"
 
 #: msc/includes/command_history.php:44
@@ -1570,7 +1570,7 @@ msgstr "échoué durant l'exécution"
 #: msc/includes/command_history.php:39 msc/logs/ajaxLogsFilter.php:133
 #: msc/msc/ajaxLogsFilter.php:200
 msgid "uploaded"
-msgstr "Envoi"
+msgstr "envoi"
 
 #: msc/msc/msctabsstatus.php:116
 msgid "uploading"
