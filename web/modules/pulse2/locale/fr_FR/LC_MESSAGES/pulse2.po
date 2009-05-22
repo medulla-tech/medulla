@@ -2,20 +2,20 @@
 # Copyright (C) 2008 THE Pulse 2 - MSC Web Interface'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Pulse 2 - MSC Web Interface package.
 # Nicolas Rueff <nicolas.rueff@mandriva.com>, 2007.
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - Pulse2 Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-20 22:23+0100\n"
-"PO-Revision-Date: 2009-05-19 19:05+0200\n"
+"POT-Creation-Date: 2009-05-22 09:42+0200\n"
+"PO-Revision-Date: 2009-05-22 10:08+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
-"Language-Team: French\n"
+"Language-Team: French <i18n@mandriva.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: pulse2/pulse2/computers_list.php:41
 msgid "All my entities"
@@ -36,4 +36,3 @@ msgstr "Pulse2"
 #: pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entité racine"
-
