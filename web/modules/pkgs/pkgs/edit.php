@@ -160,7 +160,7 @@ foreach ($options as $p) {
 foreach ($cmds as $p) {
     $f->add(
         new HiddenTpl($p[0].'name'),
-        array("value" => $package[$p[0]]['name'])
+        array("value" => $package[$p[0]]['name'], "hide" => True)
     );
     $f->add(
         new TrFormElement($p[2], new InputTpl($p[0].'cmd')),
