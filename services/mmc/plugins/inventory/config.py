@@ -45,11 +45,11 @@ class InventoryConfig(InventoryDatabaseConfig):
         self.disable = self.cp.getboolean("main", "disable")
         for i in getInventoryParts():
             try:
-                self.graph[i] = self.get("graph", i).split('|')
+                self.graph[i] = self.cp.get("graph", i).split('|')
             except:
                 self.graph[i] = []
             try:
-                self.expert_mode[i] = self.get("expert_mode", i).split('|')
+                self.expert_mode[i] = self.cp.get("expert_mode", i).split('|')
             except:
                 self.expert_mode[i] = []
 
