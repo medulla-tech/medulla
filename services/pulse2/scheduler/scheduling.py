@@ -37,7 +37,7 @@ import twisted.internet
 
 # MMC plugins
 from pulse2.database.msc import MscDatabase
-import mmc.plugins.msc.mirror_api
+import pulse2.apis.clients.mirror
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -1000,7 +1000,7 @@ def _chooseUploadMode(myCoH, myC, myT):
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
-        ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
+        ma = pulse2.apis.clients.mirror.Mirror(mirror)
         d = ma.isAvailable(myC.package_id)
         d.addCallback(_cbRunPushPullPhaseTestMirror, mirror, fbmirror, client, myC, myCoH)
 
@@ -1017,7 +1017,7 @@ def _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC,
     if fbmirror != mirror:
         # Test the fallback mirror only if the URL is the different than the
         # primary mirror
-        ma = mmc.plugins.msc.mirror_api.MirrorApi(fbmirror)
+        ma = pulse2.apis.clients.mirror.Mirror(fbmirror)
         d = ma.isAvailable(myC.package_id)
         d.addCallback(_cbRunPushPullPhase, mirror, fbmirror, client, myC, myCoH, True)
         return d
@@ -1159,7 +1159,7 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
         msg = 'Package \'%s\' is available on mirror %s' % (myC.package_id, mirror)
     updateHistory(myCoH.id, 'upload_in_progress', '0', '', msg)
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
-    ma = mmc.plugins.msc.mirror_api.MirrorApi(mirror)
+    ma = pulse2.apis.clients.mirror.Mirror(mirror)
     fids = []
     for line in myC.files.split("\n"):
         fids.append(line.split('##')[0])
