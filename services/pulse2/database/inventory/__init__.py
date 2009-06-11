@@ -97,6 +97,9 @@ class Inventory(DyngroupDatabaseHelper):
 
         noms = self.config.getInventoryNoms()
 
+        self.table['Inventory'] = self.inventory
+        self.klass['Inventory'] = InventoryTable
+
         for item in self.config.getInventoryParts():
             # Declare the SQL table
             self.table[item] = Table(item, self.metadata, autoload = True)
@@ -135,6 +138,9 @@ class Inventory(DyngroupDatabaseHelper):
             self.klass[hasitem] = eval(hasitem)
             # Map the python class to the SQL table
             mapper(eval(hasitem), self.table[hasitem])
+
+        self.table['hasInventory'] = self.table['hasNetwork']
+        self.klass['hasInventory'] = self.klass['hasNetwork']
 
         mapper(Machine, self.machine)
         mapper(InventoryTable, self.inventory)
@@ -375,6 +381,8 @@ class Inventory(DyngroupDatabaseHelper):
         if len(q) > 2:
             self.logger.debug("##### >> semi static name : %s"%(q[2]))
         if table == 'Machine':
+            return [self.machine, self.table['hasHardware'], self.inventory]
+        elif table == 'Inventory':
             return [self.machine, self.table['hasHardware'], self.inventory]
         else:
             partTable = self.table[table]
