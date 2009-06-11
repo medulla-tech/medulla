@@ -20,22 +20,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import re
-import dircache
-import os
 import logging
-
-import xmlrpclib
-from twisted.web.xmlrpc import Proxy
-
-from mmc.support.mmctools import Singleton
 import mmc.plugins.pkgs.config
-
-from mmc.client import XmlrpcSslProxy, makeSSLContext
+from mmc.support.mmctools import Singleton
+import pulse2.apis.clients.user_packageapi_api
 
 class UserPackageApiApi(Singleton):
+    initialized = False
     def __init__(self):
+        if self.initialized: return
         self.logger = logging.getLogger()
+        self.logger.debug("Going to initialize UserPackageApiApi")
         self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
 
         if self.config.upaa_enablessl:
@@ -53,21 +48,12 @@ class UserPackageApiApi(Singleton):
         self.logger.debug('UserPackageApiApi will connect to %s' % (self.server_addr))
 
         if self.config.upaa_verifypeer:
-            self.upaaserver = XmlrpcSslProxy(self.server_addr)
-            self.sslctx = makeSSLContext(self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert, False)
-            self.upaaserver.setSSLClientContext(self.sslctx)
+            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(self.server_addr, self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert)
         else:
-            self.upaaserver = Proxy(self.server_addr)
-        # FIXME: still needed ?
-        self.initialized_failed = False
+            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(self.server_addr)
 
-    def onError(self, error, funcname, args):
-        self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
-        return []
+        for method in ('getUserPackageApi', ):
+            setattr(self, method, getattr(self.internal, method))
+                    
+        self.initialized = True
 
-    def getUserPackageApi(self, user):
-        if self.initialized_failed:
-            return {}
-        d = self.upaaserver.callRemote("getUserPackageApi", {"name":user, "uuid":user})
-        d.addErrback(self.onError, "UserPackageApiApi:getUserPackageApi", {"name":user, "uuid":user})
-        return d

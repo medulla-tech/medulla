@@ -20,24 +20,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import re
-import os
 import logging
-
-import xmlrpclib
-from twisted.web.xmlrpc import Proxy
-
-import mmc.plugins.msc
-from mmc.plugins.msc.config import MscConfig, makeURL
+from mmc.plugins.msc.config import MscConfig
 from mmc.support.mmctools import Singleton
-
-from mmc.client import XmlrpcSslProxy, makeSSLContext
-
-from twisted.internet import defer
+import pulse2.apis.clients.scheduler_api
 
 class SchedulerApi(Singleton):
+    initialized = False
     def __init__(self):
+        if self.initialized: return
         self.logger = logging.getLogger()
+        self.logger.debug("Going to initialize SchedulerApi")
         self.config = MscConfig()
 
         if self.config.sa_enable:
@@ -56,64 +49,13 @@ class SchedulerApi(Singleton):
             self.logger.debug('SchedulerApi will connect to %s' % (self.server_addr))
 
             if self.config.sa_verifypeer:
-                self.saserver = XmlrpcSslProxy(self.server_addr)
-                self.sslctx = makeSSLContext(self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert, False)
-                self.saserver.setSSLClientContext(self.sslctx)
+                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, self.server_addr, self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert)
             else:
-                self.saserver = Proxy(self.server_addr)
+                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, self.server_addr)
+                
+        for method in ('getScheduler', 'getSchedulers', ):
+            setattr(self, method, getattr(self.internal, method))
 
-    def onError(self, error, funcname, args):
-        self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
-        return error
-
-    def convert2id(self, scheduler):
-        self.logger.debug("Looking up scheduler id using: " + str(scheduler))
-        ret = None
-        if type(scheduler) == dict:
-            if "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
-                scheduler = makeURL(scheduler)
-            elif "mountpoint" in scheduler and scheduler["mountpoint"]:
-                ret = scheduler["mountpoint"]
-        elif type(scheduler) in (str, unicode):
-            ret = scheduler
-        if not ret:
-            if self.config.scheduler_url2id.has_key(scheduler):
-                self.logger.debug("Found scheduler id from MSC config file using this key %s" % scheduler)
-                ret = self.config.scheduler_url2id[scheduler]
-        if not ret:
-            self.logger.debug("Using default scheduler")
-            ret = self.config.default_scheduler
-        self.logger.debug("Using scheduler '%s'" % ret)
-        return ret
-
-    def cb_convert2id(self, result):
-        if type(result) == list:
-            return map(lambda s: self.convert2id(s), result)
-        else:
-            return self.convert2id(result)
-
-    def getScheduler(self, machine):
-        if self.config.sa_enable:
-            machine = self.convertMachineIntoH(machine)
-            d = self.saserver.callRemote("getScheduler", machine)
-            d.addErrback(self.onError, "SchedulerApi:getScheduler", machine)
-            d.addCallback(self.cb_convert2id)
-            return d
-        else:
-            return defer.succeed(MscConfig().default_scheduler)
-
-    def getSchedulers(self, machines):
-        if self.config.sa_enable:
-            machines = map(lambda m: self.convertMachineIntoH(m), machines)
-            d = self.saserver.callRemote("getSchedulers", machines)
-            d.addErrback(self.onError, "SchedulerApi:getSchedulers", machines)
-            d.addCallback(self.cb_convert2id)
-            return d
-        else:
-            return defer.succeed(map(lambda m: MscConfig().default_scheduler, machines))
-
-    def convertMachineIntoH(self, machine):
-        if type(machine) != dict:
-            machine = {'uuid':machine}
-        return machine
-
+        self.internal.setConfig(self.config)
+        self.initialized = True
+ 

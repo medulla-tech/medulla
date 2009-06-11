@@ -41,8 +41,9 @@ from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 from pulse2.managers.group import ComputerGroupManager
+import pulse2.apis.clients.package_get_api
 
-class PackageA:
+class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
         bind = server
@@ -55,173 +56,11 @@ class PackageA:
                 login = "%s:%s@" % (server['username'], server['password'])
 
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
-        self.logger.debug('PackageA will connect to %s' % (self.server_addr))
-
         self.config = MscConfig()
         if self.config.ma_verifypeer:
-            self.paserver = XmlrpcSslProxy(self.server_addr)
-            self.sslctx = makeSSLContext(self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert, False)
-            self.paserver.setSSLClientContext(self.sslctx)
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
         else:
-            self.paserver = Proxy(self.server_addr)
-
-    def onError(self, error, funcname, args, value = []):
-        self.logger.warn("PackageA:%s %s has failed: %s" % (funcname, args, error))
-        return error
-
-    def getAllPackages(self, mirror = None):
-        d = self.paserver.callRemote("getAllPackages", mirror)
-        d.addErrback(self.onError, "getAllPackages", mirror)
-        return d
-
-    def getAllPendingPackages(self, mirror = None):
-        try:
-            d = self.paserver.callRemote("getAllPendingPackages", mirror)
-            d.addErrback(self.onError, "getAllPendingPackages", mirror)
-            return d
-        except:
-            return []
-
-    # FIXME ! __convertDoReboot* shouldn't be needed
-
-    def __convertDoRebootList(self, pkgs):
-        ret = []
-        for pkg in pkgs:
-            ret.append(self.__convertDoReboot(pkg))
-        return ret
-            
-    def __convertDoReboot(self, pkg):
-        if pkg:
-            try:
-                do_reboot = pkg['reboot']
-                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
-                    pkg['do_reboot'] = 'disable'
-                elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
-                    pkg['do_reboot'] = 'enable'
-                else:
-                    self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
-                del pkg['reboot']
-            except KeyError:
-                pkg['do_reboot'] = 'disable'
-        return pkg
-
-    def getPackageDetail(self, pid):
-        d = self.paserver.callRemote("getPackageDetail", pid)
-        d.addCallback(self.__convertDoReboot)
-        d.addErrback(self.onError, "getPackageDetail", pid, False)
-        return d
-
-    def getPackagesDetail(self, pids):
-        d = self.paserver.callRemote("getPackagesDetail", pids)
-        d.addCallback(self.__convertDoRebootList)
-        d.addErrback(self.onErrorGetPackageDetailCall, pids, False)
-        return d
-
-    def treatMultipleGetPackageDetailCall(self, results):
-        ret = []
-        for i in results:
-            ret.append(i[1])
-        return ret
-
-    def onErrorGetPackageDetailCall(self, error, pids, value = []):
-        # when the package server is old, this one call function does not exists
-        # so we call several time the existing function
-        self.logger.warn("one of your package server does not support getPackagesDetail, you should update it.")
-        ds = []
-        for pid in pids:
-            d = self.paserver.callRemote("getPackageDetail", pid)
-            d.addCallback(self.__convertDoReboot)
-            d.addErrback(self.onError, "getPackageDetail", pid, False)
-            ds.append(d)
-        dl = defer.DeferredList(ds)
-        dl.addCallback(self.treatMultipleGetPackageDetailCall)
-        return dl
-
-    def getPackageLabel(self, pid):
-        d = self.paserver.callRemote("getPackageLabel", pid)
-        d.addErrback(self.onError, "getPackageLabel", pid, False)
-        return d
-
-    def _erGetLocalPackagePath(self):
-        return self.config.repopath
-
-    def getLocalPackagePath(self, pid):
-        d = self.paserver.callRemote("getLocalPackagePath", pid)
-        d.addErrback(self._erGetLocalPackagePath)
-        return d
-
-    def getLocalPackagesPath(self, pids):
-        d = self.paserver.callRemote("getLocalPackagesPath", pids)
-        d.addErrback(self.onError, "getLocalPackagesPath", pids, False)
-        return d
-
-    def getPackageVersion(self, pid):
-        d = self.paserver.callRemote("getPackageVersion", pid)
-        d.addErrback(self.onError, "getPackageVersion", pid, False)
-        return d
-
-
-    def getPackageSize(self, pid):
-        d = self.paserver.callRemote("getPackageSize", pid)
-        d.addErrback(self.onError, "getPackageSize", pid, 0)
-        return d
-
-    def getPackageInstallInit(self, pid):
-        d = self.paserver.callRemote("getPackageInstallInit", pid)
-        d.addErrback(self.onError, "getPackageInstallInit", pid, False)
-        return d
-
-    def getPackagePreCommand(self, pid):
-        d = self.paserver.callRemote("getPackagePreCommand", pid)
-        d.addErrback(self.onError, "getPackagePreCommand", pid, False)
-        return d
-
-    def getPackageCommand(self, pid):
-        d = self.paserver.callRemote("getPackageCommand", pid)
-        d.addErrback(self.onError, "getPackageCommand", pid, False)
-        return d
-
-    def getPackagePostCommandSuccess(self, pid):
-        d = self.paserver.callRemote("getPackagePostCommandSuccess", pid)
-        d.addErrback(self.onError, "getPackagePostCommandSuccess", pid, False)
-        return d
-
-    def getPackagePostCommandFailure(self, pid):
-        d = self.paserver.callRemote("getPackagePostCommandFailure", pid)
-        d.addErrback(self.onError, "getPackagePostCommandFailure", pid, False)
-        return d
-
-    def getPackageHasToReboot(self, pid):
-        d = self.paserver.callRemote("getPackageHasToReboot", pid)
-        d.addErrback(self.onError, "getPackageHasToReboot", pid, False)
-        return d
-
-    def getPackageFiles(self, pid):
-        d = self.paserver.callRemote("getPackageFiles", pid)
-        d.addErrback(self.onError, "getPackageFiles", pid)
-        return d
-
-    def getFileChecksum(self, file):
-        d = self.paserver.callRemote("getFileChecksum", file)
-        d.addErrback(self.onError, "getFileChecksum", file, False)
-        return d
-
-    def getPackagesIds(self, label):
-        d = self.paserver.callRemote("getPackagesIds", label)
-        d.addErrback(self.onError, "getPackagesIds", label)
-        return d
-
-    def getPackageId(self, label, version):
-        d = self.paserver.callRemote("getPackageId", label, version)
-        d.addErrback(self.onError, "getPackageId", (label, version), False)
-        return d
-
-    def isAvailable(self, pid, mirror):
-        d = self.paserver.callRemote("isAvailable", pid, mirror)
-        d.addErrback(self.onError, "getPackageId", (pid, mirror), False)
-        return d
-
-from mmc.plugins.msc.mirror_api import MirrorApi
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, self.server_addr)
 
 class SendBundleCommand:
     def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
@@ -290,7 +129,7 @@ class SendBundleCommand:
                 if p_api == self.p_api:
                     self.p_api_pids.append(pid)
             
-            d = PackageA(self.p_api).getPackagesDetail(self.p_api_pids)
+            d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
             d.addCallbacks(self.setPackagesDetail, self.onError)
         else:
             self.createBundle()        
@@ -298,7 +137,7 @@ class SendBundleCommand:
     def setPackagesDetail(self, packages):
         for i in range(len(self.p_api_pids)):
             self.packages[self.p_api_pids[i]] = packages[i]
-        d = PackageA(self.p_api).getLocalPackagesPath(self.p_api_pids)
+        d = PackageGetA(self.p_api).getLocalPackagesPath(self.p_api_pids)
         d.addCallbacks(self.setLocalPackagesPath, self.onError)
 
     def setLocalPackagesPath(self, ppaths):
@@ -459,7 +298,7 @@ class SendPackageCommand:
         return self.deferred.callback(id_command)
 
     def send(self):
-        d = PackageA(self.p_api).getPackageDetail(self.pid)
+        d = PackageGetA(self.p_api).getPackageDetail(self.pid)
         d.addCallbacks(self.setPackage, self.onError)
 
     def setPackage(self, package):
@@ -467,7 +306,7 @@ class SendPackageCommand:
             self.onError("Can't get informations on package %s" % self.pid)
         else:
             self.pinfos = package
-            d = PackageA(self.p_api).getLocalPackagePath(self.pid)
+            d = PackageGetA(self.p_api).getLocalPackagePath(self.pid)
             d.addCallbacks(self.setRoot, self.onError)
 
     def setRoot(self, root):
@@ -554,9 +393,9 @@ class GetPackagesFiltered:
     def get(self):
         if "packageapi" in self.filt:
             if 'pending' in self.filt:
-                ret = PackageA(self.filt["packageapi"]).getAllPendingPackages(False)
+                ret = PackageGetA(self.filt["packageapi"]).getAllPendingPackages(False)
             else:
-                ret = PackageA(self.filt["packageapi"]).getAllPackages(False)
+                ret = PackageGetA(self.filt["packageapi"]).getAllPackages(False)
             ret.addCallbacks(self.sendResult, self.onError)
             ret.addErrback(lambda err: self.onError(err))
         else:
@@ -594,6 +433,9 @@ class GetPackagesUuidFiltered:
 
     def uuidFilter2(self, package_apis):
         self.package_apis = package_apis
+        # warn as we do pop in package retrival but we want to keep the packages 
+        # in the good order, we need to reverse the package api list order
+        self.package_apis.reverse()
         d = MirrorApi().getMirror(self.machine)
         d.addCallbacks(self.uuidFilter3, self.onError)
         d.addErrback(lambda err: self.onError(err))
@@ -609,11 +451,14 @@ class GetPackagesUuidFiltered:
             self.index = self.index + 1
             self.packages.extend(map(lambda m: [m, self.index, self.p_api], result))
         if self.package_apis:
-            self.p_api = self.package_apis.pop()
-            if 'pending' in self.filt:
-                d = PackageA(self.p_api).getAllPendingPackages(self.mirror)
+            if type(self.package_apis) == list:
+                self.p_api = self.package_apis.pop()
             else:
-                d = PackageA(self.p_api).getAllPackages(self.mirror)
+                self.p_api = self.package_apis
+            if 'pending' in self.filt:
+                d = PackageGetA(self.p_api).getAllPendingPackages(self.mirror)
+            else:
+                d = PackageGetA(self.p_api).getAllPackages(self.mirror)
             d.addCallbacks(self.getPackagesLoop)
         else:
             self.sendResult(self.packages)
@@ -704,9 +549,9 @@ class GetPackagesGroupFiltered:
         if self.p_apis:
             p_api = self.p_apis.pop()
             if 'pending' in self.filt:
-                d = PackageA(p_api[0]).getAllPendingPackages(p_api[1])
+                d = PackageGetA(p_api[0]).getAllPendingPackages(p_api[1])
             else:
-                d = PackageA(p_api[0]).getAllPackages(p_api[1])
+                d = PackageGetA(p_api[0]).getAllPackages(p_api[1])
             d.addCallbacks(self.getPackagesLoop)
         else:
             # No more remote call to do, we are done

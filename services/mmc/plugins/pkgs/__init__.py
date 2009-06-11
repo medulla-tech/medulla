@@ -25,7 +25,7 @@ import datetime
 import time
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
-from mmc.plugins.msc.package_api import PackageA
+from mmc.plugins.msc.package_api import PackageGetA
 from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
@@ -71,7 +71,7 @@ class RpcProxy(RpcProxyI):
         def _ppa_getPackageDetail(result, pp_api_id = pp_api_id, pid = pid):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
-                    return PackageA(upa).getPackageDetail(pid)
+                    return PackageGetA(upa).getPackageDetail(pid)
             return False
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_getPackageDetail)

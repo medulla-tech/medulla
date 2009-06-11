@@ -554,55 +554,55 @@ def is_dir(filename):
 
 #############################
 ################# Package API
-from mmc.plugins.msc.package_api import PackageA
+from mmc.plugins.msc.package_api import PackageGetA
 
 def pa_getAllPackages(p_api, mirror = None):
-    return PackageA(p_api).getAllPackages(mirror)
+    return PackageGetA(p_api).getAllPackages(mirror)
 
 def pa_getPackageDetail(p_api, pid):
-    return PackageA(p_api).getPackageDetail(pid)
+    return PackageGetA(p_api).getPackageDetail(pid)
 
 def pa_getPackageLabel(p_api, pid):
-    return PackageA(p_api).getPackageLabel(pid)
+    return PackageGetA(p_api).getPackageLabel(pid)
 
 def pa_getPackageVersion(p_api, pid):
-    return PackageA(p_api).getPackageVersion(pid)
+    return PackageGetA(p_api).getPackageVersion(pid)
 
 def pa_getPackageSize(p_api, pid):
-    return PackageA(p_api).ps_getPackageSize(pid)
+    return PackageGetA(p_api).ps_getPackageSize(pid)
 
 def pa_getPackageInstallInit(p_api, pid):
-    return PackageA(p_api).getPackageInstallInit(pid)
+    return PackageGetA(p_api).getPackageInstallInit(pid)
 
 def pa_getPackagePreCommand(p_api, pid):
-    return PackageA(p_api).getPackagePreCommand(pid)
+    return PackageGetA(p_api).getPackagePreCommand(pid)
 
 def pa_getPackageCommand(p_api, pid):
-    return PackageA(p_api).getPackageCommand(pid)
+    return PackageGetA(p_api).getPackageCommand(pid)
 
 def pa_getPackagePostCommandSuccess(p_api, pid):
-    return PackageA(p_api).getPackagePostCommandSuccess(pid)
+    return PackageGetA(p_api).getPackagePostCommandSuccess(pid)
 
 def pa_getPackagePostCommandFailure(p_api, pid):
-    return PackageA(p_api).getPackagePostCommandFailure(pid)
+    return PackageGetA(p_api).getPackagePostCommandFailure(pid)
 
 def pa_getPackageHasToReboot(p_api, pid):
-    return PackageA(p_api).getPackageHasToReboot(pid)
+    return PackageGetA(p_api).getPackageHasToReboot(pid)
 
 def pa_getPackageFiles(p_api, pid):
-    return PackageA(p_api).getPackageFiles(pid)
+    return PackageGetA(p_api).getPackageFiles(pid)
 
 def pa_getFileChecksum(p_api, file):
-    return PackageA(p_api).getFileChecksum(file)
+    return PackageGetA(p_api).getFileChecksum(file)
 
 def pa_getPackagesIds(p_api, label):
-    return PackageA(p_api).getPackagesIds(label)
+    return PackageGetA(p_api).getPackagesIds(label)
 
 def pa_getPackageId(p_api, label, version):
-    return PackageA(p_api).getPackageId(label, version)
+    return PackageGetA(p_api).getPackageId(label, version)
 
 def pa_isAvailable(p_api, pid, mirror):
-    return PackageA(p_api).isAvailable(pid, mirror)
+    return PackageGetA(p_api).isAvailable(pid, mirror)
 
 #############################
 
