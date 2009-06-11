@@ -157,8 +157,6 @@ class TreatInv(Thread):
             inventory = re.sub(r'</?HISTORY>', '', inventory)
             inventory = re.sub(r'</?DOWNLOAD>', '', inventory)
 
-            resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
-
             # Store data on the server
             inventory = OcsMapping().parse(inventory)
             self.logger.debug("Thread %s : parsed : %s " % (threadname, time.time()))
