@@ -44,10 +44,11 @@ if ($_GET['uuid'] != '') {
     $graph = getInventoryGraph($table);
     $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
     $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
-	
+    
     /* display everything else in separated tables */
     $n = null;
     $h = array();
+    
     $index = 0;
     if ($count > 0 and is_array($inv) and is_array($inv[0]) and is_array($inv[0][1])) {
         foreach ($inv[0][1] as $def) {
@@ -63,10 +64,9 @@ if ($_GET['uuid'] != '') {
     $disabled_columns[] = 'timestamp';
     $disabled_columns[] = 'Icon';
     
-    /* TODO Delete this both lines because Type and Application will be removed from inventory database */
+    /* Delete these both lines because Type and Application columns will be removed from database */
     $disabled_columns[] = 'Type';
     $disabled_columns[] = 'Application';
-    
     
     /* Generate icon => <img src="data:image/jpg;base64,DATA"> */
     if (isset($h['Icon'])) {
@@ -74,11 +74,12 @@ if ($_GET['uuid'] != '') {
         foreach ($h['Icon'] as $v) {
             if ($v != '') {
                 $h['Icon'][$index] = '<IMG src="data:image/jpeg;base64,'.$v.'">';
+            }
+            $index+=1;
         }
-        $index+=1;
+        $n = new OptimizedListInfos($h['Icon'], '');
     }
-    $n = new OptimizedListInfos($h['Icon'], '');
-            
+    
     foreach ($h as $k => $v) {
         if (!in_array($k, $disabled_columns)) {
             if (in_array($k, $graph) && count($v) > 1) {
@@ -136,7 +137,28 @@ if ($_GET['uuid'] != '') {
         $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
     }
     $n = null;
+        
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
+    $disabled_columns[] = 'id';
+    $disabled_columns[] = 'timestamp';
+    $disabled_columns[] = 'Icon';
+    
+    /* Delete these both lines because Type and Application columns will be removed from database */
+    $disabled_columns[] = 'Type';
+    $disabled_columns[] = 'Application';
+    
+    /*Generate icon => <img src="data:image/jpg;base64,DATA">*/
+    if (isset($result['Icon'])) {
+        $index = 0;
+        foreach ($result['Icon'] as $v) {
+            if ($v != '') {
+                $result['Icon'][$index] = '<IMG src="data:image/jpeg;base64,'.$v.'">';
+            }
+            $index+=1;
+        }
+        $n = new OptimizedListInfos($result['Icon'], '');
+    }
+    
     $graph = getInventoryGraph($display);
     foreach ($result as $head => $vals) {
         if (!in_array($head, $disabled_columns)) {
