@@ -39,6 +39,7 @@ from twisted.internet import ssl, reactor
 from twisted.web import proxy, server, http
 from twisted.web.server import NOT_DONE_YET
 
+from zlib import *
 
 if os.name == 'nt':
     from _winreg import *
@@ -125,8 +126,56 @@ class MyProxyRequest(proxy.ProxyRequest):
             headers['host'] = host
         self.content.seek(0, 0)
         s = self.content.read()
+        
+        logger = logging.getLogger()
+        
+        logger.debug("\nOcs Report Received");
+        
+        # We will unzip the XML File and parsing it only if needed
+        if self.config.getocsdebuglog or self.config.improve:
+            # xml file unzip 
+            sUnpack = decompressobj().decompress(s)
+            
+            # Get the query type
+            try:
+                query = re.search(r'<QUERY>([\w-]+)</QUERY>', sUnpack).group(1)
+            except AttributeError, e:
+                query = 'FAILS'
+            
+            # process on Inventory OCS XML file, 
+            if query == 'INVENTORY' :
+                try:
+                    if sys.platform[0:3] == "win":                          #It's here because I need Pulse2InventoryProxyConfig be initialited before improve packtage be initialat
+                        from improveWin import improveXML,getOcsDebugLog
+                    elif sys.platform == "mac":
+                        from improveMac import improveXML,getOcsDebugLog
+                    else:
+                        from improveUnix import improveXML,getOcsDebugLog
+                    logger.debug("\tOcs Inventory Report Processing")
+                    if self.config.getocsdebuglog:
+                        # Add Ocs Log File
+                        sUnpack = getOcsDebugLog(sUnpack)
+                        logger.debug("\t\tOcs Debug Log add")
+                    if self.config.improve:
+                        # improving of xml file
+                        sUnpack = improveXML(sUnpack)    
+                        logger.debug("\t\tInformations add")
+                except ImportError:
+                    logger.error("OCS improving failed: no improving function found for "+sys.platform+" platform")
+            
+            logger.debug("\tOcs Report Terminated");
+            logger.debug("\t\tuncompressed length: " + str(len(sUnpack)))
+            
+            # zip of xml file
+            s = compress(sUnpack)
+            logger.debug("\t\tcompressed length: " + str(len(s)))
+            
+            # update the new size of xml
+            headers['content-length'] = len(s)
+                    
         clientFactory = class_(self.method, rest, self.clientproto, headers,
                                s, self)
+        
         if self.config.enablessl:
             try:
                 ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)

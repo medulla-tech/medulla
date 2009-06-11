@@ -50,6 +50,13 @@ class Pulse2InventoryProxyConfig(Singleton):
     daemon_group = 'root'
     daemon_user = 'root'
             
+    improve = True
+    savexmlModified = False
+    updatedetection = False
+    addicon = False
+    
+    getOcsDebugLog = False
+
 
     def setup(self, config_file = 'conf/p2ipc.ini'):
         # Load configuration file
@@ -96,3 +103,16 @@ class Pulse2InventoryProxyConfig(Singleton):
                     path.reverse()
                 self.flag = ('\\'.join(path), flag)
 
+        if self.cp.has_option('xmlupdate', 'enable'):
+            self.improve = self.cp.getboolean('xmlupdate', 'enable')
+        if self.cp.has_option('xmlupdate', 'keepxmlupdate'):
+            self.savexmlmodified = self.cp.getboolean('xmlupdate', 'keepxmlupdate')
+        if self.cp.has_option('xmlupdate', 'updatedetection'):
+            self.updatedetection = self.cp.getboolean('xmlupdate', 'updatedetection')
+        if self.cp.has_option('xmlupdate', 'addicon'):
+            self.addicon = self.cp.getboolean('xmlupdate', 'addicon')
+             
+        if self.cp.has_option('ocsdebug', 'enable'):
+             self.getocsdebuglog = self.cp.getboolean('ocsdebug', 'enable')
+             if self.getocsdebuglog:
+                 self.command_attr.append("/debug")
