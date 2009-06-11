@@ -33,8 +33,6 @@ import twisted
 import logging
 import logging.config
 
-sys.path.append("E:\\IUT2A\\Java\\EclipseWorkspace\\Pulse2\\src")
-
 from pulse2.proxyssl import initialize
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
