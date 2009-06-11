@@ -29,20 +29,20 @@ from sets import Set
 
 p1 = re.compile(' ')
 p2 = re.compile(',')
-p3 = re.compile('((?:AND|OR|NOT)\([^\)\(]*\))', re.I)
+p3 = re.compile('((?:AND|OR|NOT|ET|OU|NON)\([^\)\(]*\))', re.I)
 p4 = re.compile('^[^\(\)]*(?=\()')
 p5 = re.compile('^\(')
 p6 = re.compile('\)$')
 p7 = re.compile('\(')
 p8 = re.compile('\)')
 p9 = re.compile('^<BEID:(\d+)>$')
-p10 = re.compile('(?<!^)((?:AND|OR)\((?P<val>[^\)\(,]*)\))', re.I)
+p10 = re.compile('(?<!^)((?:AND|OR|ET|OU)\((?P<val>[^\)\(,]*)\))', re.I)
 p11 = re.compile('\n')
 
 
-s2x1 = re.compile('AND\(', re.I)
-s2x2 = re.compile('OR\(', re.I)
-s2x3 = re.compile('NOT\(', re.I)
+s2x1 = re.compile('(AND|ET)\(', re.I)
+s2x2 = re.compile('(OR|OU)\(', re.I)
+s2x3 = re.compile('(NOT|NON)\(', re.I)
 s2x4 = re.compile(',')
 s2x5 = re.compile('\)')
 s2x6 = re.compile('</p>$')
@@ -85,6 +85,8 @@ class BoolRequest(object):
     def countOps(self):
         return self.equ.count()
 
+    def toH(self):
+        return self.equ.toH()
     def toS(self):
         return self.equ.toS()
     def toXML(self):
@@ -92,6 +94,8 @@ class BoolRequest(object):
 
 # Operators ####################################
 class BoolOperator(object): # abstract
+    def toH(self, list):
+        pass
     def toS(self, list):
         pass
     def toXML(self, list):
@@ -102,6 +106,8 @@ class BoolOperator(object): # abstract
         pass
 
 class BoolOperatorAnd(BoolOperator):
+    def toH(self, list):
+        return ["AND", map(to_h, list.values())]
     def toS(self, list):
         return "AND ("+(', '.join(map(to_s, list.values())))+")"
     def toXML(self, list):
@@ -123,6 +129,8 @@ class BoolOperatorAnd(BoolOperator):
         return ['AND', lists]
 
 class BoolOperatorOr(BoolOperator):
+    def toH(self, list):
+        return ["OR", map(to_h, list.values())]
     def toS(self, list):
         return "OR ("+(', '.join(map(to_s, list.values())))+")"
     def toXML(self, list):
@@ -148,6 +156,8 @@ class BoolOperatorOr(BoolOperator):
         return ['OR', lists]
 
 class BoolOperatorNot(BoolOperator):
+    def toH(self, list):
+        return ["NOT", map(to_h, list.values())]
     def toS(self, list):
         return "NOT ("+(', '.join(map(to_s, list.values())))+")"
     def toXML(self, list):
@@ -159,12 +169,16 @@ class BoolOperatorNot(BoolOperator):
     def getTree(self, lists):
         return ['NOT', lists]
 
+def to_h(obj):
+    return obj.toH()
 def to_xml(obj):
     return obj.toXML()
 def to_s(obj):
     return obj.toS()
 # Elements #####################################
 class BoolElement(object): # abstract
+    def toH(self):
+        pass
     def toS(self):
         pass
     def toXML(self):
@@ -255,6 +269,9 @@ class BoolEquation(BoolElement):
         retour = self.op.getTree(retour)
         return retour
 
+    def toH(self):
+        func = getattr(self.op, 'toH')
+        return func(self.list)
     def toS(self):
         func = getattr(self.op, 'toS')
         return func(self.list)
@@ -266,6 +283,8 @@ class BoolValue(BoolElement):
     def __init__(self, value):
         self.setValue(value)
         self.id = randint(0, 100000)
+    def toH(self):
+        return self.getValue()
     def toS(self):
         return self.getValue()
     def toXML(self):
