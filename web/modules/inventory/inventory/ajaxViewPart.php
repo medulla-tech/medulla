@@ -44,7 +44,7 @@ if ($_GET['uuid'] != '') {
     $graph = getInventoryGraph($table);
     $inv = getLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter, 'min'=>$start, 'max'=>($start + $maxperpage)));
     $count = countLastMachineInventoryPart($table, array('uuid'=>$_GET["uuid"], 'filter'=>$filter));
-
+	
     /* display everything else in separated tables */
     $n = null;
     $h = array();
@@ -57,9 +57,30 @@ if ($_GET['uuid'] != '') {
             $index+=1;
         }
     }
+    
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($table));
+    $disabled_columns[] = 'id';
+    $disabled_columns[] = 'timestamp';
+    $disabled_columns[] = 'Icon';
+    
+    /* TODO Delete this both lines because Type and Application will be removed from inventory database */
+    $disabled_columns[] = 'Type';
+    $disabled_columns[] = 'Application';
+    
+    
+    /* Generate icon => <img src="data:image/jpg;base64,DATA"> */
+    if (isset($h['Icon'])) {
+        $index = 0;
+        foreach ($h['Icon'] as $v) {
+            if ($v != '') {
+                $h['Icon'][$index] = '<IMG src="data:image/jpeg;base64,'.$v.'">';
+        }
+        $index+=1;
+    }
+    $n = new OptimizedListInfos($h['Icon'], '');
+            
     foreach ($h as $k => $v) {
-        if ($k != 'id' && $k != 'timestamp' && !in_array($k, $disabled_columns)) {
+        if (!in_array($k, $disabled_columns)) {
             if (in_array($k, $graph) && count($v) > 1) {
                 $type = ucfirst($_GET['part']);
                 # TODO should give the tab in the from param
@@ -111,8 +132,8 @@ if ($_GET['uuid'] != '') {
                 }
             }
             $index += 1;
-            $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
         }
+        $params[] = array('hostname'=>$machine[0], 'uuid'=>$machine[2]);
     }
     $n = null;
     $disabled_columns = (isExpertMode() ? array() : getInventoryEM($display));
