@@ -72,8 +72,28 @@ class PackageGetA(Pulse2Api):
     def getPackagesDetail(self, pids):
         d = self.callRemote("getPackagesDetail", pids)
         d.addCallback(self.__convertDoRebootList)
-        d.addErrback(self.onError, "getPackagesDetail", pids, False)
+        d.addErrback(self.onErrorGetPackageDetailCall, pids, False)
         return d
+ 
+    def treatMultipleGetPackageDetailCall(self, results):
+        ret = []
+        for i in results:
+            ret.append(i[1])
+        return ret
+
+    def onErrorGetPackageDetailCall(self, error, pids, value = []):
+        # when the package server is old, this one call function does not exists
+        # so we call several time the existing function
+        self.logger.warn("one of your package server does not support getPackagesDetail, you should update it.")
+        ds = []
+        for pid in pids:
+            d = self.paserver.callRemote("getPackageDetail", pid)
+            d.addCallback(self.__convertDoReboot)
+            d.addErrback(self.onError, "getPackageDetail", pid, False)
+            ds.append(d)
+        dl = defer.DeferredList(ds)
+        dl.addCallback(self.treatMultipleGetPackageDetailCall)
+        return dl
 
     def getPackageLabel(self, pid):
         d = self.callRemote("getPackageLabel", pid)
