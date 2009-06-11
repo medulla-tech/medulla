@@ -30,6 +30,7 @@ from ConfigParser import NoOptionError
 from mmc.support import mmctools
 from pulse2.database.msc.config import MscDatabaseConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
+from pulse2.apis import makeURL
 
 # Pulse 2 stuff
 import pulse2.time_intervals
@@ -416,20 +417,4 @@ MIME_DIR = "Directory"
 MIME_DIR_ICON = "folder.png"
 DEFAULT_MIME = "application/octet-stream"
 
-def makeURL(config):
-    if config.has_key('proto') and not config.has_key('enablessl'):
-        uri = "%s://" % config['proto']
-    elif config.has_key('protocol') and not config.has_key('enablessl'):
-        uri = "%s://" % config['protocol']
-    else:
-        if 'enablessl' in config and config['enablessl']:
-            uri = 'https://'
-        else:
-            uri = 'http://'
-    if config.has_key('username') and config['username'] != '':
-        uri += '%s:%s@' % (config['username'], config['password'])
-    if config.has_key('server') and not config.has_key('host'):
-        config['host'] = config['server']
-    uri += '%s:%d' % (config['host'], int(config['port']))
-    return uri
 
