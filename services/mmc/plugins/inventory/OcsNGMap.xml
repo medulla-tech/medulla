@@ -9,6 +9,8 @@
 		<MappedField from="OSNAME" to="OperatingSystem" />
 		<MappedField from="OSVERSION" to="Version" />
 		<MappedField from="OSCOMMENTS" to="Build" />
+		<MappedField from="OSARCHITECTURE" to="OsArchitecture" />
+		<MappedField from="INSTALLDATE" to="OsInstallationDate" />
 		<MappedField from="PROCESSORT" to="ProcessorType" />
 		<MappedField from="PROCESSORS" to="ProcessorFrequency" />
 		<MappedField from="PROCESSORN" to="ProcessorCount" />
@@ -18,11 +20,15 @@
 		<MappedField from="WORKGROUP" to="Workgroup" />
 		<MappedField from="LASTDATE" to="Date" />
 		<MappedField from="USERID" to="User" />
+		<MappedField from="LASTLOGGEDUSER" to="LastLoggedUser" />
+		<MappedField from="DATELASTLOGGEDUSER" to="DateLastLoggedUser" />
 		<MappedField from="WINCOMPANY" to="RegisteredCompany" />
 		<MappedField from="WINOWNER" to="RegisteredName" />
 		<MappedField from="WINPRODID" to="OSSerialNumber" />
+		<MappedField from="WINPRODKEY" to="OsSerialKey" />
 		<MappedField from="DESCRIPTION" to="Description" />
 		<MappedField from="TYPE" to="Type" />
+		<MappedField from="DEFAULTGATEWAY" to="DefaultGateway" />
 
 	</MappedObject>
 
@@ -34,6 +40,8 @@
 		<MappedField from="BMANUFACTURER" to="BiosVendor" />
 		<MappedField from="BVERSION" to="BiosVersion" />
 		<MappedField from="BDATE" to="ChipSerial" />
+		<MappedField from="DATEFIRSTRUN" to="DateFirstSwitchOn" />
+		<MappedField from="DATELASTRUN" to="DateLastSwitchOn" />
 		<MappedField from="TYPE" to="TypeMachine" />
 
 	</MappedObject>
@@ -47,6 +55,7 @@
 		<MappedField from="FREE" to="FreeSpace" />
 		<MappedField from="NUMFILES" to="FileCount" />
 		<MappedField from="VOLUMN" to="VolumeName" />
+		<MappedField from="BURNER" to="CDDVDBurner" />
 
 	</MappedObject>
 
@@ -121,14 +130,20 @@
 		<MappedField from="NAME" to="ProductName" />
 		<MappedField from="VERSION" to="ProductVersion" />
 		<MappedField from="FOLDER" to="ProductPath" />
-		<MappedField from="COMMENTS" to="Comments1" />
+		<MappedField from="COMMENTS" to="Comments" />
 		<MappedField from="FILESIZE" to="ExecutableSize" />
+		<MappedField from="INSTALLDATE" to="InstallationDate" />
+		<MappedField from="UNINSTALL" to="UninstallPath" />
+		<MappedField from="RATEOFUSE" to="RateOfUse" />
+		<MappedField from="ICON" to="Icon" />
+		<MappedField from="FOLDERSIZE" to="FolderSize" />
+		<MappedField from="FROM" to="TypePackage" />
 
 	</MappedObject>
 
 	<MappedObject name="SOUNDS" class="Sound">
 
-		<!--MappedField from="MANUFACTURER" to="Manufacturer" /-->
+		<MappedField from="MANUFACTURER" to="Manufacturer" />
 		<MappedField from="NAME" to="Name" />
 		<MappedField from="DESCRIPTION" to="Description" />
 
@@ -141,7 +156,7 @@
 		<MappedField from="MODEL" to="Model" />
 		<MappedField from="DESCRIPTION" to="Media" />
 		<MappedField from="TYPE" to="StandardType" />
-		<!--MappedField from="DISKSIZE" to="DiskSize" /-->
+		<MappedField from="DISKSIZE" to="DiskSize" />
 
 	</MappedObject>
 
@@ -182,6 +197,11 @@
 		<MappedField from="TYPE" to="Type" />
 	</MappedObject>
 
+    <MappedObject name="REGISTRY" class="Registry">
+        <MappedField from="NAME" to="Path" type="nomenclature"/>
+        <MappedField from="REGVALUE" to="Value" />
+    </MappedObject>
+
 	<MappedObject name="ACCOUNTINFO" class="Null">
 	</MappedObject>
 
@@ -189,6 +209,10 @@
 	</MappedObject>
 
 	<MappedObject name="DEVICEID" class="Null">
+	</MappedObject>
+
+	<MappedObject name="OCSDEBUG" class="InventoryDebugLog">
+		<MappedField from="DEBUGLOG" to="DebugLog" />
 	</MappedObject>
 
 </MappedFields>
