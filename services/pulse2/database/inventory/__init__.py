@@ -38,7 +38,7 @@ import time
 import re
 import logging
 
-DATABASEVERSION = 9
+DATABASEVERSION = 10
 MAX_REQ_NUM = 100
 
 class UserTable(object):

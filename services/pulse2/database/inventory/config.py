@@ -42,7 +42,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
         @return: Return all available inventory parts
         @rtype: list
         """
-        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
+        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity", "InventoryDebugLog" ]
            
     def getInventoryNoms(self, table = None):
         """
