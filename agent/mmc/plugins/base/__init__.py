@@ -29,6 +29,7 @@ from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
+from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
 from mmc.support.uuid import uuid1
 
 from mmc.support import mmctools
@@ -178,10 +179,11 @@ def activate_2():
         if not ret: break
     return ret
 
-class BasePluginConfig(PluginConfig):
+class BasePluginConfig(PluginConfig, LDAPConnectionConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
+        LDAPConnectionConfig.readLDAPConf(self, 'ldap')
         # Selected authentication method
         try:
             self.authmethod = self.get("authentication", "method")
@@ -202,6 +204,9 @@ class BasePluginConfig(PluginConfig):
             self.passwordscheme = self.get("ldap", "passwordscheme")
         except:
             pass
+
+        self.baseDN = self.getdn('ldap', 'baseDN')
+            
         # Where LDAP computer objects are stored
         # For now we ignore if the option does not exist, because it breaks
         # all existing intallations
@@ -220,7 +225,6 @@ class BasePluginConfig(PluginConfig):
         self.provmethod = None
         self.computersmethod = "none"
         self.passwordscheme = "ssha"
-
 
 def getModList():
     """
@@ -627,8 +631,7 @@ class ldapUserGroupControl:
 
         self.logger = logging.getLogger()
 
-        self.ldapHost = self.config.get("ldap", "host")
-        self.baseDN = self.config.getdn("ldap", "baseDN")
+        self.baseDN = self.config.baseDN
         self.baseGroupsDN = self.config.getdn("ldap", "baseGroupsDN")
         self.baseUsersDN = self.config.getdn("ldap", "baseUsersDN").replace(" ", "")
         self.userHomeAction = self.config.getboolean("ldap", "userHomeAction")
@@ -665,13 +668,10 @@ class ldapUserGroupControl:
         if self.config.has_section(USERDEFAULT):
             for option in self.config.options(USERDEFAULT):
                 self.userDefault["base"][option] = self.config.get(USERDEFAULT, option)
-        
-        self.l = ldap.open(self.ldapHost)
 
-        # you should set this to ldap.VERSION2 if you're using a v2 directory
-        self.l.protocol_version = ldap.VERSION3
+        self.l = LDAPConnection(self.config).get()
 
-        # Any errors will throw an ldap.LDAPError exception
+        # Any error will throw a ldap.LDAPError exception
         self.l.simple_bind_s(self.config.username, self.config.password)
 
     def runHook(self, hookName, uid = None, password = None):
@@ -1674,7 +1674,7 @@ class ldapUserGroupControl:
 
         for more info on return type, reference to ldap.schema
         """
-        subschemasubentry_dn, schema = ldap.schema.urlfetch("ldap://" + self.ldapHost)
+        subschemasubentry_dn, schema = ldap.schema.urlfetch(self.config.ldapurl)
         schemaAttrObj = schema.get_obj(ldap.schema.ObjectClass,schemaName)
         if not schemaAttrObj is None:
             return ( Set(schemaAttrObj.must) | Set(schemaAttrObj.may) )
@@ -1779,22 +1779,15 @@ class ldapAuthen:
         If there are any error, self.result is False and a ldap
         exception will be raised.
         """
-        if not conffile: conffile = INI
-        config = ConfigParser.ConfigParser()
-        config.read(conffile)
-
-        self.baseDN = config.get("ldap", "baseUsersDN")
-        
-        ldapHost = config.get("ldap", "host")
-
-        l = ldap.open(ldapHost)
-
-        # connect to an ldap V3 (correct if not v3)
-        l.protocol_version = ldap.VERSION3
+        config = BasePluginConfig("base")
+        conn = LDAPConnection(config)
+        l = conn.get()
 
         # if login == root, try to connect as the LDAP manager
-        if (login == 'root'): username = config.get("ldap", "rootName")
-        else: username = 'uid=' + login + ', ' + self.baseDN
+        if login == 'root':
+            username = config.username
+        else:
+            username = 'uid=' + login + ', ' + config.baseDN
         self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
