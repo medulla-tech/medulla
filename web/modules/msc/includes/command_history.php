@@ -387,15 +387,20 @@ class CommandHistory {
             }
             if (strpos($hist['state'], '_failed') !== False) {
                 $msgs = array(
-                              /* When SSH returns 255, an error occured while
-                                 connecting to the host. On some platforms like
-                                 RHEL 4, buggy SSH returns 1 */
-                              255 => _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc'),
-                              /* Known exit codes */
-                              128 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
-                              128 + 2 => _T("The current host IP address doesn't match the IP address from the inventory database.", 'msc'),
-                              128 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc')
-                              );
+                    // BIG HUGE TODO: should get base value (230) from the agent (PULSE2_WRAPPER_ERROR_PRECHECK_BASE from consts.py)
+                    /* When SSH returns 255, an error occured while
+                     connecting to the host. On some platforms like
+                     RHEL 4, buggy SSH returns 1 */
+                    255 => _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc'),
+                    /* Known exit codes : killed by signal */
+                    200 + 9 => _T("The script was killed by Pulse 2 (timeout ?).", 'msc'),
+                    200 + 15 => _T("The script was terminated by Pulse 2.", 'msc'),
+                    /* Known exit codes : pre-check */
+                    240 + 0 => _T("Something goes wrong while checking client identify.", 'msc'),
+                    240 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
+                    240 + 2 => _T("The current host IP address doesn't match the IP address from the inventory database.", 'msc'),
+                    240 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc'),
+                );
                 if (array_key_exists($hist['error_code'], $msgs)) {
                     $hist['stderr'][] = $msgs[$hist['error_code']];
                 }
