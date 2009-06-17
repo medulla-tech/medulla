@@ -47,8 +47,8 @@ and "pulse2_output_wrapper 0 ls /mnt /nothing" will give you:
 Output lines are formatted like this:
 <timestamp><space><tag><column><space><output line>
 With <tag>:
-  W: the wrapper line, using '·' as separator
-  C: the command line, using '·' as separator
+  W: the wrapper line, using PULSE2_WRAPPER_ARG_SEPARATOR_STR as separator
+  C: the command line, using PULSE2_WRAPPER_ARG_SEPARATOR_STR as separator
   O: something on stdout
   E: something on stderr
   X: the exit code
@@ -64,10 +64,11 @@ import sys
 import os
 import signal
 import re
-SEPARATOR = '·'
+
+from pulse2.consts import *
 
 class ExitCode(object): # the only way I found to exit with the right exit code
-    value = 143 # prepare to be killed
+    value = PULSE2_WRAPPER_ERROR_SIGNAL_BASE + signal.SIGKILL # prepare to be killed with SIGKILL
 
     def __new__(type):
         if not '_the_instance' in type.__dict__:
@@ -86,15 +87,15 @@ class Options(twisted.python.usage.Options):
     do_check = False
 
     optParameters = [
-        ["exec", None, None, "The command to be executed (on the client or on the server, see below), arg separator is '%s'" % SEPARATOR],
-        ["thru", None, None, "The command to wrap the command to execute (if executed on client, see below) and to wrap the client-check, arg separator is '%s', must respect the SSH syntax" % SEPARATOR],
+        ["exec", None, None, "The command to be executed (on the client or on the server, see below), arg separator is '%s'" % PULSE2_WRAPPER_ARG_SEPARATOR_STR],
+        ["thru", None, None, "The command to wrap the command to execute (if executed on client, see below) and to wrap the client-check, arg separator is '%s', must respect the SSH syntax" % PULSE2_WRAPPER_ARG_SEPARATOR_STR],
         ["check-path", None, '/usr/bin/pulse2-client-check.sh', "The 'checker' path (on the client)"],
         ["action", None, None, "Tell to the client we are going to perform a particular action, f.e. 'INVENTORY', 'REBOOT'"],
         ["check-server-side", None, None, "Ask the client to show us some information for further check, f.e. IP=1.2.3.4 will ask the client to display IP, which will be compared against 1.2.3.4 by the wrapper"],
         ["check-client-side", None, None, "Ask the client to check for some informations, f.e. IP=1.2.3.4 will ask the client if ots IP is 1.2.3.4"],
         ["max-log-size", None, None, "Keeps the only first bytes of the output"],
         ["max-exec-time", None, None, "Kill command above this number of seconds"],
-        ]
+    ]
 
     optFlags = [
         ["examples", None, "show me some examples"],
@@ -103,7 +104,7 @@ class Options(twisted.python.usage.Options):
         ["no-wrap", None, "Do not wrap output"],
         ["only-stdout", None, "Only write stdout on the output"],
         ["remove-empty-lines", None, "Do not write empty lines"],
-        ]
+    ]
 
     def __init__(self):
         twisted.python.usage.Options.__init__(self)
@@ -129,9 +130,9 @@ class Options(twisted.python.usage.Options):
         if not self['exec']:
             print '%s: missing string to execute: --help for usage details.' % (sys.argv[0])
             sys.exit(2)
-        self.exec_string = self['exec'].split(SEPARATOR)
+        self.exec_string = self['exec'].split(PULSE2_WRAPPER_ARG_SEPARATOR_STR)
         if self['thru']:
-            self.thru_string = self['thru'].split(SEPARATOR)
+            self.thru_string = self['thru'].split(PULSE2_WRAPPER_ARG_SEPARATOR_STR)
         else:
             self.thru_string = None
         self.check_command = [self['check-path']]
@@ -202,9 +203,11 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
         """ Fired when process has finished
         """
         if reason.value.exitCode != None:
+            # keeps the given exit code
             exitcode = int(reason.value.exitCode)
         else:
-            exitcode = int(reason.value.signal) + 128
+            # killed on signal, shift by PULSE2_WRAPPER_ERROR_SIGNAL_BASE
+            exitcode = int(reason.value.signal) + PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
         format(str(exitcode), 'X')
         ExitCode().set(exitcode)
@@ -225,20 +228,23 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         """
         # compute good exitcode
         if reason.value.exitCode != None:
+            # keeps the given exit code
             exitcode = int(reason.value.exitCode)
         else:
-            exitcode = int(reason.value.signal) + 128
+            # killed on signal, shift by PULSE2_WRAPPER_ERROR_SIGNAL_BASE
+            exitcode = int(reason.value.signal) + PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
         if exitcode == 0: # continue in flow if everything went good
             if self.config['check-server-side']: # if something has to be checked server-side, do it
                 for verif in self.config['check-server-side'].split(','): # iterate over checks to do
                     if not re.search('^%s$' % verif, self.stdout, re.M): # if not found, tell it and exit
                         if config.thru_string:
-                            format(SEPARATOR.join(config.thru_string), 'T')
+                            format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.thru_string), 'T')
                         format("PRE-COMMAND FAILED SERVER SIDE: expected result '%s' was not found !" % (verif), 'P')
-                        format(SEPARATOR.join(config.check_command), 'P')
+                        format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.check_command), 'P')
                         for line in self.stdout.splitlines():
                             format(line, 'P')
+                        format(str(self._getPrecommandExitCode(verif)), 'X')
                         ExitCode().set(self._getPrecommandExitCode(verif))
                         if twisted.internet.reactor.running:
                             twisted.internet.reactor.stop()
@@ -246,23 +252,24 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
             runCommand(self.config)
         else: # something goes bad, print pre-command output then exits
             if config.thru_string:
-                format(SEPARATOR.join(config.thru_string), 'T')
+                format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.thru_string), 'T')
             format("PRE-COMMAND FAILED CLIENT SIDE: exitcode = %s !" % (exitcode), 'P')
-            format(SEPARATOR.join(config.check_command), 'P')
+            format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.check_command), 'P')
             stdout_split = self.stdout.splitlines()
             stderr_split = self.stderr.splitlines()
             for line in stdout_split:
                 format(line, 'P')
             for line in stderr_split:
                 format(line, 'P')
-            if exitcode == 1:
-                # A failure in pre-command should return 1, else something bad
+            if exitcode == PULSE2_WRAPPER_ERROR_PRECHECK:
+                # A failure in pre-command should return PULSE2_WRAPPER_ERROR_PRECHECK, else something bad
                 # happened and we don't touch the exit code
-                
+
                 if len(stdout_split) > 0:
                     exitcode = self._getPrecommandExitCode(stdout_split.pop())
                 elif len(stderr_split) > 0:
                     exitcode = self._getPrecommandExitCode(stderr_split.pop())
+            format(str(exitcode), 'X')
             ExitCode().set(exitcode)
             if twisted.internet.reactor.running:
                 twisted.internet.reactor.stop()
@@ -278,20 +285,15 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         """
         Return special known exit code for pre-command
         """
-        EX_PRECOMMAND = 128 # Base precommand exit code range
-        # Exit codes for pre-defined checks
-        EX_CHECKS = { 'HOSTNAME' : 1,
-                     'IP' : 2,
-                     'MAC' : 3 }
-        exitcode = 1
-        for label in EX_CHECKS:
+        exitcode = PULSE2_WRAPPER_ERROR_PRECHECK_BASE # to handle unknown conditions
+        for label in PULSE2_WRAPPER_ERROR_PRECHECK_TABLE:
             if check.startswith(label):
-                exitcode = EX_PRECOMMAND + EX_CHECKS[label]
+                exitcode = PULSE2_WRAPPER_ERROR_PRECHECK_TABLE[label]
         return exitcode
-        
+
 
 def format(line, tag):
-    """ Format a line as expected (see upper)
+    """ Format a line as expected (see above)
     * attempt to guess encoding (currently try 'windows-1252', 'utf-8',
      'cp850', 'latin-1' and fallback to ascii)
     * convert to utf-8
@@ -302,6 +304,9 @@ def format(line, tag):
     if config["remove-empty-lines"] and not len(line):
         return
     for codec in ['utf-8', 'cp850', 'latin-1', 'windows-1252']:
+        if type(line) == type(unicode()): # input line can already be unicode
+            uline = line
+            break
         try:
             uline = unicode(line, codec)
             break
@@ -322,19 +327,19 @@ def format(line, tag):
 
 def runCommand(config):
     if config.thru_string and not config['exec-server-side']: # handle command wrapping if needed
-        format(SEPARATOR.join(config.thru_string), 'T')
-        format(SEPARATOR.join(config.exec_string), 'C')
+        format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.thru_string), 'T')
+        format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.exec_string), 'C')
         headarg = config.thru_string[0]
         tailargs = config.thru_string + config.exec_string
     else:
-        format(SEPARATOR.join(config.exec_string), 'C')
+        format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.exec_string), 'C')
         headarg = config.exec_string[0]
         tailargs = config.exec_string
 
     # fork process
     if not os.access(headarg, os.X_OK):
         print '%s: %s can\'t be executed !' % (sys.argv[0], headarg)
-        ExitCode().set(1)
+        ExitCode().set(PULSE2_WRAPPER_ERROR_FAILURE)
         if twisted.internet.reactor.running:
             twisted.internet.reactor.stop()
         return
@@ -358,7 +363,7 @@ def runCheckCommand(config):
     # fork process
     if not os.access(headarg, os.X_OK):
         print '%s: %s can\'t be executed !' % (sys.argv[0], headarg)
-        ExitCode().set(1)
+        ExitCode().set(PULSE2_WRAPPER_ERROR_FAILURE)
         if twisted.internet.reactor.running:
             twisted.internet.reactor.stop()
         return
@@ -384,7 +389,7 @@ try:
 except twisted.python.usage.UsageError, errortext:
     print '%s: %s' % (sys.argv[0], errortext)
     print '%s: Try --help for usage details.' % (sys.argv[0])
-    sys.exit(1)
+    sys.exit(PULSE2_WRAPPER_ERROR_FAILURE)
 
 purged_env = {} # hold "secured" env vars
 

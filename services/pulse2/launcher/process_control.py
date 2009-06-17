@@ -36,6 +36,7 @@ import twisted.internet.protocol
 # Others Pulse2 Stuff
 import pulse2.utils
 from pulse2.launcher.config import LauncherConfig
+from pulse2.consts import *
 
 def commandRunner(cmd, cbCommandEnd):
     """
@@ -167,10 +168,12 @@ class commandProtocol(twisted.internet.protocol.ProcessProtocol):
         # exitCode
         # signal
         # status
-        # as we leave under unix, error code is <exit status>, or <sig> + 128)
+        # error code is <exit status>, or <sig> + PULSE2_WRAPPER_ERROR_SIGNAL_BASE)
+        # note: to be posixly-compliant, error code should <sig> + 128,
+        # see pulse2/consts.py to know why we do not do this
 
         self.status = reason.value.status
-        self.exit_code = reason.value.exitCode or (reason.value.signal and reason.value.signal + 128) or 0 # # no exit code => POSIX compatibility
+        self.exit_code = reason.value.exitCode or (reason.value.signal and reason.value.signal + PULSE2_WRAPPER_ERROR_SIGNAL_BASE) or 0 # # no exit code => POSIX compatibility
         self.signal = reason.value.signal or 0  # no signal => force signal to zero
 
         timestamp = time.time()

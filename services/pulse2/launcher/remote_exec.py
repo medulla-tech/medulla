@@ -39,8 +39,7 @@ import pulse2.launcher.process_control
 import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.xmlrpc import getProxy
-
-SEPARATOR = u'·'
+from pulse2.consts import *
 
 def sync_remote_push(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, sync mode """
@@ -79,9 +78,9 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--exec',
-            SEPARATOR.join(real_command),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec-server-side'
         ]
 
@@ -163,9 +162,9 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            SEPARATOR.join(real_command),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -215,9 +214,9 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            SEPARATOR.join(real_command),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -308,9 +307,9 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            SEPARATOR.join(real_command),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -373,9 +372,9 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            SEPARATOR.join(real_command),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -437,9 +436,9 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -504,9 +503,9 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
             '--no-wrap',
             '--only-stdout',
             '--remove-empty-lines'
@@ -580,9 +579,9 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -646,9 +645,9 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -712,9 +711,9 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
             '--max-exec-time',
             str(wrapper_timeout),
             '--thru',
-            SEPARATOR.join(thru_command_list),
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
             '--exec',
-            real_command, # we do not use the SEPARATOR here, as the command is send "as is"
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
         ]
 
         # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
@@ -777,9 +776,9 @@ def from_remote_to_launcher(command_id, client, paths, targetpath, bwlimit, wrap
         '--max-exec-time',
         str(wrapper_timeout),
         '--exec',
-        SEPARATOR.join(real_command),
+        PULSE2_WRAPPER_ARG_SEPARATOR.join(real_command),
         '--thru',
-        SEPARATOR.join(thru_command_list),
+        PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
         '--exec-server-side'
         ]
 
