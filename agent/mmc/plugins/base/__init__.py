@@ -1304,21 +1304,22 @@ class ldapUserGroupControl:
 
     def getDetailedGroupById(self, id, base = None):
         """
-         Return raw ldap info on a group
+        Return raw ldap info on a group
+        
+        @param uid: gidNumber
+        @type uid: int
 
-         @param uid: gidNumber
-         @type uid: str
-
-         @return: full raw ldap array (dictionnary of lists)
-         @type: dict
+        @return: full raw ldap array (dictionnary of lists)
+        @type: dict
         """
-        ret = self.search("gidNumber=" + str(id), self.baseGroupsDN)
-        newattrs = []
+        if not base: base = self.baseGroupsDN
+        ret = self.search("gidNumber=" + str(id), base)
+        newattrs = {}
         if ret:
             for result in ret:
-                c,attrs=result[0]
+                c, attrs = result[0]
                 newattrs = copy.deepcopy(attrs)
-                return newattrs
+                break
 
         return newattrs
 
