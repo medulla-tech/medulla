@@ -71,13 +71,27 @@ def activate():
         return False
 
     # Test if the DNS/LDAP schema is available in the directory
-    try:
-        schema = ldapObj.getSchema("dNSZone")
-        if len(schema) <= 0:
-            logger.error("DNS zone schema is not included in LDAP directory");
+    serverType = config.dnsType
+    if serverType == "pdns":
+        try:
+            schema = ldapObj.getSchema("dNSDomain2")
+            if len(schema) <= 0:
+                logger.error("DNS zone schema (dnsdomain2.schema) is not included in LDAP directory");
+                return False
+        except:
+            logger.exception("invalid DNS schema")
             return False
-    except:
-        logger.exception("invalid schema")
+    elif serverType == "bind":
+        try:
+            schema = ldapObj.getSchema("dNSZone")
+            if len(schema) <= 0:
+                logger.error("DNS zone schema (dnszone.schema) is not included in LDAP directory");
+                return False
+        except:
+            logger.exception("invalid DNS schema")
+            return False
+    else:
+        logger.error("%s : Unknown DNS server."%serverType);
         return False
 
     # Create required OUs
@@ -108,26 +122,27 @@ def activate():
         pass
 
     # Create DNS config base structure
-    try:
-        gidNumber = grp.getgrnam(config.bindGroup)
-    except KeyError:
-        logger.error('The group "%s" does not exist.' % config.bindGroup)
-        return False
-    gidNumber = gidNumber[2]
+    if serverType == "bind":
+        try:
+            gidNumber = grp.getgrnam(config.bindGroup)
+        except KeyError:
+            logger.error('The group "%s" does not exist.' % config.bindGroup)
+            return False
+        gidNumber = gidNumber[2]
     
-    try:
-        os.mkdir(config.bindLdapDir)
-        os.chmod(config.bindLdapDir, 02750)
-        os.chown(config.bindLdapDir, -1, gidNumber)
-    except OSError, e:
-        # errno = 17 is "File exists"
-        if e.errno != 17: raise    
+        try:
+            os.mkdir(config.bindLdapDir)
+            os.chmod(config.bindLdapDir, 02750)
+            os.chown(config.bindLdapDir, -1, gidNumber)
+        except OSError, e:
+            # errno = 17 is "File exists"
+            if e.errno != 17: raise
 
-    if not os.path.exists(config.bindLdap):
-        f = open(config.bindLdap, "w")
-        f.close()
-        os.chmod(config.bindLdap, 0640)
-        os.chown(config.bindLdap, -1, gidNumber)        
+        if not os.path.exists(config.bindLdap):
+            f = open(config.bindLdap, "w")
+            f.close()
+            os.chmod(config.bindLdap, 0640)
+            os.chown(config.bindLdap, -1, gidNumber)        
     
     return True
 
@@ -344,6 +359,10 @@ class NetworkConfig(PluginConfig):
         self.dhcpLogFile = self.get("dhcp", "logfile")
         self.dhcpLeases = self.get("dhcp", "leases")
         # DNS conf
+        try:
+            self.dnsType = self.get("dns", "type")
+        except NoOptionError:
+            self.dnsType = "bind"
         self.dnsDN = self.getdn("dns", "dn")        
         self.dnsPidFile = self.get("dns", "pidfile")
         self.dnsInit = self.get("dns", "init")
@@ -368,4 +387,4 @@ class NetworkConfig(PluginConfig):
     def setDefault(self):
         PluginConfig.setDefault(self)
         self.dnsReader = None
-        self.dnsReaderPassword = None        
+        self.dnsReaderPassword = None

@@ -41,6 +41,15 @@ class Dns(ldapUserGroupControl):
             self.configDns.dnsReader = self.config.get("ldap", "rootName")
         if not self.configDns.dnsReaderPassword:
             self.configDns.dnsReaderPassword = self.config.get("ldap", "password")            
+        if self.configDns.dnsType == "pdns":
+            self.pdns = True
+            self.zoneNameField = "associatedDomain"
+            self.relativeDomainNameField = "associatedDomain"
+        else:
+            self.pdns = False
+            self.zoneNameField = "zoneName"
+            self.relativeDomainNameField = "relativeDomainName"
+
         self.reverseMarkup = "Reverse:"
         self.reversePrefix = ".in-addr.arpa"
         self.templateZone = """
@@ -77,7 +86,7 @@ zone "%(zone)s" {
         """
         ret = []
         for result in self.getZones(self.reversePrefix, True):
-            ret.append(self.translateReverse(result[1]["zoneName"][0]))
+            ret.append(self.translateReverse(result[1][self.zoneNameField][0]))
         return ret
         
     def getReverseZone(self, name):
@@ -85,9 +94,17 @@ zone "%(zone)s" {
         Return the name of the reverse zone of a zone
         """
         ret = []
-        for result in self.getZones(reverse = True, base = "ou=" + name + "," + self.configDns.dnsDN):
-            zoneName = result[1]["zoneName"][0]
-            if zoneName.endswith(self.reversePrefix): ret.append(zoneName)            
+        if self.pdns:
+            tmpZones = self.getZones(reverse = True, base = self.configDns.dnsDN)
+            for result in tmpZones:
+                zoneName = result[1][self.zoneNameField][0]
+                nsRecord = result[1]["nSRecord"][0]
+                if zoneName.endswith(self.reversePrefix) and nsRecord.endswith(".%s"%name): ret.append(zoneName)
+        else:
+            tmpZones = self.getZones(reverse = True, base = "ou=" + name + "," + self.configDns.dnsDN)
+            for result in tmpZones:
+                zoneName = result[1][self.zoneNameField][0]
+                if zoneName.endswith(self.reversePrefix): ret.append(zoneName)            
         return ret
 
     def getZoneObjects(self, name, filt = None):
@@ -98,10 +115,13 @@ zone "%(zone)s" {
             filt = "*" + filt.strip() + "*"
         else:
             filt = "*"
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (name, filt), None)
+        if self.pdns:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s.%s))" % (filt, name), None)
+        else:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (name, filt), None)
         ret = []
         for result in search:
-            relative = result[1]["relativeDomainName"][0]
+            relative = result[1][self.relativeDomainNameField][0]
             # Don't count these entries
             if relative != "@" and relative != name + ".":
                 ret.append(result)
@@ -111,17 +131,25 @@ zone "%(zone)s" {
         """
         Return the number of objects defined in a zone
         """
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s))" % (name), ["relativeDomainName"])
         count = 0
+        if self.pdns:
+            print "dc=" + name + "," + self.configDns.dnsDN
+            search = self.l.search_s("dc=" + name + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSDomain2)(associatedDomain=*.%s))" % (name), ["associatedDomain"])
+        else:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s))" % (name), ["relativeDomainName"])
+        
         for result in search:
-            relative = result[1]["relativeDomainName"][0]
+            relative = result[1][self.relativeDomainNameField][0]
             # Don't count these entries
             if relative != "@" and relative != name + ".":
                 count = count + 1
         return count
 
     def getZone(self, zoneName):
-        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zoneName, zoneName + "."), None)        
+        if self.pdns:
+            return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" % (zoneName), None)
+        else:
+            return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zoneName, zoneName + "."), None)        
         
     def getZones(self, filt = "", reverse = False, base = None):
         """
@@ -131,14 +159,23 @@ zone "%(zone)s" {
         if not filt: filt = "*"
         else: filt = "*" + filt + "*"
         if not base: base = self.configDns.dnsDN
-        search = self.l.search_s(base, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (filt, filt), None)
         ret = []
-        for result in search:
-            if (result[1]["zoneName"][0] + ".") == result[1]["relativeDomainName"][0]:
-                if self.reversePrefix in result[1]["zoneName"][0]:
+        if self.configDns.dnsType == "pdns":
+            search = self.l.search_s(base, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(soarecord=*)(associatedDomain=%s))" %filt, None)
+            for result in search:
+                if self.reversePrefix in result[1][self.zoneNameField][0]:
                     # Reverse zone
                     if reverse: ret.append(result)
                 else: ret.append(result)
+            
+        else:
+            search = self.l.search_s(base, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (filt, filt), None)
+            for result in search:
+                if (result[1]["zoneName"][0] + ".") == result[1]["relativeDomainName"][0]:
+                    if self.reversePrefix in result[1][self.zoneNameField][0]:
+                        # Reverse zone
+                        if reverse: ret.append(result)
+                    else: ret.append(result)
         return ret
 
     def zoneExists(self, zone):
@@ -168,32 +205,34 @@ zone "%(zone)s" {
             else:
                 raise "Won't create reverse zone as asked, netmask is not 8, 16 or 24"
 
-        f = open(os.path.join(self.configDns.bindLdapDir, name), "w")
-        d = {
-            "zone" : name,
-            "ldapurl" : self.ldapHost + "/" + self.configDns.dnsDN,
-            "dnsreader": urllib.quote(self.configDns.dnsReader),
-            "dnsreaderpasswd" : urllib.quote(self.configDns.dnsReaderPassword)
-            }
-        f.write(self.templateZone % d)
-        if reverse:
-            d["zone"] = self.reverseZone(network)
+        if not self.pdns:
+            # Create Bind configuration files
+            f = open(os.path.join(self.configDns.bindLdapDir, name), "w")
+            d = {
+                "zone" : name,
+                "ldapurl" : self.ldapHost + "/" + self.configDns.dnsDN,
+                "dnsreader": urllib.quote(self.configDns.dnsReader),
+                "dnsreaderpasswd" : urllib.quote(self.configDns.dnsReaderPassword)
+                }
             f.write(self.templateZone % d)
-        f.close()
-        os.chmod(os.path.join(self.configDns.bindLdapDir, name), 0640)
-
-        f = open(self.configDns.bindLdap, "r")
-        found = False
-        toadd = 'include "' + os.path.join(self.configDns.bindLdapChrootConfPath, name) + '";\n'
-        for line in f:
-            if line == toadd:
-                found = True
-                break
-        f.close()
-        if not found:
-            f = open(self.configDns.bindLdap, "a")
-            f.write(toadd)
+            if reverse:
+                d["zone"] = self.reverseZone(network)
+                f.write(self.templateZone % d)
             f.close()
+            os.chmod(os.path.join(self.configDns.bindLdapDir, name), 0640)
+
+            f = open(self.configDns.bindLdap, "r")
+            found = False
+            toadd = 'include "' + os.path.join(self.configDns.bindLdapChrootConfPath, name) + '";\n'
+            for line in f:
+                if line == toadd:
+                    found = True
+                    break
+            f.close()
+            if not found:
+                f = open(self.configDns.bindLdap, "a")
+                f.write(toadd)
+                f.close()
 
         # Create the needed zones object in LDAP
         if reverse:
@@ -205,10 +244,15 @@ zone "%(zone)s" {
         
         # Fill SOA
         self.addSOA(name)
-        ns = nameserver + "." + name + "."
+        if self.pdns:
+            ns = nameserver + "." + name
+            mailaddr = "admin." + name
+        else:
+            ns = nameserver + "." + name + "."
+            mailaddr = "admin." + name + "."
         rec = {
             "nameserver" : ns,
-            "emailaddr" :  "admin." + name + ".",
+            "emailaddr" :  mailaddr,
             "serial" : self.computeSerial(),
             "refresh" : "2D",
             "retry" : "15M",
@@ -234,18 +278,26 @@ zone "%(zone)s" {
         
         @param name: the zone name to delete     
         """
-        self.delRecursiveEntry("ou=" + zone + "," + self.configDns.dnsDN)
-        os.unlink(os.path.join(self.configDns.bindLdapDir, zone))
-        newcontent = []
-        f = open(self.configDns.bindLdap, "r")
-        for line in f:
-            if not "/" + zone + '";' in line:
-                newcontent.append(line)
-        f.close()
-        f = open(self.configDns.bindLdap, "w+")
-        for line in newcontent:
-            f.write(line)
-        f.close()
+        if self.pdns:
+            zoneDN = "dc=" + zone + "," + self.configDns.dnsDN
+            self.delRecursiveEntry(zoneDN)
+            reverseDN = self.getReverseZone(zone)
+            if reverseDN[0]:
+                self.delRecursiveEntry("dc=" + reverseDN[0] + "," + self.configDns.dnsDN)
+        else:
+            zoneDN = "ou=" + zone + "," + self.configDns.dnsDN
+            self.delRecursiveEntry(zoneDN)
+            os.unlink(os.path.join(self.configDns.bindLdapDir, zone))
+            newcontent = []
+            f = open(self.configDns.bindLdap, "r")
+            for line in f:
+                if not "/" + zone + '";' in line:
+                    newcontent.append(line)
+            f.close()
+            f = open(self.configDns.bindLdap, "w+")
+            for line in newcontent:
+                f.write(line)
+            f.close()
         
     def addDnsZone(self, zoneName, description = None, container = None):
         """
@@ -253,40 +305,55 @@ zone "%(zone)s" {
         """
         if not container: container = zoneName
         # Create the container of this zone and its reverses if it does not exist
-        try:
-            self.addOu(container, self.configDns.dnsDN)
-        except ldap.ALREADY_EXISTS:
-            pass
-        # Create the ou defining this zone and that will contain all records
-        self.addOu(zoneName, "ou=" + container + "," + self.configDns.dnsDN)
-        dn = "zoneName=" + zoneName + "," + "ou=" + zoneName + "," + "ou=" + container + "," + self.configDns.dnsDN
-        entry = {
-            "zoneName" : zoneName,
-            "objectClass" : ["top", "dNSZone"],
-            "relativeDomainName" : zoneName + ".",
-            }
-        if description: entry["tXTRecord"] = [description]
+        if self.pdns:
+            dn = "dc=" + zoneName + "," + self.configDns.dnsDN
+            entry = {
+                "associateddomain" : zoneName,
+                "objectClass" : ["top", "domainrelatedobject", "dnsdomain2", "dcobject"],
+                "dc" : zoneName,
+                }
+            if description: entry["tXTRecord"] = [description]
+        else:
+            try:
+                self.addOu(container, self.configDns.dnsDN)
+            except ldap.ALREADY_EXISTS:
+                pass
+            # Create the ou defining this zone and that will contain all records
+            self.addOu(zoneName, "ou=" + container + "," + self.configDns.dnsDN)
+            dn = "zoneName=" + zoneName + "," + "ou=" + zoneName + "," + "ou=" + container + "," + self.configDns.dnsDN
+            entry = {
+                "zoneName" : zoneName,
+                "objectClass" : ["top", "dNSZone"],
+                "relativeDomainName" : zoneName + ".",
+                }
+            if description: entry["tXTRecord"] = [description]
         attributes = [ (k,v) for k,v in entry.items() ]
         self.l.add_s(dn, attributes)
 
     def addSOA(self, zoneName, container = None, dnsClass = "IN"):
         if not container: container = zoneName
-        dn = "relativeDomainName=@," + "ou=" + zoneName + "," + "ou=" + container + "," + self.configDns.dnsDN
-        entry = {
-            "zoneName" : zoneName,
-            "objectClass" : ["top", "dNSZone"],
-            "relativeDomainName" : "@",
-            "dnsClass" : dnsClass
-            }
-        attributes=[ (k,v) for k,v in entry.items() ]
-        self.l.add_s(dn, attributes)        
+        if not self.pdns:
+            dn = "relativeDomainName=@," + "ou=" + zoneName + "," + "ou=" + container + "," + self.configDns.dnsDN
+            entry = {
+                "zoneName" : zoneName,
+                "objectClass" : ["top", "dNSZone"],
+                "relativeDomainName" : "@",
+                "dnsClass" : dnsClass
+                }
+            attributes=[ (k,v) for k,v in entry.items() ]
+            self.l.add_s(dn, attributes)        
 
     def setSOARecord(self, zoneName, record):
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
-        if soa:
-            soaDN = soa[0][0]
+        if self.pdns:
+            zoneDN = "dc=" + zoneName + "," + self.configDns.dnsDN
             s = "%(nameserver)s %(emailaddr)s %(serial)s %(refresh)s %(retry)s %(expiry)s %(minimum)s" % record
-            self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "sOARecord", [s])])
+            self.l.modify_s(zoneDN, [(ldap.MOD_REPLACE, "soarecord", [s])])
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+            if soa:
+                soaDN = soa[0][0]
+                s = "%(nameserver)s %(emailaddr)s %(serial)s %(refresh)s %(retry)s %(expiry)s %(minimum)s" % record
+                self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "sOARecord", [s])])
 
     def setSOANSRecord(self, zoneName, nameserver):
         """
@@ -294,10 +361,14 @@ zone "%(zone)s" {
         It updates the SOARecord field and nsRecord field of the @ LDAP entry
         of this given zone.
         """
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
-        if soa:
-            soaDN = soa[0][0]
-            self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "nSRecord", [nameserver])])
+        if self.pdns:
+            zoneDN = "dc=" + zoneName + "," + self.configDns.dnsDN
+            self.l.modify_s(zoneDN, [(ldap.MOD_REPLACE, "nsrecord", [nameserver])])
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+            if soa:
+                soaDN = soa[0][0]
+                self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "nSRecord", [nameserver])])
         # Also sync SOA record if there is one
         soaRecord = self.getSOARecord(zoneName)
         if soaRecord:
@@ -311,22 +382,29 @@ zone "%(zone)s" {
         The nsRecord corresponding to the name server containted into the
         SOARecord field won't be deleted. Use the setSOANSRecord to update it.
         """
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
-        if soa:
-            soaDN = soa[0][0]
-            soanameserver = soa[0][1]["sOARecord"][0].split()[0]
-            # Assert that the name server contained into the SOA record won't
-            # be deleted
-            if soanameserver not in nameservers:
-                nameservers.append(soanameserver)
-            self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "nSRecord", nameservers)])
-            self.updateZoneSerial(zoneName)
+        if self.pdns:
+            zoneDN = "dc=" + zoneName + "," + self.configDns.dnsDN
+            self.l.modify_s(zoneDN, [(ldap.MOD_REPLACE, "nsrecord", nameservers)])
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+            if soa:
+                soaDN = soa[0][0]
+                soanameserver = soa[0][1]["sOARecord"][0].split()[0]
+                # Assert that the name server contained into the SOA record won't
+                # be deleted
+                if soanameserver not in nameservers:
+                    nameservers.append(soanameserver)
+                self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "nSRecord", nameservers)])
+                self.updateZoneSerial(zoneName)
 
     def setMXRecords(self, zoneName, mxservers):
         """
         Update the mXRecord fields of the @ LDAP entry of the given zone.
         """
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if self.pdns:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s)(soarecord=*))" % zoneName, None)
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
         if soa:
             soaDN = soa[0][0]
             self.l.modify_s(soaDN, [(ldap.MOD_REPLACE, "mXRecord", mxservers)])
@@ -353,7 +431,10 @@ zone "%(zone)s" {
         @rtype: dict
         """
         ret = {}
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, ["soaRecord"])
+        if self.pdns:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" % zoneName, ["soaRecord"])
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, ["soaRecord"])
         if soa:
             try:
                 ret["nameserver"], ret["emailaddr"], ret["serial"], ret["refresh"], ret["retry"], ret["expiry"], ret["minimum"] = soa[0][1]["sOARecord"][0].split()
@@ -366,7 +447,10 @@ zone "%(zone)s" {
         Get the name servers of a zone
         """
         ret = []
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if self.pdns:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associateddomain=%s))" % zoneName, None)
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
         if soa:
             soaDN = soa[0][0]
             ret = soa[0][1]["nSRecord"]
@@ -377,7 +461,10 @@ zone "%(zone)s" {
         Get the MX servers of a zone
         """
         ret = []
-        soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
+        if self.pdns:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associateddomain=%s))" % zoneName, None)
+        else:
+            soa = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=@))" % zoneName, None)
         if soa:
             soaDN = soa[0][0]
             try:
@@ -395,7 +482,11 @@ zone "%(zone)s" {
         elements.reverse()
         while elements:
             rev = ".".join(elements) + self.reversePrefix
-            ret = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s))" % rev, None)
+            if self.pdns:
+                ret = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associateddomain=*.%s)" % rev, None)
+            else:
+                ret = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s))" % rev, None)
+            
             if ret:
                 elements.reverse()
                 # Return the reverse zone name and how the IPs are beginning in this zone
@@ -434,7 +525,7 @@ zone "%(zone)s" {
         ret = []
         oldaliases = []
         for record in self.getCNAMEs(zone, host):
-            oldalias = record[1]["relativeDomainName"][0]
+            oldalias = record[1][self.relativeDomainNameField][0]
             oldaliases.append(oldalias)
             if oldalias not in aliases:
                 # Delete alias
@@ -470,15 +561,25 @@ zone "%(zone)s" {
                 raise "%s in not a A record" % cname
         except IndexError:                   
             raise "'%s' A record does not exist in the DNS zone" % cname
-        # Add the CNAME record
-        dn = "relativeDomainName=" + alias + "," + "ou=" + zone + "," + "ou=" + zone + "," + self.configDns.dnsDN
-        entry = {
-            "relativeDomainName" : alias,
-            "objectClass" : ["top", "dNSZone"],
-            "zoneName" : zone,
-            "dNSClass" : dnsClass,
-            "CNAMERecord" : cname,
-        }
+        
+        if self.pdns:
+            dn = "dc=" + alias  + "," +"dc=" + zone + "," + self.configDns.dnsDN
+            entry = {
+                "associateddomain" : alias + "." + zone,
+                "objectClass" : ["top", "domainrelatedobject", "dnsdomain2"],
+                "dc" : alias,
+                "cnamerecord" : cname  + "." + zone,
+                }
+        else:
+            # Add the CNAME record
+            dn = "relativeDomainName=" + alias + "," + "ou=" + zone + "," + "ou=" + zone + "," + self.configDns.dnsDN
+            entry = {
+                "relativeDomainName" : alias,
+                "objectClass" : ["top", "dNSZone"],
+                "zoneName" : zone,
+                "dNSClass" : dnsClass,
+                "CNAMERecord" : cname,
+            }
         attributes=[ (k,v) for k,v in entry.items() ]
         self.l.add_s(dn, attributes)
         self.updateZoneSerial(zone)    
@@ -491,15 +592,24 @@ zone "%(zone)s" {
         @rtype: int
         """
         ret = 1
-        if not container: container = zone
-        dn = "relativeDomainName=" + hostname + "," + "ou=" + zone + "," + "ou=" + container + "," + self.configDns.dnsDN
-        entry = {
-            "relativeDomainName" : hostname,
-            "objectClass" : ["top", "dNSZone"],
-            "zoneName" : zone,
-            "dNSClass" : dnsClass,
-            "aRecord" : ip,
-        }
+        if self.pdns:
+            dn = "dc=" + hostname  + "," +"dc=" + zone + "," + self.configDns.dnsDN
+            entry = {
+                "associateddomain" : hostname + "." + zone,
+                "objectClass" : ["top", "domainrelatedobject", "dnsdomain2"],
+                "dc" : hostname,
+                "aRecord" : ip,
+                }
+        else:
+            if not container: container = zone
+            dn = "relativeDomainName=" + hostname + "," + "ou=" + zone + "," + "ou=" + container + "," + self.configDns.dnsDN
+            entry = {
+                "relativeDomainName" : hostname,
+                "objectClass" : ["top", "dNSZone"],
+                "zoneName" : zone,
+                "dNSClass" : dnsClass,
+                "aRecord" : ip,
+            }
         attributes=[ (k,v) for k,v in entry.items() ]
         self.l.add_s(dn, attributes)
         self.updateZoneSerial(zone)
@@ -518,14 +628,23 @@ zone "%(zone)s" {
                 elements.reverse()
                 elements.pop() # Remove the last "."
                 relative = ".".join(elements)
-                dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + "ou=" + container + "," + self.configDns.dnsDN
-                entry = {
-                    "relativeDomainName" : relative,
-                    "objectClass" : ["top", "dNSZone"],
-                    "zoneName" : revZone,
-                    "dNSClass" : dnsClass,
-                    "pTRRecord" : hostname + "." + zone + ".",
-                }
+                if self.pdns:
+                    dn = "dc=" + relative + "," + "dc=" + revZone + "," + self.configDns.dnsDN
+                    entry = {
+                        "dc" : relative,
+                        "objectClass" : ["top", "domainrelatedobject", "dnsdomain2"],
+                        "associatedDomain" : relative + "." + revZone,
+                        "pTRRecord" : hostname + "." + zone,
+                    }
+                else:
+                    dn = "relativeDomainName=" + relative + "," + "ou=" + revZone + "," + "ou=" + container + "," + self.configDns.dnsDN
+                    entry = {
+                        "relativeDomainName" : relative,
+                        "objectClass" : ["top", "dNSZone"],
+                        "zoneName" : revZone,
+                        "dNSClass" : dnsClass,
+                        "pTRRecord" : hostname + "." + zone + ".",
+                    }
                 attributes=[ (k,v) for k,v in entry.items() ]
                 self.l.add_s(dn, attributes)
                 self.updateZoneSerial(revZone)
@@ -536,7 +655,12 @@ zone "%(zone)s" {
         """
         Get all CNAME records that points to the given hostname
         """
-        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
+        if hostname.endswith("."+zone): fqdn = hostname
+        else: fqdn = hostname + "." + zone
+        if self.pdns:
+            return self.l.search_s("dc=" + zone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(cNAMERecord=%s))" % (fqdn), None)
+        else:
+            return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(cNAMERecord=%s))" % (zone, hostname), None)
 
     def delCNAMEs(self, zone, hostname):
         """
@@ -553,7 +677,12 @@ zone "%(zone)s" {
         If the RR is a A record where CNAME are linked in, the CNAME records
         are also removed.        
         """
-        host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
+        if hostname.endswith("."+zone): fqdn = hostname
+        else: fqdn = hostname + "." + zone
+        if self.pdns:
+            host = self.l.search_s("dc=" + zone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" %fqdn, None)
+        else:
+            host = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if host:
             # If the deleted resource is a type A record, the aliases must be
             # removed if they exist
@@ -564,7 +693,10 @@ zone "%(zone)s" {
         # Also remove reverse entry
         revzones = self.getReverseZone(zone)
         for revzone in revzones:
-            revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
+            if self.pdns:
+                revhost = self.l.search_s("dc=" + revzone + "," +self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(pTRRecord=%s))" %fqdn, None)
+            else:
+                revhost = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revzone, hostname + "." + zone + "."), None)
             if revhost:
                 self.l.delete_s(revhost[0][0])
                 self.updateZoneSerial(revzone)
@@ -608,14 +740,22 @@ zone "%(zone)s" {
         This method is useful to know if we can record a machine in a zone
         without duplicate.
         """
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
+        if hostname.endswith("."+zone): fqdn = hostname
+        else: fqdn = hostname + "." + zone
+        if self.pdns:
+            search = self.l.search_s("dc=" + zone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" % (fqdn), None)
+        else:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if search: return True
         revZone = self.getReverseZone(zone)
         if revZone:
             # Search host in the reverse zone
             revZone = revZone[0]
-            fqdn = hostname + "." + zone + "."
-            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revZone, fqdn), None)
+            if self.pdns:
+                search = self.l.search_s("dc=" + revZone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(dc=%s))" % (fqdn), None)
+            else:
+                fqdn = fqdn + "."
+                search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(pTRRecord=%s))" % (revZone, fqdn), None)
             return len(search) > 0
         return False
 
@@ -628,7 +768,10 @@ zone "%(zone)s" {
         This method is useful to know if we can record a machine in a zone
         without duplicate.
         """
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(aRecord=%s))" % (zone, ip), None)
+        if self.pdns:
+            search = self.l.search_s("dc=" + zone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(aRecord=%s))" %ip, None)
+        else:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(aRecord=%s))" % (zone, ip), None)
         if search: return True
         revZone = self.getReverseZone(zone)
         if revZone:
@@ -640,7 +783,10 @@ zone "%(zone)s" {
             elements.reverse()
             elements.pop() # Remove the last "."
             relative = ".".join(elements)
-            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (revZone, relative), None)
+            if self.pdns:
+                search = self.l.search_s("dc=" + revZone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" %relative, None)
+            else:
+                search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (revZone, relative), None)
             return len(search) > 0
         return False
 
@@ -652,7 +798,12 @@ zone "%(zone)s" {
         @rtype: str
         """
         ret = ""
-        search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
+        if hostname.endswith("."+zone): fqdn = hostname
+        else: fqdn = hostname + "." + zone
+        if self.pdns:
+            search = self.l.search_s("dc=" + zone + "," + self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s))" %fqdn, None)
+        else:
+            search = self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, hostname), None)
         if search:
             try:
                 ret = search[0][1]["aRecord"][0]
@@ -697,7 +848,12 @@ zone "%(zone)s" {
         @return: a domain name resource record (RR)
         @rtype: dict
         """
-        return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, rr), None)
+        if self.pdns:
+            if rr.endswith(zone):
+                rr, tmp = rr.split(".")
+            return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dnsdomain2)(associatedDomain=%s.%s))" % (rr, zone), None)
+        else:
+            return self.l.search_s(self.configDns.dnsDN, ldap.SCOPE_SUBTREE, "(&(objectClass=dNSZone)(zoneName=%s)(relativeDomainName=%s))" % (zone, rr), None)
 
 
 class DnsService(ServiceManager):
@@ -717,7 +873,12 @@ class DnsLogView(LogView):
         self.logfile = config.dnsLogFile
         self.maxElt= 200
         self.file = open(self.logfile, 'r')
-        self.pattern = {
-            "named-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named\[[0-9]+\]: (?P<extra>.*)$",
-            "named-syslog1" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named-sdb\[[0-9]+\]: (?P<extra>.*)$",
+        if config.dnsType == "pdns":
+            self.pattern = {
+                "named-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* pdns\[[0-9]+\]: (?P<extra>.*)$",
+            }
+        else:
+            self.pattern = {
+                "named-syslog" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named\[[0-9]+\]: (?P<extra>.*)$",
+                "named-syslog1" : "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* named-sdb\[[0-9]+\]: (?P<extra>.*)$",
             }
