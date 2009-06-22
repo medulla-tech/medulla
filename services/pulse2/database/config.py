@@ -58,6 +58,8 @@ class DatabaseConfig(Singleton):
                 self.dbdriver = self.cp.get(self.dbsection, "dbdriver")
             if self.cp.has_option(self.dbsection, "dbhost"):
                 self.dbhost = self.cp.get(self.dbsection, "dbhost")
+            if self.cp.has_option(self.dbsection, "dbport"):
+                self.dbport = self.cp.getint(self.dbsection, "dbport")
             if self.cp.has_option(self.dbsection, "dbname"):
                 self.dbname = self.cp.get(self.dbsection, "dbname")
             if self.cp.has_option(self.dbsection, "dbuser"):
