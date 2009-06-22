@@ -59,7 +59,10 @@ class LDAPConnectionConfig:
             self.ldapurl = None
         if not self.ldapurl and self.ldapserver:
             self.ldapurl = 'ldap://' + self.ldapserver
-        self.network_timeout = self.getint(section, "network_timeout")
+        try:
+            self.network_timeout = self.getint(section, "network_timeout")
+        except:
+            pass
         # Get SSL/TLS parameters
         try:
             self.start_tls = self.getboolean(section, 'start_tls')
