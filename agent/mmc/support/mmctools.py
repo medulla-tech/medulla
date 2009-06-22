@@ -171,7 +171,7 @@ def xmlrpcCleanup(data):
 
 
 class Singleton(object):
-    def __new__(type):
+    def __new__(type, *args):
         if not '_the_instance' in type.__dict__:
             type._the_instance = object.__new__(type)
         return type._the_instance
@@ -528,6 +528,21 @@ class ContextMakerI:
         @return: a SecurityContext object, or None
         """
         raise "Must be implemented by the subclass"
+
+
+class ContextProviderI:
+    """
+    Class for object that owns a security context
+    """
+
+    def __init__(self):
+        self.context = None
+  
+    def setContext(self, context):
+        """
+        Set the current context
+        """
+        self.context = context
 
 class SecurityContext:
     """
