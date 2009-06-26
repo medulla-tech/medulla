@@ -76,6 +76,7 @@ class Common(pulse2.utils.Singleton):
         self.packageDetectionDate = {}
         self.newAssociation = {}
         self.inEdition = {}
+        self.mp2src = {}
 
         try:
             self._detectPackages()
@@ -117,6 +118,8 @@ class Common(pulse2.utils.Singleton):
         self.logger.debug2(self.newAssociation)
         self.logger.debug2(">> self.inEdition")
         self.logger.debug2(self.inEdition)
+        self.logger.debug2(">> self.mp2src")
+        self.logger.debug2(self.mp2src)
         self.logger.debug2("# END ##################")
 
     def _detectPackages(self, new = False):
@@ -143,6 +146,7 @@ class Common(pulse2.utils.Singleton):
                         mirror_params['src'],
                         str(access),
                     ))
+                    self.mp2src[mirror_params['mount_point']] = mirror_params['src']
                     self._getPackages(
                         mirror_params['mount_point'],
                         mirror_params['src'],
@@ -151,6 +155,7 @@ class Common(pulse2.utils.Singleton):
                         runid
                     )
                 except Exception, e:
+                    if self.mp2src.has_key(mp): del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for mirrors")
                     self.logger.error(e)
 
@@ -161,8 +166,10 @@ class Common(pulse2.utils.Singleton):
                         mirror_params['mount_point'],
                         mirror_params['src']
                     ))
+                    self.mp2src[mirror_params['mount_point']] = mirror_params['src']
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
+                    if self.mp2src.has_key(mp): del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api get")
                     self.logger.error(e)
 
@@ -173,8 +180,10 @@ class Common(pulse2.utils.Singleton):
                         mirror_params['mount_point'],
                         mirror_params['src']
                     ))
+                    self.mp2src[mirror_params['mount_point']] = mirror_params['src']
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
+                    if self.mp2src.has_key(mp): del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api put")
                     self.logger.error(e)
 
@@ -894,7 +903,7 @@ class Common(pulse2.utils.Singleton):
                         self.logger.debug("package '%s' already exists" % (pid))
                     return False
 
-                toRelative = os.path.dirname(file)
+                toRelative = self.mp2src[mp]
                 size = 0
                 self.logger.debug("declare %s in packages"%(pid))
                 self.packages[pid] = l_package
