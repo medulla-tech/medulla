@@ -2,7 +2,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 58 2008-03-28 13:28:58Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #

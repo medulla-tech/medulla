@@ -3,7 +3,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 30 2008-02-08 16:40:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -48,7 +48,7 @@ from twisted.internet import defer
     Pulse2 PackageServer
 """
 
-REVISION = int("$Rev: 424 $".split(':')[1].strip(' $'))
+REVISION = int("$Rev$".split(':')[1].strip(' $'))
 VERSION = "1.2.3"
 
 def getRevision(): return REVISION
