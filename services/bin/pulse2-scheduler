@@ -196,7 +196,7 @@ def startService():
 
 def cleanUp():
     logger = logging.getLogger()
-    logger.info('scheduler %s: Shuting down and cleaning up' % (SchedulerConfig().name))
+    logger.info('scheduler %s: Shutting down and cleaning up' % (SchedulerConfig().name))
     logger.info('scheduler %s: End' % (SchedulerConfig().name))
 
 class Scheduler(twisted.web.xmlrpc.XMLRPC):
