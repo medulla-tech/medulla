@@ -34,7 +34,10 @@ from pulse2.package_server import ThreadLauncher, init_logger_debug
 from pulse2.package_server.config import P2PServerCP, config_addons
 
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
+VERSION = "1.2.3"
+
 def getRevision(): return REVISION
+def getVersion(): return VERSION
 
 def running(inifile, daemonize):
     config = P2PServerCP()
@@ -52,7 +55,10 @@ def running(inifile, daemonize):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
-    logger.info("Package server build('%s')"%(str(getRevision())))
+    logger.info("Pulse 2 Package Server %s starting..." % getVersion())
+    logger.info("Pulse 2 Package server build '%s'" % str(getRevision()))
+    logger.info("Using Python %s" % sys.version.split("\n")[0])
+    logger.info("Using Python Twisted %s" % twisted.copyright.version)
     init_logger_debug()
 
     config.setup(inifile)
@@ -61,6 +67,7 @@ def running(inifile, daemonize):
     os.umask(config.umask)
     os.setegid(config.daemon_group)
     os.seteuid(config.daemon_user)
+    logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
 
     if config.real_package_deletion:
         logger.warning("Real package deletion is activated")
