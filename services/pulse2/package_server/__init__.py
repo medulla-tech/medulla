@@ -48,6 +48,12 @@ from twisted.internet import defer
     Pulse2 PackageServer
 """
 
+REVISION = int("$Rev: 424 $".split(':')[1].strip(' $'))
+VERSION = "1.2.3"
+
+def getRevision(): return REVISION
+def getVersion(): return VERSION
+
 class ThreadPackageHelper(Thread):
     def __init__(self, config):
         Thread.__init__(self)

@@ -30,14 +30,8 @@ import logging
 import logging.config
 import twisted
 
-from pulse2.package_server import ThreadLauncher, init_logger_debug
+from pulse2.package_server import ThreadLauncher, init_logger_debug, getVersion, getRevision
 from pulse2.package_server.config import P2PServerCP, config_addons
-
-REVISION = int("$Rev$".split(':')[1].strip(' $'))
-VERSION = "1.2.3"
-
-def getRevision(): return REVISION
-def getVersion(): return VERSION
 
 def running(inifile, daemonize):
     config = P2PServerCP()
