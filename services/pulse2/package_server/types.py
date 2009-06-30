@@ -247,7 +247,7 @@ class File:
 
     def toURI(self, mp = None, where = None):
         if mp == None:
-            return ("%s%s/%s" % (self.where, self.path, self.name)).replace(' ', '%20')
+            return ("%s%s/%s" % (self.where, self.path.replace('\\', '/'), self.name)).replace(' ', '%20')
         else:
             if where == None:
                 d = pulse2.package_server.common.Common().h_desc(mp)
@@ -257,7 +257,7 @@ class File:
                     where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
                 else:
                     where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
-            return ("%s%s/%s" % (where, self.path, self.name)).replace(' ', '%20')
+            return ("%s%s/%s" % (where, self.path.replace('\\', '/'), self.name)).replace(' ', '%20')
 
     def toS(self):
         return "%s/%s" % (self.path, self.name)
