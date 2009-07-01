@@ -28,6 +28,7 @@
 
 from pulse2.package_server.utilities import md5file, md5sum
 import pulse2.package_server.common
+import os
 
 class Mirror:
     def __init__(self, protocol = None, server = None, port = None, mountpoint = None):
@@ -241,7 +242,7 @@ class File:
         self.checksum = checksum
         self.size = size
         if id == None:
-            self.id = md5sum("%s%s" % (self.toS(), str(self.checksum)))
+            self.id = md5sum("%s%s" % (self.toS().replace('\\', '/'), str(self.checksum)))
         else:
             self.id = id
 

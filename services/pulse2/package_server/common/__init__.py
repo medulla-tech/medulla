@@ -679,7 +679,8 @@ class Common(pulse2.utils.Singleton):
                             f.close()
                         except IOError, e:
                             self.logger.warn("Error while reading %s: %s" % (filepath, e))
-            fmd5 = file(fmd5name, "w+")
+            fmd5 = file(fmd5name, "w+b")
+            md5sums.sort(lambda x, y: cmp(x[0], y[0]))
             for name, md5hash in md5sums:
                 fmd5.write("%s  %s\n" % (md5hash, name))
             fmd5.close()
