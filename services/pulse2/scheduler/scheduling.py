@@ -1164,9 +1164,9 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
     for line in myC.files.split("\n"):
         fids.append(line.split('##')[0])
     d = ma.getFilesURI(fids)
-    d.addCallback(_cbRunPushPullPhasePushPull, mirror, client, myC, myCoH)
+    d.addCallback(_cbRunPushPullPhasePushPull, mirror, fbmirror, client, myC, myCoH, useFallback)
 
-def _cbRunPushPullPhasePushPull(result, mirror, client, myC, myCoH):
+def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, useFallback):
     files_list = result
     file_uris = {}
     choosen_mirror = mirror
@@ -1189,8 +1189,18 @@ def _cbRunPushPullPhasePushPull(result, mirror, client, myC, myCoH):
 
     # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
     if not file_uris:
-        logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror, skipping command" % (myCoH.id))
-        return None
+        if useFallback:
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.id))
+            updateHistory(myCoH.id, 'upload_failed', '0', '', 'Can\'t get files URI for package \'%s\' on fallback mirror %s' % (myC.package_id, fbmirror))
+            # the getFilesURI call failed on the fallback. We have a serious
+            # problem and we better decrement attempts
+            if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
+                runFailedPhase(myCoH.id)
+        else:
+            # Use the fallback mirror
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror" % (myCoH.id, mirror))
+            _cbRunPushPullPhaseTestFallbackMirror(None, mirror, fbmirror, client, myC, myCoH)
+        return
 
     client['protocol'] = file_uris['protocol']
     files_list = file_uris['files']
