@@ -39,12 +39,21 @@ from sqlalchemy.orm import *
 import logging
 import re
 from sets import Set
+import exceptions
 
-def encode_utf8(self, str): return str
-def encode_latin1(self, str): return str.decode('utf8')
+def encode_utf8(self, s): return s
+def encode_latin1(self, s): 
+    try:
+        return s.decode('utf8')
+    except exceptions.UnicodeEncodeError, e:
+        return s
 
-def decode_utf8(self, str): return str
-def decode_latin1(self, str): return str.decode('latin-1')
+def decode_utf8(self, s): return s
+def decode_latin1(self, s): 
+    try:
+        return s.decode('latin-1')
+    except exceptions.UnicodeEncodeError, e:
+        return s
 
 class DbTOA(object):
     def to_a(self):
