@@ -47,6 +47,11 @@ def encode_latin1(self, s):
         return s.decode('utf8')
     except exceptions.UnicodeEncodeError, e:
         return s
+    except AttributeError:
+        # under python 2.3, unicode object dont have any decode method
+        # but in the case it's already a unicode, we dont really need to decode
+        # so just return the string
+        return s
 
 def decode_utf8(self, s): return s
 def decode_latin1(self, s): 
