@@ -1,7 +1,0 @@
-server_host = 127.0.0.1
-server_port = 389
-search_base = ou=Users,dc=mandriva,dc=com
-query_filter = (&(objectClass=mailAccount)(mailenable=OK)(mail=%s))
-result_attribute = mailbox
-version = 3
-expansion_limit = 1

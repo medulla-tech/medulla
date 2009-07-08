@@ -1,5 +1,0 @@
-server_host = 127.0.0.1
-search_base = ou=Users,dc=mandriva,dc=com
-query_filter = (&(objectClass=mailAccount)(mailalias=%s)(mailenable=OK))
-result_attribute = maildrop
-version = 3
