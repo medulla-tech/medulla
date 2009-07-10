@@ -102,54 +102,49 @@ def create_method(m):
         # WARNING: recursive function, so 'already_in_loop' necessary for
         # us to know if we are recursing (True) or not (False)
         NB_DB_CONN_TRY = 2
-        NORESULT = "__noresult__"
 
         # FIXME: NOT YET IMPLEMENTED, but do not implement this using a
         # simple time.sleep(), it would lock the main loop !!!
         TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized,
 
-        ret = NORESULT
-        reconnect = False
-
         try: # do a libmysql client call : attempt to perform the old call (_old_<method>)
-            old_m = getattr(self, '_old_'+m)
+            old_m = getattr(self, '_old_%s' % m)
             ret = old_m() # success, will send the result back
+            return ret # send the result back
         except SQLError, e: # failure, catch libmysql client error
+            if already_in_loop : # just raise the exception, they will take care of it
+                raise e
+
             # see http://dev.mysql.com/doc/refman/5.1/en/error-messages-client.html
             # we try to handle only situation where a reconnection worth a try
-            if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("SQLError Lost connection")
-                reconnect = True
-            elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("SQLError MySQL server has gone away")
-                reconnect = True
-            elif (e.orig.args[0] == 2002 or e.orig.args[0] == 2003) and not already_in_loop: # Can't contact SQL server, give up
-                logging.getLogger().error("SQL server is unreachable while doing query")
-                reconnect = False # don't try to reconnect, just log the failure, as it seems important
+            if e.orig.args[0] == 2013: # Lost connection to MySQL server during query error, but we do not raise the exception (will attempt again)
+                logging.getLogger().warn("Lost connection to MySQL server during query")
+            elif e.orig.args[0] == 2006: # MySQL server has gone away, but we do not raise the exception (will attempt again)
+                logging.getLogger().warn("MySQL server connection has gone away")
+            elif e.orig.args[0] == 2002: # Can't contact SQL server, give up
+                logging.getLogger().error("MySQL server is unreachable by socket while doing query")
+                raise e
+            elif e.orig.args[0] == 2003: # Can't contact SQL server, give up
+                logging.getLogger().error("MySQL server is unreachable by network while doing query")
+                raise e
+            else: # Other SQL error, give-up
+                logging.getLogger().error("Unknown MySQL error while doing query")
+                raise e
 
             # handle cases where reco can be attempted again
             # this is where things became tricky:
             # we call ourself (new_m) with already_in_loop = True
             # we also silently drop the potentially raised exception
-            if reconnect:
-                for i in range(0, NB_DB_CONN_TRY):
+            for i in range(0, NB_DB_CONN_TRY):
+                try:
                     new_m = getattr(self, m)
-                    try:
-                        ret = new_m(True)
-                        break
-                    except Exception, e:
-                        continue
+                    ret = new_m(True)
+                    return ret
+                except Exception, e:
+                    pass
 
-            if ret != NORESULT:
-                # recursive call was a success \o/
-                # send result back
-                return ret
-            else:
-                # recursive call was a failure \o/
-                # raise the exception
-                raise e
-
-        return ret
+            # the loop was unsuccessful, finally raise the original exception
+            raise e
     return method
 
 def handle_deconnect():
