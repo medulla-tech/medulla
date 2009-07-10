@@ -27,7 +27,6 @@ from sqlalchemy.orm import *
 from sqlalchemy.exceptions import SQLError
 
 import logging
-import time
 
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
@@ -101,7 +100,11 @@ def create_method(m):
     def method(self, already_in_loop = False):
         NB_DB_CONN_TRY = 2
         NORESULT = "__noresult__"
-        TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized
+
+        # FIXME: NOT YET IMPLEMENTED, but do not implement this using a
+        # simple time.sleep(), it would lock the main loop !!!
+        TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized,
+
         ret = NORESULT
         try:
             #logging.getLogger().debug("1) going to try to call : %s"%m)
@@ -111,15 +114,17 @@ def create_method(m):
         except SQLError, e:
             #logging.getLogger().debug("2) failed to call : %s"%m)
             reconnect = False
+            # see http://dev.mysql.com/doc/refman/5.1/en/error-messages-client.html
+            # we try to handle only situation where a reconnection worth a try
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
                 logging.getLogger().warn("SQLError Lost connection")
                 reconnect = True
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
                 logging.getLogger().warn("SQLError MySQL server has gone away")
                 reconnect = True
-            elif e.orig.args[0] == 2003 and not already_in_loop: # MySQL connexion error
-                logging.getLogger().warn("Can't connect to MySQL server")
-                reconnect = True
+            elif (e.orig.args[0] == 2002 or e.orig.args[0] == 2003) and not already_in_loop: # Can't contact SQL server, give up
+                logging.getLogger().error("SQL server is unreachable while doing query")
+                reconnect = False # don't try to reconnect, just log the failure, as it seems important
             if reconnect:
                 #logging.getLogger().debug("3) trying to reconnect : %s"%m)
                 for i in range(0, NB_DB_CONN_TRY):
@@ -129,8 +134,6 @@ def create_method(m):
                         ret = new_m(True)
                         break
                     except Exception, e:
-                        # try again after a nap
-                        time.sleep(TIME_BW_CONN_TRY)
                         continue
             if ret != NORESULT:
                 return ret
