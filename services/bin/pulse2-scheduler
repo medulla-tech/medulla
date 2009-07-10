@@ -86,50 +86,39 @@ def start_all_callbacks():
 
 def scheduleStartCommands():
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
+    logging.getLogger().info('scheduler "%s": START: sleeping' % (SchedulerConfig().name)),
     twisted.internet.reactor.callLater(start_commands_in, awakeStartCommands)
 
 def scheduleStopCommands():
     stop_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
+    logging.getLogger().info('scheduler "%s": STOP: sleeping' % (SchedulerConfig().name)),
     twisted.internet.reactor.callLater(stop_commands_in, awakeStopCommands)
 
 def awakeStartCommands():
-    # start command, gather deffered
     logging.getLogger().info('scheduler "%s": START: waking-up' % (SchedulerConfig().name))
-
-    def _fb(result):
-        logging.getLogger().info('scheduler "%s": START: sleeping' % (SchedulerConfig().name))
-        scheduleStartCommands()
-
-    def _cb(result):
-        dl = twisted.internet.defer.DeferredList(result)
-        dl.addCallback(_fb).addErrback(_eb)
-        return dl
-
-    def _eb(reason):
-        logging.getLogger().error('scheduler "%s": START: Error while running awakeStartCommands:'  % (SchedulerConfig().name))
-        logging.getLogger().error(reason)
-        scheduleStartCommands()
-
-    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name).addCallback(_cb).addErrback(_eb)
+    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # we build a deferred chain
+    twisted.internet.defer.Deferred().addCallback( # initial call
+        lambda result: pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name),
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": START: Done running loop' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": START: Error while running loop : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleStartCommands()
+    ).callback(None) # starts chain
 
 def awakeStopCommands():
     logging.getLogger().info('scheduler "%s": STOP: waking-up' % (SchedulerConfig().name))
-
-    def _fb(result):
-        logging.getLogger().info('scheduler "%s": STOP: sleeping' % (SchedulerConfig().name))
-        scheduleStopCommands()
-
-    def _cb(result):
-        dl = twisted.internet.defer.DeferredList(result)
-        dl.addCallback(_fb).addErrback(_eb)
-        return dl
-
-    def _eb(reason):
-        logging.getLogger().error('scheduler "%s": STOP: Error while running awakeStopCommands:'  % (SchedulerConfig().name))
-        logging.getLogger().error(reason)
-        scheduleStopCommands()
-
-    pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name).addCallback(_cb).addErrback(_eb)
+    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # we build a deferred chain
+    twisted.internet.defer.Deferred().addCallback( # initial call
+        lambda result: pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name),
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": STOP: Done running loop' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": STOP: Error while running loop : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleStopCommands()
+    ).callback(None) # starts chain
 
 def scheduleLogStats():
     """ periodicaly log stats """
