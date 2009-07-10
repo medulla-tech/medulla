@@ -97,7 +97,10 @@ def unique(s):
     return u
 
 def create_method(m):
+    # 'm' if the name of the method to override
     def method(self, already_in_loop = False):
+        # WARNING: recursive function, so 'already_in_loop' necessary for
+        # us to know if we are recursing (True) or not (False)
         NB_DB_CONN_TRY = 2
         NORESULT = "__noresult__"
 
@@ -106,14 +109,12 @@ def create_method(m):
         TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized,
 
         ret = NORESULT
-        try:
-            #logging.getLogger().debug("1) going to try to call : %s"%m)
+        reconnect = False
+
+        try: # do a libmysql client call : attempt to perform the old call (_old_<method>)
             old_m = getattr(self, '_old_'+m)
-            ret = old_m()
-            #logging.getLogger().debug("1) success! : %s"%m)
-        except SQLError, e:
-            #logging.getLogger().debug("2) failed to call : %s"%m)
-            reconnect = False
+            ret = old_m() # success, will send the result back
+        except SQLError, e: # failure, catch libmysql client error
             # see http://dev.mysql.com/doc/refman/5.1/en/error-messages-client.html
             # we try to handle only situation where a reconnection worth a try
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
@@ -125,29 +126,43 @@ def create_method(m):
             elif (e.orig.args[0] == 2002 or e.orig.args[0] == 2003) and not already_in_loop: # Can't contact SQL server, give up
                 logging.getLogger().error("SQL server is unreachable while doing query")
                 reconnect = False # don't try to reconnect, just log the failure, as it seems important
+
+            # handle cases where reco can be attempted again
+            # this is where things became tricky:
+            # we call ourself (new_m) with already_in_loop = True
+            # we also silently drop the potentially raised exception
             if reconnect:
-                #logging.getLogger().debug("3) trying to reconnect : %s"%m)
                 for i in range(0, NB_DB_CONN_TRY):
-                    #logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
                     new_m = getattr(self, m)
                     try:
                         ret = new_m(True)
                         break
                     except Exception, e:
                         continue
+
             if ret != NORESULT:
+                # recursive call was a success \o/
+                # send result back
                 return ret
-            #logging.getLogger().debug("4) failed to reconnect : %s"%m)
-            raise e
+            else:
+                # recursive call was a failure \o/
+                # raise the exception
+                raise e
+
         return ret
     return method
 
 def handle_deconnect():
+    # initialize "disconnection handling" code
+    # base principle : sensitive methods ('first', 'count', 'all', '__iter__') are
+    #  - renamed to _old_<method>
+    #  - replaced by create_method
+    # create_method then call _old_<method> on demand (see upper)
     for m in ['first', 'count', 'all', '__iter__']:
-        try:
-            getattr(Query, '_old_'+m)
-        except AttributeError:
-            setattr(Query, '_old_'+m, getattr(Query, m))
+        try: # check if _old_<method> exists
+            getattr(Query, '_old_%s' % m)
+        except AttributeError: # and if not, create it
+            setattr(Query, '_old_%s' % m, getattr(Query, m))
             setattr(Query, m, create_method(m))
 
 def toH(w):
