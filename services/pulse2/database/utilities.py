@@ -27,6 +27,7 @@ from sqlalchemy.orm import *
 from sqlalchemy.exceptions import SQLError
 
 import logging
+import time
 
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
@@ -100,6 +101,7 @@ def create_method(m):
     def method(self, already_in_loop = False):
         NB_DB_CONN_TRY = 2
         NORESULT = "__noresult__"
+        TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized
         ret = NORESULT
         try:
             #logging.getLogger().debug("1) going to try to call : %s"%m)
@@ -127,7 +129,8 @@ def create_method(m):
                         ret = new_m(True)
                         break
                     except Exception, e:
-                        # Try again
+                        # try again after a nap
+                        time.sleep(TIME_BW_CONN_TRY)
                         continue
             if ret != NORESULT:
                 return ret
