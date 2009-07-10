@@ -115,6 +115,9 @@ def create_method(m):
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
                 logging.getLogger().warn("SQLError MySQL server has gone away")
                 reconnect = True
+            elif e.orig.args[0] == 2003 and not already_in_loop: # MySQL connexion error
+                logging.getLogger().warn("Can't connect to MySQL server")
+                reconnect = True
             if reconnect:
                 #logging.getLogger().debug("3) trying to reconnect : %s"%m)
                 for i in range(0, NB_DB_CONN_TRY):
