@@ -256,7 +256,7 @@ class InventoryGetService(Singleton):
         try:
             if not InventoryCreator().activate(config): # does the db_check
                 return False
-        except Exception, e :
+        except Exception, e : # TODO improve to get the "not the good version" message
             self.logger.error(e)
             return False
         self.config = config
@@ -328,3 +328,18 @@ class InventoryGetService(Singleton):
             pass
 
         sys.exit(0)
+
+# patch BaseHTTPRequestHandler to handle nmap requests
+def my_handle_one_request(self):
+    try:
+        return self.__handle_one_request()
+    except Exception, e:
+        if e.args[0] == 104 and e.args[1] == 'Connection reset by peer': # most probably is a nmap request
+            logging.getLogger().info("nmap detected")
+            return
+        else:
+            raise e
+
+setattr(BaseHTTPRequestHandler, '__handle_one_request', BaseHTTPRequestHandler.handle_one_request)
+setattr(BaseHTTPRequestHandler, 'handle_one_request', my_handle_one_request)
+
