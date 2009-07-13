@@ -488,13 +488,19 @@ def localProxyMayContinue(myCommandOnHostID):
         return True
 
 def startAllCommands(scheduler_name, commandIDs = []):
+    logger = logging.getLogger()
+
+    if commandIDs:
+        logger.debug('scheduler "%s": START: Starting commands %s' % (scheduler_name, commandIDs))
+    else:
+        logger.debug('scheduler "%s": START: Starting all commands' % scheduler_name)
+    return twisted.internet.threads.deferToThread(gatherIdsToStart, scheduler_name, commandIDs).addCallback(sortCommands)
+
+def gatherIdsToStart(scheduler_name, commandIDs = []):
+
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
-    logger = logging.getLogger()
-    if commandIDs:
-        logger.debug("MSC_Scheduler->startAllCommands() for commands %s..." % commandIDs)
-    else:
-        logger.debug("MSC_Scheduler->startAllCommands()...")
+
     # gather candidates:
     # ignore completed tasks (done / failed / over_timed)
     # ignore paused tasks
@@ -525,6 +531,7 @@ def startAllCommands(scheduler_name, commandIDs = []):
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
     later = time.strftime("2031-12-31 23:59:59")
+
     commands_query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
         filter(database.commands_on_host.c.current_state != 'done').\
@@ -554,14 +561,16 @@ def startAllCommands(scheduler_name, commandIDs = []):
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         )
+
     if commandIDs:
         commands_query = commands_query.filter(database.commands.c.id.in_(commandIDs))
+
     commands_to_perform = []
     for q in commands_query.all():
         commands_to_perform.append(q.id)
-    session.close()
 
-    return sortCommands(commands_to_perform)
+    session.close()
+    return commands_to_perform
 
 def sortCommands(commands_to_perform):
     """
@@ -638,7 +647,7 @@ def sortCommands(commands_to_perform):
         except: # hum, something goes weird, try to get ids_list anyway
             logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
-        logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(ids_list)))
+        logging.getLogger().info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
         for id in ids_list:
             deffered = runCommand(id)
             if deffered:
@@ -686,9 +695,15 @@ def getRunningCommandsOnHost(session, scheduler_name):
         ).all()
     
 def stopElapsedCommands(scheduler_name):
-    session = sqlalchemy.orm.create_session()
     logger = logging.getLogger()
-    logger.debug("MSC_Scheduler->stopElapsedCommands()...")
+
+    logger.debug('scheduler "%s": STOP: Stopping all commands' % scheduler_name)
+
+    return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
+
+def gatherIdsToStop(scheduler_name):
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
 
     # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
     now = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -732,7 +747,7 @@ def stopElapsedCommands(scheduler_name):
 
     session.close()
     logging.getLogger().debug("Scheduler: stopping %s" % ids)
-    return twisted.internet.defer.maybeDeferred(stopCommandsOnHosts, ids)
+    return ids
 
 def setCommandsOnHostAsStopped(ids):
     try:
@@ -755,7 +770,7 @@ def cleanStates(scheduler_name):
 
     cleanStatesAllRunningIds(ids)
     return None
-   
+
 def cleanStatesAllRunningIds(ids):
     def treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
@@ -783,7 +798,7 @@ def cleanStatesAllRunningIds(ids):
 
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
-    logging.getLogger().info('scheduler "%s": STOP: stopping %d commands' % (SchedulerConfig().name, len(ids)))
+    logging.getLogger().info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
     if len(ids) > 0:
         for launcher in SchedulerConfig().launchers_uri.values():
             deffered = callOnLauncher(None, launcher, 'term_processes', ids)
