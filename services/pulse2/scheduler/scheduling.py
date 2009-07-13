@@ -1674,6 +1674,7 @@ def runHaltPhase(myCommandOnHostID, condition):
         return runDonePhase(myCommandOnHostID)
     if myC.isPartOfABundle() and not isLastToHaltInBundle(myCommandOnHostID): # there is still a coh in the same bundle that has to halt, jump to next stage
         logger.info("command_on_host #%s: another coh from the same bundle will do the halt" % myCommandOnHostID)
+        myCoH.setHaltIgnored()
         return runDonePhase(myCommandOnHostID)
     if not myCoH.isHaltImminent(): # nothing to do right now, give out
         logger.info("command_on_host #%s: do not halt right now" % myCoH.getId())
