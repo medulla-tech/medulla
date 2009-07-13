@@ -81,18 +81,24 @@ def start_all_callbacks():
     time.sleep(CB_STARTUP_DELAY)
     scheduleStartCommands()
     scheduleStopCommands()
+    scheduleCleanStates()
     scheduleLogStats()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
 def scheduleStartCommands():
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
-    logging.getLogger().info('scheduler "%s": START: sleeping' % (SchedulerConfig().name)),
+    logging.getLogger().info('scheduler "%s": START: sleeping' % (SchedulerConfig().name))
     twisted.internet.reactor.callLater(start_commands_in, awakeStartCommands)
 
 def scheduleStopCommands():
     stop_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
-    logging.getLogger().info('scheduler "%s": STOP: sleeping' % (SchedulerConfig().name)),
+    logging.getLogger().info('scheduler "%s": STOP: sleeping' % (SchedulerConfig().name))
     twisted.internet.reactor.callLater(stop_commands_in, awakeStopCommands)
+
+def scheduleCleanStates():
+    clean_states_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
+    logging.getLogger().info('scheduler "%s": CLEAN STATES: sleeping' % (SchedulerConfig().name))
+    twisted.internet.reactor.callLater(clean_states_in, awakeCleanStates)
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: waking-up' % (SchedulerConfig().name))
@@ -120,6 +126,19 @@ def awakeStopCommands():
         lambda nothing : scheduleStopCommands()
     ).callback(None) # starts chain
 
+def awakeCleanStates():
+    logging.getLogger().info('scheduler %s: CLEAN STATES: waking-up' % (SchedulerConfig().name))
+    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # we build a deferred chain
+    twisted.internet.defer.Deferred().addCallback( # initial call
+        lambda result: pulse2.scheduler.scheduling.cleanStates(SchedulerConfig().name),
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": CLEAN STATES: Done running loop' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: Error while running loop : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleCleanStates()
+    ).callback(None) # starts chain
+           
 def scheduleLogStats():
     """ periodicaly log stats """
     delay = LOG_STATS_DELAY - time.time() % LOG_STATS_DELAY

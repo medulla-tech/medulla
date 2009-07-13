@@ -665,38 +665,30 @@ def sortCommands(commands_to_perform):
     return getLaunchersBalance().\
         addCallback(_cb, tocome_distribution)
 
-def stopElapsedCommands(scheduler_name):
-    session = sqlalchemy.orm.create_session()
+def running_states_sqlalchemy(database):
+    return sqlalchemy.or_(
+        database.commands_on_host.c.current_state == 'upload_in_progress',
+        database.commands_on_host.c.current_state == 'execution_in_progress',
+        database.commands_on_host.c.current_state == 'delete_in_progress',
+        database.commands_on_host.c.current_state == 'inventory_in_progress'
+    )
+
+def getRunningCommandsOnHost(session, scheduler_name):
     database = MscDatabase()
-    logger = logging.getLogger()
-    logger.debug("MSC_Scheduler->stopElapsedCommands()...")
-    # gather candidates:
-    # retain tasks already in progress
-    # take tasks with end_date in the future, but not null
-    ids = list()
-    for q in session.query(CommandsOnHost).\
+    return session.query(CommandsOnHost).\
         select_from(database.commands_on_host).\
-        filter(sqlalchemy.or_(
-            database.commands_on_host.c.current_state == 'upload_in_progress',
-            database.commands_on_host.c.current_state == 'execution_in_progress',
-            database.commands_on_host.c.current_state == 'delete_in_progress',
-            database.commands_on_host.c.current_state == 'inventory_in_progress',
-        )).filter(sqlalchemy.or_(
+        filter( 
+            running_states_sqlalchemy(database)
+        ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
-        ).all():
-        # enter the maze: tag command as to-be-stopped if relevant
-
-        (myCoH, myC, myT) = gatherCoHStuff(q.id)
-        if myCoH == None:
-            continue
-        if not myC.inDeploymentInterval(): # stops command not in interval
-            ids.append(q.id)
-        elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
-            # change the CoH current_state (we are not going to be able to try to start this coh ever again)
-            myCoH.setStateOverTimed()
-            ids.append(q.id)
+        ).all()
+    
+def stopElapsedCommands(scheduler_name):
+    session = sqlalchemy.orm.create_session()
+    logger = logging.getLogger()
+    logger.debug("MSC_Scheduler->stopElapsedCommands()...")
 
     # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
     now = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -721,9 +713,73 @@ def stopElapsedCommands(scheduler_name):
         logging.getLogger().info("Scheduler: over timed command_on_host #%s"%(str(q.id)))
         myCoH.setStateOverTimed()
 
+    # gather candidates:
+    # retain tasks already in progress
+    # take tasks with end_date in the future, but not null
+    ids = list()
+    for q in getRunningCommandsOnHost(session, scheduler_name):
+        # enter the maze: tag command as to-be-stopped if relevant
+
+        (myCoH, myC, myT) = gatherCoHStuff(q.id)
+        if myCoH == None:
+            continue
+        if not myC.inDeploymentInterval(): # stops command not in interval
+            ids.append(q.id)
+        elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
+            # change the CoH current_state (we are not going to be able to try to start this coh ever again)
+            myCoH.setStateOverTimed()
+            ids.append(q.id)
+
     session.close()
     logging.getLogger().debug("Scheduler: stopping %s" % ids)
     return twisted.internet.defer.maybeDeferred(stopCommandsOnHosts, ids)
+
+def setCommandsOnHostAsStopped(ids):
+    try:
+        for id in ids:
+            (myCoH, myC, myT) = gatherCoHStuff(id)
+            myCoH.current_state = 'stopped'
+            myCoH.flush()
+    except Exception, e:
+        logging.getLogger().debug("Scheduler: error %s"%(str(e)))
+
+def cleanStates(scheduler_name):
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+    logger = logging.getLogger()
+
+    logger.info("Scheduler: cleanStates")
+    # get all running coh ids
+    ids = map(lambda q: q.id, getRunningCommandsOnHost(session, scheduler_name))
+    session.close()
+
+    cleanStatesAllRunningIds(ids)
+    return None
+   
+def cleanStatesAllRunningIds(ids):
+    def treatBadStateCommandsOnHost(result, ids = ids):
+        fails = []
+        for id in ids:
+            success = False
+            for running_ids in result:
+                if id in running_ids[1]:
+                    success = True
+                    continue
+            if not success:
+                fails.append(id)
+        logging.getLogger().info('scheduler "%s": CLEAN STATES: fails : %s' % (SchedulerConfig().name, str(fails)))
+        setCommandsOnHostAsStopped(fails)
+
+    deffereds = [] # will hold all deferred
+    for launcher in SchedulerConfig().launchers_uri.values():
+        deffered = callOnLauncher(None, launcher, 'get_running_ids')
+        if deffered:
+            deffereds.append(deffered)
+            
+    twisted.internet.defer.DeferredList(deffereds).addCallbacks(
+        treatBadStateCommandsOnHost,
+        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
+    )
 
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
