@@ -114,7 +114,7 @@ def awakeStartCommands():
 
 def awakeStopCommands():
     logging.getLogger().info('scheduler "%s": STOP: Analysing database' % (SchedulerConfig().name))
-    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # as stopElapsedCommands() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
     pulse2.scheduler.scheduling.stopElapsedCommands(SchedulerConfig().name
     ).addCallbacks( # deferred handling
@@ -126,7 +126,7 @@ def awakeStopCommands():
 
 def awakeCleanStates():
     logging.getLogger().info('scheduler %s: CLEAN STATES: waking-up' % (SchedulerConfig().name))
-    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # as cleanStates() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
     twisted.internet.defer.Deferred().addCallback( # initial call
         lambda result: pulse2.scheduler.scheduling.cleanStates(SchedulerConfig().name),
