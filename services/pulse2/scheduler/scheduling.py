@@ -686,7 +686,7 @@ def getRunningCommandsOnHost(session, scheduler_name):
     database = MscDatabase()
     return session.query(CommandsOnHost).\
         select_from(database.commands_on_host).\
-        filter( 
+        filter(
             running_states_sqlalchemy(database)
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
@@ -787,10 +787,10 @@ def cleanStatesAllRunningIds(ids):
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
-        deffered = callOnLauncher(None, launcher, 'get_running_ids')
+        deffered = callOnLauncher(None, launcher, 'get_process_ids')
         if deffered:
             deffereds.append(deffered)
-            
+
     twisted.internet.defer.DeferredList(deffereds).addCallbacks(
         treatBadStateCommandsOnHost,
         lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
