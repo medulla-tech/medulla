@@ -83,7 +83,7 @@ foreach ($cmds as $item) {
     if ($history) {
         $a_date[] = _toDate($coh["end_date"]);
     } else {
-        $a_date[] = _toDate($coh["next_launch_date"]);
+        $a_date[] = _toDate($coh["next_launch_date"], True);
     }
 
     $bundle_str = '';
