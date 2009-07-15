@@ -472,7 +472,7 @@ function _colorise($line) {
     return $out;
 }
 
-function _toDate($a) {
+function _toDate($a, $noneIsAsap = False) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
 
@@ -487,6 +487,8 @@ function _toDate($a) {
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
         return strftime(web_def_date_fmt(), $parsed_date);
 
+    } elseif ($noneIsAsap && !$a) {
+        return _T('As soon as possible', 'msc');
     } else { # can't guess if we talk about a date or something else :/
         return _T('<i>undefined</i>', 'msc');
     }
