@@ -779,7 +779,7 @@ def cleanStates(scheduler_name):
 
         # check if thoses running coh are still running
         cleanStatesAllRunningIds(ids)
-        
+
     if config.active_clean_states_run:
         logger.info("Scheduler: cleanStates (run)")
         # get all running coh ids from launchers
@@ -833,14 +833,14 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
         logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (run) : %s' % (SchedulerConfig().name, str(fails)))
         # start stopping commands on launcher
         stopCommandsOnHosts(fails)
-    
+
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
         # we only want the commands beeing executed right now
         deffered = callOnLauncher(None, launcher, 'get_running_ids')
         if deffered:
             deffereds.append(deffered)
-            
+
     twisted.internet.defer.DeferredList(deffereds).addCallbacks(
         treatRunningCommandsOnHostFromLaunchers,
         lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
@@ -1101,6 +1101,10 @@ def _chooseUploadMode(myCoH, myC, myT):
     if not client['host']: # We couldn't get an IP address for the target host
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCoH.getId())
 
+    # update command state
+    myCoH.setUploadInProgress()
+    myCoH.setStateUploadInProgress()
+
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
         d = _runProxyClientPhase(client, myC, myCoH)
@@ -1112,12 +1116,12 @@ def _chooseUploadMode(myCoH, myC, myT):
             mirrors = myT.mirrors.split('||')
         except:
             logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
-            return None
+            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId())
 
         # Check mirrors
         if len(mirrors) != 2:
             logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
-            return None
+            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId())
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
@@ -1183,10 +1187,6 @@ def _runProxyClientPhase(client, myC, myCoH):
             fname = re.compile('^/[^/]*/(.*)$').search(fname).group(1) # keeps last compontent of path
         files_list.append(fname)
 
-    # update command state
-    myCoH.setUploadInProgress()
-    myCoH.setStateUploadInProgress()
-
     # prepare deffereds
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCoH.getId(), 'upload_in_progress')
@@ -1232,10 +1232,6 @@ def _runPushPhase(client, myC, myCoH, myT):
         if re.compile('^/').search(fname):
             fname = re.compile('^/(.*)$').search(fname).group(1)
         files_list.append(os.path.join(re.compile('^file://(.*)$').search(myT.mirrors).group(1), fname)) # get folder on mirror
-
-    # update command state
-    myCoH.setUploadInProgress()
-    myCoH.setStateUploadInProgress()
 
     # prepare deffereds
     if SchedulerConfig().mode == 'sync':
@@ -1326,8 +1322,6 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     client['protocol'] = file_uris['protocol']
     files_list = file_uris['files']
 
-    myCoH.setUploadInProgress()
-    myCoH.setStateUploadInProgress()
     # upload starts here
     if SchedulerConfig().mode == 'sync':
         updateHistory(myCoH.id, 'upload_in_progress')
