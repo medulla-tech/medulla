@@ -682,9 +682,9 @@ def running_states_sqlalchemy(database):
         database.commands_on_host.c.current_state == 'inventory_in_progress'
     )
 
-def getRunningCommandsOnHost(session, scheduler_name):
+def getRunningCommandsOnHostInDB(session, scheduler_name, ids = None):
     database = MscDatabase()
-    return session.query(CommandsOnHost).\
+    query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host).\
         filter(
             running_states_sqlalchemy(database)
@@ -692,7 +692,13 @@ def getRunningCommandsOnHost(session, scheduler_name):
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
-        ).all()
+        )
+    if ids != None:
+        if type(ids) == list:
+            query = query.filter(database.commands_on_host.c.id.in_(ids))
+        elif type(ids) == int:
+            query = query.filter(database.commands_on_host.c.id == ids)
+    return query.all()
     
 def stopElapsedCommands(scheduler_name):
     logger = logging.getLogger()
@@ -732,7 +738,7 @@ def gatherIdsToStop(scheduler_name):
     # retain tasks already in progress
     # take tasks with end_date in the future, but not null
     ids = list()
-    for q in getRunningCommandsOnHost(session, scheduler_name):
+    for q in getRunningCommandsOnHostInDB(session, scheduler_name):
         # enter the maze: tag command as to-be-stopped if relevant
 
         (myCoH, myC, myT) = gatherCoHStuff(q.id)
@@ -762,19 +768,30 @@ def cleanStates(scheduler_name):
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     logger = logging.getLogger()
+    config = SchedulerConfig()
 
     logger.info("Scheduler: cleanStates")
-    # get all running coh ids
-    ids = map(lambda q: q.id, getRunningCommandsOnHost(session, scheduler_name))
-    session.close()
+    if config.active_clean_states_stop:
+        logger.info("Scheduler: cleanStates (stop)")
+        # get all running coh ids from the database
+        ids = map(lambda q: q.id, getRunningCommandsOnHostInDB(session, scheduler_name))
+        session.close()
 
-    cleanStatesAllRunningIds(ids)
+        # check if thoses running coh are still running
+        cleanStatesAllRunningIds(ids)
+        
+    if config.active_clean_states_run:
+        logger.info("Scheduler: cleanStates (run)")
+        # get all running coh ids from launchers
+        # and will check if they should be running (database) in the callback
+        getRunningCommandsOnHostFromLaunchers(scheduler_name)
     return None
-
+   
 def cleanStatesAllRunningIds(ids):
     def treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
         for id in ids:
+            logging.getLogger().info('scheduler "%s": CLEAN STATES: db running ids : %s' % (SchedulerConfig().name, str(ids)))
             success = False
             for running_ids in result:
                 if id in running_ids[1]:
@@ -782,17 +799,50 @@ def cleanStatesAllRunningIds(ids):
                     continue
             if not success:
                 fails.append(id)
-        logging.getLogger().info('scheduler "%s": CLEAN STATES: fails : %s' % (SchedulerConfig().name, str(fails)))
+        logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (stop) : %s' % (SchedulerConfig().name, str(fails)))
         setCommandsOnHostAsStopped(fails)
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
+        # we want all the commands beeing treated by the launcher
         deffered = callOnLauncher(None, launcher, 'get_process_ids')
         if deffered:
             deffereds.append(deffered)
 
     twisted.internet.defer.DeferredList(deffereds).addCallbacks(
         treatBadStateCommandsOnHost,
+        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
+    )
+
+def getRunningCommandsOnHostFromLaunchers(scheduler_name):
+    def treatRunningCommandsOnHostFromLaunchers(result, scheduler_name=scheduler_name):
+        # check if they should be running (database)
+        launchers_running_ids = []
+        for running_ids in result:
+            for id in running_ids[1]:
+                launchers_running_ids.append(id)
+        logging.getLogger().info('scheduler "%s": CLEAN STATES: launcher running ids : %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
+        # get the states of launchers_running_ids
+        session = sqlalchemy.orm.create_session()
+        db_ids = getRunningCommandsOnHostInDB(session, scheduler_name, launchers_running_ids)
+        fails = []
+        db_ids = map(lambda x:x.id, db_ids)
+        for id in launchers_running_ids:
+            if id not in db_ids:
+                fails.append(id)
+        logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (run) : %s' % (SchedulerConfig().name, str(fails)))
+        # start stopping commands on launcher
+        stopCommandsOnHosts(fails)
+    
+    deffereds = [] # will hold all deferred
+    for launcher in SchedulerConfig().launchers_uri.values():
+        # we only want the commands beeing executed right now
+        deffered = callOnLauncher(None, launcher, 'get_running_ids')
+        if deffered:
+            deffereds.append(deffered)
+            
+    twisted.internet.defer.DeferredList(deffereds).addCallbacks(
+        treatRunningCommandsOnHostFromLaunchers,
         lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
     )
 

@@ -74,6 +74,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     announce_check = dict()
     awake_time = 600
     clean_states_time = 3600
+    active_clean_states =  'stop' # possible states are : stop run
     cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'
@@ -161,6 +162,13 @@ class SchedulerConfig(pulse2.utils.Singleton):
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
         self.setoption("scheduler", "clean_states_time", "clean_states_time", 'int')
+        self.setoption("scheduler", "active_clean_states", "active_clean_states")
+        self.active_clean_states_run = False
+        self.active_clean_states_stop = False
+        for s in self.active_clean_states.split(','):
+            if s == 'run':  self.active_clean_states_run = True
+            if s == 'stop': self.active_clean_states_stop = True
+                
         self.setoption("scheduler", "max_slots", "max_slots", 'int')
         self.setoption("scheduler", "max_command_time", "max_command_time", 'int')
         self.setoption("scheduler", "max_upload_time", "max_upload_time", 'int')
