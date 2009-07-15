@@ -97,7 +97,7 @@ def scheduleStopCommands():
 
 def scheduleCleanStates():
     clean_states_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
-    logging.getLogger().info('scheduler "%s": CLEAN STATES: sleeping' % (SchedulerConfig().name))
+    logging.getLogger().info('scheduler "%s": CLEAN STATES: Sleeping' % (SchedulerConfig().name))
     twisted.internet.reactor.callLater(clean_states_in, awakeCleanStates)
 
 def awakeStartCommands():
@@ -125,14 +125,14 @@ def awakeStopCommands():
     )
 
 def awakeCleanStates():
-    logging.getLogger().info('scheduler %s: CLEAN STATES: waking-up' % (SchedulerConfig().name))
+    logging.getLogger().info('scheduler %s: CLEAN STATES: Analysing database' % (SchedulerConfig().name))
     # as cleanStates() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
     twisted.internet.defer.Deferred().addCallback( # initial call
         lambda result: pulse2.scheduler.scheduling.cleanStates(SchedulerConfig().name),
     ).addCallbacks( # deferred handling
-        lambda result: logging.getLogger().info('scheduler "%s": CLEAN STATES: Done running loop' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: Error while running loop : %s'  % (SchedulerConfig().name, reason.value))
+        lambda result: logging.getLogger().info('scheduler "%s": CLEAN STATES: Finished analysing database' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: While analysing database : %s'  % (SchedulerConfig().name, reason))
     ).addCallback( # loop scheduling
         lambda nothing : scheduleCleanStates()
     ).callback(None) # starts chain

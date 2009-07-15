@@ -682,7 +682,8 @@ def running_states_sqlalchemy(database):
         database.commands_on_host.c.current_state == 'inventory_in_progress'
     )
 
-def getRunningCommandsOnHostInDB(session, scheduler_name, ids = None):
+def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
+    session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host).\
@@ -698,6 +699,8 @@ def getRunningCommandsOnHostInDB(session, scheduler_name, ids = None):
             query = query.filter(database.commands_on_host.c.id.in_(ids))
         elif type(ids) == int:
             query = query.filter(database.commands_on_host.c.id == ids)
+
+    session.close()
     return query.all()
     
 def stopElapsedCommands(scheduler_name):
@@ -708,10 +711,9 @@ def stopElapsedCommands(scheduler_name):
     return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
 
 def gatherIdsToStop(scheduler_name):
+    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
-
-    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)).\
@@ -733,12 +735,13 @@ def gatherIdsToStop(scheduler_name):
             continue
         logging.getLogger().info("Scheduler: over timed command_on_host #%s"%(str(q.id)))
         myCoH.setStateOverTimed()
+    session.close()
 
     # gather candidates:
     # retain tasks already in progress
     # take tasks with end_date in the future, but not null
     ids = list()
-    for q in getRunningCommandsOnHostInDB(session, scheduler_name):
+    for q in getRunningCommandsOnHostInDB(scheduler_name):
         # enter the maze: tag command as to-be-stopped if relevant
 
         (myCoH, myC, myT) = gatherCoHStuff(q.id)
@@ -751,7 +754,6 @@ def gatherIdsToStop(scheduler_name):
             myCoH.setStateOverTimed()
             ids.append(q.id)
 
-    session.close()
     logging.getLogger().debug("Scheduler: stopping %s" % ids)
     return ids
 
@@ -765,8 +767,6 @@ def setCommandsOnHostAsStopped(ids):
         logging.getLogger().debug("Scheduler: error %s"%(str(e)))
 
 def cleanStates(scheduler_name):
-    session = sqlalchemy.orm.create_session()
-    database = MscDatabase()
     logger = logging.getLogger()
     config = SchedulerConfig()
 
@@ -774,8 +774,7 @@ def cleanStates(scheduler_name):
     if config.active_clean_states_stop:
         logger.info("Scheduler: cleanStates (stop)")
         # get all running coh ids from the database
-        ids = map(lambda q: q.id, getRunningCommandsOnHostInDB(session, scheduler_name))
-        session.close()
+        ids = map(lambda q: q.id, getRunningCommandsOnHostInDB(scheduler_name))
 
         # check if thoses running coh are still running
         cleanStatesAllRunningIds(ids)
@@ -823,8 +822,7 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
                 launchers_running_ids.append(id)
         logging.getLogger().info('scheduler "%s": CLEAN STATES: launcher running ids : %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
         # get the states of launchers_running_ids
-        session = sqlalchemy.orm.create_session()
-        db_ids = getRunningCommandsOnHostInDB(session, scheduler_name, launchers_running_ids)
+        db_ids = getRunningCommandsOnHostInDB(scheduler_name, launchers_running_ids)
         fails = []
         db_ids = map(lambda x:x.id, db_ids)
         for id in launchers_running_ids:
