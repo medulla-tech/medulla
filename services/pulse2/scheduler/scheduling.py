@@ -62,6 +62,13 @@ PULSE2_TERMINATED_STATES = [
     'over_timed'
 ]
 
+PULSE2_RUNNING_STATES = [
+    'upload_in_progress',
+    'execution_in_progress',
+    'delete_in_progress',
+    'inventory_in_progress'
+]
+
 PULSE2_POST_INVENTORY_STATES = [
     'reboot_in_progress',
     'reboot_done',
@@ -600,10 +607,10 @@ def sortCommands(commands_to_perform):
             ids_list += ids
 
         if len(ids_list) == 0:
-            logging.getLogger().info('scheduler "%s": START: starting %d commands' % (SchedulerConfig().name, len(ids_list)))
+            logging.getLogger().info('scheduler "%s": START: Starting no command' % (SchedulerConfig().name))
             return deffereds
 
-        logging.getLogger().debug("scheduler %s: sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
+        logging.getLogger().debug("scheduler %s: START: Sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
         try: # this code is not well tested: let's protect it :D
             # tocome_distribution is a dict, keys are the current group names, values are the ids (array) of commands to launch
             current_distribution = dict()
@@ -656,9 +663,9 @@ def sortCommands(commands_to_perform):
                         if len(tocome_distribution[group]):
                             ids_list.append(tocome_distribution[group].pop(0))
             random.shuffle(ids_list)
-            logging.getLogger().debug("scheduler %s: commands sorted: %s" % (SchedulerConfig().name, ids_list))
+            logging.getLogger().debug("scheduler %s: START: Commands sorted: %s" % (SchedulerConfig().name, ids_list))
         except: # hum, something goes weird, try to get ids_list anyway
-            logging.getLogger().debug("scheduler %s: something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
+            logging.getLogger().debug("scheduler %s: START: Something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
         logging.getLogger().info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
         for id in ids_list:
@@ -695,11 +702,7 @@ def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
 
     query = session.query(CommandsOnHost
         ).select_from(database.commands_on_host
-        ).filter(sqlalchemy.or_(
-            database.commands_on_host.c.current_state == 'upload_in_progress',
-            database.commands_on_host.c.current_state == 'execution_in_progress',
-            database.commands_on_host.c.current_state == 'delete_in_progress',
-            database.commands_on_host.c.current_state == 'inventory_in_progress')
+        ).filter(database.commands_on_host.c.current_state.in_(PULSE2_RUNNING_STATES)
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
@@ -748,9 +751,7 @@ def getCommandsToNeutralize(scheduler_name):
 
 def stopElapsedCommands(scheduler_name):
     logger = logging.getLogger()
-
     logger.debug('scheduler "%s": STOP: Stopping all commands' % scheduler_name)
-
     return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
 
 def gatherIdsToStop(scheduler_name):
@@ -776,10 +777,9 @@ def gatherIdsToStop(scheduler_name):
         (myCoH, myC, myT) = gatherCoHStuff(id)
         if myCoH == None:
             continue
-        logging.getLogger().info("Scheduler: over timed command_on_host #%s" % (id))
+        logging.getLogger().debug("Scheduler: Over Timed command_on_host #%s" % (id))
         myCoH.setStateOverTimed()
 
-    logging.getLogger().debug("Scheduler: stopping %s" % ids)
     return ids
 
 def setCommandsOnHostAsStopped(ids):
@@ -791,37 +791,35 @@ def setCommandsOnHostAsStopped(ids):
     except Exception, e:
         logging.getLogger().debug("Scheduler: error %s"%(str(e)))
 
-def cleanStates(scheduler_name):
-    logger = logging.getLogger()
-    config = SchedulerConfig()
+def fixUnprocessedTasks(scheduler_name):
+    logging.getLogger().debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
+    return twisted.internet.threads.deferToThread(getRunningCommandsOnHostInDB, scheduler_name, None).addCallback(cleanStatesAllRunningIds)
 
-    logger.info("Scheduler: cleanStates")
-    if config.active_clean_states_stop:
-        logger.info("Scheduler: cleanStates (stop)")
-        # check if thoses running coh are still running
-        cleanStatesAllRunningIds(getRunningCommandsOnHostInDB(scheduler_name))
-
-    if config.active_clean_states_run:
-        logger.info("Scheduler: cleanStates (run)")
-        # get all running coh ids from launchers
-        # and will check if they should be running (database) in the callback
-        getRunningCommandsOnHostFromLaunchers(scheduler_name)
-    return None
+def fixProcessingTasks(scheduler_name):
+    logging.getLogger().debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
+    # using lambda as deferToThread do not accept DeferredList
+    return twisted.internet.threads.deferToThread(lambda woot: woot, scheduler_name).addCallback(getRunningCommandsOnHostFromLaunchers).addCallback(stopCommandsOnHosts)
 
 def cleanStatesAllRunningIds(ids):
-    def treatBadStateCommandsOnHost(result, ids = ids):
+    def __treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
+        if len(ids) > 0:
+            logging.getLogger().debug('scheduler "%s": FUT: Looking if the following tasks are still running  : %s' % (SchedulerConfig().name, str(ids)))
+        else:
+            logging.getLogger().debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
         for id in ids:
             logging.getLogger().info('scheduler "%s": CLEAN STATES: db running ids : %s' % (SchedulerConfig().name, str(ids)))
             success = False
             for running_ids in result:
-                if id in running_ids[1]:
-                    success = True
-                    continue
+                if running_ids[1] != None: # None: launcher may be down
+                    if id in running_ids[1]:
+                        success = True
+                        continue
             if not success:
                 fails.append(id)
-        logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (stop) : %s' % (SchedulerConfig().name, str(fails)))
-        setCommandsOnHostAsStopped(fails)
+        if len(fails) > 0:
+            logging.getLogger().warn('scheduler "%s": FUT: Forcing the following commands to STOP state: %s' % (SchedulerConfig().name, str(fails)))
+            return setCommandsOnHostAsStopped(fails)
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
@@ -830,28 +828,36 @@ def cleanStatesAllRunningIds(ids):
         if deffered:
             deffereds.append(deffered)
 
-    twisted.internet.defer.DeferredList(deffereds).addCallbacks(
-        treatBadStateCommandsOnHost,
-        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
+    deffered_list = twisted.internet.defer.DeferredList(deffereds)
+    deffered_list.addCallbacks(
+        __treatBadStateCommandsOnHost,
+        lambda reason: logging.getLogger().error('scheduler "%s": FUT: error %s'  % (SchedulerConfig().name, reason.value))
     )
+    return deffered_list
 
 def getRunningCommandsOnHostFromLaunchers(scheduler_name):
-    def treatRunningCommandsOnHostFromLaunchers(result, scheduler_name=scheduler_name):
+
+    def __treatRunningCommandsOnHostFromLaunchers(result, scheduler_name=scheduler_name):
         # check if they should be running (database)
         launchers_running_ids = []
         for running_ids in result:
-            for id in running_ids[1]:
-                launchers_running_ids.append(id)
-        logging.getLogger().info('scheduler "%s": CLEAN STATES: launcher running ids : %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
+            if running_ids[1] != None: # None: launcher may be down
+                for id in running_ids[1]:
+                    launchers_running_ids.append(id)
+        if len(launchers_running_ids) > 0:
+            logging.getLogger().debug('scheduler "%s": FPT: Launchers are running coh %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
+        else:
+            logging.getLogger().debug('scheduler "%s": FPT: Launchers are not running any coh'  % (SchedulerConfig().name))
 
         # get the states of launchers_running_ids
         fails = []
         for id in launchers_running_ids:
             if id not in getRunningCommandsOnHostInDB(scheduler_name, launchers_running_ids):
                 fails.append(id)
-        logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (run) : %s' % (SchedulerConfig().name, str(fails)))
-        # start stopping commands on launcher
-        stopCommandsOnHosts(fails)
+        if len(fails) > 0:
+            logging.getLogger().info('scheduler "%s": FPT: Forcing the following commands to STOP : %s' % (SchedulerConfig().name, str(fails)))
+            # start stopping commands on launcher
+        return fails
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
@@ -860,19 +866,23 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
         if deffered:
             deffereds.append(deffered)
 
-    twisted.internet.defer.DeferredList(deffereds).addCallbacks(
-        treatRunningCommandsOnHostFromLaunchers,
-        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: error %s'  % (SchedulerConfig().name, reason.value))
+    deffered_list = twisted.internet.defer.DeferredList(deffereds)
+    deffered_list.addCallbacks(
+        __treatRunningCommandsOnHostFromLaunchers,
+        lambda reason: logging.getLogger().error('scheduler "%s": FPT: error %s'  % (SchedulerConfig().name, reason.value))
     )
+    return deffered_list
 
 def stopCommandsOnHosts(ids):
     deffereds = [] # will hold all deferred
-    logging.getLogger().info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
     if len(ids) > 0:
+        logging.getLogger().info('scheduler "%s": STOP: %d commands to stop' % (SchedulerConfig().name, len(ids)))
         for launcher in SchedulerConfig().launchers_uri.values():
             deffered = callOnLauncher(None, launcher, 'term_processes', ids)
             if deffered:
                 deffereds.append(deffered)
+    else:
+        logging.getLogger().info('scheduler "%s": STOP: Stopping no command' % (SchedulerConfig().name))
     return deffereds
 
 def stopCommand(myCommandOnHostID):

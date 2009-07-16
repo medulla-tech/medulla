@@ -81,24 +81,36 @@ def start_all_callbacks():
     time.sleep(CB_STARTUP_DELAY)
     scheduleStartCommands()
     scheduleStopCommands()
-    scheduleCleanStates()
+    if SchedulerConfig().active_clean_states_stop:
+        scheduleFixUnprocessedTasks()
+    if SchedulerConfig().active_clean_states_run:
+        scheduleFixProcessingTasks()
     scheduleLogStats()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
 def scheduleStartCommands():
+    """ periodicaly starts commands """
     start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     logging.getLogger().info('scheduler "%s": START: Sleeping' % (SchedulerConfig().name)),
     twisted.internet.reactor.callLater(start_commands_in, awakeStartCommands)
 
 def scheduleStopCommands():
+    """ periodicaly stop commands (elapsed, etc ...) """
     stop_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     logging.getLogger().info('scheduler "%s": STOP: Sleeping' % (SchedulerConfig().name)),
     twisted.internet.reactor.callLater(stop_commands_in, awakeStopCommands)
 
-def scheduleCleanStates():
-    clean_states_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
-    logging.getLogger().info('scheduler "%s": CLEAN STATES: Sleeping' % (SchedulerConfig().name))
-    twisted.internet.reactor.callLater(clean_states_in, awakeCleanStates)
+def scheduleFixUnprocessedTasks():
+    """ periodicaly see if running tasks (according to the DB) are still running """
+    fix_unprocessed_tasks_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
+    logging.getLogger().info('scheduler "%s": FUT: Sleeping' % (SchedulerConfig().name))
+    twisted.internet.reactor.callLater(fix_unprocessed_tasks_in, awakeFixUnprocessedTasks)
+
+def scheduleFixProcessingTasks():
+    """ periodicaly see if not running tasks (according to the DB) are still running """
+    fix_processing_tasks_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
+    logging.getLogger().info('scheduler "%s": FPT: Sleeping' % (SchedulerConfig().name))
+    twisted.internet.reactor.callLater(fix_processing_tasks_in, awakeFixProcessingTasks)
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: Analysing database' % (SchedulerConfig().name))
@@ -124,19 +136,30 @@ def awakeStopCommands():
         lambda nothing : scheduleStopCommands() # lambda used to "silently" intercept return arg
     )
 
-def awakeCleanStates():
-    logging.getLogger().info('scheduler %s: CLEAN STATES: Analysing database' % (SchedulerConfig().name))
+def awakeFixUnprocessedTasks():
+    logging.getLogger().info('scheduler %s: FUT: Analysing database' % (SchedulerConfig().name))
     # as cleanStates() may crash before giving a deferred (MySQL down for example),
     # we build a deferred chain
-    twisted.internet.defer.Deferred().addCallback( # initial call
-        lambda result: pulse2.scheduler.scheduling.cleanStates(SchedulerConfig().name),
+    pulse2.scheduler.scheduling.fixUnprocessedTasks(SchedulerConfig().name
     ).addCallbacks( # deferred handling
-        lambda result: logging.getLogger().info('scheduler "%s": CLEAN STATES: Finished analysing database' % (SchedulerConfig().name)),
-        lambda reason: logging.getLogger().error('scheduler "%s": CLEAN STATES: While analysing database : %s'  % (SchedulerConfig().name, reason))
+        lambda result: logging.getLogger().info('scheduler "%s": FUT: Finished analysing database' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
     ).addCallback( # loop scheduling
-        lambda nothing : scheduleCleanStates()
-    ).callback(None) # starts chain
+        lambda nothing : scheduleFixUnprocessedTasks() # lambda used to "silently" intercept return arg
+    )
            
+def awakeFixProcessingTasks():
+    logging.getLogger().info('scheduler %s: FPT: Analysing database' % (SchedulerConfig().name))
+    # as cleanStates() may crash before giving a deferred (MySQL down for example),
+    # we build a deferred chain
+    pulse2.scheduler.scheduling.fixProcessingTasks(SchedulerConfig().name
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": FPT: Finished analysing database' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleFixProcessingTasks()
+    )
+
 def scheduleLogStats():
     """ periodicaly log stats """
     delay = LOG_STATS_DELAY - time.time() % LOG_STATS_DELAY
