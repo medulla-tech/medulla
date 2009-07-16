@@ -55,6 +55,22 @@ from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 
+# some known states
+PULSE2_TERMINATED_STATES = [
+    'done',
+    'failed',
+    'over_timed'
+]
+
+PULSE2_POST_INVENTORY_STATES = [
+    'reboot_in_progress',
+    'reboot_done',
+    'reboot_failed',
+    'halt_in_progress',
+    'halt_done',
+    'halt_failed'
+] + PULSE2_TERMINATED_STATES
+
 handle_deconnect()
 
 def gatherStuff():
@@ -89,18 +105,18 @@ def isLastToInventoryInBundle(myCommandOnHostID):
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
-    futur_states = ['reboot_in_progress', 'reboot_done', 'reboot_failed', 'halt_in_progress', 'halt_done', 'halt_failed', 'done', 'failed', 'over_timed']
-
-    nb = session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands)).\
-        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
-        filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
-        filter(sqlalchemy.not_(database.commands_on_host.c.current_state.in_(futur_states))).\
-        count()
+    nb = session.query(CommandsOnHost
+        ).select_from(database.commands_on_host.join(database.commands).join(database.target)
+        ).filter(database.commands.c.fk_bundle == myC.fk_bundle
+        ).filter(database.commands.c.order_in_bundle == myC.order_in_bundle
+        ).filter(database.target.c.target_uuid ==  myT.target_uuid
+        ).filter(sqlalchemy.not_(
+            database.commands_on_host.c.current_state.in_(PULSE2_POST_INVENTORY_STATES))
+        ).count()
 
     session.close()
     if nb != 1:
-        logging.getLogger().debug("isLastToInventoryInBundle on #%s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
+        logging.getLogger().debug("isLastToInventoryInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -112,19 +128,18 @@ def isLastToHaltInBundle(myCommandOnHostID):
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
 
-    nb = session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands)).\
-        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
-        filter(database.commands.c.order_in_bundle == myC.order_in_bundle).\
-        filter(sqlalchemy.and_(
-            database.commands_on_host.c.current_state != 'done', \
-            database.commands_on_host.c.current_state != 'failed', \
-            database.commands_on_host.c.current_state != 'over_timed')).\
-        count()
+    nb = session.query(CommandsOnHost
+        ).select_from(database.commands_on_host.join(database.commands).join(database.target)
+        ).filter(database.commands.c.fk_bundle == myC.fk_bundle
+        ).filter(database.commands.c.order_in_bundle == myC.order_in_bundle
+        ).filter(database.target.c.target_uuid ==  myT.target_uuid
+        ).filter(sqlalchemy.not_(
+            database.commands_on_host.c.current_state.in_(PULSE2_TERMINATED_STATES))
+        ).count()
 
     session.close()
     if nb != 1:
-        logging.getLogger().debug("isLastToHaltInBundle on #%s : still %s coh in the same bundle to do"%(str(myCommandOnHostID), str(nb-1)))
+        logging.getLogger().debug("isLastToHaltInBundle on #%s : still %s coh in the same bundle to do" % (str(myCommandOnHostID), str(nb-1)))
         return False
     return True
 
@@ -151,12 +166,12 @@ def getDependancies(myCommandOnHostID):
     coh_unfinishable_deps = [] # deps with 'failed' or 'over_timed' status
     coh_relevant_deps = [] # other deps
 
-    for q in session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands).join(database.target)).\
-        filter(database.commands.c.fk_bundle == myC.fk_bundle).\
-        filter(database.commands.c.order_in_bundle < myC.order_in_bundle).\
-        filter(database.target.c.target_uuid ==  myT.target_uuid).\
-        all():
+    for q in session.query(CommandsOnHost
+        ).select_from(database.commands_on_host.join(database.commands).join(database.target)
+        ).filter(database.commands.c.fk_bundle == myC.fk_bundle
+        ).filter(database.commands.c.order_in_bundle < myC.order_in_bundle
+        ).filter(database.target.c.target_uuid ==  myT.target_uuid
+        ).all():
             if q.current_state in ['done']:
                 coh_finished_deps.append(q.id)
             elif q.current_state  in ['failed', 'over_timed']:
@@ -533,30 +548,28 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
     later = time.strftime("2031-12-31 23:59:59")
 
     commands_query = session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands)).\
-        filter(database.commands_on_host.c.current_state != 'done').\
-        filter(database.commands_on_host.c.current_state != 'failed').\
-        filter(database.commands_on_host.c.current_state != 'over_timed').\
-        filter(database.commands_on_host.c.current_state != 'pause').\
-        filter(database.commands_on_host.c.current_state != 'stop').\
-        filter(database.commands_on_host.c.current_state != 'upload_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'execution_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'delete_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'inventory_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'reboot_in_progress').\
-        filter(database.commands_on_host.c.current_state != 'halt_in_progress').\
-        filter(database.commands_on_host.c.next_launch_date <= now).\
-        filter(sqlalchemy.or_(
+        select_from(database.commands_on_host.join(database.commands)
+        ).filter(database.commands_on_host.c.current_state != 'done'
+        ).filter(database.commands_on_host.c.current_state != 'failed'
+        ).filter(database.commands_on_host.c.current_state != 'over_timed'
+        ).filter(database.commands_on_host.c.current_state != 'pause'
+        ).filter(database.commands_on_host.c.current_state != 'stop'
+        ).filter(database.commands_on_host.c.current_state != 'upload_in_progress'
+        ).filter(database.commands_on_host.c.current_state != 'execution_in_progress'
+        ).filter(database.commands_on_host.c.current_state != 'delete_in_progress'
+        ).filter(database.commands_on_host.c.current_state != 'inventory_in_progress'
+        ).filter(database.commands_on_host.c.current_state != 'reboot_in_progress'
+        ).filter(database.commands_on_host.c.current_state != 'halt_in_progress'
+        ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(sqlalchemy.or_(
             database.commands.c.start_date == soon,
             database.commands.c.start_date <= now)
-        ).\
-        filter(database.commands.c.start_date != later).\
-        filter(sqlalchemy.or_(
+        ).filter(database.commands.c.start_date != later
+        ).filter(sqlalchemy.or_(
             database.commands.c.end_date == soon,
             database.commands.c.end_date == later,
             database.commands.c.end_date > now)
-        ).\
-        filter(sqlalchemy.or_(
+        ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
@@ -674,35 +687,65 @@ def sortCommands(commands_to_perform):
     return getLaunchersBalance().\
         addCallback(_cb, tocome_distribution)
 
-def running_states_sqlalchemy(database):
-    return sqlalchemy.or_(
-        database.commands_on_host.c.current_state == 'upload_in_progress',
-        database.commands_on_host.c.current_state == 'execution_in_progress',
-        database.commands_on_host.c.current_state == 'delete_in_progress',
-        database.commands_on_host.c.current_state == 'inventory_in_progress'
-    )
-
 def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
+    # get the list of running commands according to the database content
+    # ifs ids provided, returns only coh whose id corresponds
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
-    query = session.query(CommandsOnHost).\
-        select_from(database.commands_on_host).\
-        filter(
-            running_states_sqlalchemy(database)
+
+    query = session.query(CommandsOnHost
+        ).select_from(database.commands_on_host
+        ).filter(sqlalchemy.or_(
+            database.commands_on_host.c.current_state == 'upload_in_progress',
+            database.commands_on_host.c.current_state == 'execution_in_progress',
+            database.commands_on_host.c.current_state == 'delete_in_progress',
+            database.commands_on_host.c.current_state == 'inventory_in_progress')
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
         )
-    if ids != None:
-        if type(ids) == list:
-            query = query.filter(database.commands_on_host.c.id.in_(ids))
-        elif type(ids) == int:
-            query = query.filter(database.commands_on_host.c.id == ids)
+    if type(ids) == list:
+        query = query.\
+            filter(database.commands_on_host.c.id.in_(ids))
+    elif type(ids) == int:
+        query = query.\
+            filter(database.commands_on_host.c.id == ids)
+
+    ret = list()
+    for q in query.all():
+        ret.append(q.id)
 
     session.close()
-    return query.all()
-    
+    return ret
+
+def getCommandsToNeutralize(scheduler_name):
+    # get the list of commands which can be put into "over_timed" state,
+    # ie exhausted according to their end date
+    session = sqlalchemy.orm.create_session()
+    database = MscDatabase()
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    query = session.query(CommandsOnHost
+        ).select_from(database.commands_on_host.join(database.commands)
+        ).filter(sqlalchemy.or_(
+            database.commands_on_host.c.scheduler == '',
+            database.commands_on_host.c.scheduler == scheduler_name,
+            database.commands_on_host.c.scheduler == None)
+        ).filter(sqlalchemy.and_(
+            database.commands.c.end_date <= now,
+            database.commands.c.end_date != '0000-00-00 00:00:00')
+        ).filter(sqlalchemy.not_(
+            database.commands_on_host.c.current_state.in_(PULSE2_TERMINATED_STATES))
+        )
+
+    ret = list()
+    for q in query.all():
+        ret.append(q.id)
+
+    session.close()
+    return ret
+
 def stopElapsedCommands(scheduler_name):
     logger = logging.getLogger()
 
@@ -711,48 +754,30 @@ def stopElapsedCommands(scheduler_name):
     return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
 
 def gatherIdsToStop(scheduler_name):
-    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
-    session = sqlalchemy.orm.create_session()
-    database = MscDatabase()
-    now = time.strftime("%Y-%m-%d %H:%M:%S")
-    for q in session.query(CommandsOnHost).\
-        select_from(database.commands_on_host.join(database.commands)).\
-        filter(sqlalchemy.or_(
-            database.commands_on_host.c.scheduler == '',
-            database.commands_on_host.c.scheduler == scheduler_name,
-            database.commands_on_host.c.scheduler == None)
-        ).filter(sqlalchemy.and_(
-            database.commands.c.end_date <= now,
-            database.commands.c.end_date != '0000-00-00 00:00:00')
-        ).filter(sqlalchemy.and_(
-            database.commands_on_host.c.current_state != 'failed',
-            database.commands_on_host.c.current_state != 'over_timed',
-            database.commands_on_host.c.current_state != 'done')
-        ).all():
-
-        (myCoH, myC, myT) = gatherCoHStuff(q.id)
-        if myCoH == None:
-            continue
-        logging.getLogger().info("Scheduler: over timed command_on_host #%s"%(str(q.id)))
-        myCoH.setStateOverTimed()
-    session.close()
 
     # gather candidates:
     # retain tasks already in progress
     # take tasks with end_date in the future, but not null
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
     ids = list()
-    for q in getRunningCommandsOnHostInDB(scheduler_name):
-        # enter the maze: tag command as to-be-stopped if relevant
-
-        (myCoH, myC, myT) = gatherCoHStuff(q.id)
+    for id in getRunningCommandsOnHostInDB(scheduler_name):
+        (myCoH, myC, myT) = gatherCoHStuff(id)
         if myCoH == None:
             continue
         if not myC.inDeploymentInterval(): # stops command not in interval
-            ids.append(q.id)
-        elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__()  <= time.strftime("%Y-%m-%d %H:%M:%S"):
-            # change the CoH current_state (we are not going to be able to try to start this coh ever again)
-            myCoH.setStateOverTimed()
-            ids.append(q.id)
+            ids.append(id)
+        elif myC.end_date.__str__() != '0000-00-00 00:00:00' and myC.end_date.__str__() <= now:
+            myCoH.setStateOverTimed() # change the CoH current_state (we are not going to be able to try to start this coh ever again)
+            ids.append(id)
+
+    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
+    # /!\ has to be run *after* previous loop
+    for id in getCommandsToNeutralize(scheduler_name):
+        (myCoH, myC, myT) = gatherCoHStuff(id)
+        if myCoH == None:
+            continue
+        logging.getLogger().info("Scheduler: over timed command_on_host #%s" % (id))
+        myCoH.setStateOverTimed()
 
     logging.getLogger().debug("Scheduler: stopping %s" % ids)
     return ids
@@ -773,11 +798,8 @@ def cleanStates(scheduler_name):
     logger.info("Scheduler: cleanStates")
     if config.active_clean_states_stop:
         logger.info("Scheduler: cleanStates (stop)")
-        # get all running coh ids from the database
-        ids = map(lambda q: q.id, getRunningCommandsOnHostInDB(scheduler_name))
-
         # check if thoses running coh are still running
-        cleanStatesAllRunningIds(ids)
+        cleanStatesAllRunningIds(getRunningCommandsOnHostInDB(scheduler_name))
 
     if config.active_clean_states_run:
         logger.info("Scheduler: cleanStates (run)")
@@ -785,7 +807,7 @@ def cleanStates(scheduler_name):
         # and will check if they should be running (database) in the callback
         getRunningCommandsOnHostFromLaunchers(scheduler_name)
     return None
-   
+
 def cleanStatesAllRunningIds(ids):
     def treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
@@ -821,12 +843,11 @@ def getRunningCommandsOnHostFromLaunchers(scheduler_name):
             for id in running_ids[1]:
                 launchers_running_ids.append(id)
         logging.getLogger().info('scheduler "%s": CLEAN STATES: launcher running ids : %s'  % (SchedulerConfig().name, str(launchers_running_ids)))
+
         # get the states of launchers_running_ids
-        db_ids = getRunningCommandsOnHostInDB(scheduler_name, launchers_running_ids)
         fails = []
-        db_ids = map(lambda x:x.id, db_ids)
         for id in launchers_running_ids:
-            if id not in db_ids:
+            if id not in getRunningCommandsOnHostInDB(scheduler_name, launchers_running_ids):
                 fails.append(id)
         logging.getLogger().info('scheduler "%s": CLEAN STATES: wrong states (run) : %s' % (SchedulerConfig().name, str(fails)))
         # start stopping commands on launcher
