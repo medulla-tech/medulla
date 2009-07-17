@@ -715,37 +715,33 @@ def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
         query = query.\
             filter(database.commands_on_host.c.id == ids)
 
-    ret = list()
-    for q in query.all():
-        ret.append(q.id)
-
+    ret = map(lambda q: q.id, query.all())
     session.close()
     return ret
 
 def getCommandsToNeutralize(scheduler_name):
     # get the list of commands which can be put into "over_timed" state,
-    # ie exhausted according to their end date
+    # ie :
+    # - exhausted according to their end date
+    # - and not yet terminated according to their current state
     session = sqlalchemy.orm.create_session()
     database = MscDatabase()
     now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     query = session.query(CommandsOnHost
         ).select_from(database.commands_on_host.join(database.commands)
+        ).filter(sqlalchemy.not_(
+            database.commands_on_host.c.current_state.in_(PULSE2_TERMINATED_STATES))
+        ).filter(sqlalchemy.and_(
+            database.commands.c.end_date <= now,
+            database.commands.c.end_date != '0000-00-00 00:00:00')
         ).filter(sqlalchemy.or_(
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
-        ).filter(sqlalchemy.and_(
-            database.commands.c.end_date <= now,
-            database.commands.c.end_date != '0000-00-00 00:00:00')
-        ).filter(sqlalchemy.not_(
-            database.commands_on_host.c.current_state.in_(PULSE2_TERMINATED_STATES))
         )
 
-    ret = list()
-    for q in query.all():
-        ret.append(q.id)
-
+    ret = map(lambda q: q.id, query.all())
     session.close()
     return ret
 
@@ -755,10 +751,10 @@ def stopElapsedCommands(scheduler_name):
     return twisted.internet.threads.deferToThread(gatherIdsToStop, scheduler_name).addCallback(stopCommandsOnHosts)
 
 def gatherIdsToStop(scheduler_name):
-
-    # gather candidates:
-    # retain tasks already in progress
-    # take tasks with end_date in the future, but not null
+    # gather candidates to stop:
+    # - build the list of running commands (according to the DB),
+    # - commands not in their deployment interval get killed,
+    # - commands exhausted get killed *and* tagged as over_timed
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     ids = list()
     for id in getRunningCommandsOnHostInDB(scheduler_name):
@@ -771,7 +767,8 @@ def gatherIdsToStop(scheduler_name):
             myCoH.setStateOverTimed() # change the CoH current_state (we are not going to be able to try to start this coh ever again)
             ids.append(id)
 
-    # this loop only put the current_state in over_timed, but as the coh are not running, we dont need to stop them.
+    # this loop only put the current_state in over_timed, but as the coh
+    # are not running, we dont need to stop them.
     # /!\ has to be run *after* previous loop
     for id in getCommandsToNeutralize(scheduler_name):
         (myCoH, myC, myT) = gatherCoHStuff(id)
@@ -781,15 +778,6 @@ def gatherIdsToStop(scheduler_name):
         myCoH.setStateOverTimed()
 
     return ids
-
-def setCommandsOnHostAsStopped(ids):
-    try:
-        for id in ids:
-            (myCoH, myC, myT) = gatherCoHStuff(id)
-            myCoH.current_state = 'stopped'
-            myCoH.flush()
-    except Exception, e:
-        logging.getLogger().debug("Scheduler: error %s"%(str(e)))
 
 def fixUnprocessedTasks(scheduler_name):
     logging.getLogger().debug('scheduler "%s": FUT: Starting analysis' % scheduler_name)
@@ -801,6 +789,28 @@ def fixProcessingTasks(scheduler_name):
     return twisted.internet.threads.deferToThread(lambda woot: woot, scheduler_name).addCallback(getRunningCommandsOnHostFromLaunchers).addCallback(stopCommandsOnHosts)
 
 def cleanStatesAllRunningIds(ids):
+    """
+        algo is pretty simple:
+        - ids is the result of getRunningCommandsOnHostInDb(),
+        or in other words the exact list of running commands according
+        to the DB.
+        - we ask each launcher to give us the list of commands
+        still being processed (using xmlrpc 'get_process_ids').
+        - __treatBadStateCommandsOnHost() will compare the list of ids
+        given by the launchers to the list given by
+        getRunningCommandsOnHostInDb.
+        - each process
+          + reported by getRunningCommandsOnHostInDb()
+          + not reported by at least one launcher
+        get tagged as "STOPPED" in the database
+
+        FIXME: the downside of this is when a launcher is - for a short
+        time - unreachable but still processing a command, this commands
+        can be tagged as "STOPPED" without reason. And we do not have
+        any way to tell if an unreachable launcher is down or not.
+        That's why this feature is disabled by default.
+    """
+
     def __treatBadStateCommandsOnHost(result, ids = ids):
         fails = []
         if len(ids) > 0:
@@ -808,18 +818,19 @@ def cleanStatesAllRunningIds(ids):
         else:
             logging.getLogger().debug('scheduler "%s": FUT: No task should be running' % (SchedulerConfig().name))
         for id in ids:
-            logging.getLogger().info('scheduler "%s": CLEAN STATES: db running ids : %s' % (SchedulerConfig().name, str(ids)))
-            success = False
-            for running_ids in result:
-                if running_ids[1] != None: # None: launcher may be down
-                    if id in running_ids[1]:
-                        success = True
-                        continue
-            if not success:
+            found = False
+            for running_ids in result: # one tuple per launcher
+                if running_ids[1] == None: # None: launcher may be down
+                    continue
+                if id in running_ids[1]:
+                    found = True
+                    continue
+            if not found:
                 fails.append(id)
-        if len(fails) > 0:
-            logging.getLogger().warn('scheduler "%s": FUT: Forcing the following commands to STOP state: %s' % (SchedulerConfig().name, str(fails)))
-            return setCommandsOnHostAsStopped(fails)
+                logging.getLogger().warn('scheduler "%s": FUT: Forcing the following command to STOP state: %s' % (SchedulerConfig().name, id))
+        for id in fails:
+            (myCoH, myC, myT) = gatherCoHStuff(id)
+            myCoH.setStateStopped()
 
     deffereds = [] # will hold all deferred
     for launcher in SchedulerConfig().launchers_uri.values():
@@ -836,6 +847,25 @@ def cleanStatesAllRunningIds(ids):
     return deffered_list
 
 def getRunningCommandsOnHostFromLaunchers(scheduler_name):
+    """
+        algo is pretty simple:
+        - ids is the result of getRunningCommandsOnHostFromLaunchers(),
+        or in other words the exact list of running commands according
+        to our launchers
+        - we ask the database to give us the list of commands
+        still being processed (using getRunningCommandsOnHostInDB()).
+        - __treatRunningCommandsOnHostFromLaunchers() will compare the
+        list of ids given by the launchers to the list given by
+        getRunningCommandsOnHostInDb.
+        - each process
+          + not reported by getRunningCommandsOnHostInDb()
+          + reported by at least one launcher
+        is asked to be stopped.
+
+        FIXME: as they are really not reason for a process to still be run
+        by a launcher and being tagged as not running in database,
+        this feature is disabled by default.
+    """
 
     def __treatRunningCommandsOnHostFromLaunchers(result, scheduler_name=scheduler_name):
         # check if they should be running (database)
