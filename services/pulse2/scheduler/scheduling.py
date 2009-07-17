@@ -1128,6 +1128,10 @@ def runUploadPhase(myCommandOnHostID):
     # if we are here, upload has either previously failed or never be done
     # do copy here
 
+    # update command state
+    myCoH.setUploadInProgress()
+    myCoH.setStateUploadInProgress()
+
     # fullfil used proxy (if we can)
     if myC.hasToUseProxy():
         d = twisted.internet.defer.maybeDeferred(localProxyUploadStatus, myCommandOnHostID)
@@ -1139,9 +1143,13 @@ def runUploadPhase(myCommandOnHostID):
 def _cbChooseUploadMode(result, myCoH, myC, myT):
     if result == 'waiting':
         logging.getLogger().info("command_on_host #%s: waiting for a local proxy" % myCoH.getId())
+        myCoH.setUploadToDo()
+        myCoH.setStateScheduled()
         return None
     elif result == 'dead':
         logging.getLogger().warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
+        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Waiting for a local proxy which will never be ready')
+        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         return None
     elif result == 'server':
         logging.getLogger().info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
@@ -1158,11 +1166,9 @@ def _chooseUploadMode(myCoH, myC, myT):
     # check if we have enough informations to reach the client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
+        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Can\'t get target IP address')
+        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCoH.getId())
-
-    # update command state
-    myCoH.setUploadInProgress()
-    myCoH.setStateUploadInProgress()
 
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
