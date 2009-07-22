@@ -1,5 +1,27 @@
 #!/bin/bash
-# $Id: backup.sh 48 2004-05-10 13:18:53Z jwax $
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+# Helper tool to backup the content of a directory as an ISO to burn
+
 # arg1 : share name
 # arg2 : share path
 # arg3 : backup path
@@ -33,7 +55,7 @@ nbcd=$(tail -n 1 ${log})
 mkdir -p ${tmpdir}
 
 for i in $(seq 1 ${nbcd}); do
-    sed -i "s,=,\\\=," ${backupdest}/list${i}
+    sed -i "s,=,\\\=,g" ${backupdest}/list${i}
     cat ${backupdest}/list${i} | sed -e "s,^[0-9]*[ ]*${sharepath}/\(.*\)$,\1=${sharepath}/\1," > ${tmpdir}/list${i}
     echo "FILELIST=${backupdest}/list${i}" >> ${tmpdir}/list${i}
 done
