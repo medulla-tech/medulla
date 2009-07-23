@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Deployment error codes in Pulse 2</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas Rueff</firstname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.2.3</revnumber>
+        <date>2009-07-22</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>First version.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>The error code used when deploying a package using Pulse 2.</para>
+    </abstract>
+    <releaseinfo>$Id: database_documentation.xml 133 2009-05-12 16:29:28Z nrueff $</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Introduction</title>
+    <para>Starting with version 1.2.3, error codes ranges have been rationalized to reduce the risk of collision between error codes used by scripts and error codes used by Pulse 2 for internal purposes.</para>
+    <para>Let's take an example: a script "foobar" runs a single command on targets; </para>
+    <itemizedlist>
+      <listitem>
+        <para>in case of success, the returned value is 0,</para>
+      </listitem>
+      <listitem>
+        <para>in case of failure, the returned value is 137.</para>
+      </listitem>
+    </itemizedlist>
+    <para>pre-1.2.3, Pulse 2 was also using the error code 137 to know when a script has been terminated using SIGTERM, for example when running out of time.</para>
+    <para>In our example, if Pulse 2 was give 137 as error code, it could not know if it was because of the script failure, or because the script was it was killed.</para>
+    <para>Additionally, pre-1.2.3, the error code range used by the Pulse 2 check-client feature was not established.</para>
+  </section>
+  <section>
+    <title>The error code ranges, short story</title>
+    <para>Use 0 for success.</para>
+    <para>Use any of 1-199 for failure.</para>
+    <para>Do not use 200-255.</para>
+  </section>
+  <section>
+    <title>The error code ranges, long story</title>
+    <section>
+      <title>Success</title>
+      <para>Says, well, "historical reason". So Error code <emphasis role="bold">0</emphasis> has to be used only to <emphasis role="bold">represent a success</emphasis>. Do not use it to represent a failure !</para>
+      <variablelist>
+        <varlistentry>
+          <term>0</term>
+          <listitem>
+            <para>Script succeeded</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Failure</title>
+      <para>Range <emphasis role="bold">1 to 199</emphasis> is <emphasis role="bold">freely usable</emphasis> by script authors to <emphasis role="bold">represent a failure</emphasis> that occurred within the script. Do not use them to represent a success !</para>
+      <variablelist>
+        <varlistentry>
+          <term>1 to 199</term>
+          <listitem>
+            <para>Script failed, return error code can be freely used by the script author.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Signal</title>
+      <para>Range <emphasis role="bold">200 to 231</emphasis> is <emphasis role="bold">internally used</emphasis> to represent that script <emphasis role="bold">ended upon signal</emphasis> reception. Do not use them !</para>
+      <variablelist>
+        <varlistentry>
+          <term>200</term>
+          <listitem>
+            <para>Script was killed by the launcher by a signal higher than 31 (SIGSYS), most probably a RT signal.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>201</term>
+          <listitem>
+            <para>Script was killed by signal 1 (SIGHUP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>202</term>
+          <listitem>
+            <para>Script was killed by signal 2 (SIGINT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>203</term>
+          <listitem>
+            <para>Script was killed by signal 3 (SIGQUIT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>204</term>
+          <listitem>
+            <para>Script was killed by signal 4 (SIGILL).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>205</term>
+          <listitem>
+            <para>Script was killed by signal 5 (SIGTRAP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>206</term>
+          <listitem>
+            <para>Script was killed by signal 6 (SIGABRT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>208</term>
+          <listitem>
+            <para>Script was killed by signal 8 (SIGFPE).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>209</term>
+          <listitem>
+            <para>Script was killed by signal 9 (SIGKILL).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>211</term>
+          <listitem>
+            <para>Script was killed by signal 11 (SIGSEGV).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>212</term>
+          <listitem>
+            <para>Script was killed by signal 12 (SIGHUP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>213</term>
+          <listitem>
+            <para>Script was killed by signal 13 (SIGPIPE).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>214</term>
+          <listitem>
+            <para>Script was killed by signal 14 (SIGALRM).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>215</term>
+          <listitem>
+            <para>Script was killed by signal 15 (SIGTERM).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>207, 210, 216-231</term>
+          <listitem>
+            <para>Script was killed by signal &lt;error-code&gt; minus 200 .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Reserved</title>
+      <para>Range <emphasis role="bold">232 to 239</emphasis> is kept for future <emphasis role="bold">internal use</emphasis>. Do not use them !</para>
+    </section>
+    <section>
+      <title>Pre-check</title>
+      <para>Range <emphasis role="bold">240 to 254</emphasis> indicates a <emphasis role="bold">pre-check script error</emphasis>. Do not use them !</para>
+      <variablelist>
+        <varlistentry>
+          <term>240</term>
+          <listitem>
+            <para>Something weird append while pre-checking .</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>241</term>
+          <listitem>
+            <para>Pre-check failed.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>242-254</term>
+          <listitem>
+            <para>Reserved for future use.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Connexion failed</title>
+      <para>Error code <emphasis role="bold">255</emphasis> is used to represent a <emphasis role="bold">connection failure</emphasis>. Do not use it !</para>
+    </section>
+  </section>
+</article>
