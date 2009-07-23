@@ -1,4 +1,4 @@
-PULSE2_FOLDERS=conf dev install
+PULSE2_FOLDERS=conf dev install user
 
 html:
 	mkdir build
