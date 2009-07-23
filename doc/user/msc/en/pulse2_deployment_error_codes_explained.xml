@@ -28,14 +28,14 @@
       </revision>
     </revhistory>
     <abstract>
-      <para>The error code used when deploying a package using Pulse 2.</para>
+      <para>The error codes used when deploying a package with Pulse 2.</para>
     </abstract>
     <releaseinfo>$Id$</releaseinfo>
   </articleinfo>
   <section>
     <title>Introduction</title>
     <para>Starting with version 1.2.3, error codes ranges have been rationalized to reduce the risk of collision between error codes used by scripts and error codes used by Pulse 2 for internal purposes.</para>
-    <para>Let's take an example: a script "foobar" runs a single command on targets; </para>
+    <para>Let's take an example: a script "foobar" runs a single command on targets;</para>
     <itemizedlist>
       <listitem>
         <para>in case of success, the returned value is 0,</para>
@@ -45,7 +45,7 @@
       </listitem>
     </itemizedlist>
     <para>pre-1.2.3, Pulse 2 was also using the error code 137 to know when a script has been terminated using SIGTERM, for example when running out of time.</para>
-    <para>In our example, if Pulse 2 was give 137 as error code, it could not know if it was because of the script failure, or because the script was it was killed.</para>
+    <para>In our example, if Pulse 2 was given 137 as error code, it could not know if it was because of the script failure, or because the script was killed.</para>
     <para>Additionally, pre-1.2.3, the error code range used by the Pulse 2 check-client feature was not established.</para>
   </section>
   <section>
@@ -58,7 +58,7 @@
     <title>The error code ranges, long story</title>
     <section>
       <title>Success</title>
-      <para>Says, well, "historical reason". So Error code <emphasis role="bold">0</emphasis> has to be used only to <emphasis role="bold">represent a success</emphasis>. Do not use it to represent a failure !</para>
+      <para>For "historical reason", error code <emphasis role="bold">0</emphasis> has to be used only to <emphasis role="bold">represent a success</emphasis>. Do not use it to represent a failure !</para>
       <variablelist>
         <varlistentry>
           <term>0</term>
@@ -87,7 +87,7 @@
         <varlistentry>
           <term>200</term>
           <listitem>
-            <para>Script was killed by the launcher by a signal higher than 31 (SIGSYS), most probably a RT signal.</para>
+            <para>Script was killed by a signal higher than 31 (SIGSYS), most probably a RT signal.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -182,12 +182,12 @@
     </section>
     <section>
       <title>Pre-check</title>
-      <para>Range <emphasis role="bold">240 to 254</emphasis> indicates a <emphasis role="bold">pre-check script error</emphasis>. Do not use them !</para>
+      <para>Range <emphasis role="bold">240 to 254</emphasis> indicates a <emphasis role="bold">pre-check error</emphasis>.</para>
       <variablelist>
         <varlistentry>
           <term>240</term>
           <listitem>
-            <para>Something weird append while pre-checking .</para>
+            <para>Something weird append while pre-checking.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -199,14 +199,14 @@
         <varlistentry>
           <term>242-254</term>
           <listitem>
-            <para>Reserved for future use.</para>
+            <para>Reserved for <emphasis role="bold">future use</emphasis>.</para>
           </listitem>
         </varlistentry>
       </variablelist>
     </section>
     <section>
-      <title>Connexion failed</title>
-      <para>Error code <emphasis role="bold">255</emphasis> is used to represent a <emphasis role="bold">connection failure</emphasis>. Do not use it !</para>
+      <title>Connection failed</title>
+      <para>For "historical reason", error code <emphasis role="bold">255</emphasis> is used to represent a <emphasis role="bold">connection failure</emphasis>. Do not use it !</para>
     </section>
   </section>
 </article>

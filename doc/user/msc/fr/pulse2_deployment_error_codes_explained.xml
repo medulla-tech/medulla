@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Code d'erreur de diffusion dans Pulse 2</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas Rueff</firstname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.2.3</revnumber>
+        <date>2009-07-22</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>Première version.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>Les codes d'erreur utilisés en déploiement d'application via Pulse 2.</para>
+    </abstract>
+    <releaseinfo>$Id$</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Introduction</title>
+    <para>À partir de la version 1.2.3, les plages de codes d'erreur ont été rationalisées pour réduire le risque de collision entre les codes d'erreur utilisés par les scripts et les codes d'erreur utlisés de manière interne par Pulse 2.</para>
+    <para>Prenons l'exemple d'un script "foobar" lançant une simple commande sur la cible:</para>
+    <itemizedlist>
+      <listitem>
+        <para>en cas de succès, la valeur renvoyée est 0,</para>
+      </listitem>
+      <listitem>
+        <para>en cas d'échec, la valeur renvoyée est 137.</para>
+      </listitem>
+    </itemizedlist>
+    <para>pre-1.2.3, Pulse 2 utilisait également le code d'erreur 137 pour savoir qu'un script avait été terminé pas SIGTERM, généralement quand il dépassait le temps imparti.</para>
+    <para>Dans notre exemple, si Pulse 2 reçoit ce code de sortie de 137, il n'est pas capable de savoir si c'était dû à une erreur de srcipt, ou si c'était dû à l'arrêt du script.</para>
+    <para>De plus, pre-1.2.3, la plage de codes d'erreur utilisée par la fonctionnalité de "pré-check" de Pulse 2 n'était pas établie.</para>
+  </section>
+  <section>
+    <title>Les plages de code d'erreur, version courte</title>
+    <para>Utilisez 0 pour signaler un succès.</para>
+    <para>Utilisez une valeur dans l'intervalle 1-199 pour signaler un échec.</para>
+    <para>N'utilisez pas la plage 200-255.</para>
+  </section>
+  <section>
+    <title>Les plages de code d'erreur, version longue</title>
+    <section>
+      <title>Succès</title>
+      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">0</emphasis> est uniquement utilisé pour <emphasis role="bold">representer un succès</emphasis>. Ne l'utilisez pas pour représenter un échec !</para>
+      <variablelist>
+        <varlistentry>
+          <term>0</term>
+          <listitem>
+            <para>Succès du script.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Échec</title>
+      <para>La plage <emphasis role="bold">1 à 199</emphasis> est <emphasis role="bold">librement utilisable</emphasis> par les auteurs de scripts pour <emphasis role="bold">représenter un échec</emphasis> arrivant dans le script. Ne l'utilisez pas pour représenter un succès !</para>
+      <variablelist>
+        <varlistentry>
+          <term>1 à 199</term>
+          <listitem>
+            <para>Éche du script, code de retour utilisable librement par l'auteur du script.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Signal</title>
+      <para>La plage <emphasis role="bold">200 à 231</emphasis> est <emphasis role="bold">utilisée en interne</emphasis> pour représenter le fait que le script s'est <emphasis role="bold">terminé à cause le de réception d'un signal</emphasis>. Ne l'utilisez pas !</para>
+      <variablelist>
+        <varlistentry>
+          <term>200</term>
+          <listitem>
+            <para>Le script a été tué par un signal supérieur à 31 (SIGSYS), probablement un signal RT.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>201</term>
+          <listitem>
+            <para>Le script a été tué par un signal 1 (SIGHUP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>202</term>
+          <listitem>
+            <para>Le script a été tué par un signal 2 (SIGINT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>203</term>
+          <listitem>
+            <para>Le script a été tué par un signal 3 (SIGQUIT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>204</term>
+          <listitem>
+            <para>Le script a été tué par un signal 4 (SIGILL).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>205</term>
+          <listitem>
+            <para>Le script a été tué par un signal 5 (SIGTRAP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>206</term>
+          <listitem>
+            <para>Le script a été tué par un signal 6 (SIGABRT).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>208</term>
+          <listitem>
+            <para>Le script a été tué par un signal 8 (SIGFPE).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>209</term>
+          <listitem>
+            <para>Le script a été tué par un signal 9 (SIGKILL).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>211</term>
+          <listitem>
+            <para>Le script a été tué par un signal 11 (SIGSEGV).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>212</term>
+          <listitem>
+            <para>Le script a été tué par un signal 12 (SIGHUP).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>213</term>
+          <listitem>
+            <para>Le script a été tué par un signal 13 (SIGPIPE).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>214</term>
+          <listitem>
+            <para>Le script a été tué par un signal 14 (SIGALRM).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>215</term>
+          <listitem>
+            <para>Le script a été tué par un signal 15 (SIGTERM).</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>207, 210, 216-231</term>
+          <listitem>
+            <para>Le script a été tué par un signal &lt;code-d-erreur&gt; moins 200 .</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Réservé</title>
+      <para>La plage <emphasis role="bold">232 à 239</emphasis> est réservée pour <emphasis role="bold">usage interne futur</emphasis>. Ne l'utilisez pas !</para>
+    </section>
+    <section>
+      <title>Pré-check</title>
+      <para>La plage <emphasis role="bold">240 à 254</emphasis> indique une <emphasis role="bold">erreur de pré-check</emphasis>. Ne l'utilisez pas !</para>
+      <variablelist>
+        <varlistentry>
+          <term>240</term>
+          <listitem>
+            <para>Quelque chose d'innattendu s'est produit durant le pré-check..</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>241</term>
+          <listitem>
+            <para>Le pré-check a échoué.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>242-254</term>
+          <listitem>
+            <para>Réservé pour <emphasis role="bold">utillisation future</emphasis>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Échec de connexion</title>
+      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">255</emphasis> est utillisé pour indiquer une <emphasis role="bold">erreur de connexion</emphasis>. Ne l'utilisez pas !</para>
+    </section>
+  </section>
+</article>
