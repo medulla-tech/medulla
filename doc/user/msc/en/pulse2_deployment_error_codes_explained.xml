@@ -30,7 +30,7 @@
     <abstract>
       <para>The error code used when deploying a package using Pulse 2.</para>
     </abstract>
-    <releaseinfo>$Id: database_documentation.xml 133 2009-05-12 16:29:28Z nrueff $</releaseinfo>
+    <releaseinfo>$Id$</releaseinfo>
   </articleinfo>
   <section>
     <title>Introduction</title>

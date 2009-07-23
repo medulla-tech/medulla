@@ -17,6 +17,18 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.3</revnumber>
+        <date>2009-07-22</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para></para>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.2</revnumber>
         <date>2009-05-19</date>
         <authorinitials>NR</authorinitials>
@@ -131,6 +143,13 @@ option2 = plop</screen></para>
             <entry></entry>
           </row>
           <row>
+            <entry>active_clean_states</entry>
+            <entry>Declare which kind of unconsistant states should be fixed.<para>States can be either 'run', 'stop', or both, comma-separated.</para></entry>
+            <entry>yes</entry>
+            <entry>string</entry>
+            <entry></entry>
+          </row>
+          <row>
             <entry>announce_check</entry>
             <entry>To announce what we are currently try to do on client, for each stage.<para>For example TRANFERT while transfering something: announce_check = transfert=TRANFERT (comma-separated list as for previous options).</para><para>currently available keywords: transfert, execute, delete, inventory</para></entry>
             <entry>yes</entry>
@@ -150,6 +169,13 @@ option2 = plop</screen></para>
             <entry>yes, and used only if <emphasis role="bold">enablessl</emphasis> is set</entry>
             <entry>path</entry>
             <entry>/etc/mmc/pulse2/scheduler/keys/cacert.pem</entry>
+          </row>
+          <row>
+            <entry>clean_state_time</entry>
+            <entry>The scheduler will periodicaly awake to hunt for unconsistant command states, with this key a specific periodicity can be given.</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>3600 (one hour)</entry>
           </row>
           <row>
             <entry>client_check</entry>
