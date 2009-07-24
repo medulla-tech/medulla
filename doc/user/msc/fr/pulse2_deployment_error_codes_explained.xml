@@ -34,7 +34,7 @@
   </articleinfo>
   <section>
     <title>Introduction</title>
-    <para>À partir de la version 1.2.3, les plages de codes d'erreur ont été rationalisées pour réduire le risque de collision entre les codes d'erreur utilisés par les scripts et les codes d'erreur utlisés de manière interne par Pulse 2.</para>
+    <para>À partir de la version 1.2.3, les plages de codes d'erreur ont été rationalisées pour réduire le risque de collision entre les codes d'erreur utilisés par les scripts et les codes d'erreur utilisés de manière interne par Pulse 2.</para>
     <para>Prenons l'exemple d'un script "foobar" lançant une simple commande sur la cible:</para>
     <itemizedlist>
       <listitem>
@@ -44,8 +44,8 @@
         <para>en cas d'échec, la valeur renvoyée est 137.</para>
       </listitem>
     </itemizedlist>
-    <para>pre-1.2.3, Pulse 2 utilisait également le code d'erreur 137 pour savoir qu'un script avait été terminé pas SIGTERM, généralement quand il dépassait le temps imparti.</para>
-    <para>Dans notre exemple, si Pulse 2 reçoit ce code de sortie de 137, il n'est pas capable de savoir si c'était dû à une erreur de srcipt, ou si c'était dû à l'arrêt du script.</para>
+    <para>pre-1.2.3, Pulse 2 utilisait également le code d'erreur 137 pour savoir qu'un script avait été terminé par SIGTERM, généralement quand il dépassait le temps imparti.</para>
+    <para>Dans notre exemple, si Pulse 2 reçoit ce code de sortie de 137, il n'est pas capable de savoir si c'était dû à une erreur de script, ou si c'était dû à l'arrêt du script.</para>
     <para>De plus, pre-1.2.3, la plage de codes d'erreur utilisée par la fonctionnalité de "pré-check" de Pulse 2 n'était pas établie.</para>
   </section>
   <section>
@@ -58,7 +58,7 @@
     <title>Les plages de code d'erreur, version longue</title>
     <section>
       <title>Succès</title>
-      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">0</emphasis> est uniquement utilisé pour <emphasis role="bold">representer un succès</emphasis>. Ne l'utilisez pas pour représenter un échec !</para>
+      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">0</emphasis> est uniquement utilisé pour <emphasis role="bold">représenter un succès</emphasis>. Ne l'utilisez pas pour représenter un échec !</para>
       <variablelist>
         <varlistentry>
           <term>0</term>
@@ -75,14 +75,14 @@
         <varlistentry>
           <term>1 à 199</term>
           <listitem>
-            <para>Éche du script, code de retour utilisable librement par l'auteur du script.</para>
+            <para>Échec du script, code de retour utilisable librement par l'auteur du script.</para>
           </listitem>
         </varlistentry>
       </variablelist>
     </section>
     <section>
       <title>Signal</title>
-      <para>La plage <emphasis role="bold">200 à 231</emphasis> est <emphasis role="bold">utilisée en interne</emphasis> pour représenter le fait que le script s'est <emphasis role="bold">terminé à cause le de réception d'un signal</emphasis>. Ne l'utilisez pas !</para>
+      <para>La plage <emphasis role="bold">200 à 231</emphasis> est <emphasis role="bold">utilisée en interne</emphasis> pour représenter le fait que le script s'est <emphasis role="bold">terminé à cause de la réception d'un signal</emphasis>. Ne l'utilisez pas !</para>
       <variablelist>
         <varlistentry>
           <term>200</term>
@@ -187,7 +187,7 @@
         <varlistentry>
           <term>240</term>
           <listitem>
-            <para>Quelque chose d'innattendu s'est produit durant le pré-check..</para>
+            <para>Quelque chose d'inattendu s'est produit durant le pré-check.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -199,14 +199,14 @@
         <varlistentry>
           <term>242-254</term>
           <listitem>
-            <para>Réservé pour <emphasis role="bold">utillisation future</emphasis>.</para>
+            <para>Réservé pour <emphasis role="bold">utilisation future</emphasis>.</para>
           </listitem>
         </varlistentry>
       </variablelist>
     </section>
     <section>
       <title>Échec de connexion</title>
-      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">255</emphasis> est utillisé pour indiquer une <emphasis role="bold">erreur de connexion</emphasis>. Ne l'utilisez pas !</para>
+      <para>Pour des raisons disons "historiques", le code d'erreur <emphasis role="bold">255</emphasis> est utilisé pour indiquer une <emphasis role="bold">erreur de connexion</emphasis>. Ne l'utilisez pas !</para>
     </section>
   </section>
 </article>
