@@ -23,8 +23,10 @@
 from distutils.core import setup
 
 setup(
-    name = "mmc-agent",
-    version = "1.0",
+    name = 'mmc-agent',
+    version = '3.0.0',
+    description = 'XML-RPC agent for Mandriva Management Console',
+    license = 'GPL',
     url = "http://www.mandriva.com",
     author = "Cedric Delfosse",
     author_email = "cdelfosse@mandriva.com",
