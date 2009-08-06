@@ -206,6 +206,7 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig):
             pass
 
         self.baseDN = self.getdn('ldap', 'baseDN')
+        self.baseUsersDN = self.getdn('ldap', 'baseUsersDN')
             
         # Where LDAP computer objects are stored
         # For now we ignore if the option does not exist, because it breaks
@@ -633,7 +634,7 @@ class ldapUserGroupControl:
 
         self.baseDN = self.config.baseDN
         self.baseGroupsDN = self.config.getdn("ldap", "baseGroupsDN")
-        self.baseUsersDN = self.config.getdn("ldap", "baseUsersDN").replace(" ", "")
+        self.baseUsersDN = self.config.baseUsersDN
         self.userHomeAction = self.config.getboolean("ldap", "userHomeAction")
         self._setDefaultConfig()
 
@@ -1788,7 +1789,7 @@ class ldapAuthen:
         if login == 'root':
             username = config.username
         else:
-            username = 'uid=' + login + ', ' + config.baseDN
+            username = 'uid=' + login + ', ' + config.baseUsersDN
         self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
@@ -2124,7 +2125,7 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(RpcProxyI):
 
-    def ldapAuth(self, uiduser, passwd):
+    def authenticate(self, uiduser, passwd):
         """
         Authenticate an user with her/his password against a LDAP server.
         Return a Deferred resulting to true if the user has been successfully
@@ -2134,6 +2135,7 @@ class RpcProxy(RpcProxyI):
         d.addCallback(ProvisioningManager().doProvisioning)
         d.addCallback(lambda token: token.isAuthenticated())
         return d
+    ldapAuth = authenticate
 
     def hasComputerManagerWorking(self):
         """
