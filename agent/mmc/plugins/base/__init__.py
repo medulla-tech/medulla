@@ -71,7 +71,7 @@ INI = "/etc/mmc/plugins/base.ini"
 
 modList= None
 
-VERSION = "2.3.2"
+VERSION = "3.0.0"
 APIVERSION = "7:0:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
