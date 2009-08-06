@@ -33,7 +33,7 @@ PYTHON = $(shell which python)
 PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 
 # List of files to install
-LIBFILES = bin/add_machine_script bin/add_change_share_script bin/add_printer_script bin/delete_printer_script bin/delete_share_script
+LIBFILES = 
 
 LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
