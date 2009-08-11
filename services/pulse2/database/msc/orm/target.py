@@ -26,6 +26,7 @@
 """
 
 import sqlalchemy
+import logging
 
 class Target(object):
     """ Mapping between msc.target and SA
@@ -54,6 +55,31 @@ class Target(object):
 
     def getMacs(self):
         return self.target_macaddr.split('||')
+
+    def getBCast(self):
+        return self.target_bcast.split('||')
+
+    def hasEnoughInfoToWOL(self):
+        # to perform a WOL, we need two informations:
+        # - at least one MAC address
+        # - at least one IP network broadcast
+        # FIXME: ATM the test is rather simple : count items len
+        mac_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getMacs()))
+        bcast_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getBCast()))
+        result = (mac_len > 0 ) and (bcast_len > 0)
+        logging.getLogger().debug("hasEnoughInfoToWOL(#%s): %s" % (self.id, result))
+        return result
+
+    def hasEnoughInfoToConnect(self):
+        # to establish, we need one information :
+        # - either at least one hostname
+        # - or at least one IP address
+        # FIXME: ATM the test is rather simple : count items len
+        ips_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getIps()))
+        names_len = len(self.getFQDN())
+        result = (ips_len > 0 ) or (names_len > 0)
+        logging.getLogger().debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))
+        return result
 
     def toH(self):
         return {
