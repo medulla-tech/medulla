@@ -1011,6 +1011,7 @@ def runWOLPhase(myCommandOnHostID):
         """
         if result == 2:
             logger.info("command_on_host #%s: do not wol (target already up)" % myCommandOnHostID)
+            # FIXME: state will be 'wol_ignored' when implemented in database
             updateHistory(myCommandOnHostID, 'wol_done', 0, "skipped: host already up", "")
             myCoH.setWOLIgnored()
             myCoH.setStateScheduled()
@@ -1049,6 +1050,14 @@ def runWOLPhase(myCommandOnHostID):
 
         logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
         return None
+
+    if not myT.hasEnoughInfoToWOL(): # not enough information to perform WOL: ignoring phase but writting this in DB
+        logger.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
+        # FIXME: state will be 'wol_ignored' when implemented in database
+        updateHistory(myCommandOnHostID, 'wol_done', 0, " skipped : not enough information in target table")
+        myCoH.setWOLIgnored()
+        myCoH.setStateScheduled()
+        return runUploadPhase(myCommandOnHostID)
     if myCoH.isWOLIgnored(): # wol has already been ignored, jump to next stage
         logger.info("command_on_host #%s: wol ignored" % myCoH.getId())
         return runUploadPhase(myCommandOnHostID)
@@ -1063,6 +1072,7 @@ def runWOLPhase(myCommandOnHostID):
         myCoH.setWOLIgnored()
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
+
 
     # WOL has to be performed, but only if computer is down (ie. no ping)
     uuid = myT.target_uuid
