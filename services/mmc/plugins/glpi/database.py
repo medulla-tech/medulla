@@ -26,7 +26,7 @@ from mmc.support.config import PluginConfig
 from mmc.support.mmctools import Singleton, xmlrpcCleanup
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.utilities import complete_ctx 
+from mmc.plugins.glpi.utilities import complete_ctx
 from pulse2.utils import same_network, unique, onlyAddNew, grep, grepv
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
@@ -42,7 +42,7 @@ from sets import Set
 import exceptions
 
 def encode_utf8(self, s): return s
-def encode_latin1(self, s): 
+def encode_latin1(self, s):
     try:
         return s.decode('utf8')
     except exceptions.UnicodeEncodeError, e:
@@ -54,7 +54,7 @@ def encode_latin1(self, s):
         return s
 
 def decode_utf8(self, s): return s
-def decode_latin1(self, s): 
+def decode_latin1(self, s):
     try:
         return s.decode('latin-1')
     except exceptions.UnicodeEncodeError, e:
@@ -81,7 +81,7 @@ class Glpi(DyngroupDatabaseHelper):
         self.my_name = "Glpi"
         self.configfile = "glpi.ini"
         return DyngroupDatabaseHelper.db_check(self)
-    
+
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
@@ -645,7 +645,7 @@ class Glpi(DyngroupDatabaseHelper):
             if field == 'cn':
                 ma[field] = machine.name
         return ma
-       
+
     def __formatMachines(self, machines, advanced, get = None):
         """
         Give an LDAP like version of machines
@@ -681,7 +681,7 @@ class Glpi(DyngroupDatabaseHelper):
                     ret[uuid][1]['domain'] = ''
                     ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]
         return ret
-        
+
     def __formatMachine(self, machine, advanced, get = None):
         """
         Give an LDAP like version of the machine
@@ -918,7 +918,7 @@ class Glpi(DyngroupDatabaseHelper):
         for i in query:
             ret.append(self.getDeviceByType(i.FK_device, i.device_type))
         return ret
-        
+
     def getDeviceByType(self, did, type):
         types = ['', 'glpi_device_moboard', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_drive', 'glpi_device_control', 'glpi_device_gfxcard', 'glpi_device_sndcard', 'glpi_device_pci', 'glpi_device_case', 'glpi_device_power']
         t = types[type]
@@ -930,7 +930,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret = query.to_a()
         ret.append(['type', t.replace('glpi_device_', '')])
         return ret
-        
+
     def getLastMachineInventoryFull(self, uuid):
         session = create_session()
         query = self.filterOnUUID(session.query(Machine) \
@@ -1061,7 +1061,7 @@ class Glpi(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-        
+
     def getAllSoftwares(self, ctx, softname = ''):
         """
         @return: all softwares defined in the GLPI database

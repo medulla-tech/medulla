@@ -183,7 +183,7 @@ class MscConfig(MscDatabaseConfig):
                     self.default_scheduler = section
                 username = self.cp.get(section, "username")
                 password = self.cp.getpassword(section, "password")
-                if not is_login_and_pass: 
+                if not is_login_and_pass:
                     if username != '':
                         if username != 'username':
                             logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))

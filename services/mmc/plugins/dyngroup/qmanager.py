@@ -47,12 +47,12 @@ class QueryManager(Singleton):
 
     Query all plugins to know if they can query things.
     """
-    
+
     def activate(self):
         self.logger = logging.getLogger()
 
         os.chdir(os.path.dirname(mmc.support.mmctools.__file__) + '/..')
-        
+
         # hash{ pluginName:module }
         self.queryablePlugins = self._getQueryablePlugins()
 
@@ -61,7 +61,7 @@ class QueryManager(Singleton):
         for pluginName in self.queryablePlugins:
             module = self.queryablePlugins[pluginName]
             self.queryPossibilities[pluginName] = self._getPluginQueryPossibilities(module)
-    
+
     def _getQueryablePlugins(self):
         """
         Check in existing plugins which one support the query manager
@@ -81,7 +81,7 @@ class QueryManager(Singleton):
                         self.logger.info('QueryManager plugin ' + plugin + ' loaded')
                     else:
                         self.logger.info('QueryManager plugin '+ plugin+ ' is disabled by configuration.')
-                    
+
                 except Exception,e:
                     self.logger.exception(e)
                     self.logger.error('QueryManager plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
@@ -101,7 +101,7 @@ class QueryManager(Singleton):
 
     def getPossiblesModules(self, ctx):
         return self.queryPossibilities.keys()
-    
+
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
         try:
             return self.queryPossibilities[moduleName].keys()
@@ -112,7 +112,7 @@ class QueryManager(Singleton):
     def getTypeForCriterionInModule(self, ctx, moduleName, criterion):
         ret = self.queryPossibilities[moduleName][criterion]
         return ret[0]
-        
+
     def getPossiblesValuesForCriterionInModule(self, ctx, moduleName, criterion, value1 = '', value2 = None):
         ret = self.queryPossibilities[moduleName][criterion]
         if ret[0] == 'list' and len(ret) == 3:
@@ -133,7 +133,7 @@ class QueryManager(Singleton):
 
     def replyToQueryLen(self, ctx, query, bool = None):
         return len(self._replyToQuery(ctx, query, bool))
-        
+
     def __recursive_query(self, ctx, query):
         op = query[0]
         ret = []
@@ -148,11 +148,11 @@ class QueryManager(Singleton):
             else:
                 ret += [[mmc.plugins.dyngroup.replyToQuery(ctx, q, 0, -1), True]]
         return (self.__treat_query(op, ret))
-    
+
     def _replyToQuery(self, ctx, query, bool = None):
         raise "DON'T USE _replyToQuery!!!"
         ret = self.__recursive_query(ctx, query)
-        
+
         values = {}
         values_neg = {}
 
@@ -165,7 +165,7 @@ class QueryManager(Singleton):
                 [criterion, value]
             )
             values[str(qid)] = [val, neg]
-                
+
         self.logger.debug(values)
 
         br = BoolRequest()
@@ -203,10 +203,10 @@ class QueryManager(Singleton):
 
     def replyToQueryXML(self, ctx, query, bool = None, min = 0, max = 10):
         return self._replyToQueryXML(ctx, query, bool)[int(min):int(max)]
-        
+
     def replyToQueryXMLLen(self, ctx, query, bool = None):
         return len(self._replyToQueryXML(ctx, query, bool))
-        
+
     def _replyToQueryXML(self, ctx, query, bool = None):
         values = {}
         values_neg = {}
@@ -217,7 +217,7 @@ class QueryManager(Singleton):
                 [criterion, value]
             )
             values[str(qid)] = [val, neg]
-                
+
         self.logger.debug(values)
 
         br = BoolRequest()
@@ -258,7 +258,7 @@ class QueryManager(Singleton):
 
         for qid, module, criterion, value in query:
             values[str(qid)] = [qid, module, criterion, value]
-            
+
         br = BoolRequest()
         if bool == None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
             bool = 'AND('+','.join(map(lambda a:a, values))+')'
@@ -266,21 +266,21 @@ class QueryManager(Singleton):
         br.parse(bool)
         if not br.isValid(): # invalid bool specified = only AND
             bool = 'AND('+','.join(map(lambda a:a, values))+')'
-            br.parse(bool)                                     
-            
+            br.parse(bool)
+
         try:
             return br.getTree(values)
         except KeyError, e:
             self.logger.error("Your boolean equation does not match your request (if you are using a group please check it's correct)")
             return None
-            
+
     def parse(self, query):
         p1 = re.compile('\|\|')
         p2 = re.compile('::')
         p3 = re.compile('==')
         p4 = re.compile(', ')
         p_sep_plural = '(^>|<$)' # multiple entries are surounded by > and <
-        
+
         queries = p1.split(query)
         ret = []
         for q in queries:
@@ -293,7 +293,7 @@ class QueryManager(Singleton):
                 val = val[0]
             ret.append([b[0], b[1], c[0], val])
         return ret
-    
+
 def getAvailablePlugins(path):
     """
     Fetch all available MMC plugin
@@ -308,4 +308,4 @@ def getAvailablePlugins(path):
     for item in glob.glob(os.path.join(path, "*", "__init__.py")):
         ret.append(item.split("/")[1])
     return ret
- 
+

@@ -1,4 +1,4 @@
-Pulse 2 Invenroty Database Cleanup Script
+Pulse 2 Inventory Database Cleanup Script
 
 This script will purge all I-am-not-the-last-inventory in the database, and related informations:
  - orphaned has* tables,
