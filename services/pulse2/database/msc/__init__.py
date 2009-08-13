@@ -66,7 +66,7 @@ class MscDatabase(DatabaseHelper):
         self.my_name = "Msc"
         self.configfile = "msc.ini"
         return DatabaseHelper.db_check(self, DATABASEVERSION)
-                            
+
     def activate(self, config):
         self.logger = logging.getLogger()
         if self.is_activated:
@@ -133,7 +133,7 @@ class MscDatabase(DatabaseHelper):
             self.logger.error("Cant load the msc database : table '%s' does not exists"%(str(e.args[0])))
             return False
         return True
- 
+
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the msc database
@@ -168,48 +168,6 @@ class MscDatabase(DatabaseHelper):
                 ret.append(q.id)
         else:
             ret = -1
-        session.close()
-        return ret
-
-    def doCommandOnHostExist(self, id):
-        session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).all()
-
-        # FIXME: use query.count() instead of len(query.all())
-        ret = len(query) > 0
-        session.close()
-        return ret
-
-    # FIXME: The four next methods can be factorized
-    # FIXME: The current_state test should be put in the SQL expression
-
-    def isCommandOnHostDone(self, id):
-        session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
-        if query:
-            ret = query.current_state == 'done'
-        else:
-            ret = None
-        session.close()
-        return ret
-
-    def isCommandOnHostPaused(self, id):
-        session = create_session()
-        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
-        if query:
-            ret = q.current_state == 'pause'
-        else:
-            ret= None
-        session.close()
-        return ret
-
-    def isCommandOnHostStopped(self, id):
-        session = create_session()
-        query = self.session.query(CommandsOnHost).filter(self.commands_on_host.c.id == id).first()
-        if query:
-            ret = q.current_state == 'stop'
-        else:
-            ret = None
         session.close()
         return ret
 
@@ -280,7 +238,7 @@ class MscDatabase(DatabaseHelper):
             "fk_target" : target_id,
             "fk_commands" : command
             }
-            
+
     def createTarget(self, targetName, targetUuid, targetIp, targetMac, targetBCast, targetNetmask, mirror, groupID = None):
         """
         Inject a new Target object in our MSC database
@@ -434,7 +392,7 @@ class MscDatabase(DatabaseHelper):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled'))
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
@@ -451,7 +409,7 @@ class MscDatabase(DatabaseHelper):
         if int(type) == 0: # all
             pass
         elif int(type) == 1: # pending
-            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'scheduled'))
+            ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable', 'pause', 'stop', 'stopped', 'scheduled'))
         elif int(type) == 2: # running
             ret = ret.filter(self.commands_on_host.c.current_state.in_('upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done'))
         elif int(type) == 3: # finished
@@ -544,7 +502,7 @@ class MscDatabase(DatabaseHelper):
         if how_much > 0:
             return False
         return True
-    
+
     def __displayLogsQuery2(self, ctx, params, session):
         filter = []
         select_from = None
@@ -899,13 +857,13 @@ class MscDatabase(DatabaseHelper):
 
             }
         }
-        running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop'] #, 'scheduled']
+        running = ['upload_in_progress', 'upload_done', 'execution_in_progress', 'execution_done', 'delete_in_progress', 'delete_done', 'inventory_in_progress', 'inventory_done', 'pause', 'stop', 'stopped'] #, 'scheduled']
         failure = ['failed', 'upload_failed', 'execution_failed', 'delete_failed', 'inventory_failed', 'not_reachable']
         for coh in query:
             ret['total'] += 1
             if coh.current_state == 'done': # success
                 ret['success']['total'][0] += 1
-            elif coh.current_state == 'stop': # stopped coh
+            elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
                 ret['stopped']['total'][0] += 1
             elif coh.current_state == 'pause':
                 ret['paused']['total'][0] += 1

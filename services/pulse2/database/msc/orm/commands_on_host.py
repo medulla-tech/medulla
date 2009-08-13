@@ -400,8 +400,11 @@ class CommandsOnHost(object):
         return result
 
     def setStateStopped(self):
-        self.setCommandStatut('stop')
+        self.setCommandStatut('stopped')
     def isStateStopped(self):
+        if self.getCommandStatut() == 'stop': # 'stop' deprecated a while ago, but may still be present, so we take the opportunity to fix it here
+            logging.getLogger().warn("Detected command #%s in deprecated state 'stop', setting it to 'stopped'")
+            self.setStateStopped()
         result = (self.getCommandStatut() == 'stop' or self.getCommandStatut() == 'stopped')
         logging.getLogger().debug("isStateStopped(#%s): %s" % (self.getId(), result))
         return result
@@ -686,7 +689,7 @@ class CommandsOnHost(object):
         if self.isStateWOLInProgress():                     # normal flow
             self.setStateWOLDone()                          # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToUploadFailed(self, delay = 0, decrement = True):
@@ -713,7 +716,7 @@ class CommandsOnHost(object):
         if self.isStateUploadInProgress():                  # normal flow
             self.setStateUploadDone()                       # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToExecutionFailed(self, delay = 0, decrement = True):
@@ -740,7 +743,7 @@ class CommandsOnHost(object):
         if self.isStateExecutionInProgress():               # normal flow
             self.setStateExecutionDone()                    # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToDeleteFailed(self, delay = 0, decrement = True):
@@ -767,7 +770,7 @@ class CommandsOnHost(object):
         if self.isStateDeleteInProgress():                  # normal flow
             self.setStateDeleteDone()                       # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToInventoryFailed(self, delay = 0, decrement = True):
@@ -794,7 +797,7 @@ class CommandsOnHost(object):
         if self.isStateInventoryInProgress():               # normal flow
             self.setStateInventoryDone()                    # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToRebootFailed(self, delay = 0, decrement = True):
@@ -821,7 +824,7 @@ class CommandsOnHost(object):
         if self.isStateRebootInProgress():                  # normal flow
             self.setStateRebootDone()                       # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
     def switchToHaltFailed(self, delay = 0, decrement = True):
@@ -848,7 +851,7 @@ class CommandsOnHost(object):
         if self.isStateHaltInProgress():                    # normal flow
             self.setStateHaltDone()                         # set command status
             return True                                     # continue command flow
-        else:                                               # other state (pause, stop, etc ...)
+        else:                                               # other state (paused, stopped, etc ...)
             return False                                    # simply break flow
 
 ### /Misc state changes handling  ###
@@ -916,12 +919,20 @@ def stopCommandOnHost(coh_id):
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
     myCommandOnHost.setStateStopped()
+    if myCommandOnHost.isWOLRunning():
+        myCommandOnHost.setWOLFailed()
     if myCommandOnHost.isUploadRunning():
         myCommandOnHost.setUploadFailed()
     if myCommandOnHost.isExecutionRunning():
         myCommandOnHost.setExecutionFailed()
     if myCommandOnHost.isDeleteRunning():
         myCommandOnHost.setDeleteFailed()
+    if myCommandOnHost.isInventoryRunning():
+        myCommandOnHost.setInventoryFailed()
+    if myCommandOnHost.isRebootRunning():
+        myCommandOnHost.setRebootFailed()
+    if myCommandOnHost.isHaltRunning():
+        myCommandOnHost.setHaltFailed()
     myCommandOnHost.next_launch_date = "2031-12-31 23:59:59"
     myCommandOnHost.flush()
 
