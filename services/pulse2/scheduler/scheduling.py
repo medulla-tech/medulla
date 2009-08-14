@@ -47,6 +47,7 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.utilities import handle_deconnect
 
 # our modules
+from pulse2.consts import *
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.launchers_driving import callOnBestLauncher, callOnLauncher, getLaunchersBalance, probeClient
 import pulse2.scheduler.network
@@ -560,6 +561,7 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
         ).filter(database.commands_on_host.c.current_state != 'failed'
         ).filter(database.commands_on_host.c.current_state != 'over_timed'
         ).filter(database.commands_on_host.c.current_state != 'pause'
+        ).filter(database.commands_on_host.c.current_state != 'paused'
         ).filter(database.commands_on_host.c.current_state != 'stop'
         ).filter(database.commands_on_host.c.current_state != 'stopped'
         ).filter(database.commands_on_host.c.current_state != 'upload_in_progress'
@@ -568,6 +570,7 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
         ).filter(database.commands_on_host.c.current_state != 'inventory_in_progress'
         ).filter(database.commands_on_host.c.current_state != 'reboot_in_progress'
         ).filter(database.commands_on_host.c.current_state != 'halt_in_progress'
+        ).filter(database.commands_on_host.c.attempts_left > 0
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(sqlalchemy.or_(
             database.commands.c.start_date == soon,
@@ -937,9 +940,7 @@ def startCommand(myCommandOnHostID):
         logger.warn("attempt to start command_on_host #%s from command #%s using the wrong scheduler" % (myCoH.getId(), myCoH.getIdCommand()))
         return False
 
-    logger.info("going to start command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
-    logger.debug("command_on_host state is %s" % myCoH.toH())
-    logger.debug("command state is %s" % myC.toH())
+    logger.info("Starting command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     runCommand(myCommandOnHostID)
     return True
 
@@ -953,9 +954,10 @@ def runCommand(myCommandOnHostID):
     """
         Just a simple start point, chain-load on Upload Phase
     """
-
     if checkAndFixCommand(myCommandOnHostID):
         return runWOLPhase(myCommandOnHostID)
+    else:
+        logging.getLogger().warn("NOT going to start command_on_host #%s, check failed" % (myCommandOnHostID))
 
 def checkAndFixCommand(myCommandOnHostID):
     """
@@ -974,7 +976,13 @@ def checkAndFixCommand(myCommandOnHostID):
     if myCoH == None:
         return False
 
-    # give up in comman not in interval
+    # give up if target can't be retrieved
+    if not myT.hasEnoughInfoToConnect():
+        myCoH.setStateFailed()
+        updateHistory(myCommandOnHostID, None, PULSE2_TARGET_ERROR, '', 'Not enough information to establish a connection') # FIXME : error classe is wrong !
+        return False
+
+    # give up if command not in interval
     if not myC.inDeploymentInterval():
         return False
 
@@ -988,11 +996,12 @@ def checkAndFixCommand(myCommandOnHostID):
         # give up if bundle and some dependancies remain
         if deps_status == "dead":
             myCoH.setStateFailed()
+            updateHistory(myCommandOnHostID, None, PULSE2_BUNDLE_ERROR, '', 'Bundle stopped since a mandatory part could not be done') # FIXME : error classe is wrong !
             return False # give up, some deps have failed
         if deps_status == "wait":
             return False # wait, some deps has to be done
         if deps_status != "run":
-            return False # werd, should not append
+            return False # weird, should not append
 
     logger.debug("going to do command_on_host #%s from command #%s" % (myCoH.getId(), myCoH.getIdCommand()))
     logger.debug("command_on_host state is %s" % myCoH.toH())
@@ -1013,7 +1022,7 @@ def runWOLPhase(myCommandOnHostID):
         if result == 2:
             logger.info("command_on_host #%s: do not wol (target already up)" % myCommandOnHostID)
             # FIXME: state will be 'wol_ignored' when implemented in database
-            updateHistory(myCommandOnHostID, 'wol_done', 0, "skipped: host already up", "")
+            updateHistory(myCommandOnHostID, None, 0, "skipped: host already up", "")
             myCoH.setWOLIgnored()
             myCoH.setStateScheduled()
             return runUploadPhase(myCommandOnHostID)
@@ -1052,13 +1061,6 @@ def runWOLPhase(myCommandOnHostID):
         logger.info("command_on_host #%s: WOL still running" % myCommandOnHostID)
         return None
 
-    if not myT.hasEnoughInfoToWOL(): # not enough information to perform WOL: ignoring phase but writting this in DB
-        logger.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
-        # FIXME: state will be 'wol_ignored' when implemented in database
-        updateHistory(myCommandOnHostID, 'wol_done', 0, " skipped : not enough information in target table")
-        myCoH.setWOLIgnored()
-        myCoH.setStateScheduled()
-        return runUploadPhase(myCommandOnHostID)
     if myCoH.isWOLIgnored(): # wol has already been ignored, jump to next stage
         logger.info("command_on_host #%s: wol ignored" % myCoH.getId())
         return runUploadPhase(myCommandOnHostID)
@@ -1073,7 +1075,13 @@ def runWOLPhase(myCommandOnHostID):
         myCoH.setWOLIgnored()
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
-
+    if not myT.hasEnoughInfoToWOL(): # not enough information to perform WOL: ignoring phase but writting this in DB
+        logger.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
+        # FIXME: state will be 'wol_ignored' when implemented in database
+        updateHistory(myCommandOnHostID, None, 0, " skipped : not enough information in target table")
+        myCoH.setWOLIgnored()
+        myCoH.setStateScheduled()
+        return runUploadPhase(myCommandOnHostID)
 
     # WOL has to be performed, but only if computer is down (ie. no ping)
     uuid = myT.target_uuid
@@ -1160,7 +1168,8 @@ def _cbChooseUploadMode(result, myCoH, myC, myT):
     elif result == 'dead':
         logging.getLogger().warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
         updateHistory(myCoH.id, 'upload_failed', '0', '', 'Waiting for a local proxy which will never be ready')
-        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
+        if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps; proxy seems dead
+            return runFailedPhase(myCoH.id)
         return None
     elif result == 'server':
         logging.getLogger().info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
@@ -1177,9 +1186,7 @@ def _chooseUploadMode(myCoH, myC, myT):
     # check if we have enough informations to reach the client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Can\'t get target IP address')
-        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parsePushError, myCoH.getId())
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform upload")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
@@ -1192,12 +1199,12 @@ def _chooseUploadMode(myCoH, myC, myT):
             mirrors = myT.mirrors.split('||')
         except:
             logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId())
+            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
 
         # Check mirrors
         if len(mirrors) != 2:
             logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId())
+            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
@@ -1232,9 +1239,11 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
         # The package is available on a mirror, start upload phase
         return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
-        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
-        myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # report this as an error, but do not decrement attempts
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
+        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
+        if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
+            return runFailedPhase(myCoH.id)
+        return None
 
 def _runProxyClientPhase(client, myC, myCoH):
     # fulfill protocol
@@ -1243,10 +1252,10 @@ def _runProxyClientPhase(client, myC, myCoH):
     # get informations about our proxy
     (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
     if proxyCoH == None:
-        return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCoH.getId())
+        return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
     proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
     if not proxy['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCoH.getId())
+        return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
     # and fill struct
     # only proxy['host'] used until now
     client['proxy'] = {
@@ -1388,7 +1397,7 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
             # the getFilesURI call failed on the fallback. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
-                runFailedPhase(myCoH.id)
+                return runFailedPhase(myCoH.id)
         else:
             # Use the fallback mirror
             logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror" % (myCoH.id, mirror))
@@ -1464,7 +1473,7 @@ def runExecutionPhase(myCommandOnHostID):
     # if we are here, execution has either previously failed or never be done
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('execute'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseExecutionError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform execution")).addErrback(parseExecutionError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     if myC.isQuickAction(): # should be a standard script
         myCoH.setExecutionInProgress()
@@ -1560,7 +1569,7 @@ def runDeletePhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseDeleteError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform deletion")).addErrback(parseDeleteError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
@@ -1686,7 +1695,7 @@ def runInventoryPhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseInventoryError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform inventory")).addErrback(parseInventoryError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     # if we are here, inventory has either previously failed or never be done
     myCoH.setInventoryInProgress()
@@ -1748,7 +1757,7 @@ def runRebootPhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('reboot'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseRebootError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform reboot")).addErrback(parseRebootError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     myCoH.setRebootInProgress()
     myCoH.setStateRebootInProgress()
@@ -1832,7 +1841,7 @@ def runHaltPhase(myCommandOnHostID, condition):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('halt'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get target IP address")).addErrback(parseHaltError, myCommandOnHostID)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform halt")).addErrback(parseHaltError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_ERROR)
 
     myCoH.setHaltInProgress()
     myCoH.setStateHaltInProgress()
@@ -1891,15 +1900,13 @@ def parsePushResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
         if myCoH.switchToUploadDone():
             return runExecutionPhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: push failed (exitcode != 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
-        if myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1920,15 +1927,13 @@ def parsePullResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'upload_done', exitcode, stdout, stderr)
         if myCoH.switchToUploadDone():
             return runExecutionPhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: pull failed (exitcode != 0)" % myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'upload_failed', exitcode, stdout, stderr)
-        if myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1939,15 +1944,13 @@ def parseExecutionResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'execution_done', exitcode, stdout, stderr)
         if myCoH.switchToExecutionDone():
             return runDeletePhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: execution failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'execution_failed', exitcode, stdout, stderr)
-        if myCoH.switchToExecutionFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToExecutionFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1958,15 +1961,13 @@ def parseDeleteResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'delete_done', exitcode, stdout, stderr)
         if myCoH.switchToDeleteDone():
             return runInventoryPhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: delete failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'delete_failed', exitcode, stdout, stderr)
-        if myCoH.switchToDeleteFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToDeleteFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1977,15 +1978,13 @@ def parseInventoryResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'inventory_done', exitcode, stdout, stderr)
         if myCoH.switchToInventoryDone():
             return runRebootPhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: inventory failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'inventory_failed', exitcode, stdout, stderr)
-        if myCoH.switchToInventoryFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToInventoryFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1997,15 +1996,13 @@ def parseRebootResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'reboot_done', exitcode, stdout, stderr)
         if myCoH.switchToRebootDone():
             return runHaltOnDone(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: reboot failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'reboot_failed', exitcode, stdout, stderr)
-        if myCoH.switchToRebootFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
+        if not myCoH.switchToRebootFailed(myC.getNextConnectionDelay()):
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -2017,15 +2014,13 @@ def parseHaltResult((exitcode, stdout, stderr), myCommandOnHostID):
         updateHistory(myCommandOnHostID, 'halt_done', exitcode, stdout, stderr)
         if myCoH.switchToHaltDone():
             return runDonePhase(myCommandOnHostID)
-        else:
-            return None
+        return None
     else: # failure: immediately give up
         logging.getLogger().info("command_on_host #%s: halt failed (exitcode != 0)" % (myCommandOnHostID))
         updateHistory(myCommandOnHostID, 'halt_failed', exitcode, stdout, stderr)
         if myCoH.switchToHaltFailed(myC.getNextConnectionDelay()):
-            return None
-        else:
             return runFailedPhase(myCommandOnHostID)
+        return None
 
 def parsePushOrder(taken_in_account, myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -2125,26 +2120,39 @@ def parseHaltOrder(taken_in_account, myCommandOnHostID):
         logging.getLogger().warn("command_on_host #%s: halt order not taken in account" % myCommandOnHostID)
         return None
 
-def parseWOLError(reason, myCommandOnHostID):
+def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'wol_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'wol_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     return None
 
-def parsePushError(reason, myCommandOnHostID):
-    # something goes really wrong: immediately give up
+def parsePushError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: push failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'upload_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     return None
 
-def parsePullError(reason, myCommandOnHostID):
+def parsePullError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: pull failed, unattented reason: %s" % (myCommandOnHostID, reason))
@@ -2160,65 +2168,91 @@ def parsePullError(reason, myCommandOnHostID):
         LocalProxiesUsageTracking().untake(proxy_uuid, myC.getId())
         logging.getLogger().debug("scheduler %s: coh #%s used coh #%s as local proxy, releasing one slot (%d left)" % (SchedulerConfig().name, myCommandOnHostID, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, myC.getId())))
 
-    updateHistory(myCommandOnHostID, 'upload_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'upload_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     return None
 
-def parseExecutionError(reason, myCommandOnHostID):
+def parseExecutionError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: execution failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'execution_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToExecutionFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'execution_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToExecutionFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     # FIXME: should return a failure (but which one ?)
     return None
 
-def parseDeleteError(reason, myCommandOnHostID):
+def parseDeleteError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: delete failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'delete_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToDeleteFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'delete_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToDeleteFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     # FIXME: should return a failure (but which one ?)
     return None
 
-def parseInventoryError(reason, myCommandOnHostID):
+def parseInventoryError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: inventory failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'inventory_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToInventoryFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'inventory_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToInventoryFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     # FIXME: should return a failure (but which one ?)
     return None
 
-def parseRebootError(reason, myCommandOnHostID):
+def parseRebootError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: reboot failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'reboot_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToRebootFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'reboot_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToRebootFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     # FIXME: should return a failure (but which one ?)
     return None
 
-def parseHaltError(reason, myCommandOnHostID):
+def parseHaltError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    """
+       decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
+       error_code : by default we consider un unknwo error was risen (PULSE2_UNKNOWN_ERROR)
+    """
     # something goes really wrong: immediately give up
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logger = logging.getLogger()
     logger.warn("command_on_host #%s: halt failed, unattented reason: %s" % (myCommandOnHostID, reason))
     if myCoH == None:
         return None
-    updateHistory(myCommandOnHostID, 'halt_failed', 255, '', reason.getErrorMessage())
-    myCoH.switchToHaltFailed(myC.getNextConnectionDelay(), False) # do not decrement tries as the error has most likeley be produced by an internal condition
+    updateHistory(myCommandOnHostID, 'halt_failed', error_code, '', reason.getErrorMessage())
+    if not myCoH.switchToHaltFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        return runFailedPhase(myCommandOnHostID)
     # FIXME: should return a failure (but which one ?)
     return None
 
@@ -2240,7 +2274,7 @@ def runFailedPhase(myCommandOnHostID):
     myCoH.setStateFailed()
     return None
 
-def updateHistory(id, state, error_code=0, stdout='', stderr=''):
+def updateHistory(id, state = None, error_code = PULSE2_WRAPPER_ERROR_SUCCESS, stdout = '', stderr = ''):
     encoding = SchedulerConfig().dbencoding
     history = CommandsHistory()
     history.fk_commands_on_host = id
