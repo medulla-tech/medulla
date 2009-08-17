@@ -1084,6 +1084,13 @@ def runWOLPhase(myCommandOnHostID):
         return runUploadPhase(myCommandOnHostID)
 
     # WOL has to be performed, but only if computer is down (ie. no ping)
+
+    # update command state
+    myCoH.setWOLInProgress()
+    myCoH.setStateWOLInProgress()
+    myCoH.setLastWOLAttempt()
+    updateHistory(myCommandOnHostID, 'wol_in_progress')
+
     uuid = myT.target_uuid
     fqdn = myT.target_name
     shortname = myT.target_name
@@ -1097,10 +1104,6 @@ def runWOLPhase(myCommandOnHostID):
 
 def performWOLPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    myCoH.setLastWOLAttempt()
-    myCoH.setWOLInProgress()
-    updateHistory(myCommandOnHostID, 'wol_in_progress')
-    myCoH.setStateWOLInProgress()
 
     # perform call
     mydeffered = callOnBestLauncher(myCommandOnHostID,
@@ -1114,7 +1117,6 @@ def performWOLPhase(myCommandOnHostID):
         addCallback(parseWOLResult, myCommandOnHostID).\
         addErrback(parseWOLError, myCommandOnHostID)
     return mydeffered
-
 
 def runUploadPhase(myCommandOnHostID):
     """
