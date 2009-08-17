@@ -1114,7 +1114,7 @@ def performWOLPhase(myCommandOnHostID):
     )
 
     mydeffered.\
-        addCallback(parseWOLResult, myCommandOnHostID).\
+        addCallback(parseWOLAttempt, myCommandOnHostID).\
         addErrback(parseWOLError, myCommandOnHostID)
     return mydeffered
 
@@ -1877,7 +1877,8 @@ def runHaltPhase(myCommandOnHostID, condition):
         return None
     return mydeffered
 
-def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
+def parseWOLAttempt(attempt_result, myCommandOnHostID):
+
     def setstate(myCommandOnHostID, stdout, stderr):
         (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
         logging.getLogger().info("command_on_host #%s: WOL done and done waiting" % (myCommandOnHostID))
@@ -1889,6 +1890,17 @@ def parseWOLResult((exitcode, stdout, stderr), myCommandOnHostID):
         else:
             return None
 
+    try:
+        (exitcode, stdout, stderr) = attempt_result
+    except TypeError,e: # xmlrpc call failed
+        (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
+        logging.getLogger().error("command_on_host #%s: WOL request seems to have failed ?!" % (myCommandOnHostID))
+
+        myCoH.setWOLToDo()
+        myCoH.resetLastWOLAttempt()
+        return None
+
+    myCoH.setLastWOLAttempt()
     logging.getLogger().info("command_on_host #%s: WOL done, now waiting %s seconds for the computer to wake up" % (myCommandOnHostID,SchedulerConfig().max_wol_time))
     twisted.internet.reactor.callLater(SchedulerConfig().max_wol_time, setstate, myCommandOnHostID, stdout, stderr)
     return None
