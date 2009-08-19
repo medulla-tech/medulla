@@ -811,7 +811,10 @@ def __cb_async_process_end(shprocess):
     def _cb(result, id):
         # as we successfuly sent our result to our scheduler, command can be safely removed from our list
         shprocess.isnotifyingparent = False
-        pulse2.launcher.process_control.ProcessList().removeProcess(id)
+        if result == True:
+            pulse2.launcher.process_control.ProcessList().removeProcess(id)
+        else:
+            logging.getLogger().warn('launcher %s: failed to send results of command #%s to our scheduler at %s: %s' % (LauncherConfig().name, id, scheduler, "command was rejected; lock issue?"))
     def _eb(reason, id):
         # no result can be sent, log and keep our process in our list
         shprocess.isnotifyingparent = False
