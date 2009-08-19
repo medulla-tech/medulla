@@ -226,7 +226,7 @@ def localProxyAttemptQueueMode(myCommandOnHostID):
     for q in session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
-        filter(database.commands_on_host.c.id != myCoH.id).\
+        filter(database.commands_on_host.c.id != myCoH.getId()).\
         all():
             if q.uploaded == PULSE2_STAGE_DONE:                                 # got a pal which succeeded in doing its upload
                 if q.order_in_proxy != None:                                    # got a potent proxy server
@@ -321,7 +321,7 @@ def localProxyAttemptSplitMode(myCommandOnHostID):
         for q in session.query(CommandsOnHost).\
             select_from(database.commands_on_host.join(database.commands).join(database.target)).\
             filter(database.commands.c.id == myC.id).\
-            filter(database.commands_on_host.c.id != myCoH.id).\
+            filter(database.commands_on_host.c.id != myCoH.getId()).\
             filter(database.commands_on_host.c.order_in_proxy != None).\
             all():
                 # got 4 categories here:
@@ -381,7 +381,7 @@ def getClientUsageForProxy(proxyCommandOnHostID):
     client_count = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)).\
         filter(database.commands.c.id == myC.id).\
-        filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.id).\
+        filter(database.commands_on_host.c.fk_use_as_proxy == myCoH.getId()).\
         filter(database.commands_on_host.c.current_state == 'upload_in_progress').\
         count()
     session.close()
@@ -452,7 +452,7 @@ def localProxyMayContinue(myCommandOnHostID):
             our_client_count = session.query(CommandsOnHost).\
                 select_from(database.commands_on_host.join(database.commands).join(database.target)).\
                 filter(database.commands.c.id == myC.id).\
-                filter(database.commands_on_host.c.id != myCoH.id).\
+                filter(database.commands_on_host.c.id != myCoH.getId()).\
                 filter(database.commands_on_host.c.uploaded != 'DONE').\
                 filter(database.commands_on_host.c.uploaded != 'IGNORED').\
                 filter(database.commands_on_host.c.current_state != 'failed').\
@@ -467,7 +467,7 @@ def localProxyMayContinue(myCommandOnHostID):
             our_client_count = session.query(CommandsOnHost).\
                 select_from(database.commands_on_host.join(database.commands).join(database.target)).\
                 filter(database.commands.c.id == myC.id).\
-                filter(database.commands_on_host.c.id != myCoH.id).\
+                filter(database.commands_on_host.c.id != myCoH.getId()).\
                 filter(database.commands_on_host.c.order_in_proxy == None).\
                 filter(database.commands_on_host.c.uploaded != 'DONE').\
                 filter(database.commands_on_host.c.uploaded != 'IGNORED').\
@@ -1239,9 +1239,9 @@ def _cbChooseUploadMode(result, myCoH, myC, myT):
         return runGiveUpPhase(myCoH.getId())
     elif result == 'dead':
         logging.getLogger().warn("command_on_host #%s: waiting for a local proxy which will never be ready !" % myCoH.getId())
-        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Waiting for a local proxy which will never be ready')
+        updateHistory(myCoH.getId(), 'upload_failed', '0', '', 'Waiting for a local proxy which will never be ready')
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps; proxy seems dead
-            return runFailedPhase(myCoH.id)
+            return runFailedPhase(myCoH.getId())
         return runGiveUpPhase(myCoH.getId())
     elif result == 'server':
         logging.getLogger().info("command_on_host #%s: becoming local proxy server" % myCoH.getId())
@@ -1311,11 +1311,11 @@ def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallbac
         # The package is available on a mirror, start upload phase
         return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
-        logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.id, myC.package_id))
-        updateHistory(myCoH.id, 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
+        logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
+        updateHistory(myCoH.getId(), 'upload_failed', '0', '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
-            return runFailedPhase(myCoH.id)
-        return runGiveUpPhase(myCoH.id)
+            return runFailedPhase(myCoH.getId())
+        return runGiveUpPhase(myCoH.getId())
 
 def _runProxyClientPhase(client, myC, myCoH):
     # fulfill protocol
@@ -1431,8 +1431,8 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
         mirror = fbmirror
     else:
         msg = 'Package \'%s\' is available on mirror %s' % (myC.package_id, mirror)
-    updateHistory(myCoH.id, 'upload_in_progress', '0', '', msg)
-    logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.id, myC.package_id, mirror))
+    updateHistory(myCoH.getId(), 'upload_in_progress', '0', '', msg)
+    logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.getId(), myC.package_id, mirror))
     ma = pulse2.apis.clients.mirror.Mirror(mirror)
     fids = []
     for line in myC.files.split("\n"):
@@ -1464,15 +1464,15 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
     if not file_uris:
         if useFallback:
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.id))
-            updateHistory(myCoH.id, 'upload_failed', '0', '', 'Can\'t get files URI for package \'%s\' on fallback mirror %s' % (myC.package_id, fbmirror))
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
+            updateHistory(myCoH.getId(), 'upload_failed', '0', '', 'Can\'t get files URI for package \'%s\' on fallback mirror %s' % (myC.package_id, fbmirror))
             # the getFilesURI call failed on the fallback. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
-                return runFailedPhase(myCoH.id)
+                return runFailedPhase(myCoH.getId())
         else:
             # Use the fallback mirror
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror" % (myCoH.id, mirror))
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror" % (myCoH.getId(), mirror))
             _cbRunPushPullPhaseTestFallbackMirror(None, mirror, fbmirror, client, myC, myCoH)
         return
 
@@ -1481,34 +1481,34 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
 
     # upload starts here
     if SchedulerConfig().mode == 'sync':
-        updateHistory(myCoH.id, 'upload_in_progress')
+        updateHistory(myCoH.getId(), 'upload_in_progress')
         mydeffered = callOnBestLauncher(
-            myCoH.id,
+            myCoH.getId(),
             'sync_remote_pull',
             False,
-            myCoH.id,
+            myCoH.getId(),
             client,
             files_list,
             SchedulerConfig().max_upload_time
         )
         mydeffered.\
-            addCallback(parsePullResult, myCoH.id).\
-            addErrback(parsePullError, myCoH.id)
+            addCallback(parsePullResult, myCoH.getId()).\
+            addErrback(parsePullError, myCoH.getId())
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
-            myCoH.id,
+            myCoH.getId(),
             'async_remote_pull',
             False,
-            myCoH.id,
+            myCoH.getId(),
             client,
             files_list,
             SchedulerConfig().max_upload_time
         )
         mydeffered.\
-            addCallback(parsePullOrder, myCoH.id).\
-            addErrback(parsePullError, myCoH.id)
+            addCallback(parsePullOrder, myCoH.getId()).\
+            addErrback(parsePullError, myCoH.getId())
     else:
-        return runGiveUpPhase(myCoH.id)
+        return runGiveUpPhase(myCoH.getId())
     return mydeffered
 
 def runExecutionPhase(myCommandOnHostID):

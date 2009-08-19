@@ -45,8 +45,9 @@ import time
 import errno
 import resource
 
-time_to_wait = 2 # first stage: check of it is alive / dead after having being run /stopped for time_to_wait seconds
-check_count = 5 # second stage: attempts to obtain a good result (check_count tries) to a XMLRPC call
+time_to_wait_for_start = 2
+time_to_wait_for_stop = 2
+check_count_stop = 300
 
 from pulse2.scheduler.config import SchedulerConfig
 
@@ -84,10 +85,10 @@ def start_scheduler(config):
             # check is done in two stages:
 
             # let's do the first stage
-            time.sleep(time_to_wait)
+            time.sleep(time_to_wait_for_start)
             pid = get_pidfile(config)
             if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
-                logger.error('daemonization part #2 failed: scheduler "%s" died in less than %d seconds' % (name, time_to_wait))
+                logger.error('daemonization part #2 failed: scheduler "%s" died in less than %d seconds' % (name, time_to_wait_for_start))
                 clear_pidfile(config)
                 return False
 
@@ -126,7 +127,7 @@ def start_scheduler(config):
     logger.info('daemonization ended: switching to %s' % [scheduler_path])
     os.execv(scheduler_path, (scheduler_path,))
 
-def stop_scheduler(config):
+def stop_scheduler(config, wait_for_completion = False):
     name = config.name
     logger = logging.getLogger()
     os.seteuid(0)
@@ -137,14 +138,25 @@ def stop_scheduler(config):
         if pid_is_alive(pid):
             logger.info('attempt to kill scheduler "%s" (pid %d)' % (name, pid))
             kill_pid(pid, signal.SIGTERM) # TODO: check that kill was successful
-            time.sleep(time_to_wait)
-            if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
-                logger.info('scheduler "%s" killed using SIGTERM' % name)
-                clear_pidfile(config)
-                return True
-            else:
-                logger.error('failed to kill scheduler "%s" using SIGTERM' % name)
-                return False
+            attempts_left = check_count_stop
+            while True:
+                time.sleep(time_to_wait_for_stop)
+                if not pid_is_alive(pid): # os.WNOHANG make os.waitpid() to return (0, 0) if child is alive
+                    logger.info('scheduler "%s" killed using SIGTERM' % name)
+                    clear_pidfile(config)
+                    return True
+                elif wait_for_completion:
+                    sys.stdout.softspace = 0 # prevent to print additionnal spaces
+                    print ".",
+                    sys.stdout.flush()
+                    logger.warn('Still waiting for scheduler "%s" to stop' % name)
+                    attempts_left -= 1
+                    if attempts_left == 0:
+                        logger.error('Giving up waiting for scheduler "%s" to stop' % name)
+                        return False
+                else:
+                    logger.error('failed to kill scheduler "%s" using SIGTERM' % name)
+                    return False
         else:
             logger.error('failed to stop scheduler "%s": was supposed to be running under pid %d' % (name, pid))
             print 'failed to stop scheduler "%s": was supposed to be running under pid %d' % (name, pid)
@@ -262,6 +274,46 @@ def log_resource_usage(config):
         limits = limits[3:]
 
 if __name__ == "__main__":
+
+    def __start():
+        logger.info('Starting Pulse2 Scheduler')
+        print('Starting Pulse2 Scheduler ...'),
+        sys.stdout.flush()
+        if start_scheduler(config):
+            logger.info('Scheduler started')
+            print('OK')
+            return 0
+        else:
+            logger.warn('Failed to start scheduler')
+            print('FAILED')
+            return 1
+
+    def __graceful_stop():
+        logger.info('stopping Pulse2 Scheduler')
+        print('Stopping Pulse2 Scheduler ...'),
+        sys.stdout.flush()
+        if stop_scheduler(config, wait_for_completion = False):
+            logger.info('Scheduler stopped')
+            print('OK')
+            return 0
+        else:
+            logger.warn('Scheduler is still running, please wait a few minutes before restarting it')
+            print('IN PROGRESS')
+            return 1
+
+    def __stop():
+        logger.info('stopping Pulse2 Scheduler')
+        print('Stopping Pulse2 Scheduler ...'),
+        sys.stdout.flush()
+        if stop_scheduler(config, wait_for_completion = True):
+            logger.info('Scheduler stopped')
+            print('OK')
+            return 0
+        else:
+            logger.warn('Failed to stop scheduler')
+            print('FAILED')
+            return 1
+
     parser = optparse.OptionParser()
     parser.add_option("-c", "--config-file", help='path to the config file', default='/etc/mmc/pulse2/scheduler/scheduler.ini')
     parser.add_option("-o", "--id", help='id of this scheduler')
@@ -312,22 +364,20 @@ if __name__ == "__main__":
     logger = logging.getLogger()
 
     if args[0] == "start":
-        logger.info('Starting Pulse2 Scheduler')
-        print('Starting Pulse2 Scheduler:')
-        if start_scheduler(config):
-            logger.info('Scheduler started')
-            print('OK')
-        else:
-            logger.warn('Failed to start scheduler')
-            print('FAILED')
+        sys.exit(__start())
+    elif args[0] == "graceful-stop":
+        sys.exit(__graceful_stop())
     elif args[0] == "stop":
-        logger.info('stopping Pulse2 Scheduler')
-        print('Stopping Pulse2 Scheduler:')
-        if stop_scheduler(config):
-            logger.info('Scheduler stopped')
-            print('OK')
-        else:
-            logger.warn('Failed to stop scheduler')
-            print('FAILED')
+        sys.exit(__stop())
+    elif args[0] == "restart":
+        ret = __stop()
+        if ret != 0:
+            sys.exit(ret)
+        sys.exit(__start())
+    elif args[0] == "graceful-restart":
+        ret = __graceful_stop()
+        if ret != 0:
+            sys.exit(ret)
+        sys.exit(__start())
 
 
