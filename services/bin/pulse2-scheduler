@@ -81,12 +81,31 @@ def start_all_callbacks():
     time.sleep(CB_STARTUP_DELAY)
     scheduleStartCommands()
     scheduleStopCommands()
+    if SchedulerConfig().active_analyse_hour:
+        scheduleAnalyseCommands()
     if SchedulerConfig().active_clean_states_stop:
         scheduleFixUnprocessedTasks()
     if SchedulerConfig().active_clean_states_run:
         scheduleFixProcessingTasks()
     scheduleLogStats()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
+
+def scheduleAnalyseCommands():
+    """ periodicaly analyse commands """
+    now = time.time() - time.altzone # fixes TZ glitch
+    midnight_today = int(now / 86400) * 86400
+    midnight_tomorrow = midnight_today + 86400
+
+    hour_today = midnight_today + SchedulerConfig().analyse_hour
+    hour_tomorrow = midnight_tomorrow + SchedulerConfig().analyse_hour
+
+    if hour_today > now: # have to awake today
+        analyse_commands_in = hour_today - now
+    else: # will awake tomorrow
+        analyse_commands_in = hour_tomorrow - now
+
+    logging.getLogger().info('scheduler "%s": ANALYSE: Sleeping for %d hour %d min %d sec' % (SchedulerConfig().name, int(analyse_commands_in/3600), int(analyse_commands_in/60) % 60, int(analyse_commands_in % 60)))
+    twisted.internet.reactor.callLater(analyse_commands_in, awakeAnalyseCommands)
 
 def scheduleStartCommands():
     """ periodicaly starts commands """
@@ -111,6 +130,18 @@ def scheduleFixProcessingTasks():
     fix_processing_tasks_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
     logging.getLogger().info('scheduler "%s": FPT: Sleeping' % (SchedulerConfig().name))
     twisted.internet.reactor.callLater(fix_processing_tasks_in, awakeFixProcessingTasks)
+
+def awakeAnalyseCommands():
+    logging.getLogger().info('scheduler "%s": ANALYSE: Analysing database' % (SchedulerConfig().name))
+    # as startAllCommands() may crash before giving a deferred (MySQL down for example),
+    # we build a deferred chain
+    pulse2.scheduler.scheduling.startAnalyseCommands(SchedulerConfig().name
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": ANALYSE: Finished analysing database' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleAnalyseCommands() # lambda used to "silently" intercept return arg
+    )
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: Analysing database' % (SchedulerConfig().name))

@@ -71,6 +71,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     cp = None
 
     # [scheduler] section default values
+    analyse_hour = '' # empty by default
+    active_analyse_hour = False # inactive by default
     announce_check = dict()
     awake_time = 600
     clean_states_time = 3600
@@ -161,6 +163,22 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.name = self.cp.get("scheduler", "id")
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
+
+        self.setoption("scheduler", "analyse_hour", "analyse_hour")
+        if len(self.analyse_hour) == 0: # no option given
+            logging.getLogger().info("analyse loop disabled as requested")
+            self.active_analyse_hour = False
+        else:
+            try:
+                splitted = self.analyse_hour.split(':')
+                assert len(splitted) == 3 # only accept "HH:MM:SS"
+                self.analyse_hour = (int(splitted[2]) * 60 + int(splitted[1])) * 60 + int(splitted[0])
+                logging.getLogger().info("analyse loop enabled, will run every day at %s" % ":".join(splitted))
+                self.active_analyse_hour = True
+            except:
+                logging.getLogger().warning("can't parse analyse_hour (read %s, expecting 'HH:MM:SS'), neutralysing analyse loop" % (self.analyse_hour))
+                self.active_analyse_hour = False
+
         self.setoption("scheduler", "clean_states_time", "clean_states_time", 'int')
         self.setoption("scheduler", "active_clean_states", "active_clean_states")
         self.active_clean_states_run = False
