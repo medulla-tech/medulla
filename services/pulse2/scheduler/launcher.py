@@ -23,7 +23,11 @@
 
 # big modules
 import logging
+
+# our modules
 import pulse2.scheduler.scheduling
+from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
+from pulse2.scheduler.config import SchedulerConfig
 
 def tell_i_am_alive(launcher):
     """ A launcher just contact us, log it """
@@ -31,42 +35,50 @@ def tell_i_am_alive(launcher):
     return True
 
 def completed_push(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that push of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parsePushResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_pull(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that pull of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parsePullResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_quick_action(launcher, (exitcode, stdout, stderr), id):
     """ A launcher tell us a quick action is finished """
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_execution(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that execution of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseExecutionResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_deletion(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that deletion of CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseDeleteResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_inventory(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that inventory after CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseInventoryResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_reboot(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that reboot after CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseRebootResult((exitcode, stdout, stderr), id)
     return True
 
 def completed_halt(launcher, (exitcode, stdout, stderr), id):
+    if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(id): return False
     logging.getLogger().info("Scheduler: launcher %s tells us that halt after CoH #%s is done" % (launcher, id))
     pulse2.scheduler.scheduling.parseHaltResult((exitcode, stdout, stderr), id)
     return True

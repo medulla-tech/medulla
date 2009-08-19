@@ -55,6 +55,7 @@ from pulse2.scheduler.assign_algo import MGAssignAlgoManager
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
+from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 
 handle_deconnect()
 
@@ -1023,6 +1024,7 @@ def runCommand(myCommandOnHostID):
         Just a simple start point, chain-load on Upload Phase
     """
     if checkAndFixCommand(myCommandOnHostID):
+        if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(myCommandOnHostID): return
         return runWOLPhase(myCommandOnHostID)
     else:
         logging.getLogger().warn("NOT going to start command_on_host #%s, check failed" % (myCommandOnHostID))
@@ -2358,6 +2360,8 @@ def runFailedPhase(myCommandOnHostID):
 def runGiveUpPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: Giving up" % myCommandOnHostID)
+    if SchedulerConfig().lock_processed_commands:
+        CommandsOnHostTracking().release(myCommandOnHostID)
     return None
 
 def updateHistory(id, state = None, error_code = PULSE2_WRAPPER_ERROR_SUCCESS, stdout = '', stderr = ''):
