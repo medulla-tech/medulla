@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Pulse 2 Client Check</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas Rueff</firstname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.2.4</revnumber>
+        <date>2009-08-25</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>First version.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para></para>
+    </abstract>
+    <releaseinfo>$Id: pulse2_deployment_error_codes_explained.xml 174 2009-08-14 09:47:44Z nrueff $</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Introduction</title>
+    <para>Pulse 2 has the possibility to perform some check prior to perform an operation on its clients. This is what we call 'client check'.</para>
+    <para>"Client checking" consists in 3 checks :</para>
+    <itemizedlist>
+      <listitem>
+        <para>to ask the client if the informations the server know about it are right,</para>
+      </listitem>
+      <listitem>
+        <para>to announce the current operation,</para>
+      </listitem>
+      <listitem>
+        <para>to ask the client to give us some informations about its configuration, to perform checks server side.</para>
+      </listitem>
+    </itemizedlist>
+    <para>The following chapter will describe this in details.</para>
+  </section>
+  <section>
+    <title>Client check syntax</title>
+    <para>As previously told, 3 checks can be asked :</para>
+    <variablelist>
+      <varlistentry>
+        <term>--verify</term>
+        <listitem>
+          <para>the client is in-charge to verify that the informations given by the server are relevant</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>--action</term>
+        <listitem>
+          <para>the server announces which stage of a deployment it is currently performing</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>--show</term>
+        <listitem>
+          <para>the server asks the client to display (on stdout) some informations, which will be checked later server-side</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>Some additional args can be given :</para>
+    <variablelist>
+      <varlistentry>
+        <term>--help</term>
+        <listitem>
+          <para>display the client check usage</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>--verbose</term>
+        <listitem>
+          <para>the client will write on stderr each operation it performed</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>--debug</term>
+        <listitem>
+          <para>activate the verbose mode, plus forces "-x" on the shell interpreter.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>In other words : </para>
+    <screen>pulse2-client-check [--verify arg=value[,arg2=value2,...]] [--show arg[,arg2,...]] [--action action[,action2,...]] [--verbose] [--debug] [--help]</screen>
+    <section>
+      <title>--verify</title>
+      <para>This is the first (in chronological order) operation to be done.</para>
+      <para>Syntax is : </para>
+      <screen>arg=value[,arg2=value2][,arg3=value3][,...]</screen>
+      <para>arg can be : </para>
+      <variablelist>
+        <varlistentry>
+          <term>IP</term>
+          <listitem>
+            <para>the client will verify that the value given is an IP which can be found on the client; for example on a client with two IP addresses 192.168.0.1 and 172.20.0.1 :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify IP=192.168.0.1; echo $?
+0</screen>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify IP=192.168.0.0; echo $?
+IP Address mismatch ! Wanted "192.168.0.0", found "192.168.0.1 172.20.0.1"
+1</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the script will give up as soon as one IP address searched do not matches,</para>
+              </listitem>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">client_check = IP=ipaddr</emphasis>" in scheduler.ini.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MAC</term>
+          <listitem>
+            <para>the client will verify that the value given is an MAC address (case-insensitive) which can be found on the client; for example on a client with two MAC addresses 00:11:22:33:44:55 and ff:ee:dd:cc:bb:aa :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:11:22:33:44:55; echo $?
+0</screen>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:00:00:00:00:00; echo $?
+MAC Address mismatch ! Wanted "00:00:00:00:00:00", found "00:11:22:33:44:55 ff:ee:dd:cc:bb:aa"
+1</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the script will give up as soon as one MAC address searched do not matches,</para>
+              </listitem>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">client_check = MAC=macaddr</emphasis>" in scheduler.ini.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HOSTNAME</term>
+          <listitem>
+            <para>the client will verify that the value given (case-insensitive) corresponds to the client hostname; for example on a client whose name is "WINDOWSXP" :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify HOSTNAME=WINDOWSXP; echo $?
+0</screen>
+            <screen>-bash-3.2$ pulse2-client-check.sh --verify HOSTNAME=WRONGHOSTNAME; echo $?
+Hostname mismatch ! Wanted "WRONGHOSTNAME", found "WINDOWSXP"
+1</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">client_check = HOSTNAME=name</emphasis>" in scheduler.ini.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>Different args can of course be combined : </para>
+      <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:11:22:33:44:55,HOSTNAME=WINDOWSXP,IP=192.168.0.1; echo $?
+0</screen>
+      <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:11:22:33:44:55,HOSTNAME=WRONGHOSTNAME,IP=192.168.0.1; echo $?
+Hostname mismatch ! Wanted "WRONGHOSTNAME", found "WINDOWSXP"
+1</screen>
+    </section>
+    <section>
+      <title>--action</title>
+      <para>This is the second (in chronological order) operation to be done.</para>
+      <para>Syntax is :</para>
+      <screen>action[,action2,...]</screen>
+      <para>action can be anything, it is only used to tell the client that an operation will be performed, it is up-to the client to decide whenever aboard or not. Not yep implemented (read : will always succeed).</para>
+      <para>Please note that :</para>
+      <itemizedlist>
+        <listitem>
+          <para>the check can be activated by setting "<emphasis role="bold">announce_check = (comma-separated actions) </emphasis>" in scheduler.ini. Actions can be any of "transfert, execute, delete, inventory", the scheduler will then use them if applicable; for example with announce_check = execute,delete :</para>
+          <itemizedlist>
+            <listitem>
+              <para>in "upload" phase, "pulse2-client-check" will be run without additional arg,</para>
+            </listitem>
+            <listitem>
+              <para>in "execution" phase, "pulse2-client-check" will be run with "--action execute"</para>
+            </listitem>
+            <listitem>
+              <para>in "deletion" phase, "pulse2-client-check" will be run with "--action delete".</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>--show</title>
+      <para>This is the third (in chronological order) operation to be done.</para>
+      <para>Syntax is :</para>
+      <screen>arg[,arg2][,arg3][,...]</screen>
+      <para>arg can be :</para>
+      <variablelist>
+        <varlistentry>
+          <term>IP</term>
+          <listitem>
+            <para>the client will print its IP addresses on stdout; for example on a client with two IP addresses 192.168.0.1 and 172.20.0.1 :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --show IP
+IP=192.168.0.1
+IP=172.20.0.1</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">server_check = IP=ipaddr</emphasis>" in scheduler.ini,</para>
+              </listitem>
+              <listitem>
+                <para>the check will be performed by the server: success if at least one of the IP addresses matches, or failed.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>MAC</term>
+          <listitem>
+            <para>the client will print its MAC addresses on stdout; for example on a client with two MAC addresses 00:11:22:33:44:55 and ff:ee:dd:cc:bb:aa :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --show MAC
+MAC=00:11:22:33:44:55
+MAC=ff:ee:dd:cc:bb:aa</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">server_check = MAC</emphasis>=macaddr" in scheduler.ini.</para>
+              </listitem>
+              <listitem>
+                <para>the check will be performed by the server: success if at least one of the MAC addresses matches, or failed.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>HOSTNAME</term>
+          <listitem>
+            <para>the client will print its hostname on stdout; for example on a client whose name is "WINDOWSXP" :</para>
+            <screen>-bash-3.2$ pulse2-client-check.sh --show HOSTNAME
+HOSTNAME=WINDOWSXP</screen>
+            <para>Please note that :</para>
+            <itemizedlist>
+              <listitem>
+                <para>the check can be activated by setting "<emphasis role="bold">server_check = HOSTNAME=name</emphasis>" in scheduler.ini.</para>
+              </listitem>
+              <listitem>
+                <para>the check will be performed by the server: success if the hostname matches, or failed.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>Different args can of course be combined :</para>
+      <screen>-bash-3.2$ pulse2-client-check.sh --show IP,MAC,HOSTNAME; echo $?
+IP=192.168.0.1
+IP=172.20.0.1
+MAC=00:11:22:33:44:55
+MAC=ff:ee:dd:cc:bb:aa
+HOSTNAME=WINDOWSXP</screen>
+      <para>Note: IP and MAC are always given in the same order (first IP &lt;-&gt; first MAC, etc ...).</para>
+    </section>
+  </section>
+</article>
