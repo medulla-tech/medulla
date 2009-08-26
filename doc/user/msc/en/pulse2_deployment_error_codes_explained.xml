@@ -19,6 +19,14 @@
     </legalnotice>
     <revhistory>
       <revision revisionflag="off">
+        <revnumber>1.2.4</revnumber>
+        <date>2009-08-28</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>Nothing new</para>
+        </revdescription>
+      </revision>
+      <revision revisionflag="off">
         <revnumber>1.2.3</revnumber>
         <date>2009-07-22</date>
         <authorinitials>NR</authorinitials>
