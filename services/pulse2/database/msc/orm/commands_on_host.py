@@ -268,6 +268,9 @@ class CommandsOnHost(object):
     def setLastWOLAttempt(self):
         self.last_wol_attempt = datetime.datetime.now()
         self.flush()
+    def resetLastWOLAttempt(self):
+        self.last_wol_attempt = None
+        self.flush()
     def getLastWOLAttempt(self):
         return self.last_wol_attempt
 
