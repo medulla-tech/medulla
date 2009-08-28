@@ -793,7 +793,7 @@ class Glpi(DyngroupDatabaseHelper):
     def __get_all_locations(self):
         ret = []
         session = create_session()
-        q = session.query(Location).group_by(self.location.c.name).order_by(asc(self.location.c.name)).all()
+        q = session.query(Location).group_by(self.location.c.name).order_by(asc(self.location.c.completename)).all()
         session.close()
         for location in q:
             ret.append(location)
