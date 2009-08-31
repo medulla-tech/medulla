@@ -300,14 +300,13 @@ $test = new TrFormElement(_("Login"),$formElt);
 $test->setCssError("login");
 $test->display(array("value"=>$detailArr["uid"][0]));
 
-$test = new TrFormElement(_("Password"),new PasswordTpl("pass"));
-$test->setCssError("pass");
-$test->display(null);
+$input = new TrFormElement(_("Password"),new PasswordTpl("pass"));
+$input->setCssError("pass");
+$input->display(array("value" => ""));
 
-$test = new TrFormElement(_("Confirm password"),new PasswordTpl("confpass"));
-$test->setCssError("pass");
-$test->display(null);
-
+$input = new TrFormElement(_("Confirm password"),new PasswordTpl("confpass"));
+$input->setCssError("pass");
+$input->display(array("value" => ""));
 
 $test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
 $test->setCssError("Photo");
