@@ -1073,8 +1073,7 @@ class Glpi(DyngroupDatabaseHelper):
         query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
-        ret = query.group_by(self.software.c.name).all()
-        ret = query.all()
+        ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
         session.close()
         return ret
     def getMachineBySoftware(self, ctx, swname):
@@ -1094,7 +1093,7 @@ class Glpi(DyngroupDatabaseHelper):
                 swname = swname[0]
             query = query.filter(and_(self.software.c.name == swname[0], glpi_license.version == swname[1]))
         else:
-            query = query.filter(self.software.c.name == swname)
+            query = query.filter(self.software.c.name == swname).order_by(glpi_license.version)
         ret = query.all()
         session.close()
         return ret

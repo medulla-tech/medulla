@@ -28,6 +28,8 @@ from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 import mmc
 
+from pulse2.utils import unique
+
 from ConfigParser import NoOptionError
 
 def activate():
@@ -91,44 +93,49 @@ def query(ctx, criterion, value):
     return [machines, True]
 
 def getAllOs(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllOs(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllOs(ctx, value)))
 
 def getAllEntities(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllEntities(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllEntities(ctx, value)))
 
 def getAllSoftwares(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value))
+    ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, value)))
+    ret.sort()
+    return ret
 
 def getAllSoftwaresAndVersions(ctx, softname = "", version = None):
+    ret = []
     if version == None:
-        return map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname))
+        ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
     else:
-        return map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version))
+        ret = unique(map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version)))
+    ret.sort()
+    return ret
 
 def getAllHostnames(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllHostnames(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllHostnames(ctx, value)))
 
 def getAllContacts(ctx, value = ''):
-    return map(lambda x:x.contact, Glpi().getAllContacts(ctx, value))
+    return unique(map(lambda x:x.contact, Glpi().getAllContacts(ctx, value)))
 
 def getAllContactNums(ctx, value = ''):
-    return map(lambda x:x.contact_num, Glpi().getAllContactNums(ctx, value))
+    return unique(map(lambda x:x.contact_num, Glpi().getAllContactNums(ctx, value)))
 
 def getAllComments(ctx, value = ''):
-    return map(lambda x:x.comments, Glpi().getAllComments(ctx, value))
+    return unique(map(lambda x:x.comments, Glpi().getAllComments(ctx, value)))
 
 def getAllModels(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllModels(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllModels(ctx, value)))
 
 def getAllLocations(ctx, value = ''):
-    return map(lambda x:x.completename, Glpi().getAllLocations(ctx, value))
+    return unique(map(lambda x:x.completename, Glpi().getAllLocations(ctx, value)))
 
 def getAllOsSps(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllOsSps(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllOsSps(ctx, value)))
 
 def getAllGroups(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllGroups(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllGroups(ctx, value)))
 
 def getAllNetworks(ctx, value = ''):
-    return map(lambda x:x.name, Glpi().getAllNetworks(ctx, value))
+    return unique(map(lambda x:x.name, Glpi().getAllNetworks(ctx, value)))
 
