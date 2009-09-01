@@ -29,7 +29,7 @@
 
 $mod = new Module("inventory");
 $mod->setVersion("2.0.0");
-$mod->setRevision("$Rev$");
+$mod->setRevision('$Rev$');
 $mod->setDescription(_T("Inventory", "inventory"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
@@ -40,7 +40,7 @@ $submod->setDescription(_T("Inventory", "inventory"));
 $submod->setImg('modules/inventory/graph/img/inventory');
 $submod->setDefaultPage("inventory/inventory/index");
 
-$page = new Page("index",_T("General","inventory"));
+$page = new Page("index",_T("Bios","inventory"));
 $submod->addPage($page);
 $page = new Page("hardware",_T("Hardware","inventory"));
 $submod->addPage($page);
@@ -101,10 +101,6 @@ $page = new Page("ajaxViewPart");
 $page->setFile("modules/inventory/inventory/ajaxViewPart.php", array("AJAX" =>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("ajaxViewHard");
-$page->setFile("modules/inventory/inventory/ajaxViewHard.php", array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
-
 $page = new Page("header", _T('Header', "inventory"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
@@ -121,12 +117,70 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
-$page = new Page("invtabs", _T("Inventory on machine"));
-$page->setFile("modules/inventory/inventory/tabs.php");
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
+if (!empty($submod)) {
+    $page = new Page("groupinvtabs", _T("Inventory on a group of computers", "inventory"));
+    $page->setFile("modules/inventory/inventory/tabs.php");
+    $page->setOptions(array("visible"=>False));
+    $tab = new Tab("grouptab0",  _T("Hardware tab for a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("grouptab5",  _T("Bios tab for a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("grouptab1",  _T("Software tab for a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("grouptab2",  _T("Network tab for a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("grouptab3",  _T("Controller tab for a group", "inventory"));
+    $page->addTab($tab);
+ 
+    $tab = new Tab("grouptab4",  _T("Registry tab for a group", "inventory"));
+    $page->addTab($tab);
 
-unset($submod);
+    $tab = new Tab("tab0",  _T("Hardware tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab5",  _T("Bios tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab1",  _T("Software tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab2",  _T("Network tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab3",  _T("Controller tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab4",  _T("Registry tab for a computer in a group", "inventory"));
+    $page->addTab($tab);
+   
+    $submod->addPage($page);
+ 
+    $page = new Page("invtabs", _T("Inventory on a single computer", "inventory"));
+    $page->setFile("modules/inventory/inventory/tabs.php");
+    $page->setOptions(array("visible"=>False));
 
+    $tab = new Tab("tab0",  _T("Hardware tab for a computer", "inventory"));
+    $page->addTab($tab);
+
+    $tab = new Tab("tab1",  _T("Software tab for a computer", "inventory"));
+    $page->addTab($tab);
+
+    $tab = new Tab("tab2",  _T("Network tab for a computer", "inventory"));
+    $page->addTab($tab);
+
+    $tab = new Tab("tab3",  _T("Controller tab for a computer", "inventory"));
+    $page->addTab($tab);
+    
+    $tab = new Tab("tab4",  _T("Registry tab for a computer", "inventory"));
+    $page->addTab($tab);
+
+    $submod->addPage($page);
+    
+    unset($submod);
+}
 
 ?>
