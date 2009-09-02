@@ -128,12 +128,13 @@ PULSE2_PROXY_WAITINGFORDEAD_ERROR       = PULSE2_PROXY_ERROR_MIN + 1
 
 """
     ####################################################################
-    Standard codes for proxy
+    Standard codes for pserver
     ####################################################################
 """
 
 PULSE2_PSERVER_ERROR                        = PULSE2_PSERVER_ERROR_MIN
 PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR   = PULSE2_PSERVER_ERROR_MIN + 1
+PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR  = PULSE2_PSERVER_ERROR_MIN + 2
 
 
 """
