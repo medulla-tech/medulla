@@ -1465,14 +1465,23 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     if not file_uris:
         if useFallback:
             logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
-            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', 'Can\'t get files URI for package \'%s\' on fallback mirror %s' % (myC.package_id, fbmirror))
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', \
+                    'Can\'t get files URI for package \'%s\' on fallback mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.' % (myC.package_id, fbmirror))
             # the getFilesURI call failed on the fallback. We have a serious
+            # problem and we better decrement attempts
+            if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
+                return runFailedPhase(myCoH.getId())
+        elif not fbmirror or fbmirror == mirror:
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (myCoH.getId(), mirror))
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', \
+                    'Can\'t get files URI for package \'%s\' on mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.' % (myC.package_id, mirror))
+            # the getFilesURI call failed on the only mirror we have. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
                 return runFailedPhase(myCoH.getId())
         else:
             # Use the fallback mirror
-            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror" % (myCoH.getId(), mirror))
+            logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, trying with fallback mirror %s" % (myCoH.getId(), mirror, fbmirror))
             _cbRunPushPullPhaseTestFallbackMirror(None, mirror, fbmirror, client, myC, myCoH)
         return
 
