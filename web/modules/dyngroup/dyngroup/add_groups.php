@@ -51,7 +51,7 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 } elseif (isset($_POST['bfiltmachine_x'])) {
-    $truncate_limit = 2000;
+    $truncate_limit = getMaxElementsForStaticList();
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter']), False);
     $count = getRestrictedComputersListLen(array('filter'=>$_POST['filter']));
     if ($truncate_limit < $count) {
@@ -130,7 +130,7 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
     
-    $truncate_limit = 2000;
+    $truncate_limit = getMaxElementsForStaticList();
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID')), False);
     $count = getRestrictedComputersListLen();
     if ($truncate_limit < $count) {

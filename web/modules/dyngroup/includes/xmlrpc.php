@@ -40,4 +40,11 @@ function updateMachineCache() {
     return xmlCall("dyngroup.update_machine_cache", null);
 }
 
+function getMaxElementsForStaticList() {
+    if (!isset($_SESSION["maxElementsForStaticList"])) {
+        $_SESSION["maxElementsForStaticList"] = xmlCall("dyngroup.getMaxElementsForStaticList", null);
+    }
+    return $_SESSION["maxElementsForStaticList"];
+}
+
 ?>
