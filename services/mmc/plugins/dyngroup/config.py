@@ -27,6 +27,7 @@ from ConfigParser import NoOptionError
 class DGConfig(PluginConfig):
     dyngroup_activate = True
     defaultModule = ''
+    maxElementsForStaticList = 2000
 
     def readConf(self):
         """
@@ -67,6 +68,9 @@ class DGConfig(PluginConfig):
         if self.has_section("querymanager"):
             if self.has_option("querymanager", "activate"):
                 self.dyngroup_activate = self.getboolean("querymanager", "activate")
+
+        if self.has_option("main", "max_elements_for_static_list"):
+            self.maxElementsForStaticList = self.get("main", "max_elements_for_static_list")
 
     def setDefault(self):
         """

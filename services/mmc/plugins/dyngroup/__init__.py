@@ -389,6 +389,9 @@ def forgeRequest(elt, values):
 def getDefaultModule():
     return config.defaultModule
 
+def getMaxElementsForStaticList():
+    return config.maxElementsForStaticList
+
 def unescape(search):
     if type(search) == str and search != '':
         return re.sub('&lt;', '<', re.sub('&gt;', '>', search))
