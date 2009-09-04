@@ -29,6 +29,8 @@
 from pulse2.package_server.utilities import md5file, md5sum
 import pulse2.package_server.common
 import os
+import urllib
+import locale
 
 class Mirror:
     def __init__(self, protocol = None, server = None, port = None, mountpoint = None):
@@ -139,7 +141,14 @@ class Package:
             'files':self.files.toH()
         }
         if self.root != '':
-            ret['basepath'] = self.root
+            # The package root is decoded using the current encoding to get a Python
+            # unicode string, so that non-ASCII characters can later be successfully
+            # written into a XML-RPC stream
+            try:
+                root = self.root.decode(locale.getpreferredencoding())
+            except:
+                root = self.root
+            ret['basepath'] = root
         return ret
 
     def to_h(self):
@@ -258,8 +267,9 @@ class File:
                     where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
                 else:
                     where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
-            return ("%s%s/%s" % (where, self.path.replace('\\', '/'), self.name)).replace(' ', '%20')
-
+            ret = where + urllib.quote("%s/%s" % (self.path.replace('\\', '/'), self.name))
+            return (ret)
+            
     def toS(self):
         return "%s/%s" % (self.path, self.name)
 
@@ -267,7 +277,18 @@ class File:
         return self.toS()
 
     def toH(self):
-        return { 'name':self.name, 'path':self.path, 'id':self.id }
+        # The file name and path are decoded using the current encoding to get a
+        # Python unicode string, so that non-ASCII characters can be later successfully
+        # written into a XML-RPC stream
+        try:
+            name = self.name.decode(locale.getpreferredencoding())
+        except:
+            name = self.name
+        try:
+            path = self.path.decode(locale.getpreferredencoding())
+        except:
+            path = self.path
+        return { 'name':name, 'path':path, 'id':self.id }
 
     def to_h(self):
         return self.toH()
