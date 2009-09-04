@@ -25,8 +25,6 @@
 """
     Pulse2 PackageServer
 """
-import twisted.web.html
-import twisted.web.xmlrpc
 import os
 import stat
 import time
@@ -428,7 +426,7 @@ class Common(pulse2.utils.Singleton):
             self.logger.error(e)
             raise e
         return pid
-    
+
     def editPackage(self, pid, pack, need_assign = True):
         try:
             if self.packages.has_key(pid):
@@ -594,10 +592,10 @@ class Common(pulse2.utils.Singleton):
             self.logger.error("getPackages failed")
             self.logger.error(e)
             return None
-    
+
     def __packageSelection(self, pid, mp = None, pending = False, all = False):
-        is_acc = self.isPackageAccessible(pid) 
-        if not all:  
+        is_acc = self.isPackageAccessible(pid)
+        if not all:
             is_acc = is_acc and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid)
         if (is_acc and not pending) or (not is_acc and pending) or (all and is_acc):
             if (mp != None and pid in self.mp2p[mp]) or (mp == None):
@@ -759,7 +757,7 @@ class Common(pulse2.utils.Singleton):
             previous_t = time.time() - self.config.package_detect_loop
         self.temp_check_changes['SIZE'][pid] = [0, previous_t]
         Find().find(dir, self.__subHasChangedGetSize, [pid])
-        
+
     def __subHasChangedGetSize(self, file, pid):
         try:
             self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
@@ -774,7 +772,7 @@ class Common(pulse2.utils.Singleton):
             self.temp_check_changes['LAST'][pid] = { '###DATE###' : s }
         elif not self.temp_check_changes['LAST'][pid].has_key('###DATE###') or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
             self.temp_check_changes['LAST'][pid]['###DATE###'] = s
-            
+
     def __subHasChangedLast(self, file, pid, t):
         """
         check if the file has change in the last X secondes
@@ -844,7 +842,7 @@ class Common(pulse2.utils.Singleton):
                     self.packageDetectionDate[pid] = self.__getDate(file)
                     self.__subHasChangedGetGlobalSize(l_package.root, pid)
                     self.temp_check_changes['LAST'][pid]['###DATE###'] = self.packageDetectionDate[pid]
-                    
+
                     if self.config.package_mirror_activate:
                         Common().rsyncPackageOnMirrors(pid)
                 elif isReady == self.SMART_DETECT_CHANGES: # reload the content of the config file
@@ -855,14 +853,14 @@ class Common(pulse2.utils.Singleton):
                     self.packageDetectionDate[pid] = self.__getDate(file)
                     if self.config.package_mirror_activate:
                         Common().rsyncPackageOnMirrors(pid)
-                        
+
 
     def _treatConfFile(self, file, mp, access):
         if os.path.basename(file) == 'conf.xml':
             if self.already_declared.has_key(file) and self.already_declared[file]:
                 self._treatDir(os.path.dirname(file), mp, access)
                 return
-            
+
             self.logger.debug("_treatConfFile %s"%(file))
             self._createMD5File(os.path.dirname(file))
             pid = self._treatDir(os.path.dirname(file), mp, access)

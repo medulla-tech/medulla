@@ -29,13 +29,11 @@ import string
 import os
 import os.path
 import sys
+
 import twisted
 import twisted.copyright
 import logging
 import logging.config
-
-from pulse2.package_server import ThreadLauncher, init_logger_debug, getRevision, getVersion
-from pulse2.package_server.config import P2PServerCP
 
 class Pulse2PackageServer(win32serviceutil.ServiceFramework):
 
@@ -60,9 +58,8 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
-    def init(self):
-        config = P2PServerCP()
-        config.setup(self.inifile)
+    def init(self, config):
+        from pulse2.package_server import ThreadLauncher, init_logger_debug, getRevision, getVersion
         logging.config.fileConfig(self.inifile)
         logger = logging.getLogger()
         init_logger_debug()
@@ -70,13 +67,21 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         logger.info("Pulse 2 Package Server build '%s'" % str(getRevision()))
         logger.info("Using Python %s" % sys.version.split("\n")[0])
         logger.info("Using Python Twisted %s" % twisted.copyright.version)
+        if config.use_iocp_reactor:
+            logger.info("Using IOCP reactor")
         ThreadLauncher().initialize(config)
 
     def SvcDoRun(self):
         import servicemanager
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTED,(self._svc_display_name_, ''))
+        from pulse2.package_server.config import P2PServerCP
+        config = P2PServerCP()
+        config.setup(self.inifile)
+        if config.use_iocp_reactor:
+            from twisted.internet import iocpreactor
+            iocpreactor.install()
         self.CheckForQuit()
-        self.init()
+        self.init(config)
         twisted.internet.reactor.run(installSignalHandlers=0)
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STOPPED,(self._svc_display_name_, ''))
 

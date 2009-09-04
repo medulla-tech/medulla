@@ -62,6 +62,8 @@ class P2PServerCP(pulse2.utils.Singleton):
         daemon_user = pwd.getpwnam('root')[2]
         umask = string.atoi('0077', 8)
         pidfile = '/var/run/pulse2-package-server.pid'
+    else:
+        use_iocp_reactor = False
 
     package_detect_loop = 60
     package_detect_activate = False
@@ -146,6 +148,9 @@ class P2PServerCP(pulse2.utils.Singleton):
                     self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
                 if self.cp.has_option("daemon", "umask"):
                     self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
+        else:
+            if self.cp.has_option("main", "use_iocp_reactor"):
+                self.use_iocp_reactor = self.cp.getboolean("main", "use_iocp_reactor")
 
         if self.cp.has_option('ssl', 'username'):
             self.username = self.cp.get('ssl', 'username')

@@ -27,8 +27,7 @@ import logging
 import twisted
 import re
 import SimpleHTTPServer
-from twisted.web import xmlrpc, resource, static, server
-from twisted.internet import reactor
+from twisted.web import resource, static, server
 
 from pulse2.package_server.server import P2PSite
 from pulse2.package_server.description import Description

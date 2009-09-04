@@ -36,10 +36,9 @@ from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 import pulse2.utils
-import pulse2.package_server.thread_webserver
+
 from threading import Thread, Semaphore
 import threading
-from twisted.internet import reactor
 from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
@@ -49,7 +48,7 @@ from twisted.internet import defer
 """
 
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
-VERSION = "1.2.3"
+VERSION = "1.2.4"
 
 def getRevision(): return REVISION
 def getVersion(): return VERSION
@@ -285,6 +284,7 @@ class ThreadLauncher(pulse2.utils.Singleton):
                 self.threadgp.setDaemon(True)
                 self.logger.info("Global package mirror thread started")
 
+        from pulse2.package_server import thread_webserver
         thread_webserver.initialize(self.config)
         # FIXME: Little sleep because sometimes Python exits before the
         # threads have the time to start
