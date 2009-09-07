@@ -194,20 +194,25 @@ class Common(pulse2.utils.Singleton):
         """
         todelete = []
         for pid in self.packages:
-            proot = self._getPackageRoot(pid)
-            confxml = os.path.join(proot, "conf.xml")
-            if os.path.exists(confxml) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(confxml): # EDITED
-                self.logger.debug("Package %s has been modified (%s)" % (pid, confxml))
-                #self.__removePackage(pid, proot)
-                #todelete.append(pid)
-                #if confxml in self.already_declared:
-                #    del self.already_declared[confxml]
-            elif not os.path.exists(confxml): # SUPPRESSED
-                self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
-                self.__removePackage(pid, proot)
-                todelete.append(pid)
-                if confxml in self.already_declared:
-                    del self.already_declared[confxml]
+            try:
+                proot = self._getPackageRoot(pid)
+                confxml = os.path.join(proot, "conf.xml")
+                if os.path.exists(confxml) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(confxml): # EDITED
+                    self.logger.debug("Package %s has been modified (%s)" % (pid, confxml))
+                    #self.__removePackage(pid, proot)
+                    #todelete.append(pid)
+                    #if confxml in self.already_declared:
+                    #    del self.already_declared[confxml]
+                elif not os.path.exists(confxml): # SUPPRESSED
+                    self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
+                    self.__removePackage(pid, proot)
+                    todelete.append(pid)
+                    if confxml in self.already_declared:
+                        del self.already_declared[confxml]
+            except Exception, e:
+                self.logger.error("Common._detectRemovedAndEditedPackages : an exception happened")
+                self.logger.debug(type(e))
+                self.logger.info(e)
         if not self.config.package_mirror_activate:
             # For the mirror stuff to work, we do not remove the package from
             # our main packages dict
@@ -222,12 +227,19 @@ class Common(pulse2.utils.Singleton):
         else:
             self.logger.debug("Package %s removed from internal hashes"%(pid))
             pkg = self.packages[pid]
-            del self.reverse[pkg.label][pkg.version]
-            if len(self.reverse[pkg.label].keys()) == 0:
-                del self.reverse[pkg.label]
+            try:
+                # WARN if self.reverse[pkg.label] dont exists!
+                del self.reverse[pkg.label][pkg.version]
+                if len(self.reverse[pkg.label].keys()) == 0:
+                    del self.reverse[pkg.label]
+            except Exception, e:
+                self.logger.error("Common.suppressFromInternal : an exception happened")
+                self.logger.debug(type(e))
+                self.logger.info(e)
             if self.packageDetectionDate.has_key(pid):
                 del self.packageDetectionDate[pid]
-            del self.packages[pid]
+            if self.packages.has_key(pid):
+                del self.packages[pid]
 
     def __removePackage(self, pid, proot):
         # Remove the package from the mirror
@@ -264,7 +276,7 @@ class Common(pulse2.utils.Singleton):
         if self.working:
             self.logger.debug("Common.detectNewPackages : already working")
             return False
-        try:
+        try: # BUG : need to put the catch level down!
             self.working = True
             self.working_pkgs = {}
             self.logger.debug1("Common.detectNewPackages : detecting new packages...")
@@ -278,9 +290,14 @@ class Common(pulse2.utils.Singleton):
             self.logger.debug1("Common.detectNewPackages : done")
             self.working = False
             return True
+        except TypeError, e:
+            self.working = False
+            self.logger.error("Common.detectNewPackages : a type error happened")
+            self.logger.info(e)
         except Exception, e:
             self.working = False
             self.logger.error("Common.detectNewPackages : an exception happened")
+            self.logger.debug(type(e))
             self.logger.info(e)
         return False
 
@@ -412,7 +429,12 @@ class Common(pulse2.utils.Singleton):
     def reloadPackage(self, pid, pack):
         try:
             old = self.packages[pid]
-            self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+            try:
+                self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+            except Exception, e:
+                self.logger.error("Common.reloadPackage : an exception happened")
+                self.logger.debug(type(e))
+                self.logger.info(e)
             pack.setFiles(old.files)
             pack.size = old.size
             if self.config.package_mirror_activate:
@@ -431,7 +453,13 @@ class Common(pulse2.utils.Singleton):
         try:
             if self.packages.has_key(pid):
                 old = self.packages[pid]
-                self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+                try:
+                    self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
+                except Exception, e:
+                    self.logger.error("Common.editPackage : an exception happened")
+                    self.logger.debug(type(e))
+                    self.logger.info(e)
+                    raise e
                 pack.setFiles(old.files)
                 pack.size = old.size
             if need_assign:
