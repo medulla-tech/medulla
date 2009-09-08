@@ -48,6 +48,7 @@ function getStatusTable() {
                      "done" => _T("Done", "msc"),
                      "pause" => _T("Paused", "msc"),
                      "stop" => _T("Stopped", "msc"),
+                     "stopped" => _T("Stopped", "msc"),
                      "scheduled" => _T("Scheduled", "msc"),
                      "rescheduled" => _T("Rescheduled", "msc"),
                      "failed" => _T("Failed", "msc"),
