@@ -17,6 +17,18 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.4</revnumber>
+        <date>2009-09-08</date>
+        <authorinitials>OR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>New Pulse 2 Release, two new options in the main section</para>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.3</revnumber>
         <date>2009-07-22</date>
         <authorinitials>NR</authorinitials>
@@ -130,6 +142,18 @@ option2 = plop      </screen></para>
             <entry>Tell if the dynamic group part is activated or if there is only the static group part</entry>
             <entry>yes</entry>
             <entry>1</entry>
+          </row>
+          <row>
+            <entry>default_module</entry>
+            <entry>Set the module that is going to be automatically selected is more than one dyngroup module is defined</entry>
+            <entry>yes</entry>
+            <entry></entry>
+          </row>
+          <row>
+            <entry>max_elements_for_static_list</entry>
+            <entry>The maximum number of elements that have to be display in the static group creation list</entry>
+            <entry>yes</entry>
+            <entry>2000</entry>
           </row>
         </tbody>
       </tgroup>
