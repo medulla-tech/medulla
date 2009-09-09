@@ -62,6 +62,19 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
         else:
             pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, self.server_addr)
 
+def get_default_bundle_name(bundle_elem_nb = 0):
+    localtime = time.localtime()
+    title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        bundle_elem_nb,
+        localtime[0],
+        localtime[1],
+        localtime[2],
+        localtime[3],
+        localtime[4],
+        localtime[5]
+    )
+    return title
+
 class SendBundleCommand:
     def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
         self.ctx = ctx
@@ -154,16 +167,7 @@ class SendBundleCommand:
         self.params['bundle_title'] = None
 
         if title == None or title == '':
-            localtime = time.localtime()
-            title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
-                len(self.porders),
-                localtime[0],
-                localtime[1],
-                localtime[2],
-                localtime[3],
-                localtime[4],
-                localtime[5]
-            )
+            title = get_default_bundle_name(len(self.porders))
         # Insert bundle object
         self.session = create_session(transactional = True)
         bundle = MscDatabase().createBundle(title, self.session)

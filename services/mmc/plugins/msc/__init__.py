@@ -46,6 +46,7 @@ from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
+from mmc.plugins.msc.package_api import get_default_bundle_name
 
 from mmc.plugins.msc.MSC_Directory import MSC_Directory
 from mmc.plugins.msc.MSC_File import MSC_File
@@ -627,6 +628,10 @@ def ma_getApiPackage(machine):
 
 def ma_getApiPackages(machines):
     return MirrorApi().getApiPackages(machines)
+
+############################
+def get_new_bundle_title(nb = 0):
+    return get_default_bundle_name(nb)
 
 ############ MSC_Directory
 def repo_directory_scan(directory_path, mime_types_data):
