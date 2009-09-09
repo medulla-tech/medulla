@@ -165,4 +165,9 @@ function get_def_package_label($label, $version) {
     return xmlCall('msc.get_def_package_label', array($label, $version));
 }
 
+
+function get_new_bundle_title($nb = 0) {
+    return xmlCall('msc.get_new_bundle_title', array($nb));
+}
+
 ?>

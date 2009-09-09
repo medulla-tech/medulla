@@ -272,6 +272,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
         $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("do_reboot"),                             array("value" => '',                                "hide" => True));
+        $f->add(new HiddenTpl("bundle_title"),                          array("value" => get_new_bundle_title(count($this->members)),"hide" => True));
         $f->add(new HiddenTpl("next_connection_delay"),                 array("value" => web_def_delay(),                   "hide" => True));
         $f->add(new HiddenTpl("max_connection_attempt"),                array("value" => web_def_attempts(),                "hide" => True));
         $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
@@ -323,7 +324,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
     }
     function display_options($f) {
         $f->add(new HiddenTpl("lmembers"),                              array("value" => base64_encode(serialize($this->members)), "hide" => True));
-        $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('bundle_title')), array("value" => $name));
+        $f->add(new TrFormElement(_T('Bundle title', 'msc'),                                new InputTpl('bundle_title')), array("value" => $_POST['bundle_title']));
         $f->add(new TrFormElement(_T('Wake on lan', 'msc'),                                 new CheckboxTpl("do_wol")), array("value" => $_POST['do_wol'] == 'on' ? 'checked' : ''));
         $f->add(new TrFormElement(_T('Start the script', 'msc'),                            new CheckboxTpl("start_script")), array("value" => 'checked'));
         $f->add(new TrFormElement(_T('Delete files after a successful execution', 'msc'),   new CheckboxTpl("clean_on_success")), array("value" => 'checked'));
