@@ -34,8 +34,6 @@ PYTHON = $(shell which python)
 PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 
 # List of files to install
-LIBFILES = 
-
 LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
 SBINFILES = bin/mmc-agent bin/mds-report
@@ -68,10 +66,6 @@ install:
 	@echo ""
 	@echo "Install python code in $(DESTDIR)$(PYTHON_PREFIX)"
 	$(PYTHON) setup.py install --no-compile --prefix $(DESTDIR)$(PYTHON_PREFIX)
-
-	@echo ""
-	@echo "Install LIBFILES in $(DESTDIR)$(LIBDIR)"
-	$(INSTALL) $(LIBFILES) -m 755 -o root -g root $(DESTDIR)$(LIBDIR)
 
 	@echo ""
 	@echo "Install LIBDIRBACKUP in $(DESTDIR)$(LIBDIRBACKUP)"
