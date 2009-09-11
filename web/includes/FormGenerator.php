@@ -628,8 +628,7 @@ class SelectItem extends AbstractTpl{
     /**
      * $paramArray can be "null"
      */
-    function display($paramArray = null) {
-
+    function displayContent($paramArray = null) {
         if (!isset($this->elementsVal)) {
             $this->elementsVal = $elements;
         }
@@ -638,15 +637,6 @@ class SelectItem extends AbstractTpl{
         if ($paramArray["value"]) {
             $this->setSelected($paramArray["value"]);
         }
-
-        print "<select";
-        if ($this->style) {
-            print " class=\"".$this->style."\"";
-        }
-        if ($this->jsFunc) {
-            print " onchange=\"".$this->jsFunc."(); return false;\"";
-        }
-        print " name=\"".$this->id."\">\n";
         foreach ($this->elements as $key => $item) {
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected="selected";
@@ -655,7 +645,18 @@ class SelectItem extends AbstractTpl{
             }
             print "\t<option value=\"".$this->elementsVal[$key]."\" $selected>$item</option>\n";
         }
+    }
+    function display($paramArray = null) {
 
+        print "<select";
+        if ($this->style) {
+            print " class=\"".$this->style."\"";
+        }
+        if ($this->jsFunc) {
+            print " onchange=\"".$this->jsFunc."(); return false;\"";
+        }
+        print " name=\"".$this->id."\" id=\"".$this->id."\">\n";
+        $this->displayContent($paramArray);
         print "</select>\n";
     }
 
