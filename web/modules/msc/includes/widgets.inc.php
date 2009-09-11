@@ -391,7 +391,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 
         /* State selection dropdown */
         $this->paramname2 = $paramname2;
-        $this->states = new SelectItem($paramname2, 'pushSearch', 'searchfieldreal noborder');
+        $this->states = new SelectItem($paramname2, 'pushSearch2', 'searchfieldreal noborder');
     }
 
     function setElements($elt) {
@@ -465,6 +465,16 @@ if ($this->refresh) {
         }
 
         /**
+         *
+         */
+        function updateStates() {
+            var ind = document.getElementById('<?= $this->paramname2; ?>');
+            var val = ind.options[ind.selectedIndex].value;
+            new Ajax.Updater('<?= $this->paramname2; ?>', '<?= urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&selected='+document.Form.<?= $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true});
+            refreshtimer = setTimeout("updateSearch()", 250);
+        }
+
+        /**
          * Update div when clicking previous / next
          */
         function updateSearchParam(filter, start, end) {
@@ -483,9 +493,15 @@ if ($this->refresh) {
         /**
          * wait 500ms and update search
          */
+        function pushSearch2() {
+            clearTimers();
+            setTimeout("updateStates()", 500);
+        }
+
         function pushSearch() {
             clearTimers();
             refreshtimer = setTimeout("updateSearch()", 500);
+            setTimeout("updateStates()", 750);
         }
 
         pushSearch();

@@ -52,6 +52,10 @@ $submod->addPage($page);
 $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
 $submod->addPage($page);
 
+$page = new Page("state_list", _T("the state list", "msc"));
+$page->setOptions(array("visible"=>False, "AJAX"=> True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
