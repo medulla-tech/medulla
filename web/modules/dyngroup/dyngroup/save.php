@@ -63,7 +63,7 @@ if ($check && isset($_POST['displayTmp'])) {
 $name_exists = xmlrpc_group_name_exists($name, $group->id);
 if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['checkBool']) || isset($_POST['displayTmp']) || $name == '') {
     if ($id) { $name = $group->getName(); $visible = $group->canShow(); }
-    $r->displayReqListInfos();
+    $r->displayReqListInfos(false, array('gid'=>$id));
     // TODO : put in class
     print "<hr/><table><tr>";
     if (hasCorrectAcl("base", "computers", "save")) {

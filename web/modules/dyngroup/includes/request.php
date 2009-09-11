@@ -106,7 +106,7 @@ class Request {
             $p['request'] = $this->toS();
             array_push($parameters, $p);
         }
-        $n = new ListInfos($parts, _T('Search part', 'dyngroup'));
+        $n = new ListInfos($parts, _T('Search part', 'dyngroup'), "&amp;id=".$default_params['gid']);
         if ($canbedeleted) {
             $n->setParamInfo($parameters);
             $n->addActionItem(new ActionItem(_T("Edit", 'dyngroup'), $default_params['target_edit'], "edit", "params", null, null, $default_params['tab']));

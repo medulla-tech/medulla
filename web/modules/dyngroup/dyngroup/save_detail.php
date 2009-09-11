@@ -40,7 +40,7 @@ $request = $group->getRequest();
 if ($group->isRequest()) { // request save
     $r = new Request();
     $r->parse($request);
-    $r->displayReqListInfos();
+    $r->displayReqListInfos(false, array('gid'=>$id));
     print sprintf(_T("This request has been saved as %s (id=%s)", "dyngroup"), $name, $id);
 } else { // result save
     print sprintf(_T("This result has been saved as %s (id=%s)", "dyngroup"), $name, $id);

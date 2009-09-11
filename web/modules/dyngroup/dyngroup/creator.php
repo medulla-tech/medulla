@@ -195,9 +195,9 @@ if (!$request->isEmpty()) {
     print "<hr/>";
     print "<h3>"._T("The request is : ", "dyngroup")."</h3>";
     if ($edition) {
-        $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupsubedit', 'target_del'=>'computersgroupsubdel', 'request'=>$request->toS()));
+        $request->displayReqListInfos(true, array('id'=>$id, 'gid'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupsubedit', 'target_del'=>'computersgroupsubdel', 'request'=>$request->toS()));
     } else {
-        $request->displayReqListInfos(true, array('id'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupcreatesubedit', 'target_del'=>'computersgroupcreatesubdel', 'request'=>$request->toS(), 'tab'=>'tabdyn'));
+        $request->displayReqListInfos(true, array('id'=>$id, 'gid'=>$id, 'target'=>$target, 'target_edit'=>'computersgroupcreatesubedit', 'target_del'=>'computersgroupcreatesubdel', 'request'=>$request->toS(), 'tab'=>'tabdyn'));
     }
 }
 
