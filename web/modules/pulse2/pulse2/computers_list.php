@@ -42,7 +42,7 @@ if (displayLocalisationBar()) {
         $values['Pulse2ALL'] = '';
     }
     foreach ($locations as $loc) {
-        $values[$loc['uuid']] = $loc['name'];
+        $values[$loc['uuid']] = $loc['uuid'];
         if (isset($loc['altname'])) {
             $list[$loc['uuid']] = $loc['altname'];
         } else {

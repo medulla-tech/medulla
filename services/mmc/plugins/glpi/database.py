@@ -310,16 +310,21 @@ class Glpi(DyngroupDatabaseHelper):
                 ctxlocation = None
 
             if ctxlocation != None:
+                locsid = []
                 locs = []
                 if type(ctxlocation) == list:
                     for loc in ctxlocation:
                         locs.append(self.__getName(loc))
+                        locsid.append(self.__getId(loc))
                 join_query = join_query.join(self.location)
 
                 if location != None:
+                    locationid = int(location.replace('UUID', ''))
                     location = self.__getName(location)
                     try:
-                        locs.index(location) # just check that location is in locs, or throw an exception
+                        self.logger.warn(locsid)
+                        self.logger.warn(locationid)
+                        locsid.index(locationid) # just check that location is in locs, or throw an exception
                         query_filter = self.__addQueryFilter(query_filter, (self.location.c.name == location))
                     except ValueError:
                         self.logger.warn("User '%s' is trying to get the content of an unauthorized entity : '%s'" % (ctx.userid, location))
@@ -383,11 +388,21 @@ class Glpi(DyngroupDatabaseHelper):
 
         return query
 
+    def __getId(self, obj):
+        if type(obj) == dict:
+            return obj['uuid']
+        if type(obj) != str and type(obj) != unicode:
+            return obj.ID
+        return obj
+
     def __getName(self, obj):
         if type(obj) == dict:
             return obj['name']
         if type(obj) != str and type(obj) != unicode:
             return obj.name
+        if type(obj) == str and re.match('UUID', obj):
+            l = self.getLocation(obj)
+            if l: return l.name
         return obj
 
     def __addQueryFilter(self, query_filter, eq):
@@ -812,6 +827,15 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getLocation(self, uuid):
+        """
+        Get a Location by it's uuid
+        """
+        session = create_session()
+        ret = session.query(Location).filter(self.location.c.ID == uuid.replace('UUID', '')).first()
+        session.close()
+        return ret
+        
     def getLocationsList(self, ctx, filt = None):
         """
         Get the list of all entities that user can access
