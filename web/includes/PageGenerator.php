@@ -734,7 +734,7 @@ class SimpleNavBar extends HtmlElement {
             $end = $this->curstart - 1;
             echo "<li class=\"previousList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
             /* FIXME: maybe we can get rid of $_GET["filter"] ? */
-            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"], $this->extra);
             echo "\">"._("Previous")."</a></li>\n";
         }
 
@@ -744,7 +744,7 @@ class SimpleNavBar extends HtmlElement {
             $start = $this->curend + 1;
             $end = $this->curend + $this->max;
             echo "<li class=\"nextList\"><a href=\"".$_SERVER["SCRIPT_NAME"];
-            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s$extra", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"]);
+            printf("?module=%s&amp;submod=%s&amp;action=%s&amp;start=%d&amp;end=%d&amp;filter=%s%s", $_GET["module"],$_GET["submod"],$_GET["action"],$start, $end, $_GET["filter"], $this->extra);
             echo "\">"._("Next")."</a></li>\n";
         }
 
