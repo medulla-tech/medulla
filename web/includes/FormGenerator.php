@@ -198,19 +198,21 @@ class CheckboxTpl extends AbstractTpl{
         if ($arrParam["value"]=="checked") {
             $value="on";
             print _("yes");
-        }
-        else {
+        } else {
+            $value = "";
             print _("no");
         }
-        print '<input  type="hidden" value="'.$value.'" name="'.$this->name.'">';
+        print '<input type="hidden" value="'.$value.'" name="'.$this->name.'" />';
     }
 
     function displayHide($arrParam) {
-        if ($arrParam["value"]=="checked") {
-            $value="on";
+        if ($arrParam["value"] == "checked") {
+            $value = "on";
+        } else {
+            $value = "off";
         }
         print '<div style="color: #C00;">' . _("unavailable") . '</div>';
-        print '<input  type="hidden" value="'.$value.'" name="'.$this->name.'">';
+        print '<input type="hidden" value="'.$value.'" name="'.$this->name.'" />';
     }
 }
 
@@ -522,7 +524,7 @@ class MultipleInputTpl extends AbstractTpl {
                                                array('key'=>$key,
                                                      'name'=> $this->name)
                                                );
-            $test->setCssError($name.$key);
+            $test->setCssError($this->name.$key);
             $test->displayRo(array("value"=>$param));
         }
         if (count($arrParam) == 0) {
