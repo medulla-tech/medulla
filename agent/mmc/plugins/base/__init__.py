@@ -1747,10 +1747,15 @@ class BaseLdapAuthenticator(AuthenticatorI):
     
     def authenticate(self, user, password):
         ldapObj = ldapAuthen(user, password)
+        ret = AuthenticationToken()
         if ldapObj.isRightPass():
-            ret = AuthenticationToken(True, user, password, ldapObj.getUserEntry()[0])
-        else:
-            ret = AuthenticationToken()
+            userentry = ldapObj.getUserEntry()
+            # Check that the login string exactly matches LDAP content
+            if userentry and user != 'root':
+                if userentry[0][1]['uid'][0] == user:
+                    ret = AuthenticationToken(True, user, password, userentry[0])
+            else:
+                ret = AuthenticationToken(True, user, password, None)
         return ret
 
     def validate(self):

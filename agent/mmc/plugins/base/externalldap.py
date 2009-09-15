@@ -123,17 +123,18 @@ class ExternalLdapAuthenticator(AuthenticatorI):
             raise Exception("Can't find an external LDAP server to connect to")
         return l
 
-    def searchUser(self, l, user):
+    def searchUser(self, l, login):
         """
-        Search the user dn into he LDAP
+        Search the user dn into the LDAP
 
         @return: a couple (user DN, user entry)
         """
-        users = l.search_s(self.config.suffix, ldap.SCOPE_SUBTREE, "(&(%s=%s)(%s))" % (self.config.attr, user, self.config.filter))
+        users = l.search_s(self.config.suffix, ldap.SCOPE_SUBTREE, "(&(%s=%s)(%s))" % (self.config.attr, login, self.config.filter))
         for user in users:
             self.logger.debug("Found user dn: %s" % user[0])
             self.logger.debug(str(user))
-        if users:
+        # Check that the login string exactly matches LDAP content
+        if users and users[0][1][self.config.attr][0] == login:
             ret = users[0]
         else:
             ret = (None, None)
