@@ -22,24 +22,33 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$primary = getUserPrimaryGroup($detailArr["uid"][0]);
-$secondaries = getUserSecondaryGroups($detailArr["uid"][0]);
+/* Insert these attributes in the main ACL array, so that the widget system
+   hide them automatically. We also mark them as read only. */
+global $aclArray; 
+$aclArray["base"]["primary_autocomplete"] = "";
+$aclArray["base"]["groupsselected"] = "";
+$_SESSION["aclattr"]["primary_autocomplete"] = "ro";
+$_SESSION["aclattr"]["groupsselected"] = "ro";
+
+if ($_GET["action"] == "add") {
+    $primary = getUserDefaultPrimaryGroup();
+    $secondaries = array();
+} else {
+    $primary = getUserPrimaryGroup($detailArr["uid"][0]);
+    $secondaries = getUserSecondaryGroups($detailArr["uid"][0]);
+}
 sort($secondaries);
+
+$table = new Table();
+$table->add(
+            new TrFormElement(_("Primary group"), new InputTpl("primary_autocomplete")),
+            array("value" => $primary)
+            );
+$table->add(
+            new TrFormElement(_("Groups"), new MultipleInputTpl("groupsselected")),
+            $secondaries
+            );
+
+$table->display();
+
 ?>
-
-   <table>
-    <tr>
-     <td width="40%" style="text-align:right"><?= _("Primary group");?></td>
-     <td>
-      <?= $primary; ?>
-    </td>
-    </tr>
-    <tr><td width="40%" style="text-align:right; vertical-align: top;"><?= _("Groups");?></td><td>
-            <?php
-            foreach ($secondaries as $group)
-                echo $group . "<br>";
-            ?>
-
-    </td>
-    </tr>
-    </table>

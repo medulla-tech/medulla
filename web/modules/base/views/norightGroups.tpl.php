@@ -21,14 +21,29 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<table>
- <tr>
-  <td width="40%" style="text-align:right">
-   <?= _("Groups");?>
-  </td>
-  <td>
-   <div style="color: #C00;"><?= _("unavailable");?></div>
-  </td>
- </tr>
-</table>
+
+/* Insert these attributes in the main ACL array, so that the widget system
+   hide them automatically */
+global $aclArray; 
+$aclArray['base']['primary_autocomplete'] = '';
+$aclArray['base']['groupsselected'] = '';
+
+if ($_GET["action"] == "add") {
+    $primary = getUserDefaultPrimaryGroup();
+    $secondary = array();
+} else {
+    $primary = getUserPrimaryGroup($detailArr["uid"][0]);
+    $secondary = getUserSecondaryGroups($detailArr["uid"][0]);
+}
+
+$table = new Table();
+$table->add(
+            new TrFormElement(_("Primary group"), new InputTpl("primary_autocomplete")),
+            array("value" => $primary)
+            );
+$table->add(
+            new TrFormElement(_("Groups"), new MultipleInputTpl("groupsselected")),
+            $secondary
+            );
+
+$table->display();

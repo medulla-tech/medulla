@@ -87,16 +87,16 @@ if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
 }
 
 /* Check that the primary group name exists */
- $primary = $_POST["primary_autocomplete"];
- if (!strlen($primary)) {
-   global $error;
+$primary = $_POST["primary_autocomplete"];
+if (!strlen($primary)) {
+    global $error;
     setFormError("primary_autocomplete");
     $error.= _("The primary group field can't be empty.")."<br />";
 } else if (!existGroup($primary)) {
     global $error;
     setFormError("primary_autocomplete");
     $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
- }
+}
 
 
 //verify validity with plugin function
