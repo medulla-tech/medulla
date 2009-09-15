@@ -47,12 +47,21 @@ function getAclAttrModule($attr) {
     return false;
 }
 
+/**
+ * Returns the current user ACL (access right) for the given attribute
+ * @param $attr Attribute to get ACL for
+ * @return '' (noright) or ro (read only) or rw (read/write)
+ */
 function getAclAttr($attr) {
+    $ret = "";
     if ($_SESSION["login"]=="root") {
-        return "rw";
-    } else { 
-        return $_SESSION["aclattr"][$attr];
+        $ret = "rw";
+    } else {
+        if (!empty($_SESSION["aclattr"][$attr])) {
+            $ret = $_SESSION["aclattr"][$attr];
+        } 
     }
+    return $ret;
 }
 
 function hasCorrectAcl($module,$submod,$action) {
