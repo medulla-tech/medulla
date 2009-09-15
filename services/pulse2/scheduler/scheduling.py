@@ -745,7 +745,15 @@ def sortCommands(commands_to_perform):
             deffered = runCommand(id)
             if deffered:
                 deffereds.append(deffered)
-        return deffereds
+        return twisted.internet.defer.DeferredList(deffereds)
+    def _parseResult(result):
+        if result:
+            if type(result) == list and type(result[0]) == tuple: # normal DeferredList result
+                return map(lambda r:r[0], result)
+            else: # dont really know what is it
+                return result
+        else: # failure in the call...
+            return False
 
     # build array of commands to perform
     tocome_distribution = dict()
@@ -765,7 +773,8 @@ def sortCommands(commands_to_perform):
 
     # build array of commands being processed by available launchers
     return getLaunchersBalance().\
-        addCallback(_cb, tocome_distribution)
+        addCallback(_cb, tocome_distribution).\
+        addCallback(_parseResult)
 
 def getRunningCommandsOnHostInDB(scheduler_name, ids = None):
     # get the list of running commands according to the database content
