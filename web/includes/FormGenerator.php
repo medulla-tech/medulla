@@ -549,7 +549,7 @@ class MultipleInputTpl extends AbstractTpl {
                                                array('key'=>$key,
                                                      'name'=> $this->name)
                                                );
-            $test->setCssError($name.$key);
+            $test->setCssError($this->name.$key);
             $test->displayHide(array("value"=>$param));
         }
         if (count($arrParam) == 0) {
@@ -583,15 +583,14 @@ class AbstractTpl extends HtmlElement {
      */
     function displayRo($arrParam) {
         print $arrParam["value"];
-        print '<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'">';
+        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
     }
 
     function displayHide($arrParam) {
         print '<div style="color: #C00;">' . _("unavailable") . '</div>';
-        print '<input  type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'">';
+        print '<input type="hidden" value="'.$arrParam["value"].'" name="'.$this->name.'" />';
     }
 }
-
 
 /**
  *  display select html tags with specified
