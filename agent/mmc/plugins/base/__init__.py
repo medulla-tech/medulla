@@ -22,7 +22,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from mmc.support.errorObj import errorMessage
-from mmc.support.mmcException import mmcException
 from mmc.support.config import *
 from time import time, strftime
 from mmc.plugins.base.computers import ComputerManager, ComputerI
@@ -35,8 +34,6 @@ from mmc.support.uuid import uuid1
 from mmc.support import mmctools
 from mmc.support.mmctools import cSort, rchown, copytree
 
-from mmc.support.mmctools import shProcessProtocol
-from mmc.support.mmctools import generateBackgroundProcess
 from mmc.support.mmctools import cleanFilter
 
 from mmc.support.mmctools import xmlrpcCleanup
@@ -55,7 +52,6 @@ import string
 import re
 import os
 from mmc.support import mmctools
-import ConfigParser
 import copy
 import tempfile
 from sets import Set
