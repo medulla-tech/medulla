@@ -1786,7 +1786,7 @@ class ldapAuthen:
         If there are any error, self.result is False and a ldap
         exception will be raised.
         """
-        config = BasePluginConfig("base")
+        config = BasePluginConfig("base", conffile)
         conn = LDAPConnection(config)
         l = conn.get()
 
