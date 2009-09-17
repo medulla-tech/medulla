@@ -24,7 +24,7 @@
 import twisted.internet.error
 import twisted.copyright
 from twisted.web import xmlrpc, server
-from twisted.internet import ssl, reactor, defer
+from twisted.internet import reactor, defer
 from twisted.python import failure
 try:
     from twisted.web import http
@@ -46,7 +46,6 @@ import time
 import pwd
 import grp
 import string
-import OpenSSL
 
 sys.path.append("plugins")
 
