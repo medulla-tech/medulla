@@ -100,6 +100,9 @@ $(RELEASES_DIR)/$(TARBALL_GZ):
 docs:
 	epydoc mmc
 
+pyflakes:
+	pyflakes . bin/mmc-agent
+
 test:
 	mkdir tmp
 	PYTHONPATH=. python tests/testldap.py
