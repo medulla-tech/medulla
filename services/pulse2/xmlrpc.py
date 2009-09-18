@@ -24,15 +24,7 @@
 import logging # to log stuff
 
 import twisted
-import twisted.web.server
-import twisted.internet.error
-import twisted.web.xmlrpc
-from twisted.internet import ssl, reactor
-
-try:
-    from twisted.web import http
-except ImportError:
-    from twisted.protocols import http
+from twisted.internet import ssl
 
 import pulse2.utils
 
