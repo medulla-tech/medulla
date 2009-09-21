@@ -1,0 +1,4 @@
+title Floppy Disk
+desc Boot on the floppy disk drive
+root (fd0)
+chainloader +1

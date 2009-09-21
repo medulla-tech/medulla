@@ -1,0 +1,5 @@
+title MBR Fix
+desc Remise à zero du "Master Boot Record"
+root (hd0)
+mbr (nd)/tftpboot/revoboot/bin/mbr446.bin
+pause
