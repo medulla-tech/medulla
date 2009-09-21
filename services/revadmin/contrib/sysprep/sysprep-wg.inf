@@ -1,0 +1,35 @@
+;SetupMgrTag
+[Unattended]
+    OemSkipEula=Yes
+    TargetPath=\WINNT
+
+[GuiUnattended]
+    AdminPassword=root
+    OEMSkipRegional=1
+    TimeZone=85
+    OemSkipWelcome=1
+
+[UserData]
+    FullName=Hello
+    OrgName=XX
+    ComputerName=HOSTNAME
+
+[Display]
+    BitsPerPel=16
+    Xresolution=1024
+    YResolution=768
+    Vrefresh=70
+
+[RegionalSettings]
+    LanguageGroup=33
+
+[SetupMgr]
+    DistFolder=C:\sysprep\i386
+    DistShare=win2000dist
+
+[Identification]
+    JoinWorkgroup=LINBOX
+
+[Networking]
+    InstallDefaultComponents=Yes
+
