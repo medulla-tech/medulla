@@ -209,7 +209,7 @@ class RenderedMSCBundleSortParent {
         $orders = array();
         foreach ($_POST as $k => $v) {
             if (preg_match("/^".$this->input_pre."/", $k)) {
-                $id_papi = preg_replace("/^".$this->input_pre."/", "", $k);
+                $id_papi = base64_decode(preg_replace("/^".$this->input_pre."/", "", $k));
                 list($id, $papid) = preg_split('/##/', $id_papi);
                 $p_api = new ServerAPI();
                 $p_api->fromURI(unserialize(base64_decode($papid)));
@@ -226,7 +226,7 @@ class RenderedMSCBundleSortParent {
         $i = 1;
         if ($_POST["badvanced_bundle"] != '') { # advanced mode: keep previously given order if possible
             foreach ($this->members as $pid => $plabel) {
-                $orders[$pid] = $_POST[$this->input_pre.$pid];
+                $orders[$pid] = $_POST[$this->input_pre.base64_encode($pid)];
             }
         } else { # standard mode: generate order
             foreach ($this->members as $pid => $plabel) {
@@ -241,7 +241,7 @@ class RenderedMSCBundleSortParent {
         $f->push(new Table());
 
         foreach ($this->members as $pid => $plabel) {
-            $select = new SelectItem($this->input_pre.$pid);
+            $select = new SelectItem($this->input_pre.base64_encode($pid));
             $select->setElements($this->c);
             $select->setElementsVal($this->c);
             $select->setSelected($orders[$pid]);
