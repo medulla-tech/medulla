@@ -1,0 +1,110 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+import sys
+import socket
+import time
+import os.path
+from twisted.web.xmlrpc import Proxy
+from twisted.web.client import downloadPage
+from twisted.internet import reactor
+from twisted.internet.task import LoopingCall
+
+def usage():
+    print """\
+This little tool asks to a Pulse 2 Package Server its packages list, and then
+tries to reach 100 concurrent package downloads.
+
+Usage: pserver-max-dl <url>
+
+Example: pserver-max-dl http://192.168.0.1:9990
+"""
+    sys.exit(1)
+
+
+class Benchmark:
+
+    def __init__(self, URL, sleep):
+        self.url = URL
+        self.sleep = sleep
+        self.mapi = Proxy('%s/rpc' % self.url)
+        self.inprogress = 0
+
+    def start(self):
+        self.mapi.callRemote('getMirror', {'uuid' : '0'}).addCallbacks(self.getPackageAPI, self.onError)
+
+    def getPackageAPI(self, mirror):
+        self.mirror = Proxy('%s://%s:%s%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']))
+        self.mapi.callRemote('getApiPackage', {'uuid' : '0'}).addCallbacks(self.getPackages, self.onError)
+
+    def getPackages(self, papis):
+        self.papis = papis
+        self.papi = Proxy('%s%s' % (self.url, self.papis[0]['mountpoint']))
+        self.papi.callRemote('getAllPackages', {'uuid' : '0'}).addCallbacks(self.startBenchLoop, self.onError)
+
+    def startBenchLoop(self, packages):
+        self.packages = packages
+        print "Starting download test"
+        LoopingCall(self.startBench).start(SLEEP)
+
+    def startBench(self):
+        if self.inprogress < 100 and self.inprogress >= 0:
+            for pkg in self.packages:
+                for f in pkg['files']:
+                    fid = f['id']
+                    self.inprogress += 1                    
+                    print "Current downloads in progress:", self.inprogress
+                    d = self.mirror.callRemote('getFileURI', fid).addCallbacks(self.startDl, self.dlError)
+
+    def startDl(self, uri):
+        d = downloadPage(uri, '/dev/null')
+        d.addCallbacks(self.getDlValue, self.dlError)
+
+    def getDlValue(self, data):
+        self.inprogress -= 1
+        print "Download done, %d download remaining" % self.inprogress
+
+    def dlError(self, error):
+        print error
+        print "First error after %d concurrent downloads"  % self.inprogress
+        self.inprogress -= 1
+
+    def getPrintValue(self, value):
+        print repr(value)
+        reactor.stop()
+
+    def onError(self, error):
+        print 'error', error
+        reactor.stop()
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        usage()
+
+    URL = sys.argv[1]
+    SLEEP = 0.1
+    
+    benchmark = Benchmark(URL, SLEEP)
+    benchmark.start()
+    reactor.run()

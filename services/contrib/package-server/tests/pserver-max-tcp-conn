@@ -1,0 +1,77 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+import sys
+import socket
+import time
+import resource
+
+def usage():
+    print """\
+This little tool tests the max number of parallel connections a TCP server will
+accept.
+
+Usage: pserver-max-tcp-conn hostname port
+
+Example: pserver-max-tcp-conn 192.168.0.1 9990
+"""
+    sys.exit(1)
+
+def updateFdLimit():
+    res = 'RLIMIT_NOFILE'
+    soft = 2048
+    hard = 2048
+    try:
+        resource.setrlimit(eval("resource." + res), (soft, hard))
+    except Exception, e:
+        print "Can't set resource limits for resource='%s', soft='%d', hard='%d'" % (res, soft, hard)
+        print e
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        usage()
+
+    try:
+        HOST = sys.argv[1]
+        PORT = int(sys.argv[2])
+    except:
+        usage()
+
+    SLEEP = 0.2
+
+    updateFdLimit()
+    count = 0
+    sockets = []
+    print "Starting TCP connection test, please wait ..."
+    while True:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sockets.append(s)
+        try:
+            s.connect((HOST, PORT))
+        except socket.error, e:
+            print "TCP connection error:", e
+            break
+        count += 1
+        time.sleep(SLEEP)
+
+    print "%d parallel connections done." % count
