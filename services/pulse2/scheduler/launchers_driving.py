@@ -198,7 +198,7 @@ def downloadFile(uuid, fqdn, shortname, ips, macs, path, bwlimit):
     }
     client['client_check'] = getClientCheck(client)
     client['server_check'] = getServerCheck(client)
-    client['action'] = getAnnounceCheck('transfert')
+    client['action'] = getAnnounceCheck('download')
 
     return callOnBestLauncher(None, 'download_file', False, client, path, bwlimit)
 
