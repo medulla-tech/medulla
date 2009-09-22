@@ -1,0 +1,4 @@
+# Extinction du client apres restauration
+# desc_en: Client shutdown after restoration
+
+halt

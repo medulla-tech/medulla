@@ -1,0 +1,3 @@
+# shell de debug
+
+sh </dev/console >/dev/console
