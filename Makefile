@@ -41,6 +41,8 @@ SBINFILES = bin/mmc-agent bin/mds-report
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
+FILESTOINSTALL = web/graph web/img web/includes web/index.php web/jsframework web/logout web/main_content.php web/main.php web/version.php web/license.php web/modules
+
 all:
 
 # Cleaning target
@@ -92,8 +94,11 @@ install:
 include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
-	mkdir -p $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) backup-tools bin Changelog common.mk conf contrib COPYING init.d Makefile mmc setup.py $(RELEASES_DIR)/$(TARBALL)
+	mkdir -p $(RELEASES_DIR)/$(TARBALL)/agent $(RELEASES_DIR)/$(TARBALL)/web
+	# $(CPA) backup-tools bin Changelog common.mk conf contrib COPYING init.d Makefile mmc setup.py $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) agent/backup-tools agent/bin agent/Changelog agent/conf agent/contrib agent/COPYING agent/init.d agent/mmc agent/setup.py agent/Makefile agent/common.mk $(RELEASES_DIR)/$(TARBALL)/agent
+	$(CPA) $(FILESTOINSTALL) web/Makefile web/common.mk web/scripts web/confs web/COPYING web/Changelog $(RELEASES_DIR)/$(TARBALL)/web
+	$(CPA) Makefile common.mk $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
 
