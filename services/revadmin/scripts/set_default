@@ -1,0 +1,98 @@
+#!/usr/bin/perl -w
+
+# $Id: set_default 2307 2005-06-13 09:40:44Z root $
+
+# Executed to set the default boot entry
+
+#
+# Linbox Rescue Server
+# Copyright (C) 2005  Linbox FAS
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+$lbsconf="/etc/lbs.conf";
+$iam=`basename $0` ; chomp($iam) ;
+
+#//////////////////////////////////////////////////////////////////////////////
+
+# badExit($message,[...])
+#
+sub badExit
+{
+ my $msg = join(" ",@_) ;
+ print STDERR "$iam: $msg\n" ;
+ exit(1) ;
+}
+
+# loadConf($file,\%conf)
+#
+sub loadConf
+{
+ open(F, $_[0]) || return 0;
+ while(<F>) {
+	s/#.*$//g;
+	if (/([A-z0-9_\.]+)\s*=\s*"(.*)"/ ||
+	    /([A-z0-9_\.]+)\s*=\s*'(.*)'/ ||
+	    /([A-z0-9_\.]+)\s*=\s*(.*)/) {
+			$_[1]->{$1} = $2;
+		}
+	}
+ close(F);
+ return 1;
+}
+
+#//////////////////////////////////////////////////////////////////////////////
+
+# find basedir
+%hconf = () ;
+loadConf($lbsconf, \%hconf) ;
+$basedir = $hconf{'basedir'} ;
+badExit("'$basedir': LBS basedir not found") if (not -d $basedir) ;
+
+
+# load header
+$header = "$basedir/images/$ARGV[0]/header.lst";
+$newdef = $ARGV[1];
+
+if ($ARGV[0] eq "") {
+    print ("Usage: set_default MAC ENTRYNUMBER\n");
+    exit;
+}
+
+badExit("'$header': LBS menu not found") if (not -f $header) ;
+
+unshift @INC, "$basedir/bin" ;
+require "inifile.pl" ;
+
+%conf = ();
+iniLoad($header, \%conf);
+
+# reset default entries
+my $ii = 0;
+foreach my $sec (iniGetSections(\%conf))
+{
+    my $visu = iniGetVal(\%conf, $sec, "visu");
+    # only take into account visible entries
+    if ($visu eq "no" || $visu eq "") { next; }
+    my $val = iniGetVal(\%conf, $sec, "def");
+    if ($ii == $newdef) {
+	iniSetVal(\%conf, $sec, "def", "yes");
+    } else {
+	iniSetVal(\%conf, $sec, "def", "no");    
+    }
+    $ii++;
+}
+iniSave($header, \%conf);
+
