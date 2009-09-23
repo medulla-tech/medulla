@@ -69,6 +69,6 @@ include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
 	mkdir -p $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) pulse2 common.mk conf contrib Makefile mmc setup.py $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) services/pulse2 common.mk services/conf services/contrib Makefile services/mmc services/setup.py $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
