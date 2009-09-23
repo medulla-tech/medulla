@@ -59,12 +59,23 @@ install:
 	@echo ""
 	@echo "Install CONFILES in $(DESTDIR)$(ETCDIR)"
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys
 	$(INSTALL) conf/plugins/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
 	$(INSTALL) conf/pulse2/inventory-server/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
-	$(INSTALL) conf/pulse2/launchers/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
-	$(INSTALL) conf/pulse2/package-server/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
-	$(INSTALL) conf/pulse2/scheduler/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
-	$(INSTALL) conf/pulse2/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
+	$(INSTALL) conf/pulse2/launchers/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys
+	$(INSTALL) conf/pulse2/launchers/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
+	$(INSTALL) conf/pulse2/package-server/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys
+	$(INSTALL) conf/pulse2/package-server/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
+	$(INSTALL) conf/pulse2/scheduler/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys
+	$(INSTALL) conf/pulse2/scheduler/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
+	$(INSTALL) conf/pulse2/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
 
 	@echo ""
 	@echo "Install additionnal tools in $(DESTDIR)$(SBINDIR)"
@@ -74,6 +85,6 @@ include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
 	mkdir -p $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) services/pulse2 common.mk services/conf services/contrib Makefile services/mmc services/setup.py $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) services/pulse2 common.mk services/conf services/contrib Makefile services/mmc services/setup.py services/COPYING services/Changelog $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 

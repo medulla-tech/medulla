@@ -48,7 +48,7 @@ else
 	mkdir -p $(RPM_DIR)/{SOURCES,SPECS,BUILD,SRPMS,RPMS/i586}
 	$(CPA) $(RELEASES_DIR)/$(TARBALL_GZ) $(RPM_DIR)/SOURCES
 	cat $(RPM_SPEC_FULLPATH) | sed "s/__VERSION__/$(VERSION)/" > $(RPM_DIR)/SPECS/$(RPM_SPEC)
-	$(CPA) $(RPM_SPEC_DIR)/*.diff $(RPM_DIR)/SOURCES
+	$(CPA) $(RPM_SPEC_DIR)/*.diff $(RPM_SPEC_DIR)/*.init $(RPM_DIR)/SOURCES
 endif
 
 # build the RPMs in a directory inside the source tree
