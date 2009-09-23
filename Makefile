@@ -60,6 +60,11 @@ install:
 	@echo "Install CONFILES in $(DESTDIR)$(ETCDIR)"
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
 	$(INSTALL) conf/plugins/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
+	$(INSTALL) conf/pulse2/inventory-server/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
+	$(INSTALL) conf/pulse2/launchers/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
+	$(INSTALL) conf/pulse2/package-server/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
+	$(INSTALL) conf/pulse2/scheduler/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
+	$(INSTALL) conf/pulse2/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
 
 	@echo ""
 	@echo "Install additionnal tools in $(DESTDIR)$(SBINDIR)"
