@@ -41,18 +41,55 @@ SBINFILES = bin/mmc-agent bin/mds-report
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
-FILESTOINSTALL = web/graph web/img web/includes web/index.php web/jsframework web/logout web/main_content.php web/main.php web/version.php web/license.php web/modules
+# web part
+DATADIR = $(PREFIX)/share/mmc
+CP = $(shell which cp)
+CHOWN = $(shell which chown)
+CHGRP = $(shell which chgrp)
+HTTPDUSER = www-data
+RM = $(shell which rm)
+APACHE_CONF = confs/apache/mmc.conf
+
+
+FILESTOINSTALL = graph img includes index.php jsframework logout main_content.php main.php version.php license.php modules
 
 all:
 
+debian-package: revision
+	sed -i "s/##VERSION##/`cat revision`/" debian/changelog
+	sed -i "s/###SVN_VERSION###/`cat revision`/" modules/base/infoPackage.inc.php
+	dpkg-buildpackage -b -uc -rfakeroot
+	sed -i "s/`cat revision`/###SVN_VERSION###/" modules/base/infoPackage.inc.php
+	sed -i "s/`cat revision`/##VERSION##/" debian/changelog
+
+revision:
+	# fake SVN revision number if there is none
+	# else the revision number is found by BuildBot
+	echo -n 100 > "revision"
+
+generate-doc:
+	gen-doc/create.sh
+
+clean_mo:
+	sh scripts/clean_mo.sh
+
+build_mo:
+	sh scripts/build_mo.sh
+
+build_pot:
+	sh scripts/build_pot.sh
+
+apache_conf:
+	$(SED) 's!###DATADIR###!$(DATADIR)!' $(APACHE_CONF).tmpl > $(APACHE_CONF)
+
 # Cleaning target
-clean:
+clean: clean_mo
 	@echo ""
 	@echo "Cleaning sources..."
 	@echo "Nothing to do"
 
 # Install everything
-install: 
+install: build_mo apache_conf
 	@# Install directories
 	@echo ""
 	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
@@ -91,13 +128,27 @@ install:
 	$(SED) -i 's!^path[ \t].*$$!path = $(LIBDIR)/backup-tools!' $(DESTDIR)$(ETCDIR)/plugins/base.ini
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/mmc-agent
 
+	@echo ""
+	@echo "Installing mmc-web in $(DESTDIR)$(DATADIR)"
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
+	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)
+	$(CHOWN) -R root $(DESTDIR)$(DATADIR)
+	$(CHGRP) -R root $(DESTDIR)$(DATADIR)
+	$(INSTALL) confs/mmc.ini -m 640 -o root -g $(HTTPDUSER) $(DESTDIR)$(ETCDIR)
+	$(SED) -i 's!^rootfs[ \t].*$$!rootfs = $(DATADIR)/!' $(DESTDIR)$(ETCDIR)/mmc.ini
+	$(SED) -i 's!^rootfsmodules[ \t].*$$!rootfsmodules = $(DATADIR)/modules/!' $(DESTDIR)$(ETCDIR)/mmc.ini
+	find $(DESTDIR)$(DATADIR) -type f -name *.po -exec rm -f {} \;
+
 include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
 	mkdir -p $(RELEASES_DIR)/$(TARBALL)/agent $(RELEASES_DIR)/$(TARBALL)/web
 	# $(CPA) backup-tools bin Changelog common.mk conf contrib COPYING init.d Makefile mmc setup.py $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) agent/backup-tools agent/bin agent/Changelog agent/conf agent/contrib agent/COPYING agent/init.d agent/mmc agent/setup.py agent/Makefile agent/common.mk $(RELEASES_DIR)/$(TARBALL)/agent
-	$(CPA) $(FILESTOINSTALL) web/Makefile web/common.mk web/scripts web/confs web/COPYING web/Changelog $(RELEASES_DIR)/$(TARBALL)/web
+	$(CPA) agent/bin agent/conf agent/COPYING agent/Changelog agent/contrib agent/backup-tools agent/init.d agent/mmc agent/setup.py web/scripts web/confs $(RELEASES_DIR)/$(TARBALL)
+	cd web && $(CPA) $(FILESTOINSTALL) ../$(RELEASES_DIR)/$(TARBALL)
+	$(CPA) agent/Changelog agent/COPYING agent/Makefile agent/common.mk $(RELEASES_DIR)/$(TARBALL)/agent
+	$(CPA) web/Makefile web/common.mk web/COPYING web/Changelog $(RELEASES_DIR)/$(TARBALL)/web
 	$(CPA) Makefile common.mk $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
