@@ -18,7 +18,7 @@
 
 # General Makefile variables
 DESTDIR =
-PREFIX = /usr
+PREFIX = /usr/local
 DATADIR = $(PREFIX)/share/mmc
 MODULESWEBSUBDIR = /modules/
 SBINDIR = $(PREFIX)/sbin
@@ -38,7 +38,7 @@ PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 # List of files to install
 SBINFILES = bin/pulse2-package-server contrib/msc/pulse2-msc-clean-database contrib/inventory/pulse2-inventory-clean-database bin/pulse2-inventory-server bin/pulse2-scheduler bin/pulse2-scheduler-manager bin/pulse2-launcher bin/pulse2-launchers-manager bin/pulse2-output-wrapper bin/pulse2-ping bin/pulse2-wol bin/pulse2-tcp-sproxy
 
-FILESTOINSTALL = dyngroup msc inventory glpi pkgs pulse2
+FILESTOINSTALL = modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs modules/pulse2
 
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
@@ -46,20 +46,10 @@ BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
 all:
 
 # Cleaning target
-clean:
+clean: clean_mo
 	@echo ""
 	@echo "Cleaning sources..."
 	@echo "Nothing to do"
-
-install: build_mo
-	@echo ""
-	@echo "Installing mmc-web-dyngroup in $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)"
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
-	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
-	$(CHOWN) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
-	$(CHGRP) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
-	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/*/locale -type f -name \*.po -exec rm -f {} \;
-	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/ -depth -type d -name .svn -exec rm -fr {} \;
 
 clean_mo:
 	sh scripts/clean_mo.sh
@@ -70,10 +60,8 @@ build_mo:
 build_pot:
 	sh scripts/build_pot.sh
 
-clean: clean_mo
-
 # Install everything
-install:
+install: build_mo
 	@# Install directories
 	@echo ""
 	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
@@ -89,6 +77,15 @@ install:
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(PYTHON_PREFIX)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
+
+	@echo ""
+	@echo "Installing mmc-web-dyngroup in $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)"
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CHOWN) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CHGRP) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/*/locale -type f -name \*.po -exec rm -f {} \;
+	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/ -depth -type d -name .svn -exec rm -fr {} \;
 
 	@echo ""
 	@echo "Install python code in $(DESTDIR)$(PYTHON_PREFIX)"
@@ -138,6 +135,6 @@ include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
 	mkdir -p $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) services/bin services/pulse2 services/init.d common.mk services/conf services/contrib Makefile services/mmc services/setup.py services/COPYING services/Changelog $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) web/modules web/scripts services/bin services/pulse2 services/init.d common.mk services/conf services/contrib Makefile services/mmc services/setup.py services/COPYING services/Changelog $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
