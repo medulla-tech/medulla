@@ -18,20 +18,27 @@
 
 # General Makefile variables
 DESTDIR =
-PREFIX = /usr/local
+PREFIX = /usr
+DATADIR = $(PREFIX)/share/mmc
+MODULESWEBSUBDIR = /modules/
 SBINDIR = $(PREFIX)/sbin
 LIBDIR = $(PREFIX)/lib/mmc
 ETCDIR = /etc/mmc
 INITDIR = /etc/init.d
 INSTALL = $(shell which install)
 SED = $(shell which sed)
+CP = $(shell which cp)
+CHOWN = $(shell which chown)
+CHGRP = $(shell which chgrp)
 
 # Python specific variables
 PYTHON = $(shell which python)
 PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 
 # List of files to install
-SBINFILES = contrib/msc/pulse2-msc-clean-database contrib/inventory/pulse2-inventory-clean-database
+SBINFILES = bin/pulse2-package-server contrib/msc/pulse2-msc-clean-database contrib/inventory/pulse2-inventory-clean-database bin/pulse2-inventory-server bin/pulse2-scheduler bin/pulse2-scheduler-manager bin/pulse2-launcher bin/pulse2-launchers-manager bin/pulse2-output-wrapper bin/pulse2-ping bin/pulse2-wol bin/pulse2-tcp-sproxy
+
+FILESTOINSTALL = dyngroup msc inventory glpi pkgs pulse2
 
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
@@ -44,9 +51,40 @@ clean:
 	@echo "Cleaning sources..."
 	@echo "Nothing to do"
 
+install: build_mo
+	@echo ""
+	@echo "Installing mmc-web-dyngroup in $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)"
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CP) -R $(FILESTOINSTALL) $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CHOWN) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	$(CHGRP) -R root $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)
+	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/*/locale -type f -name \*.po -exec rm -f {} \;
+	find $(DESTDIR)$(DATADIR)$(MODULESWEBSUBDIR)/ -depth -type d -name .svn -exec rm -fr {} \;
+
+clean_mo:
+	sh scripts/clean_mo.sh
+
+build_mo:
+	sh scripts/build_mo.sh
+
+build_pot:
+	sh scripts/build_pot.sh
+
+clean: clean_mo
+
 # Install everything
 install:
 	@# Install directories
+	@echo ""
+	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
+	-[ -f $(DESTDIR)$(ETCDIR)/package-server.ini ] && mv -f $(DESTDIR)$(ETCDIR)/package-server.ini $(DESTDIR)$(ETCDIR)/package-server.ini$(BACKUP)
+	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
+	-[ -f $(DESTDIR)$(ETCDIR)/inventory-server.ini ] && mv -f $(DESTDIR)$(ETCDIR)/inventory-server.ini $(DESTDIR)$(ETCDIR)/inventory-server.ini$(BACKUP)
+	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
+	-[ -f $(DESTDIR)$(ETCDIR)/scheduler.ini ] && mv -f $(DESTDIR)$(ETCDIR)/scheduler.ini $(DESTDIR)$(ETCDIR)/scheduler.ini$(BACKUP)
+	@echo "Move old configuration files to $(DESTDIR)$(ETCDIR)$(BACKUP)"
+	-[ -f $(DESTDIR)$(ETCDIR)/launchers.ini ] && mv -f $(DESTDIR)$(ETCDIR)/launchers.ini $(DESTDIR)$(ETCDIR)/launchers.ini$(BACKUP)
+	@echo ""
 	@echo "Creating directories..."
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(PYTHON_PREFIX)
@@ -57,25 +95,40 @@ install:
 	$(PYTHON) setup.py install --no-compile --prefix $(DESTDIR)$(PYTHON_PREFIX)
 
 	@echo ""
+	@echo "Install SBINFILES in $(DESTDIR)$(SBINDIR)"
+	$(INSTALL) $(SBINFILES) -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
+
+	@echo ""
 	@echo "Install CONFILES in $(DESTDIR)$(ETCDIR)"
 	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
-	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys
 	$(INSTALL) conf/plugins/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/plugins
-	$(INSTALL) conf/pulse2/inventory-server/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
-	$(INSTALL) conf/pulse2/launchers/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys
-	$(INSTALL) conf/pulse2/launchers/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
-	$(INSTALL) conf/pulse2/package-server/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys
-	$(INSTALL) conf/pulse2/package-server/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
-	$(INSTALL) conf/pulse2/scheduler/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys
-	$(INSTALL) conf/pulse2/scheduler/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
-	$(INSTALL) conf/pulse2/*.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
+	$(INSTALL) conf/pulse2/package-server/package-server.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server
+	$(INSTALL) conf/pulse2/package-server/keys -d -m 700 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys
+	$(INSTALL) conf/pulse2/package-server/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/package-server/keys/
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
+	$(INSTALL) conf/pulse2/inventory-server/inventory-server.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server
+	$(INSTALL) conf/pulse2/inventory-server/keys -d -m 700 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server/keys
+	$(INSTALL) conf/pulse2/inventory-server/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server/keys/
+	$(INSTALL) contrib/OcsNGMap.xml -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/inventory-server/
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
+	$(INSTALL) conf/pulse2/scheduler/scheduler.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler
+	$(INSTALL) conf/pulse2/scheduler/keys -d -m 700 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys
+	$(INSTALL) conf/pulse2/scheduler/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/scheduler/keys/
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
+	$(INSTALL) conf/pulse2/launchers/launchers.ini -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers
+	$(INSTALL) conf/pulse2/launchers/keys -d -m 700 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys
+	$(INSTALL) conf/pulse2/launchers/keys/* -m 600 -o root -g root $(DESTDIR)$(ETCDIR)/pulse2/launchers/keys/
+
+	$(INSTALL) -d -m 755 -o root -g root $(DESTDIR)$(INITDIR)
+	$(INSTALL) -m 755 -o root -g root init.d/pulse2-package-server $(DESTDIR)$(INITDIR)
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-package-server
+	$(INSTALL) -m 755 -o root -g root init.d/pulse2-inventory-server $(DESTDIR)$(INITDIR)
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-inventory-server
+	$(INSTALL) -m 755 -o root -g root init.d/pulse2-scheduler $(DESTDIR)$(INITDIR)
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-scheduler
+	$(INSTALL) -m 755 -o root -g root init.d/pulse2-launchers $(DESTDIR)$(INITDIR)
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/pulse2-launchers
 
 	@echo ""
 	@echo "Install additionnal tools in $(DESTDIR)$(SBINDIR)"
@@ -85,6 +138,6 @@ include common.mk
 
 $(RELEASES_DIR)/$(TARBALL_GZ):
 	mkdir -p $(RELEASES_DIR)/$(TARBALL)
-	$(CPA) services/pulse2 common.mk services/conf services/contrib Makefile services/mmc services/setup.py services/COPYING services/Changelog $(RELEASES_DIR)/$(TARBALL)
+	$(CPA) services/bin services/pulse2 services/init.d common.mk services/conf services/contrib Makefile services/mmc services/setup.py services/COPYING services/Changelog $(RELEASES_DIR)/$(TARBALL)
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
