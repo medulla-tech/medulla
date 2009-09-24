@@ -106,7 +106,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     
     
             # Registry::Path::path||Registry::Value::srvcomment::Path==srvcomment
-            if self.cp.has_option("computers", "content"):
+            if self.cp.has_option("computers", "content") and not self.cp.get("computers", "content") == '':
                 for c in map(lambda x: x.split('::'), self.cp.get("computers", "content").split('||')):
                     if not self.content.has_key(c[0]):
                         self.content[c[0]] = []
