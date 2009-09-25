@@ -1,7 +1,7 @@
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2009 Mandriva, http://www.mandriva.com
 #
-# $Id: Makefile 4443 2009-09-17 13:21:55Z cdelfosse $
+# $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
 #
