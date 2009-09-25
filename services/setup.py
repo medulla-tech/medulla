@@ -1,7 +1,7 @@
 #
 # (c) 2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: setup.py 771 2009-05-19 16:37:01Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
