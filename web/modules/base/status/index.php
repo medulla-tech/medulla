@@ -43,89 +43,89 @@ function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
 }
 
 function print_disk_info() {
-  /* -l option to only get local filesystem occupation */
-  remote_exec("df -k", $df);
+    /* -l option to only get local filesystem occupation */
+    $df = xmlCall("base.getDisksInfos");
+    unset($df[0]);
 
-  unset($df[0]);
+    echo "<table>";
+    
+    $incomplete_lines = "";
 
-  echo "<table>";
-
-  $incomplete_lines = "";
-
-  foreach ($df as $disk)
-    {
-      //if previous is truncated we add it to the current line
-      if ($incomplete_lines) {
-  	$disk = $incomplete_lines ." ". $disk;
-	unset($incomplete_lines);
-      }
-
-      if (preg_match("/^\/dev\/mapper\/data-snap/", $disk)
-          || preg_match("/^[ ]+/", $disk))
-        {
-          continue;
+    foreach ($df as $disk) {
+        //if previous is truncated we add it to the current line
+        if ($incomplete_lines) {
+            $disk = $incomplete_lines ." ". $disk;
+            unset($incomplete_lines);
         }
 
-      //if device name use whole line... we skip this line
-      //concatenate it with the next
-      if (!preg_match(("/[ ]/"),$disk)) {
-	$incomplete_lines = $disk;
-	continue;
-      }
+        if (preg_match("/^\/dev\/mapper\/data-snap/", $disk)
+            || preg_match("/^[ ]+/", $disk)) {
+            continue;
+        }
 
-      $disk = preg_split("/[ ]+/", $disk);
+        //if device name use whole line... we skip this line
+        //concatenate it with the next
+        if (!preg_match(("/[ ]/"),$disk)) {
+            $incomplete_lines = $disk;
+            continue;
+        }
 
-      if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
-          continue;
+        $disk = preg_split("/[ ]+/", $disk);
+
+        if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
+            continue;
       
-      echo "<tr><td class=\"statusPad\">$disk[5]</td><td class=\"statusPad\">($disk[0])</td><td class=\"statusPad\">[$disk[4]]</td></tr>\n";
-      echo "<tr><td colspan=\"3\" class=\"statusPad\" style=\"padding-bottom: 2px;\">";
-      print_mem_bar("", $disk[1], $disk[2]);
-      echo "</td></tr>\n";
+        echo "<tr><td class=\"statusPad\">$disk[5]</td><td class=\"statusPad\">($disk[0])</td><td class=\"statusPad\">[$disk[4]]</td></tr>\n";
+        echo "<tr><td colspan=\"3\" class=\"statusPad\" style=\"padding-bottom: 2px;\">";
+        print_mem_bar("", $disk[1], $disk[2]);
+        echo "</td></tr>\n";
     }
-
- echo "</table>";
+    echo "</table>";
 }
 
 function print_health() {
-  remote_exec("cat /proc/uptime", $up);
-  $up = trim($up[0]);
-  list($up) = explode(" ", $up);
+    $up = xmlCall("base.getUptime");
+    $up = trim($up[0]);
+    list($up) = explode(" ", $up);
 
-  $days = (int) ($up / (24*60*60));
-  $up -= $days * 24*60*60;
-  $hrs = (int)($up / (60*60));
-  $up -= $hrs * 60*60;
-  $mins = (int)($up / 60);
+    $days = (int) ($up / (24*60*60));
+    $up -= $days * 24*60*60;
+    $hrs = (int)($up / (60*60));
+    $up -= $hrs * 60*60;
+    $mins = (int)($up / 60);
 
-  ($days > 1) ? $d = "s" : $d = "";
-  ($hrs > 1) ? $h = "s" : $h = "";
-  ($mins > 1) ? $m = "s" : $m = "";
+    ($days > 1) ? $d = "s" : $d = "";
+    ($hrs > 1) ? $h = "s" : $h = "";
+    ($mins > 1) ? $m = "s" : $m = "";
 
-  echo _("Uptime: ");
+    echo _("Uptime: ");
 
-  if ($days > 0)
-    {
-      echo $days." "._("day").$d." ";
+    if ($days > 0) {
+            echo $days." "._("day").$d." ";
     }
 
-  if (($days > 0) || ($hrs > 0))
-    {
-      echo $hrs." "._("hour").$h." ";
+    if (($days > 0) || ($hrs > 0)) {
+        echo $hrs." "._("hour").$h." ";
     }
 
-  echo $mins." "._("minute").$m."<br/><br/>\n";
+    echo $mins." "._("minute").$m."<br/><br/>\n";
 
-  remote_exec("free -m", $mem);
+    $mem = xmlCall("base.getMemoryInfos");
 
-  $m = preg_split("/[ ]+/", $mem[1]);
-  print_mem_bar(_("Memory"), $m[1], $m[2],$m[5]+$m[6]);
-  $m = preg_split("/[ ]+/", $mem[3]);
-  if ($m[1] > 0) {
-      print_mem_bar(_("Swap"), $m[1], $m[2]);
-  }
+    $m = preg_split("/[ ]+/", $mem[1]);
+    print_mem_bar(_("Memory"), $m[1], $m[2],$m[5]+$m[6]);
+    $m = preg_split("/[ ]+/", $mem[3]);
+    if ($m[1] > 0) {
+        print_mem_bar(_("Swap"), $m[1], $m[2]);
+    }
 }
 
+function print_ldap_conf() {
+    $conf = xmlCall("base.getLdapRootDN",null);
+    foreach($conf as $name => $value) {
+        echo '<p>'.$name.' : '.$value.'</p>';
+    }
+}
 
 ?>
 
@@ -222,6 +222,13 @@ $p->displayTitle();
   <div class="statusPad">
     <h2 class="statusPad"><?= _("Hard drive partitions") ?></h2>
   <?php print_disk_info(); ?>
+  </div>
+</div>
+
+<div class="left">
+  <div class="statusPad">
+    <h2 class="statusPad"><?= _("LDAP Configuration") ?></h2>
+    <?php print_ldap_conf(); ?>
   </div>
 </div>
 

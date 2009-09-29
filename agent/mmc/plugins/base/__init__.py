@@ -23,12 +23,13 @@
 
 from mmc.support.errorObj import errorMessage
 from mmc.support.config import *
+from mmc.plugins.base.config import BasePluginConfig
 from time import time, strftime
 from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.externalldap import ExternalLdapAuthenticator, ExternalLdapProvisioner
-from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
+from mmc.plugins.base.ldapconnect import LDAPConnection
 from mmc.support.uuid import uuid1
 
 from mmc.support import mmctools
@@ -77,26 +78,6 @@ def getRevision(): return REVISION
 
 def listEvent():
     return mmctools.ProcessScheduler().listEvent()
-
-def listProcess():
-    ret = []
-    psdict = mmctools.ProcessScheduler().listProcess()
-
-    for i in psdict.keys():
-        assoc = []
-        if time() - psdict[i].time > 60:
-            # Process do not respond for 60 secondes or exited for 60 seconds... remove it
-            # FIXME: This should not be done here but in an internal loop of
-            # ProcessScheduler()
-            del psdict[i]
-        else:
-            assoc.append(psdict[i].desc)
-            assoc.append(psdict[i].progress)
-            assoc.append(psdict[i].status)
-            #assoc.append(psdict[i].out)
-            ret.append(assoc)
-
-    return ret
 
 def activate():
     """
@@ -174,54 +155,6 @@ def activate_2():
         ret = manager.validate()
         if not ret: break
     return ret
-
-class BasePluginConfig(PluginConfig, LDAPConnectionConfig):
-
-    def readConf(self):
-        PluginConfig.readConf(self)
-        LDAPConnectionConfig.readLDAPConf(self, 'ldap')
-        # Selected authentication method
-        try:
-            self.authmethod = self.get("authentication", "method")
-        except:
-            pass
-        # Selected provisioning method
-        try:
-            self.provmethod = self.get("provisioning", "method")
-        except:
-            pass
-        # Selected computer management method
-        try:
-            self.computersmethod = self.get("computers", "method")
-        except:
-            pass
-        # User password scheme
-        try:
-            self.passwordscheme = self.get("ldap", "passwordscheme")
-        except:
-            pass
-
-        self.baseDN = self.getdn('ldap', 'baseDN')
-        self.baseUsersDN = self.getdn('ldap', 'baseUsersDN')
-            
-        # Where LDAP computer objects are stored
-        # For now we ignore if the option does not exist, because it breaks
-        # all existing intallations
-        try:
-            self.baseComputersDN = self.get('ldap', 'baseComputersDN')
-        except:
-            pass
-        self.backuptools = self.get("backup-tools", "path")
-        self.backupdir = self.get("backup-tools", "destpath")
-        self.username = self.getdn("ldap", "rootName")
-        self.password = self.getpassword("ldap", "password")
-
-    def setDefault(self):
-        PluginConfig.setDefault(self)
-        self.authmethod = "baseldap"
-        self.provmethod = None
-        self.computersmethod = "none"
-        self.passwordscheme = "ssha"
 
 def getModList():
     """
@@ -463,6 +396,10 @@ def isLocked(login):
 def getAllGroupsFromUser(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.getAllGroupsFromUser(uid)
+
+
+# Status methods
+from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
 
 
 ###log view accessor
@@ -2211,22 +2148,6 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return ComputerManager().getComputersListHeaders(ctx)
     
-
-################################################################################
-##########  command line section
-################################################################################
-
-def launch(s):
-    """
-     launch command and return the result in a Deferred
-
-     @param s:command to launch
-     @type s:list
-
-     @result: list with each elements of the list is a row "\n" of result
-     @rtype: list
-    """
-    return mmctools.shlaunchDeferred(s)
 
 ################################################################################
 ###### LOG VIEW CLASS

@@ -338,14 +338,6 @@ function agentLog($logline) {
 }
 
 /**
- * remote execution of a command line
- */
-function remote_exec($cmd,&$ret) {
-    $ret = xmlCall("base.launch",$cmd);
-    return $ret;
-}
-
-/**
  * try to find an ErrorHandlingItem for $errorFaultCode
  * @see ErrorHandlingObject
  * @see ErrorHandlingItem
