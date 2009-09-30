@@ -21,6 +21,7 @@
 # MA 02110-1301, USA.
 
 from pulse2.apis.clients import Pulse2Api
+from mmc.support.uuid import uuid1
 
 class PackagePutA(Pulse2Api):
     def __init__(self, *attr):
