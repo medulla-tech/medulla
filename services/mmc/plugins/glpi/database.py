@@ -82,6 +82,14 @@ class Glpi(DyngroupDatabaseHelper):
         self.configfile = "glpi.ini"
         return DyngroupDatabaseHelper.db_check(self)
 
+    def glpi_version(self):
+        return self._glpi_version
+
+    def glpi_version_new(self):
+        if not hasattr(self, '_glpi_version_new'):
+            self._glpi_version_new = (self.glpi_version() >= '0.72')
+        return self._glpi_version_new
+    
     def activate(self, conffile = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
@@ -100,8 +108,10 @@ class Glpi(DyngroupDatabaseHelper):
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Glpi, "decode", decode_latin1)
             setattr(Glpi, "encode", encode_latin1)
+        self._glpi_version = self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
         self.metadata = MetaData(self.db)
         self.initMappers()
+        self.logger.info("Glpi is in version %s" % (self.glpi_version()))
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
@@ -115,7 +125,7 @@ class Glpi(DyngroupDatabaseHelper):
 
         self.klass = {}
 
-        for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', 'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', 'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', 'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_sndcard'):
+        for i in ('glpi_dropdown_os', 'glpi_dropdown_os_sp', 'glpi_dropdown_os_version', 'glpi_dropdown_domain', 'glpi_dropdown_locations', 'glpi_dropdown_model', 'glpi_dropdown_network', 'glpi_type_computers', 'glpi_enterprises', 'glpi_device_case', 'glpi_device_control', 'glpi_device_drive', 'glpi_device_gfxcard', 'glpi_device_hdd', 'glpi_device_iface', 'glpi_device_moboard', 'glpi_device_pci', 'glpi_device_power', 'glpi_device_processor', 'glpi_device_ram', 'glpi_device_sndcard', 'glpi_config'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i) #''.join(map(lambda x:x.capitalize(), i.split('_')))
             exec "class %s(DbTOA): pass" % j
@@ -215,18 +225,36 @@ class Glpi(DyngroupDatabaseHelper):
         mapper(Software, self.software)
 
         # glpi_inst_software
-        self.inst_software = Table("glpi_inst_software", self.metadata,
-            Column('cID', Integer, ForeignKey('glpi_computers.ID')),
-            Column('license', Integer, ForeignKey('glpi_licenses.ID')),
-            autoload = True)
+        if self.glpi_version_new():
+            self.inst_software = Table("glpi_inst_software", self.metadata,
+                Column('cID', Integer, ForeignKey('glpi_computers.ID')),
+                Column('vID', Integer, ForeignKey('glpi_softwareversions.ID')),
+                autoload = True)
+        else:
+            self.inst_software = Table("glpi_inst_software", self.metadata,
+                Column('cID', Integer, ForeignKey('glpi_computers.ID')),
+                Column('license', Integer, ForeignKey('glpi_licenses.ID')),
+                autoload = True)
         mapper(InstSoftware, self.inst_software)
 
         # glpi_licenses
-        self.licenses = Table("glpi_licenses", self.metadata,
+        if self.glpi_version_new():
+            tname = "glpi_softwarelicenses"
+        else:
+            tname = "glpi_licenses"
+
+        self.licenses = Table(tname, self.metadata,
             Column('sID', Integer, ForeignKey('glpi_software.ID')),
             autoload = True)
         mapper(Licenses, self.licenses)
 
+        # glpi_softwareversions only for version > 0.72
+        if self.glpi_version_new():
+            self.softwareversions = Table("glpi_softwareversions", self.metadata,
+                    Column('sID', Integer, ForeignKey('glpi_software.ID')),
+                    autoload = True)
+            mapper(SoftwareVersion, self.softwareversions)
+            
         # model
         self.model = Table("glpi_dropdown_model", self.metadata, autoload = True)
         mapper(Model, self.model)
@@ -264,18 +292,19 @@ class Glpi(DyngroupDatabaseHelper):
                 return or_(*a_filter_on)
         return None
 
-    def __filter_on_entity(self, query, ctx):
-        ret = self.__filter_on_entity_filter(query, ctx)
+    def __filter_on_entity(self, query, ctx, other_locids = []):
+        ret = self.__filter_on_entity_filter(query, ctx, other_locids)
         return query.filter(ret)
 
-    def __filter_on_entity_filter(self, query, ctx):
+    def __filter_on_entity_filter(self, query, ctx, other_locids = []):
         # FIXME: I put the locationsid in the security context to optimize the
         # number of requests. locationsid is set by
         # glpi.utilities.complete_ctx, but when querying via the dyngroup
         # plugin it is not called.
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        return self.machine.c.FK_entities.in_(ctx.locationsid)
+        other_locids.extend(ctx.locationsid)
+        return self.machine.c.FK_entities.in_(other_locids)
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
@@ -455,9 +484,15 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Reseau':
             return base + [self.net]
         elif query[2] == 'Logiciel':
-            return base + [self.inst_software, self.licenses, self.software]
+            if self.glpi_version_new():
+                return base + [self.inst_software, self.softwareversions, self.software]
+            else:
+                return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Version':
-            return base + [self.inst_software, self.licenses, self.software]
+            if self.glpi_version_new():
+                return base + [self.inst_software, self.softwareversions, self.software]
+            else:
+                return base + [self.inst_software, self.licenses, self.software]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -531,7 +566,10 @@ class Glpi(DyngroupDatabaseHelper):
         elif query[2] == 'Logiciel': # TODO double join on ENTITY
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Version': # TODO double join on ENTITY
-            return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
+            if self.glpi_version_new():
+                return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
+            else:
+                return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
         return []
 
 
@@ -755,6 +793,13 @@ class Glpi(DyngroupDatabaseHelper):
             ret = None
         session.close()
         return ret
+
+    def getUserParentLocations(self, user):
+        """
+        get
+        return: the list of user locations'parents
+        """
+        pass
 
     def getUserLocation(self, user):
         """
@@ -1062,6 +1107,39 @@ class Glpi(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getEntitiesParentsAsList(self, lids):
+        my_parents_ids = []
+        my_parents = self.getEntitiesParentsAsDict(lids)
+        for p in my_parents:
+            for i in my_parents[p]:
+                if not my_parents_ids.__contains__(i):
+                    my_parents_ids.append(i)
+        return my_parents_ids
+
+    def getEntitiesParentsAsDict(self, lids):
+        session = create_session()
+        if type(lids) != list and type(lids) != tuple:
+            lids = (lids)
+        query = session.query(Location).all()
+        locs = {}
+        for l in query:
+            locs[l.ID] = l.parentID
+        
+        def __getParent(i):
+            if locs.has_key(i):
+                return locs[i]
+            else:
+                return None
+        ret = {}
+        for i in lids:
+            t = []
+            p = __getParent(i)
+            while p != None:
+                t.append(p)
+                p = __getParent(p)
+            ret[i] = t
+        return ret
+
     def getAllVersion4Software(self, ctx, softname, version = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -1069,23 +1147,38 @@ class Glpi(DyngroupDatabaseHelper):
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         session = create_session()
-        query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
+        if self.glpi_version_new():
+            query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software).join(self.inst_software).join(self.machine))
+        else:
+            query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
+            
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
+        if self.glpi_version_new():
+            my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
+            query = self.__filter_on_entity(query, ctx, my_parents_ids)
+            query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
+        else:
+            query = self.__filter_on_entity(query, ctx)
+            query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         r1 = re.compile('\*')
         if r1.search(softname):
             softname = r1.sub('%', softname)
             query = query.filter(self.software.c.name.like(softname))
         else:
             query = query.filter(self.software.c.name == softname)
-        if version != '':
-            query = query.filter(self.licenses.c.version.like('%'+version+'%'))
-        ret = query.group_by(self.licenses.c.version).all()
+        if self.glpi_version_new():
+            if version != '':
+                query = query.filter(self.softwareversions.c.name.like('%'+version+'%'))
+            ret = query.group_by(self.softwareversions.c.name).all()
+        else:
+            if version != '':
+                query = query.filter(self.licenses.c.version.like('%'+version+'%'))
+            ret = query.group_by(self.licenses.c.version).all()
         ret = query.all()
         session.close()
         return ret
-
+            
+    # TODO ! maybe you need to link on machine here, or you need to add some liberties in the previous query 
     def getAllSoftwares(self, ctx, softname = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -1094,7 +1187,12 @@ class Glpi(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         session = create_session()
         query = session.query(Software).select_from(self.software.join(self.licenses))
-        query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
+        if self.glpi_version_new():
+            my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
+            query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
+        else:
+            query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
+            
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
         ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
@@ -1311,11 +1409,18 @@ class Glpi(DyngroupDatabaseHelper):
 
     def getAllGroups(self, ctx, filt = ''):
         """ @return: all hostnames defined in the GLPI database """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
         session = create_session()
         query = session.query(Group).select_from(self.group.join(self.machine))
         query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.group.c.FK_entities.in_(ctx.locationsid))
+        if self.glpi_version_new():
+            my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
+            query = self.__filter_on_entity(query, ctx, my_parents_ids)
+            query = query.filter(or_(self.group.c.FK_entities.in_(ctx.locationsid), and_(self.group.c.recursive == 1, self.group.c.FK_entities.in_(my_parents_ids))))
+        else:   
+            query = self.__filter_on_entity(query, ctx)
+            query = query.filter(self.group.c.FK_entities.in_(ctx.locationsid))
         if filter != '':
             query = query.filter(self.group.c.name.like('%'+filt+'%'))
         ret = query.group_by(self.group.c.name).all()
@@ -1592,6 +1697,9 @@ class InstSoftware(object):
     pass
 
 class Licenses(object):
+    pass
+
+class SoftwareVersion(object):
     pass
 
 class Group(object):

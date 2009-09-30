@@ -108,7 +108,10 @@ def getAllSoftwaresAndVersions(ctx, softname = "", version = None):
     if version == None:
         ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
     else:
-        ret = unique(map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version)))
+        if Glpi().glpi_version_new():
+            ret = unique(map(lambda x:x.name, Glpi().getAllVersion4Software(ctx, softname, version)))
+        else:
+            ret = unique(map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version)))
     ret.sort()
     return ret
 

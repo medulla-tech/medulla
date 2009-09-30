@@ -34,6 +34,9 @@ class GlpiLocation(ComputerLocationI):
     def getUserProfile(self, userid):
         return Glpi().getUserProfile(userid)
 
+    def getUserParentLocations(self, userid):
+        return map(lambda l: l.toH(), Glpi().getUserParentLocations(userid))
+
     def getUserLocations(self, userid):
         return map(lambda l: l.toH(), Glpi().getUserLocations(userid))
 
