@@ -219,6 +219,10 @@ if __name__ == "__main__":
     (groups, runnings, zombies, loads, fds) = read_logs(logfiles, start, stop)
 
     if groups:
+        # prevent empty labels, leading to divide-by-zero
+        if '' in groups:
+            groups['unknown'] = groups.pop('')
+
         group_list = groups.keys()
         y_max = (max(map(lambda x: max(x.values()), groups.values())) / 50 + 1) * 50
 
@@ -231,7 +235,6 @@ if __name__ == "__main__":
 
         # Sort groups data for pygraph
         for group in group_list:
-
             for hour in group_hours:
                 if not groups_actions.has_key(group):
                     groups_actions[group] = []
