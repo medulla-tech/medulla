@@ -214,7 +214,7 @@ class Inventory(DyngroupDatabaseHelper):
             if 'uuids' in pattern and type(pattern['uuids']) == list and len(pattern['uuids']) > 0:
                 query = query.filter(self.machine.c.id.in_(map(lambda m:fromUUID(m), pattern['uuids'])))
             if 'location' in pattern and pattern['location']:
-                query = query.filter(self.table['Entity'].c.Label == pattern['location'])
+                query = query.filter(self.table['Entity'].c.id == fromUUID(pattern['location']))
             if 'request' in pattern:
                 request = pattern['request']
                 if 'equ_bool' in pattern:
