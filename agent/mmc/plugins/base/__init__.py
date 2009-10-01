@@ -801,13 +801,10 @@ class ldapUserGroupControl:
         # Build a UTF-8 representation of the unicode strings
         lastN = str(lastN.encode("utf-8"))
         firstN = str(firstN.encode("utf-8"))
-
-        userpassword = self._generatePassword(password)
         
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
         user_info = {'loginShell':'/bin/bash',
-                     'userPassWord': userpassword,
                      'uidNumber':str(uidNumber),
                      'gidnumber':str(gidNumber),
                      'objectclass':['inetOrgPerson','posixAccount','shadowAccount','top','person'],
@@ -845,11 +842,10 @@ class ldapUserGroupControl:
 
         ident = 'uid=' + uid + ',' + self.baseUsersDN
         try:
-            # Write into the directory
+            # Write user entry into the directory
             self.l.add_s(ident, attributes)
-            if self.config.passwordscheme == "passmod":
-                # Set the users password using ldap extended command
-                self.l.passwd_s(ident, None, str(password))
+            # Set user password
+            self.changeUserPasswd(uid, password)
             # Add user to her/his group primary group
             self.addUserToGroup(primaryGroup, uid)
         except ldap.LDAPError, error:
