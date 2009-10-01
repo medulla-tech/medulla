@@ -34,7 +34,7 @@ require("includes/PageGenerator.php");
 
 $root = $conf["global"]["root"];
 
-$error = "";
+$error = null;
 $login = "";
 if (isset($_POST["bConnect"])) {
     $login = $_POST["username"];
