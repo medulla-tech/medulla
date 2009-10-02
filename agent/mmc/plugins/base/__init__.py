@@ -1191,27 +1191,38 @@ class ldapUserGroupControl:
         newattrs = copy.deepcopy(attrs)
         return newattrs
 
-    def getDetailedUser(self, uid, base = None):
+    def getUserEntry(self, uid, base = None, operational = False):
         """
-         Return raw ldap info on user
+        Search a user entru and returns the raw LDAP entry content of a user.
 
-         @param uid: user name
-         @type uid: str
+        @param uid: user ID
+        @type uid: str
 
-         @return: full raw ldap array (dictionnary of lists)
-         @type: dict
+        @param base: LDAP base scope where to look for
+        @type base: str
 
+        @param operational: if True, LDAP operational attributes are also returned
+        @type operational: bool
+
+        @return: full raw ldap array (dictionnary of lists)
+        @type: dict
         """
         if not base: base = self.baseUsersDN
         cn = 'uid=' + str(uid) + ', ' + base
         attrs = []
-        attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
+        if operational:
+            myattrlist = ['+', '*']
+        else:
+            myattrlist = None
+        attrib = self.l.search_s(cn, ldap.SCOPE_BASE, attrlist = myattrlist)
 
         c,attrs=attrib[0]
 
         newattrs = copy.deepcopy(attrs)
 
         return newattrs
+
+    getDetailedUser = getUserEntry
 
     def getDetailedGroup(self, group, base = None):
         """
