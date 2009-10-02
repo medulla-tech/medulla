@@ -37,11 +37,13 @@ $p = new PageGenerator(_("Change your password"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error)))
-{
+if (isset($_POST["bchpasswd"]) && ($_POST["curpass"] != "") && ($_POST["newpass"] != "") && ($_POST["newpass"] == $_POST["confpass"]) && (check_auth($_SESSION['login'], $_POST["curpass"], $error))) {
     callPluginFunction("changeUserPasswd", array(array($user, prepare_string($_POST["newpass"]))));
-    $n = new NotifyWidgetSuccess(_("Your password has been changed."));
+    if (!isXMLRPCError()) {
+        $n = new NotifyWidgetSuccess(_("Your password has been changed."));
+    } 
     header("Location: " . urlStrRedirect("base/users/index"));
+
 ?>
 
 <form action="<? echo "main.php?module=base&submod=users&action=index"; ?>" method="post">
