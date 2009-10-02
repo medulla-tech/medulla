@@ -262,6 +262,12 @@ function callPluginFunction($function, $paramArr = null, $reverse = False) {
         $functionName = "_" . $item . "_" . $function;
         if (function_exists($functionName)) {
             $result[$item] = call_user_func_array($functionName, $paramArr);
+            if (isXMLRPCError()) {
+                /* Break the loop if there is an error */
+                global $errorDesc;
+                $result[$item] = $errorDesc;
+                break;
+            }
         } else {
             // print "Call : \"".$functionName."\" not exist<br />";
         }
