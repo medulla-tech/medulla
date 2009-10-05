@@ -38,9 +38,6 @@
 # semaphore handling
 import threading
 
-# entropy stuff
-import random
-
 # time stuff
 import time
 

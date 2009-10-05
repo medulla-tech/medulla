@@ -56,6 +56,7 @@ from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.launchers_driving import pingAndProbeClient
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
+from pulse2.scheduler.tracking.wol import WOLTracking
 
 handle_deconnect()
 
@@ -1104,6 +1105,7 @@ def runWOLPhase(myCommandOnHostID):
             updateHistory(myCommandOnHostID, None, PULSE2_SUCCESS_ERROR, "skipped: host already up", "")
             myCoH.setWOLIgnored()
             myCoH.setStateScheduled()
+            WOLTracking().unlockwol(myCommandOnHostID)
             return runUploadPhase(myCommandOnHostID)
         logger.info("command_on_host #%s: do wol (target not up)" % myCommandOnHostID)
         return performWOLPhase(myCommandOnHostID)
@@ -1123,13 +1125,13 @@ def runWOLPhase(myCommandOnHostID):
 
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
-            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < (SchedulerConfig().max_wol_time + 300):
-                # we should wait a little more
+            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < (SchedulerConfig().max_wol_time + 300): # still within the wait period, we should wait a little more
                 return runGiveUpPhase(myCommandOnHostID)
-            else:
-                # we already pass the delay from at least 300 seconds, let's continue
-                # FIXME: dirty fix, better use a sem system to handle collision situations :/
+            elif WOLTracking().iswollocked(myCommandOnHostID): # WOL XMLRPC still in progress, give up
+                return runGiveUpPhase(myCommandOnHostID)
+            else: # we already pass the delay from at least 300 seconds AND either the scheduler was restarted or the lock was released, let's continue
                 logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
+                WOLTracking().unlockwol(myCommandOnHostID)
                 myCoH.setWOLDone()
                 myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
@@ -1165,6 +1167,7 @@ def runWOLPhase(myCommandOnHostID):
     # WOL has to be performed, but only if computer is down (ie. no ping)
 
     # update command state
+    WOLTracking().lockwol(myCommandOnHostID)
     myCoH.setWOLInProgress()
     myCoH.setStateWOLInProgress()
     myCoH.setLastWOLAttempt()
@@ -1972,8 +1975,10 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
             return runGiveUpPhase(myCommandOnHostID)
         updateHistory(myCommandOnHostID, 'wol_done', PULSE2_SUCCESS_ERROR, stdout, stderr)
         if myCoH.switchToWOLDone():
+            WOLTracking().unlockwol(myCommandOnHostID)
             return runUploadPhase(myCommandOnHostID)
         else:
+            WOLTracking().unlockwol(myCommandOnHostID)
             return runGiveUpPhase(myCommandOnHostID)
 
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
@@ -1985,6 +1990,7 @@ def parseWOLAttempt(attempt_result, myCommandOnHostID):
         myCoH.setStateScheduled()
         myCoH.setWOLToDo()
         myCoH.resetLastWOLAttempt()
+        WOLTracking().unlockwol(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
 
     myCoH.setLastWOLAttempt()
@@ -2229,10 +2235,13 @@ def parseWOLError(reason, myCommandOnHostID, decrement_attempts_left = False, er
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().warn("command_on_host #%s: WOL failed" % myCommandOnHostID)
     if myCoH == None:
+        WOLTracking().unlockwol(myCommandOnHostID)
         return runGiveUpPhase(myCommandOnHostID)
     updateHistory(myCommandOnHostID, 'wol_failed', error_code, '', reason.getErrorMessage())
     if not myCoH.switchToWOLFailed(myC.getNextConnectionDelay(), decrement_attempts_left):
+        WOLTracking().unlockwol(myCommandOnHostID)
         return runFailedPhase(myCommandOnHostID)
+    WOLTracking().unlockwol(myCommandOnHostID)
     return runGiveUpPhase(myCommandOnHostID)
 
 def parsePushError(reason, myCommandOnHostID, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
