@@ -173,7 +173,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
             try:
                 splitted = self.analyse_hour.split(':')
                 assert len(splitted) == 3 # only accept "HH:MM:SS"
-                self.analyse_hour = (int(splitted[2]) * 60 + int(splitted[1])) * 60 + int(splitted[0])
+                self.analyse_hour = (int(splitted[0]) * 60 + int(splitted[1])) * 60 + int(splitted[2])
                 logging.getLogger().info("analyse loop enabled, will run every day at %s" % ":".join(splitted))
                 self.active_analyse_hour = True
             except:
