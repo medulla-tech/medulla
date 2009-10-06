@@ -121,7 +121,7 @@ class Command {
         );
     }
     function display() {
-        if (!$this->db_cmd) { # use does not have the good permissions
+        if (!$this->db_cmd) { # user do not have the right permissions
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
             return false;
@@ -137,7 +137,7 @@ class Command {
         return true;
     }
     function quickDisplay($actions = array(), $params = array()) {
-        if (!$this->db_cmd) { # use does not have the good permissions
+        if (!$this->db_cmd) { # user do not have the right permissions
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
             return false;
@@ -344,8 +344,8 @@ class CommandHistory {
         $n->drawTable(0);
         print "<hr/><br/>";
 
-        ### Display transfered files ###
-        $files = array(_T('Transferred files list empty.', 'msc'));
+        ### Display to be transfered files ###
+        $files = array(_T('List of files to be transfered is empty.', 'msc'));
         if ($this->db_cmd["files"]!="" && $this->db_cmd["files"]!=array()) {
             if (gettype($command["files"]) != 'array') {
                 $files = explode("\n", $this->db_cmd["files"]);
@@ -353,7 +353,7 @@ class CommandHistory {
                 $files = $this->db_cmd["files"];
             }
         }
-        $n = new ListInfos($files, _T('<b>Transfered Files</b>', 'msc'));
+        $n = new ListInfos($files, _T('<b>Files to be transfered</b>', 'msc'));
         $n->setTableHeaderPadding(0);
         $n->setRowsPerPage(count($values));
         $n->drawTable(0);

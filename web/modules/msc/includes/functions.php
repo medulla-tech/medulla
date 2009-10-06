@@ -38,9 +38,9 @@ function getStatusTable() {
                      "reboot_in_progress" => _T("Reboot in progress", "msc"),
                      "reboot_failed" => _T("Reboot failed", "msc"),
                      "reboot_done" => _T("Reboot done", "msc"),
-                     "wol_in_progress" => _T("WOL in progress", "msc"),
-                     "wol_failed" => _T("WOL failed", "msc"),
-                     "wol_done" => _T("WOL done", "msc"),
+                     "wol_in_progress" => _T("WOL request being sent", "msc"),
+                     "wol_failed" => _T("Failed to send WOL request", "msc"),
+                     "wol_done" => _T("WOL request has been sent", "msc"),
                      "halt_in_progress" => _T("Halt in progress", "msc"),
                      "halt_done" => _T("Halt done", "msc"),
                      "halt_failed" => _T("Halt failed", "msc"),
@@ -170,7 +170,7 @@ function state_tmpl_macro($status) {
         'stop' => 'BUTTON_STOP',
         'pause' => 'BUTTON_PAUSE'
     );
-    
+
     $total = $status['total'];
     $failed = $status['failure']['total'][0];
     $done = $status['success']['total'][0];
@@ -180,7 +180,7 @@ function state_tmpl_macro($status) {
     foreach (array('run_up', 'run_ex', 'run_rm') as $r) {
         $run += $status['running'][$r][0];
     }
-    
+
     if ($total == $failed + $done + $run) { # not play
         $ret['play'] = '';
     }
@@ -210,7 +210,7 @@ function state_tmpl($current_state) {
             'stop' => '',
             'pause' => ''
         );
-        
+
     if (in_array(
         $current_state,
         array(
@@ -222,7 +222,7 @@ function state_tmpl($current_state) {
             'stop' => '',
             'pause' => ''
         );
-       
+
 
     # task is paused
     if (in_array(
@@ -236,7 +236,7 @@ function state_tmpl($current_state) {
             'stop' => 'BUTTON_STOP',
             'pause' => ''
         );
-        
+
     # task is running
     if (in_array(
         $current_state,
