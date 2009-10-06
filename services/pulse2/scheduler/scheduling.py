@@ -1035,9 +1035,10 @@ def runCommand(myCommandOnHostID):
     """
     if checkAndFixCommand(myCommandOnHostID):
         if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(myCommandOnHostID): return
+        logging.getLogger().info("command_on_host #%s: Preempting" % myCommandOnHostID)
         return runWOLPhase(myCommandOnHostID)
     else:
-        logging.getLogger().warn("NOT going to start command_on_host #%s, check failed" % (myCommandOnHostID))
+        logging.getLogger().info("command_on_host #%s: NOT preempting" % myCommandOnHostID)
 
 def checkAndFixCommand(myCommandOnHostID):
     """
@@ -1125,13 +1126,13 @@ def runWOLPhase(myCommandOnHostID):
 
     if myCoH.isWOLRunning():            # WOL in progress
         if myCoH.getLastWOLAttempt() != None: # WOL *really* progress, hem
-            if (datetime.datetime.now()-myCoH.getLastWOLAttempt()).seconds < (SchedulerConfig().max_wol_time + 300): # still within the wait period, we should wait a little more
+            delta = datetime.datetime.now()-myCoH.getLastWOLAttempt()
+            if (delta.days * 60 * 60 * 24 + delta.seconds) < (SchedulerConfig().max_wol_time + 60): # still within the wait period, we should wait a little more
                 return runGiveUpPhase(myCommandOnHostID)
             elif WOLTracking().iswollocked(myCommandOnHostID): # WOL XMLRPC still in progress, give up
                 return runGiveUpPhase(myCommandOnHostID)
             else: # we already pass the delay from at least 300 seconds AND either the scheduler was restarted or the lock was released, let's continue
                 logging.getLogger().warn("command_on_host #%s: WOL should have been set as done !" % (myCommandOnHostID))
-                WOLTracking().unlockwol(myCommandOnHostID)
                 myCoH.setWOLDone()
                 myCoH.setStateScheduled()
                 return runUploadPhase(myCommandOnHostID)
@@ -2386,7 +2387,7 @@ def runFailedPhase(myCommandOnHostID):
 
 def runGiveUpPhase(myCommandOnHostID):
     (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
-    logging.getLogger().info("command_on_host #%s: Giving up" % myCommandOnHostID)
+    logging.getLogger().info("command_on_host #%s: Releasing" % myCommandOnHostID)
     if SchedulerConfig().lock_processed_commands:
         CommandsOnHostTracking().release(myCommandOnHostID)
     return None
