@@ -1475,7 +1475,7 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
             pass
 
     # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
-    if not file_uris:
+    if (not file_uris) or (len(file_uris['files']) == 0):
         if useFallback:
             logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
             updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', \
