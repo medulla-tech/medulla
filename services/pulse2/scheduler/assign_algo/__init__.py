@@ -28,7 +28,6 @@
 
 import logging
 from pulse2.utils import Singleton
-from distutils.sysconfig import get_python_lib
 import imp
 import os
 
@@ -66,15 +65,16 @@ class IntAssignAlgoManager(Singleton):
                     # Go to the parent directory
                     searchpath, _ = os.path.split(curdir)
                 # And enter assign_algo directory
-                searchpath = os.path.join(searchpath, 'assign_algo')
+                searchpath = [os.path.join(searchpath, 'assign_algo')]
             else:
-                searchpath = os.path.join(get_python_lib(), 'pulse2', 'scheduler', 'assign_algo')
-            logging.getLogger().debug("Algo search path: %s" % searchpath)
-            f, p, d = imp.find_module(assign_algo, [searchpath])
+                import sys
+                searchpath = map (lambda x: os.path.join(x, 'pulse2', 'scheduler', 'assign_algo'), sys.path)
+            logging.getLogger().debug("Algo search path: %s" % ':'.join(searchpath))
+            f, p, d = imp.find_module(assign_algo, searchpath)
             mod = imp.load_module('MyAssignAlgo', f, p, d)
             ret = self.getClassInModule(mod)
         except Exception, e:
-            logging.getLogger().debug(e)
+            logging.getLogger().warn("while loading Assign Algo: %s" % e)
             if assign_algo != 'default':
                 assign_algo = 'default'
                 ret, assign_algo = self._getAlgo(assign_algo)
@@ -96,3 +96,4 @@ class MGAssignAlgoManager(IntAssignAlgoManager):
 
     def getMaxNumberOfGroups(self):
         return self.algo.getMaxNumberOfGroups()
+
