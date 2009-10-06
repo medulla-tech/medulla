@@ -344,7 +344,7 @@ if __name__ == "__main__":
             # failed
             pass
 
-    if args[0] == "start":
+    if args[0] in ("start", "restart", "graceful-restart") :
         set_resource_usage(config)
 
     # set umask and effective UID and GID values RIGHT NOW
@@ -355,7 +355,7 @@ if __name__ == "__main__":
     # with proper uid/gid/umask
     logging.config.fileConfig(options.config_file)
 
-    if args[0] == "start":
+    if args[0] in ("start", "restart", "graceful-restart") :
         log_resource_usage(config)
 
     # last step: parse conf
