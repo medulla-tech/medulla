@@ -58,6 +58,6 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
             # cont support certif
             return twisted.web.xmlrpc.Proxy.callRemote(self, method, *args)
 
-    def onError(self, error, funcname, args):
+    def onError(self, error, funcname, args, default_return = []):
         self.logger.warn("%s: %s %s has failed: %s" % (self.name, funcname, args, error))
-        return []
+        return default_return
