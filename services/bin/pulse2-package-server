@@ -29,6 +29,7 @@ import getopt
 import logging
 import logging.config
 import twisted
+import twisted.copyright
 
 from pulse2.package_server import ThreadLauncher, init_logger_debug, getVersion, getRevision
 from pulse2.package_server.config import P2PServerCP, config_addons

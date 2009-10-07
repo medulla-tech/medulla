@@ -41,7 +41,7 @@ class Mirror(MyXmlrpc):
             self.logger.error(e)
             raise e
         self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(Common().getPackages(self.mp).keys())))
-    
+
     def xmlrpc_getServerDetails(self):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
@@ -56,7 +56,7 @@ class Mirror(MyXmlrpc):
 
     def xmlrpc_getFileURI(self, fid):
         return self.xmlrpc_getFilePath(fid)
-    
+
     def xmlrpc_getFilePath(self, fid):
         f = Common().getFile(fid, self.mp)
         if f == None:
