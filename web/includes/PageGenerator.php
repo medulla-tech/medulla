@@ -607,6 +607,10 @@ class ListInfos extends HtmlElement {
         if ($header == 1) {
             $this->drawHeader($navbar);
         }
+        $n = new NotifyWidget();
+        if (isset($_SESSION['__notify'])) {
+            $n->showJS();
+        }
         $this->drawTable($navbar);
     }
 }
