@@ -85,8 +85,10 @@ function openSocket($proto, $conf) {
         $ret = array($sock, $errNo, $errString);
     }
     error_reporting($errLevel);
-    /* Setting timeout on a SSL socket only works with PHP >= 5.2.1 */
-    stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"]);
+    if ($sock !== False) {
+        /* Setting timeout on a SSL socket only works with PHP >= 5.2.1 */
+        stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"]);
+    }
     return $ret;
 }
 
