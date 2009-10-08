@@ -12,7 +12,7 @@
       <orgname>Mandriva</orgname>
     </affiliation>
     <copyright>
-      <year>2009 Olivier Roussy - Mandriva</year>
+      <year>2009 Mandriva</year>
     </copyright>
     <revhistory>
       <revision>
@@ -187,7 +187,7 @@ option2 = plop      </screen></para>
           </row>
           <row>
             <entry>use_iocp_reactor</entry>
-            <entry>>Windows XP, Windows 2003 and Windows 2008 only. This option sets the Twisted event loop to use the IOCP reactor for better performance. Please read <xref linkend="WIN32_PERF"/></entry>
+            <entry><emphasis role="bold">Windows XP, Windows 2003 and Windows 2008 only.</emphasis> This option sets the Twisted event loop to use the IOCP reactor for better performance. Please read <xref linkend="WIN32_PERF" /></entry>
             <entry>Yes</entry>
             <entry>0</entry>
           </row>
@@ -578,49 +578,19 @@ option2 = plop      </screen></para>
       </tgroup>
     </table>
   </section>
-
   <section id="WIN32_PERF">
     <title>Pulse 2 Package Server performance on win32 platforms</title>
-
-    <para>
-      Using the default configuration, the service won't accept more than 64
-      concurrent TCP connections. The default event loop used by the Python
-      Twisted library use the select() system call, which is limited to waiting
-      on 64 sockets at a time.
-    </para>
-    <para>
-      Fortunately Twisted allows to choose another reactor instead of the
-      default select() one. If sets to 1 in the package server configuration
-      file, the "use_iocp_reactor" option lets Twisted runs with the IOCP
-      reactor. IOCP (IO completions Ports) is a fast and scalable event loop
-      system available on win32 platform. More informations are available in
-      <ulink url="http://twistedmatrix.com/projects/core/documentation/howto/choosing-reactor.html">the Twisted documentation</ulink>.
-    </para>
-    <para>
-      But there are some limitations:
-    </para>
+    <para>Using the default configuration, the service won't accept more than 64 concurrent TCP connections. The default event loop used by the Python Twisted library use the select() system call, which is limited to waiting on 64 sockets at a time.</para>
+    <para>Fortunately Twisted allows to choose another reactor instead of the default select() one. If sets to 1 in the package server configuration file, the "use_iocp_reactor" option lets Twisted runs with the IOCP reactor. IOCP (IO completions Ports) is a fast and scalable event loop system available on win32 platform. More informations are available in <ulink url="http://twistedmatrix.com/projects/core/documentation/howto/choosing-reactor.html">the Twisted documentation</ulink>.</para>
+    <para>But there are some limitations:</para>
     <itemizedlist>
       <listitem>
-	<para>
-	  SSL is not supported (for the moment) by the IOCP reactor, so the
-	  package server can't be run with IOCP and SSL enabled at the same
-	  time,
-	</para>
+        <para>SSL is not supported (for the moment) by the IOCP reactor, so the package server can't be run with IOCP and SSL enabled at the same time,</para>
       </listitem>
       <listitem>
-	<para>
-	  The IOCP reactor implentation from Twisted only works on win32 platform
-	  where the ConnectEx() API is available. So it won't works on Windows NT
-	  and Windows 2000 platforms.
-	</para>
+        <para>The IOCP reactor implentation from Twisted only works on win32 platform where the ConnectEx() API is available. So it won't works on Windows NT and Windows 2000 platforms.</para>
       </listitem>
     </itemizedlist>
-    <para>
-      Using the IOCP reactor, the package server can handle at least 300
-      parallel TCP connections, but more benchmarks need to be done to guess
-      its limits.
-    </para>
-
+    <para>Using the IOCP reactor, the package server can handle at least 300 parallel TCP connections, but more benchmarks need to be done to guess its limits.</para>
   </section>
-
 </article>

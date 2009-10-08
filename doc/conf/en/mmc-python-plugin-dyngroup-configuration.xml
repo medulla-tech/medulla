@@ -23,7 +23,7 @@
         <revdescription>
           <itemizedlist>
             <listitem>
-              <para>New Pulse 2 Release, two new options in the main section</para>
+              <para>New Pulse 2 Release, introducting a new option in the main section : max_elements_for_static_list</para>
             </listitem>
           </itemizedlist>
         </revdescription>

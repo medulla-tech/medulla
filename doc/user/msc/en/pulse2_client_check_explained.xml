@@ -93,14 +93,14 @@
         </listitem>
       </varlistentry>
     </variablelist>
-    <para>In other words : </para>
+    <para>In other words :</para>
     <screen>pulse2-client-check [--verify arg=value[,arg2=value2,...]] [--show arg[,arg2,...]] [--action action[,action2,...]] [--verbose] [--debug] [--help]</screen>
     <section>
       <title>--verify</title>
       <para>This is the first (in chronological order) operation to be done.</para>
-      <para>Syntax is : </para>
+      <para>Syntax is :</para>
       <screen>arg=value[,arg2=value2][,arg3=value3][,...]</screen>
-      <para>arg can be : </para>
+      <para>arg can be :</para>
       <variablelist>
         <varlistentry>
           <term>IP</term>
@@ -160,7 +160,7 @@ Hostname mismatch ! Wanted "WRONGHOSTNAME", found "WINDOWSXP"
           </listitem>
         </varlistentry>
       </variablelist>
-      <para>Different args can of course be combined : </para>
+      <para>Different args can of course be combined :</para>
       <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:11:22:33:44:55,HOSTNAME=WINDOWSXP,IP=192.168.0.1; echo $?
 0</screen>
       <screen>-bash-3.2$ pulse2-client-check.sh --verify MAC=00:11:22:33:44:55,HOSTNAME=WRONGHOSTNAME,IP=192.168.0.1; echo $?
@@ -172,11 +172,11 @@ Hostname mismatch ! Wanted "WRONGHOSTNAME", found "WINDOWSXP"
       <para>This is the second (in chronological order) operation to be done.</para>
       <para>Syntax is :</para>
       <screen>action[,action2,...]</screen>
-      <para>action can be anything, it is only used to tell the client that an operation will be performed, it is up-to the client to decide whenever aboard or not. Not yep implemented (read : will always succeed).</para>
+      <para>action can be anything, it is only used to tell the client that an operation will be performed, it is up-to the client to decide whenever aboard or not. Not yet implemented (read : will always succeed).</para>
       <para>Please note that :</para>
       <itemizedlist>
         <listitem>
-          <para>the check can be activated by setting "<emphasis role="bold">announce_check = (comma-separated actions) </emphasis>" in scheduler.ini. Actions can be any of "transfert, execute, delete, inventory", the scheduler will then use them if applicable; for example with announce_check = execute,delete :</para>
+          <para>the check can be activated by setting "<emphasis role="bold">announce_check = (comma-separated actions) </emphasis>" in scheduler.ini. Actions can be any of "transfert, execute, delete, inventory, reboot, halt, download", the scheduler will then use them if applicable; for example with announce_check = execute,delete :</para>
           <itemizedlist>
             <listitem>
               <para>in "upload" phase, "pulse2-client-check" will be run without additional arg,</para>

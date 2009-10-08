@@ -17,13 +17,33 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.4</revnumber>
+        <date>2009-10-07</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>New Pulse 2 Release, introducing the following options : </para>
+              <itemizedlist>
+                <listitem>
+                  <para>analyse_hour</para>
+                </listitem>
+                <listitem>
+                  <para>lock_processed_commands</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.3</revnumber>
         <date>2009-07-22</date>
         <authorinitials>NR</authorinitials>
         <revdescription>
           <itemizedlist>
             <listitem>
-              <para></para>
+              <para>New Pulse 2 Release, but no new option</para>
             </listitem>
           </itemizedlist>
         </revdescription>
@@ -150,6 +170,13 @@ option2 = plop</screen></para>
             <entry></entry>
           </row>
           <row>
+            <entry>analyse_hour</entry>
+            <entry>Once per day, at "analyse_hour" hour (HH:MM:SS), the scheduler will analyse the database, looking to weird / broken commands; set to empty to disable analyse </entry>
+            <entry>yes</entry>
+            <entry>HH:MM:SS</entry>
+            <entry>"" (disabled)</entry>
+          </row>
+          <row>
             <entry>announce_check</entry>
             <entry>To announce what we are currently try to do on client, for each stage.<para>For example TRANFERT while transfering something: announce_check = transfert=TRANFERT (comma-separated list as for previous options).</para><para>currently available keywords: transfert, execute, delete, inventory</para></entry>
             <entry>yes</entry>
@@ -211,6 +238,13 @@ option2 = plop</screen></para>
             <entry>yes</entry>
             <entry>string</entry>
             <entry>127.0.0.1</entry>
+          </row>
+          <row>
+            <entry>lock_processed_commands</entry>
+            <entry>Locking system, use with caution ! The only reason to activate this feature is for systems under heavy load; risk of double-preemption is drastically reduced using this, but your system will be even more slow.</entry>
+            <entry>yes</entry>
+            <entry>boolean</entry>
+            <entry>False</entry>
           </row>
           <row>
             <entry>max_command_time</entry>
