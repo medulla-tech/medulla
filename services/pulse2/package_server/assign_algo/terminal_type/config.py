@@ -48,7 +48,9 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
         #self.cp.read(config_file)
 
         for section in self.cp.sections():
-            if re.compile('^associations:[0-9]+$').match(section):
+            m = re.compile('^associations:(?P<index>[0-9]+)$').match(section)
+            if m:
+                index = m.group('index')
                 if not self.cp.has_option(section, 'terminal_types'):
                     continue
                 if not self.cp.has_option(section, 'mirror'):
@@ -63,8 +65,17 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
                     if not self.type2url.has_key(type):
                         self.type2url[type] = {}
                     if not self.type2url[type].has_key(kind):
-                        self.type2url[type][kind] = []
-                    self.type2url[type][kind].append(url)
+                        self.type2url[type][kind] = {}
+                    self.type2url[type][kind][index] = url
         if len(self.type2url.keys()) == 0:
             raise Exception("Please put some associations in your config file")
+
+        for type in self.type2url:
+            for kind in self.type2url[type]:
+                sorted = []
+                keys = self.type2url[type][kind].keys()
+                keys.sort()
+                for index in keys:
+                    sorted.append(self.type2url[type][kind][index])
+                self.type2url[type][kind] = sorted
 
