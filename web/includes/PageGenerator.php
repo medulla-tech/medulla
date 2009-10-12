@@ -1630,6 +1630,10 @@ class NotifyWidget {
      * private internal function
      */
     function showJS() {
+        # if this function has already been launch, no need for a second launch
+        global $doneJS;
+        if ($doneJS) { return; }
+        $doneJS = True;
         if (!isset($_SESSION['__notify'])) {
             return;
         }
@@ -1645,6 +1649,10 @@ class NotifyWidget {
      * private internal function
      */
     function display() {
+        # if this function has already been launch, no need for a second launch
+        global $doneDisplay;
+        if ($doneDisplay) { return; }
+        $doneDisplay = True;
         if (!isset($_SESSION['__notify'])) {
             return;
         }
