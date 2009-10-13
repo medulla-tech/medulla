@@ -109,6 +109,8 @@ class Glpi(DyngroupDatabaseHelper):
             setattr(Glpi, "decode", decode_latin1)
             setattr(Glpi, "encode", encode_latin1)
         self._glpi_version = self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
+        if not self.glpi_version_new():
+            self.logger.warn("Your glpi database is still in version '%s', this version is deprecated in Pulse2, please update your glpi to version '0.72.*'." % (self._glpi_version))
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.logger.info("Glpi is in version %s" % (self.glpi_version()))
