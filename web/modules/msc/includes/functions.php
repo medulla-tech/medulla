@@ -214,7 +214,8 @@ function state_tmpl($current_state) {
     if (in_array(
         $current_state,
         array(
-            'stop'
+            'stop',
+            'stopped'
         )
     ))
         return array(
