@@ -1150,17 +1150,14 @@ class Glpi(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         session = create_session()
         if self.glpi_version_new():
-            query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software).join(self.inst_software).join(self.machine))
+            query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
         else:
-            query = session.query(Licenses).select_from(self.licenses.join(self.software).join(self.inst_software).join(self.machine))
+            query = session.query(Licenses).select_from(self.licenses.join(self.software))
             
-        query = self.__filter_on(query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0))
         if self.glpi_version_new():
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
-            query = self.__filter_on_entity(query, ctx, my_parents_ids)
             query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
         else:
-            query = self.__filter_on_entity(query, ctx)
             query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
         r1 = re.compile('\*')
         if r1.search(softname):
