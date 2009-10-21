@@ -1188,11 +1188,12 @@ class Glpi(DyngroupDatabaseHelper):
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         session = create_session()
-        query = session.query(Software).select_from(self.software.join(self.licenses))
+        query = session.query(Software)
         if self.glpi_version_new():
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
             query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
         else:
+            query = query.select_from(self.software.join(self.licenses))
             query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
             
         if softname != '':
@@ -1206,7 +1207,11 @@ class Glpi(DyngroupDatabaseHelper):
         """
         # TODO use the ctx...
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.inst_software).join(self.licenses).join(self.software))
+        query = session.query(Machine)
+        if self.glpi_version_new():
+            query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software))
+        else:
+            query = query.select_from(self.machine.join(self.inst_software).join(self.licenses).join(self.software))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
