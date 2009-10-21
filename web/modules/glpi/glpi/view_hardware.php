@@ -55,8 +55,10 @@ $prop['os_license'] = _T("license id : ", 'glpi').$prop['os_license_id']._T("<br
 if ($prop['type']) { $prop['model'] .= ' ('.$prop['type'].')'; }
 if ($prop['otherserial']) { $prop['serial'] .= ' ('.$prop['otherserial'].')'; }
 if ($prop['contact']) {
-    if ($prop['contact_num']) { $prop['contact'] .= " (".$prop['contact_num']; }
-    if ($prop['tech_num']) { $prop['contact'] .= " & ".$prop['tech_num'].")"; } else { $prop['contact'] .= ")"; }
+    $add = '';
+    if ($prop['contact_num']) { $add .= $prop['contact_num']; }
+    if ($prop['tech_num']) { $add .= " & ".$prop['tech_num'].")"; } 
+    if ($add != '') { $prop['contact'] .= " (".$add.")"; }
 }
 if ($prop['location']) { $prop['entity'] .= ' > '.$prop['location']; }
 
