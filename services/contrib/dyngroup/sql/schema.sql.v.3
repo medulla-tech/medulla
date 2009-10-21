@@ -1,0 +1,61 @@
+--
+-- (c) 2008 Mandriva, http://www.mandriva.com/
+--
+-- $Id$
+--
+-- This file is part of Pulse 2, http://pulse2.mandriva.org
+--
+-- Pulse 2 is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; either version 2 of the License, or
+-- (at your option) any later version.
+--
+-- Pulse 2 is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with Pulse 2; if not, write to the Free Software
+-- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+-- MA 02110-1301, USA.
+
+CREATE TABLE ProfilesPackages (
+    FK_groups INT NOT NULL,
+    package_id INT NOT NULL,
+    PRIMARY KEY(FK_Groups, package_id)
+);
+
+CREATE TABLE ProfilesResults (
+    FK_groups INT NOT NULL,
+    FK_machines INT NOT NULL,
+    PRIMARY KEY(FK_machines)
+);
+
+CREATE TABLE ProfilesData (
+    FK_groups INT NOT NULL,
+    entity_id INT default NULL,
+    imaging_id INT default NULL, 
+    PRIMARY KEY(FK_groups)
+);
+
+-- Groups.type
+CREATE TABLE GroupType (
+    id INT NOT NULL,
+    value TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+CREATE INDEX dyngroup_grouptype_value_idx ON GroupType (value(10));
+
+ALTER TABLE Groups ADD COLUMN FK_type INT default 0;
+
+INSERT INTO GroupType values (0, 'Group');
+INSERT INTO GroupType values (1, 'Profile');
+
+-- display_in_menu
+ALTER TABLE ShareGroup ADD COLUMN display_in_menu INT NOT NULL Default 0;
+UPDATE ShareGroup, Groups SET ShareGroup.display_in_menu = Groups.display_in_menu WHERE ShareGroup.FK_group = Groups.id;
+ALTER TABLE Groups DROP COLUMN display_in_menu;
+
+-- UPDATE version set Number = 3;
+
