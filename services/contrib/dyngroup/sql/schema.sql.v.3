@@ -64,6 +64,7 @@ ALTER TABLE Groups ADD FOREIGN KEY (type) REFERENCES GroupType(id);
 -- display_in_menu
 ALTER TABLE ShareGroup ADD COLUMN display_in_menu INT NOT NULL Default 0;
 UPDATE ShareGroup, Groups SET ShareGroup.display_in_menu = Groups.display_in_menu WHERE ShareGroup.FK_group = Groups.id;
+INSERT INTO ShareGroup (FK_groups, FK_users, display_in_menu, type) SELECT id, FK_users, display_in_menu, 1 FROM Groups;
 ALTER TABLE Groups DROP COLUMN display_in_menu;
 
 -- modify fields name to be coherant
