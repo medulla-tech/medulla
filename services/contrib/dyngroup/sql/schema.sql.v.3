@@ -70,6 +70,7 @@ ALTER TABLE Groups DROP COLUMN display_in_menu;
 -- modify fields name to be coherant
 ALTER TABLE Groups CHANGE COLUMN FK_user FK_users INT NOT NULL;
 ALTER TABLE Results CHANGE COLUMN FK_group FK_groups INT NOT NULL;
+ALTER TABLE Results CHANGE COLUMN FK_machine FK_machines INT NOT NULL;
 ALTER TABLE ShareGroup CHANGE COLUMN FK_user FK_users INT NOT NULL;
 ALTER TABLE ShareGroup CHANGE COLUMN FK_group FK_groups INT NOT NULL;
 ALTER TABLE ShareGroup CHANGE COLUMN FK_type type INT NOT NULL;
