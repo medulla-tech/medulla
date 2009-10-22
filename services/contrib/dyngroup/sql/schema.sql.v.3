@@ -20,23 +20,31 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
-CREATE TABLE ProfilesPackages (
-    FK_groups INT NOT NULL,
-    package_id INT NOT NULL,
-    PRIMARY KEY(FK_Groups, package_id)
-);
-
 CREATE TABLE ProfilesResults (
     FK_groups INT NOT NULL,
     FK_machines INT NOT NULL,
-    PRIMARY KEY(FK_machines)
+    PRIMARY KEY(FK_machines),
+    INDEX profiles_result_ind_g (FK_groups),
+    FOREIGN KEY (FK_groups) REFERENCES Groups(id),
+    INDEX profiles_result_ind_m (FK_machines),
+    FOREIGN KEY (FK_machines) REFERENCES Machines(id)
+);
+
+CREATE TABLE ProfilesPackages (
+    FK_groups INT NOT NULL,
+    package_id INT NOT NULL,
+    PRIMARY KEY(FK_groups, package_id),
+    INDEX profiles_packages_ind (FK_groups),
+    FOREIGN KEY (FK_groups) REFERENCES Groups(id)
 );
 
 CREATE TABLE ProfilesData (
     FK_groups INT NOT NULL,
     entity_id INT default NULL,
     imaging_id INT default NULL, 
-    PRIMARY KEY(FK_groups)
+    PRIMARY KEY(FK_groups),
+    INDEX profiles_data_ind (FK_groups),
+    FOREIGN KEY (FK_groups) REFERENCES Groups(id)
 );
 
 -- Groups.type
@@ -47,15 +55,32 @@ CREATE TABLE GroupType (
 );
 CREATE INDEX dyngroup_grouptype_value_idx ON GroupType (value(10));
 
-ALTER TABLE Groups ADD COLUMN FK_type INT default 0;
-
 INSERT INTO GroupType values (0, 'Group');
 INSERT INTO GroupType values (1, 'Profile');
+
+ALTER TABLE Groups ADD COLUMN type INT default 0;
+ALTER TABLE Groups ADD FOREIGN KEY (type) REFERENCES GroupType(id);
 
 -- display_in_menu
 ALTER TABLE ShareGroup ADD COLUMN display_in_menu INT NOT NULL Default 0;
 UPDATE ShareGroup, Groups SET ShareGroup.display_in_menu = Groups.display_in_menu WHERE ShareGroup.FK_group = Groups.id;
 ALTER TABLE Groups DROP COLUMN display_in_menu;
+
+-- modify fields name to be coherant
+ALTER TABLE Groups CHANGE COLUMN FK_user FK_users INT NOT NULL;
+ALTER TABLE Results CHANGE COLUMN FK_group FK_groups INT NOT NULL;
+ALTER TABLE ShareGroup CHANGE COLUMN FK_user FK_users INT NOT NULL;
+ALTER TABLE ShareGroup CHANGE COLUMN FK_group FK_groups INT NOT NULL;
+ALTER TABLE ShareGroup CHANGE COLUMN FK_type type INT NOT NULL;
+
+-- add missing FK
+ALTER TABLE Groups ADD FOREIGN KEY (FK_users) REFERENCES Users(id);
+ALTER TABLE Results ADD FOREIGN KEY (FK_groups) REFERENCES Groups(id);
+ALTER TABLE Results ADD FOREIGN KEY (FK_machines) REFERENCES Machines(id);
+ALTER TABLE ShareGroup ADD FOREIGN KEY (FK_users) REFERENCES Users(id);
+ALTER TABLE ShareGroup ADD FOREIGN KEY (FK_groups) REFERENCES Groups(id);
+ALTER TABLE ShareGroup ADD FOREIGN KEY (type) REFERENCES ShareGroupType(id);
+ALTER TABLE Users ADD FOREIGN KEY (type) REFERENCES UsersTypes(id);
 
 -- UPDATE version set Number = 3;
 
