@@ -91,12 +91,25 @@ class ContextMaker(ContextMakerI):
 def isDynamicEnable():
     return config.dynamicEnable
 
+def isProfilesEnable(): #NEW
+    return config.profilesEnable
+
 class RpcProxy(RpcProxyI):
     # new groups implementations
+    def countallprofiles(self, params): #NEW
+        ctx = self.currentContext
+        count = DyngroupDatabase().countallgroups(ctx, params, 1)
+        return count
+
     def countallgroups(self, params):
         ctx = self.currentContext
         count = DyngroupDatabase().countallgroups(ctx, params)
         return count
+
+    def getallprofiles(self, params): #NEW
+        ctx = self.currentContext
+        groups = DyngroupDatabase().getallgroups(ctx, params, 1)
+        return xmlrpcCleanup(map(lambda g:g.toH(), groups))
 
     def getallgroups(self, params):
         ctx = self.currentContext
@@ -104,6 +117,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(map(lambda g:g.toH(), groups))
 
     def group_name_exists(self, name, gid = None):
+        #TODO possible risks of collision betwen share/group/profiles...
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
 
@@ -121,6 +135,10 @@ class RpcProxy(RpcProxyI):
     def create_group(self, name, visibility):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility))
+
+    def create_profile(self, name, visibility): #NEW
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility, 1))
 
     def tos_group(self, id):
         ctx = self.currentContext
@@ -189,6 +207,10 @@ class RpcProxy(RpcProxyI):
     def isrequest_group(self, id):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().isrequest_group(ctx, id))
+
+    def isprofile(self, id): #NEW
+        ctx = self.currentContext
+        return xmlrpcCleanup(DyngroupDatabase().isprofile(ctx, id))
 
     def reload_group(self, id):
         ctx = self.currentContext

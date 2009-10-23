@@ -386,10 +386,17 @@ class DyngroupDatabase(DatabaseHelper):
         return group
     
     def __result_group_query(self, ctx, session, id, filter = ''):
-        result = session.query(Machines).select_from(self.machines.join(self.results))
-        result = result.filter(self.results.c.FK_groups == id)
-        if filter:
-            result = result.filter(self.machines.c.name.like('%'+filter+'%'))
+        result = session.query(Machines)
+        if self.isprofile(ctx, id):
+            result = result.select_from(self.machines.join(self.profilesResults))
+            result = result.filter(self.profilesResults.c.FK_groups == id)
+            if filter:
+                result = result.filter(self.machines.c.name.like('%'+filter+'%'))
+        else:
+            result = result.select_from(self.machines.join(self.results))
+            result = result.filter(self.results.c.FK_groups == id)
+            if filter:
+                result = result.filter(self.machines.c.name.like('%'+filter+'%'))
         result = result.order_by(asc(self.machines.c.name))
         return result
     
@@ -429,9 +436,10 @@ class DyngroupDatabase(DatabaseHelper):
         groups = session.query(Groups).select_from(select_from).filter(filter_on)
         return groups
                                 
-    def __allgroups_query(self, ctx, params, session = None):
+    def __allgroups_query(self, ctx, params, session = None, type = 0):
+        # type : 0 = group, 1 = profile
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
-        groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(filter_on)
+        groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(filter_on).filter(self.groups.c.type == type)
         
         if params.has_key('canShow'):
             if params['canShow']:
@@ -465,6 +473,9 @@ class DyngroupDatabase(DatabaseHelper):
     
         return groups.group_by(self.groups.c.id)
     
+    def __getShareGroupInSession(self, id, user_id, session):
+        return self.getShareGroup(id, user_id, session)
+    
     def getShareGroup(self, group_id, user_id, session = None):
         if not session:
             session = create_session()
@@ -489,17 +500,19 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return s
     
-    def countallgroups(self, ctx, params):
+    def countallgroups(self, ctx, params, type = 0):
+        # type : 0 = group, 1 = profile
         session = create_session()
-        groups = self.__allgroups_query(ctx, params, session)
+        groups = self.__allgroups_query(ctx, params, session, type)
         s = select([func.count(text('*'))]).select_from(groups.compile().alias('foo'))
         result = session.execute(s)
         session.close()
         return result.fetchone()[0]
 
-    def getallgroups(self, ctx, params):
+    def getallgroups(self, ctx, params, type = 0):
+        # type : 0 = group, 1 = profile
         session = create_session()
-        groups = self.__allgroups_query(ctx, params, session)
+        groups = self.__allgroups_query(ctx, params, session, type)
         
         min = 0
         try:
@@ -563,12 +576,14 @@ class DyngroupDatabase(DatabaseHelper):
         trans.commit()
         return True
 
-    def create_group(self, ctx, name, visibility):
+    def create_group(self, ctx, name, visibility, type = 0):
+        # type is 0 = group, 1 = profile
         user_id = self.__getOrCreateUser(ctx)
         session = create_session()
         group = Groups()
         group.name = name.encode('utf-8')
         group.FK_users = user_id
+        group.type = type
         session.save_or_update(group)
         session.flush()
         session.close()
@@ -595,7 +610,7 @@ class DyngroupDatabase(DatabaseHelper):
         user_id = self.__getOrCreateUser(ctx)
         
         session = create_session()
-        s = self.getShareGroup(id, user_id)
+        s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = visibility
         session.save_or_update(s)
         session.flush()
@@ -710,22 +725,28 @@ class DyngroupDatabase(DatabaseHelper):
         return (s.display_in_menu == 1)
 
     def show_group(self, ctx, id):
+        # TODO show_group should show only for the user
+        # is : dont work on group but on sharegroup
+        user_id = self.__getOrCreateUser(ctx)
         session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
-        group.display_in_menu = 1
-        session.save_or_update(group)
+        s = self.__getShareGroupInSession(id, user_id, session)
+        s.display_in_menu = 1
+        session.save_or_update(s)
         session.flush()
         session.close()
-        return group.id
+        return s.id
 
     def hide_group(self, ctx, id):
+        # TODO hide_group should hide only for the user
+        # is : dont work on group but on sharegroup
+        user_id = self.__getOrCreateUser(ctx)
         session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
-        group.display_in_menu = 0
-        session.save_or_update(group)
+        s = self.__getShareGroupInSession(id, user_id, session)
+        s.display_in_menu = 0
+        session.save_or_update(s)
         session.flush()
         session.close()
-        return group.id
+        return s.id
 
     def todyn_group(self, ctx, id):
         return self.__deleteResults(ctx, id)
@@ -752,7 +773,16 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return (q != None and self.countresult_group(ctx, id) == 0)
 
-    def __insert_into_machines_and_results(self, connection, computers, groupid):
+    def isprofile(self, ctx, id):
+        session = create_session()
+        g = self.__getGroupInSession(ctx, session, id)
+        session.close()
+        return (g.type == 1)
+        
+    def __insert_into_machines_and_profilesresults(self, connection, computers, groupid):
+        return self.__insert_into_machines_and_results(connection, computers, groupid, 1)
+        
+    def __insert_into_machines_and_results(self, connection, computers, groupid, type = 0):
         """
         This function is called by reload_group and addmembers_to_group to
         update the Results and Machines tables of the database.
@@ -805,8 +835,12 @@ class DyngroupDatabase(DatabaseHelper):
                 })
                 id_sequence = id_sequence + 1
         if into_results:
-            # Insert into Results table only if there is something to insert
-            connection.execute(self.results.insert(), into_results)
+            if type == 0:
+                # Insert into Results table only if there is something to insert
+                connection.execute(self.results.insert(), into_results)
+            else:
+                # Insert into ProfilesResults table only if there is something to insert
+                connection.execute(self.profilesResults.insert(), into_results)
 
     def reload_group(self, ctx, id, queryManager):
         connection = self.getDbConnection()
@@ -816,7 +850,10 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         query = queryManager.getQueryTree(group.query, group.bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
-        self.__insert_into_machines_and_results(connection, result, group.id)
+        if self.isprofile(ctx, id):
+            self.error("trying to reload profile %s, that's not possible!"%(str(id)))
+        else:
+            self.__insert_into_machines_and_results(connection, result, group.id)
         trans.commit()
         return True
 
@@ -829,7 +866,10 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         connection = self.getDbConnection()
         trans = connection.begin()
-        self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
+        if self.isprofile(ctx, id):
+            self.__insert_into_machines_and_profilesresults(connection, uuids.values(), group.id)
+        else:
+            self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
         trans.commit()
         return True
 
