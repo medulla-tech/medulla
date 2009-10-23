@@ -109,13 +109,22 @@ select.list
 <?php
 }
 
-function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '') {
+function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '', $type = 0) {
+    if ($type == 0) {
+        $label_name = _T('Group name', 'dyngroup');
+        $label_visible = _T('Is the group visible', 'dyngroup');
+        $label_members = _T("Group members", "dyngroup");
+    } else {
+        $label_name = _T('Profile name', 'dyngroup');
+        $label_visible = _T('Is the profile visible', 'dyngroup');
+        $label_members = _T("Profile members", "dyngroup");
+    }
 ?>
 
 <form action="<? echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
-<tr><td><?= _T('Group name', 'dyngroup') ?></td><td></td><td><input name="name" value="<?= $name ?>" type="text"/></td></tr>
-<tr><td><?= _T('Is the group visible', 'dyngroup') ?></td><td></td><td>
+<tr><td><?= $label_name; ?></td><td></td><td><input name="name" value="<?= $name ?>" type="text"/></td></tr>
+<tr><td><?= $label_visible; ?></td><td></td><td>
     <input name='visible' value='show' <? if ($visibility == 'show') { echo 'checked'; }?> type='radio'/><?= _T('Yes', 'dyngroup') ?>, 
     <input name='visible' value='hide' <? if ($visibility != 'show') { echo 'checked'; }?> type='radio'/><?= _T('No', 'dyngroup') ?>
 </td></tr>
@@ -150,7 +159,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
  </td>
  <td style="border: none;">
   <div class="list" style="padding-left: 10px;">
-    <h3><?= _T("Group members", "dyngroup"); ?></h3>
+    <h3><?= $label_members; ?></h3>
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($members as $idx => $member) {
@@ -167,6 +176,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 </table>
 </div>
 
+<input type="hidden" name="type" value="<?= $type; ?>" />
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />

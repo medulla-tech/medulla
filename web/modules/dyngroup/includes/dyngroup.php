@@ -34,7 +34,7 @@ function getAllGroups($params = array()) { # canShow
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $groups = __xmlrpc_getallgroups($params);
     
-    # foreach to convert into Dyngroup
+    # foreach to convert into Group
     $ret = array();
     foreach ($groups as $group) {
         $g = new Group($group['id']);
@@ -45,23 +45,47 @@ function getAllGroups($params = array()) { # canShow
     return $ret;
 }
 
-function getAllDyngroup($params = array()) { # canShow
-    $params['dynamic'] = true;
-    return getAllGroups($params);
+function countAllProfiles($params = array()) {
+    $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
+    $count = __xmlrpc_countallprofiles($params);
+    return $count;
 }
 
-function getAllStagroup($params = array()) { # canShow
-    $params['static'] = true;
-    return getAllGroups($params);
+function getAllProfiles($params = array()) {
+    # xmlrpc call to get all groups
+    $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
+    $profiles = __xmlrpc_getallprofiles($params);
+
+    # foreach to convert into Profile
+    $ret = array();
+    foreach ($profiles as $profile) {
+        $p = new Profile($profile['id']);
+        $p->name = $profile['name'];
+        $p->is_owner = $profile['is_owner'];
+        $ret[] = $p;
+    }
+    return $ret;
 }
 
-function getVisibleIds() {
-    $params = array('canShow' => true);
-    return getAllGroups($params);
+function getPGobject($id, $load = false) {
+    $is_profile = xmlrpc_isprofile($id);
+    if ($is_profile) {
+        return new Profile($id, $load);
+    } else {
+        return new Group($id, $load);
+    }
 }
 
-function getGroupById($id) { return new Group($id); }
-
+class Profile extends Group {
+    # use the same methods as Group except for the creation
+    function Profile($id = null, $load = false) {
+        parent::Group($id, $load);
+        $this->type = 1;
+    }
+    function create($name, $visibility) { $this->id =  __xmlrpc_create_profile($name, $visibility); return $this->id; }
+    function isProfile() { return True; }
+    function isGroup() { return False; }
+}
 class Group {
     function Group($id = null, $load = false) {
         if ($id && $load) {
@@ -77,6 +101,7 @@ class Group {
             $this->id = $id;
             $this->exists = True;
         }
+        $this->type = 0;
     }
     function delete() { return __xmlrpc_delete_group($this->id); }
     function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility); return $this->id; }
@@ -112,6 +137,8 @@ class Group {
     function show() { return __xmlrpc_show_group($this->id); } 
     function hide() { return __xmlrpc_hide_group($this->id); } 
 
+    function isProfile() { return False; }
+    function isGroup() { return True; }
     function isDyn() { return __xmlrpc_isdyn_group($this->id); }
     function toDyn() { return __xmlrpc_todyn_group($this->id); }
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
@@ -150,10 +177,13 @@ class Group {
 
 function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgroups", array($params)); }
 function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
+function __xmlrpc_countallprofiles($params) { return xmlCall("dyngroup.countallprofiles", array($params)); }
+function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofiles", array($params)); }
 function __xmlrpc_get_group($id) { return xmlCall("dyngroup.get_group", array($id)); }
 
 function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
 function __xmlrpc_create_group($name, $visibility) { return xmlCall("dyngroup.create_group", array($name, $visibility)); }
+function __xmlrpc_create_profile($name, $visibility) { return xmlCall("dyngroup.create_profile", array($name, $visibility)); }
 function __xmlrpc_tos_group($id) { return xmlCall("dyngroup.tos_group", array($id)); }
 function __xmlrpc_setname_group($id, $name) { return xmlCall("dyngroup.setname_group", array($id, $name)); }
 function __xmlrpc_setvisibility_group($id, $visibility) { return xmlCall("dyngroup.setvisibility_group", array($id, $visibility)); }
@@ -193,6 +223,7 @@ function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", 
 function __xmlrpc_del_share($id, $share) { return xmlCall("dyngroup.del_share", array($id, $share)); }
 function __xmlrpc_can_edit($id) { return xmlCall("dyngroup.can_edit", array($id)); }
 function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
+function xmlrpc_isprofile($gid) { return xmlCall("dyngroup.isprofile", array($gid)); }
 
 ?>
 

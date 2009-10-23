@@ -36,13 +36,17 @@ if (!$gid) { // TODO !!
     $result->replyToRequest();
     $result->displayResListInfos();
 } else {
-    $group = new Group($gid, true);
+    $group = getPGobject($gid, true);
     if (isset($items[$gid])) {
         $item = $items[$gid];
     } else {
         $item = null;
     }
-    __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+    if ($group->type == 0) {
+        __my_header(sprintf(_T("Display group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+    } else {
+        __my_header(sprintf(_T("Display profile '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item);
+    }
     $group->prettyDisplay();
 }
 

@@ -28,14 +28,19 @@ $name = quickGet('name', $p_first = True, $urldecode = False);
 $id = quickGet('id');
 $visibility = quickGet('visible');
 $already_exists = false;
+$type = $_GET['type'];
 
 if ($id) {
-    $group = new Group($id, true);
+    $group = getPGobject($id, true);
     if (!$name) { $name = $group->getName(); }
     if (!$visibility) { $visibility = $group->canShow(); }
     $already_exists = true;
 } else {
-    $group = new Group();
+    if ($type == 0) {
+        $group = new Group();
+    } else {
+        $group = new Profile();
+    }
 }
 
 $members = unserialize(base64_decode($_POST["lmembers"]));
@@ -99,9 +104,17 @@ if (isset($_POST["bdelmachine_x"])) {
     
     if ($res) {
         if ($already_exists) {
-            new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+            if ($type == 0) {
+                new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+            } else {
+                new NotifyWidgetSuccess(_T("Profile successfully modified", "dyngroup"));
+            }
         } else {
-            new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
+            if ($type == 0) {
+                new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
+            } else {
+                new NotifyWidgetSuccess(_T("Profile successfully created", "dyngroup"));
+            }
         }
         $list = $group->members();
         $members = array();
@@ -110,15 +123,31 @@ if (isset($_POST["bdelmachine_x"])) {
             $members[$member['hostname']."##".$member['uuid']] = $member['hostname'];
         }
         if ($visibility == 'show') {
-            header("Location: " . urlStrRedirect("base/computers/computersgroupcreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+            if ($type == 0) {
+                header("Location: " . urlStrRedirect("base/computers/computersgroupcreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+            } else {
+                header("Location: " . urlStrRedirect("base/computers/computersprofilecreator", array('tab'=>'tabsta', 'id'=>$group->id)));
+            }
         }
     } else {
-        new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
+        if ($type == 0) {
+            new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
+        } else {
+            new NotifyWidgetFailure(_T("Profile failed to modify", "dyngroup"));
+        }
     }
 } elseif (isset($_POST["bconfirm"]) and $name == '') {
-    new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
+    if ($type == 0) {
+        new NotifyWidgetFailure(_T("You must specify a group name", "dyngroup"));
+    } else {
+        new NotifyWidgetFailure(_T("You must specify a profile name", "dyngroup"));
+    }
 } elseif (isset($_POST["bconfirm"]) and xmlrpc_group_name_exists($name, $id)) {
-    new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
+    if ($type == 0) {
+        new NotifyWidgetFailure(sprintf(_T("A group already exists with name '%s'", "dyngroup"), $name));
+    } else {
+        new NotifyWidgetFailure(sprintf(_T("A profile already exists with name '%s'", "dyngroup"), $name));
+    }
 } else {
     $list = $group->members();
     $members = array();
@@ -148,7 +177,7 @@ ksort($machines);
 $diff = array_diff_assoc($machines, $members);
 natcasesort($diff);
 
-drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter']);
+drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
 
 ?>
 

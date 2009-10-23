@@ -42,8 +42,13 @@ if (isset($_GET["start"])) {
 }
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
-$list = getAllGroups($params);
-$count = countAllGroups($params);
+if ($_GET['type'] && $_GET['type'] == 1) { # Profile
+    $list = getAllProfiles($params);
+    $count = countAllProfiles($params);
+} else {
+    $list = getAllGroups($params);
+    $count = countAllGroups($params);
+}
 $filter = $_GET["filter"];
 
 $ids  = array();

@@ -22,6 +22,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+function isProfilesEnable() {
+    if (!isset($_SESSION["isProfilesEnable"])) {
+        $_SESSION["isProfilesEnable"] = xmlCall("dyngroup.isProfilesEnable", null);
+    }
+    return $_SESSION["isProfilesEnable"];
+}
+
 function isDynamicEnable() {
     if (!isset($_SESSION["isDynamicEnable"])) {
         $_SESSION["isDynamicEnable"] = xmlCall("dyngroup.isDynamicEnable", null);
