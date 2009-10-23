@@ -28,6 +28,7 @@ class DGConfig(PluginConfig):
     dyngroup_activate = True
     defaultModule = ''
     maxElementsForStaticList = 2000
+    profilesEnable = False
 
     def readConf(self):
         """
@@ -41,6 +42,8 @@ class DGConfig(PluginConfig):
         self.dbname = self.get("database", "dbname")
         self.disable = self.getboolean("main", "disable")
         self.dynamicEnable = self.getboolean("main", "dynamic_enable")
+        if self.has_option('main', 'profiles_enable'):
+            self.profilesEnable = self.getboolean("main", 'profiles_enable')
         if self.has_option('main', 'default_module'):
             self.defaultModule = self.get('main', 'default_module')
         try:
