@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2007-2009 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -18,15 +18,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once("modules/dyngroup/includes/includes.php");
 
 $mod = new Module("dyngroup");
 $mod->setVersion("2.0.0");
-$mod->setRevision('$Rev$');
+$mod->setRevision('$Rev: 4644 $');
 $mod->setDescription(_T("Dyngroup", "dyngroup"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
