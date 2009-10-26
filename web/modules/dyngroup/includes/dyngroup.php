@@ -143,6 +143,8 @@ class Group {
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
     function reload() {  return __xmlrpc_reload_group($this->id); }
 
+    function removeRequest() { return __xmlrpc_setrequest_group($this->id, ''); }
+
     function addMember($uuid) { return $this->addMembers(array($uuid)); }
     function delMember($uuid) { return $this->delMembers($uuid); }
     function importMembers($elt, $values) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); }

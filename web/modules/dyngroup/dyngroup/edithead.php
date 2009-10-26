@@ -26,18 +26,26 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
 $gid = idGet();
-$group = new Group($gid, True);
+$group = getPGobject($gid, True);
 $edition = True;
 
 if ($group->isDyn()) {
-    $title = _T("Edit a dynamic group", 'dyngroup');
+    if ($group->type == 0) {
+        $title = _T("Edit a dynamic group", 'dyngroup');
+    } else {
+        $title = _T("Edit a dynamic profile", 'dyngroup');
+    }
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
     $p->display();
 
     require("creator.php");
 } else {
-    $title = _T("Edit a static group", 'dyngroup');
+    if ($group->type == 0) {
+        $title = _T("Edit a static group", 'dyngroup');
+    } else {
+        $title = _T("Edit a static profile", 'dyngroup');
+    }
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
     $p->display();

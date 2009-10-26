@@ -26,13 +26,15 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require("modules/base/graph/computers/index.css");
 
-$p = new PageGenerator(_T("Request saver", "dyngroup"));
+$is_group = quickGet('is_group');
+
+$p = new PageGenerator(sprintf(_T("Request saver (%s)", "dyngroup"), ($is_group?_T('group', 'dyngroup'):_T('profile', 'dyngroup'))));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $id = idGet();
 $group = null;
-if ($id) { $group = new Group($id, true); }
+if ($id) { $group = getPGobject($id, true); }
 $request = quickGet('request');
 if (!$request) { $request = $group->getRequest(); }
 if (!$request) { exit(0); }
@@ -56,7 +58,7 @@ $r->parse($request);
 
 $check = checkBoolEquation($bool, $r, isset($_POST['checkBool']));
 if ($check && isset($_POST['displayTmp'])) {
-    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible)));
+    header("Location: " . urlStrRedirect("base/computers/tmpdisplay", array('id'=>$id, 'request'=>urlencode($r->toS()), 'is_group'=>$is_group, 'equ_bool'=>$bool, 'name'=>urlencode($name), 'save_type'=>$save_type, 'visible'=>$visible)));
 }
 
 $name_exists = xmlrpc_group_name_exists($name, $group->id);
@@ -66,10 +68,14 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     // TODO : put in class
     print "<hr/><table><tr>";
     if (hasCorrectAcl("base", "computers", "save")) {
-        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id)).  "' >".
-            "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>".
-            "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>".
-            "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+        print "<form method='POST' action='".urlStr("base/computers/save", array('request'=>$request, 'id'=>$id, 'is_group'=>$is_group)).  "' >".
+            "<td>"._T('Name :', 'dyngroup')." <input name='name' type='text' value=\"" . htmlspecialchars($name) . "\" /></td>";
+            if ($is_group) {
+                print "<td>"._T('save as', 'dyngroup')." <select name='save_type'><option value='1' ".($save_type == 1 ? 'selected' : '').">"._T("query", "dyngroup")."</option><option value='2' ".($save_type == 2 ? 'selected' : '').">"._T('result', 'dyngroup')."</option></select></td>";
+            } else {
+                print "<td><input name='save_type' type='hidden' value='2'/></td>";
+            }
+            print "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
     }
     if ($r->countPart() > 0) {
         drawBoolEquation($bool);
@@ -91,12 +97,16 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
     }
 } else {
     if ($id) {
-        $group = new Group($id, true);
+        $group = getPGobject($id, true);
         $group->setVisibility($visible);
         $group->setName($name);
         $gid = $id;
     } else {
-        $group = new Group();
+        if ($is_group) {
+            $group = new Group();
+        } else {
+            $group = new Profile();
+        }
         $gid = $group->create($name, $visible);
     }
 
@@ -108,9 +118,16 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
         $group->setRequest($request);
         $group->setBool($bool);
         $group->reload();
+        if ($group->type == 1) { /* if it's a profile, we remove the request part */
+            $group->removeRequest();
+        }
     }
     if ($visible == 1) { $group->show(); }
-    header("Location: " . urlStrRedirect("base/computers/save_detail", array('id'=>$gid)));
+    if ($group->type == 0) {
+        header("Location: " . urlStrRedirect("base/computers/save_detail", array('id'=>$gid, 'is_group'=>$is_group)));
+    } else {
+        header("Location: " . urlStrRedirect("base/computers/display", array('id'=>$gid, 'gid'=>$gid, 'is_group'=>$is_group, 'groupname'=>$group->name)));
+    }
 }
 
 

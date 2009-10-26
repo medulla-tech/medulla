@@ -23,13 +23,24 @@
 
 require_once("modules/dyngroup/includes/includes.php");
 
+$groupedit = True;
+if (strpos($_GET['action'], 'profile') !== false) { $groupedit = False; }
 if ($edition) {
-    $target = 'computersgroupedit';
+    if ($groupedit) {
+        $target = 'computersgroupedit';
+    } else {
+        $target = 'computersprofileedit';
+    }
 } else {
-    $target = 'computersgroupcreator';
+    if ($groupedit) {
+        $target = 'computersgroupcreator';
+    } else {
+        $target = 'computersprofilecreator';
+    }
 }
 $subedition = false;
 if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') { $subedition = true; }
+
 
 // getting request and id parameters
 $id = idGet();
@@ -208,7 +219,7 @@ if (!$request->isEmpty())  {  # TODO check ACLs....
     print "<tr><td>";
     
     $b = new Button('base', 'computers', 'creator_step2');
-    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS()));
+    $url = urlStr("base/computers/creator_step2", array('id'=>$id, 'request'=>$request->toS(), 'is_group'=>($groupedit?'1':0)));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";
