@@ -760,7 +760,7 @@ class DyngroupDatabase(DatabaseHelper):
         except:
             pass
         session.close()
-        return (q != None)
+        return (q != None and q != '')
 
     def isrequest_group(self, ctx, id):
         session = create_session()
@@ -771,13 +771,16 @@ class DyngroupDatabase(DatabaseHelper):
         except:
             pass
         session.close()
-        return (q != None and self.countresult_group(ctx, id) == 0)
+        return (q != None and q != '' and self.countresult_group(ctx, id) == 0)
 
     def isprofile(self, ctx, id):
         session = create_session()
         g = self.__getGroupInSession(ctx, session, id)
         session.close()
-        return (g.type == 1)
+        if g:
+            return (g.type == 1)
+        else:
+            return False
         
     def __insert_into_machines_and_profilesresults(self, connection, computers, groupid):
         return self.__insert_into_machines_and_results(connection, computers, groupid, 1)
@@ -839,8 +842,26 @@ class DyngroupDatabase(DatabaseHelper):
                 # Insert into Results table only if there is something to insert
                 connection.execute(self.results.insert(), into_results)
             else:
+                # check if some machines are already in a profile
+                session = create_session()
+                ret = session.query(ProfilesResults).filter(self.profilesResults.c.FK_machines.in_(map(lambda x: x["FK_machines"], into_results))).all()
+                session.close()
+                if ret:
+                    into_results_old = into_results
+                    print into_results
+                    into_results = []
+                    ret = map(lambda m:m.FK_machines, ret)
+                    for result in into_results_old:
+                        if not result['FK_machines'] in ret:
+                            into_results.append(result)
+                    print into_results
                 # Insert into ProfilesResults table only if there is something to insert
-                connection.execute(self.profilesResults.insert(), into_results)
+                if into_results:
+                    connection.execute(self.profilesResults.insert(), into_results)
+                else:
+                    return False
+        return True
+                    
 
     def reload_group(self, ctx, id, queryManager):
         connection = self.getDbConnection()
@@ -851,7 +872,9 @@ class DyngroupDatabase(DatabaseHelper):
         query = queryManager.getQueryTree(group.query, group.bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
         if self.isprofile(ctx, id):
-            self.error("trying to reload profile %s, that's not possible!"%(str(id)))
+            if not self.__insert_into_machines_and_profilesresults(connection, result, group.id):
+                trans.rollback()
+                return False
         else:
             self.__insert_into_machines_and_results(connection, result, group.id)
         trans.commit()
@@ -867,7 +890,9 @@ class DyngroupDatabase(DatabaseHelper):
         connection = self.getDbConnection()
         trans = connection.begin()
         if self.isprofile(ctx, id):
-            self.__insert_into_machines_and_profilesresults(connection, uuids.values(), group.id)
+            if not self.__insert_into_machines_and_profilesresults(connection, uuids.values(), group.id):
+                trans.rollback()
+                return False
         else:
             self.__insert_into_machines_and_results(connection, uuids.values(), group.id)
         trans.commit()
