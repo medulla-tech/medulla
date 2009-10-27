@@ -56,7 +56,11 @@ $name = array();
 $type = array();
 $show = array();
 $action_delete = array();
-$delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+if ($is_gp != 1) {
+    $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+} else {
+    $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "supprimer", "id", "base", "computers");
+}
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
@@ -75,7 +79,11 @@ foreach ($list as $group) {
     }
 }
 
-$n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
+if ($is_gp != 1) {
+    $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
+} else {
+    $n = new OptimizedListInfos($name, _T('Profile name', 'dyngroup'));
+}
 $n->setTableHeaderPadding(0);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -89,18 +97,34 @@ if ($is_gp != 1) {
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
 
-$n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
-if (in_array("inventory", $_SESSION["supportModList"])) {
-    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
+if ($is_gp != 1) {
+    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
+    if (in_array("inventory", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
+    } else {
+        # TODO implement the glpi inventory on groups
+        #    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
+    }
+    $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
+    if (in_array("msc", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
+    }
 } else {
-    # TODO implement the glpi inventory on groups
-    #    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
-}
-$n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
-if (in_array("msc", $_SESSION["supportModList"])) {
-    $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
-    $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Display this profile's content", 'dyngroup'), "display", "afficher", "id", "base", "computers"));
+    if (in_array("inventory", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
+    } else {
+        # TODO implement the glpi inventory on groups
+        #    $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
+    }
+    $n->addActionItem(new ActionItem(_T("Edit this profile", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Share this profile", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
+    if (in_array("msc", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this profile", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
+    }
 }
 $n->addActionItemArray($action_delete);
 $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));

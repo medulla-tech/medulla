@@ -226,5 +226,8 @@ function __xmlrpc_can_edit($id) { return xmlCall("dyngroup.can_edit", array($id)
 function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
 function xmlrpc_isprofile($gid) { return xmlCall("dyngroup.isprofile", array($gid)); }
 
+function xmlrpc_getmachineprofile($id) { return xmlCall("dyngroup.getmachineprofile", array($id)); }
+function xmlrpc_getmachinesprofiles($ids) { return xmlCall("dyngroup.getmachinesprofiles", array($ids)); }
+
 ?>
 

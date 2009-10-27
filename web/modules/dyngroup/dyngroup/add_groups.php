@@ -31,6 +31,7 @@ $type = $_GET['type'];
 
 if ($id) {
     $group = getPGobject($id, true);
+    $type = $group->type;
     if (!$name) { $name = $group->getName(); }
     if (!$visibility) { $visibility = $group->canShow(); }
     $already_exists = true;

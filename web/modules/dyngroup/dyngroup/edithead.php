@@ -33,7 +33,8 @@ if ($group->isDyn()) {
     if ($group->type == 0) {
         $title = _T("Edit a dynamic group", 'dyngroup');
     } else {
-        $title = _T("Edit a dynamic profile", 'dyngroup');
+        /* shouldn't happen */
+        $title = _T("Edit a profile", 'dyngroup');
     }
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
@@ -44,7 +45,7 @@ if ($group->isDyn()) {
     if ($group->type == 0) {
         $title = _T("Edit a static group", 'dyngroup');
     } else {
-        $title = _T("Edit a static profile", 'dyngroup');
+        $title = _T("Edit a profile", 'dyngroup');
     }
     $p = new PageGenerator($title);
     $p->setSideMenu($sidemenu);
