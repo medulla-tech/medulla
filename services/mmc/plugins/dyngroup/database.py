@@ -211,9 +211,11 @@ class DyngroupDatabase(DatabaseHelper):
 
     def getMachineProfile(self, ctx, id):
         session = create_session()
-        profile = session.query(ProfilesResults).filter(self.profilesResults.c.FK_machines == id).first()
+        profile = session.query(ProfilesResults).select_from(self.profilesResults.join(self.machines)).filter(self.machines.c.uuid == id).first()
         session.close()
-        return profile
+        if profile:
+            return profile.FK_groups
+        return False
         
     def getMachines(self, ctx, params):
         if params.has_key('gname'):
