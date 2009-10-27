@@ -31,12 +31,14 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
+    $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
 
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
     $actionDownload = array();
     $actionVncClient = array();
+    $actionProfile = array();
     $params = array();
 
     $headers = getComputersListHeaders();
@@ -54,10 +56,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
             }
             $columns[$header[0]][]= $v;
         }
-	if (isset($filter['gid']))
+        if (isset($filter['gid']))
 	        $value['gid'] = $filter['gid'];
 		
-        $params[] = $value;
 
         if (in_array("inventory", $_SESSION["supportModList"])) {
             $actionInventory[] = $inventAction;
@@ -68,12 +69,23 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
             $actionMsc[] = $mscAction;
             $actionLogs[] = $logAction;
         }
+        if (in_array("dyngroup", $_SESSION["modulesList"])) {
+            $profile = xmlrpc_getmachineprofile($value['objectUUID']);
+            if ($profile) {
+                $actionProfile[] = $profileAction;
+                $value['id'] = $profile;
+            } else {
+                $actionProfile[] = $emptyAction;
+            }
+        }
+
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
         }
         if ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
         }
+        $params[] = $value;
     }
 
     if (isset($filter['location'])) {
@@ -117,6 +129,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if ($msc_vnc_show_icon) {
         $n->addActionItemArray($actionVncClient);
     };
+    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+        $n->addActionItemArray($actionProfile);
+    }
     if (in_array("msc", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionLogs);
         $n->addActionItemArray($actionMsc);
