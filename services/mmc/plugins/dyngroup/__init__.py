@@ -111,6 +111,17 @@ class RpcProxy(RpcProxyI):
         groups = DyngroupDatabase().getallgroups(ctx, params, 1)
         return xmlrpcCleanup(map(lambda g:g.toH(), groups))
 
+    def getmachinesprofiles(self, ids): #NEW
+        ret = []
+        for id in ids:
+            ret.append(self.getmachineprofile(id))
+        return ret
+
+    def getmachineprofile(self, id): #NEW
+        ctx = self.currentContext
+        profile = DyngroupDatabase().getMachineProfile(ctx, id)
+        return xmlrpcCleanup(profile)
+
     def getallgroups(self, params):
         ctx = self.currentContext
         groups = DyngroupDatabase().getallgroups(ctx, params)

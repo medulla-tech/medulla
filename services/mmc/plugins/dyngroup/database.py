@@ -209,6 +209,12 @@ class DyngroupDatabase(DatabaseHelper):
         users = session.query(Users).select_from(self.users.join(self.share).join(self.groups)).filter(self.groups.c.id == gid).all()
         return users
 
+    def getMachineProfile(self, ctx, id):
+        session = create_session()
+        profile = session.query(ProfilesResults).filter(self.profilesResults.c.FK_machines == id).first()
+        session.close()
+        return profile
+        
     def getMachines(self, ctx, params):
         if params.has_key('gname'):
             return self.__getMachinesByGroupName(ctx, params['gname'])
