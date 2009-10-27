@@ -39,9 +39,10 @@ $start = 0;
 if (isset($_GET["start"])) {
     $start = $_GET['start'];
 }
+$is_gp = $_GET['type'];
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
-if ($_GET['type'] && $_GET['type'] == 1) { # Profile
+if ($is_gp && $is_gp == 1) { # Profile
     $list = getAllProfiles($params);
     $count = countAllProfiles($params);
 } else {
@@ -82,7 +83,9 @@ $n->start = 0;
 $n->end = $conf["global"]["maxperpage"];
 
 
-$n->addExtraInfo($type, _T('Type', 'dyngroup'));
+if ($is_gp != 1) {
+    $n->addExtraInfo($type, _T('Type', 'dyngroup'));
+}
 $n->addExtraInfo($show, _T('Display', 'dyngroup'));
 $n->setParamInfo($ids);
 
