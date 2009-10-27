@@ -48,13 +48,13 @@ if (!empty($submod)) {
             $page = new Page("computersprofilecreator",_T("Computers Profile Creator","dyngroup"));
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
     
-            $tab = new Tab("tabdyn", _T("Dynamic profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabsta", _T("Static profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabfromfile", _T("Static profile creation from import's tab", "dyngroup"));
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
     
@@ -62,13 +62,13 @@ if (!empty($submod)) {
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
             $page->setOptions(array("visible"=>False));
     
-            $tab = new Tab("tabdyn", _T("Dynamic profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabsta", _T("Static profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabfromfile", _T("Static profile creation from import's tab", "dyngroup"));
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
         
@@ -76,13 +76,13 @@ if (!empty($submod)) {
             $page->setFile("modules/dyngroup/dyngroup/tab.php");
             $page->setOptions(array("visible"=>False));
     
-            $tab = new Tab("tabdyn", _T("Dynamic profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabdyn", _T("Profile creation's tab from dynamic request", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabsta", _T("Static profile creation's tab", "dyngroup"));
+            $tab = new Tab("tabsta", _T("Profile creation's tab from machine list", "dyngroup"));
             $page->addTab($tab);
     
-            $tab = new Tab("tabfromfile", _T("Static profile creation from import's tab", "dyngroup"));
+            $tab = new Tab("tabfromfile", _T("Profile creation's tab from file import", "dyngroup"));
             $page->addTab($tab);
             $submod->addPage($page);
     
