@@ -21,15 +21,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  */
-/* hey emacs! -*- Mode: C; c-file-style: "k&r"; indent-tabs-mode: nil -*- */
-/*
- * $Id$
- *
- * LRS Daemon
- *
- * TODO:
- * - real deamon (double fork)
- */
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -53,6 +44,7 @@
 #define BUFLEN 1532
 #define PORT 1001
 
+#include "pulse2-imaging-server.h"
 #include "iniparser.h"
 
 unsigned char gBuff[80];
@@ -472,18 +464,24 @@ int main(void)
 
     initlog();
 
-    ini = iniparser_load("/etc/mmc/pulse2/imaging/imaging.ini");
+    ini = iniparser_load(global_conf_file_name);
     if (ini == NULL) {
-        diep("cannot parse file /etc/lbs.conf");
+        char *msg = malloc(256); bzero (msg, 256);
+        sprintf(msg, "cannot parse file %s", global_conf_file_name);
+        diep(msg);
     }
-    /* iniparser_dump(ini, stderr); */
 
-    if ((str = iniparser_getstr(ini, ":basedir"))) {
+    if ((str = iniparser_getstr(ini, "imaging-server:basedir"))) {
         strncpy(basedir, str, 254);
         sprintf(logtxt, "%.220s/log/Response.log", basedir);
     } else {
-        diep("Basedir not found in lbs.conf");
+        char *msg = malloc(256); bzero (msg, 256);
+        sprintf(msg, "Basedir not found in %s", global_conf_file_name);
+        diep(msg);
     }
+
+    /* Daemonize here */
+    if (( daemon(0, 0) != 0)) diep("daemon");
 
     /* */
     sprintf(etherpath, "%s/etc/ether", basedir);
@@ -492,6 +490,7 @@ int main(void)
         diep("udp socket");
     if ((stcp = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         diep("tcp socket");
+
 
     /* UDP sock */
     memset((char *) &si_me, sizeof(si_me), 0);

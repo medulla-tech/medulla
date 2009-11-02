@@ -1,0 +1,3 @@
+Manual install :
+ - install src/pulse2-imaging-server under /usr/sbin
+ - install init.d/pulse2-imaging-server under /etc/initd.d
