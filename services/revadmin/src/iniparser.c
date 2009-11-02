@@ -4,16 +4,16 @@
    @file    iniparser.c
    @author  N. Devillard
    @date    Mar 2000
-   @version $Revision: 1.1 $
+   @version $Revision$
    @brief   Parser for ini files.
 */
 /*--------------------------------------------------------------------------*/
 
 /*
-    $Id: iniparser.c,v 1.1 2003/03/14 16:18:40 ludo Exp $
-    $Author: ludo $
-    $Date: 2003/03/14 16:18:40 $
-    $Revision: 1.1 $
+    $Id$
+    $Author$
+    $Date$
+    $Revision$
 */
 
 /*---------------------------------------------------------------------------

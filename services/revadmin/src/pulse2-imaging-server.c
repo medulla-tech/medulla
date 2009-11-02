@@ -1,6 +1,6 @@
 /*
  * (c) 2003-2007 Linbox FAS, http://linbox.com
- * (c) 2008-2009 Mandriva, http://www.mandriva.com
+ * (c) 2008-2009 Nicolas Rueff / Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -23,7 +23,7 @@
  */
 /* hey emacs! -*- Mode: C; c-file-style: "k&r"; indent-tabs-mode: nil -*- */
 /*
- * $Id: getClientResponse.c,v 1.6 2003/10/24 08:25:58 ludo Exp $
+ * $Id$
  *
  * LRS Daemon
  *
@@ -81,10 +81,9 @@ void mysyslog( char *smac, int priority, const char *format_str, ... )
     va_end(ap);
 
     snprintf(path, 255, "%s/images/%s/log", basedir, smac);
-    if (f = fopen(path, "a"))
-    {
-         time_t now;
-         char tm[64];
+    if ((f = fopen(path, "a"))) {
+        time_t now;
+        char tm[64];
 
         time(&now);
         strcpy(tm, ctime(&now));
@@ -94,12 +93,11 @@ void mysyslog( char *smac, int priority, const char *format_str, ... )
 
         /* log the last restoration */
         if (strstr(buf, "restoration comp") != NULL) {
-             snprintf(path, 255, "%s/images/%s/log.lastrestore", basedir, smac);
-             if (f = fopen(path, "w"))
-             {
-                  fprintf(f, "%s: %s\n", tm, buf);
-                  fclose(f);
-             }
+            snprintf(path, 255, "%s/images/%s/log.lastrestore", basedir, smac);
+            if ((f = fopen(path, "w"))){
+                fprintf(f, "%s: %s\n", tm, buf);
+                fclose(f);
+            }
         }
 
         syslog(priority, buf);
@@ -468,11 +466,13 @@ int main(void)
     fd_set fds;
     int on = 1;
 
+    syslog(LOG_INFO, "pulse2-imaging-client-handler r.$Revision$");
+
     basedir[0] = 0;
 
     initlog();
 
-    ini = iniparser_load("/etc/lbs.conf");
+    ini = iniparser_load("/etc/mmc/pulse2/imaging/imaging.ini");
     if (ini == NULL) {
         diep("cannot parse file /etc/lbs.conf");
     }
@@ -487,8 +487,6 @@ int main(void)
 
     /* */
     sprintf(etherpath, "%s/etc/ether", basedir);
-
-    syslog(LOG_INFO, "GetClientResponse $Revision$. Copyright (C) 2000-2005 Linbox FAS\n");
 
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
         diep("udp socket");

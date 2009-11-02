@@ -4,7 +4,7 @@
    @file	dictionary.c
    @author	N. Devillard
    @date	Aug 2000
-   @version	$Revision: 1.1 $
+   @version	$Revision$
    @brief	Implements a dictionary for string variables.
 
    This module implements a simple dictionary object, i.e. a list
@@ -14,10 +14,10 @@
 /*--------------------------------------------------------------------------*/
 
 /*
-	$Id: dictionary.c,v 1.1 2003/03/14 16:18:40 ludo Exp $
-	$Author: ludo $
-	$Date: 2003/03/14 16:18:40 $
-	$Revision: 1.1 $
+	$Id$
+	$Author$
+	$Date$
+	$Revision$
 */
 
 /*---------------------------------------------------------------------------

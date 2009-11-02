@@ -1,19 +1,12 @@
 #
-# $Id: Makefile,v 1.6 2003/05/21 09:41:19 ludo Exp $
+# $Id$
 #
 
 CFLAGS=-O2 -Wall
-CC=gcc-3.4
-BINARIES=getClientResponse getClientResponse.nostatic
-OBJECTS=getClientResponse.o dictionary.o iniparser.o strlib.o
 
-all: $(BINARIES)
+all: pulse2-imaging-server
 
-getClientResponse: $(OBJECTS)
-	$(CC) -s -o $@ $^ --static
-
-getClientResponse.nostatic: $(OBJECTS)
-	$(CC) -o $@ $^
+pulse2-imaging-server: dictionary.c iniparser.c pulse2-imaging-server.c strlib.c
 
 clean:
-	rm -f $(BINARIES) $(OBJECTS)
+	$(RM) pulse2-imaging-server
