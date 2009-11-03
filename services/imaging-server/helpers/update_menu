@@ -28,12 +28,14 @@ $CFGDIR = "/var/lib/tftpboot/pulse2";
 use lib "/usr/share/pulse2/imaging/helpers";
 require "lrs-legacy.pl";
 
-$macfile=$ARGV[0];
+$macfile = $ARGV[0];
 
-updateEntry($CFGDIR, $macfile) or lbsDieError();
+updateEntry( $CFGDIR, $macfile ) or lbsDieError();
 
 # reset files permissions: allow the diskless Linux to write to these files
 # and ensure backward compatibility
 for $i ( "log.restore", "postinst.log", "progress.txt" ) {
-    system("touch $CFGDIR/images/$macfile/$i ; chown 65534 $CFGDIR/images/$macfile/$i");
+    system(
+"touch $CFGDIR/images/$macfile/$i ; chown 65534 $CFGDIR/images/$macfile/$i"
+    );
 }
