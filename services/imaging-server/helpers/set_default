@@ -28,52 +28,52 @@ $BASEDIR = "/var/lib/pulse2/imaging";
 use lib "/usr/share/pulse2/imaging/helpers";
 require "lrs-legacy.pl";
 
-$iam=`basename $0` ; chomp($iam) ;
+$iam = `basename $0`;
+chomp($iam);
 
 #//////////////////////////////////////////////////////////////////////////////
 
 # badExit($message,[...])
 #
-sub badExit
-{
- my $msg = join(" ",@_) ;
- print STDERR "$iam: $msg\n" ;
- exit(1) ;
+sub badExit {
+    my $msg = join( " ", @_ );
+    print STDERR "$iam: $msg\n";
+    exit(1);
 }
 
 #//////////////////////////////////////////////////////////////////////////////
 
-badExit("'$BASEDIR': LBS basedir not found") if (not -d $BASEDIR) ;
-
+badExit("'$BASEDIR': LBS basedir not found") if ( not -d $BASEDIR );
 
 # load header
 $header = "$BASEDIR/images/$ARGV[0]/header.lst";
 $newdef = $ARGV[1];
 
-if ($ARGV[0] eq "") {
-    print ("Usage: set_default MAC ENTRYNUMBER\n");
+if ( $ARGV[0] eq "" ) {
+    print("Usage: set_default MAC ENTRYNUMBER\n");
     exit;
 }
 
-badExit("'$header': LBS menu not found") if (not -f $header) ;
+badExit("'$header': LBS menu not found") if ( not -f $header );
 
 %conf = ();
-iniLoad($header, \%conf);
+iniLoad( $header, \%conf );
 
 # reset default entries
 my $ii = 0;
-foreach my $sec (iniGetSections(\%conf))
-{
-    my $visu = iniGetVal(\%conf, $sec, "visu");
+foreach my $sec ( iniGetSections( \%conf ) ) {
+    my $visu = iniGetVal( \%conf, $sec, "visu" );
+
     # only take into account visible entries
-    if ($visu eq "no" || $visu eq "") { next; }
-    my $val = iniGetVal(\%conf, $sec, "def");
-    if ($ii == $newdef) {
-        iniSetVal(\%conf, $sec, "def", "yes");
-    } else {
-        iniSetVal(\%conf, $sec, "def", "no");
+    if ( $visu eq "no" || $visu eq "" ) { next; }
+    my $val = iniGetVal( \%conf, $sec, "def" );
+    if ( $ii == $newdef ) {
+        iniSetVal( \%conf, $sec, "def", "yes" );
+    }
+    else {
+        iniSetVal( \%conf, $sec, "def", "no" );
     }
     $ii++;
 }
-iniSave($header, \%conf);
+iniSave( $header, \%conf );
 
