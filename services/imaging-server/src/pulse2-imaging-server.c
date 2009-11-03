@@ -445,7 +445,7 @@ int main(void)
     int pid = 0;
     char pidBuff[5]; bzero(pidBuff, 5);
 
-    syslog(LOG_INFO, "pulse2-imaging-client-handler r.$Revision$");
+    syslog(LOG_INFO, "pulse2-imaging-server r.$Revision$");
 
     gBaseDir[0] = 0;
 
