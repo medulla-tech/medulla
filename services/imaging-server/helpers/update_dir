@@ -80,10 +80,7 @@ sub setHeader {
 
 #//////////////////////////////////////////////////////////////////////////////
 
-%hconf = ();
-loadConf( $lbsconf, \%hconf );
-
-badExit("'$BASEDIR': LBS basedir not found") if ( not -d $BASEDIR );
+badExit("'$BASEDIR': Pulse 2 basedir not found") if ( not -d $BASEDIR );
 
 unshift @INC, "$BASEDIR/bin";
 require "lbs-lib.pl";
