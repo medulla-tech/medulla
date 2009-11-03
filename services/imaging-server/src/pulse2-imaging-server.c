@@ -280,7 +280,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
         strcpy(pass, ptr + 1);
-        strcpy((char *)hostname, buf + 3);
+        strcpy(hostname, (char*)buf + 3);
         snprintf(command, 255, "%s/bin/check_add_host %s %s %s", basedir,
                 mac, hostname, pass);
         mysystem(command);
@@ -338,11 +338,11 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 int bn;
 
                 mysyslog(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
-                if (sscanf(&buf[3], "Local-%d", &bn) == 1) {
+                if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                         // Local backup
                         snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", basedir, smac, bn);
                         system(command);
-                } else if (sscanf(&buf[3], "Base-%d", &bn) == 1) {
+                } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
                         // Shared backup
                         snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", basedir, bn);
                         system(command);
@@ -370,7 +370,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             //to.sin_family = AF_INET;
             //to.sin_port = htons(1001);
             //inet_aton(inet_ntoa(si_other.sin_addr), &to.sin_addr);
-            sendto(s, gBuff, strlen(gBuff)+1, MSG_NOSIGNAL,
+            sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
                    (struct sockaddr *) si_other, sizeof(*si_other));
         }
         return 0;
@@ -380,7 +380,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
       char pnum;
       int bnum, to;
 
-      if (sscanf(buf, "T;%c%d;%d", &pnum, &bnum, &to) == 3) {
+      if (sscanf((char*)buf, "T;%c%d;%d", &pnum, &bnum, &to) == 3) {
         unsigned int file = (pnum<<16) + bnum;
         int wait = 0;
 
@@ -404,8 +404,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         }
         //printf("%c %d %d %d\n", pnum, bnum, to, wait);
 
-        sprintf(buf, "%d", wait);
-        sendto(s, buf, strlen(buf), MSG_NOSIGNAL,
+        sprintf((char*)buf, "%d", wait);
+        sendto(s, buf, strlen((char*)buf), MSG_NOSIGNAL,
                (struct sockaddr *) si_other, sizeof(*si_other));
 
         return 0;
@@ -446,7 +446,7 @@ int main(void)
     }
 
     if ((str = iniparser_getstr(ini, "imaging-server:basedir"))) {
-        strncpy(basedir, str, 254);
+        strncpy((char*)basedir, str, 254);
         sprintf(logtxt, "%.220s/log/Response.log", basedir);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
@@ -506,7 +506,7 @@ int main(void)
 
         select(stcp + 1, &fds, NULL, NULL, NULL);
         if (FD_ISSET(stcp, &fds)) {
-            so = accept(stcp, (struct sockaddr *) &si_other, &slen);
+            so = accept(stcp, (struct sockaddr *) &si_other, (unsigned int *)&slen);
             if (so == -1)
                 continue;
             if ((plen =
@@ -517,7 +517,7 @@ int main(void)
             so = s;
             if ((plen =
                  recvfrom(so, buf, BUFLEN, 0,
-                          (struct sockaddr *) &si_other, &slen)) == -1)
+                          (struct sockaddr *) &si_other, (unsigned int *)&slen)) == -1)
                 diep("recvfrom()");
 
         } else {
@@ -525,15 +525,15 @@ int main(void)
         }
 
         /* UDP only */
-        if ((mac = getmacfrompkt(buf, plen))) {
+        if ((mac = (char*)getmacfrompkt((char*)buf, plen))) {
             // got it from the request ! good !
         } else {
             // Pas beau...(utilise le cache ARP) (for backward compatibility)
-            mac = getmac(si_other.sin_addr);
+            mac = (char*)getmac(si_other.sin_addr);
         }
         if (!mac) {
-            strcpy(gBuff, "?");
-            mac = gBuff;
+            strcpy((char*)gBuff, "?");
+            mac = (char*)gBuff;
         }
         /* client port must be 1001 ! */
         if (ntohs(si_other.sin_port) != 1001) {
@@ -554,7 +554,7 @@ int main(void)
         if (so != s)
             close(so);
 
-        nb = getentries(etherpath);
+        nb = getentries((unsigned char*)etherpath);
     }
 
 

@@ -54,5 +54,5 @@ dictionary *ini;
 char etherpath[255];
 char logtxt[256];
 
-const char * gConfigurationFile = CONFIGURATION_FILE;
-const char * gPIDFile= PID_FILE;
+char * gConfigurationFile = CONFIGURATION_FILE;
+char * gPIDFile= PID_FILE;
