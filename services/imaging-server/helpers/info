@@ -3,410 +3,487 @@
 # $Id: info 3986 2007-02-02 15:24:33Z root $
 #
 
-my $devicelist;
+my $PCILIST;
 
 $mac = "";
+
+# Global consts
+$PCILIST = '/usr/share/misc/pci.ids';
+$BASEDIR = '/var/lib/pulse2/imaging';
 
 #
 # SMBios constants
 #
 
-@typetbl = ( "", "", "", "Desktop", "Low Profile Desktop",
-	"Pizza Box", "Mini Tower", "Tower", "Portable", "LapTop", "Notebook",
-	"Hand Held", "Docking Station", "All in One", "Sub Notebook", 
-	"Space-saving", "Lunch Box", "Main Server Chassis", "Expansion Chassis",
-	"SubChassis", "Bus Expansion Chassis", "Peripheral Chassis", 
-	"RAID Chassis", "Rack Mount Chassis", "Sealed-case", "Multi-system chassis"
-	) ;
+@typetbl = (
+    "",
+    "",
+    "",
+    "Desktop",
+    "Low Profile Desktop",
+    "Pizza Box",
+    "Mini Tower",
+    "Tower",
+    "Portable",
+    "LapTop",
+    "Notebook",
+    "Hand Held",
+    "Docking Station",
+    "All in One",
+    "Sub Notebook",
+    "Space-saving",
+    "Lunch Box",
+    "Main Server Chassis",
+    "Expansion Chassis",
+    "SubChassis",
+    "Bus Expansion Chassis",
+    "Peripheral Chassis",
+    "RAID Chassis",
+    "Rack Mount Chassis",
+    "Sealed-case",
+    "Multi-system chassis"
+);
 
-@memform = ( "", "", "", "SIMM", "SIP", "Chip", "DIP", "ZIP", "Proprietary card", 
-	"DIMM", "TSOP", "Row of chips", "RIMM", "SODIMM", "SRIMM");
-	
-@memtype = ( "", "", "", "DRAM", "EDRAM", "VRAM", "SRAM", "RAM", "ROM",
-	"FLASH", "EEPROM", "FEPROM", "EPROM", "CDRAM", "3DRAM", "SDRAM",
-	"SGRAM", "RDRAM", "DDR", "DDR2");
+@memform = (
+    "", "", "", "SIMM", "SIP", "Chip", "DIP", "ZIP", "Proprietary card",
+    "DIMM", "TSOP", "Row of chips", "RIMM", "SODIMM", "SRIMM"
+);
 
-@memdetails = ( "", "", "", "Fast-paged", "Static column", "Pseudo-static",
-	"RAMBUS", "Synchronous", "CMOS", "EDO", "Window DRAM", "Cache DRAM",
-	"Non-volatile" );  
+@memtype = (
+    "",      "",      "",      "DRAM",  "EDRAM",  "VRAM",
+    "SRAM",  "RAM",   "ROM",   "FLASH", "EEPROM", "FEPROM",
+    "EPROM", "CDRAM", "3DRAM", "SDRAM", "SGRAM",  "RDRAM",
+    "DDR",   "DDR2"
+);
+
+@memdetails = (
+    "",              "",              "",            "Fast-paged",
+    "Static column", "Pseudo-static", "RAMBUS",      "Synchronous",
+    "CMOS",          "EDO",           "Window DRAM", "Cache DRAM",
+    "Non-volatile"
+);
 
 # Program
 
 sub getdevice {
- my ($vendor,$device)=@_;
- $vendor=sprintf "%04x",hex($vendor);
- $device=sprintf "%04x",hex($device);
+    my ( $vendor, $device ) = @_;
+    $vendor = sprintf "%04x", hex($vendor);
+    $device = sprintf "%04x", hex($device);
 
- open(REF,$devicelist) or die;
- while (<REF>)
- {
-  next unless /^$vendor/;
-  chomp;
-  my ($titi,$vend)=split(/ +/,$_,2);
-  print "Vendor=$vend\n";
-  while (<REF>)
-  {
-   last unless /^[#\t]/;
-   next unless /^\t$device/;
-   chomp;
-   my ($titi,$dev)=split(/ +/,$_,2);
-   print "Device=$dev\n";
-   close(REF);
-   return;
-  }
-  print "Device=$device (unknown)\n";
-  close(REF);
-  return;
- }
- print "Vendor=$vendor (unknown)\nDevice=$device (unknown)\n";
- close(REF);
+    open( REF, $PCILIST ) or die;
+    while (<REF>) {
+        next unless /^$vendor/;
+        chomp;
+        my ( $titi, $vend ) = split( / +/, $_, 2 );
+        print "Vendor=$vend\n";
+        while (<REF>) {
+            last unless /^[#\t]/;
+            next unless /^\t$device/;
+            chomp;
+            my ( $titi, $dev ) = split( / +/, $_, 2 );
+            print "Device=$dev\n";
+            close(REF);
+            return;
+        }
+        print "Device=$device (unknown)\n";
+        close(REF);
+        return;
+    }
+    print "Vendor=$vendor (unknown)\nDevice=$device (unknown)\n";
+    close(REF);
 }
 
 sub getclass {
- my ($class,$subclass)=@_;
- 
- if ($subclass eq "") {
-    $subclass=substr $class,2,2;    
-    $class=substr $class,0,2;
- } else {
-    $class=sprintf "%02x",hex($class);
-    $subclass=sprintf "%02x",hex($subclass);
- }
- 
- open(REF,$devicelist) or die;
- while (<REF>)
- {
-  next unless /^C $class/;
-  chomp;
-  my ($titi,$toto,$cl)=split(/ +/,$_,3);
-  print "Class=$cl\n";
-  while (<REF>)
-  {
-   last unless /^\t/;
-   next unless /^\t$subclass/;
-   chomp;
-   my ($toto,$c)=split(/ +/,$_,2);
-   print "Type=$c\n";
-   close(REF);
-   return;
-  }
-  print "Type=$subclass (unknown)\n";
-  close(REF);
-  return;
- }
- print "Class=$class (unknown)\nType=$subclass (unknown)\n";
- close(REF);
-}
+    my ( $class, $subclass ) = @_;
 
-sub pci
-{
- my $file=$_[0];
- my $i=0;
-
- open(HW,$file) or die;
- while (<HW>)
- {
-  next unless /^B:/;
-  chomp;
-  my %list = split(/[:,]/);
-
-  print "\n[PCI$i]\n";
-  print "Bus=$list{'B'}\nFunc=$list{'f'}\n";
-  # print " Vendor : $list{'v'} / Device : $list{'d'}\n";
-  getdevice($list{"v"}, $list{"d"});
-  # print " Class : $list{'c'} / SubClass : $list{'s'}\n";
-  getclass($list{"c"}, $list{"s"});
-  $i++;
- }
- close(HW);
-}
-
-sub misc
-{
- my $file=$_[0];
-
- open(MISC,$file) or die;
- while (<MISC>)
- {
-  if (/^MAC/)
-  {
-	my ($toto,$addr)=split(/:/,$_,2);
-	print "MacAddr=$addr";
-	$mac = $addr;
-	next;
-  }
-  if (/^M/)
-  {
-	my ($toto,$low,$titi,$high)=split(/[:,]/);
-	$low=hex($low);
-	$high=hex($high);
-	my $total=$low+$high;
-	print "LowMem=$low\nHighMem=$high\nTotalMem=$total\n";
-	next;
-  }
-  if (/^F/)
-  {
-	my ($toto,$freq)=split(/:/);
-	$freq=int($freq/1000 + 0.5);
-	print "Freq=$freq\n";
-	next;
-  }
-  if (/^S0:/)
-    {
-      my ($t,$bios)=split(/:/);
-      chomp($bios);
-      print "Bios=$bios\n";
-      next;
+    if ( $subclass eq "" ) {
+        $subclass = substr $class, 2, 2;
+        $class    = substr $class, 0, 2;
     }
-  if (/^S1:/)
-    {
-      my ($t,$sys)=split(/:/);
-      chomp($sys);
-      print "System=$sys\n";
-      next;
+    else {
+        $class    = sprintf "%02x", hex($class);
+        $subclass = sprintf "%02x", hex($subclass);
     }
-  if (/^S3:/)
-    {
-      my ($t,$sys)=split(/:/);
-      chomp($sys);
-      my ($fac, $type)=split(/\|/, $sys);
-      $typename = "Unknown";
-      if ($type >= 1 && $type <= 26) { $typename = $typetbl[$type]; } 
-      print "Chassis=$fac|$typename\n";
-      next;
-    }
-  if (/^S4:/)
-    {
-      my ($t,$sys)=split(/:/);
-      chomp($sys);
-      print "CpuNum=$sys\n";
-      next;
-    }
-  if (/^C/)
-  {
-	my @list=split(/[:,]/);
 
-	# the current fields are extracted from cpuid level 1
-	# see http://www.sandpile.org/ia32/cpuid.htm
-	# family, model, stepping, brandid, cpuid level (4 bytes), cpu flags (4 bytes), vendorid (12 bytes)
-	if ($list[13] eq "47" && $list[20] eq "49")
-	{
-		print "CpuVendor=Intel\n";
-		if ($list[1] == '4') {print "Model=486\n";next;}
-		if ($list[1] == '5') {print "Model=Pentium\n";next;}		
-		if ($list[1] == '6')
-		  {
-		    if ($list[2] == '3') {print "Model=Pentium II Klamath\n";next;}
-		    if ($list[2] == '5') {print "Model=Pentium II Deschutes\n";next;}
-		    if ($list[2] == '6') {print "Model=Celeron A or Pentium II PE\n";next;}
-		    if ($list[2] == '7') {print "Model=Pentium III Katmai\n";next;}
-		    if (($list[2] == '8'))
-		      {
-			if ($list[4] == '1') {print "Model=Celeron Coppermine w/SSE\n";next;}
-			if ($list[4] == '2') {print "Model=Pentium III Coppermine w/SSE\n";next;}
-			
-		      }
-		    if (($list[2] eq '9')) {print "Model=Pentium III Mobile\n";next;}
-		    if (($list[2] eq 'a')) {print "Model=Pentium III Xeon\n";next;}
-		    if (($list[2] eq 'b')) {print "Model=Pentium III 0.13u\n";next;}
-		    if (($list[2] eq 'd')) {print "Model=Pentium M 90nm 2MB cache\n";next;}
-		    if (($list[2] eq 'e')) {print "Model=Pentium Core Duo 65nm 2MB cache\n";next;}
-		    if (($list[2] eq 'f')) {print "Model=Pentium Core 2 Duo 65nm 4MB cache\n";next;}
-		    print "Model=Pentium Pro/II/III/M\n";
-		    next;
-		  }
-		if (($list[1] eq '7')) {print "Model=Itanium\n";next;}
-		if (($list[1] eq 'f')) {
-		    if ($list[2] == '0') {print "Model=Pentium 4 0.18u\n";next;}
-		    if ($list[2] == '1') {print "Model=Pentium 4 0.18u\n";next;}
-		    if ($list[2] == '2') {print "Model=Pentium 4 0.13u\n";next;}
-		    if ($list[2] == '3') {print "Model=Pentium 4 90nm\n";next;}
-		    if ($list[2] == '4') {print "Model=Pentium 4 90nm\n";next;}
-		    if ($list[2] == '6') {print "Model=Pentium 4 65nm\n";next;}
-		    print "Model=Pentium 4\n";next;
-		}
-		print "Model=???\n";
-		next;
-	}
-	if ($list[13] eq "41")
-	{	
-		print "CpuVendor=AMD\n";
-		if (($list[1] == '5')) {print "Model=K5/K6\n";next;}
-		if ($list[1] == '6')
-		  {
-		    if ($list[2] == '1') {print "Model=Athlon 0.25u Slot A\n";next;}
-		    if ($list[2] == '2') {print "Model=Athlon 0.18u Slot A\n";next;}
-		    if ($list[2] == '3') {print "Model=Duron (SF core)\n";next;}
-		    if ($list[2] == '4') {print "Model=Athlon (TB core) 0.18u\n";next;}
-		    if ($list[2] == '6') {print "Model=Athlon MP/Mobile Athlon\n";next;}
-		    if ($list[2] == '7') {print "Model=Mobile Duron\n";next;}
-		    if ($list[2] == '8') {print "Model=Athlon (TH/AP core)\n";next;}
-		    if ($list[2] == 'a') {print "Model=Athlon (BT core)\n";next;}
-		    print "Model=Athlon/Duron\n";
-		    next;
-		  }
-		if (($list[1] == 'f')) {print "Model=Opteron/Athlon 64\n";next;}
-		print "Model=???\n";
-		next;
-	}
-	if ($list[13] eq "43")
-	{	
-		print "CpuVendor=Cyrix/Via\n";
-		if (($list[1] == '5')) {print "Model=Cyrix M1/Media GX\n";next;}
-		if (($list[1] == '6')) {
-		    if ($list[2] == '5') {print "Model=Cyrix M2\n";next;}
-		    print "Model=Via C3\n";next;
-		}
-		print "Model=???\n";
-		next;
-	}
-	if ($list[13] eq "53")
-	{	
-		print "CpuVendor=SiS\n";
-		print "Model=SiS 55x\n";
-		next;
-	}
-	if ($list[13] eq "47" && $list[15] eq "6f")
-	{
-		print "CpuVendor=Geode by NSC\n";
-		print "Model=GX/LX\n";
-		next;
-	}
-	if ($list[13] eq "47" && $list[20] eq "54")
-	{
-		print "CpuVendor=Transmeta\n";
-		print "Model=Crusoe/Efficeon\n";
-		next;
-	}
-	print "CpuVendor=???\n";
-	print "Model=???\n";
-  }
- }
+    open( REF, $PCILIST ) or die;
+    while (<REF>) {
+        next unless /^C $class/;
+        chomp;
+        my ( $titi, $toto, $cl ) = split( / +/, $_, 3 );
+        print "Class=$cl\n";
+        while (<REF>) {
+            last unless /^\t/;
+            next unless /^\t$subclass/;
+            chomp;
+            my ( $toto, $c ) = split( / +/, $_, 2 );
+            print "Type=$c\n";
+            close(REF);
+            return;
+        }
+        print "Type=$subclass (unknown)\n";
+        close(REF);
+        return;
+    }
+    print "Class=$class (unknown)\nType=$subclass (unknown)\n";
+    close(REF);
 }
 
-sub disk
-{
- my $file=$_[0];
- my $i=0;
+sub pci {
+    my $file = $_[0];
+    my $i    = 0;
 
- open(DISK,$file) or die;
- while (<DISK>)
- {
-  loop:
-	next unless /^D:/;
+    open( HW, $file ) or die;
+    while (<HW>) {
+        next unless /^B:/;
+        chomp;
+        my %list = split(/[:,]/);
 
-	my $j=0;
-	my @list=split(/[:(),=]+/);
-	my $capa=int($list[6]/2048);
+        print "\n[PCI$i]\n";
+        print "Bus=$list{'B'}\nFunc=$list{'f'}\n";
 
-	print "\n[DISK$i]\n";
-	$i++;
+        # print " Vendor : $list{'v'} / Device : $list{'d'}\n";
+        getdevice( $list{"v"}, $list{"d"} );
 
-	print "Name=$list[1]\nCyl=$list[3]\nHead=$list[4]\nSector=$list[5]\nCapacity=$capa\n";
-
-	while (<DISK>)
-	{
-		goto loop unless /^P:/;
-
-		my @part=split(/[:,]/);
-		$part[7]=int($part[7]/2048);
-		print "PartNum$j=$part[1]\n";
-		print "PartType$j=$part[3]\n";
-		print "PartLength$j=$part[7]\n";
-		$j++;
-	}
- }
- close(DISK);
-}
-
-
-sub hdmap
-{
-  my $file=$_[0];
-  
-  $mac =~ s/[^a-fA-F0-9]//g;
-  $mac = uc($mac);
-
-  open(INFO,">$basedir/images/$mac/hdmap") or return;
-  open(DISK,$file) or die;
-  while (<DISK>)
-    {
-      if (/^D:\(hd([0-9]+)\):[^=]+=([0-9]+)/) {
-	print INFO $1."=".$2."\n";
-      }
+        # print " Class : $list{'c'} / SubClass : $list{'s'}\n";
+        getclass( $list{"c"}, $list{"s"} );
+        $i++;
     }
-  close(DISK);
-  close(INFO);
+    close(HW);
 }
 
-sub mem
-{
- my $file=$_[0];
- my $i=0;
+sub misc {
+    my $file = $_[0];
 
- open(FILE,$file) or die;
- while (<FILE>)
- {
-	next unless /^SM:/;
+    open( MISC, $file ) or die;
+    while (<MISC>) {
+        if (/^MAC/) {
+            my ( $toto, $addr ) = split( /:/, $_, 2 );
+            print "MacAddr=$addr";
+            $mac = $addr;
+            next;
+        }
+        if (/^M/) {
+            my ( $toto, $low, $titi, $high ) = split(/[:,]/);
+            $low  = hex($low);
+            $high = hex($high);
+            my $total = $low + $high;
+            print "LowMem=$low\nHighMem=$high\nTotalMem=$total\n";
+            next;
+        }
+        if (/^F/) {
+            my ( $toto, $freq ) = split(/:/);
+            $freq = int( $freq / 1000 + 0.5 );
+            print "Freq=$freq\n";
+            next;
+        }
+        if (/^S0:/) {
+            my ( $t, $bios ) = split(/:/);
+            chomp($bios);
+            print "Bios=$bios\n";
+            next;
+        }
+        if (/^S1:/) {
+            my ( $t, $sys ) = split(/:/);
+            chomp($sys);
+            print "System=$sys\n";
+            next;
+        }
+        if (/^S3:/) {
+            my ( $t, $sys ) = split(/:/);
+            chomp($sys);
+            my ( $fac, $type ) = split( /\|/, $sys );
+            $typename = "Unknown";
+            if ( $type >= 1 && $type <= 26 ) { $typename = $typetbl[$type]; }
+            print "Chassis=$fac|$typename\n";
+            next;
+        }
+        if (/^S4:/) {
+            my ( $t, $sys ) = split(/:/);
+            chomp($sys);
+            print "CpuNum=$sys\n";
+            next;
+        }
+        if (/^C/) {
+            my @list = split(/[:,]/);
 
-	my @list=split(/[:(),=]+/);
-	my $used = ($list[1] ne "0")+0;
-	my $size = $list[1];
-	if ($size > 0) {
-	    $size *= 1024;
-	} else {
-	    $size *= -1;
-	}
-	print "\n[MEM$i]\n";
-	print "Used=$used\n";
-	print "Capacity=$size\n" if ($used);
-	print "Form=".$memform[hex($list[2])]."\n";
-	print "Location=".$list[3]."\n";
-	my $details = "";
-	my $bit = 1;
-	my $data = hex($list[4]) >> 16;
-	foreach $det (@memdetails) {
-	    if ($data & $bit) {
-		$details .= " ".$det;
-	    }
-	    $bit *= 2;
-	}
-	print "Type=".$memtype[hex($list[4]) & 0xFFFF]."$details\n";
-	print "Speed=$list[5]\n" if ($list[5] != 0);
-	$i++;
- }
- close(FILE);
+# the current fields are extracted from cpuid level 1
+# see http://www.sandpile.org/ia32/cpuid.htm
+# family, model, stepping, brandid, cpuid level (4 bytes), cpu flags (4 bytes), vendorid (12 bytes)
+            if ( $list[13] eq "47" && $list[20] eq "49" ) {
+                print "CpuVendor=Intel\n";
+                if ( $list[1] == '4' ) { print "Model=486\n";     next; }
+                if ( $list[1] == '5' ) { print "Model=Pentium\n"; next; }
+                if ( $list[1] == '6' ) {
+                    if ( $list[2] == '3' ) {
+                        print "Model=Pentium II Klamath\n";
+                        next;
+                    }
+                    if ( $list[2] == '5' ) {
+                        print "Model=Pentium II Deschutes\n";
+                        next;
+                    }
+                    if ( $list[2] == '6' ) {
+                        print "Model=Celeron A or Pentium II PE\n";
+                        next;
+                    }
+                    if ( $list[2] == '7' ) {
+                        print "Model=Pentium III Katmai\n";
+                        next;
+                    }
+                    if ( ( $list[2] == '8' ) ) {
+                        if ( $list[4] == '1' ) {
+                            print "Model=Celeron Coppermine w/SSE\n";
+                            next;
+                        }
+                        if ( $list[4] == '2' ) {
+                            print "Model=Pentium III Coppermine w/SSE\n";
+                            next;
+                        }
+
+                    }
+                    if ( ( $list[2] eq '9' ) ) {
+                        print "Model=Pentium III Mobile\n";
+                        next;
+                    }
+                    if ( ( $list[2] eq 'a' ) ) {
+                        print "Model=Pentium III Xeon\n";
+                        next;
+                    }
+                    if ( ( $list[2] eq 'b' ) ) {
+                        print "Model=Pentium III 0.13u\n";
+                        next;
+                    }
+                    if ( ( $list[2] eq 'd' ) ) {
+                        print "Model=Pentium M 90nm 2MB cache\n";
+                        next;
+                    }
+                    if ( ( $list[2] eq 'e' ) ) {
+                        print "Model=Pentium Core Duo 65nm 2MB cache\n";
+                        next;
+                    }
+                    if ( ( $list[2] eq 'f' ) ) {
+                        print "Model=Pentium Core 2 Duo 65nm 4MB cache\n";
+                        next;
+                    }
+                    print "Model=Pentium Pro/II/III/M\n";
+                    next;
+                }
+                if ( ( $list[1] eq '7' ) ) { print "Model=Itanium\n"; next; }
+                if ( ( $list[1] eq 'f' ) ) {
+                    if ( $list[2] == '0' ) {
+                        print "Model=Pentium 4 0.18u\n";
+                        next;
+                    }
+                    if ( $list[2] == '1' ) {
+                        print "Model=Pentium 4 0.18u\n";
+                        next;
+                    }
+                    if ( $list[2] == '2' ) {
+                        print "Model=Pentium 4 0.13u\n";
+                        next;
+                    }
+                    if ( $list[2] == '3' ) {
+                        print "Model=Pentium 4 90nm\n";
+                        next;
+                    }
+                    if ( $list[2] == '4' ) {
+                        print "Model=Pentium 4 90nm\n";
+                        next;
+                    }
+                    if ( $list[2] == '6' ) {
+                        print "Model=Pentium 4 65nm\n";
+                        next;
+                    }
+                    print "Model=Pentium 4\n";
+                    next;
+                }
+                print "Model=???\n";
+                next;
+            }
+            if ( $list[13] eq "41" ) {
+                print "CpuVendor=AMD\n";
+                if ( ( $list[1] == '5' ) ) { print "Model=K5/K6\n"; next; }
+                if ( $list[1] == '6' ) {
+                    if ( $list[2] == '1' ) {
+                        print "Model=Athlon 0.25u Slot A\n";
+                        next;
+                    }
+                    if ( $list[2] == '2' ) {
+                        print "Model=Athlon 0.18u Slot A\n";
+                        next;
+                    }
+                    if ( $list[2] == '3' ) {
+                        print "Model=Duron (SF core)\n";
+                        next;
+                    }
+                    if ( $list[2] == '4' ) {
+                        print "Model=Athlon (TB core) 0.18u\n";
+                        next;
+                    }
+                    if ( $list[2] == '6' ) {
+                        print "Model=Athlon MP/Mobile Athlon\n";
+                        next;
+                    }
+                    if ( $list[2] == '7' ) {
+                        print "Model=Mobile Duron\n";
+                        next;
+                    }
+                    if ( $list[2] == '8' ) {
+                        print "Model=Athlon (TH/AP core)\n";
+                        next;
+                    }
+                    if ( $list[2] == 'a' ) {
+                        print "Model=Athlon (BT core)\n";
+                        next;
+                    }
+                    print "Model=Athlon/Duron\n";
+                    next;
+                }
+                if ( ( $list[1] == 'f' ) ) {
+                    print "Model=Opteron/Athlon 64\n";
+                    next;
+                }
+                print "Model=???\n";
+                next;
+            }
+            if ( $list[13] eq "43" ) {
+                print "CpuVendor=Cyrix/Via\n";
+                if ( ( $list[1] == '5' ) ) {
+                    print "Model=Cyrix M1/Media GX\n";
+                    next;
+                }
+                if ( ( $list[1] == '6' ) ) {
+                    if ( $list[2] == '5' ) { print "Model=Cyrix M2\n"; next; }
+                    print "Model=Via C3\n";
+                    next;
+                }
+                print "Model=???\n";
+                next;
+            }
+            if ( $list[13] eq "53" ) {
+                print "CpuVendor=SiS\n";
+                print "Model=SiS 55x\n";
+                next;
+            }
+            if ( $list[13] eq "47" && $list[15] eq "6f" ) {
+                print "CpuVendor=Geode by NSC\n";
+                print "Model=GX/LX\n";
+                next;
+            }
+            if ( $list[13] eq "47" && $list[20] eq "54" ) {
+                print "CpuVendor=Transmeta\n";
+                print "Model=Crusoe/Efficeon\n";
+                next;
+            }
+            print "CpuVendor=???\n";
+            print "Model=???\n";
+        }
+    }
 }
 
+sub disk {
+    my $file = $_[0];
+    my $i    = 0;
+
+    open( DISK, $file ) or die;
+    while (<DISK>) {
+      loop:
+        next unless /^D:/;
+
+        my $j    = 0;
+        my @list = split(/[:(),=]+/);
+        my $capa = int( $list[6] / 2048 );
+
+        print "\n[DISK$i]\n";
+        $i++;
+
+        print
+"Name=$list[1]\nCyl=$list[3]\nHead=$list[4]\nSector=$list[5]\nCapacity=$capa\n";
+
+        while (<DISK>) {
+            goto loop unless /^P:/;
+
+            my @part = split(/[:,]/);
+            $part[7] = int( $part[7] / 2048 );
+            print "PartNum$j=$part[1]\n";
+            print "PartType$j=$part[3]\n";
+            print "PartLength$j=$part[7]\n";
+            $j++;
+        }
+    }
+    close(DISK);
+}
+
+sub hdmap {
+    my $file = $_[0];
+
+    $mac =~ s/[^a-fA-F0-9]//g;
+    $mac = uc($mac);
+
+    open( INFO, ">$BASEDIR/images/$mac/hdmap" ) or return;
+    open( DISK, $file ) or die;
+    while (<DISK>) {
+        if (/^D:\(hd([0-9]+)\):[^=]+=([0-9]+)/) {
+            print INFO $1 . "=" . $2 . "\n";
+        }
+    }
+    close(DISK);
+    close(INFO);
+}
+
+sub mem {
+    my $file = $_[0];
+    my $i    = 0;
+
+    open( FILE, $file ) or die;
+    while (<FILE>) {
+        next unless /^SM:/;
+
+        my @list = split(/[:(),=]+/);
+        my $used = ( $list[1] ne "0" ) + 0;
+        my $size = $list[1];
+        if ( $size > 0 ) {
+            $size *= 1024;
+        }
+        else {
+            $size *= -1;
+        }
+        print "\n[MEM$i]\n";
+        print "Used=$used\n";
+        print "Capacity=$size\n" if ($used);
+        print "Form=" . $memform[ hex( $list[2] ) ] . "\n";
+        print "Location=" . $list[3] . "\n";
+        my $details = "";
+        my $bit     = 1;
+        my $data    = hex( $list[4] ) >> 16;
+
+        foreach $det (@memdetails) {
+            if ( $data & $bit ) {
+                $details .= " " . $det;
+            }
+            $bit *= 2;
+        }
+        print "Type=" . $memtype[ hex( $list[4] ) & 0xFFFF ] . "$details\n";
+        print "Speed=$list[5]\n" if ( $list[5] != 0 );
+        $i++;
+    }
+    close(FILE);
+}
 
 # MAIN
 
-open(F,"/etc/lbs.conf") or die;
-while (<F>)
-{
- chomp;
- (my $i,$basedir)=split /[ \t]*=[ \t]*/ if /^basedir[ \t]*=/i;
-}
-close(F);
-
-$devicelist=$basedir."/etc/pci.ids";
-
 # 2 nd argument ?
 $opt_f = $ARGV[1];
-if ($opt_f ne ''){
-  open(STDOUT,"> $opt_f");
+if ( $opt_f ne '' ) {
+    open( STDOUT, "> $opt_f" );
 }
 
 print "#Generated from $ARGV[0]\n\n";
 
 print "[MAIN]\n";
-misc($ARGV[0]);
-pci($ARGV[0]);
-disk($ARGV[0]);
-hdmap($ARGV[0]);
-mem($ARGV[0]);
+misc( $ARGV[0] );
+pci( $ARGV[0] );
+disk( $ARGV[0] );
+hdmap( $ARGV[0] );
+mem( $ARGV[0] );
 
-# update the database if LRS Inventory is installed
-if (-x "/usr/share/webmin/lrs-inventory/classes/Drivers/Ini/UpdateIni.php") {
-    system("/usr/share/webmin/lrs-inventory/classes/Drivers/Ini/UpdateIni.php ".$ARGV[1]." >/dev/null");
-}
