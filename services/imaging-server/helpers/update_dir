@@ -22,6 +22,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# consts
+$BASEDIR = "/var/lib/pulse2/imaging";
+
 $lbsconf = "/etc/lbs.conf";
 $iam     = `basename $0`;
 chomp($iam);
@@ -79,22 +82,18 @@ sub setHeader {
 
 %hconf = ();
 loadConf( $lbsconf, \%hconf );
-$basedir = $hconf{'basedir'};
 
-badExit("'$basedir': LBS basedir not found") if ( not -d $basedir );
+badExit("'$BASEDIR': LBS basedir not found") if ( not -d $BASEDIR );
 
-unshift @INC, "$basedir/bin";
+unshift @INC, "$BASEDIR/bin";
 require "lbs-lib.pl";
 
-$opt_autoselect = 0;
-if ( exists $hconf{'autoselect'} ) {
-    $opt_autoselect = 1 if ( $hconf{'autoselect'} =~ m/^yes$/i );
-}
+$opt_autoselect = 0; # see below, de-activated by default
 
 my $macaddr     = $ARGV[0] || badExit("too few arguments");
 my $opt_copynum = $ARGV[1] || '';
 
-my $etherfile = "$basedir/etc/ether";
+my $etherfile = "$BASEDIR/etc/ether";
 my $hostdir;
 my $num = 0;
 my $bidon;
@@ -110,7 +109,7 @@ $lmacaddr =~ s/(..)(..)(..)(..)(..)(..)/$1:$2:$3:$4:$5:$6/;
 
 if ( $opt_copynum eq 'C' ) {
 
-    $hostdir = "$basedir/images/$macaddr";
+    $hostdir = "$BASEDIR/images/$macaddr";
     $num     = 0;
 
     if ( -f "$hostdir/COPYNUM" ) {
@@ -143,27 +142,27 @@ if ( $opt_copynum eq 'C' ) {
 }
 else {
     $num = 0;
-    if ( -f "$basedir/imgbase/BASENUM" ) {
-        $num = `cat "$basedir/imgbase/BASENUM"`;
+    if ( -f "$BASEDIR/imgbase/BASENUM" ) {
+        $num = `cat "$BASEDIR/imgbase/BASENUM"`;
         chomp($num);
     }
 
     $newimg = "Base-$num";
     $bidon =
-`mkdir -p "$basedir/imgbase/$newimg"; chown 65534 "$basedir/imgbase/$newimg"`;
+`mkdir -p "$BASEDIR/imgbase/$newimg"; chown 65534 "$BASEDIR/imgbase/$newimg"`;
     $num += 1;
 
-    open( NUM, ">$basedir/imgbase/BASENUM" ) or badExit("open: $!");
+    open( NUM, ">$BASEDIR/imgbase/BASENUM" ) or badExit("open: $!");
     print NUM $num;
     close(NUM);
 
-    open( HOST, ">$basedir/imgbase/hostname" ) or badExit("open: $!");
+    open( HOST, ">$BASEDIR/imgbase/hostname" ) or badExit("open: $!");
     print HOST etherGetNameByMac( \%einfo, $lmacaddr );
     close(HOST);
 
     # Create temporarily conf.txt:
-    if ( !-f "$basedir/imgbase/$newimg/conf.txt" ) {
-        open( CONF, ">$basedir/imgbase/$newimg/conf.txt" )
+    if ( !-f "$BASEDIR/imgbase/$newimg/conf.txt" ) {
+        open( CONF, ">$BASEDIR/imgbase/$newimg/conf.txt" )
           or badExit("open: $!");
         print CONF "title Base backup ($newimg)\n";
         print CONF "desc Currently backing up. Please wait...\n";
@@ -174,10 +173,10 @@ else {
 
         # Foreach registered hosts:
         foreach my $m ( etherGetMacs( \%einfo ) ) {
-            $hostdir = "$basedir/images/" . toMacFileName($m);
+            $hostdir = "$BASEDIR/images/" . toMacFileName($m);
 
             # Symlink to imgbase/Base-$num
-            if ( not symlink( "$basedir/imgbase/$newimg", "$hostdir/$newimg" ) )
+            if ( not symlink( "$BASEDIR/imgbase/$newimg", "$hostdir/$newimg" ) )
             {
                 badExit("symlink: $!");
             }
@@ -189,5 +188,5 @@ else {
     }
 }
 
-updateEntry( $basedir, $macaddr ) or badExit( lbsGetError() );
+updateEntry( $BASEDIR, $macaddr ) or badExit( lbsGetError() );
 
