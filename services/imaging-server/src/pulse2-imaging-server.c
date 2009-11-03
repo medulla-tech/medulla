@@ -459,24 +459,24 @@ int main(void)
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:basedir"))) {
+    if ((str = iniparser_getstr(ini, "imaging-server:base_folder"))) {
         strncpy((char*)gBaseDir, str, 254);
         sprintf(logtxt, "%.220s/log/Response.log", gBaseDir);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "gBaseDir not found in %s", gConfigurationFile);
+        sprintf(msg, "base_folder not found in %s", gConfigurationFile);
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:updatemenu_path"))) {
+    if ((str = iniparser_getstr(ini, "helpers:update_menu_path"))) {
         strncpy((char*)gUpdateMenuPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "updatemenu_path not found in %s", gConfigurationFile);
+        sprintf(msg, "update_menu_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:info_path"))) {
+    if ((str = iniparser_getstr(ini, "helpers:info_path"))) {
         strncpy((char*)gInfoPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
@@ -484,27 +484,27 @@ int main(void)
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:checkaddhost_path"))) {
+    if ((str = iniparser_getstr(ini, "helpers:check_add_host_path"))) {
         strncpy((char*)gCheckAddHostPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "checkaddhost_path not found in %s", gConfigurationFile);
+        sprintf(msg, "check_add_host_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:updatedir_path"))) {
+    if ((str = iniparser_getstr(ini, "helpers:update_dir_path"))) {
         strncpy((char*)gUpdateDirPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "updatedir_path not found in %s", gConfigurationFile);
+        sprintf(msg, "update_dir_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
-    if ((str = iniparser_getstr(ini, "imaging-server:setdefault_path"))) {
+    if ((str = iniparser_getstr(ini, "helpers:set_default_path"))) {
         strncpy((char*)gSetDefaultPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "setdefault_path not found in %s", gConfigurationFile);
+        sprintf(msg, "set_default_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
