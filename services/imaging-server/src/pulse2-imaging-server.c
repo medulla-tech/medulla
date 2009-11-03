@@ -461,7 +461,6 @@ int main(void)
 
     if ((str = iniparser_getstr(ini, "imaging-server:base_folder"))) {
         strncpy((char*)gBaseDir, str, 254);
-        sprintf(logtxt, "%.220s/log/Response.log", gBaseDir);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
         sprintf(msg, "base_folder not found in %s", gConfigurationFile);
@@ -505,6 +504,14 @@ int main(void)
     } else {
         char *msg = malloc(256); bzero(msg, 256);
         sprintf(msg, "set_default_path not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "logs:log_file_path"))) {
+        strncpy((char*)logtxt, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "log_file_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
