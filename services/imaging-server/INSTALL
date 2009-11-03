@@ -1,6 +1,8 @@
 Manual install :
+ - create folder /var/lib/pulse2/imaging, export it throught NFS (async, rw, subtree_check)
+ - create folder /var/lib/pulse2/imaging/log/
+ - create folder /usr/share/pulse2/imaging
  - install src/pulse2-imaging-server under /usr/sbin/
  - install init.d/pulse2-imaging-server under /etc/init.d/
  - install conf/pulse2/imaging-server/imaging-server.init under /etc/mmc/conf/pulse2/imaging-server/
- - create folder /var/lib/pulse2/imaging, export it throught NFS (async, rw, subtree_check)
- - create folder /var/lib/pulse2/imaging/log/
+ - install helpers into /usr/share/pulse2/imaging
