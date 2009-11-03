@@ -390,20 +390,18 @@ sub lbsGetError {
 # Si le message $msg est donne en arg, il est alors ajoute à la suite du
 # message d'erreur.
 #
-sub lbsDieError
-{
-my $msg = lbsGetError() ;
+sub lbsDieError {
+    my $msg = lbsGetError();
 
- if (defined($_[0])) {
-        $msg .= " " . $_[0]  ;
- }
+    if ( defined( $_[0] ) ) {
+        $msg .= " " . $_[0];
+    }
 
- $msg .= "\n" ;
- $msg =~ s/\n+$/\n/s ;
+    $msg .= "\n";
+    $msg =~ s/\n+$/\n/s;
 
- die($msg) ;
+    die($msg);
 }
-
 
 # $mesg textSub(\%href,$label,[$substitutes]*)
 #
