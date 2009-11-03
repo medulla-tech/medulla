@@ -184,7 +184,9 @@ sub misc {
         }
         if (/^M/) {
             my ( $toto, $low, $titi, $high ) = split(/[:,]/);
+            chomp $low;
             $low  = hex($low);
+            chomp $high;
             $high = hex($high);
             my $total = $low + $high;
             print "LowMem=$low\nHighMem=$high\nTotalMem=$total\n";
