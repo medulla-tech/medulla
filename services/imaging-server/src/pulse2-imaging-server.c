@@ -42,7 +42,7 @@ void mysyslog( char *smac, int priority, const char *format_str, ... )
     vsnprintf( buf, 1023, format_str, ap );
     va_end(ap);
 
-    snprintf(path, 255, "%s/images/%s/log", basedir, smac);
+    snprintf(path, 255, "%s/images/%s/log", gBaseDir, smac);
     if ((f = fopen(path, "a"))) {
         time_t now;
         char tm[64];
@@ -55,7 +55,7 @@ void mysyslog( char *smac, int priority, const char *format_str, ... )
 
         /* log the last restoration */
         if (strstr(buf, "restoration comp") != NULL) {
-            snprintf(path, 255, "%s/images/%s/log.lastrestore", basedir, smac);
+            snprintf(path, 255, "%s/images/%s/log.lastrestore", gBaseDir, smac);
             if ((f = fopen(path, "w"))){
                 fprintf(f, "%s: %s\n", tm, buf);
                 fclose(f);
@@ -65,7 +65,7 @@ void mysyslog( char *smac, int priority, const char *format_str, ... )
         syslog(priority, buf);
 
         /* keep only the last 20 lines of the log */
-        snprintf(buf, 1023, "%s/bin/rotatelog %s", basedir, path);
+        snprintf(buf, 1023, "%s/bin/rotatelog %s", gBaseDir, path);
         system(buf);
       }
     else
@@ -200,6 +200,10 @@ unsigned char *getmac(struct in_addr addr)
 
     syslog(LOG_INFO, "Warning: MAC not found in packet\n");
     fi = fopen("/proc/net/arp", "r");
+    if (!fi) { //can't open file
+        syslog(LOG_WARNING, "can't open /proc/net/arp");
+        return 0;
+    }
     while (fgets((char *)gBuff, 80, fi)) {
         if (strstr((char *)gBuff, straddr)) {
             ptr = (unsigned char *) strchr((char *) gBuff, ':') - 2;
@@ -252,16 +256,22 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        snprintf(command, 255, "%s/bin/update_menu %s", basedir, smac);
+        snprintf(command, 255, "%s %s", gUpdateMenuPath, smac);
         mysystem(command);
         /* write inventory to file. Must fit in one packet ! */
-        snprintf(name, 255, "%s/log/%s.inf", basedir, smac);
-        fo = fopen(name, "w");
+        snprintf(name, 255, "%s/log/%s.inf", gBaseDir, smac);
+        if (!(fo = fopen(name, "w"))) { //can't create .inf file
+            char *msg = malloc(256);
+            sprintf(msg, "can't create %s", name);
+            syslog(LOG_WARNING, msg);
+            free(msg);
+            return 0;
+        }
         fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
                 inet_ntoa(si_other->sin_addr),
                 ntohs(si_other->sin_port), mac, buf + 1);
-        snprintf(command, 255, "%s/bin/info %s/log/%s.inf %s/log/%s.ini",
-                basedir, basedir, smac, basedir, smac);
+        snprintf(command, 255, "%s %s/log/%s.inf %s/log/%s.ini",
+                gInfoPath, gBaseDir, smac, gBaseDir, smac);
         fclose(fo);
         mysystem(command);
         return 0;
@@ -270,8 +280,14 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xAD) {
         char *ptr, pass[256], hostname[256];
 
-        snprintf(name, 255, "%s/log/ID.log", basedir);
-        fo = fopen(name, "a");
+        snprintf(name, 255, "%s/log/ID.log", gBaseDir);
+        if (!(fo = fopen(name, "a"))) { //can't create ID.log file
+            char *msg = malloc(256);
+            sprintf(msg, "can't create %s", name);
+            syslog(LOG_WARNING, msg);
+            free(msg);
+            return 0;
+        }
         fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
                 inet_ntoa(si_other->sin_addr),
                 ntohs(si_other->sin_port), mac, buf);
@@ -281,21 +297,19 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         *ptr = 0;
         strcpy(pass, ptr + 1);
         strcpy(hostname, (char*)buf + 3);
-        snprintf(command, 255, "%s/bin/check_add_host %s %s %s", basedir,
-                mac, hostname, pass);
+        snprintf(command, 255, "%s %s %s %s", gCheckAddHostPath, mac, hostname, pass);
         mysystem(command);
         return 0;
     }
     // before a save
     if (buf[0] == 0xEC) {
-        snprintf(command, 255, "%s/bin/update_dir %s %c", basedir, smac, buf[1]);
+        snprintf(command, 255, "%s %s %c", gUpdateDirPath, smac, buf[1]);
         mysystem(command);
         return 0;
     }
     // change menu default
     if (buf[0] == 0xCD) {
-        snprintf(command, 255, "%s/bin/set_default %s %d", basedir,
-                smac, buf[1]);
+        snprintf(command, 255, "%s %s %d", gSetDefaultPath, smac, buf[1]);
         mysystem(command);
         mysyslog(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
         return 0;
@@ -340,11 +354,11 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 mysyslog(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
                 if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                         // Local backup
-                        snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", basedir, smac, bn);
+                        snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
                         system(command);
                 } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
                         // Shared backup
-                        snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", basedir, bn);
+                        snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", gBaseDir, bn);
                         system(command);
                 }
             } else {
@@ -433,7 +447,7 @@ int main(void)
 
     syslog(LOG_INFO, "pulse2-imaging-client-handler r.$Revision$");
 
-    basedir[0] = 0;
+    gBaseDir[0] = 0;
 
     initlog();
 
@@ -446,11 +460,51 @@ int main(void)
     }
 
     if ((str = iniparser_getstr(ini, "imaging-server:basedir"))) {
-        strncpy((char*)basedir, str, 254);
-        sprintf(logtxt, "%.220s/log/Response.log", basedir);
+        strncpy((char*)gBaseDir, str, 254);
+        sprintf(logtxt, "%.220s/log/Response.log", gBaseDir);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "Basedir not found in %s", gConfigurationFile);
+        sprintf(msg, "gBaseDir not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "imaging-server:updatemenu_path"))) {
+        strncpy((char*)gUpdateMenuPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "updatemenu_path not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "imaging-server:info_path"))) {
+        strncpy((char*)gInfoPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "info_path not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "imaging-server:checkaddhost_path"))) {
+        strncpy((char*)gCheckAddHostPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "checkaddhost_path not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "imaging-server:updatedir_path"))) {
+        strncpy((char*)gUpdateDirPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "updatedir_path not found in %s", gConfigurationFile);
+        diep(msg);
+    }
+
+    if ((str = iniparser_getstr(ini, "imaging-server:setdefault_path"))) {
+        strncpy((char*)gSetDefaultPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "setdefault_path not found in %s", gConfigurationFile);
         diep(msg);
     }
 
@@ -469,7 +523,7 @@ int main(void)
     }
 
     /* */
-    sprintf(etherpath, "%s/etc/ether", basedir);
+    sprintf(etherpath, "%s/etc/ether", gBaseDir);
 
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) diep("udp socket");
     if ((stcp = socket(AF_INET, SOCK_STREAM, 0)) == -1) diep("tcp socket");

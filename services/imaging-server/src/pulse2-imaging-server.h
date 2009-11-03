@@ -49,7 +49,15 @@
 #define PID_FILE "/var/run/pulse2-imaging-server.pid"
 
 unsigned char gBuff[80];
-unsigned char basedir[255];
+
+// some path
+unsigned char gBaseDir[255];
+unsigned char gUpdateMenuPath[255];
+unsigned char gInfoPath[255];
+unsigned char gCheckAddHostPath[255];
+unsigned char gUpdateDirPath[255];
+unsigned char gSetDefaultPath[255];
+
 dictionary *ini;
 char etherpath[255];
 char logtxt[256];
