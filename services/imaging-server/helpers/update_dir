@@ -25,9 +25,10 @@
 # consts
 $BASEDIR = "/var/lib/pulse2/imaging";
 
-$lbsconf = "/etc/lbs.conf";
 $iam     = `basename $0`;
 chomp($iam);
+
+require "/usr/share/pulse2/imaging/helpers/lrs-legacy.pl";
 
 #//////////////////////////////////////////////////////////////////////////////
 
@@ -83,23 +84,18 @@ sub setHeader {
 badExit("'$BASEDIR': Pulse 2 basedir not found") if ( not -d $BASEDIR );
 
 unshift @INC, "$BASEDIR/bin";
-require "lbs-lib.pl";
 
 $opt_autoselect = 0; # see below, de-activated by default
 
 my $macaddr     = $ARGV[0] || badExit("too few arguments");
 my $opt_copynum = $ARGV[1] || '';
 
-my $etherfile = "$BASEDIR/etc/ether";
 my $hostdir;
 my $num = 0;
 my $bidon;
-my %einfo;
 my $menu;
 my $newimg;
 my $lmacaddr;
-
-etherLoad( $etherfile, \%einfo ) or badExit( lbsGetError() );
 
 $lmacaddr = $macaddr;
 $lmacaddr =~ s/(..)(..)(..)(..)(..)(..)/$1:$2:$3:$4:$5:$6/;
@@ -119,7 +115,7 @@ if ( $opt_copynum eq 'C' ) {
     $num += 1;
 
     open( HOST, ">$hostdir/hostname" ) or badExit("open: $!");
-    print HOST etherGetNameByMac( \%einfo, $lmacaddr );
+    print HOST "TODO"; # fixme : record the original client hostname
     close(HOST);
 
     open( NUM, ">$hostdir/COPYNUM" ) or badExit("open: $!");
@@ -134,7 +130,7 @@ if ( $opt_copynum eq 'C' ) {
     }
     if ($opt_autoselect) {
         setHeader( "$hostdir/header.lst", $newimg )
-          or badExit( lbsGetError() );
+          or badExit( "setHeader" );
     }
 }
 else {
@@ -154,7 +150,7 @@ else {
     close(NUM);
 
     open( HOST, ">$BASEDIR/imgbase/hostname" ) or badExit("open: $!");
-    print HOST etherGetNameByMac( \%einfo, $lmacaddr );
+    print HOST "TODO"; # fixme : record the original client hostname
     close(HOST);
 
     # Create temporarily conf.txt:
@@ -166,24 +162,9 @@ else {
         close(CONF);
     }
 
-    if ($opt_autoselect) {
-
-        # Foreach registered hosts:
-        foreach my $m ( etherGetMacs( \%einfo ) ) {
-            $hostdir = "$BASEDIR/images/" . toMacFileName($m);
-
-            # Symlink to imgbase/Base-$num
-            if ( not symlink( "$BASEDIR/imgbase/$newimg", "$hostdir/$newimg" ) )
-            {
-                badExit("symlink: $!");
-            }
-
-            # Add a section in header.lst and set visu=yes
-            setHeader( "$hostdir/header.lst", $newimg )
-              or badExit( lbsGetError() );
-        }
-    }
 }
 
+# to be ported to pulse2
 updateEntry( $BASEDIR, $macaddr ) or badExit( lbsGetError() );
+
 
