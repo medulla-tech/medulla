@@ -25,10 +25,11 @@
 # consts
 $BASEDIR = "/var/lib/pulse2/imaging";
 
-$iam     = `basename $0`;
-chomp($iam);
+use lib "/usr/share/pulse2/imaging/helpers";
+require "lrs-legacy.pl";
 
-require "/usr/share/pulse2/imaging/helpers/lrs-legacy.pl";
+$iam = `basename $0`;
+chomp($iam);
 
 #//////////////////////////////////////////////////////////////////////////////
 
@@ -85,7 +86,7 @@ badExit("'$BASEDIR': Pulse 2 basedir not found") if ( not -d $BASEDIR );
 
 unshift @INC, "$BASEDIR/bin";
 
-$opt_autoselect = 0; # see below, de-activated by default
+$opt_autoselect = 0;    # see below, de-activated by default
 
 my $macaddr     = $ARGV[0] || badExit("too few arguments");
 my $opt_copynum = $ARGV[1] || '';
@@ -115,7 +116,7 @@ if ( $opt_copynum eq 'C' ) {
     $num += 1;
 
     open( HOST, ">$hostdir/hostname" ) or badExit("open: $!");
-    print HOST "TODO"; # fixme : record the original client hostname
+    print HOST "TODO";    # fixme : record the original client hostname
     close(HOST);
 
     open( NUM, ">$hostdir/COPYNUM" ) or badExit("open: $!");
@@ -130,7 +131,7 @@ if ( $opt_copynum eq 'C' ) {
     }
     if ($opt_autoselect) {
         setHeader( "$hostdir/header.lst", $newimg )
-          or badExit( "setHeader" );
+          or badExit("setHeader");
     }
 }
 else {
@@ -150,7 +151,7 @@ else {
     close(NUM);
 
     open( HOST, ">$BASEDIR/imgbase/hostname" ) or badExit("open: $!");
-    print HOST "TODO"; # fixme : record the original client hostname
+    print HOST "TODO";    # fixme : record the original client hostname
     close(HOST);
 
     # Create temporarily conf.txt:
@@ -166,5 +167,4 @@ else {
 
 # to be ported to pulse2
 updateEntry( $BASEDIR, $macaddr ) or badExit( lbsGetError() );
-
 
