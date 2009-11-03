@@ -21,5 +21,38 @@
  * MA 02110-1301, USA.
  */
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <math.h>
+#include <errno.h>
+#include <ctype.h>
+#include <syslog.h>
+#include <time.h>
+#include <dirent.h>
 
-char * global_conf_file_name = "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
+#ifdef S_SPLINT_S
+# include "/usr/local/splint/include/arpa/inet.h"
+#else
+# include <arpa/inet.h>
+#endif
+#include <netinet/in.h>
+
+#include "iniparser.h"
+
+#define BUFLEN 1532
+#define PORT 1001
+#define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
+#define PID_FILE "/var/run/pulse2-imaging-server.pid"
+
+unsigned char gBuff[80];
+unsigned char basedir[255];
+dictionary *ini;
+char etherpath[255];
+char logtxt[256];
+
+const char * gConfigurationFile = CONFIGURATION_FILE;
+const char * gPIDFile= PID_FILE;

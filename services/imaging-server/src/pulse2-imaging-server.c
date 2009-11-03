@@ -22,39 +22,9 @@
  * MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <math.h>
-#include <errno.h>
-#include <ctype.h>
-#include <syslog.h>
-#include <time.h>
-#include <dirent.h>
-#ifdef S_SPLINT_S
-# include "/usr/local/splint/include/arpa/inet.h"
-#else
-# include <arpa/inet.h>
-#endif
-#include <netinet/in.h>
-
-
-#define BUFLEN 1532
-#define PORT 1001
-
 #include "pulse2-imaging-server.h"
-#include "iniparser.h"
 
-unsigned char gBuff[80];
-unsigned char basedir[255];
-dictionary *ini;
-char etherpath[255];
-char logtxt[256];
-
-void initlog(void)
-{
+void initlog(void) {
     openlog("lbs", 0, LOG_DAEMON | LOG_LOCAL3);
 }
 
@@ -169,9 +139,9 @@ unsigned int getentries(unsigned char *file)
 {
     FILE *fi;
     unsigned int s = 0;
-    unsigned char buf[100];
+    char buf[100];
 
-    fi = fopen(file, "r");
+    fi = fopen((char *)file, "r");
     if (!fi)
         return 0;
     while (fgets(buf, 100, fi))
@@ -201,7 +171,7 @@ int getentry(char *file, char *pktmac)
                 //printf("%s*%s\n", mac, name);
                 if (!strncasecmp(mac, pktmac, 17)) {
                     /* return the name in the global buffer */
-                    strcpy(gBuff, name);
+                    strcpy((char *)gBuff, name);
                     fclose(fi);
                     return 1;
                 }
@@ -219,7 +189,7 @@ int getentry(char *file, char *pktmac)
 unsigned char *getmac(struct in_addr addr)
 {
     FILE *fi;
-    char *ptr;
+    unsigned char *ptr;
     char straddr[80];
     int l;
 
@@ -230,8 +200,8 @@ unsigned char *getmac(struct in_addr addr)
 
     syslog(LOG_INFO, "Warning: MAC not found in packet\n");
     fi = fopen("/proc/net/arp", "r");
-    while (fgets(gBuff, 80, fi)) {
-        if (strstr(gBuff, straddr)) {
+    while (fgets((char *)gBuff, 80, fi)) {
+        if (strstr((char *)gBuff, straddr)) {
             ptr = (unsigned char *) strchr((char *) gBuff, ':') - 2;
             ptr[17] = 0;
             return ptr;
@@ -254,7 +224,7 @@ unsigned char *getmacfrompkt(char *buf, int l)
         && buf[l - 15] == ':' && buf[l - 12] == ':' && buf[l - 9] == ':'
         && buf[l - 6] == ':' && buf[l - 3] == ':') {
         // let's copy the mac address
-        strncpy(gBuff, buf + l - 17, 17);
+        strncpy((char *)gBuff, buf + l - 17, 17);
         gBuff[17] = 0;
         return gBuff;
     }
@@ -307,10 +277,10 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 ntohs(si_other->sin_port), mac, buf);
         fclose(fo);
 
-        ptr = strrchr(buf + 3, ':');
+        ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
         strcpy(pass, ptr + 1);
-        strcpy(hostname, buf + 3);
+        strcpy((char *)hostname, buf + 3);
         snprintf(command, 255, "%s/bin/check_add_host %s %s %s", basedir,
                 mac, hostname, pass);
         mysystem(command);
@@ -457,6 +427,9 @@ int main(void)
     char *str;
     fd_set fds;
     int on = 1;
+    int pidFileFD;
+    int pid = 0;
+    char pidBuff[5]; bzero(pidBuff, 5);
 
     syslog(LOG_INFO, "pulse2-imaging-client-handler r.$Revision$");
 
@@ -464,10 +437,11 @@ int main(void)
 
     initlog();
 
-    ini = iniparser_load(global_conf_file_name);
+    ini = iniparser_load(gConfigurationFile);
+
     if (ini == NULL) {
-        char *msg = malloc(256); bzero (msg, 256);
-        sprintf(msg, "cannot parse file %s", global_conf_file_name);
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "cannot parse file %s", gConfigurationFile);
         diep(msg);
     }
 
@@ -475,42 +449,53 @@ int main(void)
         strncpy(basedir, str, 254);
         sprintf(logtxt, "%.220s/log/Response.log", basedir);
     } else {
-        char *msg = malloc(256); bzero (msg, 256);
-        sprintf(msg, "Basedir not found in %s", global_conf_file_name);
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "Basedir not found in %s", gConfigurationFile);
         diep(msg);
     }
+
+    syslog(LOG_INFO, "Configuration parsed");
 
     /* Daemonize here */
     if (( daemon(0, 0) != 0)) diep("daemon");
 
+    pid = getpid();
+    if (pid) {
+        char *msg = malloc(256); bzero (msg, 256);
+        sprintf(msg, "Daemonization succedeed, PID is %d", pid);
+        syslog(LOG_INFO, msg);
+    } else {
+        diep("daemon");
+    }
+
     /* */
     sprintf(etherpath, "%s/etc/ether", basedir);
 
-    if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-        diep("udp socket");
-    if ((stcp = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-        diep("tcp socket");
-
+    if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) diep("udp socket");
+    if ((stcp = socket(AF_INET, SOCK_STREAM, 0)) == -1) diep("tcp socket");
 
     /* UDP sock */
     memset((char *) &si_me, sizeof(si_me), 0);
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(PORT);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(s, (struct sockaddr *) &si_me, sizeof(si_me)) == -1)
-        diep("bind");
+    if (bind(s, (struct sockaddr *) &si_me, sizeof(si_me)) == -1) diep("bind UDP");
 
     /* TCP sock */
-    if (setsockopt (stcp, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0) {
-      syslog (LOG_DEBUG, "SO_REUSEADDR failed");
-    }
+    if (setsockopt (stcp, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0) syslog (LOG_DEBUG, "SO_REUSEADDR failed");
+
     memset((char *) &si_tcp, sizeof(si_tcp), 0);
     si_tcp.sin_family = AF_INET;
     si_tcp.sin_port = htons(PORT);
     si_tcp.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(stcp, (struct sockaddr *) &si_tcp, sizeof(si_tcp)) == -1)
-        diep("bind");
+    if (bind(stcp, (struct sockaddr *) &si_tcp, sizeof(si_tcp)) == -1) diep("bind TCP");
     listen(stcp, 1000);
+
+    pidFileFD = open(gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
+    if (pidFileFD == -1) diep("PID file");
+    snprintf(pidBuff, 5, "%d", pid);
+    write(pidFileFD, pidBuff, strlen(pidBuff));
+    close(pidFileFD);
 
     while (1) {
         int so;                 /* tcp/udp stream FD */
