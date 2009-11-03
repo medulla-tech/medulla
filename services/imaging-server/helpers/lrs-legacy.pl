@@ -53,6 +53,8 @@
     'LINK_NF'         => q('$1': Link not found.),
 );
 
+$_lbsdebug = 0;
+
 %_lbserr = (
     'href' => \%_errors_en,
     'func' => 'None',
@@ -382,6 +384,26 @@ sub lbsGetError {
         return $buf;
     }
 }
+
+# lbsDieError( [$msg] ) ;
+# Termine le programme en affichant la derniere erreur rencontree.
+# Si le message $msg est donne en arg, il est alors ajoute à la suite du
+# message d'erreur.
+#
+sub lbsDieError
+{
+my $msg = lbsGetError() ;
+
+ if (defined($_[0])) {
+        $msg .= " " . $_[0]  ;
+ }
+
+ $msg .= "\n" ;
+ $msg =~ s/\n+$/\n/s ;
+
+ die($msg) ;
+}
+
 
 # $mesg textSub(\%href,$label,[$substitutes]*)
 #
