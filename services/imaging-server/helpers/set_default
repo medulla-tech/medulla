@@ -1,28 +1,33 @@
 #!/usr/bin/perl -w
-
+#
+# (c) 2003-2007 Linbox, http://www.linbox.com/
+# (c) 2008-2009 Mandriva, http://www.mandriva.com/
+#
 # $Id$
-
-# Executed to set the default boot entry
-
 #
-# Linbox Rescue Server
-# Copyright (C) 2005  Linbox FAS
+# This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
-$lbsconf="/etc/lbs.conf";
+# consts
+$BASEDIR = "/var/lib/pulse2/imaging";
+
+use lib "/usr/share/pulse2/imaging/helpers";
+require "lrs-legacy.pl";
+
 $iam=`basename $0` ; chomp($iam) ;
 
 #//////////////////////////////////////////////////////////////////////////////
@@ -36,34 +41,13 @@ sub badExit
  exit(1) ;
 }
 
-# loadConf($file,\%conf)
-#
-sub loadConf
-{
- open(F, $_[0]) || return 0;
- while(<F>) {
-	s/#.*$//g;
-	if (/([A-z0-9_\.]+)\s*=\s*"(.*)"/ ||
-	    /([A-z0-9_\.]+)\s*=\s*'(.*)'/ ||
-	    /([A-z0-9_\.]+)\s*=\s*(.*)/) {
-			$_[1]->{$1} = $2;
-		}
-	}
- close(F);
- return 1;
-}
-
 #//////////////////////////////////////////////////////////////////////////////
 
-# find basedir
-%hconf = () ;
-loadConf($lbsconf, \%hconf) ;
-$basedir = $hconf{'basedir'} ;
-badExit("'$basedir': LBS basedir not found") if (not -d $basedir) ;
+badExit("'$BASEDIR': LBS basedir not found") if (not -d $BASEDIR) ;
 
 
 # load header
-$header = "$basedir/images/$ARGV[0]/header.lst";
+$header = "$BASEDIR/images/$ARGV[0]/header.lst";
 $newdef = $ARGV[1];
 
 if ($ARGV[0] eq "") {
@@ -72,9 +56,6 @@ if ($ARGV[0] eq "") {
 }
 
 badExit("'$header': LBS menu not found") if (not -f $header) ;
-
-unshift @INC, "$basedir/bin" ;
-require "inifile.pl" ;
 
 %conf = ();
 iniLoad($header, \%conf);
@@ -88,9 +69,9 @@ foreach my $sec (iniGetSections(\%conf))
     if ($visu eq "no" || $visu eq "") { next; }
     my $val = iniGetVal(\%conf, $sec, "def");
     if ($ii == $newdef) {
-	iniSetVal(\%conf, $sec, "def", "yes");
+        iniSetVal(\%conf, $sec, "def", "yes");
     } else {
-	iniSetVal(\%conf, $sec, "def", "no");    
+        iniSetVal(\%conf, $sec, "def", "no");
     }
     $ii++;
 }
