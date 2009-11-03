@@ -22,174 +22,172 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-$lbsconf="/etc/lbs.conf" ;
-$iam=`basename $0` ; chomp($iam) ;
+$lbsconf = "/etc/lbs.conf";
+$iam     = `basename $0`;
+chomp($iam);
 
 #//////////////////////////////////////////////////////////////////////////////
 
 # badExit($message,[...])
 #
-sub badExit
-{
- my $msg = join(" ",@_) ;
- print STDERR "$iam: $msg\n" ;
- exit(1) ;
+sub badExit {
+    my $msg = join( " ", @_ );
+    print STDERR "$iam: $msg\n";
+    exit(1);
 }
 
 # loadConf($file,\%conf)
 #
-sub loadConf
-{
- open(F, $_[0]) || return 0;
- while(<F>) {
+sub loadConf {
+    open( F, $_[0] ) || return 0;
+    while (<F>) {
         s/#.*$//g;
-        if (/([A-z0-9_\.]+)\s*=\s*"(.*)"/ ||
-            /([A-z0-9_\.]+)\s*=\s*'(.*)'/ ||
-            /([A-z0-9_\.]+)\s*=\s*(.*)/) {
-                        $_[1]->{$1} = $2;
-                }
+        if (   /([A-z0-9_\.]+)\s*=\s*"(.*)"/
+            || /([A-z0-9_\.]+)\s*=\s*'(.*)'/
+            || /([A-z0-9_\.]+)\s*=\s*(.*)/ )
+        {
+            $_[1]->{$1} = $2;
         }
- close(F);
- return 1;
+    }
+    close(F);
+    return 1;
 }
 
 # setHeader($file, $img)
 # Add a new section in $file (type header.lst), set visu=yes, and set
 # image $img.  Return 1 if OK, or 0 if not.
 #
-sub setHeader
-{
-my ($file,$img) = @_ ;
-my (%hdr,$menu) ;
+sub setHeader {
+    my ( $file, $img ) = @_;
+    my ( %hdr, $menu );
 
- hdrLoad($file,\%hdr) or return 0 ;
+    hdrLoad( $file, \%hdr ) or return 0;
 
-        $menu = hdrUniqueName(\%hdr) ;
-        hdrAddMenu(\%hdr,$menu) or return 0 ;
-        hdrSetVal(\%hdr, $menu, "def", "no") ;
-        hdrSetVal(\%hdr, $menu, "visu", "yes") ;
-        hdrSetVal(\%hdr, $menu, "image", $img) ;
-        hdrSetVal(\%hdr, $menu, "include", "$img/conf.txt") ;
+    $menu = hdrUniqueName( \%hdr );
+    hdrAddMenu( \%hdr, $menu ) or return 0;
+    hdrSetVal( \%hdr, $menu, "def",     "no" );
+    hdrSetVal( \%hdr, $menu, "visu",    "yes" );
+    hdrSetVal( \%hdr, $menu, "image",   $img );
+    hdrSetVal( \%hdr, $menu, "include", "$img/conf.txt" );
 
- hdrSave($file, \%hdr) or return 0 ;
+    hdrSave( $file, \%hdr ) or return 0;
 
-1;
+    1;
 }
-
 
 #//////////////////////////////////////////////////////////////////////////////
 
-%hconf = () ;
-loadConf($lbsconf, \%hconf) ;
-$basedir = $hconf{'basedir'} ;
+%hconf = ();
+loadConf( $lbsconf, \%hconf );
+$basedir = $hconf{'basedir'};
 
-badExit("'$basedir': LBS basedir not found") if (not -d $basedir) ;
+badExit("'$basedir': LBS basedir not found") if ( not -d $basedir );
 
-unshift @INC, "$basedir/bin" ;
-require "lbs-lib.pl" ;
+unshift @INC, "$basedir/bin";
+require "lbs-lib.pl";
 
-$opt_autoselect = 0 ;
-if (exists $hconf{'autoselect'}) {
-        $opt_autoselect=1 if ($hconf{'autoselect'} =~ m/^yes$/i) ;
+$opt_autoselect = 0;
+if ( exists $hconf{'autoselect'} ) {
+    $opt_autoselect = 1 if ( $hconf{'autoselect'} =~ m/^yes$/i );
 }
 
+my $macaddr     = $ARGV[0] || badExit("too few arguments");
+my $opt_copynum = $ARGV[1] || '';
 
-my $macaddr = $ARGV[0] || badExit("too few arguments") ;
-my $opt_copynum = $ARGV[1] || '' ;
-
-my $etherfile = "$basedir/etc/ether" ;
-my $hostdir ;
-my $num=0 ;
-my $bidon ;
-my %einfo ;
-my $menu ;
-my $newimg ;
+my $etherfile = "$basedir/etc/ether";
+my $hostdir;
+my $num = 0;
+my $bidon;
+my %einfo;
+my $menu;
+my $newimg;
 my $lmacaddr;
 
-etherLoad($etherfile, \%einfo) or badExit(lbsGetError()) ;
+etherLoad( $etherfile, \%einfo ) or badExit( lbsGetError() );
 
 $lmacaddr = $macaddr;
 $lmacaddr =~ s/(..)(..)(..)(..)(..)(..)/$1:$2:$3:$4:$5:$6/;
 
-if ($opt_copynum eq 'C') {
+if ( $opt_copynum eq 'C' ) {
 
-        $hostdir = "$basedir/images/$macaddr" ;
-        $num=0 ;
+    $hostdir = "$basedir/images/$macaddr";
+    $num     = 0;
 
-        if (-f "$hostdir/COPYNUM") {
-                $num=`cat "$hostdir/COPYNUM"` ;
-                chomp($num) ;
-        }
+    if ( -f "$hostdir/COPYNUM" ) {
+        $num = `cat "$hostdir/COPYNUM"`;
+        chomp($num);
+    }
 
-        $newimg = "Local-$num" ;
-        $bidon = `mkdir -p "$hostdir/$newimg"; chown 65534 "$hostdir/$newimg"`;
-        $num += 1 ;
+    $newimg = "Local-$num";
+    $bidon  = `mkdir -p "$hostdir/$newimg"; chown 65534 "$hostdir/$newimg"`;
+    $num += 1;
 
-        open(HOST,">$hostdir/hostname") or badExit("open: $!") ;
-        print HOST  etherGetNameByMac (\%einfo, $lmacaddr) ;
-        close(HOST) ;
+    open( HOST, ">$hostdir/hostname" ) or badExit("open: $!");
+    print HOST etherGetNameByMac( \%einfo, $lmacaddr );
+    close(HOST);
 
-        open(NUM,">$hostdir/COPYNUM") or badExit("open: $!") ;
-        print NUM  $num ;
-        close(NUM) ;
+    open( NUM, ">$hostdir/COPYNUM" ) or badExit("open: $!");
+    print NUM $num;
+    close(NUM);
 
-        if (! -f "$hostdir/$newimg/conf.txt") {
-            open(CONF,">$hostdir/$newimg/conf.txt") or badExit("open: $!");
-            print CONF "title Local backup ($newimg)\n" ;
-            print CONF "desc Currently backing up. Please wait...\n" ;
-            close(CONF) ;
-        }
-        if ($opt_autoselect) {
-                setHeader("$hostdir/header.lst",$newimg)
-                         or badExit(lbsGetError()) ;
-        }
+    if ( !-f "$hostdir/$newimg/conf.txt" ) {
+        open( CONF, ">$hostdir/$newimg/conf.txt" ) or badExit("open: $!");
+        print CONF "title Local backup ($newimg)\n";
+        print CONF "desc Currently backing up. Please wait...\n";
+        close(CONF);
+    }
+    if ($opt_autoselect) {
+        setHeader( "$hostdir/header.lst", $newimg )
+          or badExit( lbsGetError() );
+    }
 }
 else {
-        $num=0 ;
-        if (-f "$basedir/imgbase/BASENUM") {
-                $num=`cat "$basedir/imgbase/BASENUM"` ;
-                chomp($num) ;
+    $num = 0;
+    if ( -f "$basedir/imgbase/BASENUM" ) {
+        $num = `cat "$basedir/imgbase/BASENUM"`;
+        chomp($num);
+    }
+
+    $newimg = "Base-$num";
+    $bidon =
+`mkdir -p "$basedir/imgbase/$newimg"; chown 65534 "$basedir/imgbase/$newimg"`;
+    $num += 1;
+
+    open( NUM, ">$basedir/imgbase/BASENUM" ) or badExit("open: $!");
+    print NUM $num;
+    close(NUM);
+
+    open( HOST, ">$basedir/imgbase/hostname" ) or badExit("open: $!");
+    print HOST etherGetNameByMac( \%einfo, $lmacaddr );
+    close(HOST);
+
+    # Create temporarily conf.txt:
+    if ( !-f "$basedir/imgbase/$newimg/conf.txt" ) {
+        open( CONF, ">$basedir/imgbase/$newimg/conf.txt" )
+          or badExit("open: $!");
+        print CONF "title Base backup ($newimg)\n";
+        print CONF "desc Currently backing up. Please wait...\n";
+        close(CONF);
+    }
+
+    if ($opt_autoselect) {
+
+        # Foreach registered hosts:
+        foreach my $m ( etherGetMacs( \%einfo ) ) {
+            $hostdir = "$basedir/images/" . toMacFileName($m);
+
+            # Symlink to imgbase/Base-$num
+            if ( not symlink( "$basedir/imgbase/$newimg", "$hostdir/$newimg" ) )
+            {
+                badExit("symlink: $!");
+            }
+
+            # Add a section in header.lst and set visu=yes
+            setHeader( "$hostdir/header.lst", $newimg )
+              or badExit( lbsGetError() );
         }
-
-        $newimg = "Base-$num";
-        $bidon = `mkdir -p "$basedir/imgbase/$newimg"; chown 65534 "$basedir/imgbase/$newimg"` ;
-        $num += 1 ;
-
-        open(NUM,">$basedir/imgbase/BASENUM") or badExit("open: $!") ;
-        print NUM $num ;
-        close(NUM) ;
-
-        open(HOST,">$basedir/imgbase/hostname") or badExit("open: $!") ;
-        print HOST  etherGetNameByMac (\%einfo, $lmacaddr) ;
-        close(HOST) ;
-
-        # Create temporarily conf.txt:
-        if (! -f "$basedir/imgbase/$newimg/conf.txt") {
-            open(CONF, ">$basedir/imgbase/$newimg/conf.txt")
-                or badExit("open: $!");
-            print CONF "title Base backup ($newimg)\n" ;
-            print CONF "desc Currently backing up. Please wait...\n" ;
-            close(CONF) ;
-        }
-
-        if ($opt_autoselect) {
-
-                # Foreach registered hosts:
-                foreach my $m (etherGetMacs(\%einfo)) {
-                        $hostdir = "$basedir/images/" . toMacFileName($m) ;
-
-                        # Symlink to imgbase/Base-$num
-                        if (not symlink("$basedir/imgbase/$newimg",
-                                        "$hostdir/$newimg")) {
-                                badExit("symlink: $!") ;
-                        }
-
-                        # Add a section in header.lst and set visu=yes
-                        setHeader("$hostdir/header.lst", $newimg)
-                                or badExit(lbsGetError()) ;
-                }
-        }
+    }
 }
 
-updateEntry($basedir,$macaddr) or badExit(lbsGetError()) ;
+updateEntry( $basedir, $macaddr ) or badExit( lbsGetError() );
 
