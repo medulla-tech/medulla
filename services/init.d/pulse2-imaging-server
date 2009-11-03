@@ -52,13 +52,13 @@ start () {
 
 # Function to stop daemon
 stop () {
-        echo -n $"Stopping ${DESC} : "
+    echo -n $"Stopping ${DESC} : "
     if [ ! -f /var/run/pulse2-imaging-server.pid ]; then
         echo "no pid"
         return 0
     fi
     kill -9 `cat /var/run/pulse2-imaging-server.pid`
-    rm -f /var/run/pulse2-inventory-server.pid
+    rm -f /var/run/pulse2-imaging-server.pid
     # If return code is 0, everything went fine
         RETVAL=$?
     if [ ${RETVAL} -eq 0 ]
