@@ -24,20 +24,14 @@
 
 use File::Copy;
 
-my $base;
+# Global consts
+$BASEDIR = '/var/lib/pulse2/imaging';
+
+use lib "/usr/share/pulse2/imaging/helpers";
+require "lrs-legacy.pl";
+
 my $eth;
 my $log;
-
-$cfg        = "/etc/dhcpd.conf";
-$restart    = "service dhcpd restart";
-$leasesfile = "/var/lib/dhcp/dhcpd.leases";
-
-# Debian
-if ( -r "/etc/debian_version" ) {
-    $cfg        = "/etc/dhcp3/dhcpd.conf";
-    $restart    = "/etc/init.d/dhcp3-server restart";
-    $leasesfile = "/var/lib/dhcp3/dhcpd.leases";
-}
 
 $ip = "";
 
@@ -51,6 +45,9 @@ sub get_info {
     my $file = shift;
     my $sep  = shift;
     my $hash = shift;
+
+    # checks if file exists, attempt to create it if not, die if unsuccedeed
+    stat $file or open FILE, '>>', $file and close FILE;
 
     open FILE, $file or die;
     while (<FILE>) {
@@ -72,140 +69,13 @@ sub parse_ether {
     get_info( $eth, " ", \%ether );
 }
 
-sub get_cfg_info {
-    my $file  = shift;
-    my $begin = shift;
-    my $conf  = shift;
-    my $end   = shift;
-    my $phase = 0;
-    my $par   = 0;
-
-    #
-    iniLoad( "/etc/lbs.conf", $conf );
-
-    # insert new data before the last }
-    open FILE, $file or return;
-    while (<FILE>) {
-        chomp;
-        if ( $phase == 0 or $phase == 1 ) {
-            if (/^[^\#]*\{/) {
-                $par++;
-                $phase = 1;
-            }
-            if (/^[^\#]*\}/) {
-                $par--;
-            }
-            if ( $par == 0 and $phase == 1 ) { $phase = 2; }
-            else {
-                push @$begin, $_;
-            }
-        }
-
-        if ( $phase == 2 ) { push @$end, $_; }
-
-    }
-
-    close(FILE);
-}
-
-sub parse_config {
-    @config_before = ();
-    %config        = ();
-    @config_after  = ();
-    get_cfg_info( $cfg, \@config_before, \%config, \@config_after );
-}
 
 sub check_password {
     my $list = shift;
     my $key  = shift;
     my $pass = shift;
 
-    if ( iniHasKey( $list, "-", $key ) ) {
-        if ( iniGetVal( $list, "-", $key ) eq $pass ) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-#
-# Find mac <-> ip relations in dhcpd.leases
-#
-sub get_leases {
-    my $file = shift;
-
-    my %mac;
-    my $ip = "";
-
-    open FILE, $file or return %mac;
-    while (<FILE>) {
-        chop;
-        s/;.*$//g;
-
-        #print "$_\n";
-        if (/^\s*lease\s*([0-9\.]+) \{/) {
-            $ip = $1;
-        }
-        if (/^\s*binding state free/) {
-            $ip = "";
-        }
-        if (/^\s*hardware ethernet\s+([a-fA-F0-9:]+)/) {
-            if ( $ip ne "" ) {
-                $mac{ uc($1) } = $ip;
-            }
-            else {
-                delete $mac{ uc($1) };
-            }
-        }
-    }
-    close(FILE);
-
-    return %mac;
-}
-
-#
-# Allocation of an IP address. BUG: works only with class C
-#
-sub get_ip {
-    my $existing = shift;
-    my $rng      = shift;
-    my $mac      = shift;
-
-    if ( !iniHasKey( $rng, "dhcp", "minip" ) )   { return -1; }
-    if ( !iniHasKey( $rng, "dhcp", "maxip" ) )   { return -2; }
-    if ( !iniHasKey( $rng, "dhcp", "network" ) ) { return -3; }
-
-    my $min = iniGetVal( $rng, "dhcp", "minip" );
-    my $max = iniGetVal( $rng, "dhcp", "maxip" );
-
-    my @r = ( $min .. $max );
-
-    # check if it's already in dhcpd.leases
-    if ( exists $leases{$mac} ) {
-
-        # check if the ip is in the lbs range
-        my @sip = split( /\./, $leases{$mac} );
-        if ( $sip[3] >= $min && $sip[3] <= $max ) {
-
-            # then it's the prefered IP
-            unshift @r, $sip[3];
-        }
-    }
-
-    foreach my $i (@r) {
-        my $found = 0;
-        foreach my $j ( values %$existing ) {
-            my ( $ip, $name ) = split ' ', $j;
-            if ( iniGetVal( $rng, "dhcp", "network" ) . ".$i" eq $ip ) {
-                $found = 1;
-                last;
-            }
-        }
-        if ( $found == 0 ) {
-            $ip = iniGetVal( $rng, "dhcp", "network" ) . ".$i";
-            return 1;
-        }
-    }
+    # always return true
     return 0;
 }
 
@@ -227,86 +97,6 @@ sub insert_ether {
     $$old{$mac} = $value;
 }
 
-# add one entry to dhcpd.conf
-sub insert_dhcp_one {
-    my $file  = shift;
-    my $begin = shift;
-    my $end   = shift;
-    my $ether = shift;
-    my $conf  = shift;
-    my $mac   = shift;
-
-    if ( $ip eq "Dynamic" ) { return; }
-
-    system("mv -f $file $file.bak");
-    open FILE, ">" . $file or die;
-    foreach my $i (@$begin) { print FILE "$i\n"; }
-
-    $i = $mac;
-    my ( $ip, $name ) = split ' ', $$ether{$i};
-    print FILE "host $name\n\t{\n";
-    print FILE "\t hardware ethernet $i;\n";
-    print FILE "\t fixed-address $ip;\n";
-    if ( iniHasKey( $conf, "dhcp", "tftpserver" ) ) {
-        print FILE "\t next-server "
-          . iniGetVal( $conf, "dhcp", "tftpserver" ) . ";\n";
-    }
-    if ( iniHasKey( $conf, "dhcp", "filename" ) ) {
-        print FILE "\t filename \""
-          . iniGetVal( $conf, "dhcp", "filename" ) . "\";\n";
-    }
-    if ( isTrue( iniGetVal( $conf, "dhcp", "optionhostname" ) ) ) {
-        print FILE "\t option host-name \"$name\";\n";
-    }
-    print FILE "\t}\n\n";
-
-    foreach my $i (@$end) { print FILE "$i\n"; }
-    close(FILE);
-}
-
-# build a new dhcpd.conf
-sub insert_dhcp {
-    my $file  = shift;
-    my $begin = shift;
-    my $end   = shift;
-    my $ether = shift;
-    my $conf  = shift;
-
-    if ( $ip eq "Dynamic" ) { return; }
-
-    system("mv -f $file $file.bak");
-    open FILE, ">" . $file or die;
-    foreach my $i (@$begin) { print FILE "$i\n"; }
-    foreach my $i ( keys %$ether ) {
-        my ( $ip, $name ) = split ' ', $$ether{$i};
-        print FILE "host $name\n\t{\n";
-        print FILE "\t hardware ethernet $i;\n";
-        print FILE "\t fixed-address $ip;\n";
-        if ( iniHasKey( $conf, "dhcp", "tftpserver" ) ) {
-            print FILE "\t next-server "
-              . iniGetVal( $conf, "dhcp", "tftpserver" ) . ";\n";
-        }
-        if ( iniHasKey( $conf, "dhcp", "filename" ) ) {
-            print FILE "\t filename \""
-              . iniGetVal( $conf, "dhcp", "filename" ) . "\";\n";
-        }
-        if ( isTrue( iniGetVal( $conf, "dhcp", "optionhostname" ) ) ) {
-            print FILE "\t option host-name \"$name\";\n";
-        }
-        print FILE "\t}\n\n";
-    }
-    foreach my $i (@$end) { print FILE "$i\n"; }
-    close(FILE);
-}
-
-sub isTrue {
-    my $v = shift;
-
-    if ( $v =~ /^[Yy1Oo]/ ) { return 1; }
-
-    return 0;
-}
-
 # MAIN ////////////////////////////////////////////////////////////////////////
 
 my $firstarg    = $ARGV[0];         # Sync option...
@@ -320,17 +110,8 @@ if ( $ARGV[0] eq "" ) {
     exit;
 }
 
-open CFG, "/etc/lbs.conf" or die;
-while (<CFG>) {
-    chomp;
-    ( my $i, $base ) = split /[ \t]*=[ \t]*/ if /^basedir[ \t]*=/i;
-}
-close(CFG);
-
-require "$base/bin/inifile.pl";
-
-$eth = $base . "/etc/ether";
-$log = $base . "/log/addhost.log";
+$eth = $BASEDIR . "/etc/ether";
+$log = $BASEDIR . "/log/addhost.log";
 
 open CFG, "date|";
 chomp( $date = <CFG> );
@@ -338,26 +119,7 @@ close(CFG);
 
 open LOG, ">>" . $log;
 
-parse_config();
 parse_ether();
-
-%leases = get_leases($leasesfile);
-
-if ( isTrue( iniGetVal( \%config, "dhcp", "nostaticip" ) ) ) {
-    $ip = "Dynamic";
-}
-
-if ( $firstarg eq "--sync" or $firstarg eq "-s" ) {
-
-    # broken ? should only be used when dhcpd.conf is empty
-    insert_dhcp( $cfg, \@config_before, \@config_after, \%ether, \%config );
-    if ( isTrue( iniGetVal( \%config, "dhcp", "dhcpdrestart" ) ) ) {
-        system($restart);
-    }
-    print LOG "$date : Syncing dhcpd.conf with ether\n";
-    close(LOG);
-    exit(0);
-}
 
 print LOG "$date : Trying to add $mac ($hostname), password ******** : ";
 
@@ -368,72 +130,11 @@ if ( $mac eq "?" ) {
 }
 
 if ( exists $ether{$mac} ) { print LOG "MAC already used\n"; close(LOG); exit; }
-
-if (   ( $hostname eq "+" )
-    && ( $password eq "+" )
-    && ( isTrue( iniGetVal( \%config, "dhcp", "autoidallowed" ) ) ) )
-{
-    $ret = get_ip( \%ether, \%config, $mac );
-    if ( $ret <= 0 ) {
-        if ( $ret == 0 ) {
-            print LOG "AUTOIP : no IP available to add host (range full)\n";
-            close(LOG);
-            exit;
-        }
-        if ( $ret == -1 ) {
-            print LOG "AUTOIP : no MINIP found in ADDHOST section\n";
-            close(LOG);
-            exit;
-        }
-        if ( $ret == -2 ) {
-            print LOG "AUTOIP : no MAXIP found in ADDHOST section\n";
-            close(LOG);
-            exit;
-        }
-        if ( $ret == -3 ) {
-            print LOG "AUTOIP : no NETWORK found in ADDHOST section\n";
-            close(LOG);
-            exit;
-        }
-    }
-    $hostname = $ip;
-}
-else {
-    if ( !defined $ENV{'__LRS_DO_NO_CHECK_PASS__'} ) {
-        if ( !check_password( \%config, "passhost_$hostname", $password ) ) {
-            if ( !check_password( \%config, "passmac_$mac", $password ) ) {
-                if ( !check_password( \%config, "adminpass", $password ) ) {
-                    print LOG "PASSWORD check failed !\n";
-                    close(LOG);
-                    exit;
-                }
-            }
-        }
-    }
-
-    if ( defined $ARGV[3] ) {
-        $ip = $ARGV[3];
-    }
-    elsif ( !isTrue( iniGetVal( \%config, "dhcp", "nostaticip" ) ) ) {
-        $ret = get_ip( \%ether, \%config, $mac );
-        if ( $ret <= 0 ) {
-            if ( $ret == 0 ) {
-                print LOG "IP : no IP available to add host (range full)\n";
-                close(LOG);
-                exit;
-            }
-            if ( $ret == -1 ) {
-                print LOG "IP : no MINIP found in ADDHOST section\n";
-                close(LOG);
-                exit;
-            }
-            if ( $ret == -2 ) {
-                print LOG "IP : no MAXIP found in ADDHOST section\n";
-                close(LOG);
-                exit;
-            }
-            if ( $ret == -3 ) {
-                print LOG "IP : no NETWORK found in ADDHOST section\n";
+if ( !defined $ENV{'__LRS_DO_NO_CHECK_PASS__'} ) {
+    if ( !check_password( \%config, "passhost_$hostname", $password ) ) {
+        if ( !check_password( \%config, "passmac_$mac", $password ) ) {
+            if ( !check_password( \%config, "adminpass", $password ) ) {
+                print LOG "PASSWORD check failed !\n";
                 close(LOG);
                 exit;
             }
@@ -441,7 +142,9 @@ else {
     }
 }
 
-#print "$ip\n";
+if ( defined $ARGV[3] ) {
+    $ip = $ARGV[3];
+}
 
 # update etc/ether
 insert_ether( $eth, \%ether, $mac . " " . $ip . " " . $hostname );
@@ -460,17 +163,6 @@ if ( -f $cfg ) {
     close(FILE);
 }
 
-if ( $found == 0 ) {
-    insert_dhcp_one( $cfg, \@config_before, \@config_after, \%ether, \%config,
-        $mac );
-}
-elsif ( $found == 1 ) {
-    print LOG " (DHCPD.CONF unchanged, MAC already present !) ";
-}
-else {
-    print LOG " (DHCPD.CONF unchanged, IP already present !) ";
-}
-
 $_ = $mac;
 s/\://g;
 my $smac = $_;
@@ -482,13 +174,9 @@ if ( iniGetVal( \%config, "-", "addscript" ) ne "" ) {
           . $hostname );
 
     # update the hostname file
-    open( HOST, ">$base/images/" . $smac . "/hostname" );
+    open( HOST, ">$BASEDIR/images/" . $smac . "/hostname" );
     print HOST $hostname;
     close(HOST);
-}
-
-if ( isTrue( iniGetVal( \%config, "dhcp", "dhcpdrestart" ) ) ) {
-    system( $restart. " >/dev/null 2>&1" );
 }
 
 print LOG "IP $ip added successfully to 'ether' file\n";
