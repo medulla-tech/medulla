@@ -44,23 +44,32 @@
 #include "iniparser.h"
 
 #define BUFLEN 1532
-#define PORT 1001
 #define CONFIGURATION_FILE "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
-#define PID_FILE "/var/run/pulse2-imaging-server.pid"
 
 unsigned char gBuff[80];
 
-// some path
+char * gConfigurationFile = CONFIGURATION_FILE;
+
+// global config options, main section
+unsigned char gHost[255];
+int gPort = 0;
+unsigned char gAdminPass[255];
 unsigned char gBaseDir[255];
+unsigned char gNetbootDir[255];
+// global config options, helpers section
 unsigned char gUpdateMenuPath[255];
 unsigned char gInfoPath[255];
 unsigned char gCheckAddHostPath[255];
 unsigned char gUpdateDirPath[255];
 unsigned char gSetDefaultPath[255];
+// global config options, daemon section
+unsigned char gUser[255];
+unsigned char gGroup[255];
+unsigned char gUMask[255];
+unsigned char gPIDFile[255];
+// global config options, logs section
+char gLogFile[256];
 
 dictionary *ini;
 char etherpath[255];
-char logtxt[256];
 
-char * gConfigurationFile = CONFIGURATION_FILE;
-char * gPIDFile= PID_FILE;

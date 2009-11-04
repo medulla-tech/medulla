@@ -125,10 +125,10 @@ int mysystem(const char *s)
 {
     char cmd[1024];
 
-    snprintf(cmd, 1023, "echo \"`date`: %.900s\" 1>>%s 2>&1", s, logtxt);
+    snprintf(cmd, 1023, "echo \"`date`: %.900s\" 1>>%s 2>&1", s, gLogFile);
     system(cmd);
 
-    snprintf(cmd, 1023, "%.900s 1>>%s 2>&1", s, logtxt);
+    snprintf(cmd, 1023, "%.900s 1>>%s 2>&1", s, gLogFile);
     return (system(cmd));
 }
 
@@ -429,6 +429,132 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     return 1;
 }
 
+void readConfig(char * config_file_path) {
+    char *str;
+
+    ini = iniparser_load(config_file_path);
+
+    if (ini == NULL) {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "cannot parse file %s", config_file_path);
+        diep(msg);
+    }
+
+    // Parse MAIN section //
+    if ((str = iniparser_getstr(ini, "main:host"))) {
+        strncpy((char*)gHost, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'host' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((gPort = iniparser_getint(ini, "main:port", 0))) {
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'port' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "main:adminpass"))) {
+        strncpy((char*)gAdminPass, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'adminpass' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "main:base_folder"))) {
+        strncpy((char*)gBaseDir, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'base_folder' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "main:netboot_folder"))) {
+        strncpy((char*)gNetbootDir, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'netboot_folder' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
+
+    // Parse DAEMON section //
+    if ((str = iniparser_getstr(ini, "daemon:user"))) {
+        strncpy((char*)gUser, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'user' not found in section 'daemon' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "daemon:group"))) {
+        strncpy((char*)gGroup, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'group' not found in section 'daemon' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "daemon:umask"))) {
+        strncpy((char*)gUMask, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'umaks' not found in section 'daemon' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "daemon:pidfile"))) {
+        strncpy((char*)gPIDFile, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'pidfile' not found in section 'daemon' in file %s", config_file_path);
+        diep(msg);
+    }
+
+    // Parse HELPERS section //
+    if ((str = iniparser_getstr(ini, "helpers:update_menu_path"))) {
+        strncpy((char*)gUpdateMenuPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'update_menu_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:info_path"))) {
+        strncpy((char*)gInfoPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'info_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:check_add_host_path"))) {
+        strncpy((char*)gCheckAddHostPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'check_add_host_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:update_dir_path"))) {
+        strncpy((char*)gUpdateDirPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'update_dir_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:set_default_path"))) {
+        strncpy((char*)gSetDefaultPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'set_default_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+
+    // Parse LOGGERS section //
+    if ((str = iniparser_getstr(ini, "logger:log_file_path"))) {
+        strncpy((char*)gLogFile, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'log_file_path' not found in section 'logger' in file %s", config_file_path);
+        diep(msg);
+    }
+
+    syslog(LOG_INFO, "Configuration parsed");
+}
+
 /* MAIN */
 int main(void)
 {
@@ -438,7 +564,6 @@ int main(void)
     unsigned int nb;
     char smac[20];
     char *mac;
-    char *str;
     fd_set fds;
     int on = 1;
     int pidFileFD;
@@ -450,72 +575,7 @@ int main(void)
     gBaseDir[0] = 0;
 
     initlog();
-
-    ini = iniparser_load(gConfigurationFile);
-
-    if (ini == NULL) {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "cannot parse file %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "imaging-server:base_folder"))) {
-        strncpy((char*)gBaseDir, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "base_folder not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "helpers:update_menu_path"))) {
-        strncpy((char*)gUpdateMenuPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "update_menu_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "helpers:info_path"))) {
-        strncpy((char*)gInfoPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "info_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "helpers:check_add_host_path"))) {
-        strncpy((char*)gCheckAddHostPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "check_add_host_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "helpers:update_dir_path"))) {
-        strncpy((char*)gUpdateDirPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "update_dir_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "helpers:set_default_path"))) {
-        strncpy((char*)gSetDefaultPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "set_default_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    if ((str = iniparser_getstr(ini, "logs:log_file_path"))) {
-        strncpy((char*)logtxt, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "log_file_path not found in %s", gConfigurationFile);
-        diep(msg);
-    }
-
-    syslog(LOG_INFO, "Configuration parsed");
+    readConfig(gConfigurationFile);
 
     /* Daemonize here */
     if (( daemon(0, 0) != 0)) diep("daemon");
@@ -538,7 +598,7 @@ int main(void)
     /* UDP sock */
     memset((char *) &si_me, sizeof(si_me), 0);
     si_me.sin_family = AF_INET;
-    si_me.sin_port = htons(PORT);
+    si_me.sin_port = htons(gPort);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(s, (struct sockaddr *) &si_me, sizeof(si_me)) == -1) diep("bind UDP");
 
@@ -547,12 +607,12 @@ int main(void)
 
     memset((char *) &si_tcp, sizeof(si_tcp), 0);
     si_tcp.sin_family = AF_INET;
-    si_tcp.sin_port = htons(PORT);
+    si_tcp.sin_port = htons(gPort);
     si_tcp.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(stcp, (struct sockaddr *) &si_tcp, sizeof(si_tcp)) == -1) diep("bind TCP");
     listen(stcp, 1000);
 
-    pidFileFD = open(gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
+    pidFileFD = open((char *)gPIDFile, O_WRONLY | O_CREAT | O_TRUNC);
     if (pidFileFD == -1) diep("PID file");
     snprintf(pidBuff, 5, "%d", pid);
     write(pidFileFD, pidBuff, strlen(pidBuff));
