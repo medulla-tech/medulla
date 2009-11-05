@@ -22,163 +22,133 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# Global imports
 use File::Copy;
+use strict;
 
-# Global consts
-$BASEDIR = '/var/lib/pulse2/imaging';
-
+# Uses legacy LRS stuff
 use lib "/usr/share/pulse2/imaging/helpers";
 require "lrs-legacy.pl";
 
-my $eth;
-my $log;
+# Global consts
+my $BASEDIR             = '/var/lib/pulse2/imaging';
+my $ETHERFILE           = "$BASEDIR/etc/ether";
+my %ETHER               = ();
+my $LOGFILE             = '/var/log/mmc/pulse2-imaging-server.log';
+my $STORAGE_CREATE_PATH = '/usr/share/pulse2/imaging/helpers/create_config';
 
-$ip = "";
+my $ip = 'Dynamic';
 
-########################################
-#GET_INFO ( filename, separator, hash)
-#--------
-#fill hash with content of "filename"
-#Skip comments "#",";" and Blank lines
-########################################
-sub get_info {
-    my $file = shift;
-    my $sep  = shift;
-    my $hash = shift;
+sub mylog {
+    my $level = shift;
+    my $msg   = shift;
 
-    # checks if file exists, attempt to create it if not, die if unsuccedeed
-    stat $file or open FILE, '>>', $file and close FILE;
+    my $buffer = '';
+    my $date   = '';
 
-    open FILE, $file or die;
-    while (<FILE>) {
-        chomp;
-        next if /^;/;
-        next if /^#/;
-        next if /^\s*$/;
+    # gather date
+    open CFG, "date '+%Y-%m-%d %H:%M:%S,000' |";
+    chomp( $date = <CFG> );
+    close(CFG);
 
-        split ' ', $_, 2;
+    $buffer .= $date;
+    $buffer .= " ";
+    $buffer .= $level;
+    $buffer .= " ";
+    $buffer .= "check_add_host";
+    $buffer .= " ";
+    $buffer .= $msg;
+    $buffer .= "\n";
 
-        my ( $key, $value ) = @_;
-        $$hash{$key} = $value;
-    }
-    close(FILE);
+    open LOG, ">> $LOGFILE";
+    print LOG $buffer;
+    close LOG;
 }
-
-sub parse_ether {
-    %ether = ();
-    get_info( $eth, " ", \%ether );
-}
-
 
 sub check_password {
-    my $list = shift;
-    my $key  = shift;
-    my $pass = shift;
 
     # always return true
-    return 0;
-}
-
-sub insert_ether {
-    my $file    = shift;
-    my $old     = shift;
-    my $newline = shift;
-
-    copy( $file, $file . ".old" ) or die("Cannot copy etc/ether. $!\n");
-    open FILE, ">" . $file or die("Cannot write etc/ether. $!");
-    print FILE "#Automatically generated, do not edit\n\n";
-    foreach my $i ( keys %$old ) {
-        print FILE "$i $$old{$i}\n";
-    }
-    print FILE "$newline\n";
-    close(FILE);
-
-    my ( $mac, $value ) = split ' ', $newline, 2;
-    $$old{$mac} = $value;
+    return 1;
 }
 
 # MAIN ////////////////////////////////////////////////////////////////////////
 
-my $firstarg    = $ARGV[0];         # Sync option...
-my $mac         = uc( $ARGV[0] );
-my $hostname    = $ARGV[1];
-my $password    = $ARGV[2];
-my $proposed_ip = $ARGV[3];
+my $mac      = uc( $ARGV[0] );
+my $hostname = $ARGV[1];
+my $password = $ARGV[2];
 
 if ( $ARGV[0] eq "" ) {
     print("Usage: check_add_host MAC HOSTNAME PASSWORD\n");
     exit;
 }
 
-$eth = $BASEDIR . "/etc/ether";
-$log = $BASEDIR . "/log/addhost.log";
-
-open CFG, "date|";
-chomp( $date = <CFG> );
-close(CFG);
-
-open LOG, ">>" . $log;
-
-parse_ether();
-
-print LOG "$date : Trying to add $mac ($hostname), password ******** : ";
-
-if ( $mac eq "?" ) {
-    print LOG "MAC not retrieved in the process (ARP was flushed ?)\n";
-    close(LOG);
-    exit;
-}
-
-if ( exists $ether{$mac} ) { print LOG "MAC already used\n"; close(LOG); exit; }
-if ( !defined $ENV{'__LRS_DO_NO_CHECK_PASS__'} ) {
-    if ( !check_password( \%config, "passhost_$hostname", $password ) ) {
-        if ( !check_password( \%config, "passmac_$mac", $password ) ) {
-            if ( !check_password( \%config, "adminpass", $password ) ) {
-                print LOG "PASSWORD check failed !\n";
-                close(LOG);
-                exit;
-            }
-        }
-    }
-}
-
 if ( defined $ARGV[3] ) {
     $ip = $ARGV[3];
 }
 
-# update etc/ether
-insert_ether( $eth, \%ether, $mac . " " . $ip . " " . $hostname );
+# checks if file exists, attempt to create it if not, die if unsuccedeed
+stat $ETHERFILE
+  or open FILE, '>>', $ETHERFILE
+  and close FILE
+  and mylog( "WARN", "Creating $ETHERFILE" );
 
-my $found = 0;
-if ( -f $cfg ) {
-    open FILE, $cfg or die;
-    while (<FILE>) {
-        chomp;
-        $_ = uc($_);
+# eventually open file, parse it, close it
+open FILE, $ETHERFILE or mylog( "ERROR", "Can't open $ETHERFILE" ) and die;
+while (<FILE>) {
+    my $key;
+    my $val;
+    chomp;
+    next if /^;/;       # avoid lines starting by ';'
+    next if /^#/;       # avoid lines starting by '#'
+    next if /^\s*$/;    # avoid empty lines
 
-        # print;
-        $found = 1 if /HARDWARE\sETHERNET\s$mac/;
-        $found = 2 if /FIXED-ADDRESS\s$ip/;
-    }
-    close(FILE);
+    ( $key, $val ) = split ' ', $_,
+      2;                # split line in two components : MAC, and "IP HOSTNAME"
+
+    $ETHER{$key} = $val;
 }
+close(FILE);
 
 $_ = $mac;
 s/\://g;
 my $smac = $_;
 
-if ( iniGetVal( \%config, "-", "addscript" ) ne "" ) {
-    system( iniGetVal( \%config, "-", "addscript" ) . " "
-          . $smac . " "
-          . $ip . " "
-          . $hostname );
+mylog( "INFO", "check_add_host Trying to add $mac as $hostname" );
 
-    # update the hostname file
-    open( HOST, ">$BASEDIR/images/" . $smac . "/hostname" );
-    print HOST $hostname;
-    close(HOST);
-}
+# sanity checks
+$mac eq "?"
+  and mylog( "ERROR", "MAC not retrieved in the process (ARP was flushed ?)" )
+  and exit;
+exists $ETHER{$mac} and mylog( "ERROR", "MAC already used" ) and exit;
+check_password() or mylog( "ERROR", "Password checking failed" ) and exit;
 
-print LOG "IP $ip added successfully to 'ether' file\n";
-close(LOG);
+# create client folder
+my $command = "$STORAGE_CREATE_PATH $smac $ip $hostname";
+mylog( "DEBUG", "Running $command" );
+system($command)
+  or mylog( "ERROR", "Cannot create storage for client" )
+  and exit;
+mylog( "INFO", "Created storage for client" );
+
+# update etc/ether
+copy( $ETHERFILE, "$ETHERFILE.old" )
+  or mylog( "ERROR", "Cannot backup ether" )
+  and exit;
+
+open FILE, ">" . $ETHERFILE
+  or mylog( "ERROR", "Cannot create ether. $!" )
+  and exit;
+print FILE "# Automatically generated, do not edit\n\n";
+foreach my $i ( keys %ETHER ) { print FILE "$i $\%ETHER{$i}\n"; }
+print FILE "$mac $ip $hostname\n";
+close(FILE);
+
+$ETHER{$mac} = "$ip $hostname";
+
+# update the hostname file
+open( HOST, ">$BASEDIR/images/" . $smac . "/hostname" );
+print HOST $hostname;
+close(HOST);
+
+mylog( "INFO", "IP $ip added successfully to 'ether' file" );
 exit(0);
