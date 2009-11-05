@@ -134,7 +134,16 @@ class MyProxyRequest(proxy.ProxyRequest):
         # We will unzip the XML File and parsing it only if needed
         if self.config.getocsdebuglog or self.config.improve:
             # xml file unzip 
-            sUnpack = decompressobj().decompress(s)
+            try:
+                decomp = decompressobj()
+                sUnpack = decomp.decompress(s)
+                if decomp.unused_data:
+                    logger.warn("The zip content seems to be bad.")
+                    logger.debug("The remaining bytes are : %s"%(decomp.unused_data))
+            except Exception, e:
+                logger.error("Failed during decompression.")
+                logger.error(str(e))
+                raise e
             
             # Get the query type
             try:
@@ -167,8 +176,14 @@ class MyProxyRequest(proxy.ProxyRequest):
             logger.debug("\t\tuncompressed length: " + str(len(sUnpack)))
             
             # zip of xml file
-            s = compress(sUnpack)
-            logger.debug("\t\tcompressed length: " + str(len(s)))
+            try:
+                comp = compressobj()
+                s = comp.compress(sUnpack) + comp.flush() # default to Z_FINISH
+                logger.debug("\t\tcompressed length: " + str(len(s)))
+            except Exception, e:
+                logger.error("Failed during compression.")
+                logger.error(str(e))
+                raise e
             
             # update the new size of xml
             headers['content-length'] = len(s)

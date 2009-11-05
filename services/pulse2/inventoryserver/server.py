@@ -53,11 +53,15 @@ class InventoryServer:
 
         # handle compressed inventories
         if self.headers['Content-Type'].lower() == 'application/x-compress':
-            decomp = decompressobj()
-            content = decomp.decompress(content)
-            if decomp.unused_data:
-                self.logger.warn("The content of the request from %s seems to be bad."%(from_ip))
-                self.logger.debug("The remaining bytes are : %s"%(decomp.unused_data))
+            try:
+                decomp = decompressobj()
+                content = decomp.decompress(content)
+                if decomp.unused_data:
+                    self.logger.warn("The content of the request from %s seems to be bad."%(from_ip))
+                    self.logger.debug("The remaining bytes are : %s"%(decomp.unused_data))
+            except Exception, e:
+                self.logger.error("Failed while decompressing the request from %s."%(from_ip))
+                self.logger.error(str(e))
 
         cont = [content, self.headers['Content-Type']]
 
