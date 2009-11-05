@@ -31,73 +31,73 @@ $_lbsdebug      = 0 ;
 $WOL_EXTENSION  = "wol";
 
 %_errors_en = (
-	'RAW' =>		q($1),
-	'MAC_BAD'=>		q('$1': Invalid MAC address.),
-	'MAC_UNK' =>		q('$1': Unknown MAC address.),
-	'MAC_EXISTS' =>		q('$1': MAC address already existing.),
-	'HOST_UNK' =>		q('$1': Unknown host.),
-	'HOST_USED' =>		q('$1': Name already used.),
-	'CANT_INCLUDE' =>	q(Can't include '$1'.),
-	'CANT_SAVE' =>		q(Can't save '$1'.),
-	'CANT_WRITE' =>		q(Can't write '$1'.),
-	'CANT_GETUNIQUE' =>	q(Can't get unique name.),
-	'CANT_OPEN' =>		q('$1': Open failed.),
-	'SECT_UNK' =>		q('$1': Unknown section.),
-	'ITEM_UNK' =>		q('$1': Inknown item.),
-	'ITEM_NF' =>		q('$1': Item not found.),
-	'MENU_CANTAPPEND' =>	q('$1': Can't append menu.),
-	'FILE_NF' =>		q('$1': No such file or directory.),
-	'FILE_LOAD' =>		q('$1': Loading failed.),
-	'FILE_REMOVE' =>	q('$1': Remove failed.),
-	'FILE_EXISTS' =>	q('$1': File already exists.),
-	'ENTRY_EXISTS' =>	q('$1': Entry already exists.),
-	'IMG_NF' =>		q('$1': Image not found.),
-	'IMG_NFINTO' =>		q('$1': Image not found into '$2'),
-	'IMG_EXISTS' =>		q('$1': Image already exists.),
-	'IMG_USEDBYMENU' =>	q('$1': Image currently used by menu '$2'.),
-	'IMG_USEDBYHOST' =>	q('$1': Image used by host '$2'.),
-	'IMG_EMPTYBASE'  =>	q(No base images found into '$1'.),
-	'IMG_MVLINKINVAL' =>	q(Image '$1': invalid move operation.),
-	'LINK_NF' =>            q('$1': Link not found.),
+        'RAW' =>                q($1),
+        'MAC_BAD'=>             q('$1': Invalid MAC address.),
+        'MAC_UNK' =>            q('$1': Unknown MAC address.),
+        'MAC_EXISTS' =>         q('$1': MAC address already existing.),
+        'HOST_UNK' =>           q('$1': Unknown host.),
+        'HOST_USED' =>          q('$1': Name already used.),
+        'CANT_INCLUDE' =>       q(Can't include '$1'.),
+        'CANT_SAVE' =>          q(Can't save '$1'.),
+        'CANT_WRITE' =>         q(Can't write '$1'.),
+        'CANT_GETUNIQUE' =>     q(Can't get unique name.),
+        'CANT_OPEN' =>          q('$1': Open failed.),
+        'SECT_UNK' =>           q('$1': Unknown section.),
+        'ITEM_UNK' =>           q('$1': Inknown item.),
+        'ITEM_NF' =>            q('$1': Item not found.),
+        'MENU_CANTAPPEND' =>    q('$1': Can't append menu.),
+        'FILE_NF' =>            q('$1': No such file or directory.),
+        'FILE_LOAD' =>          q('$1': Loading failed.),
+        'FILE_REMOVE' =>        q('$1': Remove failed.),
+        'FILE_EXISTS' =>        q('$1': File already exists.),
+        'ENTRY_EXISTS' =>       q('$1': Entry already exists.),
+        'IMG_NF' =>             q('$1': Image not found.),
+        'IMG_NFINTO' =>         q('$1': Image not found into '$2'),
+        'IMG_EXISTS' =>         q('$1': Image already exists.),
+        'IMG_USEDBYMENU' =>     q('$1': Image currently used by menu '$2'.),
+        'IMG_USEDBYHOST' =>     q('$1': Image used by host '$2'.),
+        'IMG_EMPTYBASE'  =>     q(No base images found into '$1'.),
+        'IMG_MVLINKINVAL' =>    q(Image '$1': invalid move operation.),
+        'LINK_NF' =>            q('$1': Link not found.),
 ) ;
 
 
 %_errors_fr = (
-	'RAW' =>		q($1),
-	'MAC_BAD'=>		q('$1': Adresse MAC invalide.),
-	'MAC_UNK' =>		q('$1': Adresse MAC inconnue.),
-	'MAC_EXISTS' =>		q('$1': Adresse MAC déjà existante.),
-	'HOST_UNK' =>		q('$1': Machine inconnue.),
-	'HOST_USED' =>		q('$1': Nom de machine déjà utilisé.),
-	'CANT_INCLUDE' =>	q(Inclusion de '$1' impossible.),
-	'CANT_SAVE' =>		q(Sauvegarde de '$1' impossible.),
-	'CANT_WRITE' =>		q(Ecriture dans '$1' impossible.),
-	'CANT_GETUNIQUE' =>	q(Impossible d'obtenir un nom unique.),
-	'CANT_OPEN' =>		q('$1': Ouverture impossible.),
-	'SECT_UNK' =>		q('$1': Section inconnue.),
-	'ITEM_UNK' =>		q('$1': Item inconnu.),
-	'ITEM_NF' =>		q('$1': Item introuvable.),
-	'MENU_CANTAPPEND' =>	q(Ajout du menu '$1' impossible.),
-	'FILE_NF' =>		q('$1': Fichier ou repertoire introuvable.),
-	'FILE_LOAD' =>		q(Erreur de chargement de '$1'.),
-	'FILE_REMOVE' =>	q(Erreur lors de l'effacement de '$1'.),
-	'FILE_EXISTS' =>	q('$1': Fichier ou répertoire déjà existant.),
-	'ENTRY_EXISTS' =>	q('$1': Entrée déjà existante.),
-	'IMG_NF' =>		q('$1': Image introuvable.),
-	'IMG_NFINTO' =>		q('$1': Image introuvable dans '$2'),
-	'IMG_EXISTS' =>		q('$1': Image déjà existante.),
-	'IMG_USEDBYMENU' =>	q('$1': Image en cours d'utilisation dans le menu '$2'.),
-	'IMG_USEDBYHOST' =>	q('$1': image utilisée par la machine '$2'.),
-	'IMG_EMPTYBASE'  =>	q(Il n'y a aucune image de base dans '$1'.),
-	'IMG_MVLINKINVAL' =>	q(Image '$1': Déplacement de lien invalide.),
-	'LINK_NF' =>            q('$1': Lien introuvable.),
+        'RAW' =>                q($1),
+        'MAC_BAD'=>             q('$1': Adresse MAC invalide.),
+        'MAC_UNK' =>            q('$1': Adresse MAC inconnue.),
+        'MAC_EXISTS' =>         q('$1': Adresse MAC déjà existante.),
+        'HOST_UNK' =>           q('$1': Machine inconnue.),
+        'HOST_USED' =>          q('$1': Nom de machine déjà utilisé.),
+        'CANT_INCLUDE' =>       q(Inclusion de '$1' impossible.),
+        'CANT_SAVE' =>          q(Sauvegarde de '$1' impossible.),
+        'CANT_WRITE' =>         q(Ecriture dans '$1' impossible.),
+        'CANT_GETUNIQUE' =>     q(Impossible d'obtenir un nom unique.),
+        'CANT_OPEN' =>          q('$1': Ouverture impossible.),
+        'SECT_UNK' =>           q('$1': Section inconnue.),
+        'ITEM_UNK' =>           q('$1': Item inconnu.),
+        'ITEM_NF' =>            q('$1': Item introuvable.),
+        'MENU_CANTAPPEND' =>    q(Ajout du menu '$1' impossible.),
+        'FILE_NF' =>            q('$1': Fichier ou repertoire introuvable.),
+        'FILE_LOAD' =>          q(Erreur de chargement de '$1'.),
+        'FILE_REMOVE' =>        q(Erreur lors de l'effacement de '$1'.),
+        'FILE_EXISTS' =>        q('$1': Fichier ou répertoire déjà existant.),
+        'ENTRY_EXISTS' =>       q('$1': Entrée déjà existante.),
+        'IMG_NF' =>             q('$1': Image introuvable.),
+        'IMG_NFINTO' =>         q('$1': Image introuvable dans '$2'),
+        'IMG_EXISTS' =>         q('$1': Image déjà existante.),
+        'IMG_USEDBYMENU' =>     q('$1': Image en cours d'utilisation dans le menu '$2'.),
+        'IMG_USEDBYHOST' =>     q('$1': image utilisée par la machine '$2'.),
+        'IMG_EMPTYBASE'  =>     q(Il n'y a aucune image de base dans '$1'.),
+        'IMG_MVLINKINVAL' =>    q(Image '$1': Déplacement de lien invalide.),
+        'LINK_NF' =>            q('$1': Lien introuvable.),
 ) ;
 
 %_lbserr = (
-	'href' => \%_errors_en ,
-	'func' => 'None' ,
-	'mesg' => 'OK' ,
-	'flag' => 0 ,
+        'href' => \%_errors_en ,
+        'func' => 'None' ,
+        'mesg' => 'OK' ,
+        'flag' => 0 ,
 ) ;
 
 # @_protected_locals = qw(Backup-B Backup-L) ;
@@ -121,16 +121,16 @@ my $label = shift ;
 my ($i,$j,$mesg) ;
 
  if (not exists($$href{$label})) {
-	$mesg = "Unknown message label '$label'" ;
-	if (scalar @_) { $mesg .= ", with args: " . join(",",@_) ;}
-	return $mesg ;
+        $mesg = "Unknown message label '$label'" ;
+        if (scalar @_) { $mesg .= ", with args: " . join(",",@_) ;}
+        return $mesg ;
  }
  else {
- 	$mesg = $$href{$label} ;
-	for($i=0; $i<@_; $i++) {
-		$j = $i+1 ;
-		$mesg =~ s/\$$j/$_[$i]/g ;
-	}
+        $mesg = $$href{$label} ;
+        for($i=0; $i<@_; $i++) {
+                $j = $i+1 ;
+                $mesg =~ s/\$$j/$_[$i]/g ;
+        }
  }
 
  return $mesg ;
@@ -159,13 +159,13 @@ my $mesg ;
 
 
 # lbsClearError(void)
-# Effacement des messages d'erreur, et reset du flag d'erreur.  
+# Effacement des messages d'erreur, et reset du flag d'erreur.
 #
 sub lbsClearError
 {
-	$_lbserr{'func'} = 'None' ;
-	$_lbserr{'mesg'} = 'OK' ;
-	$_lbserr{'flag'} = 0 ;
+        $_lbserr{'func'} = 'None' ;
+        $_lbserr{'mesg'} = 'OK' ;
+        $_lbserr{'flag'} = 0 ;
 }
 
 
@@ -176,14 +176,14 @@ sub lbsGetError
 {
 my $buf ;
 
-	if ($_lbsdebug == 0) {
-		return $_lbserr{'mesg'} ;
-	}
-	else {
-		$buf = sprintf "Function %s:\n %s\n",
-		               $_lbserr{'func'} , $_lbserr{'mesg'} ; 
-		return $buf ;
-	}
+        if ($_lbsdebug == 0) {
+                return $_lbserr{'mesg'} ;
+        }
+        else {
+                $buf = sprintf "Function %s:\n %s\n",
+                               $_lbserr{'func'} , $_lbserr{'mesg'} ;
+                return $buf ;
+        }
 }
 
 # bool lbsErrorFlag(void)
@@ -191,27 +191,7 @@ my $buf ;
 #
 sub lbsErrorFlag
 {
-	return $_lbserr{'flag'} ;
-}
-
-
-# lbsDieError( [$msg] ) ;
-# Termine le programme en affichant la derniere erreur rencontree.
-# Si le message $msg est donne en arg, il est alors ajoute à la suite du
-# message d'erreur.
-#
-sub lbsDieError
-{
-my $msg = lbsGetError() ;
-
- if (defined($_[0])) {
- 	$msg .= " " . $_[0]  ;
- }
- 
- $msg .= "\n" ;
- $msg =~ s/\n+$/\n/s ;
- 
- die($msg) ;
+        return $_lbserr{'flag'} ;
 }
 
 
@@ -229,20 +209,20 @@ my $msg = lbsGetError() ;
 sub listExclude
 {
 
-my @result ;				# Ce qui reste de $liste
-my $liste   = $_[0] ;		# Liste de mots
-my $exclure = $_[1] ;		# Mots à exclure de $liste
+my @result ;                            # Ce qui reste de $liste
+my $liste   = $_[0] ;           # Liste de mots
+my $exclure = $_[1] ;           # Mots à exclure de $liste
 my ($i, $j, $flag) ;
 
-	for $i (@$liste) {
-		$flag=0 ;
+        for $i (@$liste) {
+                $flag=0 ;
 
-		for $j (@$exclure) {
-			if ( $i eq $j ) { $flag=1; last ;}
-		}
-		
-		if ($flag==0) {	push @result, $i ;}
-	}
+                for $j (@$exclure) {
+                        if ( $i eq $j ) { $flag=1; last ;}
+                }
+
+                if ($flag==0) { push @result, $i ;}
+        }
 
 return @result ;
 }
@@ -262,15 +242,15 @@ my $gauche = shift ;
 my $droite = shift ;
 my @out = () ;
 my ($i,$j) ;
-	
-	for $i (@$gauche) {
-		for $j (@$droite) {
-			if ( $i eq $j ) {
-				push @out, $i ;
-				last ;
-			}
-		}
-	}
+
+        for $i (@$gauche) {
+                for $j (@$droite) {
+                        if ( $i eq $j ) {
+                                push @out, $i ;
+                                last ;
+                        }
+                }
+        }
 
 return @out ;
 }
@@ -287,13 +267,13 @@ my $buf ;
  $$data = "" ;
 
  if (not open(F,$src)) {
- 	lbsError("fileLoad",'RAW', "$src: $!") ;
- 	return 0 ;
+        lbsError("fileLoad",'RAW', "$src: $!") ;
+        return 0 ;
  }
-	while(read(F,$buf,16384)) {
-		$$data .= $buf ;
-	}
-	
+        while(read(F,$buf,16384)) {
+                $$data .= $buf ;
+        }
+
  close(F) ;
 
 return length($$data) ;
@@ -307,8 +287,8 @@ sub fileSave
 my ($dest,$data) = @_ ;
 
  if (not open(F, "> $dest")) {
- 	lbsError("fileSave",'RAW',"$dest: $!") ;
- 	return 0 ;
+        lbsError("fileSave",'RAW',"$dest: $!") ;
+        return 0 ;
  }
  print F $$data ;
  close(F) ;
@@ -323,10 +303,10 @@ my ($dest,$data) = @_ ;
 sub addEmptyLine
 {
 my $buf = $_[0] . "\n\n" ;
- 
+
  $buf =~ s/\n+$/\n\n/s ;
 
-return $buf ; 
+return $buf ;
 }
 
 
@@ -337,24 +317,24 @@ sub getDirName
 {
  my @ls ;
  my $out ;
- 
+
  if (not length($_[0])) {
-	$out = "." ;
+        $out = "." ;
  }
  else {
-	@ls = split( m(/+) , $_[0] ) ;
-	pop(@ls) ;
-	if (not scalar(@ls)) {
-		if (grep(m(^/),$_[0])) {
-			$out = "/" ;
-		}
-		else {
-			$out = "." ;
-		}
-	}
-	else {
-		$out = join('/',@ls) || '/' ;
-	}
+        @ls = split( m(/+) , $_[0] ) ;
+        pop(@ls) ;
+        if (not scalar(@ls)) {
+                if (grep(m(^/),$_[0])) {
+                        $out = "/" ;
+                }
+                else {
+                        $out = "." ;
+                }
+        }
+        else {
+                $out = join('/',@ls) || '/' ;
+        }
  }
 
 return $out ;
@@ -405,11 +385,11 @@ my $dirpath = shift ;
 my @lsdir ;
 
  if (not opendir(REP,$dirpath)) {
- 	lbsError("readSubDirs",'RAW',"$dirpath: $!") ;
- 	return ;
+        lbsError("readSubDirs",'RAW',"$dirpath: $!") ;
+        return ;
  }
- 	@lsdir = grep !/^\.\.?$/, readdir(REP) ;
- 	
+        @lsdir = grep !/^\.\.?$/, readdir(REP) ;
+
  closedir(REP) ;
 
  return grep { -d "$dirpath/$_" } @lsdir ;
@@ -427,12 +407,12 @@ sub lbsSetLang
 my $lang = shift ;
 
  if ($lang eq "fr") {
- 	$_lbserr{'href'} = \%_errors_fr ;
+        $_lbserr{'href'} = \%_errors_fr ;
  }
  else {
- 	$_lbserr{'href'} = \%_errors_en ;
+        $_lbserr{'href'} = \%_errors_en ;
  }
-	
+
 1;
 }
 
@@ -456,28 +436,28 @@ my @buf ;
  %{$hdl} = () ;
 
  if (not -f $etherfile) {
- 	lbsError("etherLoad", 'FILE_NF', $etherfile) ;
- 	return ;
+        lbsError("etherLoad", 'FILE_NF', $etherfile) ;
+        return ;
  }
 
  if (not open FILE, "$etherfile") {
- 	lbsError("etherLoad", 'RAW',"$etherfile: $!") ;
- 	return ;
+        lbsError("etherLoad", 'RAW',"$etherfile: $!") ;
+        return ;
  }
 
- 	while (<FILE>) {
- 		chomp() ;
- 		next if (not grep(m/^[ \t]*[\w]+/,$_)) ;
- 		
- 		# Trim left/right:
- 		s/^[ \t]+// ;
- 		s/[ \t]+$// ;
- 		
- 		@buf = split(m/[ \t]+/, $_, 3) ;
- 		
- 		$$hdl{ $buf[0] } = [ $buf[1], $buf[2] ] ;
- 		
- 	}
+        while (<FILE>) {
+                chomp() ;
+                next if (not grep(m/^[ \t]*[\w]+/,$_)) ;
+
+                # Trim left/right:
+                s/^[ \t]+// ;
+                s/[ \t]+$// ;
+
+                @buf = split(m/[ \t]+/, $_, 3) ;
+
+                $$hdl{ $buf[0] } = [ $buf[1], $buf[2] ] ;
+
+        }
 
  close(FILE) ;
 
@@ -489,7 +469,7 @@ return 1 ;
 #
 sub etherSize
 {
-	return scalar( keys %{$_[0]} ) ;
+        return scalar( keys %{$_[0]} ) ;
 }
 
 
@@ -525,11 +505,11 @@ my $einfo = shift ;
 my $mac = shift ;
 
  if ( exists($$einfo{$mac}) ) {
-	return $$einfo{$mac}[1] ;
+        return $$einfo{$mac}[1] ;
  }
  else {
- 	lbsError("etherGetNameByMac","MAC_BAD", $mac) ;
-	return ;
+        lbsError("etherGetNameByMac","MAC_BAD", $mac) ;
+        return ;
  }
 }
 
@@ -543,11 +523,11 @@ my $einfo = shift ;
 my $mac = shift ;
 
  if ( exists($$einfo{$mac}) ) {
-	return $$einfo{$mac}[0] ;
+        return $$einfo{$mac}[0] ;
  }
  else {
- 	lbsError("etherGetIpByMac","MAC_BAD", $mac) ;
-	return ;
+        lbsError("etherGetIpByMac","MAC_BAD", $mac) ;
+        return ;
  }
 }
 
@@ -565,15 +545,15 @@ my $name = shift ;
 my $isshortname = shift ;
 my ($k,$v, $l) ;
 
-	# Ne pas differencier maj/min:
-	$name = lc($name) ;
-	
-	foreach $k ( keys %{$einfo} ) {
-		$v = ${$einfo}{$k} ;
-		$l = lc( $$v[1] ) ;
-		$l =~ s|.*/|| if defined($isshortname);
-		return $k if ($l eq $name) ;
-	}
+        # Ne pas differencier maj/min:
+        $name = lc($name) ;
+
+        foreach $k ( keys %{$einfo} ) {
+                $v = ${$einfo}{$k} ;
+                $l = lc( $$v[1] ) ;
+                $l =~ s|.*/|| if defined($isshortname);
+                return $k if ($l eq $name) ;
+        }
 
  # Echec:
  lbsError("etherGetMacByName","HOST_UNK", $name) ;
@@ -592,9 +572,9 @@ sub etherGetNames
 my $k ;
 my @out ;
 
-	foreach $k (etherGetMacs($_[0])) {
-		push @out, etherGetNameByMac($_[0], $k) ;
-	}
+        foreach $k (etherGetMacs($_[0])) {
+                push @out, etherGetNameByMac($_[0], $k) ;
+        }
 
 return sort(@out) ;
 }
@@ -614,22 +594,22 @@ my $einfo = shift ;
 my ($mac,$ip,$name) ;
 
  if (not -f $etherfile) {
- 	lbsError("etherSave", "FILE_NF", $etherfile) ;
+        lbsError("etherSave", "FILE_NF", $etherfile) ;
  }
- 
+
  if (not open ETHER, ">$etherfile") {
- 	 lbsError("etherSave","RAW","$!") ;
- 	 return 0;
+         lbsError("etherSave","RAW","$!") ;
+         return 0;
  }
 
-	print ETHER "# MAC_ADDRESS     IP_ADDRESS    HOSTNAME\n\n" ;
+        print ETHER "# MAC_ADDRESS     IP_ADDRESS    HOSTNAME\n\n" ;
 
- 	foreach $mac ( etherGetMacs($einfo) ) {
- 		$ip = etherGetIpByMac($einfo, $mac) ;
- 		$name = etherGetNameByMac($einfo, $mac) ;
- 		
- 		print ETHER "$mac $ip $name\n" ;
- 	}
+        foreach $mac ( etherGetMacs($einfo) ) {
+                $ip = etherGetIpByMac($einfo, $mac) ;
+                $name = etherGetNameByMac($einfo, $mac) ;
+
+                print ETHER "$mac $ip $name\n" ;
+        }
 
  close(ETHER) ;
 
@@ -645,18 +625,18 @@ sub etherAdd
 {
 my ($einfo, $mac, $ip, $name) = @_ ;
 
-	if (defined(etherGetMacByName($einfo, $name))) {
-		lbsError("etherAdd","HOST_USED",$name) ;
-		return 0 ;
-	}
+        if (defined(etherGetMacByName($einfo, $name))) {
+                lbsError("etherAdd","HOST_USED",$name) ;
+                return 0 ;
+        }
 
-	if (exists($$einfo{$mac})) {
-		lbsError("etherAdd","MAC_EXISTS",$mac) ;
-		return 0 ;
-	}
+        if (exists($$einfo{$mac})) {
+                lbsError("etherAdd","MAC_EXISTS",$mac) ;
+                return 0 ;
+        }
 
-	$$einfo{$mac} = [ $ip, $name ] ;
-	return 1 ;
+        $$einfo{$mac} = [ $ip, $name ] ;
+        return 1 ;
 1;
 }
 
@@ -671,14 +651,14 @@ sub etherDelete
 my $einfo = shift ;
 my $mac = shift ;
 
-	if (exists($$einfo{$mac})) {
-		delete $$einfo{$mac} ;
-		return 1 ;
-	}
-	else {
-		lbsError("etherDelete","MAC_UNK",$mac) ;
-		return 0;
-	}
+        if (exists($$einfo{$mac})) {
+                delete $$einfo{$mac} ;
+                return 1 ;
+        }
+        else {
+                lbsError("etherDelete","MAC_UNK",$mac) ;
+                return 0;
+        }
 }
 
 
@@ -697,14 +677,14 @@ my ($text,$ikey) = @_ ;
 my $l ;
 my @lines ;
 
-	@lines = split(m/\n/, $text) ;
- 	foreach $l (@lines) {
- 		next if (not length($l)) ;
- 		$l =~ s/^[ \t]+// ;
- 		return 1 if (grep(m/^$ikey/,$l)) ;
- 	}
+        @lines = split(m/\n/, $text) ;
+        foreach $l (@lines) {
+                next if (not length($l)) ;
+                $l =~ s/^[ \t]+// ;
+                return 1 if (grep(m/^$ikey/,$l)) ;
+        }
 
-return 0 ;	
+return 0 ;
 }
 
 
@@ -720,17 +700,17 @@ my ($text, $itemkey) = @_ ;
 my ($l,$a,$b) ;
 my @lines ;
 
- 	@lines = split(m/\n/, $text) ;
- 	foreach $l (@lines) {
- 		next if (not length($l)) ;
- 		$l =~ s/^[ \t]+// ;
- 		($a,$b) = split(m/ +/,$l,2) ;
- 				
- 		if ($a eq $itemkey) {
- 			return $b ;
- 		}
- 	}
- 
+        @lines = split(m/\n/, $text) ;
+        foreach $l (@lines) {
+                next if (not length($l)) ;
+                $l =~ s/^[ \t]+// ;
+                ($a,$b) = split(m/ +/,$l,2) ;
+
+                if ($a eq $itemkey) {
+                        return $b ;
+                }
+        }
+
 return ;  # Echec
 }
 
@@ -745,17 +725,17 @@ my ($text,$itemkey,$itemval) = @_ ;
 my ($l,$a,$b,$i) ;
 my @lines ;
 
- 	@lines = split(m/\n/, $text) ;
- 	for ($i=0;  $i<scalar(@lines);  $i++) {
- 		$l = $lines[$i] ;
- 		next if (not length($l)) ;
- 		$l =~ s/^[ \t]+// ;
- 		($a,$b) = split(m/ +/,$l,2) ;
- 		
- 		if ($a eq $itemkey) {
- 			$lines[$i] = "$itemkey $itemval" ;
- 		}
- 	}
+        @lines = split(m/\n/, $text) ;
+        for ($i=0;  $i<scalar(@lines);  $i++) {
+                $l = $lines[$i] ;
+                next if (not length($l)) ;
+                $l =~ s/^[ \t]+// ;
+                ($a,$b) = split(m/ +/,$l,2) ;
+
+                if ($a eq $itemkey) {
+                        $lines[$i] = "$itemkey $itemval" ;
+                }
+        }
 
 return join("\n", @lines) ;
 }
@@ -776,9 +756,9 @@ my %ini ;
  iniNew(\%ini) ;
 
  %$hdr = (
- 	'file'	=> undef ,
- 	'ini'	=> { %ini },
- 	'inc'	=> { },
+        'file'  => undef ,
+        'ini'   => { %ini },
+        'inc'   => { },
  ) ;
 
 1;
@@ -797,44 +777,44 @@ my @clefs ;
 my %inc = () ;
 
   if (not -f $file) {
-	lbsError("hdrLoad","FILE_NF", $file) ;
-	return 0 ;
+        lbsError("hdrLoad","FILE_NF", $file) ;
+        return 0 ;
   }
-  
+
   if (not iniLoad($file,\%ini)) {
-	lbsError("hdrLoad","FILE_LOAD",$file) ;
-	return 0 ;
+        lbsError("hdrLoad","FILE_LOAD",$file) ;
+        return 0 ;
   }
 
   $p = getDirName($file) ;
   @sections = iniGetSections(\%ini) ;
-  
+
   # Loading included files:
   foreach $s (@sections) {
-  	@clefs = iniGetKeys(\%ini, $s) ;
-  	for ($i=0; $i<scalar(@clefs); $i++) {
-  		($k,$v) = iniGet(\%ini,$s,$i) ;
-  		if ($k eq "include") {
+        @clefs = iniGetKeys(\%ini, $s) ;
+        for ($i=0; $i<scalar(@clefs); $i++) {
+                ($k,$v) = iniGet(\%ini,$s,$i) ;
+                if ($k eq "include") {
 
-			# Path relatif ou absolu?
-			if (grep m(^/), $v) {
-				$f = $v ;
-			}
-			else {
-				$f = "$p/$v" ;
-			}
+                        # Path relatif ou absolu?
+                        if (grep m(^/), $v) {
+                                $f = $v ;
+                        }
+                        else {
+                                $f = "$p/$v" ;
+                        }
 
-  			if (not fileLoad($f, \$buf)) {
-  				# Warning:
-  				lbsError("hdrLoad","CANT_INCLUDE",$f) ;
-  			}
-  			else {
-  				# No '\n' at end of file:
-  				$buf =~ s/\n+$//s ;
-  				$inc{$v} = $buf ;
-			}
-		}
-  	}
+                        if (not fileLoad($f, \$buf)) {
+                                # Warning:
+                                lbsError("hdrLoad","CANT_INCLUDE",$f) ;
+                        }
+                        else {
+                                # No '\n' at end of file:
+                                $buf =~ s/\n+$//s ;
+                                $inc{$v} = $buf ;
+                        }
+                }
+        }
   }
 
   # Final struct:
@@ -842,7 +822,7 @@ my %inc = () ;
   $$hdr{'file'} = $file ;
   $$hdr{'ini'} = { %ini } ;
   $$hdr{'inc'} = { %inc } ;
-  
+
 1;
 }
 
@@ -857,30 +837,30 @@ my $incref = $$hdr{'inc'} ;
 my $iniref = $$hdr{'ini'} ;
 
   if (not iniSave($file,$iniref)) {
-  	lbsError("hdrSave","CANT_SAVE",$file) ;
-  	return 0 ;
+        lbsError("hdrSave","CANT_SAVE",$file) ;
+        return 0 ;
   }
 
   $res = 1 ;
   $p = getDirName($file) ;
 
   foreach $k (keys %{$incref}) {
-	$buf = $$incref{$k} ;
+        $buf = $$incref{$k} ;
 
-	# Path relatif ou absolu?
-	if (grep m(^/), $k) {
-		$f = $k ;
-	}
-	else {
-		$f = "$p/$k" ;
-	}
+        # Path relatif ou absolu?
+        if (grep m(^/), $k) {
+                $f = $k ;
+        }
+        else {
+                $f = "$p/$k" ;
+        }
 
-	if (not fileSave("$f", \$buf)) {
-		lbsError("hdrSave","CANT_WRITE",$f) ;
-		$res = 0 ;
-	}
+        if (not fileSave("$f", \$buf)) {
+                lbsError("hdrSave","CANT_WRITE",$f) ;
+                $res = 0 ;
+        }
   }
-  
+
 return $res ;
 }
 
@@ -910,17 +890,17 @@ my @out ;
 my $iniref = $$hdr{'ini'} ;
 my @sections = hdrGetMenuNames($hdr) ;
 
-	for $s (@sections) {
-		if (iniHasKey($iniref,$s,$key)) {
-			$v = iniGetVal($iniref,$s,$key) ;
-		}
-		else {
-			$v = "" ;
-		}
-		
-		push @out, $v ;
-	}
-	
+        for $s (@sections) {
+                if (iniHasKey($iniref,$s,$key)) {
+                        $v = iniGetVal($iniref,$s,$key) ;
+                }
+                else {
+                        $v = "" ;
+                }
+
+                push @out, $v ;
+        }
+
 return @out ;
 }
 
@@ -967,12 +947,12 @@ my $iniref = $$hdr{'ini'} ;
 my @menus = hdrGetMenuNames($hdr) ;
 my ($m,$v) ;
 
-	for $m (@menus) {
-		if (iniHasKey($iniref,$m,$key)) {
-			$v = iniGetVal($iniref,$m,$key) ;
-			return $m if ($v eq $val) ;
-		}
-	}
+        for $m (@menus) {
+                if (iniHasKey($iniref,$m,$key)) {
+                        $v = iniGetVal($iniref,$m,$key) ;
+                        return $m if ($v eq $val) ;
+                }
+        }
 
 return undef ;
 }
@@ -997,12 +977,12 @@ my @lst ;
 
  $top = pop @lst ;
  $top++ ;
- 
+
  if (grep { $_ eq $top } @menus) {
- 	lbsError("hdrUniqueName","CANT_GETUNIQUE") ;
- 	return ;
+        lbsError("hdrUniqueName","CANT_GETUNIQUE") ;
+        return ;
  }
- 
+
 return "menu" . $top ;
 }
 
@@ -1033,7 +1013,7 @@ my ($hdr,$section,$key,$val) = @_ ;
 # int hdrFindMenuItem(\%hdr, $section, $itemkey)
 # Localisation d'un item dans une $section. Retourne un couple de valeurs.
 # La 1ere valeur indique l'endroit ou se trouve l'item:
-# 
+#
 #  0 : $itemkey introuvable
 #  1 : $itemkey dans header.lst
 #  2 : $itemkey dans un include
@@ -1060,17 +1040,17 @@ my $incref = $$hdr{'inc'} ;
  @clefs = iniGetKeys($iniref, $section) ;
 
  for ($i=0; $i<scalar(@clefs); $i++) {
- 	($k,$v) = iniGet($iniref, $section, $i) ;
- 	
- 	if ($k eq "item") {
- 		return (1,$i) if (itemHasKey($v,$itemkey)) ;
- 	}
- 	elsif ($k eq "include") {
- 		return (2,$v) if (itemHasKey($$incref{$v},$itemkey)) ;
- 	}
+        ($k,$v) = iniGet($iniref, $section, $i) ;
+
+        if ($k eq "item") {
+                return (1,$i) if (itemHasKey($v,$itemkey)) ;
+        }
+        elsif ($k eq "include") {
+                return (2,$v) if (itemHasKey($$incref{$v},$itemkey)) ;
+        }
  }
-  
-return (0,0) ; 
+
+return (0,0) ;
 }
 
 
@@ -1078,7 +1058,7 @@ return (0,0) ;
 # Recup de la valeur d'un item d'une section $section.
 # La recherche est effectuee sur les clefs 'item' et 'include' .
 # Concernant 'include', la fct va chercher dans le fichier indique.
-# Retourne la valeur trouvee, ou une chaine vide si echec. 
+# Retourne la valeur trouvee, ou une chaine vide si echec.
 #
 sub hdrGetMenuItem
 {
@@ -1089,30 +1069,30 @@ my $iniref = $$hdr{'ini'} ;
 my $incref = $$hdr{'inc'} ;
 
  if (not iniHasSection($iniref, $section)) {
- 	lbsError("hdrGetMenuItem","SECT_UNK",$section) ;
- 	return ;
+        lbsError("hdrGetMenuItem","SECT_UNK",$section) ;
+        return ;
  }
 
  $item = lc($item) ;
 
  @clefs = iniGetKeys($iniref, $section) ;
  for ($i=0; $i<scalar(@clefs); $i++) {
- 	($k,$v) = iniGet($iniref, $section, $i) ;
+        ($k,$v) = iniGet($iniref, $section, $i) ;
 
- 	if ($k eq "item") {
- 		# Recherche dans header.lst
-		if (defined($a = itemGetVal($v,$item))) {
-			return $a ;
-		}
- 	}
- 	elsif ($k eq "include") {
-		# Ou recherche dans les fichiers inclus:
- 		if (exists($$incref{$v})) {
- 			if (defined($a = itemGetVal($$incref{$v},$item))) {
- 				return $a ;
- 			}
-  		}
- 	}
+        if ($k eq "item") {
+                # Recherche dans header.lst
+                if (defined($a = itemGetVal($v,$item))) {
+                        return $a ;
+                }
+        }
+        elsif ($k eq "include") {
+                # Ou recherche dans les fichiers inclus:
+                if (exists($$incref{$v})) {
+                        if (defined($a = itemGetVal($$incref{$v},$item))) {
+                                return $a ;
+                        }
+                }
+        }
  }
 
 return ;  # Echec
@@ -1132,25 +1112,25 @@ my $incref = $$hdr{'inc'} ;
  ($where,$addr) = hdrFindMenuItem($hdr,$section,$itemkey) ;
 
  if ($where == 0) {
- 	# Introuvable:
- 	iniSetVal($iniref,$section,"item","$itemkey $itemval") ;
+        # Introuvable:
+        iniSetVal($iniref,$section,"item","$itemkey $itemval") ;
  }
  elsif ($where == 1) {
- 	# Dans une clef 'item':
- 	iniSet($iniref,$section,$addr,"item","$itemkey $itemval") ;
+        # Dans une clef 'item':
+        iniSet($iniref,$section,$addr,"item","$itemkey $itemval") ;
  }
  elsif ($where == 2) {
- 	# Dans un 'include':
- 	$buf = $$incref{$addr} ;
- 	$$incref{$addr} = itemChangeVal($buf,$itemkey,$itemval) ;
+        # Dans un 'include':
+        $buf = $$incref{$addr} ;
+        $$incref{$addr} = itemChangeVal($buf,$itemkey,$itemval) ;
  }
  else {
- 	# DEBUG
- 	lbsError("hdrSetMenuItem","RAW",
- 	         "BUG!: \$where==$where: invalid condition");
- 	die ;
- } 
- 
+        # DEBUG
+        lbsError("hdrSetMenuItem","RAW",
+                 "BUG!: \$where==$where: invalid condition");
+        die ;
+ }
+
 return 1 ;
 }
 
@@ -1169,12 +1149,12 @@ my ($t, $d, $res) ;
 my $iniref = $$hdr{'ini'} ;
 
  if (not iniHasSection($iniref, $section)) {
- 	lbsError("hdrGetMenuInfo","SECT_UNK",$section) ;
-	return 0 ;
+        lbsError("hdrGetMenuInfo","SECT_UNK",$section) ;
+        return 0 ;
  }
 
  # Init:
- $res = 1 ; 
+ $res = 1 ;
  %{$info} = () ;
 
  $$info{"def"}   = iniGetVal($iniref, $section, "def") ;
@@ -1185,21 +1165,21 @@ my $iniref = $$hdr{'ini'} ;
  $d = hdrGetMenuItem($hdr, $section, "desc") ;
 
  if (not defined($d)) {
- 	$$info{"desc"} = "(nul)" ;
+        $$info{"desc"} = "(nul)" ;
  }
  else {
- 	$$info{"desc"} = $d ;
+        $$info{"desc"} = $d ;
  }
 
  # La presence d'un item 'title' est obligatoire:
  if (not defined($t)) {
- 	lbsError("hdrGetMenuInfo","ITEM_NF","title","section $section") ;
- 	$$info{"title"} = "(not found)" ;
- 	$res = 0 ;
+        lbsError("hdrGetMenuInfo","ITEM_NF","title","section $section") ;
+        $$info{"title"} = "(not found)" ;
+        $res = 0 ;
  }
  else {
- 	$$info{"title"} = $t ;
- 	$res = 1 ;
+        $$info{"title"} = $t ;
+        $res = 1 ;
  }
 
  return $res ;
@@ -1210,7 +1190,7 @@ my $iniref = $$hdr{'ini'} ;
 # Retourne une chaine dans laquelle sont concatenes tous les menuitems
 # rencontres dans la section $section. Ceci concerne les clefs 'items' et
 # 'include' .
-# Une chaine vide peut etre retournee si aucun item n'est rencontre. 
+# Une chaine vide peut etre retournee si aucun item n'est rencontre.
 #
 sub hdrConcatMenuItems
 {
@@ -1223,25 +1203,25 @@ my $incref = $$hdr{'inc'} ;
 my @concat = () ;
 
  if (not iniHasSection($iniref, $section)) {
- 	lbsError("hdrConcatMenuItems","SECT_UNK",$section) ;
- 	return "" ;
+        lbsError("hdrConcatMenuItems","SECT_UNK",$section) ;
+        return "" ;
  }
 
  @clefs = iniGetKeys($iniref, $section) ;
  for ($i=0; $i<scalar(@clefs); $i++) {
- 	($k,$v) = iniGet($iniref, $section, $i) ;
-	$k = lc($k) ;
+        ($k,$v) = iniGet($iniref, $section, $i) ;
+        $k = lc($k) ;
 
- 	if ($k eq "item") {
- 		# Recherche dans header.lst
- 		push @concat, $v ;
- 	}
- 	elsif ($k eq "include") {
-		# Ou recherche dans les fichiers inclus:
- 		if (exists($$incref{$v})) {
- 			push @concat, $$incref{$v} ;
-  		}
- 	}
+        if ($k eq "item") {
+                # Recherche dans header.lst
+                push @concat, $v ;
+        }
+        elsif ($k eq "include") {
+                # Ou recherche dans les fichiers inclus:
+                if (exists($$incref{$v})) {
+                        push @concat, $$incref{$v} ;
+                }
+        }
  }
 
 return join("\n",@concat) ;
@@ -1262,7 +1242,7 @@ sub hasBootMenu
 my $mac = toMacFileName($_[1]) ;
 my $path = $_[0] . "/cfg/" . $mac ;
 
-	return 1 if (-f $path) ;
+        return 1 if (-f $path) ;
 
 return 0
 }
@@ -1286,26 +1266,26 @@ my $default_name = "" ;
 
  # Retour d'une liste vide si pas de fichier:
  if (not -f $menufile) {
- 	lbsError("getBootMenuTitles","FILE_NF",$menufile) ;
- 	return [] ;
- } 
- 
- if (not open FF, "$menufile") {
- 	lbsError("getBootMenuTitles","RAW","$menufile: $!") ;
- 	return ;
+        lbsError("getBootMenuTitles","FILE_NF",$menufile) ;
+        return [] ;
  }
 
- 	while (<FF>) {
- 		chomp() ;
- 		if (grep(m/^default/, $_)) {
- 			@buf = split(m/[ \t]+/, $_) ;
- 			$default_pos = $buf[1] ;
- 		}
- 		if (grep(m/^title/, $_)) {
- 			@buf = split(m/[ \t]+/, $_) ;
-	 		push @titles, $buf[1] ;
- 		}
-	 }
+ if (not open FF, "$menufile") {
+        lbsError("getBootMenuTitles","RAW","$menufile: $!") ;
+        return ;
+ }
+
+        while (<FF>) {
+                chomp() ;
+                if (grep(m/^default/, $_)) {
+                        @buf = split(m/[ \t]+/, $_) ;
+                        $default_pos = $buf[1] ;
+                }
+                if (grep(m/^title/, $_)) {
+                        @buf = split(m/[ \t]+/, $_) ;
+                        push @titles, $buf[1] ;
+                }
+         }
 
  close(FF) ;
 
@@ -1351,13 +1331,13 @@ sub makeUserMenu
       my $wol = $home . "/images/" . $mac . "/wol";
       my $ts = (stat($wol))[9];
       if (time() - $ts > 600) {
-	# 10 minutes: the wol request has expired ...
-	# we should tell the admin
+        # 10 minutes: the wol request has expired ...
+        # we should tell the admin
       } else {
-	# wol requested, use the alternate menu
-	$hostconf = $home . "/images/" . $mac . "/header.lst.wol";
+        # wol requested, use the alternate menu
+        $hostconf = $home . "/images/" . $mac . "/header.lst.wol";
       }
-      unlink($wol);	
+      unlink($wol);
     }
 
     # Load header.lst
@@ -1381,14 +1361,14 @@ sub makeUserMenu
       $basenumdata = "BASENUM" ;
     }
 
-    # 
+    #
     my %conf = ();
     iniLoad("/etc/webmin/lbs/config", \%conf);
     my $revorestore = iniGetVal(\%conf, "-", "restore_type");
     my $revowait = iniGetVal(\%conf, "-", "mtftp_wait");
     my $grub_splashimage = iniGetVal(\%conf, "-", "grub_splashimage");
     my $grub_keymap = iniGetVal(\%conf, "-", "grub_keymap");
- 
+
     #
     my $eth = "0";
     $eth = hdrGetVal(\%hdr, "header", "ethnum");
@@ -1402,84 +1382,84 @@ sub makeUserMenu
       hdrGetMenuInfo(\%hdr, $m, \%minfo) ;
 
       if ($minfo{'visu'} eq "yes") {
-	# Determiner la pos du menu par defaut:
-	$defaultpos = $numselect if ($minfo{'def'} eq "yes") ;
-	
-	$one = hdrConcatMenuItems(\%hdr, $m) ;
+        # Determiner la pos du menu par defaut:
+        $defaultpos = $numselect if ($minfo{'def'} eq "yes") ;
 
-	$one = encodeCP850($one) ;
+        $one = hdrConcatMenuItems(\%hdr, $m) ;
 
-	$imgname = $minfo{'image'} ;
+        $one = encodeCP850($one) ;
 
-	$one =~ s/MAC/$mac/ ;
-	$one =~ s/PATH/$imagepath\/$imgname/g ;
+        $imgname = $minfo{'image'} ;
 
-	$one =~ s/COPYNUM/$copynumdata/ ;
-	$one =~ s/BASENUM/$basenumdata/ ;
+        $one =~ s/MAC/$mac/ ;
+        $one =~ s/PATH/$imagepath\/$imgname/g ;
 
-		
-	if ($revorestore eq "" || $revorestore eq "0") {
-	  # tftp grub restore
-	  # nothing to do
-	} else {
-	  # linux based restore
-	  if ($minfo{'image'} =~ /((Base|Local)-[0-9].*)/) {
-	    # base image restoration
-	    my $imgt = "imgbase";
-	    my $imgo = "revorestore";
+        $one =~ s/COPYNUM/$copynumdata/ ;
+        $one =~ s/BASENUM/$basenumdata/ ;
 
-	    if ($revorestore eq "1") {
-	      $imgo = "revorestorenfs";
-	    } elsif ($revowait ne "0") {
-	      $imgo .= " revowait=$revowait";
-	    }
-	    if ($minfo{'image'} =~ /Local/) {
-	      $imgt = "images/$mac";
-	    }
-		      
-	    #print "$1 $revorestore \n";
-	    my $o_title = "";
-	    my $o_desc = "";
-	    foreach my $line (split (/\n/, $one)) {
-	      if ($line =~ /^\s*title /) {
-		$o_title = $line;
-	      }
-	      if ($line =~ /^\s*desc /) {
-		$o_desc = $line;
-	      }
-	    }
-	    $one = "$o_title\n$o_desc";
-	    if ($revorestore eq "1") {
-	      $one =~ s/(^\s*title.*)/$1 (NFS)/;
-	    } elsif ($revorestore eq "2") {
-	      $one =~ s/(^\s*title.*)/$1 (MTFTP)/;
-	    }
-	    $one .= "
+
+        if ($revorestore eq "" || $revorestore eq "0") {
+          # tftp grub restore
+          # nothing to do
+        } else {
+          # linux based restore
+          if ($minfo{'image'} =~ /((Base|Local)-[0-9].*)/) {
+            # base image restoration
+            my $imgt = "imgbase";
+            my $imgo = "revorestore";
+
+            if ($revorestore eq "1") {
+              $imgo = "revorestorenfs";
+            } elsif ($revowait ne "0") {
+              $imgo .= " revowait=$revowait";
+            }
+            if ($minfo{'image'} =~ /Local/) {
+              $imgt = "images/$mac";
+            }
+
+            #print "$1 $revorestore \n";
+            my $o_title = "";
+            my $o_desc = "";
+            foreach my $line (split (/\n/, $one)) {
+              if ($line =~ /^\s*title /) {
+                $o_title = $line;
+              }
+              if ($line =~ /^\s*desc /) {
+                $o_desc = $line;
+              }
+            }
+            $one = "$o_title\n$o_desc";
+            if ($revorestore eq "1") {
+              $one =~ s/(^\s*title.*)/$1 (NFS)/;
+            } elsif ($revorestore eq "2") {
+              $one =~ s/(^\s*title.*)/$1 (MTFTP)/;
+            }
+            $one .= "
 kernel (nd)$home/bin/bzImage.initrd revosavedir=/$imgt/$imgname $imgo quiet revopost
 initrd (nd)$home/bin/initrd.gz
 ";
-	    #print $one;
-	  }
-	}
+            #print $one;
+          }
+        }
 
 
 
-	$one = addEmptyLine($one) ;
+        $one = addEmptyLine($one) ;
 
-	# adding of other linux boot options:
-	if ($eth ne "0" && $eth ne "") {
-	  $one =~ s/(kernel \(nd\).* revo.*)/$1 revoeth$eth/;
-	} else {
-	  # send the mac address on the command line to improve nic configuration
-	  $one =~ s/(kernel \(nd\).* revo.*)/$1 revomac=$mac/;
-	}
-	if ($kernelopts ne "") {
-	  $one =~ s/(kernel \(nd\).* revo.*)/$1 $kernelopts/;
-	}
-		
-	$bootmenu .= $one ;
-		
-	$numselect++ ;
+        # adding of other linux boot options:
+        if ($eth ne "0" && $eth ne "") {
+          $one =~ s/(kernel \(nd\).* revo.*)/$1 revoeth$eth/;
+        } else {
+          # send the mac address on the command line to improve nic configuration
+          $one =~ s/(kernel \(nd\).* revo.*)/$1 revomac=$mac/;
+        }
+        if ($kernelopts ne "") {
+          $one =~ s/(kernel \(nd\).* revo.*)/$1 $kernelopts/;
+        }
+
+        $bootmenu .= $one ;
+
+        $numselect++ ;
       }
     }
 
@@ -1524,13 +1504,13 @@ my %einfo ;
 my $someone ;
 
  if (-e $hostdir) {
- 	lbsError("createEntry","ENTRY_EXISTS",$hostdir) ;
- 	return 0 ;
+        lbsError("createEntry","ENTRY_EXISTS",$hostdir) ;
+        return 0 ;
  }
 
  if (not etherLoad($etherfile, \%einfo)) {
- 	lbsError("createEntry","CANT_OPEN",$etherfile) ;
- 	return 0 ;
+        lbsError("createEntry","CANT_OPEN",$etherfile) ;
+        return 0 ;
  }
 
  etherAdd(\%einfo, $mac, $ip, $name) or return 0 ;
@@ -1538,8 +1518,8 @@ my $someone ;
  etherSave($etherfile, \%einfo) or return 0 ;
 
  if ( system("cp","-a","$imgskel", $hostdir)){
- 	lbsError("createEntry","RAW",$!) ;
- 	return 0 ;
+        lbsError("createEntry","RAW",$!) ;
+        return 0 ;
  }
 
 1;
@@ -1568,8 +1548,8 @@ my $imagedir = $home . "/images/" . $macfile ;
 
  # Suppression de l'entree dans ether:
  if (not etherLoad($etherfile, \%einfo)) {
- 	lbsError("deleteEntry","CANT_OPEN",$etherfile) ;
- 	return 0 ;
+        lbsError("deleteEntry","CANT_OPEN",$etherfile) ;
+        return 0 ;
  }
 
  # Fichier des menus:
@@ -1578,12 +1558,12 @@ my $imagedir = $home . "/images/" . $macfile ;
  # Fichiers de log:
  unlink($inifile) ;
  unlink($inffile) ;
- 
+
  # Repertoire des images:
  return 0 if (not -d $imagedir) ;
  if (system("rm", "-rf", "$imagedir")) {
- 	lbsError("deleteEntry","FILE_REMOVE",$imagedir) ;
- 	return 0 ;
+        lbsError("deleteEntry","FILE_REMOVE",$imagedir) ;
+        return 0 ;
  }
 
  etherDelete(\%einfo, $mac) ;
@@ -1601,10 +1581,10 @@ sub updateEntry
 my ($home,$mac) = @_ ;
 
  if (not makeUserMenu($home,$mac)) {
-	#lbsError("updateEntry","RAW","Problem making final user menu") ;
-	return 0 ;
+        #lbsError("updateEntry","RAW","Problem making final user menu") ;
+        return 0 ;
  }
-  
+
  return 1 ;
 }
 
@@ -1649,18 +1629,18 @@ my $menu ;
 my %hdr ;
 
  if (not hdrLoad($hostconf, \%hdr)) {
- 	lbsError("moveHdr2Local","FILE_LOAD",$hostconf) ;
- 	return 0 ;
+        lbsError("moveHdr2Local","FILE_LOAD",$hostconf) ;
+        return 0 ;
  }
 
  $menu = hdrFindMenu(\%hdr,"image",$image) ;
  if (not defined($menu) or not length($menu)) {
- 	lbsError("moveHdr2Local","IMG_NF",$image) ;
- 	return 0 ;
+        lbsError("moveHdr2Local","IMG_NF",$image) ;
+        return 0 ;
  }
 
  return 1 if ($test) ;
- 
+
  hdrDeleteMenu(\%hdr, $menu) ;
  hdrSave($hostconf,\%hdr) ;
 
@@ -1674,7 +1654,7 @@ my %hdr ;
         } else {
                 system("cp -a $hostconf $hostconf.$WOL_EXTENSION") ;
         }
- 
+
 1;
 }
 
@@ -1694,34 +1674,34 @@ my ($menu,$include) ;
 my %hdr ;
 
  if (not hdrLoad($hostconf, \%hdr)) {
- 	lbsError("moveLocal2Hdr","FILE_LOAD",$hostconf) ;
- 	return 0 ;
+        lbsError("moveLocal2Hdr","FILE_LOAD",$hostconf) ;
+        return 0 ;
  }
 
  $menu = hdrFindMenu(\%hdr,"image",$image) ;
  if (defined($menu)) {
- 	lbsError("moveLocal2Hdr","IMG_EXISTS",$image) ;
- 	return 0 ;
+        lbsError("moveLocal2Hdr","IMG_EXISTS",$image) ;
+        return 0 ;
  }
 
  if (not -d "$hostdir/$image") {
- 	lbsError("moveLocal2Hdr","IMG_NF",$image) ;
- 	return 0 ;
+        lbsError("moveLocal2Hdr","IMG_NF",$image) ;
+        return 0 ;
  }
 
  return 1 if ($test) ;
 
  if (-f "$hostdir/$image/conf.txt") {
- 	$include = "$image/conf.txt" ;
+        $include = "$image/conf.txt" ;
  }
  else {
- 	$include = "" ;
+        $include = "" ;
  }
 
  $menu = hdrUniqueName(\%hdr) ;
  if (not hdrAddMenu(\%hdr, $menu)) {
- 	lbsError("moveLocal2Hdr","MENU_CANTAPPEND",$menu) ;
- 	return 0 ;
+        lbsError("moveLocal2Hdr","MENU_CANTAPPEND",$menu) ;
+        return 0 ;
  }
 
  hdrSetVal(\%hdr, $menu, "def", "no") ;
@@ -1768,52 +1748,52 @@ my $hostconf = $hostdir . "/header.lst" ;
 my ($menu, $newimg, $i, $n, @lsbuf, %hdr) ;
 
  if (not hdrLoad($hostconf, \%hdr)) {
- 	lbsError("moveLocal2Base","FILE_LOAD",$hostconf) ;
- 	return 0 ;
+        lbsError("moveLocal2Base","FILE_LOAD",$hostconf) ;
+        return 0 ;
  }
 
  $menu = hdrFindMenu(\%hdr,"image",$image) ;
  if (defined($menu)) {
- 	lbsError("moveLocal2Base","IMG_USEDBYMENU",$image,$menu) ;
- 	return 0 ;
+        lbsError("moveLocal2Base","IMG_USEDBYMENU",$image,$menu) ;
+        return 0 ;
  }
 
  if (not -d "$hostdir/$image") {
- 	lbsError("moveLocal2Base","IMG_NF",$image) ;
- 	return 0 ;
+        lbsError("moveLocal2Base","IMG_NF",$image) ;
+        return 0 ;
  }
 
  if (-l "$hostdir/$image") {
- 	lbsError("moveLocal2Base","IMG_MVLINKINVAL",$image) ;
- 	return 0 ;
+        lbsError("moveLocal2Base","IMG_MVLINKINVAL",$image) ;
+        return 0 ;
  }
 
- 	# --- Construction d'un nom unique:
- 	$n = 0 ;
- 	@lsbuf = () ;
- 	foreach $i (grep m/$macfile/, readSubDirs($imgbase)) {
- 		if ($i =~ m/.*\-([0-9]+)$/) {
- 			push @lsbuf, $1 ;
- 		}
- 	}
- 	@lsbuf = sort { $a <=> $b } @lsbuf ; # Forcer un tri de type numerique
- 	$n = pop(@lsbuf) if (scalar @lsbuf);
- 	$n++ ;
- 	$newimg = "Base-" . $macfile . "-$n" ;
+        # --- Construction d'un nom unique:
+        $n = 0 ;
+        @lsbuf = () ;
+        foreach $i (grep m/$macfile/, readSubDirs($imgbase)) {
+                if ($i =~ m/.*\-([0-9]+)$/) {
+                        push @lsbuf, $1 ;
+                }
+        }
+        @lsbuf = sort { $a <=> $b } @lsbuf ; # Forcer un tri de type numerique
+        $n = pop(@lsbuf) if (scalar @lsbuf);
+        $n++ ;
+        $newimg = "Base-" . $macfile . "-$n" ;
 
  if (-e "$imgbase/$newimg") {
- 	lbsError("moveLocal2Base","IMG_EXISTS","$imgbase/$newimg") ;
- 	return 0 ;
+        lbsError("moveLocal2Base","IMG_EXISTS","$imgbase/$newimg") ;
+        return 0 ;
  }
 
  return 1 if ($test) ;
 
  if (system("mv","-f","$hostdir/$image","$imgbase/$newimg")) {
- 	lbsError("moveLocal2Base","RAW","system(): $!") ;
- 	return 0 ;
+        lbsError("moveLocal2Base","RAW","system(): $!") ;
+        return 0 ;
  }
 
-1; 
+1;
 }
 
 
@@ -1833,24 +1813,24 @@ my %hdr ;
 my ($menu,$include,$newlink) ;
 
  if (not -d "$imgbase/$image") {
- 	lbsError("moveBase2Hdr","IMG_NF","$imgbase/$image") ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","IMG_NF","$imgbase/$image") ;
+        return 0 ;
  }
 
  if (-e "$hostdir/$image") {
- 	lbsError("moveBase2Hdr","IMG_EXISTS", "$hostdir/$image") ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","IMG_EXISTS", "$hostdir/$image") ;
+        return 0 ;
  }
 
  if (not hdrLoad($hostconf, \%hdr)) {
- 	lbsError("moveBase2Hdr","FILE_LOAD",$hostconf) ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","FILE_LOAD",$hostconf) ;
+        return 0 ;
  }
 
  $menu = hdrFindMenu(\%hdr,"image",$image) ;
  if (defined($menu)) {
- 	lbsError("moveBase2Hdr","IMG_USEDBYMENU",$image,$menu) ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","IMG_USEDBYMENU",$image,$menu) ;
+        return 0 ;
  }
 
 
@@ -1858,22 +1838,22 @@ my ($menu,$include,$newlink) ;
 
 
  if (not symlink("$imgbase/$image","$hostdir/$image")) {
- 	lbsError("moveBase2Hdr","RAW","'$hostdir/$image': $!") ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","RAW","'$hostdir/$image': $!") ;
+        return 0 ;
  }
 
  if (-f "$hostdir/$image/conf.txt") {
- 	$include = "$image/conf.txt" ;
+        $include = "$image/conf.txt" ;
  }
  else {
- 	$include = "" ;
+        $include = "" ;
  }
 
 
  $menu = hdrUniqueName(\%hdr) ;
  if (not hdrAddMenu(\%hdr, $menu)) {
- 	lbsError("moveBase2Hdr","MENU_CANTAPPEND",$menu) ;
- 	return 0 ;
+        lbsError("moveBase2Hdr","MENU_CANTAPPEND",$menu) ;
+        return 0 ;
  }
 
  hdrSetVal(\%hdr, $menu, "def", "no") ;
@@ -1925,35 +1905,35 @@ my $menu ;
 my %hdr ;
 
  if (not hdrLoad($hostconf, \%hdr)) {
- 	lbsError("imgDeleteLocal","FILE_LOAD",$hostconf) ;
- 	return 0 ;
+        lbsError("imgDeleteLocal","FILE_LOAD",$hostconf) ;
+        return 0 ;
  }
 
  $menu = hdrFindMenu(\%hdr,"image",$image) ;
  if (defined($menu)) {
- 	lbsError("imgDeleteLocal","IMG_USEDBYHOST",$image,$mac) ;
- 	return 0 ;
+        lbsError("imgDeleteLocal","IMG_USEDBYHOST",$image,$mac) ;
+        return 0 ;
  }
 
  if (not -d "$hostdir/$image") {
- 	lbsError("imgDeleteLocal","IMG_NF",$image) ;
- 	return 0 ;
+        lbsError("imgDeleteLocal","IMG_NF",$image) ;
+        return 0 ;
  }
 
- 
+
  if (-l "$hostdir/$image") {
- 	# Lien sym sur repertoire
- 	if (not unlink("$hostdir/$image")) {
- 		lbsError("imgDeleteLocal","RAW","'$image': $!") ;
- 		return 0 ;
- 	}
+        # Lien sym sur repertoire
+        if (not unlink("$hostdir/$image")) {
+                lbsError("imgDeleteLocal","RAW","'$image': $!") ;
+                return 0 ;
+        }
  }
  else {
- 	# Un vrai repertoire
- 	if (system("rm","-rf","$hostdir/$image")) {
- 		lbsError("imgDeleteLocal","RAW","'$image': $!") ;
- 		return 0 ;
- 	}
+        # Un vrai repertoire
+        if (system("rm","-rf","$hostdir/$image")) {
+                lbsError("imgDeleteLocal","RAW","'$image': $!") ;
+                return 0 ;
+        }
  }
 
 1;
@@ -1981,7 +1961,7 @@ my %hdr ;
 # imageD: Utilisée dans aucun menu. Donc effacable par imgDeleteBase().
 #
 # Retourne 1 si OK, ou 0 si erreur.
-# 
+#
 #
 sub imgBaseUsage
 {
@@ -1993,40 +1973,40 @@ my (%hdr, %einfo) ;
 my (@lsmac, @lsbase, @lsused, @ls) ;
 
  %$busage = () ;
- 
+
  @lsbase = readSubDirs("$home/imgbase") ;
 
  if (not scalar(@lsbase)) {
- 	lbsError("imgBaseUsage","IMG_EMPTYBASE","imgbase/") ;
- 	return 0 ;
+        lbsError("imgBaseUsage","IMG_EMPTYBASE","imgbase/") ;
+        return 0 ;
  }
- 
+
  # Init des clefs de busage:
  foreach $img (@lsbase) {
- 	$$busage{$img} = [] ;
+        $$busage{$img} = [] ;
  }
- 
+
  etherLoad("$home/etc/ether", \%einfo) or return 0 ;
  @lsmac = etherGetMacs(\%einfo) ;
- 
- foreach $mac (@lsmac) {
- 	$host = etherGetNameByMac(\%einfo, $mac) ;
- 	$macfile = toMacFileName($mac) ;
- 	$hostdir =  $home . "/images/" . $macfile ;
- 	$hostconf = $hostdir . "/header.lst" ;
- 
- 	hdrLoad($hostconf, \%hdr) or next ;
- 	
- 	@ls = hdrSelectMenuKey(\%hdr, "image") ;
- 	@lsused = listCommon(\@lsbase, \@ls) ;
 
-	foreach $img (@lsused) {
-#		if (not exists $$busage{$img}) {
-#			$$busage{$img} = [] ;
-#		}
-		
-		push @{$$busage{$img}}, $host ;
-	}
+ foreach $mac (@lsmac) {
+        $host = etherGetNameByMac(\%einfo, $mac) ;
+        $macfile = toMacFileName($mac) ;
+        $hostdir =  $home . "/images/" . $macfile ;
+        $hostconf = $hostdir . "/header.lst" ;
+
+        hdrLoad($hostconf, \%hdr) or next ;
+
+        @ls = hdrSelectMenuKey(\%hdr, "image") ;
+        @lsused = listCommon(\@lsbase, \@ls) ;
+
+        foreach $img (@lsused) {
+#               if (not exists $$busage{$img}) {
+#                       $$busage{$img} = [] ;
+#               }
+
+                push @{$$busage{$img}}, $host ;
+        }
  }
 
 1;
@@ -2048,25 +2028,25 @@ my %einfo ;
 my ($mac,$macfile,$hostdir) ;
 
  if (not -d $imgpath) {
- 	lbsError("imgDeleteBase","IMG_NF",$imgpath) ;
- 	return 0 ;
+        lbsError("imgDeleteBase","IMG_NF",$imgpath) ;
+        return 0 ;
  }
 
  etherLoad("$home/etc/ether", \%einfo) or return 0 ;
  @lsmac = etherGetMacs(\%einfo) ;
 
  foreach $mac (@lsmac) {
- 	$macfile = toMacFileName($mac) ;
- 	$hostimage = "$home/images/$macfile/$image" ;
+        $macfile = toMacFileName($mac) ;
+        $hostimage = "$home/images/$macfile/$image" ;
 
- 	if (-d $hostimage) {
- 		imgDeleteLocal($home,$mac,$image) or return 0 ;
- 	}
+        if (-d $hostimage) {
+                imgDeleteLocal($home,$mac,$image) or return 0 ;
+        }
  }
 
  if (system("rm","-rf",$imgpath)) {
- 	lbsError("imgDeleteBase","RAW","'$imgpath': $!") ;
- 	return 0 ;
+        lbsError("imgDeleteBase","RAW","'$imgpath': $!") ;
+        return 0 ;
  }
 
  skelDeleteBaseLink ($home,$image);
@@ -2088,18 +2068,18 @@ sub skelReadBaseLinks
 my $skeldir = $_[0]."/imgskel" ;
 my (@lsbuf,@out,$i) ;
 
-	if (not opendir(SKELDIR, $skeldir)) {
-		lbsError("skelReadBaseLinks","RAW","'$skeldir': $!");
-		return ;
-	}
-		@lsbuf =  grep !/^\.\.?$/, readdir SKELDIR ;
-	closedir(SKELDIR);
+        if (not opendir(SKELDIR, $skeldir)) {
+                lbsError("skelReadBaseLinks","RAW","'$skeldir': $!");
+                return ;
+        }
+                @lsbuf =  grep !/^\.\.?$/, readdir SKELDIR ;
+        closedir(SKELDIR);
 
-	# We want only links pointing to "imgbase/$i" :
-	foreach $i (@lsbuf) {
-		next if (not -l "$skeldir/$i");
-		push(@out, $i) if (grep m(/imgbase/$i/?$), readlink "$skeldir/$i");
-	}
+        # We want only links pointing to "imgbase/$i" :
+        foreach $i (@lsbuf) {
+                next if (not -l "$skeldir/$i");
+                push(@out, $i) if (grep m(/imgbase/$i/?$), readlink "$skeldir/$i");
+        }
 
  return @out ;
 }
@@ -2122,26 +2102,26 @@ my %hdr ;
 my $m ;
 
  if (not -d $imgpath) {
- 	lbsError("skelAddBaseLink","IMG_NF",$imgpath) ;
- 	return 0 ;
+        lbsError("skelAddBaseLink","IMG_NF",$imgpath) ;
+        return 0 ;
  }
 
  if (-e $linkpath or -l $linkpath) {
- 	lbsError("skelAddBaseLink","FILE_EXISTS",$linkpath) ;
- 	return 0 ;
+        lbsError("skelAddBaseLink","FILE_EXISTS",$linkpath) ;
+        return 0 ;
  }
 
  symlink("../../imgbase/$image", $linkpath) ;
 
  hdrLoad($header,\%hdr) or return 0 ;
- 	if (not defined hdrFindMenu(\%hdr,"image",$image)) {
- 		$m = hdrUniqueName(\%hdr) ;
-	 	hdrAddMenu(\%hdr, $m) or return 0 ;
-	 	hdrSetVal(\%hdr, $m,"def","no") ;
-	 	hdrSetVal(\%hdr, $m,"visu","no") ;
-	 	hdrSetVal(\%hdr, $m,"image",$image) ;
-	 	hdrSetVal(\%hdr, $m,"include","$image/conf.txt") ;
- 	}
+        if (not defined hdrFindMenu(\%hdr,"image",$image)) {
+                $m = hdrUniqueName(\%hdr) ;
+                hdrAddMenu(\%hdr, $m) or return 0 ;
+                hdrSetVal(\%hdr, $m,"def","no") ;
+                hdrSetVal(\%hdr, $m,"visu","no") ;
+                hdrSetVal(\%hdr, $m,"image",$image) ;
+                hdrSetVal(\%hdr, $m,"include","$image/conf.txt") ;
+        }
  hdrSave($header, \%hdr) or return 0 ;
 
 1;
@@ -2160,15 +2140,15 @@ my $header = "$home/imgskel/header.lst" ;
 my (%hdr, $m) ;
 
  if (not -l $linkpath) {
- 	lbsError("skelDeleteBaseLink", "LINK_NF",$linkpath) ;
- 	return 0 ;
+        lbsError("skelDeleteBaseLink", "LINK_NF",$linkpath) ;
+        return 0 ;
  }
 
  hdrLoad($header,\%hdr) or return 0 ;
- 	$m = undef ;
- 	if (defined($m = hdrFindMenu(\%hdr,"image",$image))) {
- 		hdrDeleteSection(\%hdr,$m);
- 	}
+        $m = undef ;
+        if (defined($m = hdrFindMenu(\%hdr,"image",$image))) {
+                hdrDeleteSection(\%hdr,$m);
+        }
  hdrSave($header, \%hdr) or return 0 ;
 
  unlink($linkpath) ;
