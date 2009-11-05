@@ -46,7 +46,18 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     foreach ($headers as $header) {
         $columns[$header[0]] = array();
     }
-
+    
+    function getUUID($machine) { return $machine['objectUUID']; }
+    
+    $uuids = array_map("getUUID", $names);
+    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+        $profiles = xmlrpc_getmachinesprofiles($uuids);
+        $h_profiles = array();
+        $i = 0;
+        foreach ($uuids as $uuid) {
+            $h_profiles[$uuid] = $profiles[$i++];
+        }
+    }
     foreach($names as $value) {
         foreach ($headers as $header) {
             if (!empty($value[$header[0]])) {
@@ -70,7 +81,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
             $actionLogs[] = $logAction;
         }
         if (in_array("dyngroup", $_SESSION["modulesList"])) {
-            $profile = xmlrpc_getmachineprofile($value['objectUUID']);
+            $profile = $h_profiles[$value['objectUUID']];
             if ($profile) {
                 $actionProfile[] = $profileAction;
                 $value['id'] = $profile;
