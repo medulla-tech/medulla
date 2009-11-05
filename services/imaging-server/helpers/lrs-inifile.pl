@@ -1,23 +1,26 @@
 #!/usr/bin/perl -w
 #
-# $Id: inifile.pl 2307 2005-06-13 09:40:44Z root $
+# (c) 2003-2007 Linbox, http://www.linbox.com/
+# (c) 2008-2009 Nicolas Rueff / Mandriva, http://www.mandriva.com/
 #
-# Linbox Rescue Server
-# Copyright (C) 2005  Linbox FAS
+# $Id: update_menu 4741 2009-11-03 16:21:39Z nrueff $
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# This program is distributed in the hope that it will be useful,
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 # Cette structure est organisee comme indique ci-dessous. Les elements 'name'
 # sont les noms des sections.
@@ -70,12 +73,12 @@ my @ls ;
 my $secname = "-" ; # S'il y a des lignes avant la 1ere section.
 
  open(FF, $file) or die "iniLoad: '$file': $!\n" ;
-	while (<FF>) {
-		s/^[ \t]+// ;
-		s/[ \t\n]+$/\n/ ;
-		
-		$buf .= $_ ;
-	}
+        while (<FF>) {
+                s/^[ \t]+// ;
+                s/[ \t\n]+$/\n/ ;
+
+                $buf .= $_ ;
+        }
  close(FF) ;
 
  # Init structure:
@@ -87,30 +90,30 @@ my $secname = "-" ; # S'il y a des lignes avant la 1ere section.
  #
  $buf = "\n" . $buf ;
  @blks = split(m/(\n\[.+?\])/s, $buf) ;
- 
+
  while (scalar(@blks)) {
- 	$buf = shift(@blks) ;
- 	$buf =~ s/^\n+// ;
- 	$buf =~ s/\n+$// ;
-	@bl = split(m/\n/, $buf ) ;
- 	
-	if (not defined($bl[0])) {
-		next ;
-	}
- 	elsif (grep(m/^\[.+]$/, $bl[0]) and scalar(@bl)==1) {
- 		$secname = $bl[0] ;
- 		$secname =~ s/[\[\]]//g ;
- 		push @order, $secname ;
- 	}
- 	else {
- 		@ls = () ;
- 		foreach $line (@bl) {
- 			($k, $v) = split(m/[ \t]*=[ \t]*/, $line, 2) ;
- 			push @ls, $k, $v ;
- 		}
- 	
- 		$data{$secname} = [ @ls ] ;
- 	}
+        $buf = shift(@blks) ;
+        $buf =~ s/^\n+// ;
+        $buf =~ s/\n+$// ;
+        @bl = split(m/\n/, $buf ) ;
+
+        if (not defined($bl[0])) {
+                next ;
+        }
+        elsif (grep(m/^\[.+]$/, $bl[0]) and scalar(@bl)==1) {
+                $secname = $bl[0] ;
+                $secname =~ s/[\[\]]//g ;
+                push @order, $secname ;
+        }
+        else {
+                @ls = () ;
+                foreach $line (@bl) {
+                        ($k, $v) = split(m/[ \t]*=[ \t]*/, $line, 2) ;
+                        push @ls, $k, $v ;
+                }
+
+                $data{$secname} = [ @ls ] ;
+        }
  }
 
  # Structure finale:
@@ -138,7 +141,7 @@ sub iniHasSection
 #
 sub iniGetSections
 {
-	return @{ ${$_[0]}{'order'} } ;
+        return @{ ${$_[0]}{'order'} } ;
 }
 
 
@@ -152,7 +155,7 @@ my ($conf,$section) = @_ ;
 my @neworder ;
 
  return 0 if (not iniHasSection($conf,$section)) ;
- 
+
  delete $$conf{'data'}{$section} ;
 
  @neworder = grep { $_ ne $section } @{ $$conf{'order'} } ;
@@ -173,9 +176,9 @@ my ($conf,$section) = @_ ;
  return 0 if (iniHasSection($conf,$section)) ;
 
  push @{ $$conf{'order'} }, $section ;
- 
+
  $$conf{'data'}{$section} = [] ;  # La valeur de la clef doit etre une liste.
- 
+
 1;
 }
 
@@ -196,10 +199,10 @@ my @out = () ;
   return () if (not iniHasSection($conf,$section)) ;
 
   $lsref = $$conf{'data'}{$section} ;
-  
+
   for ($i=0;  $i<scalar(@$lsref);  $i+=2) {
-  	$k = $$lsref[$i] ;
-  	push @out, $k ;
+        $k = $$lsref[$i] ;
+        push @out, $k ;
   }
 
  return @out ;
@@ -235,17 +238,17 @@ my ($k,$v,$i) ;
 my $lsref ;
 
   return "" if (not iniHasSection($conf,$section)) ;
-    
+
   $lsref = $$conf{'data'}{$section} ;
   $key = lc($key) ;
   $v = "" ;
-  
+
   for ($i=0 ;  $i < scalar(@$lsref)  ;  $i += 2) {
-  	$k = lc( $$lsref[$i] ) ;
-  	if ($k eq $key ) {
-  		$v = $$lsref[$i+1] ;
-  		last ;
-  	}
+        $k = lc( $$lsref[$i] ) ;
+        if ($k eq $key ) {
+                $v = $$lsref[$i+1] ;
+                last ;
+        }
   }
 
 return $v ;
@@ -264,22 +267,22 @@ my ($k,$i,$found) ;
 my $lsref ;
 
   return 0 if (not iniHasSection($conf,$section)) ;
-    
+
   $lsref = $$conf{'data'}{$section} ;
   $key = lc($key) ;
   $found = 0 ;
-    
+
   for ($i=0 ;  $i < scalar(@$lsref)  ;  $i += 2) {
-  	$k = lc( $$lsref[$i] ) ;
-  	if ($k eq $key ) {
-  		$$lsref[$i+1] = $val ;
-  		$found = 1 ;
-  		last ;
-  	}
+        $k = lc( $$lsref[$i] ) ;
+        if ($k eq $key ) {
+                $$lsref[$i+1] = $val ;
+                $found = 1 ;
+                last ;
+        }
   }
 
   if (not $found) {
-  	push @$lsref, $key, $val ;
+        push @$lsref, $key, $val ;
   }
 
 1 ;
@@ -299,16 +302,16 @@ my ($k,$v,$realpos) ;
 my $lsref ;
 
   return ("","") if (not iniHasSection($conf,$section)) ;
-    
+
   $lsref = $$conf{'data'}{$section} ;
   $realpos = $keypos * 2 ;
 
   if (defined($$lsref[$realpos+1])) {
-  	$k = $$lsref[$realpos] ;
-  	$v = $$lsref[$realpos+1] ;
+        $k = $$lsref[$realpos] ;
+        $v = $$lsref[$realpos+1] ;
   }
   else {
-  	($k,$v) = ("","") ;
+        ($k,$v) = ("","") ;
   }
 
 return ($k,$v) ;
@@ -326,16 +329,16 @@ my ($conf,$section,$keypos,$key,$val) = @_ ;
 my ($lsref,$realpos) ;
 
   return 0 if (not iniHasSection($conf,$section)) ;
-    
+
   $lsref = $$conf{'data'}{$section} ;
   $realpos = $keypos * 2 ;
 
   if (defined($$lsref[$realpos+1])) {
-  	$$lsref[$realpos]   = $key ;
-  	$$lsref[$realpos+1] = $val ;
+        $$lsref[$realpos]   = $key ;
+        $$lsref[$realpos+1] = $val ;
   }
   else {
-  	return 0 ;
+        return 0 ;
   }
 
 return 1 ;
@@ -357,14 +360,14 @@ my ($k,$v) ;
  return if (not iniHasSection($conf,$section)) ;
 
  foreach $k (@_) {
- 	$v = iniGetVal($conf, $section, $k) ;
+        $v = iniGetVal($conf, $section, $k) ;
 
- 	if (length($v)) {
- 		push @vals, $v ;
- 	}
- 	else {
- 		push @vals, '' ;
- 	}
+        if (length($v)) {
+                push @vals, $v ;
+        }
+        else {
+                push @vals, '' ;
+        }
  }
 
  return @vals ;
@@ -386,29 +389,81 @@ my (@clefs, @pairs) ;
 
  open(FF, "> $file") or die "$!" ;
 
-	foreach $s (@sections) {
-		print FF "[$s]\n" ;
-		
-		@clefs = iniGetKeys($conf,$s) ;
-		
-		for ($i=0; $i<scalar(@clefs); $i++) {
-			($k,$v) = iniGet($conf,$s,$i) ;
-			if (length($v)) {
-				# Uniquement les valeurs non nulles
-				@pairs = split(m/\n/,$v) ;
-				@pairs = map { $_ = "$k=$_" } @pairs ;
-				print FF join("\n", @pairs), "\n" ;
-			}
-		}
-		
-		print FF "\n" ;
-	}
+        foreach $s (@sections) {
+                print FF "[$s]\n" ;
+
+                @clefs = iniGetKeys($conf,$s) ;
+
+                for ($i=0; $i<scalar(@clefs); $i++) {
+                        ($k,$v) = iniGet($conf,$s,$i) ;
+                        if (length($v)) {
+                                # Uniquement les valeurs non nulles
+                                @pairs = split(m/\n/,$v) ;
+                                @pairs = map { $_ = "$k=$_" } @pairs ;
+                                print FF join("\n", @pairs), "\n" ;
+                        }
+                }
+
+                print FF "\n" ;
+        }
 
  close(FF) ;
 
 1;
 }
 
+# $dir getDirName($path)
+# Equivalent de la commande shell 'dirname'.
+#
+sub getDirName
+{
+ my @ls ;
+ my $out ;
+
+ if (not length($_[0])) {
+        $out = "." ;
+ }
+ else {
+        @ls = split( m(/+) , $_[0] ) ;
+        pop(@ls) ;
+        if (not scalar(@ls)) {
+                if (grep(m(^/),$_[0])) {
+                        $out = "/" ;
+                }
+                else {
+                        $out = "." ;
+                }
+        }
+        else {
+                $out = join('/',@ls) || '/' ;
+        }
+ }
+
+return $out ;
+}
+
+# fileLoad($src, \$data)
+# Retourne le nb d'octets lus.
+#
+sub fileLoad
+{
+my ($src,$data) = @_ ;
+my $buf ;
+
+ $$data = "" ;
+
+ if (not open(F,$src)) {
+        lbsError("fileLoad",'RAW', "$src: $!") ;
+        return 0 ;
+ }
+        while(read(F,$buf,16384)) {
+                $$data .= $buf ;
+        }
+
+ close(F) ;
+
+return length($$data) ;
+}
 
 
 # End Of Module ///////////////////////////////////////////////////////////////
