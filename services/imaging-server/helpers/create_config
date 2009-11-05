@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# $Id: create_config 2307 2005-06-13 09:40:44Z root $
+#
+# Linbox Rescue Server
+# Copyright (C) 2005  Linbox FAS
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+# --- GET BASEDIR
+
+CONFIG_FILE="/etc/mmc/pulse2/imaging-server/imaging-server.ini"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "create_config: '$CONFIG_FILE': File not found" >&2
+    exit 1
+fi
+
+BASEDIR=$(grep -i '^ *base_folder' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
+SKELDIR=$(grep -i '^ *skel_folder' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
+UPDATEMENU=$(grep -i '^ *menu_update_path' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
+
+if [ ! -d "$BASEDIR" ]; then
+    echo "create_config: '$BASEDIR': Not a directory" >&2
+    exit 1
+fi
+
+# --- CREATE DIR
+
+mkdir -p "$BASEDIR/images/$1" || exit 1
+
+# --- POPULATE DIR
+
+cd "$BASEDIR/images/$1"
+(cd "$SKELDIR" && tar --exclude=.svn -cf - .) | tar -xf -
+
+# --- CREATE DEFAULT CONFIG FILE
+
+"$UPDATEMENU" $1
