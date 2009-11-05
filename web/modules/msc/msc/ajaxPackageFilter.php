@@ -78,24 +78,33 @@ if (!empty($_GET['uuid'])) {
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
 list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+$err = array();
 foreach ($packages as $c_package) {
     $package = to_package($c_package[0]);
     $type = $c_package[1];
     $p_api = new ServerAPI($c_package[2]);
 
-    $a_packages[] = $package->label;
-    $a_pversions[] = $package->version;
-    $a_sizes[] = prettyOctetDisplay($package->size);
-    if (!empty($_GET['uuid'])) {
-        $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+    if ($c_package[0]['ERR'] && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+        $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
-        $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
+        $a_packages[] = $package->label;
+        $a_pversions[] = $package->version;
+        $a_sizes[] = prettyOctetDisplay($package->size);
+        if (!empty($_GET['uuid'])) {
+            $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+        } else {
+            $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
+        }
+        if ($type==0) {
+            $a_css[] = 'primary_list';
+        } else {
+            $a_css[] = 'secondary_list';
+        }
     }
-    if ($type==0) {
-        $a_css[] = 'primary_list';
-    } else {
-        $a_css[] = 'secondary_list';
-    }
+}
+
+if ($err) {
+    new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
 
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));

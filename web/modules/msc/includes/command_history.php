@@ -385,7 +385,7 @@ class CommandHistory {
                ) {
                    $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
-            if (strpos($hist['state'], '_failed') !== False) {
+            if (strpos($hist['state'], '_failed') !== False || ($hist['error_code'] > 4501 && $hist['error_code'] < 5000)) {
                 $msgs = array(
                     // BIG HUGE TODO: should get base value (230) from the agent (PULSE2_WRAPPER_ERROR_PRECHECK_BASE from consts.py)
                     /* When SSH returns 255, an error occured while
@@ -400,7 +400,19 @@ class CommandHistory {
                     240 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
                     240 + 2 => _T("The current host IP address doesn't match the IP address from the inventory database.", 'msc'),
                     240 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc'),
+                    /* Known exit codes :  */
+                    4000 + 1 => sprintf(_T("The package '%s' is not available on any mirror.", "msc"), $hist['stderr'][0]),
+                    4000 + 2 => sprintf(_T("Can't get files URI for package '%s' on mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
+                    4000 + 3 => sprintf(_T("Can't get files URI for package '%s' on fallback mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
+                    4000 + 4 => sprintf(_T("An error occured when trying to contact the mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
+                    4000 + 5 => sprintf(_T("An error occured when trying to contact the fallback mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
+                    4000 + 6 => sprintf(_T("An error occured when trying to contact the mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
+                    4000 + 7 => sprintf(_T("An error occured when trying to contact the fallback mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
+                
+                    4500 + 8 => sprintf(_T("Package '%s' is NOT available on primary mirror %s\nPackage '%s' is available on fallback mirror %s", "msc"), $hist['stdout'][0], $hist['stdout'][1], $hist['stdout'][2], $hist['stdout'][3]),
+                    4500 + 9 => sprintf(_T("Package '%s' is available on primary mirror %s", "msc"), $hist['stdout'][0], $hist['stdout'][1]),
                 );
+                if ($hist['error_code'] >= 4001 && $hist['error_code'] < 5000) { $hist["stderr"] = array(''); }
                 if (array_key_exists($hist['error_code'], $msgs)) {
                     $hist['stderr'][] = $msgs[$hist['error_code']];
                 }

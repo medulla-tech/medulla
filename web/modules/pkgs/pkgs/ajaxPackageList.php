@@ -51,13 +51,22 @@ $count = $packages[0];
 $packages = $packages[1];
 
 $desc = $params = $names = $versions = $size = array();
+$err = array();
 foreach ($packages as $p) {
     $p = $p[0];
-    $names[] = $p['label'];
-    $versions[] = $p['version'];
-    $desc[] = $p['description'];
-    $size[] = prettyOctetDisplay($p['size']);
-    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
+    if ($p['ERR'] && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+        $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $p['mirror']);
+    } else {
+        $names[] = $p['label'];
+        $versions[] = $p['version'];
+        $desc[] = $p['description'];
+        $size[] = prettyOctetDisplay($p['size']);
+        $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
+    }
+}
+
+if ($err) {
+    new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
 }
 
 $n = new OptimizedListInfos($names, _T("Names", "pkgs"));

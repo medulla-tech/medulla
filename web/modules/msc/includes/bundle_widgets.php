@@ -23,7 +23,9 @@
  */
 
 class RenderedMSCBundleChoice {
-    function RenderedMSCBundleChoice() { }
+    function RenderedMSCBundleChoice() {
+        $this->err = array();
+    }
     function treatPost() {
         $members = isset($_POST["lmembers"])    ? unserialize(base64_decode($_POST["lmembers"]))    : null;
         $nonmemb = isset($_POST["lnonmemb"])    ? unserialize(base64_decode($_POST["lnonmemb"]))    : null;
@@ -141,6 +143,12 @@ select.list
 </style>
 <?
     }
+
+    function display_error() {
+        if ($this->err) {
+            new NotifyWidgetFailure(implode('<br/>', array_merge($this->err, array(_T("Please contact your administrator.", "msc")))));
+        }
+    }
 }
 
 class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
@@ -157,13 +165,18 @@ class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
         $this->list = array();
         foreach ($packages as $c_package) {
             $p_api = new ServerAPI($c_package[2]);
-            $this->list[$c_package[0]['id'].'##'.base64_encode(serialize($p_api->toURI()))] = $c_package[0]['label'] . " (" . $c_package[0]['version'] . ")";
+            if ($c_package[0]['ERR'] && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+                $this->err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
+            } else {
+                $this->list[$c_package[0]['id'].'##'.base64_encode(serialize($p_api->toURI()))] = $c_package[0]['label'] . " (" . $c_package[0]['version'] . ")";
+            }
         }
     }
 
     function display() {
         parent::display_start();
         parent::display_end();
+        parent::display_error();
     }
 }
 
@@ -181,13 +194,18 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
         $this->list = array();
         foreach ($packages as $c_package) {
             $p_api = new ServerAPI($c_package[2]);
-            $this->list[$c_package[0]['id'].'##'.base64_encode(serialize($p_api->toURI()))] = $c_package[0]['label'] . " (" . $c_package[0]['version'] . ")";
+            if ($c_package[0]['ERR'] && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+                $this->err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
+            } else {
+                $this->list[$c_package[0]['id'].'##'.base64_encode(serialize($p_api->toURI()))] = $c_package[0]['label'] . " (" . $c_package[0]['version'] . ")";
+            }
         }
     }
 
     function display() {
         parent::display_start();
         parent::display_end();
+        parent::display_error();
     }
 }
 

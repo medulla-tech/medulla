@@ -39,11 +39,20 @@ $res = getUserPackageApi();
 $list = array();
 $list_val = array();
 if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
+$err = array();
 foreach ($res as $mirror) {
-    $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
-    $list[$mirror['uuid']] = $mirror['mountpoint'];
-    $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
+    if ($mirror['ERR'] &&  $mirror['ERR'] == 'PULSE2ERROR_GETUSERPACKAGEAPI') {
+        $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $mirror['mirror']);
+    } else {
+        $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
+        $list[$mirror['uuid']] = $mirror['mountpoint'];
+        $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
+    }
 }
+if ($err) {
+    new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
+}
+        
 if (isset($_GET['location'])) {
     $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
 }
