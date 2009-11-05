@@ -32,6 +32,7 @@ class SchedulerApi(Singleton):
         self.logger = logging.getLogger()
         self.logger.debug("Going to initialize SchedulerApi")
         self.config = MscConfig()
+        credits = ''
 
         if self.config.sa_enable:
             if self.config.sa_enablessl:
@@ -41,17 +42,19 @@ class SchedulerApi(Singleton):
 
             if self.config.sa_username != '':
                 self.server_addr += self.config.sa_username
+                credits = self.config.sa_username
                 if self.config.sa_password != '':
                     self.server_addr += ":"+self.config.sa_password
+                    credits += ":"+self.config.sa_password
                 self.server_addr += "@"
 
             self.server_addr += self.config.sa_server+':'+str(self.config.sa_port) + self.config.sa_mountpoint
             self.logger.debug('SchedulerApi will connect to %s' % (self.server_addr))
 
             if self.config.sa_verifypeer:
-                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, self.server_addr, self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert)
+                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credits, self.server_addr, self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert)
             else:
-                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, self.server_addr)
+                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credits, self.server_addr)
                 
         for method in ('getScheduler', 'getSchedulers', ):
             setattr(self, method, getattr(self.internal, method))

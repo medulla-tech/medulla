@@ -29,10 +29,11 @@ import logging
 from twisted.internet import ssl, reactor
 import twisted.web.xmlrpc
 import pulse2.xmlrpc
+from pulse2.apis.consts import *
 
 class Pulse2Api(twisted.web.xmlrpc.Proxy):
     name = "pulse2API"
-    def __init__(self, url, verifypeer = False, cacert = None, localcert = None):
+    def __init__(self, credits, url, verifypeer = False, cacert = None, localcert = None):
         twisted.web.xmlrpc.Proxy.__init__(self, url, None, None)
         self.SSLClientContext = None
         self.logger = logging.getLogger()
@@ -40,6 +41,8 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
             pulse2.xmlrpc.OpenSSLContext().setup(localcert, cacert, verifypeer)
             self.SSLClientContext = pulse2.xmlrpc.OpenSSLContext().getContext()
         self.logger.debug('%s will connect to %s' % (self.name, url))
+        self.server_addr = url
+        self.credits = credits
         # FIXME: still needed ?
         self.initialized_failed = False
 
@@ -61,3 +64,14 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
     def onError(self, error, funcname, args, default_return = []):
         self.logger.warn("%s: %s %s has failed: %s" % (self.name, funcname, args, error))
         return default_return
+
+    def onErrorRaise(self, error, funcname, args, default_return = []):
+        if error.type == twisted.internet.error.ConnectionRefusedError:
+            self.logger.warn("%s %s has failed: connection refused" % (funcname, args))
+            return ['PULSE2_ERR', PULSE2_ERR_CONN_REF, self.server_addr, default_return]
+        if error.type == exceptions.ValueError:
+            self.logger.warn("%s %s has failed: the mountpoint don't exists" % (funcname, args))
+            return ['PULSE2_ERR', PULSE2_ERR_404, self.server_addr, default_return]
+        self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
+        return default_return
+

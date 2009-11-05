@@ -28,16 +28,21 @@ class PackageGetA(Pulse2Api):
         Pulse2Api.__init__(self, *attr)
     
     def getAllPackages(self, mirror = None):
-        d = self.callRemote("getAllPackages", mirror)
-        d.addErrback(self.onError, "getAllPackages", mirror)
-        return d
+        try:
+            d = self.callRemote("getAllPackages", mirror)
+            d.addErrback(self.onError, "getAllPackages", mirror, [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credits, '')}])
+            return d
+        except Exception, e:
+            self.logger.error("getAllPackages %s"%(str(e)))
+            return [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credits, '')}]
 
     def getAllPendingPackages(self, mirror = None):
         try:
             d = self.callRemote("getAllPendingPackages", mirror)
             d.addErrback(self.onError, "getAllPendingPackages", mirror)
             return d
-        except:
+        except Exception, e:
+            self.logger.error("getAllPendingPackages %s"%(str(e)))
             return []
 
     # FIXME ! __convertDoReboot* shouldn't be needed
@@ -87,7 +92,7 @@ class PackageGetA(Pulse2Api):
         self.logger.warn("one of your package server does not support getPackagesDetail, you should update it.")
         ds = []
         for pid in pids:
-            d = self.paserver.callRemote("getPackageDetail", pid)
+            d = self.callRemote("getPackageDetail", pid)
             d.addCallback(self.__convertDoReboot)
             d.addErrback(self.onError, "getPackageDetail", pid, False)
             ds.append(d)

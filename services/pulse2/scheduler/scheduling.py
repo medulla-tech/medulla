@@ -38,6 +38,7 @@ import twisted.internet
 # MMC plugins
 from pulse2.database.msc import MscDatabase
 import pulse2.apis.clients.mirror
+from pulse2.apis.consts import *
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -1301,7 +1302,14 @@ def _chooseUploadMode(myCoH, myC, myT):
 
 def _cbRunPushPullPhaseTestMainMirror(result, mirror, fbmirror, client, myC, myCoH):
     if result:
-        return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH)
+        if type(result) == list and result[0] == 'PULSE2_ERR':
+            if result[1] == PULSE2_ERR_CONN_REF:
+                updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
+            elif result[1] == PULSE2_ERR_404:
+                updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
+            return _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myCoH)
+        else:
+            return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH)
     else:
         # Test the fallback mirror
         return _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC, myCoH)
@@ -1321,11 +1329,22 @@ def _cbRunPushPullPhaseTestFallbackMirror(result, mirror, fbmirror, client, myC,
 
 def _cbRunPushPullPhase(result, mirror, fbmirror, client, myC, myCoH, useFallback = False):
     if result:
-        # The package is available on a mirror, start upload phase
-        return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
+        if type(result) == list and result[0] == 'PULSE2_ERR':
+            if result[1] == PULSE2_ERR_CONN_REF:
+                updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_FMIRRORFAILED_CONNREF_ERROR, '', result[2])
+            elif result[1] == PULSE2_ERR_404:
+                updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_FMIRRORFAILED_404_ERROR, '', result[2])
+            logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', myC.package_id)
+            if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
+                return runFailedPhase(myCoH.getId())
+            return runGiveUpPhase(myCoH.getId())
+        else:
+            # The package is available on a mirror, start upload phase
+            return _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback)
     else:
         logging.getLogger().warn("command_on_host #%s: Package '%s' is not available on any mirror" % (myCoH.getId(), myC.package_id))
-        updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', 'Package \'%s\' is not available on any mirror' % (myC.package_id))
+        updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', myC.package_id)
         if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
             return runFailedPhase(myCoH.getId())
         return runGiveUpPhase(myCoH.getId())
@@ -1440,11 +1459,10 @@ def _runPushPhase(client, myC, myCoH, myT):
 
 def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False):
     if useFallback:
-        msg = 'Package \'%s\' is NOT available on primary mirror %s\nPackage \'%s\' is available on fallback mirror %s' % (myC.package_id, mirror, myC.package_id, fbmirror)
+        updateHistory(myCoH.getId(), 'upload_in_progress', PULSE2_PSERVER_ISAVAILABLE_FALLBACK, '%s\n%s\n%s\n%s' % (myC.package_id, mirror, myC.package_id, fbmirror))
         mirror = fbmirror
     else:
-        msg = 'Package \'%s\' is available on primary mirror %s' % (myC.package_id, mirror)
-    updateHistory(myCoH.getId(), 'upload_in_progress', PULSE2_SUCCESS_ERROR, '', msg)
+        updateHistory(myCoH.getId(), 'upload_in_progress', PULSE2_PSERVER_ISAVAILABLE_MIRROR, '%s\n%s' % (myC.package_id, mirror))
     logging.getLogger().debug("command_on_host #%s: Package '%s' is available on %s" % (myCoH.getId(), myC.package_id, mirror))
     ma = pulse2.apis.clients.mirror.Mirror(mirror)
     fids = []
@@ -1454,6 +1472,18 @@ def _runPushPullPhase(mirror, fbmirror, client, myC, myCoH, useFallback = False)
     d.addCallback(_cbRunPushPullPhasePushPull, mirror, fbmirror, client, myC, myCoH, useFallback)
 
 def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, useFallback):
+    if type(result) == list and result[0] == 'PULSE2_ERR':
+        m = mirror
+        if useFallback:
+            m = fbmirror
+        if result[1] == PULSE2_ERR_CONN_REF:
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
+        elif result[1] == PULSE2_ERR_404:
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
+        if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True): # better decrement attemps, as package can't be found
+            return runFailedPhase(myCoH.getId())
+        return runGiveUpPhase(myCoH.getId())
+
     files_list = result
     file_uris = {}
     choosen_mirror = mirror
@@ -1478,16 +1508,14 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
     if (not file_uris) or (len(file_uris['files']) == 0):
         if useFallback:
             logging.getLogger().warn("command_on_host #%s: can't get files URI from fallback mirror, skipping command" % (myCoH.getId()))
-            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', \
-                    'Can\'t get files URI for package \'%s\' on fallback mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.' % (myC.package_id, fbmirror))
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, '', "%s\n%s" % (myC.package_id, fbmirror))
             # the getFilesURI call failed on the fallback. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):
                 return runFailedPhase(myCoH.getId())
         elif not fbmirror or fbmirror == mirror:
             logging.getLogger().warn("command_on_host #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (myCoH.getId(), mirror))
-            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', \
-                    'Can\'t get files URI for package \'%s\' on mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.' % (myC.package_id, mirror))
+            updateHistory(myCoH.getId(), 'upload_failed', PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, '', "%s\n%s" % (myC.package_id, mirror))
             # the getFilesURI call failed on the only mirror we have. We have a serious
             # problem and we better decrement attempts
             if not myCoH.switchToUploadFailed(myC.getNextConnectionDelay(), True):

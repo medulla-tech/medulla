@@ -45,7 +45,7 @@ def getProxy(schedulerConfig):
     """
     config = MscConfig()
 
-    url =  makeURL(schedulerConfig)
+    (url, credits) = makeURL(schedulerConfig)
 
     if url.startswith("http://"):
         ret = twisted.web.xmlrpc.Proxy(url)

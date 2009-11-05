@@ -47,6 +47,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
         bind = server
+        credits = ''
         if type(server) == dict:
             mountpoint = server['mountpoint']
             port = server['port']
@@ -54,13 +55,14 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
             bind = server['server']
             if server.has_key('username') and server.has_key('password') and server['username'] != '':
                 login = "%s:%s@" % (server['username'], server['password'])
+                credits = "%s:%s" % (server['username'], server['password'])
 
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.config = MscConfig()
         if self.config.ma_verifypeer:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credits, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
         else:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, self.server_addr)
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credits, self.server_addr)
 
 def get_default_bundle_name(bundle_elem_nb = 0):
     localtime = time.localtime()
@@ -397,9 +399,9 @@ class GetPackagesFiltered:
     def get(self):
         if "packageapi" in self.filt:
             if 'pending' in self.filt:
-                ret = PackageGetA(self.filt["packageapi"]).getAllPendingPackages(False)
+                ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPendingPackages, False)
             else:
-                ret = PackageGetA(self.filt["packageapi"]).getAllPackages(False)
+                ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPackages, False)
             ret.addCallbacks(self.sendResult, self.onError)
             ret.addErrback(lambda err: self.onError(err))
         else:
@@ -460,9 +462,9 @@ class GetPackagesUuidFiltered:
             else:
                 self.p_api = self.package_apis
             if 'pending' in self.filt:
-                d = PackageGetA(self.p_api).getAllPendingPackages(self.mirror)
+                d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPendingPackages, self.mirror)
             else:
-                d = PackageGetA(self.p_api).getAllPackages(self.mirror)
+                d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPackages, self.mirror)
             d.addCallbacks(self.getPackagesLoop)
         else:
             self.sendResult(self.packages)
@@ -553,9 +555,9 @@ class GetPackagesGroupFiltered:
         if self.p_apis:
             p_api = self.p_apis.pop()
             if 'pending' in self.filt:
-                d = PackageGetA(p_api[0]).getAllPendingPackages(p_api[1])
+                d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPendingPackages, p_api[1])
             else:
-                d = PackageGetA(p_api[0]).getAllPackages(p_api[1])
+                d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPackages, p_api[1])
             d.addCallbacks(self.getPackagesLoop)
         else:
             # No more remote call to do, we are done

@@ -31,5 +31,5 @@ class UserPackageApiApi(Pulse2Api):
         if self.initialized_failed:
             return {}
         d = self.callRemote("getUserPackageApi", {"name":user, "uuid":user})
-        d.addErrback(self.onError, "UserPackageApiApi:getUserPackageApi", {"name":user, "uuid":user})
+        d.addErrback(self.onError, "UserPackageApiApi:getUserPackageApi", {"name":user, "uuid":user}, [{'ERR':'PULSE2ERROR_GETUSERPACKAGEAPI', 'mirror':self.server_addr.replace(self.credits, '')}])
         return d

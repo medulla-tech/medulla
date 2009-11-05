@@ -365,7 +365,7 @@ class MscConfig(MscDatabaseConfig):
             self.scheduler_url2id = {}
 
             for id in self.schedulers:
-                url = makeURL(self.schedulers[id])
+                (url, credits) = makeURL(self.schedulers[id])
                 self.scheduler_url2id[url] = id
 
 # static config ...

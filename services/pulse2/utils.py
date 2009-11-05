@@ -28,6 +28,7 @@ import datetime
 import re
 import os
 from time import time, struct_time
+import inspect
 
 # python 2.3 fallback for set() in xmlrpcleanup
 try:
@@ -234,3 +235,8 @@ def grepv(string,list):
     expr = re.compile(string)
     return [item for item in list if not expr.search(item)]
 
+def whoami():
+    return inspect.stack()[1][3]
+def whosdaddy():
+    return inspect.stack()[2][3]
+        

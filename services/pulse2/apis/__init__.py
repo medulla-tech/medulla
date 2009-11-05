@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 def makeURL(config):
+    credits = ''
     if config.has_key('proto') and not config.has_key('enablessl'):
         uri = "%s://" % config['proto']
     elif config.has_key('protocol') and not config.has_key('enablessl'):
@@ -33,8 +34,9 @@ def makeURL(config):
             uri = 'http://'
     if config.has_key('username') and config['username'] != '':
         uri += '%s:%s@' % (config['username'], config['password'])
+        credits = '%s:%s' % (config['username'], config['password'])
     if config.has_key('server') and not config.has_key('host'):
         config['host'] = config['server']
     uri += '%s:%d' % (config['host'], int(config['port']))
-    return uri
+    return (uri, credits)
 

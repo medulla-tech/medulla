@@ -40,7 +40,7 @@ class SchedulerApi(Pulse2Api): # Singleton
         ret = None
         if type(scheduler) == dict:
             if "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
-                scheduler = makeURL(scheduler)
+                (scheduler, credits) = makeURL(scheduler)
             elif "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
         elif type(scheduler) in (str, unicode):
