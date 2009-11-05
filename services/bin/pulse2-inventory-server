@@ -125,6 +125,7 @@ if __name__ == "__main__":
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
     except getopt.GetoptError:
+        print "Error while trying to get options."
         sys.exit(2)
     daemonize = True
     for option, argument in opts:

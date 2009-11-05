@@ -49,6 +49,7 @@ class InventoryServer:
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
         resp = ''
+        from_ip = self.client_address[0]
 
         # handle compressed inventories
         if self.headers['Content-Type'].lower() == 'application/x-compress':
@@ -59,11 +60,14 @@ class InventoryServer:
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
         except AttributeError, e:
+            self.logger.warn("Could not get any QUERY section in inventory from %s"%(from_ip))
             query = 'FAILS'
         try:
             deviceid = re.search(r'<DEVICEID>([\w-]+)</DEVICEID>', content).group(1)
         except AttributeError, e:
-            pass
+            self.logger.warn("Could not get any DEVICEID section in inventory from %s"%(from_ip))
+            self.logger.debug("no DEVICEID in %s"%(content))
+            query = 'FAILS'
 
         if query == 'PROLOG':
             config = InventoryGetService().config
@@ -88,8 +92,9 @@ class InventoryServer:
         elif query == 'UPDATE':
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_update</RESPONSE></REPLY>'
         elif query == 'INVENTORY':
+            self.logger.debug("Going to treat inventory from %s"%(from_ip))
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
-            Common().addInventory(deviceid, cont)
+            Common().addInventory(deviceid, from_ip, cont)
 
         self.send_response(200)
         self.end_headers()
@@ -123,13 +128,13 @@ class TreatInv(Thread):
         while 1:
             while Common().countInventories() > 0:
                 self.logger.debug("TreatInv :: there are %d inventories"%Common().countInventories())
-                deviceid, content = Common().popInventory()
-                if not self.treatinv(deviceid, content):
+                deviceid, from_ip, content = Common().popInventory()
+                if not self.treatinv(deviceid, from_ip, content):
                     self.logger.debug("TreatInv :: failed to create inventory for device %s"%(deviceid))
             self.logger.debug("TreatInv :: there are no new inventories")
             time.sleep(15) # TODO put in the conf file
 
-    def treatinv(self, deviceid, cont):
+    def treatinv(self, deviceid, from_ip, cont):
         content = cont[0]
 
         try:
@@ -140,17 +145,21 @@ class TreatInv(Thread):
             try:
                 inv_data = re.compile(r'<CONTENT>(.+)</CONTENT>', re.DOTALL).search(content).group(1)
             except AttributeError, e:
-                pass
+                # we can not work without it!
+                self.logger.warn("Could not get any CONTENT section in inventory from %s"%(from_ip))
+                self.logger.error("no inventory created!")
+                return False
 
             try:
                 encoding = re.search(r' encoding="([^"]+)"', content).group(1)
             except AttributeError, e:
-                pass
+                self.logger.warn("Could not get any encoding in inventory from %s"%(from_ip))
 
             try:
                 date = re.compile(r'<LOGDATE>(.+)</LOGDATE>', re.DOTALL).search(inv_data).group(1)
             except AttributeError, e:
-                pass
+                # we can work without it
+                self.logger.warn("Could not get any LOGDATE section in inventory from %s"%(from_ip))
 
             self.logger.debug("Thread %s : regex : %s " % (threadname, time.time()))
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
@@ -188,7 +197,7 @@ class TreatInv(Thread):
             try:
                 date = inventory['ACCESSLOG'][1]['LOGDATE']
             except:
-                pass
+                self.logger.warn("Could not get date from the inventory")
 
             # Assign an entity to the computer
             entities = InventoryCreator().rules.compute(inventory)
@@ -224,9 +233,9 @@ class Common(Singleton):
     sem = Semaphore()
     shutdownRequest = False
 
-    def addInventory(self, deviceId, content):
+    def addInventory(self, deviceId, from_ip, content):
         self.sem.acquire()
-        self.inventories.append([deviceId, content])
+        self.inventories.append([deviceId, from_ip, content])
         self.sem.release()
 
     def countInventories(self):
@@ -237,9 +246,9 @@ class Common(Singleton):
 
     def popInventory(self):
         self.sem.acquire()
-        deviceId, content = self.inventories.pop()
+        deviceId, from_ip, content = self.inventories.pop()
         self.sem.release()
-        return (deviceId, content)
+        return (deviceId, from_ip, content)
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
@@ -325,7 +334,7 @@ class InventoryGetService(Singleton):
         try:
             os.unlink(self.config.pidfile)
         except OSError:
-            pass
+            self.logger.warn("Couldn't unlink pid file %s"%(self.config.pidfile))
 
         sys.exit(0)
 
