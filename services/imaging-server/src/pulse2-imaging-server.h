@@ -56,12 +56,15 @@ int gPort = 0;
 unsigned char gAdminPass[255];
 unsigned char gBaseDir[255];
 unsigned char gNetbootDir[255];
+unsigned char gSkelDir[255];
 // global config options, helpers section
-unsigned char gUpdateMenuPath[255];
-unsigned char gInfoPath[255];
-unsigned char gCheckAddHostPath[255];
-unsigned char gUpdateDirPath[255];
-unsigned char gSetDefaultPath[255];
+unsigned char gMenuUpdatePath[255];
+unsigned char gClientInventoryPath[255];
+unsigned char gClientAddPath[255];
+unsigned char gClientRemovePath[255];
+unsigned char gStorageCreatePath[255];
+unsigned char gStorageUpdatePath[255];
+unsigned char gMenuResetPath[255];
 // global config options, daemon section
 unsigned char gUser[255];
 unsigned char gGroup[255];

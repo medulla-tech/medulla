@@ -256,7 +256,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        snprintf(command, 255, "%s %s", gUpdateMenuPath, smac);
+        snprintf(command, 255, "%s %s", gMenuUpdatePath, smac);
         mysystem(command);
         /* write inventory to file. Must fit in one packet ! */
         snprintf(name, 255, "%s/log/%s.inf", gBaseDir, smac);
@@ -271,7 +271,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 inet_ntoa(si_other->sin_addr),
                 ntohs(si_other->sin_port), mac, buf + 1);
         snprintf(command, 255, "%s %s/log/%s.inf %s/log/%s.ini",
-                gInfoPath, gBaseDir, smac, gBaseDir, smac);
+                gClientInventoryPath, gBaseDir, smac, gBaseDir, smac);
         fclose(fo);
         mysystem(command);
         return 0;
@@ -297,19 +297,19 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         *ptr = 0;
         strcpy(pass, ptr + 1);
         strcpy(hostname, (char*)buf + 3);
-        snprintf(command, 255, "%s %s %s %s", gCheckAddHostPath, mac, hostname, pass);
+        snprintf(command, 255, "%s %s %s %s", gClientAddPath, mac, hostname, pass);
         mysystem(command);
         return 0;
     }
     // before a save
     if (buf[0] == 0xEC) {
-        snprintf(command, 255, "%s %s %c", gUpdateDirPath, smac, buf[1]);
+        snprintf(command, 255, "%s %s %c", gStorageUpdatePath, smac, buf[1]);
         mysystem(command);
         return 0;
     }
     // change menu default
     if (buf[0] == 0xCD) {
-        snprintf(command, 255, "%s %s %d", gSetDefaultPath, smac, buf[1]);
+        snprintf(command, 255, "%s %s %d", gMenuResetPath, smac, buf[1]);
         mysystem(command);
         mysyslog(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
         return 0;
@@ -378,7 +378,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         }
         return 0;
     }
-    // return me my LBS name
+    // return me my Pulse 2 name
     if (buf[0] == 0x1A) {
         if (getentry(etherpath, mac)) {
             //to.sin_family = AF_INET;
@@ -475,6 +475,13 @@ void readConfig(char * config_file_path) {
         sprintf(msg, "keyword 'netboot_folder' not found in section 'main' in file %s", config_file_path);
         diep(msg);
     }
+    if ((str = iniparser_getstr(ini, "main:skel_folder"))) {
+        strncpy((char*)gSkelDir, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'skel_folder' not found in section 'main' in file %s", config_file_path);
+        diep(msg);
+    }
 
     // Parse DAEMON section //
     if ((str = iniparser_getstr(ini, "daemon:user"))) {
@@ -507,39 +514,53 @@ void readConfig(char * config_file_path) {
     }
 
     // Parse HELPERS section //
-    if ((str = iniparser_getstr(ini, "helpers:update_menu_path"))) {
-        strncpy((char*)gUpdateMenuPath, str, 254);
+    if ((str = iniparser_getstr(ini, "helpers:menu_update_path"))) {
+        strncpy((char*)gMenuUpdatePath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'update_menu_path' not found in section 'helpers' in file %s", config_file_path);
+        sprintf(msg, "keyword 'menu_update_path' not found in section 'helpers' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "helpers:info_path"))) {
-        strncpy((char*)gInfoPath, str, 254);
+    if ((str = iniparser_getstr(ini, "helpers:client_inventory_path"))) {
+        strncpy((char*)gClientInventoryPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'info_path' not found in section 'helpers' in file %s", config_file_path);
+        sprintf(msg, "keyword 'client_inventory_path' not found in section 'helpers' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "helpers:check_add_host_path"))) {
-        strncpy((char*)gCheckAddHostPath, str, 254);
+    if ((str = iniparser_getstr(ini, "helpers:client_add_path"))) {
+        strncpy((char*)gClientAddPath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'check_add_host_path' not found in section 'helpers' in file %s", config_file_path);
+        sprintf(msg, "keyword 'client_add_path' not found in section 'helpers' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "helpers:update_dir_path"))) {
-        strncpy((char*)gUpdateDirPath, str, 254);
+    if ((str = iniparser_getstr(ini, "helpers:client_remove_path"))) {
+        strncpy((char*)gClientRemovePath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'update_dir_path' not found in section 'helpers' in file %s", config_file_path);
+        sprintf(msg, "keyword 'client_remove_path' not found in section 'helpers' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "helpers:set_default_path"))) {
-        strncpy((char*)gSetDefaultPath, str, 254);
+    if ((str = iniparser_getstr(ini, "helpers:storage_create_path"))) {
+        strncpy((char*)gStorageCreatePath, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'set_default_path' not found in section 'helpers' in file %s", config_file_path);
+        sprintf(msg, "keyword 'storage_create_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:storage_update_path"))) {
+        strncpy((char*)gStorageUpdatePath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'storage_update_path' not found in section 'helpers' in file %s", config_file_path);
+        diep(msg);
+    }
+    if ((str = iniparser_getstr(ini, "helpers:menu_reset_path"))) {
+        strncpy((char*)gMenuResetPath, str, 254);
+    } else {
+        char *msg = malloc(256); bzero(msg, 256);
+        sprintf(msg, "keyword 'menu_reset_path' not found in section 'helpers' in file %s", config_file_path);
         diep(msg);
     }
 
