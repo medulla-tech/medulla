@@ -999,8 +999,8 @@ class Common(pulse2.utils.Singleton):
     def _getFiles(self, path):
         files = []
         for pfile in os.listdir(path):
-            if os.path.isdir(pfile):
-                files.extend(self._getFiles(pfile))
+            if os.path.isdir("%s%s%s" % (path , os.sep, pfile)):
+                files.extend(self._getFiles("%s%s%s" % (path , os.sep, pfile)))
             else:
                 if os.path.basename(pfile) != 'conf.xml':
                     files.append("%s%s%s" % (path , os.sep, pfile))
