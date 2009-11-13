@@ -41,7 +41,8 @@ class DatabaseConfig(Singleton):
 
     dbdebug = "ERROR"
     dbpoolrecycle = 60
-    dbpoolsize = 5 
+    dbpoolsize = 5
+    dbpooltimeout = 30
     # SSL support
     dbsslenable = False
     dbsslca = None
@@ -76,10 +77,12 @@ class DatabaseConfig(Singleton):
             if self.cp.has_option(self.dbsection,  "dbpoolsize"):
                 self.dbpoolsize = self.cp.getint(self.dbsection, "dbpoolsize")
 
+            if self.cp.has_option(self.dbsection,  "dbpooltimeout"):
+                self.dbpooltimeout = self.cp.getint(self.dbsection, "dbpooltimeout")
+
             if self.cp.has_option(self.dbsection, "dbsslenable"):
                 self.dbsslenable = self.cp.getboolean(self.dbsection, "dbsslenable")
                 if self.dbsslenable:
                     self.dbsslca = self.cp.get(self.dbsection, "dbsslca")
                     self.dbsslcert = self.cp.get(self.dbsection, "dbsslcert")
                     self.dbsslkey = self.cp.get(self.dbsection, "dbsslkey")
-

@@ -74,7 +74,7 @@ class MscDatabase(DatabaseHelper):
 
         self.logger.info("Msc database is connecting")
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode = True)
+        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
         self.metadata = MetaData(self.db)
         if not self.initTables():
             return False
