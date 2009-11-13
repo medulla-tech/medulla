@@ -26,6 +26,7 @@
 
 function existAclAttr($attr) {
     global $aclArray;
+    if($aclArray)
     foreach ($aclArray as $items) {
         if (array_key_exists($attr,$items)) {
             return true;
