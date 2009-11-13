@@ -526,14 +526,14 @@ class Glpi(DyngroupDatabaseHelper):
                 partA, partB = part
                 if invert:
                     if like:
-                        ret.append(not_(partA.like(partB)))
+                        ret.append(not_(partA.like(self.encode(partB))))
                     else:
-                        ret.append(partA != partB)
+                        ret.append(partA != self.encode(partB))
                 else:
                     if like:
-                        ret.append(partA.like(partB))
+                        ret.append(partA.like(self.encode(partB)))
                     else:
-                        ret.append(partA == partB)
+                        ret.append(partA == self.encode(partB))
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
