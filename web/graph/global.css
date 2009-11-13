@@ -818,7 +818,51 @@ li.edit a {
         background-position: left top;
 	line-height: 18px;
 	text-decoration: none;
-        color: #FFF;
+    color: #FFF;
+}
+
+li.add a {
+	padding: 1px 3px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_add.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+    color: #FFF;
+}
+
+li.addbootmenu a {
+    background-image:url("../modules/imaging/graph/images/imaging-add.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+	padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
+li.up a {
+	padding: 1px 3px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_arrowup.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+    color: #FFF;
+}
+
+li.down a {
+	padding: 1px 3px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_arrowdown.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+    color: #FFF;
 }
 
 li.archiver a {
@@ -1078,6 +1122,10 @@ form {
 	margin: 0;
 }
 
+select {
+    font-size: 11px;
+}
+
 .btnPrimary {
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
@@ -1213,6 +1261,35 @@ form {
     border: 1px solid;
     border-color:  #BBB;
     -moz-border-radius: 8px;
+}
+
+#Location {
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;    
+}
+
+#Location #searchSpan {
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* IE Hack */
+    !padding: 0px;
+}
+
+#Location .searchfieldreal {
+    clear: none;
+}
+
+
+#Location img {
+    vertical-align: top;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+#FormLocation {
+    margin-bottom: 15px;
 }
 
 /* ---------------------------------------- */
