@@ -1,0 +1,82 @@
+div.membarfree {
+    border-right: 1px solid #27537C;
+    height: 12px;
+    background: url("img/main/bg_status_blue.gif") repeat-x left top transparent;
+    padding: 0;
+    margin: 0;
+}
+
+div.membarused {
+    border: none;
+    background: red;
+    height: 12px;
+    background: url("img/main/bg_status_orange.gif") repeat-x right top transparent;
+    overflow: hidden;
+    float: left;
+    padding: 0;
+    display: inline;
+}
+
+div.membarcache {
+    height: 12px;
+    background: url("img/main/bg_status_green.gif") repeat-x right top transparent;
+    float: left;
+    padding: 0;
+    margin: 0;
+}
+
+div.status {
+    float: left;
+    width: 49%;
+}
+
+div.status_block {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;    
+    background-color:#F0F4F7;
+    border:1px solid #CCCCCC;
+    color:#666666;
+    margin-bottom:1em;
+    padding:10px;
+    padding-bottom: 7px;
+    width: 90%;
+}
+
+div.status_block h3 {
+    font-family: Verdana, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    padding-bottom: 3px;
+}
+
+div.status_block p {
+    padding-top: 0;
+    padding-bottom: 3px;
+}
+
+div.status_block p.stat {
+    padding-top: 4px;
+    padding-bottom: 4px;    
+}
+
+div.status_block p img {
+    vertical-align: bottom;
+}
+
+div.spacer {
+    clear: left;
+    margin-bottom: 20px;
+}
+
+h2.activity {
+    float: left;
+}
+
+table.listinfos img {
+    vertical-align: bottom;
+}
+
+
+#container_status {
+    padding-top: 15px;
+}

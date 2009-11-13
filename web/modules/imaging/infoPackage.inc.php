@@ -1,8 +1,8 @@
-<?php
+<?
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2007-2009 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -23,54 +23,137 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
-
 /**
  * module declaration
  */
 
 $mod = new Module("imaging");
 $mod->setVersion("1.0.0");
-$mod->setRevision("$Rev$");
+$mod->setRevision('$Rev 0$');
 $mod->setDescription(_T("Imaging service","imaging"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(600);
 
-$submod = new SubModule("publicimages");
-$submod->setDescription(_T("Imaging", "publicimages"));
+$submod = new SubModule("manage");
+$submod->setDescription(_T("Imaging", "manage"));
 $submod->setImg("modules/imaging/img/imaging");
-$submod->setDefaultPage("imaging/publicimages/index");
+$submod->setDefaultPage("imaging/manage/index");
 
-$page = new Page("index",_T("List public images","imaging"));
+$page = new Page("index",_T("Server status","imaging"));
 $submod->addPage($page);
-
-$page = new Page("ajaxImages");
-$page->setFile("modules/imaging/publicimages/ajaxImages.php", array("AJAX" => True, "visible" => False));
+$page = new Page("master",_T("Manage masters","imaging"));
 $submod->addPage($page);
-
-$page = new Page("delete");
-$page->setFile("modules/imaging/publicimages/delete.php", array( "visible" => False, "noHeader" => True));
+$page = new Page("master_delete",_T("Delete master","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));    
 $submod->addPage($page);
-
-$page = new Page("copy");
-$page->setFile("modules/imaging/publicimages/copy.php", array("visible" => False, "noHeader" => True));
+$page = new Page("master_edit",_T("Edit master","imaging"));
+$page->setOptions(array("visible" => False));
 $submod->addPage($page);
-
-$page = new Page("edit");
-$page->setFile("modules/imaging/publicimages/edit.php", array("visible" => False));
+$page = new Page("master_add",_T("Add master","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-
-$page = new Page("view");
-$page->setFile("modules/imaging/publicimages/view.php", array("visible" => False));
+$page = new Page("master_iso",_T("Create iso from master","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-
-$page = new Page("mkiso");
-$page->setFile("modules/imaging/publicimages/mkiso.php", array( "visible" => False, "noHeader" => True));
+$page = new Page("service",_T("Manage boot services","imaging"));
+$submod->addPage($page);
+$page = new Page("service_edit",_T("Edit service","imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("service_add",_T("Add service","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+$page = new Page("bootmenu",_T("Default boot menu","imaging"));
+$submod->addPage($page);
+$page = new Page("bootmenu_up",_T("Up service","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+$page = new Page("bootmenu_down",_T("Down service","imaging"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+$page = new Page("bootmenu_edit",_T("Down service","imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("configuration",_T("Imaging configuration","imaging"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
+
+/* put in base/computer */
+/* Get the base module instance */
+$base = &$MMCApp->getModule('base');
+/* Get the computers sub-module instance */
+$submod = & $base->getSubmod('computers');
+
+if (!empty($submod)) {
+    // imaging on computer
+    $page = new Page("imgtabs", _T("Imaging on computer", "imaging"));
+    $page->setFile("modules/imaging/imaging/tabs.php");
+    $page->setOptions(array("visible" => False));
+    $tab = new Tab("tabbootmenu", _T("Boot menu", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("tabimages", _T("Images and Masters", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("tabservices", _T("Boot services", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("tablogs", _T("Imaging Log", "imaging"));
+    $page->addTab($tab);
+    $submod->addPage($page);
+    // imaging on group
+    $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
+    $page->setFile("modules/imaging/imaging/tabs.php");
+    $page->setOptions(array("visible" => False));
+    $tab = new Tab("grouptabbootmenu", _T("Boot menu", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("grouptabimages", _T("Images and Masters", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("grouptabservices", _T("Boot services", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("grouptablogs", _T("Imaging Log", "imaging"));
+    $page->addTab($tab);
+    $submod->addPage($page);
+    // actions on computer & groups
+    $page = new Page("bootmenu_remove",_T("Remove from boot menu","imaging"));
+    $page->setFile("modules/imaging/imaging/bootmenu_remove.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));    
+    $submod->addPage($page);
+    $page = new Page("images_delete",_T("Delete image","imaging"));
+    $page->setFile("modules/imaging/imaging/images_delete.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));    
+    $submod->addPage($page); 
+    $page = new Page("images_iso",_T("Create iso image","imaging"));
+    $page->setFile("modules/imaging/imaging/images_iso.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
+    $page = new Page("ajaxStatus");
+    $page->setFile("modules/imaging/imaging/ajaxStatus.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("ajaxLogs");
+    $page->setFile("modules/imaging/imaging/ajaxLogs.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("ajaxMaster");
+    $page->setFile("modules/imaging/imaging/ajaxMaster.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("ajaxService");
+    $page->setFile("modules/imaging/imaging/ajaxService.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("ajaxBootmenu");
+    $page->setFile("modules/imaging/imaging/ajaxBootmenu.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("ajaxConfiguration");
+    $page->setFile("modules/imaging/imaging/ajaxConfiguration.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+                
+    unset($submod);
+}
 
 ?>

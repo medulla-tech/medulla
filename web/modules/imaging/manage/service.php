@@ -1,8 +1,8 @@
 <?
 
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2007-2009 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -23,17 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
-
-$ajax = new AjaxFilter("modules/imaging/publicimages/ajaxImages.php");
-$ajax->display();
-
-$p = new PageGenerator(_T("Public Images"));
-$p->setSideMenu($sidemenu);
-$p->display();
-
-/* Display the DIV container that will be updated */
-$ajax->displayDivToUpdate();
+$page = "ajaxService";
+include_once('location.php');
 
 ?>
