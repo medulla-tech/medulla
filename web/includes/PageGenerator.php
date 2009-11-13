@@ -38,11 +38,16 @@ function getUniqId() {
  * similar to "echo" in PHP5
  */
 function echo_obj($obj) {
-if (!is_object($obj)){
-        echo ($obj);
-   } else
-   {
+    
+   if (is_object($obj)){        
         echo $obj->__toString();
+   }
+   else if(is_bool($obj)) {
+        if($obj)
+            echo '<img src="img/common/icn_yes.gif" alt="yes" />';
+   }
+   else {
+        echo ($obj);
    }
 
 }
@@ -122,6 +127,7 @@ class ActionItem {
     var $action;
     var $classCss;
     var $paramString;
+    var $mod;
 
     /**
      *  Constructor
@@ -131,7 +137,7 @@ class ActionItem {
      *    in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
-    function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null) {
+    function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $mod = false) {
         $this->desc=$desc;
         $this->action=$action;
         $this->classCss=$classCss;
@@ -145,6 +151,7 @@ class ActionItem {
         if ($this->tab != null) {
             $this->path .= "/" . $this->tab;
         }
+        $this->mod = $mod;
     }
 
     /**
@@ -164,6 +171,8 @@ class ActionItem {
      * display function if you have correct right on this action
      */
     function displayWithRight($param, $extraParams = array()) {
+        // add special param for actionItem
+        $extraParams['mod'] = $this->mod;
         echo "<li class=\"".$this->classCss."\">";
         if (is_array($extraParams) & !empty($extraParams)) $urlChunk = $this->buildUrlChunk($extraParams);
         else $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($extraParams);
@@ -235,8 +244,8 @@ class ActionItem {
  */
 class ActionPopupItem extends ActionItem {
 
-    function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300) {
-        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab);
+    function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false) {
+        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->setWidth($width);
     }
 
@@ -249,6 +258,8 @@ class ActionPopupItem extends ActionItem {
     }
 
     function displayWithRight($param, $extraParams = array()) {
+        // add special param for actionPopupItem
+        $extraParams['mod'] = $this->mod;
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
         } else {
@@ -826,7 +837,7 @@ class AjaxFilter extends HtmlElement {
      * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
      * @param $divid: div ID which is updated by the URL output
      */
-    function AjaxFilter($url, $divid = "container", $params = array()) {
+    function AjaxFilter($url, $divid = "container", $params = array(), $formid = "") {
         if (strpos($url, "?") === False)
             /* Add extra ? needed to build the URL */
             $this->url = $url . "?";
@@ -834,6 +845,7 @@ class AjaxFilter extends HtmlElement {
             /* Add extra & needed to build the URL */
             $this->url = $url . "&";
         $this->divid = $divid;
+        $this->formid = $formid;
         $this->refresh= 0;
         $this->params = '';
         foreach ($params as $k => $v) {
@@ -854,45 +866,55 @@ class AjaxFilter extends HtmlElement {
         $root = $conf["global"]["root"];
 
 ?>
-<form name="Form" id="Form" action="#">
+<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#">
 
-    <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-
-    <div id="searchSpan" class="searchbox" style="float: right;">
-    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <div id="loader<?=$this->formid?>">
+        <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
+    </div>
+    <div id="searchSpan<?=$this->formid?>" class="searchbox" style="float: right;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?=$this->formid?>" onkeyup="pushSearch<?=$this->formid?>(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
-    onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
+    onclick="document.getElementById('param<?=$this->formid?>').value =''; pushSearch<?=$this->formid?>(); return false;" />
     </span>
     </div>
 
     <script type="text/javascript">
-        document.getElementById('param').focus();
-        var refreshtimer = null;
-        var refreshparamtimer = null;
-        var refreshdelay = <?= $this->refresh ?>;
+<?
+if(!$this->formid) {
+?>        
+        document.getElementById('param<?=$this->formid?>').focus();
+<?
+}
+?>        
+        var refreshtimer<?=$this->formid?> = null;
+        var refreshparamtimer<?=$this->formid?> = null;
+        var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
 
         /**
          * Clear the timers set vith setTimeout
          */
-        function clearTimers() {
-            if (refreshtimer != null) {
-                clearTimeout(refreshtimer);
+        clearTimers<?=$this->formid?> = function() {
+            if (refreshtimer<?=$this->formid?> != null) {
+                clearTimeout(refreshtimer<?=$this->formid?>);
             }
-            if (refreshparamtimer != null) {
-                clearTimeout(refreshparamtimer);
+            if (refreshparamtimer<?=$this->formid?> != null) {
+                clearTimeout(refreshparamtimer<?=$this->formid?>);
             }
         }
 
         /**
          * Update div
          */
-        function updateSearch() {
-            new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
+        updateSearch<?=$this->formid?> = function() {
+            new Ajax.Updater('<?= $this->divid; ?>',
+            '<?= $this->url; ?>filter='+document.Form<?=$this->formid?>.param.value+'<?= $this->params ?>',     
+            { asynchronous:true, evalScripts: true}
+            );
 
 <?
 if ($this->refresh) {
 ?>
-            refreshtimer = setTimeout("updateSearch()", refreshdelay)
+            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", refreshdelay<?=$this->formid?>)
 <?
 }
 ?>
@@ -901,14 +923,14 @@ if ($this->refresh) {
         /**
          * Update div when clicking previous / next
          */
-        function updateSearchParam(filter, start, end) {
-            clearTimers();
+        updateSearchParam<?=$this->formid?> = function(filter, start, end) {
+            clearTimers<?=$this->formid?>();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'<?= $this->params ?>', { asynchronous:true, evalScripts: true});
 
 <?
 if ($this->refresh) {
 ?>
-            refreshparamtimer = setTimeout("updateSearchParam('"+filter+"',"+start+","+end+")", refreshdelay);
+            refreshparamtimer<?=$this->formid?> = setTimeout("updateSearchParam<?=$this->formid?>('"+filter+"',"+start+","+end+")", refreshdelay<?=$this->formid?>);
 <?
 }
 ?>
@@ -917,12 +939,13 @@ if ($this->refresh) {
         /**
          * wait 500ms and update search
          */
-        function pushSearch() {
-            clearTimers();
-            refreshtimer = setTimeout("updateSearch()", 500);
+        pushSearch<?=$this->formid?> = function() {
+            clearTimers<?=$this->formid?>();
+            refreshtimer<?=$this->formid?> = setTimeout("updateSearch<?=$this->formid?>()", 500);
         }
 
-        pushSearch();
+        pushSearch<?=$this->formid?>();
+
     </script>
 
 </form>
@@ -1023,7 +1046,6 @@ class AjaxFilterLocation extends AjaxFilter {
     <script type="text/javascript">
         document.getElementById('param').focus();
 
-
         /**
         * update div with user
         */
@@ -1075,6 +1097,58 @@ class AjaxFilterLocation extends AjaxFilter {
 </form>
 <?
           }
+}
+
+class AjaxLocation extends AjaxFilterLocation {
+
+    function AjaxLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
+        $this->AjaxFilterLocation($url, $divid, $paramname, $params);
+        $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
+    }
+    
+    function display() {
+        global $conf;
+        $root = $conf["global"]["root"];
+?>
+<form name="FormLocation" id="FormLocation" action="#">
+    <div id="Location">
+        <span id="searchSpan" class="searchbox">
+            <img src="graph/search.gif"/>
+            <span class="locationtext">&nbsp;<?=_T("Select entity", "imaging")?>:&nbsp;</span>
+            <span class="locationfield">
+            <?php
+            $this->location->display();
+            ?>
+            </span>
+        </span>
+        <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
+    </div>
+    
+
+    <script type="text/javascript">
+        /**
+        * update div with user
+        */
+        function updateSearchLocation() {
+            launch--;
+            if (launch==0) {
+                new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?><?= $this->params ?>&<?= $this->paramname ?>='+document.FormLocation.<?= $this->paramname ?>.value, { asynchronous:true, evalScripts: true});
+                }
+        }
+        /**
+        * wait 500ms and update search
+        */
+
+        function pushSearchLocation() {
+            launch++;
+            setTimeout("updateSearchLocation()",500);
+        }
+        pushSearchLocation();
+    </script>
+
+</form>
+<?
+    }
 }
 
 /**
@@ -1320,7 +1394,8 @@ class PageGenerator {
      */
     function display() {
         $this->displaySideMenu();
-        $this->displayTitle();
+        if ($this->title)
+            $this->displayTitle();
         if ($this->fixheight) {
             /* On IE, make the page have a minimal length, else the sidemenu may be cut */
             print '<div class="fixheight"></div>';
@@ -1630,14 +1705,13 @@ class NotifyWidget {
      * private internal function
      */
     function showJS() {
-        # if this function has already been launch, no need for a second launch
-        global $doneJS;
-        if ($doneJS) { return; }
+        # if this function has already been launch, no need for a second launch 
+        global $doneJS; 
+        if ($doneJS) { return; } 
         $doneJS = True;
         if (!isset($_SESSION['__notify'])) {
             return;
         }
-
         echo "<script>\n";
         echo "$('popup').style.width='".$this->getSize()."px';";
         echo "  showPopupCenter('includes/notify.php');";
