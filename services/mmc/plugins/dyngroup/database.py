@@ -469,13 +469,13 @@ class DyngroupDatabase(DatabaseHelper):
     
         try:
             if params['filter']:
-                 groups = groups.filter(self.groups.c.name.like('%'+params['filter']+'%'))
+                 groups = groups.filter(self.groups.c.name.like('%'+params['filter'].encode('utf-8')+'%'))
         except KeyError:
             pass
     
         try:
             if params['name'] != None:
-                groups = groups.filter(self.groups.c.name == params['name'])
+                groups = groups.filter(self.groups.c.name == params['name'].encode('utf-8'))
         except KeyError:
             pass
     
