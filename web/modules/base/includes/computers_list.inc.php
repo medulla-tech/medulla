@@ -29,6 +29,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
     $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+    $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
@@ -36,6 +37,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
+    $actionImaging = array();
     $actionDownload = array();
     $actionVncClient = array();
     $actionProfile = array();
@@ -79,6 +81,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         if (in_array("msc", $_SESSION["supportModList"])) {
             $actionMsc[] = $mscAction;
             $actionLogs[] = $logAction;
+        }
+        if (in_array("imaging", $_SESSION["supportModList"])) {
+            $actionImaging[] = $imgAction;
         }
         if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $profile = $h_profiles[$value['objectUUID']];
@@ -146,6 +151,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if (in_array("msc", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionLogs);
         $n->addActionItemArray($actionMsc);
+    }
+    if (in_array("imaging", $_SESSION["supportModList"])) {
+        $n->addActionItemArray($actionImaging);
     }
     if ($delete_computer && canDelComputer()) {
         $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","supprimer","computer", "base", "computers"));
