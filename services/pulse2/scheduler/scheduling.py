@@ -1203,7 +1203,8 @@ def performWOLPhase(myCommandOnHostID):
 
     mydeffered.\
         addCallback(parseWOLAttempt, myCommandOnHostID).\
-        addErrback(parseWOLError, myCommandOnHostID)
+        addErrback(parseWOLError, myCommandOnHostID).\
+        addErrback(gotErrorInError, myCommandOnHostID)
     return mydeffered
 
 def runUploadPhase(myCommandOnHostID):
@@ -1276,7 +1277,7 @@ def _chooseUploadMode(myCoH, myC, myT):
     # check if we have enough informations to reach the client
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform upload")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform upload")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCoH.getId())
 
     # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
     if myCoH.isProxyClient(): # proxy client
@@ -1289,12 +1290,12 @@ def _chooseUploadMode(myCoH, myC, myT):
             mirrors = myT.mirrors.split('||')
         except:
             logger.warn("command_on_host #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+            return twisted.internet.defer.fail(Exception("Mirror uri %s is not well-formed" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
 
         # Check mirrors
         if len(mirrors) != 2:
             logger.warn("command_on_host #%s: we need two mirrors ! '%s'" % (myCoH.getId(), myT.mirrors))
-            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+            return twisted.internet.defer.fail(Exception("Mirror uri %s do not contains two mirrors" % myT.mirrors)).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
         mirror = mirrors[0]
         fbmirror = mirrors[1]
 
@@ -1360,10 +1361,10 @@ def _runProxyClientPhase(client, myC, myCoH):
     # get informations about our proxy
     (proxyCoH, proxyC, proxyT) = gatherCoHStuff(myCoH.getUsedProxy())
     if proxyCoH == None:
-        return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+        return twisted.internet.defer.fail(Exception("Cant access to CoH")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
     proxy = { 'host': chooseClientIP(proxyT), 'uuid': proxyT.getUUID(), 'maxbw': proxyC.maxbw, 'client_check': getClientCheck(proxyT), 'server_check': getServerCheck(proxyT), 'action': getAnnounceCheck('transfert'), 'group': getClientGroup(proxyT)}
     if not proxy['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True)
+        return twisted.internet.defer.fail(Exception("Can't get proxy IP address")).addErrback(parsePushError, myCoH.getId(), decrement_attempts_left = True).addErrback(gotErrorInError, myCoH.getId())
     # and fill struct
     # only proxy['host'] used until now
     client['proxy'] = {
@@ -1394,7 +1395,8 @@ def _runProxyClientPhase(client, myC, myCoH):
         )
         mydeffered.\
             addCallback(parsePushResult, myCoH.getId()).\
-            addErrback(parsePushError, myCoH.getId())
+            addErrback(parsePushError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     elif SchedulerConfig().mode == 'async':
         # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
         mydeffered = callOnBestLauncher(
@@ -1408,7 +1410,8 @@ def _runProxyClientPhase(client, myC, myCoH):
         )
         mydeffered.\
             addCallback(parsePushOrder, myCoH.getId()).\
-            addErrback(parsePushError, myCoH.getId())
+            addErrback(parsePushError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     else:
         mydeffered = None
 
@@ -1440,7 +1443,8 @@ def _runPushPhase(client, myC, myCoH, myT):
         )
         mydeffered.\
             addCallback(parsePushResult, myCoH.getId()).\
-            addErrback(parsePushError, myCoH.getId())
+            addErrback(parsePushError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     elif SchedulerConfig().mode == 'async':
         # 'server_check': {'IP': '192.168.0.16', 'MAC': 'abbcd'}
         mydeffered = callOnBestLauncher(
@@ -1454,7 +1458,8 @@ def _runPushPhase(client, myC, myCoH, myT):
         )
         mydeffered.\
             addCallback(parsePushOrder, myCoH.getId()).\
-            addErrback(parsePushError, myCoH.getId())
+            addErrback(parsePushError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     else:
         mydeffered = None
 
@@ -1547,7 +1552,8 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
         )
         mydeffered.\
             addCallback(parsePullResult, myCoH.getId()).\
-            addErrback(parsePullError, myCoH.getId())
+            addErrback(parsePullError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
             myCoH.getId(),
@@ -1560,7 +1566,8 @@ def _cbRunPushPullPhasePushPull(result, mirror, fbmirror, client, myC, myCoH, us
         )
         mydeffered.\
             addCallback(parsePullOrder, myCoH.getId()).\
-            addErrback(parsePullError, myCoH.getId())
+            addErrback(parsePullError, myCoH.getId()).\
+            addErrback(gotErrorInError, myCoH.getId())
     else:
         return runGiveUpPhase(myCoH.getId())
     return mydeffered
@@ -1599,7 +1606,7 @@ def runExecutionPhase(myCommandOnHostID):
     # if we are here, execution has either previously failed or never be done
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('execute'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform execution")).addErrback(parseExecutionError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform execution")).addErrback(parseExecutionError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     if myC.isQuickAction(): # should be a standard script
         myCoH.setExecutionInProgress()
@@ -1617,7 +1624,8 @@ def runExecutionPhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseExecutionResult, myCommandOnHostID).\
-                addErrback(parseExecutionError, myCommandOnHostID)
+                addErrback(parseExecutionError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
@@ -1630,7 +1638,8 @@ def runExecutionPhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseExecutionOrder, myCommandOnHostID).\
-                addErrback(parseExecutionError, myCommandOnHostID)
+                addErrback(parseExecutionError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         else:
             return runGiveUpPhase(myCommandOnHostID)
         return mydeffered
@@ -1650,7 +1659,8 @@ def runExecutionPhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseExecutionResult, myCommandOnHostID).\
-                addErrback(parseExecutionError, myCommandOnHostID)
+                addErrback(parseExecutionError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
@@ -1663,7 +1673,8 @@ def runExecutionPhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseExecutionOrder, myCommandOnHostID).\
-                addErrback(parseExecutionError, myCommandOnHostID)
+                addErrback(parseExecutionError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         else:
             return runGiveUpPhase(myCommandOnHostID)
         return mydeffered
@@ -1695,7 +1706,7 @@ def runDeletePhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('delete'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform deletion")).addErrback(parseDeleteError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform deletion")).addErrback(parseDeleteError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     # if we are here, deletion has either previously failed or never be done
     if re.compile('^file://').match(myT.mirrors): # delete from remote push
@@ -1716,7 +1727,8 @@ def runDeletePhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseDeleteResult, myCommandOnHostID).\
-                addErrback(parseDeleteError, myCommandOnHostID)
+                addErrback(parseDeleteError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         elif SchedulerConfig().mode == 'async':
             mydeffered = callOnBestLauncher(
                 myCommandOnHostID,
@@ -1729,7 +1741,8 @@ def runDeletePhase(myCommandOnHostID):
             )
             mydeffered.\
                 addCallback(parseDeleteOrder, myCommandOnHostID).\
-                addErrback(parseDeleteError, myCommandOnHostID)
+                addErrback(parseDeleteError, myCommandOnHostID).\
+                addErrback(gotErrorInError, myCommandOnHostID)
         else:
             return runGiveUpPhase(myCommandOnHostID)
         return mydeffered
@@ -1754,7 +1767,8 @@ def runDeletePhase(myCommandOnHostID):
                 )
                 mydeffered.\
                     addCallback(parseDeleteResult, myCommandOnHostID).\
-                    addErrback(parseDeleteError, myCommandOnHostID)
+                    addErrback(parseDeleteError, myCommandOnHostID).\
+                    addErrback(gotErrorInError, myCommandOnHostID)
             elif SchedulerConfig().mode == 'async':
                 mydeffered = callOnBestLauncher(
                     myCommandOnHostID,
@@ -1767,7 +1781,8 @@ def runDeletePhase(myCommandOnHostID):
                 )
                 mydeffered.\
                     addCallback(parseDeleteOrder, myCommandOnHostID).\
-                    addErrback(parseDeleteError, myCommandOnHostID)
+                    addErrback(parseDeleteError, myCommandOnHostID).\
+                    addErrback(gotErrorInError, myCommandOnHostID)
             else:
                 return runGiveUpPhase(myCommandOnHostID)
             return mydeffered
@@ -1820,7 +1835,7 @@ def runInventoryPhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('inventory'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform inventory")).addErrback(parseInventoryError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform inventory")).addErrback(parseInventoryError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     # if we are here, inventory has either previously failed or never be done
     myCoH.setInventoryInProgress()
@@ -1837,7 +1852,8 @@ def runInventoryPhase(myCommandOnHostID):
         )
         mydeffered.\
             addCallback(parseInventoryResult, myCommandOnHostID).\
-            addErrback(parseInventoryError, myCommandOnHostID)
+            addErrback(parseInventoryError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
@@ -1849,7 +1865,8 @@ def runInventoryPhase(myCommandOnHostID):
         )
         mydeffered.\
             addCallback(parseInventoryOrder, myCommandOnHostID).\
-            addErrback(parseInventoryError, myCommandOnHostID)
+            addErrback(parseInventoryError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     else:
         return runGiveUpPhase(myCommandOnHostID)
     return mydeffered
@@ -1881,7 +1898,7 @@ def runRebootPhase(myCommandOnHostID):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('reboot'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform reboot")).addErrback(parseRebootError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform reboot")).addErrback(parseRebootError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     myCoH.setRebootInProgress()
     myCoH.setStateRebootInProgress()
@@ -1898,7 +1915,8 @@ def runRebootPhase(myCommandOnHostID):
         )
         mydeffered.\
             addCallback(parseRebootResult, myCommandOnHostID).\
-            addErrback(parseRebootError, myCommandOnHostID)
+            addErrback(parseRebootError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
@@ -1910,7 +1928,8 @@ def runRebootPhase(myCommandOnHostID):
         )
         mydeffered.\
             addCallback(parseRebootOrder, myCommandOnHostID).\
-            addErrback(parseRebootError, myCommandOnHostID)
+            addErrback(parseRebootError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     else:
         return runGiveUpPhase(myCommandOnHostID)
     return mydeffered
@@ -1965,7 +1984,7 @@ def runHaltPhase(myCommandOnHostID, condition):
 
     client = { 'host': chooseClientIP(myT), 'uuid': myT.getUUID(), 'maxbw': myC.maxbw, 'protocol': 'ssh', 'client_check': getClientCheck(myT), 'server_check': getServerCheck(myT), 'action': getAnnounceCheck('halt'), 'group': getClientGroup(myT)}
     if not client['host']: # We couldn't get an IP address for the target host
-        return twisted.internet.defer.fail(Exception("Not enough information about client to perform halt")).addErrback(parseHaltError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
+        return twisted.internet.defer.fail(Exception("Not enough information about client to perform halt")).addErrback(parseHaltError, myCommandOnHostID, decrement_attempts_left = True, error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR).addErrback(gotErrorInError, myCommandOnHostID)
 
     myCoH.setHaltInProgress()
     myCoH.setStateHaltInProgress()
@@ -1982,7 +2001,8 @@ def runHaltPhase(myCommandOnHostID, condition):
         )
         mydeffered.\
             addCallback(parseHaltResult, myCommandOnHostID).\
-            addErrback(parseHaltError, myCommandOnHostID)
+            addErrback(parseHaltError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     elif SchedulerConfig().mode == 'async':
         mydeffered = callOnBestLauncher(
             myCommandOnHostID,
@@ -1994,7 +2014,8 @@ def runHaltPhase(myCommandOnHostID, condition):
         )
         mydeffered.\
             addCallback(parseHaltOrder, myCommandOnHostID).\
-            addErrback(parseHaltError, myCommandOnHostID)
+            addErrback(parseHaltError, myCommandOnHostID).\
+            addErrback(gotErrorInError, myCommandOnHostID)
     else:
         return runGiveUpPhase(myCommandOnHostID)
     return mydeffered
@@ -2418,11 +2439,18 @@ def runFailedPhase(myCommandOnHostID):
     return runGiveUpPhase(myCommandOnHostID)
 
 def runGiveUpPhase(myCommandOnHostID):
-    (myCoH, myC, myT) = gatherCoHStuff(myCommandOnHostID)
     logging.getLogger().info("command_on_host #%s: Releasing" % myCommandOnHostID)
     if SchedulerConfig().lock_processed_commands:
         CommandsOnHostTracking().release(myCommandOnHostID)
     return None
+
+def gotErrorInError(reason, myCommandOnHostID):
+    logging.getLogger().error("command_on_host #%s: got an error within an error: %s" % (myCommandOnHostID, reason.value))
+    return runGiveUpPhase(myCommandOnHostID)
+
+def gotErrorInResult(reason, myCommandOnHostID):
+    logging.getLogger().error("command_on_host #%s: got an error within an result: %s" % (myCommandOnHostID, reason))
+    return runGiveUpPhase(myCommandOnHostID)
 
 def updateHistory(id, state = None, error_code = PULSE2_SUCCESS_ERROR, stdout = '', stderr = ''):
     encoding = SchedulerConfig().dbencoding
