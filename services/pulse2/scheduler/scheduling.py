@@ -58,7 +58,9 @@ from pulse2.scheduler.launchers_driving import pingAndProbeClient
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.scheduler.tracking.commands import CommandsOnHostTracking
 from pulse2.scheduler.tracking.wol import WOLTracking
+from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 
+ToBeStarted = Pulse2Preempt()
 handle_deconnect()
 
 def gatherStuff():
@@ -655,10 +657,13 @@ def gatherIdsToStart(scheduler_name, commandIDs = []):
             database.commands_on_host.c.scheduler == '',
             database.commands_on_host.c.scheduler == scheduler_name,
             database.commands_on_host.c.scheduler == None)
+        ).filter(sqlalchemy.not_(
+            database.commands.c.id.in_(Pulse2Preempt().members()))
         )
 
     if commandIDs:
         commands_query = commands_query.filter(database.commands.c.id.in_(commandIDs))
+
 
     commands_to_perform = []
     for q in commands_query.all():
@@ -674,7 +679,7 @@ def sortCommands(commands_to_perform):
     """
 
     def _cb(result, tocome_distribution):
-        deffereds = [] # will hold all deferred
+        #MDV/NR deffereds = [] # will hold all deferred
 
         ids_list = [] # will contain the IDs from commands to run
         # list is pre-filled in case of something goes wrong below
@@ -683,7 +688,8 @@ def sortCommands(commands_to_perform):
 
         if len(ids_list) == 0:
             logging.getLogger().info('scheduler "%s": START: Starting no command' % (SchedulerConfig().name))
-            return deffereds
+            #MDV/NR return deffereds
+            return True
 
         logging.getLogger().debug("scheduler %s: START: Sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
         try: # this code is not well tested: let's protect it :D
@@ -743,11 +749,9 @@ def sortCommands(commands_to_perform):
             logging.getLogger().debug("scheduler %s: START: Something goes wrong while sorting commands, keeping list untouched" % (SchedulerConfig().name))
 
         logging.getLogger().info('scheduler "%s": START: %d commands to start' % (SchedulerConfig().name, len(ids_list)))
-        for id in ids_list:
-            deffered = runCommand(id)
-            if deffered:
-                deffereds.append(deffered)
-        return twisted.internet.defer.DeferredList(deffereds)
+        ToBeStarted.put(ids_list)
+        return True
+
     def _parseResult(result):
         if result:
             if type(result) == list and type(result[0]) == tuple: # normal DeferredList result
@@ -1032,7 +1036,7 @@ def startTheseCommands(scheduler_name, commandIDs):
 
 def runCommand(myCommandOnHostID):
     """
-        Just a simple start point, chain-load on Upload Phase
+        Just a simple start point, chain-load on WOL Phase, using a deferred
     """
     if checkAndFixCommand(myCommandOnHostID):
         if SchedulerConfig().lock_processed_commands and not CommandsOnHostTracking().preempt(myCommandOnHostID): return

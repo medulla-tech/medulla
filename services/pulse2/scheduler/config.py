@@ -35,7 +35,6 @@ import pulse2.utils
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
-
 class SchedulerDatabaseConfig(MscDatabaseConfig):
     dbname = "msc"
     dbsection = "database"
@@ -90,7 +89,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     max_wol_time = 300
     mg_assign_algo = 'default'
     mode = 'async'
-    password = 'password'
+    preempt_start_number = 50
+    preempt_start_delay = 1
     port = 8000
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     scheduler_path = '/usr/sbin/pulse2-scheduler'
@@ -164,6 +164,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.name = self.cp.get("scheduler", "id")
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
+        self.setoption("scheduler", "preempt_start_number", "preempt_start_number", 'int')
+        self.setoption("scheduler", "preempt_start_delay", "preempt_start_delay", 'int')
 
         self.setoption("scheduler", "analyse_hour", "analyse_hour")
         if len(self.analyse_hour) == 0: # no option given
