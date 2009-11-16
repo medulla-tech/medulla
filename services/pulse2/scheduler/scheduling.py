@@ -1165,7 +1165,7 @@ def runWOLPhase(myCommandOnHostID):
     if not myT.hasEnoughInfoToWOL(): # not enough information to perform WOL: ignoring phase but writting this in DB
         logger.warn("command_on_host #%s: wol couldn't be performed; not enough information in target table" % myCoH.getId())
         # FIXME: state will be 'wol_ignored' when implemented in database
-        updateHistory(myCommandOnHostID, None, PULSE2_TARGET_NOTENOUGHINFO_ERROR, " skipped : not enough information in target table")
+        updateHistory(myCommandOnHostID, 'wol_failed', PULSE2_TARGET_NOTENOUGHINFO_ERROR, " skipped : not enough information in target table")
         myCoH.setWOLIgnored()
         myCoH.setStateScheduled()
         return runUploadPhase(myCommandOnHostID)
