@@ -89,6 +89,7 @@ class SchedulerConfig(pulse2.utils.Singleton):
     max_wol_time = 300
     mg_assign_algo = 'default'
     mode = 'async'
+    password = 'password'
     preempt_start_number = 50
     preempt_start_delay = 1
     port = 8000

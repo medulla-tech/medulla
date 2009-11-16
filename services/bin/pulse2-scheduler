@@ -155,8 +155,13 @@ def awakeAnalyseCommands():
 
 def awakeStartCommands():
     logging.getLogger().info('scheduler "%s": START: Analysing database' % (SchedulerConfig().name))
-    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name)
-    scheduleStartCommands()
+    pulse2.scheduler.scheduling.startAllCommands(SchedulerConfig().name
+    ).addCallbacks( # deferred handling
+        lambda result: logging.getLogger().info('scheduler "%s": START: Finished analysing database' % (SchedulerConfig().name)),
+        lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
+    ).addCallback( # loop scheduling
+        lambda nothing : scheduleStartCommands() # lambda used to "silently" intercept return arg
+    )
 
 def awakeStopCommands():
     logging.getLogger().info('scheduler "%s": STOP: Analysing database' % (SchedulerConfig().name))
@@ -198,9 +203,12 @@ def awakePreemptStartedCommands():
 
     deffereds = list()
     for i in Pulse2Preempt().get(SchedulerConfig().preempt_start_number) :
-        deffered = pulse2.scheduler.scheduling.runCommand(i)
-        if deffered:
-            deffereds.append(deffered)
+        try :
+            deffered = pulse2.scheduler.scheduling.runCommand(i)
+            if deffered:
+                deffereds.append(deffered)
+        except Exception, e:
+            logging.getLogger().error('scheduler "%s": PREEMPT/START: While running commands %s : %s' % (SchedulerConfig().name, i, e))
 
     if len(deffereds):
         dl = twisted.internet.defer.DeferredList(deffereds)
