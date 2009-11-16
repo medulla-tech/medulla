@@ -26,14 +26,11 @@
 # the base structure is a simple persistent set
 # with a semaphore
 
-# import set
-try: # python 2.4+
-    set
-except NameError: # python 2.3-
-    from sets import Set as set
-
 # logging stuff
 import logging
+
+# randomization
+import random
 
 # semaphore handling
 import threading
@@ -44,7 +41,7 @@ import pulse2.utils
 class Pulse2Preempt(pulse2.utils.Singleton):
 
     semaphore = threading.Semaphore(1)
-    content = set()
+    content = list()
 
     def __lock(self):
         self.semaphore.acquire(True)
@@ -55,7 +52,9 @@ class Pulse2Preempt(pulse2.utils.Singleton):
     def put(self, elements):
         self.__lock()
         try:
-            self.content.update(elements)
+            for k in elements:
+                if k not in self.content:
+                    self.content.append(k)
         finally:
             self.__unlock()
         #MDV/NR if len(elements):
@@ -65,7 +64,7 @@ class Pulse2Preempt(pulse2.utils.Singleton):
         result = list()
         self.__lock()
         try:
-            result = list(self.content)
+            result = self.content
         finally:
             self.__unlock()
         #MDV/NR if len(result):
@@ -75,11 +74,11 @@ class Pulse2Preempt(pulse2.utils.Singleton):
     def get(self, number):
         result = list()
         self.__lock()
+        random.shuffle(self.content) # shuffle internal list
         try:
             i = min(number, len(self.content))
-            while i > 0:
-                result.append(self.content.pop())
-                i = i-1
+            result = self.content[:i] # will return the i (0 to i not included) first elements
+            self.content = self.content[i:] # and keep the remaining
         finally:
             self.__unlock()
         #MDV/NR if len(result):
