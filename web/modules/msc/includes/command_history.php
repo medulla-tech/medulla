@@ -371,6 +371,8 @@ class CommandHistory {
                   tell the user that there was no problem.
                 */
                 $staticon = history_stat2icon("upload_done");
+            } elseif ($hist['state'] == 'wol_failed' && $hist['error_code'] == '2001') {
+                $staticon = history_stat2icon("stop");
             } else {
                 $staticon = history_stat2icon($hist['state']);
             }
