@@ -453,6 +453,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
          * Update div
          */
         function updateSearch() {
+            clearTimers();
             new Ajax.Updater('<?= $this->divid; ?>','<?= $this->url; ?>filter='+document.Form.param.value+'<?= $this->params ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&<?= $this->paramname2 ?>='+document.Form.<?= $this->paramname2 ?>.value, { asynchronous:true, evalScripts: true});
 
 <?
@@ -470,8 +471,8 @@ if ($this->refresh) {
         function updateStates() {
             var ind = document.getElementById('<?= $this->paramname2; ?>');
             var val = ind.options[ind.selectedIndex].value;
-            new Ajax.Updater('<?= $this->paramname2; ?>', '<?= urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&selected='+document.Form.<?= $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true});
-            refreshtimer = setTimeout("updateSearch()", 250);
+            new Ajax.Updater('<?= $this->paramname2; ?>', '<?= urlStrRedirect('msc/logs/state_list', array('paramname2'=>$this->paramname2)); ?>&<?= $this->paramname1 ?>='+document.Form.<?= $this->paramname1 ?>.value+'&selected='+document.Form.<?= $this->paramname2 ?>.value, {asynchronous:true, evalScripts: true });
+            refreshtimer = setTimeout("updateSearch()", 500);
         }
 
         /**
@@ -495,16 +496,15 @@ if ($this->refresh) {
          */
         function pushSearch2() {
             clearTimers();
-            setTimeout("updateStates()", 500);
+            refreshtimer = setTimeout("updateSearch()", 750);
         }
 
         function pushSearch() {
             clearTimers();
-            refreshtimer = setTimeout("updateSearch()", 500);
-            setTimeout("updateStates()", 750);
+            setTimeout("updateStates()", 100);
         }
 
-        pushSearch();
+        pushSearch2();
     </script>
 
 </form>
