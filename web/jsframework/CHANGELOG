@@ -1,3 +1,480 @@
+*V1.8.3* (October 8, 2009)
+
+* Update to Prototype 1.6.1
+
+* Effect.toggle to return effect (to be able to do Effect.toggle(element, 'appear', {sync: true});)  [RStankov]
+
+* Use element.identify() for fetching element.id in Sortable.create  [RStankov]
+
+* Fix deprecated usage of Position.cumulativeOffset. [#182 state:resolved]  [James Wheare]
+
+* Make loader work for application/xhtml+xml served documents.  Closes #95.  [Pavel Sedek]
+
+* Check for Windows Media plugin and RealPlayer plugin in Firefox on Windows to allow sound playback.  Closes #36, #86.  [Alexander Gavazov et al.]
+
+* Remove dead code in effects.js.  Closes #125.  [Confusioner]
+
+*V1.8.2* (November 18, 2008)
+
+* Update to Prototype 1.6.0.3
+
+* Make sure InPlaceEditor converts HTML entities to text.  [Sean Kirby]
+
+* Fix that Builder.node did not return extended elements on IE.  Closes #71 and #77. 
+
+* Fix a bug in Sortable.destroy to make sure it's called on the referenced Sortable only, which allows for the correct intialization of nested Sortables. Closes Trac #8615.  [Leon Chevalier]
+
+* Change Effect.Base#render not to use eval(), so certain JavaScript runtime environments (like Adobe AIR) that do not support eval() work.  [King Maxemilian, John-David Dalton]
+
+* Fixed a calculation error in Effect.Transitions.pulse that could lead to flickering, add easing and change it to be a normal 0 to 1 transition that can be used with any effects; Effect.Pulsate now uses its own implementation.  [Thomas Fuchs]
+
+* Fixed Effect.ScrollTo. Changeset 8686 had a typo, document.viewport.getScrollOffsets[0] is always undefined. Removed the max check as it is not a cross-browser way to get scroll height and breaks the effect. Depending on scrollTo to do the right thing.  Closes #11306.  [Nick Stakenburg]
+
+* Update version check so all Prototype versions can be required, not just x.x.x.  Closes #10966.  [Nick Stakenburg]
+
+* Using $$ in the loader instead of getElementsByTagName to prevent limitations.  Closes #9032.  [Nick Stakenburg]
+
+* Fix some missing semicolons.  [jdalton]
+
+* Fix an issue with Effect.ScrollTo that caused Firefox to scroll to the wrong offset in some situations. Closes #10245.  [nik.wakelin]
+
+* Fixes an issue with IE ghosting on non-absolute elements. Closes #10423.  [Tanrikut, tdd]
+
+*V1.8.1* (January 3, 2008)
+
+* Fix Element#getStyles in IE. Closes #10563. [Tobie Langel]
+
+* Update to Prototype 1.6.0.1 as of 8551.
+
+* Fix a regression with autocompleters not responding correctly to cursor keys on both Safari and IE.  Closes #10107.  [thx Zman771]
+
+*V1.8.0* (November 6, 2007)
+
+* Update to Prototype 1.6.0 final
+
+* Ajax.InPlaceEditor now can deal with callbacks that return an object.  Closes #10064.  [tdd]
+
+* Fix a potential problem with the loader and Firefox 2.0 on the Mac.  Closes #9951.  [awaters]
+
+* Add duration and distance options to Effect.Shake.  Closes #8637.  [amiel, rmm5t]
+
+* Update code to use new Hash implemention in Prototype 1.6. Update InPlaceEditor to use new Class.create syntax.  [tdd]
+
+*V1.8.0 preview 0* (October 12, 2007)
+
+* Update to new Class.create syntax in Prototype 1.6; update to latest Prototype 1.6 trunk.
+
+* Fix bottom CSS property reassignment and initialization in queues for Effect#SlideUp.  Closes #7412, #7761.
+
+* Fix an issue with String#parseStyle that could sometimes cause errors on Safari 2.
+
+* Refactoring to use Prototype 1.6. Remove dependency of Effect.tagifyText from builder. Use Prototype code style rules more consistently.
+
+* Remove the deprecated Effect2 namespace.
+
+* Update to Prototype 1.6.0_rc0.
+
+* Some effect code refactoring to take advantage of new Prototype 1.6 features.
+
+* Effect.ScrollTo is now no longer a core effect (returns a Effect.Tween instance now).
+
+* Add Effect.Tween, a new core effect. This effect tweens between two values and sets a property or calls a method on an object (including DOM elements); or allows for a callback method, which will be automatically bound to the object.
+  Examples:
+    var whatever = { blech: 0 };
+    new Effect.Tween(whatever, 5, 0, 'blech'); // sets property on the object
+    new Effect.Tween('foo', 10, 20, 'innerHTML'); // sets property on the 'foo' DOM element
+    new Effect.Tween('foo', 10, 20, 'update');    // method call on 'foo' DOM element
+    new Effect.Tween('foo', 50, 0, { duration: 2.0 }, function(p){
+      this.setStyle({border:p.toFixed(3)+'px solid red'});
+    });
+    new Effect.Tween(null, 0, 100, function(p){ scrollTo(0,p) }); // scrolls the window
+
+* Revert the workaround for the Firefox issue that makes autocompleter input field values be remembered correctly when the back button is hit to return to a page that contains autocompleted values, as this can cause "Are you sure you want to navigate away?" popups.  Closes #8411.  [okada]
+
+* Improve the way deactivating the active droppable is handled.  Closes #9072.  [Karsten Sperling]
+
+* Next version will be 1.8.0. Update to Prototype 1.6.0_pre1.
+
+* Make draggable initialization faster.  Closes #8697.  [ssinghi]
+
+* Make BDD-style testing compatible with IE6 and IE7.  Closes #8972.  [steveluscher]
+
+* Add BDD methods to booleans.  Closes #9147.  [steveluscher]
+
+* Add support for full CSS inheritance in Effect.Morph.  Closes #9054.  [Tobie]
+  IMPORTANT: Note that this could potentially change the outcome of classname-based morphs, so be sure to check your morph effects if you use this feature. 
+  For this feature, the new method Element#getStyles is introduced, which returns an objects which properties correspond to the CSS properties found in Element.CSS_PROPERTIES. Note that this method doesn't work seemlessly across browsers for certain non-measurable CSS properties, such as float.  
+
+* Add the externalControlOnly option to the in-place editors to allow for external controls to exclusively trigger the in-place editing.  Closes #9024.  [tdd]
+
+* Complete rewrite of Ajax.InPlaceEditor and Ajax.InPlaceCollectionEditor.  [tdd]
+  THIS UPDATE MIGHT AFFECT BACKWARDS COMPATIBILITY.
+  Be sure to properly test, especially if you're using multi-line editing and/or monkeypatching.
+  Read more about all the added goodness in this article:
+  http://mir.aculo.us/2007/7/17/in-place-editing-the-summer-2007-rewrite
+
+* Update to Prototype 1.5.2_rc0 r7076:
+  - Works around bugs in Safari 1 and Safari 2 Regexp engines that could cause crashes
+  - Fixes a rendering issue with opacity-based effects and floating elements on Safari
+
+* Mild refactoring of sound.js to take advantage of new Prototype features.
+
+* Add highlight element method as a shortcut to Effect.Highlight.
+    Example:
+      $('message').highlight({startcolor:'#ff0000'}).update('KTHXBYE');
+
+* Improve performance of String.prototype.parseStyle by caching the dummy element used.
+
+* Add combined effects as element methods.
+    Examples:
+      $('message').appear().update('Oh noes!');
+      $('login').shake({ duration: 2 });
+
+* Add Effect.Transitions.spring, which simulates a spring which oscillates while coming to rest. This transition is specifically targeted towards use with Effect.Move, for example as a reverteffect when using Draggables, as it will have return values >1 and cause temporary "overshooting" of the effect.  Closes #8474.  [edg2s]
+
+* Fix effects initialization if no options are given.  Fixes #7809.  [thx Kroc Camen]
+
+* Fix incorrect placement on drop for absolute ghosting elements. Update to Prototype 1.5.2_rc0 r6955 (required for #8581). Closes #8581.  [tdd]
+
+* Make sure the autocompletion happens on the token where the cursor is, not the last token when using tokenized autocompleting text fields.  Closes #8588.  [tdd]
+
+* Fix that non-Mozilla browsers would display messages with the autocompleter back-button fix introduced in 1.7.1 beta 2. Fixes #7752, #8411. [josh, stetz] 
+
+*V1.7.1 beta 3* (May 19, 2007)
+
+* Update to Prototype 1.5.1 final
+
+* New elements and handles options for Sortable.create which take arrays of elements or element ids. These overrule the normal handle and elements finding options on initialization of the sortable, and can yield huge performance increases in situations where these elements or ids are known at call time. [Thomas Fuchs]
+
+* Major performance improvement of Sortable.create when using the handle option. [Tobie Langel]
+
+* Fix Builder.node double quote escaping in attributes, fixes #8125. [Aa!]
+
+*V1.7.1 beta 2* (April 28, 2007)
+
+* Update to Prototype 1.5.1_rc4
+  - Various optimizations and fixes
+  - http://dev.rubyonrails.org/browser/spinoffs/prototype/trunk/CHANGELOG?rev=6604
+
+* Fix autocompleter indicator not appearing when calling activate() directly. Don't show indicator for local autocompleting. Fixes #7770. [pyro8019]
+
+* Don't clear out autocompleting fields in Mozilla-based browsers when navigating back to a page with the Back button, fixes #7752. [seanc]
+
+*V1.7.1 beta 1* (March 12, 2007)
+
+* Update to Prototype 1.5.1 r6386
+  - Fixes SlideUp/SlideDown on IE
+  - Fixes an opacity problem with IE
+  - Performance optimizations
+  - See http://dev.rubyonrails.org/browser/spinoffs/prototype/trunk/CHANGELOG?rev=6381 for more information
+    
+* Make builder unit tests work on IE
+
+* Fix id assignment for sounds on Firefox/Windows, fixes #7709 [Robert Wallis]
+
+* Add Sound.enable() and Sound.disable() to globally turn off Sound.play()
+
+* Added Sound.play(url,options) in new sound.js file. scriptaculous.js automatically includes this file.
+  Based on code by Jules Gravinese, used with permission.
+  
+  The sound player uses native sound support on IE, and falls back to using <embed> on other browsers,
+  which means it uses QuickTime for most cases. The recommended format to use is MP3.
+  
+    Examples:
+      Sound.play('blah.mp3');   
+      // --> plays sound immediately in 'global' track
+      Sound.play('blah.mp3',{replace:true});  
+      // --> stop playing all sounds in 'global' track, and play new sound
+      Sound.play('blah.mp3',{track:'mytrack'});
+      // --> places the sound in the 'mytrack' track
+      Sound.play('blah.mp3',{track:'mytrack',replace:true});
+      // --> stop playing all sounds in 'mytrack' track, and play new sound
+      
+  The sound effect used in the functional test is "Sword being drawn" by James Greever, released as freeware.
+
+* Various effects engine optimizations [Tobie Langel, Thomas Fuchs]
+
+* Make Ajax.InPlaceEditor more customizable: [thx godlie]
+  - Add an okLink option to Ajax.InPlaceEditor so you can have a link instead of a button. Uses the 'editor_ok_link' CSS class for styling, fixes #6455
+  - Add an cancelButton option to Ajax.InPlaceEditor, uses the 'editor_cancel_button' CSS class
+  - Add textBefore-, textBetween- and textAfterControls (which default to empty strings)
+  - For consistency, cancel link now also gets 'editor_cancel_link' CSS class
+
+* Add an onDropped callback to Draggables, that fires at the end of a drag when the Draggable was dropped on a Droppable
+
+* Add revert: 'failure' option to Draggables to only revert if not dropped on a valid drop target, fixes #6909 [davidw]
+
+* Update to new Prototype Browser detection
+
+* Fix a memory leak with Effect.Morph in Firefox, fixes #7558 [Malard]
+
+* Add ability to nest single nodes in Builder.node in addition to arrays of nodes.
+    Examples:
+      var element = Builder.node('div', Builder.node('span','blah'));
+      
+      Builder.dump();
+      var element = DIV(SPAN('blah'));
+
+*V1.7.0* (January 19, 2007)
+
+* Cleanups for Effect.Morph
+
+* Monkeypatch Prototype 1.5.0 to incorporate [6002], fixes setStyle({opacity:0}) for IE
+
+* Fix Effect.inspect() for Prototype 1.5.0 final hash changes
+
+* Update to Prototype 1.5.0 final
+
+* New option keepBackgroundImage: true for Effect.Highlight, fixes #5037 [docwhat, tomg]
+
+* Minor tweaks for issues with application/xhtml+xml documents on Firefox, fixes #6836 [sjinks]
+
+* Fix a possible exception with Sortables, fixes #6828 [craiggwilson]
+
+* Update to Prototype 1.5.0_rc2 revision [5844] (as of Rails 1.2 RC 2)
+
+*V1.7.0 beta 2* (December 18, 2006)
+
+* Change the default setting for effects to support up to 60fps, if renderable by the browser. Add performance info to effects unit test.
+
+* Change get/setOpacity to use Prototype's new support for cross-browser opacity.
+
+* Update to Prototype 1.5.0_rc2 revision [5741], which fixes some of the reported issues with beta 1 (see Prototype's CHANGELOG for more):
+    * Opera 9, while not officially supported, should work now with Prototype and script.aculo.us
+    * Fixes issue with Safari when using Prototype's Ajax helpers with HTTP authorization
+
+* Add hash and CSS className support to Effect.Morph, fixes #6674 [Tobie]
+    Examples:
+      $(element).morph('myClass')
+      // will morph to all the properties specified
+      // in .className (in your external stylesheet).
+      // All properties which cannot be morphed (such as font-style)
+      // will be applied AfterFinish
+      $(element).morph('font-size: 10px')  // or
+      $(element).morph({fontSize: '10px'}) // will morph the font-size to 10px
+      
+*V1.7.0 beta 1* (November 21, 2006)
+
+* Add Element.morph() and Element.Methods.morph() as a shortcut to Effect.Morph
+    Example:
+      // basic Effect.Morph
+      $('error_message').morph('color:#f00;font-size:17px');
+      // fade out after a while
+      $('error_message').show().morph('font-size:17px').morph('opacity:0',{delay:4});
+
+* Update to Prototype 1.5.0_rc2 revision [5580]
+
+* Add a paramName option to the inplace editor for overriding the default parameter name of "value"
+
+* Add Effect.Transform that generates parallel executing Effect.Morph sets
+    Example:
+      // set up transformation
+      var transformation = new Effect.Transform([
+        { 'div.morphing': 'font-size:20px;padding-left:40em' },
+        { 'blah'        : 'width:480px;border-width:10px;border-right-width:20px;margin:200px;margin-bottom:-20px;font-size:30px' }
+      ],{ duration: 0.5 });
+      // play transformation (can be called more than once)
+      transformation.play();
+
+* Add Effect.Morph core effect that morphs to a given CSS style rule. Effect.Morph does take orginal styles given by CSS style rules or the style attribute into consideration when calculating the transforms. It works with all length and color based CSS properties, including margins, paddings, borders, opacity and text/background colors.
+    Example:
+      new Effect.Morph('mydiv',{
+        style: 'font-size:3em;color:#f00;border-width:2em',
+        duration: 2.0
+      });
+
+*V1.6.5* (November 8, 2006)
+
+* Update to Prototype 1.5.0_rc1 revision [5462]
+
+* Support the HTML 'for' attribute in Builder by using 'htmlFor', fixes #6472 [gjones, tdd]
+
+    var node = Builder.node('label', { htmlFor: 'myinput' });
+
+* Add support to run a specific failing unit test by clicking on the corresponding test result, fixes #6290 [leeo]
+
+* Add modifier key support to Event.simulateMouse, fixes #6391 [savetheclocktower]
+
+* Add rails-trunk update task, clean up references to MIT license
+
+* Add new 'with-last' queue position option to queue effects to occur in parallel with the last effect to start in the queue
+
+* Add new special core effect Effect.Event for one-shot events that follow timelines defined by effect queues
+
+    new Effect.Event({ afterFinish:function(){
+      // do some code here
+    }, position: 'end' });
+
+* Do some refactoring to make use of Prototype 1.5 functionalities and save LOC
+
+* Fix an possible crash of IE on Effect.SlideUp, fixes #3192 [thx nel]
+
+* Add Builder.build() to create nodes from strings containing HTML, [DHH]
+
+    var node = Builder.build("<p>this is <b>neat!</b></p>");
+
+* Add a pulses parameter to Effect.Pulsate to control the amount of pulses, fixes #6245 [leeo]
+
+    For example, Effect.Pulsate('d8', {pulses: 2}) would pulsate twice. If the option is not given, it defaults to five pulses.
+
+* Fix an issue with clicking on a slider span resulting in an exception, fixes #4707 [thx sergeykojin]
+
+* Fix an issue with Draggables when no options are supplied, fixes #6045 [thx tdd]
+
+*V1.6.4* (September 6, 2006)
+
+* Hotfix IE issues with patched Prototype V1.5.0_rc1
+
+*V1.6.3* (September 5, 2006)
+
+* Update Prototype to V1.5.0_rc1
+
+* Merge assertElementsMatch and assertElementMatches from Prototype's [4986] unittest.js [Sam Stephenson]
+
+* Update Prototype to revision [4930]
+
+* Fix various issues with IE detection and Opera, and setOpacity, fixes #3886, #5973
+
+* Make Sortable.serialize handle DOM IDs like "some_element_1" correctly, fixes #5324
+
+* Add assertRespondsTo and shouldRespondTo assertions
+
+* Add experimental alternate syntax for unit tests (Behaviour Driven Development-style)
+
+* Add support for onStart, onDrag and onEnd events directly on Draggables (invoked from the Draggables.notify), fixes #4747 [thx scriptkitchen]
+
+* Add element shortcuts to Builder that can be activated by calling Builder.dump() (see the unit test), fixes #4260 [thx napalm]
+
+* Fix selection of correct option in SELECT element generated by InPlaceCollectionEditor for indexed option arrays, fixes #4789 [thx steve]
+
+* Add autoSelect option to Autocompleters to auto select an entry if only one is returned, fixes #5183 [thx cassiano dandrea]
+
+* Added delay option to Draggables and Sortables, see test/functional/dragdrop_delay_test.html for usage, implements #3325 [thx lsimon, tomg]
+
+* Remove revert cache code obsoleted by #4706, fixes #3436 (again) [thx tomg]
+
+* Fix autoscrolling inside scrollable containers when window is scrolled too, fixes #5200 [thx wseitz]
+
+* Make Effect.Puff work correctly for floating elements, fixes #3777 [thx michael hartl]
+
+* Add version and timestamp to indvidual library files for easier identification (the files are preprocessed by the Rake fresh_scriptaculous task), fixes #3015 [thx Tobie]
+
+* Add assertIndentical and assertNotIdentical unit test assertions, which test for equality and common type, fixes #5822 [thx glazedginger]
+
+* Add integration test for Ajax autocompleter for results with no linebreaks, #4149
+
+* Fix an issue with redrawing ghosted draggables that are inside a scrolled container, fixes #3860 [thx gkupps, tsukue]
+
+* Added a custom exception to all base effects when used on non-existing DOM elements, added a assertRaise method to unit tests
+
+* Fix autoscrolling when dragging an element unto a scrollable container, fixes #5017 [thx tomg]
+
+* Fix a condition where overriding the endeffect on Draggables without overriding the starteffect too leads to a Javascript error [thx Javier Martinez]
+
+* Fix a possible error with the drag/drop logic (affects the solution to #4706)
+
+*V1.6.2*
+
+* Fix a problem in the drag and drop logic if an reverting/drag ending draggable was initialized for a new drag (for example by clicking repeatedly) for all cases where the default start/revert/end-effects are used, fixes #4706 [thx tecM0]
+
+* Fix possible memory leaks with Draggables, fixes #3436 [thx aal]
+
+* Throw nicer errors when requires script.aculo.us libraries are not loaded, fixes #5339
+
+* Make slider handles work when not displayed initially by using CSS width/height, fixes #4011 [thx foysavas]
+
+* Update sortable functional test with onUpdate counter
+
+* Make more Element extensions unit tests work on Safari
+
+* Add the assertMatch unit test assertion for asserts with RegExps [thx Ian Tyndall]
+
+* Fix a problem with Effect.Move causing "jumping" elements because of very low float numbers in some situations
+
+* Fix a missing semicolon in dragdrop.js, fixes #5569 [thx mackalicious]
+
+* Fix a slight inaccuracy with Effect.Scale that could lead the scaling to be one pixel off
+
+* Be more prototypish with Effect.Transitions.linear
+
+* Make Effect.Scale recognize font sizes that use the pt unit, fixes #4136 [thx aljoscha]
+
+* Fix IE hack in Effect.Opacity, fixes #5444 [thx nicholas]
+
+* Fix IFRAME layout fix for IE and Autocompleter, fixes #5192 [thx tommy skaue]
+
+* Fix only option in onEmptyHover, fiex #5348 [thx glenn nilsson]
+
+* Fix Effect.BlindDown and SwitchOff handling of supplied callbacks, fixes #5089 [thx martinstrom]
+
+* Fix a problem with field focus on Ajax.InPlaceEditor and loading external text, fixes #4988, #5244 [thx rob]
+
+* Do not attempt to scroll if scrollspeed is 0/0, fixes #5035 [thx tomg]
+
+* Fix a problem with Sortable Tree serialization, fixes #4939, #4688, #4767  [thx Sammi Williams]
+
+* Fix an endless loop with sliders, fixes #3226, #4051, #4765 [thx jeff]
+
+* Make autocompleter work with update DIVs that have scrollbars, fixes #4782 [thx Tommy Skaue]
+
+* Corrected options parsing on switchoff effect, fixes #4710 [thx haldini]
+
+*V1.6.1*
+
+* Update to Prototype 1.5.0_rc0
+
+* Add Draggable object as third parameter to snap, fixes #4074 [thx mdaines]
+
+* Fix an IE flicker with SlideUp/SlideDown, fixes #3774, [thx sbbowers]
+
+* Add parsing/setting of any currently set opacity CSS rule to default opacity effect on draggables, fixes #3682 [thx Mike A. Owens]
+
+* Added prototype $() performance patch from #4477 and updated effects.js to new Element.addMethods() syntax
+
+* Sortable trees [thx Sammi Williams, sammi@oriontransfer.co.nz]
+  - Added functional test (test/functional/sortable_tree_test.html)
+  - removed greedy option
+  - modified the way Droppables.show works - added affected list
+  - added Droppables.findDeepestChild
+  - modified Sortable.options to work for trees
+  - modified Sortable.onEmptyHover with additional logic to insert
+    the element at a certain place according to the overlap
+  - modified Sortable.onHover to avoid DOM Exceptions
+  - modified Sortable.create to support the creation of Sortable trees
+  - added two convenience functions - Sortable.findElements and 
+    Sortable.findTreeElements
+  - Added Sortable.tree (and a number of private functions to facilitate it)
+    Returns a tree structure:
+      var root = {
+        id: null,
+        parent: null,
+        children: <children>,
+        container: <sortable element>,
+      }
+      var child = {
+        parent: <node>,
+        children: <array>,
+        id: <string> (as per options.format),
+        element: <element>,
+        container: <element>,
+        position: <integer>
+      }
+    This is intended to become part of the public API, and can be used to manipulate
+    the tree programatically.
+  - Modified Sortable.serialize to use Sortable.tree when set in the options.
+
+* Fix a problem with window scrolling on draggables [thx Gregory Hill]
+
+* Let the benchmark method return the time taken in ms, so it can be used for time-based assertions
+
+* Fix problem with id-based handle names and draggables
+
+* More Element.childrenWithClassName optimization
+
+* Added benchmark method to unittest.js; some cleaning up of unit tests
+
+* Add fix for IE memory leaks in included prototype.js from [4094]
+
 *V1.6.0*
 
 * Major speedup for sortable with handles initialization [thx Jamis Buck]
