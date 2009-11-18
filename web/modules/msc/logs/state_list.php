@@ -24,10 +24,14 @@
 
 include_once("modules/msc/includes/commands_xmlrpc.inc.php");
 
+if (!empty($_GET["commands"])) {
+    setCommandsFilter($_GET["commands"]);
+}
+
 $paramname2 = $_GET['paramname2'];
 
 $res = get_all_commandsonhost_currentstate();
- 
+
 $states = new SelectItem($paramname2, 'pushSearch', 'searchfieldreal noborder');
 
 $list = array();
