@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 # (c) 2003-2007 Linbox, http://www.linbox.com/
-# (c) 2008-2009 Mandriva, http://www.mandriva.com/
+# (c) 2008-2009 Nicolas Rueff / Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -21,6 +21,8 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+
+require "lrs-inifile.pl";
 
 %_errors_en = (
     'RAW'             => q($1),
@@ -62,13 +64,13 @@ $_lbsdebug = 0;
     'flag' => 0,
 );
 
-# updateEntry($lbs_home, $macaddr)
+# updateEntry($lbs_home, $netboot, $macaddr)
 # Fonction de mise a jour d'une entree.
 # Pour l'instant, elle ne fait que creer le menu utilisateur final.
 sub updateEntry {
-    my ( $home, $mac ) = @_;
+    my ( $home, $netboot, $mac ) = @_;
 
-    if ( not makeUserMenu( $home, $mac ) ) {
+    if ( not makeUserMenu( $home, $netboot, $mac ) ) {
 
         #lbsError("updateEntry","RAW","Problem making final user menu") ;
         return 0;
@@ -77,19 +79,20 @@ sub updateEntry {
     return 1;
 }
 
-# makeUserMenu ($home, $macaddr)
+# makeUserMenu ($base, $netboot, $macaddr)
 # Genere le menu de demarrage d'une machine a partir de header.lst .
 # Retourne 1 si OK, ou 0 si erreur.
 #
 sub makeUserMenu {
-    my $home = $_[0];
-    my $mac  = toMacFileName( $_[1] );
+    my $base    = $_[0];
+    my $netboot = $_[1];
+    my $mac     = toMacFileName( $_[2] );
 
     my $defaultpos = 0;
     my @menus      = ();
 
-    my $menupath   = $home . "/cfg/" . $mac;
-    my $imagepath  = $home . "/images/" . $mac;
+    my $menupath   = $netboot . "/cfg/" . $mac;
+    my $imagepath  = $base . "/images/" . $mac;
     my $menuheader = "";
     my $bootmenu   = "";
     my $one        = "";
@@ -97,17 +100,17 @@ sub makeUserMenu {
     my $numselect = 0;
     my %hdr;
     my %minfo;
-    my $hostconf = $home . "/images/" . $mac . "/header.lst";
+    my $hostconf = $base . "/images/" . $mac . "/header.lst";
     my $imgname;
 
     my $copynumdata;
     my $basenumdata;
 
     # WOL requested ?
-    if ( -f $home . "/images/" . $mac . "/wol" ) {
+    if ( -f $base . "/images/" . $mac . "/wol" ) {
 
         # check if the timestamp is not too old
-        my $wol = $home . "/images/" . $mac . "/wol";
+        my $wol = $base . "/images/" . $mac . "/wol";
         my $ts  = ( stat($wol) )[9];
         if ( time() - $ts > 600 ) {
 
@@ -117,7 +120,7 @@ sub makeUserMenu {
         else {
 
             # wol requested, use the alternate menu
-            $hostconf = $home . "/images/" . $mac . "/header.lst.wol";
+            $hostconf = $base . "/images/" . $mac . "/header.lst.wol";
         }
         unlink($wol);
     }
@@ -136,21 +139,25 @@ sub makeUserMenu {
         $copynumdata = "COPYNUM";
     }
 
-    if ( -f "$home/imgbase/BASENUM" ) {
-        fileLoad( "$home/imgbase/BASENUM", \$basenumdata );
+    if ( -f "$base/imgbase/BASENUM" ) {
+        fileLoad( "$base/imgbase/BASENUM", \$basenumdata );
         chomp($basenumdata);
     }
     else {
         $basenumdata = "BASENUM";
     }
 
-    #
-    my %conf = ();
-    iniLoad( "/etc/webmin/lbs/config", \%conf );
-    my $revorestore      = iniGetVal( \%conf, "-", "restore_type" );
-    my $revowait         = iniGetVal( \%conf, "-", "mtftp_wait" );
-    my $grub_splashimage = iniGetVal( \%conf, "-", "grub_splashimage" );
-    my $grub_keymap      = iniGetVal( \%conf, "-", "grub_keymap" );
+# FIXME originally taken from /etc/webmin/lbs/config, now forced to default values, should be read from somewhere else
+#MDV/NR my %conf = ();
+#MDV/NR iniLoad( "/etc/webmin/lbs/config", \%conf );
+#MDV/NR my $revorestore      = iniGetVal( \%conf, "-", "restore_type" );
+#MDV/NR my $revowait         = iniGetVal( \%conf, "-", "mtftp_wait" );
+#MDV/NR my $grub_splashimage = iniGetVal( \%conf, "-", "grub_splashimage" );
+#MDV/NR my $grub_keymap      = iniGetVal( \%conf, "-", "grub_keymap" );
+    my $revorestore      = 0;
+    my $revowait         = 5;
+    my $grub_splashimage = '/pulse2/background/mandriva.xpm';
+    my $grub_keymap      = '';
 
     #
     my $eth = "0";
@@ -224,8 +231,8 @@ sub makeUserMenu {
                         $one =~ s/(^\s*title.*)/$1 (MTFTP)/;
                     }
                     $one .= "
-kernel (nd)$home/bin/bzImage.initrd revosavedir=/$imgt/$imgname $imgo quiet revopost
-initrd (nd)$home/bin/initrd.gz
+kernel (nd)$netboot/bin/bzImage.initrd revosavedir=/$imgt/$imgname $imgo quiet revopost
+initrd (nd)$netboot/bin/initrd.gz
 ";
 
                     #print $one;
@@ -424,6 +431,199 @@ sub textSub {
     }
 
     return $mesg;
+}
+
+# $val hdrGetVal(\%hdr, $section, $key)
+# Recup de la valeur d'une clef dans une section.
+#
+sub hdrGetVal {
+    my ( $hdr, $section, $key ) = @_;
+
+    return iniGetVal( $$hdr{'ini'}, $section, $key );
+}
+
+# hdrSetVal(\%hdr, $section, $key,$val)
+# Modif de la valeur d'une clef dans une section.
+#
+sub hdrSetVal {
+    my ( $hdr, $section, $key, $val ) = @_;
+
+    return iniSetVal( $$hdr{'ini'}, $section, $key, $val );
+}
+
+# @names hdrGetMenuNames (\%hdr)
+# Retourne les noms des sections decrivant les menus. Elles ont toutes le
+# prefixe 'menu' dans leur nom.
+#
+sub hdrGetMenuNames {
+    my $hdr = $_[0];
+    return grep m/^menu/i, iniGetSections( $$hdr{'ini'} );
+}
+
+# hdrGetMenuInfo (\%hdr, $section, \%info)
+# Retourne diverses infos a partir d'une section de type 'menu'.
+# Ces infos proviennent de plrs sources: des parametres du menu lui-meme,
+# et des fichiers inclus s'il y en a.
+# Retourne 1 si OK, ou 0 si erreur.
+#
+sub hdrGetMenuInfo {
+    my ( $hdr, $section, $info ) = @_;
+    my ( $t, $d, $res );
+    my $iniref = $$hdr{'ini'};
+
+    if ( not iniHasSection( $iniref, $section ) ) {
+        lbsError( "hdrGetMenuInfo", "SECT_UNK", $section );
+        return 0;
+    }
+
+    # Init:
+    $res = 1;
+    %{$info} = ();
+
+    $$info{"def"}   = iniGetVal( $iniref, $section, "def" );
+    $$info{"visu"}  = iniGetVal( $iniref, $section, "visu" );
+    $$info{"image"} = iniGetVal( $iniref, $section, "image" );
+
+    $t = hdrGetMenuItem( $hdr, $section, "title" );
+    $d = hdrGetMenuItem( $hdr, $section, "desc" );
+
+    if ( not defined($d) ) {
+        $$info{"desc"} = "(nul)";
+    }
+    else {
+        $$info{"desc"} = $d;
+    }
+
+    # La presence d'un item 'title' est obligatoire:
+    if ( not defined($t) ) {
+        lbsError( "hdrGetMenuInfo", "ITEM_NF", "title", "section $section" );
+        $$info{"title"} = "(not found)";
+        $res = 0;
+    }
+    else {
+        $$info{"title"} = $t;
+        $res = 1;
+    }
+
+    return $res;
+}
+
+# $val hdrGetMenuItem(\%hdr, $section, $item )
+# Recup de la valeur d'un item d'une section $section.
+# La recherche est effectuee sur les clefs 'item' et 'include' .
+# Concernant 'include', la fct va chercher dans le fichier indique.
+# Retourne la valeur trouvee, ou une chaine vide si echec.
+#
+sub hdrGetMenuItem {
+    my ( $hdr, $section, $item ) = @_;
+    my @clefs;
+    my ( $i, $k, $v, $a );
+    my $iniref = $$hdr{'ini'};
+    my $incref = $$hdr{'inc'};
+
+    if ( not iniHasSection( $iniref, $section ) ) {
+        lbsError( "hdrGetMenuItem", "SECT_UNK", $section );
+        return;
+    }
+
+    $item = lc($item);
+
+    @clefs = iniGetKeys( $iniref, $section );
+    for ( $i = 0 ; $i < scalar(@clefs) ; $i++ ) {
+        ( $k, $v ) = iniGet( $iniref, $section, $i );
+
+        if ( $k eq "item" ) {
+
+            # Recherche dans header.lst
+            if ( defined( $a = itemGetVal( $v, $item ) ) ) {
+                return $a;
+            }
+        }
+        elsif ( $k eq "include" ) {
+
+            # Ou recherche dans les fichiers inclus:
+            if ( exists( $$incref{$v} ) ) {
+                if ( defined( $a = itemGetVal( $$incref{$v}, $item ) ) ) {
+                    return $a;
+                }
+            }
+        }
+    }
+
+    return;    # Echec
+}
+
+# $string hdrConcatMenuItems(\%hdr, $section)
+# Retourne une chaine dans laquelle sont concatenes tous les menuitems
+# rencontres dans la section $section. Ceci concerne les clefs 'items' et
+# 'include' .
+# Une chaine vide peut etre retournee si aucun item n'est rencontre.
+#
+sub hdrConcatMenuItems {
+    my ( $hdr, $section ) = @_;
+
+    my @clefs;
+    my ( $k, $v, $i );
+    my $iniref = $$hdr{'ini'};
+    my $incref = $$hdr{'inc'};
+    my @concat = ();
+
+    if ( not iniHasSection( $iniref, $section ) ) {
+        lbsError( "hdrConcatMenuItems", "SECT_UNK", $section );
+        return "";
+    }
+
+    @clefs = iniGetKeys( $iniref, $section );
+    for ( $i = 0 ; $i < scalar(@clefs) ; $i++ ) {
+        ( $k, $v ) = iniGet( $iniref, $section, $i );
+        $k = lc($k);
+
+        if ( $k eq "item" ) {
+
+            # Recherche dans header.lst
+            push @concat, $v;
+        }
+        elsif ( $k eq "include" ) {
+
+            # Ou recherche dans les fichiers inclus:
+            if ( exists( $$incref{$v} ) ) {
+                push @concat, $$incref{$v};
+            }
+        }
+    }
+
+    return join( "\n", @concat );
+}
+
+# $new encodeCP850($text)
+#
+#
+sub encodeCP850 {
+    my $tbl_cp850 =
+      "\x83\x84\x85\x82\x88\x89\x8a\x8b\x8c\x93\x94\x81\x96\x97\x98\x87";
+    my $tbl_latin =
+      "\xe2\xe4\xe0\xe9\xea\xeb\xe8\xef\xee\xf4\xf6\xfc\xfb\xf9\xff\xe7";
+
+#my $tbl_cp850="\x203\x204\x205\x202\x210\x211\x212\x213\x214\x223\x224\x201\x226\x227\x230\x207";
+#my $tbl_latin="\x342\x344\x340\x351\x352\x353\x350\x357\x356\x364\x366\x374\x373\x371\x377\x347";
+#my $tbl_ascii="aaaeeeeiioouuuyc";
+
+    $_ = shift;
+
+    eval "tr/$tbl_latin/$tbl_cp850/";
+
+    return $_;
+}
+
+# $newstr addEmptyLine($text)
+# Retourne une chaine terminee par une ligne vide. (Un double \n).
+#
+sub addEmptyLine {
+    my $buf = $_[0] . "\n\n";
+
+    $buf =~ s/\n+$/\n\n/s;
+
+    return $buf;
 }
 
 # END OF MODULE ///////////////////////////////////////////////////////////////
