@@ -240,15 +240,35 @@ def startService():
     # check versus MySQLdb version
     import MySQLdb
     (v1, v2, v3, v4, v5) = MySQLdb.version_info
-    if v1 == 1:
-        if v2 == 2:  # handling of v. 1.2.x+
-            if v3 <= 1:
-                if v4 != 'final': # versions up to 1.2.1c??? are buggy => injetc using ascii convertion
-                    config.dbencoding = 'ascii'
-                    logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
-    elif v2 <= 1: #handling of v. 1.1.x and 1.0.x
-            config.dbencoding = 'ascii'
-            logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
+    force_ascii = False
+    warn_debian = False
+    if v1 == 1: # handle v. 1.x
+        if v2 <= 1: # handle of v. 1.0.x and 1.1.x
+            force_ascii = True
+            warn_debian = True
+        elif v2 == 2: # handle of v. 1.2.x
+            if v3 == 0: # handling of v. 1.2.0.x
+                force_ascii = True
+                warn_debian = True
+            if v3 == 1: # handling of v. 1.2.1.x
+                warn_debian = True
+                if v4 != 'final': # versions up to 1.2.1c??? are buggy => inject using ascii convertion
+                    force_ascii = True
+            if v3 == 2: # handling of v. 1.2.2.x
+                warn_debian = True
+
+    if force_ascii :
+        logger.warn('scheduler "%s": python-mysqldb too old (spotted %s), using "ascii" as db encoding' % (config.name, MySQLdb.version_info))
+        config.dbencoding = 'ascii'
+
+    if warn_debian :
+        import platform
+        try :
+            (p,v,i) = platform.dist()
+            if p == 'debian' :
+                logger.warn('scheduler "%s": Please make sure that your python-mysql package is at least 1.2.2-7; on Debian-based platforms previous versions are buggy (broken auto-reconnect), see http://packages.debian.org/changelogs/pool/main/p/python-mysqldb/python-mysqldb_1.2.2-7/changelog#versionversion1.2.2-7' % (config.name))
+        except :
+            pass
 
     launchers = map(lambda(a): 'xml://%s:%s' % (config.launchers[a]['host'], config.launchers[a]['port']), config.launchers)
     logger.info('scheduler %s: available launchers: %s' % (config.name, ' '.join(launchers)))
