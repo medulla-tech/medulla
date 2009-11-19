@@ -25,7 +25,7 @@
 #include "pulse2-imaging-server.h"
 
 void initlog(void) {
-    openlog("lbs", 0, LOG_DAEMON | LOG_LOCAL3);
+    openlog("pulse2-imaging-server", 0, LOG_DAEMON | LOG_LOCAL3);
 }
 
 /*
