@@ -73,14 +73,14 @@ sub check_password {
 
 # MAIN ////////////////////////////////////////////////////////////////////////
 
+( $#ARGV != 2 )
+  and mylog( "ERROR", "Usage: check_add_host MAC HOSTNAME PASSWORD" )
+  and print("Usage: check_add_host MAC HOSTNAME PASSWORD\n")
+  and exit;
+
 my $mac      = uc( $ARGV[0] );
 my $hostname = $ARGV[1];
 my $password = $ARGV[2];
-
-if ( $ARGV[0] eq "" ) {
-    print("Usage: check_add_host MAC HOSTNAME PASSWORD\n");
-    exit;
-}
 
 if ( defined $ARGV[3] ) {
     $ip = $ARGV[3];
