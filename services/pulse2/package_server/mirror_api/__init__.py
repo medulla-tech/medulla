@@ -3,7 +3,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 30 2008-02-08 16:40:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -59,7 +59,7 @@ class MirrorApi(MyXmlrpc):
                 self.mirrors[type].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
                 if service.has_key('url'):
                     self.url2mirrors[type][service['url']] = self.mirrors[type][-1]
-            self.logger.debug("(%s)%s api machine/mirror server initialised"%(self.type, self.name))
+            self.logger.debug("(%s) %s api machine/mirror server initialised"%(self.type, self.name))
         except Exception, e:
             self.logger.error("(%s)%s api machine/mirror server can't initialize correctly"%(self.type, self.name))
             raise e

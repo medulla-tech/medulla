@@ -26,8 +26,9 @@ import os
 
 import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
-from mmc.support.config import PluginConfig
+from mmc.plugins.imaging.config import ImagingConfig
 from mmc.support.mmctools import *
+from pulse2.database.imaging import ImagingDatabase
 
 VERSION = "0.1"
 APIVERSION = "0:0:0"
@@ -41,124 +42,104 @@ def activate():
     """
     Run some tests to ensure the module is ready to operate.
     """
-    config = ImagingConfig("imaging")
     logger = logging.getLogger()
+    config = ImagingConfig()
+    config.init("imaging")
 
-    if config.disabled:
+    if config.disable:
         logger.warning("Plugin imaging: disabled by configuration.")
         return False
     # TODO: check images directories exists    
     return True    
-        
-class ImagingConfig(PluginConfig):
 
-    def readConf(self):
+class ContextMaker(ContextMakerI):
+    def getContext(self):
+        s = SecurityContext()
+        s.userid = self.userid
+        return s
+
+class RpcProxy(RpcProxyI):
+    """ XML/RPC Bindings """
+
+    def getPublicImagesList():
         """
-        Read the module configuration
-        
-        Currently used params:
-        - section "imaging":
-          + revopath
-          + publicdir
+        Return a list of public images
+
+        Only images names are returned
         """
-        PluginConfig.readConf(self)
-        self.revopath = self.get("imaging", "revopath")
-        self.publicdir = self.get("imaging", "publicdir")
-        self.isodir = self.get("imaging", "isodir")
-        self.tmpdir = self.get("imaging", "tmpdir")
-        self.bindir = self.get("imaging", "bindir")
-        self.publicpath = os.path.join(self.revopath, self.publicdir)
-        self.isopath = os.path.join(self.revopath, self.isodir)
-        self.tmppath = os.path.join(self.revopath, self.tmpdir)
-        self.binpath = os.path.join(self.revopath, self.bindir)
+        mylist = []
+        for image in mmc.plugins.imaging.images.getPublicImages().values():
+            mylist.append(image.name)
+        return mylist
 
-    def setDefault(self):
+    def getPublicImageInfos(name):
         """
-        Set default values
+        Return some informations about an Image
+
         """
-        PluginConfig.setDefault(self)
+        return xmlrpcCleanup(mmc.plugins.imaging.images.Image(name).getRawInfo())
 
-""" XML/RPC Bindings """
+    def deletePublicImage(name):
+        """
+        delete an Image
 
-def getPublicImagesList():
-    """
-    Return a list of public images
-    
-    Only images names are returned
-    """
-    mylist = []
-    for image in mmc.plugins.imaging.images.getPublicImages().values():
-        mylist.append(image.name)
-    return mylist
+        """
+        mmc.plugins.imaging.images.Image(name).delete()
 
-def getPublicImageInfos(name):
-    """
-    Return some informations about an Image
-    
-    """
-    return xmlrpcCleanup(mmc.plugins.imaging.images.Image(name).getRawInfo())
+    def isAnImage(name):
+        """
+        Check if pub image is a real image
 
-def deletePublicImage(name):
-    """
-    delete an Image
-    
-    """
-    mmc.plugins.imaging.images.Image(name).delete()
+        """
+        config = mmc.plugins.imaging.ImagingConfig("imaging")
+        return mmc.plugins.imaging.images.hasImagingData(os.path.join(config.publicpath, name))
 
-def isAnImage(name):
-    """
-    Check if pub image is a real image
-    
-    """
-    config = mmc.plugins.imaging.ImagingConfig("imaging")
-    return mmc.plugins.imaging.images.hasImagingData(os.path.join(config.publicpath, name))
+    def duplicatePublicImage(name, newname):
+        """
+        duplicate an Image
 
-def duplicatePublicImage(name, newname):
-    """
-    duplicate an Image
-    
-    """
-    config = mmc.plugins.imaging.ImagingConfig("imaging")
-    newpath = os.path.join(config.publicpath, newname)
-    if os.path.exists(newpath): # target already exists
-        return 1
-    if os.path.islink(newpath): # target already exists
-        return 1
-    try:
-        mmc.plugins.imaging.images.Image(name).copy(newname)
-    except: # something weird append
-        shutil.rmtree(newpath)
-        return 255
-    else:   # copy succedeed
-        return 0
-
-def setPublicImageData(name, newname, title, desc):
-    """
-    duplicate an Image
-    
-    """
-    config = mmc.plugins.imaging.ImagingConfig("imaging")
-    newpath = os.path.join(config.publicpath, newname)
-    if name != newname:
+        """
+        config = mmc.plugins.imaging.ImagingConfig("imaging")
+        newpath = os.path.join(config.publicpath, newname)
         if os.path.exists(newpath): # target already exists
             return 1
         if os.path.islink(newpath): # target already exists
             return 1
         try:
-            mmc.plugins.imaging.images.Image(name).move(newname)
+            mmc.plugins.imaging.images.Image(name).copy(newname)
         except: # something weird append
+            shutil.rmtree(newpath)
             return 255
-    mmc.plugins.imaging.images.Image(newname).setTitle(title)
-    mmc.plugins.imaging.images.Image(newname).setDesc(desc)
-    return 0
+        else:   # copy succedeed
+            return 0
 
-def createIsoFromImage(name, filename, size):
-    """
-    create an iso from an image
-    
-    """
-    config = mmc.plugins.imaging.ImagingConfig("imaging")
-    image = mmc.plugins.imaging.iso.Iso(name, filename, size)
-    image.prepareImage()
-    image.createImage()
-    return 0
+    def setPublicImageData(name, newname, title, desc):
+        """
+        duplicate an Image
+
+        """
+        config = mmc.plugins.imaging.ImagingConfig("imaging")
+        newpath = os.path.join(config.publicpath, newname)
+        if name != newname:
+            if os.path.exists(newpath): # target already exists
+                return 1
+            if os.path.islink(newpath): # target already exists
+                return 1
+            try:
+                mmc.plugins.imaging.images.Image(name).move(newname)
+            except: # something weird append
+                return 255
+        mmc.plugins.imaging.images.Image(newname).setTitle(title)
+        mmc.plugins.imaging.images.Image(newname).setDesc(desc)
+        return 0
+
+    def createIsoFromImage(name, filename, size):
+        """
+        create an iso from an image
+
+        """
+        config = mmc.plugins.imaging.ImagingConfig("imaging")
+        image = mmc.plugins.imaging.iso.Iso(name, filename, size)
+        image.prepareImage()
+        image.createImage()
+        return 0

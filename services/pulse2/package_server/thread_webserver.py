@@ -96,7 +96,8 @@ def initialize(config):
         services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         logger.info("package server initialized with scheduler api")
 
-    server.register(Description(services), 'desc')
+    desc = Description(services)
+    server.register(desc, '/desc')
     Common().setDesc(services)
 
     try:

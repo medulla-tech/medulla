@@ -1,0 +1,30 @@
+This directory contains every material needed to create the database
+required by the IMAGING module to store its informations.
+
+As the IMAGING evolve, so does the IMAGING database. This directory contains the
+base schema (schema.sql) and subsequents evolutions (schema.sql.v.x).
+
+To obtain a state-of-the-art MSC database, here is how to proceed:
+
+1) create a new database called "imaging":
+    mysqladmin create imaging
+
+2) inject the base schema:
+    mysql msc < schema.sql
+
+3) inject evolutions: (when there will be...)
+    mysql msc < schema.sql.v.2
+    mysql msc < schema.sql.v.3
+    ...
+
+4) create a new user with relevant privileges:
+    mysql imaging <<EOF
+GRANT ALL PRIVILEGES ON imaging.* TO 'mmc'@'localhost'
+IDENTIFIED BY 'mmc' WITH GRANT OPTION;
+FLUSH PRIVILEGES
+EOF
+
+5) update your /etc/mmc/plugins/imaging.ini
+
+6) enjoy !
+

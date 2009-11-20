@@ -27,6 +27,7 @@
 """
 from twisted.web import resource
 import xmlrpclib
+import logging
 
 class Description(resource.Resource):
     type = 'Description'
@@ -35,6 +36,8 @@ class Description(resource.Resource):
         self.services = services
         self.status = status
         resource.Resource.__init__(self)
+        self.logger = logging.getLogger()
+        self.logger.info("(%s) initialised with : %s"%(self.type, self.services))
     
     def __up(self):
         return "<td class='up mandriva'>&nbsp;&nbsp;</td>"
