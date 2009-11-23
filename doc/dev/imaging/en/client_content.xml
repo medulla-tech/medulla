@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Pulse 2 client content</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+      <surname>Rueff</surname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.3.0</revnumber>
+        <date>2009-11-20</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>First version</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>Description of a Pulse 2 client folder</para>
+    </abstract>
+    <releaseinfo>$Id: database_documentation.xml 4145 2009-05-12 16:29:28Z nrueff $</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Overall organization</title>
+    <para>A Pulse 2 client folder contains information of two kind :</para>
+    <para></para>
+    <itemizedlist>
+      <listitem>
+        <para>Boot menu behavior</para>
+      </listitem>
+      <listitem>
+        <para>Images creation</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section>
+    <title>COPYNUM</title>
+    <para>Contains the ID of the next image.</para>
+  </section>
+  <section>
+    <title>exclude</title>
+    <para>The Pulse 2 backup binaries use this file to learn which partitions to backup (more precisely, which to exclude). This one contains exclusion patterns, one per line, using the following syntax : &lt;disk name&gt;:&lt;partition name&gt; :</para>
+    <itemizedlist>
+      <listitem>
+        <para>To prevent backuping the P partition from D disk : <emphasis role="bold">D:P</emphasis></para>
+      </listitem>
+      <listitem>
+        <para>To prevent backuping the D disk : <emphasis role="bold">D:0</emphasis></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section>
+    <title>hdmap</title>
+    <para>UNKNOWN</para>
+  </section>
+  <section>
+    <title>header.lst</title>
+    <para>This INI-like config file describe which items will be displayed by the client.</para>
+    <section>
+      <title>[header] section</title>
+      <para>The section contains global items to pass to grub, using format "<emphasis role="bold">item=&lt;grub directive&gt;</emphasis>". For exemple : </para>
+      <screen>[header]
+item=timeout 10
+item=color 7/1 15/3
+item=default DEFNUM
+item=nosecurity</screen>
+      <para>(DEFNUM has a special meaning, see below).</para>
+    </section>
+    <section>
+      <title>[menuX] section</title>
+      <para>The section contains menu entries to pass to grub, using 4 mandatory keywords :</para>
+      <itemizedlist>
+        <listitem>
+          <para>def (yes/no) : is this item the default one ?</para>
+        </listitem>
+        <listitem>
+          <para>visu (yes/no) : is this item displayed ?</para>
+        </listitem>
+        <listitem>
+          <para>image : this item path</para>
+        </listitem>
+        <listitem>
+          <para>include : this item configuration file path</para>
+        </listitem>
+      </itemizedlist>
+      <para> For exemple :</para>
+      <screen>[menu4]
+def=no
+visu=yes
+image=Backup-B
+include=Backup-B/conf.txt</screen>
+    </section>
+  </section>
+  <section>
+    <title>header.lst.wol</title>
+    <para>Same as header.lst; used when system is supposed to be in WOL phase.</para>
+  </section>
+  <section>
+    <title>hostname</title>
+    <para>Content the client system hostname.</para>
+  </section>
+  <section>
+    <title>log and log.bak</title>
+    <para>This client main log. </para>
+  </section>
+  <section>
+    <title>log.restore</title>
+    <para>This client last restoration log.</para>
+  </section>
+  <section>
+    <title>log.postinst</title>
+    <para>This client last post-installation log.</para>
+  </section>
+  <section>
+    <title>progress.txt</title>
+    <para>This file is used to write the current operation progress. The syntax is :</para>
+    <screen>&lt;partition&gt; : &lt;percentile&gt;</screen>
+    <para><emphasis role="bold">&lt;partition&gt;</emphasis> honours the "exclude" file syntax.</para>
+    <para>Special case : when the operation is done, partition is set to <emphasis role="bold">0</emphasis>.</para>
+  </section>
+</article>

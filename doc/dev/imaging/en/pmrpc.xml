@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Poor Man RPC</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+      <surname>Rueff</surname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.3.0</revnumber>
+        <date>2009-11-20</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>First version</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>The Imaging binary / GUI protocol</para>
+    </abstract>
+    <releaseinfo>$Id: database_documentation.xml 4145 2009-05-12 16:29:28Z nrueff $</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Specifications of PMRPC</title>
+    <para>The protocol is hand-made, based on the exchange of tokens.</para>
+    <para>To simplify :</para>
+    <para><itemizedlist>
+        <listitem>
+          <para>The GUI listen (in our case: 127.0.0.1 on TCP port 7001)</para>
+        </listitem>
+        <listitem>
+          <para>the CLI issues a token (ie a command ID and command arguments)</para>
+        </listitem>
+        <listitem>
+          <para>GUI issues an ACK.</para>
+        </listitem>
+      </itemizedlist></para>
+    <para>From a network point of view, a token consists in : <itemizedlist>
+        <listitem>
+          <para>a UI32 (little endian) giving the token length,</para>
+        </listitem>
+        <listitem>
+          <para>a string the length previously announced.</para>
+        </listitem>
+      </itemizedlist>In short, encoding "à la Pascal".</para>
+    <para>Similarly, an order is made of :</para>
+    <itemizedlist>
+      <listitem>
+        <para>a token (command id)</para>
+      </listitem>
+      <listitem>
+        <para>a ui32 (little endian) giving the number of command arguments,</para>
+      </listitem>
+      <listitem>
+        <para>as many tokens as advertised.</para>
+      </listitem>
+    </itemizedlist>
+    <para>Example of exchange from the interface point of view (a token is symbolized by ||) :</para>
+    <screen>RECEIVED : |init_backup|
+RECEIVED : |/dev/hda1|/home/LRS/noiraude_2007-07-05_18:19:44/P1|192,712|84,706|/home/nicolas/Devs/GhostKiller/lrs-bin/revobin/image_e2fs|
+SEND     : |OK|
+RECEIVED : |refresh_backup_progress|
+RECEIVED : |0|
+SEND     : |OK|
+RECEIVED : |refresh_backup_progress|
+RECEIVED : |818176|
+RECEIVED : |close|
+SEND     : |OK|</screen>
+  </section>
+  <section>
+    <title>Commands available</title>
+    <section>
+      <title>Client side</title>
+      <note>
+        <para>Undocumented arguments are not used in our case.</para>
+      </note>
+      <variablelist>
+        <varlistentry>
+          <term>init_backup</term>
+          <listitem>
+            <para>The binary signals the beginning of a backup to the interface. The arguments given are, in that order :</para>
+            <orderedlist>
+              <listitem>
+                <para>the source, i.e. the partition (Linux-compliant: /dev/hda4, /dev/sdc1, etc ...),</para>
+              </listitem>
+              <listitem>
+                <para>the target, i.e. the file (and the folder) containing the backup (/home/LRS/P1, /net/LRS/tftpboot/imgs/test/P3, etc ...),</para>
+              </listitem>
+              <listitem>
+                <para>the partition size (512 bytes blocks),</para>
+              </listitem>
+              <listitem>
+                <para>the used space (512 bytes blocks),</para>
+              </listitem>
+              <listitem>
+                <para>the name of the binary used to backup.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>init_restore</term>
+          <listitem>
+            <para>The binary signals the beginning of a restoration to the interface. The arguments given are, in that order :</para>
+            <orderedlist>
+              <listitem>
+                <para>the source, i.e. the file (and the folder) containing the backup (/home/LRS/P1, /net/LRS/tftpboot/imgs/test/P3, etc ...),</para>
+              </listitem>
+              <listitem>
+                <para>the target, i.e. the partition (Linux-compliant: /dev/hda4, /dev/sdc1, etc ...),</para>
+              </listitem>
+              <listitem>
+                <para>the amount of data to restore (512 bytes blocks).</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>refresh_file</term>
+          <listitem>
+            <para>The binary tells the interface it changes from backup file. The arguments:</para>
+            <orderedlist>
+              <listitem>
+                <para>the source,</para>
+              </listitem>
+              <listitem>
+                <para>the target.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>refresh_backup_progress</term>
+          <listitem>
+            <para>The binary gives the interface its progression. The arguments:</para>
+            <itemizedlist>
+              <listitem>
+                <para>The progression (in bytes since the beginning of the image).</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>close</term>
+          <listitem>
+            <para>The binary tells the interface it will stop its execution (and the communication). No argument.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>misc_error</term>
+          <listitem>
+            <para>The binary reports an error to the interface. Two arguments:</para>
+            <itemizedlist>
+              <listitem>
+                <para>the error title,</para>
+              </listitem>
+              <listitem>
+                <para>the error description.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>backup_write_error</term>
+          <listitem>
+            <para>The binary reports an write error (while backuping) to the interface. No argument.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>zlib_error</term>
+          <listitem>
+            <para>The binary reports a zlib error (while restoring). Argument:</para>
+            <itemizedlist>
+              <listitem>
+                <para>The ZLib error message.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section>
+      <title>Server side</title>
+      <para>All token no argument can act as ACK. In practice, by convention we use "OK" token.</para>
+    </section>
+  </section>
+</article>

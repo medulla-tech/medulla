@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article class="whitepaper">
+  <title>Pulse 2 image content</title>
+  <articleinfo>
+    <author>
+      <firstname>Nicolas</firstname>
+      <surname>Rueff</surname>
+      <email>nrueff@mandriva.com</email>
+    </author>
+    <affiliation>
+      <orgname>Mandriva</orgname>
+    </affiliation>
+    <copyright>
+      <year>2009 Mandriva</year>
+    </copyright>
+    <legalnotice>
+      <para></para>
+    </legalnotice>
+    <revhistory>
+      <revision revisionflag="off">
+        <revnumber>1.3.0</revnumber>
+        <date>2009-11-20</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <para>First version</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>Description of a Pulse 2 image folder</para>
+    </abstract>
+    <releaseinfo>$Id: database_documentation.xml 4145 2009-05-12 16:29:28Z nrueff $</releaseinfo>
+  </articleinfo>
+  <section>
+    <title>Overall organization</title>
+    <para>A Pulse 2 image is contained in a folder, with files containing information, and files containing meta-information.</para>
+  </section>
+  <section>
+    <title>Files containing information</title>
+    <para>The file collection contains the image data.</para>
+    <section>
+      <title>CONF</title>
+      <para>The file reflects the image content. Syntax as follow :</para>
+      <screen>D:&lt;disk-num&gt; L:&lt;disk-size&gt;
+R
+&lt;disk-letter&gt;&lt;part-num&gt; , S:&lt;start block&gt; , E:&lt;end-block&gt;, t:&lt;part-size&gt;
+...
+E</screen>
+      <para>For example :</para>
+      <screen>D:128 L:398297088
+R
+P1 , S:63 , E:1028159 , t:131
+P2 , S:1028160 , E:3084479 , t:130
+P3 , S:3084480 , E:20498939 , t:131
+P4 , S:20498940 , E:24595514 , t:131
+E</screen>
+    </section>
+    <section>
+      <title>[P-S]TABS</title>
+      <para>The is the exact copy of the first needed sectors. For example, 63 sectors for regular PC/Dos partition table.</para>
+    </section>
+    <section>
+      <title>[P-S][1-8]idx</title>
+      <para><emphasis role="bold">UNKNOWN</emphasis>.</para>
+    </section>
+    <section>
+      <title>[P-S][1-8][0-9]{3}</title>
+      <para>The is a chunk of the backuped image.</para>
+    </section>
+  </section>
+  <section>
+    <title>Files containing meta-information</title>
+    <para>Those files contain other-than-the-client-data information : logs, GRUB template ...</para>
+    <section>
+      <title>conf.txt</title>
+      <para>The is a Grub 1 config file chunk. More precisely, this contains a full grub 1 item :</para>
+      <screen>title &lt;the image title&gt;
+desc  &lt;the image description&gt;
+&lt;additionnal GRUB commands goes there&gt;</screen>
+      <para>Amongst GRUB commands (see the grub project for more details), Mandriva added a few commands to permit restoration using TFTP protocol :</para>
+      <itemizedlist>
+        <listitem>
+          <para>Partition restoration :</para>
+          <para>the command line is :</para>
+          <screen>partcopy &lt;PART&gt; &lt;START&gt; (nd)PATH/&lt;PREFIX&gt; [TYPE]</screen>
+          <para>with :</para>
+          <itemizedlist>
+            <listitem>
+              <para>PART: a partition, GrUB syntax (<emphasis role="bold">(hd0,0)</emphasis> for ex.)</para>
+            </listitem>
+            <listitem>
+              <para>START: the start sector (512 B),</para>
+            </listitem>
+            <listitem>
+              <para>PREFIX: The image prefix (<emphasis role="bold">P1</emphasis> for example)</para>
+            </listitem>
+            <listitem>
+              <para>TYPE: The PC/DOS partition kind (<emphasis role="bold">83</emphasis> for Linux for example)</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+        <listitem>
+          <para>Partition table restoration:</para>
+          <para>the command line is :</para>
+          <screen>ptabs &lt;DISK&gt; (nd)PATH/&lt;NAME&gt;</screen>
+          <para>with :</para>
+          <itemizedlist>
+            <listitem>
+              <para>DISK: a disk, GrUB syntax (<emphasis role="bold">(hd0)</emphasis> for ex.)</para>
+            </listitem>
+            <listitem>
+              <para>NAME: the name of the file containing the partition table (<emphasis role="bold">PTABS</emphasis> for example)</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>logs.txt</title>
+      <para>A bunch of around-the-backup logs :</para>
+      <itemizedlist>
+        <listitem>
+          <para>date</para>
+        </listitem>
+        <listitem>
+          <para>/etc/cmdline</para>
+        </listitem>
+        <listitem>
+          <para>/proc/cmdline</para>
+        </listitem>
+        <listitem>
+          <para>/proc/version</para>
+        </listitem>
+        <listitem>
+          <para>/proc/partitions</para>
+        </listitem>
+        <listitem>
+          <para>/proc/bus/pci/devices</para>
+        </listitem>
+        <listitem>
+          <para>/proc/modules</para>
+        </listitem>
+        <listitem>
+          <para>/var/log/syslog</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>size.txt</title>
+      <para>This is the output of a simple '<emphasis role="bold">du -k</emphasis>' done on the image folder after the backup operation.</para>
+    </section>
+    <section>
+      <title>size&lt;maj&gt;&lt;min&gt;.txt</title>
+      <para>The is the size, in 512 B blocks, of the image with &lt;maj&gt; as major (hex), &lt;min&gt; as minor (hex).</para>
+    </section>
+  </section>
+</article>
