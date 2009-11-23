@@ -38,6 +38,7 @@ from pulse2.package_server.mirror import Mirror
 from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
 from pulse2.package_server.user_package_api import UserPackageApi
+from pulse2.package_server.imaging.api import ImagingApi
 from pulse2.package_server.config import config_addons
 
 import pulse2.xmlrpc
@@ -95,6 +96,15 @@ def initialize(config):
         server.register(scheduler, config.scheduler_api['mount_point'])
         services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         logger.info("package server initialized with scheduler api")
+
+    if config.imaging:
+        if os.path.exists(config.imaging['src']):
+            imaging = ImagingApi(config.imaging['mount_point'], config.imaging['src'])
+            server.register(imaging, config.imaging['mount_point'])
+            services.append({'type':'imaging', 'mp':config.imaging['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+            logger.info("package server initialized with imaging api")
+        else:
+            logger.error("package server couldn't initialized imaging api, %s does not exists"%(config.imaging['src']))
 
     desc = Description(services)
     server.register(desc, '/desc')

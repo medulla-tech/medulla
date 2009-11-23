@@ -110,6 +110,7 @@ class P2PServerCP(pulse2.utils.Singleton):
     user_package_api = {}
     scheduler_api = {}
     cp = None
+    imaging = None
 
     def pre_setup(self, config_file):
         if sys.platform != "win32":
@@ -232,6 +233,15 @@ class P2PServerCP(pulse2.utils.Singleton):
 
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
 
+        if self.cp.has_section("imaging"):
+            imaging_mp = '/imaging'
+            src = '/var/lib/pulse2/imaging'
+            if self.cp.has_option("imaging", 'mount_point'):
+                imaging_mp = self.cp.get("imaging", 'mount_point')
+            if self.cp.has_option("imaging", 'src'):
+                src = self.cp.get("imaging", 'src')
+            self.imaging = {'mount_point':imaging_mp, 'src':src}
+            
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
             self.package_detect_activate = self.cp.getboolean("main", "package_detect_activate")
