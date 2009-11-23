@@ -3,7 +3,7 @@
 #
 # (c) 2007-2009 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 4607 2009-10-07 14:51:46Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
