@@ -26,8 +26,20 @@
 """
 
 from pulse2.health import basicHealth
+from pulse2.database.msc import MscDatabase
 
 def getHealth():
     # take basic informations
     health = basicHealth()
+    try:
+        # Also add data about the current database connections pool
+        pool = MscDatabase().db.pool
+        health['db'] = { 'poolsize' : str(pool.size()),
+                         'checkedinconns' : str(pool.checkedin()),
+                         'overflow' : str(pool.overflow()),
+                         'checkedoutconns': str(pool.checkedout()),
+                         'recycle' : str(pool._recycle) }
+    except Exception, e:
+        # Should never fail
+        pass
     return health
