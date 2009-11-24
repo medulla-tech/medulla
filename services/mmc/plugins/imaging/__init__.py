@@ -61,6 +61,7 @@ class ContextMaker(ContextMakerI):
 class RpcProxy(RpcProxyI):
     """ XML/RPC Bindings """
 
+    """ DEPRECATED """
     def getPublicImagesList():
         """
         Return a list of public images
@@ -143,3 +144,88 @@ class RpcProxy(RpcProxyI):
         image.prepareImage()
         image.createImage()
         return 0
+
+    """ END DEPRECATED """
+
+    def getMachineBootMenu(self, id):
+        return [
+            ['Start computer', 'Boot on system hard drive', True, True, True, True],
+            ['Create rescue image', 'Backup system hard drive', "", True, "", True],
+            ['Create master', 'Backup system hard drive as a master', "", True, "", True]
+        ]
+
+    def getProfileBootMenu(self, id):
+        return [
+            ['Start computer', 'Boot on system hard drive', True, True, True, True],
+            ['Create rescue image', 'Backup system hard drive', "", True, "", True],
+            ['Create master', 'Backup system hard drive as a master', "", True, "", True]
+        ]
+
+    def getMachineImages(self, id):
+        return {
+            'images': [
+                ['MDV 2008.0', 'Mandriva 2008 Backup', '2009-02-25 17:38', '1GB', True]
+            ],
+            'masters': [
+                ['MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', False]
+            ]
+        }
+
+    def getProfileImages(self, id):
+        return {
+            'images': [
+                ['MDV 2008.0', 'Mandriva 2008 Backup', '2009-02-25 17:38', '1GB', True]
+            ],
+            'masters': [
+                ['MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', False]
+            ]
+        }
+
+    def getMachineBootServices(self, id):
+        return [
+            ['Local hard disk', True],
+            ['Create image', True],
+            ['Create master', True],
+            ['Memtest', False],
+            ['MBR Fix', False]
+        ]
+
+    def getProfileBootServices(self, id):
+        return [
+            ['Local hard disk', True],
+            ['Create image', True],
+            ['Create master', True],
+            ['Memtest', False],
+            ['MBR Fix', False]
+        ]
+
+    def getMachineLogs(self, id, start, end):
+        ret = [
+            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
+            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
+            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
+            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
+            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
+            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
+            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
+            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
+            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
+            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
+            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
+            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
+            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
+            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
+            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
+            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
+        ]
+
+        return [len(ret), ret[int(start):int(end)+1]]
+
+    def getProfileLogs(self, id, start, end):
+        return [ 4, [
+            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
+            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
+            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
+            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
+        ]]
+
