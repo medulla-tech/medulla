@@ -50,7 +50,7 @@ if (isset($params['uuid'])) {
 } elseif (isset($params['gid'])) {
 
     $p = new TabbedPageGenerator();
-    $sidemenu->forceActiveItem("list");
+    $sidemenu->forceActiveItem("list_profiles");
     $p->setSideMenu($sidemenu);
     require("modules/dyngroup/includes/includes.php");
     $group = new Group($_GET['gid'], true);
@@ -58,7 +58,7 @@ if (isset($params['uuid'])) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
-        $p->addTop(sprintf(_T("%s's group imaging", 'imaging'), $group->getName()), 
+        $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()), 
             "modules/imaging/imaging/header.php");
         $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), 
             "modules/imaging/imaging/bootmenu.php", $params);
