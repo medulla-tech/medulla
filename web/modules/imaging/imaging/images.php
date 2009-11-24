@@ -24,26 +24,22 @@
  */
 
 require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['gid']))
+if(isset($_GET['gid'])) {
     $type = 'group';
-else
+    $all = xmlrpc_getProfileImages($_GET['gid']);
+} else {
     $type = '';
+    $all = xmlrpc_getMachineImages($_GET['uuid']);
+}
+$images = $all['images'];
+$masters = $all['masters'];
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
 else 
     $mod = "none";
-
-// images
-$images = array(
-    array('MDV 2008.0', 'Mandriva 2008 Backup', '2009-02-25 17:38', '1GB', true)
-);
-
-// masters
-$masters = array(
-    array('MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', false)
-);
 
 switch($mod) {
     case 'edit':

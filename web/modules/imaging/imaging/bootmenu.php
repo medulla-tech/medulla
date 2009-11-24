@@ -24,22 +24,20 @@
  */
 
 require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['gid']))
+if(isset($_GET['gid'])) {
     $type = 'group';
-else
+    $menu = xmlrpc_getProfileBootMenu($_GET['gid']);
+} else {
     $type = '';
+    $menu = xmlrpc_getMachineBootMenu($_GET['uuid']);
+}
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
 else 
     $mod = "none";
-
-$menu = array(
-    array('Start computer', 'Boot on system hard drive', true, true, true, true),
-    array('Create rescue image', 'Backup system hard drive', "", true, "", true),
-    array('Create master', 'Backup system hard drive as a master', "", true, "", true)
-);
 
 switch($mod) {
     case 'up':

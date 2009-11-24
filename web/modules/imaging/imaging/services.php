@@ -24,24 +24,20 @@
  */
 
 require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['gid']))
+if(isset($_GET['gid'])) {
     $type = 'group';
-else
+    $menu = xmlrpc_getProfileBootServices($_GET['gid']);
+} else {
     $type = '';
-    
+    $menu = xmlrpc_getMachineBootServices($_GET['uuid']);
+}
+
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
 else 
     $mod = "none";
-
-$menu = array(
-    array('Local hard disk', true),
-    array('Create image', true),
-    array('Create master', true),
-    array('Memtest', false),
-    array('MBR Fix', false)
-);
 
 switch($mod) {
     case 'add':

@@ -30,25 +30,22 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
+require_once('../includes/xmlrpc.inc.php');
 
 $params = getParams();
 $filter = $_GET["filter"];
 
+if ($_GET["start"]) { $start = $_GET["start"]; } else { $start = 0; }
+if ($_GET["end"]) { $end = $_GET["end"]; } else { $end = 9; }
 
-if(isset($_GET['gid']))
+if(isset($_GET['gid'])) {
     $type = 'group';
-else
+    list($nbLogs, $logs) = xmlrpc_getProfileLogs($_GET['gid'], $start, $end);
+} else {
     $type = '';
-    
+    list($nbLogs, $logs) = xmlrpc_getMachineLogs($_GET['uuid'], $start, $end);
+}
 
-$logs = array(
-    array('23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'),
-    array('20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'),
-    array('18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'),
-    array('16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'),
-);
-
-$nbLogs = count($logs);
 $nbInfos = count($logs[0]);
 
 $logStates = array(
@@ -61,46 +58,49 @@ $logStates = array(
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
-for ($i = 0; $i < $nbLogs; $i++) {
-    if ($filter == "" or !(stripos($logs[$i][0], $filter) === False)) {
-
-        $list_params[$i] = $params;
-        $list_params[$i]["itemid"] = $i;
-        //$list_params[$i]["itemlabel"] = urlencode($logs[$i][0]);
+foreach ($logs as $log) {
+    if ($filter == "" or !(stripos($log[0], $filter) === False)) {
+        $param = $params;
 
         // add image to description
-        if(ereg('backup', $logs[$i][2]))
-            $logs[$i][0] = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$logs[$i][0];
-        else if(ereg('restore', $logs[$i][2]))
-            $logs[$i][0] = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$logs[$i][0];
+        if(ereg('backup', $log[2])) {
+            $log[0] = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$log[0];
+        } else if(ereg('restore', $log[2])) {
+            $log[0] = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$log[0];
+        }
 
         // get status
-        $status = $logs[$i][2];
-        if(!array_key_exists($status, $logStates))
+        $status = $log[2];
+        if(!array_key_exists($status, $logStates)) {
             $status = 'unknow';
+        }
         
         // complete percent
-        $logs[$i][1] = $logs[$i][1].'%';
+        $log[1] = $log[1].'%';
 
         // complete status display
         $led = new LedElement($logStates[$status][1]);
-        $logs[$i][2] = $led.'&nbsp;'.$logStates[$status][0];
+        $log[2] = $led.'&nbsp;'.$logStates[$status][0];
        
         for ($j = 0; $j < $nbInfos; $j++) {
-            $list[$j][] = $logs[$i][$j];
+            $list[$j][] = $log[$j];
         }
+        $list_params[]= $param;
     }
 }
 
-$l = new ListInfos($list[0], _T("Description", "imaging"));
+$l = new OptimizedListInfos($list[0], _T("Description", "imaging"));
+$l->setItemCount($nbLogs);
+$l->setNavBar(new AjaxNavBar($nbLogs, $filter));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($list[1], _T("Completed", "imaging"));
 $l->addExtraInfo($list[2], _T("State", "imaging"));
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tablogs", "details")
 );
-$l->setNavBar(new AjaxNavBar(count($list), $filter));
 $l->disableFirstColumnActionLink();
+$l->start = 0;
+$l->end = count($logs);
 $l->display();
 
 ?>
