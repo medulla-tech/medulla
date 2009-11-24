@@ -138,10 +138,10 @@ option2 = plop</screen></para>
           </row>
           <row>
             <entry>skel_folder</entry>
-            <entry>Where the image template will be taken from</entry>
+            <entry>Where the original image template will be taken from</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/skel</entry>
+            <entry>/usr/lib/pulse2/imaging/skel</entry>
           </row>
         </tbody>
       </tgroup>
@@ -216,49 +216,49 @@ option2 = plop</screen></para>
             <entry>The client_add script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/check_add_host</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/check_add_host</entry>
           </row>
           <row>
             <entry>client_remove_path</entry>
             <entry>The client_remove script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/check_remove_host</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/check_remove_host</entry>
           </row>
           <row>
             <entry>client_inventory_path</entry>
             <entry>The client_inventory_path script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/info</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/info</entry>
           </row>
           <row>
             <entry>menu_reset_path</entry>
             <entry>The menu_reset_path script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/set_default</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/set_default</entry>
           </row>
           <row>
             <entry>menu_update_path</entry>
             <entry>The menu_update_path script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/update_menu</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/update_menu</entry>
           </row>
           <row>
             <entry>storage_create_path</entry>
             <entry>The storage_create_path script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/create_config</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/create_config</entry>
           </row>
           <row>
             <entry>storage_update_path</entry>
             <entry>The storage_update_path script path</entry>
             <entry><emphasis role="bold">no</emphasis></entry>
             <entry>path</entry>
-            <entry>/usr/share/pulse2/imaging/helpers/update_dir</entry>
+            <entry>/usr/lib/pulse2/imaging/helpers/update_dir</entry>
           </row>
         </tbody>
       </tgroup>
