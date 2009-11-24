@@ -125,6 +125,9 @@ if ($is_gp != 1) {
         $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
         $n->addActionItem(new ActionItem(_T("Software deployment on this profile", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
     }
+    if (in_array("imaging", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "base", "computers"));
+    }
 }
 $n->addActionItemArray($action_delete);
 $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
