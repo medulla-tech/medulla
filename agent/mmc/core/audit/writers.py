@@ -20,6 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Contains singleton classes that writes to the audit backend
+"""
+
 import socket
 import sys
 import os
@@ -39,9 +43,16 @@ from mmc.support.mmctools import Singleton
 
 class AuditWriterI:
     """
-    Interface for LogAction*
-    """    
+    Interface for classes that writes record entry to the audit database.
+    """
+
+    def __init__(self):
+        self.logger = logging.getLogger()
+
     def log(self):
+        """
+        To write a record to the database.
+        """
         pass
     
     def setup(self):
@@ -50,10 +61,19 @@ class AuditWriterI:
     def get(self):
         pass
 
-    def get_by_Id(self):
+    def getById(self):
         pass
 
-    def get_action_type(self):
+    def getActionType(self):
+        """
+        Return a list of action and type if action=1 it return list of action
+        if type=1 it return a list of type
+        
+        @param action: if action=1 the function return a list of action
+        @type action: int
+        @param type: if type=1 the function return a list of action
+        @type type: int
+        """
         pass
 
     def commit(self):
@@ -61,29 +81,42 @@ class AuditWriterI:
 
 class AuditWriterDB(Singleton, AuditWriterI):
     
+    """
+    Singleton class for an object that writes audit data to a database.
+
+    MySQL and PostgreSQL databases are available.
+    """
+
     def __init__(self):
         """
-        Init Object AuditWriterDB self.fqdn contains the agent hostname
+        Init Object AuditWriterDB
         """
         Singleton.__init__(self)
+        AuditWriterI.__init__(self)
+        # self.fqdn contains the agent FQDN.
         self.fqdn = socket.getfqdn()
 
     def setConfig(self, config):
+        """
+        Set the configuration of this object, which contains database options.
+        """
         self.config = config
 
     def connect(self):
         """
-        Prepare database connection
+        Connect to the database.
         """
-        db = create_engine(self.config.logdbdriver + "://" + self.config.logdbuser + ":" + self.config.logdbpassword + "@" + self.config.logdbhost + ":" + self.config.logdbport + "/" + self.config.logdbname)
+        db = create_engine(self.config.auditdbdriver + "://" + self.config.auditdbuser + ":" + self.config.auditdbpassword + "@" + self.config.auditdbhost + ":" + str(self.config.auditdbport) + "/" + self.config.auditdbname)
         self.metadata = MetaData()
         self.metadata.bind = db
-        self.initTableVersion()
+        self._initTableVersion()
         mapper(Version, self.version_table)
 
     def init(self, driver, user, passwd, host, port, name):
         """
-        This function init database connexion
+        Initialize connection to the database, and checks that it is using
+        the wanted version.
+
         @param driver: driver name mysql (postgres,sqlite)
         @type driver: string
         @param user: username for the database connexion 
@@ -101,43 +134,52 @@ class AuditWriterDB(Singleton, AuditWriterI):
         version = self.getCurrentVersion()
         if not self.checkVersion(version):
             raise Exception('Bad audit database schema. Version %d found. Please update the database schema to version %d.' % (version, self.getUptodateVersion()))
-        self.initTables()
-        self.initMappers()
+        self._initTables()
+        self._initMappers()
 
-    def initTables(self, version = None):
+    def _initTables(self, version = None):
+        """
+        Init database tables.
+        """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "initTables" + self.config.logdbdriver + "V" + str(version))
+        func = getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))
         func()
 
-    def initMappers(self, version = None):
+    def _initMappers(self, version = None):
+        """
+        Init database mappers.
+        """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "initMappers" + self.config.logdbdriver + "V" + str(version))
+        func = getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))
         func()
 
-    def populateTables(self, version = None):
+    def _populateTables(self, version = None):
+        """
+        Populate tables before the first use.
+        """
         if version == None:
             version = self.getUptodateVersion()
-        func = getattr(self, "populateTables" + self.config.logdbdriver + "V" + str(version))
-        func()        
+        func = getattr(self, "_populateTables" + self.config.auditdbdriver + "V" + str(version))
+        func()
 
     def operation(self, op):
         """
         Allow to perform special operations on the audit database
 
-        if op == 'drop', drop all tables.
-        if op == 'init', initialize the audit database.
+        if op == 'dropdb', drop all tables.
+        if op == 'initdb', initialize the audit database.
+        if op == 'checkdb', check that the database version is correct.
         """
-        self.logger = logging.getLogger()
         self.connect()
         if op == 'dropdb':
             if not self.databaseExists():
                 self.logger.error('Database does not exist')
                 return False
             version = self.getCurrentVersion()
-            self.initTables(version)
-            self.initMappers(version)
+            self._initTables(version)
+            self._initMappers(version)
             self.logger.info('Dropping audit tables as requested')
             self.metadata.drop_all()
             self.logger.info('Done')
@@ -147,11 +189,11 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 return False
             self.logger.info('Creating audit tables as requested')
             self.logger.info('Using database schema version %d' % self.getUptodateVersion())
-            self.initTables()
-            self.initMappers()
+            self._initTables()
+            self._initMappers()
             self.metadata.create_all()
-            self.populateTables()
-            self.updateDatabaseVersion()
+            self._populateTables()
+            self._updateDatabaseVersion()
             self.logger.info('Done')
         elif op == 'checkdb':
             ret = False
@@ -182,7 +224,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @type context: Twisted session object
         
         @param module: module name
-        @type moude: str
+        @type module: str
 
         @param action: action name
         @type action: string
@@ -214,7 +256,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         try:
             host = context.http_headers['x-browser-ip']
         except:
-            # FIXME: maybe context.peer or something like that
+            # FIXME: Maybe context.peer or something like that
             host = socket.getfqdn()
         client = (host, useragent)
         agent = socket.getfqdn()
@@ -248,7 +290,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session = create_session()
         return AuditReaderDB(self, session).getlog(start, end, plug, user, type, date1, date2, object, action)
         
-    def get_by_Id(self,id):
+    def getById(self, id):
         """
         Allow to get a log by id in database
         @param id: id number in database
@@ -256,22 +298,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
         return a dict of a log 
         """
         session = create_session()
-        return AuditReaderDB(self, session).get_by_Id(id)
+        return AuditReaderDB(self, session).getById(id)
     
-    def get_action_type(self,action,type):
-        """
-        Return a list of action and type if action=1 it return list of action
-        if type=1 it return a list of type
-        @param action: if action=1 the function return a list of action
-        @type action: int
-        @param type: if type=1 the function return a list of action
-        @type type: int
-        """
+    def getActionType(self, action, type):
         session = create_session()
-        return AuditReaderDB(self, session).get_action_type(action, type)
+        return AuditReaderDB(self, session).getActionType(action, type)
             
-            
-    def initTableVersion(self):
+    def _initTableVersion(self):
         """
         Create the audit database version table
         """
@@ -297,14 +330,14 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
     def getUptodateVersion(self):
         """
-        @returns: the wanted audit database version
+        @returns: the wanted audit database version for this code to works
         """
         return 1
 
     def checkVersion(self, version):
         return version == self.getUptodateVersion()
 
-    def updateDatabaseVersion(self, version = None):
+    def _updateDatabaseVersion(self, version = None):
         """
         Update database version number in the version table
         """
@@ -318,7 +351,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session.save(v)
         session.flush()
 
-    def initTablesmysqlV1(self):
+    def _initTablesmysqlV1(self):
         """
         Init MySQL table for audit database version 1
         """
@@ -331,7 +364,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.action_table = Table("action", self.metadata, 
                             Column("id", Integer, primary_key=True,autoincrement=False),
                             Column("module_id", Integer, ForeignKey('module.id'),primary_key=True),
-                            Column("action_details", String(50)),
+                            Column("action_details", Unicode(50)),
                             mysql_engine='InnoDB'
                             )
     
@@ -405,7 +438,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             mysql_engine='InnoDB'
                             )
 
-    def initTablespostgresV1(self):
+    def _initTablespostgresV1(self):
         """
         FIXME: to check
         PostgreSQL db tables for audit database version 1
@@ -481,7 +514,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
                              ForeignKeyConstraint(('action_id', 'module_id'), ('action.id', 'action.module_id'))
                             )
 
-    def initMappersmysqlV1(self):
+    def _initMappersmysqlV1(self):
         """
         Init all mappers for audit database version 1
         """
@@ -496,9 +529,10 @@ class AuditWriterDB(Singleton, AuditWriterI):
         mapper(Previous_Value, self.previous_value_table)
         mapper(Log,self.log_table, properties = {'param_log' : relation(Parameters, backref='parameters'), 'obj_log' : relation(Object, secondary=self.object_log_table, lazy=False)})
         mapper(Parameters, self.param_table)
-    initMapperspostgresV1 = initMappersmysqlV1
+    # The SA mapper for PostgreSQL is the same than MySQL
+    _initMapperspostgresV1 = _initMappersmysqlV1
 
-    def populateTablesmysqlV1(self):
+    def _populateTablesmysqlV1(self):
         """
         Populate table for audit database version 1
         """
@@ -507,17 +541,19 @@ class AuditWriterDB(Singleton, AuditWriterI):
         session = create_session()
         session.save(t)
         session.flush()
-    populateTablespostgresV1 = populateTablesmysqlV1
-
-    def _get_session(self):
-        return create_session()
+    # The database population code is the same for PostgreSQL than MySQL
+    _populateTablespostgresV1 = _populateTablesmysqlV1
 
 
 class AuditWriterNull(Singleton, AuditWriterI):
     
     """
-    Will log nothing
+    Singleton class for an object that don't record any audit data.
+    It is used when audit has not been configured.
     """
+
+    def __init__(self):
+        self.logger = logging.getLogger()
     
     def init(self,*args):
         pass
@@ -531,14 +567,15 @@ class AuditWriterNull(Singleton, AuditWriterI):
     def get(self,*args):
         pass
     
-    def get_by_Id(self,*args):
+    def getById(self,*args):
         pass
 
-    def get_action_type(self,*args):
+    def getActionType(self,*args):
         pass
 
     def commit(self,*args):
         pass
 
     def operation(self, op):
-        pass
+        self.logger.info("Configured audit database will do nothing")
+        return True
