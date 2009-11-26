@@ -305,8 +305,7 @@ class Glpi(DyngroupDatabaseHelper):
         # plugin it is not called.
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        other_locids.extend(ctx.locationsid)
-        return self.machine.c.FK_entities.in_(other_locids)
+        return self.machine.c.FK_entities.in_(ctx.locationsid + other_locids)
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
         """
