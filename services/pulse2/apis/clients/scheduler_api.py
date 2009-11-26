@@ -46,7 +46,7 @@ class SchedulerApi(Pulse2Api): # Singleton
         elif type(scheduler) in (str, unicode):
             ret = scheduler
         if not ret:
-            if self.config.scheduler_url2id.has_key(scheduler):
+            if type(scheduler) in (str, unicode) and self.config.scheduler_url2id.has_key(scheduler):
                 self.logger.debug("Found scheduler id from MSC config file using this key %s" % scheduler)
                 ret = self.config.scheduler_url2id[scheduler]
         if not ret:
