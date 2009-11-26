@@ -26,12 +26,14 @@ Configuration class for the MMC base plugin.
 
 from mmc.support.config import PluginConfig
 from mmc.plugins.base.ldapconnect import LDAPConnectionConfig
+from mmc.core.audit.config import AuditConfig
 
-class BasePluginConfig(PluginConfig, LDAPConnectionConfig):
+class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        LDAPConnectionConfig.readLDAPConf(self, 'ldap')
+        LDAPConnectionConfig.readLDAPConf(self, "ldap")
+        AuditConfig.readAuditConf(self, "audit")
         # Selected authentication method
         try:
             self.authmethod = self.get("authentication", "method")
