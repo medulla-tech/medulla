@@ -40,10 +40,10 @@ class AuditFactory(Singleton):
         @param config: confile .ini
         @type config: ConfigParser
         """
-        if config.logmethod == "database":
+        if config.auditmethod == "database":
             AuditWriterDB().setConfig(config)
             if init:
-                AuditWriterDB().init(config.logdbdriver, config.logdbuser, config.logdbpassword, config.logdbhost, config.logdbport, config.logdbname)
+                AuditWriterDB().init(config.auditdbdriver, config.auditdbuser, config.auditdbpassword, config.auditdbhost, config.auditdbport, config.auditdbname)
             self.logaction = AuditWriterDB()
         else:
             self.logaction = AuditWriterNull()
