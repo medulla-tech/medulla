@@ -1,0 +1,81 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id: config.py 4822 2009-11-26 16:23:42Z cdelfosse $
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+This tool is a basic helper to manage the internals of the MMC.
+For now, it only allows to create the audit database.
+"""
+
+import sys
+import logging
+from mmc.core.audit import AuditFactory
+
+logging.basicConfig(level = logging.INFO)
+
+def usage():
+    print 'usage: mmc-helper command [subcommand]'
+    print
+    print \
+'''This tool is a basic helper for administrator to manage the internals of the
+MMC.'''
+    print 'For now, it only allows to create the audit database.'
+    print
+    print 'available commands:'
+    print ' help : print this help'
+    print ' audit : perform operation on audit database'
+    print
+    print 'audit subcommands:'
+    print ' checkdb : check audit database availability and version'
+    print ' dropdb : completely drop the audit database tables'
+    print ' initdb : initialize the audit database tables'
+    print
+    print 'example: mmc-helper audit initdb'
+
+ret = 0
+printusage = False
+if len(sys.argv) == 2:
+    if sys.argv[1] == 'help':
+        printusage = True
+    else:
+        printusage = True
+        ret = 1
+elif len(sys.argv) == 3:
+    if sys.argv[1] == 'audit':
+        a = AuditFactory(None, False)
+        instance = a.getAuditInstance()
+        if not instance.operation(sys.argv[2]):
+            ret = 1
+    else:
+        printusage = True
+        ret = 1
+else:
+    printusage = True
+    ret = 1
+
+if printusage:
+    usage()
+
+if ret:
+    sys.stderr.write('The operation failed.\n')
+
+sys.exit(ret)
