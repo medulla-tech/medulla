@@ -38,7 +38,10 @@ from mmc.support.mmctools import cSort, rchown, copytree
 from mmc.support.mmctools import cleanFilter
 
 from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, ContextProviderI
+
+from mmc.core.audit import AuditFactory as AF
+from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
 import ldap
 import ldap.schema
@@ -483,7 +486,7 @@ def delete_diacritics(s) :
 
 
 # FIXME: Change this class name
-class ldapUserGroupControl:
+class LdapUserGroupControl(ContextProviderI):
     """
     Control of User/Group/Computer(smb) control via LDAP
     this class create
@@ -558,6 +561,7 @@ class ldapUserGroupControl:
         Create a LDAP connection on self.l with admin right
         Create a ConfigParser on self.config
         """
+        ContextProviderI.__init__(self)
         if conffile: configFile = conffile
         else: configFile = INI
         self.conffile = configFile
@@ -1675,7 +1679,7 @@ class ldapUserGroupControl:
         attributes=[ (k,v) for k,v in addr_info.items() ]
 
         self.l.add_s(addrdn,attributes)
-
+ldapUserGroupControl = LdapUserGroupControl
 ###########################################################################################
 ############## ldap authentification
 ###########################################################################################
@@ -2070,17 +2074,37 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(RpcProxyI):
 
+    def __init__(self, request, mod):
+        RpcProxyI.__init__(self, request, mod)
+        self.ldapObj = LdapUserGroupControl()
+        self.ldapObj.setContext(self.session)
+
     def authenticate(self, uiduser, passwd):
         """
         Authenticate an user with her/his password against a LDAP server.
         Return a Deferred resulting to true if the user has been successfully
         authenticated, else false.
         """
+        # Create a fake session, because the user is not authenticated the
+        # session.userid attribute is empty
+        fakesession = copy.copy(self.session)
+        fakesession.userid = uiduser.decode('ascii')
+        r = AF().log(PLUGIN_NAME, AA.BASE_AUTH_USER, fakesession)
         d = defer.maybeDeferred(AuthenticationManager().authenticate, uiduser, passwd, self.session)
+        # FIXME: errback needed ?
         d.addCallback(ProvisioningManager().doProvisioning)
-        d.addCallback(lambda token: token.isAuthenticated())
+        d.addCallback(self._cbAuthenticate, r)
         return d
     ldapAuth = authenticate
+
+    def _cbAuthenticate(self, token, record):
+        """
+        Callback for authentication.
+        """
+        ret = token.isAuthenticated()
+        if ret:
+            record.commit()
+        return ret
 
     def hasComputerManagerWorking(self):
         """
