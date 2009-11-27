@@ -22,13 +22,13 @@
 
 from sqlalchemy import func
 
-class Action(object):
+class Event(object):
     pass
 
-class Agent(object):
+class Source(object):
     pass
 
-class Client(object):	
+class Initiator(object):	
     pass
 
 class Current_Value(object):
@@ -37,22 +37,13 @@ class Current_Value(object):
         self.object_log_id=object_log.id
         self.value=value
 
-class Log(object):
-    
-    def __init__(self, action, module, agent, client, objectuser, result):
-        self.action_id=action.id
-        self.agent_id=agent.id
-        self.client_id=client.id
-        self.object_user_id=objectuser.id
-        self.log_date=func.now()
-        self.module_id=module.id
-        self.result=result
-        
+class Record(object):
+            
     def getId(self):
         return self.id
 
     def __repr__(self):
-        return [self.id,self.action_id,self.client_id,self.object_user_id,self.log_date,self.module_id,self.result]
+        return [self.id, self.event_id, self.initiator_id, self.object_user_id, self.log_date, self.module_id, self.result]
 
 class Object_Log(object):
     pass

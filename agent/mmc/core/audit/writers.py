@@ -215,7 +215,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
             pass
         return True
 
-    def log(self, module, action, context = None, objects = None, current=None, previous=None, parameters = None):
+    def log(self, module, event, context = None, objects = (), current=None , previous=None, parameters = {}):
         """
         Allow to log an Action, it uses LogRecordDB
 
@@ -246,9 +246,10 @@ class AuditWriterDB(Singleton, AuditWriterI):
         # Use context information for the log record
         try:
             user = context.userid
-        except:
+        except AttributeError:
             # Get effective user id (log from a script)
             user = pwd.getpwuid(os.getuid())[0]
+            user = user.decode('ascii')
         try:
             useragent = context.http_headers['user-agent']
         except:
@@ -256,11 +257,11 @@ class AuditWriterDB(Singleton, AuditWriterI):
         try:
             host = context.http_headers['x-browser-ip']
         except:
-            # FIXME: Maybe context.peer or something like that
+            # FIXME: Maybe context.peer or something like that is better
             host = socket.getfqdn()
-        client = (host, useragent)
-        agent = socket.getfqdn()
-        return AuditRecordDB(self, session, action, module, user, objects, parameters, client, agent, current, previous)
+        initiator = (host, useragent)
+        source = socket.getfqdn()
+        return AuditRecordDB(self, session, module, event, user, objects, parameters, initiator, source, current, previous)
     
     def get(self, start, end, plug, user, type, date1, date2, object, action):
         """
@@ -357,20 +358,20 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("module_name", String(15)),
+                            Column("name", String(15), nullable=False),
                             mysql_engine='InnoDB'
                             )
 
-        self.action_table = Table("action", self.metadata, 
-                            Column("id", Integer, primary_key=True,autoincrement=False),
-                            Column("module_id", Integer, ForeignKey('module.id'),primary_key=True),
-                            Column("action_details", Unicode(50)),
+        self.event_table = Table("event", self.metadata, 
+                            Column("id", Integer, primary_key=True, autoincrement=True),
+                            Column("module_id", Integer, ForeignKey('module.id')),
+                            Column("name", Unicode(50), nullable=False),
                             mysql_engine='InnoDB'
                             )
     
-        self.agent_table = Table("agent", self.metadata,
+        self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("agent_host", String(20)),
+                           Column("hostname", String(20), nullable=False),
                            mysql_engine='InnoDB'
                            )
     
@@ -378,26 +379,26 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("id", Integer, primary_key=True),
                             Column("param_name", String(50)),
                             Column("param_value", String(1024)),
-                            Column("log_id", Integer, ForeignKey('log.id')),
+                            Column("record_id", Integer, ForeignKey('record.id')),
                             mysql_engine='InnoDB'
                             )
     
-        self.client_table=Table("client", self.metadata,
+        self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("client_type", String(64)),
-                            Column("client_host", String(20)),
+                            Column("application", String(64), nullable=False),
+                            Column("hostname", String(20), nullable=False),
                             mysql_engine='InnoDB'
                             )
 
         self.type_table=Table("type", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("type", String(20)),
+                            Column("type", String(20), nullable=False),
                             mysql_engine='InnoDB'
                             )
 
         self.object_table=Table("object", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("object_uri", String(30)),
+                            Column("uri", String(30), nullable = False),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id')),
 
@@ -407,7 +408,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.object_log_table=Table("object_log", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_id", Integer, ForeignKey('object.id')),
-                            Column("log_id", Integer, ForeignKey('log.id')),
+                            Column("record_id", Integer, ForeignKey('record.id')),
                             mysql_engine='InnoDB'
                             )
                             
@@ -425,15 +426,15 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             mysql_engine='InnoDB'
                             )
     
-        self.log_table=Table("log", self.metadata,
+        self.record_table=Table("record", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("log_date", DateTime ,default=func.now()),
-                            Column("result", Boolean),
-                            Column("client_id", Integer, ForeignKey('client.id')),
-                            Column("agent_id", Integer, ForeignKey('agent.id')),
-                            Column("action_id", Integer, ForeignKey('action.id')),
-                            Column("module_id", Integer, ForeignKey('module.id')),
-                            Column("object_user_id", Integer, ForeignKey('object.id')),
+                            Column("date", DateTime , default=func.now(), nullable=False),
+                            Column("result", Boolean, nullable=False),
+                            Column("initiator_id", Integer, ForeignKey('initiator.id'), nullable=False),
+                            Column("source_id", Integer, ForeignKey('source.id'), nullable=False),
+                            Column("event_id", Integer, ForeignKey('event.id'), nullable=False),
+                            Column("module_id", Integer, ForeignKey('module.id'), nullable=False),
+                            Column("user_id", Integer, ForeignKey('object.id'), nullable=False),
                             
                             mysql_engine='InnoDB'
                             )
@@ -445,18 +446,18 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """        
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("module_name", String(15))
+                            Column("name", String(15), nullable=False)
                             )
 
-        self.action_table = Table("action", self.metadata, 
-                            Column("id", Integer, primary_key=True,autoincrement=False),
-                            Column("module_id", Integer, ForeignKey('module.id'),primary_key=True),
-                            Column("action_details", String(50))
+        self.event_table = Table("event", self.metadata, 
+                            Column("id", Integer, primary_key=True, autoincrement=True),
+                            Column("module_id", Integer, ForeignKey('module.id')),
+                            Column("name", String(50), nullable=False)
                             )
     
-        self.agent_table = Table("agent", self.metadata,
+        self.source_table = Table("source", self.metadata,
                            Column("id", Integer, primary_key=True),
-                           Column("agent_host", String(20))
+                           Column("host", String(20), nullable=False)
                            )
     
         self.param_table=Table("parameters", self.metadata,
@@ -466,20 +467,20 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("log_id", Integer, ForeignKey('log.id'))
                             )
     
-        self.client_table=Table("client", self.metadata,
+        self.initiator_table=Table("initiator", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("client_type", String(64)),
-                            Column("client_host", String(20))
+                            Column("application", String(64), nullable=False),
+                            Column("host", String(20))
                             )
 
         self.type_table=Table("type", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("type", String(20))
+                            Column("type", String(20), nullable=False)
                             )
 
         self.object_table=Table("object", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("object_uri", String(30)),
+                            Column("_uri", String(30), nullable=False),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id'))
                             )
@@ -504,30 +505,30 @@ class AuditWriterDB(Singleton, AuditWriterI):
     
         self.log_table=Table("log", self.metadata,
                              Column("id", Integer, primary_key=True),
-                             Column("log_date", DateTime ,default=func.now()),
-                             Column("result", Boolean),
+                             Column("log_date", DateTime, default=func.now(), nullable=False),
+                             Column("result", Boolean, nullable=False),
                              Column("client_id", Integer, ForeignKey('client.id')),
                              Column("agent_id", Integer, ForeignKey('agent.id')),
-                             Column("action_id", Integer),
+                             Column("event_id", Integer),
                              Column("module_id", Integer),
                              Column("object_user_id", Integer, ForeignKey('object.id')),
-                             ForeignKeyConstraint(('action_id', 'module_id'), ('action.id', 'action.module_id'))
+                             ForeignKeyConstraint(('event_id', 'module_id'), ('event.id', 'event.module_id'))
                             )
 
     def _initMappersmysqlV1(self):
         """
         Init all mappers for audit database version 1
         """
-        mapper(Action, self.action_table)
+        mapper(Event, self.event_table)
         mapper(Module, self.module_table)
-        mapper(Agent, self.agent_table)
-        mapper(Client, self.client_table)
+        mapper(Source, self.source_table)
+        mapper(Initiator, self.initiator_table)
         mapper(Type, self.type_table)
         mapper(Object, self.object_table)
         mapper(Object_Log, self.object_log_table)
         mapper(Current_Value, self.current_value_table)
         mapper(Previous_Value, self.previous_value_table)
-        mapper(Log,self.log_table, properties = {'param_log' : relation(Parameters, backref='parameters'), 'obj_log' : relation(Object, secondary=self.object_log_table, lazy=False)})
+        mapper(Record, self.record_table, properties = {'param_log' : relation(Parameters, backref='parameters'), 'obj_log' : relation(Object, secondary=self.object_log_table, lazy=False)})
         mapper(Parameters, self.param_table)
     # The SA mapper for PostgreSQL is the same than MySQL
     _initMapperspostgresV1 = _initMappersmysqlV1
