@@ -33,6 +33,7 @@ except ImportError:
 
 from mmc.client import makeSSLContext
 from mmc.support.mmctools import Singleton
+from mmc.core.audit import AuditFactory
 
 import imp
 import logging
@@ -363,6 +364,9 @@ def agentService(config, conffile, daemonize):
         logger.info("Multi-threading enabled, max threads pool size is %d" % config.maxthreads)
         reactor.suggestThreadPoolSize(config.maxthreads)
 
+    # Start audit system
+    l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_START')
+
     # Ask PluginManager to load MMC plugins
     pm = PluginManager()
     code = pm.loadPlugins()
@@ -381,6 +385,7 @@ def agentService(config, conffile, daemonize):
         # No more log to stderr
         logger.removeHandler(hdlr2)
 
+    l.commit()
     reactor.run()
 
 def cleanUp(config):
@@ -389,12 +394,15 @@ def cleanUp(config):
     """
     logger = logging.getLogger()
     logger.info('mmc-agent shutting down, cleaning up...')
+    l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
 
     # Unlink pidfile if it exists
     if os.path.isfile(config.pidfile):
         os.seteuid(0)            
         os.setegid(0)
         os.unlink(config.pidfile)
+
+    l.commit()
 
 class MMCHTTPChannel(http.HTTPChannel):
     """
