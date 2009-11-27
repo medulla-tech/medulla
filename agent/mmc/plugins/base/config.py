@@ -76,3 +76,4 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig):
         self.provmethod = None
         self.computersmethod = "none"
         self.passwordscheme = "ssha"
+        self.auditmethod = "none"
