@@ -230,7 +230,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @type action: string
 
         @param objects
-        @type objects: tuple of (<object_name>,<type>)
+        @type objects: tuple of (<object_uri>,<type>)
 
         @param current: current attribute value saved in database
         @type current: string
@@ -397,7 +397,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         self.object_table=Table("object", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("object_name", String(30)),
+                            Column("object_uri", String(30)),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id')),
 
@@ -479,7 +479,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         self.object_table=Table("object", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("object_name", String(30)),
+                            Column("object_uri", String(30)),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id'))
                             )
