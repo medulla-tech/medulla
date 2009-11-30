@@ -32,5 +32,6 @@ setup(
     author_email = "cdelfosse@mandriva.com",
     maintainer = "Cedric Delfosse",
     maintainer_email = "cdelfosse@mandriva.com",
-    packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base"],
+    packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base",
+                "mmc.core", "mmc.core.audit"],
 )
