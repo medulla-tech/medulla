@@ -171,10 +171,12 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
-    def createBundle(self, title = '', session = create_session()):
+    def createBundle(self, title = '', session = None):
         """
         Return a new Bundle
         """
+        if session is None:
+            session = create_session()
         bdl = Bundle()
         bdl.title = title
         bdl.do_reboot = 'disable'

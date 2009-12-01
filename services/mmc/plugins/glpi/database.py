@@ -307,11 +307,11 @@ class Glpi(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.FK_entities.in_(ctx.locationsid + other_locids)
 
-    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session()):
+    def __getRestrictedComputersListQuery(self, ctx, filt = None, session = None):
         """
         Get the sqlalchemy query to get a list of computers with some filters
         """
-        if session == None:
+        if session is None:
             session = create_session()
         query = session.query(Machine)
         query = self.__filter_on(query)
