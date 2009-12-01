@@ -608,7 +608,9 @@ class MscDatabase(DatabaseHelper):
                 ret.append((element[0].toH(), element[1], element[2], False))
         return ret
 
-    def displayLogs(self, ctx, params = {}): # TODO USE ctx
+    def displayLogs(self, ctx, params = None): # TODO USE ctx
+        if params is None: # do not change the default value!
+            params = {}
         session = create_session()
         for i in ('b_id', 'cmd_id', 'coh_id', 'gid', 'uuid', 'filt'):
             if not params.has_key(i) or params[i] == '':

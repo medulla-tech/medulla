@@ -365,7 +365,9 @@ def __onlyIn(query, module):
                 return False
     return True
 
-def __addCtxFilters(ctx, filt = {}):
+def __addCtxFilters(ctx, filt = None):
+    if filt is None:
+        filt = {}
     try:
         if ctx.locations:
             location = ctx.locations

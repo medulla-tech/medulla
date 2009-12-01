@@ -231,8 +231,9 @@ class AFiles:
             return map(lambda x: x.toURI(mp, where), self.internals)
 
 class File:
-    def __init__(self, name = None, path = '/', checksum = None, size = 0, acc = {}, id = None):
-        access = acc
+    def __init__(self, name = None, path = '/', checksum = None, size = 0, access = None, id = None):
+        if access is None: # dont modify the default value!
+            access = {}
         if access.has_key('mirror'):
             self.where = access['mirror']
         else:
@@ -269,7 +270,7 @@ class File:
                     where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
             ret = where + urllib.quote("%s/%s" % (self.path.replace('\\', '/'), self.name))
             return (ret)
-            
+
     def toS(self):
         return "%s/%s" % (self.path, self.name)
 

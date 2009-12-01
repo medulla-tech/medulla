@@ -680,7 +680,9 @@ class Common(pulse2.utils.Singleton):
                 self.logger.debug("New valid temporary package detected")
                 shutil.copytree(file, os.path.join(src, l_package.id))
 
-    def _getPackages(self, mp, src, access = {}, new = False, runid = -1):
+    def _getPackages(self, mp, src, access = None, new = False, runid = -1):
+        if access is None: # dont modify the default value!
+            access = {}
         if not os.path.exists(src):
             raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
 
@@ -980,7 +982,9 @@ class Common(pulse2.utils.Singleton):
             raise err
         return str(pid)
 
-    def _treatFile(self, pid, f, path, access = {}, fid = None):
+    def _treatFile(self, pid, f, path, access = None, fid = None):
+        if access is None: # dont modify the default value!
+            access = {}
         (fsize, fmd5) = [0,0]
         if not self.file_properties.has_key(f):
             fsize = os.path.getsize(f)
