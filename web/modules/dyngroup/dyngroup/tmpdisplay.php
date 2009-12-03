@@ -48,6 +48,7 @@ $get .= "&request=".urlencode($_GET['request']);
 $get .= "&name=".urlencode($name);
 $get .= "&save_type=".quickGet('save_type', true);
 $get .= "&visible=".quickGet('visible', true);
+$get .= "&is_group=".quickGet('is_group', true);
 if (strlen($_GET['id'])) {
     $get .= "&id=".urlencode($_GET['id']);
 }
