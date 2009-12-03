@@ -29,7 +29,8 @@ from mmc.plugins.dyngroup.config import DGConfig
 import mmc
 
 def activate():
-    conf = DGConfig("dyngroup")
+    conf = DGConfig()
+    conf.init("dyngroup")
     return conf.dyngroup_activate
 
 def queryPossibilities():

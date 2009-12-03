@@ -21,59 +21,42 @@
 # MA 02110-1301, USA.
 
 import logging
-from mmc.support.config import PluginConfig
+from mmc.support import mmctools
+from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
 from ConfigParser import NoOptionError
 
-class DGConfig(PluginConfig):
+class DGConfig(DyngroupDatabaseConfig):
     dyngroup_activate = True
     defaultModule = ''
     maxElementsForStaticList = 2000
     profilesEnable = False
 
-    def readConf(self):
+    def init(self, name, conffile = None):
+        self.name = name
+        if not conffile: self.conffile = mmctools.getConfigFile(name)
+        else: self.conffile = conffile
+
+        DyngroupDatabaseConfig.setup(self, self.conffile)
+        self.setup(self.conffile)
+
+    def setup(self, conf_file):
         """
         Read the module configuration
         """
-        PluginConfig.readConf(self)
-        self.dbdriver = self.get("database", "dbdriver")
-        self.dbuser = self.get("database", "dbuser")
-        self.dbpasswd = self.getpassword("database", "dbpasswd")
-        self.dbhost = self.get("database", "dbhost")
-        self.dbname = self.get("database", "dbname")
-        self.disable = self.getboolean("main", "disable")
-        self.dynamicEnable = self.getboolean("main", "dynamic_enable")
-        if self.has_option('main', 'profiles_enable'):
-            self.profilesEnable = self.getboolean("main", 'profiles_enable')
-        if self.has_option('main', 'default_module'):
-            self.defaultModule = self.get('main', 'default_module')
-        try:
-            self.dbport = self.getint("database", "dbport")
-        except NoOptionError:
-            # We will use the default db driver port
-            self.dbport = None
-        if self.has_option("database", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
-        if self.has_option("database", "dbpoolsize"):
-            self.dbpoolsize = self.getint("database", "dbpoolsize")
+        self.disable = self.cp.getboolean("main", "disable")
+        self.dynamicEnable = self.cp.getboolean("main", "dynamic_enable")
+        if self.cp.has_option('main', 'profiles_enable'):
+            self.profilesEnable = self.cp.getboolean("main", 'profiles_enable')
+        if self.cp.has_option('main', 'default_module'):
+            self.defaultModule = self.cp.get('main', 'default_module')
+        
+        if self.cp.has_option("main", "max_elements_for_static_list"):
+            self.maxElementsForStaticList = self.cp.get("main", "max_elements_for_static_list")
 
-        if self.has_option("database", "dbsslenable"):
-            self.dbsslenable = self.getboolean("database", "dbsslenable")
-            if self.dbsslenable:
-                self.dbsslca = self.get("database", "dbsslca")
-                self.dbsslcert = self.get("database", "dbsslcert")
-                self.dbsslkey = self.get("database", "dbsslkey")
+        if self.cp.has_section("querymanager"):
+            if self.cp.has_option("querymanager", "activate"):
+                self.dyngroup_activate = self.cp.getboolean("querymanager", "activate")
 
-        try:
-            self.dbdebug = logging._levelNames[self.get("database", "dbdebug")]
-        except:
-            self.dbdebug = logging.ERROR
-
-        if self.has_section("querymanager"):
-            if self.has_option("querymanager", "activate"):
-                self.dyngroup_activate = self.getboolean("querymanager", "activate")
-
-        if self.has_option("main", "max_elements_for_static_list"):
-            self.maxElementsForStaticList = self.get("main", "max_elements_for_static_list")
 
     def setDefault(self):
         """

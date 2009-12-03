@@ -57,13 +57,14 @@ def getRevision(): return REVISION
 def activate():
     logger = logging.getLogger()
     global config
-    config = DGConfig("dyngroup")
+    config = DGConfig()
+    config.init("dyngroup")
 
     if config.disable:
         logger.warning("Plugin dyngroup: disabled by configuration.")
         return False
 
-    DyngroupDatabase().activate()
+    DyngroupDatabase().activate(config)
     if not DyngroupDatabase().db_check():
         return False
 
