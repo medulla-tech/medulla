@@ -83,7 +83,7 @@ def icmpClient(client, timeout):
     """ Send a Ping to our client """
     def __cb_icmp_end(shprocess, client=client):
         if not shprocess.exit_code == 0:
-            logging.getLogger().warn("launcher %s: ICMP failed on %s: %s, %s" % (LauncherConfig().name, client, shprocess.stdout, shprocess.stderr))
+            logging.getLogger().debug("launcher %s: ICMP failed on %s: %s, %s" % (LauncherConfig().name, client, shprocess.stdout, shprocess.stderr))
             return False
         logging.getLogger().debug("launcher %s: ICMP succeeded on %s" % (LauncherConfig().name, client))
         return True
@@ -112,7 +112,7 @@ def probeClient(client, timeout):
              { 'platform': "Apple MacOS", 'pcre': "Darwin", "tmp_path": "/tmp/lsc", "root_path": "/"}
         ]
         if not exitcode == 0:
-            logging.getLogger().warn("launcher %s: PROBE execution failed o %s: %s, %s" % (LauncherConfig().name, client, stdout, stderr))
+            logging.getLogger().debug("launcher %s: PROBE execution failed on %s: %s, %s" % (LauncherConfig().name, client, stdout, stderr))
             return "Not available"
         for identification in idData:
             if re.compile(identification["pcre"]).search(stdout) or stdout == identification["platform"]:
