@@ -147,11 +147,11 @@ class ActionItem {
         if ($submod == null) $this->submod = $_GET["submod"];
         else $this->submod = $submod;
         $this->tab = $tab;
+        $this->mod = $mod;
         $this->path = $this->module . "/" . $this->submod . "/" . $this->action;
         if ($this->tab != null) {
             $this->path .= "/" . $this->tab;
         }
-        $this->mod = $mod;
     }
 
     /**
@@ -171,12 +171,13 @@ class ActionItem {
      * display function if you have correct right on this action
      */
     function displayWithRight($param, $extraParams = array()) {
-        // add special param for actionItem
-        $extraParams['mod'] = $this->mod;
+        /* add special param for actionItem */
+        if (is_array($extraParams)) {
+            $extraParams['mod'] = $this->mod;
+        }
         echo "<li class=\"".$this->classCss."\">";
         if (is_array($extraParams) & !empty($extraParams)) $urlChunk = $this->buildUrlChunk($extraParams);
         else $urlChunk = "&amp;" . $this->paramString."=" . rawurlencode($extraParams);
-        //echo "<a title=\"".$this->desc."\" href=\"main.php?module=".$this->module."&amp;submod=".$this->submod."&amp;action=".$this->action. $urlChunk . "\">&nbsp;</a>";
         echo "<a title=\"".$this->desc."\" href=\"" . urlStr($this->path) . $urlChunk . "\">&nbsp;</a>";
         echo "</li>";
     }
@@ -258,7 +259,7 @@ class ActionPopupItem extends ActionItem {
     }
 
     function displayWithRight($param, $extraParams = array()) {
-        // add special param for actionPopupItem
+        /* Add special param for actionPopupItem */
         $extraParams['mod'] = $this->mod;
         if (is_array($extraParams) & !empty($extraParams)) {
             $urlChunk = $this->buildUrlChunk($extraParams);
