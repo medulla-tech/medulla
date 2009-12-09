@@ -125,12 +125,12 @@ def copytree(src, dst, symlinks=False):
             # XXX What about devices, sockets etc.?
         except (IOError, os.error), why:
             errors.append((srcname, dstname, str(why)))
-        # catch the Error from the recursive copytree so that we can
+        # catch the Exception from the recursive copytree so that we can
         # continue with other files
-        except Error, err:
+        except Exception, err:
             errors.extend(err.args[0])
     if errors:
-        raise Error, errors
+        raise Exception, errors
 
 def xmlrpcCleanup(data):
     """
