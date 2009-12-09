@@ -50,7 +50,7 @@ if __name__ == "__main__":
     try:
         cp = MMCConfigParser()
         cp.read(inifile)
-    except e:
+    except Exception, e:
         print str(e)
         sys.exit(3)
     
