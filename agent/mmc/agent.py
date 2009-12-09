@@ -349,7 +349,7 @@ def agentService(config, conffile, daemonize):
     except OSError, (errno, strerror):
         # Raise exception if error is not "File exists"
         if errno != 17:
-            raise OSError(errno, strerror + ' ' + path)
+            raise
         else: pass
 
     # Changing path to probe and load plugins
