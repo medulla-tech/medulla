@@ -345,11 +345,13 @@ function agentLog($logline) {
  * @see ErrorHandlingItem
  */
 function findErrorHandling($errorFaultCode) {
-    $errorfile = "modules/".$_GET["module"]."/includes/errorHandling.php";
-
     require("includes/commonErrorHandling.php");
-    if (file_exists($errorfile)) {
-        require($errorfile);
+
+    if (!empty($_GET["module"])) {
+        $errorfile = "modules/".$_GET["module"]."/includes/errorHandling.php";
+        if (file_exists($errorfile)) {
+            require($errorfile);
+        }
     }
 
     if (isset($errObj)) { //if error obj is set
