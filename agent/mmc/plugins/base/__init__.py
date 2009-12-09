@@ -114,6 +114,10 @@ def activate():
         logger.error("Backup directory %s does not exist or is not a directory" % config.backupdir)
         return False
 
+    if not os.path.exists(os.path.join(config.backuptools, "backup.sh")):
+        logger.error("Backup tools in directory %s are not available" % config.backuptools)
+        return False
+
     # Create required OUs
     ous = [ ldapObj.baseUsersDN, ldapObj.baseGroupsDN, ldapObj.gpoDN ]
     for ou in ous:
