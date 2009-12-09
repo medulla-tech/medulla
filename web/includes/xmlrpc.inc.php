@@ -93,6 +93,14 @@ function openSocket($proto, $conf) {
 }
 
 /**
+ *  @return 1 if an XMLRPC exception has been raised, else 0
+ */
+function isXMLRPCError() {
+    global $errorStatus;
+    return $errorStatus;
+}
+
+/**
  * Make a XML-RPC call
  * If the global variable $errorStatus is not zero, the XML-RPC call is not
  * done, and this function returns nothing.
@@ -106,7 +114,7 @@ function xmlCall($method, $params = null) {
     global $errorDesc;
     global $conf;
 
-    if ($errorStatus) { // Don't do a XML-RPC call if a previous one failed
+    if (isXMLRPCError()) { // Don't do a XML-RPC call if a previous one failed
         return;
     }
 
@@ -321,22 +329,6 @@ function xmlCall($method, $params = null) {
 
     /* Return the result of the remote procedure call */
     return $xmlResponse;
-}
-
-/**
- *  @return 1 if an XMLRPC exception has been raised, else 0
- */
-function isXMLRPCError() {
-    global $errorStatus;
-    return $errorStatus;
-}
-
-/**
- * log a line into agent log
- */
-function agentLog($logline) {
-    $path = $_GET['module'].'/'.$_GET['submod'].'/'.$_GET['action'];
-    return xmlCall("log",array($_SERVER['SERVER_ADDR'],"PATH: $path\n".$logline."\n"));
 }
 
 /**
