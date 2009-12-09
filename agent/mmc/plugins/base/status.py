@@ -24,6 +24,8 @@
 Methods for the MMC status page.
 """
 
+from time import time
+
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.support.mmctools import shlaunchDeferred, ProcessScheduler
 
