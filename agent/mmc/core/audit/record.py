@@ -24,7 +24,10 @@
 Contains classes that define records for the audit system
 """
 
+import logging
+
 from sqlalchemy import *
+from sqlalchemy.orm import create_session
 from classes import *
 
 class AuditRecord:
@@ -87,7 +90,7 @@ class AuditRecordDB(AuditRecord):
     Class for objects that store an audit record into a database
     """
 
-    def __init__(self, parent, session, module, event, user, objects, param, initiator, source, current, previous):
+    def __init__(self, parent, module, event, user, objects, param, initiator, source, current, previous):
         """ 
         Insert New log in database 
         @param action: action name 
@@ -108,158 +111,169 @@ class AuditRecordDB(AuditRecord):
         @type agent: string
         """
         AuditRecord.__init__(self, module, event, user, objects, param, initiator, source, current, previous)
-        self.session = session
-        self.session.begin()
-        
-        # get module object from database
-        bdmodule = self.session.query(Module).filter(parent.module_table.c.name==module).first()
-        # insert module object in database if it is not available
-        if bdmodule == None:
-            bdmodule = Module()
-            bdmodule.name = module
-            self.session.save(bdmodule)
-            self.session.flush()
+        session = create_session()
+        session.begin()
+        try:        
+            # get module object from database
+            bdmodule = session.query(Module).filter(parent.module_table.c.name==module).first()
+            # insert module object in database if it is not available
+            if bdmodule == None:
+                bdmodule = Module()
+                bdmodule.name = module
+                session.save(bdmodule)
+                session.flush()
 
-        # get event object from database
-        bdevent = self.session.query(Event).filter(and_(parent.event_table.c.name == event, parent.event_table.c.module_id == bdmodule.id)).first()
-        # insert event object in database if it is not available
-        if bdevent == None:
-            bdevent = Event()
-            bdevent.module_id = bdmodule.id
-            bdevent.name = event
-            self.session.save(bdevent)
-            self.session.flush()
+            # get event object from database
+            bdevent = session.query(Event).filter(and_(parent.event_table.c.name == event, parent.event_table.c.module_id == bdmodule.id)).first()
+            # insert event object in database if it is not available
+            if bdevent == None:
+                bdevent = Event()
+                bdevent.module_id = bdmodule.id
+                bdevent.name = event
+                session.save(bdevent)
+                session.flush()
 
-        # get initiator object
-        bdinitiator = self.session.query(Initiator).filter(and_(parent.initiator_table.c.application == initiator[1], parent.initiator_table.c.hostname == initiator[0])).first()
-        # put it in database if it is not available
-        if bdinitiator == None:
-            bdinitiator = Initiator()
-            bdinitiator.application = initiator[1]
-            bdinitiator.hostname = initiator[0]
-            self.session.save(bdinitiator)
-            self.session.flush()
+            # get initiator object
+            bdinitiator = session.query(Initiator).filter(and_(parent.initiator_table.c.application == initiator[1], parent.initiator_table.c.hostname == initiator[0])).first()
+            # put it in database if it is not available
+            if bdinitiator == None:
+                bdinitiator = Initiator()
+                bdinitiator.application = initiator[1]
+                bdinitiator.hostname = initiator[0]
+                session.save(bdinitiator)
+                session.flush()
 
-        # get source object
-        bdsource = self.session.query(Source).filter(parent.source_table.c.hostname == source).first()
-        # put it in database if not available
-        if bdsource == None:
-            bdsource = Source()
-            bdsource.hostname = source
-            self.session.save(bdsource)
-            self.session.flush()
+            # get source object
+            bdsource = session.query(Source).filter(parent.source_table.c.hostname == source).first()
+            # put it in database if not available
+            if bdsource == None:
+                bdsource = Source()
+                bdsource.hostname = source
+                session.save(bdsource)
+                session.flush()
 
-        # get user type
-        utype = self.session.query(Type).filter(parent.type_table.c.type == 'USER').first()
-        if utype == None:
-            utype = Type()
-            utype.type = 'USER'
-            self.session.save(utype)
-            self.session.flush()
+            # get user type
+            utype = session.query(Type).filter(parent.type_table.c.type == 'USER').first()
+            if utype == None:
+                utype = Type()
+                utype.type = 'USER'
+                session.save(utype)
+                session.flush()
 
-        # get user object
-        bduser = self.session.query(Object).filter(and_(parent.object_table.c.uri == user, parent.object_table.c.type_id == utype.id)).first()
-        if bduser == None:
-            bduser = Object()
-            bduser.uri = user
-            bduser.type_id = utype.id
-            self.session.save(bduser)
-            self.session.flush()
+            # get user object
+            bduser = session.query(Object).filter(and_(parent.object_table.c.uri == user, parent.object_table.c.type_id == utype.id)).first()
+            if bduser == None:
+                bduser = Object()
+                bduser.uri = user
+                bduser.type_id = utype.id
+                session.save(bduser)
+                session.flush()
 
-        # Fill in record to emit
-        self.record = Record()
-        self.record.event_id = bdevent.id
-        self.record.module_id = bdmodule.id
-        self.record.source_id = bdsource.id
-        self.record.initiator_id = bdinitiator.id
-        self.record.user_id = bduser.id
-        # Set result status to undone
-        self.record.result = False
-        # Insert Object_Log
-        self.session.save(self.record)
-        self.session.flush()
-        
-        parentobj=None
-        if objects != None:
-            for i,j in objects:
-                #Get or Insert Type id of object
-                bdtype = self.session.query(Type).filter(parent.type_table.c.type==j).first()
-                if bdtype == None:
-                    bdtype = Type()
-                    bdtype.type = j
-                    self.session.save(bdtype)
-                    self.session.flush()
-                
-                # Object is not parent
-                # l'objet peut ne pas avoir de parent
-                obj = self.session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id)).first()
+            # Fill in record to emit
+            self.record = Record()
+            self.record.event_id = bdevent.id
+            self.record.module_id = bdmodule.id
+            self.record.source_id = bdsource.id
+            self.record.initiator_id = bdinitiator.id
+            self.record.user_id = bduser.id
+            # Set result status to undone
+            self.record.result = False
+            # Insert Object_Log
+            session.save(self.record)
+            session.flush()
 
-                if obj == None:          
-                    obj = Object()
-                    obj.uri = i
-                    obj.type_id = bdtype.id
-                    
-                    
-                    if bdtype.id == 2:
-                        obj.parent = None
-                    else:
-                        obj.parent = parentobj
-                    self.session.save(obj)
-                    self.session.flush()
-                #
-                # Insert in object_log table
-                #
-                
-                parentobj = obj.id
-                bdobjectlog = Object_Log()
-                bdobjectlog.object_id = obj.id
-                bdobjectlog.log_id = self.record.id
-                self.session.save(bdobjectlog)
-                self.session.flush()
-                # object type is attribute
-                if obj.type_id==2:
-                    bdobjectlogattr=bdobjectlog
-              
-        #insert current value
-        if current != None:
-            if type(current) == tuple or type(current) == list :
-                for i in current:            
-                     cv = Current_Value(bdobjectlogattr, i)
-                     self.session.save(cv)
-            else:
-                cv = Current_Value(bdobjectlogattr, current)
-                self.session.save(cv)
+            parentobj=None
+            if objects != None:
+                for i,j in objects:
+                    #Get or Insert Type id of object
+                    bdtype = session.query(Type).filter(parent.type_table.c.type==j).first()
+                    if bdtype == None:
+                        bdtype = Type()
+                        bdtype.type = j
+                        session.save(bdtype)
+                        session.flush()
 
-        #insert previous value        
-        if previous != None:
-            if type(previous) == tuple or type(previous) == list:
-                for i in previous:             
-                     pv = Previous_Value(bdobjectlogattr, i)
-                     self.session.save(pv)      
-            else:          
-                pv = Previous_Value(bdobjectlogattr, previous)
-                self.session.save(pv)  
+                    # Object is not parent
+                    # l'objet peut ne pas avoir de parent
+                    obj = session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id)).first()
 
-        # relations on log_parameters        
-        if param != None:
-            for i in param:
-                if type(i)==list:
-                    for j in i:
-                        p = Parameters(j, str(i[j]))
-                        self.record.param_log.append(p)
+                    if obj == None:          
+                        obj = Object()
+                        obj.uri = i
+                        obj.type_id = bdtype.id
+
+
+                        if bdtype.id == 2:
+                            obj.parent = None
+                        else:
+                            obj.parent = parentobj
+                        session.save(obj)
+                        session.flush()
+                    #
+                    # Insert in object_log table
+                    #
+
+                    parentobj = obj.id
+                    bdobjectlog = Object_Log()
+                    bdobjectlog.object_id = obj.id
+                    bdobjectlog.log_id = self.record.id
+                    session.save(bdobjectlog)
+                    session.flush()
+                    # object type is attribute
+                    if obj.type_id==2:
+                        bdobjectlogattr=bdobjectlog
+
+            #insert current value
+            if current != None:
+                if type(current) == tuple or type(current) == list :
+                    for i in current:            
+                         cv = Current_Value(bdobjectlogattr, i)
+                         session.save(cv)
                 else:
-                    p = Parameters(i, str(param[i]))
-                    self.record.param_log.append(p)
-        
-        self.session.save_or_update(self.record)
-        self.session.flush()
-        self.session.commit()
+                    cv = Current_Value(bdobjectlogattr, current)
+                    session.save(cv)
+
+            #insert previous value        
+            if previous != None:
+                if type(previous) == tuple or type(previous) == list:
+                    for i in previous:             
+                         pv = Previous_Value(bdobjectlogattr, i)
+                         session.save(pv)      
+                else:          
+                    pv = Previous_Value(bdobjectlogattr, previous)
+                    session.save(pv)  
+
+            # relations on log_parameters        
+            if param != None:
+                for i in param:
+                    if type(i)==list:
+                        for j in i:
+                            p = Parameters(j, str(i[j]))
+                            self.record.param_log.append(p)
+                    else:
+                        p = Parameters(i, str(param[i]))
+                        self.record.param_log.append(p)
+
+            session.save_or_update(self.record)
+            session.commit()
+        except:
+            session.rollback()
+            logging.getLogger().error("Error with the audit database connection")
+            raise
+        session.close()
         
     def commit(self):
         """
         Valid the log and set the result attribute to True if event succeeds
         """
         self.record.result = True
-        self.session.save_or_update(self.record)
-        self.session.flush()
-        self.session.close()
+        session = create_session()
+        session.begin()
+        try:            
+            session.save_or_update(self.record)
+            session.commit()
+        except:
+            session.rollback()
+            logging.getLogger().error("Error with the audit database connection")
+            raise
+        session.close()

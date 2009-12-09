@@ -241,8 +241,6 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @param parameters: list of parameters (get with the locals() builtin)
         @type parameters: dict of param
         """
-        
-        session = create_session()
         # Use context information for the log record
         try:
             user = context.userid
@@ -261,7 +259,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
             host = socket.getfqdn()
         initiator = (host, useragent)
         source = socket.getfqdn()
-        return AuditRecordDB(self, session, module, event, user, objects, parameters, initiator, source, current, previous)
+        return AuditRecordDB(self, module, event, user, objects, parameters, initiator, source, current, previous)
     
     def get(self, start, end, plug, user, type, date1, date2, object, action):
         """
@@ -289,7 +287,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @type action: string 
         """
         session = create_session()
-        return AuditReaderDB(self, session).getlog(start, end, plug, user, type, date1, date2, object, action)
+        return AuditReaderDB(self).getlog(start, end, plug, user, type, date1, date2, object, action)
         
     def getById(self, id):
         """
