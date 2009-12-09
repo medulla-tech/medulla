@@ -24,7 +24,7 @@
 from mmc.support.errorObj import errorMessage
 from mmc.support.config import *
 from mmc.plugins.base.config import BasePluginConfig
-from time import time, strftime
+from time import strftime
 from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager

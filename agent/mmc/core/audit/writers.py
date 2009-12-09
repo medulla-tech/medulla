@@ -32,7 +32,6 @@ import logging
 
 # SqlAlchemy
 from sqlalchemy import *
-from sqlalchemy import exceptions
 from sqlalchemy.orm import *
 
 from mmc.core.audit.classes import *

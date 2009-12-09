@@ -20,11 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
-
-from mmc.support.mmctools import Singleton
 from sqlalchemy import *
-from sqlalchemy.ext.selectresults import SelectResults
 from classes import *
 
 class AuditReaderDB:

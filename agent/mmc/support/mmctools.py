@@ -32,7 +32,6 @@ import re
 from new import instancemethod
 from time import time, struct_time
 import datetime
-from mmc.support.mmcException import mmcException
 import logging
 from twisted.internet import protocol
 
