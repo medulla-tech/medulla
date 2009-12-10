@@ -27,7 +27,7 @@
 # with a semaphore
 
 # logging stuff
-import logging
+#MDV/NR import logging
 
 # randomization
 import random

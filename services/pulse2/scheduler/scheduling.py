@@ -679,8 +679,6 @@ def sortCommands(commands_to_perform):
     """
 
     def _cb(result, tocome_distribution):
-        #MDV/NR deffereds = [] # will hold all deferred
-
         ids_list = [] # will contain the IDs from commands to run
         # list is pre-filled in case of something goes wrong below
         for ids in tocome_distribution.values():
@@ -688,7 +686,6 @@ def sortCommands(commands_to_perform):
 
         if len(ids_list) == 0:
             logging.getLogger().info('scheduler "%s": START: Starting no command' % (SchedulerConfig().name))
-            #MDV/NR return deffereds
             return True
 
         logging.getLogger().debug("scheduler %s: START: Sorting the following commands: %s" % (SchedulerConfig().name, ids_list))
@@ -875,6 +872,20 @@ def fixProcessingTasks(scheduler_name):
     logging.getLogger().debug('scheduler "%s": FPT: Starting analysis' % scheduler_name)
     # using lambda as deferToThread do not accept DeferredList
     return twisted.internet.threads.deferToThread(lambda woot: woot, scheduler_name).addCallback(getRunningCommandsOnHostFromLaunchers).addCallback(stopCommandsOnHosts)
+
+def preemptTasks(scheduler_name):
+    deffereds = list()
+    commands = Pulse2Preempt().get(SchedulerConfig().preempt_amount)
+    if len(commands) :
+        logging.getLogger().debug('scheduler "%s": PREEMPT/START: Starting preemption for %d commands' % (scheduler_name, len(commands)))
+        for command in commands :
+            deffered = twisted.internet.defer.Deferred()
+            deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
+            deffered.addErrback(lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, reason.value)))
+            deffered.callback(command)
+            deffereds.append(deffered)
+
+    return twisted.internet.defer.DeferredList(deffereds, consumeErrors = True) # deferred handling; consumeErrors set to prevent any unhandled exception
 
 def cleanStatesAllRunningIds(ids):
     """

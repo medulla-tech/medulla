@@ -22,8 +22,7 @@
 # MA 02110-1301, USA.
 
 # Misc
-import ConfigParser
-import re           # fo re.compil
+import re           # for re.compil
 import pwd          # for getpwnam
 import grp          # for getgrpnam
 import string       # for atoi
@@ -74,14 +73,18 @@ class SchedulerConfig(pulse2.utils.Singleton):
     active_analyse_hour = False # inactive by default
     announce_check = dict()
     awake_time = 600
+    checkstatus_period = 900
     clean_states_time = 3600
     active_clean_states =  '' # possible states are : stop run
     cacert = "/etc/mmc/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'
     enablessl = True
+    incertitude_factor = .2
+    initial_wait = 2
     localcert = "/etc/mmc/pulse2/scheduler/keys/privkey.pem"
     lock_processed_commands = False
+    loghealth_period = 60
     host = "127.0.0.1"
     max_command_time = 3600
     max_slots = 300
@@ -90,8 +93,8 @@ class SchedulerConfig(pulse2.utils.Singleton):
     mg_assign_algo = 'default'
     mode = 'async'
     password = 'password'
-    preempt_start_number = 50
-    preempt_start_delay = 1
+    preempt_amount = 50
+    preempt_period = 1
     port = 8000
     resolv_order = ['fqdn', 'netbios', 'hosts', 'ip']
     scheduler_path = '/usr/sbin/pulse2-scheduler'
@@ -165,8 +168,12 @@ class SchedulerConfig(pulse2.utils.Singleton):
         self.name = self.cp.get("scheduler", "id")
 
         self.setoption("scheduler", "awake_time", "awake_time", 'int')
-        self.setoption("scheduler", "preempt_start_number", "preempt_start_number", 'int')
-        self.setoption("scheduler", "preempt_start_delay", "preempt_start_delay", 'int')
+        self.setoption("scheduler", "initial_wait", "initial_wait", 'int')
+        self.setoption("scheduler", "preempt_amount", "preempt_amount", 'int')
+        self.setoption("scheduler", "preempt_period", "preempt_period", 'int')
+        self.setoption("scheduler", "checkstatus_period", "checkstatus_period", 'int')
+        self.setoption("scheduler", "loghealth_period", "loghealth_period", 'int')
+        self.setoption("scheduler", "incertitude_factor", "incertitude_factor", 'float')
 
         self.setoption("scheduler", "analyse_hour", "analyse_hour")
         if len(self.analyse_hour) == 0: # no option given

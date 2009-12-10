@@ -29,6 +29,7 @@ import sys
 import optparse
 import xmlrpclib
 import time
+import random
 
 # Twisted
 from twisted.internet import epollreactor
@@ -58,7 +59,7 @@ from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
-from pulse2.scheduler.health import getHealth
+from pulse2.scheduler.health import getHealth, checkStatus
 from pulse2.utils import xmlrpcCleanup
 
 import pulse2.xmlrpc
@@ -71,19 +72,21 @@ from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 
 VERSION = "1.3.0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
-CB_STARTUP_DELAY = 2
-LOG_STATS_DELAY = 60
-
-SchedulerConfig().preempt_start_delay = 1
-SchedulerConfig().preempt_start_number = 50
 
 def getVersion():  return VERSION
 def getRevision(): return REVISION
 
+def get_next_delay(base, subject_to_incertitude = False):
+    ret = base                  # next delay in "base" seconds,
+    ret -= time.time() % base   # rounded to the lower (second modulo base)
+    if subject_to_incertitude : # if we have to had some randomness, do it
+        ret += random.random() * SchedulerConfig().incertitude_factor * base
+    return ret
+
 def start_all_callbacks():
     logger = logging.getLogger()
-    logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, CB_STARTUP_DELAY))
-    time.sleep(CB_STARTUP_DELAY)
+    logger.info('scheduler "%s": will start to run callbacks in %d seconds' % (SchedulerConfig().name, SchedulerConfig().initial_wait))
+    time.sleep(SchedulerConfig().initial_wait)
     scheduleStartCommands()
     scheduleStopCommands()
     if SchedulerConfig().active_analyse_hour:
@@ -94,6 +97,7 @@ def start_all_callbacks():
         scheduleFixProcessingTasks()
     scheduleLogStats()
     schedulePreemptStartedCommands()
+    scheduleCheckStatus()
     logger.info('scheduler "%s": all callbacks started' % (SchedulerConfig().name))
 
 def scheduleAnalyseCommands():
@@ -110,36 +114,41 @@ def scheduleAnalyseCommands():
     else: # will awake tomorrow
         analyse_commands_in = hour_tomorrow - now
 
-    logging.getLogger().info('scheduler "%s": ANALYSE: Sleeping for %d hour %d min %d sec' % (SchedulerConfig().name, int(analyse_commands_in/3600), int(analyse_commands_in/60) % 60, int(analyse_commands_in % 60)))
+    logging.getLogger().info('scheduler "%s": ANALYSE: Sleeping' % (SchedulerConfig().name))
     twisted.internet.reactor.callLater(analyse_commands_in, awakeAnalyseCommands)
 
 def scheduleStartCommands():
     """ periodicaly starts commands """
-    start_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     logging.getLogger().info('scheduler "%s": START: Sleeping' % (SchedulerConfig().name)),
-    twisted.internet.reactor.callLater(start_commands_in, awakeStartCommands)
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().awake_time), awakeStartCommands)
 
 def scheduleStopCommands():
     """ periodicaly stop commands (elapsed, etc ...) """
-    stop_commands_in = SchedulerConfig().awake_time - time.time() % SchedulerConfig().awake_time
     logging.getLogger().info('scheduler "%s": STOP: Sleeping' % (SchedulerConfig().name)),
-    twisted.internet.reactor.callLater(stop_commands_in, awakeStopCommands)
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().awake_time), awakeStopCommands)
 
 def scheduleFixUnprocessedTasks():
     """ periodicaly see if running tasks (according to the DB) are still running """
-    fix_unprocessed_tasks_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
     logging.getLogger().info('scheduler "%s": FUT: Sleeping' % (SchedulerConfig().name))
-    twisted.internet.reactor.callLater(fix_unprocessed_tasks_in, awakeFixUnprocessedTasks)
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().clean_states_time, True), awakeFixUnprocessedTasks)
 
 def scheduleFixProcessingTasks():
     """ periodicaly see if not running tasks (according to the DB) are still running """
-    fix_processing_tasks_in = SchedulerConfig().clean_states_time - time.time() % SchedulerConfig().clean_states_time
     logging.getLogger().info('scheduler "%s": FPT: Sleeping' % (SchedulerConfig().name))
-    twisted.internet.reactor.callLater(fix_processing_tasks_in, awakeFixProcessingTasks)
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().clean_states_time, True), awakeFixProcessingTasks)
 
 def schedulePreemptStartedCommands():
     """ periodicaly run commands marked to be run """
-    twisted.internet.reactor.callLater(SchedulerConfig().preempt_start_delay, awakePreemptStartedCommands)
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().preempt_period), awakePreemptStartedCommands)
+
+def scheduleLogStats():
+    """ periodicaly log stats """
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().loghealth_period), awakeLogStats)
+
+def scheduleCheckStatus():
+    """ periodicaly check our status stats """
+    logging.getLogger().info('scheduler "%s": CHECK: Sleeping' % (SchedulerConfig().name)),
+    twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().checkstatus_period, True), awakeCheckStatus)
 
 def awakeAnalyseCommands():
     logging.getLogger().info('scheduler "%s": ANALYSE: Analysing database' % (SchedulerConfig().name))
@@ -149,7 +158,7 @@ def awakeAnalyseCommands():
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": ANALYSE: Finished analysing database' % (SchedulerConfig().name)),
         lambda reason: logging.getLogger().error('scheduler "%s": ANALYSE: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
-    ).addCallback( # loop scheduling
+    ).addBoth( # loop scheduling
         lambda nothing : scheduleAnalyseCommands() # lambda used to "silently" intercept return arg
     )
 
@@ -159,7 +168,7 @@ def awakeStartCommands():
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": START: Finished analysing database' % (SchedulerConfig().name)),
         lambda reason: logging.getLogger().error('scheduler "%s": START: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
-    ).addCallback( # loop scheduling
+    ).addBoth( # loop scheduling
         lambda nothing : scheduleStartCommands() # lambda used to "silently" intercept return arg
     )
 
@@ -171,7 +180,7 @@ def awakeStopCommands():
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": STOP: Finished analysing database' % (SchedulerConfig().name)),
         lambda reason: logging.getLogger().error('scheduler "%s": STOP: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
-    ).addCallback( # loop scheduling
+    ).addBoth( # loop scheduling
         lambda nothing : scheduleStopCommands() # lambda used to "silently" intercept return arg
     )
 
@@ -183,7 +192,7 @@ def awakeFixUnprocessedTasks():
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FUT: Finished analysing database' % (SchedulerConfig().name)),
         lambda reason: logging.getLogger().error('scheduler "%s": FUT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
-    ).addCallback( # loop scheduling
+    ).addBoth( # loop scheduling
         lambda nothing : scheduleFixUnprocessedTasks() # lambda used to "silently" intercept return arg
     )
            
@@ -195,40 +204,28 @@ def awakeFixProcessingTasks():
     ).addCallbacks( # deferred handling
         lambda result: logging.getLogger().info('scheduler "%s": FPT: Finished analysing database' % (SchedulerConfig().name)),
         lambda reason: logging.getLogger().error('scheduler "%s": FPT: While analysing database : %s'  % (SchedulerConfig().name, reason.value))
-    ).addCallback( # loop scheduling
+    ).addBoth( # loop scheduling
         lambda nothing : scheduleFixProcessingTasks()
     )
 
 def awakePreemptStartedCommands():
+    pulse2.scheduler.scheduling.preemptTasks(SchedulerConfig().name
+    # everything got commented out : logging is useless, it would burn space for nothing; see logging in preemptTasks
+    #MDV/NR ).addCallbacks( # deferred handling
+        #MDV/NR lambda result: logging.getLogger().info('scheduler "%s": PREEMPT/START: Finished preempting' % (SchedulerConfig().name)),
+        #MDV/NR lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While preempting : %s'  % (SchedulerConfig().name, reason.value))
+    ).addBoth( # loop scheduling
+        lambda nothing : schedulePreemptStartedCommands() # lambda used to "silently" intercept return arg
+    )
 
-    deffereds = list()
-    for i in Pulse2Preempt().get(SchedulerConfig().preempt_start_number) :
-        try :
-            deffered = pulse2.scheduler.scheduling.runCommand(i)
-            if deffered:
-                deffereds.append(deffered)
-        except Exception, e:
-            logging.getLogger().error('scheduler "%s": PREEMPT/START: While running commands %s : %s' % (SchedulerConfig().name, i, e))
-
-    if len(deffereds):
-        dl = twisted.internet.defer.DeferredList(deffereds)
-        dl.addCallbacks( # deferred handling
-            lambda result: logging.getLogger().info('scheduler "%s": PREEMPT/START: Finished %d commands' % (SchedulerConfig().name, len(deffereds))),
-            lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running %d commands : %s'  % (SchedulerConfig().name, reason.value, len(deffereds)))
-        ).addCallback( # loop scheduling
-            lambda nothing : schedulePreemptStartedCommands() # lambda used to "silently" intercept return arg
-        )
-    else:
-        schedulePreemptStartedCommands()
-
-def scheduleLogStats():
-    """ periodicaly log stats """
-    delay = LOG_STATS_DELAY - time.time() % LOG_STATS_DELAY
-    twisted.internet.reactor.callLater(delay, logStats)
-
-def logStats():
+def awakeLogStats():
     logging.getLogger().info('scheduler %s: HEALTH: %s' % (SchedulerConfig().name, getHealth()))
     scheduleLogStats()
+
+def awakeCheckStatus():
+    logging.getLogger().info('scheduler %s: CHECK: Starting' % (SchedulerConfig().name))
+    checkStatus()
+    scheduleCheckStatus()
 
 def startService():
     logger = logging.getLogger()

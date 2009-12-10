@@ -26,7 +26,6 @@
     Pulse2 PackageServer
 """
 
-import random
 from pulse2.scheduler.assign_algo import MGAssignAlgo
 
 class MGUserAssignAlgo(MGAssignAlgo):

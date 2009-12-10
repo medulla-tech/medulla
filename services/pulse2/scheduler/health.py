@@ -25,14 +25,17 @@
     Give stats on-the-fly
 """
 
+import logging
+
 from pulse2.health import basicHealth
 from pulse2.database.msc import MscDatabase
+from pulse2.scheduler.config import SchedulerConfig
 
 def getHealth():
     # take basic informations
     health = basicHealth()
     try:
-        # Also add data about the current database connections pool
+        # add data about the current database connections pool
         pool = MscDatabase().db.pool
         health['db'] = { 'poolsize' : str(pool.size()),
                          'checkedinconns' : str(pool.checkedin()),
@@ -40,6 +43,21 @@ def getHealth():
                          'checkedoutconns': str(pool.checkedout()),
                          'recycle' : str(pool._recycle) }
     except Exception, e:
-        # Should never fail
+        logging.getLogger().warn('scheduler %s: HEALTH: got the following error : %s' % (SchedulerConfig().name, e))
         pass
     return health
+
+def checkPool():
+    health = getHealth()
+    try :
+        pool = MscDatabase().db.pool
+        if pool._max_overflow > -1 and pool._overflow >= pool._max_overflow :
+            logging.getLogger().warn('scheduler %s: CHECK: overflow detected in SQL pool (current = %d, max = %d), disposing and recreating pool' % (SchedulerConfig().name, pool._overflow, pool._max_overflow))
+            pool.dispose()
+            pool = pool.recreate()
+    except Exception, e:
+        logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))
+        pass
+
+def checkStatus():
+    checkPool()
