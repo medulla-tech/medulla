@@ -17,13 +17,45 @@
     </copyright>
     <revhistory>
       <revision>
+        <revnumber>1.2.5</revnumber>
+        <date>2009-12-10</date>
+        <authorinitials>NR</authorinitials>
+        <revdescription>
+          <itemizedlist>
+            <listitem>
+              <para>New Pulse 2 Release, introducing the following options :</para>
+              <itemizedlist>
+                <listitem>
+                  <para>incertitude_factor</para>
+                </listitem>
+                <listitem>
+                  <para>checkstatus_period</para>
+                </listitem>
+                <listitem>
+                  <para>initial_wait</para>
+                </listitem>
+                <listitem>
+                  <para>loghealth_period</para>
+                </listitem>
+                <listitem>
+                  <para>preempt_period</para>
+                </listitem>
+                <listitem>
+                  <para>preempt_amount</para>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+          </itemizedlist>
+        </revdescription>
+      </revision>
+      <revision>
         <revnumber>1.2.4</revnumber>
         <date>2009-10-07</date>
         <authorinitials>NR</authorinitials>
         <revdescription>
           <itemizedlist>
             <listitem>
-              <para>New Pulse 2 Release, introducing the following options : </para>
+              <para>New Pulse 2 Release, introducing the following options :</para>
               <itemizedlist>
                 <listitem>
                   <para>analyse_hour</para>
@@ -171,7 +203,7 @@ option2 = plop</screen></para>
           </row>
           <row>
             <entry>analyse_hour</entry>
-            <entry>Once per day, at "analyse_hour" hour (HH:MM:SS), the scheduler will analyse the database, looking to weird / broken commands; set to empty to disable analyse </entry>
+            <entry>Once per day, at "analyse_hour" hour (HH:MM:SS), the scheduler will analyse the database, looking to weird / broken commands; set to empty to disable analyse</entry>
             <entry>yes</entry>
             <entry>HH:MM:SS</entry>
             <entry>"" (disabled)</entry>
@@ -212,6 +244,13 @@ option2 = plop</screen></para>
             <entry></entry>
           </row>
           <row>
+            <entry>checkstatus_period</entry>
+            <entry>The period of the loop in charge of checking the scheduler health</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>900 (15 minutes)</entry>
+          </row>
+          <row>
             <entry>dbencoding</entry>
             <entry>The encoding to use when injecting logs into the MSC database.</entry>
             <entry>yes</entry>
@@ -224,6 +263,20 @@ option2 = plop</screen></para>
             <entry>yes</entry>
             <entry>boolean</entry>
             <entry>True</entry>
+          </row>
+          <row>
+            <entry>initial_wait</entry>
+            <entry>The amount of seconds to wait for the system to be stabilized when starting.</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>2 (seconds)</entry>
+          </row>
+          <row>
+            <entry>initial_wait</entry>
+            <entry>Add a little randomness to some loops<para>default value is .2, ie +/- 20 %</para></entry>
+            <entry>yes</entry>
+            <entry>float</entry>
+            <entry>.2</entry>
           </row>
           <row>
             <entry>localcert</entry>
@@ -245,6 +298,13 @@ option2 = plop</screen></para>
             <entry>yes</entry>
             <entry>boolean</entry>
             <entry>False</entry>
+          </row>
+          <row>
+            <entry>loghealth_period</entry>
+            <entry>The period of the loop in charge of logging the scheduler health</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>60 (1 minute)</entry>
           </row>
           <row>
             <entry>max_command_time</entry>
@@ -301,6 +361,20 @@ option2 = plop</screen></para>
             <entry>yes</entry>
             <entry>int</entry>
             <entry>8000</entry>
+          </row>
+          <row>
+            <entry>preempt_amount</entry>
+            <entry>Starting with version 1.2.5, the scheduler will perform this amount of command at a time.</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>50</entry>
+          </row>
+          <row>
+            <entry>preempt_period</entry>
+            <entry>Starting with version 1.2.5, the scheduler will periodicaly perform commands, using this period.</entry>
+            <entry>yes</entry>
+            <entry>int</entry>
+            <entry>1</entry>
           </row>
           <row>
             <entry>resolv_order</entry>
