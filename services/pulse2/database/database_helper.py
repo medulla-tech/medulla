@@ -24,6 +24,8 @@
 
 from pulse2.utils import Singleton
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
+from sqlalchemy.exceptions import SQLError
+
 import logging
 NB_DB_CONN_TRY = 2
 SA_MAJOR = 0
@@ -48,7 +50,7 @@ class DatabaseHelper(Singleton):
             return False
 
         return True
-    
+
     def connected(self):
         try:
             if self.db != None:
@@ -102,7 +104,7 @@ class DatabaseHelper(Singleton):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except exceptions.SQLError, e:
+            except SQLError, e:
                 self.logger.error(e)
             except Exception, e:
                 self.logger.error(e)
