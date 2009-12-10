@@ -22,7 +22,6 @@
 # MA 02110-1301, USA.
 
 import md5
-import logging
 
 from pulse2.launcher.config import LauncherConfig
 

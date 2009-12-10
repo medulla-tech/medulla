@@ -275,8 +275,6 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
     def xmlrpc_sync_remote_halt(self, command_id, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_halt(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
-    def xmlrpc_sync_remote_wol(self, client, command, timeout = None):
-        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_wol(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
 
     # Asynchrone commands summoning
     def xmlrpc_async_remote_push(self, command_id, client, files_list, timeout = None):

@@ -34,8 +34,6 @@
 import os
 import os.path
 import sys
-import ConfigParser
-import re
 import logging
 import logging.config
 import optparse

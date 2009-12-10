@@ -47,7 +47,6 @@ import twisted.python.usage
 import twisted.internet.reactor
 import twisted.web.xmlrpc
 import sys
-import time
 
 class Options(twisted.python.usage.Options):
 

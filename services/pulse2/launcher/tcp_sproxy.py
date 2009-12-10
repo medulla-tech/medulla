@@ -23,7 +23,6 @@
 # MA 02110-1301, USA.
 
 import logging
-import time
 import re
 
 import twisted.internet.reactor

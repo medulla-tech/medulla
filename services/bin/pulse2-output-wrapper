@@ -65,7 +65,8 @@ import os
 import signal
 import re
 
-from pulse2.consts import *
+from pulse2.consts import PULSE2_WRAPPER_ERROR_FAILURE, PULSE2_WRAPPER_ERROR_SIGNAL_BASE, PULSE2_WRAPPER_ERROR_PRECHECK, PULSE2_WRAPPER_ERROR_PRECHECK_BASE, PULSE2_WRAPPER_ERROR_PRECHECK_TABLE
+from pulse2.consts import PULSE2_WRAPPER_ARG_SEPARATOR_STR
 
 class ExitCode(object): # the only way I found to exit with the right exit code
     value = PULSE2_WRAPPER_ERROR_SIGNAL_BASE + signal.SIGKILL # prepare to be killed with SIGKILL

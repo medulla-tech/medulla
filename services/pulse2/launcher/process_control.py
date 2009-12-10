@@ -22,7 +22,6 @@
 # MA 02110-1301, USA.
 
 # classical Python modules
-import os
 import time
 import signal
 import logging
@@ -36,7 +35,7 @@ import twisted.internet.protocol
 # Others Pulse2 Stuff
 import pulse2.utils
 from pulse2.launcher.config import LauncherConfig
-from pulse2.consts import *
+from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
 def commandRunner(cmd, cbCommandEnd):
     """

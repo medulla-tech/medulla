@@ -39,7 +39,7 @@ import pulse2.launcher.process_control
 import pulse2.launcher.utils
 from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.xmlrpc import getProxy
-from pulse2.consts import *
+from pulse2.consts import PULSE2_WRAPPER_ARG_SEPARATOR
 
 def sync_remote_push(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, sync mode """
