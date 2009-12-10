@@ -59,7 +59,7 @@ from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.xmlrpc import SchedulerSite
 from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.assign_algo import MGAssignAlgoManager
-from pulse2.scheduler.health import getHealth, checkStatus
+from pulse2.scheduler.health import getHealth, checkStatus, startLoopTS, stopLoopTS, logLoopTS, preemptLoopTS
 from pulse2.utils import xmlrpcCleanup
 
 import pulse2.xmlrpc
@@ -119,12 +119,14 @@ def scheduleAnalyseCommands():
 
 def scheduleStartCommands():
     """ periodicaly starts commands """
-    logging.getLogger().info('scheduler "%s": START: Sleeping' % (SchedulerConfig().name)),
+    logging.getLogger().info('scheduler "%s": START: Sleeping' % (SchedulerConfig().name))
+    startLoopTS.touch()
     twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().awake_time), awakeStartCommands)
 
 def scheduleStopCommands():
     """ periodicaly stop commands (elapsed, etc ...) """
-    logging.getLogger().info('scheduler "%s": STOP: Sleeping' % (SchedulerConfig().name)),
+    logging.getLogger().info('scheduler "%s": STOP: Sleeping' % (SchedulerConfig().name))
+    stopLoopTS.touch()
     twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().awake_time), awakeStopCommands)
 
 def scheduleFixUnprocessedTasks():
@@ -139,10 +141,12 @@ def scheduleFixProcessingTasks():
 
 def schedulePreemptStartedCommands():
     """ periodicaly run commands marked to be run """
+    preemptLoopTS.touch()
     twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().preempt_period), awakePreemptStartedCommands)
 
 def scheduleLogStats():
     """ periodicaly log stats """
+    logLoopTS.touch()
     twisted.internet.reactor.callLater(get_next_delay(SchedulerConfig().loghealth_period), awakeLogStats)
 
 def scheduleCheckStatus():
@@ -414,7 +418,7 @@ class Scheduler(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_pubkey(self, launcher, key_name):
         return xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
     def xmlrpc_remote_exec(self, launcher, path):
-        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, key_name))
+        return xmlrpcCleanup(pulse2.scheduler.launchers_driving.getPubKey(launcher, path))
     def xmlrpc_get_health(self):
         return xmlrpcCleanup(getHealth())
 

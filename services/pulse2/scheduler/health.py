@@ -26,10 +26,27 @@
 """
 
 import logging
-
+import time
 from pulse2.health import basicHealth
 from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.config import SchedulerConfig
+
+"""
+    global vars to hold past timestamps, used by checkLoops()
+"""
+class SchedulerTimestamp:
+    ts = 0
+    def __init__(self):
+        self.touch()
+    def touch(self):
+        self.ts = time.time()
+    def delta(self):
+        return time.time() - self.ts
+
+startLoopTS = SchedulerTimestamp()
+stopLoopTS = SchedulerTimestamp()
+logLoopTS = SchedulerTimestamp()
+preemptLoopTS = SchedulerTimestamp()
 
 def getHealth():
     # take basic informations
@@ -59,5 +76,23 @@ def checkPool():
         logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))
         pass
 
+
+def checkLoops():
+    try :
+        if startLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 start iteration were missed
+            logging.getLogger().warn('scheduler %s: CHECK: missed more than 3 start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+        if stopLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 stop iteration were missed
+            logging.getLogger().warn('scheduler %s: CHECK: missed more than 3 stop loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+        if preemptLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no preempt was done in awake-time interval
+            logging.getLogger().warn('scheduler %s: CHECK: no preempt was some since the last start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+        if logLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no log was done in awake-time interval
+            logging.getLogger().warn('scheduler %s: CHECK: no logging was some since the last start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+
+    except Exception, e:
+        logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))
+        pass
+
+
 def checkStatus():
     checkPool()
+    checkLoops()
