@@ -28,6 +28,7 @@ import dircache
 from mmc.plugins.msc.config import MscConfig
 
 class Qaction:
+    keywords = ['command', 'titlefr', 'titleuk']
     def __init__(self, filename):
         self.logger = logging.getLogger()
         self.filename = filename
@@ -54,7 +55,10 @@ class Qaction:
             kw = p1.split(line)
             if len(kw) == 2:
                 self.result[kw[0]] = kw[1]
-                
+            elif len(kw) >= 3 and kw[0] in self.keywords:
+                ind = kw[0]
+                kw.remove(ind)
+                self.result[ind] = '='.join(kw)
     
         f.close()
 
