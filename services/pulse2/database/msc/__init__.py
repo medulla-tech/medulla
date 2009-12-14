@@ -31,9 +31,10 @@ import os.path
 from sqlalchemy import *
 from sqlalchemy import exceptions
 from sqlalchemy.orm import *
-from sqlalchemy.exceptions import NoSuchTableError
+from sqlalchemy.exceptions import NoSuchTableError, TimeoutError
 
 from twisted.internet import defer
+from twisted.python import failure
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -961,3 +962,17 @@ class MscDatabase(DatabaseHelper):
 
         # coh.uploaded, coh.executed, coh.deleted
 
+    def antiPoolOverflowErrorback(self, reason):
+        """
+            an erroback, with handle QueuePool error-like by :
+            - intercepting all exception
+            - trap only SA "TimeoutError" Exceptions
+            - if exception identified as TimeoutError, recreate pool
+            - then raise the error anew
+        """
+        reason.trap(TimeoutError)
+        if self.db.pool._max_overflow > -1 and self.db.pool._overflow >= self.db.pool._max_overflow :
+            logging.getLogger().error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
+            self.db.pool.dispose()
+            self.db.pool = self.db.pool.recreate()
+        return reason
