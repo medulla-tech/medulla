@@ -69,7 +69,7 @@ def checkPool():
     try :
         pool = MscDatabase().db.pool
         if pool._max_overflow > -1 and pool._overflow >= pool._max_overflow :
-            logging.getLogger().warn('scheduler %s: CHECK: overflow detected in SQL pool (current = %d, max = %d), disposing and recreating pool' % (SchedulerConfig().name, pool._overflow, pool._max_overflow))
+            logging.getLogger().error('scheduler %s: CHECK: Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (SchedulerConfig().name, pool._overflow, pool._max_overflow))
             pool.dispose()
             pool = pool.recreate()
     except Exception, e:
