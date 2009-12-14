@@ -80,13 +80,13 @@ def checkPool():
 def checkLoops():
     try :
         if startLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 start iteration were missed
-            logging.getLogger().warn('scheduler %s: CHECK: missed more than 3 start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: CHECK: Seems the START loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
         if stopLoopTS.delta() > 3 * SchedulerConfig().awake_time: # sounds the alarm if more than 3 stop iteration were missed
-            logging.getLogger().warn('scheduler %s: CHECK: missed more than 3 stop loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: CHECK: Seems the STOP loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
         if preemptLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no preempt was done in awake-time interval
-            logging.getLogger().warn('scheduler %s: CHECK: no preempt was some since the last start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: Seems the PREEMPT loop is running into trouble; this may be due to load / network issue; please check your network environment !' % (SchedulerConfig().name))
         if logLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no log was done in awake-time interval
-            logging.getLogger().warn('scheduler %s: CHECK: no logging was some since the last start loop iteration, consider this scheduler as dead' % (SchedulerConfig().name))
+            logging.getLogger().warn('scheduler %s: Seems the HEALTH loop is running into trouble; this may be due to load issue; please check your scheduler settings !' % (SchedulerConfig().name))
 
     except Exception, e:
         logging.getLogger().warn('scheduler %s: CHECK: got the following error : %s' % (SchedulerConfig().name, e))

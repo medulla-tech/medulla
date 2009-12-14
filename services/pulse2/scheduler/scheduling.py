@@ -30,7 +30,6 @@ import random
 import datetime
 
 import sqlalchemy
-import sqlalchemy.orm
 
 # Twisted modules
 import twisted.internet
@@ -881,6 +880,7 @@ def preemptTasks(scheduler_name):
         for command in commands :
             deffered = twisted.internet.defer.Deferred()
             deffered.addCallback(pulse2.scheduler.scheduling.runCommand)
+            deffered.addErrback(MscDatabase().antiPoolOverflowErrorback)
             deffered.addErrback(lambda reason: logging.getLogger().error('scheduler "%s": PREEMPT/START: While running command %s : %s'  % (SchedulerConfig().name, command, reason.value)))
             deffered.callback(command)
             deffereds.append(deffered)
@@ -2504,3 +2504,4 @@ def getServerCheck(myT):
         'ips': myT.getIps(),
         'macs': myT.getMacs()
     });
+
