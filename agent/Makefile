@@ -103,9 +103,14 @@ docs:
 pyflakes:
 	pyflakes . bin/mmc-agent
 
+# This target contains the test suite for MMC core
 test:
-	mkdir tmp
-	PYTHONPATH=. python tests/testldap.py
-	PYTHONPATH=. python tests/testsamba.py
-	PYTHONPATH=. python tests/testproxy.py
-	PYTHONPATH=. python tests/testmail.py
+	PATH=$(PATH):bin/ python tests/mmc-password-helper-test.py
+
+# This target is a convenient way to start MMC core and MDS test suites
+test-mds: test
+	mkdir -p tmp
+	PYTHONPATH=. python tests-mds/testldap.py
+	PYTHONPATH=. python tests-mds/testsamba.py
+	PYTHONPATH=. python tests-mds/testproxy.py
+	PYTHONPATH=. python tests-mds/testmail.py
