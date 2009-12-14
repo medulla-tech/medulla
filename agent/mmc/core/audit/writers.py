@@ -167,12 +167,25 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Allow to perform special operations on the audit database
 
-        if op == 'dropdb', drop all tables.
-        if op == 'initdb', initialize the audit database.
-        if op == 'checkdb', check that the database version is correct.
+        if op == 'drop', print the string to use to drop the database.
+        if op == 'droptables', drop all tables.
+        if op == 'create', print the string to use to create the database.
+        if op == 'init', initialize the audit database tables.
+        if op == 'check', check that the database version is correct.
         """
         self.connect()
-        if op == 'dropdb':
+        if op == 'drop':
+            if self.config.auditdbdriver == 'mysql':
+                print '-- Execute the following lines into the MySQL client'
+                print 'DROP DATABASE IF EXISTS %s;' % self.config.auditdbname
+                print "DROP USER '%s'@localhost;" % self.config.auditdbuser
+            elif self.config.auditdbdriver == 'postgres':
+                # FIXME: Do it for PostgreSQL too
+                print 'Not yet implemented'
+            else:
+                self.logger.error("SQL driver '%s' is not supported" % self.config.auditdbdriver)
+                return False
+        elif op == 'droptables':
             if not self.databaseExists():
                 self.logger.error('Database does not exist')
                 return False
@@ -182,7 +195,19 @@ class AuditWriterDB(Singleton, AuditWriterI):
             self.logger.info('Dropping audit tables as requested')
             self.metadata.drop_all()
             self.logger.info('Done')
-        elif op == 'initdb':
+        elif op == 'create':
+            if self.config.auditdbdriver == 'mysql':
+                print '-- Execute the following lines into the MySQL client'
+                print 'CREATE DATABASE %s DEFAULT CHARSET utf8;' % self.config.auditdbname
+                print "GRANT ALL PRIVILEGES ON %s.* TO '%s'@localhost IDENTIFIED BY '%s';" % (self.config.auditdbname, self.config.auditdbuser, self.config.auditdbpassword)
+                print 'FLUSH PRIVILEGES;'
+            elif self.config.auditdbdriver == 'postgres':
+                # FIXME: Do it for PostgreSQL too
+                print 'Not yet implemented'
+            else:
+                self.logger.error("SQL driver '%s' is not supported" % self.config.auditdbdriver)
+                return False
+        elif op == 'init':
             if self.databaseExists():
                 self.logger.error('Database already exist')
                 return False
@@ -194,7 +219,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
             self._populateTables()
             self._updateDatabaseVersion()
             self.logger.info('Done')
-        elif op == 'checkdb':
+        elif op == 'check':
             ret = False
             if self.databaseExists():
                 version = self.getCurrentVersion()
@@ -208,10 +233,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 else:
                     self.logger.info('Unknown database schema version number. This sofware may need to be updated.')
             return ret
-        elif op == 'purgedb':
+        elif op == 'purge':
             pass
-        elif op == 'archivedb':
+        elif op == 'archive':
             pass
+        else:
+            return False
+        
         return True
 
     def log(self, module, event, context = None, objects = (), current=None , previous=None, parameters = {}):

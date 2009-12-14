@@ -37,19 +37,22 @@ def usage():
     print
     print \
 '''This tool is a basic helper for administrator to manage the internals of the
-MMC.'''
-    print 'For now, it only allows to create the audit database.'
-    print
-    print 'available commands:'
-    print ' help : print this help'
-    print ' audit : perform operation on audit database'
-    print
-    print 'audit subcommands:'
-    print ' checkdb : check audit database availability and version'
-    print ' dropdb : completely drop the audit database tables'
-    print ' initdb : initialize the audit database tables'
-    print
-    print 'example: mmc-helper audit initdb'
+MMC.
+For now, it only allows to create and initialize the audit database.
+
+available commands:
+ help : print this help
+ audit : perform operation on audit database
+
+audit subcommands:
+ create : print the SQL command line to use to create the audit database
+ init : initialize the audit database tables
+ check : check audit database availability and version
+ droptables : drop the audit database tables
+ drop : print the string to use to drop the audit database
+
+example: mmc-helper audit initdb
+'''
 
 ret = 0
 printusage = False
@@ -75,7 +78,7 @@ else:
 if printusage:
     usage()
 
-if ret:
+if ret and len(sys.argv) > 1:
     sys.stderr.write('The operation failed.\n')
 
 sys.exit(ret)
