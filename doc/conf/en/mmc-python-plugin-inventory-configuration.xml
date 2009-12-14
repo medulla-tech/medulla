@@ -377,7 +377,7 @@ display = cn::Computer Name||displayName::Description||srvcomment::Name||regdn::
     </table>
     <para>The separator to use between two entries is ||</para>
     <para>List is a list of Table/Column that can be queryed as it.</para>
-    <para>Double is a list of Table1/Column1::Table2/Column2##Name. It's generaly used for having a AND on the same entry in a table (all machines having the software X and the version Y is not the same as all machines having the software X at the version Y)</para>
+    <para>Double is composed like that : NAME::Table1/Column1##Table2/Column2, knowing that name MUST start by the mysql table name plus the char '/'. It's generaly used for having a AND on the same entry in a table (all machines having the software X and the version Y is not the same as all machines having the software X at the version Y)</para>
     <para>Halfstatic is a list of Table/Column1/name complement::Column2##Value2, where the choices are on the column Column1 in the table Table where Column2 == Value2. The name complement is just to display purpose.</para>
   </section>
   <section>
