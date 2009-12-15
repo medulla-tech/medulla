@@ -30,6 +30,7 @@
 #include <portable.h>
 #include <slap.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #ifndef CONFIG_FILE
 #define CONFIG_FILE "/etc/openldap/mmc-check-password.conf"
@@ -183,8 +184,6 @@ int check_password (char *pPasswd, char **ppErrStr, Entry *pEntry) {
 
     if (ret)
         goto error;
-
-ok:
 
     *ppErrStr = strdup ("OK");
     return (LDAP_SUCCESS);
