@@ -1044,17 +1044,22 @@ class LdapUserGroupControl:
         @param attrVal: attribute value
         @type  attrVal: object
         """
-        if attrVal:            
+        userdn = self.searchUserDN(uid)
+        if attrVal:
+            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
             if type(attrVal) == unicode:
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpclib.Binary):
                 # Needed for binary string coming from XMLRPC
                 attrVal = str(attrVal)
-            self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_REPLACE,attr,attrVal)])
+            self.l.modify_s(userdn, [(ldap.MOD_REPLACE,attr,attrVal)])
+            r.commit()
         else:
             # Remove the attribute because its value is empty
+            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
             try:
                 self.l.modify_s('uid='+uid+','+ self.baseUsersDN, [(ldap.MOD_DELETE,attr, None)])
+                r.commit()
             except ldap.NO_SUCH_ATTRIBUTE:
                 # The attribute has been already deleted
                 pass
@@ -1246,7 +1251,7 @@ class LdapUserGroupControl:
         else:
             result = self.l.search_s(self.config.baseDN, ldap.SCOPE_SUBTREE, 'uid=' + uid)
             if result:
-                ret, entry = result[0][0]
+                ret, entry = result[0]
             else:
                 ret = ''
         return ret
