@@ -425,7 +425,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         self.object_table=Table("object", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("uri", String(30), nullable = False),
+                            Column("uri", String(255), nullable = False),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id')),
 
