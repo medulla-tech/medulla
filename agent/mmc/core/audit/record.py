@@ -183,10 +183,10 @@ class AuditRecordDB(AuditRecord):
             session.save(self.record)
             session.flush()
 
-            parentobj=None
+            parentobj = None
             if objects != None:
                 for i,j in objects:
-                    #Get or Insert Type id of object
+                    # Get or Insert Type id of object
                     bdtype = session.query(Type).filter(parent.type_table.c.type==j).first()
                     if bdtype == None:
                         bdtype = Type()
@@ -194,35 +194,25 @@ class AuditRecordDB(AuditRecord):
                         session.save(bdtype)
                         session.flush()
 
-                    # Object is not parent
-                    # l'objet peut ne pas avoir de parent
-                    obj = session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id)).first()
-
-                    if obj == None:          
+                    # Get or insert object
+                    obj = session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id, parent.object_table.c.parent==parentobj)).first()
+                    if obj == None:
                         obj = Object()
                         obj.uri = i
                         obj.type_id = bdtype.id
-
-
-                        if bdtype.id == 2:
-                            obj.parent = None
-                        else:
-                            obj.parent = parentobj
+                        obj.parent = parentobj
                         session.save(obj)
                         session.flush()
-                    #
-                    # Insert in object_log table
-                    #
-
-                    parentobj = obj.id
+                    
                     bdobjectlog = Object_Log()
                     bdobjectlog.object_id = obj.id
                     bdobjectlog.log_id = self.record.id
                     session.save(bdobjectlog)
                     session.flush()
-                    # object type is attribute
-                    if obj.type_id==2:
-                        bdobjectlogattr=bdobjectlog
+                    
+                    # Keep a reference to this object, because it will be the
+                    # the parent of the next object to store
+                    parentobj = obj.id
 
             #insert current value
             if current != None:
