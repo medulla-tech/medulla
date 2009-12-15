@@ -22,10 +22,10 @@
 
 all: mmc-check-password
 
-mmc_check_password.o:
+mmc-check-password.o:
 	gcc -g -O2 -Wall -fpic -c -I/usr/include/openldap/include -I/usr/include/openldap/slapd mmc-check-password.c
 
-mmc_check_password: clean mmc-check-password.o
+mmc-check-password: clean mmc-check-password.o
 	gcc -shared -o mmc-check-password.so mmc-check-password.o
 
 clean:
