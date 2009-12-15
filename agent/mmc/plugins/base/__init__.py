@@ -490,7 +490,7 @@ def delete_diacritics(s) :
 
 
 # FIXME: Change this class name
-class LdapUserGroupControl(ContextProviderI):
+class LdapUserGroupControl:
     """
     Control of User/Group/Computer(smb) control via LDAP
     this class create
@@ -565,7 +565,6 @@ class LdapUserGroupControl(ContextProviderI):
         Create a LDAP connection on self.l with admin right
         Create a ConfigParser on self.config
         """
-        ContextProviderI.__init__(self)
         if conffile: configFile = conffile
         else: configFile = INI
         self.conffile = configFile
@@ -1201,7 +1200,7 @@ class LdapUserGroupControl(ContextProviderI):
 
     def getUserEntry(self, uid, base = None, operational = False):
         """
-        Search a user entru and returns the raw LDAP entry content of a user.
+        Search a user entry and returns the raw LDAP entry content of a user.
 
         @param uid: user ID
         @type uid: str
@@ -1231,6 +1230,26 @@ class LdapUserGroupControl(ContextProviderI):
         return newattrs
 
     getDetailedUser = getUserEntry
+
+    def searchUserDN(self, uid):
+        """
+        Search and return the DN of the given user entry.
+
+        @param uid: User ID (login)
+        @type uid: str
+
+        @return: the DN of the user entry, or an empty string if not found
+        @rtype: str
+        """
+        if uid == 'root':
+            ret = self.config.username
+        else:
+            result = self.l.search_s(self.config.baseDN, ldap.SCOPE_SUBTREE, 'uid=' + uid)
+            if result:
+                ret, entry = result[0][0]
+            else:
+                ret = ''
+        return ret
 
     def getDetailedGroup(self, group, base = None):
         """
@@ -2071,17 +2090,18 @@ class Computers(ldapUserGroupControl, ComputerI):
         return self.l.delete_s(dn)
     
 class ContextMaker(ContextMakerI):
+
+    """
+    Create security context for the base plugin.
+    """
+
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
+        s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
         return s
 
 class RpcProxy(RpcProxyI):
-
-    def __init__(self, request, mod):
-        RpcProxyI.__init__(self, request, mod)
-        self.ldapObj = LdapUserGroupControl()
-        self.ldapObj.setContext(self.session)
 
     def authenticate(self, uiduser, passwd):
         """
@@ -2089,24 +2109,20 @@ class RpcProxy(RpcProxyI):
         Return a Deferred resulting to true if the user has been successfully
         authenticated, else false.
         """
-        # Create a fake session, because the user is not authenticated the
-        # session.userid attribute is empty
-        fakesession = copy.copy(self.session)
-        fakesession.userid = uiduser.decode('ascii')
-        r = AF().log(PLUGIN_NAME, AA.BASE_AUTH_USER, fakesession)
         d = defer.maybeDeferred(AuthenticationManager().authenticate, uiduser, passwd, self.session)
-        # FIXME: errback needed ?
         d.addCallback(ProvisioningManager().doProvisioning)
-        d.addCallback(self._cbAuthenticate, r)
+        d.addCallback(self._cbAuthenticate)
         return d
     ldapAuth = authenticate
 
-    def _cbAuthenticate(self, token, record):
+    def _cbAuthenticate(self, token):
         """
         Callback for authentication.
         """
         ret = token.isAuthenticated()
         if ret:
+            userdn = LdapUserGroupControl().searchUserDN(token.login)
+            record = AF().log(PLUGIN_NAME, AA.BASE_AUTH_USER, [(userdn, AT.USER)])
             record.commit()
         return ret
 

@@ -47,6 +47,7 @@ import time
 import pwd
 import grp
 import string
+import threading
 
 sys.path.append("plugins")
 
@@ -138,7 +139,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
             request.setHeader("content-type", "text/xml")
             if self.config.multithreading:
                 oldargs = args
-                args = (function,) + args
+                args = (function,s,) + args
                 defer.maybeDeferred(self._runInThread, *args).addErrback(
                     self._ebRender, functionPath, oldargs, request
                 ).addCallback(
@@ -168,9 +169,10 @@ class MmcServer(xmlrpc.XMLRPC,object):
             _printExecutionTime(start)            
             reactor.callFromThread(deferred.errback, failure)
             
-        def _putResult(deferred, f, args, kwargs):
-            import threading
+        def _putResult(deferred, f, session, args, kwargs):
             self.logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
+            # Attach current user session to the thread
+            threading.currentThread().session = session
             start = time.time()
             try:
                 result = f(*args, **kwargs)
@@ -188,9 +190,10 @@ class MmcServer(xmlrpc.XMLRPC,object):
                     reactor.callFromThread(deferred.callback, result)
             
         function = args[0]
-        args = args[1:]
+        context = args[1]
+        args = args[2:]
         d = defer.Deferred()
-        reactor.callInThread(_putResult, d, function, args, kwargs)
+        reactor.callInThread(_putResult, d, function, context, args, kwargs)
         return d
 
     def _cbRender(self, result, request, functionPath = None, args = None):
@@ -207,7 +210,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
                     self.logger.exception(e)
                     f = Fault(8004, "MMC agent can't provide a security context for this account")
                     self._cbRender(f, request)
-                    return                    
+                    return
         if result == None: result = 0
         if isinstance(result, xmlrpc.Handler):
             result = result.result

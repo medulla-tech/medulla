@@ -36,7 +36,7 @@ class AuditRecord:
     Base class for a audit record object
     """
     
-    def __init__(self, module, event, user, object, param, initiator, source, previous, current):
+    def __init__(self, module, event, user, objects, param, initiator, source, previous, current):
         """
         Create a AuditRecord instance which contains all information that will
         be logged into database.
@@ -47,8 +47,8 @@ class AuditRecord:
         @type event: string
         @param user: user name
         @type user: string
-        @param object: list tuple of object which contains object uri and object type [('object','typeobject')...]
-        @type object: list
+        @param objects: list tuple of object which contains object uri and object type [('object','typeobject')...]
+        @type objects: list
         @param client: tuple which represent client (clienthost, clienttype)
         @type client: tuple
         @param param: parameters
@@ -64,13 +64,14 @@ class AuditRecord:
         assert(type(self.event) == unicode)
         # String
         self.user=user
-        assert(type(self.user) == unicode)
+        assert(type(self.user) == tuple)
+        assert(len(self.user) == 2)
         # Dictionnary of string
         self.parameters = param
         assert(type(self.parameters) == dict)
         # list of couple (object, type)
-        self.objects=object
-        assert(type(self.objects) == tuple)
+        self.objects=objects
+        assert(type(self.objects) == list)
         # 
         self.initiator = initiator
         assert(type(self.initiator) == tuple)
@@ -99,8 +100,8 @@ class AuditRecordDB(AuditRecord):
         @type action: string
         @param module: module name
         @type module: string
-        @param user: user name
-        @type user: string
+        @param user: tuple with user name and type
+        @type user: tuple
         @param objects: list tuple of object which contains object uri and object type [('object','typeobject')...]
         @type objects: list
         @param client: tuple which represent client (clienthost, clienttype)
@@ -153,18 +154,18 @@ class AuditRecordDB(AuditRecord):
                 session.flush()
 
             # get user type
-            utype = session.query(Type).filter(parent.type_table.c.type == 'USER').first()
+            utype = session.query(Type).filter(parent.type_table.c.type == self.user[1]).first()
             if utype == None:
                 utype = Type()
-                utype.type = 'USER'
+                utype.type = self.user[1]
                 session.save(utype)
                 session.flush()
 
             # get user object
-            bduser = session.query(Object).filter(and_(parent.object_table.c.uri == user, parent.object_table.c.type_id == utype.id)).first()
+            bduser = session.query(Object).filter(and_(parent.object_table.c.uri == self.user[0], parent.object_table.c.type_id == utype.id)).first()
             if bduser == None:
                 bduser = Object()
-                bduser.uri = user
+                bduser.uri = self.user[0]
                 bduser.type_id = utype.id
                 session.save(bduser)
                 session.flush()

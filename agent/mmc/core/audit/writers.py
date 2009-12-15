@@ -29,6 +29,7 @@ import sys
 import os
 import pwd
 import logging
+import threading
 
 # SqlAlchemy
 from sqlalchemy import *
@@ -242,7 +243,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         
         return True
 
-    def log(self, module, event, context = None, objects = (), current=None , previous=None, parameters = {}):
+    def log(self, module, event, objects = [], current=None , previous=None, parameters = {}):
         """
         Allow to log an Action, it uses LogRecordDB
 
@@ -268,19 +269,20 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @param parameters: list of parameters (get with the locals() builtin)
         @type parameters: dict of param
         """
-        # Use context information for the log record
         try:
-            user = context.userid
-        except AttributeError:
+            userdn = threading.currentThread().session.contexts['base'].userdn
+            user = (userdn, 'USER')
+        except:
             # Get effective user id (log from a script)
             user = pwd.getpwuid(os.getuid())[0]
             user = user.decode('ascii')
+            user = (user, 'SYSTEMUSER')
         try:
-            useragent = context.http_headers['user-agent']
+            useragent = threading.currentThread().session.http_headers['user-agent']
         except:
             useragent = sys.argv[0]
         try:
-            host = context.http_headers['x-browser-ip']
+            host = threading.currentThread().session.http_headers['x-browser-ip']
         except:
             # FIXME: Maybe context.peer or something like that is better
             host = socket.getfqdn()
