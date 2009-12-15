@@ -501,7 +501,7 @@ def readConfig(config):
         config.pidfile = config.get("log", "pidfile")
 
     # Multi-threading support
-    config.multithreading = False
+    config.multithreading = True
     config.maxthreads = 20
     try:
         config.multithreading = config.getboolean("main", "multithreading")
