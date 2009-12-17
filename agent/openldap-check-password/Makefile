@@ -23,10 +23,17 @@
 all: mmc-check-password
 
 mmc-check-password.o:
-	gcc -g -O2 -Wall -fpic -c -I/usr/include/openldap/include -I/usr/include/openldap/slapd mmc-check-password.c
+	$(CC) -g -O2 -Wall -fpic -c -I/usr/include/openldap/include -I/usr/include/openldap/slapd mmc-check-password.c
 
 mmc-check-password: clean mmc-check-password.o
-	gcc -shared -o mmc-check-password.so mmc-check-password.o
+	$(CC) -shared -o mmc-check-password.so mmc-check-password.o
+
+install: mmc-check-password
+	# FIXME: don't know how to make it better ...
+	-[ -d /usr/lib/openldap ] && \
+	$(INSTALL) mmc-check-password.so -m 755 -o root -g root /usr/lib/openldap/
+	-[ -d /usr/lib64/openldap ] && \
+	$(INSTALL) mmc-check-password.so -m 755 -o root -g root /usr/lib64/openldap/
 
 clean:
 	$(RM) mmc-check-password.o mmc-check-password.so *~
