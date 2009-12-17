@@ -144,6 +144,8 @@ class PPolicy(ldapUserGroupControl):
             for k in self.configPPolicy.ppolicyAttributes :
                 if type(self.configPPolicy.ppolicyAttributes[k]) == bool:
                     self.configPPolicy.ppolicyAttributes[k] = str(self.configPPolicy.ppolicyAttributes[k]).upper()
+		if k == 'pwdCheckModule'.lower():
+                    attrs['objectClass'].append('pwdPolicyChecker')
                 attrs[k] = str(self.configPPolicy.ppolicyAttributes[k])
             attributes = modlist.addModlist(attrs)
             self.l.add_s(self.configPPolicy.ppolicydefaultdn, attributes)
