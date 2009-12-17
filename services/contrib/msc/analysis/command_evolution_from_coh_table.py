@@ -34,15 +34,21 @@ from sqlalchemy import *
 
 parser = OptionParser()
 parser.add_option("-f", "--format", dest="format", help="Output format (default : human)", metavar="csv|human", default="human")
-parser.add_option("-s", "--start", dest="start", help="Start date (defaut : yesterday, same hour)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-87400)))
-parser.add_option("-e", "--end", dest="end", help="End date (defaut : now)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time())))
+parser.add_option("--created-after", dest="created_after", help="Min creation date (defaut : yesterday, same hour)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-87400)))
+parser.add_option("--created-before", dest="created_before", help="Max creation date (defaut : now)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time())))
+parser.add_option("--started-after", dest="started_after", help="Min execution date (defaut : same value as --created-after)", metavar="YYYY-MM-DD HH:MM:SS", default=None)
+parser.add_option("--started-before", dest="started_before", help="Max execution date (defaut : same value as --created-before)", metavar="YYYY-MM-DD HH:MM:SS", default=None)
 parser.add_option("-u", "--uri", dest="uri", help="MySQL URI (defaut : mysql://root@127.0.0.1/msc)", metavar="mysql://<user>:<password>@<host>/<base>", default='mysql://root@127.0.0.1/msc')
 parser.add_option("--min", dest="min", help="Minimum targets to be displayed (default : 0)", metavar="number", default=0, type=int)
-parser.add_option("--domain", dest="domain", help="Domain regex (default : [^\.]+\.$)", metavar="regex", default='[^\.]+\.$')
+parser.add_option("--domain", dest="domain", help="Domain regex (default : [^\.]+$)", metavar="regex", default='[^\.]+$')
 parser.add_option("--docs", dest="docs", help="Show me doc about fields", action="store_true", default=False)
 
 (options, args) = parser.parse_args()
 
+if not options.started_after :
+    options.started_after = options.created_after
+if not options.started_before :
+    options.started_before = options.created_before
 
 if options.docs :
     print "Fields signification"
@@ -144,12 +150,10 @@ history_table = Table("commands_history",
                 autoload = True)
 
 # gather commands
-startTimestamp = options.start
-endTimestamp = options.end
 commandData = command_table.select().where(
             and_(
-                command_table.c.creation_date < endTimestamp,
-                command_table.c.creation_date > startTimestamp,
+                command_table.c.creation_date < options.created_before,
+                command_table.c.creation_date > options.created_after,
             )
     ).execute().fetchall()
 
@@ -210,9 +214,17 @@ data = dict()
 
 for command in commandData:
     cohData = coh_table.select().where(
-            coh_table.c.fk_commands == command['id']
+            and_(
+                or_(
+                    and_(
+                        coh_table.c.start_date < options.started_before,
+                        coh_table.c.start_date > options.started_after,
+                    ),
+                    coh_table.c.start_date == None,
+                ),
+                coh_table.c.fk_commands == command['id']
+            )
         ).execute().fetchall()
-
     dataCommand = getStruct()
 
     dataCommand['name'] = command['title']
