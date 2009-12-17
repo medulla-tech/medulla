@@ -33,5 +33,5 @@ setup(
     maintainer = "Cedric Delfosse",
     maintainer_email = "cdelfosse@mandriva.com",
     packages = ["mmc", "mmc.support", "mmc.plugins", "mmc.plugins.base",
-                "mmc.core", "mmc.core.audit"],
+                "mmc.plugins.ppolicy", "mmc.core", "mmc.core.audit"],
 )
