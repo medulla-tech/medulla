@@ -23,6 +23,7 @@
 DESTDIR = 
 PREFIX = /usr/local
 SBINDIR = $(PREFIX)/sbin
+BINDIR= $(PREFIX)/bin
 LIBDIR = $(PREFIX)/lib/mmc
 ETCDIR = /etc/mmc
 INITDIR = /etc/init.d
@@ -37,6 +38,7 @@ PYTHON_PREFIX = $(shell $(PYTHON) -c "import sys; print sys.prefix")
 LIBFILESBACKUP = backup-tools/cdlist backup-tools/backup.sh
 LIBDIRBACKUP = $(LIBDIR)/backup-tools
 SBINFILES = bin/mmc-agent bin/mds-report
+BINFILES = bin/mmc-helper bin/mmc-password-helper
 
 # Extension for backuped configuration files
 BACKUP = .$(shell date +%Y-%m-%d+%H:%M:%S)
@@ -75,6 +77,10 @@ install:
 	@echo ""
 	@echo "Install SBINFILES in $(DESTDIR)$(SBINDIR)"
 	$(INSTALL) $(SBINFILES) -m 755 -o root -g root $(DESTDIR)$(SBINDIR)
+
+	@echo ""
+	@echo "Install BINFILES in $(DESTDIR)$(BINDIR)"
+	$(INSTALL) $(BINFILES) -m 755 -o root -g root $(DESTDIR)$(BINDIR)
 
 	@echo ""
 	@echo "Install CONFILES in $(DESTDIR)$(ETCDIR)"
