@@ -398,7 +398,7 @@ class CommandHistory {
                     200 + 9 => _T("The script was killed by Pulse 2 (timeout ?).", 'msc'),
                     200 + 15 => _T("The script was terminated by Pulse 2.", 'msc'),
                     /* Known exit codes : pre-check */
-                    240 + 0 => _T("Something goes wrong while checking client identify.", 'msc'),
+                    240 + 0 => _T("Something goes wrong while checking client identity.", 'msc'),
                     240 + 1 => _T("The current host name doesn't match the host name from the inventory database.", 'msc'),
                     240 + 2 => _T("The current host IP address doesn't match the IP address from the inventory database.", 'msc'),
                     240 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc'),
