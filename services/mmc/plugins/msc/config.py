@@ -26,7 +26,6 @@ import logging
 import re
 import os.path
 
-from ConfigParser import NoOptionError
 from mmc.support import mmctools
 from pulse2.database.msc.config import MscDatabaseConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
