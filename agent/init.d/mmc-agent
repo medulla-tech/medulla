@@ -26,7 +26,7 @@
 
 # Variables
 DESC="Mandriva Management Console : mmc-agent" 
-DAEMON="##SBINDIR##/mmc-agent"
+DAEMON="/usr/sbin/mmc-agent"
 PIDFILE="/var/run/mmc-agent.pid"
 
 # Function to start daemon
@@ -62,10 +62,33 @@ stop () {
 	    kill -15 `cat ${PIDFILE}`
 	    # Get return code
 	    RETVAL=$?
-	  # If there's not pidfile, skipp kill and define RETVAL as 1
+	  # If there's no pidfile, skip kill and define RETVAL as 1
 	  else
 	  RETVAL=1
 	fi	
+	if [ ${RETVAL} -eq 0 ]
+	  then
+	    echo "done."
+	  else
+	    echo "failed."
+	fi
+	return ${RETVAL}
+}
+
+# Function to force the daemon to stop
+force_stop () {
+	echo -n $"Stopping (forced) ${DESC} : "
+	# Check if the pidfile exists
+	if [ -e ${PIDFILE} ]
+	  then
+	    # If there's one, get the pid and send SIG 9
+	    kill -9 `cat ${PIDFILE}`
+	    # Get return code
+	    RETVAL=$?
+	  # If there's no pidfile, skip kill and define RETVAL as 1
+	  else
+	    RETVAL=1
+	fi
 	if [ ${RETVAL} -eq 0 ]
 	  then
 	    echo "done."
@@ -88,6 +111,9 @@ case $1 in
 	;;
 	stop)
 		stop
+	;;
+	force-stop)
+		force_stop
 	;;
 	restart | force-reload)
 		restart
