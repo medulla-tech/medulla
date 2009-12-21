@@ -36,7 +36,7 @@ import re
 
 SA_MAJOR = 0
 SA_MINOR = 4
-DATABASEVERSION = 2
+DATABASEVERSION = 3
 
 class DyngroupDatabase(DatabaseHelper):
     """
