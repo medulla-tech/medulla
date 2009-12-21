@@ -52,14 +52,14 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     function getUUID($machine) { return $machine['objectUUID']; }
     
     $uuids = array_map("getUUID", $names);
-    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+    /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $profiles = xmlrpc_getmachinesprofiles($uuids);
         $h_profiles = array();
         $i = 0;
         foreach ($uuids as $uuid) {
             $h_profiles[$uuid] = $profiles[$i++];
         }
-    }
+    }*/
     foreach($names as $value) {
         foreach ($headers as $header) {
             if (!empty($value[$header[0]])) {
@@ -85,6 +85,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         if (in_array("imaging", $_SESSION["supportModList"])) {
             $actionImaging[] = $imgAction;
         }
+        /*
         if (in_array("dyngroup", $_SESSION["modulesList"])) {
             $profile = $h_profiles[$value['objectUUID']];
             if ($profile) {
@@ -94,6 +95,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
                 $actionProfile[] = $emptyAction;
             }
         }
+        */
 
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
@@ -145,9 +147,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if ($msc_vnc_show_icon) {
         $n->addActionItemArray($actionVncClient);
     };
-    if (in_array("dyngroup", $_SESSION["modulesList"])) {
+    /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $n->addActionItemArray($actionProfile);
-    }
+    }*/
     if (in_array("msc", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionLogs);
         $n->addActionItemArray($actionMsc);
