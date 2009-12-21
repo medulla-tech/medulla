@@ -64,7 +64,10 @@ setup(
         "pulse2.package_server.user_package_api",
         "pulse2.package_server.assign_algo",
         "pulse2.package_server.assign_algo.default",
-        "pulse2.package_server.assign_algo.terminal_type"
+        "pulse2.package_server.assign_algo.terminal_type",
+        "pulse2.package_server.imaging",
+        "pulse2.package_server.imaging.api",
+        "pulse2.package_server.imaging.common",
 ],
 )
 
