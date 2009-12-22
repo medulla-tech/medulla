@@ -73,11 +73,15 @@ packages_to_install
 urpmi --auto --no-suggests $PKGS
 rpm -q $PKGS
 
-TMPCO=`mktemp -d`
-
-pushd $TMPCO
-
-svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2-server
+if [ -z $TMPCO ];
+    then
+    TMPCO=`mktemp -d`
+    pushd $TMPCO
+    # Check out Pulse 2 source
+    svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2-server
+else
+    pushd $TMPCO
+fi
 
 pushd pulse2-server
 make install PREFIX=/usr
