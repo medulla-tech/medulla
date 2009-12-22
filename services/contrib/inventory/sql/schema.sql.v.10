@@ -35,8 +35,8 @@ ALTER TABLE Bios ADD DateLastSwitchOn VarChar(20) default NULL;
 
 ALTER TABLE Drive ADD CDDVDBurner VarChar(12) default NULL;
 
---ALTER TABLE Software DROP Application;
---ALTER TABLE Software DROP Type;
+-- ALTER TABLE Software DROP Application;
+-- ALTER TABLE Software DROP Type;
 ALTER TABLE Software ADD InstallationDate VarChar(25) default NULL;
 ALTER TABLE Software ADD TypePackage VarChar(8) default NULL;
 ALTER TABLE Software ADD UninstallPath VarChar(256) default NULL;
