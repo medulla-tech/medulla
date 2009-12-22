@@ -41,9 +41,9 @@ fi
 # DROP databases
 if [ -f /usr/bin/mysqladmin ];
     then
-    mysqladmin drop msc --f
-    mysqladmin drop dyngroup --f
-    mysqladmin drop inventory --f
+    echo "drop database if exists msc" | mysql
+    echo "drop database if exists dyngroup" | mysql
+    echo "drop database if exists inventory" | mysql
     echo "drop user mmc@localhost" | mysql 
 fi
 
