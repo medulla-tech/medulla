@@ -82,6 +82,7 @@ rpm -q $PKGS
 if [ -z $TMPCO ];
     then
     TMPCO=`mktemp -d`
+    TMPREMOVE=1
     pushd $TMPCO
     # Check out MMC CORE
     svn co http://mds.mandriva.org/svn/mmc-projects/mmc-core/trunk mmc-core
@@ -133,7 +134,10 @@ rm -fr /home/archives; mkdir -p /home/archives
 ldapdelete -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
 service mmc-agent restart
 
-rm -fr $TMPCO
+if [ ! -z $TMPREMOVE ];
+    then
+    rm -fr $TMPCO
+fi
 
 echo "Installation done successfully"
 exit 0
