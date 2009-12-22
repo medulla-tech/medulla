@@ -76,6 +76,7 @@ rpm -q $PKGS
 if [ -z $TMPCO ];
     then
     TMPCO=`mktemp -d`
+    TMPREMOVE=1
     pushd $TMPCO
     # Check out Pulse 2 source
     svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2-server
@@ -192,6 +193,11 @@ echo "Launch pulse2's services"
 /etc/init.d/mmc-agent force-stop
 rm -f /var/run/mmc-agent.pid
 /etc/init.d/mmc-agent start
+
+if [ ! -z $TMPREMOVE ];
+    then
+    rm -fr $TMPCO
+fi
 
 echo "Installation done successfully"
 exit 0
