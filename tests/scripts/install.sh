@@ -21,6 +21,16 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+echo "MMC CORE basic auto-installation script"
+echo
+
+if [ ! -f "/bin/lsb_release" ];
+then
+    echo "Please install lsb_release."
+    echo "urpmi lsb-release"
+    exit 1
+fi	
+
 DISTRIBUTION=`lsb_release -i -s`
 RELEASE=`lsb_release -r -s`
 
@@ -42,21 +52,12 @@ function packages_to_install () {
           python-sqlalchemy lib${ARCH}crack2-python"
 
     # Apache/PHP
-    PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc"
+    PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc gettext"
 
     # Development & install
     PKGS="$PKGS subversion make gcc libldap2.4_2-devel"
 }
 
-echo "MDS basic auto-installation script"
-echo
-
-if [ ! -f "/bin/lsb_release" ];
-then
-    echo "Please install lsb_release."
-    echo "urpmi lsb-release"
-    exit 1
-fi	
 
 
 if [ ! -f "$DISTRIBUTION-$RELEASE" ];
@@ -65,13 +66,17 @@ then
     exit 1
 fi
 
-echo "WARNING: this script will erase some parts of your configuration !"
-echo "         type Ctrl-C now to exit if you are not sure"
-echo "         type Enter to continue"
-read
+if [ -z $FORCE ];
+    then
+    echo
+    echo "WARNING: this script will erase some parts of your configuration !"
+    echo "         type Ctrl-C now to exit if you are not sure"
+    echo "         type Enter to continue"
+    read
+fi
 
 packages_to_install
-urpmi $PKGS
+urpmi --auto --no-suggests $PKGS
 rpm -q $PKGS
 
 TMPCO=`mktemp -d`

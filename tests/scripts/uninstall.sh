@@ -21,14 +21,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-echo "MDS auto-uninstallation script"
-echo
-echo "WARNING: this script will erase some parts of your configuration !"
-echo "         type Ctrl-C now to exit if you are not sure"
-echo "         type Enter to continue"
-read
-
 PREFIX=/usr
+
+echo "MDS auto-uninstallation script"
+
+if [ -z $FORCE ];
+    then
+    echo
+    echo "WARNING: this script will erase some parts of your configuration !"
+    echo "         type Ctrl-C now to exit if you are not sure"
+    echo "         type Enter to continue"
+    read
+fi
 
 service mmc-agent stop || true
 
