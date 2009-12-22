@@ -44,7 +44,7 @@ if [ -f /usr/bin/mysqladmin ];
     echo "drop database if exists msc" | mysql
     echo "drop database if exists dyngroup" | mysql
     echo "drop database if exists inventory" | mysql
-    echo "drop user mmc@localhost" | mysql 
+    echo "drop user mmc@localhost" | mysql || true
 fi
 
 rm -fr $PREFIX/lib/python2.*/site-packages/pulse2
@@ -52,3 +52,5 @@ rm -fr $PREFIX/lib/python2.*/site-packages/mmc
 rm -f /etc/init.d/pulse2-*
 rm -fr /var/lib/pulse2/packages/*-*-*-*-*
 rm -fr /tmp/package_tmp
+
+exit 0
