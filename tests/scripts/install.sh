@@ -79,12 +79,15 @@ packages_to_install
 urpmi --auto --no-suggests $PKGS
 rpm -q $PKGS
 
-TMPCO=`mktemp -d`
-
-pushd $TMPCO
-
-# Check out MMC CORE
-svn co https://mds.mandriva.org/svn/mmc-projects/mmc-core/trunk mmc-core
+if [ -z $TMPCO ];
+    then
+    TMPCO=`mktemp -d`
+    pushd $TMPCO
+    # Check out MMC CORE
+    svn co http://mds.mandriva.org/svn/mmc-projects/mmc-core/trunk mmc-core
+else
+    pushd $TMPCO
+fi
 
 pushd mmc-core/agent
 make install PREFIX=/usr
