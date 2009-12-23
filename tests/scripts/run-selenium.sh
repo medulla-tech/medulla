@@ -27,7 +27,7 @@
 # resultèfile
 
 TESTS=$1
-RESULT=$2
+RESULTDIR=$2
 
 XSERVER=X
 DISPLAY=:1
@@ -77,9 +77,14 @@ export DISPLAY
 # Cleanup firefox cookie
 rm -f /root/.mozilla/firefox/*.default/cookies.sqlite
 
+set +e
 # See: http://seleniumhq.org/docs/05_selenium_rc.html#server-options
-$JAVA -jar $MMCCORE/tests/libs/selenium-server.jar -userExtensions $MMCCORE/tests/libs/user-extensions.js -htmlSuite "*firefox $FIREFOX" "http://localhost/" "./$TESTS" "./$RESULT"
+$JAVA -jar $MMCCORE/tests/libs/selenium-server.jar -userExtensions $MMCCORE/tests/libs/user-extensions.js -htmlSuite "*firefox $FIREFOX" "http://localhost/" "./$TESTS" "$RESULTDIR/result.html"
+RET=$?
+set -e
 
 killall $XSERVER
 
-exit 0
+cp -vr /var/log/mmc/* $RESULTDIR
+
+exit $RET
