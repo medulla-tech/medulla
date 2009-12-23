@@ -44,15 +44,14 @@ cat << EOF > ${FILENAME}
     </tbody>
 EOF
 
-pushd $DIR
-for file in `ls`
+for file in `ls $DIR`
 do
+    file=$DIR/$file
     test -d ${file} && for file2 in `ls ${file}`
     do
         echo "<tr><td><a href=\"./${file}/${file2}\">${file}/`echo ${file2} | sed 's/^\(.*\)\..*$/\1/'`</a></td></tr>" >> ${FILENAME}
     done
 done
-popd
 
 cat << EOF >> ${FILENAME}
   </table>
