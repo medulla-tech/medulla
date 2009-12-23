@@ -51,7 +51,11 @@ fi
 
 function packages_to_install () {
     # MySQL
-    PKGS="$PKGS mysql mysql-client python-mysql"
+    PKGS="$PKGS mysql mysql-client"
+    if [ $RELEASE == "2010.0" ];
+        then
+        PKGS="$PKGS python-mysql"
+    fi
 }
 
 if [ ! -f "$DISTRIBUTION-$RELEASE" ];
@@ -93,6 +97,8 @@ popd
 /etc/init.d/mysqld stop
 sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf
 /etc/init.d/mysqld start
+# Wait for MySQL to start
+sleep 5
 
 IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/adr://'`
 
