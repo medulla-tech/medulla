@@ -32,19 +32,19 @@ RESULT=$2
 XSERVER=X
 DISPLAY=:1
 
-if [ ! which java ];
+if ! which java;
 then
     echo "JAVA must be installed."
     exit 1
 fi
 
-if [ ! which X ];
+if ! which X;
 then
     echo "X must be installed."
     exit 1
 fi
 
-if [ ! which firefox ];
+if ! which firefox;
 then
     echo "firefox must be installed."
     exit 1
