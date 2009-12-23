@@ -129,7 +129,10 @@ sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
 echo "include /etc/openldap/schema/mmc.schema" >> /etc/openldap/schema/local.schema
 
 # Setup ppolicy
-sed -i "s/disable = 1/disable = 0/" /etc/mmc/plugins/ppolicy.ini
+if [ $RELEASE == "2010.0" ];
+    then
+    sed -i "s/disable = 1/disable = 0/" /etc/mmc/plugins/ppolicy.ini
+fi
 
 # Restart LDAP & APACHE
 service ldap restart
