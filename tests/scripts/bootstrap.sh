@@ -27,6 +27,9 @@
 # If target is specified, the Pulse 2 main Makefile will be called with this
 # target.
 
+# Set more permissive umask
+umask 0022
+
 # Install script won't ask user confirmation when FORCE=1
 export FORCE=1
 
