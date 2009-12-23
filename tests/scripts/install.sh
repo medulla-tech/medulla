@@ -79,12 +79,12 @@ if [ -z $TMPCO ];
     TMPREMOVE=1
     pushd $TMPCO
     # Check out Pulse 2 source
-    svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2-server
+    svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2
 else
     pushd $TMPCO
 fi
 
-pushd pulse2-server
+pushd pulse2
 make install PREFIX=/usr
 popd
 
@@ -98,7 +98,7 @@ IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/adr://'`
 
 # Create database msc and configure msc.init
 
-pushd $TMPCO/pulse2-server/services/contrib/msc/sql/
+pushd $TMPCO/pulse2/services/contrib/msc/sql/
 mysqladmin create msc
 mysql msc < schema.sql
 mysql msc < schema.sql.v.2
@@ -123,7 +123,7 @@ sed -i "s/# mserver = 127.0.0.1/mserver = $IPADDRESS/" /etc/mmc/plugins/msc.ini
 sed -i "/\[scheduler_api\]/{n; s/host = 127.0.0.1/host = $IPADDRESS/}" /etc/mmc/plugins/msc.ini
 
 # Create database dyngroup and configure dyngroup.init
-pushd $TMPCO/pulse2-server/services/contrib/dyngroup/sql/
+pushd $TMPCO/pulse2/services/contrib/dyngroup/sql/
 mysqladmin create dyngroup
 mysql dyngroup < schema.sql
 mysql dyngroup < schema.sql.v.1
@@ -136,7 +136,7 @@ sed -i "s/activate = 0/activate = 1/" /etc/mmc/plugins/dyngroup.ini
 popd
 
 # Create database inventory and configure inventory.init
-pushd $TMPCO/pulse2-server/services/contrib/inventory/sql/
+pushd $TMPCO/pulse2/services/contrib/inventory/sql/
 mysqladmin create inventory
 mysql inventory < schema.sql
 mysql inventory < schema.sql.v.2
