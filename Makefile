@@ -154,14 +154,10 @@ test: test-launcher test-package-server
 
 RESULTDIR=/tmp/selenium-pulse2$(BACKUP)
 selenium:
-	tests/scripts/prepare-for-selenium-tests.sh
+	#tests/scripts/prepare-for-selenium-tests.sh
 	$(MMCCORE)/tests/scripts/build-selenium-suite.sh selenium-suite.html tests/selenium/suite/
-	rm -f result.html
-	$(MMCCORE)/tests/scripts/run-selenium.sh selenium-suite.html result.html
 	mkdir $(RESULTDIR)
-	echo "Copy result in $(RESULTDIR)"
-	cp -v result.html $(RESULTDIR)
-	cp -vr /var/log/mmc/* $(RESULTDIR)/
+	$(MMCCORE)/tests/scripts/run-selenium.sh selenium-suite.html $(RESULTDIR)
 
 uninstall:
 	@echo "Un-installing Pulse 2"
