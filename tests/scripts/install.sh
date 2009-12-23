@@ -147,7 +147,7 @@ rm -fr /home/archives; mkdir -p /home/archives
 # Start MMC agent
 # Remove default LDAP password policies because the MMC agent will add one
 ldapdelete -x -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
-/etc/init.d/mmc-agent force-stop || true
+/etc/init.d/mmc-agent force-stop || true
 /etc/init.d/mmc-agent start
 
 if [ ! -z $TMPREMOVE ];
