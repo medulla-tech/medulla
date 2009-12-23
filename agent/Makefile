@@ -95,7 +95,9 @@ install:
 	$(SED) -i 's!^path[ \t].*$$!path = $(LIBDIR)/backup-tools!' $(DESTDIR)$(ETCDIR)/plugins/base.ini
 	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!' $(DESTDIR)$(INITDIR)/mmc-agent
 
+ifndef NOCHECKPASSWORD
 	$(MAKE) -C openldap-check-password install CC=$(CC) INSTALL=$(INSTALL)
+endif
 
 include common.mk
 
