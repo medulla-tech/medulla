@@ -43,5 +43,7 @@ rm -fr $PREFIX/lib/python2.*/site-packages/mmc
 rm -fr $PREFIX/share/mmc $PREFIX/lib/mmc
 rm -f /usr/lib*/openldap/mmc-check-password.so
 
+rm -fr /var/lib/ldap.* /etc/openldap/slapd.conf.*
+
 echo "Uninstallation done"
 exit 0
