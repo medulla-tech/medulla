@@ -152,6 +152,10 @@ test-package-server:
 test: test-launcher test-package-server
 	@echo "Package server and Launcher are OK"
 
+selenium:
+	$(MMCCORE)/tests/scripts/build-selenium-suite.sh selenium-suite.html tests/selenium/
+	$(MMCCORE)/tests/scripts/run-selenium.sh selenium-suite.html result.html
+
 uninstall:
 	@echo "Un-installing Pulse 2"
 	rm -rf $(DESTDIR)$(ETCDIR)
