@@ -101,7 +101,7 @@ fi
 pushd mmc-core/agent
 if [ $RELEASE == "2006.0" ];
     then
-    NOCHECKPASSWORD=1
+    export NOCHECKPASSWORD=1
 fi
 make install PREFIX=/usr
 popd
@@ -116,6 +116,7 @@ popd
 
 # Setup LDAP
 rm -f /etc/openldap/schema/*
+touch /etc/openldap/schema/local.schema
 cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema /etc/openldap/schema/
 /usr/share/openldap/scripts/mandriva-dit-setup.sh -d mandriva.com -p secret -y
 sed -i 's/cn=admin/uid=LDAP Admin,ou=System Accounts/' /etc/mmc/plugins/base.ini
@@ -125,7 +126,6 @@ sed -i '/.*kolab.schema/d' /etc/openldap/slapd.conf
 sed -i '/.*misc.schema/d' /etc/openldap/slapd.conf
 sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
 
-rm -f /etc/openldap/schema/local.schema
 echo "include /etc/openldap/schema/mmc.schema" >> /etc/openldap/schema/local.schema
 
 # Setup ppolicy
@@ -143,7 +143,7 @@ rm -fr /home/archives; mkdir -p /home/archives
 
 # Start MMC agent
 # Remove default LDAP password policies because the MMC agent will add one
-ldapdelete -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
+ldapdelete -x -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
 service mmc-agent restart
 
 if [ ! -z $TMPREMOVE ];
