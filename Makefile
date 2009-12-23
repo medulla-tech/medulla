@@ -153,7 +153,9 @@ test: test-launcher test-package-server
 	@echo "Package server and Launcher are OK"
 
 selenium:
-	$(MMCCORE)/tests/scripts/build-selenium-suite.sh selenium-suite.html tests/selenium/
+	tests/scripts/prepare-for-selenium-tests.sh
+	$(MMCCORE)/tests/scripts/build-selenium-suite.sh selenium-suite.html tests/selenium/suite/
+	rm -f result.html
 	$(MMCCORE)/tests/scripts/run-selenium.sh selenium-suite.html result.html
 
 uninstall:
