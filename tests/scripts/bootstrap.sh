@@ -62,4 +62,6 @@ fi
 
 popd
 
+rm -fr $TMPCO
+
 exit 0
