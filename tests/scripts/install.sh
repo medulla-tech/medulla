@@ -48,7 +48,7 @@ function packages_to_install () {
     PKGS="$PKGS openldap-servers openldap-mandriva-dit"
 
     # Python
-    PKGS="$PKGS python-twisted-web python-ldap python-sqlalchemy lib${ARCH}crack2-python"
+    PKGS="$PKGS python-twisted-web python-ldap"
 
     # Apache/PHP
     PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc gettext"
@@ -57,12 +57,12 @@ function packages_to_install () {
     PKGS="$PKGS subversion make gcc"
 
     if [ $RELEASE == "2006.0" ];
-	then
-	PKGS="$PKGS lib${ARCH}python2.4-devel libldap2.3_0-devel"
+        then
+        PKGS="$PKGS lib${ARCH}python2.4-devel libldap2.3_0-devel"
     fi
     if [ $RELEASE == "2010.0" ];
-	then
-	PKGS="$PKGS lib${ARCH}python2.6-devel libldap2.4_2-devel"
+        then
+        PKGS="$PKGS python-sqlalchemy lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel"
     fi
 }
 
@@ -99,6 +99,10 @@ else
 fi
 
 pushd mmc-core/agent
+if [ $RELEASE == "2006.0" ];
+    then
+    NOCHECKPASSWORD=1
+fi
 make install PREFIX=/usr
 popd
 
