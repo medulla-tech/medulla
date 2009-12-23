@@ -56,12 +56,17 @@ popd
 if [ ! -z "$1" ];
     then
     pushd $PULSE2
-    make "$1" || true
+    set +e
+    make "$1"
+    RET=$?
+    set -e
     popd
+else
+    RET=0
 fi
 
 popd
 
 rm -fr $TMPCO
 
-exit 0
+exit $RET
