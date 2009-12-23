@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>002_list_computer/000_list_computer</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">002_list_computer/000_list_computer</td></tr>
+</thead><tbody>
+<tr>
+	<td>setTimeout</td>
+	<td>600000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Computers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Computer Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='container']/form/table/tbody/tr[1]/td[1]</td>
+	<td>computer01</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='container']/form/table/tbody/tr[2]/td[1]</td>
+	<td>computer02</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

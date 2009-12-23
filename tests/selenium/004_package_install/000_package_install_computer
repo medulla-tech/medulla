@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>000_package_install_computer</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">000_package_install_computer</td></tr>
+</thead><tbody>
+<tr>
+	<td>setTimeout</td>
+	<td>600000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//li[@id='navbarcomputers']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>computer01</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='container']/form/table/tbody/tr[1]/td[3]/ul/li[4]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//img[@title='Target plateform is GNU Linux']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Package</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='container']/form/table/tbody/tr[2]/td[1]</td>
+	<td>package1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='container']/form/table/tbody/tr[2]/td[4]/ul/li[1]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>package1 v.1.0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>do_inventory</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>bconfirm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Command</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeTextPresent</td>
+	<td>package1 (1.0)</td>
+	<td>Islog</td>
+</tr>
+<tr>
+	<td>while</td>
+	<td>storedVars['Islog']==true</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Command</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeTextPresent</td>
+	<td>package1 (1.0)</td>
+	<td>Islog</td>
+</tr>
+<tr>
+	<td>endWhile</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=History</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

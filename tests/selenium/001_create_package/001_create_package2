@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>001_create_package/001_create_package2</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">001_create_package/001_create_package2</td></tr>
+</thead><tbody>
+<tr>
+	<td>setTimeout</td>
+	<td>600000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add a package</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Add a package</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>label</td>
+	<td>package2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>version</td>
+	<td>1.0</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>package de test 2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>commandcmd</td>
+	<td>exit 0</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>bassoc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Associate files to package package2 (1.0)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@id='rdo_files' and @name='rdo_files' and @value='test2']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>bassoc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Files succesfully associated</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>breset</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Names</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

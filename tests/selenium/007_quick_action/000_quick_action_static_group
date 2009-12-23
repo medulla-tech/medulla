@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>007_quick_action/000_quick_action_static_group</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">007_quick_action/000_quick_action_static_group</td></tr>
+</thead><tbody>
+<tr>
+	<td>setTimeout</td>
+	<td>600000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=All groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Group name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='container']/form/table/tbody/tr/td[4]/ul/li[6]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>launchAction</td>
+	<td>label=Mandriva Test : echo test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@type='image']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Please confirm you really want to perform this action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>bconfirm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Client</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Command</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeTextPresent</td>
+	<td>Mandriva Test : echo test</td>
+	<td>Islog</td>
+</tr>
+<tr>
+	<td>while</td>
+	<td>storedVars['Islog']==true</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Command</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeTextPresent</td>
+	<td>Mandriva Test : echo test</td>
+	<td>Islog</td>
+</tr>
+<tr>
+	<td>endWhile</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=History</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Command</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='container']/form/table/tbody/tr[1]/td[1]</td>
+	<td>Mandriva Test : echo test</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
