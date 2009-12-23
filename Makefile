@@ -154,7 +154,7 @@ test: test-launcher test-package-server
 
 RESULTDIR=/tmp/selenium-pulse2$(BACKUP)
 selenium:
-	#tests/scripts/prepare-for-selenium-tests.sh
+	tests/scripts/prepare-for-selenium-tests.sh
 	$(MMCCORE)/tests/scripts/build-selenium-suite.sh selenium-suite.html tests/selenium/suite/
 	mkdir $(RESULTDIR)
 	$(MMCCORE)/tests/scripts/run-selenium.sh selenium-suite.html $(RESULTDIR)
