@@ -34,9 +34,18 @@ DISPLAY=:1
 
 if ! which java;
 then
-    echo "JAVA must be installed."
-    exit 1
+    if [ -f /usr/lib/jre-1_5_0_06/bin/java ];
+    then
+        # Special case for one of our test machine
+        JAVA=/usr/lib/jre-1_5_0_06/bin/java
+    else
+        echo "JAVA must be installed."
+        exit 1
+    fi
+else
+    JAVA=java
 fi
+
 
 if ! which X;
 then
@@ -49,10 +58,19 @@ then
     echo "firefox must be installed."
     exit 1
 fi
-FIREFOX=`which firefox`
+
+# FIXME: should find a better way
+# Firefox exec path for CS4
+if [ -f /usr/lib/mozilla-firefox-2.0.0.19/mozilla-firefox-bin ];
+    then
+        FIREFOX=/usr/lib/mozilla-firefox-2.0.0.19/mozilla-firefox-bin
+else
+    echo "Can't find firefox executable"
+    exit 1
+fi
 
 # Start X on :1
-killall $XSERVER
+killall $XSERVER || true
 $XSERVER $DISPLAY &
 export DISPLAY
 
@@ -60,7 +78,7 @@ export DISPLAY
 rm -f /root/.mozilla/firefox/*.default/cookies.sqlite
 
 # See: http://seleniumhq.org/docs/05_selenium_rc.html#server-options
-java -jar selenium-server.jar -userExtensions user-extensions.js -htmlSuite "*firefox $FIREFOX" "http://localhost/" "$TESTS" "$RESULT"
+$JAVA -jar $MMCCORE/tests/libs/selenium-server.jar -userExtensions $MMCCORE/tests/libs/user-extensions.js -htmlSuite "*firefox $FIREFOX" "http://localhost/" "./$TESTS" "./$RESULT"
 
 killall $XSERVER
 
