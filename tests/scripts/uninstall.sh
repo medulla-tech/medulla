@@ -34,7 +34,8 @@ if [ -z $FORCE ];
     read
 fi
 
-service mmc-agent stop || true
+service mmc-agent force-stop || true
+rm -f /var/run/mmc-agent.pid
 
 rm -fr /etc/mmc*
 rm -f /etc/init.d/mmc-agent $PREFIX/sbin/mmc-agent
