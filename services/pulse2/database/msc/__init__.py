@@ -533,12 +533,13 @@ class MscDatabase(DatabaseHelper):
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')))
 
         if params['b_id'] == None:
-            if params['finished']: # Filter on finished commands only
-                filter.append(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
-            else:
+            is_done = self.__doneBundle(params, session)
+            if params['finished'] and not is_done: # Filter on finished commands only
+                filter.append(1 == 0) # send nothing
+            elif not params['finished'] and is_done:
                 # If we are querying on a bundle, we also want to display the
                 # commands_on_host flagged as done
-                filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+                filter.append(1 == 0) # send nothing
 #        else:
 #            is_done = self.__doneBundle(params, session)
 #            self.logger.debug("is the bundle done ? %s"%(str(is_done)))
@@ -649,7 +650,10 @@ class MscDatabase(DatabaseHelper):
                 # Get all commands related to the given computer UUID or group
                 # id
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
-                cmds = map(lambda c: (c.id, c.fk_bundle), ret)
+                cmds = []
+                for c in ret:
+                    if self.__doneBundle({'cmd_id':c.id, 'b_id':None}, session) and params['finished'] or not self.__doneBundle({'cmd_id':c.id, 'b_id':None}, session) and not params['finished']:
+                        cmds.append((c.id, c.fk_bundle))
 
                 size = []
                 size.extend(cmds)
