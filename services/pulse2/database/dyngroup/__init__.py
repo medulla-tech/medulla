@@ -421,20 +421,6 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def add_share(self, ctx, id, shares, visibility = 0):
-        """
-        add several shares, creating the users if they don't already exists
-        """
-        # often used with visibility = 0 as it's not at the same place that 
-        # the share is created and that the visibility is set
-        group = self.get_group(ctx, id)
-        session = create_session()
-        for login, t in shares:
-            user_id = self.__getOrCreateUser(ctx, login, t)
-            self.__createShare(group.id, user_id, visibility)
-        session.close()
-        return True
-
     def can_edit(self, ctx, id):
         """
         tell if a users can edit a group (based on the share type)

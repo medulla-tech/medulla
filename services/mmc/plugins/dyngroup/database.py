@@ -92,6 +92,20 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.name == groupname, filter_on)).order_by(self.machines.c.name).all()
 
+    def add_share(self, ctx, id, shares, visibility = 0):
+        """
+        add several shares, creating the users if they don't already exists
+        """
+        # often used with visibility = 0 as it's not at the same place that 
+        # the share is created and that the visibility is set
+        group = self.get_group(ctx, id)
+        session = create_session()
+        for login, t in shares:
+            user_id = self.__getOrCreateUser(ctx, login, t)
+            self.__createShare(group.id, user_id, visibility)
+        session.close()
+        return True
+
     ####################################
     ## SHARE ACCESS
 
