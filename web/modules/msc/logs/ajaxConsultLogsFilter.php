@@ -76,6 +76,7 @@ foreach ($cmds as $item) {
     $gid = $item['gid'];
     $current_state = $item['current_state'];
     $creation_date = _toDate($creation_date);
+    $status = $item['status'];
         
 
     #    "module=base&submod=computers&action=msctabs&cmd_id=1&tab=tablogs&uuid=UUID1620";
@@ -108,7 +109,8 @@ foreach ($cmds as $item) {
     */
     $params[] = array('cmd_id'=>$cmd['id'], 'title'=>$label);
     
-    $icons = state_tmpl($current_state);
+    if ($status) { $icons = state_tmpl_macro($status); }
+    else { $icons = state_tmpl($current_state); }
     if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
     if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
     if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
