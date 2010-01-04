@@ -486,7 +486,7 @@ class MscDatabase(DatabaseHelper):
         # get the list of all commands...
         cmds = self.__getAllCommandsConsult(ctx, filt)
         
-        ret = []
+        ret1 = []
         lastline = {'bid':None, 'gid':None, 'cid':None, 'cmd':None}
         obj = None
         # agregate the list : bundle/group/ ....
@@ -498,38 +498,50 @@ class MscDatabase(DatabaseHelper):
                         # TODO do we have to add information when we are in the same bundle ?
                         pass
                     else: # we just change bundle, we create the bundle to be filled
-                        if obj != None: ret.append(obj)
+                        if obj != None: ret1.append(obj)
                         if gid != None and gid != '':
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':1}
                         else:
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':1}
                 else: # we just enter in the bundle, we create the bundle to be filled
-                    if obj != None: ret.append(obj)
+                    if obj != None: ret1.append(obj)
                     if gid != None and gid != '':
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':1}
                     else:
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':1}
             else: # we are not in a bundle
                 if lastline['bid'] != None: # we were in a bundle, we just finish the previous bundle and start a command
                     # TODO do we have to add information when we are in the bundle ?
-                    if obj != None: ret.append(obj)
+                    if obj != None: ret1.append(obj)
                     if gid != None and gid != '':
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnGroupStatus(ctx, cmd.id)}
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':2}
                     else:
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':{}, 'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)}
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':3}
                 else: # we weren't in a bundle, we just finish the previous command
                     if cmd.id == lastline['cid']: # we are treating the same command
                         # TODO do we have to add information when we are in the same command
                         pass
                     else:
-                        if obj != None: ret.append(obj)
+                        if obj != None: ret1.append(obj)
                         if gid != None and gid != '':
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnGroupStatus(ctx, cmd.id)}
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':2}
                         else:
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':{}, 'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)}
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':3}
             lastline = {'bid':bid, 'gid':gid, 'cid':cmd.id, 'cmd':cmd}
+
+        size = len(ret1)
+        ret = []
+        for obj in ret1[min:max]: # call the time eating function only on necessary entries
+            if obj['case'] == 1:
+                obj['status'] = self.getCommandOnBundleStatus(ctx, obj['bid'])
+            elif obj['case'] == 2:
+                obj['status'] = self.getCommandOnGroupStatus(ctx, obj['cmdid'])
+            elif obj['case'] == 3:
+                obj['status'] = {}
+                obj['current_state'] = self.getCommandOnHostCurrentState(ctx, obj['cmdid'])
+            ret.append(obj)
             
-        return [len(ret), ret[min:max]]
+        return [size, ret]
 
     ###################
     def __displayLogsQuery(self, ctx, params, session):
