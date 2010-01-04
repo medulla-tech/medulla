@@ -33,6 +33,9 @@ umask 0022
 # Install script won't ask user confirmation when FORCE=1
 export FORCE=1
 
+export LANG=C
+export LC_ALL=C
+
 export TMPCO=`mktemp -d`
 
 pushd $TMPCO

@@ -21,6 +21,9 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+export LANG=C
+export LC_ALL=C
+
 PREFIX=/usr
 
 echo "Pulse 2 auto-uninstallation script"

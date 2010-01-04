@@ -21,6 +21,9 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+export LANG=C
+export LC_ALL=C
+
 echo "Pulse2 auto-installation script"
 echo
 
@@ -100,7 +103,7 @@ sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf
 # Wait for MySQL to start
 sleep 5
 
-IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/adr://'`
+IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/addr://'`
 
 # Create database msc and configure msc.init
 
@@ -190,7 +193,7 @@ sed -i "s/host = /host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-ser
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
 
 #launch all service of pulse2
-echo "Launch pulse2's services"
+echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-package-server restart
 /etc/init.d/pulse2-launchers restart
 /etc/init.d/pulse2-scheduler restart
