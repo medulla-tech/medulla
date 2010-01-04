@@ -473,6 +473,64 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return []
 
+    def __getAllCommandsConsult(self, ctx, filt):
+        session = create_session()
+        query = session.query(Commands).add_column(self.bundle.c.id).add_column(self.target.c.target_name).add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
+        query = query.filter(self.commands.c.title.like('%%%s%%'%(filt))).order_by(self.commands.c.creation_date, self.bundle.c.id).all()
+        
+        session.close()
+        return query
+
+    def getAllCommandsConsult(self, ctx, min, max, filt):
+        # get the list of all commands...
+        cmds = self.__getAllCommandsConsult(ctx, filt)
+        
+        ret = []
+        lastline = {'bid':None, 'gid':None, 'cid':None, 'cmd':None}
+        obj = None
+        # agregate the list : bundle/group/ ....
+        for cmd in cmds:
+            cmd, bid, target_name, gid, btitle, target_uuid = cmd
+            if bid != None: # we are in a bundle
+                if lastline['bid'] != None: # we were in a bundle, we continue adding information to the bundle
+                    if bid == lastline['bid']: # we were in the same bundle
+                        # TODO do we have to add information when we are in the same bundle ?
+                        pass
+                    else: # we just change bundle, we create the bundle to be filled
+                        if obj != None: ret.append(obj)
+                        if gid != None and gid != '':
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                        else:
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                else: # we just enter in the bundle, we create the bundle to be filled
+                    if obj != None: ret.append(obj)
+                    if gid != None and gid != '':
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                    else:
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':''}
+            else: # we are not in a bundle
+                if lastline['bid'] != None: # we were in a bundle, we just finish the previous bundle and start a command
+                    # TODO do we have to add information when we are in the bundle ?
+                    if obj != None: ret.append(obj)
+                    if gid != None and gid != '':
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                    else:
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                else: # we weren't in a bundle, we just finish the previous command
+                    if cmd.id == lastline['cid']: # we are treating the same command
+                        # TODO do we have to add information when we are in the same command
+                        pass
+                    else:
+                        if obj != None: ret.append(obj)
+                        if gid != None and gid != '':
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                        else:
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':''}
+            lastline = {'bid':bid, 'gid':gid, 'cid':cmd.id, 'cmd':cmd}
+            
+        return [len(ret), ret]
+
     ###################
     def __displayLogsQuery(self, ctx, params, session):
         query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))

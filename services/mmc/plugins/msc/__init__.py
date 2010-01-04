@@ -313,6 +313,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
 
+    def get_all_commands_for_consult(self, min = 0, max = 10, filt = ''):
+        ctx = self.currentContext
+        return xmlrpcCleanup(MscDatabase().getAllCommandsConsult(ctx, min, max, filt))
+
     def get_all_commandsonhost_currentstate(self):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostCurrentstate(ctx))
