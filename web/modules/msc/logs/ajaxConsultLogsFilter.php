@@ -2,9 +2,9 @@
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2007-2010 Mandriva, http://www.mandriva.com
  *
- * $Id: ajaxLogsFilter.php 4306 2009-07-15 16:09:25Z oroussy $
+ * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -19,8 +19,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 require("../../../includes/PageGenerator.php");
