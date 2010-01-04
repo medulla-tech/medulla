@@ -54,8 +54,8 @@ $params = array();
 $actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
 $actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails_logs = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tablogs');
-$actiondetails_hist = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tabhistory');
+$actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
+$actionstatus->setWidth("600");
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
@@ -77,8 +77,6 @@ foreach ($cmds as $item) {
     $creation_date = _toDate($creation_date);
     $status = $item['status'];
         
-
-    #    "module=base&submod=computers&action=msctabs&cmd_id=1&tab=tablogs&uuid=UUID1620";
     if ($target_uuid && $target_uuid != '') {
         $linkdetail = urlStr("base/computers/msctabs/tablogs", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
         $linklogs = urlStr("base/computers/msctabs/tablogs", array('uuid'=>$target_uuid, 'gid'=>$gid));
@@ -90,39 +88,20 @@ foreach ($cmds as $item) {
     $a_date[] = $creation_date;
     $a_creator[] = $creator;
     $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target); # TODO change to have a link to the target log page
-    $params[] = array();
 
-    /*
-
-    if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
-        $coh['current_state'] = 'rescheduled';
-    }
-    if (isset($statusTable[$coh['current_state']])) {
-        $a_current[] = $statusTable[$coh['current_state']];
-    } else {
-        $a_current[] = $coh['current_state'];
-    }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from", 'hostname'=>$target['target_name'], 'title'=>$cmd['title']);
-
-
-    */
-    $params[] = array('cmd_id'=>$cmd['id'], 'title'=>$label);
+    $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);
     
     if ($status) { $icons = state_tmpl_macro($status); }
     else { $icons = state_tmpl($current_state); }
     if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
     if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
     if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-    /*if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {
+    if ((!isset($bid) || $bid == '') && (!isset($gid) || $gid == '')) { # gid
         $a_details[] = $actionempty;
-    } elseif ($coh['current_state'] != 'done') {
-        $a_details[] = $actiondetails_logs;
     } else {
-        $a_details[] = $actiondetails_hist;
-    }*/
-    $a_details[] = $actionempty;
+        $a_details[] = $actionstatus;
+    }
 }
-
 
 $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
 $n->addExtraInfo($a_creator, _T("Creator", "msc"));
