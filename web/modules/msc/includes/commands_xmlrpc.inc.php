@@ -22,6 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+function get_all_commands_for_consult($min = 0, $max = 10, $filt = '') {
+    return xmlCall('msc.get_all_commands_for_consult', array($min, $max, $filt));
+}
+
 function get_all_commandsonhost_currentstate() {
     return xmlCall('msc.get_all_commandsonhost_currentstate');
 }

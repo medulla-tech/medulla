@@ -38,8 +38,10 @@ $mod->setPriority(700);
 $submod = new SubModule("logs");
 $submod->setDescription(_T("MSC logs", "msc"));
 $submod->setImg('modules/msc/img/navbar/msc');
-$submod->setDefaultPage("msc/logs/all");
+$submod->setDefaultPage("msc/logs/consult");
 
+$page = new Page("consult", _T('Consulter les diffusions', 'msc')); # TODO! put it in english!
+$submod->addPage($page);
 $page = new Page("all", _T('Show all logs', 'msc'));
 $submod->addPage($page);
 $page = new Page("pending", _T('Show pending task\'s logs', 'msc'));
