@@ -43,6 +43,7 @@ from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.qaction import qa_list_files
 from mmc.plugins.msc.machines import Machines, Machine
 from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
+from mmc.plugins.dyngroup.database import DyngroupDatabase
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
@@ -315,7 +316,13 @@ class RpcProxy(RpcProxyI):
 
     def get_all_commands_for_consult(self, min = 0, max = 10, filt = ''):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsConsult(ctx, min, max, filt))
+        size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt)
+        ret = []
+        for c in ret1:
+            if c['gid']:
+                c['target'] = DyngroupDatabase().get_group(ctx, c['gid']).name
+            ret.append(c)
+        return xmlrpcCleanup((size, ret))
 
     def get_all_commandsonhost_currentstate(self):
         ctx = self.currentContext
