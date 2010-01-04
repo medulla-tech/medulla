@@ -500,23 +500,23 @@ class MscDatabase(DatabaseHelper):
                     else: # we just change bundle, we create the bundle to be filled
                         if obj != None: ret.append(obj)
                         if gid != None and gid != '':
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
                         else:
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
                 else: # we just enter in the bundle, we create the bundle to be filled
                     if obj != None: ret.append(obj)
                     if gid != None and gid != '':
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
                     else:
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':self.getCommandOnBundleStatus(ctx, bid)}
             else: # we are not in a bundle
                 if lastline['bid'] != None: # we were in a bundle, we just finish the previous bundle and start a command
                     # TODO do we have to add information when we are in the bundle ?
                     if obj != None: ret.append(obj)
                     if gid != None and gid != '':
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnGroupStatus(ctx, cmd.id)}
                     else:
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':{}, 'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)}
                 else: # we weren't in a bundle, we just finish the previous command
                     if cmd.id == lastline['cid']: # we are treating the same command
                         # TODO do we have to add information when we are in the same command
@@ -524,12 +524,12 @@ class MscDatabase(DatabaseHelper):
                     else:
                         if obj != None: ret.append(obj)
                         if gid != None and gid != '':
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':''}
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'status':self.getCommandOnGroupStatus(ctx, cmd.id)}
                         else:
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':''}
+                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'status':{}, 'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)}
             lastline = {'bid':bid, 'gid':gid, 'cid':cmd.id, 'cmd':cmd}
             
-        return [len(ret), ret]
+        return [len(ret), ret[min:max]]
 
     ###################
     def __displayLogsQuery(self, ctx, params, session):
@@ -861,6 +861,12 @@ class MscDatabase(DatabaseHelper):
             ret = session.query(Target).select_from(self.target.join(self.commands_on_host)).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
             session.close()
         return ret
+
+    def getCommandOnHostCurrentState(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(Commands).add_column(self.commands_on_host.c.current_state).select_from(self.commands.join(self.commands_on_host)).filter(self.commands.c.id == cmd_id).first()
+        session.close()
+        return ret[1]
 
     def getCommandOnHostTitle(self, ctx, cmd_id):
         session = create_session()
