@@ -28,7 +28,11 @@ if (strlen($_GET['cmd_id'])) {
     $cmd_id = $_GET['cmd_id'];
     $status = get_command_on_group_status($cmd_id);
     $title = get_command_on_host_title($cmd_id);
-    $title = sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total']);
+    if ($status['total'] == 1) {
+        $title = sprintf(_T("Command '%s' state concerning <b>one</b> computer", "msc"), $title);
+    } else {
+        $title = sprintf(_T("Command '%s' state concerning <b>%s</b> computers", "msc"), $title, $status['total']);
+    }
 } elseif (strlen($_GET['bundle_id'])) {
     $status = get_command_on_bundle_status($_GET['bundle_id']);
     $bdl = bundle_detail($_GET['bundle_id']);
@@ -37,7 +41,13 @@ if (strlen($_GET['cmd_id'])) {
     } else {
         $cmd_nb = count($bdl[1]);
         $machines_nb = $status['total'] / count($bdl[1]);
-        $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers", "msc"), $bdl[0]['title'], $cmd_nb, $machines_nb);
+        if ($cmd_nb == 1) {
+            if ($machines_nb == 1) { $title = sprintf(_T("Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer", "msc"), $bdl[0]['title']); }
+            else { $title = sprintf(_T("Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers", "msc"), $bdl[0]['title'], $machines_nb); }
+        } else {
+            if ($machines_nb == 1) { $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer", "msc"), $bdl[0]['title'], $cmd_nb); }
+            else { $title = sprintf(_T("Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers", "msc"), $bdl[0]['title'], $cmd_nb, $machines_nb); }
+        }
     }
 } else {
     print _T("error : cmd_id or bundle_id must be given", "msc");
