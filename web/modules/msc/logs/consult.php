@@ -30,7 +30,7 @@ require_once('modules/msc/includes/command_history.php');
 require_once('modules/msc/includes/functions.php');
 require_once('modules/msc/includes/widgets.inc.php');
 
-$p = new PageGenerator(_T("Consulter les diffusions", 'msc')); # TODO! put it in english!
+$p = new PageGenerator(_T("Consolidated view", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

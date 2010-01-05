@@ -40,7 +40,7 @@ $submod->setDescription(_T("MSC logs", "msc"));
 $submod->setImg('modules/msc/img/navbar/msc');
 $submod->setDefaultPage("msc/logs/consult");
 
-$page = new Page("consult", _T('Consulter les diffusions', 'msc')); # TODO! put it in english!
+$page = new Page("consult", _T('Consolidated view', 'msc'));
 $submod->addPage($page);
 $page = new Page("all", _T('Show all logs', 'msc'));
 $submod->addPage($page);

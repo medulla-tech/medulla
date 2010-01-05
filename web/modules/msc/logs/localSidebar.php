@@ -24,7 +24,7 @@
  
 $sidemenu= new SideMenu();
 $sidemenu->setClass("logs");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Consulter les diffusions", 'msc'), "msc", "logs", "consult")); # TODO! put it in english!
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Consolidated view", 'msc'), "msc", "logs", "consult"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all logs", 'msc'), "msc", "logs", "all"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all pending task's logs", 'msc'), "msc", "logs", "pending"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all running task's logs", 'msc'), "msc", "logs", "running"));
