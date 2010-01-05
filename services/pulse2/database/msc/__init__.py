@@ -160,10 +160,10 @@ class MscDatabase(DatabaseHelper):
 
     def getIdCommandOnHost(self, ctx, id):
         session = create_session()
-        query = session.query(CommandsOnHost).filter(self.commands.c.id == id).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.creator == ctx.userid).all()
-        if len(query) == 1:
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == id).filter(self.commands.c.creator == ctx.userid).all()
+        if type(query) != list:
             ret = query.id
-        elif len(query) > 1:
+        elif len(query) > 0:
             ret = []
             for q in query:
                 ret.append(q.id)
