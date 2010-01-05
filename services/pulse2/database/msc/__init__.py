@@ -477,7 +477,7 @@ class MscDatabase(DatabaseHelper):
         session = create_session()
         query = session.query(Commands).add_column(self.bundle.c.id).add_column(self.target.c.target_name).add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
-        query = query.filter(or_(self.commands.c.title.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))))
+        query = query.filter(or_(self.commands.c.title.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))))
         query = query.order_by(self.commands.c.creation_date, self.bundle.c.id).all()
         
         session.close()
