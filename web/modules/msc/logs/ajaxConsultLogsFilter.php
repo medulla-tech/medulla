@@ -55,6 +55,7 @@ $actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc"
 $actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
 $actionstatus  = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus","status", "msc", "base", "computers");
+$actionsinglestatus  = new ActionPopupItem(_T("Status", "msc"), "msctabssinglestatus","status", "msc", "base", "computers");
 $actionstatus->setWidth("600");
 $actionempty = new EmptyActionItem();
 $a_start = array();
@@ -97,7 +98,7 @@ foreach ($cmds as $item) {
     if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
     if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
     if ((!isset($bid) || $bid == '') && (!isset($gid) || $gid == '')) { # gid
-        $a_details[] = $actionempty;
+        $a_details[] = $actionsinglestatus;
     } else {
         $a_details[] = $actionstatus;
     }

@@ -152,9 +152,15 @@ if (!empty($submod)) {
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $submod->addPage($page);
 
-    /* Confirm popup when stopping a command */
+    /* Status of a command on a group/bundle */
     $page = new Page("msctabsstatus", _T("Command status", "msc"));
     $page->setFile("modules/msc/msc/msctabsstatus.php");
+    $page->setOptions(array("visible"=>False, "noHeader"=>True));
+    $submod->addPage($page);
+
+    /* Status for a command on one machine */
+    $page = new Page("msctabssinglestatus", _T("Single command status", "msc"));
+    $page->setFile("modules/msc/msc/msctabssinglestatus.php");
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $submod->addPage($page);
 
