@@ -31,6 +31,7 @@ import os.path
 from sqlalchemy import *
 from sqlalchemy import exceptions
 from sqlalchemy.orm import *
+from sqlalchemy.sql import union
 from sqlalchemy.exceptions import NoSuchTableError, TimeoutError
 
 from twisted.internet import defer
@@ -160,7 +161,9 @@ class MscDatabase(DatabaseHelper):
 
     def getIdCommandOnHost(self, ctx, id):
         session = create_session()
-        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == id).filter(self.commands.c.creator == ctx.userid).all()
+        query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == id)
+        query = self.__queryUsersFilter(ctx, query)
+        query = query.all()
         if type(query) != list:
             ret = query.id
         elif len(query) > 0:
@@ -292,10 +295,37 @@ class MscDatabase(DatabaseHelper):
         conn.close()
         return schedulers
 
+    def __queryUsersFilterBis(self, ctx):
+        """
+        Build a part of a query for commands, that add user filtering
+        """
+        q = 1==1
+        if ctx.filterType == "mine":
+            # User just want to get her/his commands
+            return self.commands.c.creator == ctx.userid
+        elif ctx.filterType == "all":
+            # User want to get all commands she/he has the right to see
+            if ctx.userid == "root":
+                # root can see everything, so no filter for root
+                return 1 == 1
+            elif ctx.locationsCount not in [None, 0, 1] and ctx.userids:
+                # We have multiple locations, and a list of userids sharing the
+                # same locations of the current user
+                return self.commands.c.creator.in_(ctx.userids)
+        else:
+            # Unknown filter type
+            self.logger.warn("Unknown filter type when querying commands")
+            if ctx.locationsCount not in [None, 0, 1]:
+                # We have multiple locations (entities) in database, so we
+                # filter the results using the current userid
+                return self.commands.c.creator == ctx.userid
+        return 1 == 1
+
     def __queryUsersFilter(self, ctx, q):
         """
         Build a part of a query for commands, that add user filtering
         """
+        # should use return q.filter(self.__queryUsersFilterBis(ctx))
         if ctx.filterType == "mine":
             # User just want to get her/his commands
             q = q.filter(self.commands.c.creator == ctx.userid)
@@ -473,74 +503,91 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return []
 
-    def __getAllCommandsConsult(self, ctx, filt):
-        session = create_session()
-        query = session.query(Commands).add_column(self.bundle.c.id).add_column(self.target.c.target_name).add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
-        query = query.filter(or_(self.commands.c.title.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))))
-        query = query.order_by(self.commands.c.creation_date, self.bundle.c.id).all()
-        
-        session.close()
-        return query
-
     def getAllCommandsConsult(self, ctx, min, max, filt):
-        # get the list of all commands...
-        cmds = self.__getAllCommandsConsult(ctx, filt)
+        filtering2_1 = and_(self.commands.c.fk_bundle == None, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+        filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+                
+        session = create_session()
+        size1 = session.query(Commands).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).count() or 0
+        size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count() or 0
+ 
+        conn = self.getDbConnection()
+        size2 = conn.execute(size2).fetchone()
         
-        ret1 = []
-        lastline = {'bid':None, 'gid':None, 'cid':None, 'cmd':None}
-        obj = None
-        # agregate the list : bundle/group/ ....
-        for cmd in cmds:
-            cmd, bid, target_name, gid, btitle, target_uuid = cmd
-            if bid != None: # we are in a bundle
-                if lastline['bid'] != None: # we were in a bundle, we continue adding information to the bundle
-                    if bid == lastline['bid']: # we were in the same bundle
-                        # TODO do we have to add information when we are in the same bundle ?
-                        pass
-                    else: # we just change bundle, we create the bundle to be filled
-                        if obj != None: ret1.append(obj)
-                        if gid != None and gid != '':
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':1}
-                        else:
-                            obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':1}
-                else: # we just enter in the bundle, we create the bundle to be filled
-                    if obj != None: ret1.append(obj)
-                    if gid != None and gid != '':
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':1}
-                    else:
-                        obj = {'title':btitle, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':bid, 'cmdid':'', 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':1}
-            else: # we are not in a bundle
-                if lastline['bid'] != None: # we were in a bundle, we just finish the previous bundle and start a command
-                    # TODO do we have to add information when we are in the bundle ?
-                    if obj != None: ret1.append(obj)
-                    if gid != None and gid != '':
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':2}
-                    else:
-                        obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':3}
-                else: # we weren't in a bundle, we just finish the previous command
-                    if cmd.id == lastline['cid']: # we are treating the same command
-                        # TODO do we have to add information when we are in the same command
-                        pass
-                    else:
-                        if obj != None: ret1.append(obj)
-                        if gid != None and gid != '':
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':'group %s'%gid, 'gid':gid, 'uuid':'', 'case':2}
-                        else:
-                            obj = {'title':cmd.title, 'creator':cmd.creator, 'creation_date':cmd.creation_date, 'bid':'', 'cmdid':cmd.id, 'target':target_name, 'uuid':target_uuid, 'gid':'', 'case':3}
-            lastline = {'bid':bid, 'gid':gid, 'cid':cmd.id, 'cmd':cmd}
+        size = int(size1) + int(size2[0])
 
-        size = len(ret1)
+        u2 = union(
+                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date], filtering2_1),
+                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date], filtering2_2) 
+        ).group_by('bid').order_by(desc('creation_date')).offset(int(min)).limit(int(max)-int(min))
+
+        conn = self.getDbConnection()
+        cmds = map(lambda e: e[0], conn.execute(u2).fetchall())
+        conn.close()
+
+        session = create_session()
+
+        query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.target.c.target_name)
+        query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
+        
+        cmds = query.filter(self.commands.c.id.in_(cmds)).group_by(self.commands.c.id).order_by(desc(self.commands.c.creation_date)).all()
+
+        session.close()
+
         ret = []
-        for obj in ret1[min:max]: # call the time eating function only on necessary entries
-            if obj['case'] == 1:
-                obj['status'] = self.getCommandOnBundleStatus(ctx, obj['bid'])
-            elif obj['case'] == 2:
-                obj['status'] = self.getCommandOnGroupStatus(ctx, obj['cmdid'])
-            elif obj['case'] == 3:
-                obj['status'] = {}
-                obj['current_state'] = self.getCommandOnHostCurrentState(ctx, obj['cmdid'])
-            ret.append(obj)
+        for cmd, bid, target_name, gid, btitle, target_uuid in cmds:
+            if bid != None: # we are in a bundle
+                if gid != None and gid != '':
+                    ret.append({
+                            'title':btitle,
+                            'creator':cmd.creator,
+                            'creation_date':cmd.creation_date,
+                            'bid':bid,
+                            'cmdid':'',
+                            'target':'group %s'%gid,
+                            'gid':gid, 
+                            'uuid':'',
+                            'status':self.getCommandOnBundleStatus(ctx, bid)
+                    })
+                else:
+                    ret.append({
+                            'title':btitle,
+                            'creator':cmd.creator,
+                            'creation_date':cmd.creation_date,
+                            'bid':bid,
+                            'cmdid':'',
+                            'target':target_name,
+                            'uuid':target_uuid,
+                            'gid':'',
+                            'status':self.getCommandOnBundleStatus(ctx, bid)
+                    })
+            else: # we are not in a bundle
+                if gid != None and gid != '':
+                    ret.append({
+                            'title':cmd.title,
+                            'creator':cmd.creator,
+                            'creation_date':cmd.creation_date,
+                            'bid':'',
+                            'cmdid':cmd.id,
+                            'target':'group %s'%gid,
+                            'gid':gid,
+                            'uuid':'',
+                            'status':self.getCommandOnGroupStatus(ctx, cmd.id)
+                    })
+                else:
+                    ret.append({
+                            'title':cmd.title,
+                            'creator':cmd.creator,
+                            'creation_date':cmd.creation_date,
+                            'bid':'',
+                            'cmdid':cmd.id,
+                            'target':target_name,
+                            'uuid':target_uuid,
+                            'gid':'',
+                            'status':{},
+                            'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)
+                    })
             
         return [size, ret]
 

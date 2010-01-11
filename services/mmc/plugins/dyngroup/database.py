@@ -70,6 +70,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         select_from = self.machines.join(self.results).join(self.groups)
         (join_tables, filter_on) = self.__permissions_query(ctx, session)
+        if join_tables == None:
+            return (select_from, filter_on)
         return (self.__merge_join_query(select_from, join_tables), filter_on)
 
     def __getMachines(self, ctx, gid, session = None):
@@ -80,7 +82,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.id == gid, filter_on)).order_by(self.machines.c.name).all()
+        if filter_on == None:
+            filter_on = and_(self.groups.c.id == gid)
+        else:
+            filter_on = and_(self.groups.c.id == gid, filter_on)
+        return session.query(Machines).select_from(select_from).filter(filter_on).all()
 
     def __getMachinesByGroupName(self, ctx, groupname, session = None):
         """
@@ -90,7 +96,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        return session.query(Machines).select_from(select_from).filter(and_(self.groups.c.name == groupname, filter_on)).order_by(self.machines.c.name).all()
+        if filter_on == None:
+            filter_on = and_(self.groups.c.name == groupname)
+        else:
+            filter_on = and_(self.groups.c.name == groupname, filter_on)
+        return session.query(Machines).select_from(select_from).filter(filter_on).all()
 
     def add_share(self, ctx, id, shares, visibility = 0):
         """
@@ -174,7 +184,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     #####################################
     ## GROUP ACCESS
 
-    def __getGroupInSessionFirstStep(self, ctx, session):
+    def __getGroupInSessionFirstStep(self, ctx, session, ro = False):
         """
         return the query on groups, filtered on the context
         ie : only the group you can have access!
@@ -183,15 +193,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
     
         group = session.query(Groups).select_from(self.groups.join(self.users, self.groups.c.FK_users == self.users.c.id).outerjoin(self.shareGroup, self.groups.c.id == self.shareGroup.c.FK_groups))
+        if ctx.userid == 'root' or ro:
+            return group
         return group.filter(or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
     
-    def __getGroupByNameInSession(self, ctx, session, name):
+    def __getGroupByNameInSession(self, ctx, session, name, ro = False):
         """
         get a group by it's name using the __getGroupInSessionFirstStep function 
         wildcards are allowed
         ie : you will see only the group you can have access!
         """
-        group = self.__getGroupInSessionFirstStep(ctx, session)
+        group = self.__getGroupInSessionFirstStep(ctx, session, ro)
         if re.search("\*", name):
             name = re.sub("\*", "%", name)
             group = group.filter(self.groups.c.name.like(name))
@@ -199,13 +211,13 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             group = group.filter(self.groups.c.name == name).first()
         return group
     
-    def __getGroupInSession(self, ctx, session, id):
+    def __getGroupInSession(self, ctx, session, id, ro = False):
         """
         get a group by it's id using the __getGroupInSessionFirstStep function 
         wildcards are not allowed
         ie : you will see only the group you can have access!
         """
-        group = self.__getGroupInSessionFirstStep(ctx, session)
+        group = self.__getGroupInSessionFirstStep(ctx, session, ro)
         group = group.filter(self.groups.c.id == id).first()
         return group
 
@@ -216,14 +228,25 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         and filters like filter (on the group name with wildcards) and name (on the group name without wildcards)
         """
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
-        groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(filter_on).filter(self.groups.c.type == type)
+        groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(self.groups.c.type == type)
+        root_id = self.__getUser('root')
+        if filter_on != None:
+            groups = groups.filter(filter_on)
         
+        if ctx.userid == 'root' and params.has_key('localSidebar') and params['localSidebar']:
+            groups = groups.filter(self.groups.c.FK_user == root_id)
         if params.has_key('canShow'):
             if params['canShow']:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
             else:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 0)
     
+        try:
+            if params['owner']:
+                groups = groups.filter(self.users.c.login == params['owner'])
+        except KeyError:
+            pass
+
         try:
             if params['dynamic']:
                 groups = groups.filter(self.groups.c.query != None)
@@ -298,22 +321,43 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         return True if a group with this name exists and does not have the same id
         """
-        if self.countallgroups(ctx, {'name':name}) == 0:
-            return False
-        if id == None:
-            return True
-        grps = self.getallgroups(ctx, {'name':name})
+        if id == None or id == '':
+            if self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}) == 0:
+                return False
+            else:
+                return True
+        
+        owner = self.get_group_owner(ctx, id)
+        grps = self.getallgroups(ctx, {'name':name, 'owner':owner.login})
         for grp in grps:
             if str(grp.id) != str(id):
                 return True
         return False
 
-    def get_group(self, ctx, id):
+    def get_group_owner(self, ctx, id):
+        group = self.get_group(ctx, id)
+        if group:
+            session = create_session()
+            user = session.query(Users).select_from(self.users.join(self.groups)).filter(self.groups.c.id == id).first()
+            session.close()
+            return user
+        return False
+
+    def get_group(self, ctx, id, ro = False):
         """
-        get teh group defined by it's id only if you can have access!
+        get the group defined by it's id only if you can have access!
         """
         session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
+        group = self.__getGroupInSession(ctx, session, id, ro)
+        if not group:
+            session.close()
+            return False
+        if ro: # do tests to put the flag ro
+            r = self.__getGroupInSession(ctx, session, id, False)
+            if r:
+                setattr(group, 'ro', False)
+            else:
+                setattr(group, 'ro', True)
         session.close()
         if group:
             return group
@@ -536,6 +580,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         user_id = self.__getOrCreateUser(ctx)
         ug_ids = map(lambda x: x.id, self.__getUsers(getUserGroups(ctx.userid), 1, session)) # get all usergroups ids
     
+        if ctx.userid == 'root':
+            return (None, None)
         return ([[self.users, False, self.users.c.id == self.groups.c.FK_users], [self.shareGroup, True, self.groups.c.id == self.shareGroup.c.FK_groups]], or_(self.users.c.login == ctx.userid, self.shareGroup.c.FK_users == user_id, self.shareGroup.c.FK_users.in_(ug_ids)))
     
     def __get_group_permissions_request_first(self, ctx, session = None):
@@ -547,7 +593,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         select_from = self.groups
         join_tables, filter_on = self.__permissions_query(ctx, session)
-        select_from = self.__merge_join_query(select_from, join_tables)
+        if join_tables != None:
+            select_from = self.__merge_join_query(select_from, join_tables)
         return (select_from, filter_on)
     
     def __get_group_permissions_request(self, ctx, session = None):
@@ -556,7 +603,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         to get the result of the query
         """
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
-        groups = session.query(Groups).select_from(select_from).filter(filter_on)
+        groups = session.query(Groups).select_from(select_from)
+        if filter_on != None:
+            groups = groups.filter(filter_on)
         return groups
   
     #######################################
@@ -597,7 +646,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         get the list of machines of the group (defined by it's name)
         """
         session = create_session()
-        group = self.__getGroupByNameInSession(ctx, session, name)
+        group = self.__getGroupByNameInSession(ctx, session, name, False)
         content = self.__getContent(ctx, group, queryManager)
         return content
 
@@ -658,7 +707,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         connection = self.getDbConnection()
         trans = connection.begin()
         session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
+        group = self.__getGroupInSession(ctx, session, id, False)
         session.close()
         query = queryManager.getQueryTree(group.query, group.bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, group.bool, 0, -1, False, True)
@@ -679,7 +728,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         Add member computers specified by a uuids list to a group.
         """
         session = create_session()
-        group = self.__getGroupInSession(ctx, session, id)
+        group = self.__getGroupInSession(ctx, session, id, False)
         session.close()
         connection = self.getDbConnection()
         trans = connection.begin()

@@ -53,14 +53,16 @@ if ($_GET['uuid']) {
     $p = new TabbedPageGenerator();
     $p->setSideMenu($sidemenu);
     require("modules/dyngroup/includes/includes.php");
-    $group = new Group($_GET['gid'], true);
+    $group = new Group($_GET['gid'], true, true);
     if ($group->exists == False) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
         $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
-        $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid'=>$_GET['gid']));
-        $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid'=>$_GET['gid']));
+        if (!$group->all_params['ro']) {
+            $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid'=>$_GET['gid']));
+            $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid'=>$_GET['gid']));
+        }
         $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid'=>$_GET['gid']));
         $p->addTab("grouptabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid'=>$_GET['gid']));
     }

@@ -86,9 +86,9 @@ class Profile extends Group {
     function isGroup() { return False; }
 }
 class Group {
-    function Group($id = null, $load = false) {
+    function Group($id = null, $load = false, $ro = false) {
         if ($id && $load) {
-            $params = __xmlrpc_get_group($id);
+            $params = __xmlrpc_get_group($id, $ro);
             if ($params == False) {
                 $this->exists = False;
             } else {
@@ -96,22 +96,25 @@ class Group {
                 $this->name = $params['name'];
                 $this->exists = True;
             }
+            $this->all_params = $params;
         } elseif ($id) {
             $this->id = $id;
             $this->exists = True;
+            $this->all_params = array();
         }
         $this->type = 0;
     }
-    function delete() { return __xmlrpc_delete_group($this->id); }
+    function can_modify() { if (isset($this->all_params['ro']) && $this->all_params['ro']) { return False; } return True; }
+    function delete() { if ($this->can_modify()) { return __xmlrpc_delete_group($this->id); } return False; }
     function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility); return $this->id; }
     function toS() { return __xmlrpc_tos_group($this->id); }
 
     function getName() { return $this->name; }
-    function setName($name) { $this->name = $name; return __xmlrpc_setname_group($this->id, $name); }
+    function setName($name) { if ($this->can_modify()) { $this->name = $name; return __xmlrpc_setname_group($this->id, $name); } return False; }
     function getRequest() { return __xmlrpc_request_group($this->id); }
-    function setRequest($request) { return __xmlrpc_setrequest_group($this->id, $request); }
+    function setRequest($request) { if ($this->can_modify()) { return __xmlrpc_setrequest_group($this->id, $request); } return False; }
     function getBool() { return __xmlrpc_bool_group($this->id); }
-    function setBool($bool) { return __xmlrpc_setbool_group($this->id, $bool); }
+    function setBool($bool) { if ($this->can_modify()) { return __xmlrpc_setbool_group($this->id, $bool); } return False; }
 
     function reply($start = 0, $end = 10, $filter = '') { return __xmlrpc_requestresult_group($this->id, $start, $end, $filter); }
     function countReply($filter = '') { return __xmlrpc_countrequestresult_group($this->id, $filter); }
@@ -131,45 +134,55 @@ class Group {
     function members() { return $this->getResult(0, -1, ''); }
     function countResult($filter = '') { return __xmlrpc_countresult_group($this->id, $filter); }
 
-    function setVisibility($visibility) { return __xmlrpc_setvisibility_group($this->id, $visibility); }
+    function setVisibility($visibility) { if ($this->can_modify()) { return __xmlrpc_setvisibility_group($this->id, $visibility); } return False; }
     function canShow() { return __xmlrpc_canshow_group($this->id); }
-    function show() { return __xmlrpc_show_group($this->id); } 
-    function hide() { return __xmlrpc_hide_group($this->id); } 
+    function show() { if ($this->can_modify()) { return __xmlrpc_show_group($this->id); } return False; } 
+    function hide() { if ($this->can_modify()) { return __xmlrpc_hide_group($this->id); } return False; } 
 
     function isProfile() { return False; }
     function isGroup() { return True; }
     function isDyn() { return __xmlrpc_isdyn_group($this->id); }
-    function toDyn() { return __xmlrpc_todyn_group($this->id); }
+    function toDyn() { if ($this->can_modify()) { return __xmlrpc_todyn_group($this->id); } return False; }
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
-    function reload() {  return __xmlrpc_reload_group($this->id); }
+    function reload() {  if ($this->can_modify()) { return __xmlrpc_reload_group($this->id); } return False; }
 
     function removeRequest() { return __xmlrpc_setrequest_group($this->id, ''); }
 
-    function addMember($uuid) { return $this->addMembers(array($uuid)); }
-    function delMember($uuid) { return $this->delMembers($uuid); }
-    function importMembers($elt, $values) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); }
+    function addMember($uuid) { if ($this->can_modify()) { return $this->addMembers(array($uuid)); } return False; }
+    function delMember($uuid) { if ($this->can_modify()) { return $this->delMembers($uuid); } return False; }
+    function importMembers($elt, $values) { if ($this->can_modify()) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); } return False; }
     #function removeMachine($uuid) { }
-    function addMembers($uuids) { return __xmlrpc_addmembers_to_group($this->id, $uuids); }
+    function addMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_addmembers_to_group($this->id, $uuids); } return False; }
     #function addMachines($a_uuids) { }
-    function delMembers($uuids) { return __xmlrpc_delmembers_to_group($this->id, $uuids); }
+    function delMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_delmembers_to_group($this->id, $uuids); } return False; }
 
-    function shareWith() { return __xmlrpc_share_with($this->id); }
+    function shareWith() { if ($this->can_modify()) { return __xmlrpc_share_with($this->id); } return False; }
     function addShares($share) {
         $sha = array();
-        foreach (array_values($share) as $s) {
-            $sha[] = array($s['user']['login'], $s['user']['type']);
+        if ($this->can_modify()) { 
+            $sha = array();
+            foreach (array_values($share) as $s) {
+                $sha[] = array($s['user']['login'], $s['user']['type']);
+            }
+            return __xmlrpc_add_share($this->id, $sha);
         }
-        return __xmlrpc_add_share($this->id, $sha);
+        return False;
     }
     function delShares($share) {
-        $sha = array();
-        foreach (array_values($share) as $s) {
-            $sha[] = array($s['user']['login'], $s['user']['type']);
+        if ($this->can_modify()) { 
+            $sha = array();
+            foreach (array_values($share) as $s) {
+                $sha[] = array($s['user']['login'], $s['user']['type']);
+            }
+            return __xmlrpc_del_share($this->id, $sha);
         }
-        return __xmlrpc_del_share($this->id, $sha);
+        return False;
     }
     function canEdit() {
-        return __xmlrpc_can_edit($this->id);
+        if ($this->can_modify()) { 
+            return __xmlrpc_can_edit($this->id);
+        }
+        return False;
     }
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
         include("modules/pulse2/pulse2/computers_list.php");
@@ -180,7 +193,7 @@ function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgro
 function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
 function __xmlrpc_countallprofiles($params) { return xmlCall("dyngroup.countallprofiles", array($params)); }
 function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofiles", array($params)); }
-function __xmlrpc_get_group($id) { return xmlCall("dyngroup.get_group", array($id)); }
+function __xmlrpc_get_group($id, $ro) { return xmlCall("dyngroup.get_group", array($id, $ro)); }
 
 function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
 function __xmlrpc_create_group($name, $visibility) { return xmlCall("dyngroup.create_group", array($name, $visibility)); }

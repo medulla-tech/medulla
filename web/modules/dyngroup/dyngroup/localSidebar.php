@@ -31,7 +31,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("All profiles", "dyngroup"), "bas
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a profile", "dyngroup"), "base", "computers", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
 
 $items = array();
-$groups = getAllGroups(array('canShow'=>true));
+$groups = getAllGroups(array('canShow'=>true, 'localSidebar'=>true));
 foreach ($groups as $group) {
     $isA = ($group->isDyn() ? (!$group->isRequest() ? _T('the result', 'dyngroup') : _T('the query', 'dyngroup')) : (_T('the static group', 'dyngroup')));
     

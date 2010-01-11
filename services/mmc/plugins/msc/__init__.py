@@ -318,9 +318,28 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt)
         ret = []
+        logger = logging.getLogger()
+        cache = {}
         for c in ret1:
             if c['gid']:
-                c['target'] = DyngroupDatabase().get_group(ctx, c['gid']).name
+                if cache.has_key(c['gid']):
+                    c['target'] = cache[c['gid']]
+                else:
+                    group = DyngroupDatabase().get_group(ctx, c['gid'], True)
+                    if type(group) == bool: # we dont have the permission to view the group
+                        c['target'] = 'UNVISIBLEGROUP' # TODO!
+                    elif group == None:
+                        c['target'] = 'this group has been deleted'
+                    elif hasattr(group, 'ro') and group.ro:
+                        logger.debug("user %s access to group %s in RO mode"%(ctx.userid, group.name))
+                        c['target'] = group.name
+                    else:
+                        c['target'] = group.name
+                    cache[c['gid']] = c['target']
+            # treat c['title'] to remove the date when possible
+            # "Bundle (1) - 2009/12/14 10:22:24" => "Bundle (1)"
+            date_re = re.compile(" - \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d")
+            c['title'] = date_re.sub('', c['title'])
             ret.append(c)
         return xmlrpcCleanup((size, ret))
 

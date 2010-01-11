@@ -621,6 +621,7 @@ class Groups(object):
             'bool':self.bool
         }
         if hasattr(self, 'is_owner'): ret['is_owner'] = self.is_owner
+        if hasattr(self, 'ro'): ret['ro'] = self.ro
 #        if DyngroupDatabase().getGroupType(self.type): ret['type_label'] = DyngroupDatabase().getGroupType(self.type).value
         return ret
 class GroupType(object): pass
