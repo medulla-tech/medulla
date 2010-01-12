@@ -32,8 +32,7 @@ from mmc.plugins.base import getUserGroups
 import mmc.plugins.dyngroup
 # PULSE2 modules
 import pulse2.database.dyngroup
-from pulse2.database.dyngroup import Groups, GroupType, Machines, ProfilesData, ProfilesPackages, ProfilesResults, \
-                                    Results, ShareGroup, ShareGroupType, Users, UsersType 
+from pulse2.database.dyngroup import Groups, GroupType, Machines, ProfilesData, ProfilesPackages, ProfilesResults, Results, ShareGroup, ShareGroupType, Users, UsersType
 
 # Imported last
 import logging
@@ -234,7 +233,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             groups = groups.filter(filter_on)
         
         if ctx.userid == 'root' and params.has_key('localSidebar') and params['localSidebar']:
-            groups = groups.filter(self.groups.c.FK_user == root_id)
+            groups = groups.filter(self.groups.c.FK_users == root_id)
         if params.has_key('canShow'):
             if params['canShow']:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
