@@ -228,7 +228,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
         groups = session.query(Groups).add_column(self.users.c.login).select_from(select_from).filter(self.groups.c.type == type)
-        root_id = self.__getUser('root')
+        root_id = self.__getUser('root').id
         if filter_on != None:
             groups = groups.filter(filter_on)
         
