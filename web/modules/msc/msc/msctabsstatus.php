@@ -138,6 +138,12 @@ $slabels = array(
 
 );
 
+function export_csv($cmd_id, $bundle_id, $state) {
+    return " <td><a href='".
+        urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id, 'bundle_id'=>$bundle_id, 'state'=>$state)).
+        "'><img src='modules/msc/graph/csv.png' alt='export csv'/></a></td>";
+}
+
 ?><h3><?= $title?>&nbsp;
 <a href='<?= urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id, 'bundle_id'=>$_GET['bundle_id'])) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
 </h3>
@@ -146,11 +152,11 @@ $slabels = array(
 foreach ($labels as $l) {
     $s = $status[$l[0]];
     if ($s['total'][0] == '0') {
-        print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td></tr>";
+        print "<tr><td colspan='3'>".$l[1][0]." (".$s['total'][1]."%)</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
     } elseif ($s['total'][0] == '1') {
-        print "<tr><td colspan='3'>".$l[1][1]." (".$s['total'][1]."%)</td></tr>";
+        print "<tr><td colspan='3'>".$l[1][1]." (".$s['total'][1]."%)</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
     } else {
-        print "<tr><td colspan='3'>".sprintf($l[1][2], $s['total'][0])." (".$s['total'][1]."%)</td></tr>";
+        print "<tr><td colspan='3'>".sprintf($l[1][2], $s['total'][0])." (".$s['total'][1]."%)</td>".export_csv($cmd_id, $_GET['bundle_id'], $l[0])."</tr>";
     }
 
     foreach ($slabels[$l[0]] as $sl) {
@@ -172,7 +178,11 @@ foreach ($labels as $l) {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
         print " (".$ss[1]."%)";
-        print "</td></tr>";
+        if ($ss[1] == 0) {
+            print "</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
+        } else {
+            print "</td>".export_csv($cmd_id, $_GET['bundle_id'], $sl[0])."</tr>";
+        }
     }
 }
 

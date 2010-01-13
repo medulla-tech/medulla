@@ -149,8 +149,16 @@ function pause_bundle($bundle_id) {
         return xmlCall('msc.pause_bundle', array($bundle_id));
 }
 
+function get_command_on_group_by_state($cmd_id, $state) {
+    return xmlCall('msc.get_command_on_group_by_state', array($cmd_id, $state));
+}
+
 function get_command_on_group_status($cmd_id) {
     return xmlCall('msc.get_command_on_group_status', array($cmd_id));
+}
+
+function get_command_on_bundle_by_state($bundle_id, $state) {
+    return xmlCall('msc.get_command_on_bundle_by_state', array($bundle_id, $state));
 }
 
 function get_command_on_bundle_status($bundle_id) {

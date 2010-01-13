@@ -940,6 +940,13 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda c:c.id, ret)
 
+    def getCommandOnGroupByState(self, ctx, cmd_id, state):
+        session = create_session()
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
+        ret = self.__filterOnStatus(ctx, query, state)
+        session.close()
+        return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
+    
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
@@ -947,6 +954,13 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
+    def getCommandOnBundleByState(self, ctx, fk_bundle, state):
+        session = create_session()
+        query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands_on_host.c.host)
+        ret = self.__filterOnStatus(ctx, query, state)
+        session.close()
+        return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
+        
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
         session = create_session()
         query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle)
@@ -954,39 +968,53 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
-    def __getStatus(self, ctx, query):
+    def __putUUIDInCOH(self, coh, uuid):
+        setattr(coh, 'target_uuid', uuid)
+        return coh
+    
+    def __filterOnStatus(self, ctx, query, state):
+        query = map(lambda x: self.__putUUIDInCOH(x[0], x[1]), query)
+        ret = self.__getStatus(ctx, query, True)
+        if state in ret:
+            return ret[state]['total'][1]
+        for l1 in ret:
+            if state in ret[l1]:
+                return ret[l1][state][1]
+        return None
+
+    def __getStatus(self, ctx, query, verbose = False):
         ret = {
             'total':0,
             'success':{
-                'total':[0]
+                'total':[0, []]
             },
             'stopped':{
-                'total':[0]
+                'total':[0, []]
             },
             'paused':{
-                'total':[0]
+                'total':[0, []]
             },
             'running':{
-                'total':[0],
-                'wait_up':[0],
-                'run_up':[0],
-                'sec_up':[0],
-                'wait_ex':[0],
-                'run_ex':[0],
-                'sec_ex':[0],
-                'wait_rm':[0],
-                'run_rm':[0],
-                'sec_rm':[0]
+                'total':[0, []],
+                'wait_up':[0, []],
+                'run_up':[0, []],
+                'sec_up':[0, []],
+                'wait_ex':[0, []],
+                'run_ex':[0, []],
+                'sec_ex':[0, []],
+                'wait_rm':[0, []],
+                'run_rm':[0, []],
+                'sec_rm':[0, []]
             },
             'failure':{
-                'total':[0],
-                'fail_up':[0],
-                'conn_up':[0],
-                'fail_ex':[0],
-                'conn_ex':[0],
-                'fail_rm':[0],
-                'conn_rm':[0],
-                'over_timed':[0]
+                'total':[0, []],
+                'fail_up':[0, []],
+                'conn_up':[0, []],
+                'fail_ex':[0, []],
+                'conn_ex':[0, []],
+                'fail_rm':[0, []],
+                'conn_rm':[0, []],
+                'over_timed':[0, []]
 
             }
         }
@@ -996,74 +1024,102 @@ class MscDatabase(DatabaseHelper):
             ret['total'] += 1
             if coh.current_state == 'done': # success
                 ret['success']['total'][0] += 1
+                if verbose: ret['success']['total'][1].append(coh)
             elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
                 ret['stopped']['total'][0] += 1
+                if verbose: ret['stopped']['total'][1].append(coh)
             elif coh.current_state == 'pause':
                 ret['paused']['total'][0] += 1
+                if verbose: ret['paused']['total'][1].append(coh)
             elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
                 ret['failure']['total'][0] += 1
+                if verbose: ret['failure']['total'][1].append(coh)
                 ret['failure']['over_timed'][0] += 1
+                if verbose: ret['failure']['over_timed'][1].append(coh)
             elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
                 ret['failure']['total'][0] += 1
+                if verbose: ret['failure']['total'][1].append(coh)
                 if coh.uploaded == 'FAILED':
                     ret['failure']['fail_up'][0] += 1
+                    if verbose: ret['failure']['fail_up'][1].append(coh)
                     if coh.current_state == 'not_reachable':
                         ret['failure']['conn_up'][0] += 1
+                        if verbose: ret['failure']['conn_up'][1].append(coh)
                 elif coh.executed == 'FAILED':
                     ret['failure']['fail_ex'][0] += 1
+                    if verbose: ret['failure']['fail_ex'][1].append(coh)
                     if coh.current_state == 'not_reachable':
                         ret['failure']['conn_ex'][0] += 1
+                        if verbose: ret['failure']['conn_ex'][1].append(coh)
                 elif coh.deleted == 'FAILED':
                     ret['failure']['fail_rm'][0] += 1
+                    if verbose: ret['failure']['fail_rm'][1].append(coh)
                     if coh.current_state == 'not_reachable':
                         ret['failure']['conn_rm'][0] += 1
+                        if verbose: ret['failure']['conn_rm'][1].append(coh)
             elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
                 ret['running']['total'][0] += 1
+                if verbose: ret['running']['total'][1].append(coh)
                 if coh.uploaded == 'FAILED':
                     ret['running']['wait_up'][0] += 1
+                    if verbose: ret['running']['wait_up'][1].append(coh)
                     ret['running']['sec_up'][0] += 1
+                    if verbose: ret['running']['sec_up'][1].append(coh)
                 elif coh.executed == 'FAILED':
                     ret['running']['wait_ex'][0] += 1
+                    if verbose: ret['running']['wait_ex'][1].append(coh)
                     ret['running']['sec_ex'][0] += 1
+                    if verbose: ret['running']['sec_ex'][1].append(coh)
                 elif coh.deleted == 'FAILED':
                     ret['running']['wait_rm'][0] += 1
+                    if verbose: ret['running']['wait_rm'][1].append(coh)
                     ret['running']['sec_rm'][0] += 1
+                    if verbose: ret['running']['sec_rm'][1].append(coh)
             else: # running
                 ret['running']['total'][0] += 1
+                if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
                 if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
                     ret['running']['total'][0] -= 1
                     ret['success']['total'][0] += 1
+                    if verbose: ret['success']['total'][1].append(coh)
                 elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
                     if coh.deleted == 'WORK_IN_PROGRESS':
                         ret['running']['run_rm'][0] += 1
+                        if verbose: ret['running']['run_rm'][1].append(coh)
                     else:
                         ret['running']['wait_rm'][0] += 1
+                        if verbose: ret['running']['wait_rm'][1].append(coh)
                 elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
                     if coh.executed == 'WORK_IN_PROGRESS':
                         ret['running']['run_ex'][0] += 1
+                        if verbose: ret['running']['run_ex'][1].append(coh)
                     else:
                         ret['running']['wait_ex'][0] += 1
+                        if verbose: ret['running']['wait_ex'][1].append(coh)
                 else: # upload running
                     if coh.uploaded == 'WORK_IN_PROGRESS':
                         ret['running']['run_up'][0] += 1
+                        if verbose: ret['running']['run_up'][1].append(coh)
                     else:
                         ret['running']['wait_up'][0] += 1
+                        if verbose: ret['running']['wait_up'][1].append(coh)
 
-        for i in ['success', 'stopped', 'running', 'failure', 'paused']:
-            if ret['total'] == 0:
-                ret[i]['total'].append(0)
-            else:
-                ret[i]['total'].append(ret[i]['total'][0] * 100 / ret['total'])
-        for i in ['wait_up', 'run_up', 'wait_ex', 'run_ex', 'wait_rm', 'run_rm']:
-            if ret['total'] == 0:
-                ret['running'][i].append(0)
-            else:
-                ret['running'][i].append(ret['running'][i][0] * 100 / ret['total'])
-        for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm', 'over_timed']:
-            if ret['total'] == 0:
-                ret['failure'][i].append(0)
-            else:
-                ret['failure'][i].append(ret['failure'][i][0] * 100 / ret['total'])
+        if not verbose:
+            for i in ['success', 'stopped', 'running', 'failure', 'paused']:
+                if ret['total'] == 0:
+                    ret[i]['total'].append(0)
+                else:
+                    ret[i]['total'].append(ret[i]['total'][0] * 100 / ret['total'])
+            for i in ['wait_up', 'run_up', 'wait_ex', 'run_ex', 'wait_rm', 'run_rm']:
+                if ret['total'] == 0:
+                    ret['running'][i].append(0)
+                else:
+                    ret['running'][i].append(ret['running'][i][0] * 100 / ret['total'])
+            for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm', 'over_timed']:
+                if ret['total'] == 0:
+                    ret['failure'][i].append(0)
+                else:
+                    ret['failure'][i].append(ret['failure'][i][0] * 100 / ret['total'])
         return ret
 
         # nombre total de coh

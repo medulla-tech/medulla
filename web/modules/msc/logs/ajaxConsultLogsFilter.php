@@ -77,30 +77,52 @@ foreach ($cmds as $item) {
     $current_state = $item['current_state'];
     $creation_date = _toDate($creation_date);
     $status = $item['status'];
-        
-    if ($target_uuid && $target_uuid != '') {
-        $linkdetail = urlStr("base/computers/msctabs/tablogs", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
-        $linklogs = urlStr("base/computers/msctabs/tablogs", array('uuid'=>$target_uuid, 'gid'=>$gid));
-    } else {
-        $linkdetail = urlStr("base/computers/groupmsctabs/grouptablogs", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
-        $linklogs = urlStr("base/computers/groupmsctabs/grouptablogs", array('uuid'=>$target_uuid, 'gid'=>$gid));
-    }
-    $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linkdetail , $label, $label); # TODO change to have a link to the log page for that command
-    $a_date[] = $creation_date;
-    $a_creator[] = $creator;
-    $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target); # TODO change to have a link to the target log page
-
-    $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);
-    
     if ($status) { $icons = state_tmpl_macro($status); }
     else { $icons = state_tmpl($current_state); }
-    if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-    if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-    if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
-    if ((!isset($bid) || $bid == '') && (!isset($gid) || $gid == '')) { # gid
-        $a_details[] = $actionsinglestatus;
+    $tab = 'tablogs';
+    if ($icons['play'] == '' && $icons['stop'] == '' && $icons['pause'] == '') { $tab = 'tabhistory'; }
+        
+    if ($target_uuid && $target_uuid != '') {
+        $linkdetail = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
+        $linklogs = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
     } else {
-        $a_details[] = $actionstatus;
+        $linkdetail = urlStr("base/computers/groupmsctabs/$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
+        $linklogs = urlStr("base/computers/groupmsctabs/$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
+    }
+    $a_date[] = $creation_date;
+    $a_creator[] = $creator;
+    $no_actions = False;
+    if ($target == 'UNVISIBLEMACHINE') {
+        $target = _T('Unavailable machine', 'msc');
+        $a_cmd[] = $label;
+        $a_target[] = $target;
+        $no_actions = True;
+    } elseif ($target == 'UNVISIBLEGROUP') {
+        $target = _T('Unavailable group', 'msc');
+        $a_cmd[] = $label;
+        $a_target[] = $target;
+        $no_actions = True;
+    } else {
+        $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linkdetail , $label, $label);
+        $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
+    }
+
+    $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);
+
+    if ($no_actions) {
+        $a_start[] = $actionempty;
+        $a_stop[] = $actionempty;
+        $a_pause[] = $actionempty;
+        $a_details[] = $actionempty;
+    } else {    
+        if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
+        if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
+        if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
+        if ((!isset($bid) || $bid == '') && (!isset($gid) || $gid == '')) { # gid
+            $a_details[] = $actionsinglestatus;
+        } else {
+            $a_details[] = $actionstatus;
+        }
     }
 }
 

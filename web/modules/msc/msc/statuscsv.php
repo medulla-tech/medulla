@@ -23,13 +23,28 @@
  */
  
 require('modules/msc/includes/commands_xmlrpc.inc.php');
+require('modules/msc/includes/command_history.php');
+
+$specific_state = False;
+if (strlen($_GET['state'])) {
+    $specific_state = True;
+    $state = $_GET['state'];
+}
 
 if (strlen($_GET['cmd_id'])) {
     $cmd_id = $_GET['cmd_id'];
-    $s = get_command_on_group_status($cmd_id);
+    if ($specific_state) { // the export doesnot have the same format
+        $s = get_command_on_group_by_state($_GET['bundle_id'], $state);
+    } else {
+        $s = get_command_on_group_status($cmd_id);
+    }
     $title = get_command_on_host_title($cmd_id);
 } elseif (strlen($_GET['bundle_id'])) {
-    $s = get_command_on_bundle_status($_GET['bundle_id']);
+    if ($specific_state) { // the export doesnot have the same format
+        $s = get_command_on_bundle_by_state($_GET['bundle_id'], $state);
+    } else {
+        $s = get_command_on_bundle_status($_GET['bundle_id']);
+    }
     $bdl = bundle_detail($_GET['bundle_id']);
     if ($bdl[0] == null) {
         $title = '';
@@ -41,6 +56,7 @@ if (strlen($_GET['cmd_id'])) {
 ob_end_clean();
 
 $filename = "command_status_$cmd_id";
+if ($specific_state) { $filename .= "_$state"; }
 /* The two following lines make the CSV export works for IE 7.x */
 header("Pragma: ");
 header("Cache-Control: ");
@@ -48,7 +64,20 @@ header("Content-type: text/txt");
 header('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 
 
-$header = array(
+if ($specific_state) {
+    $header = array(
+                _T('uuid', 'msc'),
+                _T('host', 'msc'),
+                _T('current state', 'msc'),
+                _T('start date', 'msc'),
+                _T('end date', 'msc')
+            );
+    $content = array();
+    foreach ($s as $coh) {
+        $content[] = array($coh['uuid'], $coh['host'], $coh['current_state'], ($coh['start_date'] ? _toDate($coh['start_date']) : ''), ($coh['end_date'] ? _toDate($coh['end_date']) : ''));
+    }
+} else {
+    $header = array(
                 _T('title', 'msc'),
                 _T('total', 'msc'),
                 _T('computers successfully deployed', 'msc'),
@@ -72,13 +101,16 @@ $header = array(
                 _T('unreacheable during execution', 'msc'),
                 _T('failed during suppression', 'msc'),
                 _T('unreachable during suppression', 'msc')
-                );
+            );
 
-$content = array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
+    $content = array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
+}
 
 
 print '"'.join('";"', $header)."\"\n";
-print '"'.join('";"', $content)."\"\n";
+foreach ($content as $line) {
+    print '"'.join('";"', $line)."\"\n";
+}
 
 
 exit;

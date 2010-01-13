@@ -322,8 +322,8 @@ class RpcProxy(RpcProxyI):
         cache = {}
         for c in ret1:
             if c['gid']:
-                if cache.has_key(c['gid']):
-                    c['target'] = cache[c['gid']]
+                if cache.has_key("G%s"%(c['gid'])):
+                    c['target'] = cache["G%s"%(c['gid'])]
                 else:
                     group = DyngroupDatabase().get_group(ctx, c['gid'], True)
                     if type(group) == bool: # we dont have the permission to view the group
@@ -335,7 +335,14 @@ class RpcProxy(RpcProxyI):
                         c['target'] = group.name
                     else:
                         c['target'] = group.name
-                    cache[c['gid']] = c['target']
+                    cache["G%s"%(c['gid'])] = c['target']
+            else:
+                if cache.has_key("M%s"%(c['uuid'])):
+                    c['target'] = cache["M%s"%(c['uuid'])]
+                else:
+                    if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx, c['uuid']):
+                        c['target'] = "UNVISIBLEMACHINE"
+                    cache["M%s"%(c['uuid'])] = c['target']
             # treat c['title'] to remove the date when possible
             # "Bundle (1) - 2009/12/14 10:22:24" => "Bundle (1)"
             date_re = re.compile(" - \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d")
@@ -395,9 +402,17 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnGroupStatus(ctx, cmd_id))
 
+    def get_command_on_group_by_state(self, cmd_id, state):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getCommandOnGroupByState(ctx, cmd_id, state))
+
     def get_command_on_bundle_status(self, bundle_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnBundleStatus(ctx, bundle_id))
+    
+    def get_command_on_bundle_by_state(self, bundle_id, state):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getCommandOnBundleByState(ctx, bundle_id, state))
 
     def get_command_on_host_title(self, cmd_id):
         ctx = self.currentContext
