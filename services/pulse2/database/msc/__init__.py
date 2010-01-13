@@ -1107,19 +1107,19 @@ class MscDatabase(DatabaseHelper):
         if not verbose:
             for i in ['success', 'stopped', 'running', 'failure', 'paused']:
                 if ret['total'] == 0:
-                    ret[i]['total'].append(0)
+                    ret[i]['total'][1] = 0
                 else:
-                    ret[i]['total'].append(ret[i]['total'][0] * 100 / ret['total'])
+                    ret[i]['total'][1] = ret[i]['total'][0] * 100 / ret['total']
             for i in ['wait_up', 'run_up', 'wait_ex', 'run_ex', 'wait_rm', 'run_rm']:
                 if ret['total'] == 0:
-                    ret['running'][i].append(0)
+                    ret['running'][i][1] = 0
                 else:
-                    ret['running'][i].append(ret['running'][i][0] * 100 / ret['total'])
+                    ret['running'][i][1] = ret['running'][i][0] * 100 / ret['total']
             for i in ['fail_up', 'conn_up', 'fail_ex', 'conn_ex', 'fail_rm', 'conn_rm', 'over_timed']:
                 if ret['total'] == 0:
-                    ret['failure'][i].append(0)
+                    ret['failure'][i][1] = 0
                 else:
-                    ret['failure'][i].append(ret['failure'][i][0] * 100 / ret['total'])
+                    ret['failure'][i][1] = ret['failure'][i][0] * 100 / ret['total']
         return ret
 
         # nombre total de coh
