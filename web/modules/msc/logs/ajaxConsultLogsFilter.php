@@ -93,7 +93,7 @@ foreach ($cmds as $item) {
     $a_creator[] = $creator;
     $no_actions = False;
     if ($target == 'UNVISIBLEMACHINE') {
-        $target = _T('Unavailable machine', 'msc');
+        $target = _T('Unavailable computer', 'msc');
         $a_cmd[] = $label;
         $a_target[] = $target;
         $no_actions = True;
