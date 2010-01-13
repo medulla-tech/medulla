@@ -145,10 +145,13 @@ function export_csv($cmd_id, $bundle_id, $state) {
         "'><img src='modules/msc/graph/csv.png' alt='export csv'/></a></td>";
 }
 
-?><h3><?= $title?>&nbsp;
+?>
+<table width='100%'> <tr><td colspan='3'>
+<h3><?= $title?>&nbsp;
+</h3></td><td>
 <a href='<?= urlStr("base/computers/statuscsv", array('cmd_id'=>$cmd_id, 'bundle_id'=>$_GET['bundle_id'])) ?>'><img src='modules/msc/graph/csv.png' alt='export csv'/></a>
-</h3>
- <table width='100%'> <?php
+</td></tr>
+ <?php
 
 foreach ($labels as $l) {
     $s = $status[$l[0]];
