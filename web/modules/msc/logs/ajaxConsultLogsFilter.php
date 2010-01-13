@@ -74,7 +74,7 @@ foreach ($cmds as $item) {
     $cmd_id = $item['cmdid'];
     $bid = $item['bid'];
     $gid = $item['gid'];
-    $current_state = $item['current_state'];
+    $current_state = empty($item['current_state']) ? '' : $item['current_state'];
     $creation_date = _toDate($creation_date);
     $status = $item['status'];
     if ($status) { $icons = state_tmpl_macro($status); }

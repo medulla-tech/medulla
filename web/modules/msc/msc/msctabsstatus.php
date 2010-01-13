@@ -24,8 +24,9 @@
 
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
-if (strlen($_GET['cmd_id'])) {
-    $cmd_id = $_GET['cmd_id'];
+$cmd_id = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
+
+if (strlen($cmd_id)) {
     $status = get_command_on_group_status($cmd_id);
     $title = get_command_on_host_title($cmd_id);
     if ($status['total'] == 1) {
@@ -53,7 +54,7 @@ if (strlen($_GET['cmd_id'])) {
     print _T("error : cmd_id or bundle_id must be given", "msc");
 }
 
-if (strlen($_GET['bundle_id']) && !strlen($_GET['cmd_id'])) {
+if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
     /* Change labels when displaying a bundle summary */
     $labels = array(
         array('success', array(

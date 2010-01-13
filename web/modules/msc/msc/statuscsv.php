@@ -31,8 +31,9 @@ if (strlen($_GET['state'])) {
     $state = $_GET['state'];
 }
 
-if (strlen($_GET['cmd_id'])) {
-    $cmd_id = $_GET['cmd_id'];
+$cmd_id = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
+
+if (strlen($cmd_id)) {
     if ($specific_state) { // the export doesnot have the same format
         $s = get_command_on_group_by_state($_GET['bundle_id'], $state);
     } else {
