@@ -90,8 +90,8 @@ foreach ($cmds as $item) {
         $linkdetail = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
         $linklogs = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
     } else {
-        $linkdetail = urlStr("base/computers/groupmsctabs/$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
-        $linklogs = urlStr("base/computers/groupmsctabs/$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
+        $linkdetail = urlStr("base/computers/groupmsctabs/group$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
+        $linklogs = urlStr("base/computers/groupmsctabs/group$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
     }
     $a_date[] = $creation_date;
     $a_creator[] = $creator;
