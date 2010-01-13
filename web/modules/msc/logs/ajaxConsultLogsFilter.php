@@ -97,9 +97,9 @@ foreach ($cmds as $item) {
     $a_creator[] = $creator;
     $no_actions = False;
     if (!isset($bid) || $bid == '') {
-        $img = draw_image("modules/base/graph/computers/install_package.png", _T('', 'msc'));
+        $img = draw_image("modules/msc/graph/images/install_package.png", _T('', 'msc'));
     } else {
-        $img = draw_image("modules/base/graph/computers/install_bundle.png", _T('', 'msc'));
+        $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('', 'msc'));
     }
     if ($target == 'UNVISIBLEMACHINE') {
         $target = _T('Unavailable computer', 'msc');
