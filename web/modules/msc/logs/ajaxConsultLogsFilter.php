@@ -65,6 +65,10 @@ $a_details = array();
 
 $n = null;
 
+function draw_image($url, $label) {
+        return '<img style="vertical-align: middle;" title="'.$label.'" src="'.$url.'"/>';
+}
+
 foreach ($cmds as $item) {
     $label = $item['title'];
     $creation_date = $item['creation_date'];
@@ -92,20 +96,29 @@ foreach ($cmds as $item) {
     $a_date[] = $creation_date;
     $a_creator[] = $creator;
     $no_actions = False;
+    if (!isset($bid) || $bid == '') {
+        $img = draw_image("modules/base/graph/computers/install_package.png", _T('', 'msc'));
+    } else {
+        $img = draw_image("modules/base/graph/computers/install_bundle.png", _T('', 'msc'));
+    }
     if ($target == 'UNVISIBLEMACHINE') {
         $target = _T('Unavailable computer', 'msc');
-        $a_cmd[] = $label;
-        $a_target[] = $target;
+        $a_cmd[] = $img." ".$label;
+        $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc'))." ".$target;
         $no_actions = True;
     } elseif ($target == 'UNVISIBLEGROUP') {
         $target = _T('Unavailable group', 'msc');
-        $a_cmd[] = $label;
-        $a_target[] = $target;
+        $a_cmd[] = $img." ".$label;
+        $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('Group', 'msc'))." ".$target;
         $no_actions = True;
     } else {
-        $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linkdetail , $label, $label);
+        $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s %s</a>", $linkdetail , $label, $img, $label);
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
-        $a_target[] = $target;
+        if (!isset($gid) || $gid == '') {
+            $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('', 'msc'))." ".$target;
+        } else {
+            $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('', 'msc'))." ".$target;
+        }
     }
 
     $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);
