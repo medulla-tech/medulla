@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
 <title>msc_check_log</title>
 </head>
 <body>
@@ -38,7 +35,7 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Elements 1 to 10 - Total 12 (page 1 / 2) </td>
+	<td>Elements 1 to 10 - Total 12 (page 1 / 2)</td>
 	<td></td>
 </tr>
 <tr>
@@ -52,7 +49,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Show all running task's logs</td>
 	<td></td>
 </tr>
@@ -62,7 +59,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Show all finished task's logs</td>
 	<td></td>
 </tr>
@@ -72,7 +69,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Show custom state task's logs</td>
 	<td></td>
 </tr>
