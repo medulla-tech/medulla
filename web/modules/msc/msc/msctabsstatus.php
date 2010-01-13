@@ -178,7 +178,7 @@ foreach ($labels as $l) {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
         print " (".$ss[1]."%)";
-        if ($ss[1] == 0) {
+        if ($ss[0] == 0) {
             print "</td><td><img src='modules/msc/graph/nocsv.png' alt='no csv export possible'/></td></tr>";
         } else {
             print "</td>".export_csv($cmd_id, $_GET['bundle_id'], $sl[0])."</tr>";

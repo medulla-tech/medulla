@@ -950,13 +950,18 @@ class Glpi(DyngroupDatabaseHelper):
 
         @rtype: bool
         """
-        if not self.displayLocalisationBar or ctx.userid == "root":
+        if not self.displayLocalisationBar:
             return True
-        a_locations = map(lambda loc:loc.name, ctx.locations)
+
         session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.location))
-        query = query.filter(self.location.c.name.in_(a_locations))
-        query = self.filterOnUUID(query, a_machine_uuid)
+        query = session.query(Machine)
+        if ctx.userid == "root":
+            query = self.filterOnUUID(query, a_machine_uuid)
+        else:
+            a_locations = map(lambda loc:loc.name, ctx.locations)
+            query = query.select_from(self.machine.join(self.location))
+            query = query.filter(self.location.c.name.in_(a_locations))
+            query = self.filterOnUUID(query, a_machine_uuid)
         ret = query.group_by(self.machine.c.ID).all()
         size = 1
         if type(ret) == list:

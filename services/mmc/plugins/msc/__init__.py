@@ -342,6 +342,8 @@ class RpcProxy(RpcProxyI):
                 else:
                     if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx, c['uuid']):
                         c['target'] = "UNVISIBLEMACHINE"
+                    elif not ComputerManager().getComputer(ctx, {'uuid':c['uuid']}):
+                        c['target'] = "UNVISIBLEMACHINE"
                     cache["M%s"%(c['uuid'])] = c['target']
             # treat c['title'] to remove the date when possible
             # "Bundle (1) - 2009/12/14 10:22:24" => "Bundle (1)"

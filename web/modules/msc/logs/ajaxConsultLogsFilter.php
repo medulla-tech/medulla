@@ -104,7 +104,8 @@ foreach ($cmds as $item) {
         $no_actions = True;
     } else {
         $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linkdetail , $label, $label);
-        $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
+        // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
+        $a_target[] = $target;
     }
 
     $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);

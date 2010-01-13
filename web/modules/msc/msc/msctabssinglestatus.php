@@ -29,8 +29,14 @@ if (strlen($_GET['cmd_id'])) {
     $coh_ids = get_id_command_on_host($cmd_id);
     $coh = get_commands_on_host($coh_ids[0]);
     
+    $title = get_command_on_host_title($cmd_id);
+    $title = sprintf(_T("Command '%s' state concerning <b>%s</b>", "msc"), $title, $coh['host']);
+    print "<h3>$title</h3>";
+    
     $statusTable = getStatusTable();
-    print '<table width="100%"><tr><td>'.$statusTable[$coh['current_state']].'</td>';
+    print '<table width="100%">';
+    print '<tr><th>'._T('Current State', 'msc').'</th><th>'._T('uploaded', 'msc').'</th><th>'._T('executed', 'msc').'</th><th>'._T('deleted', 'msc').'</th></tr>';
+    print '<tr><td>'.$statusTable[$coh['current_state']].'</td>';
     print '<td width="33%"><img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/></td> ';
     print '<td width="33%"><img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/></td> ';
     print '<td width="33%"><img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/></td> ';
