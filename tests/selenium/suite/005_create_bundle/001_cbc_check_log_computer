@@ -50,6 +50,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Host</td>
+	<td></td>
+</tr>
+<tr>
 	<td>verifyText</td>
 	<td>//div[@id='section']/div[3]/table[2]/tbody/tr/td[1]</td>
 	<td>computer01</td>
