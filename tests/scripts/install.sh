@@ -57,7 +57,7 @@ function packages_to_install () {
     PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc gettext"
 
     # Development & install
-    PKGS="$PKGS subversion make gcc"
+    PKGS="$PKGS subversion make gcc wget python-setuptools"
 
     if [ $RELEASE == "2006.0" ];
         then
@@ -65,7 +65,9 @@ function packages_to_install () {
     fi
     if [ $RELEASE == "2010.0" ];
         then
-        PKGS="$PKGS python-sqlalchemy lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel"
+        # The python-sqlalchemy lib must be installed manually because we are
+        # compatible only with version 0.4, and 2010.0 provides version 0.5.
+        PKGS="$PKGS lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel"
     fi
 }
 
@@ -114,6 +116,13 @@ make install PREFIX=/usr HTTPDUSER=apache
 cp confs/apache/mmc.conf /etc/httpd/conf/webapps.d/
 popd
 
+
+# Download and setup SQLAlchemy 0.8
+wget "http://downloads.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz?use_mirror=switch"
+tar xzf SQLAlchemy-0.4.8.tar.gz
+pushd SQLAlchemy-0.4.8
+python setup.py install
+popd
 
 popd
 
