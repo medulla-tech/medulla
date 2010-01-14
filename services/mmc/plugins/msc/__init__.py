@@ -404,17 +404,17 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnGroupStatus(ctx, cmd_id))
 
-    def get_command_on_group_by_state(self, cmd_id, state):
+    def get_command_on_group_by_state(self, cmd_id, state, min = 0, max = -1):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getCommandOnGroupByState(ctx, cmd_id, state))
+        return xmlrpcCleanup2(MscDatabase().getCommandOnGroupByState(ctx, cmd_id, state, min, max))
 
     def get_command_on_bundle_status(self, bundle_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnBundleStatus(ctx, bundle_id))
     
-    def get_command_on_bundle_by_state(self, bundle_id, state):
+    def get_command_on_bundle_by_state(self, bundle_id, state, min = 0, max = -1):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getCommandOnBundleByState(ctx, bundle_id, state))
+        return xmlrpcCleanup2(MscDatabase().getCommandOnBundleByState(ctx, bundle_id, state, min, max))
 
     def get_command_on_host_title(self, cmd_id):
         ctx = self.currentContext

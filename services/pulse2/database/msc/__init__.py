@@ -940,11 +940,12 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda c:c.id, ret)
 
-    def getCommandOnGroupByState(self, ctx, cmd_id, state):
+    def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
+        if max != -1: ret = ret[min:max]
         return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
     
     def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
@@ -954,11 +955,12 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
-    def getCommandOnBundleByState(self, ctx, fk_bundle, state):
+    def getCommandOnBundleByState(self, ctx, fk_bundle, state, min = 0, max = -1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
+        if max != -1: ret = ret[min:max]
         return map(lambda coh: {'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
         
     def getCommandOnBundleStatus(self, ctx, fk_bundle):

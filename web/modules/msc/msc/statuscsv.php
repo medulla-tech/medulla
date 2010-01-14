@@ -32,19 +32,38 @@ if (strlen($_GET['state'])) {
 }
 
 $cmd_id = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
+ 
+function get_command_by_state($kind, $id, $state, $count) {
+    $split = 250; # results will be splitted by 250 to reduce memory usage
+    
+    if ($count <= $split) {
+        $range = array(0);
+    } else {
+        $range = range(0, $count-1, $split);
+    }
+    $firstline = true;
+    $ret = array();
+    foreach ($range as $lower) {
+        $upper = $lower + $split ;
+        if ($kind == 1) {
+            $ret = array_merge($ret, get_command_on_group_by_state($id, $state, $lower, $upper));
+        } elseif ($kind == 2) {
+            $ret = array_merge($ret, get_command_on_bundle_by_state($id, $state, $lower, $upper));
+        }
+    }
+    return $ret;
+}
 
 if (strlen($cmd_id)) {
+    $s = get_command_on_group_status($cmd_id);
     if ($specific_state) { // the export doesnot have the same format
-        $s = get_command_on_group_by_state($_GET['bundle_id'], $state);
-    } else {
-        $s = get_command_on_group_status($cmd_id);
+        $s = get_command_by_state(1, $cmd_id, $state, $s['total']);
     }
     $title = get_command_on_host_title($cmd_id);
 } elseif (strlen($_GET['bundle_id'])) {
+    $s = get_command_on_bundle_status($_GET['bundle_id']);
     if ($specific_state) { // the export doesnot have the same format
-        $s = get_command_on_bundle_by_state($_GET['bundle_id'], $state);
-    } else {
-        $s = get_command_on_bundle_status($_GET['bundle_id']);
+        $s = get_command_by_state(2, $_GET['bundle_id'], $state, $s['total']);
     }
     $bdl = bundle_detail($_GET['bundle_id']);
     if ($bdl[0] == null) {
@@ -56,7 +75,9 @@ if (strlen($cmd_id)) {
 
 ob_end_clean();
 
-$filename = "command_status_$cmd_id";
+$filename = "command_status_";
+if (strlen($cmd_id)) { $filename .= "C".$cmd_id; }
+elseif (strlen($_GET['bundle_id'])) { $filename .= "B".$_GET['bundle_id']; }
 if ($specific_state) { $filename .= "_$state"; }
 /* The two following lines make the CSV export works for IE 7.x */
 header("Pragma: ");
@@ -104,7 +125,7 @@ if ($specific_state) {
                 _T('unreachable during suppression', 'msc')
             );
 
-    $content = array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]);
+    $content = array(array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]));
 }
 
 
