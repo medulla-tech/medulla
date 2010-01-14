@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id: writers.py 4827 2009-11-27 14:54:51Z cdelfosse $
 #
@@ -41,13 +41,15 @@ class AuditActions:
     BASE_DEL_GROUP = u'BASE_DEL_GROUP'
     BASE_BACKUP_USER = u'BASE_BACKUP_USER'
     BASE_AUTH_USER = u'BASE_AUTH_USER'
+    BASE_MOVE_USER_HOME = u'BASE_MOVE_USER_HOME'
+    BASE_ADD_OU = u'BASE_ADD_OU'
 AA = AuditActions
 
 class AuditTypes:
     USER = u'USER'
     GROUP = u'GROUP'
     ATTRIBUTE = u'ATTRIBUTE'
-    ORGANISATIONAL_UNIT = u'ORGANISATIONAL_UNIT'
+    ORGANIZATIONAL_UNIT = u'ORGANIZATIONAL_UNIT'
 AT = AuditTypes
 
 PLUGIN_NAME = u'MMC-BASE'
