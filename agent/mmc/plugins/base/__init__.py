@@ -651,12 +651,16 @@ class LdapUserGroupControl:
         @type login: str
         """
         dn = 'uid=' + login + ',' + self.baseUsersDN
+        attr = 'loginShell'
+        r = AF().log(PLUGIN_NAME, AA.BASE_ENABLE_USER, [(dn, AT.USER), (attr, AT.ATTRIBUTE)])
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
-        new["loginShell"] = "/bin/bash" # FIXME: should not be hardcoded but put in a conf file
+        # FIXME: should not be hardcoded but put in a conf file
+        new[attr] = "/bin/bash"
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
+        r.commit()
         return 0
 
     def disableUser(self, login):
@@ -667,12 +671,15 @@ class LdapUserGroupControl:
         @type login: str
         """
         dn = 'uid=' + login + ',' + self.baseUsersDN
+        attr = 'loginShell'
+        r = AF().log(PLUGIN_NAME, AA.BASE_DISABLE_USER, [(dn, AT.USER), (attr, AT.ATTRIBUTE)])
         s = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, old = s[0]
         new = old.copy()
         new["loginShell"] = "/bin/false" # FIXME: should not be hardcoded but put in a conf file
         modlist = ldap.modlist.modifyModlist(old, new)
         self.l.modify_s(dn, modlist)
+        r.commit()
         return 0
 
     def isEnabled(self, login):
@@ -779,6 +786,8 @@ class LdapUserGroupControl:
                               created on the filesystem
         @type createHomeDir: bool
         """
+        ident = 'uid=' + uid + ',' + self.baseUsersDN
+        r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
         # Make a homeDir string if none was given
         if not homeDir: homeDir = os.path.join(self.defaultHomeDir, uid)
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
@@ -847,7 +856,6 @@ class LdapUserGroupControl:
             else:
                 attributes.append((k, v))
 
-        ident = 'uid=' + uid + ',' + self.baseUsersDN
         try:
             # Write user entry into the directory
             self.l.add_s(ident, attributes)
@@ -875,6 +883,7 @@ class LdapUserGroupControl:
 
         # Run addUser hook
         self.runHook("base.adduser", uid, password)
+        r.commit()
         return 0
 
     def isAuthorizedHome(self,home):
@@ -892,7 +901,8 @@ class LdapUserGroupControl:
             in config file.
         @type cn: str
         """
-
+        entry = 'cn=' + cn + ',' + self.baseGroupsDN
+        r = AF().log(PLUGIN_NAME, AA.BASE_ADD_GROUP, [(entry, AT.GROUP)])
         maxgid = self.maxGID()
         gidNumber = maxgid + 1;
 
@@ -901,9 +911,9 @@ class LdapUserGroupControl:
                     'gidnumber':str(gidNumber),
                     'objectclass':('posixGroup','top')
                      }
-        entry = 'cn=' + cn + ',' + self.baseGroupsDN
         attributes = [ (k,v) for k,v in group_info.items() ]
         self.l.add_s(entry, attributes)
+        r.commit()
         return gidNumber
 
     def delUserFromGroup(self, cngroup, uiduser):
@@ -919,11 +929,15 @@ class LdapUserGroupControl:
         """
         cngroup = cngroup.encode("utf-8")
         uiduser = uiduser.encode("utf-8")
+        groupdn = 'cn=' + cngroup + ',' + self.baseGroupsDN
+        userdn = self.searchUserDN(uiduser)
+        r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_FROM_GROUP, [(groupdn, AT.GROUP), (userdn, AT.USER)])
         try:
-            self.l.modify_s('cn=' + cngroup + ',' + self.baseGroupsDN, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
+            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
         except ldap.NO_SUCH_ATTRIBUTE:
             # There are no member in this group
             pass
+        r.commit()
 
     def delUserFromAllGroups(self, uid):
         """
@@ -933,7 +947,6 @@ class LdapUserGroupControl:
         @type uid: unicode
         """
         ret = self.search("memberUid=" + uid, self.baseGroupsDN)
-
         if ret:
             for result in ret:
                 group = result[0][1]["cn"][0]
@@ -950,6 +963,7 @@ class LdapUserGroupControl:
         @param group: new primary group
         @type uid: unicode
         """
+        userdn = self.searchUserDN(uid)
         gidNumber = self.getDetailedGroup(group)["gidNumber"][0]
         currentPrimary = self.getUserPrimaryGroup(uid)
         try:
@@ -1009,28 +1023,32 @@ class LdapUserGroupControl:
             pass
         return secondary
 
-    def addUserToGroup(self, cngroup, uiduser, base = None):
+    def addUserToGroup(self, cngroup, uid, base = None):
         """
          add memberUid attributes corresponding param user to an ldap posixGroup entry
 
          @param cngroup: name of the group (not full ldap path)
          @type cngroup: unicode
 
-         @param uiduser: user uid (not full ldap path)
-         @type uiduser: unicode
+         @param uid: user uid (not full ldap path)
+         @type uid: unicode
          """
         if not base: base = self.baseGroupsDN
         cngroup = cngroup.encode("utf-8")
-        uiduser = uiduser.encode("utf-8")
+        uid = uid.encode("utf-8")
+        groupdn = 'cn=' + cngroup + ',' + base
+        userdn = self.searchUserDN(uid)
+        r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER_TO_GROUP, [(groupdn, AT.GROUP), (userdn, AT.USER)])
         try:
-            self.l.modify_s('cn=' + cngroup + ',' + base, [(ldap.MOD_ADD, 'memberUid', uiduser)])
+            self.l.modify_s(groupdn, [(ldap.MOD_ADD, 'memberUid', uid)])
         except ldap.TYPE_OR_VALUE_EXISTS:
             # Try to add a the user to one of his/her group
             # Can be safely ignored
             pass
+        r.commit()
         return 0
 
-    def changeUserAttributes(self,uid,attr,attrVal):
+    def changeUserAttributes(self, uid, attr, attrVal):
         """
         Change an user attribute.
         If an attrVal is empty, the attribute will be removed.
@@ -1046,7 +1064,7 @@ class LdapUserGroupControl:
         """
         userdn = self.searchUserDN(uid)
         if attrVal:
-            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)])
+            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrVal)
             if type(attrVal) == unicode:
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpclib.Binary):
@@ -1078,12 +1096,15 @@ class LdapUserGroupControl:
          @type  attrVal: object
         """
         group = group.encode("utf-8")
+        groupdn = 'cn=' + group + ','+ self.baseGroupsDN
         if attrVal:
+            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_GROUP, [(groupdn, AT.GROUP), (attr, AT.ATTRIBUTE)], attrVal)
             attrVal = str(attrVal.encode("utf-8"))
-            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,attrVal)])
+            self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, attrVal)])
         else:
-            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_REPLACE,attr,'rien')])
-            self.l.modify_s('cn=' + group + ','+ self.baseGroupsDN, [(ldap.MOD_DELETE,attr,'rien')])
+            self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, 'none')])
+            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, 'none')])
+        r.commit()
         return 0
 
     def changeUserPasswd(self, uid, passwd):
@@ -1096,13 +1117,16 @@ class LdapUserGroupControl:
         @param passwd: non encrypted password
         @type  passwd: str
         """
+        userdn = self.searchUserDN(uid)
+        r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_PASSWORD, [(userdn, AT.USER)])
         if self.config.passwordscheme == "passmod":
-            self.l.passwd_s('uid=' + uid + ',' + self.baseUsersDN, None, str(passwd))
+            self.l.passwd_s(userdn, None, str(passwd))
         else:
             userpassword = self._generatePassword(passwd)
-            self.l.modify_s('uid=' + uid + ',' + self.baseUsersDN, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
+            self.l.modify_s(userdn, [(ldap.MOD_REPLACE, "userPassword", userpassword)])
         # Run ChangeUserPassword hook
         self.runHook("base.changeuserpassword", uid, passwd)
+        r.commit()
 
     def delUser(self, uid, home):
         """
@@ -1113,6 +1137,8 @@ class LdapUserGroupControl:
         @param home: if =1 delete home directory
         @type  home: int
         """
+        userdn = self.searchUserDN(uid)
+        r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER, [(userdn, AT.USER)])
         # Run delUser hook
         self.runHook("base.deluser", uid)
 
@@ -1120,11 +1146,11 @@ class LdapUserGroupControl:
             homedir = self.getDetailedUser(uid)['homeDirectory'][0]
             shutil.rmtree(homedir)
 
-        self.delRecursiveEntry('uid=' + uid + ',' + self.baseUsersDN)
-
+        self.delRecursiveEntry(userdn)
+        r.commit()
         return 0
 
-    def delRecursiveEntry(self,path):
+    def delRecursiveEntry(self, path):
         """
         Delete an entry, del recursive leaf
 
@@ -1183,15 +1209,18 @@ class LdapUserGroupControl:
 
         return resArr
 
-    def delGroup(self, cnGroup):
+    def delGroup(self, group):
         """
-         remove a group
-         /!\ baseGroupsDN based on INI file
-         @param cnGroup: group name (not full ldap path)
-         @type  cnGroup: str
+        Remove a group
+        /!\ baseGroupsDN based on INI file
 
+        @param group: group name (not full LDAP path)
+        @type group: str
         """
-        self.l.delete_s('cn=' + cnGroup + ',' + self.baseGroupsDN)
+        groupdn = 'cn=' + group + ',' + self.baseGroupsDN
+        r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP, [(groupdn, AT.GROUP)])
+        self.l.delete_s(groupdn)
+        r.commit()
 
     def getEntry(self, dn):
         """
@@ -1676,20 +1705,23 @@ class LdapUserGroupControl:
 
     def moveHome(self,uid,newHome):
         """
-         Move an home directory.
-
-         @param uid: user name
-         @type uid: str
-
-         @param newHome: new home path
-            ex: /home/coin
-         @type newHome: str
+        Move an home directory.
+        
+        @param uid: user name
+        @type uid: str
+         
+        @param newHome: new home path
+        ex: /home/coin
+        @type newHome: str
         """
         oldHome = self.getDetailedUser(uid)['homeDirectory'][0]
         if newHome != oldHome:
+            userdn = searchUserDN(uid)
+            r = AF().log(PLUGIN_NAME, AA.BASE_MOVE_USER_HOME, [(userdn, AT.USER)])
             self.changeUserAttributes(uid,"homeDirectory",newHome)
             if self.userHomeAction:
                 shutil.move(oldHome, newHome)
+            r.commit()
 
     def addOu(self, ouname, ldappath):
         """
@@ -1702,11 +1734,14 @@ class LdapUserGroupControl:
          @type ldappath: str
         """
         addrdn = 'ou=' + ouname + ', ' + ldappath
+        r = AF().log(PLUGIN_NAME, AA.BASE_ADD_OU, [(addrdn, AT.ORGANIZATIONAL_UNIT)])
         addr_info = {'ou':ouname,
                     'objectClass':('organizationalUnit','top')}
         attributes=[ (k,v) for k,v in addr_info.items() ]
 
-        self.l.add_s(addrdn,attributes)
+        self.l.add_s(addrdn, attributes)
+        r.commit()
+
 ldapUserGroupControl = LdapUserGroupControl
 ###########################################################################################
 ############## ldap authentification
