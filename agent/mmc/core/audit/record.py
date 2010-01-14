@@ -36,7 +36,7 @@ class AuditRecord:
     Base class for a audit record object
     """
     
-    def __init__(self, module, event, user, objects, param, initiator, source, previous, current):
+    def __init__(self, module, event, user, objects, param, initiator, source, current, previous):
         """
         Create a AuditRecord instance which contains all information that will
         be logged into database.
@@ -184,6 +184,7 @@ class AuditRecordDB(AuditRecord):
             session.flush()
 
             parentobj = None
+            bdobjectlog = None
             if objects != None:
                 for i,j in objects:
                     # Get or Insert Type id of object
@@ -210,29 +211,30 @@ class AuditRecordDB(AuditRecord):
                     session.save(bdobjectlog)
                     session.flush()
                     
-                    # Keep a reference to this object, because it will be the
+                    # Keep a reference to this object, because it may be
                     # the parent of the next object to store
                     parentobj = obj.id
 
-            #insert current value
-            if current != None:
-                if type(current) == tuple or type(current) == list :
-                    for i in current:            
-                         cv = Current_Value(bdobjectlogattr, i)
-                         session.save(cv)
-                else:
-                    cv = Current_Value(bdobjectlogattr, current)
-                    session.save(cv)
+            if bdobjectlog != None:
+                # Insert current value
+                if current != None:
+                    if type(current) == tuple or type(current) == list :
+                        for i in current:            
+                             cv = Current_Value(bdobjectlog, i)
+                             session.save(cv)
+                    else:
+                        cv = Current_Value(bdobjectlog, current)
+                        session.save(cv)
 
-            #insert previous value        
-            if previous != None:
-                if type(previous) == tuple or type(previous) == list:
-                    for i in previous:             
-                         pv = Previous_Value(bdobjectlogattr, i)
-                         session.save(pv)      
-                else:          
-                    pv = Previous_Value(bdobjectlogattr, previous)
-                    session.save(pv)  
+                # Insert previous value        
+                if previous != None:
+                    if type(previous) == tuple or type(previous) == list:
+                        for i in previous:             
+                             pv = Previous_Value(bdobjectlog, i)
+                             session.save(pv)      
+                    else:          
+                        pv = Previous_Value(bdobjectlog, previous)
+                        session.save(pv)  
 
             # relations on log_parameters        
             if param != None:
