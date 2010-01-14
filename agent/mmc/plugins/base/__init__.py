@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -22,9 +22,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from mmc.support.errorObj import errorMessage
-from mmc.support.config import *
+from mmc.support.config import PluginConfig
 from mmc.plugins.base.config import BasePluginConfig
-from time import strftime
 from mmc.plugins.base.computers import ComputerManager, ComputerI
 from mmc.plugins.base.auth import AuthenticationManager, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisioningManager
@@ -38,15 +37,12 @@ from mmc.support.mmctools import cSort, rchown, copytree
 from mmc.support.mmctools import cleanFilter
 
 from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, ContextProviderI
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.core.audit import AuditFactory as AF
 from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 
 import ldap
-import ldap.schema
-import ldap.modlist
-from ldap.modlist import addModlist
 import ldif
 import crypt
 import sha
@@ -55,7 +51,7 @@ import random
 import string
 import re
 import os
-from mmc.support import mmctools
+
 import copy
 import tempfile
 from sets import Set
@@ -2116,7 +2112,7 @@ class Computers(ldapUserGroupControl, ComputerI):
         logging.getLogger().info("adding a computer")
         logging.getLogger().info(dn)
         logging.getLogger().info(data)
-        self.l.add_s(dn, addModlist(data))
+        self.l.add_s(dn, ldap.modlist.addModlist(data))
         return uuid
 
     def canDelComputer(self):
