@@ -112,7 +112,7 @@ foreach ($cmds as $item) {
         $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('Group', 'msc'))." ".$target;
         $no_actions = True;
     } else {
-        $a_cmd[] = sprintf("<a href='%s' class='bundle' title='%s'>%s %s</a>", $linkdetail , $label, $img, $label);
+        $a_cmd[] = sprintf("<a href='%s' class='bundle link' title='%s'>%s %s</a>", $linkdetail , $label, $img, $label);
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
         if (!isset($gid) || $gid == '') {
             $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('', 'msc'))." ".$target;
