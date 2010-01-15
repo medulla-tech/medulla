@@ -56,8 +56,8 @@ function packages_to_install () {
     # Apache/PHP
     PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc gettext"
 
-    # Development & install
-    PKGS="$PKGS subversion make gcc wget python-setuptools"
+    # Development & install
+    PKGS="$PKGS subversion make gcc wget"
 
     if [ $RELEASE == "2006.0" ];
         then
@@ -67,7 +67,7 @@ function packages_to_install () {
         then
         # The python-sqlalchemy lib must be installed manually because we are
         # compatible only with version 0.4, and 2010.0 provides version 0.5.
-        PKGS="$PKGS lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel"
+        PKGS="$PKGS lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel python-setuptools"
     fi
 }
 
@@ -103,11 +103,17 @@ else
     pushd $TMPCO
 fi
 
-pushd mmc-core/agent
 if [ $RELEASE == "2006.0" ];
     then
     export NOCHECKPASSWORD=1
+    # Download and setup Python setuptools
+    wget http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz#md5=7df2a529a074f613b509fb44feefe74e
+    tar xzf setuptools-0.6c11.tar.gz
+    pushd setuptools-0.6c11
+    python setup.py install
+    popd
 fi
+pushd mmc-core/agent
 make install PREFIX=/usr
 popd
 
@@ -115,7 +121,6 @@ pushd mmc-core/web
 make install PREFIX=/usr HTTPDUSER=apache
 cp confs/apache/mmc.conf /etc/httpd/conf/webapps.d/
 popd
-
 
 # Download and setup SQLAlchemy 0.8
 wget "http://downloads.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz?use_mirror=switch"
