@@ -86,6 +86,9 @@ a:link { color: #2A557E; }
 a:visited { color: #2A557E; }
 a:hover { color: #000; }
 
+a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none; }
+a.link:hover { color: #000; border-bottom: 1px dotted #777; background: #ddd; }
+
 img {
   /*display: block;*/
   border: none;
