@@ -241,7 +241,7 @@ class MscDatabase(msc.MscDatabase):
                     targets_name.append(targets[i][1])
                     # Maybe could be done in prepareTarget
                     targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
-                    targets_to_insert.append(targetsdata[i])
+                    targets_to_insert.append(dict(targetsdata[i]))
                 targets_to_insert_list.append(targets_to_insert)
 
             if session == None:
