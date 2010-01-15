@@ -68,8 +68,9 @@ def running(inifile, daemonize):
         logger.warning("Real package deletion is activated")
 
     # When starting, we log to stderr too
-    hdlr2 = logging.StreamHandler()
-    logger.addHandler(hdlr2)
+    # as there is a lot of log possible during the init of pserver, we no longer log to stderr
+    # hdlr2 = logging.StreamHandler()
+    # logger.addHandler(hdlr2)
 
     try:
         ThreadLauncher().initialize(config)
@@ -82,7 +83,7 @@ def running(inifile, daemonize):
     if daemonize:
         daemon(config)
         # No more log to stderr
-        logger.removeHandler(hdlr2)
+        # logger.removeHandler(hdlr2)
 
     ThreadLauncher().runThreads()
     twisted.internet.reactor.run()
