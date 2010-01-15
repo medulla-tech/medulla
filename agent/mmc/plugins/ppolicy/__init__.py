@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -33,12 +33,11 @@ pwdPolicy auxiliary object class (as done in OpenLDAP ppolicy smoke test).
 import copy
 import ldap
 import logging
-import string
 import time
 import calendar
 from ldap import modlist
 from mmc.plugins.base import ldapUserGroupControl
-from mmc.support.config import PluginConfig, ConfigException
+from mmc.support.config import PluginConfig
 
 
 VERSION = "2.3.2"
@@ -84,22 +83,19 @@ class PPolicyConfig(PluginConfig):
         Read the configuration file using the ConfigParser API.
         """
         PluginConfig.readConf(self)
-        # Read LDAP Password Policy configuration
-        self.ppolicyAttributes = {}
-        self.ppolicydn = self.get('ppolicy', 'ppolicyDN')
-        self.ppolicydefault = self.get('ppolicy', 'ppolicyDefault')
-        self.ppolicydefaultdn = "cn=" + self.ppolicydefault + "," + self.ppolicydn
-        for attribute in self.items('ppolicyattributes'):
-            if attribute[1] == 'True':
-                self.ppolicyAttributes[attribute[0]] = True
-            elif attribute[1] == 'False':
-                self.ppolicyAttributes[attribute[0]] = False
-            else:
-                self.ppolicyAttributes[attribute[0]] = attribute[1]
-        
-        #if self.has_section("user"):
-        #    if self.has_option('user', 'attribute'):
-        #        self.userAttributes = self.get('user', 'attribute').split('|')
+        if not self.disabled:
+            # Read LDAP Password Policy configuration
+            self.ppolicyAttributes = {}
+            self.ppolicydn = self.get('ppolicy', 'ppolicyDN')
+            self.ppolicydefault = self.get('ppolicy', 'ppolicyDefault')
+            self.ppolicydefaultdn = "cn=" + self.ppolicydefault + "," + self.ppolicydn
+            for attribute in self.items('ppolicyattributes'):
+                if attribute[1] == 'True':
+                    self.ppolicyAttributes[attribute[0]] = True
+                elif attribute[1] == 'False':
+                    self.ppolicyAttributes[attribute[0]] = False
+                else:
+                    self.ppolicyAttributes[attribute[0]] = attribute[1]
 
 
 class PPolicy(ldapUserGroupControl):
@@ -150,7 +146,7 @@ class PPolicy(ldapUserGroupControl):
             attributes = modlist.addModlist(attrs)
             self.l.add_s(self.configPPolicy.ppolicydefaultdn, attributes)
             self.logger.info("Default password policy registered at: %s" % self.configPPolicy.ppolicydefaultdn)
-        
+
     def getAttribute(self, nameattribute = None):
         """
         Get the given attribute value of the default password policies.
@@ -398,8 +394,3 @@ def isAccountInGraceLogin(uid):
 
 def isPasswordExpired(uid):
     return UserPPolicy(uid).isPasswordExpired()
-
-
-if __name__ == "__main__":
-    #print ldapUserGroupControl().getDetailedUserIntAttr("user1")
-    print isPasswordExpired("testpass")
