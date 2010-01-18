@@ -122,4 +122,7 @@ class DatabaseHelper(Singleton):
         except NoSuchTableError, e:
             logging.getLogger().warn('The table %s does not exists.'%str(e))
             return False
+        except Exception, e:
+            logging.getLogger().warn(e)
+            return False
         return True
