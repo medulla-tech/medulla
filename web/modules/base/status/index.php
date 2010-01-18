@@ -162,42 +162,32 @@ div.membarcache {
 *html div.membarused { margin: 0 -4px 0 0; } /* pour IE/PC */
 *html div.membarcache { margin: 0 -4px 0 0; } /* pour IE/PC */
 
-div.left {
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        -moz-border-radius: 1em;
+div.right {
         float: right;
-        width: 45%;
-        padding: 10px;
-        margin-bottom: 1em;
-        display: block;
+        width: 49%;
         margin: 0;
-	position: relative;
 }
 
-div.right {
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        -moz-border-radius: 1em;
-        width: 45%;
-        margin-bottom: 1em;
-        padding: 10px;
-        display: block;
-	position: relative;
+div.left {
+        width: 49%;
+        margin: 0;
 }
 
 h2.statusPad {
         text-align: center;
 }
 
-td.statusPad {
-        border: none;
-        border-width: 1px;
+div.statusPad {
         padding: 0px;
         text-align: center;
         font-size: 11px;
+        color: #666;
+        background-color: #F0F4F7;
+        border: solid 1px #CCC;
+        -moz-border-radius: 1em;
+        -webkit-border-radius: 1em;
+        padding: 10px;
+        margin-bottom: 10px;
 }
 
 -->
@@ -211,33 +201,27 @@ $p->displayTitle();
 
 ?>
 
-<div class="left">
-  <div class="statusPad">
-    <h2 class="statusPad"><?= _("Server status") ?></h2>
-<?php print_health(); ?>
-  </div>
-</div>
-
 <div class="right">
   <div class="statusPad">
-    <h2 class="statusPad"><?= _("Hard drive partitions") ?></h2>
-  <?php print_disk_info(); ?>
+    <h2 class="statusPad"><?= _("Server status") ?></h2>
+    <?php print_health(); ?>
   </div>
-</div>
 
-<div class="left">
-  <div class="statusPad">
+ <div class="statusPad">
     <h2 class="statusPad"><?= _("LDAP Configuration") ?></h2>
     <?php print_ldap_conf(); ?>
   </div>
 </div>
 
-<div class="right">
-  <div>
-
+<div class="left">
+  <div class="statusPad">
+    <h2 class="statusPad"><?= _("Hard drive partitions") ?></h2>
+    <?php print_disk_info(); ?>
+  </div>
+  
+  <div class="statusPad">
     <h2 class="statusPad"><?=  _("Background jobs") ?></h2>
-    <div id="bgps">
-    </div>
+    <div id="bgps"> </div>
     <script type="text/javascript">
         new Ajax.PeriodicalUpdater('bgps','includes/bgps_view.php', {asynchronous: true, frequency: 2});
     </script>
