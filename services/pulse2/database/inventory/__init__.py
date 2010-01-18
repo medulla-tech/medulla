@@ -72,7 +72,8 @@ class Inventory(DyngroupDatabaseHelper):
         PossibleQueries().init(self.config)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
-        self.initMappers()
+        if not self.initMappersCatchException():
+            return False
         self.metadata.create_all()
         self.is_activated = True
         self.dbversion = self.getInventoryDatabaseVersion()

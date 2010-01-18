@@ -80,7 +80,8 @@ class MscDatabase(DatabaseHelper):
         self.metadata = MetaData(self.db)
         if not self.initTables():
             return False
-        self.initMappers()
+        if not self.initMappersCatchException():
+            return False
         self.metadata.create_all()
         # FIXME: should be removed
         self.session = create_session()

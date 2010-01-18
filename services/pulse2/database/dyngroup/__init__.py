@@ -59,12 +59,9 @@ class DyngroupDatabase(DatabaseHelper):
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         self.metadata = MetaData(self.db)
-        try:
-            self.initMappers()
-        except NoSuchTableError, e:
-            self.logger.error(e)
+        if not self.initMappersCatchException():
             self.session = None
-            return None
+            return False
         self.metadata.create_all()
         self.session = create_session()
         self.is_activated = True
@@ -74,6 +71,9 @@ class DyngroupDatabase(DatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
+
+        self.version = Table("version", self.metadata, autoload = True)
+
         # types
         self.shareGroupType = Table("ShareGroupType", self.metadata,autoload = True)
         mapper(ShareGroupType, self.shareGroupType)

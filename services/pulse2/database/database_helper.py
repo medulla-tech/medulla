@@ -25,6 +25,7 @@
 from pulse2.utils import Singleton
 from pulse2.database.sqlalchemy_tests import checkSqlalchemy
 from sqlalchemy.exceptions import SQLError
+from sqlalchemy.exceptions import NoSuchTableError
 
 import logging
 NB_DB_CONN_TRY = 2
@@ -55,6 +56,8 @@ class DatabaseHelper(Singleton):
         try:
             if self.db != None:
                 if hasattr(self, "version"):
+                    return self.version.select().execute().fetchone()[0]
+                elif hasattr(self, "Version"):
                     return self.version.select().execute().fetchone()[0]
                 else:
                     return True
@@ -113,4 +116,10 @@ class DatabaseHelper(Singleton):
             raise "Database connection error"
         return ret
 
-
+    def initMappersCatchException(self):
+        try:
+            self.initMappers()
+        except NoSuchTableError, e:
+            logging.getLogger().warn('The table %s does not exists.'%str(e))
+            return False
+        return True
