@@ -134,10 +134,9 @@ sed -i "/\[scheduler_api\]/{n; s/host = 127.0.0.1/host = $IPADDRESS/}" /etc/mmc/
 # Create database dyngroup and configure dyngroup.init
 pushd $TMPCO/pulse2/services/contrib/dyngroup/sql/
 mysqladmin create dyngroup
-mysql dyngroup < schema.sql
-mysql dyngroup < schema.sql.v.1
-mysql dyngroup < schema.sql.v.2
-mysql dyngroup < schema.sql.v.3
+mysql dyngroup < schema-001.sql
+mysql dyngroup < schema-002.sql
+mysql dyngroup < schema-003.sql
 mysql dyngroup << EOF
 EOF
 sed -i "s/# default_module = /default_module = inventory/" /etc/mmc/plugins/dyngroup.ini
