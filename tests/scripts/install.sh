@@ -191,7 +191,13 @@ sed -i "s/host = /host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-ser
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
 
-#launch all service of pulse2
+# Generate SSH key if not available
+if [ ! -f /root/.ssh/id_dsa ];
+then
+    ssh-keygen -t dsa -f /root/.ssh/id_dsa -N ""
+fi
+
+# Launch all service of Pulse 2
 echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-package-server restart
 /etc/init.d/pulse2-launchers restart
