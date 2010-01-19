@@ -142,7 +142,7 @@ $(RELEASES_DIR)/$(TARBALL_GZ):
 
 
 test-launcher:
-	PYTHONPATH=$(PWD)/services/ MODE VERBOSITY python ./services/test/Launcher.py $(MODE) $(VERBOSITY)
+	PYTHONPATH=$(PWD)/services/ python ./tests/services/launcher.py $(MODE) $(VERBOSITY)
 	@echo "Launcher is OK"	
 
 test-package-server:
@@ -151,6 +151,9 @@ test-package-server:
 
 test: test-launcher test-package-server
 	@echo "Package server and Launcher are OK"
+
+xmlrpc-tests:
+	cd tests/services && ./start.sh
 
 RESULTDIR=/tmp/selenium-pulse2$(BACKUP)
 selenium:

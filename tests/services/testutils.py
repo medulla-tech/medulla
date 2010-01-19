@@ -125,8 +125,8 @@ def ipconfig():
     conf=popen("/sbin/ifconfig eth0")
     server=conf.read()
     server=server.split()
-    ipserver=server[6][4:]
-    if ipserver=="":
+    ipserver=server[6][5:]
+    if ipserver == "":
         print "The computer doesn't have an IP address on the eth0 interface"
         sys.exit(1)
     return ipserver

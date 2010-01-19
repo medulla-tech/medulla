@@ -27,14 +27,15 @@ exported by a XML-RPC server.
 """
 
 import sys
+import re
 from testutils import SupEspLi
 source=sys.argv[1]
 test=sys.argv[2]
 
 function_source="def xmlrpc"
-function_test="result=server"
-file_source="/usr/sbin/"+source
-file_test="/root/python/"+test
+function_test="result *= *server"
+file_source = source
+file_test = test
 
 
 file1=open(file_source,"r")
@@ -77,7 +78,7 @@ file1.close()
 # Read the file and create a list with all functions starting by function_test
 file2=open(file_test,'r')
 for line in file2:
-    if function_test in line:
+    if re.search(function_test, line):
         if line[0]=='#':
             lin=""
             function_name=""
@@ -120,26 +121,19 @@ SupEspLi(list_functions_tested)
 remove_occur(list_functions_tested)
 remove_occur(list_functions_source)
 remove_occur(list_functions_not_tested)
-all=len(list_functions_source)-1
-tested=len(list_functions_tested)-1
-percent=(tested*100.0)/all
-print "%f %% functions are tested" %(percent)
-
-# Write in alphabetics' order the function(s) not tested
-list_functions_not_tested.sort
-for function in list_functions_not_tested:
-    print "%s is not tested" %(function)
     
-list_functions_tested.extend(list_functions_not_tested)
 for function_source in list_functions_source:
     if function_source not in (list_functions_tested):
         list_functions.append(function_source)
 
+all = len(list_functions_source)
+tested = len(list_functions_tested)
+percent = (float(tested) / float(all) ) * 100
+print "%f %% functions are tested (%d / %d)" % (percent, tested, all)
+
 # Write in alphabetics' order the function(s) witch are not in the test's
 # module
-
-list_functions=[x for x in list_functions if x!=""]
-if list_functions!=[]:
-    list_functions.sort
+if list_functions:
+    list_functions.sort()
     for function in list_functions:
-        print "%s is not in the test" %(function)
+        print "%s is not tested" % function

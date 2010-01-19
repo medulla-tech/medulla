@@ -36,7 +36,7 @@ Test module for the Pulse 2 scheduler
 ipserver='localhost' # Address of pulse2 scheduler
 uuid='UUID1' # Client UUID
 fqdn='localhost.localdomain'
-protocol='http'
+protocol='https'
 directory=mkdtemp(suffix='launcher',prefix='pulse2',dir="/tmp")
 dbdriver= "mysql"
 dbhost= "localhost"
@@ -51,7 +51,7 @@ else:
 
 del(sys.argv[1:])
 
-server = xmlrpclib.ServerProxy('%s://%s:8000/' %(protocol,ipserver))
+server = xmlrpclib.ServerProxy('%s://username:password@%s:8000/' % (protocol, ipserver))
 
 connectionC=generation_Commands(dbdriver,dbhost,dbport)
 

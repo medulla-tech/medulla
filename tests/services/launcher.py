@@ -49,7 +49,7 @@ else:
 del(sys.argv[1:])
 direct=getcwd()
 
-server=ServerProxy('http://%s:8001' %(ipserver))
+server=ServerProxy('https://username:password@%s:8001' % ipserver)
 
 class class01sync_push_inventoryTest(TestCase):
     """

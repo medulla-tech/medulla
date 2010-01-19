@@ -38,7 +38,7 @@ available.
 
 ipserver = ipconfig()
 uuid='UUID1' #client uuid
-protocol='http' #protocol's server
+protocol='https' #protocol's server
 
 if "debug" in sys.argv:
     mode="debug"
@@ -48,10 +48,10 @@ else:
 
 del(sys.argv[1:])
 
-#remove if exist the package test
-system ("rm -rf /var/lib/pulse2/packages/test")
+# Remove if exist the package test
+system("rm -rf /var/lib/pulse2/packages/test")
 
-serverM=xmlrpclib.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
+serverM =xmlrpclib.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
 serverMA = xmlrpclib.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
 serverP = xmlrpclib.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
 serverS = xmlrpclib.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))

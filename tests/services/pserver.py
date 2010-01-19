@@ -36,7 +36,7 @@ Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module
 """
 
 uuid='UUID1' #client uuid
-protocol='http' #protocol's server
+protocol='https' #protocol's server
 makefile=False
 
 if "makefile" in sys.argv:
