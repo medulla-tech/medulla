@@ -60,6 +60,7 @@ import shutil
 import xmlrpclib
 
 from time import mktime, strptime, strftime, localtime
+from ConfigParser import NoSectionError, NoOptionError
 from twisted.internet import defer
 
 # global definition for ldapUserGroupControl
@@ -2248,9 +2249,9 @@ class LogView:
     def __init__(self, logfile = '/var/log/ldap.log', pattern=None):
         config = PluginConfig("base")
         try: self.logfile = config.get("ldap", "logfile")
-        except NoSectionError, NoOptionError: self.logfile = logfile
+        except (NoSectionError, NoOptionError): self.logfile = logfile
         try: self.maxElt = config.get("LogView", "maxElt")
-        except NoSectionError, NoOptionError: self.maxElt= 200
+        except (NoSectionError, NoOptionError): self.maxElt= 200
         if pattern:
             self.pattern = pattern
         else:
