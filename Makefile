@@ -139,7 +139,8 @@ $(RELEASES_DIR)/$(TARBALL_GZ):
 	cd $(RELEASES_DIR) && tar -czf $(TARBALL_GZ) $(EXCLUDE_FILES) $(TARBALL); rm -rf $(TARBALL);
 
 
-
+pyflakes:
+	cd services && pyflakes bin/pulse2-scheduler* bin/pulse2-launcher* bin/pulse2-package* bin/pulse2-inventory* bin/pulse2-output-wrapper bin/build* .
 
 test-launcher:
 	PYTHONPATH=$(PWD)/services/ python ./tests/services/launcher.py $(MODE) $(VERBOSITY)
