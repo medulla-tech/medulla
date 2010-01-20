@@ -111,7 +111,7 @@ docs:
 	epydoc mmc
 
 pyflakes:
-	pyflakes . bin/mmc-agent
+	pyflakes . bin/*
 
 # This target contains the test suite for MMC core
 test:
