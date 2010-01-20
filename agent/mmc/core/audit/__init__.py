@@ -30,17 +30,22 @@ class AuditFactory(Singleton):
         if not hasattr(self, 'logaction'):
             if config == None:
                 from mmc.plugins.base import BasePluginConfig
-                self.make(BasePluginConfig('base'), init)
+                try:
+                    # Read the configuration
+                    self.make(BasePluginConfig('base'), init)
+                except IOError:
+                    # Fallback on default configuration
+                    self.make(None, init)
             else:
-                self.make(config, operation)
+                self.make(config, init)
     
-    def make(self, config = None, init = True):
+    def make(self, config, init = True):
         """
         Configure the logging mode database,none,syslog 
         @param config: confile .ini
         @type config: ConfigParser
         """
-        if config.auditmethod == "database":
+        if config and config.auditmethod == "database":
             AuditWriterDB().setConfig(config)
             if init:
                 AuditWriterDB().init(config.auditdbdriver, config.auditdbuser, config.auditdbpassword, config.auditdbhost, config.auditdbport, config.auditdbname)
