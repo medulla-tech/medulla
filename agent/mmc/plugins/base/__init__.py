@@ -1713,7 +1713,7 @@ class LdapUserGroupControl:
         """
         oldHome = self.getDetailedUser(uid)['homeDirectory'][0]
         if newHome != oldHome:
-            userdn = searchUserDN(uid)
+            userdn = self.searchUserDN(uid)
             r = AF().log(PLUGIN_NAME, AA.BASE_MOVE_USER_HOME, [(userdn, AT.USER)])
             self.changeUserAttributes(uid,"homeDirectory",newHome)
             if self.userHomeAction:
