@@ -38,7 +38,10 @@ if (isset($_POST["bconfirm"])) {
         $url[$post] = $_POST[$post];
     }
     $url['tab'] = $tab;
-
+    if (isset($tab)) {
+        $url['tab'] = $tab;
+    }
+    
     if (strlen($_POST['bundle_id'])) {
         $bundle_id = $_POST['bundle_id'];
         if (strlen($_POST['gid'])) {

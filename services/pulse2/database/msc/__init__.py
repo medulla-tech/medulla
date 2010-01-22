@@ -528,7 +528,7 @@ class MscDatabase(DatabaseHelper):
 
         session = create_session()
 
-        query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.target.c.target_name)
+        query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
         query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
         query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
         
@@ -537,7 +537,7 @@ class MscDatabase(DatabaseHelper):
         session.close()
 
         ret = []
-        for cmd, bid, target_name, gid, btitle, target_uuid in cmds:
+        for cmd, bid, target_name, cohid, gid, btitle, target_uuid in cmds:
             if bid != None: # we are in a bundle
                 if gid != None and gid != '':
                     ret.append({
@@ -583,6 +583,7 @@ class MscDatabase(DatabaseHelper):
                             'creation_date':cmd.creation_date,
                             'bid':'',
                             'cmdid':cmd.id,
+                            'cohid':cohid,
                             'target':target_name,
                             'uuid':target_uuid,
                             'gid':'',

@@ -76,6 +76,7 @@ foreach ($cmds as $item) {
     $target = $item['target'];
     $target_uuid = $item['uuid'];
     $cmd_id = $item['cmdid'];
+    $coh_id = $item['cohid'];
     $bid = $item['bid'];
     $gid = $item['gid'];
     $current_state = empty($item['current_state']) ? '' : $item['current_state'];
@@ -87,7 +88,13 @@ foreach ($cmds as $item) {
     if ($icons['play'] == '' && $icons['stop'] == '' && $icons['pause'] == '') { $tab = 'tabhistory'; }
         
     if ($target_uuid && $target_uuid != '') {
-        $linkdetail = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
+        $param = array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid);
+        if (!isset($gid) || $gid == '') {
+            $param['coh_id'] = $coh_id;
+        } else {
+            $param['gid'] = $gid;
+        }
+        $linkdetail = urlStr("base/computers/msctabs/$tab", $param);
         $linklogs = urlStr("base/computers/msctabs/$tab", array('uuid'=>$target_uuid, 'gid'=>$gid));
     } else {
         $linkdetail = urlStr("base/computers/groupmsctabs/group$tab", array('uuid'=>$target_uuid, 'cmd_id'=>$cmd_id, 'bundle_id'=>$bid, 'gid'=>$gid));
@@ -95,6 +102,7 @@ foreach ($cmds as $item) {
     }
     $a_date[] = $creation_date;
     $a_creator[] = $creator;
+    $param = array('cmd_id'=>$cmd_id, 'title'=>$label, 'bundle_id'=>$bid, 'from'=>'msc|logs|consult');
     $no_actions = False;
     if (!isset($bid) || $bid == '') {
         $img = draw_image("modules/msc/graph/images/install_package.png", _T('', 'msc'));
@@ -116,12 +124,16 @@ foreach ($cmds as $item) {
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
         if (!isset($gid) || $gid == '') {
             $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('', 'msc'))." ".$target;
+            $param['uuid'] = $target_uuid;
+            $param['hostname'] = $target;
         } else {
             $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('', 'msc'))." ".$target;
+            $param['gid'] = $gid;
         }
     }
 
-    $params[] = array('cmd_id'=>$cmd_id, 'title'=>$label, 'gid'=>$gid, 'bundle_id'=>$bid, 'gid'=>$gid);
+    if (isset($coh_id)) { $param['coh_id'] = $coh_id; }
+    $params[] = $param;
 
     if ($no_actions) {
         $a_start[] = $actionempty;

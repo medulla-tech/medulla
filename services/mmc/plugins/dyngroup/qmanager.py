@@ -21,7 +21,6 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from mmc.agent import PluginManager
 from mmc.support.mmctools import shLaunch
 import mmc.support.mmctools
 import logging
@@ -66,6 +65,7 @@ class QueryManager(Singleton):
         """
         Check in existing plugins which one support the query manager
         """
+        from mmc.agent import PluginManager
         pm = PluginManager()
         ret = {}
 

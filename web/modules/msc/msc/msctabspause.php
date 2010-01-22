@@ -37,7 +37,9 @@ if (isset($_POST["bconfirm"])) {
     foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
         $url[$post] = $_POST[$post];
     }
-    $url['tab'] = $tab;
+    if (isset($tab)) {
+        $url['tab'] = $tab;
+    }
 
     if (strlen($_POST['bundle_id'])) {
         $bundle_id = $_POST['bundle_id'];
@@ -102,6 +104,9 @@ if (isset($_POST["bconfirm"])) {
     $gid = $_GET["gid"];
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
+    if (!$name && $_GET['title']) {
+        $name = $_GET['title'];
+    }
 
     $action_type = _T('action', 'msc');
     if (strlen($bundle_id)) {
