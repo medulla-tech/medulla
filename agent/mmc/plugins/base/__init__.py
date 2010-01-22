@@ -401,6 +401,9 @@ def getAllGroupsFromUser(uid):
     ldapObj = ldapUserGroupControl()
     return ldapObj.getAllGroupsFromUser(uid)
 
+def getUserDN(uid):
+    ldapObj = ldapUserGroupControl()
+    return ldapObj.searchUserDN(uid)
 
 # Status methods
 from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
