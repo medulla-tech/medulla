@@ -50,6 +50,11 @@ def activate():
         logger.warning("Plugin imaging: disabled by configuration.")
         return False
     # TODO: check images directories exists    
+
+    # initialise imaging database
+    if not ImagingDatabase().activate(config):
+        logger.warning("Plugin imaging: an error occured during the database initialization")
+        return False
     return True    
 
 class ContextMaker(ContextMakerI):

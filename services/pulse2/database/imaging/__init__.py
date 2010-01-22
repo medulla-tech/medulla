@@ -56,11 +56,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return None
         self.logger.info("ImagingDatabase is activating")
         self.config = config
-        PossibleQueries().init(self.config)
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
-            return None
+            return False
         self.metadata.create_all()
         self.is_activated = True
         self.dbversion = self.getImagingDatabaseVersion()
@@ -71,8 +70,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the imaging database
         """
-        self.version = Table("Version", self.metadata, autoload = True)
-        mapper(Version, self.version)
+        self.version = Table("version", self.metadata, autoload = True)
         
         self.initTables()
         mapper(BootService, self.boot_service)
@@ -87,8 +85,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(Language, self.language)
         mapper(Log, self.log)
         mapper(LogState, self.log_state)
-        mapper(Menu, self.menu)
-        mapper(MenuItem, self.menu_item)
+        mapper(Menu, self.menu, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
+        mapper(MenuItem, self.menu_item, properties = { 'menu' : relation(Menu) })
         mapper(Partition, self.partition)
         mapper(PostInstallScript, self.post_install_script)
         mapper(PostInstallScriptInImage, self.post_install_script_in_image)
@@ -112,16 +110,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.boot_service_in_menu = Table(
             "BootServiceInMenu",
             self.metadata,
-            Column('fk_bootservice', Integer, ForeignKey('BootService.id')),
-            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id')),
+            Column('fk_bootservice', Integer, ForeignKey('BootService.id'), primary_key=True),
+            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
             autoload = True
         )
 
         self.boot_service_on_imaging_server = Table(
             "BootServiceOnImagingServer",
             self.metadata,
-            Column('fk_boot_service', Integer, ForeignKey('BootService.id')),
-            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id')),
+            Column('fk_boot_service', Integer, ForeignKey('BootService.id'), primary_key=True),
+            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
             autoload = True
         )
 
@@ -141,16 +139,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.image_in_menu = Table(
             "ImageInMenu",
             self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id')),
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
             autoload = True
         )
 
         self.image_on_imaging_server = Table(
             "ImageOnImagingServer",
             self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id')),
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
             autoload = True
         )
 
@@ -164,7 +162,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.internationalization = Table(
             "Internationalization",
             self.metadata,
-            Column('fk_language', Integer, ForeignKey('Language.id')),
+            Column('id', Integer, primary_key=True),
+            Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
             autoload = True
         )
 
@@ -192,8 +191,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.menu = Table(
             "Menu",
             self.metadata,
-            Column('fk_default_item', Integer, ForeignKey('MenuItem.id')),
-            Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
+            # cant put them for circular dependancies reasons, the join must be explicit
+            # Column('fk_default_item', Integer, ForeignKey('MenuItem.id')), 
+            # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
             Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
             # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
             autoload = True
@@ -223,8 +223,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.post_install_script_in_image = Table(
             "PostInstallScriptInImage",
             self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            Column('fk_post_install_script', Integer, ForeignKey('PostInstallScript.id')),
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_post_install_script', Integer, ForeignKey('PostInstallScript.id'), primary_key=True),
             autoload = True
         )
 
@@ -264,7 +264,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.version.select().execute().fetchone()[0]
 
 
-class DBObject:
+class DBObject(object):
     __to_be_exported = ['id', 'name', 'label']
     def to_h(self):
         return self.toH()
@@ -338,7 +338,4 @@ class TargetType(DBObject):
 
 class User(DBObject):
     __to_be_exported = ['id', 'login']
-
-class Version(DBObject):
-    pass
 
