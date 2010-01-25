@@ -28,6 +28,7 @@
 from twisted.web import resource
 import xmlrpclib
 import logging
+import cgi
 
 class Description(resource.Resource):
     type = 'Description'
@@ -69,7 +70,7 @@ class Description(resource.Resource):
                         body += "<td class='mandriva "+style+"'>content</td>"
                         body += self.__down()
                     else:
-                        url = "?uri="+description['proto']+"://"+description['server']+":"+description['port']+CGI.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+CGI.escape(description['mp'])+"&type="+description['type']  
+                        url = "?uri="+description['proto']+"://"+description['server']+":"+description['port']+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']  
                         serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                         body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href=\""+url+"\">content</a></td>"
                         body += self.__up()
@@ -77,7 +78,7 @@ class Description(resource.Resource):
                     #print '%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp'])
                     client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
                     #ret = client.getServerDetails()
-                    url = "?proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+CGI.escape(description['mp'])+"&type="+description['type']
+                    url = "?proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
                     serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                     body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href='"+url+"'>details</a></td>"
                     body += self.__up()
@@ -184,9 +185,9 @@ class Description(resource.Resource):
 #                end
 #                body += "</table>"
 #            rescue XMLRPC::FaultException => e
-#                body += "<span class='mandriva error'><pre class='mandriva'>#{CGI::escapeHTML(e.faultString)}</pre></span>"
+#                body += "<span class='mandriva error'><pre class='mandriva'>#{cgi::escapeHTML(e.faultString)}</pre></span>"
 #            rescue Exception => e
-#                body += "<span class='mandriva error'><pre class='mandriva'>#{CGI::escapeHTML(e.inspect)}</pre></span>"
+#                body += "<span class='mandriva error'><pre class='mandriva'>#{cgi::escapeHTML(e.inspect)}</pre></span>"
 #            end
 #        end
 #    
