@@ -26,7 +26,6 @@
     Pulse2 PackageServer Mirror/Computer link API
 """
 
-import twisted.web.xmlrpc
 import logging
 from pulse2.package_server.types import Mirror
 from pulse2.package_server.assign_algo import MMAssignAlgoManager

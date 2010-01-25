@@ -25,7 +25,6 @@
 """
     Pulse2 Modules
 """
-import twisted.web.html
 import os
 import time
 import exceptions

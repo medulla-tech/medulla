@@ -21,10 +21,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
 from sets import Set
 from sqlalchemy import *
-from sqlalchemy.exceptions import SQLError
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.database_helper import DatabaseHelper

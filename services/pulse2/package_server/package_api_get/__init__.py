@@ -25,7 +25,6 @@
 """
     Pulse2 Modules
 """
-import twisted.web.html
 import logging
 import os
 from pulse2.package_server.common import Common

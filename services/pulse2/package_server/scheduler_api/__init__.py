@@ -26,7 +26,6 @@
     Pulse2 PackageServer
 """
 
-import twisted.web.xmlrpc
 import logging
 import random
 from pulse2.package_server.types import Machine

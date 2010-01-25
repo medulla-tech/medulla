@@ -25,14 +25,12 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql import *
-from sqlalchemy.exceptions import NoSuchTableError
 
 # PULSE2 modules
 from pulse2.database.database_helper import DatabaseHelper
 
 # Imported last
 import logging
-import re
 
 SA_MAJOR = 0
 SA_MINOR = 4

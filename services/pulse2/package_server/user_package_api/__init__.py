@@ -26,9 +26,8 @@
     Pulse2 PackageServer
 """
 
-import twisted.web.xmlrpc
 import logging
-from pulse2.package_server.types import User, Mirror
+from pulse2.package_server.types import Mirror
 from pulse2.package_server.assign_algo import UPAssignAlgoManager
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
