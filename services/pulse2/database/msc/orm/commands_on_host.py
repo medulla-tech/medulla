@@ -233,7 +233,7 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isWOLImminent(#%s): %s" % (self.getId(), result))
         return result
     def wasWOLPreviouslyRan(self):
-        result = (getLastWOLAttempt() != None) # should check if still in WOL delay
+        result = (self.getLastWOLAttempt() != None) # should check if still in WOL delay
         logging.getLogger().debug("wasWOLPreviouslyRan(#%s): %s" % (self.getId(), result))
         return result
 
@@ -629,13 +629,13 @@ class CommandsOnHost(object):
         logging.getLogger().debug("isLocalProxy(#%s): %s" % (self.getId(), result))
         return result
 
-    def setOrderInProxy(order_in_proxy):
+    def setOrderInProxy(self, order_in_proxy):
         self.order_in_proxy = int(order_in_proxy)
         self.flush()
     def getOrderInProxy(self):
         return self.order_in_proxy
 
-    def setMaxClientsPerProxy(max_clients_per_proxy):
+    def setMaxClientsPerProxy(self, max_clients_per_proxy):
         self.max_clients_per_proxy = int(max_clients_per_proxy)
         self.flush()
     def getMaxClientsPerProxy(self):
