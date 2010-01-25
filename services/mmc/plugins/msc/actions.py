@@ -75,19 +75,6 @@ def msc_scp(user, ip_addr, source, destination):
 
     return [scp_command, output, return_var, stdout, stderr, -1]
 
-def start_inventory(ip_addr, database = None):
-    if not database:
-        database = mmc.plugins.msc.database.DatabaseConnection()
-    ret = lsc_scp("root", ip_addr, "./scripts/run-inventory.bat", "/cygdrive/c/") # TODO check!
-
-    command = "/cygdrive/c/run-inventory.bat"
-    lsc_ssh("root", ip, command)
-
-    command = "rm /cygdrive/c/run-inventory.bat"
-    ret = lsc_ssh("root", ip, command)
-
-    return ret
-
 def mscCopy(session, path_source, files_source, path_destination):
     # * Initialise result variable
     result = {
