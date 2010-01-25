@@ -3,20 +3,28 @@
 SCHEMA_NAME=schema
 SCHEMA_MAXVERSION=15
 
-[ -z $MYSQL_HOST ] && echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read
-[ ! -z $REPLY ] && MYSQL_HOST=$REPLY
-[ -z $MYSQL_HOST ] && MYSQL_HOST='localhost'
+if [ ! -n "${MYSQL_HOST+x}" ]; then
+    echo 'Enter MYSQL host (default : "localhost", or $MYSQL_DATABASE if defined)' && read
+    [ ! -z $REPLY ] && MYSQL_HOST=$REPLY
+    [ -z $MYSQL_HOST ] && MYSQL_HOST='localhost'
+fi
 
-[ -z $MYSQL_BASE ] && echo 'Enter MYSQL database (default : "msc", or $MYSQL_BASE if defined)' && read
-[ ! -z $REPLY ] && MYSQL_BASE=$REPLY
-[ -z $MYSQL_BASE ] && MYSQL_BASE='msc'
+if [ ! -n "${MYSQL_BASE+x}" ]; then
+    echo 'Enter MYSQL database (default : "msc", or $MYSQL_BASE if defined)' && read
+    [ ! -z $REPLY ] && MYSQL_BASE=$REPLY
+    [ -z $MYSQL_BASE ] && MYSQL_BASE='msc'
+fi
 
-[ -z $MYSQL_USER ] && echo 'Enter MYSQL user (default : "root", or $MYSQL_USER if defined)' && read
-[ ! -z $REPLY ] && MYSQL_USER=$REPLY
-[ -z $MYSQL_USER ] && MYSQL_USER='root'
+if [ ! -n "${MYSQL_USER+x}" ]; then
+    echo 'Enter MYSQL user (default : "root", or $MYSQL_USER if defined)' && read
+    [ ! -z $REPLY ] && MYSQL_USER=$REPLY
+    [ -z $MYSQL_USER ] && MYSQL_USER='root'
+fi
 
-[ -z $MYSQL_PWD ] && echo 'Enter MYSQL password (default : <empty>, or $MYSQL_PWD if defined)' && read
-[ ! -z $REPLY ] && MYSQL_PWD=$REPLY
+if [ ! -n "${MYSQL_PWD+x}" ]; then
+    echo 'Enter MYSQL password (default : <empty>, or $MYSQL_PWD if defined)' && read
+    [ ! -z $REPLY ] && MYSQL_PWD=$REPLY
+fi
 
 MYSQL_CNF=`mktemp`
 trap "rm -f MYSQL_CNF" EXIT
