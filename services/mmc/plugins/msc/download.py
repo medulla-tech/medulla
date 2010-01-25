@@ -108,7 +108,7 @@ class MscDownloadProcess:
         else:
             scheduler_name = result
         if scheduler_name not in MscConfig().schedulers:
-            return Failure("scheduler %s does not exist" % (scheduler_name))
+            return twisted.internet.defer.fail(twisted.python.failure.Failure("scheduler %s does not exist" % (scheduler_name)))
 
         # Create the lock file
         f = file(self.lockfile, 'w+')
