@@ -33,7 +33,7 @@ def dottedQuadToNum(ip):
     bytes = [long(x) for x in bytes]
     for x in bytes:
         if x > 255 or x < 0:
-            raise ValueError, "%r: single byte must be 0 <= byte < 256" % (ipstr)
+            raise ValueError, "%r: single byte must be 0 <= byte < 256" % (ip)
     return ((bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3])
 
 def ipInRange(ipAddress, beginRange, endRange):
