@@ -22,11 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import re
-import dircache
-import os
-import logging
-
 from pulse2.apis.clients import Pulse2Api
 
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
