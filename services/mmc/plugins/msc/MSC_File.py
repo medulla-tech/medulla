@@ -837,4 +837,8 @@ def get_parent_directory(directory_path):
         return directory_path[0:position]
     except ValueError:
         return ""
+        
+def stripslashes(s):
+    r = s.replace("\\n","\n").replace("\\r","\n").replace("\\","")
+    return r
 
