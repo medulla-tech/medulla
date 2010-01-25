@@ -21,8 +21,6 @@
 from mmc.plugins.base import ComputerI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 import logging
-import time
-import exceptions
 
 class DyngroupComputers(ComputerI):
     # don't know how to do something else than delComputer.

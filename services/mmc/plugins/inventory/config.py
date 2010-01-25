@@ -20,12 +20,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from pulse2.database.inventory.config import InventoryDatabaseConfig
-from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.inventory.utilities import getInventoryParts
 from mmc.support import mmctools
-
-from ConfigParser import NoOptionError
-import logging
 
 class InventoryConfig(InventoryDatabaseConfig):
     disable = True

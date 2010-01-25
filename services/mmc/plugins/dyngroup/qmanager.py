@@ -21,23 +21,15 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from mmc.support.mmctools import shLaunch
 import mmc.support.mmctools
 import logging
 import glob
 import os
 import re
 import imp
-import time
-import datetime
-import exceptions
 from bool_equations import BoolRequest
 from mmc.plugins.base.computers import ComputerManager
-from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.config import PluginConfig
-from ConfigParser import NoOptionError
 
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import Singleton
 
 class QueryManager(Singleton):

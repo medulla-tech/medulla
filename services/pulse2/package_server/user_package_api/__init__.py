@@ -27,10 +27,8 @@
 """
 
 import twisted.web.xmlrpc
-import twisted.web.server
 import logging
-import random
-from pulse2.package_server.types import Mirror, Machine, User
+from pulse2.package_server.types import User, Mirror
 from pulse2.package_server.assign_algo import UPAssignAlgoManager
 from pulse2.package_server.xmlrpc import MyXmlrpc
 

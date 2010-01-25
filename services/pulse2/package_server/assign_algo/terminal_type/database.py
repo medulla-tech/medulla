@@ -19,11 +19,9 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
 import pulse2.utils
 from sqlalchemy import *
 from sqlalchemy.orm import create_session
-import logging
 
 NB_DB_CONN_TRY = 2
 

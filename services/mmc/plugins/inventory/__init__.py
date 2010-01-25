@@ -21,19 +21,15 @@
 
 # Helpers
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
-from mmc.support.mmctools import Singleton, xmlrpcCleanup
+from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
-from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
 
 import logging
-import datetime
-import time
 
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
-from mmc.plugins.inventory.utilities import unique
 from mmc.plugins.inventory.computers import InventoryComputers
 from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation

@@ -22,12 +22,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
 import os
 import sys
-import signal
 
-from twisted.internet import reactor, utils
+from twisted.internet import reactor
 from twisted.web import http
 
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig

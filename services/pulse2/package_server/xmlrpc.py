@@ -23,12 +23,10 @@
 # MA 02110-1301, USA.
 
 import twisted.web.html
-import twisted.web.xmlrpc
 from twisted.web import server, xmlrpc
 import xmlrpclib
 import time
-from twisted.internet import ssl, reactor, defer
-from twisted.python import failure
+from twisted.internet import defer
 
 Fault = xmlrpclib.Fault
 

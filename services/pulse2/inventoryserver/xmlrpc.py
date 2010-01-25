@@ -27,7 +27,6 @@ import twisted.internet.reactor
 import twisted.web.server
 import twisted.internet.error
 import twisted.web.xmlrpc
-from twisted.internet import ssl
 
 try:
     from twisted.web import http

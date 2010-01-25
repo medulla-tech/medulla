@@ -22,16 +22,11 @@
 # -*- coding: utf-8; -*-
 
 # TODO rename location into entity (and locations in location)
-from mmc.support.config import PluginConfig
-from mmc.support.mmctools import Singleton, xmlrpcCleanup
-from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import complete_ctx
-from pulse2.utils import same_network, unique, onlyAddNew, grep, grepv
+from pulse2.utils import same_network, unique, grepv
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
-
-from ConfigParser import NoOptionError
 
 from sqlalchemy import *
 from sqlalchemy.orm import *

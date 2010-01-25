@@ -22,13 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# Misc            
-import re    
-import logging
-import pwd
-import grp  
-import string
-
 # PULSE2
 from pulse2.database.config import DatabaseConfig
 

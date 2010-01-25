@@ -26,9 +26,8 @@
     Pulse2 Package server types
 """
 
-from pulse2.package_server.utilities import md5file, md5sum
+from pulse2.package_server.utilities import md5sum
 import pulse2.package_server.common
-import os
 import urllib
 import locale
 

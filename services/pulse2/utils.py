@@ -27,7 +27,7 @@ from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser(
 import datetime
 import re
 import os
-from time import time, struct_time
+from time import struct_time
 import inspect
 
 # python 2.3 fallback for set() in xmlrpcleanup

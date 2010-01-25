@@ -20,17 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from mmc.support.mmctools import shLaunch
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
-import mmc.support.mmctools
+
 import logging
-import glob
-import os
 import re
-import imp
-import time
-import datetime
 import exceptions
 
 from mmc.plugins.dyngroup.bool_equations import BoolRequest

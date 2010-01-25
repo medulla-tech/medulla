@@ -31,7 +31,6 @@ except ImportError:
     sys.exit(1)
 
 import sqlalchemy
-import logging
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s db_conn_string [--id entity_id|--name entity_name]' % argv[0]

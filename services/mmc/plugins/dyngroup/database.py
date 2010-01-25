@@ -22,20 +22,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import create_session
 from sqlalchemy.sql import *
-from sqlalchemy.exceptions import NoSuchTableError
 
 # MMC modules
 from mmc.plugins.base import getUserGroups
 import mmc.plugins.dyngroup
 # PULSE2 modules
 import pulse2.database.dyngroup
-from pulse2.database.dyngroup import Groups, GroupType, Machines, ProfilesData, ProfilesPackages, ProfilesResults, Results, ShareGroup, ShareGroupType, Users, UsersType
+from pulse2.database.dyngroup import Groups, Machines, Results, Users
 
 # Imported last
-import logging
 import re
 
 class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):

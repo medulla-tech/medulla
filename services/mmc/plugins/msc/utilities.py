@@ -21,7 +21,6 @@
 # MA 02110-1301, USA.
 
 import re
-from mmc.support.mmctools import shLaunch
 import os
 
 def addslashes(str):

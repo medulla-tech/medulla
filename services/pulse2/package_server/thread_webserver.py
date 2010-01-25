@@ -26,8 +26,7 @@ import os.path
 import logging
 import twisted
 import re
-import SimpleHTTPServer
-from twisted.web import resource, static, server
+from twisted.web import resource, static
 
 from pulse2.package_server.server import P2PSite
 from pulse2.package_server.description import Description
@@ -39,7 +38,6 @@ from pulse2.package_server.package_api_get import PackageApiGet
 from pulse2.package_server.package_api_put import PackageApiPut
 from pulse2.package_server.user_package_api import UserPackageApi
 from pulse2.package_server.imaging.api import ImagingApi
-from pulse2.package_server.config import config_addons
 
 import pulse2.xmlrpc
 

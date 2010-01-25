@@ -20,7 +20,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from mmc.support.config import PluginConfig
-from mmc.support.mmctools import Singleton
 
 from ConfigParser import NoOptionError
 import logging

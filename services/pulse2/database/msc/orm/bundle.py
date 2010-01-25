@@ -25,11 +25,6 @@
 """ Class to map msc.bundle to SA
 """
 
-# big modules
-import logging
-import sqlalchemy
-import time
-
 class Bundle(object):
     """ Mapping between msc.bundle and SA
     """

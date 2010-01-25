@@ -23,8 +23,6 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
 import logging
-import time
-import exceptions
 
 class InventoryComputers(ComputerI):
     def __init__(self, conffile = None):

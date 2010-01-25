@@ -21,7 +21,6 @@
 # MA 02110-1301, USA.
 
 from pulse2.apis import makeURL
-from mmc.support.mmctools import Singleton
 from twisted.internet import defer
 
 from pulse2.apis.clients import Pulse2Api

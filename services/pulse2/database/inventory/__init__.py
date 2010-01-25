@@ -25,16 +25,14 @@
 from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.database.utilities import unique, toH, DbObject, handle_deconnect
-from pulse2.database.sqlalchemy_tests import checkSqlalchemy
+from pulse2.database.utilities import unique, handle_deconnect, DbObject
 from pulse2.database.inventory.mapping import OcsMapping
-from pulse2.utils import same_network, onlyAddNew, Singleton
+from pulse2.utils import same_network, Singleton
 
 from sqlalchemy import *
 from sqlalchemy.orm import *
 
 import datetime
-import time
 import re
 import logging
 

@@ -37,7 +37,7 @@ from pulse2.package_server.types import *
 from pulse2.package_server.parser import PackageParser
 from pulse2.package_server.find import Find
 import pulse2.utils
-from pulse2.package_server.utilities import md5file, md5sum
+from pulse2.package_server.utilities import md5file
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 
 class Common(pulse2.utils.Singleton):

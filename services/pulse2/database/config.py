@@ -22,11 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# Misc
-import ConfigParser
-import re
-import logging
-
 from pulse2.utils import Singleton, Pulse2ConfigParser
 
 class DatabaseConfig(Singleton):

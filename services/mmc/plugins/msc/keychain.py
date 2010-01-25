@@ -23,9 +23,6 @@
 
 import os
 import re
-import logging
-
-import mmc.plugins.msc.config
 
 from mmc.support.mmctools import shLaunch
 

@@ -28,7 +28,6 @@ import logging
 import mmc.plugins.msc.config
 
 from mmc.support.mmctools import shLaunch
-from mmc.plugins.msc.config import basedir #, MAX_LOG_SIZE
 
 def msc_exec(command):
     proc = shLaunch(command)

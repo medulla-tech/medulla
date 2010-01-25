@@ -22,7 +22,6 @@
 # MA 02110-1301, USA.
 
 from sqlalchemy import *
-from sqlalchemy import exceptions
 from sqlalchemy.orm import *
 from sqlalchemy.exceptions import SQLError
 

@@ -27,7 +27,7 @@
 """
 
 import random
-from pulse2.package_server.types import Mirror, Machine, User
+from pulse2.package_server.types import Machine, User
 from pulse2.package_server.assign_algo import MMAssignAlgo, UPAssignAlgo
 
 class MMUserAssignAlgo(MMAssignAlgo):

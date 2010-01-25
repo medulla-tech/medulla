@@ -38,7 +38,6 @@ import twisted.web.xmlrpc
 import twisted.web.server
 import twisted.internet.defer
 import twisted.internet.base
-from twisted.internet import ssl
 try:
     from twisted.web import http
 except ImportError:
@@ -67,8 +66,6 @@ import pulse2.xmlrpc
 # Logging
 import logging
 import logging.config
-
-from pulse2.scheduler.tracking.preempt import Pulse2Preempt
 
 VERSION = "1.3.0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))

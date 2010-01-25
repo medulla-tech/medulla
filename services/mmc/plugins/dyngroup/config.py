@@ -20,11 +20,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
 from mmc.support import mmctools
 from mmc.support.config import PluginConfig
 from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
-from ConfigParser import NoOptionError
 
 class DGConfig(DyngroupDatabaseConfig):
     dyngroup_activate = True

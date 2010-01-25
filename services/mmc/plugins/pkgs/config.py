@@ -23,10 +23,8 @@
 
 # big modules
 import logging
-import re
 import os.path # for SSL cert files checking
 
-from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 

@@ -21,8 +21,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import datetime
-import time
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.msc.package_api import PackageGetA

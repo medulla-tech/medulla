@@ -21,8 +21,6 @@
 
 import pulse2.utils
 #from mmc.support.config import PluginConfig
-import logging
-import sys
 import re
 from pulse2.database.inventory.config import InventoryDatabaseConfigSkel
 

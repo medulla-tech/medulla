@@ -20,17 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import os
-import re
 import logging
-from mmc.support.config import PluginConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.config import GlpiQueryManagerConfig
-import mmc
 
 from pulse2.utils import unique
-
-from ConfigParser import NoOptionError
 
 def activate():
     conf = GlpiQueryManagerConfig("glpi")

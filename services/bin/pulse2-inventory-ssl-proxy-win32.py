@@ -23,9 +23,6 @@
 import win32serviceutil
 import win32service
 import win32event
-import winerror
-import pywintypes
-import string
 import os
 import os.path
 import sys

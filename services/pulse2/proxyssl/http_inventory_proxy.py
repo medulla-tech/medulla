@@ -25,18 +25,14 @@
 import logging
 import os
 import re
-import socket
 import sys
-import time
-import signal
-import OpenSSL
 import urlparse
 
 from pulse2.proxyssl.utilities import Singleton
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
-from twisted.internet import ssl, reactor
-from twisted.web import proxy, server, http
+from twisted.internet import ssl
+from twisted.web import proxy
 from twisted.web.server import NOT_DONE_YET
 
 from zlib import *

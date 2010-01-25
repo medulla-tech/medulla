@@ -24,18 +24,12 @@
 
 # standard modules
 import time
-import re
-import os.path
 
 # SqlAlchemy
 from sqlalchemy import *
-from sqlalchemy import exceptions
 from sqlalchemy.orm import *
 from sqlalchemy.sql import union
 from sqlalchemy.exceptions import NoSuchTableError, TimeoutError
-
-from twisted.internet import defer
-from twisted.python import failure
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -47,7 +41,6 @@ from pulse2.database.database_helper import DatabaseHelper
 
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager
-from pulse2.utils import Singleton
 import pulse2.time_intervals
 
 # Imported last

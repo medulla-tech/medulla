@@ -25,7 +25,6 @@
 import time
 import signal
 import logging
-from new import instancemethod
 
 # Twisted stuff
 import twisted.internet.defer

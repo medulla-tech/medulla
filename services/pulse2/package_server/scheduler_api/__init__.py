@@ -3,7 +3,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 30 2008-02-08 16:40:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -27,11 +27,9 @@
 """
 
 import twisted.web.xmlrpc
-import twisted.web.server
 import logging
 import random
-from pulse2.package_server.types import Mirror, Machine
-from pulse2.package_server.assign_algo import MMAssignAlgoManager
+from pulse2.package_server.types import Machine
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
 class SchedulerApi(MyXmlrpc):

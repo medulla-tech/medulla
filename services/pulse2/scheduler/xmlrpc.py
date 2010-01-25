@@ -26,7 +26,7 @@ import logging
 import twisted.web.server
 import twisted.internet.error
 import twisted.web.xmlrpc
-from twisted.internet import ssl, reactor
+from twisted.internet import reactor
 
 try:
     from twisted.web import http

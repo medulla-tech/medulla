@@ -28,11 +28,10 @@ import re
 import os
 
 # Twisted
-from twisted.web.xmlrpc import Proxy
-from twisted.internet import reactor, defer
+from twisted.internet import defer
 
 # Helpers
-from mmc.support.mmctools import shLaunch, xmlrpcCleanup
+from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 from mmc.plugins.base.computers import ComputerManager
@@ -48,9 +47,6 @@ import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
 from mmc.plugins.msc.package_api import get_default_bundle_name
-
-from mmc.plugins.msc.MSC_Directory import MSC_Directory
-from mmc.plugins.msc.MSC_File import MSC_File
 
 # XMLRPC client functions
 import mmc.plugins.msc.client.scheduler

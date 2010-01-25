@@ -22,10 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# big modules
-import logging
-import time
-
 # uses SA to handle sessions
 import sqlalchemy.orm
 

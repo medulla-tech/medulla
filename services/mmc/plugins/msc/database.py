@@ -22,38 +22,22 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # standard modules
-import time
 import re
-import os.path
 
 # SqlAlchemy
 from sqlalchemy import *
-from sqlalchemy import exceptions
 from sqlalchemy.orm import *
-
-from twisted.internet import defer
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager
-from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.plugins.msc.scheduler_api import SchedulerApi
-
-# ORM mappings
-from pulse2.database.msc.orm.commands import Commands
-from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
-from pulse2.database.msc.orm.commands_history import CommandsHistory
-from pulse2.database.msc.orm.target import Target
-from pulse2.database.msc.orm.bundle import Bundle
 
 # blacklists
 from mmc.plugins.msc import blacklist
 
 # Pulse 2 stuff
 from pulse2.database import msc
-
-# Imported last
-import logging
 
 class MscDatabase(msc.MscDatabase):
     """

@@ -22,7 +22,6 @@
 # MA 02110-1301, USA.
 
 import sys
-import os
 import re
 import time
 from pychart import *

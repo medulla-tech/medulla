@@ -31,7 +31,7 @@ import logging
 import re
 
 # our stuff
-from mmc.client import MMCProxy, makeSSLContext, XmlrpcSslProxy
+from mmc.client import makeSSLContext, XmlrpcSslProxy
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.database import MscDatabase

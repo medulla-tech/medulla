@@ -21,24 +21,17 @@
 # MA 02110-1301, USA.
 
 import re
-import dircache
-import os
 import logging
 import time
 
-import xmlrpclib
-from twisted.web.xmlrpc import Proxy
 from twisted.python import failure
 from twisted.internet import defer
 
 from sqlalchemy.orm import create_session
 
 from mmc.plugins.msc import MscConfig
-from mmc.support.mmctools import Singleton
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.mirror_api import MirrorApi
-
-from mmc.client import XmlrpcSslProxy, makeSSLContext
 
 from pulse2.managers.group import ComputerGroupManager
 import pulse2.apis.clients.package_get_api

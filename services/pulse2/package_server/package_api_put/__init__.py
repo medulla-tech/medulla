@@ -3,7 +3,7 @@
 #
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
 #
-# $Id: __init__.py 30 2008-02-08 16:40:54Z nrueff $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -26,8 +26,6 @@
     Pulse2 Modules
 """
 import twisted.web.html
-import twisted.web.xmlrpc
-import logging
 import os
 import time
 import exceptions

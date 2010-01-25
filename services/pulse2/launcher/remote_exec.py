@@ -31,9 +31,6 @@
 import os
 import logging
 
-# Twisted stuf
-import twisted.web.xmlrpc
-
 # gather our modules
 import pulse2.launcher.process_control
 import pulse2.launcher.utils

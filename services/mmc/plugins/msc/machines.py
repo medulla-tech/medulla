@@ -21,12 +21,9 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import re
 import logging
 from mmc.plugins.msc.config import MscConfig
-from mmc.plugins.msc.system import sysPing
 from mmc.plugins.base.computers import ComputerManager
-import mmc.plugins.msc.actions
 from mmc.support.mmctools import Singleton
 
 class Machine:

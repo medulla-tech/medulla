@@ -23,7 +23,7 @@
 """
     Pulse2 PackageServer Imaging Common part
 """
-import logging
+
 import pulse2.utils
 
 class ImagingCommon(pulse2.utils.Singleton):

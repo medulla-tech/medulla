@@ -21,12 +21,9 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import re
-import dircache
-import os
 import logging
 
-from twisted.internet import ssl, reactor
+from twisted.internet import reactor
 import twisted.web.xmlrpc
 import pulse2.xmlrpc
 from pulse2.apis.consts import *

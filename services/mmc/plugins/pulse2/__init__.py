@@ -24,7 +24,6 @@ from sqlalchemy.exceptions import SQLError
 import sqlalchemy.orm.query
 
 import logging
-from ConfigParser import NoOptionError
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
 from pulse2.managers.group import ComputerGroupManager

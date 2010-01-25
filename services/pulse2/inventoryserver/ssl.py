@@ -23,15 +23,14 @@
 # MA 02110-1301, USA.
 
 
-import socket, os
+import socket
 import logging
 from SocketServer import BaseServer
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
-from OpenSSL import SSL, crypto
+from OpenSSL import SSL
 from twisted.internet import ssl
 from SocketServer import ThreadingMixIn
-from threading import Thread, Semaphore
 
 
 def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):

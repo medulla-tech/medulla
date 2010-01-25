@@ -24,7 +24,6 @@
 
 from pulse2.utils import Singleton
 from xml.dom.minidom import parse, parseString
-import logging
 
 class OcsMapping(Singleton):
     def initialize(self, xmlmapping):

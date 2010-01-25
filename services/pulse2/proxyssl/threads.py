@@ -26,7 +26,6 @@ import logging
 
 from twisted.internet import utils, reactor
 from pulse2.proxyssl.utilities import Singleton
-from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
 class RunInventory(Singleton):
 
