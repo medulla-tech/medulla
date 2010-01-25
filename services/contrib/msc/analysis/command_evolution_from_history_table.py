@@ -68,7 +68,7 @@ hist_data = select([
         coh_table.c.fk_commands.in_(ids)
     ).order_by(history_table.c.date).execute().fetchall()
 
-class deployStats():
+class deployStats:
 
     __keys = [
         "uploading",
