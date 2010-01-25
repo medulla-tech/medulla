@@ -24,7 +24,7 @@
 import logging
 import re
 import os
-#from config import DEFAULT_MIME, escapeshellarg, clean_path
+from config import DEFAULT_MIME, LINUX_SEPARATOR, WINDOWS_SEPARATOR, CYGWIN_WINDOWS_ROOT_PATH
 from utilities import escapeshellarg, clean_path
 from actions import msc_ssh, msc_exec, msc_scp
 import errors
@@ -344,7 +344,7 @@ class MSC_File(object):
         stdout = ret[2]
         stderr = ret[3]
 
-        if return_val != 0:
+        if return_var != 0:
             self.error_code = errors.ERROR_RENAME_FILE
             return False
 
@@ -742,7 +742,7 @@ def MSC_fileSend(session, path):
     session.MSC_cmdAdd(cmd)
     res = session.MSC_cmdFlush("local")
     if len(res[cmd]['STDERR']) != 0:
-        self.errcode = ERR_UNKNOWN
+        self.errcode = ERROR_UNKOWN #FIXME not in object! 
         return False
     return True
 
