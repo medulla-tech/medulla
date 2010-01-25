@@ -55,7 +55,7 @@ pushd $MMCCORE/tests/scripts
 popd
 
 pushd $PULSE2/tests/scripts
-./install.sh || true
+./install.sh
 popd
 
 # Call makefile target if specified
