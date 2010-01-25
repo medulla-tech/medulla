@@ -1029,7 +1029,7 @@ class AjaxFilterLocation extends AjaxFilter {
         global $conf;
         $root = $conf["global"]["root"];
 ?>
-<form name="Form" id="Form" action="#">
+<form name="Form" id="Form" action="#" onsubmit="return false;">
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
     <div id="searchSpan" class="searchbox" style="float: right;">
     <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
