@@ -74,3 +74,4 @@ function pushSearchGroup() {
     launch++;
     setTimeout("updateSearchGroup()",500);
 }
+

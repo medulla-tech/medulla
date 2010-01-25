@@ -867,7 +867,7 @@ class AjaxFilter extends HtmlElement {
         $root = $conf["global"]["root"];
 
 ?>
-<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#">
+<form name="Form<?=$this->formid?>" id="Form<?=$this->formid?>" action="#" onsubmit="return false;">
 
     <div id="loader<?=$this->formid?>">
         <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
@@ -886,7 +886,7 @@ if(!$this->formid) {
         document.getElementById('param<?=$this->formid?>').focus();
 <?
 }
-?>        
+?>
         var refreshtimer<?=$this->formid?> = null;
         var refreshparamtimer<?=$this->formid?> = null;
         var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
