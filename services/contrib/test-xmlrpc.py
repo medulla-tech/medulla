@@ -88,8 +88,10 @@ def parseCliArgs(config):
             if token.count('=') == 1:                  # found a dict token
                 (key, val) = token.split('=')          # process it
                 try:
+                    items = []
                     items[key] = val
                 except:
+                    items = {}
                     items = {key: val}
             elif token.count(',') > 0:         # found a list token
                 try:
