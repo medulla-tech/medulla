@@ -34,6 +34,7 @@ from mmc.plugins.msc.client.scheduler import process_on_client
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.client.scheduler import getProxy
 from twisted.internet.threads import deferToThread
+import twisted.internet.defer
 
 class MscDownloadProcess:
 

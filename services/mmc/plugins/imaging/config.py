@@ -25,6 +25,7 @@ import logging
 import os
 
 from mmc.support import mmctools
+from mmc.support.config import PluginConfig
 from pulse2.database.imaging.config import ImagingDatabaseConfig
 from ConfigParser import NoOptionError
 
