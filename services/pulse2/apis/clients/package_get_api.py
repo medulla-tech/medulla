@@ -21,6 +21,7 @@
 # MA 02110-1301, USA.
 
 from pulse2.apis.clients import Pulse2Api
+import twisted.internet.defer
 
 class PackageGetA(Pulse2Api):
     def __init__(self, *attr):
