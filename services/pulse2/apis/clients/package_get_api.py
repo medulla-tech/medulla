@@ -96,7 +96,7 @@ class PackageGetA(Pulse2Api):
             d.addCallback(self.__convertDoReboot)
             d.addErrback(self.onError, "getPackageDetail", pid, False)
             ds.append(d)
-        dl = defer.DeferredList(ds)
+        dl = twisted.internet.defer.DeferredList(ds)
         dl.addCallback(self.treatMultipleGetPackageDetailCall)
         return dl
 
