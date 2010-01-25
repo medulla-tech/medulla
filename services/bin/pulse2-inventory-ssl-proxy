@@ -29,7 +29,7 @@ import getopt
 import logging
 import logging.config
 from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
-from pulse2.proxyssl import initialize, run
+from pulse2.proxyssl import initialise, run
 
 
 def running(daemonize, inifile):
