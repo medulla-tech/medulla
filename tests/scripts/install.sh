@@ -105,27 +105,14 @@ sleep 5
 
 IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/addr://'`
 
+export MYSQL_HOST=localhost
+export MYSQL_USER=root
+export MYSQL_PWD=
 # Create database msc and configure msc.init
 
 pushd $TMPCO/pulse2/services/contrib/msc/sql/
-mysqladmin create msc
-mysql msc < schema.sql
-mysql msc < schema.sql.v.2
-mysql msc < schema.sql.v.3
-mysql msc < schema.sql.v.4
-mysql msc < schema.sql.v.5
-mysql msc < schema.sql.v.6
-mysql msc < schema.sql.v.7
-mysql msc < schema.sql.v.8
-mysql msc < schema.sql.v.9
-mysql msc < schema.sql.v.10
-mysql msc < schema.sql.v.11
-mysql msc < schema.sql.v.12
-mysql msc < schema.sql.v.13
-mysql msc < schema.sql.v.14
-mysql msc < schema.sql.v.15
-popd
-
+export MYSQL_BASE=msc
+./install.sh
 sed -i "s/#\[main\]/\[main\]/" /etc/mmc/plugins/msc.ini
 sed -i "s/# disable = 0/disable = 0/" /etc/mmc/plugins/msc.ini
 sed -i "s/# mserver = 127.0.0.1/mserver = $IPADDRESS/" /etc/mmc/plugins/msc.ini
@@ -133,29 +120,16 @@ sed -i "/\[scheduler_api\]/{n; s/host = 127.0.0.1/host = $IPADDRESS/}" /etc/mmc/
 
 # Create database dyngroup and configure dyngroup.init
 pushd $TMPCO/pulse2/services/contrib/dyngroup/sql/
-mysqladmin create dyngroup
-mysql dyngroup < schema-001.sql
-mysql dyngroup < schema-002.sql
-mysql dyngroup < schema-003.sql
-mysql dyngroup << EOF
-EOF
+export MYSQL_BASE=dyngroup
+./install.sh
 sed -i "s/# default_module = /default_module = inventory/" /etc/mmc/plugins/dyngroup.ini
 sed -i "s/activate = 0/activate = 1/" /etc/mmc/plugins/dyngroup.ini
 popd
 
 # Create database inventory and configure inventory.init
 pushd $TMPCO/pulse2/services/contrib/inventory/sql/
-mysqladmin create inventory
-mysql inventory < schema.sql
-mysql inventory < schema.sql.v.2
-mysql inventory < schema.sql.v.3
-mysql inventory < schema.sql.v.4
-mysql inventory < schema.sql.v.5
-mysql inventory < schema.sql.v.6
-mysql inventory < schema.sql.v.7
-mysql inventory < schema.sql.v.8
-mysql inventory < schema.sql.v.9
-mysql inventory < schema.sql.v.10
+export MYSQL_BASE=inventory
+./install.sh
 sed -i "s/disable = 1/disable = 0/" /etc/mmc/plugins/inventory.ini
 sed -i "s/# \[querymanager\]/\[querymanager\]/" /etc/mmc/plugins/inventory.ini
 sed -i "s/# list =/list =/" /etc/mmc/plugins/inventory.ini
@@ -178,11 +152,7 @@ EOF
 sed -i "s/# \[computers\]/\[computers\]/" /etc/mmc/plugins/base.ini
 sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
 
-#insert in inventory database computers for test
-#mysql -h localhost -u mmc -pmmc  inventory</root/selenium/inventory.sql
-
 # create the temp folder for packages
-
 mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
 
