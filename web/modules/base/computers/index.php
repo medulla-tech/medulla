@@ -36,7 +36,7 @@ if (in_array("pulse2", $_SESSION["modulesList"])) {
     $param = array();
     if (isset($_GET['gid'])) { $param['gid'] = $_GET['gid']; }
 
-    $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
+    $ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxComputersList'), "container", $param);
     $ajax->display();
     print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();

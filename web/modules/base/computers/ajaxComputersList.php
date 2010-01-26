@@ -21,13 +21,13 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-require("../../../includes/i18n.inc.php");
-require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
-require("../../../modules/base/includes/computers.inc.php");
-require("../../../modules/base/includes/computers_list.inc.php");
+/*require("includes/i18n.inc.php");
+require("includes/PageGenerator.php");
+require("includes/config.inc.php");
+require("includes/acl.inc.php");
+require("includes/session.inc.php");*/
+/*require("modules/base/includes/computers.inc.php");
+require("modules/base/includes/computers_list.inc.php");*/
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -49,8 +49,8 @@ if (isset($_GET['request'])) { $filter['request'] = $_GET['request']; }
 if (isset($_GET['equ_bool'])) { $filter['equ_bool'] = $_GET['equ_bool']; }
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
-    require("../../../modules/pulse2/includes/groups_xmlrpc.inc.php");
-    require("../../../modules/dyngroup/includes/dyngroup.php");
+    /*require("modules/pulse2/includes/groups_xmlrpc.inc.php");
+    require("modules/dyngroup/includes/dyngroup.php");*/
     if (isset($_GET['gid'])) {
         $filter['gid'] = $_GET['gid'];
         $canbedeletedfromgroup = true;
@@ -80,8 +80,8 @@ $count = getComputerCount($filter);
 $msc_can_download_file = False;
 $msc_vnc_show_icon = False;
 if (in_array("msc", $_SESSION["supportModList"])) {
-    require_once("../../../modules/msc/includes/scheduler_xmlrpc.php");
-    require_once("../../../modules/msc/includes/mscoptions_xmlrpc.php");
+    require_once("modules/msc/includes/scheduler_xmlrpc.php");
+    require_once("modules/msc/includes/mscoptions_xmlrpc.php");
     $msc_can_download_file = msc_can_download_file();
     $msc_vnc_show_icon = web_vnc_show_icon();
 }

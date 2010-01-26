@@ -41,6 +41,7 @@ function autoInclude() {
     global $redirArray;
     global $redirAjaxArray;
     global $conf;
+    global $filter;
 
     includeInfoPackage(fetchModulesList($conf["global"]["rootfsmodules"]));
     includePublicFunc(fetchModulesList($conf["global"]["rootfsmodules"]));
@@ -56,11 +57,47 @@ function autoInclude() {
     } else {
         $__submod = "default";
     }
-    
+
     if (isset($_GET["action"])) {
         $__action = $_GET["action"];
     } else {
         $__action = "default";
+    }
+
+    /* Check filter info */
+    // we must be in a ajax call
+    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) and
+       $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest" and 
+       isset($_GET['filter'])) {
+        // get the page who called us
+        preg_match('/module=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
+        if(isset($matches[1]))
+            $module = $matches[1];
+        else
+            $module = "default";
+        preg_match('/submod=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
+        if(isset($matches[1]))
+            $submod = $matches[1];
+        else
+            $submod = "default";            
+        preg_match('/action=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
+        if(isset($matches[1]))
+            $action = $matches[1];
+        else
+            $action = "default";            
+        preg_match('/tab=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
+        if(isset($matches[1]))
+            $tab = $matches[1];
+        else
+            $tab = "default";
+                        
+        // store the filter
+        $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter"] = $_GET['filter'];
+        
+        unset($module);
+        unset($submod);
+        unset($action);
+        unset($tab);
     }
 
     /* Redirect user to a default page. */
@@ -106,6 +143,7 @@ function autoInclude() {
     if (!isNoHeader($__module, $__submod, $__action)) {
         require_once("graph/footer.inc.php");
     }
+   
 }
 
 

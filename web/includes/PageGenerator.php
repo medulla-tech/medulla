@@ -852,6 +852,28 @@ class AjaxFilter extends HtmlElement {
         foreach ($params as $k => $v) {
             $this->params .= "&".$k."=".$v;
         }
+            
+        // get the current module pages
+        if (isset($_GET["module"]))
+            $__module = $_GET["module"];
+        else
+            $__module = "default";
+        if (isset($_GET["submod"]))
+            $__submod = $_GET["submod"];
+        else
+            $__submod = "default";
+        if (isset($_GET["action"]))
+            $__action = $_GET["action"];
+        else
+            $__action = "default";
+        if (isset($_GET['tab']))
+            $__tab = $_GET['tab'];
+        else
+            $__tab = "default";            
+        // then get our filter info
+        if(isset($_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"])) {
+            $this->storedfilter = $_SESSION[$__module."_".$__submod."_".$__action."_".$__tab."_filter"];
+        }    
     }
 
     /**
@@ -886,7 +908,14 @@ if(!$this->formid) {
         document.getElementById('param<?=$this->formid?>').focus();
 <?
 }
+if(isset($this->storedfilter)) {
 ?>
+        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+<?
+}    
+?>
+
+
         var refreshtimer<?=$this->formid?> = null;
         var refreshparamtimer<?=$this->formid?> = null;
         var refreshdelay<?=$this->formid?> = <?= $this->refresh ?>;
@@ -1047,6 +1076,13 @@ class AjaxFilterLocation extends AjaxFilter {
     <script type="text/javascript">
         document.getElementById('param').focus();
 
+<?
+if(isset($this->storedfilter)) {
+?>
+        document.Form.param.value = "<?=$this->storedfilter?>";
+<?
+}    
+?>
         /**
         * update div with user
         */
