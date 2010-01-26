@@ -23,15 +23,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("../../../includes/PageGenerator.php");
+/*require("../../../includes/PageGenerator.php");
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
+require("../../../includes/session.inc.php");*/
 
-require_once("../../../modules/msc/includes/functions.php");
-require_once("../../../modules/msc/includes/commands_xmlrpc.inc.php");
-require_once("../../../modules/msc/includes/command_history.php");
+require_once("modules/msc/includes/functions.php");
+require_once("modules/msc/includes/commands_xmlrpc.inc.php");
+require_once("modules/msc/includes/command_history.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -45,7 +45,7 @@ $from = empty($_GET["from"])                    ? ''    : $_GET["from"];
 
 if (!empty($_GET["commands"]))
     setCommandsFilter($_GET["commands"]);
-
+    
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
     $cmds = get_all_commandsonhost_by_currentstate($current_state, $start, $start + $maxperpage, $filter);

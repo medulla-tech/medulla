@@ -313,6 +313,13 @@ class AjaxFilterCommands extends AjaxFilter {
         var refreshparamtimer = null;
         var refreshdelay = <?= $this->refresh ?>;
 
+<?
+if(isset($this->storedfilter)) {
+?>
+        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+<?
+}    
+?>
         /**
          * Clear the timers set vith setTimeout
          */
@@ -437,6 +444,13 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         var refreshparamtimer = null;
         var refreshdelay = <?= $this->refresh ?>;
 
+<?
+if(isset($this->storedfilter)) {
+?>
+        document.Form<?=$this->formid?>.param.value = "<?=$this->storedfilter?>";
+<?
+}    
+?>
         /**
          * Clear the timers set vith setTimeout
          */

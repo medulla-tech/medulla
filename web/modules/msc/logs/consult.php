@@ -34,7 +34,7 @@ $p = new PageGenerator(_T("Consolidated view", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilterCommands("modules/msc/logs/ajaxConsultLogsFilter.php");
+$ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"));
 $ajax->setRefresh(30000);
 $ajax->display();
 print "<br/><br/><br/>";

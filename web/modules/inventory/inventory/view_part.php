@@ -24,11 +24,22 @@
 
 require_once("modules/inventory/includes/xmlrpc.php");
 
-$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
+
+$params = array("from" => 'base%2computers%2Finvtabs');
+
+foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
+    if (isset($_GET[$get])) {
+        $value = $_GET[$get];
+        $params[$get] = $value;
+    }
+}
+$ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
+
+/*$url = 'modules/inventory/inventory/ajaxViewPart.php?from=base%2Fcomputers%2Finvtabs';
 foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') as $get) {
     $url .= "&$get=".$_GET[$get];
 }
-$ajax = new AjaxFilter($url);
+$ajax = new AjaxFilter($url);*/
 
 $ajax->display();
 print "<br/><br/><br/>";

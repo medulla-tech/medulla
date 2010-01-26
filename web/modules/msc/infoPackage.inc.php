@@ -50,10 +50,15 @@ $page = new Page("running", _T('Show running task\'s logs', 'msc'));
 $submod->addPage($page);
 $page = new Page("finished", _T('Show finished task\'s logs', 'msc'));
 $submod->addPage($page);
-
 $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
 $submod->addPage($page);
 
+$page = new Page("ajaxLogsFilter", _T('logs list', 'msc'));
+$page->setOptions(array("visible"=>False, "AJAX"=> True));
+$submod->addPage($page);
+$page = new Page("ajaxConsultLogsFilter", _T('consolidated logs list', 'msc'));
+$page->setOptions(array("visible"=>False, "AJAX"=> True));
+$submod->addPage($page);
 $page = new Page("state_list", _T("the state list", "msc"));
 $page->setOptions(array("visible"=>False, "AJAX"=> True));
 $submod->addPage($page);
@@ -219,6 +224,16 @@ if (!empty($submod)) {
     $page = new Page("statuscsv",_T("Csv's export", "msc"));
     $page->setOptions(array("visible"=>False, "noHeader"=>True));
     $page->setFile("modules/msc/msc/statuscsv.php");
+    $submod->addPage($page);
+    
+    $page = new Page("ajaxLogsFilter", _T('logs list', 'msc'));
+    $page->setFile("modules/msc/msc/ajaxLogsFilter.php");
+    $page->setOptions(array("visible"=>False, "AJAX"=> True));
+    $submod->addPage($page);
+    
+    $page = new Page("ajaxPackageFilter", _T('logs list', 'msc'));
+    $page->setFile("modules/msc/msc/ajaxPackageFilter.php");
+    $page->setOptions(array("visible"=>False, "AJAX"=> True));
     $submod->addPage($page);
 
     unset($submod);

@@ -23,30 +23,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#require("../../../graph/navbartools.inc.php");
-require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
-
-require_once('../../../modules/msc/includes/qactions.inc.php');
-require_once('../../../modules/msc/includes/mirror_api.php');
-require_once('../../../modules/msc/includes/machines.inc.php');
-require_once('../../../modules/msc/includes/widgets.inc.php');
-require_once('../../../modules/msc/includes/utilities.php');
+require_once('modules/msc/includes/qactions.inc.php');
+require_once('modules/msc/includes/mirror_api.php');
+require_once('modules/msc/includes/machines.inc.php');
+require_once('modules/msc/includes/widgets.inc.php');
+require_once('modules/msc/includes/utilities.php');
 
 $group = null;
 if (!empty($_GET['gid'])) {
-    require_once("../../../modules/dyngroup/includes/utilities.php");
-    require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
-    require_once("../../../modules/dyngroup/includes/xmlrpc.php");
-    require_once("../../../modules/dyngroup/includes/dyngroup.php");
+    require_once("modules/dyngroup/includes/utilities.php");
+    require_once("modules/dyngroup/includes/querymanager_xmlrpc.php");
+    require_once("modules/dyngroup/includes/xmlrpc.php");
+    require_once("modules/dyngroup/includes/dyngroup.php");
 
     $group = new Group($_GET['gid'], true);
 }
 
-require_once("../../../modules/msc/includes/package_api.php");
+require_once("modules/msc/includes/package_api.php");
 if ($_GET['uuid']) {
     $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
 } else {

@@ -33,7 +33,7 @@ $p->display();
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 
-$ajax = new AjaxFilterLocation("modules/pkgs/pkgs/ajaxPackageList.php");
+$ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
 
 $res = getUserPackageApi();
 $list = array();

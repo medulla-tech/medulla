@@ -34,7 +34,9 @@ $p = new PageGenerator(_T("Show custom status task's logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilterCommandsStates("modules/msc/logs/ajaxLogsFilter.php?type=-1&from=custom", 'container');
+$params = array("type"=>-1, "from"=>"custom");
+
+$ajax = new AjaxFilterCommandsStates(urlStrRedirect("msc/logs/ajaxLogsFilter"), "container", "commands", "currentstate", $params);
 
 $res = get_all_commandsonhost_currentstate(); 
 $list = array();

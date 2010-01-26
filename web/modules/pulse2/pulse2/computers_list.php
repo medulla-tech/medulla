@@ -32,7 +32,7 @@ if (isset($_GET['request'])) { $param['request'] = urlencode($_GET['request']); 
 if (isset($_GET['equ_bool'])) { $param['equ_bool'] = urlencode($_GET['equ_bool']); }
 
 if (displayLocalisationBar()) {
-    $ajax = new AjaxFilterLocation("modules/base/computers/ajaxComputersList.php", "container", 'location', $param);
+    $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);
 
     $list = array();
     $values = array();
@@ -59,7 +59,7 @@ if (displayLocalisationBar()) {
         $ajax->setSelected($_SESSION["computers.selected_location"]);
     }
 } else {
-    $ajax = new AjaxFilter("modules/base/computers/ajaxComputersList.php", "container", $param);
+    $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxComputersList"), "container", $param);
 }
 
 $ajax->display();

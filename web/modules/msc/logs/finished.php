@@ -34,7 +34,9 @@ $p = new PageGenerator(_T("Show all finished task's logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilterCommands("modules/msc/logs/ajaxLogsFilter.php?type=3&from=finished&history=1");
+$params = array("type"=>3, "from"=>"finished", "history"=>1);
+
+$ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxLogsFilter"), "container", "commands", $params);
 $ajax->setRefresh(30000);
 $ajax->display();
 print "<br/><br/><br/>";

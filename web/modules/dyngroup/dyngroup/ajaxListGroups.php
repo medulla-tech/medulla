@@ -21,7 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("../../../includes/PageGenerator.php");
+/*require("../../../includes/PageGenerator.php");
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
@@ -30,7 +30,7 @@ require_once("../../../modules/dyngroup/includes/utilities.php");
 require_once("../../../modules/dyngroup/includes/querymanager_xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/xmlrpc.php");
 require_once("../../../modules/dyngroup/includes/request.php");
-require("../../../modules/dyngroup/includes/dyngroup.php");
+require("../../../modules/dyngroup/includes/dyngroup.php");*/
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -39,7 +39,11 @@ $start = 0;
 if (isset($_GET["start"])) {
     $start = $_GET['start'];
 }
-$is_gp = $_GET['type'];
+
+if(isset($_GET['type']))
+    $is_gp = $_GET['type'];
+else
+    $is_gp = 0;
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
 if ($is_gp && $is_gp == 1) { # Profile

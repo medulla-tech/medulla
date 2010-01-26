@@ -22,14 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
-
-require_once("../../../modules/inventory/includes/xmlrpc.php");
-require_once("../../../modules/base/includes/edit.inc.php");
+require_once("modules/inventory/includes/xmlrpc.php");
+require_once("modules/base/includes/edit.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];

@@ -211,6 +211,11 @@ if (!empty($submod)) {
     $page->setFile("modules/dyngroup/dyngroup/list.php");
     $submod->addPage($page);
 
+    $page = new Page("ajaxListGroups",_T("List all groups of computers","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/ajaxListGroups.php");
+    $page->setOptions(array("visible"=>False, "AJAX" =>True));    
+    $submod->addPage($page);
+
     $page = new Page("list_profiles",_T("List all profiles of computers","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/list_profiles.php");
     $submod->addPage($page);

@@ -37,7 +37,7 @@ if (isset($_GET['gid'])) {
 } else {
     $gid = '';
 }
-$ajax = new AjaxFilter("modules/dyngroup/dyngroup/ajaxListGroups.php", "container", array('gid' => $gid));
+$ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxListGroups"), "container", array('gid' => $gid));
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();

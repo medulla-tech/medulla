@@ -27,16 +27,17 @@ require_once("modules/inventory/includes/xmlrpc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$url = 'modules/inventory/inventory/ajaxViewPart.php?part='.$table.'&from=inventory%2Finventory%2F'.strtolower($table);
-foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab') as $get) {
+$params = array("part" => $table, "from" => 'inventory%2Finventory%2F'.strtolower($table));
+
+foreach (array('uuid', 'hostname', 'gid', 'groupname', 'tab') as $get) {
     if (isset($_GET[$get])) {
         $value = $_GET[$get];
     } else {
         $value = '';
     }
-    $url .= "&$get=" . $value;
+    $params[$get] = $value;
 }
-$ajax = new AjaxFilter($url);
+$ajax = new AjaxFilter(urlStrRedirect("inventory/inventory/ajaxViewPart"), "container", $params);
 
 $titles = array('index' => _T('Bios list', 'inventory'),
                 'hardware' => _T('Hardware and OS information list', 'inventory'),

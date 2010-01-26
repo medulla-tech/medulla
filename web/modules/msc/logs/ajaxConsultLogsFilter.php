@@ -22,15 +22,9 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
-
-require_once("../../../modules/msc/includes/functions.php");
-require_once("../../../modules/msc/includes/commands_xmlrpc.inc.php");
-require_once("../../../modules/msc/includes/command_history.php");
+require_once("modules/msc/includes/functions.php");
+require_once("modules/msc/includes/commands_xmlrpc.inc.php");
+require_once("modules/msc/includes/command_history.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
