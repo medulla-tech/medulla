@@ -22,7 +22,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Imaging and ImagingApi are two class that handle calls to the imaging api.
+"""
+
 from pulse2.apis.clients import Pulse2Api
+import logging
 
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
 # defined in the conf file.
@@ -30,7 +35,6 @@ class Imaging(Pulse2Api):
     def __init__(self, *attr):
         self.name = "Imaging"
         Pulse2Api.__init__(self, *attr)
-
     
     # Computer registration
     def computerRegister(self, computerName, MACAddress):
@@ -115,88 +119,125 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:computerBackupImagesSetInformations", [imageId, informations])
         return d
     # Imaging server images management
-    def ImagingServerStatus(self):
+    def imagingServerStatus(self):
         """
         Returns a dict containing the status of the imaging server.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerStatus")
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerStatus")
+        d = self.callRemote("imagingServerStatus")
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerStatus", None)
         return d
-    def ImagingServerMastersGet(self): # list of imageData
+    def imagingServerMastersGet(self): # list of imageData
         """
         Returns the list of available master on the imaging server.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerMastersGet")
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerMastersGet")
+        d = self.callRemote("imagingServerMastersGet")
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMastersGet", None)
         return d
-    def ImagingServerMasterSetInformations(self, imageId, informations):
+    def imagingServerMasterSetInformations(self, imageId, informations):
         """
         Set master image informations, informations is a dict containing image label, description, and a post installation script name.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerMasterSetInformations", imageId, informations)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerMasterSetInformations", [imageId, informations])
+        d = self.callRemote("imagingServerMasterSetInformations", imageId, informations)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterSetInformations", [imageId, informations])
         return d
-    def ImagingServerBootServicesGet(self): # list of bootServiceData
+    def imagingServerBootServicesGet(self): # list of bootServiceData
         """
         Returns the list of available boot services on the imaging server.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerBootServicesGet")
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerBootServicesGet")
+        d = self.callRemote("imagingServerBootServicesGet")
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerBootServicesGet")
         return d
-    def ImagingServerBootServiceSetInformations(self, imageId, informations):
+    def imagingServerBootServiceSetInformations(self, imageId, informations):
         """
         Set boot service informations, informations is a dict containing image label, description, and a post installation script name.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerBootServiceSetInformations", imageId, informations)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerBootServiceSetInformations", [imageId, informations])
+        d = self.callRemote("imagingServerBootServiceSetInformations", imageId, informations)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerBootServiceSetInformations", [imageId, informations])
         return d
-    def ImagingServerDefaultMenuGet(self): # imagingMenu
+    def imagingServerDefaultMenuGet(self): # imagingMenu
         """
         Returns the default boot menu of the imaging server.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerDefaultMenuGet")
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerDefaultMenuGet")
+        d = self.callRemote("imagingServerDefaultMenuGet")
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuGet")
         return d
-    def ImagingServerDefaultMenuSet(self, imagingMenu):
+    def imagingServerDefaultMenuSet(self, imagingMenu):
         """
         Set the default boot menu on this imaging server for new computer without a profile.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerDefaultMenuSet", imagingMenu)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerDefaultMenuSet", imagingMenu)
+        d = self.callRemote("imagingServerDefaultMenuSet", imagingMenu)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", imagingMenu)
         return d
-    def ImagingServerMasterIsoBuild(self, imageId):
+    def imagingServerMasterIsoBuild(self, imageId):
         """
         Build the auto restoration ISO CDROM of a master.
         Called by the MMC agent.
         """
-        d = self.callRemote("ImagingServerMasterIsoBuild", imageId)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerMasterIsoBuild", imageId)
+        d = self.callRemote("imagingServerMasterIsoBuild", imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterIsoBuild", imageId)
         return d
-    def ImagingServerBackupToMaster(self, imageId):
+    def imagingServerBackupToMaster(self, imageId):
         """Convert a backup image to a master."""
-        d = self.callRemote("ImagingServerBackupToMaster", imageId)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerBackupToMaster", imageId)
+        d = self.callRemote("imagingServerBackupToMaster", imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerBackupToMaster", imageId)
         return d
-    def ImagingServerMasterDisable(self, imageId):
+    def imagingServerMasterDisable(self, imageId):
         """Disable a master."""
-        d = self.callRemote("ImagingServerMasterDisable", imageId)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerMasterDisable", imageId)
+        d = self.callRemote("imagingServerMasterDisable", imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterDisable", imageId)
         return d
-    def ImagingServerMasterDelete(self, imageId, archive = True):
+    def imagingServerMasterDelete(self, imageId, archive = True):
         """Delete a master. Maybe archive it."""
-        d = self.callRemote("ImagingServerMasterDelete", imageId, archive)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerMasterDelete", [imageId, archive])
+        d = self.callRemote("imagingServerMasterDelete", imageId, archive)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterDelete", [imageId, archive])
         return d
-    def ImagingServerConfigurationSet(self, configuration):
+    def imagingServerConfigurationSet(self, configuration):
         """Set the imaging server configuration (dict)."""
-        d = self.callRemote("ImagingServerConfigurationSet", configuration)
-        d.addErrback(self.onErrorRaise, "Imaging:ImagingServerConfigurationSet", configuration)
+        d = self.callRemote("imagingServerConfigurationSet", configuration)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerConfigurationSet", configuration)
         return d
+
+
+# need to get a PackageApiManager, it will manage a PackageApi for each mirror
+# defined in the conf file.
+class ImagingApi(Imaging):
+    def __init__(self, url = None):
+        self.logger = logging.getLogger()
+        credit = ''
+        if type(url) == str or type(url) == unicode:
+            self.server_addr = url
+            if url.find('@') != -1:
+                credit = url.split('/')[2].split('@')
+            Imaging.__init__(self, credit, url)
+        elif type(url) == dict:
+            if url['enablessl']:
+                self.server_addr = 'https://'
+            else:
+                self.server_addr = 'http://'
+
+            if url['username'] != '':
+                self.server_addr += url['username']
+                credit = url['username']
+                if url['password'] != '':
+                    self.server_addr += ":"+url['password']
+                    credit += ":"+url['password']
+                self.server_addr += "@"
+
+            self.server_addr += url['server']+':'+str(url['port']) + url['mountpoint']
+
+            if url['verifypeer']:
+                Imaging.__init__(self, credit, self.server_addr, url['verifypeer'], url['cacert'], url['localcert'])
+            else:
+                Imaging.__init__(self, credit, self.server_addr)
+        else:
+            self.logger.error("Imaging api : cant connect to %s, dont know how to do"%(url))
+        self.logger.debug("ImagingApi> connected to %s"%(self.server_addr))
+
 
