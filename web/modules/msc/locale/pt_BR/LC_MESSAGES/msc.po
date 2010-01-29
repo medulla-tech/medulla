@@ -1853,7 +1853,7 @@ msgid "unreachable during upload"
 msgstr "inacessível durante o envio"
 
 #: web/modules/msc/msc/statuscsv.php:123
-msgid "unrechable during execution"
+msgid "unrecheable during execution"
 msgstr "inacessível durante a execução"
 
 #: web/modules/msc/msc/msctabssinglestatus.php:38
