@@ -85,7 +85,7 @@ msgstr "L'association de fichiers a échoué %s"
 
 #: pkgs/pkgs/associate_files.php:57
 #, php-format
-msgid "Files succesfully associated with package <b>%s (%s)</b>%s"
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 

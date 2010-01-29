@@ -54,7 +54,7 @@ if (isset($_POST["bassoc"])) {
             if (count($ret) > 1) {
                 $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
             }
-            new NotifyWidgetSuccess(sprintf(_T("Files succesfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
+            new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
             header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('location'=>base64_encode($p_api_id))));
         } else {
             $reason = '';
