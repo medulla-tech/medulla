@@ -1,0 +1,23 @@
+[header]
+item=timeout 10
+item=color 7/1 15/3
+item=default DEFNUM
+
+[menu1]
+def=yes
+visu=yes
+image=Boot-on-Disk
+include=Boot-on-Disk/conf.txt
+
+[menu2]
+def=no
+visu=yes
+image=Create-Master
+include=Create-Master/conf.txt
+
+[menu3]
+def=no
+visu=yes
+image=Tool-MemTest
+include=Tool-MemTest/conf.txt
+
