@@ -21,14 +21,22 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Class to manage imaging mmc-agent api
+imaging plugin
+"""
+
 import logging
 import os
 
 import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
+from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.support.mmctools import *
 from pulse2.database.imaging import ImagingDatabase
+from pulse2.database.imaging.types import *
+from pulse2.apis.clients.imaging import ImagingApi
 
 VERSION = "0.1"
 APIVERSION = "0:0:0"
@@ -152,20 +160,25 @@ class RpcProxy(RpcProxyI):
 
     """ END DEPRECATED """
 
-    def getMachineBootMenu(self, id):
-        return [
-            ['Start computer', 'Boot on system hard drive', True, True, True, True],
-            ['Create rescue image', 'Backup system hard drive', "", True, "", True],
-            ['Create master', 'Backup system hard drive as a master', "", True, "", True]
-        ]
+    ################################################### web def
+    def get_web_def_date_fmt(self):
+        return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
 
-    def getProfileBootMenu(self, id):
-        return [
-            ['Start computer', 'Boot on system hard drive', True, True, True, True],
-            ['Create rescue image', 'Backup system hard drive', "", True, "", True],
-            ['Create master', 'Backup system hard drive as a master', "", True, "", True]
-        ]
+    ###########################################################
+    ###### BOOT MENU (image+boot service on the target)
+    def __getTargetBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        menu = map(lambda l: l.toH(), db.getBootMenu(target_id, start, end, filter))
+        count = db.countBootMenu(target_id, filter)
+        return [count, xmlrpcCleanup(menu)]
+    
+    def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+        return self.__getTargetBootMenu(target_id, start, end, filter)
 
+    def getMachineBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+        return self.__getTargetBootMenu(target_id, start, end, filter)
+
+    ###### IMAGES
     def getMachineImages(self, id):
         return {
             'images': [
@@ -186,51 +199,87 @@ class RpcProxy(RpcProxyI):
             ]
         }
 
-    def getMachineBootServices(self, id):
-        return [
-            ['Local hard disk', True],
-            ['Create image', True],
-            ['Create master', True],
-            ['Memtest', False],
-            ['MBR Fix', False]
-        ]
+    ###### BOOT SERVICES
+    def __getTargetBootServices(self, id, type, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getBootServicesOnTargetById(id, start, end, filter))
+        count = db.countBootServicesOnTargetById(id, filter)
+        return [count, xmlrpcCleanup(ret)]
+        
+    def getMachineBootServices(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetBootServices(id, TYPE_COMPUTER, start, end, filter)
 
-    def getProfileBootServices(self, id):
-        return [
-            ['Local hard disk', True],
-            ['Create image', True],
-            ['Create master', True],
-            ['Memtest', False],
-            ['MBR Fix', False]
-        ]
+    def getProfileBootServices(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetBootServices(id, TYPE_PROFILE, start, end, filter)
 
-    def getMachineLogs(self, id, start, end):
-        ret = [
-            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
-            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
-            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
-            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
-            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
-            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
-            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
-            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
-            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
-            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
-            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
-            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
-            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
-            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
-            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
-            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
-        ]
+    def getPossibleBootServices(self, target_uuid, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getPossibleBootServices(target_uuid, start, end, filter))
+        count = db.countPossibleBootServices(target_uuid, filter)
+        return [count, xmlrpcCleanup(ret)]
 
-        return [len(ret), ret[int(start):int(end)+1]]
+    # EDITION
+    def addServiceToTarget(self, bs_uuid, target_uuid, params):
+        try:
+            ret = ImagingDatabase().addServiceToTarget(bs_uuid, target_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
-    def getProfileLogs(self, id, start, end):
-        return [ 4, [
-            ['23/10/2009 18:00 - Backup image', '75', 'backup_in_progress'],
-            ['20/10/2009 16:44 - Restore of image MDV 2008', '100', 'restore_done'],
-            ['18/10/2009 12:00 - Restore of image MDV 2008', '22', 'restore_fail'],
-            ['16/10/2009 12:00 - Restore of image MDV 2008', '45', 'plop'],
-        ]]
+    def delServiceToTarget(self, bs_uuid, target_uuid):
+        try:
+            ret = ImagingDatabase().delServiceToTarget(bs_uuid, target_uuid)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
+    def editServiceToTarget(self, bs_uuid, target_uuid, params):
+        try:
+            ret = ImagingDatabase().editServiceToTarget(bs_uuid, target_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            raise e
+            return xmlrpcCleanup([False, e])
+        
+    ###### MENU ITEMS
+    def getMenuItemByUUID(self, bs_uuid): 
+        mi = ImagingDatabase().getMenuItemByUUID(bs_uuid)
+        if mi != None:
+            return xmlrpcCleanup(mi.toH())
+        return False
+        
+    ###### LOGS 
+    def __getTargetLogs(self, id, type, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getLogsOnTargetByIdAndType(id, type, start, end, filter))
+        count = db.countLogsOnTargetByIdAndType(id, type, filter)
+        return [count, xmlrpcCleanup(ret)]
+        
+    def getMachineLogs(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetLogs(id, TYPE_COMPUTER, start, end, filter)
+
+    def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetLogs(id, TYPE_PROFILE, start, end, filter)
+
+    def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
+        if location_uuid == False:
+            return [0, []]
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getLogs4Location(location_uuid, start, end, filter))
+        count = db.countLogs4Location(location_uuid, filter)
+        return [count, xmlrpcCleanup(ret)]
+    
+    ###### GET IMAGING API URL
+    def __chooseImagingApiUrl(self, location):
+        db = ImagingDatabase()
+        return ImagingDatabase().getEntityUrl(location)
+    
+    ###### IMAGING API CALLS
+    def getGlobalStatus(self, location):
+        url = self.__chooseImagingApiUrl(location)
+        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        if i != None:
+            return xmlrpcCleanup(i.imagingServerStatus())
+        return {}
+
+   

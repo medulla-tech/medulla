@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Configuration reader for imaging
+"""
+
 import logging
 import os
 
@@ -31,6 +35,8 @@ from ConfigParser import NoOptionError
 
 class ImagingConfig(ImagingDatabaseConfig):
     disable = True
+
+    web_def_date_fmt = "%Y-%m-%d %H:%M:%S" # TODO read it from the config file!
 
     def init(self, name = 'imaging', conffile = None):
         self.dbsection = "database"

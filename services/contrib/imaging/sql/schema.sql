@@ -211,6 +211,7 @@ CREATE TABLE MenuItem (
   hidden_WOL Bool DEFAULT 1,
   fk_menu INT NOT NULL,
   fk_name INT NOT NULL,
+  `desc` Text,
   FOREIGN KEY(fk_menu) REFERENCES Menu(id),
   FOREIGN KEY(fk_name) REFERENCES Internationalization(id),
   PRIMARY KEY (id)
