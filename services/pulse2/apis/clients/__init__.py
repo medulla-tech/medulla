@@ -21,12 +21,17 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Class to manage api calls and errors
+"""
+
 import logging
 
 from twisted.internet import reactor
 import twisted.web.xmlrpc
 import pulse2.xmlrpc
 from pulse2.apis.consts import *
+import exceptions
 
 class Pulse2Api(twisted.web.xmlrpc.Proxy):
     name = "pulse2API"
