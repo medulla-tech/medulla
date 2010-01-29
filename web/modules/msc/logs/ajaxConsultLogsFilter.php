@@ -99,9 +99,9 @@ foreach ($cmds as $item) {
     $param = array('cmd_id'=>$cmd_id, 'title'=>$label, 'bundle_id'=>$bid, 'from'=>'msc|logs|consult');
     $no_actions = False;
     if (!isset($bid) || $bid == '') {
-        $img = draw_image("modules/msc/graph/images/install_package.png", _T('', 'msc'));
+        $img = draw_image("modules/msc/graph/images/install_package.png", _T('Package', 'msc'));
     } else {
-        $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('', 'msc'));
+        $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('Bundle', 'msc'));
     }
     if ($target == 'UNVISIBLEMACHINE') {
         $target = _T('Unavailable computer', 'msc');
@@ -117,11 +117,11 @@ foreach ($cmds as $item) {
         $a_cmd[] = sprintf("<a href='%s' class='bundle link' title='%s'>%s %s</a>", $linkdetail , $label, $img, $label);
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
         if (!isset($gid) || $gid == '') {
-            $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('', 'msc'))." ".$target;
+            $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc'))." ".$target;
             $param['uuid'] = $target_uuid;
             $param['hostname'] = $target;
         } else {
-            $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('', 'msc'))." ".$target;
+            $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('Group', 'msc'))." ".$target;
             $param['gid'] = $gid;
         }
     }
