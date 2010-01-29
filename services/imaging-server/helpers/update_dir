@@ -164,5 +164,7 @@ else {
 }
 
 # to be ported to pulse2
+#MDV/NR ($base, $bootmenudir, $bootservicesdir, $mastersdir, $bootmenudir, $mac)
+
 updateEntry( $BASEDIR, $macaddr ) or badExit( lbsGetError() );
 

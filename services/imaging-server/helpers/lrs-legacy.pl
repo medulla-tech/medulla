@@ -62,14 +62,12 @@ $_lbsdebug = 0;
             'flag' => 0,
            );
 
-# updateEntry($lbs_home, $netboot, $macaddr)
+# updateEntry
 # Fonction de mise a jour d'une entree.
 # Pour l'instant, elle ne fait que creer le menu utilisateur final.
-sub updateEntry
+sub updateEntry($$$$$)
 {
-    my ($home, $netboot, $mac) = @_;
-
-    if (not makeUserMenu($home, $netboot, $mac))
+    if (not makeUserMenu(@_))
     {
 
         #lbsError("updateEntry","RAW","Problem making final user menu") ;
@@ -79,20 +77,20 @@ sub updateEntry
     return 1;
 }
 
-# makeUserMenu ($base, $netboot, $macaddr)
+# makeUserMenu
 # Genere le menu de demarrage d'une machine a partir de header.lst .
 # Retourne 1 si OK, ou 0 si erreur.
 #
-sub makeUserMenu
+sub makeUserMenu($$$$$)
 {
-    my $base    = $_[0];
-    my $netboot = $_[1];
-    my $mac     = toMacFileName($_[2]);
+    my ($base, $bootmenudir, $bootservicesdir, $mastersdir, $mac) = @_;
+
+    $mac = toMacFileName($mac);
 
     my $defaultpos = 0;
     my @menus      = ();
 
-    my $menupath   = $netboot . "/cfg/" . $mac;
+    my $menupath   = $bootmenudir . "/" . $mac;
     my $imagepath  = $base . "/images/" . $mac;
     my $menuheader = "";
     my $bootmenu   = "";
@@ -130,7 +128,7 @@ sub makeUserMenu
     }
 
     # Load header.lst
-    if (not hdrLoad($hostconf, \%hdr))
+    if (not hdrLoad($hostconf, \%hdr, $bootservicesdir, $mastersdir))
     {
         lbsError("makeUserMenu", "FILE_LOAD", $hostconf);
         return 0;
@@ -165,7 +163,7 @@ sub makeUserMenu
     #MDV/NR my $grub_keymap      = iniGetVal( \%conf, "-", "grub_keymap" );
     my $revorestore      = 0;
     my $revowait         = 5;
-    my $grub_splashimage = '/pulse2/background/mandriva.xpm';
+    my $grub_splashimage = '/pulse2/bootsplash';
     my $grub_keymap      = '';
 
     #
@@ -253,8 +251,8 @@ sub makeUserMenu
                         $one =~ s/(^\s*title.*)/$1 (MTFTP)/;
                     }
                     $one .= "
-kernel (nd)$netboot/bin/bzImage.initrd revosavedir=/$imgt/$imgname $imgo quiet revopost
-initrd (nd)$netboot/bin/initrd.gz
+kernel (nd)$netboot/diskless/kernel revosavedir=/$imgt/$imgname $imgo quiet revopost
+initrd (nd)$netboot/diskless/initrd
 ";
 
                     #print $one;
@@ -328,7 +326,7 @@ sub toMacFileName
 #
 sub hdrLoad
 {
-    my ($file, $hdr) = @_;
+    my ($file, $hdr, $bootservicesdir, $mastersdir) = @_;
     my %ini = ();
     my @sections;
     my ($s, $k, $v, $p, $i, $f, $buf);
@@ -347,7 +345,6 @@ sub hdrLoad
         return 0;
     }
 
-    $p        = getDirName($file);
     @sections = iniGetSections(\%ini);
 
     # Loading included files:
@@ -359,30 +356,37 @@ sub hdrLoad
             ($k, $v) = iniGet(\%ini, $s, $i);
             if ($k eq "include")
             {
-
-                # Path relatif ou absolu?
-                if (grep m(^/), $v)
+                if (grep m(^/), $v) # absolute path
                 {
-                    $f = $v;
+                    if (not fileLoad($v, \$buf)) {
+                        lbsError("hdrLoad", "CANT_INCLUDE", $v);
+                    } else {
+                        $buf =~ s/\n+$//s;
+                        $inc{$v} = $buf;
+                    }
                 }
                 else
                 {
-                    $f = "$p/$v";
+                    # try to load file in $bootservicesdir and $mastersdir and former dir
+                    if (not fileLoad("$bootservicesdir/$v", \$buf)) {
+                        if (not fileLoad("$mastersdir/$v", \$buf)) {
+                            if (not fileLoad(getDirName($file) . "/$v", \$buf)) {
+                                lbsError("hdrLoad", "CANT_INCLUDE", $v);
+                            } else {
+                                $buf =~ s/\n+$//s;
+                                $inc{$v} = $buf;
+                            }
+                        } else {
+                            $buf =~ s/\n+$//s;
+                            $inc{$v} = $buf;
+                        }
+                    } else {
+                        $buf =~ s/\n+$//s;
+                        $inc{$v} = $buf;
+                    }
+
                 }
 
-                if (not fileLoad($f, \$buf))
-                {
-
-                    # Warning:
-                    lbsError("hdrLoad", "CANT_INCLUDE", $f);
-                }
-                else
-                {
-
-                    # No '\n' at end of file:
-                    $buf =~ s/\n+$//s;
-                    $inc{$v} = $buf;
-                }
             }
         }
     }
@@ -698,6 +702,58 @@ sub addEmptyLine
     $buf =~ s/\n+$/\n\n/s;
 
     return $buf;
+}
+
+# $itemval itemGetVal($text,$itemkey)
+# Retourne la valeur d'un item present dans la chaine $texte.
+# $itemkey est la clef (title, partcopy, chainloader,...) de l'item pour
+# lequel on recherhe la valeur. Elle se situe normalement en debut de ligne.
+# Ne retourne rien si item non trouve.
+#
+sub itemGetVal
+{
+my ($text, $itemkey) = @_ ;
+my ($l,$a,$b) ;
+my @lines ;
+
+        @lines = split(m/\n/, $text) ;
+        foreach $l (@lines) {
+                next if (not length($l)) ;
+                $l =~ s/^[ \t]+// ;
+                ($a,$b) = split(m/ +/,$l,2) ;
+
+                if ($a eq $itemkey) {
+                        return $b ;
+                }
+        }
+
+return ;  # Echec
+}
+
+
+# $newtext itemChangeVal($text,$itemkey,$itemval)
+# Remplace dans $text la valeur de $itemkey, par $itemval.
+# Retourne le texte modifie, ou $text si $itemkey non trouve.
+#
+sub itemChangeVal
+{
+my ($text,$itemkey,$itemval) = @_ ;
+my ($l,$a,$b,$i) ;
+my @lines ;
+
+        @lines = split(m/\n/, $text) ;
+        for ($i=0;  $i<scalar(@lines);  $i++) {
+                $l = $lines[$i] ;
+                next if (not length($l)) ;
+                $l =~ s/^[ \t]+// ;
+                ($a,$b) = split(m/ +/,$l,2) ;
+
+                if ($a eq $itemkey) {
+                        $lines[$i] = "$itemkey $itemval" ;
+                }
+        }
+
+return join("\n", @lines) ;
 }
 
 # END OF MODULE ///////////////////////////////////////////////////////////////

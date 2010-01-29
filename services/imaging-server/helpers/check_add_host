@@ -30,7 +30,7 @@ require "lrs-legacy.pl";
 
 # Global consts
 my $BASEDIR             = '/var/lib/pulse2/imaging';
-my $ETHERFILE           = "$BASEDIR/etc/ether";
+my $ETHERFILE           = "$BASEDIR/computers/UUIDs.txt";
 my %ETHER               = ();
 my $LOGFILE             = '/var/log/mmc/pulse2-imaging-server.log';
 my $STORAGE_CREATE_PATH = '/usr/lib/pulse2/imaging/helpers/create_config';
@@ -111,7 +111,7 @@ $_ = $mac;
 s/\://g;
 my $smac = $_;
 
-mylog( "INFO", "check_add_host Trying to add $mac as $hostname" );
+mylog( "INFO", "Trying to add $mac as $hostname" );
 
 # sanity checks
 $mac eq "?"

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 #
 # (c) 2003-2007 Linbox, http://www.linbox.com/
 # (c) 2008-2009 Mandriva, http://www.mandriva.com/
@@ -21,30 +21,92 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 
 use lib "/usr/lib/pulse2/imaging/helpers";
 require "lrs-legacy.pl";
 
 # consts
-my $CONFIG_FILE = "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
-my $BASEFOLDER = "/var/lib/pulse2/imaging";
-my $NETBOOTFILER = "/var/lib/tftpboot/pulse2";
-my $macfile = $ARGV[0];
+my $CONFIG_FILE         = "/etc/mmc/pulse2/imaging-server/imaging-server.ini";
+my $BASEFOLDER          = "/var/lib/pulse2/imaging";
+my $BOOTMENUSFOLDER     = "/var/lib/pulse2/imaging/bootmenus";
+my $BOOTSERVICESFOLDER  = "/var/lib/pulse2/imaging/bootservices";
+my $MASTERSDIR          = "/var/lib/pulse2/imaging/masters";
+my $LOGFILE             = "/var/log/mmc/pulse2-imaging-server.log";
+my $macfile             = $ARGV[0];
 
 open FILE, $CONFIG_FILE or die("can't read $CONFIG_FILE");
-while (<FILE>) {
-    $BASEFOLDER = $1 if m/base_folder *= *(\S+)/;
+while (<FILE>)
+{
+    $BASEFOLDER   = $1 if m/base_folder *= *(\S+)/;
+    $BOOTMENUSFOLDER = $1 if m/bootmenus_folder *= *(\S+)/;
+    $LOGFILE = $1 if m/log_file_path *= *(\S+)/;
 }
+
 chomp $BASEFOLDER;
+[-d $BASEFOLDER]
+  or mylog("ERROR", "base_folder $BASEFOLDER is not a valid folder")
+  and print("base_folder $BASEFOLDER is not a valid folder\n")
+  and exit;
 
-[ -d $BASEFOLDER ] or die("$BASEFOLDER is not a valid folder");
+chomp $BOOTMENUSFOLDER;
+[-d $BOOTMENUSFOLDER]
+  or mylog("ERROR", "bootmenus_folder $BOOTMENUSFOLDER is not a valid folder")
+  and print("bootmenus_folder $BOOTMENUSFOLDER is not a valid folder\n")
+  and exit;
 
-updateEntry( $BASEFOLDER, $NETBOOTFILER, $macfile ) or lbsDieError();
+chomp $BOOTSERVICESFOLDER;
+[-d $BOOTSERVICESFOLDER]
+  or mylog("ERROR", "bootservices_folder $BOOTSERVICESFOLDER is not a valid folder")
+  and print("bootservices_folder $BOOTSERVICESFOLDER is not a valid folder\n")
+  and exit;
+
+chomp $MASTERSDIR;
+[-d $MASTERSDIR]
+  or mylog("ERROR", "masters_folder $MASTERSDIR is not a valid folder")
+  and print("masters_folder $MASTERSDIR is not a valid folder\n")
+  and exit;
+
+($#ARGV == 0)
+  or mylog("ERROR", "Usage: update_menu MAC")
+  and print("Usage: update_menu MAC\n")
+  and exit;
+
+updateEntry($BASEFOLDER, $BOOTMENUSFOLDER, $BOOTSERVICESFOLDER, $MASTERSDIR, $macfile) or lbsDieError();
 
 # reset files permissions: allow the diskless Linux to write to these files
 # and ensure backward compatibility
-for my $i ( "log.restore", "postinst.log", "progress.txt" ) {
+for my $i ("log.restore", "postinst.log", "progress.txt")
+{
     system(
-"touch $BASEFOLDER/images/$macfile/$i ; chown 65534 $BASEFOLDER/images/$macfile/$i"
+        "touch $BASEFOLDER/images/$macfile/$i ; chown 65534 $BASEFOLDER/images/$macfile/$i"
     );
 }
+
+sub mylog {
+    my $level = shift;
+    my $msg   = shift;
+
+    my $buffer = '';
+    my $date   = '';
+
+    # gather date
+    open CFG, "date '+%Y-%m-%d %H:%M:%S,000' |";
+    chomp( $date = <CFG> );
+    close(CFG);
+
+    $buffer .= $date;
+    $buffer .= " ";
+    $buffer .= $level;
+    $buffer .= " ";
+    $buffer .= "check_add_host";
+    $buffer .= " ";
+    $buffer .= $msg;
+    $buffer .= "\n";
+
+    open LOG, ">> $LOGFILE";
+    print LOG $buffer;
+    close LOG;
+}
+
+

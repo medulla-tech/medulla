@@ -30,11 +30,16 @@ if [ ! -f "$CONFIG_FILE" ]; then
 fi
 
 BASEDIR=$(grep -i '^ *base_folder' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
-SKELDIR=$(grep -i '^ *skel_folder' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
+SKELDIR=$(grep -i '^ *templates_folder' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
 UPDATEMENU=$(grep -i '^ *menu_update_path' "$CONFIG_FILE" | tr "=" " " | awk {'print $2;'})
 
 if [ ! -d "$BASEDIR" ]; then
     echo "create_config: '$BASEDIR': Not a directory" >&2
+    exit 1
+fi
+
+if [ ! -d "$SKELDIR" ]; then
+    echo "create_config: '$SKELDIR': Not a directory" >&2
     exit 1
 fi
 

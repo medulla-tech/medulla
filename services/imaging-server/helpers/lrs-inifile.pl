@@ -456,16 +456,31 @@ sub getDirName
 #
 sub fileLoad
 {
-    my ($src, $data) = @_;
-    my $buf;
+    my $src, $data, $locale, $buf;
+
+    my $default_locale = 'C';
+
+    if (@_ == 2) {
+        ($src, $data) = @_;
+        $locale = $default_locale;
+    } else {
+        ($src, $data, $locale) = @_;
+    }
 
     $$data = "";
 
-    if (not open(F, $src))
+    if (not open(F, "$src.$locale"))
     {
-        lbsError("fileLoad", 'RAW', "$src: $!");
-        return 0;
+        if (not open(F, "$src.$default_locale"))
+        {
+            if (not open(F, $src))
+            {
+                lbsError("fileLoad", 'RAW', "$src: $!");
+                return 0;
+            }
+        }
     }
+
     while (read(F, $buf, 16384))
     {
         $$data .= $buf;
