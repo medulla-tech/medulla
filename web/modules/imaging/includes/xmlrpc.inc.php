@@ -37,20 +37,65 @@ function xmlrpc_getProfileImages($id) {
     return xmlCall("imaging.getProfileImages", array($id));
 }
 
-function xmlrpc_getMachineBootServices($id) {
-    return xmlCall("imaging.getMachineBootServices", array($id));
+/* BootServices */
+function xmlrpc_getPossibleBootServices($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getPossibleBootServices", array($id, $start, $end, $filter));
 }
 
-function xmlrpc_getProfileBootServices($id) {
-    return xmlCall("imaging.getProfileBootServices", array($id));
+function xmlrpc_getMachineBootServices($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getMachineBootServices", array($id, $start, $end, $filter));
 }
 
-function xmlrpc_getMachineLogs($id, $start, $end) {
-    return xmlCall("imaging.getMachineLogs", array($id, $start, $end));
+function xmlrpc_getProfileBootServices($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getProfileBootServices", array($id, $start, $end, $filter));
 }
 
-function xmlrpc_getProfileLogs($id, $start, $end) {
-    return xmlCall("imaging.getProfileLogs", array($id, $start, $end));
+function xmlrpc_getMenuItemByUUID($id) {
+    return xmlCall("imaging.getMenuItemByUUID", array($id));
+}
+
+// actions
+function xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params) {
+    return xmlCall("imaging.addServiceToTarget", array($item_uuid, $target_uuid, $params));
+}
+
+function xmlrpc_delServiceToTarget($item_uuid, $target_uuid) {
+    return xmlCall("imaging.delServiceToTarget", array($item_uuid, $target_uuid));
+}
+
+function xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params) {
+    return xmlCall("imaging.editServiceToTarget", array($item_uuid, $target_uuid, $params));
+}
+
+/* Logs */
+function xmlrpc_getMachineLogs($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getMachineLogs", array($id, $start, $end, $filter));
+}
+
+function xmlrpc_getProfileLogs($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getProfileLogs", array($id, $start, $end, $filter));
+}
+
+// server informations
+
+function xmlrpc_getGlobalStatus($location) {
+    return xmlCall("imaging.getGlobalStatus", array($location));
+}
+
+function xmlrpc_getDiskInfo($location) {
+    return xmlCall("imaging.getDiskInfo", array($location)); //TODO?
+}
+
+function xmlrpc_getHealth($location) {
+    return xmlCall("imaging.getHealth", array($location)); //TODO?
+}
+
+function xmlrpc_getShortStatus($location) {
+    return xmlCall("imaging.getShortStatus", array($location)); //TODO?
+}
+
+function xmlrpc_getLogs4Location($location, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getLogs4Location", array($location, $start, $end, $filter));
 }
 
 ?>

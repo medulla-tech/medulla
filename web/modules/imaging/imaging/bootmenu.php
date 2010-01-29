@@ -28,10 +28,10 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 if(isset($_GET['gid'])) {
     $type = 'group';
-    $menu = xmlrpc_getProfileBootMenu($_GET['gid']);
+    list($count, $menu) = xmlrpc_getProfileBootMenu($_GET['gid']);
 } else {
     $type = '';
-    $menu = xmlrpc_getMachineBootMenu($_GET['uuid']);
+    list($count, $menu) = xmlrpc_getMachineBootMenu($_GET['uuid']);
 }
 
 if(isset($_GET['mod']))
@@ -47,10 +47,10 @@ switch($mod) {
         item_down($type, $menu);
         break;
     case 'edit':
-        item_edit($type, $menu);
+        item_edit();
         break;  
     default:
-        item_list($type, $menu);
+        item_list($type, $menu, $count);
         break;
 }
 
@@ -59,40 +59,50 @@ function item_up($type, $menu) {
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    
 }
 
-function item_down($type, $menu) {
+function item_down() {
     $params = getParams();
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    
 }
 
-function item_edit($type, $menu) {
+function item_edit() {
     
     $params = getParams();
-    $id = $_GET['itemid'];
+    $item_uuid = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
+    
+    $item = xmlrpc_getMenuItemByUUID($item_uuid);
 
     if(count($_POST) == 0) {
     
-        printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $label);
+        printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $item['desc']);
                 
-        $is_selected = false;
-        $is_displayed = false;
-        $is_wol_selected = false;
-        $is_wol_displayed = false;
+        $is_selected = '';
+        $is_displayed = 'CHECKED';
+        $is_wol_selected = '';
+        $is_wol_displayed = 'CHECKED';
         // get current values
-        if($menu[$id][2] == true)
+        if($item['default'] == true)
             $is_selected = 'CHECKED';
-        if($menu[$id][3] == true)
-            $is_displayed = 'CHECKED';
-        if($menu[$id][4] == true)
+        if($item['hidden'] == true)
+            $is_displayed = '';
+        if($item['default_WOL'] == true)
             $is_wol_selected = 'CHECKED';
-        if($menu[$id][5] == true)
-            $is_wol_displayed = 'CHECKED';
+        if($item['hidden_WOL'] == true)
+            $is_wol_displayed = '';
         
         $f = new ValidatingForm();
         $f->push(new Table());
+        $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
+        $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
+        $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
+        $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
+                        
+        $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_name"));
+        $f->add($input,                                         array("value" => $item['default_name']));
+                
         $f->add(
             new TrFormElement(_T("Selected by default", "imaging"), 
-            new CheckboxTpl("selected")),
+            new CheckboxTpl("default")),
             array("value" => $is_selected)
         );
         $f->add(
@@ -102,30 +112,47 @@ function item_edit($type, $menu) {
         );
         $f->add(
             new TrFormElement(_T("Selected by default on WOL", "imaging"), 
-            new CheckboxTpl("wol_selected")),
+            new CheckboxTpl("default_WOL")),
             array("value" => $is_wol_selected)
         );
         $f->add(
             new TrFormElement(_T("Displayed on WOL", "imaging"), 
-            new CheckboxTpl("wol_displayed")),
+            new CheckboxTpl("displayed_WOL")),
             array("value" => $is_wol_displayed)
         );    
         $f->pop();
         $f->addButton("bvalid", _T("Validate"));
         $f->pop();
         $f->display();
-    }
-    else {
+    } else {
         // set new values
         foreach($_POST as $key => $value) {
         
         }
+        if(isset($_GET['gid'])) {
+            $type = 'group';
+            $target_uuid = $_GET['gid'];
+        } else {
+            $type = '';
+            $target_uuid = $_GET['uuid'];
+        }
+                        
+        $bs_uuid = $item['boot_service']['imaging_uuid'];
+        
+        $params['default'] = ($_POST['default'] == 'on'?True:False);
+        $params['default_WOL'] = ($_POST['default_WOL'] == 'on'?True:False);
+        $params['hidden'] = ($_POST['displayed'] == 'on'?False:True);
+        $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
+        $params['default_name'] = $_POST['default_name'];
+
+        $ret = xmlrpc_editServiceToTarget($bs_uuid, $target_uuid, $params);
+        
         // goto menu boot list
-        header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
+        header("Location: " . urlStrRedirect("base/computers/".$type."imgtabs", $params));
     }    
 }
 
-function item_list($type, $menu) {
+function item_list($type, $menu, $count) {
 
     $params = getParams();
 
@@ -138,38 +165,58 @@ function item_list($type, $menu) {
     $actionUp = array();
     $actionDown = array();
 
-    $nbItems = count($menu);
-    $nbInfos = count($menu[0]);
+    $nbItems = $count;
     
-    for($i=0;$i<$nbItems;$i++) {
+    $a_label = array();
+    $a_desc = array();
+    $a_default = array();
+    $a_display = array();
+    $a_defaultWOL = array();
+    $a_displayWOL = array();
+    
+//    for($i=0;$i<$nbItems;$i++) {
+    $i = -1;
+    foreach ($menu as $entry) {
+        $i = $i + 1;
+//        $entry = $menu[$i];
+        $is_image = False;
+        if (isset($entry['image'])) {
+            $is_image = True;
+        }
         $list_params[$i] = $params;
-        $list_params[$i]["itemid"] = $i;
-        $list_params[$i]["itemlabel"] = urlencode($menu[$i][0]);
+        $list_params[$i]["itemid"] = $entry['imaging_uuid'];
+        $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
         
         if($i==0) {
             $actionsDown[] = $downAction;
             $actionsUp[] = $emptyAction;
-        }
-        else if($i==$nbItems-1) {
+        } else if($i==$nbItems-1) {
             $actionsDown[] = $emptyAction;
             $actionsUp[] = $upAction;
-        }
-        else {
+        } else {
             $actionsDown[] = $downAction;
             $actionsUp[] = $upAction;
         }
-        
-        for ($j = 0; $j < $nbInfos; $j++) {
-            $list[$j][] = $menu[$i][$j];
+
+        $a_label[] = $entry['default_name']; # should be replaced by the label in the good language
+        if ($is_image) { # TODO $entry has now a cache for desc.
+            $a_desc[] = $entry['image']['desc'];
+        } else {
+            $a_desc[] = $entry['boot_service']['desc'];
         }
+        $a_default[] = $entry['default'];
+        $a_display[] = ($entry['hidden'] ? False:True);
+        $a_defaultWOL[] = $entry['default_WOL'];
+        $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
+        
     }
-    $l = new ListInfos($list[0], _T("Label"));
+    $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);
-    $l->addExtraInfo($list[1], _T("Description", "imaging"));
-    $l->addExtraInfo($list[2], _T("Default", "imaging"));
-    $l->addExtraInfo($list[3], _T("Displayed", "imaging"));
-    $l->addExtraInfo($list[4], _T("Default on WOL", "imaging"));
-    $l->addExtraInfo($list[5], _T("Displayed on WOL", "imaging"));
+    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
+    $l->addExtraInfo($a_default, _T("Default", "imaging"));
+    $l->addExtraInfo($a_display, _T("Displayed", "imaging"));
+    $l->addExtraInfo($a_defaultWOL, _T("Default on WOL", "imaging"));
+    $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
     $l->addActionItemArray($actionsUp);
     $l->addActionItemArray($actionsDown);
     $l->addActionItem(new ActionItem(_T("Edit"), "imgtabs", "edit", "item", 

@@ -30,9 +30,14 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
+require("../includes/xmlrpc.inc.php");
+
 
 $location = getCurrentLocation();
-
+$global_status = xmlrpc_getGlobalStatus($location);
+$disk_info = format_disk_info($global_status['disks_info']);
+$health = format_health($global_status['uptime'], $global_status['mem_info']);
+$short_status = $global_status['short_status'];
 ?>
 
 <br/>
@@ -41,11 +46,11 @@ $location = getCurrentLocation();
 <div class="status">
     <div class="status_block">
         <h3><?=_T('Space available on server', 'imaging')?></h3>
-        <?=print_disk_info();?>
+        <?=$disk_info;?>
     </div>
     <div class="status_block">
         <h3><?=_T('Load on server', 'imaging')?></h3>
-        <?=print_health();?>
+        <?=$health;?>
     </div>
 </div>
 
@@ -60,8 +65,8 @@ $location = getCurrentLocation();
     </div>-->
     <div class="status_block">
         <h3><?=_T('Imaging stats', 'imaging')?></h3>
-        <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong>10</strong>/33 clients have a rescue image</p>
-        <p class="stat"><img src="img/common/cd.png" /> <strong>5</strong> masters are available</p>
+        <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?=$short_status['rescue'];?></strong>/<?=$short_status['total'];?> clients have a rescue image</p>
+        <p class="stat"><img src="img/common/cd.png" /> <strong><?=$short_status['master'];?></strong> masters are available</p>
     </div>
 </div>
 

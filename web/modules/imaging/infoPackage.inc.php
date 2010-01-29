@@ -152,6 +152,16 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/ajaxConfiguration.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
+
+    $page = new Page("addservice", _T("Add a service to a target", "msc"));
+    $page->setFile("modules/imaging/imaging/addservice.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("editservice", _T("Edit parameters of a service on a target", "msc"));
+    $page->setFile("modules/imaging/imaging/addservice.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    
                 
     unset($submod);
 }

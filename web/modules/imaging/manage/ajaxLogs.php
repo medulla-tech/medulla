@@ -30,8 +30,14 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
+require("../includes/xmlrpc.inc.php");
 
 $location = getCurrentLocation();
+
+$maxperpage = $conf["global"]["maxperpage"];
+$filter = empty($_GET["filter"])                ? ''    : $_GET['filter'];
+$start = empty($_GET["start"])                  ? 0     : $_GET["start"];
+$end = $start + $maxperpage;
 
 $logStates = array(
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
@@ -43,12 +49,12 @@ $logStates = array(
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
-$logs = array(
-    array('23/10/2009 18:00 - Backup image on gnion', '75', 'backup_in_progress'),
-    array('20/10/2009 16:44 - Restore of image MDV 2008 on gnion', '100', 'restore_done'),
-    array('18/10/2009 12:00 - Restore of image MDV 2008 on gnion', '22', 'restore_fail'),
-    array('16/10/2009 12:00 - Restore of image MDV 2008 on gnion', '45', 'plop'),
-);
+list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filter);
+
+$logs = array();
+foreach ($db_logs as $log) {
+    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['completeness'], $log['log_state']);
+}
 
 $filter = $_GET["filter"];
 $nbLogs = count($logs);
@@ -58,7 +64,8 @@ for ($i = 0; $i < $nbLogs; $i++) {
     if ($filter == "" or !(stripos($logs[$i][0], $filter) === False)) {
 
         $list_params[$i]["itemid"] = $i;
-        //$list_params[$i]["hostname"] = $logs[$i][0];
+        $list_params[$i]["uuid"] = $db_logs[$i]['target']['uuid'];
+        $list_params[$i]["hostname"] = $db_logs[$i]['target']['name'];
         //$list_params[$i]["itemlabel"] = urlencode($logs[$i][0]);
 
         // add image to description
@@ -77,7 +84,7 @@ for ($i = 0; $i < $nbLogs; $i++) {
 
         // complete status display
         $led = new LedElement($logStates[$status][1]);
-        $logs[$i][2] = $led.'&nbsp;'.$logStates[$status][0];
+        $logs[$i][2] = $led->value.'&nbsp;'.$logStates[$status][0];
        
         for ($j = 0; $j < $nbInfos; $j++) {
             $list[$j][] = $logs[$i][$j];
@@ -85,14 +92,17 @@ for ($i = 0; $i < $nbLogs; $i++) {
     }
 }
 
-$l = new ListInfos($list[0], _T("Description", "imaging"));
+$l = new OptimizedListInfos($list[0], _T("Description", "imaging"));
 $l->addExtraInfo($list[1], _T("Completed", "imaging"));
 $l->addExtraInfo($list[2], _T("State", "imaging"));
 $l->setParamInfo($list_params);
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tablogs", "details")
 );
-$l->setNavBar(new AjaxNavBar(count($list), $filter));
+$l->setItemCount($count);
+$l->setNavBar(new AjaxNavBar($count, $filter));
+$l->start = 0;
+$l->end = $maxperpage;
 $l->disableFirstColumnActionLink();
 $l->display();
 

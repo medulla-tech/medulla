@@ -33,20 +33,21 @@ require("../includes/includes.php");
 require_once('../includes/xmlrpc.inc.php');
 
 $params = getParams();
-$filter = $_GET["filter"];
 
-if ($_GET["start"]) { $start = $_GET["start"]; } else { $start = 0; }
-if ($_GET["end"]) { $end = $_GET["end"]; } else { $end = 9; }
+$maxperpage = $conf["global"]["maxperpage"];
+$filter = empty($_GET["filter"])                ? ''    : $_GET['filter'];
+$start = empty($_GET["start"])                  ? 0     : $_GET["start"];
+$end = $start + $maxperpage;
 
 if(isset($_GET['gid'])) {
     $type = 'group';
-    list($nbLogs, $logs) = xmlrpc_getProfileLogs($_GET['gid'], $start, $end);
+    list($nbLogs, $db_logs) = xmlrpc_getProfileLogs($_GET['gid'], $start, $end, $filter);
 } else {
     $type = '';
-    list($nbLogs, $logs) = xmlrpc_getMachineLogs($_GET['uuid'], $start, $end);
+    list($nbLogs, $db_logs) = xmlrpc_getMachineLogs($_GET['uuid'], $start, $end, $filter);
 }
 
-$nbInfos = count($logs[0]);
+$nbInfos = count($db_logs[0]);
 
 $logStates = array(
     "restore_in_progress" => array(_T("Restore in progress", "imaging"), 'orange'),
@@ -58,6 +59,11 @@ $logStates = array(
     "unknow" => array(_T("Status unknow", "imaging"), "black"),
 );
 
+$logs = array();
+foreach ($db_logs as $log) {
+    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['completeness'], $log['log_state']);
+}
+        
 foreach ($logs as $log) {
     if ($filter == "" or !(stripos($log[0], $filter) === False)) {
         $param = $params;
@@ -80,18 +86,21 @@ foreach ($logs as $log) {
 
         // complete status display
         $led = new LedElement($logStates[$status][1]);
-        $log[2] = $led.'&nbsp;'.$logStates[$status][0];
+        $log[2] = $led->value.'&nbsp;'.$logStates[$status][0];
        
         for ($j = 0; $j < $nbInfos; $j++) {
             $list[$j][] = $log[$j];
         }
+        $param["uuid"] = $log['target']['uuid'];
+        $param["hostname"] = $log['target']['name'];
+        
         $list_params[]= $param;
     }
 }
 
 $l = new OptimizedListInfos($list[0], _T("Description", "imaging"));
-$l->setItemCount($nbLogs);
-$l->setNavBar(new AjaxNavBar($nbLogs, $filter));
+$l->setItemCount($count);
+$l->setNavBar(new AjaxNavBar($count, $filter));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($list[1], _T("Completed", "imaging"));
 $l->addExtraInfo($list[2], _T("State", "imaging"));
@@ -100,7 +109,7 @@ $l->addActionItem(
 );
 $l->disableFirstColumnActionLink();
 $l->start = 0;
-$l->end = count($logs);
+$l->end = $maxperpage;
 $l->display();
 
 ?>

@@ -28,11 +28,14 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 if(isset($_GET['gid'])) {
     $type = 'group';
-    $menu = xmlrpc_getProfileBootServices($_GET['gid']);
+    list($count, $menu) = xmlrpc_getPossibleBootServices($_GET['gid']);
+    $target_uuid = $_GET['gid'];
 } else {
     $type = '';
-    $menu = xmlrpc_getMachineBootServices($_GET['uuid']);
+    list($count, $menu) = xmlrpc_getPossibleBootServices($_GET['uuid']);
+    $target_uuid = $_GET['uuid'];
 }
+
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
@@ -41,52 +44,60 @@ else
 
 switch($mod) {
     case 'add':
-        service_add($type, $menu);
+        service_add($type, $menu, $target_uuid);
         break;
     default:
-        service_list($type, $menu);
+        service_list($type, $menu, $count, $target_uuid);
         break;
 }
 
-function service_add($type, $menu) {
+function service_add($type, $menu, $target_uuid) {
     $params = getParams();
-    $id = $_GET['itemid'];
+    $item_uuid = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
     
+    $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid);
+
     // goto images list 
-    $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
-    new NotifyWidgetSuccess($str);
-    header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
+    if ($ret[0]) {
+        $str = sprintf(_T("Service <strong>%s</strong> added to boot menu", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
+        header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
+    } else {
+        new NotifyWidgetError($ret[1]);
+    }
 }
 
-function service_list($type, $menu) {
+function service_list($type, $menu, $count, $target_uuid) {
     $params = getParams();
 
     $addActions = array();
-    $addAction = new ActionItem(_T("Add service to boot menu", "imaging"), "imgtabs", 
-        "addbootmenu", "image", "base", "computers", $type."tabservices", "add");
+    
+    $addAction = new ActionPopupItem(_T("Add service to boot menu", "imaging"), "addservice", "addbootmenu", "image", "base", "computers", null, 300, "add");
     $emptyAction = new EmptyActionItem();
 
     // show services list    
-    $nbItems = count($menu);
-    $nbInfos = count($menu[0]);
-    for($i=0;$i<$nbItems;$i++) {
+    $a_label = array();
+    $a_in_boot_menu = array();
+    $i = -1;
+    foreach ($menu as $entry) {
+        $i = $i+1;
         $list_params[$i] = $params;
-        $list_params[$i]["itemid"] = $i;
-        $list_params[$i]["itemlabel"] = $menu[$i][0];
+        $list_params[$i]["itemlabel"] = $entry['value'];
+        $list_params[$i]["itemid"] = $entry['imaging_uuid'];
+        $list_params[$i]['targetid'] = $targetid;
         // don't show action if service is in bootmenu
-        if(!$menu[$i][1])
+        if(!isset($entry['menu_item']))
             $addActions[] = $addAction;
         else
             $addActions[] = $emptyAction;
+
+        $a_label[]= $entry['value'];
+        $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
         
-        // get array for lisinfos
-        for ($j = 0; $j < $nbInfos; $j++) {
-            $list[$j][] = $menu[$i][$j];
-        }
     }
-    $l = new ListInfos($list[0], _T("Label", "imaging"));
-    $l->addExtraInfo($list[1], _T("In bootmenu", "imaging"));
+    $l = new ListInfos($a_label, _T("Label", "imaging"));
+    $l->addExtraInfo($a_in_boot_menu, _T("In bootmenu", "imaging"));
     $l->setParamInfo($list_params);
     $l->addActionItemArray($addActions);
     $l->disableFirstColumnActionLink();

@@ -23,6 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
  
+require('web_def.inc.php');
+
 function getCurrentLocation() {
 
     $location = false;
@@ -85,8 +87,25 @@ function print_disk_info() {
     /* -l option to only get local filesystem occupation */
     $df = xmlCall("base.getDisksInfos");
     unset($df[0]);
+
+    echo format_disk_info($df);
+}
+
+function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
+    echo format_mem_bar($title, $max, $used, $cache, $width);
+}
+
+function print_health() {
+    $up = xmlCall("base.getUptime");
+    $up = trim($up[0]);
     
+    $mem = xmlCall("base.getMemoryInfos");
+    echo format_health($up, $mem);
+}
+
+function format_disk_info($df) {
     $incomplete_lines = "";
+    $ret = '';
 
     foreach ($df as $disk) {
         //if previous is truncated we add it to the current line
@@ -95,8 +114,7 @@ function print_disk_info() {
             unset($incomplete_lines);
         }
 
-        if (preg_match("/^\/dev\/mapper\/data-snap/", $disk)
-            || preg_match("/^[ ]+/", $disk)) {
+        if (preg_match("/^\/dev\/mapper\/data-snap/", $disk) || preg_match("/^[ ]+/", $disk)) {
             continue;
         }
 
@@ -112,32 +130,33 @@ function print_disk_info() {
         if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
             continue;
       
-        print_mem_bar("<strong>$disk[5]</strong> <em>($disk[0])</em> : ".humanSize($disk[2]*1024)."/".humanSize($disk[3]*1024), $disk[1], $disk[2]);
+        $ret .= format_mem_bar("<strong>$disk[5]</strong> <em>($disk[0])</em> : ".humanSize($disk[2]*1024)."/".humanSize($disk[3]*1024), $disk[1], $disk[2]);
     }
+    return $ret;
 }
 
-function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
+function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) { 
+    $ret = '';
     $wused = ($used / $max) * $width;
     if ($title != "") {
-        echo "<p>".$title."</p>";
+        $ret .= "<p>".$title."</p>";
     }
-    echo "<div class=\"membarfree\" style=\"width: ".$width."px\">";
+    $ret .= "<div class=\"membarfree\" style=\"width: ".$width."px\">";
     if ($cache > 0) {
-        printf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
+        $ret .= sprintf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
         $wused = (($used - $cache) / $max) * $width;
     }
-    printf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
+    $ret .= sprintf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
     if ($cache > 0) {
-            echo "</div>";
+            $ret .= "</div>";
     }
-    echo "</div>\n";
+    $ret .= "</div>\n";
+    return $ret;
 }
 
-function print_health() {
-    $up = xmlCall("base.getUptime");
-    $up = trim($up[0]);
-
+function format_health($up, $mem) {
     list($up) = explode(" ", $up);
+    $ret = '';
 
     $days = (int) ($up / (24*60*60));
     $up -= $days * 24*60*60;
@@ -149,23 +168,46 @@ function print_health() {
     ($hrs > 1) ? $h = "s" : $h = "";
     ($mins > 1) ? $m = "s" : $m = "";
 
-    echo "<em>"._("Uptime: ")."</em>";
+    $rt .= "<em>"._("Uptime: ")."</em>";
     if ($days > 0) {
-            echo $days." "._("day").$d." ";
+            $ret .= $days." "._("day").$d." ";
     }
     if (($days > 0) || ($hrs > 0)) {
-        echo $hrs." "._("hour").$h." ";
+        $ret .= $hrs." "._("hour").$h." ";
     }
-    echo $mins." "._("minute").$m;
+    $ret .= $mins." "._("minute").$m;
 
-    $mem = xmlCall("base.getMemoryInfos");
 
     $m = preg_split("/[ ]+/", $mem[1]);
-    print_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize(($m[5]+$m[6])*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2],$m[5]+$m[6]);
+    $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize(($m[5]+$m[6])*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2],$m[5]+$m[6]);
     $m = preg_split("/[ ]+/", $mem[3]);
     if ($m[1] > 0) {
-        print_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2]);
+        $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024*1024)."/".humanSize($m[1]*1024*1024), $m[1], $m[2]);
     }
+    return $ret;
 }
+
+function _toDate($a, $noneIsAsap = False) {
+    $never = array(2031, 12, 31, 23, 59, 59);
+    $asap = array(1970, 1, 1, 0, 0, 0);
+        
+    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
+                
+        if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
+            return _T('Never', 'msc');
+            
+        if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+            return _T('As soon as possible', 'msc');
+        
+        $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
+        return strftime(web_def_date_fmt(), $parsed_date);
+        
+    } elseif ($noneIsAsap && !$a) {
+        return _T('As soon as possible', 'msc');
+    } else { # can't guess if we talk about a date or something else :/
+        return _T('<i>undefined</i>', 'msc');
+    }   
+}
+
 
 ?>

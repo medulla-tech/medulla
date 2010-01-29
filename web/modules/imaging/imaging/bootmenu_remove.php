@@ -24,25 +24,39 @@
  */
 
 include('modules/imaging/includes/includes.php');
+include('modules/imaging/includes/xmlrpc.inc.php');
 $params = getParams();
-$id = $_GET['itemid'];
+$item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
-if(isset($_GET['gid'])) 
+$item = xmlrpc_getMenuItemByUUID($item_uuid);
+$bs_uuid = $item['boot_service']['imaging_uuid'];
+                
+if(isset($_GET['gid'])) {
     $type = 'group';
-else
+    $target_uuid = $_GET['gid'];
+} else {
     $type = '';
-
+    $target_uuid = $_GET['uuid'];
+}
+    
 if (quickGet('valid')) {
-    // remove from bootmenu
-    // ...
+    $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid);
+    if ($ret[0] and !isXMLRPCError()) {                     
+        $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);             
+        new NotifyWidgetSuccess($str);                      
+    } elseif (!$ret[0]) {
+        new NotifyWidgetError($ret[1]);
+    }
     $params['mod'] = 'remove_success';
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
 }
 
 // show popup
-$params['id'] = $id;
+$params['itemid'] = $item_uuid;
 $params['mod'] = 'remove';
+$params['bs_uuid'] = $bs_uuid;
+
 ?>
 <h2><?= _T("Remove from boot menu", "imaging") ?></h2>
 
