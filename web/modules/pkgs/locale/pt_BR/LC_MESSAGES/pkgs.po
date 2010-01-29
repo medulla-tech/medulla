@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pkgs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-20 04:31+0200\n"
+"POT-Creation-Date: 2009-10-20 09:30+0200\n"
 "PO-Revision-Date: 2010-01-28 16:21-0200\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
 "Language-Team: Brazilian Portuguese <cooker-i18n@mandrivalinux.org>\n"
@@ -18,163 +18,171 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-#: pkgs/pkgs/localSidebar.php:28 pkgs/pkgs/edit.php:75
-#: pkgs/infoPackage.inc.php:44
+#: web/modules/pkgs/pkgs/localSidebar.php:28 web/modules/pkgs/pkgs/edit.php:75
+#: web/modules/pkgs/infoPackage.inc.php:44
 msgid "Add a package"
 msgstr "Adicionar um pacote"
 
-#: pkgs/pkgs/associate_files.php:115
+#: web/modules/pkgs/pkgs/associate_files.php:115
 msgid "Associate"
 msgstr "Associar"
 
-#: pkgs/pkgs/edit.php:173
+#: web/modules/pkgs/pkgs/edit.php:173
 msgid "Associate files"
 msgstr "Associar arquivos"
 
-#: pkgs/infoPackage.inc.php:49
+#: web/modules/pkgs/infoPackage.inc.php:49
 msgid "Associate files to a package"
 msgstr "Associar arquivos a um pacote"
 
-#: pkgs/pkgs/associate_files.php:74
+#: web/modules/pkgs/pkgs/associate_files.php:74
 #, php-format
 msgid "Associate files to package <b>%s (%s)</b>"
 msgstr "Associar arquivos ao pacote <b>%s (%s)</b>"
 
-#: pkgs/pkgs/ajaxPendingPackageList.php:57
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:52
 msgid "Associate package"
 msgstr "Associar pacote"
 
-#: pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:134
 msgid "Command : "
 msgstr "Comando : "
 
-#: pkgs/pkgs/edit.php:134
+#: web/modules/pkgs/pkgs/edit.php:134
 msgid "Command's name : "
 msgstr "Nome do comando : "
 
-#: pkgs/pkgs/ajaxPackageList.php:84 pkgs/pkgs/ajaxPendingPackageList.php:84
-#: pkgs/infoPackage.inc.php:59
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:79
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: web/modules/pkgs/infoPackage.inc.php:59
 msgid "Delete a package"
 msgstr "Excluir um pacote"
 
-#: pkgs/pkgs/remove.php:42
+#: web/modules/pkgs/pkgs/remove.php:42
 msgid "Delete this package"
 msgstr "Excluir este pacote"
 
-#: pkgs/pkgs/edit.php:130
+#: web/modules/pkgs/pkgs/edit.php:130
 msgid "Description"
 msgstr "Descrição"
 
-#: pkgs/pkgs/ajaxPackageList.php:74 pkgs/pkgs/ajaxPendingPackageList.php:75
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:69
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Descriptions"
 msgstr "Descrições"
 
-#: pkgs/pkgs/ajaxPackageList.php:82 pkgs/pkgs/edit.php:91
-#: pkgs/infoPackage.inc.php:46
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:77
+#: web/modules/pkgs/pkgs/edit.php:91 web/modules/pkgs/infoPackage.inc.php:46
 msgid "Edit a package"
 msgstr "Editar um pacote"
 
-#: pkgs/pkgs/associate_files.php:67
+#: web/modules/pkgs/pkgs/associate_files.php:67
 msgid "Failed to associate files"
 msgstr "Falha ao associar arquivos"
 
-#: pkgs/pkgs/associate_files.php:64
+#: web/modules/pkgs/pkgs/associate_files.php:64
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Falha ao associar os arquivos%s"
 
-#: pkgs/pkgs/associate_files.php:57
+#: web/modules/pkgs/pkgs/associate_files.php:57
 #, php-format
-msgid "Files succesfully associated with package <b>%s (%s)</b>%s"
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Os arquivos foram associados com sucesso ao pacote <b>%s (%s)</b>%s"
 
-#: pkgs/pkgs/ajaxPackageList.php:58 pkgs/pkgs/index.php:45
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:53
+#: web/modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC falhou ao contactar o servidor de pacotes %s."
 
-#: pkgs/pkgs/ajaxPackageList.php:72 pkgs/pkgs/ajaxPendingPackageList.php:73
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:67
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 msgid "Names"
 msgstr "Nomes"
 
-#: pkgs/pkgs/edit.php:142
+#: web/modules/pkgs/pkgs/edit.php:142
 msgid "Need a reboot ?"
 msgstr "Necessita reiniciar ?"
 
-#: pkgs/pkgs/edit.php:117
+#: web/modules/pkgs/pkgs/edit.php:117
 msgid "Package API"
 msgstr "API do pacote"
 
-#: pkgs/pkgs/edit.php:67
+#: web/modules/pkgs/pkgs/edit.php:67
 msgid "Package failed to save"
 msgstr "Falha ao salvar pacote"
 
-#: pkgs/pkgs/edit.php:128
+#: web/modules/pkgs/pkgs/edit.php:128
 msgid "Package label"
 msgstr "Rótulo do pacote"
 
-#: pkgs/pkgs/ajaxPackageList.php:75
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:70
 msgid "Package size"
 msgstr "Tamanho do pacote"
 
-#: pkgs/pkgs/edit.php:57
+#: web/modules/pkgs/pkgs/edit.php:57
 msgid "Package successfully edited"
 msgstr "Pacote editado com sucesso"
 
-#: pkgs/pkgs/edit.php:129
+#: web/modules/pkgs/pkgs/edit.php:129
 msgid "Package version"
 msgstr "Versão do pacote"
 
-#: pkgs/infoPackage.inc.php:32 pkgs/infoPackage.inc.php:38
+#: web/modules/pkgs/infoPackage.inc.php:32
+#: web/modules/pkgs/infoPackage.inc.php:38
 msgid "Packages"
 msgstr "Pacotes"
 
-#: pkgs/pkgs/localSidebar.php:27 pkgs/pkgs/index.php:29
+#: web/modules/pkgs/pkgs/localSidebar.php:27
+#: web/modules/pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr "Lista de pacotes"
 
-#: pkgs/pkgs/localSidebar.php:29 pkgs/pkgs/pending.php:29
+#: web/modules/pkgs/pkgs/localSidebar.php:29
+#: web/modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "Lista de pacotes pendentes"
 
-#: pkgs/pkgs/ajaxPackageList.php:69 pkgs/pkgs/index.php:53
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:64
+#: web/modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr "Contate seu administrador."
 
-#: pkgs/infoPackage.inc.php:52
+#: web/modules/pkgs/infoPackage.inc.php:52
 msgid "See pending packages"
 msgstr "Ver pacotes pendentes"
 
-#: pkgs/pkgs/associate_files.php:94
+#: web/modules/pkgs/pkgs/associate_files.php:94
 msgid "Select the directory you want for this package"
 msgstr "Selecione o diretório que deseja para este pacote"
 
-#: pkgs/infoPackage.inc.php:42
+#: web/modules/pkgs/infoPackage.inc.php:42
 msgid "Show all packages"
 msgstr "Mostrar todos os pacotes"
 
-#: pkgs/infoPackage.inc.php:55
+#: web/modules/pkgs/infoPackage.inc.php:55
 msgid "Show mirror status"
 msgstr "Mostrar estado do espelho"
 
-#: pkgs/pkgs/ajaxPendingPackageList.php:83
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
 msgstr "Mostar espelhos"
 
-#: pkgs/pkgs/rsync.php:32
+#: web/modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr "O pacote %s (%s) não está associado"
 
-#: pkgs/pkgs/remove.php:34
+#: web/modules/pkgs/pkgs/remove.php:34
 msgid "The package failed to delete"
 msgstr "Falha ao excluir o pacote"
 
-#: pkgs/pkgs/remove.php:33
+#: web/modules/pkgs/pkgs/remove.php:33
 msgid "The package has been deleted."
 msgstr "O pacote foi excluído."
 
-#: pkgs/pkgs/ajaxPackageList.php:73 pkgs/pkgs/ajaxPendingPackageList.php:74
+#: web/modules/pkgs/pkgs/ajaxPackageList.php:68
+#: web/modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Versions"
 msgstr "Versões"
-

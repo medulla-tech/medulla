@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2 - MSC Web Interface 1.2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-12 23:57+0200\n"
+"POT-Creation-Date: 2009-10-20 09:31+0200\n"
 "PO-Revision-Date: 2009-06-17 10:20+0200\n"
 "Last-Translator: Nicolas Rueff <nrueff@mandriva.com>\n"
 "Language-Team: Français\n"
@@ -71,21 +71,21 @@ msgstr "Contrôle sécurisé du client %s"
 msgid "%s's group secure control"
 msgstr "Contrôle sécurisé du groupe %s"
 
-#: web/modules/msc/msc/msctabsstatus.php:125
-#: web/modules/msc/msc/msctabsstatus.php:127
-#: web/modules/msc/msc/msctabsstatus.php:129
+#: web/modules/msc/msc/msctabsstatus.php:126
+#: web/modules/msc/msc/msctabsstatus.php:128
+#: web/modules/msc/msc/msctabsstatus.php:130
 #, php-format
 msgid "(with %s already try)"
 msgstr "(dont %s ont déjà tenté)"
 
-#: web/modules/msc/msc/msctabsstatus.php:133
 #: web/modules/msc/msc/msctabsstatus.php:134
 #: web/modules/msc/msc/msctabsstatus.php:135
+#: web/modules/msc/msc/msctabsstatus.php:136
 #, php-format
 msgid "(with %s being unreachable)"
 msgstr "(dont %s sont injoignables)"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:243
+#: web/modules/msc/msc/ajaxLogsFilter.php:237
 #, php-format
 msgid ", using proxy %s"
 msgstr ", utilisant le proxy %s"
@@ -95,52 +95,52 @@ msgstr ", utilisant le proxy %s"
 msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
 msgstr "<a href='' class='bundle' title='%s'>(dans le bundle %s)</a>"
 
-#: web/modules/msc/msc/msctabsstatus.php:100
+#: web/modules/msc/msc/msctabsstatus.php:101
 #, php-format
 msgid "<b>%s</b> computers are paused"
 msgstr "<b>%s</b> machines sont en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:105
+#: web/modules/msc/msc/msctabsstatus.php:106
 #, php-format
 msgid "<b>%s</b> computers are running a deployment"
 msgstr "<b>%s</b> machines sont en cours de déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:95
+#: web/modules/msc/msc/msctabsstatus.php:96
 #, php-format
 msgid "<b>%s</b> computers are stopped"
 msgstr "<b>%s</b> machines ont été stoppées"
 
-#: web/modules/msc/msc/msctabsstatus.php:110
+#: web/modules/msc/msc/msctabsstatus.php:111
 #, php-format
 msgid "<b>%s</b> computers failed to deploy"
 msgstr "<b>%s</b> machines ont échoué lors du déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:90
+#: web/modules/msc/msc/msctabsstatus.php:91
 #, php-format
 msgid "<b>%s</b> computers were successfully deployed"
 msgstr "<b>%s</b> machines ont réussi leur déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:77
+#: web/modules/msc/msc/msctabsstatus.php:78
 #, php-format
 msgid "<b>%s</b> packages installation are being done"
 msgstr "<b>%s</b> installations de packages en cours"
 
-#: web/modules/msc/msc/msctabsstatus.php:72
+#: web/modules/msc/msc/msctabsstatus.php:73
 #, php-format
 msgid "<b>%s</b> packages installation are paused"
 msgstr "<b>%s</b> installations de packages en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:67
+#: web/modules/msc/msc/msctabsstatus.php:68
 #, php-format
 msgid "<b>%s</b> packages installation are stopped"
 msgstr "<b>%s</b> installations de packages en cours"
 
-#: web/modules/msc/msc/msctabsstatus.php:82
+#: web/modules/msc/msc/msctabsstatus.php:83
 #, php-format
 msgid "<b>%s</b> packages installation failed"
 msgstr "<b>%s</b> installations de packages ont échoué"
 
-#: web/modules/msc/msc/msctabsstatus.php:62
+#: web/modules/msc/msc/msctabsstatus.php:63
 #, php-format
 msgid "<b>%s</b> packages installation were successful"
 msgstr "<b>%s</b> installations de packages ont réussi"
@@ -165,83 +165,83 @@ msgstr "<b>Étapes de la commande</b>"
 msgid "<b>Files to be transfered</b>"
 msgstr "<b>Fichiers à transférer</b>"
 
-#: web/modules/msc/msc/msctabsstatus.php:108
+#: web/modules/msc/msc/msctabsstatus.php:109
 msgid "<b>No</b> computer failed to deploy"
 msgstr "<b>Aucune</b> machine n'a échoué lors du déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:98
+#: web/modules/msc/msc/msctabsstatus.php:99
 msgid "<b>No</b> computer is paused"
 msgstr "<b>Aucune</b> machine n'est en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:103
+#: web/modules/msc/msc/msctabsstatus.php:104
 msgid "<b>No</b> computer is running a deployment"
 msgstr "<b>Aucune</b> machine n'est en cours de déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:93
+#: web/modules/msc/msc/msctabsstatus.php:94
 msgid "<b>No</b> computer is stopped"
 msgstr "<b>Aucune</b> machine n'est arrétée"
 
-#: web/modules/msc/msc/msctabsstatus.php:88
+#: web/modules/msc/msc/msctabsstatus.php:89
 msgid "<b>No</b> computer was successfully deployed"
 msgstr "<b>Aucune</b> machine n'a réussi son déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:80
+#: web/modules/msc/msc/msctabsstatus.php:81
 msgid "<b>No</b> package installation failed"
 msgstr "<b>Aucune</b> installation de package n'a échoué"
 
-#: web/modules/msc/msc/msctabsstatus.php:75
+#: web/modules/msc/msc/msctabsstatus.php:76
 msgid "<b>No</b> package installation is being done"
 msgstr "<b>Aucune</b> installation de package n'est en cours"
 
-#: web/modules/msc/msc/msctabsstatus.php:70
+#: web/modules/msc/msc/msctabsstatus.php:71
 msgid "<b>No</b> package installation is paused"
 msgstr "<b>Aucune</b> installation de package n'est en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:65
+#: web/modules/msc/msc/msctabsstatus.php:66
 msgid "<b>No</b> package installation is stopped"
 msgstr "<b>Aucune</b> installation de package n'est arrétée"
 
-#: web/modules/msc/msc/msctabsstatus.php:60
+#: web/modules/msc/msc/msctabsstatus.php:61
 msgid "<b>No</b> package installation was successful"
 msgstr "<b>Aucune</b> installation de package n'a réussi"
 
-#: web/modules/msc/msc/msctabsstatus.php:109
+#: web/modules/msc/msc/msctabsstatus.php:110
 msgid "<b>One</b> computer failed to deploy"
 msgstr "<b>Une</b> machine a échoué lors du déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:99
+#: web/modules/msc/msc/msctabsstatus.php:100
 msgid "<b>One</b> computer is paused"
 msgstr "<b>Une</b> machine est en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:104
+#: web/modules/msc/msc/msctabsstatus.php:105
 msgid "<b>One</b> computer is running a deployment"
 msgstr "<b>Une</b> machine est en cours de déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:94
+#: web/modules/msc/msc/msctabsstatus.php:95
 msgid "<b>One</b> computer is stopped"
 msgstr "<b>Une</b> machine est arrétée"
 
-#: web/modules/msc/msc/msctabsstatus.php:89
+#: web/modules/msc/msc/msctabsstatus.php:90
 msgid "<b>One</b> computer was successfully deployed"
 msgstr "<b>Une</b> machine a réussi son déploiement"
 
-#: web/modules/msc/msc/msctabsstatus.php:81
+#: web/modules/msc/msc/msctabsstatus.php:82
 msgid "<b>One</b> package installation failed"
 msgstr "<b>Une</b> installation de packages a échoué"
 
-#: web/modules/msc/msc/msctabsstatus.php:76
+#: web/modules/msc/msc/msctabsstatus.php:77
 msgid "<b>One</b> package installation is being done"
 msgstr "<b>Une</b> installation de packages est en cours"
 
-#: web/modules/msc/msc/msctabsstatus.php:71
+#: web/modules/msc/msc/msctabsstatus.php:72
 msgid "<b>One</b> package installation is paused"
 msgstr "<b>Une</b> installation de packages en pause"
 
-#: web/modules/msc/msc/msctabsstatus.php:66
+#: web/modules/msc/msc/msctabsstatus.php:67
 msgid "<b>One</b> package installation is stopped"
 msgstr "<b>Une</b> installation de packages a échoué"
 
-#: web/modules/msc/msc/msctabsstatus.php:61
+#: web/modules/msc/msc/msctabsstatus.php:62
 msgid "<b>One</b> package installation was successful"
 msgstr "<b>Une</b> installation de packages a réussi"
 
@@ -323,7 +323,7 @@ msgid "Advanced launch bundle"
 msgstr "Lancement d'un ensemble d'applications (avancé)"
 
 #: web/modules/msc/includes/widgets.inc.php:264
-#: web/modules/msc/includes/widgets.inc.php:383
+#: web/modules/msc/includes/widgets.inc.php:390
 msgid "All users commands"
 msgstr "Commandes de tous les utilisateurs"
 
@@ -333,8 +333,8 @@ msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "connection was refused."
 msgstr ""
-"Une erreur s'est produite lors de la tentative de contact du miroir de secours "
-"'%s' : la connexion a été refusée"
+"Une erreur s'est produite lors de la tentative de contact du miroir de "
+"secours '%s' : la connexion a été refusée"
 
 #: web/modules/msc/includes/command_history.php:412
 #, php-format
@@ -342,17 +342,17 @@ msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "mountpoint doesn't exists."
 msgstr ""
-"Une erreur s'est produite lors de la tentative de contact du miroir de secours "
-"'%s' : le point de montage n'existe pas"
+"Une erreur s'est produite lors de la tentative de contact du miroir de "
+"secours '%s' : le point de montage n'existe pas"
 
 #: web/modules/msc/includes/command_history.php:409
 #, php-format
 msgid ""
-"An error occurred when trying to contact the mirror '%s' : the connection was "
-"refused."
+"An error occurred when trying to contact the mirror '%s' : the connection "
+"was refused."
 msgstr ""
-"Une erreur s'est produite lors de la tentative de contact du miroir principal "
-"'%s' : la connexion a été refusée"
+"Une erreur s'est produite lors de la tentative de contact du miroir "
+"principal '%s' : la connexion a été refusée"
 
 #: web/modules/msc/includes/command_history.php:411
 #, php-format
@@ -360,8 +360,8 @@ msgid ""
 "An error occurred when trying to contact the mirror '%s' : the mountpoint "
 "doesn't exists."
 msgstr ""
-"Une erreur s'est produite lors de la tentative de contact du miroir principal "
-"'%s' : le point de montage n'existe pas"
+"Une erreur s'est produite lors de la tentative de contact du miroir "
+"principal '%s' : le point de montage n'existe pas"
 
 #: web/modules/msc/includes/command_history.php:499
 #: web/modules/msc/includes/command_history.php:505
@@ -372,34 +372,35 @@ msgstr "Dès que possible"
 msgid "Beginning of validity"
 msgstr "Début de validité"
 
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:104
 #: web/modules/msc/includes/command_history.php:91
 msgid "Bundle"
 msgstr "Ensemble d'applications"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:122
+#: web/modules/msc/msc/ajaxLogsFilter.php:116
 #, php-format
 msgid "Bundle #%s"
 msgstr "Ensemble d'applications #%s"
 
-#: web/modules/msc/msc/msctabsstatus.php:49
+#: web/modules/msc/msc/msctabsstatus.php:50
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
 msgstr ""
 "État du bundle '%s' concernant <b>%s</b> commandes sur <b>%s</b> machines"
 
-#: web/modules/msc/msc/msctabsstatus.php:48
+#: web/modules/msc/msc/msctabsstatus.php:49
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
 msgstr ""
 "État du bundle '%s' concernant <b>%s</b> commandes sur <b>une</b> machine"
 
-#: web/modules/msc/msc/msctabsstatus.php:46
+#: web/modules/msc/msc/msctabsstatus.php:47
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
 msgstr ""
 "État du bundle '%s' concernant <b>une</b> commande sur <b>%s</b> machines"
 
-#: web/modules/msc/msc/msctabsstatus.php:45
+#: web/modules/msc/msc/msctabsstatus.php:46
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
 msgstr ""
@@ -413,7 +414,7 @@ msgstr "Nom de l'ensemble d'applications"
 msgid "Bytes"
 msgstr "Octets"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:118
+#: web/modules/msc/msc/ajaxLogsFilter.php:112
 msgid "Can't get bundle for the requested id"
 msgstr "Ne peut accéder au bundle pour l'id demandé"
 
@@ -424,8 +425,8 @@ msgid ""
 "Please check that the package and its files have not been modified since the "
 "planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur "
-"le miroir de secours '%s'.\n"
+"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur le "
+"miroir de secours '%s'.\n"
 "Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés "
 "depuis la planification de la commande."
 
@@ -436,8 +437,8 @@ msgid ""
 "Please check that the package and its files have not been modified since the "
 "planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur "
-"le miroir principal '%s'.\n"
+"Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur le "
+"miroir principal '%s'.\n"
 "Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés "
 "depuis la planification de la commande."
 
@@ -455,7 +456,7 @@ msgstr ""
 "Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier "
 "depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:306
+#: web/modules/msc/msc/ajaxLogsFilter.php:300
 msgid "Client"
 msgstr "Client"
 
@@ -464,19 +465,24 @@ msgid "Close window"
 msgstr "Fermer la fenêtre"
 
 #: web/modules/msc/msc/package_detail.php:36
-#: web/modules/msc/msc/ajaxLogsFilter.php:195
-#: web/modules/msc/msc/ajaxLogsFilter.php:304
+#: web/modules/msc/msc/ajaxLogsFilter.php:189
+#: web/modules/msc/msc/ajaxLogsFilter.php:298
 #: web/modules/msc/logs/ajaxLogsFilter.php:131
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:107
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Command"
 msgstr "Commande"
 
-#: web/modules/msc/msc/msctabsstatus.php:34
+#: web/modules/msc/msc/msctabssinglestatus.php:33
+#, php-format
+msgid "Command '%s' state concerning <b>%s</b>"
+msgstr "État de la commande '%s' sur <b>%s</b>"
+
+#: web/modules/msc/msc/msctabsstatus.php:35
 #, php-format
 msgid "Command '%s' state concerning <b>%s</b> computers"
 msgstr "État de la commande '%s' sur <b>%s</b> machines"
 
-#: web/modules/msc/msc/msctabsstatus.php:32
+#: web/modules/msc/msc/msctabsstatus.php:33
 #, php-format
 msgid "Command '%s' state concerning <b>one</b> computer"
 msgstr "État de la commande '%s' sur <b>une</b> machines"
@@ -503,7 +509,7 @@ msgstr "Paramètres du script"
 msgid "Command start date"
 msgstr "Date de démarrage de la commande"
 
-#: web/modules/msc/infoPackage.inc.php:156
+#: web/modules/msc/infoPackage.inc.php:161
 msgid "Command status"
 msgstr "Statut de la commande"
 
@@ -550,21 +556,22 @@ msgstr "Mode de transfert"
 msgid "Creation"
 msgstr "Création"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:109
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:151
 #: web/modules/msc/includes/command_history.php:92
 #: web/modules/msc/includes/command_history.php:111
 msgid "Creation date"
 msgstr "Date de création"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:108
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:150
 msgid "Creator"
 msgstr "Créateur"
 
-#: web/modules/msc/infoPackage.inc.php:219
+#: web/modules/msc/infoPackage.inc.php:224
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:309
+#: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/msc/ajaxLogsFilter.php:303
 #: web/modules/msc/includes/command_history.php:37
 msgid "Current State"
 msgstr "État actuel"
@@ -642,13 +649,13 @@ msgstr "Déploiement par proxy local"
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:123
-#: web/modules/msc/msc/history.php:51 web/modules/msc/msc/history.php:86
-#: web/modules/msc/msc/history.php:92 web/modules/msc/msc/history.php:110
-#: web/modules/msc/msc/logs.php:51 web/modules/msc/msc/logs.php:63
-#: web/modules/msc/msc/logs.php:100 web/modules/msc/msc/logs.php:106
-#: web/modules/msc/msc/logs.php:124 web/modules/msc/msc/ajaxLogsFilter.php:88
-#: web/modules/msc/msc/ajaxLogsFilter.php:90
+#: web/modules/msc/msc/ajaxPackageFilter.php:116
+#: web/modules/msc/msc/history.php:58 web/modules/msc/msc/history.php:107
+#: web/modules/msc/msc/history.php:113 web/modules/msc/msc/history.php:131
+#: web/modules/msc/msc/logs.php:58 web/modules/msc/msc/logs.php:70
+#: web/modules/msc/msc/logs.php:119 web/modules/msc/msc/logs.php:125
+#: web/modules/msc/msc/logs.php:143 web/modules/msc/msc/ajaxLogsFilter.php:82
+#: web/modules/msc/msc/ajaxLogsFilter.php:84
 #: web/modules/msc/msc/packages.php:44
 #: web/modules/msc/logs/ajaxLogsFilter.php:68
 #: web/modules/msc/logs/ajaxLogsFilter.php:69
@@ -672,12 +679,12 @@ msgstr "Terminé"
 msgid "Download file"
 msgstr "Télécharger le fichier"
 
-#: web/modules/msc/infoPackage.inc.php:113
+#: web/modules/msc/infoPackage.inc.php:118
 msgid "Download file from a computer"
 msgstr "Téléchargement de fichier depuis un ordinateur"
 
 #: web/modules/msc/msc/download_file.php:33
-#: web/modules/msc/infoPackage.inc.php:214
+#: web/modules/msc/infoPackage.inc.php:219
 msgid "Download file page"
 msgstr "Téléchargement de fichiers"
 
@@ -685,7 +692,7 @@ msgstr "Téléchargement de fichiers"
 msgid "Downloading"
 msgstr "Téléchargement en cours"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:297
+#: web/modules/msc/msc/ajaxLogsFilter.php:291
 #: web/modules/msc/logs/ajaxLogsFilter.php:126
 msgid "End date"
 msgstr "Date de fin"
@@ -768,9 +775,14 @@ msgstr "Première opération"
 msgid "From computer"
 msgstr "De l'ordinateur"
 
-#: web/modules/msc/infoPackage.inc.php:125
+#: web/modules/msc/infoPackage.inc.php:130
 msgid "Get a downloaded file"
 msgstr "Récupérer un fichier téléchargé"
+
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:114
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:124
+msgid "Group"
+msgstr ""
 
 #: web/modules/msc/msc/launch.php:253
 #, php-format
@@ -798,7 +810,7 @@ msgstr "Arrêt échoué"
 msgid "Halt in progress"
 msgstr "Arrêt en cours"
 
-#: web/modules/msc/msc/tabs.php:49 web/modules/msc/msc/tabs.php:65
+#: web/modules/msc/msc/tabs.php:49 web/modules/msc/msc/tabs.php:67
 msgid "History"
 msgstr "Historique"
 
@@ -806,7 +818,7 @@ msgstr "Historique"
 msgid "Host"
 msgstr "Ordinateur"
 
-#: web/modules/msc/infoPackage.inc.php:209
+#: web/modules/msc/infoPackage.inc.php:214
 msgid "IP Addr."
 msgstr "Adresse IP"
 
@@ -838,25 +850,25 @@ msgstr "Dernière tentative de WOL"
 msgid "Last operation at"
 msgstr "Dernière opération"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:122
+#: web/modules/msc/msc/ajaxPackageFilter.php:115
 #: web/modules/msc/msc/packages.php:43
 msgid "Launch"
 msgstr "Démarrer"
 
-#: web/modules/msc/msc/tabs.php:46 web/modules/msc/msc/tabs.php:62
+#: web/modules/msc/msc/tabs.php:46 web/modules/msc/msc/tabs.php:63
 msgid "Launch Actions"
 msgstr "Lancer une action"
 
-#: web/modules/msc/msc/tabs.php:47 web/modules/msc/msc/tabs.php:63
+#: web/modules/msc/msc/tabs.php:47 web/modules/msc/msc/tabs.php:64
 #: web/modules/msc/includes/bundle_widgets.php:217
 msgid "Launch Bundle"
 msgstr "Lancer un bundle"
 
-#: web/modules/msc/infoPackage.inc.php:173
+#: web/modules/msc/infoPackage.inc.php:178
 msgid "Launch a command"
 msgstr "Lancer une action"
 
-#: web/modules/msc/infoPackage.inc.php:179
+#: web/modules/msc/infoPackage.inc.php:184
 msgid "Launch a quick action command"
 msgstr "Lancer une action rapide"
 
@@ -880,42 +892,42 @@ msgstr "Proxys locaux"
 msgid "Local proxies selection"
 msgstr "Sélection des proxys locaux"
 
-#: web/modules/msc/msc/tabs.php:48 web/modules/msc/msc/tabs.php:64
+#: web/modules/msc/msc/tabs.php:48 web/modules/msc/msc/tabs.php:66
 msgid "Logs"
 msgstr "Journaux"
 
-#: web/modules/msc/infoPackage.inc.php:204
+#: web/modules/msc/infoPackage.inc.php:209
 msgid "MAC Addr."
 msgstr "Adresse MAC"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:88
+#: web/modules/msc/msc/ajaxPackageFilter.php:81
 #: web/modules/msc/includes/bundle_widgets.php:169
 #: web/modules/msc/includes/bundle_widgets.php:198
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "La MMC a échoué à contacter le serveur de package %s."
 
-#: web/modules/msc/infoPackage.inc.php:84
+#: web/modules/msc/infoPackage.inc.php:89
 msgid "MSC bundle tab for a group"
 msgstr "Onglet des ensembles d'applications pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:102
+#: web/modules/msc/infoPackage.inc.php:107
 msgid "MSC bundle tab for a machine"
 msgstr "Onglet des ensembles d'applications pour une machine"
 
-#: web/modules/msc/infoPackage.inc.php:90
+#: web/modules/msc/infoPackage.inc.php:95
 msgid "MSC history tab for a group"
 msgstr "Onglet de l'historique pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:108
+#: web/modules/msc/infoPackage.inc.php:113
 msgid "MSC history tab for a machine"
 msgstr "Onglet de l'historique pour une machine"
 
-#: web/modules/msc/infoPackage.inc.php:81
+#: web/modules/msc/infoPackage.inc.php:86
 msgid "MSC launch tab for a group"
 msgstr "Onglet de lancement pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:99
+#: web/modules/msc/infoPackage.inc.php:104
 msgid "MSC launch tab for a machine"
 msgstr "Onglet de lancement pour une machine"
 
@@ -923,13 +935,18 @@ msgstr "Onglet de lancement pour une machine"
 msgid "MSC logs"
 msgstr "MSC"
 
-#: web/modules/msc/infoPackage.inc.php:87
+#: web/modules/msc/infoPackage.inc.php:92
 msgid "MSC logs tab for a group"
 msgstr "Onglet des journaux pour un groupe"
 
-#: web/modules/msc/infoPackage.inc.php:105
+#: web/modules/msc/infoPackage.inc.php:110
 msgid "MSC logs tab for a machine"
 msgstr "Onglet des journaux pour une machine"
+
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:109
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:120
+msgid "Machine"
+msgstr "Ordinateur"
 
 #: web/modules/msc/msc/launch.php:296
 #: web/modules/msc/includes/bundle_widgets.php:362
@@ -945,7 +962,7 @@ msgstr "Nombre de tentatives de connexions"
 msgid "Maximum number of simultaneous connections to a proxy"
 msgstr "Nombre maximal de connexions simultanées sur un proxy"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:302
+#: web/modules/msc/msc/ajaxLogsFilter.php:296
 msgid "Mode"
 msgstr "Mode"
 
@@ -954,17 +971,17 @@ msgstr "Mode"
 msgid "Multiple"
 msgstr "Multiple"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:250
+#: web/modules/msc/msc/ajaxLogsFilter.php:244
 #, php-format
 msgid "Multiple, client mode%s"
 msgstr "Multiple, mode client%s"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:252
+#: web/modules/msc/msc/ajaxLogsFilter.php:246
 msgid "Multiple, server mode"
 msgstr "Multiple, mode serveur"
 
 #: web/modules/msc/includes/widgets.inc.php:264
-#: web/modules/msc/includes/widgets.inc.php:383
+#: web/modules/msc/includes/widgets.inc.php:390
 msgid "My commands"
 msgstr "Mes commandes"
 
@@ -990,7 +1007,7 @@ msgstr "Pas de probe effectué"
 msgid "No proxy"
 msgstr "Pas de proxy"
 
-#: web/modules/msc/msc/msctabsstatus.php:164
+#: web/modules/msc/msc/msctabsstatus.php:174
 #: web/modules/msc/includes/command_history.php:263
 msgid "None"
 msgstr "Aucune"
@@ -999,12 +1016,12 @@ msgstr "Aucune"
 msgid "None (Local Proxy Client)"
 msgstr "Aucun (Client de Proxy Local)"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:247
-#: web/modules/msc/msc/ajaxLogsFilter.php:259
+#: web/modules/msc/msc/ajaxLogsFilter.php:241
+#: web/modules/msc/msc/ajaxLogsFilter.php:253
 msgid "Normal"
 msgstr "Normal"
 
-#: web/modules/msc/msc/tabs.php:72
+#: web/modules/msc/msc/tabs.php:74
 msgid "Not enough informations"
 msgstr "Il manque des informations"
 
@@ -1012,7 +1029,7 @@ msgstr "Il manque des informations"
 msgid "Not reachable"
 msgstr "Non joignable"
 
-#: web/modules/msc/msc/msctabsstatus.php:166
+#: web/modules/msc/msc/msctabsstatus.php:176
 msgid "One"
 msgstr "Une"
 
@@ -1024,8 +1041,9 @@ msgstr "Ou désignez manuellement les proxys ci-dessous : "
 msgid "Other/N.A."
 msgstr "Autres/Non disponibles"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:110
+#: web/modules/msc/msc/ajaxPackageFilter.php:103
 #: web/modules/msc/msc/packages.php:40
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:102
 msgid "Package"
 msgstr "Package"
 
@@ -1043,31 +1061,31 @@ msgstr ""
 msgid "Package '%s' is available on primary mirror %s"
 msgstr "Le package '%s' est accéssible sur le miroir principal %s"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:112
+#: web/modules/msc/msc/ajaxPackageFilter.php:105
 msgid "Package size"
 msgstr "Taille du package"
 
-#: web/modules/msc/msc/packages.php:29 web/modules/msc/infoPackage.inc.php:184
+#: web/modules/msc/msc/packages.php:29 web/modules/msc/infoPackage.inc.php:189
 msgid "Packages"
 msgstr "Packages"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:83
+#: web/modules/msc/msc/ajaxLogsFilter.php:77
 #: web/modules/msc/logs/ajaxLogsFilter.php:66
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:55
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:49
 msgid "Pause"
 msgstr "Mettre en pause"
 
-#: web/modules/msc/msc/msctabspause.php:113
+#: web/modules/msc/msc/msctabspause.php:118
 #, php-format
 msgid "Pause %s %s on host %s"
 msgstr "Mise en pause %s %s sur %s"
 
-#: web/modules/msc/msc/msctabspause.php:111
+#: web/modules/msc/msc/msctabspause.php:116
 #, php-format
 msgid "Pause %s %s on this group"
 msgstr "Mettre en pause %s %s sur ce groupe"
 
-#: web/modules/msc/infoPackage.inc.php:144
+#: web/modules/msc/infoPackage.inc.php:149
 msgid "Pause a command"
 msgstr "Mettre une commande en pause"
 
@@ -1075,11 +1093,11 @@ msgstr "Mettre une commande en pause"
 msgid "Paused"
 msgstr "Mis en pause"
 
-#: web/modules/msc/infoPackage.inc.php:194
+#: web/modules/msc/infoPackage.inc.php:199
 msgid "Ping"
 msgstr "Ping"
 
-#: web/modules/msc/infoPackage.inc.php:189
+#: web/modules/msc/infoPackage.inc.php:194
 msgid "Ping and probe"
 msgstr "Ping et Probe"
 
@@ -1096,11 +1114,11 @@ msgstr "Réussite du ping"
 msgid "Ping succeeded, SSH connection failed"
 msgstr "Réussite du ping, échec de la connexion SSH"
 
-#: web/modules/msc/infoPackage.inc.php:199
+#: web/modules/msc/infoPackage.inc.php:204
 msgid "Platform"
 msgstr "Système d'exploitation"
 
-#: web/modules/msc/infoPackage.inc.php:138
+#: web/modules/msc/infoPackage.inc.php:143
 msgid "Play a command"
 msgstr "Jouer une commande"
 
@@ -1116,7 +1134,7 @@ msgstr "Veuillez confirmer la suppression du fichier"
 msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:107
+#: web/modules/msc/msc/ajaxPackageFilter.php:100
 #: web/modules/msc/includes/bundle_widgets.php:149
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
@@ -1126,7 +1144,7 @@ msgstr "Veuillez contacter votre administrateur."
 msgid "Possible actions"
 msgstr "Actions possibles"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:310
+#: web/modules/msc/msc/ajaxLogsFilter.php:304
 msgid "Progression"
 msgstr "Progression"
 
@@ -1188,7 +1206,7 @@ msgstr "Nombre de tentatives restantes"
 msgid "Remote control of :"
 msgstr "Contrôle à distance de : "
 
-#: web/modules/msc/infoPackage.inc.php:119
+#: web/modules/msc/infoPackage.inc.php:124
 msgid "Remove a downloaded file"
 msgstr "Supprimer un fichier téléchargé"
 
@@ -1224,11 +1242,11 @@ msgstr "Paramètres du script"
 msgid "Secure Control"
 msgstr "Contrôle sécurisé"
 
-#: web/modules/msc/infoPackage.inc.php:77
+#: web/modules/msc/infoPackage.inc.php:82
 msgid "Secure control on a group of computers"
 msgstr "Contrôle sécurisé du groupe de machines"
 
-#: web/modules/msc/infoPackage.inc.php:95
+#: web/modules/msc/infoPackage.inc.php:100
 msgid "Secure control on computer"
 msgstr "Contrôle sécurisé de l'ordinateur"
 
@@ -1261,7 +1279,7 @@ msgid "Show all task logs"
 msgstr "Montrer toutes les actions"
 
 #: web/modules/msc/logs/localSidebar.php:32
-#: web/modules/msc/infoPackage.inc.php:54
+#: web/modules/msc/infoPackage.inc.php:53
 msgid "Show custom state task's logs"
 msgstr "Montrer les actions par état"
 
@@ -1273,7 +1291,7 @@ msgstr "Montrer les actions par état"
 msgid "Show finished task's logs"
 msgstr "Montrer les actions finies"
 
-#: web/modules/msc/infoPackage.inc.php:167
+#: web/modules/msc/infoPackage.inc.php:172
 msgid "Show package's details"
 msgstr "Montrer les détails pour ce package"
 
@@ -1290,7 +1308,7 @@ msgstr "Montrer les actions en cours"
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
-#: web/modules/msc/infoPackage.inc.php:162
+#: web/modules/msc/infoPackage.inc.php:167
 msgid "Single command status"
 msgstr "Statut de la commande"
 
@@ -1299,12 +1317,12 @@ msgstr "Statut de la commande"
 msgid "Single with fallback"
 msgstr "Simple avec redondance"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:255
+#: web/modules/msc/msc/ajaxLogsFilter.php:249
 #, php-format
 msgid "Single, client mode%s"
 msgstr "Simple, mode client%s"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:257
+#: web/modules/msc/msc/ajaxLogsFilter.php:251
 msgid "Single, server mode"
 msgstr "Simple, mode serveur"
 
@@ -1314,9 +1332,9 @@ msgstr ""
 "Il s'est passé quelque chose d'inattendu lors de la vérification de "
 "l'identité du poste client."
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:82
+#: web/modules/msc/msc/ajaxLogsFilter.php:76
 #: web/modules/msc/logs/ajaxLogsFilter.php:65
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:54
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:48
 msgid "Start"
 msgstr "Démarrer"
 
@@ -1326,16 +1344,16 @@ msgstr "Démarrer"
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
-#: web/modules/msc/msc/msctabsplay.php:106
+#: web/modules/msc/msc/msctabsplay.php:108
 #, php-format
 msgid "Start action on host %s"
 msgstr "Démarrer l'action sur l'ordinateur %s"
 
-#: web/modules/msc/msc/msctabsplay.php:108
+#: web/modules/msc/msc/msctabsplay.php:110
 msgid "Start action on this group"
 msgstr "Démarrer l'action sur ce groupe"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:299
+#: web/modules/msc/msc/ajaxLogsFilter.php:293
 #: web/modules/msc/logs/ajaxLogsFilter.php:128
 msgid "Start date"
 msgstr "Date de démarrage"
@@ -1370,29 +1388,29 @@ msgid "State"
 msgstr "État"
 
 #: web/modules/msc/msc/ajaxDownloadFile.php:90
-#: web/modules/msc/msc/ajaxLogsFilter.php:85
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:57
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:58
+#: web/modules/msc/msc/ajaxLogsFilter.php:79
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:51
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:52
 msgid "Status"
 msgstr "Statut"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:84
+#: web/modules/msc/msc/ajaxLogsFilter.php:78
 #: web/modules/msc/logs/ajaxLogsFilter.php:67
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:56
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:50
 msgid "Stop"
 msgstr "Arrêter"
 
-#: web/modules/msc/msc/msctabsstop.php:117
+#: web/modules/msc/msc/msctabsstop.php:120
 #, php-format
 msgid "Stop %s %s on host %s"
 msgstr "Arrêt%s %s sur %s"
 
-#: web/modules/msc/msc/msctabsstop.php:115
+#: web/modules/msc/msc/msctabsstop.php:118
 #, php-format
 msgid "Stop %s %s on this group"
 msgstr "Arrêt%s %s sur ce groupe"
 
-#: web/modules/msc/infoPackage.inc.php:150
+#: web/modules/msc/infoPackage.inc.php:155
 msgid "Stop a command"
 msgstr "Stopper une commande"
 
@@ -1401,7 +1419,7 @@ msgstr "Stopper une commande"
 msgid "Stopped"
 msgstr "Arrêté"
 
-#: web/modules/msc/infoPackage.inc.php:131
+#: web/modules/msc/infoPackage.inc.php:136
 msgid "Take control of a computer"
 msgstr "Prendre le contrôle d'un ordinateur"
 
@@ -1409,7 +1427,7 @@ msgstr "Prendre le contrôle d'un ordinateur"
 msgid "Take control of this computer"
 msgstr "Prendre le contrôle de cet ordinateur"
 
-#: web/modules/msc/logs/ajaxConsultLogsFilter.php:110
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:152
 msgid "Target"
 msgstr "Cible"
 
@@ -1463,9 +1481,9 @@ msgstr "Le téléchargement est en cours."
 msgid "The file has been deleted."
 msgstr "Le fichier a été supprimé."
 
-#: web/modules/msc/msc/history.php:89 web/modules/msc/msc/history.php:114
-#: web/modules/msc/msc/logs.php:66 web/modules/msc/msc/logs.php:103
-#: web/modules/msc/msc/logs.php:128
+#: web/modules/msc/msc/history.php:110 web/modules/msc/msc/history.php:135
+#: web/modules/msc/msc/logs.php:73 web/modules/msc/msc/logs.php:122
+#: web/modules/msc/msc/logs.php:147
 msgid "The group you are working on is empty."
 msgstr "Le groupe sur lequel vous travaillez est vide."
 
@@ -1482,12 +1500,12 @@ msgstr "Le script a été annulé par Pulse 2 (durée trop longue ?)."
 msgid "The script was terminated by Pulse 2."
 msgstr "Le script a été terminé par Pulse 2."
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:51
+#: web/modules/msc/msc/ajaxPackageFilter.php:44
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:53
+#: web/modules/msc/msc/ajaxPackageFilter.php:46
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
@@ -1503,6 +1521,14 @@ msgstr "Horodatage"
 #: web/modules/msc/includes/functions.php:55
 msgid "To do"
 msgstr "À faire"
+
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:107
+msgid "Unavailable computer"
+msgstr ""
+
+#: web/modules/msc/logs/ajaxConsultLogsFilter.php:112
+msgid "Unavailable group"
+msgstr ""
 
 #: web/modules/msc/includes/functions.php:27
 msgid "Upload done"
@@ -1530,7 +1556,7 @@ msgstr "Période de validité"
 msgid "Value"
 msgstr "Valeur"
 
-#: web/modules/msc/msc/ajaxPackageFilter.php:111
+#: web/modules/msc/msc/ajaxPackageFilter.php:104
 #: web/modules/msc/msc/package_detail.php:36
 #: web/modules/msc/msc/packages.php:41
 msgid "Version"
@@ -1566,13 +1592,13 @@ msgstr ""
 "Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier."
 "<br/>"
 
-#: web/modules/msc/msc/msctabspause.php:106
-#: web/modules/msc/msc/msctabsstop.php:110
+#: web/modules/msc/msc/msctabspause.php:111
+#: web/modules/msc/msc/msctabsstop.php:113
 msgid "action"
 msgstr "de l'action"
 
-#: web/modules/msc/msc/msctabsstatus.php:116
-#: web/modules/msc/msc/msctabsstatus.php:118
+#: web/modules/msc/msc/msctabsstatus.php:117
+#: web/modules/msc/msc/msctabsstatus.php:119
 msgid "are"
 msgstr "sont"
 
@@ -1589,40 +1615,49 @@ msgstr "réveillé"
 msgid "bit/s"
 msgstr "bit/s"
 
-#: web/modules/msc/msc/msctabspause.php:108
-#: web/modules/msc/msc/msctabsstop.php:112
+#: web/modules/msc/msc/msctabspause.php:113
+#: web/modules/msc/msc/msctabsstop.php:115
 msgid "bundle"
 msgstr "du bundle"
 
-#: web/modules/msc/msc/statuscsv.php:68
+#: web/modules/msc/msc/statuscsv.php:119
 msgid "computers failed to deploy"
 msgstr "machines ont échoué lors du déploiement"
 
-#: web/modules/msc/msc/statuscsv.php:57
+#: web/modules/msc/msc/statuscsv.php:108
 msgid "computers out of the valid period"
 msgstr "ordinateurs hors délai"
 
-#: web/modules/msc/msc/statuscsv.php:56
+#: web/modules/msc/msc/statuscsv.php:107
 msgid "computers paused"
 msgstr "machines en pause"
 
-#: web/modules/msc/msc/statuscsv.php:58
+#: web/modules/msc/msc/statuscsv.php:109
 msgid "computers running a deploiement"
 msgstr "machines sont en cours de déploiement"
 
-#: web/modules/msc/msc/statuscsv.php:55
+#: web/modules/msc/msc/statuscsv.php:106
 msgid "computers stopped"
 msgstr "machines sont stoppées"
 
-#: web/modules/msc/msc/statuscsv.php:54
+#: web/modules/msc/msc/statuscsv.php:105
 msgid "computers successfully deployed"
 msgstr "machines ont réussi leur déploiement"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:199
+#: web/modules/msc/infoPackage.inc.php:59
+msgid "consolidated logs list"
+msgstr "Vue consolidée des diffusions"
+
+#: web/modules/msc/msc/statuscsv.php:93
+msgid "current state"
+msgstr "État actuel"
+
+#: web/modules/msc/msc/ajaxLogsFilter.php:193
 msgid "current_state"
 msgstr "état"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:202
+#: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/msc/ajaxLogsFilter.php:196
 #: web/modules/msc/logs/ajaxLogsFilter.php:135
 #: web/modules/msc/includes/command_history.php:41
 msgid "deleted"
@@ -1642,25 +1677,30 @@ msgstr "Terminé"
 msgid "enable"
 msgstr "activé"
 
-#: web/modules/msc/msc/msctabssinglestatus.php:41
+#: web/modules/msc/msc/statuscsv.php:95
+msgid "end date"
+msgstr "Date de fin"
+
+#: web/modules/msc/msc/msctabssinglestatus.php:47
 msgid "error : cmd_id must be given"
 msgstr "erreur: cmd_id doit être renseigné"
 
-#: web/modules/msc/msc/msctabsstatus.php:53
+#: web/modules/msc/msc/msctabsstatus.php:54
 msgid "error : cmd_id or bundle_id must be given"
 msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 
-#: web/modules/msc/msc/msctabsstatus.php:40
+#: web/modules/msc/msc/msctabsstatus.php:41
 msgid "error : the bundle_id given does not exists in the database."
 msgstr "erreur: l'id de bundle donné n'existe pas dans la base de donnée. "
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:201
+#: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/msc/ajaxLogsFilter.php:195
 #: web/modules/msc/logs/ajaxLogsFilter.php:134
 #: web/modules/msc/includes/command_history.php:40
 msgid "executed"
 msgstr "exécution"
 
-#: web/modules/msc/msc/msctabsstatus.php:128
+#: web/modules/msc/msc/msctabsstatus.php:129
 msgid "executing"
 msgstr "en cours d'exécution"
 
@@ -1668,18 +1708,18 @@ msgstr "en cours d'exécution"
 msgid "failed"
 msgstr "échec"
 
-#: web/modules/msc/msc/statuscsv.php:71
-#: web/modules/msc/msc/msctabsstatus.php:134
+#: web/modules/msc/msc/statuscsv.php:122
+#: web/modules/msc/msc/msctabsstatus.php:135
 msgid "failed during execution"
 msgstr "échoué durant l'exécution"
 
-#: web/modules/msc/msc/statuscsv.php:73
-#: web/modules/msc/msc/msctabsstatus.php:135
+#: web/modules/msc/msc/statuscsv.php:124
+#: web/modules/msc/msc/msctabsstatus.php:136
 msgid "failed during suppression"
 msgstr "échoué durant la suppression"
 
-#: web/modules/msc/msc/statuscsv.php:69
-#: web/modules/msc/msc/msctabsstatus.php:133
+#: web/modules/msc/msc/statuscsv.php:120
+#: web/modules/msc/msc/msctabsstatus.php:134
 msgid "failed during upload"
 msgstr "échoué durant le téléchargement"
 
@@ -1696,13 +1736,17 @@ msgstr ""
 msgid "halted"
 msgstr "arrêté"
 
-#: web/modules/msc/msc/msctabsstatus.php:117
+#: web/modules/msc/msc/msctabsstatus.php:118
 msgid "has"
 msgstr "a"
 
-#: web/modules/msc/msc/msctabsstatus.php:117
+#: web/modules/msc/msc/msctabsstatus.php:118
 msgid "have"
 msgstr "ont"
+
+#: web/modules/msc/msc/statuscsv.php:92
+msgid "host"
+msgstr "Ordinateur"
 
 #: web/modules/msc/msc/start_command.php:163
 #: web/modules/msc/includes/bundle_widgets.php:307
@@ -1713,10 +1757,16 @@ msgstr "invent."
 msgid "inventoried"
 msgstr "inventorié"
 
-#: web/modules/msc/msc/msctabsstatus.php:116
-#: web/modules/msc/msc/msctabsstatus.php:118
+#: web/modules/msc/msc/msctabsstatus.php:117
+#: web/modules/msc/msc/msctabsstatus.php:119
 msgid "is"
 msgstr "est"
+
+#: web/modules/msc/infoPackage.inc.php:56
+#: web/modules/msc/infoPackage.inc.php:229
+#: web/modules/msc/infoPackage.inc.php:234
+msgid "logs list"
+msgstr "liste des logs"
 
 #: web/modules/msc/msc/launch.php:82 web/modules/msc/msc/launch.php:149
 msgid "never"
@@ -1734,7 +1784,7 @@ msgstr "non"
 msgid "now"
 msgstr "maintenant"
 
-#: web/modules/msc/msc/msctabsstatus.php:136
+#: web/modules/msc/msc/msctabsstatus.php:137
 msgid "out of the valid period of execution"
 msgstr "en dehors de la période valide d'exécution"
 
@@ -1760,84 +1810,93 @@ msgstr "push / pull"
 msgid "rebooted"
 msgstr "redémarré"
 
-#: web/modules/msc/msc/statuscsv.php:64
+#: web/modules/msc/msc/statuscsv.php:115
 msgid "running execution"
 msgstr "en cours d'exécution"
 
-#: web/modules/msc/msc/statuscsv.php:67
+#: web/modules/msc/msc/statuscsv.php:118
 msgid "running suppression"
 msgstr "en cours de suppression"
 
-#: web/modules/msc/msc/statuscsv.php:61
+#: web/modules/msc/msc/statuscsv.php:112
 msgid "running upload"
 msgstr "en cours de téléchargement"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:197
+#: web/modules/msc/msc/statuscsv.php:94
+msgid "start date"
+msgstr "Date de démarrage"
+
+#: web/modules/msc/msc/ajaxLogsFilter.php:191
 msgid "start_date"
 msgstr "Date de démarrage"
 
-#: web/modules/msc/msc/msctabsstatus.php:130
+#: web/modules/msc/msc/msctabsstatus.php:131
 msgid "suppressing"
 msgstr "en cours de suppression"
 
-#: web/modules/msc/infoPackage.inc.php:57
+#: web/modules/msc/infoPackage.inc.php:62
 msgid "the state list"
 msgstr "la liste des états"
 
-#: web/modules/msc/msc/statuscsv.php:52
+#: web/modules/msc/msc/statuscsv.php:103
 msgid "title"
 msgstr "titre"
 
-#: web/modules/msc/msc/statuscsv.php:53
+#: web/modules/msc/msc/statuscsv.php:104
 msgid "total"
 msgstr "total"
 
-#: web/modules/msc/msc/statuscsv.php:74
+#: web/modules/msc/msc/statuscsv.php:125
 msgid "unreachable during suppression"
 msgstr "échoué durant la suppression"
 
-#: web/modules/msc/msc/statuscsv.php:70
+#: web/modules/msc/msc/statuscsv.php:121
 msgid "unreachable during upload"
 msgstr "échoué durant le téléchargement"
 
-#: web/modules/msc/msc/statuscsv.php:72
-msgid "unrecheble during execution"
-msgstr "échoué durant l'exécution"
+#: web/modules/msc/msc/statuscsv.php:123
+msgid "unrechable during execution"
+msgstr "non accéssible durant l'exécution"
 
-#: web/modules/msc/msc/ajaxLogsFilter.php:200
+#: web/modules/msc/msc/msctabssinglestatus.php:38
+#: web/modules/msc/msc/ajaxLogsFilter.php:194
 #: web/modules/msc/logs/ajaxLogsFilter.php:133
 #: web/modules/msc/includes/command_history.php:39
 msgid "uploaded"
 msgstr "envoi"
 
-#: web/modules/msc/msc/msctabsstatus.php:126
+#: web/modules/msc/msc/msctabsstatus.php:127
 msgid "uploading"
 msgstr "en cours de téléchargement"
 
-#: web/modules/msc/msc/statuscsv.php:62
-#: web/modules/msc/msc/msctabsstatus.php:127
+#: web/modules/msc/msc/statuscsv.php:91
+msgid "uuid"
+msgstr ""
+
+#: web/modules/msc/msc/statuscsv.php:113
+#: web/modules/msc/msc/msctabsstatus.php:128
 msgid "waiting to execute"
 msgstr "en attente d'exécution"
 
-#: web/modules/msc/msc/statuscsv.php:63
+#: web/modules/msc/msc/statuscsv.php:114
 msgid "waiting to execute and already try"
 msgstr "en attente d'exécution pour la seconde fois"
 
-#: web/modules/msc/msc/statuscsv.php:65
-#: web/modules/msc/msc/msctabsstatus.php:129
+#: web/modules/msc/msc/statuscsv.php:116
+#: web/modules/msc/msc/msctabsstatus.php:130
 msgid "waiting to suppress"
 msgstr "en attente de suppression"
 
-#: web/modules/msc/msc/statuscsv.php:66
+#: web/modules/msc/msc/statuscsv.php:117
 msgid "waiting to suppress and already try"
 msgstr "en attente de suppression pour la seconde fois"
 
-#: web/modules/msc/msc/statuscsv.php:59
-#: web/modules/msc/msc/msctabsstatus.php:125
+#: web/modules/msc/msc/statuscsv.php:110
+#: web/modules/msc/msc/msctabsstatus.php:126
 msgid "waiting to upload"
 msgstr "en attente de téléchargement"
 
-#: web/modules/msc/msc/statuscsv.php:60
+#: web/modules/msc/msc/statuscsv.php:111
 msgid "waiting to upload and already try"
 msgstr "en attente de téléchargement pour la seconde fois"
 

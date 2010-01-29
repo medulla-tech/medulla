@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dyngroup\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-05 07:42+0200\n"
+"POT-Creation-Date: 2009-10-20 09:31+0200\n"
 "PO-Revision-Date: 2009-05-04 10:36-0300\n"
 "Last-Translator: Andre Paulo Machado <andre.panm@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@mail.kde.org>\n"
@@ -48,12 +48,12 @@ msgstr "->"
 
 #: web/modules/dyngroup/dyngroup/save.php:92
 #: web/modules/dyngroup/dyngroup/import_from_file.php:43
-#: web/modules/dyngroup/dyngroup/add_groups.php:146
+#: web/modules/dyngroup/dyngroup/add_groups.php:147
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Já existe um grupo com o nome '%s'"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:148
+#: web/modules/dyngroup/dyngroup/add_groups.php:149
 #, fuzzy, php-format
 msgid "A profile already exists with name '%s'"
 msgstr "Já existe um grupo com o nome '%s'"
@@ -191,8 +191,8 @@ msgstr "Removedor de Subconsulta de Grupo de Computadores"
 msgid "Computers Profile Sub Request Editor"
 msgstr "Edição Subconsulta de Grupo de Computadores"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:62
-#: web/modules/dyngroup/dyngroup/add_groups.php:165
+#: web/modules/dyngroup/dyngroup/add_groups.php:63
+#: web/modules/dyngroup/dyngroup/add_groups.php:166
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "A lista de computadores foi reduzida em %d computadores"
@@ -202,11 +202,11 @@ msgstr "A lista de computadores foi reduzida em %d computadores"
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:103
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:137
 msgid "Csv export"
 msgstr "Exportar CSV"
 
-#: web/modules/dyngroup/infoPackage.inc.php:243
+#: web/modules/dyngroup/infoPackage.inc.php:248
 msgid "Csv's export"
 msgstr "Exportar CSV"
 
@@ -214,7 +214,7 @@ msgstr "Exportar CSV"
 msgid "Delete"
 msgstr "Excluir"
 
-#: web/modules/dyngroup/infoPackage.inc.php:218
+#: web/modules/dyngroup/infoPackage.inc.php:223
 msgid "Delete a group of computers"
 msgstr "Excluir um grupo de computadores"
 
@@ -223,15 +223,20 @@ msgstr "Excluir um grupo de computadores"
 msgid "Delete group"
 msgstr "Excluir grupo"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:58
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:64
 msgid "Delete this group"
+msgstr "Excluir este grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:66
+#, fuzzy
+msgid "Delete this profile"
 msgstr "Excluir este grupo"
 
 #: web/modules/dyngroup/infoPackage.inc.php:205
 msgid "Detailed page of save a group of computers"
 msgstr "Página detalhada de um grupo de computadores salvo"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:86
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:101
 msgid "Display"
 msgstr "Exibir"
 
@@ -253,8 +258,13 @@ msgstr "Exibir o conteúdo do grupo '%s'"
 msgid "Display profile '%s' content"
 msgstr "Exibir o conteúdo do grupo '%s'"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:89
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:105
 msgid "Display this group's content"
+msgstr "Exibir este conteúdo de grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:119
+#, fuzzy
+msgid "Display this profile's content"
 msgstr "Exibir este conteúdo de grupo"
 
 #: web/modules/dyngroup/dyngroup/tab.php:35
@@ -279,24 +289,25 @@ msgstr "Editar"
 msgid "Edit a dynamic group"
 msgstr "Editar um grupo dinâmico"
 
-#: web/modules/dyngroup/dyngroup/edithead.php:36
+#: web/modules/dyngroup/dyngroup/edithead.php:37
+#: web/modules/dyngroup/dyngroup/edithead.php:48
 #, fuzzy
-msgid "Edit a dynamic profile"
-msgstr "Editar um grupo dinâmico"
+msgid "Edit a profile"
+msgstr "Adicionar um valor"
 
 #: web/modules/dyngroup/dyngroup/groupshead.php:31
-#: web/modules/dyngroup/dyngroup/edithead.php:45
+#: web/modules/dyngroup/dyngroup/edithead.php:46
 msgid "Edit a static group"
 msgstr "Editar um grupo estático"
 
-#: web/modules/dyngroup/dyngroup/edithead.php:47
-#, fuzzy
-msgid "Edit a static profile"
-msgstr "Editar um grupo estático"
-
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:96
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:112
 msgid "Edit this group"
 msgstr "Editar este grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:126
+#, fuzzy
+msgid "Edit this profile"
+msgstr "Editar um grupo estático"
 
 #: web/modules/dyngroup/dyngroup/save.php:135
 msgid "Enter boolean operator between groups"
@@ -310,7 +321,7 @@ msgstr "Ir para salvar etapa"
 msgid "Group creation"
 msgstr "Criação de grupo"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:133
+#: web/modules/dyngroup/dyngroup/add_groups.php:134
 msgid "Group failed to modify"
 msgstr "Grupo falhou ao tentar modificar"
 
@@ -328,11 +339,11 @@ msgstr "Membros do grupo"
 
 #: web/modules/dyngroup/includes/groups.inc.php:113
 #: web/modules/dyngroup/dyngroup/import_from_file.php:49
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:77
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:87
 msgid "Group name"
 msgstr "Nome do grupo"
 
-#: web/modules/dyngroup/infoPackage.inc.php:223
+#: web/modules/dyngroup/infoPackage.inc.php:228
 msgid "Group of computers details"
 msgstr "Detalhes do grupo de computadores"
 
@@ -340,12 +351,12 @@ msgstr "Detalhes do grupo de computadores"
 msgid "Group share"
 msgstr "Compartilhamento de grupo"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:113
+#: web/modules/dyngroup/dyngroup/add_groups.php:114
 msgid "Group successfully created"
 msgstr "Grupo criado com sucesso"
 
 #: web/modules/dyngroup/dyngroup/import_from_file.php:40
-#: web/modules/dyngroup/dyngroup/add_groups.php:107
+#: web/modules/dyngroup/dyngroup/add_groups.php:108
 msgid "Group successfully modified"
 msgstr "Grupo modificado com sucesso"
 
@@ -353,7 +364,7 @@ msgstr "Grupo modificado com sucesso"
 msgid "Group successfully shared"
 msgstr "Grupo compartilhado com sucesso"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:69
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:78
 msgid "Hidden"
 msgstr "Oculto"
 
@@ -361,8 +372,17 @@ msgstr "Oculto"
 msgid "Hide"
 msgstr "Ocultar"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:91
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:133
+msgid "Imaging management"
+msgstr ""
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:107
 msgid "Inventory on this group"
+msgstr "Mostrar o inventário deste grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:121
+#, fuzzy
+msgid "Inventory on this profile"
 msgstr "Mostrar o inventário deste grupo"
 
 #: web/modules/dyngroup/includes/groups.inc.php:114
@@ -376,10 +396,11 @@ msgid "Is the profile visible"
 msgstr "O grupo é visível ?"
 
 #: web/modules/dyngroup/infoPackage.inc.php:210
+#: web/modules/dyngroup/infoPackage.inc.php:214
 msgid "List all groups of computers"
 msgstr "Listar todos os grupos de computadores"
 
-#: web/modules/dyngroup/infoPackage.inc.php:214
+#: web/modules/dyngroup/infoPackage.inc.php:219
 #, fuzzy
 msgid "List all profiles of computers"
 msgstr "Listar todos os grupos de computadores"
@@ -435,7 +456,7 @@ msgstr "Criação de grupo estático a partir de"
 msgid "Profile creation's tab from machine list"
 msgstr "Criação de grupo estático a partir de"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:135
+#: web/modules/dyngroup/dyngroup/add_groups.php:136
 #, fuzzy
 msgid "Profile failed to modify"
 msgstr "Grupo falhou ao tentar modificar"
@@ -446,16 +467,17 @@ msgid "Profile members"
 msgstr "Membros do grupo"
 
 #: web/modules/dyngroup/includes/groups.inc.php:117
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:89
 #, fuzzy
 msgid "Profile name"
 msgstr "Nome do grupo"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:115
+#: web/modules/dyngroup/dyngroup/add_groups.php:116
 #, fuzzy
 msgid "Profile successfully created"
 msgstr "Grupo criado com sucesso"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:109
+#: web/modules/dyngroup/dyngroup/add_groups.php:110
 #, fuzzy
 msgid "Profile successfully modified"
 msgstr "Grupo modificado com sucesso"
@@ -465,7 +487,8 @@ msgstr "Grupo modificado com sucesso"
 msgid "Profiles list"
 msgstr "Lista de grupos"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:99
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:115
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:129
 msgid "Read log"
 msgstr "Ver o log"
 
@@ -481,7 +504,7 @@ msgstr "Remover Computador"
 msgid "Remove a computer"
 msgstr "Remover um computador"
 
-#: web/modules/dyngroup/infoPackage.inc.php:228
+#: web/modules/dyngroup/infoPackage.inc.php:233
 msgid "Remove a computer from a computers group"
 msgstr "Remover um computador de um grupo"
 
@@ -531,16 +554,26 @@ msgstr "Compartilhar um grupo de computadores"
 msgid "Share groupe '%s' with"
 msgstr "Compartilhar o grupo '%s' com"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:97
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Share this group"
+msgstr "Compartilhar este grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:127
+#, fuzzy
+msgid "Share this profile"
 msgstr "Compartilhar este grupo"
 
 #: web/modules/dyngroup/dyngroup/details.php:58
 msgid "Show"
 msgstr "Mostrar"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:100
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:116
 msgid "Software deployment on this group"
+msgstr "Instalação de software neste grupo"
+
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:130
+#, fuzzy
+msgid "Software deployment on this profile"
 msgstr "Instalação de software neste grupo"
 
 #: web/modules/dyngroup/dyngroup/tab.php:36
@@ -614,11 +647,11 @@ msgstr "Esta consulta foi salva como %s (id=%s)"
 msgid "This result has been saved as %s (id=%s)"
 msgstr "Este resultado foi salvo como %s (id=%s)"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:85
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:99
 msgid "Type"
 msgstr "Tipo"
 
-#: web/modules/dyngroup/infoPackage.inc.php:248
+#: web/modules/dyngroup/infoPackage.inc.php:253
 msgid "Update machine cache"
 msgstr "Atualizar cache do computador"
 
@@ -626,7 +659,7 @@ msgstr "Atualizar cache do computador"
 msgid "Update machines name cache in dyngroup"
 msgstr "Atualizar cache de nome de computadores no grupo dinâmico"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:69
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:78
 msgid "Visible"
 msgstr "Visível"
 
@@ -639,11 +672,11 @@ msgstr "Sim"
 
 #: web/modules/dyngroup/dyngroup/save.php:94
 #: web/modules/dyngroup/dyngroup/save.php:96
-#: web/modules/dyngroup/dyngroup/add_groups.php:140
+#: web/modules/dyngroup/dyngroup/add_groups.php:141
 msgid "You must specify a group name"
 msgstr "Você precisa especificar um nome de grupo"
 
-#: web/modules/dyngroup/dyngroup/add_groups.php:142
+#: web/modules/dyngroup/dyngroup/add_groups.php:143
 #, fuzzy
 msgid "You must specify a profile name"
 msgstr "Você precisa especificar um nome de grupo"
@@ -653,7 +686,7 @@ msgstr "Você precisa especificar um nome de grupo"
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Você vai remover o computador <b>%s</b> do grupo <b>%s</b>."
 
-#: web/modules/dyngroup/dyngroup/tmpdisplay.php:54
+#: web/modules/dyngroup/dyngroup/tmpdisplay.php:55
 msgid "back"
 msgstr "voltar"
 
@@ -675,7 +708,7 @@ msgid "profile"
 msgstr ""
 
 #: web/modules/dyngroup/dyngroup/save.php:74
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "query"
 msgstr "consulta"
 
@@ -683,7 +716,7 @@ msgstr "consulta"
 msgid "result"
 msgstr "resultado"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:65
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:74
 #, php-format
 msgid "result (%s)"
 msgstr "resultado (%s)"
@@ -692,7 +725,7 @@ msgstr "resultado (%s)"
 msgid "save as"
 msgstr "salvar como"
 
-#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:67
+#: web/modules/dyngroup/dyngroup/ajaxListGroups.php:76
 msgid "static group"
 msgstr "grupo estático"
 
@@ -727,6 +760,10 @@ msgstr "visível"
 #, fuzzy
 #~ msgid "Dynamic profile creation's tab"
 #~ msgstr "Aba de criação de grupo dinâmico"
+
+#, fuzzy
+#~ msgid "Edit a dynamic profile"
+#~ msgstr "Editar um grupo dinâmico"
 
 #, fuzzy
 #~ msgid "Static profile creation from import's tab"

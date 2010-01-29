@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-20 22:23+0100\n"
+"POT-Creation-Date: 2009-10-20 09:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,22 +16,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: pulse2/pulse2/computers_list.php:41
+#: web/modules/pulse2/pulse2/computers_list.php:41
 msgid "All my entities"
 msgstr ""
 
-#: pulse2/infoPackage.inc.php:44
+#: web/modules/pulse2/infoPackage.inc.php:44
 msgid "Computers list"
 msgstr ""
 
-#: pulse2/infoPackage.inc.php:49
+#: web/modules/pulse2/infoPackage.inc.php:49
 msgid "Location selection in computer edit"
 msgstr ""
 
-#: pulse2/infoPackage.inc.php:33
+#: web/modules/pulse2/infoPackage.inc.php:33
 msgid "Pulse2"
 msgstr ""
 
-#: pulse2/includes/locations_xmlrpc.inc.php:31
+#: web/modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr ""

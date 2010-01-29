@@ -1,192 +1,198 @@
-#: glpi/glpi/tabs.php:49
+#: web/modules/glpi/glpi/tabs.php:49
 #, php-format
 msgid "%s's inventory (%s)"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:54
+#: web/modules/glpi/glpi/view_hardware.php:54
 msgid "<br/>license number : "
 msgstr ""
 
-#: glpi/glpi/tabs.php:56
+#: web/modules/glpi/glpi/tabs.php:56
 msgid "Controller"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:35
+#: web/modules/glpi/infoPackage.inc.php:35
 msgid "Display locations"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:55 glpi/infoPackage.inc.php:70
+#: web/modules/glpi/infoPackage.inc.php:55
+#: web/modules/glpi/infoPackage.inc.php:70
 msgid "GLPI controller tab"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:49 glpi/infoPackage.inc.php:64
+#: web/modules/glpi/infoPackage.inc.php:49
+#: web/modules/glpi/infoPackage.inc.php:64
 msgid "GLPI hardware tab"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:52 glpi/infoPackage.inc.php:67
+#: web/modules/glpi/infoPackage.inc.php:52
+#: web/modules/glpi/infoPackage.inc.php:67
 msgid "GLPI network tab"
 msgstr ""
 
-#: glpi/glpi/tabs.php:52
+#: web/modules/glpi/glpi/tabs.php:52
 msgid "Hardware"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:45
+#: web/modules/glpi/infoPackage.inc.php:45
 msgid "Inventory (GLPI) on a groups of machines"
 msgstr ""
 
-#: glpi/infoPackage.inc.php:60
+#: web/modules/glpi/infoPackage.inc.php:60
 msgid "Inventory (GLPI) on machine"
 msgstr ""
 
-#: glpi/glpi/tabs.php:56
+#: web/modules/glpi/glpi/tabs.php:56
 msgid "Network"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:68
+#: web/modules/glpi/glpi/view_hardware.php:70
 msgid "Properties"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:69
+#: web/modules/glpi/glpi/view_hardware.php:71
 msgid "Value"
 msgstr ""
 
-#: glpi/glpi/view_part.php:87
+#: web/modules/glpi/glpi/view_part.php:87
 msgid "bandwidth"
 msgstr ""
 
-#: glpi/glpi/view_part.php:90
+#: web/modules/glpi/glpi/view_part.php:90
 msgid "comment"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:75 glpi/glpi/view_part.php:77
+#: web/modules/glpi/glpi/view_hardware.php:77
+#: web/modules/glpi/glpi/view_part.php:77
 msgid "comments"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:86
+#: web/modules/glpi/glpi/view_hardware.php:88
 msgid "contact"
 msgstr ""
 
-#: glpi/glpi/view_part.php:84
+#: web/modules/glpi/glpi/view_part.php:84
 msgid "designation"
 msgstr ""
 
-#: glpi/glpi/view_part.php:96
+#: web/modules/glpi/glpi/view_part.php:96
 msgid "drive"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:87
+#: web/modules/glpi/glpi/view_hardware.php:89
 msgid "entity"
 msgstr ""
 
-#: glpi/glpi/view_part.php:86
+#: web/modules/glpi/glpi/view_part.php:86
 msgid "frequence"
 msgstr ""
 
-#: glpi/glpi/view_part.php:81
+#: web/modules/glpi/glpi/view_part.php:81
 msgid "gateway"
 msgstr ""
 
-#: glpi/glpi/view_part.php:97
+#: web/modules/glpi/glpi/view_part.php:97
 msgid "gfxcard"
 msgstr ""
 
-#: glpi/glpi/view_part.php:94
+#: web/modules/glpi/glpi/view_part.php:94
 msgid "hdd"
 msgstr ""
 
-#: glpi/glpi/view_part.php:95
+#: web/modules/glpi/glpi/view_part.php:95
 msgid "iface"
 msgstr ""
 
-#: glpi/glpi/view_part.php:78
+#: web/modules/glpi/glpi/view_part.php:78
 msgid "ifaddr"
 msgstr ""
 
-#: glpi/glpi/view_part.php:79
+#: web/modules/glpi/glpi/view_part.php:79
 msgid "ifmac"
 msgstr ""
 
-#: glpi/glpi/view_part.php:89
+#: web/modules/glpi/glpi/view_part.php:89
 msgid "interface"
 msgstr ""
 
-#: glpi/glpi/view_part.php:88
+#: web/modules/glpi/glpi/view_part.php:88
 msgid "is_writer"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:54
+#: web/modules/glpi/glpi/view_hardware.php:54
 msgid "license id : "
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:83
+#: web/modules/glpi/glpi/view_hardware.php:85
 msgid "location"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:84
+#: web/modules/glpi/glpi/view_hardware.php:86
 msgid "model"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:74 glpi/glpi/view_part.php:76
+#: web/modules/glpi/glpi/view_hardware.php:76
+#: web/modules/glpi/glpi/view_part.php:76
 msgid "name"
 msgstr ""
 
-#: glpi/glpi/view_part.php:80
+#: web/modules/glpi/glpi/view_part.php:80
 msgid "netmask"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:77
+#: web/modules/glpi/glpi/view_hardware.php:79
 msgid "os"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:82
+#: web/modules/glpi/glpi/view_hardware.php:84
 msgid "os_license"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:81
+#: web/modules/glpi/glpi/view_hardware.php:83
 msgid "os_license_id"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:80
+#: web/modules/glpi/glpi/view_hardware.php:82
 msgid "os_license_number"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:79
+#: web/modules/glpi/glpi/view_hardware.php:81
 msgid "os_sp"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:78
+#: web/modules/glpi/glpi/view_hardware.php:80
 msgid "os_version"
 msgstr ""
 
-#: glpi/glpi/view_part.php:99
+#: web/modules/glpi/glpi/view_part.php:99
 msgid "pci"
 msgstr ""
 
-#: glpi/glpi/view_part.php:92
+#: web/modules/glpi/glpi/view_part.php:92
 msgid "processor"
 msgstr ""
 
-#: glpi/glpi/view_part.php:93
+#: web/modules/glpi/glpi/view_part.php:93
 msgid "ram"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:76
+#: web/modules/glpi/glpi/view_hardware.php:78
 msgid "serial"
 msgstr ""
 
-#: glpi/glpi/view_part.php:98
+#: web/modules/glpi/glpi/view_part.php:98
 msgid "sndcard"
 msgstr ""
 
-#: glpi/glpi/view_part.php:85
+#: web/modules/glpi/glpi/view_part.php:85
 msgid "specif_default"
 msgstr ""
 
-#: glpi/glpi/view_part.php:82
+#: web/modules/glpi/glpi/view_part.php:82
 msgid "subnet"
 msgstr ""
 
-#: glpi/glpi/view_hardware.php:85 glpi/glpi/view_part.php:83
+#: web/modules/glpi/glpi/view_hardware.php:87
+#: web/modules/glpi/glpi/view_part.php:83
 msgid "type"
 msgstr ""
