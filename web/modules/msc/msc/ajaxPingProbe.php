@@ -42,7 +42,7 @@ if ($probe_order == "ping") {
         $title = _T('Ping failed', 'msc');
     } else {
         $icon = return_icon("DONE");
-        $title = _T('Ping succeedeed', 'msc');
+        $title = _T('Ping succeeded', 'msc');
     }
 } elseif ($probe_order == "ssh") {
     $res = scheduler_probe_client('', $_GET["uuid"]);
@@ -74,7 +74,7 @@ if ($probe_order == "ping") {
             $title = _T('Error scheduler-side !', 'msc');
         } elseif ($res === "Not available") {
             $icon = return_icon("WORK_IN_PROGRESS");
-            $title = _T('Ping succeedeed, SSH connection failed', 'msc');
+            $title = _T('Ping succeeded, SSH connection failed', 'msc');
         } else {
             $icon = return_icon("DONE");
             $title = sprintf(_T('Target plateform is %s', 'msc'), $res);

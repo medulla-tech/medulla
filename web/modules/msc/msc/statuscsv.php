@@ -120,7 +120,7 @@ if ($specific_state) {
                 _T('failed during upload', 'msc'),
                 _T('unreachable during upload', 'msc'),
                 _T('failed during execution', 'msc'),
-                _T('unreacheable during execution', 'msc'),
+                _T('unrechable during execution', 'msc'),
                 _T('failed during suppression', 'msc'),
                 _T('unreachable during suppression', 'msc')
             );

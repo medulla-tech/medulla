@@ -101,9 +101,9 @@ if (strlen($_GET['bundle_id']) && !strlen($cmd_id)) {
             _T('<b>%s</b> computers are paused', 'msc')
         )),
         array('running', array(
-            _T('<b>No</b> computer is running a deployement', 'msc'),
-            _T('<b>One</b> computer is running a deployement', 'msc'),
-            _T('<b>%s</b> computers are running a deployement', 'msc')
+            _T('<b>No</b> computer is running a deployment', 'msc'),
+            _T('<b>One</b> computer is running a deployment', 'msc'),
+            _T('<b>%s</b> computers are running a deployment', 'msc')
         )),
         array('failure', array(
             _T('<b>No</b> computer failed to deploy', 'msc'),
@@ -131,9 +131,9 @@ $slabels = array(
         array('run_rm', _T('suppressing', 'msc'))
     ),
     'failure'=>array(
-        array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s beeing unreachable)', 'msc')),
-        array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s beeing unreachable)', 'msc')),
-        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s beeing unreachable)', 'msc')),
+        array('fail_up', _T('failed during upload', 'msc'), 'conn_up', _T('(with %s being unreachable)', 'msc')),
+        array('fail_ex', _T('failed during execution', 'msc'), 'conn_ex', _T('(with %s being unreachable)', 'msc')),
+        array('fail_rm', _T('failed during suppression', 'msc'), 'conn_rm', _T('(with %s being unreachable)', 'msc')),
         array('over_timed', _T('out of the valid period of execution', 'msc'))
     )
 

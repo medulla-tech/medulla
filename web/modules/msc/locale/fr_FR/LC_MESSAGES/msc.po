@@ -39,7 +39,7 @@ msgstr "%s (sur %s)"
 
 #: web/modules/msc/includes/command_history.php:248
 #, php-format
-msgid "%s <i>(no additionnal parameter given)</i>"
+msgid "%s <i>(no additional parameter given)</i>"
 msgstr "%s <i>(pas de paramètre supplémentaire donné)</i>"
 
 #: web/modules/msc/includes/widgets.inc.php:84
@@ -82,7 +82,7 @@ msgstr "(dont %s ont déjà tenté)"
 #: web/modules/msc/msc/msctabsstatus.php:134
 #: web/modules/msc/msc/msctabsstatus.php:135
 #, php-format
-msgid "(with %s beeing unreachable)"
+msgid "(with %s being unreachable)"
 msgstr "(dont %s sont injoignables)"
 
 #: web/modules/msc/msc/ajaxLogsFilter.php:243
@@ -102,7 +102,7 @@ msgstr "<b>%s</b> machines sont en pause"
 
 #: web/modules/msc/msc/msctabsstatus.php:105
 #, php-format
-msgid "<b>%s</b> computers are running a deployement"
+msgid "<b>%s</b> computers are running a deployment"
 msgstr "<b>%s</b> machines sont en cours de déploiement"
 
 #: web/modules/msc/msc/msctabsstatus.php:95
@@ -174,7 +174,7 @@ msgid "<b>No</b> computer is paused"
 msgstr "<b>Aucune</b> machine n'est en pause"
 
 #: web/modules/msc/msc/msctabsstatus.php:103
-msgid "<b>No</b> computer is running a deployement"
+msgid "<b>No</b> computer is running a deployment"
 msgstr "<b>Aucune</b> machine n'est en cours de déploiement"
 
 #: web/modules/msc/msc/msctabsstatus.php:93
@@ -214,7 +214,7 @@ msgid "<b>One</b> computer is paused"
 msgstr "<b>Une</b> machine est en pause"
 
 #: web/modules/msc/msc/msctabsstatus.php:104
-msgid "<b>One</b> computer is running a deployement"
+msgid "<b>One</b> computer is running a deployment"
 msgstr "<b>Une</b> machine est en cours de déploiement"
 
 #: web/modules/msc/msc/msctabsstatus.php:94
@@ -330,7 +330,7 @@ msgstr "Commandes de tous les utilisateurs"
 #: web/modules/msc/includes/command_history.php:410
 #, php-format
 msgid ""
-"An error occured when trying to contact the fallback mirror '%s' : the "
+"An error occurred when trying to contact the fallback mirror '%s' : the "
 "connection was refused."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir de secours "
@@ -339,7 +339,7 @@ msgstr ""
 #: web/modules/msc/includes/command_history.php:412
 #, php-format
 msgid ""
-"An error occured when trying to contact the fallback mirror '%s' : the "
+"An error occurred when trying to contact the fallback mirror '%s' : the "
 "mountpoint doesn't exists."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir de secours "
@@ -348,7 +348,7 @@ msgstr ""
 #: web/modules/msc/includes/command_history.php:409
 #, php-format
 msgid ""
-"An error occured when trying to contact the mirror '%s' : the connection was "
+"An error occurred when trying to contact the mirror '%s' : the connection was "
 "refused."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir principal "
@@ -357,7 +357,7 @@ msgstr ""
 #: web/modules/msc/includes/command_history.php:411
 #, php-format
 msgid ""
-"An error occured when trying to contact the mirror '%s' : the mountpoint "
+"An error occurred when trying to contact the mirror '%s' : the mountpoint "
 "doesn't exists."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir principal "
@@ -422,7 +422,7 @@ msgstr "Ne peut accéder au bundle pour l'id demandé"
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the "
-"planification of the command."
+"planning of the command."
 msgstr ""
 "Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur "
 "le miroir de secours '%s'.\n"
@@ -434,7 +434,7 @@ msgstr ""
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the "
-"planification of the command."
+"planning of the command."
 msgstr ""
 "Les URI des fichiers du package '%s' n'ont pas pu etre récupérées sur "
 "le miroir principal '%s'.\n"
@@ -1089,11 +1089,11 @@ msgid "Ping failed"
 msgstr "Échec du ping"
 
 #: web/modules/msc/msc/ajaxPingProbe.php:45
-msgid "Ping succeedeed"
+msgid "Ping succeeded"
 msgstr "Réussite du ping"
 
 #: web/modules/msc/msc/ajaxPingProbe.php:77
-msgid "Ping succeedeed, SSH connection failed"
+msgid "Ping succeeded, SSH connection failed"
 msgstr "Réussite du ping, échec de la connexion SSH"
 
 #: web/modules/msc/infoPackage.inc.php:199
@@ -1561,7 +1561,7 @@ msgid "You don't have the right permissions to display this command"
 msgstr "Vous n'avez pas le droit de consulter cette commande"
 
 #: web/modules/msc/msc/launch.php:44
-msgid "Your start and end dates are not coherant, please check them.<br/>"
+msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr ""
 "Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier."
 "<br/>"
@@ -1801,7 +1801,7 @@ msgid "unreachable during upload"
 msgstr "échoué durant le téléchargement"
 
 #: web/modules/msc/msc/statuscsv.php:72
-msgid "unreacheable during execution"
+msgid "unrecheble during execution"
 msgstr "échoué durant l'exécution"
 
 #: web/modules/msc/msc/ajaxLogsFilter.php:200

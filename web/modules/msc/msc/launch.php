@@ -41,7 +41,7 @@ function quick_get($param, $is_checkbox = False) {
 function start_a_command($proxy = array()) {
     $error = "";
     if (!check_date($_POST)) {
-        $error .= _T("Your start and end dates are not coherant, please check them.<br/>", "msc");
+        $error .= _T("Your start and end dates are not coherent, please check them.<br/>", "msc");
     }
     # should add some other tests on fields (like int are int? ...)
     if ($error != '') {

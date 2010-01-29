@@ -245,7 +245,7 @@ class CommandHistory {
             if ($this->db_cmd['parameters'])
                 $command_line = sprintf(_T('%s %s', 'msc'), $this->db_cmd['start_file'], $this->db_cmd['parameters']);
             else
-                $command_line = sprintf(_T('%s <i>(no additionnal parameter given)</i>', 'msc'), $this->db_cmd['start_file']);
+                $command_line = sprintf(_T('%s <i>(no additional parameter given)</i>', 'msc'), $this->db_cmd['start_file']);
         else
             $command_line = _T('<i>not set</i>', 'msc');
 
@@ -390,7 +390,7 @@ class CommandHistory {
             if (strpos($hist['state'], '_failed') !== False || ($hist['error_code'] > 4501 && $hist['error_code'] < 5000)) {
                 $msgs = array(
                     // BIG HUGE TODO: should get base value (230) from the agent (PULSE2_WRAPPER_ERROR_PRECHECK_BASE from consts.py)
-                    /* When SSH returns 255, an error occured while
+                    /* When SSH returns 255, an error occurred while
                      connecting to the host. On some platforms like
                      RHEL 4, buggy SSH returns 1 */
                     255 => _T("Error while connecting to secure agent on this host. Please check network connectivity, and that the secure agent is installed on this host.", 'msc'),
@@ -404,12 +404,12 @@ class CommandHistory {
                     240 + 3 => _T("The current host MAC address doesn't match the MAC address from the inventory database.", 'msc'),
                     /* Known exit codes :  */
                     4000 + 1 => sprintf(_T("The package '%s' is not available on any mirror.", "msc"), $hist['stderr'][0]),
-                    4000 + 2 => sprintf(_T("Can't get files URI for package '%s' on mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
-                    4000 + 3 => sprintf(_T("Can't get files URI for package '%s' on fallback mirror %s.\nPlease check that the package and its files have not been modified since the planification of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
-                    4000 + 4 => sprintf(_T("An error occured when trying to contact the mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
-                    4000 + 5 => sprintf(_T("An error occured when trying to contact the fallback mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
-                    4000 + 6 => sprintf(_T("An error occured when trying to contact the mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
-                    4000 + 7 => sprintf(_T("An error occured when trying to contact the fallback mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
+                    4000 + 2 => sprintf(_T("Can't get files URI for package '%s' on mirror %s.\nPlease check that the package and its files have not been modified since the planning of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
+                    4000 + 3 => sprintf(_T("Can't get files URI for package '%s' on fallback mirror %s.\nPlease check that the package and its files have not been modified since the planning of the command.", "msc"), $hist['stderr'][0], $hist['stderr'][1]),
+                    4000 + 4 => sprintf(_T("An error occurred when trying to contact the mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
+                    4000 + 5 => sprintf(_T("An error occurred when trying to contact the fallback mirror '%s' : the connection was refused.", "msc"), $hist['stderr'][0]),
+                    4000 + 6 => sprintf(_T("An error occurred when trying to contact the mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
+                    4000 + 7 => sprintf(_T("An error occurred when trying to contact the fallback mirror '%s' : the mountpoint doesn't exists.", "msc"), $hist['stderr'][0]),
                 
                     4500 + 8 => sprintf(_T("Package '%s' is NOT available on primary mirror %s\nPackage '%s' is available on fallback mirror %s", "msc"), $hist['stdout'][0], $hist['stdout'][1], $hist['stdout'][2], $hist['stdout'][3]),
                     4500 + 9 => sprintf(_T("Package '%s' is available on primary mirror %s", "msc"), $hist['stdout'][0], $hist['stdout'][1]),
