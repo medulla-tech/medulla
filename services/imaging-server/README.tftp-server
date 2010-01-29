@@ -1,0 +1,30 @@
+The imaging service relay on a tftp server.
+
+Only use Advanced TFTP server
+
+I repeat :
+
+ONLY USE ADVANCED TFTP SERVER.
+
+In fact, ATFTP is the only supported TFTP server.
+
+Some words about which configuration to use :
+ * mandatory options :
+   * serve files from /dev/null (see below)
+   * --port 69 : after all, we are doing PXE here
+   * --pcre /etc/mmc/pulse2/atftp/pcre.conf
+
+ * recommended options :
+   * --daemon : in other words, avoid using inetd
+   * --mcast-port 8200-8299 : Pulse 2 convention
+   * --mcast-addr  239.239.239.0-255 : another Pulse 2 convention
+
+ * Suggested options :
+   * --mcast-ttl 5
+   * --retry-timeout 5
+   * --maxthread 100
+   * --logfile /var/log/mmc/pulse2/atftpd.log : still a pulse 2 convention, to keep log files in a unique folder
+   * --verbose 5
+
+/etc/mmc/pulse2/atftp/pcre.conf should contain at least :
+
