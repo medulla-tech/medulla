@@ -1,6 +1,6 @@
 /*
  * (c) 2003-2007 Linbox FAS, http://linbox.com
- * (c) 2008-2009 Nicolas Rueff / Mandriva, http://www.mandriva.com
+ * (c) 2008-2009 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -31,7 +31,14 @@ void initlog(void) {
 /*
  * logging
  */
-void mysyslog( char *smac, int priority, const char *format_str, ... )
+
+int myLogger(char* msg) {
+    char cmd[1024];
+    snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", msg, gLogFile);
+    return (system(cmd));
+}
+
+void logClientActivity( char *smac, int priority, const char *format_str, ... )
 {
     va_list ap;
     FILE *f;
@@ -125,7 +132,7 @@ int mysystem(const char *s)
 {
     char cmd[1024];
 
-    snprintf(cmd, 1023, "echo \"`date`: %.900s\" 1>>%s 2>&1", s, gLogFile);
+    snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", s, gLogFile);
     system(cmd);
 
     snprintf(cmd, 1023, "%.900s 1>>%s 2>&1", s, gLogFile);
@@ -198,10 +205,10 @@ unsigned char *getmac(struct in_addr addr)
     straddr[l] = ' ';
     straddr[l + 1] = '\0';
 
-    syslog(LOG_INFO, "Warning: MAC not found in packet\n");
+    myLogger("Warning: MAC not found in packet");
     fi = fopen("/proc/net/arp", "r");
     if (!fi) { //can't open file
-        syslog(LOG_WARNING, "can't open /proc/net/arp");
+        myLogger("can't open /proc/net/arp");
         return 0;
     }
     while (fgets((char *)gBuff, 80, fi)) {
@@ -246,57 +253,53 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     static unsigned int lastfile = 0, lasttime = 0;
 
     /* do not log, log requests ! */
-    if (buf[0] != 'L' && buf[0] != 0xCD)
-        syslog
-            (LOG_DEBUG,
-             "Packet from %s:%d, MAC Address:%s, Command: %02x\n",
+    if (buf[0] != 'L' && buf[0] != 0xCD) {
+        char *buff = malloc(256);
+
+        snprintf(buff, 255, "Packet from %s:%d, MAC Address:%s, Command: %02x",
              inet_ntoa(si_other->sin_addr), ntohs(si_other->sin_port), mac,
              buf[0]);
-
+        myLogger(buff);
+        free(buff);
+    }
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
         snprintf(command, 255, "%s %s", gMenuUpdatePath, smac);
         mysystem(command);
         /* write inventory to file. Must fit in one packet ! */
-        snprintf(name, 255, "%s/log/%s.inf", gBaseDir, smac);
+        snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
         if (!(fo = fopen(name, "w"))) { //can't create .inf file
             char *msg = malloc(256);
             sprintf(msg, "can't create %s", name);
-            syslog(LOG_WARNING, msg);
+            myLogger(msg);
             free(msg);
             return 0;
         }
         fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
                 inet_ntoa(si_other->sin_addr),
                 ntohs(si_other->sin_port), mac, buf + 1);
-        snprintf(command, 255, "%s %s/log/%s.inf %s/log/%s.ini",
-                gClientInventoryPath, gBaseDir, smac, gBaseDir, smac);
+        snprintf(command, 255, "%s %s/%s.inf %s/%s.ini",
+                gClientInventoryPath, gInventoryDir, smac, gInventoryDir, smac);
         fclose(fo);
         mysystem(command);
         return 0;
     }
     // identification
     if (buf[0] == 0xAD) {
-        char *ptr, pass[256], hostname[256];
+        char *ptr, pass[256], hostname[256], buff[256];
 
-        snprintf(name, 255, "%s/log/ID.log", gBaseDir);
-        if (!(fo = fopen(name, "a"))) { //can't create ID.log file
-            char *msg = malloc(256);
-            sprintf(msg, "can't create %s", name);
-            syslog(LOG_WARNING, msg);
-            free(msg);
-            return 0;
-        }
-        fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
-                inet_ntoa(si_other->sin_addr),
-                ntohs(si_other->sin_port), mac, buf);
-        fclose(fo);
 
         ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
         strcpy(pass, ptr + 1);
         strcpy(hostname, (char*)buf + 3);
+
+        snprintf(buff, 255, "Identification from %s:%d (%s) as %s",
+                inet_ntoa(si_other->sin_addr),
+                ntohs(si_other->sin_port), mac, hostname);
+        myLogger(buff);
+
         snprintf(command, 255, "%s %s %s %s", gClientAddPath, mac, hostname, pass);
         mysystem(command);
         return 0;
@@ -311,47 +314,47 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xCD) {
         snprintf(command, 255, "%s %s %d", gMenuResetPath, smac, buf[1]);
         mysystem(command);
-        mysyslog(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
+        logClientActivity(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
         return 0;
     }
     // log data
     if (buf[0] == 'L') {
         switch (buf[1]) {
         case '0':
-            mysyslog(smac, LOG_INFO, "%s booted", mac);
+            logClientActivity(smac, LOG_INFO, "%s booted", mac);
             break;
         case '1':
-            mysyslog(smac, LOG_INFO, "%s executing menu entry %d",
+            logClientActivity(smac, LOG_INFO, "%s executing menu entry %d",
                    mac, buf[2]);
             break;
         case '2':
             if (buf[2] == '-') {
-                mysyslog(smac, LOG_INFO, "%s restoration started (%s)", mac, &buf[3]);
+                logClientActivity(smac, LOG_INFO, "%s restoration started (%s)", mac, &buf[3]);
             } else {
-                mysyslog(smac, LOG_INFO, "%s restoration started", mac);
+                logClientActivity(smac, LOG_INFO, "%s restoration started", mac);
             }
             break;
         case '3':
             if (buf[2] == '-') {
-                mysyslog(smac, LOG_INFO, "%s restoration completed (%s)", mac, &buf[3]);
+                logClientActivity(smac, LOG_INFO, "%s restoration completed (%s)", mac, &buf[3]);
             } else {
-                mysyslog(smac, LOG_INFO, "%s restoration completed", mac);
+                logClientActivity(smac, LOG_INFO, "%s restoration completed", mac);
             }
             lasttime = 0;       /* reset MTFTP time barriers */
             lastfile = 0;
             break;
         case '4':
             if (buf[2] == '-') {
-                mysyslog(smac, LOG_INFO, "%s backup started (%s)", mac, &buf[3]);
+                logClientActivity(smac, LOG_INFO, "%s backup started (%s)", mac, &buf[3]);
             } else {
-                mysyslog(smac, LOG_INFO, "%s backup started", mac);
+                logClientActivity(smac, LOG_INFO, "%s backup started", mac);
             }
             break;
         case '5':
             if (buf[2] == '-') {
                 int bn;
 
-                mysyslog(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
+                logClientActivity(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
                 if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                         // Local backup
                         snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
@@ -362,17 +365,17 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                         system(command);
                 }
             } else {
-                mysyslog(smac, LOG_INFO, "%s backup completed", mac);
+                logClientActivity(smac, LOG_INFO, "%s backup completed", mac);
             }
             break;
         case '6':
-            mysyslog(smac, LOG_INFO, "%s postinstall started", mac);
+            logClientActivity(smac, LOG_INFO, "%s postinstall started", mac);
             break;
         case '7':
-            mysyslog(smac, LOG_INFO, "%s postinstall completed", mac);
+            logClientActivity(smac, LOG_INFO, "%s postinstall completed", mac);
             break;
         case '8':
-            mysyslog(smac, LOG_INFO, "%s critical error", mac);
+            logClientActivity(smac, LOG_INFO, "%s critical error", mac);
             break;
 
         }
@@ -461,25 +464,21 @@ void readConfig(char * config_file_path) {
         sprintf(msg, "keyword 'adminpass' not found in section 'main' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "main:base_folder"))) {
+
+
+    // Parse FOLDERS section //
+    if ((str = iniparser_getstr(ini, "directories:base_folder"))) {
         strncpy((char*)gBaseDir, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'base_folder' not found in section 'main' in file %s", config_file_path);
+        sprintf(msg, "keyword 'base_folder' not found in section 'directories' in file %s", config_file_path);
         diep(msg);
     }
-    if ((str = iniparser_getstr(ini, "main:netboot_folder"))) {
-        strncpy((char*)gNetbootDir, str, 254);
+    if ((str = iniparser_getstr(ini, "directories:inventories_folder"))) {
+        strncpy((char*)gInventoryDir, str, 254);
     } else {
         char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'netboot_folder' not found in section 'main' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "main:skel_folder"))) {
-        strncpy((char*)gSkelDir, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'skel_folder' not found in section 'main' in file %s", config_file_path);
+        sprintf(msg, "keyword 'inventories_folder' not found in section 'directories' in file %s", config_file_path);
         diep(msg);
     }
 
@@ -573,7 +572,7 @@ void readConfig(char * config_file_path) {
         diep(msg);
     }
 
-    syslog(LOG_INFO, "Configuration parsed");
+    myLogger("Configuration parsed");
 }
 
 /* MAIN */

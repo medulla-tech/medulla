@@ -1,5 +1,5 @@
 /*
- * (c) 2009 Nicolas Rueff / Mandriva, http://www.mandriva.com
+ * (c) 2009 Mandriva, http://www.mandriva.com
  *
  * $Id: pulse2-imaging-server.c 4713 2009-11-02 14:20:32Z nrueff $
  *
@@ -55,7 +55,7 @@ unsigned char gHost[255];
 int gPort = 0;
 unsigned char gAdminPass[255];
 unsigned char gBaseDir[255];
-unsigned char gNetbootDir[255];
+unsigned char gInventoryDir[255];
 unsigned char gSkelDir[255];
 // global config options, helpers section
 unsigned char gMenuUpdatePath[255];
