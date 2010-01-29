@@ -1,4 +1,0 @@
-title Floppy Disk
-desc Boot auf dem floppy disk
-root (fd0)
-chainloader +1

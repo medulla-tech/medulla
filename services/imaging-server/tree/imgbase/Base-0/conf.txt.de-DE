@@ -1,6 +1,0 @@
-title Post-installation (group)
-desc Post-installation (group)
-# (Empty image restoration to which a postinst script can be assigned)
-# Boot on 1st disk 0
-root (hd0)
-chainloader +1

@@ -1,4 +1,0 @@
-title Disquette
-desc Demarrage sur le lecteur de disquette
-root (fd0)
-chainloader +1
