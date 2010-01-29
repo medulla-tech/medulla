@@ -34,7 +34,7 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 if(!isset($params))
     $params = array();
 
-$p = new PageGenerator(_T("", "imaging"));
+$p = new PageGenerator(_T("Locations", "imaging"));
 $sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $p->setSideMenu($sidemenu);
 $p->display();
