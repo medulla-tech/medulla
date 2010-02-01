@@ -346,40 +346,38 @@ class class17sleepTest(TestCase):
     """
     Test's class witch verifies if the process changes his state correctly
     """
-    def test1701get_sleep(self):
-        server.async_remote_quickaction(111190,{'protocol':'ssh','host':ipserver,'uuid':uuid},"cat")
-        sleep (5)
-        test=popen('ps ax|grep \"cat\"')
+    def disabletest1701get_sleep(self):
+        CMD = "cat"
+        server.async_remote_quickaction(111190,{'protocol':'ssh','host':ipserver,'uuid':uuid}, CMD)
+        sleep(5)
+        test=popen('ps -C %s -o state=' % CMD)
         t=test.read()
-        ts=t.split()
         test.close()
-        if "S" in ts[2]:
+        if t.startswith("S"):
             r="S"
         else:
             r="error"
         server.stop_process(111190)
-        sleep (5)
-        test=popen('ps ax|grep \"cat\"')
+        sleep(5)
+        test=popen('ps -C %s -o state=' % CMD)
         t=test.read()
-        ts=t.split()
         test.close()
-        if "T" in ts[2]:
+        if t.startswith("T"):
             e="T"
         else:
             e="error"
         server.cont_process(111190)
-        sleep (5)
-        test=popen('ps ax|grep \"cat\"')
+        sleep(5)
+        test=popen('ps -C %s -o state=' % CMD)
         t=test.read()
-        ts=t.split()
         test.close()
-        if "S" in ts[2]:
+        if t.startswith("S"):
             s="S"
         else:
             s="error"
         result=r+e+s
         server.kill_process(111190)
-        self.assertEqual (result,"STS")
+        self.assertEqual(result, "STS")
 
 class class18removedir(TestCase):
     """
