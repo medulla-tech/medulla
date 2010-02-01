@@ -21,6 +21,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module spawns and controls commands executed by the launcher.
+"""
+
 # classical Python modules
 import time
 import signal
@@ -401,7 +405,7 @@ def getProcessCount():
 def getRunningCount():
     return ProcessList().getRunningCount()
 def getZombiesCount():
-    return ProcessList().getZombieCount()
+    return ProcessList().getZombiesCount()
 
 def getProcessIds():
     return ProcessList().getProcessIds()
