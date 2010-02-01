@@ -298,7 +298,7 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
     def xmlrpc_get_process_count(self):
         return xmlrpcCleanup(pulse2.launcher.process_control.getProcessCount())
     def xmlrpc_get_running_count(self):
-        return xmlrpcCleanup(pulse2.launcher.process_control.getRunning_count())
+        return xmlrpcCleanup(pulse2.launcher.process_control.getRunningCount())
     def xmlrpc_get_zombie_count(self):
         return xmlrpcCleanup(pulse2.launcher.process_control.getZombiesCount())
     def xmlrpc_get_process_ids(self):
