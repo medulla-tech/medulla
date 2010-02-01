@@ -31,6 +31,9 @@ $params = getParams();
 $hostname = $params['hostname'];
 
 if (isset($params['uuid'])) {
+    if (!isset($_GET['uuid']) || $_GET['uuid'] == '') {
+        $_GET['uuid'] = $params['uuid'];
+    }
 
     $p = new TabbedPageGenerator();
     $sidemenu->forceActiveItem("index");
