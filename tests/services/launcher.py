@@ -176,7 +176,7 @@ class class08async_execTest(TestCase):
         self.assertEqual (result,True)
 
     def test805async_remote_execsleep(self):
-        result=server.async_remote_exec(3,{'protocol':'ssh','host':ipserver,'uuid':uuid},"sleep 500")
+        result=server.async_remote_exec(3,{'protocol':'ssh','host':ipserver,'uuid':uuid}, "cat")
         self.assertEqual ( result, True)
 
 class class09stopTest(TestCase):
@@ -187,33 +187,33 @@ class class09stopTest(TestCase):
         result=server.stop_process(3)
         self.assertEqual (result,True)
 
-class class10int_contTest(TestCase):
-    """
-    Test's class of int_process and cont_process
-    """
-    def test1001int_process(self):
-        result=server.int_process(3)
-        self.assertEqual (result,True)
-
-    def test1002cont_process(self):
-        result=server.cont_process(3)
-        self.assertEqual (result,True)
-
-class class11stdTest(TestCase):
+class class10stdTest(TestCase):
     """
     Test's class of get_process_stdout, get_process_stder and get_process_exitcode
     """
-    def test1101get_process_stdout(self):
+    def test1001get_process_stdout(self):
         result=server.get_process_stdout(3)
         self.assertEqual(result, '')
 
-    def test1101get_process_stderr(self):
+    def test1001get_process_stderr(self):
         result=server.get_process_stderr(3)
-        self.assertEqual(result, "")
+        self.assertEqual(result, '')
 
-    def test1102get_process_exitcode(self):
+    def test1002get_process_exitcode(self):
         result=server.get_process_exitcode(3)
-        self.assertEquals(result, "")
+        self.assertEquals(result, '')
+
+class class11int_contTest(TestCase):
+    """
+    Test's class of int_process and cont_process
+    """
+    def test1101cont_process(self):
+        result=server.cont_process(3)
+        self.assertEqual (result,True)
+
+    def test1102int_process(self):
+        result = server.int_process(3)
+        self.assertEqual(result,True)
 
 class class12sync_quickactionTest(TestCase):
     """
