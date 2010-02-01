@@ -26,14 +26,6 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['gid'])) {
-    $type = 'group';
-    list($count, $menu) = xmlrpc_getProfileBootMenu($_GET['gid']);
-} else {
-    $type = '';
-    list($count, $menu) = xmlrpc_getMachineBootMenu($_GET['uuid']);
-}
-
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
 else 
@@ -41,26 +33,62 @@ else
 
 switch($mod) {
     case 'up':
-        item_up($type, $menu);
+        item_up();
         break;
     case 'down':
-        item_down($type, $menu);
+        item_down();
         break;
     case 'edit':
         item_edit();
         break;  
     default:
-        item_list($type, $menu, $count);
+        item_list();
         break;
 }
 
-function item_up($type, $menu) {
+function item_up() {
     $params = getParams();
+    $item_uuid = $_GET['itemid'];
+    $label = $_GET['itemlabel'];
+    $uuid = $params['uuid'];
+
+    if (isset($_GET['gid'])) {
+        $type = 'group';
+    } else {
+        $type = '';
+    }
+    $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
+    if ($ret) {
+        $str = sprintf(_T("Service <strong>%s</strong> moved up in the boot menu", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
+    } else {
+        $str = sprintf(_T("Failed to move service <strong>%s</strong> in the boot menu", "imaging"), $label);
+        new NotifyWidgetError($str);
+    }
+    
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    
 }
 
 function item_down() {
     $params = getParams();
+    $item_uuid = $_GET['itemid'];
+    $label = $_GET['itemlabel'];
+    $uuid = $params['uuid'];
+
+    if (isset($_GET['gid'])) {
+        $type = 'group';
+    } else {
+        $type = '';
+    }
+    $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
+    if ($ret) {
+        $str = sprintf(_T("Service <strong>%s</strong> moved down in the boot menu", "imaging"), $label);
+        new NotifyWidgetSuccess($str);
+    } else {
+        $str = sprintf(_T("Failed to move service <strong>%s</strong> in the boot menu", "imaging"), $label);
+        new NotifyWidgetError($str);
+    }
+     
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    
 }
 
@@ -152,15 +180,21 @@ function item_edit() {
     }    
 }
 
-function item_list($type, $menu, $count) {
+function item_list() {
+    
+    if(isset($_GET['gid'])) {
+        $type = 'group';
+        list($count, $menu) = xmlrpc_getProfileBootMenu($_GET['gid']);
+    } else {
+        $type = '';
+        list($count, $menu) = xmlrpc_getMachineBootMenu($_GET['uuid']);
+    }
 
     $params = getParams();
 
     // forge params   
-    $upAction = new ActionItem(_T("Move Up"), "imgtabs", "up", "item", "base", 
-    "computers", $type."tabbootmenu", "up");
-    $downAction = new ActionItem(_T("Move down"), "imgtabs", "down", "item", 
-    "base", "computers", $type."tabbootmenu", "down");
+    $upAction = new ActionItem(_T("Move Up"), "imgtabs", "up", "item", "base", "computers", $type."tabbootmenu", "up");
+    $downAction = new ActionItem(_T("Move down"), "imgtabs", "down", "item", "base", "computers", $type."tabbootmenu", "down");
     $emptyAction = new EmptyActionItem();
     $actionUp = array();
     $actionDown = array();
@@ -174,11 +208,9 @@ function item_list($type, $menu, $count) {
     $a_defaultWOL = array();
     $a_displayWOL = array();
     
-//    for($i=0;$i<$nbItems;$i++) {
     $i = -1;
     foreach ($menu as $entry) {
         $i = $i + 1;
-//        $entry = $menu[$i];
         $is_image = False;
         if (isset($entry['image'])) {
             $is_image = True;
@@ -219,10 +251,8 @@ function item_list($type, $menu, $count) {
     $l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
     $l->addActionItemArray($actionsUp);
     $l->addActionItemArray($actionsDown);
-    $l->addActionItem(new ActionItem(_T("Edit"), "imgtabs", "edit", "item", 
-    "base", "computers", $type."tabbootmenu", "edit"));
-    $l->addActionItem(new ActionPopupItem(_T("Delete"), "bootmenu_remove", 
-    "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete"));
+    $l->addActionItem(new ActionItem(_T("Edit"), "imgtabs", "edit", "item", "base", "computers", $type."tabbootmenu", "edit"));
+    $l->addActionItem(new ActionPopupItem(_T("Delete"), "bootmenu_remove", "delete", "item", "base", "computers", $type."tabbootmenu", 300, "delete"));
     $l->disableFirstColumnActionLink();
     $l->display();
 }

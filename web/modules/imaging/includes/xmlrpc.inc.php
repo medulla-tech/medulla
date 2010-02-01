@@ -29,6 +29,16 @@ function xmlrpc_getProfileBootMenu($id) {
     return xmlCall("imaging.getProfileBootMenu", array($id));
 }
 
+//Actions
+function xmlrpc_moveItemDownInMenu($target_uuid, $type, $item_uuid) {
+    return xmlCall("imaging.moveItemDownInMenu", array($target_uuid, $type, $item_uuid));
+}
+
+function xmlrpc_moveItemUpInMenu($target_uuid, $type, $item_uuid) {
+    return xmlCall("imaging.moveItemUpInMenu", array($target_uuid, $type, $item_uuid));
+}
+
+/**/
 function xmlrpc_getMachineImages($id) {
     return xmlCall("imaging.getMachineImages", array($id));
 }
