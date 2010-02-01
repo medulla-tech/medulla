@@ -21,6 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
+"""
+
 import xmlrpclib
 import unittest
 import urllib2
@@ -31,13 +35,11 @@ from testutils import generation_Pserver,SupEsp,ipconfig
 from time import sleep
 from tempfile import mkdtemp
 
-"""
-Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
-"""
-
 uuid='UUID1' #client uuid
 protocol='https' #protocol's server
 makefile=False
+# FIXME: we'd better get it from the package files size
+PKGSIZE = 66
 
 if "makefile" in sys.argv:
     makefile=True
@@ -55,7 +57,6 @@ directory=getcwd()
 
 ipserver=ipconfig()
 
-
 serverM=xmlrpclib.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
 serverMA = xmlrpclib.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
 serverP = xmlrpclib.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
@@ -70,15 +71,15 @@ class class01testMirror (unittest.TestCase):
         self.assertEqual (result,True)
 
     def test102getFilePath (self):
-        result=serverM.getFilePath("43f38f712223725ac3e220b96889484b")
+        result=serverM.getFilePath("5d3ff03e396aa072f5cae2b2ddcd88b9")
         self.assertEqual (result,"%s://%s:9990/mirror1_files/test/MD5SUMS" %(protocol,ipserver))
 
     def test103getFileURI (self):
-        result=serverM.getFileURI("43f38f712223725ac3e220b96889484b")
+        result=serverM.getFileURI("5d3ff03e396aa072f5cae2b2ddcd88b9")
         self.assertEqual (result,"%s://%s:9990/mirror1_files/test/MD5SUMS" %(protocol,ipserver))
 
     def test104getFilesURI (self):
-        result=serverM.getFilesURI(["43f38f712223725ac3e220b96889484b","baf68c123b04d61856f71fe07b7bd84b"])
+        result=serverM.getFilesURI(["5d3ff03e396aa072f5cae2b2ddcd88b9","7885517b39317add6a1d362968b01774"])
         self.assertEqual (result,['%s://%s:9990/mirror1_files/test/MD5SUMS' %(protocol,ipserver), '%s://%s:9990/mirror1_files/test/install.bat' %(protocol,ipserver)])
 
 class class02testMirror_API (unittest.TestCase):
@@ -126,7 +127,7 @@ class class03testPackages_get (unittest.TestCase):
     def test302getAllPackages (self):
         result=serverP.getAllPackages({'mountpoint': '/mirror1', 'server': ipserver, 'protocol': protocol, 'uuid': 'UUID/mirror1', 'port': '9990'})
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': 72}])
+        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
 
     def test303getLocalPackagePath (self):
         result=serverP.getLocalPackagePath ("test")
@@ -139,12 +140,12 @@ class class03testPackages_get (unittest.TestCase):
     def test305getPackageDetail (self):
         result=serverP.getPackageDetail("test")
         SupEsp(result)
-        self.assertEqual (result,{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': 72})
+        self.assertEqual (result,{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE})
 
     def test306getPackagesDetail (self):
         result = serverP.getPackagesDetail(["test","test"])
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': 72},{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': 72}])
+        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE},{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
 
     def test307getPackageCommand (self):
         result=serverP.getPackageCommand("test")
@@ -154,7 +155,7 @@ class class03testPackages_get (unittest.TestCase):
     def test308getPackageFiles (self):
         result=serverP.getPackageFiles("test")
         SupEsp(result)
-        self.assertEqual (result,[{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}])
+        self.assertEqual (result,[{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}])
 
     def test309getPackageInstallInit (self):
         result=serverP.getPackageInstallInit("test")
@@ -187,7 +188,7 @@ class class03testPackages_get (unittest.TestCase):
 
     def test315getPackageSize (self):
         result=serverP.getPackageSize("test")
-        self.assertEqual (result,72)
+        self.assertEqual(result, PKGSIZE)
 
     def test316isAvailable (self):
         result=serverP.isAvailable("test",{'mountpoint': '/mirror1', 'server': ipserver, 'protocol': protocol, 'uuid': 'UUID/package_api_get1', 'port': '9990'})
@@ -196,7 +197,7 @@ class class03testPackages_get (unittest.TestCase):
     def test317getServerDetails (self):
         result=serverP.getServerDetails()
         SupEsp(result)
-        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': 'baf68c123b04d61856f71fe07b7bd84b'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '43f38f712223725ac3e220b96889484b'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': 72}])
+        self.assertEqual (result,[{'postCommandSuccess': {'command': '', 'name': ''}, 'files': [{'path': '/test', 'name': 'install.bat', 'id': '7885517b39317add6a1d362968b01774'}, {'path': '/test', 'name': 'MD5SUMS', 'id': '5d3ff03e396aa072f5cae2b2ddcd88b9'}], 'installInit': {'command': '', 'name': ''}, 'description': 'Ceci est le package de test', 'preCommand': {'command': '', 'name': ''}, 'basepath': direct, 'reboot': '1', 'label': 'TestPackage', 'version': '2.0.0.9', 'command': {'command': './install.bat', 'name': 'commande'}, 'postCommandFailure': {'command': '', 'name': ''}, 'id': 'test', 'size': PKGSIZE}])
 
     def test318getPackageVersion (self):
         result=serverP.getPackageVersion("test")
@@ -212,11 +213,11 @@ class class03testPackages_get (unittest.TestCase):
 #        self.assertEqual (result,'test')
 
 #    def test321getFileChecksum (self):
-#        result=serverP.getFileChecksum("baf68c123b04d61856f71fe07b7bd84b")
+#        result=serverP.getFileChecksum("7885517b39317add6a1d362968b01774")
 #        self.assertEqual (result,27)
 
 #    def test322getFilesChecksum (self):
-#        result=serverP.getFileChecksum(["baf68c123b04d61856f71fe07b7bd84b","43f38f712223725ac3e220b96889484b"])
+#        result=serverP.getFileChecksum(["7885517b39317add6a1d362968b01774","5d3ff03e396aa072f5cae2b2ddcd88b9"])
 #        self.assertEqual (result,[27,27])
 
 class class04testScheduler (unittest.TestCase):
@@ -244,7 +245,7 @@ class class05valid_urlTest(unittest.TestCase):
     Test's class which test if the dowloading urls work
     """
     def test501valid_url(self):
-        for package in serverM.getFilesURI(["baf68c123b04d61856f71fe07b7bd84b","43f38f712223725ac3e220b96889484b"]):
+        for package in serverM.getFilesURI(["7885517b39317add6a1d362968b01774","5d3ff03e396aa072f5cae2b2ddcd88b9"]):
             package1=string.split(package)
             cpackage=string.joinfields(package1,"%20")
             urllib2.urlopen(cpackage)
