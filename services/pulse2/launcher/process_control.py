@@ -417,7 +417,7 @@ def getZombieIds():
 def getProcessStderr(id):
     process = ProcessList().getProcess(id)
     if process:
-        return process.getStderr()
+        return process.getStdErr()
     return None
 def getProcessStdout(id):
     process = ProcessList().getProcess(id)
