@@ -402,8 +402,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret.append(mi)
         return ret
 
-    def getMenuContent(self, menu_id, type = MENU_ALL, start = 0, end = -1, filter = ''):# TODO implement the start/end with a union betwen q1 and q2
-        session = create_session()
+    def getMenuContent(self, menu_id, type = MENU_ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union betwen q1 and q2
+        session_need_close = False
+        if session == None:
+            session = create_session()
+            session_need_close = True
 
         mi_ids = session.query(MenuItem).add_column(self.menu_item.c.id).select_from(self.menu_item.join(self.menu))
         if filter != '':
@@ -428,7 +431,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q2 = q2.filter(self.menu_item.c.id.in_(mi_ids)).order_by(self.menu_item.c.order).all()
             q1 = self.__mergeImageInMenuItem(q2)
             q.extend(q2)
-        session.close()
+        if session_need_close:
+            session.close()
         q.sort(lambda x,y: cmp(x.order, y.order))
         return q
         
@@ -659,13 +663,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return None
 
-    def getMenuItemByUUID(self, mi_uuid):
-        session = create_session()
+    def getMenuItemByUUID(self, mi_uuid, session = None):
+        session_need_close = False
+        if session == None:
+            session_need_close = True
+            session = create_session()
         mi = session.query(MenuItem).add_entity(BootService).add_entity(Image).add_entity(Menu)
         mi = mi.select_from(self.menu_item.join(self.menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
         mi = self.__mergeBootServiceOrImageInMenuItem(mi)
-        session.close()
+        if session_need_close:
+            session.close()
         return mi
     
     ######################
@@ -739,6 +747,62 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return 0
         count_items = self.countMenuContent(menu.id, MENU_ALL, filter)
         return count_items
+
+    ######################
+    def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
+        menu = self.getTargetsMenuTUUID(target_uuid)
+
+        session = create_session()
+        mis = self.getMenuContent(menu.id, MENU_ALL, 0, -1, '', session)
+        mis.sort(lambda x,y: cmp(y.order, x.order))
+        move = False
+        mod_mi = [None, None]
+        for mi in mis:
+            if move:
+                move = False
+                mod_mi[1] = mi
+            if str(mi.id) == str(uuid2id(mi_uuid)):
+                move = True
+                mod_mi[0] = mi
+        if mod_mi[0] != None and mod_mi[1] != None:
+            ord = mod_mi[0].order
+            mod_mi[0].order = mod_mi[1].order
+            mod_mi[1].order = ord
+            session.save_or_update(mod_mi[0])
+            session.save_or_update(mod_mi[1])
+            session.flush()
+            session.close()
+        else:
+            session.close()
+            return False
+        return True
+
+    def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
+        menu = self.getTargetsMenuTUUID(target_uuid)
+
+        session = create_session()
+        mis = self.getMenuContent(menu.id, MENU_ALL, 0, -1, '', session)
+        move = False
+        mod_mi = [None, None]
+        for mi in mis:
+            if move:
+                move = False
+                mod_mi[1] = mi
+            if str(mi.id) == str(uuid2id(mi_uuid)):
+                move = True
+                mod_mi[0] = mi
+        if mod_mi[0] != None and mod_mi[1] != None:
+            ord = mod_mi[0].order
+            mod_mi[0].order = mod_mi[1].order
+            mod_mi[1].order = ord
+            session.save_or_update(mod_mi[0])
+            session.save_or_update(mod_mi[1])
+            session.flush()
+            session.close()
+        else:
+            session.close()
+            return False
+        return True
 
 def id2uuid(id):
     return "UUID%d" % id

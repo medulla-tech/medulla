@@ -178,6 +178,13 @@ class RpcProxy(RpcProxyI):
     def getMachineBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
+    # EDITION
+    def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
+        return ImagingDatabase().moveItemUpInMenu(target_uuid, type, mi_uuid)
+        
+    def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
+        return ImagingDatabase().moveItemDownInMenu(target_uuid, type, mi_uuid)
+        
     ###### IMAGES
     def getMachineImages(self, id):
         return {
