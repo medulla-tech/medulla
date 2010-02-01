@@ -21,6 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Test module for the Pulse 2 Launcher
+"""
+
 from xmlrpclib import ServerProxy
 from unittest import TestCase
 from os import chdir, popen, system, removedirs, remove, getcwd, mkdir, path
@@ -29,10 +33,6 @@ from time import sleep
 import unittest
 from testutils import generation_Launcher
 import sys
-
-"""
-Test module for the Pulse 2 Launcher
-"""
 
 ipserver='localhost' #adress of pulse2 Launcher
 uuid='UUID1' #client uuid
@@ -144,15 +144,15 @@ class class07sync_execTest(TestCase):
 
     def test704get_process_count(self):
         result=server.get_process_count()
-        self.assertEqual (result,0)
+        self.assertEqual(result, 0)
 
-#    def test705get_running_count(self):
-#        result=server.get_running_count()
-#        self.assertEqual (result,0)
+    def test705get_running_count(self):
+        result=server.get_running_count()
+        self.assertEqual(result, 0)
 
-#    def test706get_zombie_count(self):
-#        result=server.get_zombie_count()
-#        self.assertEqual (result,0)
+    def test706get_zombie_count(self):
+        result=server.get_zombie_count()
+        self.assertEqual(result, 0)
 
 class class08async_execTest(TestCase):
     """
@@ -161,11 +161,11 @@ class class08async_execTest(TestCase):
 
     def test801async_remote_execerreur(self):
         result=server.async_remote_exec(4,{'protocol':'ssh','host':ipserver,'uuid':uuid},"echo \"toto\" 1>&2")
-        self.assertEqual ( result, True)
+        self.assertEqual (result, True)
 
     def test802async_remote_execexit(self):
         result=server.async_remote_exec(5,{'protocol':'ssh','host':ipserver,'uuid':uuid},"exit 1")
-        self.assertEqual ( result, True)
+        self.assertEqual (result, True)
 
     def test803term_processes(self):
         result=server.term_processes([4,5])
@@ -201,19 +201,19 @@ class class10int_contTest(TestCase):
 
 class class11stdTest(TestCase):
     """
-    Test's class of get_process_stdout, get_process_stder and get_process_exitcod
+    Test's class of get_process_stdout, get_process_stder and get_process_exitcode
     """
     def test1101get_process_stdout(self):
         result=server.get_process_stdout(3)
-        self.assertEqual (result,'')
+        self.assertEqual(result, '')
 
-#    def test1101get_process_stderr(self):
-#        result=server.get_process_stderr(3)
-#        self.assertEqual (result,"")
+    def test1101get_process_stderr(self):
+        result=server.get_process_stderr(3)
+        self.assertEqual(result, "")
 
     def test1102get_process_exitcode(self):
         result=server.get_process_exitcode(3)
-        self.assertEquals (result, "")
+        self.assertEquals(result, "")
 
 class class12sync_quickactionTest(TestCase):
     """
