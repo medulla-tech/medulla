@@ -36,20 +36,16 @@ CREATE TABLE TargetType (
 INSERT INTO TargetType (label) values ('computer');
 INSERT INTO TargetType (label) values ('profile');
 
--- LogState
-CREATE TABLE LogState (
+-- MasteredOnState
+CREATE TABLE MasteredOnState (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
 );
-INSERT INTO LogState (label) values ('backup_done');
-INSERT INTO LogState (label) values ('backup_failed');
-INSERT INTO LogState (label) values ('backuping');
-INSERT INTO LogState (label) values ('backup_to_be_done');
-INSERT INTO LogState (label) values ('restore_done');
-INSERT INTO LogState (label) values ('restore_failed');
-INSERT INTO LogState (label) values ('restoring');
-INSERT INTO LogState (label) values ('restore_to_be_done');
+INSERT INTO MasteredOnState (label) values ('backup_done');
+INSERT INTO MasteredOnState (label) values ('backup_failed');
+INSERT INTO MasteredOnState (label) values ('restore_done');
+INSERT INTO MasteredOnState (label) values ('restore_failed');
 
 -- Protocol
 CREATE TABLE Protocol (
@@ -104,8 +100,11 @@ CREATE TABLE Entity (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   uuid Text NOT NULL,
+  fk_default_menu INT NOT NULL,
+  FOREIGN KEY (fk_default_menu) REFERENCES Menu(id),
   PRIMARY KEY (id)
 );
+CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
 
 --------------------------------------------------------------------
 -- Target
@@ -113,6 +112,8 @@ CREATE TABLE Target (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   uuid Text NOT NULL,
+  kernel_parameters Text,
+  image_parameters Text,
   `type` INT NOT NULL,
   fk_entity INT NOT NULL,
   fk_menu INT NOT NULL,
@@ -185,8 +186,10 @@ CREATE INDEX fk_image_on_imaging_server_imaging_server_idx ON ImageOnImagingServ
 -- Partition
 CREATE TABLE Partition (
   id INT NOT NULL AUTO_INCREMENT,
+  name Text NOT NULL,
   filesystem Text NOT NULL,
-  `size` INT NOT NULL,
+  `size_sect` INT NOT NULL,
+  start_sect INT NOT NULL,
   fk_image INT NOT NULL,
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   PRIMARY KEY (id)
@@ -245,24 +248,23 @@ CREATE TABLE Image (
 );
 CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
 
--- Log
-CREATE TABLE Log (
+-- MasteredOn
+CREATE TABLE MasteredOn (
   id INT NOT NULL AUTO_INCREMENT,
   timestamp datetime,
   title Text NOT NULL,
-  completeness INT NOT NULL,
   detail Text NOT NULL,
-  fk_log_state INT NOT NULL,
+  fk_mastered_on_state INT NOT NULL,
   fk_image INT NOT NULL,
   fk_target INT NOT NULL,
-  FOREIGN KEY(fk_log_state) REFERENCES LogState(id),
+  FOREIGN KEY(fk_mastered_on_state) REFERENCES MasteredOnState(id),
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_target) REFERENCES Target(id),
   PRIMARY KEY (id)
 );
-CREATE INDEX fk_log_state_idx ON `Log`(fk_log_state);
-CREATE INDEX fk_log_image_idx ON `Log`(fk_image);
-CREATE INDEX fk_log_target_idx ON `Log`(fk_target);
+CREATE INDEX fk_mastered_on_state_idx ON MasteredOn(fk_mastered_on_state);
+CREATE INDEX fk_mastered_on_image_idx ON MasteredOn(fk_image);
+CREATE INDEX fk_mastered_on_target_idx ON MasteredOn(fk_target);
 
 -- BootServiceInMenu
 CREATE TABLE BootServiceInMenu (

@@ -178,6 +178,13 @@ class RpcProxy(RpcProxyI):
     def getMachineBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
+    def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
+        # Entities are names Location in the php part, here we convert them from Location to Entity
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getEntityBootMenu(loc_id, start, end, filter))
+        count = db.countEntityBootMenu(loc_id, filter)
+        return [count, xmlrpcCleanup(ret)]
+
     # EDITION
     def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
         return ImagingDatabase().moveItemUpInMenu(target_uuid, type, mi_uuid)
@@ -186,25 +193,55 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().moveItemDownInMenu(target_uuid, type, mi_uuid)
         
     ###### IMAGES
-    def getMachineImages(self, id):
-        return {
-            'images': [
-                ['MDV 2008.0', 'Mandriva 2008 Backup', '2009-02-25 17:38', '1GB', True]
-            ],
-            'masters': [
-                ['MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', False]
-            ]
-        }
+    def __getTargetImages(self, id, type, start = 0, end = -1, filter = ''):
+        # carrefull the end is used for each list (image and master)
+        db = ImagingDatabase()
+        reti = map(lambda l: l.toH(), db.getPossibleImages(id, start, end, filter))
+        counti = db.countPossibleImages(id, filter)
 
-    def getProfileImages(self, id):
+        retm = map(lambda l: l.toH(), db.getPossibleMasters(id, start, end, filter))
+        countm = db.countPossibleMasters(id, filter)
+                
         return {
-            'images': [
-                ['MDV 2008.0', 'Mandriva 2008 Backup', '2009-02-25 17:38', '1GB', True]
-            ],
-            'masters': [
-                ['MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', False]
-            ]
+            'images': [counti, xmlrpcCleanup(reti)],
+            'masters': [countm, xmlrpcCleanup(retm)]
         }
+    
+    def getMachineImages(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetImages(id, TYPE_COMPUTER, start, end, filter)
+
+    def getProfileImages(self, id, start = 0, end = -1, filter = ''):
+        return self.__getTargetImages(id, TYPE_PROFILE, start, end, filter)
+
+    def getLocationImages(self, loc_id, start = 0, end = -1, filter = ''):
+        # Entities are names Location in the php part, here we convert them from Location to Entity
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getEntityMasters(loc_id, start, end, filter))
+        count = db.countEntityMasters(loc_id, filter)
+        return [count, xmlrpcCleanup(ret)]
+        
+    # EDITION
+    def addImageToTarget(self, item_uuid, target_uuid, params):
+        try:
+            ret = ImagingDatabase().addImageToTarget(item_uuid, target_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            raise e
+            return xmlrpcCleanup([False, e])
+
+    def editImageToTarget(self, item_uuid, target_uuid, params):
+        try:
+            ret = ImagingDatabase().editImageToTarget(item_uuid, target_uuid, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def delImageToTarget(self, item_uuid, target_uuid):
+        try:
+            ret = ImagingDatabase().delImageToTarget(item_uuid, target_uuid)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     ###### BOOT SERVICES
     def __getTargetBootServices(self, id, type, start = 0, end = -1, filter = ''):
@@ -223,6 +260,13 @@ class RpcProxy(RpcProxyI):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getPossibleBootServices(target_uuid, start, end, filter))
         count = db.countPossibleBootServices(target_uuid, filter)
+        return [count, xmlrpcCleanup(ret)]
+
+    def getLocationBootServices(self, loc_id, start = 0, end = -1, filter = ''):
+        # Entities are names Location in the php part, here we convert them from Location to Entity
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getEntityBootServices(loc_id, start, end, filter))
+        count = db.countEntityBootServices(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
 
     # EDITION
@@ -248,6 +292,27 @@ class RpcProxy(RpcProxyI):
             raise e
             return xmlrpcCleanup([False, e])
         
+    def addServiceToLocation(self, bs_uuid, location_id, params):
+        try:
+            ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def delServiceToLocation(self, bs_uuid, location_id):
+        try:
+            ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def editServiceToLocation(self, bs_uuid, location_id, params):
+        try:
+            ret = ImagingDatabase().editServiceToEntity(bs_uuid, location_id, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+        
     ###### MENU ITEMS
     def getMenuItemByUUID(self, bs_uuid): 
         mi = ImagingDatabase().getMenuItemByUUID(bs_uuid)
@@ -256,24 +321,24 @@ class RpcProxy(RpcProxyI):
         return False
         
     ###### LOGS 
-    def __getTargetLogs(self, id, type, start = 0, end = -1, filter = ''):
+    def __getTargetMasteredOns(self, id, type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getLogsOnTargetByIdAndType(id, type, start, end, filter))
-        count = db.countLogsOnTargetByIdAndType(id, type, filter)
+        ret = map(lambda l: l.toH(), db.getMasteredOnsOnTargetByIdAndType(id, type, start, end, filter))
+        count = db.countMasteredOnsOnTargetByIdAndType(id, type, filter)
         return [count, xmlrpcCleanup(ret)]
         
     def getMachineLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetLogs(id, TYPE_COMPUTER, start, end, filter)
+        return self.__getTargetMasteredOns(id, TYPE_COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
-        return self.__getTargetLogs(id, TYPE_PROFILE, start, end, filter)
+        return self.__getTargetMasteredOns(id, TYPE_PROFILE, start, end, filter)
 
     def getLogs4Location(self, location_uuid, start = 0, end = -1, filter = ''):
         if location_uuid == False:
             return [0, []]
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getLogs4Location(location_uuid, start, end, filter))
-        count = db.countLogs4Location(location_uuid, filter)
+        ret = map(lambda l: l.toH(), db.getMasteredOns4Location(location_uuid, start, end, filter))
+        count = db.countMasteredOns4Location(location_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
     
     ###### GET IMAGING API URL
@@ -285,6 +350,7 @@ class RpcProxy(RpcProxyI):
     def getGlobalStatus(self, location):
         url = self.__chooseImagingApiUrl(location)
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        # TODO need to be done in async
         if i != None:
             return xmlrpcCleanup(i.imagingServerStatus())
         return {}
