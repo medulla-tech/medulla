@@ -1,5 +1,6 @@
+# -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -16,14 +17,17 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Contains needed classes to build and to compute boolean operation on list of
+objects.
+"""
 
 import re
 import logging
 from random import randint
-from uniq import unique
+from pulse2.utils import unique
 from xml.dom import minidom
 from sets import Set
 
@@ -137,7 +141,6 @@ class BoolOperatorOr(BoolOperator):
         return "<b t='OR'><p>"+('</p><p>'.join(map(to_xml, list.values())))+"</p></b>"
     def merge(self, lists):
         retour = []
-        b1 = True
         if len(lists) > 0:
             pos = map(lambda a:a[0], filter(lambda a:a[1], lists))
             neg = map(lambda a:a[0], filter(lambda a:not a[1], lists))
