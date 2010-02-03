@@ -30,61 +30,57 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
+require('../includes/xmlrpc.inc.php');
 
 $params = getParams();
 $location = getCurrentLocation();
     
-if($location == "UUID1") {
-    $masters = array(
-        array('MDV 2008.0', 'Mandriva 2008 Master', '2009-02-25 17:38', '1GB', true),
-        array('MDV 2009.0', 'Mandriva 2009 Master', '2009-02-25 17:38', '1GB', false),
-        array('MDV 2010.0', 'Mandriva 2010 Master', '2009-02-25 17:38', '1GB', false),
-    );
-}
-else if ($location == "UUID2") {
-    $masters = array(
-        array('MDV 2010.0', 'Mandriva 2010 Master', '2009-02-25 17:38', '1GB', true),
-    );
-}
-else {
-    $masters = array(
-        array('Debian 6.0', 'Squeeze', '2009-02-25 17:38', '1GB', true),
-    );
-}
+list($count, $masters) = xmlrpc_getLocationImages($location);
 
 // forge params
-$nbItems = count($masters);
-$nbInfos = count($masters[0]);
-$addAction = new ActionItem(_T("Add image to default boot menu", "imaging"), 
-    "master_add", "addbootmenu", "master", "imaging", "manage");
+#$nbItems = count($masters);
+#$nbInfos = count($masters[0]);
+$addAction = new ActionItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 $addActions = array();
 
-for($i=0;$i<$nbItems;$i++) {
+$a_label = array();
+$a_desc = array();
+$a_date = array();
+$a_size = array();
+$a_is_in_menu = array();
+
+$i = -1;
+foreach ($masters as $master) {
+    $i += 1;
+    #for($i=0;$i<$nbItems;$i++) {
     $list_params[$i] = $params;
-    $list_params[$i]["itemid"] = $i;
-    $list_params[$i]["itemlabel"] = urlencode($masters[$i][0]);
+    $list_params[$i]["itemid"] = $master['imaging_uuid'];
+    $list_params[$i]["itemlabel"] = urlencode($master['desc']);
     
-    if(!$masters[$i][4])
+    if (!$master['image']) {
         $addActions[] = $addAction;
-    else
+    } else {
         $addActions[] = $emptyAction;
-    
-    for ($j = 0; $j < $nbInfos; $j++) {
-        $list[$j][] = $masters[$i][$j];
     }
+
+    $a_label[] = $master['desc'];
+    $a_desc[] = $master['desc'];
+    $a_date[] = _toDate($master['creation_date']);
+    $a_size[] = $master['size'];
+    $a_is_in_menu[] = ($master['image']?True:False);
 }
 
 $t = new TitleElement(_T("Available masters", "imaging"));
 $t->display();
 
 // show images list
-$l = new ListInfos($list[0], _T("Label"));
+$l = new ListInfos($a_label, _T("Label"));
 $l->setParamInfo($list_params);
-$l->addExtraInfo($list[1], _T("Description", "imaging"));
-$l->addExtraInfo($list[2], _T("Created", "imaging"));
-$l->addExtraInfo($list[3], _T("Size (compressed)", "imaging"));
-$l->addExtraInfo($list[4], _T("In default boot menu", "imaging"));
+$l->addExtraInfo($a_desc, _T("Description", "imaging"));
+$l->addExtraInfo($a_date, _T("Created", "imaging"));
+$l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
+$l->addExtraInfo($a_is_in_menu, _T("In default boot menu", "imaging"));
 $l->addActionItemArray($addActions);
 $l->addActionItem(
     new ActionPopupItem(_T("Create bootable iso", "imaging"), 

@@ -154,9 +154,6 @@ function item_edit() {
         $f->display();
     } else {
         // set new values
-        foreach($_POST as $key => $value) {
-        
-        }
         if(isset($_GET['gid'])) {
             $type = 'group';
             $target_uuid = $_GET['gid'];
@@ -220,8 +217,13 @@ function item_list() {
         $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
         
         if($i==0) {
-            $actionsDown[] = $downAction;
-            $actionsUp[] = $emptyAction;
+            if ($count == 1) {
+                $actionsDown[] = $emptyAction;
+                $actionsUp[] = $emptyAction;
+            } else {
+                $actionsDown[] = $downAction;
+                $actionsUp[] = $emptyAction;
+            }
         } else if($i==$nbItems-1) {
             $actionsDown[] = $emptyAction;
             $actionsUp[] = $upAction;
@@ -230,12 +232,14 @@ function item_list() {
             $actionsUp[] = $upAction;
         }
 
-        $a_label[] = $entry['default_name']; # should be replaced by the label in the good language
         if ($is_image) { # TODO $entry has now a cache for desc.
             $a_desc[] = $entry['image']['desc'];
+            $kind = 'IM';
         } else {
             $a_desc[] = $entry['boot_service']['desc'];
+            $kind = 'BS';
         }
+        $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);
         $a_defaultWOL[] = $entry['default_WOL'];

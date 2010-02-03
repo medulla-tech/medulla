@@ -30,55 +30,76 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
+require('../includes/xmlrpc.inc.php');
 
 $location = getCurrentLocation();
 
-$menu = array(
-    array('Start computer', 'Boot on system hard drive', true, true, true, true),
-    array('Create rescue image', 'Backup system hard drive', "", true, "", true),
-    array('Create master', 'Backup system hard drive as a master', "", true, "", true)
-);
+list($count, $menu) = xmlrpc_getLocationBootMenu($location);
 
 $upAction = new ActionItem(_T("Move Up"), "bootmenu_up", "up", "item", "imaging", "manage");
 $downAction = new ActionItem(_T("Move down"), "bootmenu_down", "down", "item", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 $actionUp = array();
 $actionDown = array();
-$nbItems = count($menu);
-$nbInfos = count($menu[0]);
 
-for($i=0;$i<$nbItems;$i++) {
-    $list_params[$i]["itemid"] = $i;
-    $list_params[$i]["itemlabel"] = urlencode($menu[$i][0]);
+$a_label = array();
+$a_desc = array();
+$a_default = array();
+$a_display = array();
+$a_defaultWOL = array();
+$a_displayWOL = array();
 
-    if($i==0) {
-        $actionsDown[] = $downAction;
-        $actionsUp[] = $emptyAction;
+$i = -1;
+foreach ($menu as $entry) {
+    $i = $i + 1;
+    $is_image = False;
+    if (isset($entry['image'])) {
+        $is_image = True;
     }
-    else if($i==$nbItems-1) {
+    $list_params[$i] = $params;
+    $list_params[$i]["itemid"] = $entry['imaging_uuid'];
+    $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
+
+    if ($i==0) {
+        if ($count == 1) {
+            $actionsDown[] = $emptyAction;
+            $actionsUp[] = $emptyAction;
+        } else {
+            $actionsDown[] = $downAction;
+            $actionsUp[] = $emptyAction;
+        }
+    } elseif ($i==$count-1) {
         $actionsDown[] = $emptyAction;
         $actionsUp[] = $upAction;
-    }
-    else {
+    } else {
         $actionsDown[] = $downAction;
         $actionsUp[] = $upAction;
     }       
     
-    for ($j = 0; $j < $nbInfos; $j++) {
-        $list[$j][] = $menu[$i][$j];
+    if ($is_image) { # TODO $entry has now a cache for desc.
+        $a_desc[] = $entry['image']['desc'];
+        $kind = 'IM';
+    } else {
+        $a_desc[] = $entry['boot_service']['desc'];
+        $kind = 'BS';
     }
-}
+    $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
+    $a_default[] = $entry['default'];
+    $a_display[] = ($entry['hidden'] ? False:True);
+    $a_defaultWOL[] = $entry['default_WOL'];
+    $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
 
+}
 $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
 $t->display();
 
-$l = new ListInfos($list[0], _T("Label"));
+$l = new ListInfos($a_label, _T("Label", "imaging"));
 $l->setParamInfo($list_params);
-$l->addExtraInfo($list[1], _T("Description", "imaging"));
-$l->addExtraInfo($list[2], _T("Default", "imaging"));
-$l->addExtraInfo($list[3], _T("Displayed", "imaging"));
-$l->addExtraInfo($list[4], _T("Default on WOL", "imaging"));
-$l->addExtraInfo($list[5], _T("Displayed on WOL", "imaging"));
+$l->addExtraInfo($a_desc, _T("Description", "imaging"));
+$l->addExtraInfo($a_default, _T("Default", "imaging"));
+$l->addExtraInfo($a_display, _T("Displayed", "imaging"));
+$l->addExtraInfo($a_defaultWOL, _T("Default on WOL", "imaging"));
+$l->addExtraInfo($a_displayWOL, _T("Displayed on WOL", "imaging"));
 $l->addActionItemArray($actionsUp);
 $l->addActionItemArray($actionsDown);
 $l->addActionItem(new ActionItem(_T("Edit"), "bootmenu_edit", "edit", "item", "imaging", "manage"));

@@ -53,7 +53,7 @@ list($count, $db_logs) = xmlrpc_getLogs4Location($location, $start, $end, $filte
 
 $logs = array();
 foreach ($db_logs as $log) {
-    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['completeness'], $log['log_state']);
+    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['mastered_on_state']);
 }
 
 $filter = $_GET["filter"];
@@ -74,17 +74,15 @@ for ($i = 0; $i < $nbLogs; $i++) {
         else if(ereg('restore', $logs[$i][2]))
             $logs[$i][0] = '<img src="modules/imaging/graph/images/restore.png" />&nbsp;'.$logs[$i][0];
 
-        // complete percent
-        $logs[$i][1] = $logs[$i][1].'%';
-
         // get status
-        $status = $logs[$i][2];
-        if(!array_key_exists($status, $logStates))
+        $status = $logs[$i][1];
+        if(!array_key_exists($status, $logStates)) {
             $status = 'unknow';
+        }
 
         // complete status display
         $led = new LedElement($logStates[$status][1]);
-        $logs[$i][2] = $led->value.'&nbsp;'.$logStates[$status][0];
+        $logs[$i][1] = $led->value.'&nbsp;'.$logStates[$status][0];
        
         for ($j = 0; $j < $nbInfos; $j++) {
             $list[$j][] = $logs[$i][$j];
@@ -93,8 +91,7 @@ for ($i = 0; $i < $nbLogs; $i++) {
 }
 
 $l = new OptimizedListInfos($list[0], _T("Description", "imaging"));
-$l->addExtraInfo($list[1], _T("Completed", "imaging"));
-$l->addExtraInfo($list[2], _T("State", "imaging"));
+$l->addExtraInfo($list[1], _T("State", "imaging"));
 $l->setParamInfo($list_params);
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", "tablogs", "details")

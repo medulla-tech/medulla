@@ -61,7 +61,8 @@ $page = new Page("service_edit",_T("Edit service","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 $page = new Page("service_add",_T("Add service","imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+// $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 $page = new Page("bootmenu",_T("Default boot menu","imaging"));
 $submod->addPage($page);
@@ -159,6 +160,14 @@ if (!empty($submod)) {
     $submod->addPage($page);
     $page = new Page("editservice", _T("Edit parameters of a service on a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    
+    $page = new Page("addimage", _T("Add a image to a target", "msc"));
+    $page->setFile("modules/imaging/imaging/addimage.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+    $submod->addPage($page);
+    $page = new Page("editimage", _T("Edit parameters of a image on a target", "msc"));
+    $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
     $submod->addPage($page);
     

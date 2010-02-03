@@ -29,6 +29,10 @@ function xmlrpc_getProfileBootMenu($id) {
     return xmlCall("imaging.getProfileBootMenu", array($id));
 }
 
+function xmlrpc_getLocationBootMenu($id) {
+    return xmlCall("imaging.getLocationBootMenu", array($id));
+}
+
 //Actions
 function xmlrpc_moveItemDownInMenu($target_uuid, $type, $item_uuid) {
     return xmlCall("imaging.moveItemDownInMenu", array($target_uuid, $type, $item_uuid));
@@ -38,18 +42,39 @@ function xmlrpc_moveItemUpInMenu($target_uuid, $type, $item_uuid) {
     return xmlCall("imaging.moveItemUpInMenu", array($target_uuid, $type, $item_uuid));
 }
 
-/**/
-function xmlrpc_getMachineImages($id) {
-    return xmlCall("imaging.getMachineImages", array($id));
+/* Images */
+function xmlrpc_getMachineImages($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getMachineImages", array($id, $start, $end, $filter));
 }
 
-function xmlrpc_getProfileImages($id) {
-    return xmlCall("imaging.getProfileImages", array($id));
+function xmlrpc_getProfileImages($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getProfileImages", array($id, $start, $end, $filter));
 }
+
+function xmlrpc_getLocationImages($location_id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getLocationImages", array($location_id, $start, $end, $filter));
+}
+//Actions
+function xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params) {
+    return xmlCall("imaging.addImageToTarget", array($item_uuid, $target_uuid, $params));
+}
+
+function xmlrpc_editImageToTarget($item_uuid, $target_uuid, $params) {
+    return xmlCall("imaging.editImageToTarget", array($item_uuid, $target_uuid, $params));
+}
+
+function xmlrpc_delImageToTarget($item_uuid, $target_uuid) {
+    return xmlCall("imaging.delImageToTarget", array($item_uuid, $target_uuid));
+}
+
 
 /* BootServices */
 function xmlrpc_getPossibleBootServices($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getPossibleBootServices", array($id, $start, $end, $filter));
+}
+
+function xmlrpc_getLocationBootServices($id, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getLocationBootServices", array($id, $start, $end, $filter));
 }
 
 function xmlrpc_getMachineBootServices($id, $start = 0, $end = -1, $filter = '') {
@@ -76,6 +101,20 @@ function xmlrpc_delServiceToTarget($item_uuid, $target_uuid) {
 function xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params) {
     return xmlCall("imaging.editServiceToTarget", array($item_uuid, $target_uuid, $params));
 }
+
+function xmlrpc_addServiceToLocation($item_uuid, $location_id, $params) {
+    return xmlCall("imaging.addServiceToLocation", array($item_uuid, $location_id, $params));
+}
+
+function xmlrpc_delServiceToLocation($item_uuid, $location_id) {
+    return xmlCall("imaging.delServiceToLocation", array($item_uuid, $location_id));
+}
+
+function xmlrpc_editServiceToLocation($item_uuid, $location_id, $params) {
+    return xmlCall("imaging.editServiceToLocation", array($item_uuid, $location_id, $params));
+}
+
+
 
 /* Logs */
 function xmlrpc_getMachineLogs($id, $start = 0, $end = -1, $filter = '') {

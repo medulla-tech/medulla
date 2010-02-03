@@ -25,39 +25,47 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-$id = $_GET['itemid'];
+$params = getParams();
+$location = getCurrentLocation();
+$item_uuid = $_GET['itemid'];
+$label = urldecode($_GET['itemlabel']);
 
-$menu = array(
-    array('Start computer', 'Boot on system hard drive', true, true, true, true),
-    array('Create rescue image', 'Backup system hard drive', "", true, "", true),
-    array('Create master', 'Backup system hard drive as a master', "", true, "", true)
-);
+$item = xmlrpc_getMenuItemByUUID($item_uuid);
 
 if(count($_POST) == 0) {
             
+    $is_selected = '';
+    $is_displayed = 'CHECKED';
+    $is_wol_selected = '';
+    $is_wol_displayed = 'CHECKED';
     // get current values
-    $label = $menu[$id][0];
-    if($menu[$id][2] == true)
+    if($item['default'] == true)
         $is_selected = 'CHECKED';
-    if($menu[$id][3] == true)
-        $is_displayed = 'CHECKED';
-    if($menu[$id][4] == true)
+    if($item['hidden'] == true)
+        $is_displayed = '';
+    if($item['default_WOL'] == true)
         $is_wol_selected = 'CHECKED';
-    if($menu[$id][5] == true)
-        $is_wol_displayed = 'CHECKED';
+    if($item['hidden_WOL'] == true)
+        $is_wol_displayed = '';
     
-    
-    $p = new PageGenerator(_T("Edit : ", "imaging").$label);
+    $p = new PageGenerator(sprintf(_T("Edit : %s", "imaging"), $label));
     $sidemenu->forceActiveItem("bootmenu");
     $p->setSideMenu($sidemenu);
     $p->display();
     
     $f = new ValidatingForm();
     $f->push(new Table());      
+    $f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
+    
+    $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_name"));
+    $f->add($input,                                         array("value" => $item['default_name']));
+                    
     $f->add(
         new TrFormElement(_T("Selected by default", "imaging"), 
-        new CheckboxTpl("selected")),
+        new CheckboxTpl("default")),
         array("value" => $is_selected)
     );
     $f->add(
@@ -67,25 +75,29 @@ if(count($_POST) == 0) {
     );
     $f->add(
         new TrFormElement(_T("Selected by default on WOL", "imaging"), 
-        new CheckboxTpl("wol_selected")),
+        new CheckboxTpl("default_WOL")),
         array("value" => $is_wol_selected)
     );
     $f->add(
         new TrFormElement(_T("Displayed on WOL", "imaging"), 
-        new CheckboxTpl("wol_displayed")),
+        new CheckboxTpl("displayed_WOL")),
         array("value" => $is_wol_displayed)
     );    
     $f->pop();
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
     $f->display();
-}
-else {
-    // set new values
-    foreach($_POST as $key => $value) {
-    
-    }
-    // goto menu boot list
+} else {
+    $bs_uuid = $item['boot_service']['imaging_uuid'];
+
+    $params['default'] = ($_POST['default'] == 'on'?True:False);
+    $params['default_WOL'] = ($_POST['default_WOL'] == 'on'?True:False);
+    $params['hidden'] = ($_POST['displayed'] == 'on'?False:True);
+    $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
+    $params['default_name'] = $_POST['default_name'];
+
+    $ret = xmlrpc_editServiceToLocation($bs_uuid, $location, $params);
+
     header("Location: " . urlStrRedirect("imaging/manage/bootmenu"));
 }   
 

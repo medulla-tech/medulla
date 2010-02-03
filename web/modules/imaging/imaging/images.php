@@ -29,10 +29,13 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 if(isset($_GET['gid'])) {
     $type = 'group';
     $all = xmlrpc_getProfileImages($_GET['gid']);
+    $target_uuid = $_GET['gid'];
 } else {
     $type = '';
     $all = xmlrpc_getMachineImages($_GET['uuid']);
+    $target_uuid = $_GET['uuid'];
 }
+
 $images = $all['images'];
 $masters = $all['masters'];
 
@@ -46,7 +49,7 @@ switch($mod) {
         image_edit($type, $images);
         break;
     case 'add':
-        image_add($type);
+        image_add($type, $target_uuid);
         break;
     default:
         if(empty($type))
@@ -55,19 +58,22 @@ switch($mod) {
         break;
 }
 
-function image_add($type) {
+function image_add($type, $target_uuid) {
     
     $params = getParams();
     // add to menu
-    $id = $_GET['itemid'];
+    $item_uuid = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
 
-    $result = true;
-    if($result == true) {
+    $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid);
+
+    if($ret[0]) {
         // goto images list   
         $str = sprintf(_T("Image <strong>%s</strong> added to boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+    } else {
+        new NotifyWidgetError($ret[1]);
     }
 }
 
@@ -128,35 +134,47 @@ function image_list($type, $title, $images, $actions=true) {
     }
     
     $addActions = array();
-    $addAction = new ActionItem(_T("Add image to boot menu", "imaging"), "imgtabs", 
-        "addbootmenu", "image", "base", "computers", $type."tabimages", "add");
+    $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
     $emptyAction = new EmptyActionItem();
     
     // forge params
-    $nbItems = count($images);
-    $nbInfos = count($images[0]);
-    for($i=0;$i<$nbItems;$i++) {
+    list($count, $images) = $images;
+
+    $i = -1;
+
+    $a_desc = array();
+    $a_desc = array();
+    $a_date = array();
+    $a_size = array();
+    $a_inbootmenu = array();
+    foreach ($images as $image) {
+        $i += 1;
+        
         $list_params[$i] = $params;
-        $list_params[$i]["itemid"] = $i;
-        $list_params[$i]["itemlabel"] = urlencode($images[$i][0]);
+        $list_params[$i]["itemid"] = $image['imaging_uuid'];
+        $list_params[$i]["itemlabel"] = urlencode($images['desc']);
         
         // don't show action if image is in bootmenu
-        if(!$images[$i][4])
+        if(!$images['images']) {
             $addActions[] = $addAction;
-        else
+        } else {
             $addActions[] = $emptyAction;    
-        
-        for ($j = 0; $j < $nbInfos; $j++) {
-            $list[$j][] = $images[$i][$j];
         }
+        
+        # TODO no label in image!
+        $a_label[] = $image['desc'];
+        $a_desc[] = $image['images']['default_name'];
+        $a_date[] = _toDate($image['creation_date']);
+        $a_size[] = $image['size'];
+        $a_inbootmenu[] = ($image['menu_item']?True:False);
     }
     // show images list
-    $l = new ListInfos($list[0], _T("Label"));
+    $l = new ListInfos($a_label, _T("Label"));
     $l->setParamInfo($list_params);
-    $l->addExtraInfo($list[1], _T("Description", "imaging"));
-    $l->addExtraInfo($list[2], _T("Created", "imaging"));
-    $l->addExtraInfo($list[3], _T("Size (compressed)", "imaging"));
-    $l->addExtraInfo($list[4], _T("In boot menu", "imaging"));    
+    $l->addExtraInfo($a_desc, _T("Description", "imaging"));
+    $l->addExtraInfo($a_date, _T("Created", "imaging"));
+    $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
+    $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));    
     $l->addActionItemArray($addActions);
     $l->addActionItem(
         new ActionPopupItem(_T("Create bootable iso", "imaging"), 
