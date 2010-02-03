@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Contains the base plugin for the MMC agent.
+"""
+
 from mmc.support.errorObj import errorMessage
 from mmc.support.config import PluginConfig
 from mmc.plugins.base.config import BasePluginConfig
@@ -71,6 +75,9 @@ modList= None
 VERSION = "3.0.0"
 APIVERSION = "7:0:3"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
+
+# List of methods that can be called without user authentication
+NOAUTHNEEDED = ['authenticate', 'ldapAuth']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -18,8 +18,11 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+XML-RPC server implementation of the MMC agent.
+"""
 
 import twisted.internet.error
 import twisted.copyright
@@ -71,14 +74,19 @@ class MmcServer(xmlrpc.XMLRPC,object):
         self.config = config
         self.logger = logging.getLogger()
 
+    def _splitFunctionPath(self, functionPath):
+        if '.' in functionPath:
+            mod, func = functionPath.split('.', 1)
+        else:
+            mod = None
+            func = functionPath
+        return mod, func
+
     def _getFunction(self, functionPath, request):
         """Overrided to use functions from our plugins"""
-        if '.' in functionPath:
-            mod, func = functionPath.split('.')
-        else:
-            func = functionPath
+        mod, func = self._splitFunctionPath(functionPath)
         try:
-            if '.' in functionPath:
+            if mod:
                 try:
                     ret = getattr(self.modules[mod], func)
                 except AttributeError:
@@ -87,8 +95,23 @@ class MmcServer(xmlrpc.XMLRPC,object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            self.logger.error(functionPath+' not found')
+            self.logger.error(functionPath + ' not found')
             raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+        return ret
+
+    def _needAuth(self, functionPath):
+        """
+        @returns: True if the specified function requires a user authentication
+        @rtype: boolean
+        """
+        mod, func = self._splitFunctionPath(functionPath)
+        ret = True
+        if mod:
+            try:
+                nanl = self.modules[mod].NOAUTHNEEDED
+                ret = func not in nanl
+            except (KeyError, AttributeError):
+                pass
         return ret
 
     def render(self, request):
@@ -128,7 +151,7 @@ class MmcServer(xmlrpc.XMLRPC,object):
         else:
             self.logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
         try:
-            if not s.loggedin and functionPath != "base.ldapAuth":
+            if not s.loggedin and self._needAuth(functionPath):
                 self.logger.warning("Function can't be called because the user is not logged in")
                 raise Fault(8003, "Can't use MMC agent server because you are not logged in")
             else:
