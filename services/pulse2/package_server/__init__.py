@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -18,34 +18,26 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+    Pulse2 Package Server
+"""
 
 import os.path
 import logging
-import twisted
-import re
 import time
-import signal
 import os
-import sys
-import shutil
 
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 import pulse2.utils
 
-from threading import Thread, Semaphore
-import threading
+from threading import Thread
 from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
-
-"""
-    Pulse2 PackageServer
-"""
 
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 VERSION = "1.2.4"
@@ -77,7 +69,7 @@ class ThreadPackageDetect(ThreadPackageHelper):
             Common().detectNewPackages()
             logging.getLogger().debug("###############< ThreadPackageDetect end\n")
         except Exception, e:
-            logging.getLogger().error('an Exception happened when trying to detect packages')
+            logging.getLogger().error('an Exception happened when trying to detect packages:' + str(e))
         self.working = False
 
     def run(self):
