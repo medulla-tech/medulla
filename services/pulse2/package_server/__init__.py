@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
