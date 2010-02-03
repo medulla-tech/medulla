@@ -20,6 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+FIXME: find a docstring
+"""
+
 from mmc.support.mmctools import Singleton
 
 class PossibleQueries(Singleton):

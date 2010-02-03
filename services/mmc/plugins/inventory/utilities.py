@@ -2,7 +2,7 @@
 #
 # (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
-# $Id: bool_equations.py 5195 2010-02-03 09:22:39Z cdelfosse $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #

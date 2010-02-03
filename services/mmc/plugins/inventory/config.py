@@ -1,7 +1,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 #
-# $Id: __init__.py 3 2008-03-03 14:35:11Z cdelfosse $
+# $Id$
 #
 # This file is part of MMC.
 #
@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+"""
+Configuration class for the inventory MMC agent plugin.
+"""
 
 from pulse2.database.inventory.config import InventoryDatabaseConfig
 from mmc.plugins.inventory.utilities import getInventoryParts
