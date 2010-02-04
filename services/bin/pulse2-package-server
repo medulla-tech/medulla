@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2008 Mandriva, http://www.mandriva.com/
+# (c) 2008-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -18,9 +18,11 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Pulse 2 Package Server daemon.
+"""
 
 import os
 import os.path
@@ -67,10 +69,12 @@ def running(inifile, daemonize):
     if config.real_package_deletion:
         logger.warning("Real package deletion is activated")
 
-    # When starting, we log to stderr too
-    # as there is a lot of log possible during the init of pserver, we no longer log to stderr
-    # hdlr2 = logging.StreamHandler()
-    # logger.addHandler(hdlr2)
+    # When starting, we log to stderr too if we don't become a daemon
+    # As there is a lot of log possible during the init of pserver, we no
+    # longer log to stderr if we daemonize later
+    if not daemonize:
+        hdlr2 = logging.StreamHandler()
+        logger.addHandler(hdlr2)
 
     try:
         ThreadLauncher().initialize(config)
