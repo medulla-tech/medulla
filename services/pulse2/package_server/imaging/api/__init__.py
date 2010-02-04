@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -18,26 +17,97 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-    Pulse2 PackageServer Mirror API
+Pulse 2 Package Server Imaging API
 """
+
 import logging
-from pulse2.package_server.imaging.common import ImagingCommon
+
+from twisted.internet.utils import getProcessOutput
+
+from pulse2.package_server.imaging.config import ImagingConfig
 from pulse2.package_server.xmlrpc import MyXmlrpc
+from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
+
+from pulse2.utils import isMACAddress, splitComputerPath
 
 class ImagingApi(MyXmlrpc):
-    type = 'Imaging'
-    def __init__(self, mp, src):
+    
+    myType = 'Imaging'
+
+    def __init__(self, name, config):
+        """
+        @param config: Package server config
+        @type config: P2PServerCP
+        """
         MyXmlrpc.__init__(self)
+        self.name = name
         self.logger = logging.getLogger()
-        self.src = src
-            
-        self.mp = mp
-        self.logger.info("(%s) %s : initialised (%s)"%(self.type, self.mp, self.src))
+        self.logger.info("Initializing %s" % self.myType)
+        # Read and check configuration
+        self.config = ImagingConfig()
+        self.config.read(config.cp)
+        self.config.validate()
 
     def xmlrpc_getServerDetails(self):
         pass
+
+    def xmlrpc_imagingServerStatus(self):
+        """
+        Returns the percentage of remaining size from the part where the images
+        are stored.
+
+        @return: a percentage, or -1 if it fails
+        @rtype: int
+        """
+        def onSuccess(result):
+            ret = -1
+            for line in result.split('\n'):
+                words = line.split()
+                print words
+                # Last column should contain the mounted on part
+                try:
+                    mount = words[-1]
+                except IndexError:
+                    continue
+                if self.config.imaging_root_dir.startswith(mount):
+                    try:
+                        ret = int(words[-2].rstrip('%'))
+                    except (ValueError, IndexError):
+                        pass
+                    # Don't break but continue because mount maybe /, which
+                    # will always match
+            return ret
+        
+        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d.addCallback(onSuccess)
+        return d
+
+    def xmlrpc_computerRegister(self, computerName, MACAddress):
+        """
+        Method to register a new computer.
+
+        @raise TypeError: if computerName or MACAddress are malformed
+        @return: a deferred object resulting to 1 if registration was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def onSuccess(result):
+            self.logger.info('Imaging: New client registration succeeded for: %s %s (%s)' % (computerName, MACAddress, str(result)))
+            return 1
+        
+        if not isMACAddress(MACAddress):
+            raise TypeError
+        profile, entities, hostname, domain = splitComputerPath(computerName)
+
+        self.logger.info('Imaging: Starting new client registration: %s %s' % (computerName, MACAddress))
+        # Call the MMC agent
+        client = ImagingXMLRPCClient('', self.config.mmc_agent, self.config.mmc_agent_verify_peer, self.config.mmc_agent_cacert, self.config.mmc_agent_localcert)
+        func = 'imaging.computerRegister'
+        args = (hostname, domain, MACAddress, profile, entities)
+        d = client.callRemote(func, *args)
+        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+        return d
