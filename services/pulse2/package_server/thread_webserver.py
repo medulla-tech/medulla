@@ -1,7 +1,6 @@
-#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -18,9 +17,12 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Pulse 2 Package Server.
+Registers all XML-RPC resources attached to the XML-RPC server.
+"""
 
 import os.path
 import logging
@@ -40,10 +42,6 @@ from pulse2.package_server.user_package_api import UserPackageApi
 from pulse2.package_server.imaging.api import ImagingApi
 
 import pulse2.xmlrpc
-
-"""
-    Pulse2 PackageServer
-"""
 
 class MyServer(resource.Resource):
     def register(self, klass, mp):
@@ -96,13 +94,13 @@ def initialize(config):
         logger.info("package server initialized with scheduler api")
 
     if config.imaging:
-        if os.path.exists(config.imaging['src']):
-            imaging = ImagingApi(config.imaging['mount_point'], config.imaging['src'])
+        try:
+            imaging = ImagingApi(config.imaging['mount_point'], config)
             server.register(imaging, config.imaging['mount_point'])
             services.append({'type':'imaging', 'mp':config.imaging['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
-            logger.info("package server initialized with imaging api")
-        else:
-            logger.error("package server couldn't initialized imaging api, %s does not exists"%(config.imaging['src']))
+            logger.info("Package Server initialized with imaging API")
+        except Exception, e:
+            logger.error("Imaging error: " + str(e))
 
     desc = Description(services)
     server.register(desc, '/desc')
