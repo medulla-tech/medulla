@@ -2,7 +2,7 @@
 #
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: config.py 4808 2009-11-23 16:04:04Z oroussy $
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
