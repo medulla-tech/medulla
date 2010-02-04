@@ -20,6 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the user package_api API
+It provide methods to tell which package_api a user can use to modify packages.
+"""
+
 from pulse2.apis.clients import Pulse2Api
         
 class UserPackageApiApi(Pulse2Api):
@@ -31,5 +36,5 @@ class UserPackageApiApi(Pulse2Api):
         if self.initialized_failed:
             return {}
         d = self.callRemote("getUserPackageApi", {"name":user, "uuid":user})
-        d.addErrback(self.onError, "UserPackageApiApi:getUserPackageApi", {"name":user, "uuid":user}, [{'ERR':'PULSE2ERROR_GETUSERPACKAGEAPI', 'mirror':self.server_addr.replace(self.credits, '')}])
+        d.addErrback(self.onError, "UserPackageApiApi:getUserPackageApi", {"name":user, "uuid":user}, [{'ERR':'PULSE2ERROR_GETUSERPACKAGEAPI', 'mirror':self.server_addr.replace(self.credentials, '')}])
         return d

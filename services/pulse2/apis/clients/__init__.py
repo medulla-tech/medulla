@@ -35,7 +35,7 @@ import exceptions
 
 class Pulse2Api(twisted.web.xmlrpc.Proxy):
     name = "pulse2API"
-    def __init__(self, credits, url, verifypeer = False, cacert = None, localcert = None):
+    def __init__(self, credentials, url, verifypeer = False, cacert = None, localcert = None):
         twisted.web.xmlrpc.Proxy.__init__(self, url, None, None)
         self.SSLClientContext = None
         self.logger = logging.getLogger()
@@ -44,7 +44,7 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
             self.SSLClientContext = pulse2.xmlrpc.OpenSSLContext().getContext()
         self.logger.debug('%s will connect to %s' % (self.name, url))
         self.server_addr = url
-        self.credits = credits
+        self.credentials = credentials
         # FIXME: still needed ?
         self.initialized_failed = False
 

@@ -20,6 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the package_api_put API
+It provides methods to modify packages.
+"""
+
 from pulse2.apis.clients import Pulse2Api
 from mmc.support.uuid import uuid1
 

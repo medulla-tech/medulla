@@ -20,6 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the user package_api API
+It provide methods to tell which package_api a user can use to modify packages.
+"""
 import logging
 import mmc.plugins.pkgs.config
 from mmc.support.mmctools import Singleton
@@ -32,7 +36,7 @@ class UserPackageApiApi(Singleton):
         self.logger = logging.getLogger()
         self.logger.debug("Going to initialize UserPackageApiApi")
         self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
-        credits = ''
+        credentials = ''
 
         if self.config.upaa_enablessl:
             self.server_addr = 'https://'
@@ -41,19 +45,19 @@ class UserPackageApiApi(Singleton):
 
         if self.config.upaa_username != '':
             self.server_addr += self.config.upaa_username
-            credits += self.config.upaa_username
+            credentials += self.config.upaa_username
             if self.config.upaa_password != '':
                 self.server_addr += ":"+self.config.upaa_password
-                credits += ":"+self.config.upaa_password
+                credentials += ":"+self.config.upaa_password
             self.server_addr += "@"
 
         self.server_addr += self.config.upaa_server+':'+str(self.config.upaa_port) + self.config.upaa_mountpoint
         self.logger.debug('UserPackageApiApi will connect to %s' % (self.server_addr))
 
         if self.config.upaa_verifypeer:
-            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(credits, self.server_addr, self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert)
+            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(credentials, self.server_addr, self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert)
         else:
-            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(credits, self.server_addr)
+            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(credentials, self.server_addr)
 
         for method in ('getUserPackageApi', ):
             setattr(self, method, getattr(self.internal, method))

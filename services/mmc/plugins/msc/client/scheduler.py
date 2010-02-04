@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Client to connect to the scheduler XMLRPC api from the msc mmc plugin.
+"""
+
 # Twisted
 import twisted.web.xmlrpc
 import twisted.internet.defer
@@ -45,7 +49,7 @@ def getProxy(schedulerConfig):
     """
     config = MscConfig()
 
-    (url, credits) = makeURL(schedulerConfig)
+    (url, credentials) = makeURL(schedulerConfig)
 
     if url.startswith("http://"):
         ret = twisted.web.xmlrpc.Proxy(url)

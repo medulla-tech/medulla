@@ -21,8 +21,12 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+this module just prvide a method to create an API url from a dict.
+"""
+
 def makeURL(config):
-    credits = ''
+    credentials = ''
     if config.has_key('proto') and not config.has_key('enablessl'):
         uri = "%s://" % config['proto']
     elif config.has_key('protocol') and not config.has_key('enablessl'):
@@ -34,9 +38,9 @@ def makeURL(config):
             uri = 'http://'
     if config.has_key('username') and config['username'] != '':
         uri += '%s:%s@' % (config['username'], config['password'])
-        credits = '%s:%s' % (config['username'], config['password'])
+        credentials = '%s:%s' % (config['username'], config['password'])
     if config.has_key('server') and not config.has_key('host'):
         config['host'] = config['server']
     uri += '%s:%d' % (config['host'], int(config['port']))
-    return (uri, credits)
+    return (uri, credentials)
 

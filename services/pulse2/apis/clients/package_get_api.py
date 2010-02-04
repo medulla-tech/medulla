@@ -20,6 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the package_api_get API
+It provides methods to acces to package informations.
+"""
+
 from pulse2.apis.clients import Pulse2Api
 import twisted.internet.defer
 
@@ -31,11 +36,11 @@ class PackageGetA(Pulse2Api):
     def getAllPackages(self, mirror = None):
         try:
             d = self.callRemote("getAllPackages", mirror)
-            d.addErrback(self.onError, "getAllPackages", mirror, [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credits, '')}])
+            d.addErrback(self.onError, "getAllPackages", mirror, [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}])
             return d
         except Exception, e:
             self.logger.error("getAllPackages %s"%(str(e)))
-            return [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credits, '')}]
+            return [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}]
 
     def getAllPendingPackages(self, mirror = None):
         try:

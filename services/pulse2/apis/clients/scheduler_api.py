@@ -20,6 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the scheduler API
+It provides methods to know which scheduler is a computer depending on
+"""
+
 from pulse2.apis import makeURL
 from twisted.internet import defer
 
@@ -39,7 +44,7 @@ class SchedulerApi(Pulse2Api): # Singleton
         ret = None
         if type(scheduler) == dict:
             if "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
-                (scheduler, credits) = makeURL(scheduler)
+                (scheduler, credentials) = makeURL(scheduler)
             elif "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
         elif type(scheduler) in (str, unicode):

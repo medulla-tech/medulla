@@ -21,6 +21,12 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Module to connect to the Mirror API XMLRPC API.
+This api provides methods to know which package or mirror API to connect 
+to know package you can install on a computer.
+"""
+
 import logging
 import mmc.plugins.msc
 import pulse2.apis.clients.mirror_api
@@ -35,7 +41,7 @@ class MirrorApi(Singleton):
         self.logger = logging.getLogger()
         self.logger.debug("Going to initialize MirrorApi")
         self.config = mmc.plugins.msc.MscConfig()
-        credits = ''
+        credentials = ''
 
         if self.config.ma_enablessl:
             self.server_addr = 'https://'
@@ -44,18 +50,18 @@ class MirrorApi(Singleton):
 
         if self.config.ma_username != '':
             self.server_addr += self.config.ma_username
-            credits = self.config.ma_username
+            credentials = self.config.ma_username
             if self.config.ma_password != '':
                 self.server_addr += ":"+self.config.ma_password
-                credits += ":"+self.config.ma_password
+                credentials += ":"+self.config.ma_password
             self.server_addr += "@"
 
         self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
 
         if self.config.ma_verifypeer:
-            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credits, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
         else:
-            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credits, self.server_addr)
+            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr)
         
         for method in ('getMirror', 'getMirrors', 'getFallbackMirror', 'getFallbackMirrors', 'getApiPackage', 'getApiPackages', ):
             setattr(self, method, getattr(self.internal, method))

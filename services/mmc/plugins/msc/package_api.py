@@ -20,6 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+This module define the package get API.
+It provides methods to get informations on packages.
+"""
 import re
 import logging
 import time
@@ -40,7 +44,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
         self.logger = logging.getLogger()
         bind = server
-        credits = ''
+        credentials = ''
         if type(server) == dict:
             mountpoint = server['mountpoint']
             port = server['port']
@@ -48,14 +52,14 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
             bind = server['server']
             if server.has_key('username') and server.has_key('password') and server['username'] != '':
                 login = "%s:%s@" % (server['username'], server['password'])
-                credits = "%s:%s" % (server['username'], server['password'])
+                credentials = "%s:%s" % (server['username'], server['password'])
 
         self.server_addr = '%s://%s%s:%s%s' % (proto, login, bind, str(port), mountpoint)
         self.config = MscConfig()
         if self.config.ma_verifypeer:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credits, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
         else:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credits, self.server_addr)
+            pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credentials, self.server_addr)
 
 def get_default_bundle_name(bundle_elem_nb = 0):
     localtime = time.localtime()

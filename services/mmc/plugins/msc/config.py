@@ -21,6 +21,12 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Config module for the msc mmc plugin.
+Get all possible option like how to connect to the database, ....
+
+"""
+
 # big modules
 import logging
 import re
@@ -364,7 +370,7 @@ class MscConfig(MscDatabaseConfig):
             self.scheduler_url2id = {}
 
             for id in self.schedulers:
-                (url, credits) = makeURL(self.schedulers[id])
+                (url, credentials) = makeURL(self.schedulers[id])
                 self.scheduler_url2id[url] = id
 
 # static config ...
