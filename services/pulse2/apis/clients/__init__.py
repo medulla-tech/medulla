@@ -1,25 +1,23 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
-# $Id: mirror_api.py 689 2009-02-06 15:18:43Z oroussy $
+# $Id: config.py 4808 2009-11-23 16:04:04Z oroussy $
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# MMC is free software; you can redistribute it and/or modify
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# MMC is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 Class to manage api calls and errors
@@ -34,8 +32,14 @@ from pulse2.apis.consts import *
 import exceptions
 
 class Pulse2Api(twisted.web.xmlrpc.Proxy):
+
     name = "pulse2API"
+
     def __init__(self, credentials, url, verifypeer = False, cacert = None, localcert = None):
+        """
+        @param credentials: XML-RPC HTTP BASIC credentials = login:password
+        @type credentials: str
+        """
         twisted.web.xmlrpc.Proxy.__init__(self, url, None, None)
         self.SSLClientContext = None
         self.logger = logging.getLogger()
