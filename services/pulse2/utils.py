@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -17,11 +17,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
-from ConfigParser import * # to build Pulse2ConfigParser on top of ConfigParser()
+"""
+Some common utility methods used by Pulse 2 components
+"""
+
+# to build Pulse2ConfigParser on top of ConfigParser()
+from ConfigParser import ConfigParser
 
 # some imports to convert stuff in xmlrpcCleanup()
 import datetime
@@ -240,3 +243,55 @@ def whoami():
 def whosdaddy():
     return inspect.stack()[2][3]
         
+def isMACAddress(mac):
+    """
+    @returns: returns True if the given MAC address is valid
+    @rtype: bool
+    """
+    return re.match('^([0-9a-f]{2}:){5}[0-9a-f]{2}$', mac.lower()) != None
+
+def splitComputerPath(path):
+    """
+    Split the computer path according to this scheme:
+     profile:/entity1/entity2/computerName
+
+    @raise TypeError: if the computer path is not valid
+    @returns: returns a tuple with (profile, entities, hostname, domain)
+    @rtype: tuple
+    """
+    # Get profile
+    m = re.match("^([a-zA-Z0-9]*):(.*)$", path)
+    if m:
+        profile = m.group(1)
+        tail = m.group(2)
+    else:
+        profile = ''
+        tail = path
+
+    # Split entity path and computer FQDN
+    entities, fqdn = os.path.split(tail)
+
+    if entities and entities != '/':
+        if not entities.startswith('/'):
+            raise TypeError
+        # Check entities
+        for entity in entities.split('/'):
+            # FIXME: re to check entity name ?
+            if entity and not re.match('^[a-zA-Z0-9]{3,64}$', entity):
+                raise TypeError, 'Bad entity: %s' % entity
+    else:
+        entities = ''
+
+    if '.' in fqdn:
+        hostname, domain = fqdn.split('.', 1)
+    else:
+        hostname = fqdn
+        domain = ''
+
+    if domain and not re.match('^([a-z][a-z0-9-]*[a-z0-9]\.){0,10}[a-z][a-z0-9-]*[a-z0-9]$', domain):
+        raise TypeError, 'Bad domain: %s' % domain
+
+    if not re.match('^[a-z][a-z0-9-]*[a-z0-9]$', hostname):
+        raise TypeError, 'Bad hostname: %s' % hostname
+
+    return (profile, entities, hostname, domain)
