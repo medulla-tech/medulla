@@ -153,9 +153,11 @@ def unique(s):
         for x in s:
             u[x] = 1
     except TypeError:
-        del u  # move on to the next method
-    else:
+        u = None # move on to the next method
+
+    if u != None:
         return u.keys()
+    del u
 
     # We can't hash all the elements.  Second fastest is to sort,
     # which brings the equal elements together; then duplicates are
@@ -168,8 +170,9 @@ def unique(s):
         t = list(s)
         t.sort()
     except TypeError:
-        del t  # move on to the next method
-    else:
+        t = None # move on to the next method
+
+    if t != None:
         assert n > 0
         last = t[0]
         lasti = i = 1
@@ -179,6 +182,8 @@ def unique(s):
                 lasti += 1
             i += 1
         return t[:lasti]
+    else:
+        del t
 
     # Brute force is all that's left.
     u = []
@@ -222,11 +227,6 @@ def isdigit(i):
     if type(i) == int or type(i) == long:
         return True
     if (type(i) == str or type(i) == unicode) and re.search("^\d*$",i):
-        return True
-    return False
-
-def isalpha(s):
-    if (type(i) == str or type(i) == unicode) and re.search("^\w*$",i):
         return True
     return False
 
