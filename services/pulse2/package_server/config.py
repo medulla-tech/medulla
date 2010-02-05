@@ -21,6 +21,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+The module define the config option needed by the package server and all 
+it's API modules.
+"""
+
 
 # Misc
 import ConfigParser
@@ -240,7 +245,9 @@ class P2PServerCP(pulse2.utils.Singleton):
                 imaging_mp = self.cp.get("imaging", 'mount_point')
             if self.cp.has_option("imaging", 'src'):
                 src = self.cp.get("imaging", 'src')
-            self.imaging = {'mount_point':imaging_mp, 'src':src}
+            if self.cp.has_option("imaging", 'uuid'):
+                uuid = self.cp.get("imaging", 'uuid')
+            self.imaging = {'mount_point':imaging_mp, 'src':src, 'uuid':uuid}
             
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
