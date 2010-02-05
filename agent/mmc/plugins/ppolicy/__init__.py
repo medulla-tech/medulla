@@ -38,6 +38,8 @@ import calendar
 from ldap import modlist
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.support.config import PluginConfig
+from mmc.core.audit import AuditFactory as AF
+from mmc.plugins.ppolicy.audit import AT, AA, PLUGIN_NAME
 
 
 VERSION = "2.3.2"
@@ -83,19 +85,22 @@ class PPolicyConfig(PluginConfig):
         Read the configuration file using the ConfigParser API.
         """
         PluginConfig.readConf(self)
-        if not self.disabled:
-            # Read LDAP Password Policy configuration
-            self.ppolicyAttributes = {}
-            self.ppolicydn = self.get('ppolicy', 'ppolicyDN')
-            self.ppolicydefault = self.get('ppolicy', 'ppolicyDefault')
-            self.ppolicydefaultdn = "cn=" + self.ppolicydefault + "," + self.ppolicydn
-            for attribute in self.items('ppolicyattributes'):
-                if attribute[1] == 'True':
-                    self.ppolicyAttributes[attribute[0]] = True
-                elif attribute[1] == 'False':
-                    self.ppolicyAttributes[attribute[0]] = False
-                else:
-                    self.ppolicyAttributes[attribute[0]] = attribute[1]
+        # Read LDAP Password Policy configuration
+        self.ppolicyAttributes = {}
+        self.ppolicydn = self.get('ppolicy', 'ppolicyDN')
+        self.ppolicydefault = self.get('ppolicy', 'ppolicyDefault')
+        self.ppolicydefaultdn = "cn=" + self.ppolicydefault + "," + self.ppolicydn
+        for attribute in self.items('ppolicyattributes'):
+            if attribute[1] == 'True':
+                self.ppolicyAttributes[attribute[0]] = True
+            elif attribute[1] == 'False':
+                self.ppolicyAttributes[attribute[0]] = False
+            else:
+                self.ppolicyAttributes[attribute[0]] = attribute[1]
+        
+        #if self.has_section("user"):
+        #    if self.has_option('user', 'attribute'):
+        #        self.userAttributes = self.get('user', 'attribute').split('|')
 
 
 class PPolicy(ldapUserGroupControl):
@@ -116,7 +121,7 @@ class PPolicy(ldapUserGroupControl):
         @rtype: bool
         '''
         try:
-            result = self.l.search_s(self.configPPolicy.ppolicydefaultdn, ldap.SCOPE_BASE)
+            self.l.search_s(self.configPPolicy.ppolicydefaultdn, ldap.SCOPE_BASE)
             return True
         except ldap.NO_SUCH_OBJECT:
             return False
@@ -146,7 +151,7 @@ class PPolicy(ldapUserGroupControl):
             attributes = modlist.addModlist(attrs)
             self.l.add_s(self.configPPolicy.ppolicydefaultdn, attributes)
             self.logger.info("Default password policy registered at: %s" % self.configPPolicy.ppolicydefaultdn)
-
+        
     def getAttribute(self, nameattribute = None):
         """
         Get the given attribute value of the default password policies.
@@ -178,6 +183,7 @@ class PPolicy(ldapUserGroupControl):
         @param value: LDAP attribute value
         @type value: str
         """
+        r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_ATTR, [(self.configPPolicy.ppolicydefaultdn, AT.PPOLICY), (nameattribute, AT.ATTRIBUTE)], value)
         if value != None:
             if type(value) == bool:
                 value = str(value).upper()
@@ -189,6 +195,7 @@ class PPolicy(ldapUserGroupControl):
             logging.getLogger().error("Attribute %s isn't defined on ldap" % nameattribute)
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
+        r.commit()
         
     def getDefaultAttributes (self):
         """
@@ -258,6 +265,7 @@ class UserPPolicy(ldapUserGroupControl):
         @param value: LDAP attribute value
         @type value: str
         """
+        r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_USER_ATTR, [(self.dn, AT.USER), (nameattribute, AT.ATTRIBUTE)], value)
         if value != None:
             if type(value) == bool:
                 value = str(value).upper()
@@ -269,7 +277,8 @@ class UserPPolicy(ldapUserGroupControl):
             logging.getLogger().error("Attribute %s isn't defined on ldap" % nameattribute)
         except ldap.INVALID_SYNTAX:
             logging.getLogger().error("Invalid Syntax from the attribute value of %s on ldap" % nameattribute)
-            
+        r.commit()
+
     def hasPPolicyObjectClass(self):
         """
         Returns true if the user owns the pwdPolicy objectClass.
@@ -285,19 +294,22 @@ class UserPPolicy(ldapUserGroupControl):
 
         The pwdAttribute is also set to the value 'userPassword'.
         """
-        # Get current user entry
-        s = self.l.search_s(self.dn, ldap.SCOPE_BASE)
-        c, old = s[0]
-        
-        new = copy.deepcopy(old)
+        if not self.hasPPolicyObjectClass():
+            r = AF().log(PLUGIN_NAME, AA.PPOLICY_ADD_USER_PPOLICY_ATTR, [(self.dn, AT.USER)])
+            # Get current user entry
+            s = self.l.search_s(self.dn, ldap.SCOPE_BASE)
+            c, old = s[0]
 
-        if not "pwdPolicy" in new["objectClass"]:
-            new["objectClass"].append("pwdPolicy")
-            new["pwdAttribute"] = "userPassword"
+            new = copy.deepcopy(old)
 
-        # Update LDAP
-        modlist = ldap.modlist.modifyModlist(old, new)
-        self.l.modify_s(self.dn, modlist)
+            if not "pwdPolicy" in new["objectClass"]:
+                new["objectClass"].append("pwdPolicy")
+                new["pwdAttribute"] = "userPassword"
+
+            # Update LDAP
+            modlist = ldap.modlist.modifyModlist(old, new)
+            self.l.modify_s(self.dn, modlist)
+            r.commit()
 
     def isAccountLocked(self):
         """
@@ -306,7 +318,7 @@ class UserPPolicy(ldapUserGroupControl):
         @returns: -1 if the user account has been locked permanently, 0 if not, else the lock timestamp
         @rtype: int
         """
-        user = self.getDetailedUser(self.userUid, operational = True)
+        self.getDetailedUser(self.userUid, operational = True)
         return
 
     def isAccountInGraceLogin(self):
@@ -394,3 +406,8 @@ def isAccountInGraceLogin(uid):
 
 def isPasswordExpired(uid):
     return UserPPolicy(uid).isPasswordExpired()
+
+
+if __name__ == "__main__":
+    #print ldapUserGroupControl().getDetailedUserIntAttr("user1")
+    print isPasswordExpired("testpass")
