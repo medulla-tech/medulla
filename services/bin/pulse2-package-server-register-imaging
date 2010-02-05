@@ -1,0 +1,87 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2008-2010 Mandriva, http://www.mandriva.com/
+#
+# $Id: pulse2-package-server 5210 2010-02-04 17:45:08Z cdelfosse $
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Pulse 2 Package Server Imaging module registration.
+Need to be known by the MMC
+"""
+import os
+import sys
+import getopt
+import xmlrpclib
+
+from pulse2.package_server.config import P2PServerCP
+
+my_name = None
+mmc_url = None
+inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
+try:
+    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:")
+except getopt.GetoptError:
+    sys.exit(2)
+    
+print "reading command line opts"
+for option, argument in opts:
+    if option == "-f": # alternate config file
+        inifile = argument
+    elif option == "-n": # imaging server name NEEDED!
+        my_name = argument
+    elif option == "-m": # MMC url
+        mmc_url = argument
+
+failure = False
+if my_name == None:
+    print "ERROR: -n opt is mandatory, please put a name for this imaging server"
+    failure = True
+if mmc_url == None:
+    print "ERROR: -m opt is mandatory, please put the MMC connection url"
+    failure = True
+
+if failure:
+    sys.exit(4)
+
+if not os.path.exists(inifile):
+    if os.path.exists("/etc/mmc/pulse2/pserver/package-server.ini"):
+            print "Please move your configuration file from /etc/mmc/pulse2/pserver/package-server.ini to %s, or use the -f option."%(inifile)
+            sys.exit(3)
+    print "File '%s' does not exist." % inifile
+    sys.exit(3)
+
+config = P2PServerCP()
+# TODO need to put the logger handler for root
+config.setup(inifile)
+
+config.imaging['mount_point'] = config.imaging['mount_point'].replace('/', '')
+my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging['mount_point'])
+my_uuid = config.imaging['uuid']
+
+print "%s %s" % (my_url, my_uuid)
+
+print "connect to %s"%(mmc_url)
+client = xmlrpclib.ServerProxy(mmc_url)
+
+ret = client.imaging.imagingServerRegister(my_name, my_url, my_uuid)
+print ret[1]
+if ret[1]:
+    print "registering failed."
+
+
