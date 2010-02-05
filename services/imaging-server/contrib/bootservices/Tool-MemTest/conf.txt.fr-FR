@@ -1,3 +1,0 @@
-title Utilitaire : Test memoire
-desc Utilitaire de test de la RAM du PC
-kernel (nd)/tftpboot/revoboot/bin/memtest.bin

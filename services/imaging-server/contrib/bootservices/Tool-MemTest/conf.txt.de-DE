@@ -1,3 +1,0 @@
-title Utility : Memory Test
-desc PC RAM Test
-kernel (nd)/tftpboot/revoboot/bin/memtest.bin

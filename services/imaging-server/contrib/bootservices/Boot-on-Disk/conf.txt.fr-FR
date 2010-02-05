@@ -1,4 +1,0 @@
-title Disque Dur Local
-desc Demarrage sur disque dur local
-root (hd0)
-chainloader +1

@@ -1,5 +1,0 @@
-title Création Image (Partagée)
-desc Sauvegarde DD -> Image partagée
-kernel (nd)/tftpboot/revoboot/bin/bzImage.initrd revosavedir=/imgbase/Base-BASENUM quiet
-initrd (nd)/tftpboot/revoboot/bin/initrd.gz
-

@@ -1,4 +1,0 @@
-title Locale FestPlate
-desc Boot auf erster localen Festplate
-root (hd0)
-chainloader +1

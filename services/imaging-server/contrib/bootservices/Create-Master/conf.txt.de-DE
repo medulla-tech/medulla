@@ -1,5 +1,0 @@
-title Festplate Bild Bau (Verteilt)
-desc Festplate Backup nach verteilt Bild
-kernel (nd)/tftpboot/revoboot/bin/bzImage.initrd revosavedir=/imgbase/Base-BASENUM quiet
-initrd (nd)/tftpboot/revoboot/bin/initrd.gz
-

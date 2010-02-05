@@ -1,5 +1,0 @@
-title Création Image (Locale)
-desc Sauvegarde DD -> Image Locale
-kernel (nd)/tftpboot/revoboot/bin/bzImage.initrd revosavedir=/images/MAC/Local-COPYNUM quiet
-initrd (nd)/tftpboot/revoboot/bin/initrd.gz
-

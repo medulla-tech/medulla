@@ -1,0 +1,3 @@
+title Test mémoire
+desc Réaliser une vérificatin complète de la mémoire
+kernel --kernel-type=openbsd (nd)/pulse2/tools/memtest
