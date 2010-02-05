@@ -1,0 +1,4 @@
+title Démarrage sans disque
+desc Charger un environnement sans disque et obtenir une invite de commande
+kernel (nd)/pulse2/diskless/kernel revodebug revobase=/var/lib/pulse2/imaging quiet
+initrd (nd)/pulse2/diskless/initrd
