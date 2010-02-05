@@ -21,4 +21,19 @@
 
 # main target
 
-all: src
+BUILD_FOLDER = build/
+SUBDIRS = src
+
+.PHONY: subdirs $(SUBDIRS)
+
+subdirs: $(SUBDIRS)
+	[ -d $(BUILD_FOLDER) ] || mkdir -p $(BUILD_FOLDER)
+	cp -a src/pulse2-imaging-server $(BUILD_FOLDER)
+
+$(SUBDIRS):
+	$(MAKE) -C $@
+
+clean: $(SUBDIRS)
+	for i in $^; do $(MAKE) -C $$i clean; done
+
+.PHONY: src
