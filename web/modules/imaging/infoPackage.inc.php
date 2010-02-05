@@ -78,6 +78,14 @@ $submod->addPage($page);
 $page = new Page("configuration",_T("Imaging configuration","imaging"));
 $submod->addPage($page);
 
+$page = new Page("ajaxAvailableImagingServer",_T("Available Imaging Server","imaging"));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("imaging_server_link",_T("Link an Imaging Server","imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

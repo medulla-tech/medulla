@@ -34,10 +34,11 @@ require("../includes/xmlrpc.inc.php");
 
 
 $location = getCurrentLocation();
-$global_status = xmlrpc_getGlobalStatus($location);
-$disk_info = format_disk_info($global_status['disks_info']);
-$health = format_health($global_status['uptime'], $global_status['mem_info']);
-$short_status = $global_status['short_status'];
+if (xmlrpc_doesLocationHasImagingServer($location)) {
+    $global_status = xmlrpc_getGlobalStatus($location);
+    $disk_info = format_disk_info($global_status['disks_info']);
+    $health = format_health($global_status['uptime'], $global_status['mem_info']);
+    $short_status = $global_status['short_status'];
 ?>
 
 <br/>
@@ -75,9 +76,15 @@ $short_status = $global_status['short_status'];
 <h2 class="activity"><?=_T('Recent activity in entity', 'imaging')?></h2>
 
 <?
-$ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
-//$ajax->setRefresh(10000);
-$ajax->display();
-echo "<br/><br/><br/>";
-$ajax->displayDivToUpdate();
+    $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
+    //$ajax->setRefresh(10000);
+    $ajax->display();
+    echo "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
+} else {
+    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
+}
 ?>

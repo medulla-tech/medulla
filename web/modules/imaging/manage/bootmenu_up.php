@@ -23,16 +23,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-include('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 $params = getParams();
-$id = $_GET['itemid'];
+$location = getCurrentLocation();
+$item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
+$ret = xmlrpc_moveItemUpInMenu4Location($location, $item_uuid);
 
-// up item
-// ...
-
+if ($ret) {
+    $str = sprintf(_T("<strong>%s</strong> moved up in the default boot menu", "imaging"), $label);
+    new NotifyWidgetSuccess($str);
+} else {
+    $str = sprintf(_T("Failed to move <strong>%s</strong> in the default boot menu", "imaging"), $label);
+    new NotifyWidgetError($str);
+}
 header("Location: " . urlStrRedirect("imaging/manage/bootmenu", $params));
 
 ?>

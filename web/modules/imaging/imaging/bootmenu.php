@@ -59,10 +59,10 @@ function item_up() {
     }
     $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
     if ($ret) {
-        $str = sprintf(_T("Service <strong>%s</strong> moved up in the boot menu", "imaging"), $label);
+        $str = sprintf(_T("Item <strong>%s</strong> moved up in the boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
     } else {
-        $str = sprintf(_T("Failed to move service <strong>%s</strong> in the boot menu", "imaging"), $label);
+        $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), $label);
         new NotifyWidgetError($str);
     }
     
@@ -82,10 +82,10 @@ function item_down() {
     }
     $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
     if ($ret) {
-        $str = sprintf(_T("Service <strong>%s</strong> moved down in the boot menu", "imaging"), $label);
+        $str = sprintf(_T("Item <strong>%s</strong> moved down in the boot menu", "imaging"), $label);
         new NotifyWidgetSuccess($str);
     } else {
-        $str = sprintf(_T("Failed to move service <strong>%s</strong> in the boot menu", "imaging"), $label);
+        $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), $label);
         new NotifyWidgetError($str);
     }
      

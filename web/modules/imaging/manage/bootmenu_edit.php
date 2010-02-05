@@ -36,7 +36,6 @@ $label = urldecode($_GET['itemlabel']);
 $item = xmlrpc_getMenuItemByUUID($item_uuid);
 
 if(count($_POST) == 0) {
-            
     $is_selected = '';
     $is_displayed = 'CHECKED';
     $is_wol_selected = '';
@@ -88,7 +87,13 @@ if(count($_POST) == 0) {
     $f->pop();
     $f->display();
 } else {
-    $bs_uuid = $item['boot_service']['imaging_uuid'];
+    $is_image = True;
+    if ($item['boot_service']) {
+        $bs_uuid = $item['boot_service']['imaging_uuid'];
+        $is_image = False;
+    } else {
+        $im_uuid = $item['image']['imaging_uuid'];
+    }
 
     $params['default'] = ($_POST['default'] == 'on'?True:False);
     $params['default_WOL'] = ($_POST['default_WOL'] == 'on'?True:False);
@@ -96,7 +101,11 @@ if(count($_POST) == 0) {
     $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
     $params['default_name'] = $_POST['default_name'];
 
-    $ret = xmlrpc_editServiceToLocation($bs_uuid, $location, $params);
+    if ($is_image) {
+        $ret = xmlrpc_editImageToLocation($im_uuid, $location, $params);
+    } else {
+        $ret = xmlrpc_editServiceToLocation($bs_uuid, $location, $params);
+    }
 
     header("Location: " . urlStrRedirect("imaging/manage/bootmenu"));
 }   

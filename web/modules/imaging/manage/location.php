@@ -26,6 +26,7 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 // get entities
 require("modules/pulse2/includes/xmlrpc.inc.php");
@@ -39,9 +40,13 @@ $sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $p->setSideMenu($sidemenu);
 $p->display();
 
+# needed in the case we have to go back to the good list.
+$params['from'] = $_GET['action'];
+
 if (displayLocalisationBar()) {
 
     $location = getCurrentLocation();
+    
 
     $ajax = new AjaxLocation("modules/imaging/manage/$page.php", "container_$page", "location", $params);
     $list = array();

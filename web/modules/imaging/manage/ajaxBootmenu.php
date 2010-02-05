@@ -83,12 +83,12 @@ foreach ($menu as $entry) {
         $a_desc[] = $entry['boot_service']['desc'];
         $kind = 'BS';
     }
+    $kind .= $entry['imaging_uuid'];
     $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
     $a_default[] = $entry['default'];
     $a_display[] = ($entry['hidden'] ? False:True);
     $a_defaultWOL[] = $entry['default_WOL'];
     $a_displayWOL[] = ($entry['hidden_WOL'] ? False:True);
-
 }
 $t = new TitleElement(_T("Default boot menu configuration", "imaging"));
 $t->display();

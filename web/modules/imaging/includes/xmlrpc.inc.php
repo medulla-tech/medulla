@@ -42,6 +42,14 @@ function xmlrpc_moveItemUpInMenu($target_uuid, $type, $item_uuid) {
     return xmlCall("imaging.moveItemUpInMenu", array($target_uuid, $type, $item_uuid));
 }
 
+function xmlrpc_moveItemDownInMenu4Location($loc_id, $item_uuid) {
+    return xmlCall("imaging.moveItemDownInMenu4Location", array($loc_id, $item_uuid));
+}
+
+function xmlrpc_moveItemUpInMenu4Location($loc_id, $item_uuid) {
+    return xmlCall("imaging.moveItemUpInMenu4Location", array($loc_id, $item_uuid));
+}
+
 /* Images */
 function xmlrpc_getMachineImages($id, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getMachineImages", array($id, $start, $end, $filter));
@@ -65,6 +73,18 @@ function xmlrpc_editImageToTarget($item_uuid, $target_uuid, $params) {
 
 function xmlrpc_delImageToTarget($item_uuid, $target_uuid) {
     return xmlCall("imaging.delImageToTarget", array($item_uuid, $target_uuid));
+}
+
+function xmlrpc_addImageToLocation($item_uuid, $loc_id, $params) {
+    return xmlCall("imaging.addImageToLocation", array($item_uuid, $loc_id, $params));
+}
+
+function xmlrpc_editImageToLocation($item_uuid, $loc_id, $params) {
+    return xmlCall("imaging.editImageToLocation", array($item_uuid, $loc_id, $params));
+}
+
+function xmlrpc_delImageToLocation($item_uuid, $loc_id) {
+    return xmlCall("imaging.delImageToLocation", array($item_uuid, $loc_id));
 }
 
 
@@ -147,4 +167,16 @@ function xmlrpc_getLogs4Location($location, $start = 0, $end = -1, $filter = '')
     return xmlCall("imaging.getLogs4Location", array($location, $start, $end, $filter));
 }
 
+/* entity and imaging server */
+function xmlrpc_getAllNonLinkedImagingServer($start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getAllNonLinkedImagingServer", array($start, $end, $filter));
+}
+
+function xmlrpc_linkImagingServerToLocation($is_uuid, $loc_id, $params) {
+    return xmlCall("imaging.linkImagingServerToLocation", array($is_uuid, $loc_id, $params));
+}
+
+function xmlrpc_doesLocationHasImagingServer($location) {
+    return xmlCall("imaging.doesLocationHasImagingServer", array($location));
+}
 ?>

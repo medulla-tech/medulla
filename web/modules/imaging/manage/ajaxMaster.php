@@ -38,9 +38,7 @@ $location = getCurrentLocation();
 list($count, $masters) = xmlrpc_getLocationImages($location);
 
 // forge params
-#$nbItems = count($masters);
-#$nbInfos = count($masters[0]);
-$addAction = new ActionItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
+$addAction = new ActionPopupItem(_T("Add image to default boot menu", "imaging"), "master_add", "addbootmenu", "master", "imaging", "manage");
 $emptyAction = new EmptyActionItem();
 $addActions = array();
 
@@ -53,12 +51,11 @@ $a_is_in_menu = array();
 $i = -1;
 foreach ($masters as $master) {
     $i += 1;
-    #for($i=0;$i<$nbItems;$i++) {
     $list_params[$i] = $params;
     $list_params[$i]["itemid"] = $master['imaging_uuid'];
     $list_params[$i]["itemlabel"] = urlencode($master['desc']);
     
-    if (!$master['image']) {
+    if (!$master['menu_item']) {
         $addActions[] = $addAction;
     } else {
         $addActions[] = $emptyAction;
@@ -68,7 +65,7 @@ foreach ($masters as $master) {
     $a_desc[] = $master['desc'];
     $a_date[] = _toDate($master['creation_date']);
     $a_size[] = $master['size'];
-    $a_is_in_menu[] = ($master['image']?True:False);
+    $a_is_in_menu[] = ($master['menu_item']?True:False);
 }
 
 $t = new TitleElement(_T("Available masters", "imaging"));

@@ -65,4 +65,12 @@ function web_def_service_default_WOL() {
     #return __web_def_in_session("service_default_WOL");
 }
 
+function web_def_menu_timeout() {
+    #return __web_def_in_session("menu_timeout");
+}
+
+function web_def_menu_message() {
+    #return __web_def_in_session("menu_message");
+    return "Warning...";
+}
 ?>
