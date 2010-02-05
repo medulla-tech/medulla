@@ -150,8 +150,10 @@ test-package-server:
 	PYTHONPATH=$(PWD)/services/ python ./services/test/Pserver.py $(MODE) $(VERBOSITY)
 	@echo "Package server is OK"
 
-test: test-launcher test-package-server
-	@echo "Package server and Launcher are OK"
+test: unit-tests xmlrpc-tests
+
+unit-tests:
+	PYTHONPATH=$(PWD)/services/ python ./services/pulse2/tests/*.py
 
 xmlrpc-tests:
 	cd tests/services && ./start.sh
