@@ -33,6 +33,7 @@ import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.imaging.config import ImagingConfig
+from mmc.plugins.base.computers import ComputerManager
 from mmc.support.mmctools import *
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import *
@@ -41,6 +42,8 @@ from pulse2.apis.clients.imaging import ImagingApi
 VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
+
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -187,10 +190,16 @@ class RpcProxy(RpcProxyI):
 
     # EDITION
     def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
-        return ImagingDatabase().moveItemUpInMenu(target_uuid, type, mi_uuid)
+        return ImagingDatabase().moveItemUpInMenu(target_uuid, mi_uuid)
         
     def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
-        return ImagingDatabase().moveItemDownInMenu(target_uuid, type, mi_uuid)
+        return ImagingDatabase().moveItemDownInMenu(target_uuid, mi_uuid)
+    
+    def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
+        return ImagingDatabase().moveItemUpInMenu4Location(loc_id, mi_uuid)
+        
+    def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
+        return ImagingDatabase().moveItemDownInMenu4Location(loc_id, mi_uuid)
         
     ###### IMAGES
     def __getTargetImages(self, id, type, start = 0, end = -1, filter = ''):
@@ -239,6 +248,28 @@ class RpcProxy(RpcProxyI):
     def delImageToTarget(self, item_uuid, target_uuid):
         try:
             ret = ImagingDatabase().delImageToTarget(item_uuid, target_uuid)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def addImageToLocation(self, item_uuid, loc_id, params):
+        try:
+            ret = ImagingDatabase().addImageToEntity(item_uuid, loc_id, params)
+            return xmlrpcCleanup([True, ret])
+        except Exception, e:
+            raise e
+            return xmlrpcCleanup([False, e])
+
+    def editImageToLocation(self, item_uuid, loc_id, params):
+        #try:
+            ret = ImagingDatabase().editImageToEntity(item_uuid, loc_id, params)
+            return xmlrpcCleanup([True, ret])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
+
+    def delImageToLocation(self, item_uuid, loc_id):
+        try:
+            ret = ImagingDatabase().delImageToEntity(item_uuid, loc_id)
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
@@ -355,4 +386,65 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup(i.imagingServerStatus())
         return {}
 
+    ####### IMAGING SERVER
+    def getAllNonLinkedImagingServer(self, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getAllNonLinkedImagingServer(start, end, filter))
+        count = db.countAllNonLinkedImagingServer(filter)
+        return [count, xmlrpcCleanup(ret)]
+
+    def linkImagingServerToLocation(self, is_uuid, loc_id, params):
+        db = ImagingDatabase()
+        try:
+            ret = db.linkImagingServerToEntity(is_uuid, loc_id, params)
+        except Exception, e:
+            return [False, str(e)]
+        return [True]
+
+    def doesLocationHasImagingServer(self, loc_id):
+        return ImagingDatabase().doesLocationHasImagingServer(loc_id)
+
+    ###### API to be called from the imaging server (ie : without authentication)
+    def computerRegister(self, computerName, MACAddress):
+        """
+        Called by the Package Server to register a new computer.
+        The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
+        """
+        (profile, name) = parseProfileFromName(computerName)
+
+        computer = {
+            'computername':name,
+            'computerdescription':'',
+            'computerip':'',
+            'computermac':MACAddress,
+            'computernet':'',
+            'location_uuid':''
+        }
+            
+        ComputerManager().addComputer(None, computer)
+        
+        if profile != None:
+            # register the machine + put it in the profil if it exists
+            pass
+            
+    def imagingServerRegister(self, name, url, uuid):
+        """
+        Called by the imagingServer register script, it fills all the required fields for an 
+        imaging server, then the server is available in the list of server not linked to any entity
+        and need to be linked.
+        """
+        db = ImagingDatabase()
+        if db.countImagingServerByPackageServerUUID(uuid) != 0:
+            return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing."%(uuid)]
+        db.registerImagingServer(name, url, uuid)
+        return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
    
+def parseProfileFromName(name):
+    """
+    name can be profile:computer_name or just computer_name
+    """
+    ret = name.split(':')
+    if len(ret) == 2:
+        return ret
+    return (None, ret[0])
+        

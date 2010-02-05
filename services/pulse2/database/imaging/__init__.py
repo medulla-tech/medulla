@@ -38,6 +38,9 @@ import logging
 DATABASEVERSION = 1
 
 ERR_MISSING_NOMENCLATURE = 1001
+ERR_IMAGING_SERVER_DONT_EXISTS = 1003
+ERR_ENTITY_ALREADY_EXISTS = 1004
+
 class ImagingDatabase(DyngroupDatabaseHelper):
     """
     Class to query the Pulse2 imaging database.
@@ -643,15 +646,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
        
     ERR_TARGET_HAS_NO_MENU = 1000
-
-    def __addService(self, session, bs_uuid, menu, params):
-        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
-        if menu == None:
-            raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
-            
-        mi = self.__createNewMenuItem(session, menu.id, bs.desc, params)
-        session.flush()
-        
+    ERR_ENTITY_HAS_NO_DEFAULT_MENU = 1002
+    def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
         if params['default']:
             is_menu_modified = True
@@ -661,46 +657,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
             session.save_or_update(menu)
+        return menu
 
-        bsim = BootServiceInMenu()
-        bsim.fk_menuitem = mi.id
-        bsim.fk_bootservice = uuid2id(bs_uuid)
-        session.save(bsim)
-        session.flush()
-        return None
-
-    def addServiceToTarget(self, bs_uuid, target_uuid, params):
-        session = create_session()
-        menu = self.getTargetsMenuTUUID(target_uuid, session)
-        ret = self.__addService(session, bs_uuid, menu, params)
-        session.close()
-        return ret
-   
-    def addServiceToEntity(self, bs_uuid, loc_id, params):
-        session = create_session()
-        menu = self.getEntityDefaultMenu(loc_id, session)
-        ret = self.__addService(session, bs_uuid, menu, params)
-        session.close()
-        return ret
-    
-    def __getMenuItem(self, session, bs_uuid, target_uuid):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).join(self.target))
-        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
-        return mi
-
-    def __getMenuItem4Entity(self, session, bs_uuid, loc_id):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu))
-        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
-        return mi
-        
-    def __editService(self, session, bs_uuid, menu, mi, params):
-        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
-        if menu == None:
-            raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
-
-        mi = self.__fillMenuItem(session, mi, menu.id, bs.desc, params)
-        session.flush()
-
+    def __editMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
         if menu.fk_default_item != mi.id and params['default']:
             is_menu_modified = True
@@ -718,14 +677,79 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if is_menu_modified:
             session.save_or_update(menu)
+        return menu
+
+    def __addBootServiceInMenu(self, session, mi_id, bs_uuid):
+        bsim = BootServiceInMenu()
+        bsim.fk_menuitem = mi_id
+        bsim.fk_bootservice = uuid2id(bs_uuid)
+        session.save(bsim)
+        session.flush()
+        return bsim
+
+    def __addImageInMenu(self, session, mi_id, im_uuid):
+        imim = ImageInMenu()
+        imim.fk_menuitem = mi_id
+        imim.fk_image = uuid2id(im_uuid)
+        session.save(imim)
+        session.flush()
+        return imim
+
+    def __addService(self, session, bs_uuid, menu, params):
+        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
+        if menu == None:
+            raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
+            
+        mi = self.__createNewMenuItem(session, menu.id, bs.desc, params)
+        session.flush()
+        
+        self.__addMenuDefaults(session, menu, mi, params)
+        self.__addBootServiceInMenu(session, mi.id, bs_uuid)
+
+        session.close()
+        return None
+
+    def addServiceToTarget(self, bs_uuid, target_uuid, params):
+        session = create_session()
+        menu = self.getTargetsMenuTUUID(target_uuid, session)
+        ret = self.__addService(session, bs_uuid, menu, params)
+        session.close()
+        return ret
+   
+    def addServiceToEntity(self, bs_uuid, loc_id, params):
+        session = create_session()
+        menu = self.getEntityDefaultMenu(loc_id, session)
+        ret = self.__addService(session, bs_uuid, menu, params)
+        session.close()
+        return ret
+    
+    def __getServiceMenuItem(self, session, bs_uuid, target_uuid):
+        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).join(self.target))
+        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
+        return mi
+
+    def __getServiceMenuItem4Entity(self, session, bs_uuid, loc_id):
+        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu))
+        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
+        return mi
+        
+    def __editService(self, session, bs_uuid, menu, mi, params):
+        bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
+        if menu == None:
+            raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
+
+        mi = self.__fillMenuItem(session, mi, menu.id, bs.desc, params)
+        session.flush()
+
+        self.__editMenuDefaults(session, menu, mi, params)
 
         session.flush()
         return None
-    
+ 
     def editServiceToTarget(self, bs_uuid, target_uuid, params):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
-        mi = self.__getMenuItem(session, bs_uuid, target_uuid)
+        mi = self.__getServiceMenuItem(session, bs_uuid, target_uuid)
         ret = self.__editService(session, bs_uuid, menu, mi, params)
         session.close()
         return ret
@@ -733,7 +757,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def editServiceToEntity(self, bs_uuid, loc_id, params):
         session = create_session()
         menu = self.getEntityDefaultMenu(loc_id, session)
-        mi = self.__getMenuItem4Entity(session, bs_uuid, loc_id)
+        mi = self.__getServiceMenuItem4Entity(session, bs_uuid, loc_id)
         ret = self.__editService(session, bs_uuid, menu, mi, params)
         session.close()
         return ret
@@ -841,6 +865,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getEntityMasters(self, loc_id, start, end, filter):
         session = create_session()
         menu = self.getEntityDefaultMenu(loc_id)
+        if menu == None:
+            raise "%s:Entity does not have a default menu"%(ERR_ENTITY_HAS_NO_DEFAULT_MENU)
         q1 = self.__EntityImages(session, loc_id, filter)
         q1 = q1.group_by(self.image.c.id)
         if end != -1:
@@ -867,86 +893,74 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def addImageToTarget(self, item_uuid, target_uuid, params):
-        session = create_session()
-        menu = self.getTargetsMenuTUUID(target_uuid, session)
+    def __addImage(self, session, item_uuid, menu, params):
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first();
         if menu == None:
             raise '%s:Please create menu before trying to put an image'%(ERR_TARGET_HAS_NO_MENU)
             
-        mi = MenuItem()
-        mi.default_name = params['name']
-        mi.hidden = params['hidden']
-        mi.hidden_WOL = params['hidden_WOL']
-        # put it at the last position
-        mi.order = self.getLastMenuItemOrder(menu.id) + 1
-        mi.desc = im.desc
-        mi.fk_name = 0 # TODO i18n in internationalize!
-        mi.fk_menu = menu.id
-        session.save(mi)
+        if params.has_key('name') and not params.has_key('default_name'):
+            params['default_name'] = params['name']
+        mi = self.__createNewMenuItem(session, menu.id, im.desc, params)
         session.flush()
         
-        is_menu_modified = False
-        if params['default']:
-            is_menu_modified = True
-            menu.fk_default_item = mi.id
-        if params['default_WOL']:
-            is_menu_modified = True
-            menu.fk_default_item_WOL = mi.id
-        if is_menu_modified:
-            session.save_or_update(menu)
-
-        iim = ImageInMenu()
-        iim.fk_menuitem = mi.id
-        iim.fk_image = uuid2id(item_uuid)
-        session.save(iim)
-        session.flush()
+        self.__addMenuDefaults(session, menu, mi, params)
+        self.__addImageInMenu(session, mi.id, item_uuid)
                 
         session.close()
         return None
 
-    def editImageToTarget(self, item_uuid, target_uuid, params):
+    def addImageToTarget(self, item_uuid, target_uuid, params):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
-        im = session.query(Image).filter(self.boot_service.c.id == uuid2id(item_uuid)).first();
+        ret = self.__addImage(session, item_uuid, menu, params)
+        session.close()
+        return ret
+        
+    def addImageToEntity(self, item_uuid, loc_id, params):
+        session = create_session()
+        menu = self.getEntityDefaultMenu(loc_id, session)
+        ret = self.__addImage(session, item_uuid, menu, params)
+        session.close()
+        return ret
+
+    def __editImage(self, session, item_uuid, menu, mi, params):
+        im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first();
         if menu == None:
             raise '%s:Please create menu before trying to put an image'%(ERR_TARGET_HAS_NO_MENU)
 
+        mi = self.__fillMenuItem(session, mi, menu.id, im.desc, params)
+        session.flush()
+
+        self.__editMenuDefaults(session, menu, mi, params)
+
+        session.flush()
+        return None
+
+    def __getImageMenuItem(self, session, item_uuid, target_uuid):
         mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu).join(self.target))
         mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
+        return mi
 
-        mi.default_name = params['default_name']
-        mi.hidden = params['hidden']
-        mi.hidden_WOL = params['hidden_WOL']
-        if params.has_key('order'):
-            mi.order = params['order'] # TODO put the order!
-        mi.desc = im.desc
-        mi.fk_name = 0 # TODO i18n in internationalize!
-        mi.fk_menu = menu.id
-        session.save_or_update(mi)
-        session.flush()
+    def __getImageMenuItem4Entity(self, session, item_uuid, loc_id):
+        mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu))
+        mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
+        return mi
 
-        is_menu_modified = False
-        if menu.fk_default_item != mi.id and params['default']:
-            is_menu_modified = True
-            menu.fk_default_item = mi.id
-        if menu.fk_default_item == mi.id and not params['default']:
-            is_menu_modified = True
-            menu.fk_default_item = None
-            
-        if menu.fk_default_item_WOL != mi.id and params['default_WOL']:
-            is_menu_modified = True
-            menu.fk_default_item_WOL = mi.id
-        if menu.fk_default_item_WOL == mi.id and not params['default_WOL']:
-            is_menu_modified = True
-            menu.fk_default_item_WOL = None
-
-        if is_menu_modified:
-            session.save_or_update(menu)
-
-        session.flush()
+    def editImageToTarget(self, item_uuid, target_uuid, params):
+        session = create_session()
+        menu = self.getTargetsMenuTUUID(target_uuid, session)
+        mi = self.__getImageMenuItem(session, item_uuid, target_uuid)
+        ret = self.__editImage(session, item_uuid, menu, mi, params)
         session.close()
-        return None
+        return ret
+        
+    def editImageToEntity(self, item_uuid, loc_id, params):
+        session = create_session()
+        menu = self.getEntityDefaultMenu(loc_id, session)
+        mi = self.__getImageMenuItem4Entity(session, item_uuid, loc_id)
+        ret = self.__editImage(session, item_uuid, menu, mi, params)
+        session.close()
+        return ret
 
     def delImageToTarget(self, item_uuid, target_uuid):
         session = create_session()
@@ -1047,12 +1061,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return count_items
         
     ######################
-    def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
-        menu = self.getTargetsMenuTUUID(target_uuid)
-
+    def __moveItemInMenu(self, menu, mi_uuid, reverse = False):
         session = create_session()
         mis = self.getMenuContent(menu.id, MENU_ALL, 0, -1, '', session)
-        mis.sort(lambda x,y: cmp(y.order, x.order))
+        if reverse:
+            mis.sort(lambda x,y: cmp(y.order, x.order))
         move = False
         mod_mi = [None, None]
         for mi in mis:
@@ -1074,33 +1087,134 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
             return False
         return True
-
-    def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
+    
+    def moveItemUpInMenu(self, target_uuid, mi_uuid):
         menu = self.getTargetsMenuTUUID(target_uuid)
+        ret = self.__moveItemInMenu(menu, mi_uuid, True)
+        return ret
 
+    def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
+        menu = self.getEntityDefaultMenu(loc_id)
+        ret = self.__moveItemInMenu(menu, mi_uuid, True)
+        return ret
+
+    def moveItemDownInMenu(self, target_uuid, mi_uuid):
+        menu = self.getTargetsMenuTUUID(target_uuid)
+        ret = self.__moveItemInMenu(menu, mi_uuid)
+        return ret
+
+    def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
+        menu = self.getEntityDefaultMenu(loc_id)
+        ret = self.__moveItemInMenu(menu, mi_uuid)
+        return ret
+    
+    ##################################
+    # ImagingServer
+    def countImagingServerByPackageServerUUID(self, uuid):
         session = create_session()
-        mis = self.getMenuContent(menu.id, MENU_ALL, 0, -1, '', session)
-        move = False
-        mod_mi = [None, None]
-        for mi in mis:
-            if move:
-                move = False
-                mod_mi[1] = mi
-            if str(mi.id) == str(uuid2id(mi_uuid)):
-                move = True
-                mod_mi[0] = mi
-        if mod_mi[0] != None and mod_mi[1] != None:
-            ord = mod_mi[0].order
-            mod_mi[0].order = mod_mi[1].order
-            mod_mi[1].order = ord
-            session.save_or_update(mod_mi[0])
-            session.save_or_update(mod_mi[1])
-            session.flush()
+        q = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == uuid).count()
+        session.close()
+        return q
+
+    def getImagingServerByUUID(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(ImagingServer).filter(self.imaging_server.c.id == uuid2id(uuid)).first()
+        if session_need_to_close:
             session.close()
-        else:
-            session.close()
-            return False
+        return q
+        
+    def getImagingServerByPackageServerUUID(self, uuid):
+        session = create_session()
+        q = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == uuid).all()
+        session.close()
+        return q
+    
+    def registerImagingServer(self, name, url, uuid):
+        session = create_session()
+        ims = ImagingServer()
+        ims.name = name
+        ims.url = url
+        ims.fk_entity = 0
+        ims.packageserver_uuid = uuid
+        session.save(ims)
+        session.flush()
+        session.close()
+        return ims.id
+    
+    def __getEntityByUUID(self, session, loc_id):
+        return session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
+    
+    def __createMenu(self, session, params):
+        menu = Menu()
+        menu.default_name = params['default_name']
+        menu.timeout = params['timeout']
+        menu.background_uri = params['background_uri']
+        menu.message = params['message']
+        menu.fk_protocol = 2 # TODO get the true protocol!
+        menu.fk_default_item = 0
+        menu.fk_default_item_WOL = 0
+        menu.fk_name = 0
+        session.save(menu)
+        return menu
+
+    def __createEntity(self, session, loc_id, loc_name, menu_id):
+        e = Entity()
+        e.name = loc_name
+        e.uuid = loc_id
+        e.fk_default_menu = menu_id
+        session.save(e)
+        return e
+        
+    def linkImagingServerToEntity(self, is_uuid, loc_id, params):
+        session = create_session()
+        imaging_server = self.getImagingServerByUUID(is_uuid, session)
+        if imaging_server == None:
+            raise "%s:No server exists with that uuid (%s)" % (ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid)
+        location = self.__getEntityByUUID(session, loc_id)
+        if location != None:
+            raise "%s:This entity already exists (%s) cant be linked again" % (ERR_ENTITY_ALREADY_EXISTS, loc_id)
+        
+        menu = self.__createMenu(session, params)
+        session.flush()
+        location = self.__createEntity(session, loc_id, params['loc_name'], menu.id)
+        session.flush()
+
+        imaging_server.fk_entity = location.id
+        session.save_or_update(imaging_server)
+        session.flush()
+        session.close()
         return True
+
+    def __AllNonLinkedImagingServer(self, session, filter):
+        q = session.query(ImagingServer).filter(self.imaging_server.c.fk_entity == 0)
+        if filter and filter != '':
+            q = q.filter(or_(self.imaging_server.c.name.like('%'+filter+'%'), self.imaging_server.c.url.like('%'+filter+'%'), self.imaging_server.c.uuid.like('%'+filter+'%')))
+        return q
+        
+    def getAllNonLinkedImagingServer(self, start, end, filter):
+        session = create_session()
+        q = self.__AllNonLinkedImagingServer(session, filter)
+        if end != -1:
+            q = q.offset(int(start)).limit(int(end)-int(start))
+        else:
+            q = q.all()
+        session.close()
+        return q
+
+    def countAllNonLinkedImagingServer(self, filter):
+        session = create_session()
+        q = self.__AllNonLinkedImagingServer(session, filter)
+        q = q.count()
+        session.close()
+        return q
+            
+    def doesLocationHasImagingServer(self, loc_id):
+        session = create_session()
+        q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == loc_id).count()
+        return (q == 1)
 
 def id2uuid(id):
     return "UUID%d" % id
