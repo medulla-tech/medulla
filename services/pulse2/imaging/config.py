@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2009 Nicolas Rueff / Mandriva, http://www.mandriva.com/
+# (c) 2010 Nicolas Rueff / Mandriva, http://www.mandriva.com/
 #
 # $Id: config.py 4167 2009-05-19 10:15:00Z oroussy $
 #
@@ -21,28 +21,46 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Configuration class for the Pulse 2 Imaging Service.
+"""
 
 # Misc
 import pulse2.utils
+import os.path
 
 class ImagingConfig(pulse2.utils.Singleton):
     """
-    Singleton Class to hold configuration directives
+        Class which hold an imaging service configuration.
     """
 
     # imaging section
     base_folder = '/var/lib/pulse2/imaging'
-    netboot_folder = '/var/lib/tftpboot/pulse2'
+    bootloader_folder = os.path.join(base_folder, 'bootloader')
+    bootmenus_folder = os.path.join(base_folder, 'bootmenus')
+    diskless_folder = os.path.join(base_folder, 'diskless')
+    inventories_folder = os.path.join(base_folder, 'inventories')
+    masters_folder = os.path.join(base_folder, 'masters')
 
     options = {}
 
-
     def setup(self, config_file):
+        """
+           Setup config object according to config_file content.
+        """
 
         self.cp = pulse2.utils.Pulse2ConfigParser()
         self.cp.read(config_file)
 
         if self.cp.has_option('imaging', 'base_folder'):
             self.base_folder = self.cp.get('imaging', 'base_folder')
-        if self.cp.has_option('imaging', 'netboot_folder'):
-            self.netboot_folder = self.cp.get('imaging', 'netboot_folder')
+        if self.cp.has_option('imaging', 'bootloader_folder'):
+            self.bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootloader_folder'))
+        if self.cp.has_option('imaging', 'bootmenus_folder'):
+            self.bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootmenus_folder'))
+        if self.cp.has_option('imaging', 'diskless_folder'):
+            self.diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'diskless_folder'))
+        if self.cp.has_option('imaging', 'inventories_folder'):
+            self.inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'inventories_folder'))
+        if self.cp.has_option('imaging', 'masters_folder'):
+            self.masters_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'masters_folder'))
