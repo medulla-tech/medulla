@@ -37,6 +37,9 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Default boot menu","imaging"), "imaging", "manage", "bootmenu", "modules/imaging/graph/images/imaging-bootmenu-active.png", "modules/imaging/graph/images/imaging-bootmenu-inactive.png")
 );
 $sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Post-installation scripts","imaging"), "imaging", "manage", "postinstall", "modules/imaging/graph/images/imaging-bootmenu-active.png", "modules/imaging/graph/images/imaging-bootmenu-inactive.png")
+);
+$sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration", "modules/imaging/graph/images/imaging-configuration-active.png", "modules/imaging/graph/images/imaging-configuration-inactive.png")
 );
 
