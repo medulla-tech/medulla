@@ -51,7 +51,7 @@ if (isset($_POST["bconfirm"])) {
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/service", $params));
     } else {
-        new NotifyWidgetError($ret[1]);
+        new NotifyWidgetFailure($ret[1]);
     }
 }
 

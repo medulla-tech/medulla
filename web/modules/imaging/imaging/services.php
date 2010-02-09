@@ -64,7 +64,7 @@ function service_add($type, $menu, $target_uuid) {
         new NotifyWidgetSuccess($str);
         header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
     } else {
-        new NotifyWidgetError($ret[1]);
+        new NotifyWidgetFailure($ret[1]);
     }
 }
 

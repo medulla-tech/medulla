@@ -73,7 +73,7 @@ function image_add($type, $target_uuid) {
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
     } else {
-        new NotifyWidgetError($ret[1]);
+        new NotifyWidgetFailure($ret[1]);
     }
 }
 

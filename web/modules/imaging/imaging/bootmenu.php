@@ -63,7 +63,7 @@ function item_up() {
         new NotifyWidgetSuccess($str);
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), $label);
-        new NotifyWidgetError($str);
+        new NotifyWidgetFailure($str);
     }
     
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    
@@ -86,7 +86,7 @@ function item_down() {
         new NotifyWidgetSuccess($str);
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), $label);
-        new NotifyWidgetError($str);
+        new NotifyWidgetFailure($str);
     }
      
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));    

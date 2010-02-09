@@ -46,7 +46,7 @@ if (quickGet('valid')) {
         $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);             
         new NotifyWidgetSuccess($str);                      
     } elseif (!$ret[0]) {
-        new NotifyWidgetError($ret[1]);
+        new NotifyWidgetFailure($ret[1]);
     }
     $params['mod'] = 'remove_success';
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));

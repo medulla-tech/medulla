@@ -38,7 +38,7 @@ if ($ret) {
     new NotifyWidgetSuccess($str);
 } else {
     $str = sprintf(_T("Failed to move <strong>%s</strong> in the default boot menu", "imaging"), $label);
-    new NotifyWidgetError($str);
+    new NotifyWidgetFailure($str);
 }
 header("Location: " . urlStrRedirect("imaging/manage/bootmenu", $params));
 
