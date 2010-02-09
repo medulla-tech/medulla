@@ -21,12 +21,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+set -e
+
+PKI_CNF=pulse2.cnf
 PKI_PATH=PULSE2
 PKI_KEYS_PATH=$PKI_PATH/private
 PKI_CERTS_PATH=$PKI_PATH/newcerts
 PKI_REQS_PATH=$PKI_PATH/req
 PASSPHRASE=pulse2
-PULSE2_SERVICES="mmc_agent launcher_01 scheduler_01 inventory_server package_server"
+PKI_CN="Pulse 2"
+PKI_COUNTRY=FR
+PKI_STATE=Lorraine
+PKI_LOCALITY=Metz
+PKI_ORGANIZATION=Mandriva
+PKI_EMAIL=pulse2@mandriva.com
+PKI_SUBJ=/countryName=$PKI_COUNTRY/stateOrProvinceName=$PKI_STATE/localityName=$PKI_LOCALITY/organizationName=$PKI_ORGANIZATION/emailAddress=$PKI_EMAIL
+
+PULSE2_SERVICES="mmc_agent scheduler launcher inventory_server packager_server imaging_server apache"
 
 export PASSPHRASE
 
@@ -40,17 +51,17 @@ mkdir $PKI_CERTS_PATH
 mkdir $PKI_REQS_PATH
 
 # initialise PKI
-openssl req -passout env:PASSPHRASE -batch -extensions v3_ca -new -keyout $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_REQS_PATH/pulse2-req.pem
+openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$PKI_CN"  -passout env:PASSPHRASE -batch -extensions v3_ca -new -keyout $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_REQS_PATH/pulse2-req.pem
 # self-sign
-openssl ca -passin env:PASSPHRASE -batch -extensions v3_ca -selfsign -keyfile $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_PATH/pulse2.pem -infiles $PKI_REQS_PATH/pulse2-req.pem
+openssl ca -config $PKI_CNF -passin env:PASSPHRASE -batch -extensions v3_ca -selfsign -keyfile $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_PATH/pulse2.pem -infiles $PKI_REQS_PATH/pulse2-req.pem
 # remove sign request
 rm $PKI_REQS_PATH/pulse2-req.pem
 
 for service in $PULSE2_SERVICES; do
         # generate key and sign request
-        openssl req -passout env:PASSPHRASE -batch -extensions v3_ca -new -keyout $PKI_KEYS_PATH/$service-key.pem -out $PKI_REQS_PATH/$service-req.pem
+        openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$service" -passout env:PASSPHRASE -batch -extensions v3_ca -new -keyout $PKI_KEYS_PATH/$service-key.pem -out $PKI_REQS_PATH/$service-req.pem
         # sign cert with PKI
-        openssl ca -passin env:PASSPHRASE -batch -extensions v3_ca -policy policy_anything -keyfile $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_CERTS_PATH/$service-cert.pem -infiles $PKI_REQS_PATH/$service-req.pem
+        openssl ca -config $PKI_CNF -passin env:PASSPHRASE -batch -extensions v3_ca -keyfile $PKI_KEYS_PATH/pulse2-key.pem -out $PKI_CERTS_PATH/$service-cert.pem -infiles $PKI_REQS_PATH/$service-req.pem
         # convert it in the good format
         openssl rsa -passin env:PASSPHRASE -in $PKI_KEYS_PATH/$service-key.pem -out $PKI_KEYS_PATH/$service-key.rsa
         # generate final cert

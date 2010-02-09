@@ -1,0 +1,48 @@
+[ ca ]
+default_ca              = CA_Pulse2
+
+[ CA_Pulse2 ]
+dir                     = ./PULSE2
+database                = $dir/index.txt
+new_certs_dir           = $dir/newcerts
+
+certificate             = $dir/pulse2.pem
+serial                  = $dir/serial
+private_key             = $dir/private/pulse2.pem
+RANDFILE                = $dir/private/.rand
+
+default_days            = 365
+default_crl_days        = 30
+default_md              = md5
+
+policy                  = policy_match
+email_in_dn             = yes
+
+name_opt                = ca_default
+cert_opt                = ca_default
+copy_extensions         = none
+
+# For the CA policy
+[ policy_match ]
+countryName             = supplied
+stateOrProvinceName     = supplied
+organizationName        = supplied
+commonName              = supplied
+emailAddress            = supplied
+
+[ v3_ca ]
+subjectKeyIdentifier    = hash
+authorityKeyIdentifier  = keyid:always,issuer:always
+basicConstraints        = CA:true
+
+[ req ]
+default_bits            = 1024
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+attributes              = req_attributes
+x509_extensions         = v3_ca
+string_mask             = nombstr
+
+[ req_distinguished_name ]
+
+[ req_attributes ]
