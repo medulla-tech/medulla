@@ -41,8 +41,7 @@ int myLogger(char *msg) {
 
 void logClientActivity(char *smac, int priority, const char *format_str, ...) {
     va_list ap;
-    FILE *f;
-    char buf[1024], path[256];
+    char buf[1024];
 
     /* write some info */
     va_start(ap, format_str);
@@ -257,7 +256,7 @@ unsigned char *getmacfrompkt(char *buf, int l) {
  */
 int process_packet(unsigned char *buf, char *mac, char *smac,
                    struct sockaddr_in *si_other, int s) {
-    char command[256], name[256];
+    char name[256];
     int fo;
     static unsigned int lastfile = 0, lasttime = 0;
 
@@ -366,7 +365,6 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             break;
         case '5':
             if (buf[2] == '-') {
-                int bn;
 
                 logClientActivity(smac, LOG_INFO, "%s backup completed (%s)",
                                   mac, &buf[3]);
@@ -452,7 +450,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 }
 
 void readConfig(char *config_file_path) {
-    char *str, *tmp;
+    char *tmp;
 
     ini = iniparser_load(config_file_path);
 
@@ -553,7 +551,6 @@ int main(void) {
     struct sockaddr_in si_me, si_other, si_tcp;
     int s, slen = sizeof(si_other), plen, stcp;
     unsigned char buf[BUFLEN];
-    unsigned int nb;
     char smac[20];
     char *mac;
     fd_set fds;
