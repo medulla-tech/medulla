@@ -34,14 +34,6 @@ class ImagingConfig(pulse2.utils.Singleton):
         Class which hold an imaging service configuration.
     """
 
-    # imaging section
-    base_folder = '/var/lib/pulse2/imaging'
-    bootloader_folder = os.path.join(base_folder, 'bootloader')
-    bootmenus_folder = os.path.join(base_folder, 'bootmenus')
-    diskless_folder = os.path.join(base_folder, 'diskless')
-    inventories_folder = os.path.join(base_folder, 'inventories')
-    masters_folder = os.path.join(base_folder, 'masters')
-
     options = {}
 
     def setup(self, config_file):
@@ -51,16 +43,3 @@ class ImagingConfig(pulse2.utils.Singleton):
 
         self.cp = pulse2.utils.Pulse2ConfigParser()
         self.cp.read(config_file)
-
-        if self.cp.has_option('imaging', 'base_folder'):
-            self.base_folder = self.cp.get('imaging', 'base_folder')
-        if self.cp.has_option('imaging', 'bootloader_folder'):
-            self.bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootloader_folder'))
-        if self.cp.has_option('imaging', 'bootmenus_folder'):
-            self.bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootmenus_folder'))
-        if self.cp.has_option('imaging', 'diskless_folder'):
-            self.diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'diskless_folder'))
-        if self.cp.has_option('imaging', 'inventories_folder'):
-            self.inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'inventories_folder'))
-        if self.cp.has_option('imaging', 'masters_folder'):
-            self.masters_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'masters_folder'))
