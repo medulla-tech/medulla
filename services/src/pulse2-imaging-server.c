@@ -537,11 +537,11 @@ void readConfig(char *config_file_path) {
     snprintf(gPathMTFTPSync, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] mtftp_sync_path = %s", gPathMTFTPSync);
 
-    // Parse LOGGER section //
+    // Parse LOGGER section : get args keyword from handler_hand01 section//
     gLogFile =
-        iniparser_getstring(ini, "logger:log_file_path",
+        iniparser_getstring(ini, "handler_hand01:args",
                             "/var/log/mmc/pulse2-imaging-server.log");
-    syslog(LOG_INFO, "[logger] log_file_path = %s", gLogFile);
+    syslog(LOG_INFO, "[handler_hand01] args = %s", gLogFile);
 
     myLogger("Configuration parsed");
 }
