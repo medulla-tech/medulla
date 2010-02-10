@@ -1,5 +1,5 @@
 /*
- * (c) 2009 Mandriva, http://www.mandriva.com
+ * (c) 2009-2010 Mandriva, http://www.mandriva.com
  *
  * $Id: pulse2-imaging-server.c 4713 2009-11-02 14:20:32Z nrueff $
  *
@@ -20,6 +20,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  */
+
+#ifndef PULSE_IMAGING_SERVER_H
+#define PULSE_IMAGING_SERVER_H
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -51,28 +54,26 @@ unsigned char gBuff[80];
 char * gConfigurationFile = CONFIGURATION_FILE;
 
 // global config options, main section
-unsigned char gHost[255];
+char *gHost;
 int gPort = 0;
-unsigned char gAdminPass[255];
-unsigned char gBaseDir[255];
-unsigned char gInventoryDir[255];
-unsigned char gSkelDir[255];
+char *gAdminPass;
 // global config options, helpers section
-unsigned char gMenuUpdatePath[255];
-unsigned char gClientInventoryPath[255];
-unsigned char gClientAddPath[255];
-unsigned char gClientRemovePath[255];
-unsigned char gStorageCreatePath[255];
-unsigned char gStorageUpdatePath[255];
-unsigned char gMenuResetPath[255];
+char *gDirHooks;
+char *gPathProcessInventory;
+char *gPathCreateClient;
+char *gPathCreateImage;
+char *gPathUpdateClient;
+char *gPathUpdateImage;
+char *gPathLogAction;
+char *gPathGetUUID;
+char *gPathMTFTPSync;
 // global config options, daemon section
-unsigned char gUser[255];
-unsigned char gGroup[255];
-unsigned char gUMask[255];
-unsigned char gPIDFile[255];
+char *gUser;
+char *gGroup;
+char *gUMask;
+char *gPIDFile;
 // global config options, logs section
-char gLogFile[256];
-
+char *gLogFile;
 dictionary *ini;
-char etherpath[255];
 
+#endif //PULSE_IMAGING_SERVER_H

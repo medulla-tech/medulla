@@ -49,36 +49,37 @@ void logClientActivity( char *smac, int priority, const char *format_str, ... )
     vsnprintf( buf, 1023, format_str, ap );
     va_end(ap);
 
-    snprintf(path, 255, "%s/images/%s/log", gBaseDir, smac);
-    if ((f = fopen(path, "a"))) {
-        time_t now;
-        char tm[64];
-
-        time(&now);
-        strcpy(tm, ctime(&now));
-        tm[strlen(tm) - 1] = '\000';
-        fprintf(f, "%s: %s\n", tm, buf);
-        fclose(f);
-
-        /* log the last restoration */
-        if (strstr(buf, "restoration comp") != NULL) {
-            snprintf(path, 255, "%s/images/%s/log.lastrestore", gBaseDir, smac);
-            if ((f = fopen(path, "w"))){
-                fprintf(f, "%s: %s\n", tm, buf);
-                fclose(f);
-            }
-        }
-
-        syslog(priority, buf);
-
-        /* keep only the last 20 lines of the log */
-        snprintf(buf, 1023, "%s/bin/rotatelog %s", gBaseDir, path);
-        system(buf);
-      }
-    else
-      {
-        syslog(priority, buf);
-      }
+    //MDV/NR FIXME: call hook
+    //MDV/NR snprintf(path, 255, "%s/images/%s/log", gBaseDir, smac);
+    //MDV/NR if ((f = fopen(path, "a"))) {
+        //MDV/NR time_t now;
+        //MDV/NR char tm[64];
+//MDV/NR
+        //MDV/NR time(&now);
+        //MDV/NR strcpy(tm, ctime(&now));
+        //MDV/NR tm[strlen(tm) - 1] = '\000';
+        //MDV/NR fprintf(f, "%s: %s\n", tm, buf);
+        //MDV/NR fclose(f);
+//MDV/NR
+        //MDV/NR /* log the last restoration */
+        //MDV/NR if (strstr(buf, "restoration comp") != NULL) {
+            //MDV/NR snprintf(path, 255, "%s/images/%s/log.lastrestore", gBaseDir, smac);
+            //MDV/NR if ((f = fopen(path, "w"))){
+                //MDV/NR fprintf(f, "%s: %s\n", tm, buf);
+                //MDV/NR fclose(f);
+            //MDV/NR }
+        //MDV/NR }
+//MDV/NR
+        //MDV/NR syslog(priority, buf);
+//MDV/NR
+        //MDV/NR /* keep only the last 20 lines of the log */
+        //MDV/NR snprintf(buf, 1023, "%s/bin/rotatelog %s", gBaseDir, path);
+        //MDV/NR system(buf);
+      //MDV/NR }
+    //MDV/NR else
+      //MDV/NR {
+        //MDV/NR syslog(priority, buf);
+      //MDV/NR }
 }
 
 
@@ -265,24 +266,25 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        snprintf(command, 255, "%s %s", gMenuUpdatePath, smac);
+        snprintf(command, 255, "%s %s", gPathUpdateClient, smac);
         mysystem(command);
         /* write inventory to file. Must fit in one packet ! */
-        snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
-        if (!(fo = fopen(name, "w"))) { //can't create .inf file
-            char *msg = malloc(256);
-            sprintf(msg, "can't create %s", name);
-            myLogger(msg);
-            free(msg);
-            return 0;
-        }
-        fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
-                inet_ntoa(si_other->sin_addr),
-                ntohs(si_other->sin_port), mac, buf + 1);
-        snprintf(command, 255, "%s %s/%s.inf %s/%s.ini",
-                gClientInventoryPath, gInventoryDir, smac, gInventoryDir, smac);
-        fclose(fo);
-        mysystem(command);
+        // TODO !
+        //MDV/NR snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
+        //MDV/NR if (!(fo = fopen(name, "w"))) { //can't create .inf file
+            //MDV/NR char *msg = malloc(256);
+            //MDV/NR sprintf(msg, "can't create %s", name);
+            //MDV/NR myLogger(msg);
+            //MDV/NR free(msg);
+            //MDV/NR return 0;
+        //MDV/NR }
+        //MDV/NR fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
+                //MDV/NR inet_ntoa(si_other->sin_addr),
+                //MDV/NR ntohs(si_other->sin_port), mac, buf + 1);
+        //MDV/NR snprintf(command, 255, "%s %s/%s.inf %s/%s.ini",
+                //MDV/NR gPathProcessInventory, gInventoryDir, smac, gInventoryDir, smac);
+        //MDV/NR fclose(fo);
+        //MDV/NR mysystem(command);
         return 0;
     }
     // identification
@@ -300,19 +302,19 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
 
-        snprintf(command, 255, "%s %s %s %s", gClientAddPath, mac, hostname, pass);
+        snprintf(command, 255, "%s %s %s %s", gPathCreateClient, mac, hostname, pass);
         mysystem(command);
         return 0;
     }
     // before a save
     if (buf[0] == 0xEC) {
-        snprintf(command, 255, "%s %s %c", gStorageUpdatePath, smac, buf[1]);
+        snprintf(command, 255, "%s %s %c", gPathUpdateImage, smac, buf[1]);
         mysystem(command);
         return 0;
     }
     // change menu default
     if (buf[0] == 0xCD) {
-        snprintf(command, 255, "%s %s %d", gMenuResetPath, smac, buf[1]);
+        snprintf(command, 255, "%s %s %d", gPathUpdateClient, smac, buf[1]);
         mysystem(command);
         logClientActivity(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
         return 0;
@@ -355,15 +357,16 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 int bn;
 
                 logClientActivity(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
-                if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
-                        // Local backup
-                        snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
-                        system(command);
-                } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
-                        // Shared backup
-                        snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", gBaseDir, bn);
-                        system(command);
-                }
+                // TODO : handle this pserver side
+                //MDV/NR if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
+                        //MDV/NR // Local backup
+                        //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
+                        //MDV/NR system(command);
+                //MDV/NR } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
+                        //MDV/NR // Shared backup
+                        //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", gBaseDir, bn);
+                        //MDV/NR system(command);
+                //MDV/NR }
             } else {
                 logClientActivity(smac, LOG_INFO, "%s backup completed", mac);
             }
@@ -383,14 +386,15 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     }
     // return me my Pulse 2 name
     if (buf[0] == 0x1A) {
-        if (getentry(etherpath, mac)) {
-            //to.sin_family = AF_INET;
-            //to.sin_port = htons(1001);
-            //inet_aton(inet_ntoa(si_other.sin_addr), &to.sin_addr);
-            sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
-                   (struct sockaddr *) si_other, sizeof(*si_other));
-        }
-        return 0;
+        //TODO : to be hooked
+        //MDV/NR if (getentry(etherpath, mac)) {
+            //MDV/NR //to.sin_family = AF_INET;
+            //MDV/NR //to.sin_port = htons(1001);
+            //MDV/NR //inet_aton(inet_ntoa(si_other.sin_addr), &to.sin_addr);
+            //MDV/NR sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
+                   //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
+        //MDV/NR }
+        //MDV/NR return 0;
     }
     /* time synchro */
     if (buf[0] == 'T') {
@@ -438,139 +442,51 @@ void readConfig(char * config_file_path) {
     ini = iniparser_load(config_file_path);
 
     if (ini == NULL) {
-        char *msg = malloc(256); bzero(msg, 256);
+        char msg[256];
         sprintf(msg, "cannot parse file %s", config_file_path);
+        syslog(LOG_ERR, msg);
         diep(msg);
     }
 
     // Parse MAIN section //
-    if ((str = iniparser_getstr(ini, "main:host"))) {
-        strncpy((char*)gHost, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'host' not found in section 'main' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((gPort = iniparser_getint(ini, "main:port", 0))) {
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'port' not found in section 'main' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "main:adminpass"))) {
-        strncpy((char*)gAdminPass, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'adminpass' not found in section 'main' in file %s", config_file_path);
-        diep(msg);
-    }
-
-
-    // Parse FOLDERS section //
-    if ((str = iniparser_getstr(ini, "directories:base_folder"))) {
-        strncpy((char*)gBaseDir, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'base_folder' not found in section 'directories' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "directories:inventories_folder"))) {
-        strncpy((char*)gInventoryDir, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'inventories_folder' not found in section 'directories' in file %s", config_file_path);
-        diep(msg);
-    }
+    gHost = iniparser_getstring(ini, "main:host", "0.0.0.0");
+    syslog(LOG_DEBUG, "[main] host = %s", gHost);
+    gPort = iniparser_getint(ini, "main:port", 1001);
+    syslog(LOG_DEBUG, "[main] port = %d", gPort);
+    gAdminPass = iniparser_getstring(ini, "main:adminpass", "");
+    syslog(LOG_DEBUG, "[main] adminpass = ****", gAdminPass);
 
     // Parse DAEMON section //
-    if ((str = iniparser_getstr(ini, "daemon:user"))) {
-        strncpy((char*)gUser, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'user' not found in section 'daemon' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "daemon:group"))) {
-        strncpy((char*)gGroup, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'group' not found in section 'daemon' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "daemon:umask"))) {
-        strncpy((char*)gUMask, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'umaks' not found in section 'daemon' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "daemon:pidfile"))) {
-        strncpy((char*)gPIDFile, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'pidfile' not found in section 'daemon' in file %s", config_file_path);
-        diep(msg);
-    }
+    gUser = iniparser_getstring(ini, "daemon:user", "root");
+    syslog(LOG_DEBUG, "[daemon] user = %s", gUser);
+    gGroup = iniparser_getstring(ini, "daemon:group", "root");
+    syslog(LOG_DEBUG, "[daemon] group = %s", gGroup);
+    gUMask = iniparser_getint(ini, "daemon:umask", 0077);
+    syslog(LOG_DEBUG, "[daemon] umask = %d", gUMask);
+    gPIDFile = iniparser_getstring(ini, "daemon:pidfile", "/var/run/pulse2-imaging-server.pid");
+    syslog(LOG_DEBUG, "[daemon] pidfile = %s", gPIDFile);
 
-    // Parse HELPERS section //
-    if ((str = iniparser_getstr(ini, "helpers:menu_update_path"))) {
-        strncpy((char*)gMenuUpdatePath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'menu_update_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:client_inventory_path"))) {
-        strncpy((char*)gClientInventoryPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'client_inventory_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:client_add_path"))) {
-        strncpy((char*)gClientAddPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'client_add_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:client_remove_path"))) {
-        strncpy((char*)gClientRemovePath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'client_remove_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:storage_create_path"))) {
-        strncpy((char*)gStorageCreatePath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'storage_create_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:storage_update_path"))) {
-        strncpy((char*)gStorageUpdatePath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'storage_update_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
-    if ((str = iniparser_getstr(ini, "helpers:menu_reset_path"))) {
-        strncpy((char*)gMenuResetPath, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'menu_reset_path' not found in section 'helpers' in file %s", config_file_path);
-        diep(msg);
-    }
+    // Parse HOOKS section //
+    gDirHooks = iniparser_getstring(ini, "hooks:hooks_dir", "/usr/lib/pulse2/imaging/hooks");
+    syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
+    gPathCreateClient = iniparser_getstring(ini, "hooks:client_update_path", "create_client");
+    syslog(LOG_DEBUG, "[hooks] client_update_path = %s", gPathCreateClient);
+    gPathProcessInventory= iniparser_getstring(ini, "hooks:process_inventory_path", "process_inventory");
+    syslog(LOG_DEBUG, "[hooks] process_inventory_path = %s", gPathProcessInventory);
+    gPathCreateImage = iniparser_getstring(ini, "hooks:create_image_path", "create_image");
+    syslog(LOG_DEBUG, "[hooks] create_image_path = %s", gPathCreateImage);
+    gPathUpdateImage = iniparser_getstring(ini, "hooks:update_image_path", "update_image");
+    syslog(LOG_DEBUG, "[hooks] update_image_path = %s", gPathUpdateImage);
+    gPathLogAction = iniparser_getstring(ini, "hooks:log_action_path", "log_action");
+    syslog(LOG_DEBUG, "[hooks] log_action_path = %s", gPathLogAction);
+    gPathGetUUID = iniparser_getstring(ini, "hooks:get_uuid_path", "get_uuid");
+    syslog(LOG_DEBUG, "[hooks] get_uuid_path = %s", gPathGetUUID);
+    gPathMTFTPSync = iniparser_getstring(ini, "hooks:mtftp_sync_path", "mtftp_sync");
+    syslog(LOG_DEBUG, "[hooks] mtftp_sync_path = %s", gPathMTFTPSync);
 
-    // Parse LOGGERS section //
-    if ((str = iniparser_getstr(ini, "logger:log_file_path"))) {
-        strncpy((char*)gLogFile, str, 254);
-    } else {
-        char *msg = malloc(256); bzero(msg, 256);
-        sprintf(msg, "keyword 'log_file_path' not found in section 'logger' in file %s", config_file_path);
-        diep(msg);
-    }
+    // Parse LOGGER section //
+    gLogFile = iniparser_getstring(ini, "logger:log_file_path", "/var/log/mmc/pulse2-imaging-server.log");
+    syslog(LOG_INFO, "[logger] log_file_path = %s", gLogFile);
 
     myLogger("Configuration parsed");
 }
@@ -592,8 +508,6 @@ int main(void)
 
     syslog(LOG_INFO, "pulse2-imaging-server r.$Revision$");
 
-    gBaseDir[0] = 0;
-
     initlog();
     readConfig(gConfigurationFile);
 
@@ -603,14 +517,14 @@ int main(void)
     pid = getpid();
     if (pid) {
         char *msg = malloc(256); bzero (msg, 256);
-        sprintf(msg, "Daemonization succedeed, PID is %d", pid);
+        sprintf(msg, "daemonization succedeed, PID is %d", pid);
         syslog(LOG_INFO, msg);
     } else {
         diep("daemon");
     }
 
     /* */
-    sprintf(etherpath, "%s/etc/ether", gBaseDir);
+    //MDV/NR sprintf(etherpath, "%s/etc/ether", gBaseDir);
 
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) diep("udp socket");
     if ((stcp = socket(AF_INET, SOCK_STREAM, 0)) == -1) diep("tcp socket");
@@ -695,7 +609,7 @@ int main(void)
         if (so != s)
             close(so);
 
-        nb = getentries((unsigned char*)etherpath);
+        //MDV/NR nb = getentries((unsigned char*)etherpath);
     }
 
 
