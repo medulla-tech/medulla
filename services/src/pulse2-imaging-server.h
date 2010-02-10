@@ -70,7 +70,7 @@ char *gPathMTFTPSync;
 // global config options, daemon section
 char *gUser;
 char *gGroup;
-char *gUMask;
+int gUMask;
 char *gPIDFile;
 // global config options, logs section
 char *gLogFile;
