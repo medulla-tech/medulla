@@ -22,7 +22,7 @@
 # MA 02110-1301, USA.
 
 """
-The module define the config option needed by the package server and all 
+The module define the config option needed by the package server and all
 it's API modules.
 """
 
@@ -238,17 +238,53 @@ class P2PServerCP(pulse2.utils.Singleton):
 
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
 
+        # [imaging] section parsing
         if self.cp.has_section("imaging"):
+            # mount point
             imaging_mp = '/imaging'
-            src = '/var/lib/pulse2/imaging'
+            # base folder
+            base_folder = '/var/lib/pulse2/imaging'
+            # will contain the bootloader material (revoboot + splashscreen), served by tftp
+            bootloader_folder = os.path.join(base_folder, 'bootloader')
+            # will contain the boot menus, served by tftp
+            bootmenus_folder = os.path.join(base_folder, 'bootmenus')
+            # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
+            diskless_folder = os.path.join(base_folder, 'diskless')
+            # will contain inventories
+            inventories_folder = os.path.join(base_folder, 'inventories')
+            # will contain masters, served by tftp
+            masters_folder = os.path.join(base_folder, 'masters')
+            # Entity UUID
+            uuid = None
+
             if self.cp.has_option("imaging", 'mount_point'):
                 imaging_mp = self.cp.get("imaging", 'mount_point')
-            if self.cp.has_option("imaging", 'src'):
-                src = self.cp.get("imaging", 'src')
+            if self.cp.has_option('imaging', 'base_folder'):
+                base_folder = self.cp.get('imaging', 'base_folder')
+            if self.cp.has_option('imaging', 'bootloader_folder'):
+                bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootloader_folder'))
+            if self.cp.has_option('imaging', 'bootmenus_folder'):
+                bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootmenus_folder'))
+            if self.cp.has_option('imaging', 'diskless_folder'):
+                diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'diskless_folder'))
+            if self.cp.has_option('imaging', 'inventories_folder'):
+                inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'inventories_folder'))
+            if self.cp.has_option('imaging', 'masters_folder'):
+                masters_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'masters_folder'))
             if self.cp.has_option("imaging", 'uuid'):
                 uuid = self.cp.get("imaging", 'uuid')
-            self.imaging = {'mount_point':imaging_mp, 'src':src, 'uuid':uuid}
-            
+            self.imaging = {
+                'mount_point': imaging_mp,
+                'base_folder': base_folder,
+                'bootloader_folder': bootloader_folder,
+                'bootmenus_folder': bootmenus_folder,
+                'diskless_folder': diskless_folder,
+                'inventories_folder': inventories_folder,
+                'masters_folder': masters_folder,
+                'src': src,
+                'uuid':uuid
+            }
+
         if self.cp.has_option("main", "package_detect_activate"):
             # WARN this must overide the previously defined activate if it is in the config file
             self.package_detect_activate = self.cp.getboolean("main", "package_detect_activate")
