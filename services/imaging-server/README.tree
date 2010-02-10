@@ -1,5 +1,0 @@
-Missing files, to be added by copy :
-  - bin/memtest.bin : a stock memtest86, used by "Util-MemTest" base image
-    => wget http://www.memtest86.com/memtest86-3.5.tar.gz && tar zxf memtest86-3.5.tar.gz && mv memtest86-3.5/precomp.bin tree/bin/memtest.bin && rm -fr memtest86-3.5 memtest86-3.5.tar.gz
-
-
