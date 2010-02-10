@@ -134,20 +134,27 @@ int mysystem(char *arg, ... )
     char cmd[1024];
     char tmp[1024];
     va_list ap;
-    int d = 0;
+    int count = 0;
+    char *s;
+
 
     bzero(tmp, 1024);
 
     va_start(ap, arg);
-    while (*arg) {
-        if (d) {
-            snprintf(tmp, 1024, "%s", arg);
-        } else {
-            snprintf(tmp, 1024, "%s %s", cmd, arg);
-        }
-        d++;
-        strncpy(cmd, 1024, tmp);
-    }
+    while (*arg)
+       switch (*arg++) {
+            case 's':              /* string */
+                s = va_arg(ap, char *);
+                printf("%s\n", s);
+                if (count) {
+                    snprintf(tmp, 1024, "%s", s);
+                } else {
+                    snprintf(tmp, 1024, "%s %s", cmd, s);
+                }
+                count++;
+                break;
+
+       }
     va_end(ap);
 
     snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", cmd, gLogFile);
@@ -283,8 +290,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        snprintf(command, 255, "%s %s", gPathUpdateClient, smac);
-        mysystem(command);
+        mysystem(gPathUpdateClient, smac);
         /* write inventory to file. Must fit in one packet ! */
         // TODO !
         //MDV/NR snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
@@ -487,9 +493,13 @@ void readConfig(char * config_file_path) {
     gDirHooks = iniparser_getstring(ini, "hooks:hooks_dir", "/usr/lib/pulse2/imaging/hooks");
     syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
 
-    tmp = iniparser_getstring(ini, "hooks:client_update_path", "create_client");
+    tmp = iniparser_getstring(ini, "hooks:create_client_path", "create_client");
     gPathCreateClient = malloc(256); bzero(gPathCreateClient, 256); snprintf(gPathCreateClient, 256, "%s/%s", gDirHooks, tmp);
-    syslog(LOG_DEBUG, "[hooks] client_update_path = %s", gPathCreateClient);
+    syslog(LOG_DEBUG, "[hooks] create_client_path = %s", gPathCreateClient);
+
+    tmp = iniparser_getstring(ini, "hooks:update_client_path", "update_client");
+    gPathUpdateClient = malloc(256); bzero(gPathUpdateClient, 256); snprintf(gPathUpdateClient, 256, "%s/%s", gDirHooks, tmp);
+    syslog(LOG_DEBUG, "[hooks] update_client_path = %s", gPathUpdateClient);
 
     tmp= iniparser_getstring(ini, "hooks:process_inventory_path", "process_inventory");
     gPathProcessInventory = malloc(256); bzero(gPathProcessInventory, 256); snprintf(gPathProcessInventory, 256, "%s/%s", gDirHooks, tmp);
@@ -543,7 +553,7 @@ int main(void)
     readConfig(gConfigurationFile);
 
     /* Daemonize here */
-    if (( daemon(0, 0) != 0)) diep("daemon");
+    //MDV/NR if (( daemon(0, 0) != 0)) diep("daemon");
 
     pid = getpid();
     if (pid) {
