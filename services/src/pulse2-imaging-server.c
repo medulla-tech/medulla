@@ -129,15 +129,32 @@ void diep(char *s)
 /*
  * system() func with logging
  */
-int mysystem(const char *s)
+int mysystem(char *arg, ... )
 {
     char cmd[1024];
+    char tmp[1024];
+    va_list ap;
+    int d = 0;
 
-    snprintf(cmd, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", s, gLogFile);
-    system(cmd);
+    bzero(tmp, 1024);
 
-    snprintf(cmd, 1023, "%.900s 1>>%s 2>&1", s, gLogFile);
-    return (system(cmd));
+    va_start(ap, arg);
+    while (*arg) {
+        if (d) {
+            snprintf(tmp, 1024, "%s", arg);
+        } else {
+            snprintf(tmp, 1024, "%s %s", cmd, arg);
+        }
+        d++;
+        strncpy(cmd, 1024, tmp);
+    }
+    va_end(ap);
+
+    snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", cmd, gLogFile);
+    system(tmp);
+
+    snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
+    return system(cmd);
 }
 
 /*
