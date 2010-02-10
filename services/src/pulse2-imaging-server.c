@@ -266,7 +266,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                    struct sockaddr_in *si_other, int s)
 {
     char command[256], name[256];
-    FILE *fo;
+    int fo;
     static unsigned int lastfile = 0, lasttime = 0;
 
     /* do not log, log requests ! */
@@ -282,24 +282,28 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        mysystem(2, gPathUpdateClient, smac);
-        /* write inventory to file. Must fit in one packet ! */
-        // TODO !
-        //MDV/NR snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
-        //MDV/NR if (!(fo = fopen(name, "w"))) { //can't create .inf file
-            //MDV/NR char *msg = malloc(256);
-            //MDV/NR sprintf(msg, "can't create %s", name);
-            //MDV/NR myLogger(msg);
-            //MDV/NR free(msg);
-            //MDV/NR return 0;
-        //MDV/NR }
-        //MDV/NR fprintf(fo, ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
-                //MDV/NR inet_ntoa(si_other->sin_addr),
-                //MDV/NR ntohs(si_other->sin_port), mac, buf + 1);
-        //MDV/NR snprintf(command, 255, "%s %s/%s.inf %s/%s.ini",
-                //MDV/NR gPathProcessInventory, gInventoryDir, smac, gInventoryDir, smac);
-        //MDV/NR fclose(fo);
-        //MDV/NR mysystem(command);
+        char buffer[100 * 1024];
+        int buffer_len = 0;
+        mysystem(2, gPathUpdateClient, smac); // TODO : check return code
+
+        /* write inventory to a temporary file. Must fit in one packet ! */
+        snprintf(name, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
+
+        if (!(fo = mkstemp(name))) { //can't create .inf file
+            char *msg = malloc(256);
+            sprintf(msg, "can't create %s", name);
+            myLogger(msg);
+            free(msg);
+            return 0;
+        }
+        buffer_len = snprintf(buffer, 100 * 1024,
+                ">>>Packet from %s:%d\nMAC Address:%s\n%s\n<<<\n",
+                inet_ntoa(si_other->sin_addr),
+                ntohs(si_other->sin_port), mac, buf + 1);
+        write(fo, buffer, buffer_len);
+        close(fo);
+
+        mysystem(3, gPathProcessInventory, smac, name); // TODO : check return code
         return 0;
     }
     // identification
