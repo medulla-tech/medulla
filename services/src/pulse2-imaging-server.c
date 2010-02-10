@@ -129,39 +129,31 @@ void diep(char *s)
 /*
  * system() func with logging
  */
-int mysystem(char *arg, ... )
+int mysystem(int argc, ... )
 {
     char cmd[1024];
     char tmp[1024];
-    va_list ap;
+    va_list argv;
     int count = 0;
-    char *s;
-
 
     bzero(tmp, 1024);
 
-    va_start(ap, arg);
-    while (*arg)
-       switch (*arg++) {
-            case 's':              /* string */
-                s = va_arg(ap, char *);
-                printf("%s\n", s);
-                if (count) {
-                    snprintf(tmp, 1024, "%s", s);
-                } else {
-                    snprintf(tmp, 1024, "%s %s", cmd, s);
-                }
-                count++;
-                break;
-
-       }
-    va_end(ap);
+    va_start(argv, argc);
+    while (argc--) {
+        if (count)
+            snprintf(tmp, 1024, "%s %s", cmd, va_arg(argv, char *));
+        else
+            snprintf(tmp, 1024, "%s", va_arg(argv, char *));
+        strncpy(cmd, tmp, 1024);
+        count++;
+    }
+    va_end(argv);
 
     snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1", cmd, gLogFile);
     system(tmp);
 
     snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
-    return system(cmd);
+    return system(tmp);
 }
 
 /*
@@ -290,7 +282,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
 
     // Hardware Info...
     if (buf[0] == 0xAA) {
-        mysystem(gPathUpdateClient, smac);
+        mysystem(2, gPathUpdateClient, smac);
         /* write inventory to file. Must fit in one packet ! */
         // TODO !
         //MDV/NR snprintf(name, 255, "%s/%s.inf", gInventoryDir, smac);
@@ -326,19 +318,19 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         myLogger(buff);
 
         snprintf(command, 255, "%s %s %s %s", gPathCreateClient, mac, hostname, pass);
-        mysystem(command);
+        mysystem(1, command);
         return 0;
     }
     // before a save
     if (buf[0] == 0xEC) {
         snprintf(command, 255, "%s %s %c", gPathUpdateImage, smac, buf[1]);
-        mysystem(command);
+        mysystem(1, command);
         return 0;
     }
     // change menu default
     if (buf[0] == 0xCD) {
         snprintf(command, 255, "%s %s %d", gPathUpdateClient, smac, buf[1]);
-        mysystem(command);
+        mysystem(1, command);
         logClientActivity(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
         return 0;
     }
@@ -553,7 +545,7 @@ int main(void)
     readConfig(gConfigurationFile);
 
     /* Daemonize here */
-    //MDV/NR if (( daemon(0, 0) != 0)) diep("daemon");
+    if (( daemon(0, 0) != 0)) diep("daemon");
 
     pid = getpid();
     if (pid) {
