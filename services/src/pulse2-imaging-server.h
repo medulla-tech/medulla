@@ -1,7 +1,7 @@
 /*
  * (c) 2009-2010 Mandriva, http://www.mandriva.com
  *
- * $Id: pulse2-imaging-server.c 4713 2009-11-02 14:20:32Z nrueff $
+ * $Id$
  *
  * This file is part of Pulse 2, http://pulse2.mandriva.org
  *
