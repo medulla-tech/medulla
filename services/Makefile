@@ -19,6 +19,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# General Makefile variables
+PULSE2_OWNER	:= root
+PULSE2_GROUP	:= root
+PREFIX 			:= /usr/local
+VARDIR 			:= /var/lib/pulse2/imaging
+SBINDIR 		:= $(PREFIX)/sbin
+INITDIR 		:= /etc/init.d
+ETCDIR 			:= /etc/mmc
+INSTALL			:= $(shell which install)
+SED				:= $(shell which sed)
+
 # main target
 
 BUILD_FOLDER = build/
@@ -27,13 +38,37 @@ SUBDIRS = src
 .PHONY: subdirs $(SUBDIRS)
 
 subdirs: $(SUBDIRS)
-	[ -d $(BUILD_FOLDER) ] || mkdir -p $(BUILD_FOLDER)
-	cp -a src/pulse2-imaging-server $(BUILD_FOLDER)
 
 $(SUBDIRS):
 	$(MAKE) -C $@
 
 clean: $(SUBDIRS)
 	for i in $^; do $(MAKE) -C $$i clean; done
+
+install: subdirs install-imaging-server
+
+install-imaging-server:
+	@echo ""
+	@echo "Creating directories ..."
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/bootmenus
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/inventories
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/custom
+	$(INSTALL) -m 750 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(VARDIR)/masters
+
+	@echo "Installing binaries ..."
+	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
+
+	@echo "Installing init files ..."
+	$(INSTALL) -m 755 -o root -g root init.d/pulse2-imaging-server $(DESTDIR)$(INITDIR)
+	$(SED) -i 's!##SBINDIR##!$(SBINDIR)!g' $(DESTDIR)$(INITDIR)/pulse2-imaging-server
+
+	@echo "Installing default material ..."
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(ETCDIR)/pulse2/pulse2-imaging-server
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/pulse2-imaging-server
+
+	@echo "Installing config files ..."
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) -d $(ETCDIR)/pulse2/pulse2-imaging-server
+	$(INSTALL) -m 755 -o $(PULSE2_OWNER) -g $(PULSE2_GROUP) conf/pulse2/imaging-server/imaging-server.ini $(ETCDIR)/pulse2/pulse2-imaging-server
 
 .PHONY: src
