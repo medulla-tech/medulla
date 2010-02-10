@@ -309,33 +309,29 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     // identification
     if (buf[0] == 0xAD) {
         char *ptr, pass[256], hostname[256], buff[256];
-
-
         ptr = strrchr((char *)buf + 3, ':');
         *ptr = 0;
         strcpy(pass, ptr + 1);
         strcpy(hostname, (char*)buf + 3);
-
         snprintf(buff, 255, "Identification from %s:%d (%s) as %s",
                 inet_ntoa(si_other->sin_addr),
                 ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-
-        snprintf(command, 255, "%s %s %s %s", gPathCreateClient, mac, hostname, pass);
-        mysystem(1, command);
+        mysystem(1, gPathCreateClient, mac, hostname, pass);
         return 0;
     }
     // before a save
     if (buf[0] == 0xEC) {
-        snprintf(command, 255, "%s %s %c", gPathUpdateImage, smac, buf[1]);
-        mysystem(1, command);
+        char operation[16];
+        snprintf(operation, 16, "%c", buf[1]);
+        mysystem(3, gPathUpdateImage, smac, operation);
         return 0;
     }
-    // change menu default
+    // change default menu
     if (buf[0] == 0xCD) {
-        snprintf(command, 255, "%s %s %d", gPathUpdateClient, smac, buf[1]);
-        mysystem(1, command);
-        logClientActivity(smac, LOG_INFO, "%s default set to %d", mac, buf[1]);
+        char item[16];
+        snprintf(item, 16, "%d", buf[1]);
+        mysystem(3, gPathUpdateClient, smac, item);
         return 0;
     }
     // log data
@@ -378,13 +374,13 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 logClientActivity(smac, LOG_INFO, "%s backup completed (%s)", mac, &buf[3]);
                 // TODO : handle this pserver side
                 //MDV/NR if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
-                        //MDV/NR // Local backup
-                        //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
-                        //MDV/NR system(command);
-                //MDV/NR } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
-                        //MDV/NR // Shared backup
-                        //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", gBaseDir, bn);
-                        //MDV/NR system(command);
+                    //MDV/NR // Local backup
+                    //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/images/%s/Local-%d", gBaseDir, smac, bn);
+                    //MDV/NR system(command);
+                    //MDV/NR } else if (sscanf((char*)&buf[3], "Base-%d", &bn) == 1) {
+                    //MDV/NR // Shared backup
+                    //MDV/NR snprintf(command, 255, "chown -R 0:0 %s/imgbase/Base-%d", gBaseDir, bn);
+                    //MDV/NR system(command);
                 //MDV/NR }
             } else {
                 logClientActivity(smac, LOG_INFO, "%s backup completed", mac);
@@ -403,7 +399,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         }
         return 0;
     }
-    // return me my Pulse 2 name
+    // give me my Pulse 2 name
     if (buf[0] == 0x1A) {
         //TODO : to be hooked
         //MDV/NR if (getentry(etherpath, mac)) {
@@ -415,7 +411,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         //MDV/NR }
         //MDV/NR return 0;
     }
-    /* time synchro */
+    /* mtftp synchro */
     if (buf[0] == 'T') {
       char pnum;
       int bnum, to;
