@@ -51,7 +51,7 @@
 
 unsigned char gBuff[80];
 
-char * gConfigurationFile = CONFIGURATION_FILE;
+char *gConfigurationFile = CONFIGURATION_FILE;
 
 // global config options, main section
 char *gHost;
@@ -76,4 +76,4 @@ char *gPIDFile;
 char *gLogFile;
 dictionary *ini;
 
-#endif //PULSE_IMAGING_SERVER_H
+#endif                          //PULSE_IMAGING_SERVER_H
