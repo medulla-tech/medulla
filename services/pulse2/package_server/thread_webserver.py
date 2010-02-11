@@ -24,7 +24,6 @@ Pulse 2 Package Server.
 Registers all XML-RPC resources attached to the XML-RPC server.
 """
 
-import os.path
 import logging
 import twisted
 import re
