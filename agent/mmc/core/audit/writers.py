@@ -290,7 +290,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         source = socket.getfqdn()
         return AuditRecordDB(self, module, event, user, objects, parameters, initiator, source, current, previous)
     
-    def get(self, start, end, plug, user, type, date1, date2, object, action):
+    def getLog(self, start, end, plug, user, type, date1, date2, object, action):
         """
         Allow to get all log
         return a dict of log
@@ -316,9 +316,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @type action: string 
         """
         session = create_session()
-        return AuditReaderDB(self).getlog(start, end, plug, user, type, date1, date2, object, action)
+        return AuditReaderDB(self, session).getLog(start, end, plug, user, type, date1, date2, object, action)
         
-    def getById(self, id):
+    def getLogById(self, id):
         """
         Allow to get a log by id in database
         @param id: id number in database
@@ -326,7 +326,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         return a dict of a log 
         """
         session = create_session()
-        return AuditReaderDB(self, session).getById(id)
+        return AuditReaderDB(self, session).getLogById(id)
     
     def getActionType(self, action, type):
         session = create_session()
@@ -428,7 +428,6 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("uri", String(255), nullable = False),
                             Column("type_id", Integer, ForeignKey('type.id')),
                             Column("parent", Integer, ForeignKey('object.id')),
-
                             mysql_engine='InnoDB'
                             )
 
@@ -462,7 +461,6 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("event_id", Integer, ForeignKey('event.id'), nullable=False),
                             Column("module_id", Integer, ForeignKey('module.id'), nullable=False),
                             Column("user_id", Integer, ForeignKey('object.id'), nullable=False),
-                            
                             mysql_engine='InnoDB'
                             )
 
@@ -491,7 +489,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("id", Integer, primary_key=True),
                             Column("param_name", String(50)),
                             Column("param_value", String(1024)),
-                            Column("log_id", Integer, ForeignKey('log.id'))
+                            Column("record_id", Integer, ForeignKey('log.id'))
                             )
     
         self.initiator_table=Table("initiator", self.metadata,
@@ -515,7 +513,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.object_log_table=Table("object_log", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("object_id", Integer, ForeignKey('object.id')),
-                            Column("log_id", Integer, ForeignKey('log.id'))
+                            Column("record_id", Integer, ForeignKey('log.id'))
                             )
                             
         self.previous_value_table=Table("previous_value", self.metadata,
@@ -530,15 +528,15 @@ class AuditWriterDB(Singleton, AuditWriterI):
                             Column("value", String(1024))
                             )
     
-        self.log_table=Table("log", self.metadata,
+        self.record_table=Table("record", self.metadata,
                              Column("id", Integer, primary_key=True),
-                             Column("log_date", DateTime, default=func.now(), nullable=False),
+                             Column("date", DateTime, default=func.now(), nullable=False),
                              Column("result", Boolean, nullable=False),
-                             Column("client_id", Integer, ForeignKey('client.id')),
-                             Column("agent_id", Integer, ForeignKey('agent.id')),
+                             Column("initiator_id", Integer, ForeignKey('initiator.id'), nullable=False),
+                             Column("source_id", Integer, ForeignKey('source.id')),
                              Column("event_id", Integer),
                              Column("module_id", Integer),
-                             Column("object_user_id", Integer, ForeignKey('object.id')),
+                             Column("user_id", Integer, ForeignKey('object.id')),
                              ForeignKeyConstraint(('event_id', 'module_id'), ('event.id', 'event.module_id'))
                             )
 

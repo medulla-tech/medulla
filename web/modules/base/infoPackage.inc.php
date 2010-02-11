@@ -54,7 +54,6 @@ $page->setOptions(array("visible"=>False,"AJAX" =>True));
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
-
 $submod = new SubModule("status");
 $submod->setVisibility(True);
 $submod->setDescription(_("Status"));
@@ -128,6 +127,21 @@ $page = new Page("editacl",_("Edit ACL permissions on a user"));
 $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("loguser",_("Logged user actions"));
+$page->setFile("modules/base/users/loguser.php",
+	               array("AJAX" =>False,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("userlogview",_("Action details"));
+$page->setFile("modules/base/users/userlogview.php",
+	               array("AJAX" =>False,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("ajaxLogUserFilter");
+$page->setFile("modules/base/users/ajaxLogUserFilter.php",
+	               array("AJAX" =>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("delete",_("Delete a user"));
 $page->setFile("modules/base/users/delete.php",
                array("noHeader"=>True,"visible"=>False));
@@ -160,10 +174,8 @@ $submod->setImg('img/navbar/group');
 $submod->setDefaultPage("base/groups/index");
 $submod->setPriority(20);
 
-
 $page = new Page("index",_("Group list"));
 $submod->addPage($page);
-
 
 $page = new Page("add",_("Add a group"));
 $submod->addPage($page);
@@ -188,6 +200,47 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
+/* Audit module */
+
+$submod = new SubModule("audit");
+$submod->setDescription(_("Audit"));
+$submod->setImg('img/navbar/logview');
+$submod->setDefaultPage("base/audit/index");
+$submod->setPriority(2000);
+
+$page = new Page("index",_("Find actions in all modules"));
+$page->setFile("modules/base/audit/index.php", array("AJAX" =>False,"visible"=>True));
+$submod->addPage($page);
+
+$page = new Page("searchbar");
+$page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("indexbase",_("Find actions in User and Group"));
+$page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
+$submod->addPage($page);
+
+$page = new Page("indexmail",_("Find actions in Mail"));
+$page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
+$submod->addPage($page);
+
+$page = new Page("indexproxy",_("Find actions in Proxy"));
+$page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
+$submod->addPage($page);
+
+$page = new Page("indexnetwork",_("Find actions in Network"));
+$page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxLogFilter");
+$page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("view",_("View details of an action"));
+$page->setFile("modules/base/audit/view.php", array("AJAX" =>False,"visible"=>False));
+$submod->addPage($page);
+
+$mod->addSubmod($submod);
 
 /* Computer management module */
 

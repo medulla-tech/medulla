@@ -24,8 +24,10 @@
 
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/groups.inc.php");
+require("modules/base/includes/logging-xmlrpc.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require("modules/base/includes/AjaxFilterLog.inc.php");
 
 /**
  * Resize a jpg file if it is greater than $maxwidth or $maxheight
@@ -299,6 +301,14 @@ if ($_GET["action"]=="add") {
 $test = new TrFormElement(_("Login"),$formElt);
 $test->setCssError("login");
 $test->display(array("value"=>$detailArr["uid"][0]));
+
+$lastlog=get_last_log_user($_GET["user"]);
+
+if ($lastlog[0]!=0)
+{
+	$test = new LinkTrFormElement(_("Last action"),new HiddenTpl("lastaction"));
+	$test->display(array("value"=>"?module=base&submod=users&action=loguser&user=".$_GET["user"],"name"=>$lastlog[1][0]["date"]));
+}
 
 $input = new TrFormElement(_("Password"),new PasswordTpl("pass"));
 $input->setCssError("pass");

@@ -20,6 +20,11 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+    Factory used to interact with the Audit module
+    (read/write audit logs)
+"""
+
 from mmc.support.mmctools import Singleton
 from mmc.core.audit.writers import *
 
@@ -68,27 +73,27 @@ class AuditFactory(Singleton):
         """
         return self.logaction.log(*args)
   
-    def getlog(self,*args):
+    def getLog(self,*args):
         """
         Get Log Actions return a listEvent
         @param *args : list of log filter args
         """
-        return self.logaction.get(*args)
+        return self.logaction.getLog(*args)
     
-    def getlog_by_Id(self,*args):
+    def getLogById(self,*args):
         """
         Get Log Actions return an Event
         @param *args : list of log filter args
         """
-        return self.logaction.get_by_Id(*args)
+        return self.logaction.getLogById(*args)
     
-    def get_action_type(self,*args):
+    def getActionType(self,*args):
         """
         Get Log Actions return an list of actions or type
         @param action : return actions
         @param type : return type
         """
-        return self.logaction.get_action_type(*args)
+        return self.logaction.getActionType(*args)
         
     def setup(self,*args):
         """

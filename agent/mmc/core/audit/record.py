@@ -207,7 +207,7 @@ class AuditRecordDB(AuditRecord):
                     
                     bdobjectlog = Object_Log()
                     bdobjectlog.object_id = obj.id
-                    bdobjectlog.log_id = self.record.id
+                    bdobjectlog.record_id = self.record.id
                     session.save(bdobjectlog)
                     session.flush()
                     
