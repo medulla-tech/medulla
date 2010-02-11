@@ -34,7 +34,7 @@ import mmc.plugins.imaging.iso
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
-from mmc.support.mmctools import *
+from mmc.support.mmctools import RpcProxyI
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import *
 from pulse2.apis.clients.imaging import ImagingApi
