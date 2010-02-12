@@ -130,6 +130,7 @@ int mysystem(int argc, ...) {
     char tmp[1024];
     va_list argv;
     int count = 0;
+    int retval = 0;
 
     bzero(tmp, 1024);
 
@@ -144,12 +145,15 @@ int mysystem(int argc, ...) {
     }
     va_end(argv);
 
-    snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` %.900s\" 1>>%s 2>&1",
+    snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` pulse2-imaging-server %.900s\" 1>>%s 2>&1",
              cmd, gLogFile);
     system(tmp);
 
     snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
-    return system(tmp);
+
+    // we now take care of the error code :
+    retval = WEXITSTATUS(system(tmp));
+    return retval;
 }
 
 /*
@@ -307,7 +311,23 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-        mysystem(1, gPathCreateClient, mac, hostname, pass);
+        switch (mysystem(1, gPathCreateClient, mac, hostname, pass)) {
+            case 0:
+                myLogger("Hook succeeded !");
+                break;
+            case 1:
+                myLogger("Hook failed server side !");
+                break;
+            case 2:
+                myLogger("Hook failed client side !");
+                break;
+            case 3:
+                myLogger("Hook failed !");
+                break;
+            default:
+                myLogger("ERROR : something unexpected happend !");
+                break;
+        }
         return 0;
     }
     // before a save
@@ -483,7 +503,7 @@ void readConfig(char *config_file_path) {
     // Parse HOOKS section //
     gDirHooks =
         iniparser_getstring(ini, "hooks:hooks_dir",
-                            "/usr/lib/pulse2/imaging/hooks");
+                            "/usr/local/lib/pulse2/imaging-server/hooks");
     syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
 
     tmp = iniparser_getstring(ini, "hooks:create_client_path", "create_client");
@@ -540,7 +560,9 @@ void readConfig(char *config_file_path) {
     // Parse LOGGER section : get args keyword from handler_hand01 section//
     gLogFile =
         iniparser_getstring(ini, "handler_hand01:args",
-                            "/var/log/mmc/pulse2-imaging-server.log");
+                            "(/var/log/mmc/pulse2-imaging-server.log,)");
+    gLogFile +=2;
+    *(gLogFile + strlen(gLogFile) - 3) = 0;
     syslog(LOG_INFO, "[handler_hand01] args = %s", gLogFile);
 
     myLogger("Configuration parsed");
