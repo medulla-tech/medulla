@@ -1,4 +1,5 @@
-# (c) 2010 Nicolas Rueff / Mandriva, http://www.mandriva.com
+#
+# (c) 2009-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -15,15 +16,16 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with Pulse 2. If not, see <http://www.gnu.org/licenses/>.
+#
 
 # General Makefile variables
 PULSE2_OWNER	:= root
 PULSE2_GROUP	:= root
 PREFIX 			:= /usr/local
-VARDIR 			:= /var/lib/pulse2/imaging
+VARDIR 			:= /var/lib/pulse2
+VARIMAGINGDIR	:= $(VARDIR)/imaging-server
+HOOKSDIR		:= $(PREFIX)/lib/pulse2/imaging-server/hooks
 SBINDIR 		:= $(PREFIX)/sbin
 INITDIR 		:= /etc/init.d
 ETCDIR 			:= /etc/mmc
@@ -58,6 +60,10 @@ install-imaging-server:
 
 	@echo "Installing binaries ..."
 	$(INSTALL) -m 755 -o root -g root src/pulse2-imaging-server $(SBINDIR)/pulse2-imaging-server
+
+	@echo "Installing hooks ..."
+	$(INSTALL) -m 755 -o root -g root -d $(HOOKSDIR)
+	$(INSTALL) -m 755 -o root -g root contrib/imaging-server/hooks/* $(HOOKSDIR)/
 
 	@echo "Installing init files ..."
 	$(INSTALL) -m 755 -o root -g root init.d/pulse2-imaging-server $(DESTDIR)$(INITDIR)
