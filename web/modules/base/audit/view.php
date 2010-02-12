@@ -29,83 +29,65 @@ require("modules/base/includes/AjaxFilterLog.inc.php");
 $p = new PageGenerator();
 $p->setTitle("Action details");
 $p->setSideMenu($sidemenu);
+$p->display();
+
 $log=get_log_by_id($_GET["logid"]);
+
 $f = new ValidatingForm();
 $f->push(new Table());
-
-$f->add(    new TrFormElement(_("Date"), new HiddenTpl("date")),
-            array("value" => $log[0]["date"])
-       );
-
-$f->add(    new TrFormElement(_("User which do the action"), new HiddenTpl("user")),
-            array("value" => $log[0]["user"])
-       );
-
-$f->add(    new TrFormElement(_("Action"), new HiddenTpl("action")),
-            array("value" => $log[0]["action"])
-       );
-
-$f->add(    new TrFormElement(_("Plugin"), new HiddenTpl("plugin")),
-            array("value" => $log[0]["plugin"])
-       );
-       
-$f->add(    new TrFormElement(_("Client"), new HiddenTpl("interface")),
-            array("value" => $log[0]["client-type"])
-       );
-
-$f->add(    new TrFormElement(_("Client hostname"), new HiddenTpl("hostname")),
-            array("value" => $log[0]["client-host"])
-       );
-       
-$f->add(    new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
-            array("value" => $log[0]["agent-host"])
-       );
+$f->add(new TrFormElement(_("Date"), new HiddenTpl("date")),
+        array("value" => $log[0]["date"]));
+$f->add(new TrFormElement(_("User which do the action"), new HiddenTpl("user")),
+        array("value" => $log[0]["user"]));
+$f->add(new TrFormElement(_("Action"), new HiddenTpl("action")),
+        array("value" => $log[0]["action"]));
+$f->add(new TrFormElement(_("Plugin"), new HiddenTpl("plugin")),
+        array("value" => $log[0]["plugin"]));
+$f->add(new TrFormElement(_("Client"), new HiddenTpl("interface")),
+        array("value" => $log[0]["client-type"]));
+$f->add(new TrFormElement(_("Client hostname"), new HiddenTpl("hostname")),
+        array("value" => $log[0]["client-host"]));
+$f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
+        array("value" => $log[0]["agent-host"]));
+        
 $i=1;
-foreach ( $log[0]["objects"] as $obj)
-{
-    
-$f->add(    new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
-            array("value" => $obj["object"])
-       );
+foreach ($log[0]["objects"] as $obj) {    
+    $f->add(new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
+        array("value" => $obj["object"]));
+    $f->add(new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
+        array("value" => $obj["type"]));
 
-$f->add(    new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
-            array("value" => $obj["type"])
-       );
-
-        if (isset($obj["previous"])  && isset($obj["current"]))
-        {
-            $f->add(new TrFormElement(_("Previous"),new DisabledInputTpl("previous")), array("value"=> $obj["previous"][0],"disabled"=>True));
-            for ($i = 1; $i < sizeof($obj["previous"]); $i++)
-            {
-                    $f->add(new TrFormElement("",new DisabledInputTpl("previous")), array("value"=> $obj["previous"][0],"disabled"=>True));
-            }
-            $f->add(new TrFormElement(_("Current"),new DisabledInputTpl("current")), array("value"=> $obj["current"][0],"Input"=>True));
-            for ($i = 1; $i < sizeof($obj["current"]); $i++)
-            {
-                    $f->add(new TrFormElement("",new DisabledInputTpl("current")), array("value"=> $obj["current"][0],"Input"=>True));
-            }
+    if (isset($obj["previous"])  && isset($obj["current"])) {
+        $f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
+        array("value"=> $obj["previous"][0],"disabled"=>True));
+        
+        for ($i = 1; $i < sizeof($obj["previous"]); $i++) {
+            $f->add(new TrFormElement("",new DisabledInputTpl("previous")), 
+            array("value"=> $obj["previous"][0],"disabled"=>True));
         }
+        
+        $f->add(new TrFormElement(_("Current"),new DisabledInputTpl("current")), 
+            array("value"=> $obj["current"][0],"Input"=>True));
+
+        for ($i = 1; $i < sizeof($obj["current"]); $i++) {
+            $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
+            array("value"=> $obj["current"][0],"Input"=>True));
+        }
+    }
     $i++;        
 }
-$p->display();
-$f->display();
-
 $f->pop();
+$f->display();
 
 $g = new ValidatingForm();
 $g->push(new DivExpertMode());
 $g->push(new Table());
-
-foreach ( $log[0]["parameters"] as $param=>$paramvalue)
-{
-    $g->add(    new TrFormElement($param, new HiddenTpl("param"+$param)),
-            array("value" => $paramvalue)
-    );
+foreach ($log[0]["parameters"] as $param=>$paramvalue) {
+    $g->add(new TrFormElement($param, new HiddenTpl("param"+$param)),
+            array("value" => $paramvalue));
 }
-
 $g->pop();
 $g->pop();
 $g->display();
-
 
 ?>
