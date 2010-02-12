@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8; -*-
 #
-# (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2007-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -29,7 +29,7 @@
 
 # Variables
 DESC="Pulse 2 Imaging Server"
-DAEMON="/usr/sbin/pulse2-imaging-server"
+DAEMON="##SBINDIR##/pulse2-imaging-server"
 
 # Function to start daemon
 start () {
