@@ -253,20 +253,18 @@ class LogListInfos extends OptimizedListInfos {
 
         echo "</tr></thead>";
 
-        for ( $idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
-            
-            if($this->arrCommit[$idx]==0){
-                echo "<tr";
-                echo " class=\"error\"";
-                echo "\">";
+        for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+                        
+            if (($this->start - $idx) % 2) {
+                echo '<tr class="';
+            } else {
+                echo '<tr class="alternate ';
             }
-            else{
-                if (($this->start - $idx) % 2) {
-                    echo "<tr>";
-                } else {
-                    echo '<tr class="alternate">';
-                }
+            if($this->arrCommit[$idx]==0) {
+                echo 'error';
             }
+            echo '">';
+
             //link to first action (if we have an action)
             if (count($this->arrAction) && $this->firstColumnActionLink) {
                 $this->drawMainAction($idx);
