@@ -36,6 +36,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <dirent.h>
+#include <sys/wait.h> // for WEXITSTATUS and friends
 
 #ifdef S_SPLINT_S
 # include "/usr/local/splint/include/arpa/inet.h"
