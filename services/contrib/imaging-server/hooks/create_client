@@ -22,7 +22,11 @@
 #
 
 """
-    This is a generic hook skeleton to be used with pulse 2 imaging server
+    This hook is called when a client asks to be declared.
+
+    Fort the curious mind, if correspond to the following GRUB keywords:
+    - identify (name and password given by the user)
+    - identifyauto (server is left alone) : deprecated, LRS stuff
 """
 import sys
 import twisted.internet.reactor
@@ -122,8 +126,8 @@ def callFunction(deffered):
     )
 
 # Parse the command line
-config = pulse2.imaging.config.ImagingConfig(CONFIG_FILE) #: ConfigParser object
-config.setup()
+config = pulse2.imaging.config.ImagingConfig() #: ConfigParser object
+config.setup(CONFIG_FILE)
 logging.config.fileConfig(CONFIG_FILE)
 
 # Instanciate the API

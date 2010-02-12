@@ -122,8 +122,8 @@ def callFunction(deffered):
     )
 
 # Parse the command line
-config = pulse2.imaging.config.ImagingConfig(CONFIG_FILE) #: ConfigParser object
-config.setup()
+config = pulse2.imaging.config.ImagingConfig() #: ConfigParser object
+config.setup(CONFIG_FILE)
 logging.config.fileConfig(CONFIG_FILE)
 
 # Instanciate the API
