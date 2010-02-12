@@ -49,8 +49,8 @@ if (isset($_GET['request'])) { $filter['request'] = $_GET['request']; }
 if (isset($_GET['equ_bool'])) { $filter['equ_bool'] = $_GET['equ_bool']; }
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
-    /*require("modules/pulse2/includes/groups_xmlrpc.inc.php");
-    require("modules/dyngroup/includes/dyngroup.php");*/
+    require_once("modules/pulse2/includes/groups_xmlrpc.inc.php");
+    require_once("modules/dyngroup/includes/dyngroup.php");
     if (isset($_GET['gid'])) {
         $filter['gid'] = $_GET['gid'];
         $canbedeletedfromgroup = true;
