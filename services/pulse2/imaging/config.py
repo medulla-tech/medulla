@@ -51,6 +51,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     # [package-server] section
     pserver_host = "127.0.0.1"
     pserver_port = 9990
+    pserver_mount_point = "/imaging"
     pserver_enablessl = True
     pserver_username = "username"
     pserver_password = "password"
@@ -59,7 +60,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     pserver_verifypeer = False
 
     # [hooks] section
-    hooks_dir = "/usr/lib/pulse2/imaging/hooks"
+    hooks_dir = "/usr/local/lib/pulse2/imaging-server/hooks"
     create_client_path = os.path.join(hooks_dir, "create_client")
     client_update_path = os.path.join(hooks_dir, "update_client")
     process_inventory_path = os.path.join(hooks_dir, "process_inventory")
@@ -100,6 +101,8 @@ class ImagingConfig(pulse2.utils.Singleton):
                 self.pserver_host = self.cp.get("package-server", "host")
             if self.cp.has_option("package-server", "port"):
                 self.pserver_port = self.cp.getint("package-server", "port")
+            if self.cp.has_option("package-server", "mount_point"):
+                self.pserver_mount_point = self.cp.getboolean("package-server", "mount_point")
             if self.cp.has_option("package-server", "enablessl"):
                 self.pserver_enablessl = self.cp.getboolean("package-server", "enablessl")
             if self.cp.has_option("package-server", "password"):
