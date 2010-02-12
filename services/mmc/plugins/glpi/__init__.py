@@ -19,6 +19,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+MMC GLPI Backend plugin
+It provide an API to access informations in the GLPI database.
+"""
+
 from mmc.support.mmctools import xmlrpcCleanup, RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
@@ -45,7 +50,8 @@ def activate():
         logger.warning("Plugin glpi: disabled by configuration.")
         return False
 
-    GlpiLocation().init(config) # does Glpi().activate()
+    if not GlpiLocation().init(config): # does Glpi().activate()
+        return False
     if not Glpi().db_check():
         return False
                     

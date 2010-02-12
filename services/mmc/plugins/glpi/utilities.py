@@ -20,6 +20,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Glpi utilities
+"""
+
 from pulse2.managers.location import ComputerLocationManager
 import mmc.plugins.glpi.database
 import logging
@@ -35,7 +39,7 @@ def complete_ctx(ctx):
     if not hasattr(ctx, "locations") or ctx.locations == None:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid))
-        ctx.locationsid = map(lambda e: e.ID, ctx.locations)
+        ctx.locationsid = map(lambda e: e.id, ctx.locations)
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)

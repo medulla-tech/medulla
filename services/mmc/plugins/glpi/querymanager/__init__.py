@@ -20,6 +20,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Glpi querymanager
+give informations to the dyngroup plugin to be able to build dyngroups 
+on glpi informations
+"""
+
 import logging
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.config import GlpiQueryManagerConfig
@@ -100,12 +106,18 @@ def getAllSoftwares(ctx, value = ''):
 def getAllSoftwaresAndVersions(ctx, softname = "", version = None):
     ret = []
     if version == None:
-        ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
+        if Glpi().glpi_version().find('0.8') == 0: # glpi in 0.8
+            ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
+        else:
+            ret = unique(map(lambda x:x.name, Glpi().getAllSoftwares(ctx, softname)))
     else:
-        if Glpi().glpi_version_new():
+        if Glpi().glpi_version().find('0.8') == 0: # glpi in 0.8
             ret = unique(map(lambda x:x.name, Glpi().getAllVersion4Software(ctx, softname, version)))
         else:
-            ret = unique(map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version)))
+            if Glpi().glpi_version_new():
+                ret = unique(map(lambda x:x.name, Glpi().getAllVersion4Software(ctx, softname, version)))
+            else:
+                ret = unique(map(lambda x:x.version, Glpi().getAllVersion4Software(ctx, softname, version)))
     ret.sort()
     return ret
 
@@ -119,7 +131,10 @@ def getAllContactNums(ctx, value = ''):
     return unique(map(lambda x:x.contact_num, Glpi().getAllContactNums(ctx, value)))
 
 def getAllComments(ctx, value = ''):
-    return unique(map(lambda x:x.comments, Glpi().getAllComments(ctx, value)))
+    if Glpi().glpi_version().find('0.8') == 0:
+        return unique(map(lambda x:x.comment, Glpi().getAllComments(ctx, value)))
+    else:
+        return unique(map(lambda x:x.comments, Glpi().getAllComments(ctx, value)))
 
 def getAllModels(ctx, value = ''):
     return unique(map(lambda x:x.name, Glpi().getAllModels(ctx, value)))

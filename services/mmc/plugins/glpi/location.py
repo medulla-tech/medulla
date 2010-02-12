@@ -20,6 +20,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Glpi implementation of the ComputerLocationI Interface
+Provide functions to get all user profiles and user locations informations
+"""
+
 import logging
 from pulse2.managers.location import ComputerLocationI
 from mmc.plugins.glpi.database import Glpi
@@ -29,7 +34,7 @@ class GlpiLocation(ComputerLocationI):
     def init(self, config):
         self.logger = logging.getLogger()
         self.config = config
-        Glpi().activate()
+        return Glpi().activate()
 
     def getUserProfile(self, userid):
         return Glpi().getUserProfile(userid)

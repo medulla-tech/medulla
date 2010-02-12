@@ -19,6 +19,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Glpi implementation of the interface ComputerI
+Provides functions to get computers informations filtered on criterions
+"""
 from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
@@ -107,7 +111,7 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
-        except exceptions.AttributeError:
+        except exceptions.AttributeError, e:
             pass
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
@@ -120,7 +124,7 @@ class GlpiComputers(ComputerI):
             if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
-        except exceptions.AttributeError:
+        except exceptions.AttributeError, e:
             pass
         return self.glpi.getComputerCount(ctx, filt)
 
