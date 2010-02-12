@@ -2120,7 +2120,12 @@ class ValidatingForm extends Form {
 
     function end() {
         $str = parent::end();
-        $str .= "<script type=\"text/javascript\">Form.focusFirstElement(" . "'" . $this->options["id"] . "'" . ")</script>\n";
+        $str .= "
+        <script type=\"text/javascript\">
+            if(Form.findFirstElement(\"".$this->options["id"]."\")) {
+                Form.focusFirstElement(\"".$this->options["id"]."\");
+            }
+        </script>\n";
         return $str;
     }
 
