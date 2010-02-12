@@ -173,6 +173,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         if op == 'create', print the string to use to create the database.
         if op == 'init', initialize the audit database tables.
         if op == 'check', check that the database version is correct.
+        if op == 'list', print all records on command line.
         """
         self.connect()
         if op == 'drop':
@@ -234,6 +235,18 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 else:
                     self.logger.info('Unknown database schema version number. This sofware may need to be updated.')
             return ret
+        elif op == 'list':
+            self._initTables()
+            self._initMappers()
+            [nb, records] = self.getLog(0, 0, 0, 0, 0, 0, 0, 0, 0)
+            if nb > 0:
+                self.logger.info('List all audit records.')
+                print "Date".ljust(19)+"\t"+"User".ljust(50)+"\t"+"Event".ljust(25)+"\t"+"Plugin".ljust(15)+"\t"+"Result"
+                for record in records:
+                    print record["date"]+"\t"+record["user"].ljust(50)+"\t"+record["action"].ljust(25)+"\t"+record["plugin"].ljust(15)+"\t"+str(record["commit"])
+            else:
+                self.logger.info('No audit record in the database.')
+            return True            
         elif op == 'purge':
             pass
         elif op == 'archive':

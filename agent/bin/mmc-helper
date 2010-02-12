@@ -50,6 +50,7 @@ audit subcommands:
  check : check audit database availability and version
  droptables : drop the audit database tables
  drop : print the string to use to drop the audit database
+ list : print all audit records on command line
 
 example: mmc-helper audit initdb
 '''
