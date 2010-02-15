@@ -73,10 +73,12 @@ def myTreatment(result):
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
 ########################################################################
 
-def endBack():
+def endBack(when):
     """
         take the reactor down
     """
+    if when == "timeout" :
+        logging.getLogger().error('HOOK %s : Killed by a timeout' % sys.argv[0])
     twisted.internet.reactor.callLater(0, twisted.internet.reactor.stop)
 
 def callBack(result):
@@ -92,7 +94,7 @@ def callBack(result):
     # if result is a list and the first arg a string and its value,
     # 'PULSE2_ERR', then something went wrong
     if type(result) == list and type(result[0]) == str and result[0] == 'PULSE2_ERR':
-        logging.getLogger().error("%s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
+        logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
         endBack()
     else:
@@ -138,6 +140,10 @@ imagingAPI = pulse2.apis.clients.imaging.ImagingApi({
     "localcert" : config.pserver_localcert,
     "cacert" : config.pserver_cacert,
 }) #: Object which will be used to speak with our pserver
+
+# anti-blocking stuff
+# I have 30 seconds to get my result or be killed
+twisted.internet.reactor.callLater(10, endBack, "timeout")
 
 # fire the reactor
 twisted.internet.reactor.callWhenRunning(myCall)
