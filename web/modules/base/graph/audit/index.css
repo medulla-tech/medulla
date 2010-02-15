@@ -1,7 +1,43 @@
-<style type="text/css"><!--
-
-form.ajaxfilterlog {
-    padding-bottom: 5px;
+form.audit_nok {
+    background: #f4e5e5;
+    border: 2px solid #C53A3A;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;    
 }
 
---></style>
+form.audit_ok {
+    background: #EAFDEA;
+    border: 2px solid #28892B;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;    
+}
+
+form.audit_ok td.label, form.audit_nok td.label {
+    font-weight: bold;
+    color: #444;
+}
+
+form.audit_ok td.label:after, form.audit_nok td.label:after {
+    content: " :";
+}
+
+.ajaxfilterlog {
+    margin-bottom: 10px;
+}
+
+.searchboxlog {
+    border: 1px solid #BBB;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #EEE;
+    width: 95%;
+}
+ 
+.searchtools {
+    position: absolute;
+    right: 7%;
+}
