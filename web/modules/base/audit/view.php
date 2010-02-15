@@ -24,25 +24,42 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-require("modules/base/includes/logging-xmlrpc.inc.php");
+require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
+require_once("includes/auditCodesManager.php");
+$auditManager = new AuditCodesManager();
+
 $p = new PageGenerator();
 $p->setTitle("Action details");
+if($_GET["logref"]) {
+    $item = "index".$_GET["logref"];
+}
+else {
+    $item = " ";
+}
+$sidemenu->forceActiveItem($item);
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $log=get_log_by_id($_GET["logid"]);
 
-$f = new ValidatingForm();
+if($log[0]["commit"]) {
+    $style = "audit_ok";
+}
+else {
+    $style = "audit_nok";
+}
+
+$f = new ValidatingForm(array("class" => $style));
 $f->push(new Table());
 $f->add(new TrFormElement(_("Date"), new HiddenTpl("date")),
         array("value" => $log[0]["date"]));
 $f->add(new TrFormElement(_("User which do the action"), new HiddenTpl("user")),
-        array("value" => $log[0]["user"]));
+        array("value" => getObjectName($log[0]["user"])." (".$log[0]["user"].")"));
 $f->add(new TrFormElement(_("Action"), new HiddenTpl("action")),
-        array("value" => $log[0]["action"]));
+        array("value" => $auditManager->getCode($log[0]["action"])));
 $f->add(new TrFormElement(_("Plugin"), new HiddenTpl("plugin")),
-        array("value" => $log[0]["plugin"]));
+        array("value" => $auditManager->getCode($log[0]["plugin"])));
 $f->add(new TrFormElement(_("Client"), new HiddenTpl("interface")),
         array("value" => $log[0]["client-type"]));
 $f->add(new TrFormElement(_("Client hostname"), new HiddenTpl("hostname")),
@@ -51,27 +68,50 @@ $f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
         array("value" => $log[0]["agent-host"]));
         
 $i=1;
+
+/*echo "<pre>";
+print_r($log[0]["objects"]);
+echo "</pre>";*/
+
 foreach ($log[0]["objects"] as $obj) {    
+
     $f->add(new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
         array("value" => $obj["object"]));
     $f->add(new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
-        array("value" => $obj["type"]));
+        array("value" => $auditManager->getCode($obj["type"])));
 
     if (isset($obj["previous"])  && isset($obj["current"])) {
-        $f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
-        array("value"=> $obj["previous"][0],"disabled"=>True));
-        
-        for ($i = 1; $i < sizeof($obj["previous"]); $i++) {
-            $f->add(new TrFormElement("",new DisabledInputTpl("previous")), 
-            array("value"=> $obj["previous"][0],"disabled"=>True));
-        }
-        
-        $f->add(new TrFormElement(_("Current"),new DisabledInputTpl("current")), 
-            array("value"=> $obj["current"][0],"Input"=>True));
 
-        for ($i = 1; $i < sizeof($obj["current"]); $i++) {
-            $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
-            array("value"=> $obj["current"][0],"Input"=>True));
+        if(isset($obj["previous"][0])) {
+            $previous = $obj["previous"][0];
+        }
+        else {
+            $previous = " ";
+        }
+
+        if(isset($obj["current"][0])) {
+            $current = $obj["current"][0];
+        }
+        else {
+            $current = " ";
+        }        
+    
+        if($previous != " " or $current != " ") {
+            $f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
+                array("value"=> $previous, "disabled"=>True));
+            
+            /*for ($i = 1; $i < sizeof($obj["previous"]); $i++) {
+                $f->add(new TrFormElement("",new DisabledInputTpl("previous")), 
+                array("value"=> $previous, "disabled"=>True));
+            }*/
+            
+            $f->add(new TrFormElement(_("Current"),new DisabledInputTpl("current")), 
+                array("value"=> $current, "disabled"=>True));
+
+            /*for ($i = 1; $i < sizeof($obj["current"]); $i++) {
+                $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
+                array("value"=> $current, "disabled"=>True));            
+            }*/
         }
     }
     $i++;        

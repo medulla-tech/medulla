@@ -33,7 +33,6 @@ $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
 $p = new PageGenerator(_("User and Group audit"));
-$sidemenu->forceActiveItem('indexbase');
 $p->setSideMenu($sidemenu);
 $p->display();
 

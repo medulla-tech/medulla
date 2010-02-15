@@ -24,8 +24,10 @@
 
 //require("includes/PageGenerator.php");
 
-require("modules/base/includes/logging-xmlrpc.inc.php");
+require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
+require_once("includes/auditCodesManager.php");
+$auditManager = new AuditCodesManager();
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -33,7 +35,7 @@ if (isset($_GET["start"])) $start = $_GET["start"];
 else
 $start=0;
 
-$module=$_GET["page"];
+$module = $_GET["page"];
 
 if ( ($_GET["filtertype"]!=NULL) && ($_GET["filter"]!=NULL) ) {
     $filter=$_GET["filter"];
@@ -68,24 +70,31 @@ $logobject = array();
 $logtypeobject = array();
 $logid= array();
 $logcommit= array();
+$logparams= array();
 
 if($loglist) {
+    $i = 0;
     foreach ($loglist as $log) {
         if(is_array($log)) {
-            $logid[]=$log["id"];
-            $loguser[]=$log["user"];
-            $logcommit[]=$log["commit"];
-            $logdate[]=$log["date"];
-            $logaction[]=_($log["action"]);
-            $logplug[]=$log["plugin"];
-            if(count($log["objects"]) > 0){
-                $logobject[]=$log["objects"][0]["object"];
-                $logtypeobject[]=_($log["objects"][0]["type"]);      
-            }else{
-                $logobject[]=" ";
-                $logtypeobject[]=" ";
+            $logid[]     = $log["id"];
+            /* transform LDAP user uri to a simple string */
+            $loguser[]   = getObjectName($log["user"]);        
+            $logcommit[] = $log["commit"];
+            $logdate[]   = $log["date"];
+            $logaction[] = $auditManager->getCode($log["action"]);
+            $logplug[]   = $auditManager->getCode($log["plugin"]);
+            if(count($log["objects"]) > 0) {
+                $logobject[]     = getObjectName($log["objects"][0]["object"]);
+                $logtypeobject[] = $auditManager->getCode($log["objects"][0]["type"]);
+            } 
+            else {
+                $logobject[]     = " ";
+                $logtypeobject[] = " ";
             }
-        }   
+            $logparams[$i]["logid"] = $log["id"];
+            $logparams[$i]["logref"] = $module;
+            $i++;
+        }
     }
 }
 
@@ -96,18 +105,18 @@ $n->start = 0;
 $n->end = $nblog - 1;
 $n->setRowsPerPage($maxperpage);
 $n->addCommitInfo($logcommit,"Commit");
-$n->addExtraInfo($loguser,_("User"));
-$n->addExtraInfo($logaction,_("Action"));
-$n->addExtraInfo($logtypeobject,_("Type"));
-$n->addExtraInfo($logobject,_("Object Name"));
-if ($module=="all")
-{
-    $n->addExtraInfo($logplug,_("Plugin"));    
+$n->addExtraInfo($loguser,_T("User", "base"));
+$n->addExtraInfo($logaction,_T("Action", "base"));
+$n->addExtraInfo($logtypeobject,_T("Type", "base"));
+$n->addExtraInfo($logobject,_T("Object Name", "base"));
+if ($module == "all") {
+    $n->addExtraInfo($logplug,_T("Plugin", "base"));
 }
-$n->setParamInfo($logid,"logid");
+$n->addExtraInfo($logcommit,_T("Result", "base"));
+$n->setParamInfo($logparams);
 $n->disableFirstColumnActionLink();
-$n->addActionItem(new ActionItem(_("View details"),"view","display","logid"));
-$n->setName(_("Logs"));
+$n->addActionItem(new ActionItem(_T("View details", "base"),"view","display","logid"));
+$n->setName(_T("Logs", "base"));
 $n->display();
 
 ?>

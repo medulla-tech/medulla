@@ -1,6 +1,8 @@
 <?php
 
-require("logging-xmlrpc.inc.php");
+require_once("logging-xmlrpc.inc.php");
+require_once("includes/auditCodesManager.php");
+$auditManager = new AuditCodesManager();
 
 if( $_GET["filtertype"]=="object" or $_GET["filtertype"]=="user"){
 ?>
@@ -24,7 +26,7 @@ else {
     <select style="width:100px; vertical-align: middle;" name="param" id="param" onChange="pushSearch(); return false;">
 <?php
     foreach ($lst as $key => $item){
-        print "\t<option value=\"".$lst[$key]."\" >"._($item)."</option>\n";
+        print "\t<option value=\"".$lst[$key]."\" >".$auditManager->getCode($item)."</option>\n";
     }    
 ?>
     </select>
