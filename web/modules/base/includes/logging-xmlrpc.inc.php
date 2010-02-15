@@ -33,8 +33,8 @@ function get_last_log_user($user) {
 function get_log_by_id($id) {
     
     $listlog = xmlCall("base.getLogById", $id);
-    
-    return  $listlog;
+        
+    return $listlog;
 }
 
 function get_log_filter($start,$end,$module,$filter,$filtertype,$startdate,$enddate) {
@@ -67,8 +67,6 @@ function get_log_filter($start,$end,$module,$filter,$filtertype,$startdate,$endd
     return  $listlog;
 }
 
-
-
 function get_log_user_filter($start,$end,$module,$user,$filter,$filtertype,$startdate,$enddate) {
     $action=0;
     $type=0;
@@ -94,6 +92,13 @@ function get_log_user_filter($start,$end,$module,$user,$filter,$filtertype,$star
 
 function get_action_type($action,$type){
     return xmlCall("base.getActionType",array($action,$type));   
+}
+
+function has_audit_working() {
+    if (!isset($_SESSION["hasAuditManagerWorking"])) {
+        $_SESSION["hasAuditManagerWorking"] = xmlCall("base.hasAuditWorking");
+    }
+    return $_SESSION["hasAuditManagerWorking"];
 }
         
 ?>
