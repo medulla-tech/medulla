@@ -32,6 +32,7 @@ import os
 import mmc.plugins.imaging.images
 import mmc.plugins.imaging.iso
 from mmc.support.mmctools import xmlrpcCleanup
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.support.mmctools import RpcProxyI
