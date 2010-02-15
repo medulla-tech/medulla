@@ -68,7 +68,6 @@ INSERT INTO Language (label) values ('Français');
 INSERT INTO Language (label) values ('English');
 INSERT INTO Language (label) values ('Spanish');
 -- end of the nomenclatures tables
---------------------------------------------------------------------
 
 -- BootService
 CREATE TABLE BootService (
@@ -106,7 +105,6 @@ CREATE TABLE Entity (
 );
 CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
 
---------------------------------------------------------------------
 -- Target
 CREATE TABLE Target (
   id INT NOT NULL AUTO_INCREMENT,
@@ -294,4 +292,4 @@ CREATE TABLE version (
 );
 
 INSERT INTO version VALUES( '1' );
-  
+
