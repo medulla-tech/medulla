@@ -35,7 +35,7 @@ from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
-from mmc.support.mmctools import RpcProxyI
+from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from pulse2.database.imaging import ImagingDatabase
 from pulse2.database.imaging.types import *
 from pulse2.apis.clients.imaging import ImagingApi
@@ -61,13 +61,13 @@ def activate():
     if config.disable:
         logger.warning("Plugin imaging: disabled by configuration.")
         return False
-    # TODO: check images directories exists    
+    # TODO: check images directories exists
 
     # initialise imaging database
     if not ImagingDatabase().activate(config):
         logger.warning("Plugin imaging: an error occured during the database initialization")
         return False
-    return True    
+    return True
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -175,7 +175,7 @@ class RpcProxy(RpcProxyI):
         menu = map(lambda l: l.toH(), db.getBootMenu(target_id, start, end, filter))
         count = db.countBootMenu(target_id, filter)
         return [count, xmlrpcCleanup(menu)]
-    
+
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
@@ -192,16 +192,16 @@ class RpcProxy(RpcProxyI):
     # EDITION
     def moveItemUpInMenu(self, target_uuid, type, mi_uuid):
         return ImagingDatabase().moveItemUpInMenu(target_uuid, mi_uuid)
-        
+
     def moveItemDownInMenu(self, target_uuid, type, mi_uuid):
         return ImagingDatabase().moveItemDownInMenu(target_uuid, mi_uuid)
-    
+
     def moveItemUpInMenu4Location(self, loc_id, mi_uuid):
         return ImagingDatabase().moveItemUpInMenu4Location(loc_id, mi_uuid)
-        
+
     def moveItemDownInMenu4Location(self, loc_id, mi_uuid):
         return ImagingDatabase().moveItemDownInMenu4Location(loc_id, mi_uuid)
-        
+
     ###### IMAGES
     def __getTargetImages(self, id, type, start = 0, end = -1, filter = ''):
         # carrefull the end is used for each list (image and master)
@@ -211,12 +211,12 @@ class RpcProxy(RpcProxyI):
 
         retm = map(lambda l: l.toH(), db.getPossibleMasters(id, start, end, filter))
         countm = db.countPossibleMasters(id, filter)
-                
+
         return {
             'images': [counti, xmlrpcCleanup(reti)],
             'masters': [countm, xmlrpcCleanup(retm)]
         }
-    
+
     def getMachineImages(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetImages(id, TYPE_COMPUTER, start, end, filter)
 
@@ -229,7 +229,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getEntityMasters(loc_id, start, end, filter))
         count = db.countEntityMasters(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
-        
+
     # EDITION
     def addImageToTarget(self, item_uuid, target_uuid, params):
         try:
@@ -281,7 +281,7 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getBootServicesOnTargetById(id, start, end, filter))
         count = db.countBootServicesOnTargetById(id, filter)
         return [count, xmlrpcCleanup(ret)]
-        
+
     def getMachineBootServices(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootServices(id, TYPE_COMPUTER, start, end, filter)
 
@@ -323,7 +323,7 @@ class RpcProxy(RpcProxyI):
         except Exception, e:
             raise e
             return xmlrpcCleanup([False, e])
-        
+
     def addServiceToLocation(self, bs_uuid, location_id, params):
         try:
             ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
@@ -344,21 +344,21 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([True, ret])
         except Exception, e:
             return xmlrpcCleanup([False, e])
-        
+
     ###### MENU ITEMS
-    def getMenuItemByUUID(self, bs_uuid): 
+    def getMenuItemByUUID(self, bs_uuid):
         mi = ImagingDatabase().getMenuItemByUUID(bs_uuid)
         if mi != None:
             return xmlrpcCleanup(mi.toH())
         return False
-        
-    ###### LOGS 
+
+    ###### LOGS
     def __getTargetMasteredOns(self, id, type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getMasteredOnsOnTargetByIdAndType(id, type, start, end, filter))
         count = db.countMasteredOnsOnTargetByIdAndType(id, type, filter)
         return [count, xmlrpcCleanup(ret)]
-        
+
     def getMachineLogs(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetMasteredOns(id, TYPE_COMPUTER, start, end, filter)
 
@@ -372,12 +372,12 @@ class RpcProxy(RpcProxyI):
         ret = map(lambda l: l.toH(), db.getMasteredOns4Location(location_uuid, start, end, filter))
         count = db.countMasteredOns4Location(location_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
-    
+
     ###### GET IMAGING API URL
     def __chooseImagingApiUrl(self, location):
         db = ImagingDatabase()
         return ImagingDatabase().getEntityUrl(location)
-    
+
     ###### IMAGING API CALLS
     def getGlobalStatus(self, location):
         url = self.__chooseImagingApiUrl(location)
@@ -421,16 +421,16 @@ class RpcProxy(RpcProxyI):
             'computernet':'',
             'location_uuid':''
         }
-            
+
         ComputerManager().addComputer(None, computer)
-        
+
         if profile != None:
             # register the machine + put it in the profil if it exists
             pass
-            
+
     def imagingServerRegister(self, name, url, uuid):
         """
-        Called by the imagingServer register script, it fills all the required fields for an 
+        Called by the imagingServer register script, it fills all the required fields for an
         imaging server, then the server is available in the list of server not linked to any entity
         and need to be linked.
         """
@@ -439,7 +439,7 @@ class RpcProxy(RpcProxyI):
             return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing."%(uuid)]
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
-   
+
 def parseProfileFromName(name):
     """
     name can be profile:computer_name or just computer_name
@@ -448,4 +448,4 @@ def parseProfileFromName(name):
     if len(ret) == 2:
         return ret
     return (None, ret[0])
-        
+
