@@ -26,8 +26,6 @@
 require('modules/msc/includes/machines.inc.php');
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-
-require("modules/base/graph/computers/index.css");
 require('modules/msc/includes/scheduler_xmlrpc.php');
 
 $p = new PageGenerator(_T("Download file page", "msc"));

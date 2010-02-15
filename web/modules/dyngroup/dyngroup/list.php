@@ -24,7 +24,6 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
-require("modules/base/graph/computers/index.css");
 require("modules/dyngroup/graph/index.css");
 
 $p = new PageGenerator(_T("Group list", 'dyngroup'));

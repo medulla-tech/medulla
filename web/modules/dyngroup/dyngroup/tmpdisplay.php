@@ -24,7 +24,6 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
-require("modules/base/graph/computers/index.css");
 
 function quickGet1($s) { return quickGet($s, false, false); }
 $name = quickGet1('name');

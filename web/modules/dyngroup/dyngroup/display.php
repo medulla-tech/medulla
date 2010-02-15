@@ -22,7 +22,6 @@
  */
 
 require("modules/base/computers/localSidebar.php");
-require("modules/base/graph/computers/index.css");
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
