@@ -36,8 +36,6 @@ from ConfigParser import NoOptionError
 class ImagingConfig(ImagingDatabaseConfig):
     disable = True
 
-    web_def_date_fmt = "%Y-%m-%d %H:%M:%S" # TODO read it from the config file!
-
     def init(self, name = 'imaging', conffile = None):
         self.dbsection = "database"
         self.name = name
@@ -50,22 +48,13 @@ class ImagingConfig(ImagingDatabaseConfig):
     def setup(self, conf_file):
         """
         Read the module configuration
-        
+
         Currently used params:
         - section "imaging":
           + revopath
           + publicdir
         """
         self.disable = self.cp.getboolean("main", "disable")
-        self.revopath = self.cp.get("imaging", "revopath")
-        self.publicdir = self.cp.get("imaging", "publicdir")
-        self.isodir = self.cp.get("imaging", "isodir")
-        self.tmpdir = self.cp.get("imaging", "tmpdir")
-        self.bindir = self.cp.get("imaging", "bindir")
-        self.publicpath = os.path.join(self.revopath, self.publicdir)
-        self.isopath = os.path.join(self.revopath, self.isodir)
-        self.tmppath = os.path.join(self.revopath, self.tmpdir)
-        self.binpath = os.path.join(self.revopath, self.bindir)
 
     def setDefault(self):
         """
