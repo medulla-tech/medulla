@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2010 Mandriva, http://www.mandriva.com
  *
  * $Id: index.php 382 2008-03-03 15:13:24Z cedric $
  *
@@ -29,14 +29,15 @@ require("modules/base/includes/AjaxFilterLog.inc.php");
 $types = array("object"=>"Object", "type"=>"Type", "action"=>"Action");
 
 if(isset($_GET["user"]))
-    $user=$_GET["user"];
+    $user = $_GET["user"];
 else
-    $user=$_GET["nlogin"];
+    $user = $_GET["nlogin"];
     
 $ajax = new AjaxFilterLog(urlStrRedirect("base/users/ajaxLogUserFilter",array("user"=>$user)),$types);
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 $p = new PageGenerator(_("User log"));
+$sidemenu->forceActiveItem('index');
 $p->setSideMenu($sidemenu);
 $p->display();
 
