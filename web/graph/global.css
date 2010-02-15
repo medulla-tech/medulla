@@ -778,6 +778,16 @@ li.display a:hover {
 	background-image: url("../img/common/icn_show_ro.gif");
 }
 
+li.audit a {
+	padding: 3px 0px 5px 20px;
+	margin: 0 0px 0 0px;
+	background-image: url("../img/common/audit.png");
+	background-repeat: no-repeat;
+	line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 li.supprimer a {
 	/* Deprecated. Use li.delete instead */
 	padding: 3px 0px 5px 20px;
@@ -1230,17 +1240,6 @@ select {
         padding-top: 2px;
         padding-bottom: 2px;
         background-color: #EEE;
-}
-
-.searchboxlog {
- 	border: 1px solid #BBB;
-        -moz-border-radius: 8px;
-        padding-left: 2px;
-        padding-right: 2px;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        background-color: #EEE;
-        width: 95%;
 }
 
 .loader {
