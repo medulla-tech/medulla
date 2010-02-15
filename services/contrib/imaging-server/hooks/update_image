@@ -73,7 +73,7 @@ def myTreatment(result):
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
 ########################################################################
 
-def endBack(when):
+def endBack(when = None):
     """
         take the reactor down
     """
