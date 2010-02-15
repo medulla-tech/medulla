@@ -424,7 +424,7 @@ class RpcProxy(RpcProxyI):
         ComputerManager().addComputer(None, computer)
 
         if profile != None:
-            # register the machine + put it in the profil if it exists
+            # register the machine + put it in the profile if it exists
             pass
 
     def imagingServerRegister(self, name, url, uuid):
