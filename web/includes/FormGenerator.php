@@ -830,7 +830,7 @@ class TrFormElement extends FormElement{
         if (empty($arrParam)) $arrParam = $this->options;
         if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
-        printf('<tr><td width="%s" ', $this->firstColWidth);
+        printf('<tr><td class="label" width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
 
