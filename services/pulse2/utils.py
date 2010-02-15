@@ -139,11 +139,11 @@ def unique(s):
     equality-testing.  Then unique() will usually work in quadratic
     time.
     """
-    
+
     n = len(s)
     if n == 0:
         return []
-        
+
     # Try using a dict first, as that's the fastest and will usually
     # work.  If it doesn't work, it will usually fail quickly, so it
     # usually doesn't cost much to *try* it.  It requires that all the
@@ -222,7 +222,7 @@ def onlyAddNew(obj, value):
 def getConfigFile(module, path = "/etc/mmc/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
-        
+
 def isdigit(i):
     if type(i) == int or type(i) == long:
         return True
@@ -240,15 +240,80 @@ def grepv(string,list):
 
 def whoami():
     return inspect.stack()[1][3]
+
 def whosdaddy():
     return inspect.stack()[2][3]
-        
-def isMACAddress(mac):
+
+def isCiscoMacAddress(mac_addr):
     """
+    Check that the given MAC adress is a cisco-formatted MAC Address.
+
+    @type mac_addr: str
+    @param mac_addr: the mac addr to check
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    return re.match('^([0-9a-f]{2}:){5}[0-9a-f]{2}$', mac.lower()) != None
+    if type(mac_addr) != str:
+        return False
+    regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
+    return re.match(regex, mac_addr) != None
+
+def isLinuxMacAddress(mac_addr):
+    """
+    Check that the given MAC adress is a linux-formatted MAC Address.
+
+    @type mac_addr: str
+    @param mac_addr: the mac addr to check
+    @returns: returns True if the given MAC address is valid
+    @rtype: bool
+    """
+    if type(mac_addr) != str:
+        return False
+    regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
+    return re.match(regex, mac_addr) != None
+
+def isWinMacAddress(mac_addr):
+    """
+    Check that the given MAC adress is a windows-formatted MAC Address.
+
+    @type mac_addr: str
+    @param mac_addr: the mac addr to check
+    @returns: returns True if the given MAC address is valid
+    @rtype: bool
+    """
+
+    if type(mac_addr) != str:
+        return False
+    regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
+    return re.match(regex, mac_addr) != None
+
+def isShortMacAddress(mac_addr):
+    """
+    Check that the given MAC adress is a short-formatted MAC Address.
+
+    @type mac_addr: str
+    @param mac_addr: the mac addr to check
+    @returns: returns True if the given MAC address is valid
+    @rtype: bool
+    """
+
+    if type(mac_addr) != str:
+        return False
+    regex = '^(([0-9a-fA-F]){12})$'
+    return re.match(regex, mac_addr) != None
+
+def isMACAddress(mac_addr):
+    """
+    Check that the given MAC adress seems to be a MAC Address.
+
+    @type mac_addr: str
+    @param mac_addr: the mac addr to check
+    @returns: returns True if the given MAC address is valid
+    @rtype: bool
+    """
+    if type(mac_addr) != str:
+        return False
+    return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
 
 def splitComputerPath(path):
     """
