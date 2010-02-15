@@ -9,16 +9,17 @@ class DisabledInputTpl extends AbstractTpl{
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" class="textfield" size="'.$this->size.'" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].'" /></span>';
+        print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" class="textfield" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].'" /></span>';
 
         print '<script type="text/javascript">
                 $(\''.$this->name.'\').validate = function() {';
-        if (!isset($arrParam["required"]))
+        if (!isset($arrParam["required"])) {
             /* If a value is not required, and the input field is empty, that's ok */
             print '
                     if ($(\''.$this->name.'\').value == \'\') { //if is empty (hidden value)
                         return true
                     }';
+        }
         if (false) print alert("' . $this->name . '"); // Used for debug only
         print '
                     var rege = '.$this->regexp.'
@@ -342,8 +343,8 @@ class AjaxFilterLog extends AjaxFilter {
 ?>
 <form name="Form" id="Form" class="ajaxfilterlog" action="#">
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-    <div id="searchSpan" class="searchboxlog" style="position: relative; float: right;">
-    <span class="searchfieldfilter">
+    <div id="searchSpan" class="searchboxlog">
+        <span class="searchfieldfilter">
 <?php
         $this->enddate->setSize(15);
         $this->begindate->setSize(15);
@@ -351,8 +352,8 @@ class AjaxFilterLog extends AjaxFilter {
         $this->enddate->display(array("update_search"=>True));
         //$this->filtertype->display();
 ?>
-    <span id="searchtools" style="position: absolute; right: 0px;">
-        <select name="filtertype" onChange="searchbar()">
+        <span class="searchtools">
+            <select name="filtertype" onChange="searchbar()">
     
 <?php
 
@@ -361,14 +362,12 @@ class AjaxFilterLog extends AjaxFilter {
     }
     
 ?>
-        </select>
-    
-        <span id="searchfilter">
+            </select>    
+            <span id="searchfilter">
+            </span>    
+            <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
         </span>
-    
-        <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 10px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh")?>" />
-        </span>
-    </span>&nbsp; 
+    </span>&nbsp;
     </div>
     <script type="text/javascript">
         window.onload=searchbar;
