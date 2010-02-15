@@ -420,6 +420,16 @@ def getLogById(*args):
     
 def getActionType(*args):
     return AF().getActionType(*args)
+    
+def hasAuditWorking():
+    """
+    Returns True if the audit module is enabled 
+    """
+    config = BasePluginConfig("base")
+    if (config.auditmethod != 'none'):
+        return True
+    else:
+        return False
 
 # Status methods
 from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess
