@@ -23,6 +23,7 @@
  */
 
 require_once("modules/base/includes/computers.inc.php");
+require_once("modules/base/includes/logging-xmlrpc.inc.php");
 
 /**
  * module declaration
@@ -202,45 +203,65 @@ $mod->addSubmod($submod);
 
 /* Audit module */
 
-$submod = new SubModule("audit");
-$submod->setDescription(_("Audit"));
-$submod->setImg('img/navbar/logview');
-$submod->setDefaultPage("base/audit/index");
-$submod->setPriority(2000);
+if (has_audit_working()) {
+    $submod = new SubModule("audit");
+    $submod->setDescription(_("Audit"));
+    $submod->setImg('img/navbar/logview');
+    $submod->setDefaultPage("base/audit/indexall");
+    $submod->setPriority(2000);
 
-$page = new Page("index",_("Find actions in all modules"));
-$page->setFile("modules/base/audit/index.php", array("AJAX" =>False,"visible"=>True));
-$submod->addPage($page);
+    $page = new Page("indexall",_T("Find actions in all modules", "base"));
+    $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
+    $submod->addPage($page);
 
-$page = new Page("searchbar");
-$page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
+    $page = new Page("indexbase",_T("Find actions in User and Group", "base"));
+    $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
+    $submod->addPage($page);
 
-$page = new Page("indexbase",_("Find actions in User and Group"));
-$page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
-$submod->addPage($page);
+    if(in_array("mail", $_SESSION["modulesList"])) {
+        $page = new Page("indexmail",_T("Find actions in Mail", "base"));
+        $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
 
-$page = new Page("indexmail",_("Find actions in Mail"));
-$page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
-$submod->addPage($page);
+    if(in_array("proxy", $_SESSION["modulesList"])) {
+        $page = new Page("indexproxy",_T("Find actions in Proxy", "base"));
+        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
 
-$page = new Page("indexproxy",_("Find actions in Proxy"));
-$page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
-$submod->addPage($page);
+    if(in_array("network", $_SESSION["modulesList"])) {
+        $page = new Page("indexnetwork",_T("Find actions in Network", "base"));
+        $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
 
-$page = new Page("indexnetwork",_("Find actions in Network"));
-$page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
-$submod->addPage($page);
+    if(in_array("samba", $_SESSION["modulesList"])) {
+        $page = new Page("indexsamba",_T("Find actions in Samba", "base"));
+        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
 
-$page = new Page("ajaxLogFilter");
-$page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
-$submod->addPage($page);
+    if(in_array("sshlpk", $_SESSION["modulesList"])) {
+        $page = new Page("indexsshlpk",_T("Find actions in SSHLPK", "base"));
+        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }
+    
+    $page = new Page("searchbar");
+    $page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
 
-$page = new Page("view",_("View details of an action"));
-$page->setFile("modules/base/audit/view.php", array("AJAX" =>False,"visible"=>False));
-$submod->addPage($page);
+    $page = new Page("ajaxLogFilter");
+    $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
+    $submod->addPage($page);
 
-$mod->addSubmod($submod);
+    $page = new Page("view",_("View details of an action"));
+    $page->setFile("modules/base/audit/view.php", array("AJAX" =>False,"visible"=>False));
+    $submod->addPage($page);
+
+    $mod->addSubmod($submod);
+}
 
 /* Computer management module */
 
