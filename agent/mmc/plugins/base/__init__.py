@@ -1127,10 +1127,10 @@ class LdapUserGroupControl:
             r = AF().log(PLUGIN_NAME, AA.BASE_MOD_GROUP, [(groupdn, AT.GROUP), (attr, AT.ATTRIBUTE)], attrVal)
             attrVal = str(attrVal.encode("utf-8"))
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, attrVal)])
+            r.commit()
         else:
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, 'none')])
             self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, 'none')])
-        r.commit()
         return 0
 
     def changeUserPasswd(self, uid, passwd):
