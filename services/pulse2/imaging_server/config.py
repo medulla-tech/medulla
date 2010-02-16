@@ -51,7 +51,7 @@ class ImagingConfig(pulse2.utils.Singleton):
     # [package-server] section
     pserver_host = "127.0.0.1"
     pserver_port = 9990
-    pserver_mount_point = "/imaging"
+    pserver_mount_point = "/imaging_api"
     pserver_enablessl = True
     pserver_username = "username"
     pserver_password = "password"
