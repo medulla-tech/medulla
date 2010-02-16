@@ -311,21 +311,26 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-        switch (mysystem(1, gPathCreateClient, mac, hostname, pass)) {
+        switch (mysystem(4, gPathCreateClient, mac, hostname, pass)) {
             case 0:
                 myLogger("Hook succeeded !");
+                // FIXME : we should send back an ACK
                 break;
             case 1:
                 myLogger("Hook failed server side !");
+                // FIXME : we should send back an NAK
                 break;
             case 2:
                 myLogger("Hook failed client side !");
+                // FIXME : we should send back an NAK
                 break;
             case 3:
                 myLogger("Hook failed !");
+                // FIXME : we should send back an NAK
                 break;
             default:
                 myLogger("ERROR : something unexpected happend !");
+                // FIXME : we should send back an NAK
                 break;
         }
         return 0;
@@ -417,15 +422,12 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     }
     // give me my Pulse 2 name
     if (buf[0] == 0x1A) {
-        //TODO : to be hooked
-        //MDV/NR if (getentry(etherpath, mac)) {
-        //MDV/NR //to.sin_family = AF_INET;
-        //MDV/NR //to.sin_port = htons(1001);
-        //MDV/NR //inet_aton(inet_ntoa(si_other.sin_addr), &to.sin_addr);
-        //MDV/NR sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
-        //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
-        //MDV/NR }
-        //MDV/NR return 0;
+        if (mysystem(2, gPathGetUUID, mac) == 0) {
+            // TODO : thanks to system(), we do not have any chance to get our command stdout
+            //MDV/NR sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
+                //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
+        }
+        return 0;
     }
     /* mtftp synchro */
     if (buf[0] == 'T') {
