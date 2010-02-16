@@ -1242,6 +1242,27 @@ select {
         background-color: #EEE;
 }
 
+.ajaxfilterlog {
+    margin-bottom: 10px;
+}
+
+.searchboxlog {
+    border: 1px solid #BBB;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #EEE;
+    width: 95%;
+}
+ 
+.searchtools {
+    position: absolute;
+    right: 7%;
+}
+
 .loader {
     float: right;
     position : relative;
