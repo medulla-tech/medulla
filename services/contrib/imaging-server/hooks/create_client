@@ -77,8 +77,13 @@ def myCall():
         exitcode = ERROR_CLIENT
         endBack()
 
-    if not (pulse2.utils.isMACAddress(mac)):
+    if not pulse2.utils.isMACAddress(mac):
         logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    if not len(uuid):
+        logging.getLogger().error('HOOK %s : No UUID given' % (sys.argv[0]))
         exitcode = ERROR_CLIENT
         endBack()
 
