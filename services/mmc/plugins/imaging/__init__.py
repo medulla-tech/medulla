@@ -405,26 +405,30 @@ class RpcProxy(RpcProxyI):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
     ###### API to be called from the imaging server (ie : without authentication)
-    def computerRegister(self, computerName, MACAddress):
+    def computerRegister(self, hostname, domain, MACAddress, profile, entities):
         """
         Called by the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (like profile:/entityA/entityB/computer)
         """
-        (profile, name) = parseProfileFromName(computerName)
 
         computer = {
-            'computername':name,
-            'computerdescription':'',
-            'computerip':'',
-            'computermac':MACAddress,
-            'computernet':'',
-            'location_uuid':''
+            'computername'          : hostname, # FIXME : what about domain ?
+            'computerdescription'   : '',
+            'computerip'            : '',
+            'computermac'           : MACAddress,
+            'computernet'           : '',
+            'location_uuid'         : ''
         }
 
         ComputerManager().addComputer(None, computer)
 
-        if profile != None:
-            # register the machine + put it in the profile if it exists
+        if profile:
+            # TODO
+            pass
+
+
+        if entities:
+            # TODO
             pass
 
     def imagingServerRegister(self, name, url, uuid):
@@ -438,13 +442,3 @@ class RpcProxy(RpcProxyI):
             return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing."%(uuid)]
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
-
-def parseProfileFromName(name):
-    """
-    name can be profile:computer_name or just computer_name
-    """
-    ret = name.split(':')
-    if len(ret) == 2:
-        return ret
-    return (None, ret[0])
-
