@@ -145,7 +145,8 @@ int mysystem(int argc, ...) {
     }
     va_end(argv);
 
-    snprintf(tmp, 1023, "echo \"`date --rfc-3339=seconds` pulse2-imaging-server %.900s\" 1>>%s 2>&1",
+    snprintf(tmp, 1023,
+             "echo \"`date --rfc-3339=seconds` pulse2-imaging-server %.900s\" 1>>%s 2>&1",
              cmd, gLogFile);
     system(tmp);
 
@@ -312,26 +313,26 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
         switch (mysystem(4, gPathCreateClient, mac, hostname, pass)) {
-            case 0:
-                myLogger("Hook succeeded !");
-                // FIXME : we should send back an ACK
-                break;
-            case 1:
-                myLogger("Hook failed server side !");
-                // FIXME : we should send back an NAK
-                break;
-            case 2:
-                myLogger("Hook failed client side !");
-                // FIXME : we should send back an NAK
-                break;
-            case 3:
-                myLogger("Hook failed !");
-                // FIXME : we should send back an NAK
-                break;
-            default:
-                myLogger("ERROR : something unexpected happend !");
-                // FIXME : we should send back an NAK
-                break;
+        case 0:
+            myLogger("Hook succeeded !");
+            // FIXME : we should send back an ACK
+            break;
+        case 1:
+            myLogger("Hook failed server side !");
+            // FIXME : we should send back an NAK
+            break;
+        case 2:
+            myLogger("Hook failed client side !");
+            // FIXME : we should send back an NAK
+            break;
+        case 3:
+            myLogger("Hook failed !");
+            // FIXME : we should send back an NAK
+            break;
+        default:
+            myLogger("ERROR : something unexpected happend !");
+            // FIXME : we should send back an NAK
+            break;
         }
         return 0;
     }
@@ -425,7 +426,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         if (mysystem(2, gPathGetUUID, mac) == 0) {
             // TODO : thanks to system(), we do not have any chance to get our command stdout
             //MDV/NR sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
-                //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
+            //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
         }
         return 0;
     }
@@ -563,7 +564,7 @@ void readConfig(char *config_file_path) {
     gLogFile =
         iniparser_getstring(ini, "handler_hand01:args",
                             "(/var/log/mmc/pulse2-imaging-server.log,)");
-    gLogFile +=2;
+    gLogFile += 2;
     *(gLogFile + strlen(gLogFile) - 3) = 0;
     syslog(LOG_INFO, "[handler_hand01] args = %s", gLogFile);
 
