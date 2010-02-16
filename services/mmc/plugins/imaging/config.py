@@ -35,6 +35,8 @@ from ConfigParser import NoOptionError
 
 class ImagingConfig(ImagingDatabaseConfig):
     disable = True
+    web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
+                                
 
     def init(self, name = 'imaging', conffile = None):
         self.dbsection = "database"
@@ -55,6 +57,10 @@ class ImagingConfig(ImagingDatabaseConfig):
           + publicdir
         """
         self.disable = self.cp.getboolean("main", "disable")
+        
+        if self.cp.has_section("web"):
+            if self.cp.has_option("web", "web_def_date_fmt"):
+                self.web_def_date_fmt = self.cp.get("web", "web_def_date_fmt")
 
     def setDefault(self):
         """
