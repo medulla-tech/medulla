@@ -210,41 +210,41 @@ if (has_audit_working()) {
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(2000);
 
-    $page = new Page("indexall",_T("Find actions in all modules", "base"));
+    $page = new Page("indexall",_T("All modules", "base"));
     $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
 
-    $page = new Page("indexbase",_T("Find actions in User and Group", "base"));
+    $page = new Page("indexbase",_T("Users and Groups", "base"));
     $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
+    
+    if(in_array("samba", $_SESSION["modulesList"])) {
+        $page = new Page("indexsamba",_T("Samba", "base"));
+        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
+        $submod->addPage($page);
+    }    
 
     if(in_array("mail", $_SESSION["modulesList"])) {
-        $page = new Page("indexmail",_T("Find actions in Mail", "base"));
+        $page = new Page("indexmail",_T("Mail", "base"));
         $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
-    if(in_array("proxy", $_SESSION["modulesList"])) {
-        $page = new Page("indexproxy",_T("Find actions in Proxy", "base"));
-        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
-        $submod->addPage($page);
-    }
-
     if(in_array("network", $_SESSION["modulesList"])) {
-        $page = new Page("indexnetwork",_T("Find actions in Network", "base"));
+        $page = new Page("indexnetwork",_T("Network", "base"));
         $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
-    if(in_array("samba", $_SESSION["modulesList"])) {
-        $page = new Page("indexsamba",_T("Find actions in Samba", "base"));
-        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
+    if(in_array("sshlpk", $_SESSION["modulesList"])) {
+        $page = new Page("indexsshlpk",_T("SSH public keys", "base"));
+        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
-    if(in_array("sshlpk", $_SESSION["modulesList"])) {
-        $page = new Page("indexsshlpk",_T("Find actions in SSHLPK", "base"));
-        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
+    if(in_array("proxy", $_SESSION["modulesList"])) {
+        $page = new Page("indexproxy",_T("Proxy", "base"));
+        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
     

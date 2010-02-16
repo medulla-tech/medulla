@@ -32,7 +32,7 @@ $ajax = new AjaxFilterLog(urlStrRedirect("base/audit/ajaxLogFilter"), $types, "s
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();
 
-$p = new PageGenerator(_("SSHLPK audit"));
+$p = new PageGenerator(_("SSH public key audit"));
 $sidemenu->forceActiveItem('indexsshlpk');
 $p->setSideMenu($sidemenu);
 $p->display();

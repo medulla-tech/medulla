@@ -48,7 +48,7 @@ if(in_array("network", $_SESSION["modulesList"])) {
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 if(in_array("sshlpk", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("SSHLPK", "base"), "base","audit","indexsshlpk", 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("SSH public keys", "base"), "base","audit","indexsshlpk", 
     "img/common/logview_active.png", "img/common/logview_inactive.png"));
 }
 
