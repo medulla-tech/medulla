@@ -32,6 +32,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 
 from pulse2.utils import isMACAddress, splitComputerPath
+from pulse2.apis import makeURL
 
 class ImagingApi(MyXmlrpc):
 
@@ -70,7 +71,7 @@ class ImagingApi(MyXmlrpc):
                     mount = words[-1]
                 except IndexError:
                     continue
-                if self.config.imaging_root_dir.startswith(mount):
+                if self.config.imaging_api['masters_folder'].startswith(mount):
                     try:
                         ret = int(words[-2].rstrip('%'))
                     except (ValueError, IndexError):
@@ -99,11 +100,21 @@ class ImagingApi(MyXmlrpc):
 
         if not isMACAddress(MACAddress):
             raise TypeError
+        if not len(computerName):
+            raise TypeError
         profile, entities, hostname, domain = splitComputerPath(computerName)
+
+        url, credentials = makeURL(PackageServerConfig().mmc_agent)
 
         self.logger.info('Imaging: Starting new client registration: %s %s' % (computerName, MACAddress))
         # Call the MMC agent
-        client = ImagingXMLRPCClient('', self.config.mmc_agent, self.config.mmc_agent_verify_peer, self.config.mmc_agent_cacert, self.config.mmc_agent_localcert)
+        client = ImagingXMLRPCClient(
+            '',
+            url,
+            PackageServerConfig().mmc_agent['verifypeer'],
+            PackageServerConfig().mmc_agent['cacert'],
+            PackageServerConfig().mmc_agent['localcert']
+        )
         func = 'imaging.computerRegister'
         args = (hostname, domain, MACAddress, profile, entities)
         d = client.callRemote(func, *args)
