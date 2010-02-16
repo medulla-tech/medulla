@@ -116,6 +116,8 @@ class P2PServerCP(pulse2.utils.Singleton):
     cp = None
     imaging = None
 
+    mmc_agent = {}
+
     def pre_setup(self, config_file):
         if sys.platform != "win32":
             self.cp = Pulse2ConfigParser()
@@ -238,10 +240,13 @@ class P2PServerCP(pulse2.utils.Singleton):
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
 
         # [mmc_agent] section parsing
+        self.mmc_agent = {}
         if self.cp.has_section("mmc_agent"):
             self.mmc_agent = {
                 'host' : "127.0.0.1",
                 'port' : 7080,
+                'username' : 'mmc',
+                'password' : 's3cr3t',
                 'enablessl' : False,
                 'verifypeer' : False,
                 'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
