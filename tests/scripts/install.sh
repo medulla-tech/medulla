@@ -97,12 +97,6 @@ popd
 
 popd
 
-/etc/init.d/mysqld stop
-sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf
-/etc/init.d/mysqld start
-# Wait for MySQL to start
-sleep 5
-
 IPADDRESS=`ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/addr://'`
 
 export MYSQL_HOST=localhost
