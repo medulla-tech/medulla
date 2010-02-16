@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
@@ -162,14 +163,14 @@ class AuditReaderDB:
         
         self.logresult=[]
         
-        for logs in qlog:
-            laction = self.session.query(Event).filter(and_(self.parent.event_table.c.id==logs.event_id, self.parent.event_table.c.module_id==logs.module_id)).first()
-            lparam = self.session.query(Parameters).filter(self.parent.param_table.c.record_id == logs.id).all()
-            lplugin = self.session.query(Module).filter(self.parent.module_table.c.id == logs.module_id).first()
-            lclient = self.session.query(Initiator).filter(self.parent.initiator_table.c.id == logs.initiator_id).first()
-            listobj = self.session.query(Object_Log).filter(self.parent.object_log_table.c.record_id == logs.id).all()
-            luser = self.session.query(Object).filter(self.parent.object_table.c.id == logs.user_id).first()
-            lagent = self.session.query(Source).filter(self.parent.source_table.c.id == logs.source_id).first()
+        for record in qlog:                
+            laction = self.session.query(Event).filter(and_(self.parent.event_table.c.id==record.event_id, self.parent.event_table.c.module_id==record.module_id)).first()
+            lparam = self.session.query(Parameters).filter(self.parent.param_table.c.record_id == record.id).all()
+            lplugin = self.session.query(Module).filter(self.parent.module_table.c.id == record.module_id).first()
+            lclient = self.session.query(Initiator).filter(self.parent.initiator_table.c.id == record.initiator_id).first()
+            listobj = self.session.query(Object_Log).filter(self.parent.object_log_table.c.record_id == record.id).all()
+            luser = self.session.query(Object).filter(self.parent.object_table.c.id == record.user_id).first()
+            lagent = self.session.query(Source).filter(self.parent.source_table.c.id == record.source_id).first()
 
             #put params in dict
             if lparam != None:
@@ -177,42 +178,43 @@ class AuditReaderDB:
                 for param in lparam :
                     parameters.__setitem__(str(param.param_name),str(param.param_value))
 
-            if listobj != None:
-                llistobj=[]
-                for objects in listobj:
+            llistobj=[]
+            if listobj != None:                
+                for objects in listobj:          
+                          
                     lobject = self.session.query(Object).filter(self.parent.object_table.c.id == objects.object_id).first()
                     ltype = self.session.query(Type).filter(self.parent.type_table.c.id == lobject.type_id).first()
                     
                     #
                     #    Object is an LDAP Attribute
-                    #                   
-                    if lobject.type_id==2:
-                        lpattr = self.session.query(Previous_Value).filter(self.parent.previous_value_table.c.object_log_id==objects.id).all()
-                        #
-                        # Put attr in array !
-                        #
-                        
-                        pattr=[]
-                        for p in lpattr:    
-                            pattr.append(p.value)
-                        
-                        lcattr = self.session.query(Current_Value).filter(self.parent.current_value_table.c.object_log_id==objects.id).all()
-                        
-                        cattr=[]
-                        for c in lcattr:    
-                            cattr.append(c.value)
-                        
-                        llistobj.append({"object":str(lobject.uri), "type":str(ltype.type), "previous":pattr,"current":cattr})        
-                    else:
+                    #        
+                    #if lobject.type_id==2:
+                    lpattr = self.session.query(Previous_Value).filter(self.parent.previous_value_table.c.object_log_id==objects.id).all()
+                    #
+                    # Put attr in array !
+                    #
                     
-                        llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
+                    pattr=[]
+                    for p in lpattr:    
+                        pattr.append(p.value)
+                    
+                    lcattr = self.session.query(Current_Value).filter(self.parent.current_value_table.c.object_log_id==objects.id).all()
+                    
+                    cattr=[]
+                    for c in lcattr:    
+                        cattr.append(c.value)
+                    
+                    llistobj.append({"object":str(lobject.uri), "type":str(ltype.type), "previous":pattr,"current":cattr})        
+                #else:
+                 #   llistobj.append({})
+                    #llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
             #
             #    Final array
             #                        
             self.logresult.append({
-                "id":str(logs.id),
-                "date":str(logs.date),
-                "commit":logs.result,
+                "id":str(record.id),
+                "date":str(record.date),
+                "commit":record.result,
                 "user":luser.uri,
                 "action":laction.name,
                 "plugin":lplugin.name,
