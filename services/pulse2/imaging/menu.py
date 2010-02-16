@@ -73,6 +73,13 @@ class ImagingMenu():
     def _applyReplacement(self, string, condition):
         """
             Private func, to apply a remlpacement into a given string
+
+            Some examples :
+            ##MAC:fmt## replaced by the client MAC address; ATM fmt can be:
+              - short (pure MAC addr)
+              - cisco (cisco-fmt MAC addr)
+              - linux (linux-fmt MAC addr)
+              - win (win-fmt MAC addr)
         """
         output = string
         for replacement in self.replacements:
