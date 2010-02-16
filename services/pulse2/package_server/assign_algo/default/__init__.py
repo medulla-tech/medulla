@@ -40,7 +40,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
         if not self.assign[machine.uuid].has_key('getMirror'):
             self.assign[machine.uuid]['getMirror'] = self.mirrors[random.randint(0,len(self.mirrors)-1)].toH()
         return self.assign[machine.uuid]['getMirror']
-        
+
     def getMachineMirrorFallback(self, m):
         machine = Machine().from_h(m)
         if not self.assign.has_key(machine.uuid):
@@ -50,7 +50,6 @@ class MMUserAssignAlgo(MMAssignAlgo):
         return self.assign[machine.uuid]['getFallbackMirror']
 
     def getMachinePackageApi(self, m):
-        machine = Machine().from_h(m)
         ret = []
         ret += map(lambda papi: papi.toH(), self.package_apis)
         return ret
