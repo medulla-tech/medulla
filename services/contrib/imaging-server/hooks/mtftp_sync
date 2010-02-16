@@ -29,7 +29,7 @@ import twisted.internet.reactor
 import logging
 import logging.config
 import pulse2.apis.clients.imaging
-import pulse2.imaging.config
+import pulse2.imaging_server.config
 
 CONFIG_FILE = '/etc/mmc/pulse2/imaging-server/imaging-server.ini' #: config file location
 
@@ -124,7 +124,7 @@ def callFunction(deffered):
     )
 
 # Parse the command line
-config = pulse2.imaging.config.ImagingConfig() #: ConfigParser object
+config = pulse2.imaging_server.config.ImagingConfig() #: ConfigParser object
 config.setup(CONFIG_FILE)
 logging.config.fileConfig(CONFIG_FILE)
 
