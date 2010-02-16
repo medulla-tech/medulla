@@ -235,14 +235,25 @@ if (!empty($_GET["user"])) {
      }
   }
   $detailArr = getDetailedUser($_GET["user"]);
-
   $enabled = isEnabled($_GET["user"]);
 }
 
-if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && $_GET["user"])
+if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && isset($_GET["user"])) {
     if (!isXMLRPCError()) {
         $result = sprintf(_("User %s has been successfully created."), $_GET["user"]);
     }
+}
+
+// get user info
+if(isset($detailArr["uid"][0])) { $user_uid = $detailArr["uid"][0]; } else { $user_uid = ""; }
+if(isset($detailArr["givenName"][0])) { $user_givenName = $detailArr["givenName"][0]; } else { $user_givenName = ""; }
+if(isset($detailArr["sn"][0])) { $user_sn = $detailArr["sn"][0]; } else { $user_sn = ""; }
+if(isset($detailArr["title"][0])) { $user_title = $detailArr["title"][0]; } else { $user_title = ""; }
+if(isset($detailArr["mail"][0])) { $user_mail = $detailArr["mail"][0]; } else { $user_mail = ""; }
+if(isset($detailArr["mobile"][0])) { $user_mobile = $detailArr["mobile"][0]; } else { $user_mobile = ""; }
+if(isset($detailArr["facsimileTelephoneNumber"][0])) { $user_facsimileTelephoneNumber = $detailArr["facsimileTelephoneNumber"][0]; } else { $user_facsimileTelephoneNumber = ""; }
+if(isset($detailArr["homePhone"][0])) { $user_homePhone = $detailArr["homePhone"][0]; } else { $user_homePhone = ""; }
+if(isset($detailArr["homeDirectory"][0])) { $user_homeDirectory = $detailArr["homeDirectory"][0]; } else { $user_homeDirectory = ""; }
 
 //display result message
 if (isset($result)&&!isXMLRPCError()) {
@@ -300,14 +311,14 @@ if ($_GET["action"]=="add") {
 
 $test = new TrFormElement(_("Login"),$formElt);
 $test->setCssError("login");
-$test->display(array("value"=>$detailArr["uid"][0]));
+$test->display(array("value"=>$user_uid));
 
-$lastlog=get_last_log_user($_GET["user"]);
-
-if ($lastlog[0]!=0)
-{
-	$test = new LinkTrFormElement(_("Last action"),new HiddenTpl("lastaction"));
-	$test->display(array("value"=>"?module=base&submod=users&action=loguser&user=".$_GET["user"],"name"=>$lastlog[1][0]["date"]));
+if(isset($_GET['user'])) {
+    $lastlog=get_last_log_user($_GET["user"]);
+    if ($lastlog[0]!=0) {
+    	$test = new LinkTrFormElement(_("Last action"),new HiddenTpl("lastaction"));
+	    $test->display(array("value"=>"?module=base&submod=users&action=loguser&user=".$_GET["user"],"name"=>$lastlog[1][0]["date"]));
+    }
 }
 
 $input = new TrFormElement(_("Password"),new PasswordTpl("pass"));
@@ -320,21 +331,21 @@ $input->display(array("value" => ""));
 
 $test = new TrFormElement(_("Photo"), new ImageTpl("jpegPhoto"));
 $test->setCssError("Photo");
-$test->display(array("value" => $detailArr["uid"][0], "action" => $_GET["action"]));
+$test->display(array("value" => $user_uid, "action" => $_GET["action"]));
 
 $test = new TrFormElement(_("Last name"),new InputTpl("name"));
-$test->display(array("value"=>$detailArr["sn"][0]));
+$test->display(array("value"=> $user_sn));
 
 $test = new TrFormElement(_("First name"),new InputTpl("firstname"));
-$test->display(array("value"=>$detailArr["givenName"][0]));
+$test->display(array("value"=> $user_givenName));
 
 $test = new TrFormElement(_("Title"),new InputTpl("title"));
-$test->display(array("value"=>$detailArr["title"][0]));
+$test->display(array("value"=> $user_title));
 
 $email = new InputTpl("mail",'/^([A-Za-z0-9._%-]+@[A-Za-z0-9.-]+){0,1}$/');
 $test = new TrFormElement(_("Mail address"), $email);
 $test->setCssError("mail");
-$test->display(array("value"=>$detailArr["mail"][0]));
+$test->display(array("value"=> $user_mail));
 
 print "</table>";
 $phoneregexp = "/^[a-zA-Z0-9(-/ ]*$/";
@@ -347,19 +358,17 @@ print '<table cellspacing="0">';
 
 $test = new TrFormElement(_("Mobile number"), new InputTpl("mobile", $phoneregexp));
 $test->setCssError("mobile");
-$test->display(array("value"=>$detailArr["mobile"][0]));
+$test->display(array("value"=> $user_mobile));
 
 $test = new TrFormElement(_("Fax number"), new InputTpl("facsimileTelephoneNumber", $phoneregexp));
 $test->setCssError("facsimileTelephoneNumber");
-$test->display(array("value"=>$detailArr["facsimileTelephoneNumber"][0]));
+$test->display(array("value"=> $user_facsimileTelephoneNumber));
 
 $test = new TrFormElement(_("Home phone number"), new InputTpl("homePhone", $phoneregexp));
-$test->setCssError("homePnone");
-$test->display(array("value"=>$detailArr["homePhone"][0]));
+$test->setCssError("homePhone");
+$test->display(array("value"=>$user_homePhone));
 
-
-
-if ($detailArr["uid"][0]) {
+if ($user_uid) {
     $checked = "CHECKED";
     if (isset($detailArr["loginShell"])) {
         if ($detailArr["loginShell"][0] != '/bin/false') {
@@ -385,7 +394,7 @@ $test->display($param);
 <?php
 
 $test = new TrFormElement(_("Home directory"),new InputTpl("homeDir"));
-$test->display(array("value"=>$detailArr["homeDirectory"][0]));
+$test->display(array("value"=>$user_homeDirectory));
 
 if ($_GET["action"] == "add") {
     $test = new TrFormElement(_("Create home directory on filesystem"), new CheckboxTpl("createHomeDir"));
@@ -454,7 +463,7 @@ callPluginFunction("baseEdit",array($detailArr,$_POST));
 <?php
 
 //if we create a new user redir in edition
-if ($newuser&&!isXMLRPCError()) {
+if (isset($newuser) && !isXMLRPCError()) {
     if (isset($error)) {
         /* We will use this variable to display a warning on the edit page */
         $_SESSION["addusererror"] = $error;

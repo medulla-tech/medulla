@@ -22,12 +22,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if ($detailArr["uid"][0]) { //if user exist
+if (isset($detailArr["uid"][0])) { //if user exist
     $primary = getUserPrimaryGroup($detailArr["uid"][0]);
     $secondary = getUserSecondaryGroups($detailArr["uid"][0]);
+    $user_uid = $detailArr["uid"][0];
 } else {
     $primary = getUserDefaultPrimaryGroup();
     $secondary = array();
+    $user_uid = "";
 }
 sort($secondary);
 
@@ -86,7 +88,7 @@ sort($secondary);
                 echo "groups.push('" . htmlentities($group[0], ENT_QUOTES) . "');\n";
             }
         ?>
-        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?= $detailArr["uid"][0]; ?>', {paramName: "value"});
+        new Ajax.Autocompleter('autocomplete','autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php?uid=<?= $user_uid; ?>', {paramName: "value"});
         new Ajax.Autocompleter('primary_autocomplete','primary_autocomplete_choices','modules/base/users/ajaxAutocompleteGroup.php', {paramName: "value"});
 
         function validOnEnter(field,event) {

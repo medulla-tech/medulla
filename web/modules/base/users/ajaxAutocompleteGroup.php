@@ -26,8 +26,6 @@
 
 require("../../../includes/config.inc.php");
 
-
-
 require("../../../includes/i18n.inc.php");
 require("../../../modules/base/includes/edit.inc.php");
 require("../../../includes/acl.inc.php");
@@ -40,7 +38,14 @@ require("../../../modules/base/includes/groups.inc.php");
 
 
 $value = $_POST["value"];
-$uid = $_GET["uid"];
+if(isset($_GET["uid"]) and $_GET["uid"]) {
+    $uid = $_GET["uid"];
+}
+else {
+    $uid = false;
+    $primary = "";
+}
+
 
 $groups = search_groups($value);
 if ($uid) $primary = getUserPrimaryGroup($uid);
