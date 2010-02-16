@@ -26,7 +26,7 @@ export LC_ALL=C
 
 PREFIX=/usr
 
-echo "MDS auto-uninstallation script"
+echo "MMC CORE auto-uninstallation script"
 
 if [ -z $FORCE ];
     then
@@ -40,12 +40,16 @@ fi
 service mmc-agent force-stop || true
 rm -f /var/run/mmc-agent.pid
 
+mmc-helper audit droptables || true
+mmc-helper audit drop | mysql
+
 rm -fr /etc/mmc*
 rm -f /etc/init.d/mmc-agent $PREFIX/sbin/mmc-agent
 
 rm -fr $PREFIX/lib/python2.*/site-packages/mmc
 rm -fr $PREFIX/share/mmc $PREFIX/lib/mmc
 rm -f /usr/lib*/openldap/mmc-check-password.so
+rm -f $PREFIX/bin/mmc-*
 
 rm -fr /var/lib/ldap.* /etc/openldap/slapd.conf.*
 
