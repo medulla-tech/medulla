@@ -1524,11 +1524,11 @@ msgstr "À faire"
 
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:107
 msgid "Unavailable computer"
-msgstr ""
+msgstr "Ordinateur inaccessible"
 
 #: web/modules/msc/logs/ajaxConsultLogsFilter.php:112
 msgid "Unavailable group"
-msgstr ""
+msgstr "Groupe inaccessible"
 
 #: web/modules/msc/includes/functions.php:27
 msgid "Upload done"
