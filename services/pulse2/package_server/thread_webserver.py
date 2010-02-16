@@ -92,11 +92,17 @@ def initialize(config):
         services.append({'type':'scheduler_api', 'mp':config.scheduler_api['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
         logger.info("package server initialized with scheduler api")
 
-    if config.imaging:
+    if config.imaging_api:
         try:
-            imaging = ImagingApi(config.imaging['mount_point'], config)
-            server.register(imaging, config.imaging['mount_point'])
-            services.append({'type':'imaging', 'mp':config.imaging['mount_point'], 'server':config.bind, 'port':config.port, 'proto':config.proto})
+            imaging = ImagingApi(config.imaging_api['mount_point'], config)
+            server.register(imaging, config.imaging_api['mount_point'])
+            services.append({
+                'type'   : 'imaging',
+                'mp'     : config.imaging_api['mount_point'],
+                'server' : config.bind,
+                'port'   : config.port,
+                'proto'  : config.proto
+            })
             logger.info("Package Server initialized with imaging API")
         except Exception, e:
             logger.error("Imaging error: " + str(e))
