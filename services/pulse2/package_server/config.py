@@ -50,7 +50,6 @@ class P2PServerCP(pulse2.utils.Singleton):
     cacert = '/etc/mmc/pulse2/package-server/keys/cacert.pem'
     localcert = '/etc/mmc/pulse2/package-server/keys/privkey.pem'
 
-
     # default values
     bind = ''
     port = 9990
@@ -238,10 +237,45 @@ class P2PServerCP(pulse2.utils.Singleton):
 
                 self.package_api_put.append({'mount_point':mount_point, 'src':src, 'tmp_input_dir':pap_tmp_input_dir})
 
-        # [imaging] section parsing
-        if self.cp.has_section("imaging"):
+        # [mmc_agent] section parsing
+        if self.cp.has_section("mmc_agent"):
+            self.mmc_agent = {
+                'host' : "127.0.0.1",
+                'port' : 7080,
+                'enablessl' : False,
+                'verifypeer' : False,
+                'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
+                'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"
+            }
+
+            if self.cp.has_option('mmc_agent', 'host'):
+                self.mmc_agent['host'] = self.cp.get('mmc_agent', 'host')
+            if self.cp.has_option('mmc_agent', 'port'):
+                self.mmc_agent['port'] = self.cp.getint('mmc_agent', 'port')
+            if self.cp.has_option('mmc_agent', 'enablessl'):
+                self.mmc_agent['enablessl'] = self.cp.getboolean('mmc_agent', 'enablessl')
+            if self.cp.has_option('mmc_agent', 'verifypeer'):
+                self.mmc_agent['verifypeer'] = self.cp.getboolean('mmc_agent', 'verifypeer')
+            if self.cp.has_option('mmc_agent', 'cacert'):
+                self.mmc_agent['cacert'] = self.cp.get('mmc_agent', 'cacert')
+            if self.cp.has_option('mmc_agent', 'localcert'):
+                self.mmc_agent['localcert'] = self.cp.get('mmc_agent', 'localcert')
+            if not os.path.isfile(self.mmc_agent['localcert']):
+                raise Exception('can\'t read SSL key "%s"' % (self.mmc_agent['localcert']))
+                return False
+            if not os.path.isfile(self.mmc_agent['cacert']):
+                raise Exception('can\'t read SSL certificate "%s"' % (self.mmc_agent['cacert']))
+                return False
+            if self.mmc_agent['verifypeer']: # we need twisted.internet.ssl.Certificate to activate certs
+                import twisted.internet.ssl
+                if not hasattr(twisted.internet.ssl, "Certificate"):
+                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                    return False
+
+        # [imaging_api] section parsing
+        if self.cp.has_section("imaging_api"):
             # mount point
-            imaging_mp = '/imaging'
+            imaging_mp = '/imaging_api'
             # base folder
             base_folder = '/var/lib/pulse2/imaging'
             # will contain the bootloader material (revoboot + splashscreen), served by tftp
@@ -257,23 +291,23 @@ class P2PServerCP(pulse2.utils.Singleton):
             # Entity UUID
             uuid = None
 
-            if self.cp.has_option("imaging", 'mount_point'):
-                imaging_mp = self.cp.get("imaging", 'mount_point')
-            if self.cp.has_option('imaging', 'base_folder'):
-                base_folder = self.cp.get('imaging', 'base_folder')
-            if self.cp.has_option('imaging', 'bootloader_folder'):
-                bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootloader_folder'))
-            if self.cp.has_option('imaging', 'bootmenus_folder'):
-                bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'bootmenus_folder'))
-            if self.cp.has_option('imaging', 'diskless_folder'):
-                diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'diskless_folder'))
-            if self.cp.has_option('imaging', 'inventories_folder'):
-                inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'inventories_folder'))
-            if self.cp.has_option('imaging', 'masters_folder'):
-                masters_folder = os.path.join(self.base_folder, self.cp.get('imaging', 'masters_folder'))
-            if self.cp.has_option("imaging", 'uuid'):
-                uuid = self.cp.get("imaging", 'uuid')
-            self.imaging = {
+            if self.cp.has_option("imaging_api", 'mount_point'):
+                imaging_mp = self.cp.get("imaging_api", 'mount_point')
+            if self.cp.has_option('imaging_api', 'base_folder'):
+                base_folder = self.cp.get('imaging_api', 'base_folder')
+            if self.cp.has_option('imaging_api', 'bootloader_folder'):
+                bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootloader_folder'))
+            if self.cp.has_option('imaging_api', 'bootmenus_folder'):
+                bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootmenus_folder'))
+            if self.cp.has_option('imaging_api', 'diskless_folder'):
+                diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'diskless_folder'))
+            if self.cp.has_option('imaging_api', 'inventories_folder'):
+                inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'inventories_folder'))
+            if self.cp.has_option('imaging_api', 'masters_folder'):
+                masters_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'masters_folder'))
+            if self.cp.has_option("imaging_api", 'uuid'):
+                uuid = self.cp.get("imaging_api", 'uuid')
+            self.imaging_api = {
                 'mount_point': imaging_mp,
                 'base_folder': base_folder,
                 'bootloader_folder': bootloader_folder,

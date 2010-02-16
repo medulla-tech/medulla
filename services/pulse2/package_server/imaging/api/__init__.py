@@ -27,14 +27,14 @@ import logging
 
 from twisted.internet.utils import getProcessOutput
 
-from pulse2.package_server.imaging.config import ImagingConfig
+from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 
 from pulse2.utils import isMACAddress, splitComputerPath
 
 class ImagingApi(MyXmlrpc):
-    
+
     myType = 'Imaging'
 
     def __init__(self, name, config):
@@ -47,9 +47,7 @@ class ImagingApi(MyXmlrpc):
         self.logger = logging.getLogger()
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
-        self.config = ImagingConfig()
-        self.config.read(config.cp)
-        self.config.validate()
+        self.config = PackageServerConfig()
 
     def xmlrpc_getServerDetails(self):
         pass
@@ -80,7 +78,7 @@ class ImagingApi(MyXmlrpc):
                     # Don't break but continue because mount maybe /, which
                     # will always match
             return ret
-        
+
         d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
         d.addCallback(onSuccess)
         return d
@@ -98,7 +96,7 @@ class ImagingApi(MyXmlrpc):
         def onSuccess(result):
             self.logger.info('Imaging: New client registration succeeded for: %s %s (%s)' % (computerName, MACAddress, str(result)))
             return 1
-        
+
         if not isMACAddress(MACAddress):
             raise TypeError
         profile, entities, hostname, domain = splitComputerPath(computerName)
