@@ -69,6 +69,14 @@ function packages_to_install () {
         # compatible only with version 0.4, and 2010.0 provides version 0.5.
         PKGS="$PKGS lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel python-setuptools"
     fi
+
+    # MySQL
+    PKGS="$PKGS mysql mysql-client"
+    if [ $RELEASE == "2010.0" ];
+        then
+        PKGS="$PKGS python-mysql"
+    fi
+
 }
 
 
@@ -131,6 +139,13 @@ popd
 
 popd
 
+# MySQL setup
+/etc/init.d/mysqld stop
+sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf
+/etc/init.d/mysqld start
+# Wait for MySQL to start
+sleep 5
+
 # Setup LDAP
 rm -f /etc/openldap/schema/*
 touch /etc/openldap/schema/local.schema
@@ -161,9 +176,27 @@ rm -fr /var/log/mmc; mkdir /var/log/mmc
 # Recreate archives directory
 rm -fr /home/archives; mkdir -p /home/archives
 
-# Start MMC agent
 # Remove default LDAP password policies because the MMC agent will add one
 ldapdelete -x -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
+
+# Setup MMC audit framework
+cat >> /etc/mmc/plugins/base.ini << EOF
+
+[audit]
+method = database
+host = localhost
+driver = mysql
+port = 3306
+user = audit
+password = audit
+base = audit
+EOF
+
+mmc-helper audit create | mysql
+mmc-helper audit init | mysql
+mmc-helper audit check
+
+# Start MMC agent
 /etc/init.d/mmc-agent start
 
 if [ ! -z $TMPREMOVE ];
