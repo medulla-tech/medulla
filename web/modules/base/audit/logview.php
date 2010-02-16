@@ -22,7 +22,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
+if($__submod == "audit") {
+    require_once("localSidebar.php");
+}
 require("graph/navbar.inc.php");
 require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
@@ -31,12 +33,13 @@ $auditManager = new AuditCodesManager();
 
 $p = new PageGenerator();
 $p->setTitle("Action details");
-if($_GET["logref"]) {
+if(isset($_GET["logref"])) {
     $item = "index".$_GET["logref"];
 }
 else {
-    $item = " ";
+    $item = "index";
 }
+
 $sidemenu->forceActiveItem($item);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -69,10 +72,6 @@ $f->add(new TrFormElement(_("Agent Hostname"), new HiddenTpl("ahostname")),
         
 $i=1;
 
-/*echo "<pre>";
-print_r($log[0]["objects"]);
-echo "</pre>";*/
-
 foreach ($log[0]["objects"] as $obj) {    
 
     $f->add(new TrFormElement(_("Object"), new HiddenTpl("obj".$i)),
@@ -80,17 +79,17 @@ foreach ($log[0]["objects"] as $obj) {
     $f->add(new TrFormElement(_("Object type"), new HiddenTpl("type".$i)),
         array("value" => $auditManager->getCode($obj["type"])));
 
-    if (isset($obj["previous"])  && isset($obj["current"])) {
+    if (isset($obj["previous"]) && isset($obj["current"])) {
 
-        if(isset($obj["previous"][0])) {
-            $previous = $obj["previous"][0];
+        if(isset($obj["previous"][0]) and $obj["previous"][0]) {
+            $previous = trim($obj["previous"][0]);
         }
         else {
             $previous = " ";
         }
 
-        if(isset($obj["current"][0])) {
-            $current = $obj["current"][0];
+        if(isset($obj["current"][0]) and $obj["current"][0]) {
+            $current = trim($obj["current"][0]);
         }
         else {
             $current = " ";

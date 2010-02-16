@@ -22,25 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
-require("modules/base/includes/AjaxFilterLog.inc.php");
-
-$types = array("object"=>"Object", "type"=>"Type", "action"=>"Action");
-
-if(isset($_GET["user"]))
-    $user = $_GET["user"];
-else
-    $user = $_GET["nlogin"];
-    
-$ajax = new AjaxFilterLog(urlStrRedirect("base/users/ajaxLogFilter",array("user"=>$user)),$types);
-$ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
-$ajax->display();
-$p = new PageGenerator(_("User log"));
-$sidemenu->forceActiveItem('index');
-$p->setSideMenu($sidemenu);
-$p->display();
-
-$ajax->displayDivToUpdate();
+include("localSidebar.php");
+include("modules/base/audit/logview.php");
 
 ?>

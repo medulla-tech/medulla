@@ -24,7 +24,7 @@
 
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/groups.inc.php");
-require("modules/base/includes/logging-xmlrpc.inc.php");
+require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");

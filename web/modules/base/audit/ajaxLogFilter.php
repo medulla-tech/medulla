@@ -55,22 +55,33 @@ if ($_GET["enddate"]!=_("End date")) {
     $enddate = $_GET["enddate"];
 }
 
-$loguser= array();
-$loglist= array();
-$logid= array();
-list($nblog, $loglist) = get_log_filter($start,$start+$maxperpage,$module,$filter,$filtertype,$startdate,$enddate);
-$logdate = array();
+$loglist = array();
+
+// get logs
+if(isset($_GET["user"])) {
+    $user = $_GET["user"];
+    list($nblog, $loglist) = get_log_user_filter($start,$start+$maxperpage,$module,$user,$filter,$filtertype,$startdate,$enddate);
+    $logref = "";
+}
+else {
+    list($nblog, $loglist) = get_log_filter($start,$start+$maxperpage,$module,$filter,$filtertype,$startdate,$enddate);
+    $logref = $module;
+}
+
+$loguser   = array();
+$logid     = array();
+$logdate   = array();
 $logaction = array();
 $logplugin = array();
-$loguser= array();
-$logplug= array();
-$loginterface= array();
-$logipinterface= array();
-$logobject = array();
-$logtypeobject = array();
-$logid= array();
-$logcommit= array();
-$logparams= array();
+$loguser   = array();
+$logplug   = array();
+$loginterface   = array();
+$logipinterface = array();
+$logobject      = array();
+$logtypeobject  = array();
+$logid     = array();
+$logcommit = array();
+$logparams = array();
 
 if($loglist) {
     $i = 0;
@@ -92,7 +103,7 @@ if($loglist) {
                 $logtypeobject[] = " ";
             }
             $logparams[$i]["logid"] = $log["id"];
-            $logparams[$i]["logref"] = $module;
+            $logparams[$i]["logref"] = $logref;
             $i++;
         }
     }
@@ -115,7 +126,7 @@ if ($module == "all") {
 $n->addExtraInfo($logcommit,_T("Result", "base"));
 $n->setParamInfo($logparams);
 $n->disableFirstColumnActionLink();
-$n->addActionItem(new ActionItem(_T("View details", "base"),"view","display","logid"));
+$n->addActionItem(new ActionItem(_T("View details", "base"),"logview","display","logid"));
 $n->setName(_T("Logs", "base"));
 $n->display();
 

@@ -133,13 +133,13 @@ $page->setFile("modules/base/users/loguser.php",
 	               array("AJAX" =>False,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("userlogview",_("Action details"));
-$page->setFile("modules/base/users/userlogview.php",
-	               array("AJAX" =>False,"visible"=>False));
+$page = new Page("logview",_("Action details"));
+$page->setFile("modules/base/users/logview.php", 
+                   array("AJAX" =>False,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("ajaxLogUserFilter");
-$page->setFile("modules/base/users/ajaxLogUserFilter.php",
+$page = new Page("ajaxLogFilter");
+$page->setFile("modules/base/audit/ajaxLogFilter.php",
 	               array("AJAX" =>True,"visible"=>False));
 $submod->addPage($page);
 
@@ -256,8 +256,8 @@ if (has_audit_working()) {
     $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
     $submod->addPage($page);
 
-    $page = new Page("view",_("View details of an action"));
-    $page->setFile("modules/base/audit/view.php", array("AJAX" =>False,"visible"=>False));
+    $page = new Page("logview",_("View details of an action"));
+    $page->setFile("modules/base/audit/logview.php", array("AJAX" =>False,"visible"=>False));
     $submod->addPage($page);
 
     $mod->addSubmod($submod);

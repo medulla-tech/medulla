@@ -21,7 +21,7 @@ class DisabledInputTpl extends AbstractTpl{
                     }';
         }
         if (false) print alert("' . $this->name . '"); // Used for debug only
-        print '
+        /*print '
                     var rege = '.$this->regexp.'
                     if ((rege.exec($(\''.$this->name.'\').value))!=null) {
                         return true
@@ -30,7 +30,7 @@ class DisabledInputTpl extends AbstractTpl{
                         new Element.scrollTo(\'container_input_'.$this->name.'\');
                         return 0;
                     }
-                };';
+                };';*/
         if (isset($arrParam["onchange"])) {
             print '$(\''.$this->name.'\').onchange = function() {' . $arrParam["onchange"] . '};';
         }
