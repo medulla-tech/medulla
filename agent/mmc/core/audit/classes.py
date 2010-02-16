@@ -20,6 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+   Python classes describing the audit database model
+"""
+
 class Event(object):
     pass
 
@@ -41,7 +45,7 @@ class Record(object):
         return self.id
 
     def __repr__(self):
-        return [self.id, self.event_id, self.initiator_id, self.object_user_id, self.log_date, self.module_id, self.result]
+        return [self.id, self.event_id, self.initiator_id, self.user_id, self.date, self.module_id, self.result]
 
 class Object_Log(object):
     pass
