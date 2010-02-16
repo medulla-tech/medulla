@@ -67,7 +67,10 @@ foreach ($cl as $k => $v) {
     $cl1[$v[1]['cn'][0].$k] = $k;
 }
 $names = array();
-ksort($cl1);
+function my_cmp($a, $b) {
+    return strcmp(strtolower($a), strtolower($b));
+}
+uksort($cl1, "my_cmp");
 foreach ($cl1 as $k1 =>$k) {
     $names[] = join_value($cl[$k]);
 }
