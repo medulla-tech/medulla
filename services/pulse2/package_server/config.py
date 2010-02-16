@@ -51,13 +51,14 @@ class P2PServerCP(pulse2.utils.Singleton):
     localcert = '/etc/mmc/pulse2/package-server/keys/privkey.pem'
 
     # default values
+
+    # [main] section
     bind = ''
     port = 9990
     enablessl = True
     verifypeer = False
     username = ''
     password = ''
-
     tmp_input_dir = '/tmp/packages/default'
 
     if sys.platform != "win32":
@@ -66,7 +67,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         daemon_user = pwd.getpwnam('root')[2]
         umask = string.atoi('0077', 8)
         pidfile = '/var/run/pulse2-package-server.pid'
-    else:
+    if sys.platform == "win32":
         use_iocp_reactor = False
 
     package_detect_loop = 60
@@ -101,14 +102,16 @@ class P2PServerCP(pulse2.utils.Singleton):
     package_global_mirror_loop = 3600
     package_global_mirror_command_options = ['-ar', '--delete']
 
+    mm_assign_algo = 'default'
+    up_assign_algo = 'default'
+
+    # / [main] section
+
     parser = None
     mirrors = []
     package_api_get = []
     package_api_put = []
     proto = 'http'
-
-    mm_assign_algo = 'default'
-    up_assign_algo = 'default'
 
     mirror_api = {}
     user_package_api = {}
@@ -155,7 +158,8 @@ class P2PServerCP(pulse2.utils.Singleton):
                     self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
                 if self.cp.has_option("daemon", "umask"):
                     self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
-        else:
+
+        if sys.platform == "win32":
             if self.cp.has_option("main", "use_iocp_reactor"):
                 self.use_iocp_reactor = self.cp.getboolean("main", "use_iocp_reactor")
 
@@ -199,17 +203,21 @@ class P2PServerCP(pulse2.utils.Singleton):
                     raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
                     return False
 
-        if self.cp.has_option('mirror_api', 'mount_point'):
-            self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
+        if self.cp.has_section('mirror_api'):
+            self.mirror_api['mount_point'] = '/rpc'
+            if self.cp.has_option('mirror_api', 'mount_point'):
+                self.mirror_api['mount_point'] = self.cp.get('mirror_api', 'mount_point')
 
-        if self.cp.has_option('user_packageapi_api', 'mount_point'):
-            self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
+        if self.cp.has_section('user_packageapi_api'):
+            self.user_package_api['mount_point'] = '/upaa'
+            if self.cp.has_option('user_packageapi_api', 'mount_point'):
+                self.user_package_api['mount_point'] = self.cp.get('user_packageapi_api', 'mount_point')
 
         if self.cp.has_section('scheduler_api'):
+            self.scheduler_api['mount_point'] = '/scheduler_api'
+            self.scheduler_api['schedulers'] = 'scheduler_01'
             if self.cp.has_option('scheduler_api', 'mount_point'):
                 self.scheduler_api['mount_point'] = self.cp.get('scheduler_api', 'mount_point')
-            else:
-                self.scheduler_api['mount_point'] = '/scheduler_api'
             if self.cp.has_option('scheduler_api', 'schedulers'):
                 self.scheduler_api['schedulers'] = self.cp.get('scheduler_api', 'schedulers')
 
