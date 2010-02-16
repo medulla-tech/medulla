@@ -39,7 +39,11 @@ def complete_ctx(ctx):
     if not hasattr(ctx, "locations") or ctx.locations == None:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid))
-        ctx.locationsid = map(lambda e: e.id, ctx.locations)
+        if type(ctx.locations) == list:
+            if hasattr(ctx.locations[0], 'id'): # GLPI 0.8
+                ctx.locationsid = map(lambda e: e.id, ctx.locations)
+            elif hasattr(ctx.locations[0], 'ID'): # GLPI 0.7x
+                ctx.locationsid = map(lambda e: e.ID, ctx.locations)
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)

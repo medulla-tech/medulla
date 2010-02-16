@@ -69,7 +69,10 @@ class Glpi08(DyngroupDatabaseHelper):
 
     def glpi_version(self):
         return self._glpi_version
-        
+
+    def glpi_version_new(self):
+        return False
+    
     def activate(self, config = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
