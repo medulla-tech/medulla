@@ -23,6 +23,7 @@
  */
 
 require("modules/base/includes/users.inc.php");
+require_once("modules/base/includes/logging-xmlrpc.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -82,7 +83,9 @@ $n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user"));
 $n->addActionItem(new ActionItem(_("MMC rights"),"editacl","editacl","user") );
 $n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","user") );
 $n->addActionItem(new ActionPopupItem(_("Backup"),"backup","backup","user") );
-$n->addActionItem(new ActionItem(_("Logged Actions"),"loguser","audit","user") );
+if (has_audit_working()) {
+    $n->addActionItem(new ActionItem(_("Logged Actions"),"loguser","audit","user") );
+}
 $n->setName(_("Users"));
 $n->display();
 
