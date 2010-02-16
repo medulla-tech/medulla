@@ -385,8 +385,8 @@ class Common(pulse2.utils.Singleton):
                 i = self.dontgivepkgs[pid].index(target)
                 del self.dontgivepkgs[pid][i]
                 modif = True
-            except ValueError, e:
-                self.logger.warning("PackageMirror no %s target defined for package %s"%(target, pid))
+            except ValueError:
+                self.logger.warning("PackageMirror: no %s target defined for package %s" % (target, pid))
             if len(self.dontgivepkgs[pid]) == 0:
                 del self.dontgivepkgs[pid]
                 modif = True
@@ -517,7 +517,7 @@ class Common(pulse2.utils.Singleton):
             return [False, "This package don't exists"]
         params = self.h_desc(mp)
         path = self._getPackageRoot(pid)
-        self.logger.debug("File association will put files in %s"%(path))
+        self.logger.debug("File association will put files in %s" % (path))
         files_out = []
         err = 0
         for f in files:
@@ -905,7 +905,6 @@ class Common(pulse2.utils.Singleton):
             self.temp_check_changes['LAST'][pid] = {'###DATE###': self.packageDetectionDate[pid]}
 
     def _treatFiles(self, files, mp, pid, access):
-        conf = self.h_desc(mp)
         toRelative = self.packages[pid].root
         for f in files:
             path = re.sub('//', '/', '/'+re.sub(re.escape(os.path.dirname(toRelative)), '', os.path.dirname(f)))
