@@ -4,7 +4,7 @@ require_once("logging-xmlrpc.inc.php");
 require_once("includes/auditCodesManager.php");
 $auditManager = new AuditCodesManager();
 
-if( $_GET["filtertype"]=="object" or $_GET["filtertype"]=="user"){
+if($_GET["filtertype"] == "object" or $_GET["filtertype"] == "user"){
 ?>
     
     <img src="graph/search.gif" style="vertical-align: middle;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" style="width : 100px;" name="param" id="param" onkeyup="pushSearch(); return false;" />

@@ -20,6 +20,7 @@ $module_audit_codes = array(
     'BASE_MOVE_USER_HOME' => _T("Move user home", "base"),
     'BASE_ADD_OU' => _T("Add organizational unit", "base"),    
     'USER' => _T("User", "base"),
+    'SYSTEMUSER' => _T("System user", "base"),
     'GROUP' => _T("Group", "base"),
     'ATTRIBUTE' => _T("Attribute", "base"),
     'ORGANIZATIONAL_UNIT' => _T("Organisational unit", "base"),

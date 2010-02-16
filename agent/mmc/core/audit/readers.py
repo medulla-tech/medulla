@@ -85,13 +85,21 @@ class AuditReaderDB:
         #
         # Filter by user
         #        
-        if user != 0:
-            object_user = self.session.query(Object).filter(and_(self.parent.object_table.c.type_id==1,self.parent.object_table.c.uri.like("%"+user+"%"))).first()
+        if user != 0:        
+            # type_id: 1 => USER
+            # type_id: 2 => SYSTEMUSER
+            object_user = self.session.query(Object).filter(
+                and_(
+                    or_(
+                        self.parent.object_table.c.type_id==1,
+                        self.parent.object_table.c.type_id==2,
+                    ),
+                    self.parent.object_table.c.uri.like("%"+user+"%"),
+                )).first()                
             if object_user==None:
                 self.session.close()
                 return None
-            else:
-               
+            else:               
                ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
                qlog = ql
 
@@ -134,8 +142,7 @@ class AuditReaderDB:
         #               
         if type != 0:
             typ = self.session.query(Type).filter(self.parent.type_table.c.type.like("%"+type+"%")).first()
-            if typ != None:
-              
+            if typ != None:              
                 ql = qlog.filter(self.parent.object_table.c.type_id==typ.id).join("obj_log")
                 qlog = ql
             else:
@@ -247,6 +254,7 @@ class AuditReaderDB:
             return res
         elif type != 0:
             for i in self.session.query(Type).all():
-                res.__setitem__(i.type,i.type)
+                if i.type != "SYSTEMUSER":
+                    res.__setitem__(i.type,i.type)
             self.session.close()
             return res

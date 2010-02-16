@@ -377,7 +377,13 @@ class AjaxFilterLog extends AjaxFilter {
         * update div with user
         */
         function searchbar() {
-            new Ajax.Updater('searchfilter','<?php echo $this->urlsearch ?>'+'&filtertype='+document.Form.filtertype.value);
+            new Ajax.Updater(
+                'searchfilter','<?php echo $this->urlsearch ?>', {
+                    method:'get',
+                    parameters: { 'filtertype': document.Form.filtertype.value },
+                    onSuccess: pushSearch,
+                }
+            );
         }
                 
         function updateSearch() {
