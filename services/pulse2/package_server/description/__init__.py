@@ -26,7 +26,6 @@
     Pulse2 PackageServer
 """
 from twisted.web import resource
-import xmlrpclib
 import logging
 import cgi
 
@@ -39,7 +38,7 @@ class Description(resource.Resource):
         resource.Resource.__init__(self)
         self.logger = logging.getLogger()
         self.logger.info("(%s) initialised with : %s"%(self.type, self.services))
-    
+
     def __up(self):
         return "<td class='up mandriva'>&nbsp;&nbsp;</td>"
 
@@ -62,7 +61,7 @@ class Description(resource.Resource):
                     request.args.has_key('mp') and request.args['mp'] == description['mp'] and \
                     request.args.has_key('type') and request.args['type'] == description['type']:
                 style = 'selected'
-                    
+
             body += "<tr class='mandriva "+style+"'><td class='mandriva "+style+"'>"+description['proto']+"://"+description['server']+":"+description['port']+description['mp']+"</td><td class='mandriva "+style+"'>"+description['type']+"</td>"
             try:
                 if description['type'] == 'mirror_files':
@@ -70,27 +69,29 @@ class Description(resource.Resource):
                         body += "<td class='mandriva "+style+"'>content</td>"
                         body += self.__down()
                     else:
-                        url = "?uri="+description['proto']+"://"+description['server']+":"+description['port']+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']  
+                        url = "?uri="+description['proto']+"://"+description['server']+":"+description['port']+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
                         serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                         body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href=\""+url+"\">content</a></td>"
                         body += self.__up()
                 else:
-                    #print '%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp'])
-                    client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
-                    #ret = client.getServerDetails()
+                    # FIXME NR/MDV : are the four lines below useful ?
+                    # print '%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp'])
+                    # import xmlrpclib
+                    # client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
+                    # ret = client.getServerDetails()
                     url = "?proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
                     serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                     body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href='"+url+"'>details</a></td>"
                     body += self.__up()
                     self.status[description['mp']] = True
-            except Exception, e:
+            except Exception:
                 body += "<td class='mandriva "+style+"'>details</td>"
                 body += self.__down()
                 self.status[description['mp']] = False
             body += "</tr>"
         body += "</table>"
         body += "<hr class='mandriva'/>"
-    
+
 #        if request.args['uri'] then
 #            body += "<iframe class='mandriva' style='width:100%; heigth:100%;' src=#{request.args['uri']}>Your browser don't support iframes</iframe>"
 #        elsif request.args['add_package'].to_s == 1.to_s then
@@ -118,12 +119,12 @@ class Description(resource.Resource):
 #            desc = request.args['description']
 #            cmd = Mandriva::Command.new('CMD', request.args['cmd'])
 #            pack = Mandriva::Package.new().init(id, label, version, 0, desc, cmd)
-#    
+#
 #            body += "will try to connect to : #{request.args['server']}:#{request.args['port']}/#{request.args['mp']}"
 #            begin
 #                server = connect(request.args['server'], request.args['port'], request.args['mp'])
 #                pid, path = server.call('xmlrpc.putPackageDetail', pack.toH)
-#    
+#
 #                if not pid then
 #                    body += " --> failed"
 #                else
@@ -141,7 +142,7 @@ class Description(resource.Resource):
 #                ret = server.call('xmlrpc.getServerDetails')
 #                case request.args['type']
 #                when 'package_api_put'
-#                    body += "<tr class='mandriva'><th class='mandriva'>Label</th><th class='mandriva'>Version</th><th class='mandriva'>Size</th></tr>"  
+#                    body += "<tr class='mandriva'><th class='mandriva'>Label</th><th class='mandriva'>Version</th><th class='mandriva'>Size</th></tr>"
 #                    url = serverdetail[request.args['server']+':'+request.args['port']+request.args['mp']]
 #                    ret.each do |papi|
 #                        style = ''
@@ -152,7 +153,7 @@ class Description(resource.Resource):
 #                    end
 #                    body += "<tr class='mandriva'><td colspan='3'><a href='#{url}&add_package=1' class='mandriva fontblack'>add a new package</a></td></tr>"
 #                when 'package_api_get', 'mirror'
-#                    body += "<tr class='mandriva'><th class='mandriva'>Label</th><th class='mandriva'>Version</th><th class='mandriva'>Size</th></tr>"  
+#                    body += "<tr class='mandriva'><th class='mandriva'>Label</th><th class='mandriva'>Version</th><th class='mandriva'>Size</th></tr>"
 #                    url = serverdetail[request.args['server']+':'+request.args['port']+request.args['mp']]
 #                    ret.each do |papi|
 #                        style = ''
@@ -179,7 +180,7 @@ class Description(resource.Resource):
 #                    if not ret['mirror'].nil?
 #                        body += "<tr class='mandriva'><td class='mandriva'><h3 class='mandriva'>Mirrors</h3></td></tr>"
 #                        ret['mirror'].each do |m|
-#                            body += "<tr class='mandriva'><td class='mandriva'>#{m['protocol']}://#{m['server']}:#{m['port']}#{m['mountpoint']}</td></tr>"  
+#                            body += "<tr class='mandriva'><td class='mandriva'>#{m['protocol']}://#{m['server']}:#{m['port']}#{m['mountpoint']}</td></tr>"
 #                        end
 #                    end
 #                end
@@ -190,19 +191,19 @@ class Description(resource.Resource):
 #                body += "<span class='mandriva error'><pre class='mandriva'>#{cgi::escapeHTML(e.inspect)}</pre></span>"
 #            end
 #        end
-#    
+#
 #        if request.args['package'] then
 #            body += "<hr class='mandriva'/>"
 #            pkg = Mandriva::Common.instance.packages(request.args['mp'])[request.args['package']]
 #            body += "<table class='mandriva'>"
 #            body += "<tr class='mandriva'><th class='mandriva'>Type</th><th class='mandriva'>Commands</th></tr>"
 #            body += "<tr class='mandriva'><td class='mandriva'>Pre command</td><td class='mandriva'>#{pkg.precmd.to_s}</td></tr>"
-#            body += "<tr class='mandriva'><td class='mandriva'>Initialisation command</td><td class='mandriva'>#{pkg.initcmd.to_s}</td></tr>"   
+#            body += "<tr class='mandriva'><td class='mandriva'>Initialisation command</td><td class='mandriva'>#{pkg.initcmd.to_s}</td></tr>"
 #            body += "<tr class='mandriva'><td class='mandriva'>Command</td><td class='mandriva'>#{pkg.cmd.to_s}</td></tr>"
-#            body += "<tr class='mandriva'><td class='mandriva'>Failure post command</td><td class='mandriva'>#{pkg.postcmd_ko.to_s}</td></tr>"  
-#            body += "<tr class='mandriva'><td class='mandriva'>Success post command</td><td class='mandriva'>#{pkg.postcmd_ok.to_s}</td></tr>"  
+#            body += "<tr class='mandriva'><td class='mandriva'>Failure post command</td><td class='mandriva'>#{pkg.postcmd_ko.to_s}</td></tr>"
+#            body += "<tr class='mandriva'><td class='mandriva'>Success post command</td><td class='mandriva'>#{pkg.postcmd_ok.to_s}</td></tr>"
 #            body += "</table>"
-#    
+#
 #            body += "<br/>"
 #            body += "<table class='mandriva'>"
 #            body += "<tr class='mandriva'><th class='mandriva'>Id</th><th class='mandriva'>File</th>"
@@ -219,7 +220,7 @@ class Description(resource.Resource):
 #            end
 #            body += "</table>"
 #        end
-        
+
         body += "<style>"
         body += ".fontblack {"
         body += "    color: black !important;"
@@ -267,7 +268,7 @@ class Description(resource.Resource):
         body += "}"
         body += "</style>"
         body += "</html>"
-    
+
         return body
 
 
