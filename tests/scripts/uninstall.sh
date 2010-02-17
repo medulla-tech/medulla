@@ -51,7 +51,6 @@ if [ -f /usr/bin/mysqladmin ];
 fi
 
 rm -fr $PREFIX/lib/python2.*/site-packages/pulse2
-rm -fr $PREFIX/lib/python2.*/site-packages/mmc/plugins/
 rm -f /etc/init.d/pulse2-*
 rm -f $PREFIX/sbin/pulse2-*
 rm -fr /var/lib/pulse2/packages/*-*-*-*-*
