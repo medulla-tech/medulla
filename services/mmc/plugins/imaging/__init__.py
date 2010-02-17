@@ -167,6 +167,12 @@ class RpcProxy(RpcProxyI):
     def get_web_def_date_fmt(self):
         return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
 
+    def get_web_def_possible_protocols(self):
+        return xmlrpcCleanup(map(lambda p:p.toH(), ImagingDatabase().getAllProtocols()))
+
+    def get_web_def_default_protocol(self):
+        return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
+
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
     def __getTargetBootMenu(self, target_id, start = 0, end = -1, filter = ''):
@@ -393,13 +399,31 @@ class RpcProxy(RpcProxyI):
         count = db.countAllNonLinkedImagingServer(filter)
         return [count, xmlrpcCleanup(ret)]
 
-    def linkImagingServerToLocation(self, is_uuid, loc_id, params):
+    def linkImagingServerToLocation(self, is_uuid, loc_id, loc_name):
         db = ImagingDatabase()
         try:
-            ret = db.linkImagingServerToEntity(is_uuid, loc_id, params)
+            ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
         except Exception, e:
             return [False, str(e)]
         return [True]
+
+    def getImagingServerConfig(self, location):
+        imaging_server = ImagingDatabase().getImagingServerByEntityUUID(location)
+        default_menu = ImagingDatabase().getEntityDefaultMenu(location)
+        if imaging_server and default_menu:
+            return xmlrpcCleanup((imaging_server.toH(), default_menu.toH()))
+        elif default_menu:
+            return [False, ":cant find imaging server linked to location %s"%(location)]
+        elif imaging_server:
+            return [False, ":cant find the default menu for location %s"%(location), xmlrpcCleanup(imaging_server.toH())]
+
+    def setImagingServerConfig(self, location, config):
+        menu = ImagingDatabase().getEntityDefaultMenu(location)
+        menu = menu.toH()
+        try:
+            return xmlrpcCleanup([ImagingDatabase().modifyMenu(menu['imaging_uuid'], config)])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def doesLocationHasImagingServer(self, loc_id):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)

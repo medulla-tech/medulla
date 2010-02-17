@@ -36,7 +36,11 @@ from ConfigParser import NoOptionError
 class ImagingConfig(ImagingDatabaseConfig):
     disable = True
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
-                                
+    web_def_default_protocol = 'nfs'
+    web_def_default_menu_name = 'Menu'
+    web_def_default_timeout = '60'
+    web_def_default_background_uri = ''
+    web_def_default_message = 'Warning ! Your PC is being backed up or restored. Do not reboot !'
 
     def init(self, name = 'imaging', conffile = None):
         self.dbsection = "database"
@@ -59,8 +63,10 @@ class ImagingConfig(ImagingDatabaseConfig):
         self.disable = self.cp.getboolean("main", "disable")
         
         if self.cp.has_section("web"):
-            if self.cp.has_option("web", "web_def_date_fmt"):
-                self.web_def_date_fmt = self.cp.get("web", "web_def_date_fmt")
+            for i in ('date_fmt', 'default_protocol', 'default_menu_name', 'default_timeout', 'default_background_uri', 'default_message'):
+                full_name = "web_def_%s"%(i)
+                if self.cp.has_option("web", full_name):
+                    setattr(self, full_name, self.cp.get("web", full_name))
 
     def setDefault(self):
         """

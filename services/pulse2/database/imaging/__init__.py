@@ -67,13 +67,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
-        self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType}
-        self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}}
+        self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol}
+        self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
         self.__loadNomenclatureTables()
+        self.loadDefaults()
         self.is_activated = True
         self.dbversion = self.getImagingDatabaseVersion()
         self.logger.debug("ImagingDatabase finish activation")
         return self.db_check()
+
+    def loadDefaults(self):
+        self.default_params = {
+            'default_name':self.config.web_def_default_menu_name,
+            'timeout':self.config.web_def_default_timeout,
+            'background_uri':self.config.web_def_default_background_uri,
+            'message':self.config.web_def_default_message,
+            'protocol':self.config.web_def_default_protocol
+        }
 
     def initMappers(self):
         """
@@ -1125,6 +1135,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if session_need_to_close:
             session.close()
         return q
+
+    def getImagingServerByEntityUUID(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
+        if session_need_to_close:
+            session.close()
+        return q
         
     def getImagingServerByPackageServerUUID(self, uuid):
         session = create_session()
@@ -1147,13 +1167,86 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __getEntityByUUID(self, session, loc_id):
         return session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
     
+    def getMenuByUUID(self, menu_uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(Menu).filter(self.menu.c.id == uuid2id(menu_uuid)).first()
+        if session_need_to_close:
+            session.close()
+        return q
+        
+    def getProtocolByUUID(self, uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(Protocol).filter(self.protocol.c.id == uuid2id(uuid)).first()
+        if session_need_to_close:
+            session.close()
+        return q
+         
+    def getProtocolByLabel(self, label, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        q = session.query(Protocol).filter(self.protocol.c.label == label).first()
+        if session_need_to_close:
+            session.close()
+        return q
+    
+    def __modifyMenu(self, menu_uuid, params, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+        menu = self.getMenuByUUID(menu_uuid, session)
+        need_to_be_save = False
+        if params.has_key('default_name') and menu.default_name != params['default_name']:
+            need_to_be_save = True
+            menu.default_name = params['default_name']
+        if params.has_key('timeout') and menu.timeout != params['timeout']:
+            need_to_be_save = True
+            menu.timeout = params['timeout']
+        if params.has_key('background_uri') and menu.background_uri != params['background_uri']:
+            need_to_be_save = True
+            menu.background_uri = params['background_uri']
+        if params.has_key('message') and menu.message != params['message']:
+            need_to_be_save = True
+            menu.message = params['message']
+            
+        if params.has_key('protocol'):
+            proto = self.getProtocolByUUID(params['protocol'], session)
+            if proto and menu.fk_protocol != proto.id:
+                need_to_be_save = True
+                menu.fk_protocol = proto.id
+                
+        if need_to_be_save:
+            session.save_or_update(menu)
+        if session_need_to_close:
+            session.flush()
+            session.close()
+        return menu
+
+    def modifyMenu(self, menu_uuid, params):
+        self.__modifyMenu(menu_uuid, params)
+        return True
+
     def __createMenu(self, session, params):
         menu = Menu()
         menu.default_name = params['default_name']
         menu.timeout = params['timeout']
         menu.background_uri = params['background_uri']
         menu.message = params['message']
-        menu.fk_protocol = 2 # TODO get the true protocol!
+        if params.has_key('protocol'):
+            proto = self.getProtocolByLabel(params['protocol'], session)
+            if proto:
+                menu.fk_protocol = proto.id
+        if not menu.fk_protocol:
+            proto = self.getProtocolByLabel(self.config.web_def_default_protocol, session)
+            menu.fk_protocol = proto.id
         menu.fk_default_item = 0
         menu.fk_default_item_WOL = 0
         menu.fk_name = 0
@@ -1168,7 +1261,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.save(e)
         return e
         
-    def linkImagingServerToEntity(self, is_uuid, loc_id, params):
+    def linkImagingServerToEntity(self, is_uuid, loc_id, loc_name):
         session = create_session()
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
         if imaging_server == None:
@@ -1177,9 +1270,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if location != None:
             raise "%s:This entity already exists (%s) cant be linked again" % (ERR_ENTITY_ALREADY_EXISTS, loc_id)
         
-        menu = self.__createMenu(session, params)
+        menu = self.__createMenu(session, self.default_params)
         session.flush()
-        location = self.__createEntity(session, loc_id, params['loc_name'], menu.id)
+        location = self.__createEntity(session, loc_id, loc_name, menu.id)
         session.flush()
 
         imaging_server.fk_entity = location.id
@@ -1215,6 +1308,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == loc_id).count()
         return (q == 1)
+
+    def setImagingServerConfig(self, location, config):
+        session = create_session()
+        imaging_server = self.getImagingServerByEntityUUID(location, session)
+        # modify imaging_server
+        # session.save(imaging_server)
+        # session.flush()
+        session.close()
+        return True
+
+    # Protocols
+    def getAllProtocols(self):
+        session = create_session()
+        q = session.query(Protocol).all()
+        session.close()
+        return q
 
 def id2uuid(id):
     return "UUID%d" % id
@@ -1283,7 +1392,7 @@ class MasteredOnState(DBObject):
     to_be_exported = ['id', 'label']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol']
 
 class MenuItem(DBObject):
     to_be_exported = ['id', 'default_name', 'order', 'hidden', 'hidden_WOL', 'fk_menu', 'fk_name', 'default', 'default_WOL', 'desc']
