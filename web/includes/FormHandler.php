@@ -6,15 +6,15 @@ class FormHandler {
     var $data;    
     
     function FormHandler($data) {
-        echo "<pre>";
+        /*echo "<pre>";
         print_r($data);
-        echo '</pre>';
+        echo '</pre>';*/
         $this->post_data = $data;
         $this->data = array();
         $this->sanitize();
-        echo "<pre>";
+        /*echo "<pre>";
         print_r($this->data);
-        echo '</pre>';
+        echo '</pre>';*/
     }
     
     /* Create array with updated fields from $_POST */
