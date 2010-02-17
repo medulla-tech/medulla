@@ -24,9 +24,6 @@
  */
 
 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
-
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
@@ -39,26 +36,29 @@ require("modules/pulse2/includes/locations_xmlrpc.inc.php");
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
-    $params = getParams();
-
-    $item_uuid = $_POST['itemid'];
-    $label = urldecode($_POST['itemlabel']);
-    $loc_id = $_POST['loc_id'];
     $from = $_POST['from'];
-    $params['default_name'] = $_POST['default_m_label'];
+    $loc_id = $_POST['loc_id'];
+    $loc_name = $_POST['loc_name'];
+    $item_uuid = $_POST['itemid'];
+    
+    $label = urldecode($_POST['itemlabel']);
+    
+    //$params = getParams();
+    /*$params['default_name'] = $_POST['default_m_label'];
     $params['timeout'] = $_POST['timeout'];
     $params['background_uri'] = $_POST['background_uri'];
     $params['message'] = $_POST['message'];
     $params['protocol'] = $_POST['protocol'];
     $params['loc_name'] = $_POST['loc_name'];
+    */
 
-    $ret = xmlrpc_linkImagingServerToLocation($item_uuid, $loc_id, $params);
+    $ret = xmlrpc_linkImagingServerToLocation($item_uuid, $loc_id, $loc_name);
 
     // goto images list 
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Link betwen imaging server <strong>%s</strong> and the entity <strong>%s</strong> succeded.", "imaging"), $label, $loc_id);
         new NotifyWidgetSuccess($str);
-        header("Location: " . urlStrRedirect("imaging/manage/$from", $params));
+        header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
     } elseif ($ret[0]) {
         header("Location: " . urlStrRedirect("imaging/manage/$from", $params));
     } else {
@@ -82,23 +82,16 @@ $label = urldecode($_GET['itemlabel']);
 $loc_id = $_GET['loc_id'];
 $from  = $_GET['from'];
 
-$p = new PageGenerator(sprintf(_T("Link the Imaging Server '<b>%s</b>' to the entity '<b>%s</b>'", "imaging"), $label, $loc_name));
-$sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
-$p->setSideMenu($sidemenu);
-$p->display();
+$f = new PopupForm(sprintf(_T("Do you really want to link the Imaging Server '<b>%s</b>' to the entity '<b>%s</b>'", "imaging"), $label, $loc_name));
 
-$f = new PopupForm(_T("Please fill the default menu informations for this entity", "imaging"));
-
-$f->push(new Table());
-
-// form preseeding
+// form preseeding*/
 $f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
 $f->add(new HiddenTpl("loc_id"),                        array("value" => $loc_id,                        "hide" => True));
 $f->add(new HiddenTpl("loc_name"),                      array("value" => $loc_name,                      "hide" => True));
 $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
 $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
 $f->add(new HiddenTpl("from"),                          array("value" => $from,                          "hide" => True));
-
+/*
 $input = new TrFormElement(_T('Default menu label', 'imaging'),        new InputTpl("default_m_label"));
 $f->add($input,                                         array("value" => ''));
 
@@ -115,8 +108,9 @@ $input = new TrFormElement(_T('protocol', 'imaging'),       new InputTpl("protoc
 $f->add($input,                                             array("value" => ''));
 # TODO NEED TO GET THE POSSIBLE protocol AND ASK AS A LIST
         
-
+*/
 $f->addValidateButton("bconfirm");
+//$f->addButton("bconfig", _T("Confirm and configure", "imaging"));
 $f->addCancelButton("bback");
 $f->display();
     

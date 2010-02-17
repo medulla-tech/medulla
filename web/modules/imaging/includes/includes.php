@@ -137,7 +137,11 @@ function format_disk_info($df) {
 
 function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) { 
     $ret = '';
-    $wused = ($used / $max) * $width;
+    if ($max != 0) {
+        $wused = ($used / $max) * $width;
+    } else {
+        $wused = $width;
+    }
     if ($title != "") {
         $ret .= "<p>".$title."</p>";
     }

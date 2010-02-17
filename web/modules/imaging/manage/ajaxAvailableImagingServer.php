@@ -38,7 +38,7 @@ list($count, $imaging_server) = xmlrpc_getAllNonLinkedImagingServer();
 
 // forge params
 $params = getParams();
-$addAction = new ActionItem(sprintf(_T("Link this Imaging Server to the '%s' entity.", "imaging"), $location), "imaging_server_link", "addbootmenu", "master", "imaging", "manage");
+$addAction = new ActionPopupItem(sprintf(_T("Link this Imaging Server to the '%s' entity.", "imaging"), $location), "imaging_server_link", "addbootmenu", "master", "imaging", "manage");
 $addActions = array();
 
 $params['loc_id'] = $location;

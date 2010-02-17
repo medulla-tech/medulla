@@ -38,8 +38,15 @@ $t = new TitleElement(_T("Imaging server configuration", "imaging"));
 $t->display();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
-    $f = new ValidatingForm();
+    $config = xmlrpc_getImagingServerConfig($location);
+    $imaging_server = $config[0];
+    $default_menu = $config[1];
     
+    $f = new ValidatingForm(array("action"=>urlStrRedirect("imaging/manage/save_configuration"),));
+    
+    $f->add(new HiddenTpl("is_uuid"),                       array("value" => $imaging_server['imaging_uuid'], "hide" => True));
+    /* We dont have this information right now in the database schema
+
     $f->add(new TitleElement(_T("Traffic control", "imaging")));
     $f->push(new Table());
     $interfaces = array("eth0" => "eth0", "eth1" => "eth1");
@@ -62,21 +69,52 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         new TrFormElement(_T("Max. throughput for NFS restoration (Mbit)", "imaging"), 
         new InputTpl("net_nfs")), array("value" => "1000")
     );
-    $f->pop();
+    $f->pop();*/
+
+    $f->add(new TitleElement(_T("Default menu parameters", "imaging")));
+    $f->push(new Table());
     
+    $f->add(
+        new TrFormElement(_T('Default menu label', 'imaging'),        
+        new InputTpl("default_m_label")), array("value" => $default_menu['default_name'])
+    );
+    $f->pop();
+ 
     $f->add(new TitleElement(_T("Restoration options", "imaging")));
     $f->push(new Table());
-    $rest_selected = "nfs";
+    $possible_protocols = web_def_possible_protocols();
+    $default_protocol = web_def_default_protocol();
+    $protocols_choices = array();
+    $protocols_values = array();
+
+    /* translate possibles protocols */
+    _T('nfs', 'imaging');
+    _T('tftp', 'imaging');
+    _T('mtftp', 'imaging');
+    foreach ($possible_protocols as $p) {
+        if ($p['label']) {
+            if ($p['label'] == $default_menu['protocol']) {
+                $rest_selected = $p['imaging_uuid'];
+            }
+            if ($p['label'] == $default_protocol) {
+                $p['label'] = _T($p['label'], 'imaging').' '._T('(default)', 'imaging');
+            }
+            $protocols_choices[$p['imaging_uuid']] = $p['label'];
+            $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
+        }
+    }
+    
     $rest_type = new RadioTpl("rest_type");
-    $rest_type->setChoices(array("nfs" => "NFS (Standard)", "mtftp" => "MTFTP (Multicast)"));
-    $rest_type->setValues(array("nfs" => "nfs", "mtftp" => "mtftp"));
+    
+    $rest_type->setChoices($protocols_choices);
+    $rest_type->setValues($protocols_values);
     $rest_type->setSelected($rest_selected);
     $f->add(
         new TrFormElement(_T("Restoration type", "imaging"), $rest_type)
     );
     $f->add(
         new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"), 
-        new InputTpl("rest_wait")), array("value" => "5")
+        new InputTpl("rest_wait")), array("value" => $default_menu['timeout'])
     );
     $f->pop();
     
@@ -84,11 +122,11 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $f->push(new Table());
     $f->add(
         new TrFormElement(_T("Full path to the XPM displayed at boot", "imaging"), 
-        new InputTpl("boot_xpm")), array("value" => "")
+        new InputTpl("boot_xpm")), array("value" => $default_menu['background_uri'])
     );
     $f->add(
         new TrFormElement(_T("Message displayed during backup/restoration", "imaging"), 
-        new TextareaTpl("boot_msg")), array("value" => "Warning ! Your PC is being backed up or restored. Do not reboot !")
+        new TextareaTpl("boot_msg")), array("value" => $default_menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
     );
     $f->add(
         new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"), 
@@ -104,13 +142,16 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     );
     $f->pop();
     
+    $_GET["action"] = "save_configuration";
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
     $f->display();
 } else {
     # choose the imaging server we want to associate to that entity
-    xmlrpc_getAllNonLinkedImagingServer();
-
+    $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
+    $ajax->display();
+    print "<br/><br/><br/>";
+    $ajax->displayDivToUpdate();
 }
  
  ?>

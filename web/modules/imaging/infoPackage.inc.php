@@ -93,9 +93,11 @@ $page = new Page("ajaxAvailableImagingServer",_T("Available Imaging Server","ima
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 $page = new Page("imaging_server_link",_T("Link an Imaging Server","imaging"));
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+$page = new Page("save_configuration",_T("Save an Imaging Server configuration","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
-
 
 $mod->addSubmod($submod);
 

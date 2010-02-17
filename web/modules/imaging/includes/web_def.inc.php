@@ -32,6 +32,13 @@ function web_def_date_fmt() {
     return __web_def_in_session("date_fmt");
 }
 
+function web_def_possible_protocols() {
+    return __web_def_in_session("possible_protocols");
+}
+
+function web_def_default_protocol() {
+    return __web_def_in_session("default_protocol");
+}
 
 function web_def_image_hidden() {
     #return __web_def_in_session("image_hidden");

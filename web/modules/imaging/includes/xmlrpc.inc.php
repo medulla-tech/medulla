@@ -172,11 +172,19 @@ function xmlrpc_getAllNonLinkedImagingServer($start = 0, $end = -1, $filter = ''
     return xmlCall("imaging.getAllNonLinkedImagingServer", array($start, $end, $filter));
 }
 
-function xmlrpc_linkImagingServerToLocation($is_uuid, $loc_id, $params) {
-    return xmlCall("imaging.linkImagingServerToLocation", array($is_uuid, $loc_id, $params));
+function xmlrpc_linkImagingServerToLocation($is_uuid, $loc_id, $loc_name) {
+    return xmlCall("imaging.linkImagingServerToLocation", array($is_uuid, $loc_id, $loc_name));
 }
 
 function xmlrpc_doesLocationHasImagingServer($location) {
     return xmlCall("imaging.doesLocationHasImagingServer", array($location));
+}
+
+function xmlrpc_getImagingServerConfig($location) {
+    return xmlCall("imaging.getImagingServerConfig", array($location));
+}
+
+function xmlrpc_setImagingServerConfig($location, $config) {
+    return xmlCall("imaging.setImagingServerConfig", array($location, $config));
 }
 ?>
