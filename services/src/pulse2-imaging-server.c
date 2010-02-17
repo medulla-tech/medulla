@@ -122,6 +122,29 @@ void diep(char *s) {
     exit(1);
 }
 
+int analyseresult(int exitcode) {
+/*
+ * log stuff based on the exitcdoe value
+ */
+    switch (exitcode) {
+    case 0:
+        myLogger("Hook succeeded !");
+        return 0;
+    case 1:
+        myLogger("Hook failed server side !");
+        return 1;
+    case 2:
+        myLogger("Hook failed client side !");
+        return 1;
+    case 3:
+        myLogger("Hook failed !");
+        return 1;
+    default:
+        myLogger("ERROR : something unexpected happend !");
+        return 1;
+    }
+}
+
 /*
  * system() func with logging
  */
@@ -280,31 +303,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char buffer[100 * 1024];
         char filename[256];
         int buffer_len = 0;
-        switch (mysystem(2, gPathUpdateClient, mac)) {
-        case 0:
-            myLogger("Hook succeeded !");
-            // FIXME : we should send back an ACK
-            break;
-        case 1:
-            myLogger("Hook failed server side !");
-            // FIXME : we should send back an NAK
+        if (analyseresult(mysystem(2, gPathUpdateClient, mac)) ) {
+            // FIXME : we should also send back a NAK
             return 0;
-            break;
-        case 2:
-            myLogger("Hook failed client side !");
-            // FIXME : we should send back an NAK
-            return 0;
-            break;
-        case 3:
-            myLogger("Hook failed !");
-            // FIXME : we should send back an NAK
-            return 0;
-            break;
-        default:
-            myLogger("ERROR : something unexpected happend !");
-            // FIXME : we should send back an NAK
-            return 0;
-            break;
         }
 
         /* write inventory to a temporary file. Must fit in one packet ! */
@@ -324,27 +325,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         write(fo, buffer, buffer_len);
         close(fo);
 
-        switch (mysystem(3, gPathProcessInventory, mac, filename)) {
-        case 0:
-            myLogger("Hook succeeded !");
-            // FIXME : we should send back an ACK
-            break;
-        case 1:
-            myLogger("Hook failed server side !");
-            // FIXME : we should send back an NAK
-            break;
-        case 2:
-            myLogger("Hook failed client side !");
-            // FIXME : we should send back an NAK
-            break;
-        case 3:
-            myLogger("Hook failed !");
-            // FIXME : we should send back an NAK
-            break;
-        default:
-            myLogger("ERROR : something unexpected happend !");
-            // FIXME : we should send back an NAK
-            break;
+        if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename)) ) {
+            // FIXME : we should also send back a NAK
         }
         unlink(name);
         return 0;
@@ -360,27 +342,8 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-        switch (mysystem(4, gPathCreateClient, mac, hostname, pass)) {
-        case 0:
-            myLogger("Hook succeeded !");
-            // FIXME : we should send back an ACK
-            break;
-        case 1:
-            myLogger("Hook failed server side !");
-            // FIXME : we should send back an NAK
-            break;
-        case 2:
-            myLogger("Hook failed client side !");
-            // FIXME : we should send back an NAK
-            break;
-        case 3:
-            myLogger("Hook failed !");
-            // FIXME : we should send back an NAK
-            break;
-        default:
-            myLogger("ERROR : something unexpected happend !");
-            // FIXME : we should send back an NAK
-            break;
+        if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass)) ) {
+            // FIXME : we should also send back a NAK
         }
         return 0;
     }
@@ -388,7 +351,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xEC) {
         char operation[16];
         snprintf(operation, 16, "%c", buf[1]);
-        mysystem(3, gPathUpdateImage, smac, operation);
+        mysystem(3, gPathCreateImage, smac, operation);
         return 0;
     }
     // change default menu
