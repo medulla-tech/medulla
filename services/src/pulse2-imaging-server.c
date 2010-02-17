@@ -280,7 +280,32 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char buffer[100 * 1024];
         char filename[256];
         int buffer_len = 0;
-        mysystem(2, gPathUpdateClient, mac);    // TODO : check return code
+        switch (mysystem(2, gPathUpdateClient, mac)) {
+        case 0:
+            myLogger("Hook succeeded !");
+            // FIXME : we should send back an ACK
+            break;
+        case 1:
+            myLogger("Hook failed server side !");
+            // FIXME : we should send back an NAK
+            return 0;
+            break;
+        case 2:
+            myLogger("Hook failed client side !");
+            // FIXME : we should send back an NAK
+            return 0;
+            break;
+        case 3:
+            myLogger("Hook failed !");
+            // FIXME : we should send back an NAK
+            return 0;
+            break;
+        default:
+            myLogger("ERROR : something unexpected happend !");
+            // FIXME : we should send back an NAK
+            return 0;
+            break;
+        }
 
         /* write inventory to a temporary file. Must fit in one packet ! */
         snprintf(filename, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
@@ -299,8 +324,28 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         write(fo, buffer, buffer_len);
         close(fo);
 
-        mysystem(3, gPathProcessInventory, mac, filename);      // TODO : check return code
-
+        switch (mysystem(3, gPathProcessInventory, mac, filename)) {
+        case 0:
+            myLogger("Hook succeeded !");
+            // FIXME : we should send back an ACK
+            break;
+        case 1:
+            myLogger("Hook failed server side !");
+            // FIXME : we should send back an NAK
+            break;
+        case 2:
+            myLogger("Hook failed client side !");
+            // FIXME : we should send back an NAK
+            break;
+        case 3:
+            myLogger("Hook failed !");
+            // FIXME : we should send back an NAK
+            break;
+        default:
+            myLogger("ERROR : something unexpected happend !");
+            // FIXME : we should send back an NAK
+            break;
+        }
         unlink(name);
         return 0;
     }
