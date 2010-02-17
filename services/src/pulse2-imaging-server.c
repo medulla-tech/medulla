@@ -278,17 +278,18 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     // Hardware Info...
     if (buf[0] == 0xAA) {
         char buffer[100 * 1024];
+        char filename[256];
         int buffer_len = 0;
         mysystem(2, gPathUpdateClient, mac);    // TODO : check return code
 
         /* write inventory to a temporary file. Must fit in one packet ! */
-        snprintf(name, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
+        snprintf(filename, 255, "/tmp/inventory.pulse2.%s.XXXXXX", smac);
 
-        if (!(fo = mkstemp(name))) {    // can't create .inf file
-            char *msg = malloc(256) ;
-            snprintf(msg, 256, "can't create %s", name);
+        if (!(fo = mkstemp(filename))) {        // can't create .inf file
+            char *msg = malloc(256);
+            snprintf(msg, 256, "can't create %s", filename);
             myLogger(msg);
-            free(msg)
+            free(msg);
             return 0;
         }
         buffer_len = snprintf(buffer, 100 * 1024,
@@ -298,7 +299,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         write(fo, buffer, buffer_len);
         close(fo);
 
-        mysystem(3, gPathProcessInventory, mac, name);  // TODO : check return code
+        mysystem(3, gPathProcessInventory, mac, filename);      // TODO : check return code
 
         unlink(name);
         return 0;
@@ -425,10 +426,33 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     }
     // give me my Pulse 2 name
     if (buf[0] == 0x1A) {
-        if (mysystem(2, gPathGetUUID, mac) == 0) {
-            // TODO : thanks to system(), we do not have any chance to get our command stdout
-            //MDV/NR sendto(s, gBuff, strlen((char*)gBuff)+1, MSG_NOSIGNAL,
-            //MDV/NR (struct sockaddr *) si_other, sizeof(*si_other));
+        char filename[256];
+        // create a temporary file to get our UUID
+        snprintf(filename, 255, "/tmp/uuid.pulse2.%s.XXXXXX", smac);
+
+        if (!(fo = mkstemp(filename))) {        // can't create .inf file
+            char *msg = malloc(256);
+            snprintf(msg, 256, "can't create %s", filename);
+            myLogger(msg);
+            free(msg);
+            return 0;
+        }
+        close(fo);
+
+        if (mysystem(3, gPathGetUUID, mac, filename) == 0) {
+            /*
+             * thanks to system(), we do not have any chance to get our
+             * so we uses a temporary file to recover it.
+             * yes, that's quiet ugly
+             */
+            bzero(name, 256);
+            fo = open(filename, 'r');
+            read(fo, name, 256);
+            close(fo);
+            unlink(filename);
+            strncpy((char *)gBuff, name, 256);
+            sendto(s, gBuff, strlen((char *)gBuff) + 1, MSG_NOSIGNAL,
+                   (struct sockaddr *)si_other, sizeof(*si_other));
         }
         return 0;
     }
