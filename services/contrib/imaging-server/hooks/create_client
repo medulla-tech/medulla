@@ -87,12 +87,17 @@ def myCall():
         exitcode = ERROR_CLIENT
         endBack()
 
-    callFunction(
-        imagingAPI.computerRegister(
-            uuid,
-            mac
+    try:
+        callFunction(
+            imagingAPI.computerRegister(
+                uuid,
+                mac
+            )
         )
-    )
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        exitcode = ERROR_CLIENT
+        endBack()
 
 def myTreatment(result):
     """
@@ -103,8 +108,12 @@ def myTreatment(result):
     global exitcode
     if result:
         exitcode= ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
+        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+
+    # nothing else to do
     endBack()
 
 ########################################################################
