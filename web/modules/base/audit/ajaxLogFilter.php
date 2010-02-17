@@ -92,15 +92,19 @@ if($loglist) {
             $loguser[]   = getObjectName($log["user"]);        
             $logcommit[] = $log["commit"];
             $logdate[]   = $log["date"];
-            $logaction[] = $auditManager->getCode($log["action"]);
             $logplug[]   = $auditManager->getCode($log["plugin"]);
             if(count($log["objects"]) > 0) {
                 $logobject[]     = getObjectName($log["objects"][0]["object"]);
                 $logtypeobject[] = $auditManager->getCode($log["objects"][0]["type"]);
+                if(isset($log["objects"][1]["object"]))
+                    $logaction[] = $auditManager->getCode($log["action"])." (".getObjectName($log["objects"][1]["object"]).")";
+                else
+                    $logaction[] = $auditManager->getCode($log["action"]);
             } 
             else {
                 $logobject[]     = " ";
-                $logtypeobject[] = " ";
+                $logtypeobject[] = " "; 
+                $logaction[] = $auditManager->getCode($log["action"]);
             }
             $logparams[$i]["logid"] = $log["id"];
             $logparams[$i]["logref"] = $logref;
