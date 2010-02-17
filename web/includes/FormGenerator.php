@@ -479,7 +479,7 @@ class DynamicDateTpl extends InputTpl {
 
 class MultipleInputTpl extends AbstractTpl {
 
-    function MultipleInputTpl($name,$desc='') {
+    function MultipleInputTpl($name,$desc='', $new=false) {
         $this->name = $name;
         /*
           stripslashes is needed, because some characters may be backslashed
@@ -487,6 +487,7 @@ class MultipleInputTpl extends AbstractTpl {
         */
         $this->desc = stripslashes($desc);
         $this->regexp = '/.*/';
+        $this->new = $new;
     }
 
     function setRegexp($regexp) {
@@ -499,8 +500,10 @@ class MultipleInputTpl extends AbstractTpl {
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement($this->desc,
                                                new InputTpl($this->name.'['.$key.']',$this->regexp),
-                                               array('key'=>$key,
-                                                     'name'=> $this->name)
+                                               array('key' => $key,
+                                                     'name' => $this->name,
+                                                     'new' => $this->new
+                                                     )
                                                );
             $test->setCssError($this->name . $key);
             $test->display(array("value" => $param));
@@ -512,7 +515,7 @@ class MultipleInputTpl extends AbstractTpl {
         print '</td><td>';
         print '<input name="buser" type="submit" class="btnPrimary" value="'._("Add").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
-        { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp) . '\' }); return false;"/>';
+        { evalScripts: true, parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->regexp).'\' }); return false;"/>';
         print '</td></tr>';
         print '</table>';
         print '</div>';
@@ -757,6 +760,31 @@ class DeletableTrFormElement extends FormElement{
         } else {
             $desc = '';
         }
+        
+        // set hidden form with old_value for each DeletableTrFormElement field
+        // set a random old_value if some field has been created
+        if($this->new) {
+            $old_value = uniqid();
+        }
+        else if(isset($arrParam["value"])) { 
+            $old_value = $arrParam["value"]; 
+        } 
+        else { 
+            $old_value = ""; 
+        }
+        if(is_object($this->template)) {
+            $field_name = $this->template->name;            
+        }
+        else if(is_array($this->template)) {
+            $field_name = $this->template["name"];
+        }
+        else {
+            $field_name = "";
+        }
+        if ($field_name) {
+            print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
+        }        
+        
         print '<tr><td width="40%" ';
         print displayErrorCss($this->cssErrorName);
         print 'style = "text-align: right;">';
@@ -768,12 +796,12 @@ class DeletableTrFormElement extends FormElement{
             print $desc;
         }
         print '</td><td>';
-
+        
+        // reald field display
         parent::display($arrParam);
         print '<input name="bdel" type="submit" class="btnSecondary" value="'._("Delete").'" onclick="
         new Ajax.Updater(\''.$this->name.'\',\'includes/FormGenerator/MultipleInput.tpl.php\',
         { parameters: Form.serialize($(\'edit\'))+\'&amp;minputname='.$this->name.'&amp;del='.$this->key.'&amp;desc='.urlencode($this->desc) . '&amp;regexp='.rawurlencode($this->template->regexp) . '\' }); return false;"/>';
-
 
         print '</td></tr>';
 
@@ -809,7 +837,7 @@ class DeletableTrFormElement extends FormElement{
  * display a tr html tag in a form
  * using corresponding template
  */
-class TrFormElement extends FormElement{
+class TrFormElement extends FormElement {
     var $template;
     var $desc;
     var $cssErrorName;
@@ -823,7 +851,6 @@ class TrFormElement extends FormElement{
             $this->$key = $value;
         }
     }
-
 
     /**
      *  display input Element
@@ -845,6 +872,31 @@ class TrFormElement extends FormElement{
         }
         print '</td><td>';
 
+        // set hidden form with old_value for each TrFormElement field
+        if(isset($arrParam["value"])) { 
+            // if checkbox
+            if ($arrParam["value"] == "checked")
+                $old_value = "on";
+            else
+                $old_value = $arrParam["value"];
+        }
+        else {
+            $old_value = "";
+        }
+        if(is_object($this->template)) {
+            $field_name = $this->template->name;            
+        }
+        else if(is_array($this->template)) {
+            $field_name = $this->template["name"];
+        }
+        else {
+            $field_name = "";
+        }
+        if ($field_name) {
+            print '<input type="hidden" name="old_'.$field_name.'" value="'.$old_value.'" />';
+        }
+
+        // display real field
         parent::display($arrParam);
 
         if (isset($arrParam["extra"])) {

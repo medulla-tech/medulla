@@ -28,6 +28,7 @@ require_once("modules/base/includes/logging-xmlrpc.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
+require("includes/FormHandler.php");
 
 /**
  * Resize a jpg file if it is greater than $maxwidth or $maxheight
@@ -62,60 +63,74 @@ function resizeJpg($source, $maxwidth, $maxheight) {
 global $result;
 global $error;
 
+// Class managing $_POST array
+if($_POST) {
+    $FH = new FormHandler($_POST);
+} 
+else {
+    $FH = new FormHandler(array());    
+}
+
 //verify validity of information
 if (isset($_POST["buser"])) {
 
-$nlogin = $_POST["nlogin"];
-$name = $_POST["name"];
-$firstname = $_POST["firstname"];
-$confpass = $_POST["confpass"];
-$homedir = $_POST["homeDir"];
-$loginShell = $_POST["loginShell"];
+    $nlogin = $_POST["nlogin"];
+    $name = $_POST["name"];
+    $firstname = $_POST["firstname"];
+    $pass = $_POST["pass"];
+    $confpass = $_POST["confpass"];
+    $homedir = $_POST["homeDir"];
+    $loginShell = $_POST["loginShell"];
 
-$detailArr["cn"][0]=$nlogin;
-$detailArr["givenName"][0]=$firstname;
-$detailArr["sn"][0]=$name;
-$pass = $_POST["pass"];
-$desactive = $_POST["isBaseDesactive"];
+    $detailArr["cn"][0]=$nlogin;
+    $detailArr["givenName"][0]=$firstname;
+    $detailArr["sn"][0]=$name;
+    
+    if(isset($_POST["isBaseDesactive"])) {
+        $desactive = $_POST["isBaseDesactive"];
+    }
+    else {
+        $desactive = false;
+    }
 
-if ($pass != $confpass) {
-    $error.= _("The confirmation password does not match the new password.")." <br/>";
-    setFormError("pass");
-}
+    if ($pass != $confpass) {
+        $error.= _("The confirmation password does not match the new password.")." <br/>";
+        setFormError("pass");
+    }
 
-if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
-    $error.= _("User's name invalid !")."<br/>";
-    setFormError("login");
-}
+    if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $nlogin)) {
+        $error.= _("User's name invalid !")."<br/>";
+        setFormError("login");
+    }
 
-/* Check that the primary group name exists */
-$primary = $_POST["primary_autocomplete"];
-if (!strlen($primary)) {
-    global $error;
-    setFormError("primary_autocomplete");
-    $error.= _("The primary group field can't be empty.")."<br />";
-} else if (!existGroup($primary)) {
-    global $error;
-    setFormError("primary_autocomplete");
-    $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
-}
+    /* Check that the primary group name exists */
+    $primary = $_POST["primary_autocomplete"];
+    if (!strlen($primary)) {
+        setFormError("primary_autocomplete");
+        $error.= _("The primary group field can't be empty.")."<br />";
+    } 
+    else if (!existGroup($primary)) {
+        setFormError("primary_autocomplete");
+        $error.= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
+    }
 
-
-//verify validity with plugin function
-callPluginFunction("verifInfo",array($_POST));
-
+    //verify validity with plugin function
+    callPluginFunction("verifInfo", array($_POST));
 
     //if this user does not exist (not editing a user)
     if (!$error&&($_GET["action"]=="add")) {
+        
         if (!exist_user($nlogin)) {
-            if ($pass =='') {//if we not precise a password
+            if ($pass == '') {//if we not precise a password
                 $error.= _("Password is empty.")."<br/>"; //refuse addition
                 setFormError("pass");
             } else {  //if no problem
-                $createHomeDir = isset($_POST["createHomeDir"]);
+                $createHomeDir = isset($_POST["createHomeDir"]);                
                 $result = add_user($nlogin, $pass, $firstname, $name, $homedir, $createHomeDir, $_POST["primary_autocomplete"]);
-                if (strlen($_POST['mail']) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
-		if (strlen($loginShell) > 0) changeUserAttributes($nlogin, "loginShell", $loginShell);
+                if (strlen($_POST['mail']) > 0) 
+                    changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+		        if (strlen($loginShell) > 0) 
+		            changeUserAttributes($nlogin, "loginShell", $loginShell);
                 $_GET["user"]=$nlogin;
                 $newuser=true;
             }
@@ -123,7 +138,7 @@ callPluginFunction("verifInfo",array($_POST));
         else { //if user exist
             $error.= _("This user already exists.")."<br/>";
         }
-    }
+    }    
 } elseif (isset($_POST["benable"])) {
     $ret = callPluginFunction("enableUser", $_GET["user"]);
     $result = _("User enabled.");
@@ -138,104 +153,119 @@ callPluginFunction("verifInfo",array($_POST));
 // it'll be consider as modification
 if (!empty($_GET["user"])) {
 
-  if (!$error) {
-      global $result;
-      if ($_POST["deletephoto"]) {
-        changeUserAttributes($_POST["nlogin"], "jpegPhoto", null);
-      } else if ($_POST["buser"]) { //if we submit modification
-         if ($_POST['isBaseDesactive']) { //desactive user
-              changeUserAttributes($nlogin,'loginShell','/bin/false');
-              $result .= _("User disabled.")."<br />";
-         } else { //else if it desactive, reactive him
-	     if (($_POST['loginShell'] == "/bin/false") || ($_POST['loginShell'] == "")) {
-                 $newshell = "/bin/bash";
-                 $result .= _("User enabled.")."<br />";
-	     } else $newshell = $_POST['loginShell'];
-	     changeUserAttributes($nlogin, 'loginShell', $newshell);
-         }
+    if (!$error) {
+    
+        global $result;
+        
+        if ($FH->isUpdated("deletephoto")) {
+            changeUserAttributes($_POST["nlogin"], "jpegPhoto", null);
+        }
+        else if (isset($_POST["buser"])) { //if we submit modification        
 
-         if ($_POST["homeDir"]) move_home($nlogin, $_POST["homeDir"]);
+            // Change user attributes
+            if($FH->isUpdated('isBaseDesactive')) {
+                if ($FH->getValue('isBaseDesactive') == "on") { //desactive user
+                    changeUserAttributes($nlogin, 'loginShell', '/bin/false');
+                    $result .= _("User disabled.")."<br />";
+                }
+                else {
+                    changeUserAttributes($nlogin, 'loginShell', '/bin/bash');
+                    $result .= _("User enabled.")."<br />";
+                }
+            }            
+            if ($FH->isUpdated("homeDir"))
+                move_home($nlogin, $_POST["homeDir"]);
+            if($FH->isUpdated('telephoneNumber'))
+                changeUserTelephoneNumbers($nlogin, $_POST["telephoneNumber"]);
+            if($FH->isUpdated('title'))
+                changeUserAttributes($nlogin, "title", $_POST["title"]);
+            if($FH->isUpdated('mobile'))
+                changeUserAttributes($nlogin, "mobile", $_POST["mobile"]);
+            if($FH->isUpdated('facsimileTelephoneNumber'))
+                changeUserAttributes($nlogin, "facsimileTelephoneNumber", $_POST["facsimileTelephoneNumber"]);
+            if($FH->isUpdated('homePhone'))
+                changeUserAttributes($nlogin, "homePhone", $_POST["homePhone"]);
+            if($FH->isUpdated('cn'))
+                changeUserAttributes($nlogin, "cn", $_POST["cn"]);        
+            if($FH->isUpdated('mail'))
+                changeUserAttributes($nlogin, "mail", $_POST["mail"]);
+            if($FH->isUpdated('displayName'))
+                changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
 
-         // Change user attributes
-	 changeUserTelephoneNumbers($nlogin, $_POST["telephoneNumber"]);
-         changeUserAttributes($nlogin, "title", $_POST["title"]);
-         changeUserAttributes($nlogin, "mobile", $_POST["mobile"]);
-         changeUserAttributes($nlogin, "facsimileTelephoneNumber", $_POST["facsimileTelephoneNumber"]);
-         changeUserAttributes($nlogin, "homePhone", $_POST["homePhone"]);
-	 if (strlen($_POST["cn"]) > 0) changeUserAttributes($nlogin, "cn", $_POST["cn"]);
-	 if ($newuser) {
-	     if (strlen($_POST["mail"]) > 0) changeUserAttributes($nlogin, "mail", $_POST["mail"]);
-	     if (strlen($_POST["displayName"]) > 0) changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
-	 } else {
-	     changeUserAttributes($nlogin, "mail", $_POST["mail"]);
-             changeUserAttributes($nlogin, "displayName", $_POST["displayName"]);
-	 }
-	 /* Change photo */
-	 if (!empty($_FILES["photofilename"]["name"])) {            
+            /* Change photo */
+            if (!empty($_FILES["photofilename"]["name"])) {            
+                if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
+                    $pfile = $_FILES["photofilename"]["tmp_name"];
+                    $size = getimagesize($pfile);
+                    if ($size["mime"] == "image/jpeg") {
+                        $maxwidth = 320;
+                        $maxheight = 320;
+                        if (in_array("gd", get_loaded_extensions())) {
+                            /* Resize file if GD extension is installed */
+                            $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"], 
+                                    $maxwidth, $maxheight);                         
+                        }
+                        list($width, $height) = getimagesize($pfile);
+                        if (($width <= $maxwidth) && ($height <= $maxheight)) {
+                            $obj = new Trans();
+                            $obj->scalar = "";
+                            $obj->xmlrpc_type = "base64";
+                            $f = fopen($pfile, "r");
+                            while (!feof($f)) $obj->scalar .= fread($f, 4096);  
+                            fclose($f);
+                            unlink($pfile);
+                            changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
+                        } 
+                        else {
+                            $error .= sprintf(_("The photo is too big. The max size is %s x %s."), 
+                                $maxwidth, $maxheight) . "<br/>";
+                        }
+                    } 
+                    else $error .= _("The photo is not a JPG file.") . "<br/>";
+                } 
+                else $error .= _("The photo is not a JPG file.") . "<br/>";
+            }	 
 
-	   if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
-               $pfile = $_FILES["photofilename"]["tmp_name"];
-	       $size = getimagesize($pfile);
-               if ($size["mime"] == "image/jpeg") {
-		 $maxwidth = 320;
-		 $maxheight = 320;
-                 if (in_array("gd", get_loaded_extensions())) {
-                     /* Resize file if GD extension is installed */
-                     $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"], $maxwidth, $maxheight);                         
-                 }
-                 list($width, $height) = getimagesize($pfile);
-		 if (($width <= $maxwidth) && ($height <= $maxheight)) {
-                     $obj = new Trans();
-                     $obj->scalar = "";
-                     $obj->xmlrpc_type = "base64";
-                     $f = fopen($pfile, "r");
-                     while (!feof($f)) $obj->scalar .= fread($f, 4096);  
-                     fclose($f);
-                     unlink($pfile);
-                     changeUserAttributes($nlogin, "jpegPhoto", $obj, False);
-                 } else $error .= sprintf(_("The photo is too big. The max size is %s x %s."), $maxwidth, $maxheight) . "<br/>";
-	       } else $error .= _("The photo is not a JPG file.") . "<br/>";
-	   } else $error .= _("The photo is not a JPG file.") . "<br/>";
-	 }	 
+            if($FH->isUpdated('firstname') or $FH->isUpdated('name'))
+                change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
 
-         change_user_main_attr($_GET["user"], $nlogin, $firstname, $name);
-         $result.=_("Attributes updated.")."<br />";
+            $result.=_("Attributes updated.")."<br />";
 
-         if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
-         // Create/modify user in all enabled MMC modules
-         callPluginFunction("changeUser",array($_POST));
+            if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
+            
+            // Create/modify user in all enabled MMC modules
+            callPluginFunction("changeUser", array($FH));
 
-          // If we change the password of an already existing user
-         if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
-             callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
+            // If we change the password of an already existing user
+            if (($_POST["pass"] == $_POST["confpass"]) && ($_POST["pass"] != "") && ($_GET["action"] != "add")) {
+                callPluginFunction("changeUserPasswd", array(array($_GET["user"], prepare_string($_POST["pass"]))));
+                //update result display
+                $result.=_("Password updated.")."<br />";
+            }
 
-             //update result display
-             $result.=_("Password updated.")."<br />";
-         }
+            /* Primary group management */
+            $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
+            if ($_POST["primary_autocomplete"] != $primaryGroup) {
+                /* Update the primary group */
+                callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], 
+                    $_POST["primary_autocomplete"], $primaryGroup));
+            }
 
-         /* Primary group management */
-         $primaryGroup = getUserPrimaryGroup($_POST['nlogin']);
-         if ($_POST["primary_autocomplete"] != $primaryGroup) {
-             /* Update the primary group */
-             callPluginFunction("changeUserPrimaryGroup", array($_POST['nlogin'], $_POST["primary_autocomplete"], $primaryGroup));
-         }
-
-         /* Secondary groups management */
-         $old = getUserSecondaryGroups($_POST['nlogin']);
-         $new = $_POST['groupsselected'];
-         foreach (array_diff($old, $new) as $group) {
-             del_member($group, $_POST['nlogin']);
-	     callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
-         }
-         foreach (array_diff($new, $old) as $group) {
-             add_member($group, $_POST['nlogin']);
-	     callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
-         }
-
-     }
-  }
-  $detailArr = getDetailedUser($_GET["user"]);
-  $enabled = isEnabled($_GET["user"]);
+            /* Secondary groups management */
+            $old = getUserSecondaryGroups($_POST['nlogin']);
+            $new = $_POST['groupsselected'];
+            foreach (array_diff($old, $new) as $group) {
+                del_member($group, $_POST['nlogin']);
+                callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
+            }
+            foreach (array_diff($new, $old) as $group) {
+                add_member($group, $_POST['nlogin']);
+                callPluginFunction("addUserToGroup", array($_POST['nlogin'], $group));
+            }    
+        }
+    }    
+    $detailArr = getDetailedUser($_GET["user"]);
+    $enabled = isEnabled($_GET["user"]);
 }
 
 if (strstr($_SERVER['HTTP_REFERER'],'module=base&submod=users&action=add') && isset($_GET["user"])) {
@@ -254,6 +284,9 @@ if(isset($detailArr["mobile"][0])) { $user_mobile = $detailArr["mobile"][0]; } e
 if(isset($detailArr["facsimileTelephoneNumber"][0])) { $user_facsimileTelephoneNumber = $detailArr["facsimileTelephoneNumber"][0]; } else { $user_facsimileTelephoneNumber = ""; }
 if(isset($detailArr["homePhone"][0])) { $user_homePhone = $detailArr["homePhone"][0]; } else { $user_homePhone = ""; }
 if(isset($detailArr["homeDirectory"][0])) { $user_homeDirectory = $detailArr["homeDirectory"][0]; } else { $user_homeDirectory = ""; }
+if(isset($detailArr["displayName"][0])) { $user_displayName = $detailArr["displayName"][0]; } else { $user_displayName = ""; }
+if(isset($detailArr["loginShell"][0])) { $user_loginShell = $detailArr["loginShell"][0]; } else { $user_loginShell = ""; }
+if(isset($detailArr["cn"][0])) { $user_cn = $detailArr["cn"][0]; } else { $user_cn = ""; }
 
 //display result message
 if (isset($result)&&!isXMLRPCError()) {
@@ -369,7 +402,7 @@ $test->setCssError("homePhone");
 $test->display(array("value"=>$user_homePhone));
 
 if ($user_uid) {
-    $checked = "CHECKED";
+    $checked = "checked";
     if (isset($detailArr["loginShell"])) {
         if ($detailArr["loginShell"][0] != '/bin/false') {
             $checked = "";
@@ -378,14 +411,13 @@ if ($user_uid) {
 } else {
     $checked = "";
 }
-$param = array ("value" => $checked);
 
 $test = new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
         array("tooltip"=>_("A disabled user can't log in any UNIX services. <br/>
                             Her/his login shell command is replaced by /bin/false"))
         );
 $test->setCssError("isBaseDesactive");
-$test->display($param);
+$test->display(array("value" => $checked));
 
 ?>
 </table>
@@ -398,21 +430,21 @@ $test->display(array("value"=>$user_homeDirectory));
 
 if ($_GET["action"] == "add") {
     $test = new TrFormElement(_("Create home directory on filesystem"), new CheckboxTpl("createHomeDir"));
-    $test->display(array("value" => "CHECKED"));
+    $test->display(array("value" => "checked"));
 }
 
 $test = new TrFormElement(_("Login shell"),new InputTpl("loginShell"));
-$test->display(array("value" => $detailArr["loginShell"][0]));
+$test->display(array("value" => $user_loginShell));
 
 $test = new TrFormElement(_("Common name"),new InputTpl("cn"),
 			  array("tooltip" => _("This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."))
 			  );
-$test->display(array("value"=>$detailArr["cn"][0]));
+$test->display(array("value"=> $user_cn));
 
 $test = new TrFormElement(_("Preferred name to be used"),new InputTpl("displayName"),
 			  array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
 			  );
-$test->display(array("value"=>$detailArr["displayName"][0]));?>
+$test->display(array("value"=> $user_displayName));?>
 
 <tr><td style="text-align: right;"><? print "UID : ".$detailArr["uidNumber"][0]; ?></td>
 <td><? print "GID : ".$detailArr["gidNumber"][0];?></td></tr>
@@ -449,7 +481,7 @@ if ($aclattrright=="rw") {
 print '</div>';
 
 //call plugin baseEdit form
-callPluginFunction("baseEdit",array($detailArr,$_POST));
+callPluginFunction("baseEdit", array($detailArr,$_POST));
 ?>
 
 <input name="buser" type="submit" class="btnPrimary" value="<?= _("Confirm"); ?>" />
