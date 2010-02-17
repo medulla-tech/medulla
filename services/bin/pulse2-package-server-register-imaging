@@ -70,9 +70,9 @@ config = P2PServerCP()
 # TODO need to put the logger handler for root
 config.setup(inifile)
 
-config.imaging['mount_point'] = config.imaging['mount_point'].replace('/', '')
-my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging['mount_point'])
-my_uuid = config.imaging['uuid']
+config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
+my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
+my_uuid = config.imaging_api['uuid']
 
 print "%s %s" % (my_url, my_uuid)
 
