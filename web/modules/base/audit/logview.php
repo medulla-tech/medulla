@@ -96,16 +96,16 @@ foreach ($log[0]["objects"] as $obj) {
         }        
     
         if($previous != " " or $current != " ") {
-            $f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
-                array("value"=> $previous, "disabled"=>True));
+            /*$f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
+                array("value"=> $previous, "disabled"=>True));*/
             
             /*for ($i = 1; $i < sizeof($obj["previous"]); $i++) {
                 $f->add(new TrFormElement("",new DisabledInputTpl("previous")), 
                 array("value"=> $previous, "disabled"=>True));
             }*/
             
-            $f->add(new TrFormElement(_("Current"),new DisabledInputTpl("current")), 
-                array("value"=> $current, "disabled"=>True));
+            $f->add(new TrFormElement(_("Current value"),new HiddenTpl("current")), 
+                array("value"=> $current));
 
             /*for ($i = 1; $i < sizeof($obj["current"]); $i++) {
                 $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
