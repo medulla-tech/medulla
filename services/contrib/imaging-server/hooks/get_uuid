@@ -25,6 +25,7 @@
     This is a generic hook skeleton to be used with pulse 2 imaging server
 """
 import sys
+import os.path
 import twisted.internet.reactor
 import logging
 import logging.config
@@ -51,10 +52,24 @@ def myCall():
         a deferred should be passed to callFunction()
         @woot
     """
-    callFunction(
-        imagingAPI.imagingServerStatus(
-        )
-    )
+    if len(sys.argv) != 3: # not enough (or too much) args
+        logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    mac = sys.argv[1]
+
+    if not pulse2.utils.isMACAddress(mac):
+        logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    try:
+        callFunction(imagingAPI.getComputerUUID(mac))
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        exitcode = ERROR_CLIENT
+        endBack()
 
 def myTreatment(result):
     """
@@ -63,10 +78,29 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
-    if result:
+
+    if result and type(result) == str:
+        filename = sys.argv[2]
+
+        if not os.path.isfile(filename):
+            logging.getLogger().error('HOOK %s : Second arg (%s) do not seems to be an existing file name' % (sys.argv[0], filename))
+            exitcode = ERROR_CLIENT
+            endBack()
+
+        try :
+            filestream = open(filename, 'w')
+            filestream.write(result)
+            print result
+            filestream.close()
+        except:
+            logging.getLogger().error('HOOK %s : Can\'t write %s, giving up' % (sys.argv[0], filename))
+            exitcode = ERROR_CLIENT
+            endBack()
         exitcode= ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
+        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
     endBack()
 
 ########################################################################
