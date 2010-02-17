@@ -80,8 +80,11 @@ print "connect to %s"%(mmc_url)
 client = xmlrpclib.ServerProxy(mmc_url)
 
 ret = client.imaging.imagingServerRegister(my_name, my_url, my_uuid)
-print ret[1]
-if ret[1]:
+if ret[0]:
+    print ret[1]
+elif ret[1]:
+    print ret[1]
+else:
     print "registering failed."
 
 
