@@ -340,20 +340,18 @@ CREATE INDEX fk_post_install_script_in_image_post_install_script_idx    ON PostI
 -- ----------------------------------------------------------------------
 -- Insert data
 -- ----------------------------------------------------------------------
-INSERT INTO TargetType (label) values ('computer');
-INSERT INTO TargetType (label) values ('profile');
+INSERT INTO TargetType (label) VALUES ('computer');
+INSERT INTO TargetType (label) VALUES ('profile');
 
-INSERT INTO MasteredOnState (label) values ('backup_done');
-INSERT INTO MasteredOnState (label) values ('backup_failed');
-INSERT INTO MasteredOnState (label) values ('restore_done');
-INSERT INTO MasteredOnState (label) values ('restore_failed');
+INSERT INTO MasteredOnState (label) VALUES ('backup_done');
+INSERT INTO MasteredOnState (label) VALUES ('backup_failed');
+INSERT INTO MasteredOnState (label) VALUES ('restore_done');
+INSERT INTO MasteredOnState (label) VALUES ('restore_failed');
 
-INSERT INTO Protocol (label) values ('');
-INSERT INTO Protocol (label) values ('tftp');
-INSERT INTO Protocol (label) values ('nfs');
-INSERT INTO Protocol (label) values ('mtftp');
+INSERT INTO Protocol (label) VALUES ('nfs');
+INSERT INTO Protocol (label) VALUES ('tftp');
+INSERT INTO Protocol (label) VALUES ('mtftp');
 
-INSERT INTO Language (label) values ('English');
-INSERT INTO Language (label) values ('Français');
-INSERT INTO Language (label) values ('Español');
-
+INSERT INTO Language (label) VALUES ('English');
+INSERT INTO Language (label) VALUES ('Français');
+INSERT INTO Language (label) VALUES ('Español');
