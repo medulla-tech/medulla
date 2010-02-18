@@ -51,10 +51,28 @@ def myCall():
         a deferred should be passed to callFunction()
         @woot
     """
-    callFunction(
-        imagingAPI.imagingServerStatus(
-        )
-    )
+    global exitcode
+
+    mac = '' # client MAC address
+
+    if len(sys.argv) != 2: # not enough (or too much) args
+        logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (one expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    mac = sys.argv[1]
+
+    if not pulse2.utils.isMACAddress(mac):
+        logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    try:
+        callFunction(imagingAPI.computerUpdate(mac))
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        exitcode = ERROR_CLIENT
+        endBack()
 
 def myTreatment(result):
     """
@@ -65,8 +83,12 @@ def myTreatment(result):
     global exitcode
     if result:
         exitcode= ERROR_OK
+        logging.getLogger().error('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
+        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+
+    # nothing else to do
     endBack()
 
 ########################################################################
