@@ -24,11 +24,13 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
-CREATE TABLE Version (
-  Number tinyint(4) unsigned NOT NULL default '0'
-) ENGINE=INNODB CHARSET=UTF8;
+SET storage_engine=INNODB;
 
-INSERT INTO Version VALUES( '1' );
+CREATE TABLE version (
+  Number tinyint(4) unsigned NOT NULL default '0'
+);
+
+INSERT INTO version VALUES( '1' );
 
 -- nomenclatures tables
 -- TargetType
@@ -36,28 +38,28 @@ CREATE TABLE TargetType (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- MasteredOnState
 CREATE TABLE MasteredOnState (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Protocol
 CREATE TABLE Protocol (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Language
 CREATE TABLE Language (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 -- end of the nomenclatures tables
 
 -- BootService
@@ -67,14 +69,14 @@ CREATE TABLE BootService (
   `desc` Text NOT NULL,
   uri Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- User
 CREATE TABLE `User` (
   id INT NOT NULL AUTO_INCREMENT,
   login Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- PostInstallScript
 CREATE TABLE PostInstallScript (
@@ -83,7 +85,7 @@ CREATE TABLE PostInstallScript (
   value Text NOT NULL,
   uri Text NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Entity
 CREATE TABLE Entity (
@@ -92,7 +94,7 @@ CREATE TABLE Entity (
   uuid Text NOT NULL,
   fk_default_menu INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Target
 CREATE TABLE Target (
@@ -105,7 +107,7 @@ CREATE TABLE Target (
   fk_entity INT NOT NULL,
   fk_menu INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- ImagingServer
 CREATE TABLE ImagingServer (
@@ -116,7 +118,7 @@ CREATE TABLE ImagingServer (
   recursive Bool NOT NULL DEFAULT 0,
   fk_entity INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Menu
 CREATE TABLE Menu (
@@ -130,19 +132,19 @@ CREATE TABLE Menu (
   fk_default_item_WOL INT NOT NULL,
   fk_protocol INT DEFAULT 0,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- BootServiceOnImagingServer
 CREATE TABLE BootServiceOnImagingServer (
   fk_boot_service INT NOT NULL,
   fk_imaging_server INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- ImageOnImagingServer
 CREATE TABLE ImageOnImagingServer (
   fk_image INT NOT NULL,
   fk_imaging_server INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Partition
 CREATE TABLE Partition (
@@ -153,14 +155,14 @@ CREATE TABLE Partition (
   start_sect INT NOT NULL,
   fk_image INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Internationalization
 CREATE TABLE Internationalization (
   id INT NOT NULL,
   label Text NOT NULL,
   fk_language INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- MenuItem
 CREATE TABLE MenuItem (
@@ -173,13 +175,13 @@ CREATE TABLE MenuItem (
   fk_name INT NOT NULL,
   `desc` Text,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- ImageInMenu
 CREATE TABLE ImageInMenu (
   fk_image INT NOT NULL,
   fk_menuitem INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- Image
 CREATE TABLE Image (
@@ -192,7 +194,7 @@ CREATE TABLE Image (
   creation_date datetime,
   fk_creator INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- MasteredOn
 CREATE TABLE MasteredOn (
@@ -204,20 +206,20 @@ CREATE TABLE MasteredOn (
   fk_image INT NOT NULL,
   fk_target INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- BootServiceInMenu
 CREATE TABLE BootServiceInMenu (
   fk_menuitem INT NOT NULL,
   fk_bootservice INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 
 -- PostInstallScriptInImage
 CREATE TABLE PostInstallScriptInImage (
   fk_image INT NOT NULL,
   fk_post_install_script INT NOT NULL
-) ENGINE=INNODB CHARSET=UTF8;
+);
 
 -- ----------------------------------------------------------------------
 -- Add unicity constraints
