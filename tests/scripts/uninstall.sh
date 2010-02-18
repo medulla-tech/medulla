@@ -47,6 +47,7 @@ if [ -f /usr/bin/mysqladmin ];
     echo "drop database if exists msc" | mysql
     echo "drop database if exists dyngroup" | mysql
     echo "drop database if exists inventory" | mysql
+    echo "drop database if exists imaging" | mysql
     echo "drop user mmc@localhost" | mysql || true
 fi
 

@@ -131,12 +131,20 @@ sed -i "s/# double =/double =/" /etc/mmc/plugins/inventory.ini
 sed -i "s/# halfstatic =/halfstatic =/" /etc/mmc/plugins/inventory.ini
 popd
 
+# Create database inventory and configure inventory.init
+pushd $TMPCO/pulse2/services/contrib/imaging/sql/
+export MYSQL_BASE=imaging
+./install.sh
+popd
+
 mysql << EOF
 GRANT ALL PRIVILEGES ON msc.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON dyngroup.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON inventory.* TO 'mmc'@'localhost'
+IDENTIFIED BY 'mmc' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON imaging.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 FLUSH PRIVILEGES
 EOF
