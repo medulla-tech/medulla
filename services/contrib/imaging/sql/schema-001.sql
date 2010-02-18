@@ -39,8 +39,6 @@ CREATE TABLE TargetType (
   label Text NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-INSERT INTO TargetType (label) values ('computer');
-INSERT INTO TargetType (label) values ('profile');
 
 -- MasteredOnState
 CREATE TABLE MasteredOnState (
@@ -48,10 +46,6 @@ CREATE TABLE MasteredOnState (
   label Text NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-INSERT INTO MasteredOnState (label) values ('backup_done');
-INSERT INTO MasteredOnState (label) values ('backup_failed');
-INSERT INTO MasteredOnState (label) values ('restore_done');
-INSERT INTO MasteredOnState (label) values ('restore_failed');
 
 -- Protocol
 CREATE TABLE Protocol (
@@ -59,10 +53,6 @@ CREATE TABLE Protocol (
   label Text NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-INSERT INTO Protocol (label) values ('');
-INSERT INTO Protocol (label) values ('tftp');
-INSERT INTO Protocol (label) values ('nfs');
-INSERT INTO Protocol (label) values ('mtftp');
 
 -- Language
 CREATE TABLE Language (
@@ -70,9 +60,6 @@ CREATE TABLE Language (
   label Text NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-INSERT INTO Language (label) values ('Français');
-INSERT INTO Language (label) values ('English');
-INSERT INTO Language (label) values ('Spanish');
 -- end of the nomenclatures tables
 
 -- BootService
@@ -292,3 +279,25 @@ CREATE TABLE PostInstallScriptInImage (
 ALTER TABLE PostInstallScriptInImage ADD UNIQUE (fk_image, fk_post_install_script);
 CREATE INDEX fk_post_install_script_in_image_image_idx ON PostInstallScriptInImage(fk_image);
 CREATE INDEX fk_post_install_script_in_image_post_install_script_idx ON PostInstallScriptInImage(fk_post_install_script);
+
+
+-- ----------------------------------------------------------------------
+-- Insert data
+-- ----------------------------------------------------------------------
+INSERT INTO TargetType (label) values ('computer');
+INSERT INTO TargetType (label) values ('profile');
+
+INSERT INTO MasteredOnState (label) values ('backup_done');
+INSERT INTO MasteredOnState (label) values ('backup_failed');
+INSERT INTO MasteredOnState (label) values ('restore_done');
+INSERT INTO MasteredOnState (label) values ('restore_failed');
+
+INSERT INTO Protocol (label) values ('');
+INSERT INTO Protocol (label) values ('tftp');
+INSERT INTO Protocol (label) values ('nfs');
+INSERT INTO Protocol (label) values ('mtftp');
+
+INSERT INTO Language (label) values ('English');
+INSERT INTO Language (label) values ('Français');
+INSERT INTO Language (label) values ('Español');
+
