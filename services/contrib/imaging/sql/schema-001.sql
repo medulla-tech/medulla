@@ -67,8 +67,8 @@ CREATE TABLE BootService (
   id INT NOT NULL AUTO_INCREMENT,
   default_name Text NOT NULL,
   default_desc Text NOT NULL,
-  fk_name INT NOT NULL,
-  fk_desc INT NOT NULL,
+  fk_name INT,
+  fk_desc INT,
   value Text NOT NULL,
   PRIMARY KEY (id)
 );
@@ -85,8 +85,8 @@ CREATE TABLE PostInstallScript (
   id INT NOT NULL AUTO_INCREMENT,
   default_name Text NOT NULL,
   default_desc Text NOT NULL,
-  fk_name INT NOT NULL,
-  fk_desc INT NOT NULL,
+  fk_name INT,
+  fk_desc INT,
   value Text NOT NULL,
   PRIMARY KEY (id)
 );
@@ -221,7 +221,6 @@ CREATE TABLE BootServiceInMenu (
   fk_menuitem INT NOT NULL,
   fk_bootservice INT NOT NULL
 );
-
 
 -- PostInstallScriptInImage
 CREATE TABLE PostInstallScriptInImage (
