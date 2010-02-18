@@ -96,7 +96,6 @@ CREATE TABLE Entity (
   FOREIGN KEY (fk_default_menu) REFERENCES Menu(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
 
 -- Target
 CREATE TABLE Target (
@@ -113,9 +112,6 @@ CREATE TABLE Target (
   FOREIGN KEY (fk_menu) REFERENCES Menu(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_target_type_idx ON Target(`type`);
-CREATE INDEX fk_target_entity_idx ON Target(fk_entity);
-CREATE INDEX fk_target_menu_idx ON Target(fk_menu);
 
 -- ImagingServer
 CREATE TABLE ImagingServer (
@@ -128,7 +124,6 @@ CREATE TABLE ImagingServer (
   FOREIGN KEY (fk_entity) REFERENCES Entity(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_imaging_server_entity_idx ON ImagingServer(fk_entity);
 
 -- Menu
 CREATE TABLE Menu (
@@ -147,10 +142,6 @@ CREATE TABLE Menu (
   FOREIGN KEY (fk_protocol) REFERENCES Protocol(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_menu_name_idx ON Menu(fk_name);
-CREATE INDEX fk_menu_default_item_idx ON Menu(fk_default_item);
-CREATE INDEX fk_menu_default_item_WOL_idx ON Menu(fk_default_item_WOL);
-CREATE INDEX fk_menu_protocol_idx ON Menu(fk_protocol);
 
 -- BootServiceOnImagingServer
 CREATE TABLE BootServiceOnImagingServer (
@@ -160,8 +151,6 @@ CREATE TABLE BootServiceOnImagingServer (
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
 ) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE BootServiceOnImagingServer ADD UNIQUE (fk_boot_service, fk_imaging_server);
-CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx ON BootServiceOnImagingServer(fk_boot_service);
-CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx ON BootServiceOnImagingServer(fk_imaging_server);
 
 -- ImageOnImagingServer
 CREATE TABLE ImageOnImagingServer (
@@ -171,8 +160,6 @@ CREATE TABLE ImageOnImagingServer (
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
 ) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE ImageOnImagingServer ADD UNIQUE (fk_image, fk_imaging_server);
-CREATE INDEX fk_image_on_imaging_server_image_idx ON ImageOnImagingServer(fk_image);
-CREATE INDEX fk_image_on_imaging_server_imaging_server_idx ON ImageOnImagingServer(fk_imaging_server);
 
 -- Partition
 CREATE TABLE Partition (
@@ -185,7 +172,6 @@ CREATE TABLE Partition (
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_partition_image_idx ON Partition(fk_image);
 
 -- Internationalization
 CREATE TABLE Internationalization (
@@ -210,8 +196,6 @@ CREATE TABLE MenuItem (
   FOREIGN KEY(fk_name) REFERENCES Internationalization(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_menu_item_menu_idx ON MenuItem(fk_menu);
-CREATE INDEX fk_menu_item_name_idx ON MenuItem(fk_name);
 
 -- ImageInMenu
 CREATE TABLE ImageInMenu (
@@ -221,8 +205,6 @@ CREATE TABLE ImageInMenu (
   FOREIGN KEY(fk_menuitem) REFERENCES MenuItem(id)
 ) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE ImageInMenu ADD UNIQUE (fk_image, fk_menuitem);
-CREATE INDEX fk_image_in_menu_image_idx ON ImageInMenu(fk_image);
-CREATE INDEX fk_image_in_menu_menuitem_idx ON ImageInMenu(fk_menuitem);
 
 -- Image
 CREATE TABLE Image (
@@ -237,7 +219,6 @@ CREATE TABLE Image (
   FOREIGN KEY(fk_creator) REFERENCES `User`(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
 
 -- MasteredOn
 CREATE TABLE MasteredOn (
@@ -253,9 +234,6 @@ CREATE TABLE MasteredOn (
   FOREIGN KEY(fk_target) REFERENCES Target(id),
   PRIMARY KEY (id)
 ) ENGINE=INNODB CHARSET=UTF8;
-CREATE INDEX fk_mastered_on_state_idx ON MasteredOn(fk_mastered_on_state);
-CREATE INDEX fk_mastered_on_image_idx ON MasteredOn(fk_image);
-CREATE INDEX fk_mastered_on_target_idx ON MasteredOn(fk_target);
 
 -- BootServiceInMenu
 CREATE TABLE BootServiceInMenu (
@@ -265,8 +243,6 @@ CREATE TABLE BootServiceInMenu (
   FOREIGN KEY(fk_bootservice) REFERENCES BootService(id)
 ) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE BootServiceInMenu ADD UNIQUE (fk_menuitem, fk_bootservice);
-CREATE INDEX fk_boot_service_in_menu_menuitem_idx ON BootServiceInMenu(fk_menuitem);
-CREATE INDEX fk_boot_service_in_menu_bootservice_idx ON BootServiceInMenu(fk_bootservice);
 
 
 -- PostInstallScriptInImage
@@ -277,9 +253,48 @@ CREATE TABLE PostInstallScriptInImage (
   FOREIGN KEY(fk_post_install_script) REFERENCES PostInstallScript(id)
 ) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE PostInstallScriptInImage ADD UNIQUE (fk_image, fk_post_install_script);
+
+-- ----------------------------------------------------------------------
+-- Add indexes
+-- ----------------------------------------------------------------------
+CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
+
+CREATE INDEX fk_target_type_idx ON Target(`type`);
+CREATE INDEX fk_target_entity_idx ON Target(fk_entity);
+CREATE INDEX fk_target_menu_idx ON Target(fk_menu);
+
+CREATE INDEX fk_imaging_server_entity_idx ON ImagingServer(fk_entity);
+
+CREATE INDEX fk_menu_name_idx ON Menu(fk_name);
+CREATE INDEX fk_menu_default_item_idx ON Menu(fk_default_item);
+CREATE INDEX fk_menu_default_item_WOL_idx ON Menu(fk_default_item_WOL);
+CREATE INDEX fk_menu_protocol_idx ON Menu(fk_protocol);
+
+CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx ON BootServiceOnImagingServer(fk_boot_service);
+CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx ON BootServiceOnImagingServer(fk_imaging_server);
+
+CREATE INDEX fk_image_on_imaging_server_image_idx ON ImageOnImagingServer(fk_image);
+CREATE INDEX fk_image_on_imaging_server_imaging_server_idx ON ImageOnImagingServer(fk_imaging_server);
+
+CREATE INDEX fk_partition_image_idx ON Partition(fk_image);
+
+CREATE INDEX fk_menu_item_menu_idx ON MenuItem(fk_menu);
+CREATE INDEX fk_menu_item_name_idx ON MenuItem(fk_name);
+
+CREATE INDEX fk_image_in_menu_image_idx ON ImageInMenu(fk_image);
+CREATE INDEX fk_image_in_menu_menuitem_idx ON ImageInMenu(fk_menuitem);
+
+CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
+
+CREATE INDEX fk_mastered_on_state_idx ON MasteredOn(fk_mastered_on_state);
+CREATE INDEX fk_mastered_on_image_idx ON MasteredOn(fk_image);
+CREATE INDEX fk_mastered_on_target_idx ON MasteredOn(fk_target);
+
+CREATE INDEX fk_boot_service_in_menu_menuitem_idx ON BootServiceInMenu(fk_menuitem);
+CREATE INDEX fk_boot_service_in_menu_bootservice_idx ON BootServiceInMenu(fk_bootservice);
+
 CREATE INDEX fk_post_install_script_in_image_image_idx ON PostInstallScriptInImage(fk_image);
 CREATE INDEX fk_post_install_script_in_image_post_install_script_idx ON PostInstallScriptInImage(fk_post_install_script);
-
 
 -- ----------------------------------------------------------------------
 -- Insert data
