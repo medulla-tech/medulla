@@ -40,7 +40,7 @@ class Mirror:
         self.uuid = "UUID%s"%(mountpoint)
 
     def toH(self):
-        return { 'protocol' : self.protocol, 'server' : self.server, 'port' : self.port, 'mountpoint' : self.mountpoint, 'uuid' : self.uuid }
+        return { 'protocol' : self.protocol, 'server' : self.server, 'port' : str(self.port), 'mountpoint' : self.mountpoint, 'uuid' : self.uuid }
 
     def fromH(self, h):
         self.protocol = h['protocol']
@@ -312,7 +312,7 @@ class Machine:
         try:
             self.uuid = h['uuid']
         except Exception, e:
-            raise Exception("machine must have an uuid")
+            raise Exception("machine must have an uuid: " + str(e))
         return self
 
     def equal(self, a):
@@ -334,7 +334,7 @@ class User:
         try:
             self.uuid = h['uuid']
         except Exception, e:
-            raise Exception("user must have an uuid")
+            raise Exception("user must have an uuid: " + str(e))
         return self
 
     def equal(self, a):
