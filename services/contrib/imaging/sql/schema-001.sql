@@ -172,7 +172,7 @@ CREATE TABLE Internationalization (
   id INT NOT NULL,
   label Text NOT NULL,
   fk_language INT NOT NULL
-);
+) AUTO_INCREMENT=10000;
 
 -- MenuItem
 CREATE TABLE MenuItem (
@@ -355,8 +355,19 @@ INSERT INTO Language (label) VALUES ('English');
 INSERT INTO Language (label) VALUES ('Français');
 INSERT INTO Language (label) VALUES ('Español');
 
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, 'Continue Normal Startup', 'Start as usual', NULL, NULL, 'root (hd0)\r\nchainloader +1');
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, 'Register as Pulse 2 Client', 'Record this computer in Pulse 2 Server', NULL, NULL, 'identify L=##PULSE2_LANG## P=none\nreboot');
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, 'Create a Master image', 'Create a backup to be used as Master later', NULL, NULL, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=/##PULSE2_F_MASTERS##/##PULSE2_F_IMAGE## revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, 'Diskless Boot', 'Load diskless environment then get a prompt', NULL, NULL, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revodebug revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, 'Memory test', 'Run a full memory check', NULL, NULL, 'kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_TOOLS##/##PULSE2_MEMTEST##');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (1, 2, 'Continuer le démarrage normalement');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, 'Démarrer comme d\'habitude');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 2, 'Ajouter comme client Pulse 2');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 2, 'Enregistrer ce poste auprès du server Pulse 2');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 2, 'Sauvegarder comme image Master');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 2, 'Créer une sauvegarde pour utilisation comme master plus tard');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (7, 2, 'Démarrage sans disque');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (8, 2, 'Charger un environnement sans disque et obtenir une invite de commande');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (9, 2, 'Test mémoire');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 2, 'Réaliser une vérification complète de la mémoire');
+
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, 'Continue Normal Startup', 'Start as usual', 1, 2, 'root (hd0)\r\nchainloader +1');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, 'Register as Pulse 2 Client', 'Record this computer in Pulse 2 Server', 3, 4, 'identify L=##PULSE2_LANG## P=none\nreboot');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, 'Create a Master image', 'Create a backup to be used as Master later', 5, 6, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=/##PULSE2_F_MASTERS##/##PULSE2_F_IMAGE## revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, 'Diskless Boot', 'Load diskless environment then get a prompt', 7, 8, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revodebug revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, 'Memory test', 'Run a full memory check', 9, 10, 'kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_TOOLS##/##PULSE2_MEMTEST##');
