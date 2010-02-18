@@ -1,4 +1,0 @@
-title Créer une sauvegarde
-desc Créer une sauvegarde utilisable à des fins de restauration
-kernel (nd)/pulse2/diskless/kernel revosavedir=/images/MAC/Local-COPYNUM revoprivate revoroot=REVOROOT quiet
-initrd (nd)/pulse2/diskless/initrd

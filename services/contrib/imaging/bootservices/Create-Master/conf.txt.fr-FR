@@ -1,4 +1,0 @@
-title Sauvegarder comme image Master
-desc Créer une sauvegarde pour utilisation comme master plus tard
-kernel (nd)/pulse2/diskless/kernel revosavedir=/masters/Base-COPYNUM revoshared revoroot=REVOROOT quiet
-initrd (nd)/pulse2/diskless/initrd

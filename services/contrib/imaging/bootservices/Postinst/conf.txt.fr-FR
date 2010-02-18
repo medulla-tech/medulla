@@ -1,5 +1,0 @@
-title Post Installation
-desc Déclencher une post installation
-kernel (nd)/pulse2/diskless/kernel revopost quiet
-initrd (nd)/pulse2/diskless/initrd
-setdefault 0

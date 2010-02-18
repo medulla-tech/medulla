@@ -1,4 +1,0 @@
-title Continuer le démarrage normalement
-desc Démarrer comme d'habitude
-root (hd0)
-chainloader +1
