@@ -150,7 +150,7 @@ sed -i "s/# method = inventory/method = inventory/" /etc/mmc/plugins/base.ini
 mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
 
-sed -i "s/host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
+sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
 
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
