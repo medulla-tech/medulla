@@ -26,6 +26,12 @@
 -- Database version
 --
 
+CREATE TABLE Version (
+  Number tinyint(4) unsigned NOT NULL default '0'
+) ENGINE=INNODB CHARSET=UTF8;
+
+INSERT INTO Version VALUES( '1' );
+
 -- nomenclatures tables
 -- TargetType
 CREATE TABLE TargetType (
@@ -286,10 +292,3 @@ CREATE TABLE PostInstallScriptInImage (
 ALTER TABLE PostInstallScriptInImage ADD UNIQUE (fk_image, fk_post_install_script);
 CREATE INDEX fk_post_install_script_in_image_image_idx ON PostInstallScriptInImage(fk_image);
 CREATE INDEX fk_post_install_script_in_image_post_install_script_idx ON PostInstallScriptInImage(fk_post_install_script);
-
-CREATE TABLE version (
-  Number tinyint(4) unsigned NOT NULL default '0'
-) ENGINE=INNODB CHARSET=UTF8;
-
-INSERT INTO version VALUES( '1' );
-
