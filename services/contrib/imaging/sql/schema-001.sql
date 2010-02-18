@@ -65,9 +65,11 @@ CREATE TABLE Language (
 -- BootService
 CREATE TABLE BootService (
   id INT NOT NULL AUTO_INCREMENT,
+  default_name Text NOT NULL,
+  default_desc Text NOT NULL,
+  fk_name INT NOT NULL,
+  fk_desc INT NOT NULL,
   value Text NOT NULL,
-  `desc` Text NOT NULL,
-  uri Text NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -81,9 +83,11 @@ CREATE TABLE `User` (
 -- PostInstallScript
 CREATE TABLE PostInstallScript (
   id INT NOT NULL AUTO_INCREMENT,
-  name Text NOT NULL,
+  default_name Text NOT NULL,
+  default_desc Text NOT NULL,
+  fk_name INT NOT NULL,
+  fk_desc INT NOT NULL,
   value Text NOT NULL,
-  uri Text NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -134,6 +138,12 @@ CREATE TABLE Menu (
   PRIMARY KEY (id)
 );
 
+-- PostInstallScriptOnImagingServer
+CREATE TABLE PostInstallScriptOnImagingServer (
+  fk_post_install_script INT NOT NULL,
+  fk_imaging_server INT NOT NULL
+);
+
 -- BootServiceOnImagingServer
 CREATE TABLE BootServiceOnImagingServer (
   fk_boot_service INT NOT NULL,
@@ -167,13 +177,11 @@ CREATE TABLE Internationalization (
 -- MenuItem
 CREATE TABLE MenuItem (
   id INT NOT NULL AUTO_INCREMENT,
-  default_name Text NOT NULL,
   `order` INT NOT NULL,
   hidden Bool DEFAULT 1,
   hidden_WOL Bool DEFAULT 1,
   fk_menu INT NOT NULL,
   fk_name INT NOT NULL,
-  `desc` Text,
   PRIMARY KEY (id)
 );
 
@@ -187,10 +195,10 @@ CREATE TABLE ImageInMenu (
 CREATE TABLE Image (
   id INT NOT NULL AUTO_INCREMENT,
   path Text NOT NULL,
+  name Text NOT NULL,
+  `desc` Text NOT NULL,
   checksum Text NOT NULL,
   `size` INT NOT NULL,
-  `desc` Text NOT NULL,
-  is_master Bool DEFAULT 0,
   creation_date datetime,
   fk_creator INT NOT NULL,
   PRIMARY KEY (id)
@@ -224,12 +232,13 @@ CREATE TABLE PostInstallScriptInImage (
 -- ----------------------------------------------------------------------
 -- Add unicity constraints
 -- ----------------------------------------------------------------------
-ALTER TABLE PostInstallScriptInImage    ADD UNIQUE (fk_image, fk_post_install_script);
-ALTER TABLE BootServiceOnImagingServer  ADD UNIQUE (fk_boot_service, fk_imaging_server);
-ALTER TABLE ImageOnImagingServer        ADD UNIQUE (fk_image, fk_imaging_server);
-ALTER TABLE Internationalization        ADD UNIQUE (id, fk_language);
-ALTER TABLE ImageInMenu                 ADD UNIQUE (fk_image, fk_menuitem);
-ALTER TABLE BootServiceInMenu           ADD UNIQUE (fk_menuitem, fk_bootservice);
+ALTER TABLE PostInstallScriptInImage            ADD UNIQUE (fk_image, fk_post_install_script);
+ALTER TABLE BootServiceOnImagingServer          ADD UNIQUE (fk_boot_service, fk_imaging_server);
+ALTER TABLE PostInstallScriptOnImagingServer    ADD UNIQUE (fk_post_install_script, fk_imaging_server);
+ALTER TABLE ImageOnImagingServer                ADD UNIQUE (fk_image, fk_imaging_server);
+ALTER TABLE Internationalization                ADD UNIQUE (id, fk_language);
+ALTER TABLE ImageInMenu                         ADD UNIQUE (fk_image, fk_menuitem);
+ALTER TABLE BootServiceInMenu                   ADD UNIQUE (fk_menuitem, fk_bootservice);
 
 -- ----------------------------------------------------------------------
 -- Add foreign constraints
@@ -250,6 +259,9 @@ ALTER TABLE Menu ADD FOREIGN KEY(fk_protocol)           REFERENCES Protocol(id);
 ALTER TABLE BootServiceOnImagingServer ADD FOREIGN KEY(fk_boot_service)     REFERENCES BootService(id);
 ALTER TABLE BootServiceOnImagingServer ADD FOREIGN KEY(fk_imaging_server)   REFERENCES ImagingServer(id);
 
+ALTER TABLE PostInstallScriptOnImagingServer ADD FOREIGN KEY(fk_post_install_script)    REFERENCES PostInstallScript(id);
+ALTER TABLE PostInstallScriptOnImagingServer ADD FOREIGN KEY(fk_imaging_server)         REFERENCES ImagingServer(id);
+
 ALTER TABLE ImageOnImagingServer ADD FOREIGN KEY(fk_image)          REFERENCES Image(id);
 ALTER TABLE ImageOnImagingServer ADD FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id);
 
@@ -258,7 +270,6 @@ ALTER TABLE Partition ADD FOREIGN KEY(fk_image) REFERENCES Image(id);
 ALTER TABLE Internationalization ADD FOREIGN KEY(fk_language) REFERENCES Language(id);
 
 ALTER TABLE MenuItem ADD FOREIGN KEY(fk_menu) REFERENCES Menu(id);
-ALTER TABLE MenuItem ADD FOREIGN KEY(fk_name) REFERENCES Internationalization(id);
 
 ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_image)       REFERENCES Image(id);
 ALTER TABLE ImageInMenu ADD FOREIGN KEY(fk_menuitem)    REFERENCES MenuItem(id);
@@ -274,6 +285,12 @@ ALTER TABLE BootServiceInMenu ADD FOREIGN KEY(fk_bootservice)   REFERENCES BootS
 
 ALTER TABLE PostInstallScriptInImage ADD FOREIGN KEY(fk_image)                  REFERENCES Image(id);
 ALTER TABLE PostInstallScriptInImage ADD FOREIGN KEY(fk_post_install_script)    REFERENCES PostInstallScript(id);
+
+ALTER TABLE BootService ADD FOREIGN KEY(fk_name)    REFERENCES Internationalization(id);
+ALTER TABLE BootService ADD FOREIGN KEY(fk_desc)    REFERENCES Internationalization(id);
+
+ALTER TABLE PostInstallScript ADD FOREIGN KEY(fk_name)  REFERENCES Internationalization(id);
+ALTER TABLE PostInstallScript ADD FOREIGN KEY(fk_desc)  REFERENCES Internationalization(id);
 
 -- ----------------------------------------------------------------------
 -- Add indexes
@@ -293,6 +310,9 @@ CREATE INDEX fk_menu_protocol_idx           ON Menu(fk_protocol);
 
 CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx     ON BootServiceOnImagingServer(fk_boot_service);
 CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx   ON BootServiceOnImagingServer(fk_imaging_server);
+
+CREATE INDEX fk_post_install_script_on_imaging_server_post_install_script_idx   ON PostInstallScriptOnImagingServer(fk_post_install_script);
+CREATE INDEX fk_post_install_script_on_imaging_server_imaging_server_idx        ON PostInstallScriptOnImagingServer(fk_imaging_server);
 
 CREATE INDEX fk_image_on_imaging_server_image_idx           ON ImageOnImagingServer(fk_image);
 CREATE INDEX fk_image_on_imaging_server_imaging_server_idx  ON ImageOnImagingServer(fk_imaging_server);
