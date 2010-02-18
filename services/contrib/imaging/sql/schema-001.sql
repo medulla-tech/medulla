@@ -150,7 +150,6 @@ CREATE TABLE BootServiceOnImagingServer (
   FOREIGN KEY(fk_boot_service) REFERENCES BootService(id),
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE BootServiceOnImagingServer ADD UNIQUE (fk_boot_service, fk_imaging_server);
 
 -- ImageOnImagingServer
 CREATE TABLE ImageOnImagingServer (
@@ -159,7 +158,6 @@ CREATE TABLE ImageOnImagingServer (
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE ImageOnImagingServer ADD UNIQUE (fk_image, fk_imaging_server);
 
 -- Partition
 CREATE TABLE Partition (
@@ -180,7 +178,6 @@ CREATE TABLE Internationalization (
   fk_language INT NOT NULL,
   FOREIGN KEY(fk_language) REFERENCES Language(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE Internationalization ADD UNIQUE (id, fk_language);
 
 -- MenuItem
 CREATE TABLE MenuItem (
@@ -204,7 +201,6 @@ CREATE TABLE ImageInMenu (
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_menuitem) REFERENCES MenuItem(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE ImageInMenu ADD UNIQUE (fk_image, fk_menuitem);
 
 -- Image
 CREATE TABLE Image (
@@ -242,7 +238,6 @@ CREATE TABLE BootServiceInMenu (
   FOREIGN KEY(fk_menuitem) REFERENCES MenuItem(id),
   FOREIGN KEY(fk_bootservice) REFERENCES BootService(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE BootServiceInMenu ADD UNIQUE (fk_menuitem, fk_bootservice);
 
 
 -- PostInstallScriptInImage
@@ -252,7 +247,16 @@ CREATE TABLE PostInstallScriptInImage (
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_post_install_script) REFERENCES PostInstallScript(id)
 ) ENGINE=INNODB CHARSET=UTF8;
-ALTER TABLE PostInstallScriptInImage ADD UNIQUE (fk_image, fk_post_install_script);
+
+-- ----------------------------------------------------------------------
+-- Add unicity constraints
+-- ----------------------------------------------------------------------
+ALTER TABLE PostInstallScriptInImage    ADD UNIQUE (fk_image, fk_post_install_script);
+ALTER TABLE BootServiceOnImagingServer  ADD UNIQUE (fk_boot_service, fk_imaging_server);
+ALTER TABLE ImageOnImagingServer        ADD UNIQUE (fk_image, fk_imaging_server);
+ALTER TABLE Internationalization        ADD UNIQUE (id, fk_language);
+ALTER TABLE ImageInMenu                 ADD UNIQUE (fk_image, fk_menuitem);
+ALTER TABLE BootServiceInMenu           ADD UNIQUE (fk_menuitem, fk_bootservice);
 
 -- ----------------------------------------------------------------------
 -- Add indexes
