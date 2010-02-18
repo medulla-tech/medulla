@@ -146,7 +146,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')
         if self.cp.has_option('main', 'port'):
-            self.port = self.cp.get("main", 'port')
+            self.port = self.cp.getint("main", 'port')
 
         if sys.platform != "win32":
             if self.cp.has_section('daemon'):
