@@ -32,7 +32,7 @@ CREATE TABLE TargetType (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 INSERT INTO TargetType (label) values ('computer');
 INSERT INTO TargetType (label) values ('profile');
 
@@ -41,7 +41,7 @@ CREATE TABLE MasteredOnState (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 INSERT INTO MasteredOnState (label) values ('backup_done');
 INSERT INTO MasteredOnState (label) values ('backup_failed');
 INSERT INTO MasteredOnState (label) values ('restore_done');
@@ -52,7 +52,7 @@ CREATE TABLE Protocol (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 INSERT INTO Protocol (label) values ('');
 INSERT INTO Protocol (label) values ('tftp');
 INSERT INTO Protocol (label) values ('nfs');
@@ -63,7 +63,7 @@ CREATE TABLE Language (
   id INT NOT NULL AUTO_INCREMENT,
   label Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 INSERT INTO Language (label) values ('Français');
 INSERT INTO Language (label) values ('English');
 INSERT INTO Language (label) values ('Spanish');
@@ -76,14 +76,14 @@ CREATE TABLE BootService (
   `desc` Text NOT NULL,
   uri Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 
 -- User
 CREATE TABLE `User` (
   id INT NOT NULL AUTO_INCREMENT,
   login Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 
 -- PostInstallScript
 CREATE TABLE PostInstallScript (
@@ -92,7 +92,7 @@ CREATE TABLE PostInstallScript (
   value Text NOT NULL,
   uri Text NOT NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 
 -- Entity
 CREATE TABLE Entity (
@@ -102,7 +102,7 @@ CREATE TABLE Entity (
   fk_default_menu INT NOT NULL,
   FOREIGN KEY (fk_default_menu) REFERENCES Menu(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_entity_default_menu_idx ON Entity(fk_default_menu);
 
 -- Target
@@ -119,7 +119,7 @@ CREATE TABLE Target (
   FOREIGN KEY (fk_entity) REFERENCES Entity(id),
   FOREIGN KEY (fk_menu) REFERENCES Menu(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_target_type_idx ON Target(`type`);
 CREATE INDEX fk_target_entity_idx ON Target(fk_entity);
 CREATE INDEX fk_target_menu_idx ON Target(fk_menu);
@@ -134,7 +134,7 @@ CREATE TABLE ImagingServer (
   fk_entity INT NOT NULL,
   FOREIGN KEY (fk_entity) REFERENCES Entity(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_imaging_server_entity_idx ON ImagingServer(fk_entity);
 
 -- Menu
@@ -153,7 +153,7 @@ CREATE TABLE Menu (
   FOREIGN KEY (fk_default_item_WOL) REFERENCES MenuItem(id),
   FOREIGN KEY (fk_protocol) REFERENCES Protocol(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_menu_name_idx ON Menu(fk_name);
 CREATE INDEX fk_menu_default_item_idx ON Menu(fk_default_item);
 CREATE INDEX fk_menu_default_item_WOL_idx ON Menu(fk_default_item_WOL);
@@ -165,7 +165,7 @@ CREATE TABLE BootServiceOnImagingServer (
   fk_imaging_server INT NOT NULL,
   FOREIGN KEY(fk_boot_service) REFERENCES BootService(id),
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE BootServiceOnImagingServer ADD UNIQUE (fk_boot_service, fk_imaging_server);
 CREATE INDEX fk_boot_service_on_imaging_server_boot_service_idx ON BootServiceOnImagingServer(fk_boot_service);
 CREATE INDEX fk_boot_service_on_imaging_server_imaging_server_idx ON BootServiceOnImagingServer(fk_imaging_server);
@@ -176,7 +176,7 @@ CREATE TABLE ImageOnImagingServer (
   fk_imaging_server INT NOT NULL,
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE ImageOnImagingServer ADD UNIQUE (fk_image, fk_imaging_server);
 CREATE INDEX fk_image_on_imaging_server_image_idx ON ImageOnImagingServer(fk_image);
 CREATE INDEX fk_image_on_imaging_server_imaging_server_idx ON ImageOnImagingServer(fk_imaging_server);
@@ -191,7 +191,7 @@ CREATE TABLE Partition (
   fk_image INT NOT NULL,
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_partition_image_idx ON Partition(fk_image);
 
 -- Internationalization
@@ -200,7 +200,7 @@ CREATE TABLE Internationalization (
   label Text NOT NULL,
   fk_language INT NOT NULL,
   FOREIGN KEY(fk_language) REFERENCES Language(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE Internationalization ADD UNIQUE (id, fk_language);
 
 -- MenuItem
@@ -216,7 +216,7 @@ CREATE TABLE MenuItem (
   FOREIGN KEY(fk_menu) REFERENCES Menu(id),
   FOREIGN KEY(fk_name) REFERENCES Internationalization(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_menu_item_menu_idx ON MenuItem(fk_menu);
 CREATE INDEX fk_menu_item_name_idx ON MenuItem(fk_name);
 
@@ -226,7 +226,7 @@ CREATE TABLE ImageInMenu (
   fk_menuitem INT NOT NULL,
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_menuitem) REFERENCES MenuItem(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE ImageInMenu ADD UNIQUE (fk_image, fk_menuitem);
 CREATE INDEX fk_image_in_menu_image_idx ON ImageInMenu(fk_image);
 CREATE INDEX fk_image_in_menu_menuitem_idx ON ImageInMenu(fk_menuitem);
@@ -243,7 +243,7 @@ CREATE TABLE Image (
   fk_creator INT NOT NULL,
   FOREIGN KEY(fk_creator) REFERENCES `User`(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_image_creator_idx ON Image(fk_creator);
 
 -- MasteredOn
@@ -259,7 +259,7 @@ CREATE TABLE MasteredOn (
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_target) REFERENCES Target(id),
   PRIMARY KEY (id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 CREATE INDEX fk_mastered_on_state_idx ON MasteredOn(fk_mastered_on_state);
 CREATE INDEX fk_mastered_on_image_idx ON MasteredOn(fk_image);
 CREATE INDEX fk_mastered_on_target_idx ON MasteredOn(fk_target);
@@ -270,7 +270,7 @@ CREATE TABLE BootServiceInMenu (
   fk_bootservice INT NOT NULL,
   FOREIGN KEY(fk_menuitem) REFERENCES MenuItem(id),
   FOREIGN KEY(fk_bootservice) REFERENCES BootService(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE BootServiceInMenu ADD UNIQUE (fk_menuitem, fk_bootservice);
 CREATE INDEX fk_boot_service_in_menu_menuitem_idx ON BootServiceInMenu(fk_menuitem);
 CREATE INDEX fk_boot_service_in_menu_bootservice_idx ON BootServiceInMenu(fk_bootservice);
@@ -282,14 +282,14 @@ CREATE TABLE PostInstallScriptInImage (
   fk_post_install_script INT NOT NULL,
   FOREIGN KEY(fk_image) REFERENCES Image(id),
   FOREIGN KEY(fk_post_install_script) REFERENCES PostInstallScript(id)
-);
+) ENGINE=INNODB CHARSET=UTF8;
 ALTER TABLE PostInstallScriptInImage ADD UNIQUE (fk_image, fk_post_install_script);
 CREATE INDEX fk_post_install_script_in_image_image_idx ON PostInstallScriptInImage(fk_image);
 CREATE INDEX fk_post_install_script_in_image_post_install_script_idx ON PostInstallScriptInImage(fk_post_install_script);
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
-);
+) ENGINE=INNODB CHARSET=UTF8;
 
 INSERT INTO version VALUES( '1' );
 
