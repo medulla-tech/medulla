@@ -856,6 +856,17 @@ li.addbootmenu a {
     text-decoration:none;
 }
 
+li.delbootmenu a {
+    background-image:url("../modules/imaging/graph/images/imaging-del.png");
+    background-position:left top;
+    background-repeat:no-repeat;
+    color:#FFFFFF;
+    line-height:18px;
+    margin:0 0;
+	padding: 4px 3px 5px 20px;
+    text-decoration:none;
+}
+
 li.duplicatescript a {
     background-image:url("../modules/imaging/graph/images/imaging-postinstall-duplicate.png");
     background-position:left top;
@@ -870,7 +881,7 @@ li.duplicatescript a {
 li.up a {
 	padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_arrowup.gif");
+    background-image: url("../img/common/icn_arrowup.png");
     background-repeat: no-repeat;
     background-position: left top;
 	line-height: 18px;
@@ -881,7 +892,7 @@ li.up a {
 li.down a {
 	padding: 1px 3px 5px 20px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_arrowdown.gif");
+    background-image: url("../img/common/icn_arrowdown.png");
     background-repeat: no-repeat;
     background-position: left top;
 	line-height: 18px;
