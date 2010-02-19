@@ -24,7 +24,7 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
-SET storage_engine=INNODB;
+SET storage_engine=MYISAM;
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
