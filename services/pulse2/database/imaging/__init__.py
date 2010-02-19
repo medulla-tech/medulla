@@ -466,7 +466,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __getMenusImagingServer(self, session, menu_id):
-        imaging_server = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity).join(self.target)).filter(or_(self.entity.c.default_menu == menu_id, self.target.c.fk_menu == menu_id)).first()
+        imaging_server = session.query(ImagingServer).select_from(self.imaging_server.outerjoin(self.entity).outerjoin(self.target)).filter(or_(self.entity.c.fk_default_menu == menu_id, self.target.c.fk_menu == menu_id)).first()
         if imaging_server:
             return imaging_server
         else:
@@ -479,7 +479,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
             session_need_close = True
 
-        mi_ids = session.query(MenuItem).add_column(self.menu_item.c.id).select_from(self.menu_item.join(self.menu))
+        mi_ids = session.query(MenuItem).add_column(self.menu_item.c.id).select_from(self.menu_item.join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
         if filter != '':
             mi_ids = mi_ids.filter(and_(self.menu.c.id == menu_id, self.menu_item.c.desc.like('%'+filter+'%')))
         else:
@@ -490,21 +490,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             mi_ids = mi_ids.all()
         mi_ids = map(lambda x:x[1], mi_ids)
+        print mi_ids
 
         imaging_server = self.__getMenusImagingServer(session, menu_id)
-        if imaging_servr:
+        is_id = 0
+        if imaging_server:
             is_id = imaging_server.id
         
         q = []
         if type == MENU_ALL or type == MENU_BOOTSERVICE:
             q1 = session.query(MenuItem).add_entity(BootService).add_entity(Menu).add_entity(BootServiceOnImagingServer)
-            q1 = q1.select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).outerjoin(self.boot_service_on_imaging_server))
+            q1 = q1.select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id).outerjoin(self.boot_service_on_imaging_server))
             q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
         if type == MENU_ALL or type == MENU_IMAGE:
-            q2 = session.query(MenuItem).add_entity(Image).add_entity(Menu).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu))
+            q2 = session.query(MenuItem).add_entity(Image).add_entity(Menu).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu, self.menu_item.c.fk_menu == self.menu.c.id))
             q2 = q2.filter(self.menu_item.c.id.in_(mi_ids)).order_by(self.menu_item.c.order).all()
             q2 = self.__mergeImageInMenuItem(q2)
             q.extend(q2)
@@ -1284,24 +1286,37 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __getDefaultMenu(self, session):
         return session.query(Menu).filter(self.menu.c.id == 1).first()
     def __getDefaultMenuItem(self, session):
-        return session.query(MenuItem).add_entity(BootServiceInMenu).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
+        default_item = session.query(MenuItem).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
+        default_item_WOL = session.query(MenuItem).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item_WOL == self.menu_item.c.id)).first()
+        return [default_item, default_item_WOL]
+    def __getDefaultMenuMenuItems(self, session):
+        return session.query(MenuItem).add_entity(BootServiceInMenu).select_from(self.menu_item.join(self.boot_service_in_menu)).filter(self.menu_item.c.fk_menu == 1).all()
         
     def __duplicateDefaultMenuItem(self, session):
         # warning ! cant be an image !
-        default_menu_item, default_bsim = self.__getDefaultMenuItem(session)
-        menu_item = MenuItem()
-        menu_item.order = default_menu_item.order
-        menu_item.hidden = default_menu_item.hidden
-        menu_item.hidden_WOL = default_menu_item.hidden_WOL
-        menu_item.fk_menu = 1 # default Menu, need to be change as soon as we have the menu id!
-        session.save(menu_item)
+        default_list = self.__getDefaultMenuMenuItems(session)
+        mi = self.__getDefaultMenuItem(session)
+        ret = []
+        mi_out = [0,0]
+        for default_menu_item, default_bsim in default_list:
+            menu_item = MenuItem()
+            menu_item.order = default_menu_item.order
+            menu_item.hidden = default_menu_item.hidden
+            menu_item.hidden_WOL = default_menu_item.hidden_WOL
+            menu_item.fk_menu = 1 # default Menu, need to be change as soon as we have the menu id!
+            session.save(menu_item)
+            ret.append(menu_item)
+            session.flush()
+            if mi[0].id == default_menu_item.id:
+                mi_out[0] = menu_item.id
+            if mi[1].id == default_menu_item.id:
+                mi_out[1] = menu_item.id
+            bsim = BootServiceInMenu()
+            bsim.fk_menuitem = menu_item.id
+            bsim.fk_bootservice = default_bsim.fk_bootservice
+            session.save(bsim)
         session.flush()
-        bsim = BootServiceInMenu()
-        bsim.fk_menuitem = menu_item.id
-        bsim.fk_bootservice = default_bsim.fk_bootservice
-        session.save(bsim)
-        session.flush()
-        return menu_item
+        return [ret, mi_out]
         
     def __duplicateDefaultMenu(self, session):
         menu = Menu()
@@ -1312,10 +1327,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
         menu.fk_protocol = default_menu.fk_protocol
-        menu_item = self.__duplicateDefaultMenuItem(session)
-        menu.fk_default_item = menu_item.id
-        menu.fk_default_item_WOL = menu_item.id
+        menu_items, mi = self.__duplicateDefaultMenuItem(session)
+        menu.fk_default_item = mi[0]
+        menu.fk_default_item_WOL = mi[1]
         session.save(menu)
+        session.flush()
+        for menu_item in menu_items:
+            menu_item.fk_menu = menu.id
+            session.save_or_update(menu_item)
         return menu
         
     def __createMenu(self, session, params):
