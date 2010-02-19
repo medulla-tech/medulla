@@ -379,4 +379,7 @@ INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0,
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (1, 1);
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (2, 2);
 
-UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 where id = 1;
+UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 WHERE id = 1;
+
+INSERT INTO Entity (id, name, uuid, fk_default_menu) VALUES (1, 'NEED_ASSOCIATION', 'NEED_ASSOCIATION', 1);
+

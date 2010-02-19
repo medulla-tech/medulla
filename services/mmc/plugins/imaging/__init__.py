@@ -428,6 +428,19 @@ class RpcProxy(RpcProxyI):
     def doesLocationHasImagingServer(self, loc_id):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
+    ###### POST INSTALL SCRIPTS
+    def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
+        count = db.countAllPostInstallScripts(location, filter)
+        return [count, xmlrpcCleanup(ret)]
+
+    def getPostInstallScript(self, pis_uuid):
+        pis = ImagingDatabase().getPostInstallScript(pis_uuid)
+        if pis:
+            return xmlrpcCleanup(pis.toH())
+        return xmlrpcCleanup(False)
+
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, hostname, domain, MACAddress, profile, entities):
         """

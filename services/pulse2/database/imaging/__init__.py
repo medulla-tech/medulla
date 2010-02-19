@@ -104,11 +104,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(Language, self.language)
         mapper(MasteredOn, self.mastered_on)
         mapper(MasteredOnState, self.mastered_on_state)
-        mapper(Menu, self.menu, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
-        mapper(MenuItem, self.menu_item, properties = { 'menu' : relation(Menu) })
+        mapper(Menu, self.menu) #, properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
+        mapper(MenuItem, self.menu_item) #, properties = { 'menu' : relation(Menu) })
         mapper(Partition, self.partition)
         mapper(PostInstallScript, self.post_install_script)
         mapper(PostInstallScriptInImage, self.post_install_script_in_image)
+        mapper(PostInstallScriptOnImagingServer, self.post_install_script_on_imaging_server)
         mapper(Protocol, self.protocol)
         mapper(Target, self.target)
         mapper(TargetType, self.target_type)
@@ -125,79 +126,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             autoload = True
         )
-
-        self.boot_service_in_menu = Table(
-            "BootServiceInMenu",
-            self.metadata,
-            Column('fk_bootservice', Integer, ForeignKey('BootService.id'), primary_key=True),
-            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
-            autoload = True
-        )
-
-        self.boot_service_on_imaging_server = Table(
-            "BootServiceOnImagingServer",
-            self.metadata,
-            Column('fk_boot_service', Integer, ForeignKey('BootService.id'), primary_key=True),
-            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
-            autoload = True
-        )
-
+        
         self.entity = Table(
             "Entity",
             self.metadata,
             autoload = True
         )
-
-        self.image = Table(
-            "Image",
-            self.metadata,
-            Column('fk_creator', Integer, ForeignKey('User.id')),
-            autoload = True
-        )
-
-        self.image_in_menu = Table(
-            "ImageInMenu",
-            self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
-            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
-            autoload = True
-        )
-
-        self.image_on_imaging_server = Table(
-            "ImageOnImagingServer",
-            self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
-            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
-            autoload = True
-        )
-
-        self.imaging_server = Table(
-            "ImagingServer",
-            self.metadata,
-            Column('fk_entity', Integer, ForeignKey('Entity.id')),
-            autoload = True
-        )
-
-        self.internationalization = Table(
-            "Internationalization",
-            self.metadata,
-            Column('id', Integer, primary_key=True),
-            Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
-            autoload = True
-        )
-
+        
         self.language = Table(
             "Language",
             self.metadata,
-            autoload = True
-        )
-
-        self.mastered_on = Table(
-            "MasteredOn",
-            self.metadata,
-            Column('fk_mastered_on_state', Integer, ForeignKey('MasteredOnState.id')),
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            Column('fk_target', Integer, ForeignKey('Target.id')),
             autoload = True
         )
 
@@ -207,57 +145,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             autoload = True
         )
 
-        self.menu = Table(
-            "Menu",
-            self.metadata,
-            # cant put them for circular dependancies reasons, the join must be explicit
-            # Column('fk_default_item', Integer, ForeignKey('MenuItem.id')), 
-            # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
-            Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
-            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
-            autoload = True
-        )
-
-        self.menu_item = Table(
-            "MenuItem",
-            self.metadata,
-            Column('fk_menu', Integer, ForeignKey('Menu.id')),
-            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
-            autoload = True
-        )
-
-        self.partition = Table(
-            "Partition",
-            self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id')),
-            autoload = True
-        )
-
         self.post_install_script = Table(
             "PostInstallScript",
             self.metadata,
             autoload = True
         )
 
-        self.post_install_script_in_image = Table(
-            "PostInstallScriptInImage",
-            self.metadata,
-            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
-            Column('fk_post_install_script', Integer, ForeignKey('PostInstallScript.id'), primary_key=True),
-            autoload = True
-        )
-
         self.protocol = Table(
             "Protocol",
             self.metadata,
-            autoload = True
-        )
-
-        self.target = Table(
-            "Target",
-            self.metadata,
-            Column('fk_entity', Integer, ForeignKey('Entity.id')),
-            Column('fk_menu', Integer, ForeignKey('Menu.id')),
             autoload = True
         )
 
@@ -273,9 +169,145 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             autoload = True
         )
 
+        self.image = Table(
+            "Image",
+            self.metadata,
+            Column('fk_creator', Integer, ForeignKey('User.id')),
+            autoload = True
+        )
+
+        self.imaging_server = Table(
+            "ImagingServer",
+            self.metadata,
+            Column('fk_entity', Integer, ForeignKey('Entity.id')),
+            autoload = True
+        )
+
+        self.internationalization = Table(
+            "Internationalization",
+            self.metadata,
+            Column('id', Integer, primary_key=True),
+            Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.menu = Table(
+            "Menu",
+            self.metadata,
+            # cant put them for circular dependancies reasons, the join must be explicit
+            # Column('fk_default_item', Integer, ForeignKey('MenuItem.id')), 
+            Column('fk_default_item', Integer),
+            # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
+            Column('fk_default_item_WOL', Integer),
+            Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
+            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
+            useexisting=True,
+            autoload = True
+        )
+
+        self.menu_item = Table(
+            "MenuItem",
+            self.metadata,
+            Column('fk_menu', Integer, ForeignKey('Menu.id')),
+            # fk_name is not an explicit FK, you need to choose the lang before beeing able to join
+            useexisting=True,
+            autoload = True
+        )
+
+        self.partition = Table(
+            "Partition",
+            self.metadata,
+            Column('fk_image', Integer, ForeignKey('Image.id')),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.boot_service_in_menu = Table(
+            "BootServiceInMenu",
+            self.metadata,
+            Column('fk_bootservice', Integer, ForeignKey('BootService.id'), primary_key=True),
+            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.boot_service_on_imaging_server = Table(
+            "BootServiceOnImagingServer",
+            self.metadata,
+            Column('fk_boot_service', Integer, ForeignKey('BootService.id'), primary_key=True),
+            # Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
+            # cant declare it implicit as a FK else it make circular dependancies
+            Column('fk_imaging_server', Integer, primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.image_in_menu = Table(
+            "ImageInMenu",
+            self.metadata,
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_menuitem', Integer, ForeignKey('MenuItem.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.image_on_imaging_server = Table(
+            "ImageOnImagingServer",
+            self.metadata,
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+        
+        self.target = Table(
+            "Target",
+            self.metadata,
+            Column('fk_entity', Integer, ForeignKey('Entity.id')),
+            Column('fk_menu', Integer, ForeignKey('Menu.id')),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.mastered_on = Table(
+            "MasteredOn",
+            self.metadata,
+            Column('fk_mastered_on_state', Integer, ForeignKey('MasteredOnState.id')),
+            Column('fk_image', Integer, ForeignKey('Image.id')),
+            Column('fk_target', Integer, ForeignKey('Target.id')),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.post_install_script_in_image = Table(
+            "PostInstallScriptInImage",
+            self.metadata,
+            Column('fk_image', Integer, ForeignKey('Image.id'), primary_key=True),
+            Column('fk_post_install_script', Integer, ForeignKey('PostInstallScript.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+        self.post_install_script_on_imaging_server = Table(
+            "PostInstallScriptOnImagingServer",
+            self.metadata,
+            # Column('fk_imaging_server', Integer, ForeignKey('ImagingServer.id'), primary_key=True),
+            # circular deps
+            Column('fk_imaging_server', Integer, primary_key=True),
+            Column('fk_post_install_script', Integer, ForeignKey('PostInstallScript.id'), primary_key=True),
+            useexisting=True,
+            autoload = True
+        )
+
+
+#self.nomenclatures = {'MasteredOnState':MasteredOnState, 'TargetType':TargetType, 'Protocol':Protocol}
+#self.fk_nomenclatures = {'MasteredOn':{'fk_mastered_on_state':'MasteredOnState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
+                        
     def __loadNomenclatureTables(self):
         session = create_session()
         for i in self.nomenclatures:
+            print i
             n = session.query(self.nomenclatures[i]).all()
             self.nomenclatures[i] = {}
             for j in n:
@@ -388,9 +420,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     
     def __mergeBootServiceInMenuItem(self, my_list):
         ret = []
-        for mi, bs, menu in my_list:
+        for mi, bs, menu, bsois in my_list:
             if bs != None:
                 setattr(mi, 'boot_service', bs)
+            setattr(mi, 'is_local', (bsois != None))
             if menu != None:
                 setattr(mi, 'default', (menu.fk_default_item == mi.id))
                 setattr(mi, 'default_WOL', (menu.fk_default_item_WOL == mi.id))
@@ -432,6 +465,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret.append(mi)
         return ret
 
+    def __getMenusImagingServer(self, session, menu_id):
+        imaging_server = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity).join(self.target)).filter(or_(self.entity.c.default_menu == menu_id, self.target.c.fk_menu == menu_id)).first()
+        if imaging_server:
+            return imaging_server
+        else:
+            self.logger.error("cant find any imaging_server for menu '%s'"%(menu_id))
+            return  None
+    
     def getMenuContent(self, menu_id, type = MENU_ALL, start = 0, end = -1, filter = '', session = None):# TODO implement the start/end with a union betwen q1 and q2
         session_need_close = False
         if session == None:
@@ -449,11 +490,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             mi_ids = mi_ids.all()
         mi_ids = map(lambda x:x[1], mi_ids)
+
+        imaging_server = self.__getMenusImagingServer(session, menu_id)
+        if imaging_servr:
+            is_id = imaging_server.id
         
         q = []
         if type == MENU_ALL or type == MENU_BOOTSERVICE:
-            q1 = session.query(MenuItem).add_entity(BootService).add_entity(Menu).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu))
-            q1 = q1.filter(self.menu_item.c.id.in_(mi_ids)).order_by(self.menu_item.c.order).all()
+            q1 = session.query(MenuItem).add_entity(BootService).add_entity(Menu).add_entity(BootServiceOnImagingServer)
+            q1 = q1.select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu).outerjoin(self.boot_service_on_imaging_server))
+            q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
+            q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
         if type == MENU_ALL or type == MENU_IMAGE:
@@ -1157,7 +1204,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ims = ImagingServer()
         ims.name = name
         ims.url = url
-        ims.fk_entity = 0
+        ims.fk_entity = 1 # the 'NEED_ASSOCIATION' entity
         ims.packageserver_uuid = uuid
         session.save(ims)
         session.flush()
@@ -1234,6 +1281,43 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.__modifyMenu(menu_uuid, params)
         return True
 
+    def __getDefaultMenu(self, session):
+        return session.query(Menu).filter(self.menu.c.id == 1).first()
+    def __getDefaultMenuItem(self, session):
+        return session.query(MenuItem).add_entity(BootServiceInMenu).filter(and_(self.menu.c.id == 1, self.menu.c.fk_default_item == self.menu_item.c.id)).first()
+        
+    def __duplicateDefaultMenuItem(self, session):
+        # warning ! cant be an image !
+        default_menu_item, default_bsim = self.__getDefaultMenuItem(session)
+        menu_item = MenuItem()
+        menu_item.order = default_menu_item.order
+        menu_item.hidden = default_menu_item.hidden
+        menu_item.hidden_WOL = default_menu_item.hidden_WOL
+        menu_item.fk_menu = 1 # default Menu, need to be change as soon as we have the menu id!
+        session.save(menu_item)
+        session.flush()
+        bsim = BootServiceInMenu()
+        bsim.fk_menuitem = menu_item.id
+        bsim.fk_bootservice = default_bsim.fk_bootservice
+        session.save(bsim)
+        session.flush()
+        return menu_item
+        
+    def __duplicateDefaultMenu(self, session):
+        menu = Menu()
+        default_menu = self.__getDefaultMenu(session)
+        menu.default_name = default_menu.default_name
+        menu.fk_name = default_menu.fk_name
+        menu.timeout = default_menu.timeout
+        menu.background_uri = default_menu.background_uri
+        menu.message = default_menu.message
+        menu.fk_protocol = default_menu.fk_protocol
+        menu_item = self.__duplicateDefaultMenuItem(session)
+        menu.fk_default_item = menu_item.id
+        menu.fk_default_item_WOL = menu_item.id
+        session.save(menu)
+        return menu
+        
     def __createMenu(self, session, params):
         menu = Menu()
         menu.default_name = params['default_name']
@@ -1270,7 +1354,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if location != None:
             raise "%s:This entity already exists (%s) cant be linked again" % (ERR_ENTITY_ALREADY_EXISTS, loc_id)
         
-        menu = self.__createMenu(session, self.default_params)
+        # menu = self.__createMenu(session, self.default_params)
+        menu = self.__duplicateDefaultMenu(session)
         session.flush()
         location = self.__createEntity(session, loc_id, loc_name, menu.id)
         session.flush()
@@ -1282,7 +1367,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def __AllNonLinkedImagingServer(self, session, filter):
-        q = session.query(ImagingServer).filter(self.imaging_server.c.fk_entity == 0)
+        q = session.query(ImagingServer).filter(self.imaging_server.c.fk_entity == 1)
         if filter and filter != '':
             q = q.filter(or_(self.imaging_server.c.name.like('%'+filter+'%'), self.imaging_server.c.url.like('%'+filter+'%'), self.imaging_server.c.uuid.like('%'+filter+'%')))
         return q
@@ -1325,6 +1410,66 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
+    ######### POST INSTALL SCRIPT
+    def isLocalPostInstallScripts(self, pis_uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer)
+        q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server).outerjoin(self.imaging_server).outerjoin(self.entity))
+        q = q.filter(or_(self.post_install_script_on_imaging_server.c.id == None, self.entity.c.uuid == loc_id))
+        q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid))
+        q = q.first()
+
+        ret = (q[1] != None)
+        
+        if session_need_to_close:
+            session.close()
+        return ret
+
+    def __AllPostInstallScripts(self, session, location, filter, is_count = False):
+        # PostInstallScripts are not specific to an Entity
+        q = session.query(PostInstallScript)
+        if not is_count:
+            q = q.add_entity(PostInstallScriptOnImagingServer)
+            q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server).outerjoin(self.imaging_server).outerjoin(self.entity))
+            q = q.filter(or_(self.post_install_script_on_imaging_server.c.id == None, self.entity.c.uuid == loc_id))
+        q = q.filter(self.post_install_script.c.name.like('%'+filter+'%'))
+        return q
+        
+    def __mergePostInstallScriptOnImagingServerInPostInstallScript(self, postinstallscript_list):
+        ret = []
+        for postinstallscript, postinstallscript_on_imagingserver in postinstallscript_list:
+            setattr(postinstallscript, 'is_local', (postinstallscript_on_imagingserver != None))
+            ret.append(postinstallscript)
+        return ret
+
+    def getAllPostInstallScripts(self, location, start, end, filter):
+        session = create_session()
+        q = self.__AllPostInstallScripts(session, location, filter)
+        if end != -1:
+            q = q.offset(int(start)).limit(int(end)-int(start))
+        else:
+            q = q.all()
+        session.close()
+        q = self.__mergePostInstallScriptOnImagingServerInPostInstallScript(q)
+        return q 
+
+    def countAllPostInstallScripts(self, location, filter):
+        session = create_session()
+        q = self.__AllPostInstallScripts(session, location, filter, True)
+        q = q.count()
+        session.close()
+        return q
+
+    def getPostInstallScript(self, pis_uuid):
+        session = create_session()
+        q = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(pis_uuid)).first()
+        session.close()
+        return q
+
 def id2uuid(id):
     return "UUID%d" % id
 def uuid2id(uuid):
@@ -1353,7 +1498,7 @@ class DBObject(object):
         return ret
 
 class BootService(DBObject):
-    to_be_exported = ['id', 'value', 'desc', 'uri']
+    to_be_exported = ['id', 'value', 'desc', 'uri', 'is_local']
     need_iteration = ['menu_item']
 
 class BootServiceInMenu(DBObject):
@@ -1402,9 +1547,12 @@ class Partition(DBObject):
     to_be_exported = ['id', 'filesystem', 'size', 'fk_image']
 
 class PostInstallScript(DBObject):
-    to_be_exported = ['id', 'name', 'value', 'uri']
+    to_be_exported = ['id', 'name', 'value', 'uri', 'is_local']
 
 class PostInstallScriptInImage(DBObject):
+    pass
+
+class PostInstallScriptOnImagingServer(DBObject):
     pass
 
 class Protocol(DBObject):
