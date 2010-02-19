@@ -54,7 +54,11 @@ class TextareaTpl extends AbstractTpl {
     }
 
     function display($arrParam) {
-        echo '<textarea name="'.$this->name.'" id="'.$this->name.'" class="textfield" rows="' . $this->rows . '" cols="'.$this->cols.'" />';
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
+
+        echo '<textarea name="'.$this->name.'" id="'.$this->name.'" class="textfield" rows="' . $this->rows . '" cols="'.$this->cols.'" '.$arrParam["disabled"].' />';
 
         if (isset($arrParam["value"])) {
             echo $arrParam["value"];
