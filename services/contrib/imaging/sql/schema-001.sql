@@ -198,6 +198,7 @@ CREATE TABLE Image (
   `desc` Text NOT NULL,
   checksum Text NOT NULL,
   `size` INT NOT NULL,
+  is_master BOOL DEFAULT FALSE,
   creation_date datetime,
   fk_creator INT NOT NULL,
   PRIMARY KEY (id)
