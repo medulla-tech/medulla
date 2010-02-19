@@ -358,8 +358,8 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 2, 'Continu
 INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 2, 'Démarrer comme d\'habitude');
 INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 2, 'Ajouter comme client Pulse 2');
 INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 2, 'Enregistrer ce poste auprès du server Pulse 2');
-INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 2, 'Sauvegarder comme image Master');
-INSERT INTO Internationalization (id, fk_language, label) VALUES (7, 2, 'Créer une sauvegarde pour utilisation comme master plus tard');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 2, 'Créer une image');
+INSERT INTO Internationalization (id, fk_language, label) VALUES (7, 2, 'Réaliser une image de ce poste');
 INSERT INTO Internationalization (id, fk_language, label) VALUES (8, 2, 'Démarrage sans disque');
 INSERT INTO Internationalization (id, fk_language, label) VALUES (9, 2, 'Charger un environnement sans disque et obtenir une invite de commande');
 INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 2, 'Test mémoire');
@@ -367,7 +367,7 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (11, 2, 'Réali
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, 'Continue Normal Startup', 'Start as usual', 1, 2, 'root (hd0)\r\nchainloader +1');
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, 'Register as Pulse 2 Client', 'Record this computer in Pulse 2 Server', 3, 4, 'identify L=##PULSE2_LANG## P=none\nreboot');
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, 'Create a Master image', 'Create a backup to be used as Master later', 5, 6, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=/##PULSE2_F_MASTERS##/##PULSE2_F_IMAGE## revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, 'Create a backup', 'Create a backup of this computer', 5, 6, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revosavedir=/##PULSE2_F_MASTERS##/##PULSE2_F_IMAGE## revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, 'Diskless Boot', 'Load diskless environment then get a prompt', 7, 8, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revodebug revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, 'Memory test', 'Run a full memory check', 9, 10, 'kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_TOOLS##/##PULSE2_MEMTEST##');
 
@@ -375,14 +375,8 @@ INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, f
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0, 0, 1);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (3, 3, 0, 0, 1);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (4, 4, 0, 0, 1);
-INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (5, 5, 0, 0, 1);
 
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (1, 1);
 INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (2, 2);
-INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (3, 2);
-INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (4, 4);
-INSERT INTO BootServiceInMenu (fk_bootservice, fk_menuitem) VALUES (5, 5);
 
 UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 where id = 1;
