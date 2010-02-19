@@ -30,8 +30,10 @@ import os.path
 import twisted.internet.reactor
 import logging
 import logging.config
+
 import pulse2.apis.clients.imaging
 import pulse2.imaging_server.config
+import pulse2.imaging.bootinventory
 
 CONFIG_FILE = '/etc/mmc/pulse2/imaging-server/imaging-server.ini' #: config file location
 
@@ -58,7 +60,8 @@ def myCall():
     mac = '' # client MAC address
     filename = '' # where the inventory is temporaly stored
     filestream = None
-    inventory = {} # will hold our inventory
+    data = None     # will hold our inventory (text)
+    inventory = {}  # will hold our inventory (struct)
 
     if len(sys.argv) != 3: # not enough (or too much) args
         logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
@@ -79,161 +82,19 @@ def myCall():
         exitcode = ERROR_CLIENT
         endBack()
 
+
     try :
         filestream = open(filename)
+        data = filestream.readlines()
+        filestream.close()
     except:
         logging.getLogger().error('HOOK %s : Can\'t read %s, giving up' % (sys.argv[0], filename))
         exitcode = ERROR_CLIENT
         endBack()
 
-    mem_info    = {'lower' : 0, 'upper': 0}
-    MEM_INFO_RE = re.compile("^M:([0-9a-f]+),U:([0-9a-f]+)$") # lower / upper mem
-    bus_info    = {}
-    BUS_INFO_RE = re.compile("^B:([0-9A-Fa-f]+),f:([0-9A-Fa-f]+),v:([0-9A-Fa-f]+),d:([0-9A-Fa-f]+),c:([0-9A-Fa-f]+),s:([0-9A-Fa-f]+)$") # bus, dev, vendor, device, class, subclass
-    disk_info   = {}
-    DISKINFO_RE = re.compile("^D:\(hd([0-9]+)\):CHS\(([0-9]+),([0-9]+),([0-9]+)\)=([0-9]+)$") # number, CHS, size
-    PARTINFO_RE = re.compile("^P:([0-9]+),t:([0-9a-f]+),s:([0-9]+),l:([0-9]+)$") # number, type, start, len
-    BIOSINFO_RE = re.compile("^S0:([^\|]*)\|([^\|]*)\|([^\|]*)$") # 3 components : vendor, version, date
-    bios_info   = {'vendor': '', 'version': '', 'date' : ''}
-    SYSINFO_RE  = re.compile("^S1:([^\|]*)\|([^\|]*)\|([^\|]*)\|([^\|]*)\|([0-9A-F]{32})$") # 5 components : vendor, desc, ??, ??, UUID (16 hex chars)
-    sys_info    = {'manufacturer': '', 'product': '', 'version' : '', 'serial' : '', 'uuid' : ''}
-    ENCLOS_RE   = re.compile("^S3:([^\|]*)\|([0-9]+)$") # vendor, type
-    enclos_info = {'vendor': '', 'type': ''}
-    MEMSLOT_RE  = re.compile("^SM:([0-9]+):([0-9]+):([^:]*):([0-9]+):([0-9]+)$") # Size in MB, Form factor, Location, Type, Speed in MHZ
-    memslot_info= { 'size' : 0, 'ff': 0, 'location': '', 'type': '', 'speed': 0 }
-    NUMCPU_RE   = re.compile("^S4:([0-9]+)$") # CPU number
-    numcpu_info = 0
-    FEATCPU_RE  = re.compile("^C:(.*)$") # CPU features, comma-separated
-    featcpu_info= []
-    FREQCPU_RE  = re.compile("^F:([0-9]+)$") # CPU frequency
-    freqcpu_info= []
-    MACADDR_RE  = re.compile("^MAC Address:(.+)$") # MAC Address
-    macaddr_info= ''
-    IPADDR_RE  = re.compile("^IP Address:(.+):([0-9]+)$") # IP Address:port
-    ipaddr_info= {'ip': '', 'port': 0}
-    current_disk = None # track the disk we are reading
-    for line in filestream:
-        if not len(line):
-            continue
-        mo = re.match(MEM_INFO_RE, line)
-        if mo :
-            mem_info['lower'] = int(mo.group(1), 16)
-            mem_info['upper'] = int(mo.group(2), 16)
-            continue
-        mo = re.match(BUS_INFO_RE, line)
-        if mo :
-            bus = int(mo.group(1), 16)
-            dev = int(mo.group(2), 16)
-            vendor = int(mo.group(3), 16)
-            device = int(mo.group(4), 16)
-            cl = int(mo.group(5), 16)
-            subcl = int(mo.group(6), 16)
-            if not bus in bus_info:
-                bus_info[bus] = dict()
-            bus_info[bus][dev] = {
-                "vendor": vendor,
-                "device" : device,
-                "class" : cl,
-                "subclass" : subcl
-            }
-            continue
-        mo = re.match(DISKINFO_RE, line)
-        if mo :
-            num = int(mo.group(1), 10)
-            c = int(mo.group(2), 10)
-            h = int(mo.group(3), 10)
-            s = int(mo.group(4), 10)
-            sz = int(mo.group(4), 10)
-            disk_info[num] = {
-                "C": c,
-                "H" : h,
-                "S" : s,
-                "size" : sz,
-                "parts" : dict()
-            }
-            current_disk = num
-            continue
-        mo = re.match(PARTINFO_RE, line)
-        if mo :
-            num = int(mo.group(1), 10)
-            t = int(mo.group(2), 16)
-            s = int(mo.group(3), 10)
-            l = int(mo.group(4), 10)
-            disk_info[current_disk]['parts'][num] = {
-                'type' : t,
-                'start' : s,
-                'length' : l
-            }
-            continue
-        mo = re.match(BIOSINFO_RE, line)
-        if mo :
-            bios_info['vendor'] = mo.group(1)
-            bios_info['version'] = mo.group(2)
-            bios_info['date'] = mo.group(3)
-            continue
-        mo = re.match(SYSINFO_RE, line)
-        if mo :
-            sys_info['manufacturer'] = mo.group(1)
-            sys_info['product'] = mo.group(2)
-            sys_info['version'] = mo.group(3)
-            sys_info['serial'] = mo.group(4)
-            sys_info['uuid'] = mo.group(5)
-            continue
-        mo = re.match(ENCLOS_RE, line)
-        if mo :
-            enclos_info['vendor'] = mo.group(1)
-            enclos_info['type'] = mo.group(2)
-            continue
-        mo = re.match(MEMSLOT_RE, line)
-        if mo :
-            memslot_info['size'] = int(mo.group(1), 10)
-            memslot_info['ff'] = int(mo.group(2), 10)
-            memslot_info['location'] = mo.group(3)
-            memslot_info['type'] = mo.group(4)
-            memslot_info['speed'] = int(mo.group(5), 10)
-            continue
-        mo = re.match(NUMCPU_RE, line)
-        if mo :
-            numcpu_info = int(mo.group(1), 10)
-            continue
-        mo = re.match(FEATCPU_RE, line)
-        if mo :
-            featcpu_info = map(lambda x: int(x, 16), mo.group(1).split(','))
-            continue
-        mo = re.match(FREQCPU_RE, line)
-        if mo :
-            freqcpu_info = int(mo.group(1), 10)
-            continue
-        mo = re.match(MACADDR_RE, line)
-        if mo :
-            macaddr_info = mo.group(1)
-            continue
-        mo = re.match(IPADDR_RE, line)
-        if mo :
-            ipaddr_info['ip'] = mo.group(1)
-            ipaddr_info['port'] = int(mo.group(2), 10)
-            print ipaddr_info
-            continue
-        logging.getLogger().warning('HOOK %s : unprocessed line %s' % (sys.argv[0], line))
-
-    filestream.close()
-
-    inventory = {
-        'mem'       : mem_info,
-        'bus'       : bus_info,
-        'disk'      : disk_info,
-        'bios'      : bios_info,
-        'sys'       : sys_info,
-        'enclos'    : enclos_info,
-        'memslot'   : memslot_info,
-        'numcpu'    : numcpu_info,
-        'featcpu'   : featcpu_info,
-        'freqcpu'   : freqcpu_info,
-        'macaddr'   : macaddr_info,
-        'ipaddr'    : ipaddr_info
-    }
-
     try:
+        inventory = pulse2.imaging.bootinventory.BootInventory(data)
+        logging.getLogger().error(inventory.dump())
         callFunction(imagingAPI.processInventory(mac, inventory))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
