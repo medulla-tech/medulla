@@ -40,6 +40,7 @@ DATABASEVERSION = 1
 ERR_MISSING_NOMENCLATURE = 1001
 ERR_IMAGING_SERVER_DONT_EXISTS = 1003
 ERR_ENTITY_ALREADY_EXISTS = 1004
+ERR_UNEXISTING_MENUITEM = 1005
 
 class ImagingDatabase(DyngroupDatabaseHelper):
     """
@@ -307,7 +308,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __loadNomenclatureTables(self):
         session = create_session()
         for i in self.nomenclatures:
-            print i
             n = session.query(self.nomenclatures[i]).all()
             self.nomenclatures[i] = {}
             for j in n:
@@ -490,7 +490,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             mi_ids = mi_ids.all()
         mi_ids = map(lambda x:x[1], mi_ids)
-        print mi_ids
 
         imaging_server = self.__getMenusImagingServer(session, menu_id)
         is_id = 0
@@ -616,16 +615,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######################
     def __PossibleBootServices(self, session, target_uuid, filter):
         q = session.query(BootService).add_column(self.boot_service.c.id)
-        q = q.select_from(self.boot_service.join(self.boot_service_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target))
-        q = q.filter(self.target.c.uuid == target_uuid)
+        q = q.select_from(self.boot_service \
+                .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
+                .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(self.entity).join(self.target))
+        q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
 
     def __EntityBootServices(self, session, loc_id, filter):
         q = session.query(BootService).add_column(self.boot_service.c.id)
-        q = q.select_from(self.boot_service.join(self.boot_service_on_imaging_server).join(self.imaging_server).join(self.entity))
-        q = q.filter(self.entity.c.uuid == loc_id)
+        q = q.select_from(self.boot_service \
+                .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
+                .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(self.entity))
+        q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
         return q
@@ -686,20 +691,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def __createNewMenuItem(self, session, menu_id, desc, params):
+    def __createNewMenuItem(self, session, menu_id, params):
         mi = MenuItem()
         params['order'] = self.getLastMenuItemOrder(menu_id) + 1
-        mi = self.__fillMenuItem(session, mi, menu_id, desc, params)
+        mi = self.__fillMenuItem(session, mi, menu_id, params)
         return mi
     
-    def __fillMenuItem(self, session, mi, menu_id, desc, params):
-        mi.default_name = params['default_name']
+    def __fillMenuItem(self, session, mi, menu_id, params):
         mi.hidden = params['hidden']
         mi.hidden_WOL = params['hidden_WOL']
         if params.has_key('order'):
-            mi.order = params['order'] # TODO put the order!
-        mi.desc = desc
-        mi.fk_name = 0 # TODO i18n in internationalize!
+            mi.order = params['order']
         mi.fk_menu = menu_id
         session.save_or_update(mi)
         return mi
@@ -720,6 +722,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __editMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
+        if type(menu) in (long, int):
+            menu = session.query(Menu).filter(self.menu.c.id == menu).first()
         if menu.fk_default_item != mi.id and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
@@ -759,7 +763,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if menu == None:
             raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
             
-        mi = self.__createNewMenuItem(session, menu.id, bs.desc, params)
+        mi = self.__createNewMenuItem(session, menu.id, params)
         session.flush()
         
         self.__addMenuDefaults(session, menu, mi, params)
@@ -787,17 +791,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.target.c.uuid == target_uuid)).first()
         return mi
 
-    def __getServiceMenuItem4Entity(self, session, bs_uuid, loc_id):
-        mi = session.query(MenuItem).select_from(self.menu_item.join(self.boot_service_in_menu).join(self.boot_service).join(self.menu))
-        mi = mi.filter(and_(self.boot_service.c.id == uuid2id(bs_uuid), self.menu.c.id == self.entity.c.fk_default_menu, self.entity.c.uuid == loc_id)).first()
-        return mi
-        
     def __editService(self, session, bs_uuid, menu, mi, params):
         bs = session.query(BootService).filter(self.boot_service.c.id == uuid2id(bs_uuid)).first();
         if menu == None:
             raise '%s:Please create menu before trying to put a bootservice'%(ERR_TARGET_HAS_NO_MENU)
 
-        mi = self.__fillMenuItem(session, mi, menu.id, bs.desc, params)
+        mi = self.__fillMenuItem(session, mi, menu.id, params)
         session.flush()
 
         self.__editMenuDefaults(session, menu, mi, params)
@@ -813,13 +812,27 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def editServiceToEntity(self, bs_uuid, loc_id, params):
+    def __getMenuItemByUUID(self, session, mi_uuid):
+        return session.query(MenuItem).filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
+    
+    def editServiceToEntity(self, mi_uuid, loc_id, params):
         session = create_session()
-        menu = self.getEntityDefaultMenu(loc_id, session)
-        mi = self.__getServiceMenuItem4Entity(session, bs_uuid, loc_id)
-        ret = self.__editService(session, bs_uuid, menu, mi, params)
+        if self.isLocalBootService(mi_uuid, session):
+            # we can change the title/desc/...
+            bs = session.query(BootService).select_form(self.boot_service.join(self.boot_service_in_menu))
+            bs = bs.filter(self.boot_service_in_menu.c.fk_menuitem == uuid2id(mi_uuid)).first()
+            if bs.default_name != params['default_name']:
+                bs.default_name = params['default_name']
+                session.save_or_update(bs)
+        mi = self.__getMenuItemByUUID(session, mi_uuid)
+        if mi == None:
+            raise '%s:This MenuItem doesnot exists'%(ERR_UNEXISTING_MENUITEM)
+        ret = self.__fillMenuItem(session, mi, mi.fk_menu, params)
+        session.flush()
+        self.__editMenuDefaults(session, mi.fk_menu, mi, params)
+        session.flush()
         session.close()
-        return ret
+        return None
 
     def delServiceToTarget(self, bs_uuid, target_uuid):
         session = create_session()
@@ -856,6 +869,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = mi.select_from(self.menu_item.join(self.menu).outerjoin(self.boot_service_in_menu).outerjoin(self.boot_service).outerjoin(self.image_in_menu).outerjoin(self.image))
         mi = mi.filter(self.menu_item.c.id == uuid2id(mi_uuid)).first()
         mi = self.__mergeBootServiceOrImageInMenuItem(mi)
+        if hasattr(mi, 'boot_service'):
+            local = self.isLocalBootService(mi_uuid, session)
+            setattr(mi.boot_service, 'is_local', local)
         if session_need_close:
             session.close()
         return mi
@@ -959,7 +975,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             
         if params.has_key('name') and not params.has_key('default_name'):
             params['default_name'] = params['name']
-        mi = self.__createNewMenuItem(session, menu.id, im.desc, params)
+        mi = self.__createNewMenuItem(session, menu.id, params)
         session.flush()
         
         self.__addMenuDefaults(session, menu, mi, params)
@@ -987,7 +1003,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if menu == None:
             raise '%s:Please create menu before trying to put an image'%(ERR_TARGET_HAS_NO_MENU)
 
-        mi = self.__fillMenuItem(session, mi, menu.id, im.desc, params)
+        mi = self.__fillMenuItem(session, mi, menu.id, params)
         session.flush()
 
         self.__editMenuDefaults(session, menu, mi, params)
@@ -1089,6 +1105,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return 0
         count_items = self.countMenuContent(menu.id, MENU_BOOTSERVICE, filter)
         return count_items
+    
+    def isLocalBootService(self, mi_uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        mi = session.query(MenuItem).add_entity(Entity)
+        mi = mi.select_from(self.menu_item.join(self.menu).outerjoin(self.target).outerjoin(self.entity, or_(self.entity.c.id == self.target.c.fk_entity, self.entity.c.fk_default_menu == self.menu.c.id)))
+        mi = mi.filter(and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id != None)).first()
+        loc_id = mi[1].uuid
+
+        q = session.query(BootService).add_entity(BootServiceOnImagingServer)
+        q = q.select_from(self.boot_service \
+                .join(self.boot_service_in_menu).join(self.menu_item) \
+                .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
+                .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
+                .outerjoin(self.entity))
+        q = q.filter(or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.entity.c.uuid == loc_id))
+        q = q.filter(self.menu_item.c.id == uuid2id(mi_uuid))
+        q = q.first()
+
+        ret = (q[1] != None)
+        
+        if session_need_to_close:
+            session.close()
+        return ret
 
     ######################
     def getBootMenu(self, target_id, start, end, filter):
@@ -1437,8 +1480,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session = create_session()
 
         q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer)
-        q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server).outerjoin(self.imaging_server).outerjoin(self.entity))
-        q = q.filter(or_(self.post_install_script_on_imaging_server.c.id == None, self.entity.c.uuid == loc_id))
+        q = q.select_from(self.post_install_script \
+                .outerjoin(self.post_install_script_on_imaging_server, self.post_install_script_on_imaging_server.c.fk_post_install_script == self.post_install_script.c.id) \
+                .outerjoin(self.imaging_server, self.post_install_script_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
+                .outerjoin(self.entity))
+        q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == loc_id))
         q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid))
         q = q.first()
 
@@ -1453,9 +1499,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(PostInstallScript)
         if not is_count:
             q = q.add_entity(PostInstallScriptOnImagingServer)
-            q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server).outerjoin(self.imaging_server).outerjoin(self.entity))
-            q = q.filter(or_(self.post_install_script_on_imaging_server.c.id == None, self.entity.c.uuid == loc_id))
-        q = q.filter(self.post_install_script.c.name.like('%'+filter+'%'))
+            q = q.select_from(self.post_install_script \
+                    .outerjoin(self.post_install_script_on_imaging_server, self.post_install_script_on_imaging_server.c.fk_post_install_script == self.post_install_script.c.id) \
+                    .outerjoin(self.imaging_server, self.post_install_script_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
+                    .outerjoin(self.entity))
+            q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == location))
+        q = q.filter(or_(self.post_install_script.c.default_name.like('%'+filter+'%'), self.post_install_script.c.default_desc.like('%'+filter+'%')))
         return q
         
     def __mergePostInstallScriptOnImagingServerInPostInstallScript(self, postinstallscript_list):
@@ -1483,11 +1532,68 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def getPostInstallScript(self, pis_uuid):
+    def getPostInstallScript(self, pis_uuid, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+     
+        q = session.query(PostInstallScript).add_entity(PostInstallScriptOnImagingServer)
+        q = q.select_from(self.post_install_script.outerjoin(self.post_install_script_on_imaging_server))
+        q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid)).first()
+        q = self.__mergePostInstallScriptOnImagingServerInPostInstallScript([q])
+
+        if session_need_to_close:
+            session.close()
+        return q[0]
+
+    def delPostInstallScript(self, pis_uuid):
         session = create_session()
-        q = session.query(PostInstallScript).filter(self.post_install_script.c.id == uuid2id(pis_uuid)).first()
+        pis = self.getPostInstallScript(pis_uuid, session)
+        if not pis.is_local:
+            return False
+        session.delete(pis)
+        session.flush()
+        session.close
+        return True
+    
+    def editPostInstallScript(self, pis_uuid, params):
+        session = create_session()
+        pis = self.getPostInstallScript(pis_uuid, session)
+        need_to_be_save = False
+        if pis.default_name != params['default_name']:
+            need_to_be_save = True
+            pis.default_name = params['default_name']
+        if pis.default_desc != params['default_desc']:
+            need_to_be_save = True
+            pis.default_desc = params['default_desc']
+        if pis.value != params['value']:
+            need_to_be_save = True
+            pis.value = params['value']
+
+        if need_to_be_save:
+            session.save_or_update(pis)
+            session.flush()
         session.close()
-        return q
+        return True
+        
+    def addPostInstallScript(self, loc_id, params):
+        session = create_session()
+        pis = PostInstallScript()
+        pis.default_name = params['default_name']
+        pis.default_desc = params['default_desc']
+        pis.value = params['value']
+        session.save(pis)
+        session.flush()
+        # link it to the location because it's a local script
+        imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
+        pisois = PostInstallScriptOnImagingServer()
+        pisois.fk_post_install_script = pis.id
+        pisois.fk_imaging_server = imaging_server.id
+        session.save(pisois)
+        session.flush()
+        session.close()
+        return True
 
 def id2uuid(id):
     return "UUID%d" % id
@@ -1517,7 +1623,7 @@ class DBObject(object):
         return ret
 
 class BootService(DBObject):
-    to_be_exported = ['id', 'value', 'desc', 'uri', 'is_local']
+    to_be_exported = ['id', 'value', 'default_desc', 'uri', 'is_local', 'default_name']
     need_iteration = ['menu_item']
 
 class BootServiceInMenu(DBObject):
@@ -1566,7 +1672,7 @@ class Partition(DBObject):
     to_be_exported = ['id', 'filesystem', 'size', 'fk_image']
 
 class PostInstallScript(DBObject):
-    to_be_exported = ['id', 'name', 'value', 'uri', 'is_local']
+    to_be_exported = ['id', 'default_name', 'value', 'default_desc', 'is_local']
 
 class PostInstallScriptInImage(DBObject):
     pass

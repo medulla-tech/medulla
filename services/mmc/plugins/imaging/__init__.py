@@ -330,25 +330,25 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def addServiceToLocation(self, bs_uuid, location_id, params):
-        try:
+        #try:
             ret = ImagingDatabase().addServiceToEntity(bs_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
     def delServiceToLocation(self, bs_uuid, location_id):
-        try:
+        #try:
             ret = ImagingDatabase().delServiceToEntity(bs_uuid, location_id)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
-    def editServiceToLocation(self, bs_uuid, location_id, params):
-        try:
-            ret = ImagingDatabase().editServiceToEntity(bs_uuid, location_id, params)
+    def editServiceToLocation(self, mi_uuid, location_id, params):
+        #try:
+            ret = ImagingDatabase().editServiceToEntity(mi_uuid, location_id, params)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
     ###### MENU ITEMS
     def getMenuItemByUUID(self, bs_uuid):
@@ -440,6 +440,25 @@ class RpcProxy(RpcProxyI):
         if pis:
             return xmlrpcCleanup(pis.toH())
         return xmlrpcCleanup(False)
+
+    # edit
+    def delPostInstallScript(self, pis_uuid):
+        try:
+            return xmlrpcCleanup(ImagingDatabase().delPostInstallScript(pis_uuid))
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def editPostInstallScript(self, pis_uuid, params):
+        try:
+            return xmlrpcCleanup(ImagingDatabase().editPostInstallScript(pis_uuid, params))
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
+
+    def addPostInstallScript(self, loc_id, params):
+        #try:
+            return xmlrpcCleanup(ImagingDatabase().addPostInstallScript(loc_id, params))
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
 
     ###### API to be called from the imaging server (ie : without authentication)
     def computerRegister(self, hostname, domain, MACAddress, profile, entities):
