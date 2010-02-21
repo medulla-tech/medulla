@@ -21,6 +21,21 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
   
+
+function xmlrpc_isProfileRegistered($profile_uuid) {
+    return xmlCall("imaging.isProfileRegistered", array($profile_uuid));
+}
+function xmlrpc_getMyMenuProfile($target_uuid) {
+    return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
+}
+
+function xmlrpc_isMachineRegistered($machine_uuid) {
+    return xmlCall("imaging.isMachineRegistered", array($machine_uuid));
+}
+function xmlrpc_getMyMenuMachine($target_uuid) {
+    return xmlCall("imaging.getMyMenuMachine", array($target_uuid));
+}
+        
 function xmlrpc_getMachineBootMenu($id) {
     return xmlCall("imaging.getMachineBootMenu", array($id));
 }
@@ -187,4 +202,26 @@ function xmlrpc_getImagingServerConfig($location) {
 function xmlrpc_setImagingServerConfig($location, $config) {
     return xmlCall("imaging.setImagingServerConfig", array($location, $config));
 }
+
+/* postinstall scripts */
+function xmlrpc_getAllPostInstallScripts($location, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getAllPostInstallScripts", array($location, $start, $end, $filter));
+}
+
+function xmlrpc_getPostInstallScript($script_id) {
+    return xmlCall("imaging.getPostInstallScript", array($script_id));
+}
+
+function xmlrpc_delPostInstallScript($script_id) {
+    return xmlCall("imaging.delPostInstallScript", array($script_id));
+}
+
+function xmlrpc_editPostInstallScript($script_id, $params) {
+    return xmlCall("imaging.editPostInstallScript", array($script_id, $params));
+}
+
+function xmlrpc_addPostInstallScript($location, $params) {
+    return xmlCall("imaging.addPostInstallScript", array($location, $params));
+}
+
 ?>

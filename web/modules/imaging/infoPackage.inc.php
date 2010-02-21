@@ -60,8 +60,11 @@ $submod->addPage($page);
 $page = new Page("service_edit",_T("Edit service","imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
+$page = new Page("service_del",_T("Remove service","imaging"));
+$page->setOptions(array("noHeader" => True, "visible" => False));
+$submod->addPage($page);
 $page = new Page("service_add",_T("Add service","imaging"));
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("noHeader" => True, "visible" => False));
 // $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 $page = new Page("bootmenu",_T("Default boot menu","imaging"));
@@ -112,6 +115,11 @@ $submod = & $base->getSubmod('computers');
 
 if (!empty($submod)) {
     // imaging on computer
+    $page = new Page("register_target", _T("Register a computer in the imaging module", "imaging"));
+    $page->setFile("modules/imaging/imaging/register_target.php");
+    $page->setOptions(array("visible" => False));
+    $submod->addPage($page);
+    
     $page = new Page("imgtabs", _T("Imaging on computer", "imaging"));
     $page->setFile("modules/imaging/imaging/tabs.php");
     $page->setOptions(array("visible" => False));
@@ -124,7 +132,13 @@ if (!empty($submod)) {
     $tab = new Tab("tablogs", _T("Imaging Log", "imaging"));
     $page->addTab($tab);
     $submod->addPage($page);
+
     // imaging on group
+    $page = new Page("groupregister_target", _T("Register a profile in the imaging module", "imaging"));
+    $page->setFile("modules/imaging/imaging/register_target.php");
+    $page->setOptions(array("visible" => False));
+    $submod->addPage($page);
+    
     $page = new Page("groupimgtabs", _T("Imaging on group", "imaging"));
     $page->setFile("modules/imaging/imaging/tabs.php");
     $page->setOptions(array("visible" => False));

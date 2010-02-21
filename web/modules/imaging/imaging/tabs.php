@@ -38,6 +38,8 @@ if (isset($params['uuid'])) {
     $p = new TabbedPageGenerator();
     $sidemenu->forceActiveItem("index");
     $p->setSideMenu($sidemenu);    
+
+    $params['hostname'] = $hostname;
     $p->addTop(sprintf(_T("%s's computer imaging", 'imaging'), $hostname), 
         "modules/imaging/imaging/header.php");
     $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), 
@@ -61,6 +63,7 @@ if (isset($params['uuid'])) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
+        $params['groupname'] = $group->getName();
         $p->addTop(sprintf(_T("%s's profile imaging", 'imaging'), $group->getName()), 
             "modules/imaging/imaging/header.php");
         $p->addTab("grouptabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), 
