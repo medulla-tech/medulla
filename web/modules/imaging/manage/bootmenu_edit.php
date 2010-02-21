@@ -35,6 +35,11 @@ $label = urldecode($_GET['itemlabel']);
 
 $item = xmlrpc_getMenuItemByUUID($item_uuid);
 
+$is_image = False;
+if (isset($item['image'])) {
+    $is_image = True;
+}   
+
 if(count($_POST) == 0) {
     $is_selected = '';
     $is_displayed = 'CHECKED';
@@ -49,6 +54,16 @@ if(count($_POST) == 0) {
         $is_wol_selected = 'CHECKED';
     if($item['hidden_WOL'] == true)
         $is_wol_displayed = '';
+
+    $ro = False;
+    if ($is_image) {
+        $default_name = $item['image']['default_name'];
+    } else {
+        $default_name = $item['boot_service']['default_name'];
+        if (!isset($item['is_local'])) {
+            $ro = True;
+        }
+    }
     
     $p = new PageGenerator(sprintf(_T("Edit : %s", "imaging"), $label));
     $sidemenu->forceActiveItem("bootmenu");
@@ -60,7 +75,7 @@ if(count($_POST) == 0) {
     $f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
     
     $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_name"));
-    $f->add($input,                                         array("value" => $item['default_name']));
+    $f->add($input,                                         array("value" => $default_name, "disabled" => ($ro?'disabled':'')));
                     
     $f->add(
         new TrFormElement(_T("Selected by default", "imaging"), 
@@ -102,9 +117,9 @@ if(count($_POST) == 0) {
     $params['default_name'] = $_POST['default_name'];
 
     if ($is_image) {
-        $ret = xmlrpc_editImageToLocation($im_uuid, $location, $params);
+        $ret = xmlrpc_editImageToLocation($item['imaging_uuid'], $location, $params);
     } else {
-        $ret = xmlrpc_editServiceToLocation($bs_uuid, $location, $params);
+        $ret = xmlrpc_editServiceToLocation($item['imaging_uuid'], $location, $params);
     }
 
     header("Location: " . urlStrRedirect("imaging/manage/bootmenu"));

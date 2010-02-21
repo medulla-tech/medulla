@@ -23,53 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
  
-/*
- * Post-installation scripts list page
- */
- 
-require("localSidebar.php");
-require("graph/navbar.inc.php");
-require_once('modules/imaging/includes/includes.php');
-require_once('modules/imaging/includes/xmlrpc.inc.php');
-
-    
-// get all the scripts    
-$scripts = array(
-    array("id" => "1", "name" => "Sysprep"),
-    array("id" => "2", "name" => "NTFS resize")
-);
-
-
-// create page
-$p = new PageGenerator(_T("Manage post-installation scripts", "imaging"));
-$sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
-$p->setSideMenu($sidemenu);
-$p->display();
-
-$i = 0;
-foreach($scripts as $script) {
-    $a_label[] = $script["name"];
-    $list_params[$i]["itemid"] = $script["id"];
-    $list_params[$i]["itemlabel"] = $script["name"];
-    $i++;
-}
-
-// show scripts list
-$l = new ListInfos($a_label, _T("Name"));
-$l->setParamInfo($list_params);
-$l->addActionItem(
-    new ActionItem(_T("Edit script", "imaging"), 
-    "postinstall_edit", "edit", "image", "imaging", "manage")
-);
-$l->addActionItem(
-    new ActionItem(_T("Duplicate", "imaging"), 
-    "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
-);
-$l->addActionItem(
-    new ActionPopupItem(_T("Delete", "imaging"), 
-    "postinstall_delete", "delete", "image", "imaging", "manage")
-);
-$l->disableFirstColumnActionLink();
-$l->display();
+$page = "ajaxPostInstall";
+include_once('location.php');
 
 ?>

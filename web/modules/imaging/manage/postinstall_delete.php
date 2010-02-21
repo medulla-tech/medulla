@@ -28,20 +28,46 @@
  */
 
 include('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
+
 //$params = getParams();
-$id = $_GET['itemid'];
+$script_id = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
 if ($_POST) {
+    $script_id = $_POST['itemid'];
     // delete image
-    // ...
-    header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+    $ret = xmlrpc_delPostInstallScript($script_id);
+
+    // check result
+    if ((is_array($ret) && $ret[0]) || $ret) {
+        $str = sprintf(_T("<strong>%s</strong> script deleted", "imaging"), $script_name);
+        new NotifyWidgetSuccess($str);
+        header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+    } elseif (count($ret) > 1) {
+        new NotifyWidgetFailure($ret[1]);
+    } else {
+        $str = sprintf(_T("<strong>%s</strong> script wasn't deleted", "imaging"), $script_name);
+        new NotifyWidgetFailure($str);
+    }
+} else {
+    $script = xmlrpc_getPostInstallScript($script_id);
+    
+    if (!$script['is_local']) {
+    ?>
+    <h2><?= _T("Cant delete this post-installation script, it's a global script.", "imaging") ?></h2>
+    <?
+    } else {
+    ?>
+    <h2><?= _T("Delete post-installation script", "imaging") ?></h2>
+    <form action="<?=urlStr("imaging/manage/postinstall_delete")?>" method="post">
+        <p><? printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
+        <input name='itemid' type='hidden' value="<?=$script_id?>" />
+        <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete", "imaging"); ?>" />
+        <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
+    </form>
+    <?
+    }
 }
 
 ?>
-<h2><?= _T("Delete post-installation script", "imaging") ?></h2>
-<form action="<?=urlStr("imaging/manage/postinstall_delete")?>" method="post">
-    <p><? printf(_T("Are you sure you want to delete the <b>%s</b> script ?", "imaging"), $label); ?></p>
-    <input name='valid' type="submit" class="btnPrimary" value="<?= _T("Delete", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?= _T("Cancel", "imaging"); ?>" onClick="new Effect.Fade('popup'); return false;"/>
-</form>

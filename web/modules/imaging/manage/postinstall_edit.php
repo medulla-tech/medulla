@@ -34,22 +34,23 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 // id of the script
 $script_id = $_GET['itemid'];
-// get script values for $script_id
-$script = array("id" => "1", "name" => "Sysprep", "value" => "Mount 1\ncp sysprep.inf c:\\\nreboot");
+$script = xmlrpc_getPostInstallScript($script_id);
+$location = getCurrentLocation();
 
 // if task is not defined, we are in edit mode
-if(!isset($task)) {
+if (!isset($task)) {
     $task = "edit";
 }
 
-if($task == "edit") {
-    $name = $script["name"];
+if ($task == "edit") {
+    $name = $script["default_name"];
+    $desc = $script["default_desc"];
     $id = $script["id"];
     $title = "Edit post-installation script";
     $action = "updated";
-}
-else if($task == "duplicate") {
+} elseif ($task == "duplicate") {
     $name = "";
+    $desc = $script["default_desc"];
     $id = "";
     $title = "Duplicate post-installation script";
     $action = "created";
@@ -63,47 +64,55 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 // form has been posted
-if(count($_POST) > 0) {
-    
+if (count($_POST) > 0) {
     // get the script values
     $script_id = $_GET["itemid"];
     $script_name = trim($_POST["postinstall_name"]);
     $script_value = $_POST["postinstall_value"];
+    $script_desc = $_POST["postinstall_desc"];
     
     if ($task == "edit"){
         // store new values for script
-        // FIXME
-        $ret = 1;
-    }
-    else if ($task == "duplicate") {
+        $ret = xmlrpc_editPostInstallScript($script_id, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
+    } elseif ($task == "duplicate") {
         // create new script
-        // FIXME
-        $ret = 1;
+        $ret = xmlrpc_addPostInstallScript($location, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
     }
     // check result
-    if ($ret) {
-        $str = sprintf(_T("<strong>%s</strong> script $action", "imaging"), $script_name);
+    if ((is_array($ret) && $ret[0]) || $ret) {
+        $str = sprintf(_T("<strong>%s</strong> script %s", "imaging"), $script_name, $action);
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
+    } elseif (count($ret) > 1) {
+        new NotifyWidgetFailure($ret[1]);
     } else {
-        $str = sprintf(_T("<strong>%s</strong> script wasn't $action", "imaging"), $script_name);
+        $str = sprintf(_T("<strong>%s</strong> script wasn't %s", "imaging"), $script_name, $action);
         new NotifyWidgetFailure($str);
     }   
 }
 
 // Display the script edit form
 $f = new ValidatingForm();
+$textareadesc = new TextareaTpl("postinstall_desc");
+$textareadesc->setRows(2);
+$textareadesc->setCols(50);
+
 $textarea = new TextareaTpl("postinstall_value");
 $textarea->setRows(15);
 $textarea->setCols(50);
 $f->push(new Table());
+$disabled = (!$script['is_local'] && $task == 'edit');
 $f->add(
     new TrFormElement("Script name", new InputTpl("postinstall_name")), 
-    array("value" => $name, "required" => True)
+    array("value" => $name, "required" => True, 'disabled' => ($disabled?'disabled':''))
+);
+$f->add(
+    new TrFormElement("Script description", $textareadesc), 
+    array("value" => $desc, "required" => True, 'disabled' => ($disabled?'disabled':''))
 );
 $f->add(
     new TrFormElement(_T("Script value"), $textarea), 
-    array("value" => $script['value'], "required" => True)
+    array("value" => $script['value'], "required" => True, 'disabled' => ($disabled?'disabled':''))
 );
 $f->pop();
 $f->addButton("bvalid", _T("Validate"));

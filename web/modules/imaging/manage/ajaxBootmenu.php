@@ -59,7 +59,6 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         }
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $entry['imaging_uuid'];
-        $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
     
         if ($i==0) {
             if ($count == 1) {
@@ -78,14 +77,18 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         }       
         
         if ($is_image) { # TODO $entry has now a cache for desc.
-            $a_desc[] = $entry['image']['desc'];
+            $a_desc[] = $entry['image']['default_desc'];
+            $default_name = $entry['image']['default_name'];
             $kind = 'IM';
         } else {
-            $a_desc[] = $entry['boot_service']['desc'];
+            $a_desc[] = $entry['boot_service']['default_desc'];
+            $default_name = $entry['boot_service']['default_name'];
             $kind = 'BS';
         }
+        $list_params[$i]["itemlabel"] = urlencode($default_name);
+        
         $kind .= $entry['imaging_uuid'];
-        $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
+        $a_label[] = sprintf("%s) %s", $kind, $default_name); # should be replaced by the label in the good language
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);
         $a_defaultWOL[] = $entry['default_WOL'];

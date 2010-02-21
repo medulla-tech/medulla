@@ -22,7 +22,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+ 
+/*
+ * Post-installation scripts list page
+ */
+ 
 /* Get MMC includes */
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
@@ -35,52 +39,39 @@ require('../includes/xmlrpc.inc.php');
 $location = getCurrentLocation();
 
 if (xmlrpc_doesLocationHasImagingServer($location)) {
-    list($count, $services) = xmlrpc_getLocationBootServices($location);
     
-    // forge params
-    $params = getParams();
-    $addAction = new ActionPopupItem(_T("Add service to default boot menu", "imaging"), "service_add", "addbootmenu", "master", "imaging", "manage");
-    $delAction = new ActionPopupItem(_T("Remove service from default boot menu", "imaging"), "service_del", "delbootmenu", "master", "imaging", "manage");
-    $addActions = array();
+    list($count, $scripts) = xmlrpc_getAllPostInstallScripts($location);
     
     $a_label = array();
     $a_desc = array();
-    $a_in_boot_menu = array();
-    $i = -1;
-    foreach ($services as $entry) {
-        $i = $i+1;
-        $list_params[$i] = $params;
-        $list_params[$i]["itemlabel"] = $entry['default_name'];
-        $list_params[$i]["itemid"] = $entry['imaging_uuid'];
-        // don't show action if service is in bootmenu
-        if(!isset($entry['menu_item'])) {
-            $addActions[] = $addAction;
-        } else {
-            $addActions[] = $delAction;
-        }
-    
-        $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);
-        $a_desc[]= $entry['default_desc'];
-        $a_in_boot_menu[]= (isset($entry['menu_item'])? True:False);
+    $i = 0;
+    foreach($scripts as $script) {
+        $a_label[] = sprintf("%s%s", ($script['is_local']?'':'X) '), $script["default_name"]);
+        $a_desc[] = $script["default_desc"];
+        $list_params[$i]["itemid"] = $script['imaging_uuid'];
+        $list_params[$i]["itemlabel"] = $script["default_name"];
+        $i++;
     }
     
-    
-    $t = new TitleElement(_T("Manage services", "imaging"));
-    $t->display();
-    
-    // show images list
-    $l = new ListInfos($a_label, _T("Label", "imaging"));
-    $l->setParamInfo($list_params);
+    // show scripts list
+    $l = new ListInfos($a_label, _T("Name"));
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
-    $l->addExtraInfo($a_in_boot_menu, _T("In bootmenu", "imaging"));
-    $l->addActionItemArray($addActions);
-    /* should we be able to to that ?!
+    $l->setParamInfo($list_params);
     $l->addActionItem(
-        new ActionItem(_T("Edit service", "imaging"), 
-        "service_edit", "edit", "master", "imaging", "manage")
-    );*/
+        new ActionItem(_T("Edit script", "imaging"), 
+        "postinstall_edit", "edit", "image", "imaging", "manage")
+    );
+    $l->addActionItem(
+        new ActionItem(_T("Duplicate", "imaging"), 
+        "postinstall_duplicate", "duplicatescript", "image", "imaging", "manage")
+    );
+    $l->addActionItem(
+        new ActionPopupItem(_T("Delete", "imaging"), 
+        "postinstall_delete", "delete", "image", "imaging", "manage")
+    );
     $l->disableFirstColumnActionLink();
     $l->display();
+    
 } else {
     $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxAvailableImagingServer"), "container", array('from'=>$_GET['from']));
     $ajax->display();
