@@ -897,6 +897,15 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getMachinesLocations(self, machine_uuids):
+        session = create_session()
+        q = session.query(Location).add_column(self.machine.c.id).select_from(self.location.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        session.close()
+        ret = {}
+        for loc, mid in q:
+            ret[toUUID(mid)] = loc.toH()
+        return ret
+
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all users name that share the same locations with the given

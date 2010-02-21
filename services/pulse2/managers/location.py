@@ -22,6 +22,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+Computer Location manager
+provide methods to work with location association with computers
+"""
+
 import logging
 from pulse2.utils import Singleton
 
@@ -113,6 +118,13 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
+    def getMachinesLocations(self, machine_uuids):
+        try:
+            klass = self.components[self.main]
+            return klass().getMachinesLocations(machine_uuids)
+        except KeyError:
+            return True
+
 class ComputerLocationI(Singleton):
     def displayLocalisationBar(self):
         """ return True if the module want to display the location bar in computers lists """
@@ -144,5 +156,9 @@ class ComputerLocationI(Singleton):
 
     def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all = True):
         """ should return true if more than one or all machines are accessible for this user """
+        pass
+
+    def getMachinesLocations(self, machine_uuids):
+        """ should return the location in which the machines are as a dict {machine_uuid:location} """
         pass
 

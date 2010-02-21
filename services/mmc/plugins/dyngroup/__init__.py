@@ -20,6 +20,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+"""
+MMC Dyngroup Backend plugin
+It provide an API to work with the informations in the Dyngroup database.
+It also provide access to the QueryManager API
+"""
+
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
@@ -32,10 +38,12 @@ from mmc.plugins.dyngroup.qmanager import QueryManager
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.dyngroup.group import DyngroupGroup
+from mmc.plugins.dyngroup.profile import DyngroupProfile
 from mmc.plugins.dyngroup.computers import DyngroupComputers
 
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.group import ComputerGroupManager
+from pulse2.managers.profile import ComputerProfileManager
 
 
 VERSION = '2.0.0'
@@ -63,6 +71,7 @@ def activate():
         return False
 
     ComputerGroupManager().register("dyngroup", DyngroupGroup)
+    ComputerProfileManager().register("dyngroup", DyngroupProfile)
     ComputerManager().register("dyngroup", DyngroupComputers)
 
     return True

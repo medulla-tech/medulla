@@ -21,6 +21,10 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Dyngroup database handler
+"""
+
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import create_session, mapper, relation
@@ -324,6 +328,38 @@ class DyngroupDatabase(DatabaseHelper):
             self.machines.update(self.machines.c.uuid==uuid).execute(name=machines[uuid])
 
     ####################################
+    ## PROFILE ACCESS
+    def getProfileByUUID(self, uuid):
+        """
+        Get a profile given it's uuid
+        """
+        session = create_session()
+        # WARNING we have to pass to uuid for groups and profiles!)
+        q = session.query(Groups).select_from(self.groups.join(self.groupType)).filter(and_(self.groupType.c.value == 'Profile', self.groups.c.id == uuid)).first()
+        session.close()
+        return q
+
+    def getComputersProfile(self, uuid):
+        """
+        Get a computer's profile given the computer uuid
+        """
+        session = create_session()
+        q = session.query(Groups).select_from(self.machines.join(self.profilesResults).join(self.groups).join(self.groupType))
+        q = q.filter(and_(self.groupType.c.value == 'Profile', self.machines.c.uuid == uuid)).first() # a computer can only be in one profile!
+        session.close()
+        return q
+        
+    def getProfileContent(self, uuid):
+        """
+        Get all computers that are in a profile
+        """
+        session = create_session()
+        q = session.query(Machines).select_from(self.machines.join(self.profilesResults).join(self.groups).join(self.groupType))
+        q = q.filter(and_(self.groupType.c.value == 'Profile', self.groups.c.id == uuid)).all()
+        session.close()
+        return q
+    
+    ####################################
     ## SHARE ACCESS
 
     def __createShare(self, group_id, user_id, visibility = 0, type_id = 0):
@@ -608,6 +644,12 @@ class DyngroupDatabase(DatabaseHelper):
     ################################
     ## MEMBERS
 
+def id2uuid(id):
+    return "UUID%s"%(str(id))
+
+def uuid2id(uuid):
+    return uuid.replace('UUID', '')
+
 ##############################################################################################################
 class Groups(object):
     def toH(self):
@@ -616,7 +658,8 @@ class Groups(object):
             'name':self.name,
             'query':self.query,
             'type':self.type,
-            'bool':self.bool
+            'bool':self.bool,
+            'uuid':id2uuid(self.id)
         }
         if hasattr(self, 'is_owner'): ret['is_owner'] = self.is_owner
         if hasattr(self, 'ro'): ret['ro'] = self.ro
@@ -628,6 +671,7 @@ class Machines(object):
     def toH(self):
         return {
             'id':self.id,
+            'uuid':id2uuid(self.id),
             'hostname':self.name,
             'uuid':self.uuid
         }

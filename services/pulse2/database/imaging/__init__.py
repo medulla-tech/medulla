@@ -406,6 +406,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
     
+    def getTargetMenu(self, uuid, type, session = None):
+        need_to_close_session = False
+        if session == None:
+            need_to_close_session = True
+            session = create_session()
+        q = session.query(Menu).select_from(self.menu.join(self.target)).filter(and_(self.target.c.uuid == uuid, self.target.c.type == type)).first() # there should always be only one!
+        if need_to_close_session:
+            session.close()
+        return q
+    
     def __mergeMenuItemInBootService(self, list_of_bs, list_of_both):
         ret = []
         temporary = {}
@@ -1471,6 +1481,68 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(Protocol).all()
         session.close()
         return q
+
+    ######### REGISTRATION
+    def isTargetRegister(self, uuid, type, session = None):
+        session_need_to_close = False
+        if session == None:
+            session_need_to_close = True
+            session = create_session()
+
+        q = session.query(Target).filter(and_(self.target.c.uuid == uuid, self.target_type.c.id == type)).first()
+        ret = (q != None)
+        
+        if session_need_to_close:
+            session.close()
+        return ret
+
+    ######### MENUS
+    def getMyMenuTarget(self, uuid, type):
+        session = create_session()
+        muuid = False
+        # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
+        from pulse2.managers.profile import ComputerProfileManager
+        from pulse2.managers.location import ComputerLocationManager
+        if type == TYPE_COMPUTER:
+            # if registered, get the computer menu and finish
+            if self.isTargetRegister(uuid, type, session):
+                whose = [uuid, type]
+                menu = self.getTargetMenu(uuid, type, session)
+                if menu:
+                    menu = menu.toH()
+                session.close()
+                return [whose, menu]
+            # else get the profile id
+            else:
+                profile = ComputerProfileManager().getComputersProfile(uuid)
+                muuid = uuid
+                if profile:
+                    uuid = profile.id # WARNING we must pass in UUIDs!
+            
+        # if profile is registered, get the profile menu and finish
+        if uuid and self.isTargetRegister(uuid, TYPE_PROFILE, session):
+            whose = [uuid, TYPE_PROFILE]
+            menu = self.getTargetMenu(uuid, TYPE_PROFILE, session)
+            if menu:
+                menu = menu.toH()
+
+        # else get the entity menu
+        else:
+            whose = False
+            if muuid:
+                location = ComputerLocationManager().getMachinesLocations([muuid])
+                loc_id = location[muuid]['uuid']
+            else:
+                m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
+                locations = ComputerLocationManager().getMachinesLocations(m_uuids)
+                # WARNING! here we take the location that is the most represented, it's wrong! 
+                # we have to decide how do we do with cross location profiles 
+                # TODO!
+                loc_id = locations[m_uuids[0]]['uuid']
+            menu = self.getEntityDefaultMenu(loc_id, session)
+
+        session.close()
+        return [whose, menu]
 
     ######### POST INSTALL SCRIPT
     def isLocalPostInstallScripts(self, pis_uuid, session = None):

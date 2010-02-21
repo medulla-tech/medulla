@@ -83,7 +83,7 @@ class Glpi(DyngroupDatabaseHelper):
         methods = ['initMappers', 'getMachineUUID', 'activate', 'config', 'decode', 'doesUserHaveAccessToMachine', 'doesUserHaveAccessToMachines', \
             'getLastMachineInventoryFull', 'getLastMachineInventoryPart', 'getLocationsCount', 'getMachineIp', 'getMachineMac', 'getMachineUUID', 'getUserLocations', \
             'getUserParentLocations', 'getUserProfile', 'getUserProfiles', 'getUsersInSameLocations', 'init', 'inventoryExists', 'glpi_version', \
-            'getRestrictedComputersList', 'getRestrictedComputersListLen', 'getComputersList', 'getComputer', 'getComputerCount', \
+            'getRestrictedComputersList', 'getRestrictedComputersListLen', 'getComputersList', 'getComputer', 'getComputerCount', 'getMachinesLocations', \
             'getAllComments', 'getAllContactNums', 'getAllContacts', 'getAllEntities', 'getAllGroups', 'getAllHostnames', 'getAllLocations', \
             'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllVersion4Software', 'glpi_version_new', \
             'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \

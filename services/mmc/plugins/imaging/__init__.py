@@ -428,6 +428,28 @@ class RpcProxy(RpcProxyI):
     def doesLocationHasImagingServer(self, loc_id):
         return ImagingDatabase().doesLocationHasImagingServer(loc_id)
 
+    ###### REGISTRATION
+    def isTargetRegister(self, uuid, type):
+        return ImagingDatabase().isTargetRegister(uuid, type)
+        
+    def isMachineRegistered(self, machine_uuid):
+        return self.isTargetRegister(machine_uuid, TYPE_COMPUTER)
+
+    def isProfileRegistered(self, profile_uuid):
+        return self.isTargetRegister(profile_uuid, TYPE_PROFILE)
+
+    ###### Menus
+    def getMyMenuTarget(self, uuid, type):
+        ret = ImagingDatabase().getMyMenuTarget(uuid, type)
+        ret[1] = ret[1].toH()
+        return ret
+
+    def getMyMenuMachine(self, uuid):
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_COMPUTER))
+
+    def getMyMenuProfile(self, uuid):
+        return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_PROFILE))
+
     ###### POST INSTALL SCRIPTS
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
