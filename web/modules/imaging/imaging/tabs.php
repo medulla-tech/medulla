@@ -31,6 +31,12 @@ $params = getParams();
 $hostname = $params['hostname'];
 
 if (isset($params['uuid'])) {
+    $_GET['type'] = '';
+    $_GET['target_uuid'] = $params['uuid'];
+    $_GET['target_name'] = $params['hostname'];
+    $params['type'] = '';
+    $params['target_uuid'] = $params['uuid'];
+    $params['target_name'] = $params['hostname'];
     if (!isset($_GET['uuid']) || $_GET['uuid'] == '') {
         $_GET['uuid'] = $params['uuid'];
     }
@@ -50,9 +56,17 @@ if (isset($params['uuid'])) {
         "modules/imaging/imaging/services.php", $params);
     $p->addTab("tablogs", _T("Imaging log", 'imaging'), "", 
         "modules/imaging/imaging/logs.php", $params);
+    $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "", 
+        "modules/imaging/imaging/configure.php", $params);
     $p->display();
     
 } elseif (isset($params['gid'])) {
+    $_GET['type'] = 'group';
+    $_GET['target_uuid'] = $params['gid'];
+    $_GET['target_name'] = $params['hostname'];
+    $params['type'] = 'group';
+    $params['target_uuid'] = $params['gid'];
+    $params['target_name'] = $params['hostname'];
 
     $p = new TabbedPageGenerator();
     $sidemenu->forceActiveItem("list_profiles");
@@ -74,6 +88,8 @@ if (isset($params['uuid'])) {
             "modules/imaging/imaging/services.php", $params);
         $p->addTab("grouptablogs", _T("Imaging log", 'imaging'), "", 
             "modules/imaging/imaging/logs.php", $params);
+        $p->addTab("grouptabconfigure", _T("Menu configuration", 'imaging'), "", 
+            "modules/imaging/imaging/configure.php", $params);
     }
     $p->display();
     

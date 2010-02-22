@@ -24,19 +24,37 @@
  */
 
 require_once('modules/imaging/includes/includes.php');
+require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['mod']))
-    $mod = $_GET['mod'];
-else 
-    $mod = "none";
+if (isset($_GET['gid'])) {
+    $type = 'group';
+    $target_uuid = $_GET['gid'];
+    $target_name = $_GET['groupname'];
+} else {
+    $type = '';
+    $target_uuid = $_GET['uuid'];
+    $target_name = $_GET['hostname'];
+}
 
-switch($mod) {
-    case 'details':
-        log_details();
-        break;
-    default:
-        log_list();
-        break;
+if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
+    
+    if(isset($_GET['mod']))
+        $mod = $_GET['mod'];
+    else 
+        $mod = "none";
+    
+    switch($mod) {
+        case 'details':
+            log_details();
+            break;
+        default:
+            log_list();
+            break;
+    }
+} else {
+    # register the target (computer or profile)
+    $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
+    header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
 }
 
 function log_details() {

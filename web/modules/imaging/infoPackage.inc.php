@@ -131,6 +131,8 @@ if (!empty($submod)) {
     $page->addTab($tab);
     $tab = new Tab("tablogs", _T("Imaging Log", "imaging"));
     $page->addTab($tab);
+    $tab = new Tab("tabconfigure", _T("Menu configuration", "imaging"));
+    $page->addTab($tab);
     $submod->addPage($page);
 
     // imaging on group
@@ -149,6 +151,8 @@ if (!empty($submod)) {
     $tab = new Tab("grouptabservices", _T("Boot services", "imaging"));
     $page->addTab($tab);
     $tab = new Tab("grouptablogs", _T("Imaging Log", "imaging"));
+    $page->addTab($tab);
+    $tab = new Tab("grouptabconfigure", _T("Menu configuration", "imaging"));
     $page->addTab($tab);
     $submod->addPage($page);
     // actions on computer & groups

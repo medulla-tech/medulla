@@ -36,7 +36,7 @@ if (isset($_GET['gid'])) {
     $target_name = $_GET['hostname'];
 }
 
-if (($type == '' && xmlrpc_isMachineRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
+if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
     list($count, $menu) = xmlrpc_getPossibleBootServices($target_uuid);
 
     if(isset($_GET['mod']))
@@ -44,15 +44,7 @@ if (($type == '' && xmlrpc_isMachineRegistered($target_uuid)) || ($type == 'grou
     else 
         $mod = "none";
     
-    switch($mod) {
-        case 'add':
-            service_add($type, $menu, $target_uuid);
-            break;
-        default:
-            service_list($type, $menu, $count, $target_uuid);
-            break;
-    }
-    
+   
     function service_add($type, $menu, $target_uuid) {
         $params = getParams();
         $item_uuid = $_GET['itemid'];
@@ -106,6 +98,15 @@ if (($type == '' && xmlrpc_isMachineRegistered($target_uuid)) || ($type == 'grou
         $l->display();
         
     }
+    switch($mod) {
+        case 'add':
+            service_add($type, $menu, $target_uuid);
+            break;
+        default:
+            service_list($type, $menu, $count, $target_uuid);
+            break;
+    }
+ 
 } else {
     # register the target (computer or profile)
     $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);

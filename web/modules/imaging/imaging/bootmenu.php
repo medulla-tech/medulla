@@ -26,24 +26,18 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['mod']))
-    $mod = $_GET['mod'];
-else 
-    $mod = "none";
-
-switch($mod) {
-    case 'up':
-        item_up();
-        break;
-    case 'down':
-        item_down();
-        break;
-    case 'edit':
-        item_edit();
-        break;  
-    default:
-        item_list();
-        break;
+$params = getParams();
+if (isset($_GET['gid'])) {
+    $type = 'group';
+    $target_uuid = $_GET['gid'];
+    $target_name = $_GET['groupname'];
+} else {
+    $type = '';
+    $target_uuid = $_GET['uuid'];
+    $target_name = $_GET['hostname'];
+}
+if (isset($params['hostname']) && !isset($target_name)) {
+    $target_name = $params['hostname'];
 }
 
 function item_up() {
@@ -184,7 +178,7 @@ function item_list() {
         list($count, $menu) = xmlrpc_getProfileBootMenu($_GET['gid']);
     } else {
         $type = '';
-        list($count, $menu) = xmlrpc_getMachineBootMenu($_GET['uuid']);
+        list($count, $menu) = xmlrpc_getComputerBootMenu($_GET['uuid']);
     }
 
     $params = getParams();
@@ -261,6 +255,32 @@ function item_list() {
     $l->display();
 }
 
+if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
 
+    if(isset($_GET['mod']))
+        $mod = $_GET['mod'];
+    else 
+        $mod = "none";
+    
+    switch($mod) {
+        case 'up':
+            item_up();
+            break;
+        case 'down':
+            item_down();
+            break;
+        case 'edit':
+            item_edit();
+            break;  
+        default:
+            item_list();
+            break;
+    }
+} else {
+    # register the target (computer or profile)
+    $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
+    header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
+            
+}
 
 ?>

@@ -39,11 +39,12 @@ function getCurrentLocation() {
 }
 
 class TitleElement extends HtmlElement {    
-    function TitleElement($title){
+    function TitleElement($title, $level = 2){
         $this->title=$title;
+        $this->level = $level;
     }    
     function display(){
-        print '<br/><h2>'.$this->title.'</h2>';
+        print '<br/><h'.$this->level.'>'.$this->title.'</h'.$this->level.'>';
     }
 }
 

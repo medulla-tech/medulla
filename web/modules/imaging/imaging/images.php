@@ -26,37 +26,51 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 
-if(isset($_GET['gid'])) {
+if (isset($_GET['gid'])) {
     $type = 'group';
-    $all = xmlrpc_getProfileImages($_GET['gid']);
     $target_uuid = $_GET['gid'];
+    $target_name = $_GET['groupname'];
 } else {
     $type = '';
-    $all = xmlrpc_getMachineImages($_GET['uuid']);
     $target_uuid = $_GET['uuid'];
+    $target_name = $_GET['hostname'];
 }
 
-$images = $all['images'];
-$masters = $all['masters'];
+if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
 
-if(isset($_GET['mod']))
-    $mod = $_GET['mod'];
-else 
-    $mod = "none";
-
-switch($mod) {
-    case 'edit':
-        image_edit($type, $images);
-        break;
-    case 'add':
-        image_add($type, $target_uuid);
-        break;
-    default:
-        if(empty($type))
-            image_list($type, "Available images", $images);
-        image_list($type, "Available masters", $masters, false);
-        break;
+    if ($type == 'group') {
+        $all = xmlrpc_getProfileImages($_GET['gid']);
+    } else {
+        $all = xmlrpc_getComputerImages($_GET['uuid']);
+    }
+    
+    $images = $all['images'];
+    $masters = $all['masters'];
+    
+    if(isset($_GET['mod']))
+        $mod = $_GET['mod'];
+    else 
+        $mod = "none";
+    
+    switch($mod) {
+        case 'edit':
+            image_edit($type, $images);
+            break;
+        case 'add':
+            image_add($type, $target_uuid);
+            break;
+        default:
+            if(empty($type))
+                image_list($type, "Available images", $images);
+            image_list($type, "Available masters", $masters, false);
+            break;
+    }
+} else {
+    # register the target (computer or profile)
+    $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
+    header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
 }
+
 
 function image_add($type, $target_uuid) {
     
