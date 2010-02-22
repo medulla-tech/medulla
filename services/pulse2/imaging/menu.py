@@ -1,5 +1,6 @@
-# the menu timeout#
-# (c) 2009-2010 Nicolas Rueff / Mandriva, http://www.mandriva.com/
+# -*- coding: utf-8; -*-
+#
+# (c) 2009-2010 Mandriva, http://www.mandriva.com/
 #
 # $Id$
 #
@@ -16,9 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
     client menu handling classes
@@ -30,8 +29,52 @@ import os.path
 import os
 import logging
 import time
+import tempfile
 
-class ImagingMenu():
+def isMenuStructure(menu):
+    """
+    @return: True if the given object is a menu structure
+    @rtype: bool
+    """
+    ret = True
+    if type(menu) == dict:
+        for k in ['message', 'protocol', 'default_item', 'default_item_wol',
+                  'timeout', 'background_uri', 'bootservices', 'images', 'target']:
+            if not k in menu:
+                ret = False
+                break
+    else:
+        ret = False
+    return ret
+
+class ImagingMenuBuilder:
+
+    """
+    Class that builds an imaging menu according to its dict structure
+    """
+
+    def __init__(self, config, uuid, menu):
+        if not isMenuStructure(menu):
+            raise TypeError
+        self.menu = menu
+        self.config = config
+        # FIXME: macaddress should be resolved according to UUID
+        self.macaddress = '00:11:22:33:44:55'
+
+    def make(self):
+        """
+        @return: an ImagingMenu object
+        """
+        m = ImagingMenu(self.config, self.macaddress)
+        m.setSplashScreen(self.menu['background_uri'])
+        m.setMessage(self.menu['message'])
+        m.setTimeout(self.menu['timeout'])
+        m.setDefaultItem(self.menu['default_item'])
+        for pos, entry in self.menu['bootservices'].items():
+            m.addBootServiceEntry(entry, pos)
+        return m
+
+class ImagingMenu:
     """
         hold an imaging menu
     """
@@ -40,9 +83,11 @@ class ImagingMenu():
     config = None # the server configuration
 
     # menu items
-    timeout = 0; # the menu timeout
-    default_item = 0; # the menu default entry
-    splashscreen = None; # the menu splashscreen
+    timeout = 0 # the menu timeout
+    default_item = 0 # the menu default entry
+    default_item_wol = 0 # the menu default entry on WOL
+    splashscreen = None # the menu splashscreen
+    message = None
     colors = { # menu colors
         'normal' : { 'fg': 7, 'bg': 1 },
         'highlight' : { 'fg': 15, 'bg': 3 }
@@ -54,12 +99,6 @@ class ImagingMenu():
 
     additionnal = list() # additionnal keywords, put in the menu 'as is'
 
-    replacements = list() # list of replacements to perform;
-    # a replacement is using the following structure :
-    # key 'from' : the PCRE to look for
-    # key 'to' : the replacement to perform
-    # key 'when' : when to perform the replacement (only 'global' for now)
-
     def __init__(self, config, macaddress):
         """
             Initialize this object.
@@ -67,12 +106,25 @@ class ImagingMenu():
             macAddress is the client MAC Address
         """
         self.config = config
-        assert pulse2.utils.isMacAddress(macaddress)
+        assert pulse2.utils.isMACAddress(macaddress)
         self.mac = macaddress
 
-    def _applyReplacement(self, string, condition):
+        # list of replacements to perform
+        self.replacements = [ ('##PULSE2_F_BOOTSPLASH##',
+                               'bootsplash.xpm',
+                               'global'),
+                              ('##PULSE2_F_DISKLESS##',
+                               self.config.imaging_api['diskless_folder'],
+                               'global')
+                         ]
+        # a replacement is using the following structure :
+        # key 'from' : the PCRE to look for
+        # key 'to' : the replacement to perform
+        # key 'when' : when to perform the replacement (only 'global' for now)
+
+    def _applyReplacement(self, string, condition = 'global'):
         """
-            Private func, to apply a remlpacement into a given string
+            Private func, to apply a replacement into a given string
 
             Some examples :
             ##MAC:fmt## replaced by the client MAC address; ATM fmt can be:
@@ -83,55 +135,57 @@ class ImagingMenu():
         """
         output = string
         for replacement in self.replacements:
-            for (f, t, w) in replacement:
-                if w == condition :
-                    output = re.sub(f, t, output)
+            f, t, w = replacement
+            if w == condition:
+                output = re.sub(f, t, output)
         return output
 
-    def write(self):
-        """
-            write the client menu
-        """
+    def buildMenu(self):
         # takes global items, one by one
 
-        buffer  = '# Auto-generated by Pulse 2 Imaging Server on %s \n\n' % time.asctime()
+        buf  = '# Auto-generated by Pulse 2 Imaging Server on %s \n\n' % time.asctime()
 
         if self.timeout:
-            buffer += 'timeout %s\n' % self.timeout
-        buffer += 'default %s\n' % self.default_item
+            buf += 'timeout %s\n' % self.timeout
+        buf += 'default %s\n' % self.default_item
         if self.splashscreen:
-            buffer += self._applyReplacement('splashscreen %s\n' % self.splashscreen)
-        buffer += 'color %d/%d %d/%d\n' % (
+            buf += self._applyReplacement('splashscreen %s\n' % self.splashscreen)
+        buf += 'color %d/%d %d/%d\n' % (
             self.colors['normal']['fg'],
             self.colors['normal']['bg'],
             self.colors['highlight']['fg'],
             self.colors['highlight']['bg']
         )
         if self.keyboard == 'fr':
-            buffer += 'keybfr\n'
+            buf += 'keybfr\n'
 
         if self.hidden:
-            buffer += 'hide\n'
+            buf += 'hide\n'
 
-        buffer += '\n'.join(self.additionnal)
+        buf += '\n'.join(self.additionnal)
 
         # then write items
-        for menuitem in self.menuitems:
-            output = menuitem.getEntry()
-            buffer += '\n'
-            buffer += self._applyReplacement(output)
+        for i in range(1, len(self.menuitems)+1):
+            output = self.menuitems[i].getEntry()
+            buf += '\n'
+            buf += output
+        return buf
 
-        filename = os.path.join(self.config.bootmenus_folder, pulse2.utils.reduceMacAddr(self.mac))
-        backup = os.tempnam(self.config.bootmenus_folder, pulse2.utils.reduceMacAddr(self.mac))
+    def write(self):
+        """
+            write the client menu
+        """
+        buf = self.buildMenu()
+        filename = os.path.join(self.config.imaging_api['bootmenus_folder'], pulse2.utils.reduceMACAddress(self.mac))
 
         try:
-            os.rename(filename, backup)
-            file = open(filename, 'w+')
-            file.write(buffer)
-            file.close()
-            os.remove(backup)
-        except OsError, e:
-            logging.getLogger.error("While writing boot menu for %s : %s" % (self.mac, e))
+            fid, tempname = tempfile.mkstemp(dir=self.config.imaging_api['bootmenus_folder'])
+            fid.write(buf)
+            fid.close()            
+            os.rename(tempname, filename)
+        except OSError, e:
+            logging.getLogger().error("While writing boot menu for %s : %s" % (self.mac, e))
+            print e
             return False
 
         return True
@@ -160,6 +214,7 @@ class ImagingMenu():
         """
             set the default item number
         """
+        assert(type(value) == int)
         self.default_item = value
 
     def getDefaultItem(self):
@@ -168,12 +223,23 @@ class ImagingMenu():
         """
         return self.default_item
 
-    def addEntry(self, entry, position = None):
+    def addImageEntry(self, entry, position):
+        """
+        add the ImagingEntry entry to our menu
+        if position is None, add it at the first slot available
+        """
+        if position in self.menuitems:
+            raise ValueError
+        self.menuitems[position] = ImagingImageItem(entry)
+
+    def addBootServiceEntry(self, entry, position):
         """
             add the ImagingEntry entry to our menu
             if position is None, add it at the first slot available
         """
-        pass
+        if position in self.menuitems:
+            raise ValueError
+        self.menuitems[position] = ImagingBootServiceItem(entry)
 
     def removeEntry(self, position = None):
         """
@@ -202,33 +268,44 @@ class ImagingMenu():
         """
         self.hidden = False
 
-class ImagingMenuItem():
+    def setProtocol(self, value):
+        assert(value in ['nfs', 'tftp', 'mtftp'])
+        self.protocol = value
+
+    def setSplashScreen(self, value):
+        assert(type(value) == unicode)
+        self.splashscreen = value
+
+    def setMessage(self, message):
+        assert(type(message) == unicode)
+        self.message = message
+
+class ImagingImageItem:
+    pass
+
+
+class ImagingBootServiceItem:
     """
         hold an imaging menu item
     """
 
     title = None # the item title
     desc = None # the item desc
-    uri = None # the uri to call
+    value = None # the value to display
 
-    def __init__(self, title, desc = None):
+    def __init__(self, entry):
         """
             Initialize this object.
             title is mandatory, desc optionnal
             (in this case, desc takes the value of title)
         """
-        assert type(title) == str
-        self.title = title
-        assert type(desc) in [str, NoneType]
-        self.desc = desc
-
-    def setUri(self, uri):
-        """
-            set the bootservice URI
-        """
-        assert type(uri) == str
-        self.uri = uri
-
+        print entry
+        self.title = entry['name']
+        self.desc = entry['desc']
+        self.value = entry['value']
+        assert(type(self.title) == unicode)
+        assert(type(self.desc) == unicode)
+        
     def getEntry(self):
         """
             return the entry, in a grub compatible format
@@ -237,7 +314,7 @@ class ImagingMenuItem():
         buffer += 'title %s\n' % self.title
         if self.desc:
             buffer += 'desc %s\n' % self.desc
-        if self.uri:
-            buffer += self.uri
+        if self.value:
+            buffer += self.value + '\n'
         return buffer
 
