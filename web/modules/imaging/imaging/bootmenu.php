@@ -118,10 +118,9 @@ function item_edit() {
         $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
         $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
         $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
+        $f->add(new HiddenTpl("default_name"),                  array("value" => (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['default_name']), "hide" => True));
+           
                         
-        $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_name"));
-        $f->add($input,                                         array("value" => $item['default_name']));
-                
         $f->add(
             new TrFormElement(_T("Selected by default", "imaging"), 
             new CheckboxTpl("default")),
