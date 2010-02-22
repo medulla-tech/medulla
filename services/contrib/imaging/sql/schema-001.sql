@@ -24,7 +24,7 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
-SET storage_engine=MYISAM;
+SET storage_engine=INNODB;
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
@@ -372,7 +372,7 @@ INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `valu
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, 'Diskless Boot', 'Load diskless environment then get a prompt', 7, 8, 'kernel ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_K_DISKLESS## revodebug revoroot=##PULSE2_F_BASE## quiet\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_F_DISKLESS##/##PULSE2_I_DISKLESS##');
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, 'Memory test', 'Run a full memory check', 9, 10, 'kernel --kernel-type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_F_TOOLS##/##PULSE2_MEMTEST##');
 
-INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, 'Default Boot Menu', 1, NULL, '/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOSPLASH##', '-- Warning! Your PC is being backed up or restored. Do not reboot !', NULL, NULL, 1);
+INSERT INTO Menu (id, default_name, fk_name, timeout, background_uri, message, fk_default_item, fk_default_item_WOL, fk_protocol) VALUES (1, 'Default Boot Menu', 1, NULL, '##PULSE2_F_DISKLESS##/##PULSE2_F_BOOSPLASH##', '-- Warning! Your PC is being backed up or restored. Do not reboot !', NULL, NULL, 1);
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 1, 0, 0, 1);
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (2, 2, 0, 0, 1);
