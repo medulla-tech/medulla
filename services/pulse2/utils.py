@@ -315,6 +315,12 @@ def isMACAddress(mac_addr):
         return False
     return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
 
+def reduceMACAddress(mac):
+    """
+    @return: the MAC address without ':'
+    """
+    return mac.replace(':', '')
+
 def splitComputerPath(path):
     """
     Split the computer path according to this scheme:
