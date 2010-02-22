@@ -63,13 +63,13 @@ def myCall():
 
     if len(sys.argv) == 2: # "mac" version
         mac = sys.argv[1]
-        logging.getLogger().warning('HOOK %s : I was not given an UUID, proceeding anyway' % (sys.argv[0]) )
-    elif len(sys.argv) == 3: # "mac + uuid" version
+        logging.getLogger().warning('HOOK %s : I was not given an name, proceeding anyway' % (sys.argv[0]) )
+    elif len(sys.argv) == 3: # "mac + name" version
         mac = sys.argv[1]
-        uuid = sys.argv[2]
-    elif len(sys.argv) == 4: # "mac + uuid + pass" version
+        name = sys.argv[2]
+    elif len(sys.argv) == 4: # "mac + name + pass" version
         mac = sys.argv[1]
-        uuid = sys.argv[2]
+        name = sys.argv[2]
         key = sys.argv[3]
         logging.getLogger().warning('HOOK %s : I was given a password, but I don\'t now what to do woth it, so I dropped it' % (sys.argv[0]) )
     else:
@@ -82,15 +82,15 @@ def myCall():
         exitcode = ERROR_CLIENT
         endBack()
 
-    if not len(uuid):
-        logging.getLogger().error('HOOK %s : No UUID given' % (sys.argv[0]))
+    if not len(name):
+        logging.getLogger().error('HOOK %s : No name given' % (sys.argv[0]))
         exitcode = ERROR_CLIENT
         endBack()
 
     try:
         callFunction(
             imagingAPI.computerRegister(
-                uuid,
+                name,
                 mac
             )
         )
