@@ -200,7 +200,10 @@ if (!empty($submod)) {
     $page = new Page("editservice", _T("Edit parameters of a service on a target", "msc"));
     $page->setFile("modules/imaging/imaging/addservice.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));
-    
+    $page = new Page("delservice", _T("Remove a service from a target", "msc"));
+    $page->setFile("modules/imaging/imaging/addservice.php");
+    $page->setOptions(array("AJAX" => True, "visible" => False));
+     
     $page = new Page("addimage", _T("Add a image to a target", "msc"));
     $page->setFile("modules/imaging/imaging/addimage.php");
     $page->setOptions(array("AJAX" => True, "visible" => False));

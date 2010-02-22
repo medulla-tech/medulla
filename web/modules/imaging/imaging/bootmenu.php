@@ -96,7 +96,8 @@ function item_edit() {
 
     if(count($_POST) == 0) {
     
-        printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $item['desc']);
+        $name = (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['default_name']);
+        printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $name);
                 
         $is_selected = '';
         $is_displayed = 'CHECKED';
@@ -118,9 +119,8 @@ function item_edit() {
         $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
         $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
         $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
-        $f->add(new HiddenTpl("default_name"),                  array("value" => (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['default_name']), "hide" => True));
-           
-                        
+        $f->add(new HiddenTpl("default_name"),                  array("value" => $name,                          "hide" => True));
+
         $f->add(
             new TrFormElement(_T("Selected by default", "imaging"), 
             new CheckboxTpl("default")),

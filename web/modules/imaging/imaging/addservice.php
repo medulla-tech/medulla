@@ -99,10 +99,8 @@ function service_add($type, $target_uuid) {
     $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
     $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
     $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
+    $f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
 
-    $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_mi_label"));
-    $f->add($input,                                         array("value" => ''));
-    
 
     $check = new TrFormElement(_T('Selected by default', 'imaging'), new CheckboxTpl("do_default"));
     $f->add($check,                                         array("value" => web_def_service_default() ? "checked" : ""));
