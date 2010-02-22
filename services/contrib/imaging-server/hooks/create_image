@@ -51,10 +51,31 @@ def myCall():
         a deferred should be passed to callFunction()
         @woot
     """
-    callFunction(
-        imagingAPI.imagingServerStatus(
-        )
-    )
+
+    mac = '' # client MAC address
+
+    if len(sys.argv) != 2 and len(sys.argv) != 3: # not enough (or too much) args
+        logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (one or two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    mac = sys.argv[1]
+
+    if not pulse2.utils.isMACAddress(mac):
+        logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
+        exitcode = ERROR_CLIENT
+        endBack()
+
+    if len(sys.argv) == 3:
+        logging.getLogger().warn('HOOK %s : Asking for a kind of backup is deprecated !' % (sys.argv[0]))
+
+    try:
+        callFunction(imagingAPI.computerPrepareImagingDirectory(mac))
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        #MDV/NR exitcode = ERROR_CLIENT
+        exitcode= ERROR_OK
+        endBack()
 
 def myTreatment(result):
     """
