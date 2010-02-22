@@ -206,6 +206,17 @@ function item_list() {
         if (isset($entry['image'])) {
             $is_image = True;
         }
+
+        if ($is_image) { # TODO $entry has now a cache for desc.
+            $a_desc[] = $entry['image']['desc'];
+            $entry['default_name'] = $entry['image']['default_name'];
+            $kind = 'IM';
+        } else {
+            $a_desc[] = $entry['boot_service']['default_desc'];
+            $entry['default_name'] = $entry['boot_service']['default_name'];
+            $kind = 'BS';
+        }
+
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $entry['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
@@ -225,14 +236,7 @@ function item_list() {
             $actionsDown[] = $downAction;
             $actionsUp[] = $upAction;
         }
-
-        if ($is_image) { # TODO $entry has now a cache for desc.
-            $a_desc[] = $entry['image']['desc'];
-            $kind = 'IM';
-        } else {
-            $a_desc[] = $entry['boot_service']['desc'];
-            $kind = 'BS';
-        }
+        
         $a_label[] = sprintf("%s) %s", $kind, $entry['default_name']); # should be replaced by the label in the good language
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);
