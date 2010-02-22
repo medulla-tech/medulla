@@ -26,10 +26,12 @@ Pulse 2 Package Server Imaging API
 import logging
 
 from twisted.internet import defer
+from twisted.internet.defer import maybeDeferred
 
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
+from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
 
 from pulse2.utils import isMACAddress, splitComputerPath
@@ -89,7 +91,7 @@ class ImagingApi(MyXmlrpc):
 
         url, credentials = makeURL(PackageServerConfig().mmc_agent)
 
-        self.logger.info('Imaging: Starting new client registration: %s %s' % (computerName, MACAddress))
+        self.logger.info('Imaging: Starting registration for %s as %s' % (MACAddress, computerName))
         # Call the MMC agent
         client = ImagingXMLRPCClient(
             '',
@@ -103,6 +105,119 @@ class ImagingApi(MyXmlrpc):
         d = client.callRemote(func, *args)
         d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
         return d
+
+    def xmlrpc_computerUpdate(self, MACAddress):
+        """
+        Method to update the menu a computer.
+
+        @raise TypeError: if MACAddress is malformed
+        @return: a deferred object resulting to 1 if update was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def onSuccess(result):
+            # TODO : add menu re-generation here
+            return 1
+
+        if not isMACAddress(MACAddress):
+            raise TypeError
+
+        url, credentials = makeURL(PackageServerConfig().mmc_agent)
+
+        self.logger.info('Imaging: Starting menu update for %s' % (MACAddress))
+        # Call the MMC agent
+        client = ImagingXMLRPCClient(
+            '',
+            url,
+            PackageServerConfig().mmc_agent['verifypeer'],
+            PackageServerConfig().mmc_agent['cacert'],
+            PackageServerConfig().mmc_agent['localcert']
+        )
+        func = 'imaging.getMenu'
+        args = (MACAddress)
+        d = client.callRemote(func, *args)
+        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+        return d
+
+    def xmlrpc_injectInventory(self, MACAddress, Inventory):
+        """
+        Method to process the inventory of a computer
+
+        @raise TypeError: if MACAddress is malformed
+        @return: a deferred object resulting to 1 if processing was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def onSuccess(result):
+            # TODO : add menu re-generation here
+            return 1
+
+        if not isMACAddress(MACAddress):
+            raise TypeError
+
+        url, credentials = makeURL(PackageServerConfig().mmc_agent)
+
+        self.logger.info('Imaging: Starting inventory processing for %s' % (MACAddress))
+        # Call the MMC agent
+        client = ImagingXMLRPCClient(
+            '',
+            url,
+            PackageServerConfig().mmc_agent['verifypeer'],
+            PackageServerConfig().mmc_agent['cacert'],
+            PackageServerConfig().mmc_agent['localcert']
+        )
+        func = 'imaging.injectInventory'
+        args = (MACAddress, Inventory)
+        d = client.callRemote(func, *args)
+        d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
+        return d
+
+
+    def xmlrpc_getComputerUUID(self, MACAddress):
+        """
+        Method to obtain the UUID of a computer.
+
+        We are using a cache system :
+        pulse2.package_server.imaging.cache.UUIDCache()
+
+        @raise TypeError: if MACAddress is malformed
+        @return: a deferred object resulting to 1 if processing was
+                 successful, else 0.
+        @rtype: int
+        """
+
+        def onSuccess(result):
+            try:
+                if result[0]:
+                    UUIDCache().set(MACAddress, result[1])
+                return result
+            except:
+                self.logger.info('Imaging: Got an unexpected result for %s : %s' % (MACAddress, result))
+
+        if not isMACAddress(MACAddress):
+            raise TypeError
+
+        # try to extract from our cache
+        uuid = UUIDCache().get(MACAddress)
+
+        if uuid: # fetched from cache
+            return maybeDeferred(lambda uuid: uuid, uuid)
+        else : # cache fetching failed, try to obtain the real value
+            url, credentials = makeURL(PackageServerConfig().mmc_agent)
+            self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
+            # Call the MMC agent
+            client = ImagingXMLRPCClient(
+                '',
+                url,
+                PackageServerConfig().mmc_agent['verifypeer'],
+                PackageServerConfig().mmc_agent['cacert'],
+                PackageServerConfig().mmc_agent['localcert']
+            )
+            d = client.callRemote('imaging.getComputerUUID', MACAddress)
+            d.addCallbacks(onSuccess, client.onError, errbackArgs = ('imaging.getComputerUUID', MACAddress, 0))
+            return d
 
     def xmlrpc_computersMenuSet(menus):
         """
