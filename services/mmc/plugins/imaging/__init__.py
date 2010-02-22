@@ -43,7 +43,7 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerUUID']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -431,7 +431,7 @@ class RpcProxy(RpcProxyI):
     ###### REGISTRATION
     def isTargetRegister(self, uuid, type):
         return ImagingDatabase().isTargetRegister(uuid, type)
-        
+
     def isMachineRegistered(self, machine_uuid):
         return self.isTargetRegister(machine_uuid, TYPE_COMPUTER)
 
@@ -520,3 +520,10 @@ class RpcProxy(RpcProxyI):
             return [False, "The UUID you try to declare (%s) already exists in the database, please check you know what you are doing."%(uuid)]
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
+
+    def getComputerUUID(self, mac):
+        """
+        Called by the package server, to obtain a computer UUID in exchange of its MAC address
+        """
+        # TODO, for now return a fake value
+        return [True, "FAKE_UUID"]
