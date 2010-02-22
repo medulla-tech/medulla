@@ -441,7 +441,7 @@ class RpcProxy(RpcProxyI):
     ###### Menus
     def getMyMenuTarget(self, uuid, type):
         ret = ImagingDatabase().getMyMenuTarget(uuid, type)
-        if ret[1] != None:
+        if ret[1]:
             ret[1] = ret[1].toH()
         return ret
 
