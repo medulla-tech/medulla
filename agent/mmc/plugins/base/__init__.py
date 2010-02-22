@@ -1089,8 +1089,15 @@ class LdapUserGroupControl:
         @type  attrVal: object
         """
         userdn = self.searchUserDN(uid)
+
+        # don't log jpeg values
+        if attr == "jpegPhoto":
+            attrValue = None
+        else:
+            attrValue = attrVal            
+        
         if attrVal:
-            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrVal)
+            r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrValue)
             if type(attrVal) == unicode:
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpclib.Binary):
