@@ -35,8 +35,13 @@ from sqlalchemy.orm import *
 
 import logging
 
+# THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
+from pulse2.managers.profile import ComputerProfileManager
+from pulse2.managers.location import ComputerLocationManager
+
 DATABASEVERSION = 1
 
+ERR_DEFAULT = 1000
 ERR_MISSING_NOMENCLATURE = 1001
 ERR_IMAGING_SERVER_DONT_EXISTS = 1003
 ERR_ENTITY_ALREADY_EXISTS = 1004
@@ -1372,8 +1377,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [ret, mi_out]
         
     def __duplicateDefaultMenu(self, session):
-        menu = Menu()
         default_menu = self.__getDefaultMenu(session)
+        return self.__duplicateMenu(session, default_menu)
+
+    def __duplicateMenu(self, session, default_menu):
+        menu = Menu()
         menu.default_name = default_menu.default_name
         menu.fk_name = default_menu.fk_name
         menu.timeout = default_menu.timeout
@@ -1496,20 +1504,72 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return ret
 
+    def __createTarget(self, session, uuid, name, type, entity_id, menu_id, params):
+        target = Target()
+        target.uuid = uuid
+        target.name = name
+        target.type = type
+        target.kernel_parameters = ''
+        target.image_parameters = ''
+        target.fk_entity = entity_id
+        target.fk_menu = menu_id
+        session.save(target)
+        return target
+
     ######### MENUS
+    def setMyMenuTarget(self, uuid, params, type):
+        session = create_session()
+        session.close()
+        menu = self.getTargetMenu(uuid, type, session)
+        location_id = None
+        if not menu:
+            if type == TYPE_COMPUTER:
+                profile = ComputerProfileManager().getComputersProfile(uuid)
+                default_menu = None
+                if profile:
+                    default_menu = self.getTargetMenu(profile.id, TYPE_PROFILE, session)
+                if default_menu == None or not profile:
+                    location = ComputerLocationManager().getMachinesLocations([uuid])
+                    loc_id = location[uuid]['uuid']
+                    location_id = loc_id
+                    default_menu = self.getEntityDefaultMenu(loc_id, session)
+            elif type == TYPE_PROFILE:
+                m_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(uuid))
+                locations = ComputerLocationManager().getMachinesLocations(m_uuids)
+                # WARNING! here we take the location that is the most represented, it's wrong! 
+                # we have to decide how do we do with cross location profiles 
+                # TODO!
+                loc_id = locations[m_uuids[0]]['uuid']
+                location_id = loc_id
+                default_menu = self.getEntityDefaultMenu(loc_id, session)
+            else:
+                raise "%s:Don't know that type of target : %s"%(ERR_DEFAULT, type)
+            menu = self.__duplicateMenu(session, default_menu)
+            menu = self.__modifyMenu(id2uuid(menu.id), params, session)
+            session.flush()
+        else:
+            menu = self.__modifyMenu(id2uuid(menu.id), params, session)
+
+        if not self.isTargetRegister(uuid, type, session):
+            if location_id == None:
+                location = ComputerLocationManager().getMachinesLocations([uuid])
+                location_id = location[uuid]['uuid']
+            loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
+            target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)
+            
+        session.flush()
+        session.close()
+        return [True]
+        
+        
     def getMyMenuTarget(self, uuid, type):
         session = create_session()
         muuid = False
-        # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
-        from pulse2.managers.profile import ComputerProfileManager
-        from pulse2.managers.location import ComputerLocationManager
         if type == TYPE_COMPUTER:
             # if registered, get the computer menu and finish
             if self.isTargetRegister(uuid, type, session):
                 whose = [uuid, type]
                 menu = self.getTargetMenu(uuid, type, session)
-                if menu:
-                    menu = menu.toH()
                 session.close()
                 return [whose, menu]
             # else get the profile id
@@ -1523,9 +1583,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if uuid and self.isTargetRegister(uuid, TYPE_PROFILE, session):
             whose = [uuid, TYPE_PROFILE]
             menu = self.getTargetMenu(uuid, TYPE_PROFILE, session)
-            if menu:
-                menu = menu.toH()
-
         # else get the entity menu
         else:
             whose = False
@@ -1540,6 +1597,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 # TODO!
                 loc_id = locations[m_uuids[0]]['uuid']
             menu = self.getEntityDefaultMenu(loc_id, session)
+        if menu == None:
+            menu = False
 
         session.close()
         return [whose, menu]

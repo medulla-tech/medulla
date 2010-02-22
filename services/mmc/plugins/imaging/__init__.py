@@ -184,7 +184,7 @@ class RpcProxy(RpcProxyI):
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
-    def getMachineBootMenu(self, target_id, start = 0, end = -1, filter = ''):
+    def getComputerBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootMenu(target_id, start, end, filter)
 
     def getLocationBootMenu(self, loc_id, start = 0, end = -1, filter = ''):
@@ -222,7 +222,7 @@ class RpcProxy(RpcProxyI):
             'masters': [countm, xmlrpcCleanup(retm)]
         }
 
-    def getMachineImages(self, id, start = 0, end = -1, filter = ''):
+    def getComputerImages(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetImages(id, TYPE_COMPUTER, start, end, filter)
 
     def getProfileImages(self, id, start = 0, end = -1, filter = ''):
@@ -287,7 +287,7 @@ class RpcProxy(RpcProxyI):
         count = db.countBootServicesOnTargetById(id, filter)
         return [count, xmlrpcCleanup(ret)]
 
-    def getMachineBootServices(self, id, start = 0, end = -1, filter = ''):
+    def getComputerBootServices(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetBootServices(id, TYPE_COMPUTER, start, end, filter)
 
     def getProfileBootServices(self, id, start = 0, end = -1, filter = ''):
@@ -364,7 +364,7 @@ class RpcProxy(RpcProxyI):
         count = db.countMasteredOnsOnTargetByIdAndType(id, type, filter)
         return [count, xmlrpcCleanup(ret)]
 
-    def getMachineLogs(self, id, start = 0, end = -1, filter = ''):
+    def getComputerLogs(self, id, start = 0, end = -1, filter = ''):
         return self.__getTargetMasteredOns(id, TYPE_COMPUTER, start, end, filter)
 
     def getProfileLogs(self, id, start = 0, end = -1, filter = ''):
@@ -432,7 +432,7 @@ class RpcProxy(RpcProxyI):
     def isTargetRegister(self, uuid, type):
         return ImagingDatabase().isTargetRegister(uuid, type)
 
-    def isMachineRegistered(self, machine_uuid):
+    def isComputerRegistered(self, machine_uuid):
         return self.isTargetRegister(machine_uuid, TYPE_COMPUTER)
 
     def isProfileRegistered(self, profile_uuid):
@@ -441,14 +441,25 @@ class RpcProxy(RpcProxyI):
     ###### Menus
     def getMyMenuTarget(self, uuid, type):
         ret = ImagingDatabase().getMyMenuTarget(uuid, type)
-        ret[1] = ret[1].toH()
+        if ret[1] != None:
+            ret[1] = ret[1].toH()
         return ret
 
-    def getMyMenuMachine(self, uuid):
+    def setMyMenuTarget(self, uuid, params, type):
+        ret = ImagingDatabase().setMyMenuTarget(uuid, params, type)
+        return ret
+
+    def getMyMenuComputer(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_COMPUTER))
+
+    def setMyMenuComputer(self, target_uuid, params):
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_COMPUTER))
 
     def getMyMenuProfile(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_PROFILE))
+    
+    def setMyMenuProfile(self, target_uuid, params):
+        return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_PROFILE))
 
     ###### POST INSTALL SCRIPTS
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
