@@ -81,6 +81,7 @@ if (isset($_POST["buser"])) {
     $confpass = $_POST["confpass"];
     $homedir = $_POST["homeDir"];
     $loginShell = $_POST["loginShell"];
+    $cn = $_POST["cn"];
 
     $detailArr["cn"][0]=$nlogin;
     $detailArr["givenName"][0]=$firstname;
@@ -91,6 +92,11 @@ if (isset($_POST["buser"])) {
     }
     else {
         $desactive = false;
+    }
+    
+    if (strlen($cn) == 0) {
+        $error.= _("The common name field can't be empty.")." <br/>";
+        setFormError("cn");
     }
 
     if ($pass != $confpass) {
@@ -231,7 +237,7 @@ if (!empty($_GET["user"])) {
 
             $result.=_("Attributes updated.")."<br />";
 
-            if (!isset($_POST["groupsselected"])) $_POST["groupsselected"] = array();
+            if (!$FH->getPostValue("groupsselected")) $FH->setPostValue("groupsselected", array());
             
             // Create/modify user in all enabled MMC modules
             callPluginFunction("changeUser", array($FH));
@@ -253,7 +259,7 @@ if (!empty($_GET["user"])) {
 
             /* Secondary groups management */
             $old = getUserSecondaryGroups($_POST['nlogin']);
-            $new = $_POST['groupsselected'];
+            $new = $FH->getPostValue('groupsselected');
             foreach (array_diff($old, $new) as $group) {
                 del_member($group, $_POST['nlogin']);
                 callPluginFunction("delUserFromGroup", array($_POST['nlogin'], $group));
