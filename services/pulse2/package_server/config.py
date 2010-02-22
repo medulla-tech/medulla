@@ -260,7 +260,6 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'cacert' : "/etc/mmc/pulse2/package-server/keys/cacert.pem",
                 'localcert' : "/etc/mmc/pulse2/package-server/keys/privkey.pem"
             }
-
             if self.cp.has_option('mmc_agent', 'host'):
                 self.mmc_agent['host'] = self.cp.get('mmc_agent', 'host')
             if self.cp.has_option('mmc_agent', 'port'):
@@ -273,17 +272,18 @@ class P2PServerCP(pulse2.utils.Singleton):
                 self.mmc_agent['cacert'] = self.cp.get('mmc_agent', 'cacert')
             if self.cp.has_option('mmc_agent', 'localcert'):
                 self.mmc_agent['localcert'] = self.cp.get('mmc_agent', 'localcert')
-            if not os.path.isfile(self.mmc_agent['localcert']):
-                raise Exception('can\'t read SSL key "%s"' % (self.mmc_agent['localcert']))
-                return False
-            if not os.path.isfile(self.mmc_agent['cacert']):
-                raise Exception('can\'t read SSL certificate "%s"' % (self.mmc_agent['cacert']))
-                return False
-            if self.mmc_agent['verifypeer']: # we need twisted.internet.ssl.Certificate to activate certs
-                import twisted.internet.ssl
-                if not hasattr(twisted.internet.ssl, "Certificate"):
-                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+            if self.mmc_agent['enablessl']:
+                if not os.path.isfile(self.mmc_agent['localcert']):
+                    raise Exception('can\'t read SSL key "%s"' % (self.mmc_agent['localcert']))
                     return False
+                if not os.path.isfile(self.mmc_agent['cacert']):
+                    raise Exception('can\'t read SSL certificate "%s"' % (self.mmc_agent['cacert']))
+                    return False
+                if self.mmc_agent['verifypeer']: # we need twisted.internet.ssl.Certificate to activate certs
+                    import twisted.internet.ssl
+                    if not hasattr(twisted.internet.ssl, "Certificate"):
+                        raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                        return False
 
         # [imaging_api] section parsing
         if self.cp.has_section("imaging_api"):
