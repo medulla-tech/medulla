@@ -31,13 +31,31 @@ import xmlrpclib
 
 from pulse2.package_server.config import P2PServerCP
 
+ERROR_BAD_ARGUMENT = 2
+
+inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
+
+def display_help(code):
+    """
+    Display command line help and exit using specified code
+    """
+    if ERROR_BAD_ARGUMENT:
+        sys.stderr.write("ERROR: Bad command line arguments\n")
+    print "Usage: pulse2-package-server-register-imaging -m MMC_AGENT_URL -n NAME [options]"
+    print "Options:"
+    print "-m        : MMC Agent URL (mandatory)"
+    print "-n        : Imaging server name (mandatory)"
+    print "-f        : Alternate configuration file (%s)" % inifile
+    print "-h --help : Display help"
+    sys.exit(code)
+
 my_name = None
 mmc_url = None
-inifile = "/etc/mmc/pulse2/package-server/package-server.ini"
+
 try:
-    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:")
+    opts, suivarg = getopt.getopt(sys.argv[1:], "f:n:m:h", ["help"])
 except getopt.GetoptError:
-    sys.exit(2)
+    display_help(ERROR_BAD_ARGUMENT)
     
 print "reading command line opts"
 for option, argument in opts:
@@ -47,6 +65,10 @@ for option, argument in opts:
         my_name = argument
     elif option == "-m": # MMC url
         mmc_url = argument
+    elif option in ("-h", "--help"):
+        display_help(0)
+    else:
+        display_help(ERROR_BAD_ARGUMENT)
 
 failure = False
 if my_name == None:
@@ -73,6 +95,10 @@ config.setup(inifile)
 config.imaging_api['mount_point'] = config.imaging_api['mount_point'].replace('/', '')
 my_url = "%s://%s:%s/%s" % (config.proto, config.bind, str(config.port), config.imaging_api['mount_point'])
 my_uuid = config.imaging_api['uuid']
+
+if not my_uuid:
+    sys.stderr.write("Error: Please set the uuid option of the imaging_api section of %s\n" % inifile)
+    sys.exit(1)
 
 print "%s %s" % (my_url, my_uuid)
 
