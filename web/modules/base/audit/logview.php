@@ -81,21 +81,21 @@ foreach ($log[0]["objects"] as $obj) {
 
     if (isset($obj["previous"]) && isset($obj["current"])) {
 
-        if(isset($obj["previous"][0]) and $obj["previous"][0]) {
+        /*if(isset($obj["previous"][0]) and $obj["previous"][0]) {
             $previous = trim($obj["previous"][0]);
         }
         else {
             $previous = " ";
-        }
+        }*/
 
         if(isset($obj["current"][0]) and $obj["current"][0]) {
             $current = trim($obj["current"][0]);
         }
         else {
-            $current = " ";
+            $current = "(empty)";
         }        
     
-        if($previous != " " or $current != " ") {
+        //if($previous != " " or $current != " ") {
             /*$f->add(new TrFormElement(_("Previous"), new DisabledInputTpl("previous")), 
                 array("value"=> $previous, "disabled"=>True));*/
             
@@ -111,7 +111,7 @@ foreach ($log[0]["objects"] as $obj) {
                 $f->add(new TrFormElement("",new DisabledInputTpl("current")), 
                 array("value"=> $current, "disabled"=>True));            
             }*/
-        }
+        //}
     }
     $i++;        
 }
