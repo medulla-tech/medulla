@@ -25,11 +25,12 @@ Pulse 2 Package Server Imaging API
 
 import logging
 
-from twisted.internet.utils import getProcessOutput
+from twisted.internet import defer
 
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
+from pulse2.package_server.imaging.api.status import Status
 
 from pulse2.utils import isMACAddress, splitComputerPath
 from pulse2.apis import makeURL
@@ -61,28 +62,10 @@ class ImagingApi(MyXmlrpc):
         @return: a percentage, or -1 if it fails
         @rtype: int
         """
-        def onSuccess(result):
-            ret = -1
-            for line in result.split('\n'):
-                words = line.split()
-                print words
-                # Last column should contain the mounted on part
-                try:
-                    mount = words[-1]
-                except IndexError:
-                    continue
-                if self.config.imaging_api['masters_folder'].startswith(mount):
-                    try:
-                        ret = int(words[-2].rstrip('%'))
-                    except (ValueError, IndexError):
-                        pass
-                    # Don't break but continue because mount maybe /, which
-                    # will always match
-            return ret
-
-        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
-        d.addCallback(onSuccess)
-        return d
+        status = Status(self.config)
+        status.deferred = defer.Deferred()
+        status.get()
+        return status.deferred
 
     def xmlrpc_computerRegister(self, computerName, MACAddress):
         """
@@ -120,3 +103,16 @@ class ImagingApi(MyXmlrpc):
         d = client.callRemote(func, *args)
         d.addCallbacks(onSuccess, client.onError, errbackArgs = (func, args, 0))
         return d
+
+    def xmlrpc_computersMenuSet(menus):
+        """
+        Set computers imaging boot menu.
+
+        @param menus: list of (uuid, menu) couples
+        @type menus: list
+
+        @ret: 
+        """
+        for uuid, menu in menus:
+            pass
+        return 1
