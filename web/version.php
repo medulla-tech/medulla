@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2010 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -18,12 +18,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 ?>
 <?php
 
+/* Display MMC architecture component versions */
 
 require("includes/config.inc.php");
 
@@ -39,9 +39,13 @@ foreach ($_SESSION["supportModList"] as $modName) {
     $apirev = xmlCall($modName.".getApiVersion",null);
     $apiver = xmlCall($modName.".getVersion",null);
     echo "agent: version $apiver / API ".$apirev. " / revision ".xmlCall($modName.".getRevision",null)."<br/>";
-    echo "web: version ".$__version[$modName] .  " / API  ".$__apiversion[$modName]." / revision ".$__revision[$modName]."<br/>";  
-    if ($__apiversion[$modName] != $apirev) {
-        echo '<div style="color : #D00;">Warning: API numbers mismatch</div>';
+    if (in_array($modName, $_SESSION["modulesList"])) {
+        echo "web: version ".$__version[$modName] .  " / API  ".$__apiversion[$modName]." / revision ".$__revision[$modName]."<br/>";  
+        if ($__apiversion[$modName] != $apirev) {
+            echo '<div style="color : #D00;">Warning: API numbers mismatch</div>';
+        }
+    } else {
+        echo '<div style="color : #D00;">web: plugin is not installed</div>';
     }
     echo "<br/>";
 }
