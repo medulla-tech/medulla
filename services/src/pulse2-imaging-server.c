@@ -172,7 +172,6 @@ int mysystem(int argc, ...) {
              "echo \"`date --rfc-3339=seconds` pulse2-imaging-server %.900s\" 1>>%s 2>&1",
              cmd, gLogFile);
     system(tmp);
-
     snprintf(tmp, 1023, "%.900s 1>>%s 2>&1", cmd, gLogFile);
 
     // we now take care of the error code :
@@ -284,7 +283,6 @@ unsigned char *getmacfrompkt(char *buf, int l) {
  */
 int process_packet(unsigned char *buf, char *mac, char *smac,
                    struct sockaddr_in *si_other, int s) {
-    char name[256];
     int fo;
     static unsigned int lastfile = 0, lasttime = 0;
 
@@ -328,7 +326,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename)) ) {
             // FIXME : we should also send back a NAK
         }
-        unlink(name);
+        unlink(filename);
         return 0;
     }
     // identification
@@ -453,6 +451,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
              * so we uses a temporary file to recover it.
              * yes, that's quiet ugly
              */
+            char *name = malloc(256);
             bzero(name, 256);
             fo = open(filename, 'r');
             read(fo, name, 256);
@@ -461,6 +460,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             strncpy((char *)gBuff, name, 256);
             sendto(s, gBuff, strlen((char *)gBuff) + 1, MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
+            free(name);
         }
         return 0;
     }
@@ -518,12 +518,17 @@ void readConfig(char *config_file_path) {
         diep(msg);
     }
     // Parse MAIN section //
-    gHost = iniparser_getstring(ini, "main:host", "0.0.0.0");
-    syslog(LOG_DEBUG, "[main] host = %s", gHost);
+
+    tmp = iniparser_getstring(ini, "main:host", "0.0.0.0");
+    snprintf(gHost, 256, "%s", tmp);
+    syslog(LOG_DEBUG, "[hooks] host = %s", gHost);
+
     gPort = iniparser_getint(ini, "main:port", 1001);
     syslog(LOG_DEBUG, "[main] port = %d", gPort);
-    gAdminPass = iniparser_getstring(ini, "main:adminpass", "");
-    syslog(LOG_DEBUG, "[main] adminpass = ****");
+
+    tmp = iniparser_getstring(ini, "main:adminpass", "");
+    snprintf(gAdminPass, 256, "%s", tmp);
+    syslog(LOG_DEBUG, "[hooks] adminpass = ****");
 
     // Parse DAEMON section //
     gUser = iniparser_getstring(ini, "daemon:user", "root");
@@ -538,59 +543,43 @@ void readConfig(char *config_file_path) {
     syslog(LOG_DEBUG, "[daemon] pidfile = %s", gPIDFile);
 
     // Parse HOOKS section //
-    gDirHooks =
-        iniparser_getstring(ini, "hooks:hooks_dir",
+    tmp = iniparser_getstring(ini, "hooks:hooks_dir",
                             "/usr/local/lib/pulse2/imaging-server/hooks");
+    snprintf(gDirHooks, 256, "%s", tmp);
     syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
 
     tmp = iniparser_getstring(ini, "hooks:create_client_path", "create_client");
-    gPathCreateClient = malloc(256);
-    bzero(gPathCreateClient, 256);
     snprintf(gPathCreateClient, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] create_client_path = %s", gPathCreateClient);
 
     tmp = iniparser_getstring(ini, "hooks:update_client_path", "update_client");
-    gPathUpdateClient = malloc(256);
-    bzero(gPathUpdateClient, 256);
     snprintf(gPathUpdateClient, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] update_client_path = %s", gPathUpdateClient);
 
     tmp =
         iniparser_getstring(ini, "hooks:process_inventory_path",
                             "process_inventory");
-    gPathProcessInventory = malloc(256);
-    bzero(gPathProcessInventory, 256);
     snprintf(gPathProcessInventory, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] process_inventory_path = %s",
            gPathProcessInventory);
 
     tmp = iniparser_getstring(ini, "hooks:create_image_path", "create_image");
-    gPathCreateImage = malloc(256);
-    bzero(gPathCreateImage, 256);
     snprintf(gPathCreateImage, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] create_image_path = %s", gPathCreateImage);
 
     tmp = iniparser_getstring(ini, "hooks:update_image_path", "update_image");
-    gPathUpdateImage = malloc(256);
-    bzero(gPathUpdateImage, 256);
     snprintf(gPathUpdateImage, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] update_image_path = %s", gPathUpdateImage);
 
     tmp = iniparser_getstring(ini, "hooks:log_action_path", "log_action");
-    gPathLogAction = malloc(256);
-    bzero(gPathLogAction, 256);
     snprintf(gPathLogAction, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] log_action_path = %s", gPathLogAction);
 
     tmp = iniparser_getstring(ini, "hooks:get_uuid_path", "get_uuid");
-    gPathGetUUID = malloc(256);
-    bzero(gPathGetUUID, 256);
     snprintf(gPathGetUUID, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] get_uuid_path = %s", gPathGetUUID);
 
     tmp = iniparser_getstring(ini, "hooks:mtftp_sync_path", "mtftp_sync");
-    gPathMTFTPSync = malloc(256);
-    bzero(gPathMTFTPSync, 256);
     snprintf(gPathMTFTPSync, 256, "%s/%s", gDirHooks, tmp);
     syslog(LOG_DEBUG, "[hooks] mtftp_sync_path = %s", gPathMTFTPSync);
 

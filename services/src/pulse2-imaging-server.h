@@ -55,19 +55,19 @@ unsigned char gBuff[80];
 char *gConfigurationFile = CONFIGURATION_FILE;
 
 // global config options, main section
-char *gHost;
+char gHost[256];
 int gPort = 0;
-char *gAdminPass;
+char gAdminPass[256];
 // global config options, helpers section
-char *gDirHooks;
-char *gPathProcessInventory;
-char *gPathCreateClient;
-char *gPathCreateImage;
-char *gPathUpdateClient;
-char *gPathUpdateImage;
-char *gPathLogAction;
-char *gPathGetUUID;
-char *gPathMTFTPSync;
+char gDirHooks[256];
+char gPathProcessInventory[256];
+char gPathCreateClient[256];
+char gPathCreateImage[256];
+char gPathUpdateClient[256];
+char gPathUpdateImage[256];
+char gPathLogAction[256];
+char gPathGetUUID[256];
+char gPathMTFTPSync[256];
 // global config options, daemon section
 char *gUser;
 char *gGroup;
