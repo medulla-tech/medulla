@@ -164,9 +164,10 @@ function image_list($type, $title, $images, $actions=true) {
     foreach ($images as $image) {
         $i += 1;
         
+        $name = $image['name'];
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $image['imaging_uuid'];
-        $list_params[$i]["itemlabel"] = urlencode($images['desc']);
+        $list_params[$i]["itemlabel"] = urlencode($name);
         
         // don't show action if image is in bootmenu
         if(!$images['images']) {
@@ -176,8 +177,8 @@ function image_list($type, $title, $images, $actions=true) {
         }
         
         # TODO no label in image!
-        $a_label[] = $image['desc'];
-        $a_desc[] = $image['images']['default_name'];
+        $a_label[] = $name;
+        $a_desc[] = $image['desc'];
         $a_date[] = _toDate($image['creation_date']);
         $a_size[] = $image['size'];
         $a_inbootmenu[] = ($image['menu_item']?True:False);

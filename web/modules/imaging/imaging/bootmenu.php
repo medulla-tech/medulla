@@ -208,7 +208,7 @@ function item_list() {
 
         if ($is_image) { # TODO $entry has now a cache for desc.
             $a_desc[] = $entry['image']['desc'];
-            $entry['default_name'] = $entry['image']['default_name'];
+            $entry['default_name'] = $entry['image']['name'];
             $kind = 'IM';
         } else {
             $a_desc[] = $entry['boot_service']['default_desc'];
