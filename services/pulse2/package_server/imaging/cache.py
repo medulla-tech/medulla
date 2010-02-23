@@ -47,8 +47,10 @@ class UUIDCache(pulse2.utils.Singleton):
     config = ConfigParser.ConfigParser()
 
     def __init__(self):
+        pulse2.utils.Singleton.__init__(self)
         if not os.path.isfile(self.cachePath):
             try:
+                self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
                 fp = open(self.cachePath, 'wb')
                 self.config.write(fp)
                 fp.close()
@@ -63,6 +65,7 @@ class UUIDCache(pulse2.utils.Singleton):
         Update cache file using our memory stucture
         """
         try:
+            self.log.info("Writing my UUID Cache File %s" % (self.cachePath))
             fp = open(self.cachePath, 'wb')
             self.config.write(fp)
             fp.close()
@@ -76,6 +79,7 @@ class UUIDCache(pulse2.utils.Singleton):
         Update memory stucture using our cache file
         """
         try:
+            self.log.info("Reading my UUID Cache File %s" % (self.cachePath))
             fp = open(self.cachePath, 'rb')
             self.config.read(fp)
             fp.close()
