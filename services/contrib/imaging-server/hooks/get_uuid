@@ -66,7 +66,7 @@ def myCall():
         return endBack()
 
     try:
-        callFunction(imagingAPI.getComputerUUID(mac))
+        callFunction(imagingAPI.getComputerByMac(mac))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
@@ -80,7 +80,7 @@ def myTreatment(result):
     """
     global exitcode
 
-    if result and type(result) == str:
+    if result and type(result) == dict:
         filename = sys.argv[2]
 
         if not os.path.isfile(filename):
@@ -90,10 +90,10 @@ def myTreatment(result):
 
         try :
             filestream = open(filename, 'w')
-            filestream.write(result)
+            filestream.write(result['shortname'])
             filestream.close()
-        except:
-            logging.getLogger().error('HOOK %s : Can\'t write %s, giving up' % (sys.argv[0], filename))
+        except Exception, e:
+            logging.getLogger().error('HOOK %s : Can\'t write %s : %s, giving up' % (sys.argv[0], filename, e))
             exitcode = ERROR_CLIENT
             return endBack()
 
