@@ -1105,7 +1105,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mi = session.query(MenuItem).select_from(self.menu_item.join(self.image_in_menu).join(self.image).join(self.menu).join(self.target))
         mi = mi.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
         iim = session.query(ImageInMenu).select_from(self.image_in_menu.join(self.menu_item).join(self.image).join(self.menu).join(self.target))
-        iim = bsim.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
+        iim = iim.filter(and_(self.image.c.id == uuid2id(item_uuid), self.target.c.uuid == target_uuid)).first()
         session.delete(mi)
         session.delete(iim)
         # TODO when it's not a master and the computer is the only one, what should we do with the image?
@@ -1815,7 +1815,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local']
     need_iteration = ['menu_item']
 
 class ImageInMenu(DBObject):
