@@ -52,7 +52,7 @@ class Status:
                 mount = words[-1]
             except IndexError:
                 continue
-            if self.config.imaging_api['masters_folder'].startswith(mount):
+            if os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder']).startswith(mount):
                 try:
                     self.ret['space_available'] = (int(words[-2].rstrip('%')), int(words[-3]) )
                 except (ValueError, IndexError):
