@@ -267,11 +267,11 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editImageToLocation(self, item_uuid, loc_id, params):
-        #try:
+        try:
             ret = ImagingDatabase().editImageToEntity(item_uuid, loc_id, params)
             return xmlrpcCleanup([True, ret])
-        #except Exception, e:
-        #    return xmlrpcCleanup([False, e])
+        except Exception, e:
+            return xmlrpcCleanup([False, e])
 
     def delImageToLocation(self, item_uuid, loc_id):
         try:
@@ -561,9 +561,8 @@ class RpcProxy(RpcProxyI):
         if not db.isTargetRegister(computer_uuid, TYPE_COMPUTER):
             return [False, "The computer UUID you try to access don't exists in the MMC."]
 
-        ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
-        #try:
-        #    ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
-        #    return ret
-        #except Exception, e:
-        #    return [False, e]
+        try:
+            ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
+            return ret
+        except Exception, e:
+            return [False, e]
