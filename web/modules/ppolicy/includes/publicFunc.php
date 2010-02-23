@@ -78,7 +78,7 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->push(new Table());
 
     if (strcmp($ldapArr["pwdMustChange"][0], 'TRUE') == 0) {
-        $pwdMustChange = "CHECKED";
+        $pwdMustChange = "checked";
     } else {
         $pwdMustChange = "";
     }
@@ -102,7 +102,7 @@ function _ppolicy_baseEdit($ldapArr, $postArr) {
     $f->push(new Table());
 
     if (strcmp($ldapArr["pwdLockout"][0],'TRUE') == 0) {
-        $pwdLockout = "CHECKED";
+        $pwdLockout = "checked";
     } else {
         $pwdLockout = "";
     }
@@ -152,48 +152,51 @@ function _ppolicy_verifInfo($postArr) {
 
 /**
  * function call when you submit change on a user
- * @param $postArr $_POST array of the page
+ * @param $FH FormHandler class of the page
  */
-function _ppolicy_changeUser($postArr) {
-    if (isset($postArr["ppolicyactivated"])) {
-        if (!hasPPolicyObjectClass($postArr["nlogin"])) {
-            addPPolicyObjectClass($postArr["nlogin"]);
+function _ppolicy_changeUser($FH) {
+    if ($FH->getPostValue("ppolicyactivated")) {
+        if (!hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
+            addPPolicyObjectClass($FH->getPostValue("nlogin"));
         }
 
-        $detailArr = getDetailedUser($postArr["nlogin"]);
+        $detailArr = getDetailedUser($FH->getPostValue("nlogin"));
         _ppolicy_completeUserEntry($detailArr);
         $ppolicyattr = getPPolicyAttributesKeys();
 
         $msg = '<br />';
 
-        foreach ($ppolicyattr as $key=>$info) {     // foreach the list of Supported Attributes
-            if ($info[1]=="bool") { 
-                if (empty($postArr[$key])) {
-                    if ($detailArr[$key][0] != "FALSE") {
-                        setUserPPolicyAttribut($postArr["nlogin"],$key,'FALSE');
-                        $msg .= "- ".$info[0]."<br />";
-                    }                   
-                } else {
-                    if ($detailArr[$key][0] != "TRUE") {
-                        setUserPPolicyAttribut($postArr["nlogin"],$key,'TRUE');
-                        $msg .= "- ".$info[0]."<br />";
-                    }                    
+        foreach ($ppolicyattr as $key => $info) { // foreach the list of Supported Attributes
+            // check if the value has been updated
+            if($FH->isUpdated($key)) {
+                // checkboxes
+                if ($info[1] == "bool") {
+                    if($FH->getValue($key) == "off") {
+                        setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'FALSE');
+                        $action = _('disabled');
+                    }
+                    else {
+                        setUserPPolicyAttribut($FH->getPostValue("nlogin"),$key,'TRUE');
+                        $action = _('enabled');
+                    }
+                    $msg .= "- ".$info[0]." ".$action."<br />";                
                 }
-            } elseif ($detailArr[$key][0] != $postArr[$key]) {
-                setUserPPolicyAttribut($postArr["nlogin"],$key,$postArr[$key]);
-                $msg .= "- ".$info[0]."<br />";
+                // other ppolicy attributes
+                else {                
+                    setUserPPolicyAttribut($FH->getPostValue("nlogin"), $key, $FH->getValue($key));
+                    $msg .= "- ".$info[0]." "._("updated")."<br />";
+                }
             }
         }
 
         if ($msg != '<br />') {
             global $result;
             $result .= $msg;
-            $result .= _("has been updated")."<br />";
         }
     } else {
         /* if ppolicy plugin is unchecked */
-        if (hasPPolicyObjectClass($postArr["nlogin"])) {
-            removePPolicyObjectClass($postArr["nlogin"]);
+        if (hasPPolicyObjectClass($FH->getPostValue("nlogin"))) {
+            removePPolicyObjectClass($FH->getPostValue("nlogin"));
         }
     }
 }
