@@ -293,10 +293,18 @@ class P2PServerCP(pulse2.utils.Singleton):
             base_folder = '/var/lib/pulse2/imaging'
             # will contain the bootloader material (revoboot + splashscreen), served by tftp
             bootloader_folder = os.path.join(base_folder, 'bootloader')
+            # Boot splash screen
+            bootsplash_file = 'bootsplash.xpm'
             # will contain the boot menus, served by tftp
             bootmenus_folder = os.path.join(base_folder, 'bootmenus')
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
             diskless_folder = os.path.join(base_folder, 'diskless')
+            # diskless kernel
+            diskless_kernel = 'kernel'
+            # diskless initrd
+            diskless_initrd = 'initrd'
+            # diskless memtest tool
+            diskless_memtest = 'memtest'
             # will contain inventories
             inventories_folder = os.path.join(base_folder, 'inventories')
             # will contain masters, served by tftp
@@ -312,10 +320,18 @@ class P2PServerCP(pulse2.utils.Singleton):
                 base_folder = self.cp.get('imaging_api', 'base_folder')
             if self.cp.has_option('imaging_api', 'bootloader_folder'):
                 bootloader_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootloader_folder'))
+            if self.cp.has_option('imaging_api', 'bootsplash_file'):
+                bootsplash_file = self.cp.get('imaging_api', 'bootloader_file')
             if self.cp.has_option('imaging_api', 'bootmenus_folder'):
                 bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootmenus_folder'))
             if self.cp.has_option('imaging_api', 'diskless_folder'):
                 diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'diskless_folder'))
+            if self.cp.has_option("imaging_api", 'diskless_kernel'):
+                diskless_kernel = self.cp.get("imaging_api", 'diskless_kernel')
+            if self.cp.has_option("imaging_api", 'diskless_initrd'):
+                diskless_initrd = self.cp.get("imaging_api", 'diskless_initrd')
+            if self.cp.has_option("imaging_api", 'diskless_memtest'):
+                diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
             if self.cp.has_option('imaging_api', 'inventories_folder'):
                 inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'inventories_folder'))
             if self.cp.has_option('imaging_api', 'masters_folder'):
@@ -329,13 +345,17 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'mount_point'       : imaging_mp,
                 'base_folder'       : base_folder,
                 'bootloader_folder' : bootloader_folder,
+                'bootsplash_file'   : bootsplash_file,
                 'bootmenus_folder'  : bootmenus_folder,
                 'diskless_folder'   : diskless_folder,
+                'diskless_kernel'   : diskless_kernel,
+                'diskless_initrd'   : diskless_initrd,
+                'diskless_memtest'  : diskless_memtest,
                 'inventories_folder': inventories_folder,
                 'masters_folder'    : masters_folder,
                 'src'               : src,
                 'uuid'              : uuid,
-                'uuid_cache_file'   : uuid_cache_file
+                'uuid_cache_file'   : uuid_cache_file,
             }
 
         if self.cp.has_option("main", "package_detect_activate"):
