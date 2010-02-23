@@ -52,7 +52,7 @@ class UUIDCache(pulse2.utils.Singleton):
                 fd = open(self.cachePath, 'wb')
                 fd.close()
             except Exception, e:
-                self.log.warn("Can't create my UUID Cache File %s " % self.cachePath)
+                self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
                 return False
         self.config.read(self.cachePath)
 
@@ -63,7 +63,7 @@ class UUIDCache(pulse2.utils.Singleton):
                 self.config.write(fd)
                 fd.close()
             except Exception, e:
-                self.log.warn("Can't create my UUID Cache File %s " % cachePath)
+                self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
                 return False
 
     def get(self, mac):
