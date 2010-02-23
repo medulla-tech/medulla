@@ -149,6 +149,7 @@ function image_list($type, $title, $images, $actions=true) {
     
     $addActions = array();
     $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
+    $delAction = new ActionPopupItem(_T("Remove from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
     $emptyAction = new EmptyActionItem();
     
     // forge params
@@ -156,6 +157,7 @@ function image_list($type, $title, $images, $actions=true) {
 
     $i = -1;
 
+    $params['from'] = 'tabimages';
     $a_desc = array();
     $a_desc = array();
     $a_date = array();
@@ -170,10 +172,11 @@ function image_list($type, $title, $images, $actions=true) {
         $list_params[$i]["itemlabel"] = urlencode($name);
         
         // don't show action if image is in bootmenu
-        if(!$images['images']) {
+        if(!isset($image['menu_item'])) {
             $addActions[] = $addAction;
         } else {
-            $addActions[] = $emptyAction;    
+            $addActions[] = $delAction;
+            $list_params[$i]['mi_itemid'] = $image['menu_item']['imaging_uuid'];
         }
         
         # TODO no label in image!

@@ -197,6 +197,7 @@ function item_list() {
     $a_display = array();
     $a_defaultWOL = array();
     $a_displayWOL = array();
+    $params['from'] = 'tabbootmenu';
     
     $i = -1;
     foreach ($menu as $entry) {

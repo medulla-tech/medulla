@@ -68,13 +68,15 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
         $addActions = array();
         
         $addAction = new ActionPopupItem(_T("Add service to boot menu", "imaging"), "addservice", "addbootmenu", "image", "base", "computers", null, 300, "add");
-        $delAction = new ActionPopupItem(_T("Remove service from boot menu", "imaging"), "delservice", "delbootmenu", "image", "base", "computers", null, 300, "del");
+        $delAction = new ActionPopupItem(_T("Remove service from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
+            
         $emptyAction = new EmptyActionItem();
     
         // show services list    
         $a_label = array();
         $a_desc = array();
         $a_in_boot_menu = array();
+        $params['from'] = 'tabservices';
         $i = -1;
         foreach ($menu as $entry) {
             $i = $i+1;
@@ -87,6 +89,7 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
                 $addActions[] = $addAction;
             } else {
                 $addActions[] = $delAction;
+                $list_params[$i]["mi_itemid"] = $entry['menu_item']['imaging_uuid'];
             }
     
             $a_label[]= sprintf("%s%s", ($script['is_local']?'':'X) '), $entry['default_name']);

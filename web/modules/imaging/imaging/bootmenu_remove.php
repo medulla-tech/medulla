@@ -26,11 +26,23 @@
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
 $params = getParams();
+$params['from'] = $_GET['from'];
 $item_uuid = $_GET['itemid'];
-$label = urldecode($_GET['itemlabel']);
 
+if ($params['from'] == 'tabimages') {
+    $item_uuid = $_GET['mi_itemid'];
+    $params['mi_itemid'] = $_GET['mi_itemid'];
+} elseif ($params['from'] == 'tabservices') {
+    $item_uuid = $_GET['mi_itemid'];
+    $params['mi_itemid'] = $_GET['mi_itemid'];
+} elseif ($params['from'] == 'tabbootmenu') {
+}
+
+$label = urldecode($_GET['itemlabel']);
 $item = xmlrpc_getMenuItemByUUID($item_uuid);
+
 $bs_uuid = $item['boot_service']['imaging_uuid'];
+$im_uuid = $item['image']['imaging_uuid'];
                 
 if(isset($_GET['gid'])) {
     $type = 'group';
@@ -41,7 +53,11 @@ if(isset($_GET['gid'])) {
 }
     
 if (quickGet('valid')) {
-    $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid);
+    if (isset($bs_uuid)) {
+        $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid);
+    } else {
+        $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid);
+    }
     if ($ret[0] and !isXMLRPCError()) {                     
         $str = sprintf(_T("Menu Item <strong>%s</strong> removed from boot menu", "imaging"), $label);             
         new NotifyWidgetSuccess($str);                      
@@ -49,6 +65,7 @@ if (quickGet('valid')) {
         new NotifyWidgetFailure($ret[1]);
     }
     $params['mod'] = 'remove_success';
+    $params['tab'] = $type.$params['from'];
     header("Location: " . urlStrRedirect("base/computers/imgtabs", $params));
 }
 
