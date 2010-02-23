@@ -76,7 +76,6 @@ if (isset($_POST["bppolicy"])) {
 $detailArr = getAllPPolicyAttributes();
 
 $p = new PageGenerator(_T("Default password policy", "ppolicy"));
-$sidemenu->forceActiveItem('index');
 $p->setSideMenu($sidemenu);
 $p->display();
 
