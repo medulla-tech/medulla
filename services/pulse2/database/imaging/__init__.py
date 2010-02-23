@@ -445,15 +445,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret.append(mi)
         return ret
     
-    def __mergeMenuItemInImage(self, list_of_im, list_of_both):
+    def __mergeMenuItemInImage(self, list_of_im, list_of_both, list_of_target = []):
         ret = []
         temporary = {}
         for im, mi in list_of_both:
             if mi != None:
                 temporary[im.id] = mi
+        targets = {}
+        for t, mo in list_of_target:
+            targets[mo.fk_image] = t.uuid
         for im, im_id in list_of_im:
             if temporary.has_key(im_id):
                 setattr(im, 'menu_item', temporary[im_id])
+            if len(list_of_target) != 0 and targets.has_key(im.id):
+                setattr(im, 'mastered_on_target_uuid', targets[im.id])
             ret.append(im)
         return ret
     
@@ -941,9 +946,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.all()
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
+
+        im_ids = map(lambda im:im[0].id, q1)
+        q3 = session.query(Target).add_entity(MasteredOn).select_from(self.target.join(self.mastered_on)).filter(self.mastered_on.c.fk_image.in_(im_ids)).all()
         session.close()
-        
-        q = self.__mergeMenuItemInImage(q1, q2)
+
+        q = self.__mergeMenuItemInImage(q1, q2, q3)
         return q
 
     def countPossibleImagesOrMaster(self, target_uuid, type, filter):
@@ -1101,6 +1109,36 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = self.__editImage(session, item_uuid, menu, mi, params)
         session.close()
         return ret
+
+    def editImage(self, item_uuid, target_uuid, params):
+        session = create_session()
+        im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
+        if im == None:
+            raise "%s:Cant find the image you are trying to edit."%(ERR_DEFAULT)
+        need_to_be_save = False
+        for p in ('name', 'desc', 'is_master'):
+            if params.has_key(p) and params[p] != getattr(im, p):
+                need_to_be_save = True
+                setattr(im, p, params[p])
+
+        if params.has_key('is_master'):
+            # there should only be one...
+            if params['is_master'] and params.has_key('post_install_script') or not params['is_master']:
+                pisiis = session.query(PostInstallScriptInImage).filter(self.post_install_script_in_image.c.fk_image == uuid2id(item_uuid)).all()
+                for p in pisiis:
+                    session.delete(p)
+
+            if params['is_master'] and params.has_key('post_install_script'):
+                pisii = PostInstallScriptInImage()
+                pisii.fk_image = uuid2id(item_uuid)
+                pisii.fk_post_install_script = uuid2id(params['post_install_script'])
+                session.save(pisii)
+                
+        if need_to_be_save:
+            session.save_or_update(im)
+        session.flush()
+        session.close()
+        return im.id
 
     def delImageToTarget(self, item_uuid, target_uuid):
         session = create_session()
@@ -1695,6 +1733,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret.append(postinstallscript)
         return ret
 
+    def getAllTargetPostInstallScript(self, target_uuid, start, end, filter):
+        session = create_session()
+        loc = session.query(Entity).select_from(self.entity.join(self.target)).filter(self.target.c.uuid == target_uuid).first()
+        session.close()
+        location = id2uuid(loc.id)
+        return self.getAllPostInstallScripts(location, start, end, filter)
+
+    def countAllTargetPostInstallScript(self, target_uuid, filter):
+        session = create_session()
+        loc = session.query(Entity).select_from(self.entity.join(self.target)).filter(self.target.c.uuid == target_uuid).first()
+        session.close()
+        location = id2uuid(loc.id)
+        return self.countAllPostInstallScripts(location, filter)
+        
     def getAllPostInstallScripts(self, location, start, end, filter):
         session = create_session()
         q = self.__AllPostInstallScripts(session, location, filter)
@@ -1816,7 +1868,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid', 'mastered_on_target_uuid']
     need_iteration = ['menu_item']
 
 class ImageInMenu(DBObject):

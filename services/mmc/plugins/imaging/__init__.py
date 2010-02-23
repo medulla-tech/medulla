@@ -245,11 +245,15 @@ class RpcProxy(RpcProxyI):
             return xmlrpcCleanup([False, e])
 
     def editImageToTarget(self, item_uuid, target_uuid, params):
-        try:
+        #try:
             ret = ImagingDatabase().editImageToTarget(item_uuid, target_uuid, params)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
-            return xmlrpcCleanup([False, e])
+        #except Exception, e:
+        #    return xmlrpcCleanup([False, e])
+
+    def editImage(self, item_uuid, target_uuid, params):
+        ret = ImagingDatabase().editImage(item_uuid, target_uuid, params)
+        return xmlrpcCleanup([True, ret])
 
     def delImageToTarget(self, item_uuid, target_uuid):
         try:
@@ -462,6 +466,12 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_PROFILE))
 
     ###### POST INSTALL SCRIPTS
+    def getAllTargetPostInstallScript(self, target_uuid, start = 0, end = -1, filter = ''):
+        db = ImagingDatabase()
+        ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
+        count = db.countAllTargetPostInstallScript(target_uuid, filter)
+        return [count, xmlrpcCleanup(ret)]
+    
     def getAllPostInstallScripts(self, location, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
         ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
