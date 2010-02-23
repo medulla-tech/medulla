@@ -219,12 +219,12 @@ class Imaging(Pulse2Api):
         d = self.callRemote("injectInventory", uuid, inventory)
         d.addErrback(self.onErrorRaise, "Imaging:injectInventory", [uuid, inventory])
         return d
-    def getComputerUUID(self, MACAddress):
+    def getComputerByMac(self, MACAddress):
         """
         Get a computer UUID using the MAC Adress
         """
-        d = self.callRemote("getComputerUUID", MACAddress)
-        d.addErrback(self.onErrorRaise, "Imaging:getComputerUUID", MACAddress)
+        d = self.callRemote("getComputerByMac", MACAddress)
+        d.addErrback(self.onErrorRaise, "Imaging:getComputerByMac", MACAddress)
         return d
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
