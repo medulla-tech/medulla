@@ -75,7 +75,7 @@ def myCall():
     message = sys.argv[4]
 
     try:
-        callFunction(imagingAPI.logAction(mac, level, phase, message))
+        callFunction(imagingAPI.logClientAction(mac, level, phase, message))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
