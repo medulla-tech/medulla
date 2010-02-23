@@ -178,9 +178,9 @@ class ImagingApi(MyXmlrpc):
         return d
 
 
-    def xmlrpc_getComputerUUID(self, MACAddress):
+    def xmlrpc_getComputerByMac(self, MACAddress):
         """
-        Method to obtain the UUID of a computer.
+        Method to obtain informations about a computer using its MAC address.
 
         We are using a cache system :
         pulse2.package_server.imaging.cache.UUIDCache()
@@ -194,10 +194,11 @@ class ImagingApi(MyXmlrpc):
         def onSuccess(result):
             try:
                 if result[0]:
-                    UUIDCache().set(result[1], MACAddress, '', '')
-                return result
+                    UUIDCache().set(result[1]['uuid'], MACAddress, result[1]['shortname'], result[1]['fqdn'])
+                    self.logger.info('Imaging: Updating cache for %s' % (MACAddress))
+                return result[1]
             except Exception, e:
-                self.logger.info('Imaging: While processing result %s for %s : %s' % (MACAddress, result, e))
+                self.logger.warning('Imaging: While processing result %s for %s : %s' % (MACAddress, result, e))
 
         if not isMACAddress(MACAddress):
             raise TypeError
@@ -205,7 +206,7 @@ class ImagingApi(MyXmlrpc):
         # try to extract from our cache
         res = UUIDCache().getByMac(MACAddress)
         if res: # fetched from cache
-            return maybeDeferred(lambda x: x['uuid'], res)
+            return maybeDeferred(lambda x: x, res)
         else : # cache fetching failed, try to obtain the real value
             url, credentials = makeURL(PackageServerConfig().mmc_agent)
             self.logger.info('Imaging: Getting computer UUID for %s' % (MACAddress))
@@ -217,8 +218,8 @@ class ImagingApi(MyXmlrpc):
                 PackageServerConfig().mmc_agent['cacert'],
                 PackageServerConfig().mmc_agent['localcert']
             )
-            d = client.callRemote('imaging.getComputerUUID', MACAddress)
-            d.addCallbacks(onSuccess, client.onError, errbackArgs = ('imaging.getComputerUUID', MACAddress, 0))
+            d = client.callRemote('imaging.getComputerByMac', MACAddress)
+            d.addCallbacks(onSuccess, client.onError, errbackArgs = ('imaging.getComputerByMac', MACAddress, 0))
             return d
 
     def xmlrpc_computersMenuSet(menus):
