@@ -199,6 +199,7 @@ CREATE TABLE Image (
   id INT NOT NULL AUTO_INCREMENT,
   path Text NOT NULL,
   name Text NOT NULL,
+  uuid Text NOT NULL,
   `desc` Text NOT NULL,
   checksum Text NOT NULL,
   `size` INT NOT NULL,

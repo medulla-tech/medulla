@@ -541,7 +541,7 @@ class RpcProxy(RpcProxyI):
         # return [True, "UUID%s"%computer.id]
         return [True, "FAKE_UUID"]
 
-    def imageRegister(self, imaging_server_uuid, computer_uuid, name, desc, path, checksum, size, creation_date, creator = None):
+    def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, name, desc, path, checksum, size, creation_date, creator = None):
         """
         Called by the Package Server to register a new Image.
         """
@@ -549,6 +549,7 @@ class RpcProxy(RpcProxyI):
             'name':name,
             'desc':desc,
             'path':path,
+            'uuid':image_uuid,
             'checksum':checksum,
             'size':size,
             'creation_date':creation_date,

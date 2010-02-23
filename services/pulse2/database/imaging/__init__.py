@@ -596,7 +596,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     
     #####################
     def __MasteredOnsOnTargetByIdAndType(self, session, target_id, type, filter):
-        q = session.query(MasteredOn).add_entity(Target).select_from(self.mastered_on.join(self.target)).filter(or_(self.target.c.id == target_id, self.target.c.uuid == target_id))
+        q = session.query(MasteredOn).add_entity(Target).select_from(self.mastered_on.join(self.target)).filter(self.target.c.uuid == target_id)
         if type == TYPE_COMPUTER:
             q = q.filter(self.target.c.type == 1)
         elif type == TYPE_PROFILE:
@@ -1020,6 +1020,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         image.name = params['name']
         image.desc = params['desc']
         image.path = params['path']
+        image.uuid = params['uuid']
         image.checksum = params['checksum']
         image.size = params['size']
         import time
@@ -1037,7 +1038,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mastered_on.detail = params['desc']
         mastered_on.fk_mastered_on_state = 1 # done
         mastered_on.fk_image = image.id
-        mastered_on.fk_target = uuid2id(computer_uuid)
+        target = session.query(Target).filter(self.target.c.uuid == computer_uuid).first()
+        mastered_on.fk_target = target.id
         session.save(mastered_on)
         
         # link the image to the imaging_server
@@ -1797,8 +1799,7 @@ class DBObject(object):
                 # we dont want to enter in an infinite loop 
                 # and generaly we dont need more levels
                 ret[i] = getattr(self, i).toH(level+1)
-        if not ret.has_key('uuid'):
-            ret['imaging_uuid'] = self.getUUID()
+        ret['imaging_uuid'] = self.getUUID()
         return ret
 
 class BootService(DBObject):
@@ -1815,7 +1816,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name', 'is_local', 'uuid']
     need_iteration = ['menu_item']
 
 class ImageInMenu(DBObject):
