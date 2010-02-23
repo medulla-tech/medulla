@@ -60,7 +60,7 @@ def myCall():
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
 def myTreatment(result):
     """
@@ -77,7 +77,7 @@ def myTreatment(result):
         logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
 
     # nothing else to do
-    endBack()
+    return endBack()
 
 ########################################################################
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
@@ -106,7 +106,7 @@ def callBack(result):
     if type(result) == list and type(result[0]) == str and result[0] == 'PULSE2_ERR':
         logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
-        endBack()
+        return endBack()
     else:
         logging.getLogger().debug("%s : No error" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
@@ -120,7 +120,7 @@ def errorBack(reason):
     """
     global exitcode
     exitcode = ERROR_CLIENT
-    endBack()
+    return endBack()
 
 def callFunction(deffered):
     """

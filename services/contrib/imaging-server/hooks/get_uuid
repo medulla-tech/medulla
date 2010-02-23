@@ -29,6 +29,7 @@ import os.path
 import twisted.internet.reactor
 import logging
 import logging.config
+
 import pulse2.apis.clients.imaging
 import pulse2.imaging_server.config
 
@@ -50,26 +51,26 @@ def myCall():
         Design your own call here
 
         a deferred should be passed to callFunction()
-        @woot
     """
+    global exitcode
+
     if len(sys.argv) != 3: # not enough (or too much) args
         logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
     mac = sys.argv[1]
-
     if not pulse2.utils.isMACAddress(mac):
         logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
     try:
         callFunction(imagingAPI.getComputerUUID(mac))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
 def myTreatment(result):
     """
@@ -85,23 +86,25 @@ def myTreatment(result):
         if not os.path.isfile(filename):
             logging.getLogger().error('HOOK %s : Second arg (%s) do not seems to be an existing file name' % (sys.argv[0], filename))
             exitcode = ERROR_CLIENT
-            endBack()
+            return endBack()
 
         try :
             filestream = open(filename, 'w')
             filestream.write(result)
-            print result
             filestream.close()
         except:
             logging.getLogger().error('HOOK %s : Can\'t write %s, giving up' % (sys.argv[0], filename))
             exitcode = ERROR_CLIENT
-            endBack()
+            return endBack()
+
         exitcode= ERROR_OK
         logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
         logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
-    endBack()
+
+    # nothing else to do
+    return endBack()
 
 ########################################################################
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
@@ -130,7 +133,7 @@ def callBack(result):
     if type(result) == list and type(result[0]) == str and result[0] == 'PULSE2_ERR':
         logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
-        endBack()
+        return endBack()
     else:
         logging.getLogger().debug("%s : No error" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
@@ -144,7 +147,7 @@ def errorBack(reason):
     """
     global exitcode
     exitcode = ERROR_CLIENT
-    endBack()
+    return endBack()
 
 def callFunction(deffered):
     """

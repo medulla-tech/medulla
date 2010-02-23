@@ -51,20 +51,21 @@ def myCall():
         a deferred should be passed to callFunction()
         @woot
     """
+    global exitcode
 
     mac = '' # client MAC address
 
     if len(sys.argv) != 2 and len(sys.argv) != 3: # not enough (or too much) args
         logging.getLogger().error('HOOK %s : I was not called with the right number of arguments (one or two expected, got %d)' % (sys.argv[0], len(sys.argv) - 1))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
     mac = sys.argv[1]
 
     if not pulse2.utils.isMACAddress(mac):
         logging.getLogger().error('HOOK %s : First arg (%s) do not seems to be a MAC address' % (sys.argv[0], mac))
         exitcode = ERROR_CLIENT
-        endBack()
+        return endBack()
 
     if len(sys.argv) == 3:
         logging.getLogger().warn('HOOK %s : Asking for a kind of backup is deprecated !' % (sys.argv[0]))
@@ -73,9 +74,8 @@ def myCall():
         callFunction(imagingAPI.computerPrepareImagingDirectory(mac))
     except AttributeError, e:
         logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
-        #MDV/NR exitcode = ERROR_CLIENT
-        exitcode= ERROR_OK
-        endBack()
+        exitcode = ERROR_CLIENT
+        return endBack()
 
 def myTreatment(result):
     """
@@ -84,11 +84,15 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
-    if result:
+    if result and result != None:
         exitcode= ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
-    endBack()
+        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+
+    # nothing else to do
+    return endBack()
 
 ########################################################################
 #         NOTHING SHOULD BE ALTERED BELOW THIS LINE                    #
@@ -117,7 +121,7 @@ def callBack(result):
     if type(result) == list and type(result[0]) == str and result[0] == 'PULSE2_ERR':
         logging.getLogger().error("HOOK %s : Error code = %d (see previous line)" % (sys.argv[0], result[1]))
         exitcode = ERROR_SERVER
-        endBack()
+        return endBack()
     else:
         logging.getLogger().debug("%s : No error" % (sys.argv[0]))
         exitcode = ERROR_CLIENT
@@ -131,7 +135,7 @@ def errorBack(reason):
     """
     global exitcode
     exitcode = ERROR_CLIENT
-    endBack()
+    return endBack()
 
 def callFunction(deffered):
     """
