@@ -434,7 +434,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             read(fo, name, 256);
             close(fo);
             unlink(filename);
-            sendto(s, gBuff, strlen(name) + 1, MSG_NOSIGNAL,
+            sendto(s, name, strlen(name) + 1 , MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
         }
