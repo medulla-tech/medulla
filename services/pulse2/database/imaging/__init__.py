@@ -901,14 +901,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######################
     def __PossibleImages(self, session, target_uuid, is_master, filter):
         q = session.query(Image).add_column(self.image.c.id)
-        q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target))
+        q = q.select_from(self.image.join(self.image_on_imaging_server).join(self.imaging_server).join(self.entity).join(self.target, self.target.c.fk_entity == self.entity.c.id).join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id))
         q = q.filter(self.target.c.uuid == target_uuid) # , or_(self.image.c.is_master == True, and_(self.image.c.is_master == False, )))
         if filter != '':
             q = q.filter(or_(self.image.c.desc.like('%'+filter+'%'), self.image.c.value.like('%'+filter+'%')))
         if is_master == IMAGE_IS_MASTER_ONLY:
             q = q.filter(self.image.c.is_master == True)
         elif is_master == IMAGE_IS_IMAGE_ONLY:
-            q = q.filter(self.image.c.is_master == False)
+            q = q.filter(and_(self.image.c.is_master == False, self.target.c.id == self.mastered_on.c.fk_target))
         elif is_master == IMAGE_IS_BOTH:
             pass
             
