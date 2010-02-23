@@ -49,12 +49,18 @@ def myCall():
         Design your own call here
 
         a deferred should be passed to callFunction()
-        @woot
     """
-    callFunction(
-        imagingAPI.imagingServerStatus(
+    global exitcode
+
+    try:
+        callFunction(
+            imagingAPI.imagingServerStatus(
+            )
         )
-    )
+    except AttributeError, e:
+        logging.getLogger().error('HOOK %s : %s' % (sys.argv[0], e))
+        exitcode = ERROR_CLIENT
+        endBack()
 
 def myTreatment(result):
     """
@@ -63,10 +69,14 @@ def myTreatment(result):
         don't forget to set exitcode and finally call endBack()
     """
     global exitcode
-    if result:
+    if result and result != None:
         exitcode= ERROR_OK
+        logging.getLogger().info('HOOK %s : SUCCESS !' % sys.argv[0])
     else:
         exitcode = ERROR_SERVER
+        logging.getLogger().error('HOOK %s : Error server side !' % sys.argv[0])
+
+    # nothing else to do
     endBack()
 
 ########################################################################
