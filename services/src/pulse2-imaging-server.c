@@ -151,11 +151,9 @@ int analyseresult(int exitcode) {
 int mysystem(int argc, ...) {
     char cmd[1024];
     char tmp[1024];
-    va_list argv;
     int count = 0;
     int retval = 0;
-
-    bzero(tmp, 1024);
+    va_list argv;
 
     va_start(argv, argc);
     while (argc--) {
@@ -457,8 +455,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
             read(fo, name, 256);
             close(fo);
             unlink(filename);
-            strncpy((char *)gBuff, name, 256);
-            sendto(s, gBuff, strlen((char *)gBuff) + 1, MSG_NOSIGNAL,
+            sendto(s, gBuff, strlen(name) + 1, MSG_NOSIGNAL,
                    (struct sockaddr *)si_other, sizeof(*si_other));
             free(name);
         }
@@ -626,9 +623,6 @@ int main(void) {
     } else {
         diep("daemon");
     }
-
-    /* */
-    //MDV/NR sprintf(etherpath, "%s/etc/ether", gBaseDir);
 
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
         diep("udp socket");
