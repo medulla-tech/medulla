@@ -43,7 +43,7 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerUUID']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerUUID', 'imageRegister']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -537,4 +537,33 @@ class RpcProxy(RpcProxyI):
         Called by the package server, to obtain a computer UUID in exchange of its MAC address
         """
         # TODO, for now return a fake value
+        computer = ComputerManager().getComputerByMac(mac)
+        # return [True, "UUID%s"%computer.id]
         return [True, "FAKE_UUID"]
+
+    def imageRegister(self, imaging_server_uuid, computer_uuid, name, desc, path, checksum, size, creation_date, creator = None):
+        """
+        Called by the Package Server to register a new Image.
+        """
+        image = {
+            'name':name,
+            'desc':desc,
+            'path':path,
+            'checksum':checksum,
+            'size':size,
+            'creation_date':creation_date,
+            'is_master':False,
+            'creator':creator
+        }
+        db = ImagingDatabase()
+        if db.countImagingServerByPackageServerUUID(imaging_server_uuid) == 0:
+            return [False, "The imaging server UUID you try to access don't exists in the MMC."]
+        if not db.isTargetRegister(computer_uuid, TYPE_COMPUTER):
+            return [False, "The computer UUID you try to access don't exists in the MMC."]
+
+        ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
+        #try:
+        #    ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
+        #    return ret
+        #except Exception, e:
+        #    return [False, e]

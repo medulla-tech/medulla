@@ -633,7 +633,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.select_from(self.boot_service \
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
-                .outerjoin(self.entity).join(self.target))
+                .outerjoin(self.entity).outerjoin(self.target))
         q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
@@ -663,6 +663,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getPossibleBootServices(self, target_uuid, start, end, filter):
         session = create_session()
         menu = self.getTargetsMenuTUUID(target_uuid)
+        print menu
         q1 = self.__PossibleBootServices(session, target_uuid, filter)
         q1 = q1.group_by(self.boot_service.c.id)
         if end != -1:
@@ -713,8 +714,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
     
     def __fillMenuItem(self, session, mi, menu_id, params):
-        mi.hidden = params['hidden']
-        mi.hidden_WOL = params['hidden_WOL']
+        if params.has_key('hidden'):
+            mi.hidden = params['hidden']
+        else:
+            mi.hidden = True
+        if params.has_key('hidden_WOL'):
+            mi.hidden_WOL = params['hidden_WOL']
+        else:
+            mi.hidden_WOL = True
         if params.has_key('order'):
             mi.order = params['order']
         mi.fk_menu = menu_id
@@ -725,10 +732,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ERR_ENTITY_HAS_NO_DEFAULT_MENU = 1002
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
-        if params['default']:
+        if params.has_key('default') and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
-        if params['default_WOL']:
+        if params.has_key('default_WOL') and params['default_WOL']:
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
@@ -1005,6 +1012,47 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = self.__addImage(session, item_uuid, menu, params)
         session.close()
         return ret
+    
+    def registerImage(self, imaging_server_uuid, computer_uuid, params):
+        session = create_session()
+        # create the image item
+        image = Image()
+        image.name = params['name']
+        image.desc = params['desc']
+        image.path = params['path']
+        image.checksum = params['checksum']
+        image.size = params['size']
+        import time
+        image.creation_date = time.localtime() # image['creation_date']
+        image.fk_creator = 1 # TOBEDONE image['']
+        image.is_master = params['is_master']
+        session.save(image)
+        session.flush()
+        
+        # fill the mastered_on
+        #   there is way to much fields!
+        mastered_on = MasteredOn()
+        mastered_on.timestamp = time.localtime()
+        mastered_on.title = params['name']
+        mastered_on.detail = params['desc']
+        mastered_on.fk_mastered_on_state = 1 # done
+        mastered_on.fk_image = image.id
+        mastered_on.fk_target = uuid2id(computer_uuid)
+        session.save(mastered_on)
+        
+        # link the image to the imaging_server
+        ims = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
+        ioims = ImageOnImagingServer()
+        ioims.fk_image = image.id
+        ioims.fk_imaging_server = ims.id
+        session.save(ioims)
+        
+        # link the image to the machine
+        # DONT PUT IN THE MENU BY DEFAULT 
+        # self.addImageToTarget(id2uuid(image.id), computer_uuid, params)
+        session.flush()
+        session.close()
+        return [True]
         
     def addImageToEntity(self, item_uuid, loc_id, params):
         session = create_session()
@@ -1767,7 +1815,7 @@ class Entity(DBObject):
     to_be_exported = ['id', 'name', 'uuid']
 
 class Image(DBObject):
-    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator']
+    to_be_exported = ['id', 'path', 'checksum', 'size', 'desc', 'is_master', 'creation_date', 'fk_creator', 'name']
     need_iteration = ['menu_item']
 
 class ImageInMenu(DBObject):

@@ -19,6 +19,11 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+"""
+Inventory implementation of the Computer Interface
+Used by the ComputerManager
+"""
+
 from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
 from pulse2.database.inventory import Inventory
@@ -128,6 +133,9 @@ class InventoryComputers(ComputerI):
 
     def delComputer(self, ctx, uuid):
         return self.inventory.delMachine(uuid)
+
+    def getComputerByMac(self, mac):
+        return self.inventory.getMachinesBy(None, 'Network', 'MACAddress', mac)
 
     def getComputersListHeaders(self, ctx):
         """

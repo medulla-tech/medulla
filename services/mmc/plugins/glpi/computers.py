@@ -161,3 +161,6 @@ class GlpiComputers(ComputerI):
         return False
 
 
+    def getComputerByMac(self, mac):
+        return self.glpi.getMachineByMacAddress('imaging_module', mac)
+            

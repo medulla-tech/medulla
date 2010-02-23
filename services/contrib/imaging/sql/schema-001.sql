@@ -388,5 +388,7 @@ UPDATE Menu SET fk_default_item = 1, fk_default_item_WOL = 1 WHERE id = 1;
 
 INSERT INTO Entity (id, name, uuid, fk_default_menu) VALUES (1, "NEED_ASSOCIATION", "NEED_ASSOCIATION", 1);
 
+INSERT INTO User (id, login) VALUES (1, 'UNKNOWN');
+
 COMMIT;
 
