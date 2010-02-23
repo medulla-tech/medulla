@@ -58,7 +58,7 @@ def myCall():
     global exitcode
 
     mac = '' # client MAC address
-    uuid = '' # client ID
+    name = '' # client ID
     key = '' # registering password (not used)
 
     if len(sys.argv) == 2: # "mac" version
