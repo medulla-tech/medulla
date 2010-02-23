@@ -27,6 +27,7 @@ Imaging and ImagingApi are two class that handle calls to the imaging api.
 """
 
 from pulse2.apis.clients import Pulse2Api
+from pulse2.utils import isMACAddress
 import logging
 
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
@@ -35,49 +36,57 @@ class Imaging(Pulse2Api):
     def __init__(self, *attr):
         self.name = "Imaging"
         Pulse2Api.__init__(self, *attr)
-    
+
     # Computer registration
     def computerRegister(self, computerName, MACAddress):
         """
         Called by pulse2-imaging-server to tell the Package Server to register a new computer.
         The computer name may contain a profile and an entity path (self, like profile:/entityA/entityB/computer)
+
+        @type computerName: str
+        @type MACAddress: str
+        @raise : TypeError is computerName is not a str
+        @raise : TypeError is MACAddress is not a mac addr
+        @rtype : bool
         """
+
+        if type(computerName) != str:
+            raise TypeError
+        if not isMACAddress(MACAddress):
+            raise TypeError
         d = self.callRemote("computerRegister", computerName, MACAddress)
         d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [computerName, MACAddress])
         return d
-    def computerPrepareImagingDirectory(self, uuid, imagingData = None):
+
+    def computerPrepareImagingDirectory(self, MACAddress, imagingData = None):
         """
-        Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content. 
+        Asks the Package Server to create the file system structure for the given computer uuid thanks to imagingData content.
         If imagingData is None, the package server queries the MMC agent for the imaging data.
         """
+        if not isMACAddress(MACAddress):
+            raise TypeError
+
+        #MDV/NR uuid = getUUIDFromMac(MACAddress)
+
         d = self.callRemote("computerPrepareImagingDirectory", uuid, imagingData)
         d.addErrback(self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [uuid, imagingData])
         return d
     def computerUnregister(self, uuid, archive = True):
         """
         Remove computer data from the Imaging Server.
-        The computer must be registered again to use imaging. 
+        The computer must be registered again to use imaging.
         If archive is True, the computer imaging data are stored in an archive directory, else it is wiped out.
         """
         d = self.callRemote("computerUnregister", uuid, archive)
         d.addErrback(self.onErrorRaise, "Imaging:computerUnregister", [uuid, archive])
         return d
     # Computer Menu management
-    def computerMenuGet(self, uuid): # imagingMenu
+    def computerMenuUpdate(self, uuid):
         """
-        Returns the boot menu of a computer.
-        Called by the MMC agent.
+        Ask the pserver to update a menu.
         """
-        d = self.callRemote("computerMenuGet", uuid)
-        d.addErrback(self.onErrorRaise, "Imaging:computerMenuGet", uuid)
-        return d
-    def computerMenuSet(self, uuid, imagingMenu):
-        """
-        Sets the boot menu of a computer.
-        Called by the MMC agent.
-        """
-        d = self.callRemote("computerMenuSet", uuid, imagingMenu)
-        d.addErrback(self.onErrorRaise, "Imaging:computerMenuSet", [uuid, imagingMenu])
+        d = self.callRemote("computerMenuUpdate", uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:computerMenuUpdate", uuid)
         return d
     # Computer log management
     def computerLogGet(self, uuid): # str
@@ -203,7 +212,20 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServerConfigurationSet", configuration)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerConfigurationSet", configuration)
         return d
-
+    def injectInventory(self, uuid, inventory):
+        """
+        Called by pulse2-imaging-server to give the Package Server a new inventory from MACAddress.
+        """
+        d = self.callRemote("injectInventory", uuid, inventory)
+        d.addErrback(self.onErrorRaise, "Imaging:injectInventory", [uuid, inventory])
+        return d
+    def getComputerUUID(self, MACAddress):
+        """
+        Get a computer UUID using the MAC Adress
+        """
+        d = self.callRemote("getComputerUUID", MACAddress)
+        d.addErrback(self.onErrorRaise, "Imaging:getComputerUUID", MACAddress)
+        return d
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
