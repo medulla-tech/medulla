@@ -39,48 +39,6 @@ int myLogger(char *msg) {
     return (system(cmd));
 }
 
-void logClientActivity(char *smac, int priority, const char *format_str, ...) {
-    va_list ap;
-    char buf[1024];
-
-    /* write some info */
-    va_start(ap, format_str);
-    vsnprintf(buf, 1023, format_str, ap);
-    va_end(ap);
-
-    //MDV/NR FIXME: call hook
-    //MDV/NR snprintf(path, 255, "%s/images/%s/log", gBaseDir, smac);
-    //MDV/NR if ((f = fopen(path, "a"))) {
-    //MDV/NR time_t now;
-    //MDV/NR char tm[64];
-//MDV/NR
-    //MDV/NR time(&now);
-    //MDV/NR strcpy(tm, ctime(&now));
-    //MDV/NR tm[strlen(tm) - 1] = '\000';
-    //MDV/NR fprintf(f, "%s: %s\n", tm, buf);
-    //MDV/NR fclose(f);
-//MDV/NR
-    //MDV/NR /* log the last restoration */
-    //MDV/NR if (strstr(buf, "restoration comp") != NULL) {
-    //MDV/NR snprintf(path, 255, "%s/images/%s/log.lastrestore", gBaseDir, smac);
-    //MDV/NR if ((f = fopen(path, "w"))){
-    //MDV/NR fprintf(f, "%s: %s\n", tm, buf);
-    //MDV/NR fclose(f);
-    //MDV/NR }
-    //MDV/NR }
-//MDV/NR
-    //MDV/NR syslog(priority, buf);
-//MDV/NR
-    //MDV/NR /* keep only the last 20 lines of the log */
-    //MDV/NR snprintf(buf, 1023, "%s/bin/rotatelog %s", gBaseDir, path);
-    //MDV/NR system(buf);
-    //MDV/NR }
-    //MDV/NR else
-    //MDV/NR {
-    //MDV/NR syslog(priority, buf);
-    //MDV/NR }
-}
-
 void hex2char(char *ptr, char *val) {
     if ((ptr[1] >= 'A') && (ptr[1] <= 'F'))
         *val = ptr[1] - 'A' + 10;
@@ -175,6 +133,24 @@ int mysystem(int argc, ...) {
     // we now take care of the error code :
     retval = WEXITSTATUS(system(tmp));
     return retval;
+}
+
+void logClientActivity(char *mac, int priority, char *phase,
+                       const char *format_str, ...) {
+    va_list ap;
+    char buf[1024];
+    char prio[8];
+
+    /* write some info */
+    va_start(ap, format_str);
+    vsnprintf(buf, 1023, format_str, ap);
+    va_end(ap);
+
+    snprintf(prio, 2, "%d", priority);
+
+    if (mysystem(5, gPathLogAction, mac, prio, phase, buf) == 0) {
+        // FIXME : we should send back a NAK
+    }
 }
 
 /*
@@ -284,8 +260,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     int fo;
     static unsigned int lastfile = 0, lasttime = 0;
 
-    /* do not log, log requests ! */
-    if (buf[0] != 'L' && buf[0] != 0xCD) {
+    {
         char *buff = malloc(256);
 
         snprintf(buff, 255, "Packet from %s:%d, MAC Address:%s, Command: %02x",
@@ -299,7 +274,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         char buffer[100 * 1024];
         char filename[256];
         int buffer_len = 0;
-        if (analyseresult(mysystem(2, gPathUpdateClient, mac)) ) {
+        if (analyseresult(mysystem(2, gPathUpdateClient, mac))) {
             // FIXME : we should also send back a NAK
             return 0;
         }
@@ -321,7 +296,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         write(fo, buffer, buffer_len);
         close(fo);
 
-        if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename)) ) {
+        if (analyseresult(mysystem(3, gPathProcessInventory, mac, filename))) {
             // FIXME : we should also send back a NAK
         }
         unlink(filename);
@@ -338,7 +313,7 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                  inet_ntoa(si_other->sin_addr),
                  ntohs(si_other->sin_port), mac, hostname);
         myLogger(buff);
-        if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass)) ) {
+        if (analyseresult(mysystem(4, gPathCreateClient, mac, hostname, pass))) {
             // FIXME : we should also send back a NAK
         }
         return 0;
@@ -347,7 +322,9 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
     if (buf[0] == 0xEC) {
         char operation[16];
         snprintf(operation, 16, "%c", buf[1]);
-        mysystem(3, gPathCreateImage, smac, operation);
+        if (analyseresult(mysystem(3, gPathCreateImage, smac, operation))) {
+            // FIXME : we should also send back a NAK
+        }
         return 0;
     }
     // change default menu
@@ -358,49 +335,48 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
         return 0;
     }
     // log data
-    if (buf[0] == 'L') {
+    if (buf[0] == 0x4C) {       // 0x4C = 'L' as in Log
         switch (buf[1]) {
         case '0':
-            logClientActivity(smac, LOG_INFO, "%s booted", mac);
+            logClientActivity(mac, LOG_INFO, "boot", "'booted'");
             break;
         case '1':
-            logClientActivity(smac, LOG_INFO, "%s executing menu entry %d",
-                              mac, buf[2]);
+            logClientActivity(mac, LOG_INFO, "menu",
+                              "'executing menu entry %d'", buf[2]);
             break;
         case '2':
             if (buf[2] == '-') {
-                logClientActivity(smac, LOG_INFO, "%s restoration started (%s)",
-                                  mac, &buf[3]);
+                logClientActivity(mac, LOG_INFO, "restoration",
+                                  "'restoration started (%s)'", &buf[3]);
             } else {
-                logClientActivity(smac, LOG_INFO, "%s restoration started",
-                                  mac);
+                logClientActivity(mac, LOG_INFO, "restoration",
+                                  "'restoration started'");
             }
             break;
         case '3':
             if (buf[2] == '-') {
-                logClientActivity(smac, LOG_INFO,
-                                  "%s restoration completed (%s)", mac,
-                                  &buf[3]);
+                logClientActivity(mac, LOG_INFO, "restoration",
+                                  "'restoration completed (%s)'", &buf[3]);
             } else {
-                logClientActivity(smac, LOG_INFO, "%s restoration completed",
-                                  mac);
+                logClientActivity(mac, LOG_INFO, "restoration",
+                                  "'restoration completed'");
             }
             lasttime = 0;       /* reset MTFTP time barriers */
             lastfile = 0;
             break;
         case '4':
             if (buf[2] == '-') {
-                logClientActivity(smac, LOG_INFO, "%s backup started (%s)", mac,
-                                  &buf[3]);
+                logClientActivity(mac, LOG_INFO, "backup",
+                                  "'backup started (%s)'", &buf[3]);
             } else {
-                logClientActivity(smac, LOG_INFO, "%s backup started", mac);
+                logClientActivity(mac, LOG_INFO, "backup", "'backup started'");
             }
             break;
         case '5':
             if (buf[2] == '-') {
 
-                logClientActivity(smac, LOG_INFO, "%s backup completed (%s)",
-                                  mac, &buf[3]);
+                logClientActivity(mac, LOG_INFO, "backup",
+                                  "'backup completed (%s)'", &buf[3]);
                 // TODO : handle this pserver side
                 //MDV/NR if (sscanf((char*)&buf[3], "Local-%d", &bn) == 1) {
                 //MDV/NR // Local backup
@@ -412,17 +388,20 @@ int process_packet(unsigned char *buf, char *mac, char *smac,
                 //MDV/NR system(command);
                 //MDV/NR }
             } else {
-                logClientActivity(smac, LOG_INFO, "%s backup completed", mac);
+                logClientActivity(mac, LOG_INFO, "backup",
+                                  "'backup completed'");
             }
             break;
         case '6':
-            logClientActivity(smac, LOG_INFO, "%s postinstall started", mac);
+            logClientActivity(mac, LOG_INFO, "postinstall",
+                              "'postinstall started'");
             break;
         case '7':
-            logClientActivity(smac, LOG_INFO, "%s postinstall completed", mac);
+            logClientActivity(mac, LOG_INFO, "postinstall",
+                              "'postinstall completed'");
             break;
         case '8':
-            logClientActivity(smac, LOG_INFO, "%s critical error", mac);
+            logClientActivity(mac, LOG_INFO, "error", "'critical error'");
             break;
 
         }
@@ -541,7 +520,7 @@ void readConfig(char *config_file_path) {
 
     // Parse HOOKS section //
     tmp = iniparser_getstring(ini, "hooks:hooks_dir",
-                            "/usr/local/lib/pulse2/imaging-server/hooks");
+                              "/usr/local/lib/pulse2/imaging-server/hooks");
     snprintf(gDirHooks, 256, "%s", tmp);
     syslog(LOG_DEBUG, "[hooks] hooks_dir = %s", gDirHooks);
 
