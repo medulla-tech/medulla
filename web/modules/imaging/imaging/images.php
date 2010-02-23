@@ -96,13 +96,19 @@ function image_edit($type, $menu) {
     $params = getParams();
     $id = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
+    foreach ($menu[1] as $m) {
+        if ($m['imaging_uuid'] == $id) {
+            $menu = $m;
+            continue;
+        }
+    }
 
     if(count($_POST) == 0) {
     
         printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
                 
         // get current values
-        $desc = $menu[$id][1];
+        $desc = $menu["desc"];
         
         $f = new ValidatingForm();
         $f->push(new Table());

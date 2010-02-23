@@ -61,49 +61,48 @@ $logStates = array(
 
 $logs = array();
 foreach ($db_logs as $log) {
-    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['completeness'], $log['log_state']);
+    $logs[] = array(sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']), $log['completeness'], $log['log_state'], $log);
 }
         
-foreach ($logs as $log) {
-    if ($filter == "" or !(stripos($log[0], $filter) === False)) {
-        $param = $params;
+$a_titles = array();
+$a_desc = array();
+$a_states = array();
+foreach ($db_logs as $log) {
+    $param = $params;
 
-        // add image to description
-        if(ereg('backup', $log[2])) {
-            $log[0] = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$log[0];
-        } else if(ereg('restore', $log[2])) {
-            $log[0] = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$log[0];
-        }
-
-        // get status
-        $status = $log[2];
-        if(!array_key_exists($status, $logStates)) {
-            $status = 'unknow';
-        }
-        
-        // complete percent
-        $log[1] = $log[1].'%';
-
-        // complete status display
-        $led = new LedElement($logStates[$status][1]);
-        $log[2] = $led->value.'&nbsp;'.$logStates[$status][0];
-       
-        for ($j = 0; $j < $nbInfos; $j++) {
-            $list[$j][] = $log[$j];
-        }
-        $param["uuid"] = $log['target']['uuid'];
-        $param["hostname"] = $log['target']['name'];
-        
-        $list_params[]= $param;
+    $status = $log['mastered_on_state'];
+    // add image to description
+    $title = sprintf(_T("%s - %s on %s", "imaging"), _toDate($log['timestamp']), $log['title'], $log['target']['name']);
+    if(ereg('backup', $status)) {
+        $title = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$title;
+    } elseif (ereg('restore', $status)) {
+        $title = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$title;
     }
+
+    // get status
+    if(!array_key_exists($status, $logStates)) {
+        $status = 'unknow';
+    }
+    
+    // complete status display
+    $led = new LedElement($logStates[$status][1]);
+    $status = $led->value.'&nbsp;'.$logStates[$status][0];
+    
+    $a_titles[]= $title;
+    $a_desc[]= $log['detail'];
+    $a_states[]= $status;
+    $param["uuid"] = $log['target']['uuid'];
+    $param["hostname"] = $log['target']['name'];
+    
+    $list_params[]= $param;
 }
 
-$l = new OptimizedListInfos($list[0], _T("Description", "imaging"));
+$l = new OptimizedListInfos($a_titles, _T("Title", "imaging"));
 $l->setItemCount($count);
 $l->setNavBar(new AjaxNavBar($count, $filter));
 $l->setParamInfo($list_params);
-$l->addExtraInfo($list[1], _T("Completed", "imaging"));
-$l->addExtraInfo($list[2], _T("State", "imaging"));
+$l->addExtraInfo($a_desc, _T("Details", "imaging"));
+$l->addExtraInfo($a_states, _T("State", "imaging"));
 $l->addActionItem(
     new ActionItem(_T("Details"), "imgtabs", "display", "item", "base", "computers", $type."tablogs", "details")
 );
