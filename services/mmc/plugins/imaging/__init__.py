@@ -43,7 +43,7 @@ VERSION = "0.1"
 APIVERSION = "0:0:0"
 REVISION = int("$Rev$".split(':')[1].strip(' $'))
 
-NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerUUID', 'imageRegister']
+NOAUTHNEEDED = ['computerRegister', 'imagingServerRegister', 'getComputerByMac', 'imageRegister', 'computerLogAction']
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -457,7 +457,7 @@ class RpcProxy(RpcProxyI):
 
     def getMyMenuProfile(self, uuid):
         return xmlrpcCleanup(self.getMyMenuTarget(uuid, TYPE_PROFILE))
-    
+
     def setMyMenuProfile(self, target_uuid, params):
         return xmlrpcCleanup(self.setMyMenuTarget(target_uuid, params, TYPE_PROFILE))
 
@@ -532,14 +532,14 @@ class RpcProxy(RpcProxyI):
         db.registerImagingServer(name, url, uuid)
         return [True, "Your Imaging Server has been correctly registered. You can now associate it to the correct entity in the MMC."]
 
-    def getComputerUUID(self, mac):
+    def getComputerByMac(self, mac):
         """
-        Called by the package server, to obtain a computer UUID in exchange of its MAC address
+        Called by the package server, to obtain a computer UUID/shortname/fqdn in exchange of its MAC address
         """
         # TODO, for now return a fake value
-        computer = ComputerManager().getComputerByMac(mac)
+        #MDV/NR computer = ComputerManager().getComputerByMac(mac)
         # return [True, "UUID%s"%computer.id]
-        return [True, "FAKE_UUID"]
+        return [True, {'uuid': "FAKE_UUID", 'mac': mac, 'shortname': "shortname", 'fqdn': "fqdn"}]
 
     def imageRegister(self, imaging_server_uuid, computer_uuid, image_uuid, name, desc, path, checksum, size, creation_date, creator = None):
         """
