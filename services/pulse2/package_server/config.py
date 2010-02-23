@@ -296,9 +296,9 @@ class P2PServerCP(pulse2.utils.Singleton):
             # Boot splash screen
             bootsplash_file = 'bootsplash.xpm'
             # will contain the boot menus, served by tftp
-            bootmenus_folder = os.path.join(base_folder, 'bootmenus')
+            bootmenus_folder = 'bootmenus'
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
-            diskless_folder = os.path.join(base_folder, 'diskless')
+            diskless_folder = 'diskless'
             # diskless kernel
             diskless_kernel = 'kernel'
             # diskless initrd
@@ -306,9 +306,9 @@ class P2PServerCP(pulse2.utils.Singleton):
             # diskless memtest tool
             diskless_memtest = 'memtest'
             # will contain inventories
-            inventories_folder = os.path.join(base_folder, 'inventories')
+            inventories_folder = 'inventories'
             # will contain masters, served by tftp
-            masters_folder = os.path.join(base_folder, 'masters')
+            masters_folder = 'masters'
             # will contain our UUID/MAC Addr cache
             uuid_cache_file = os.path.join(base_folder, 'uuid-cache.txt')
             # Entity UUID
@@ -323,9 +323,9 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option('imaging_api', 'bootsplash_file'):
                 bootsplash_file = self.cp.get('imaging_api', 'bootloader_file')
             if self.cp.has_option('imaging_api', 'bootmenus_folder'):
-                bootmenus_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'bootmenus_folder'))
+                bootmenus_folder = self.cp.get('imaging_api', 'bootmenus_folder')
             if self.cp.has_option('imaging_api', 'diskless_folder'):
-                diskless_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'diskless_folder'))
+                diskless_folder = self.cp.get('imaging_api', 'diskless_folder')
             if self.cp.has_option("imaging_api", 'diskless_kernel'):
                 diskless_kernel = self.cp.get("imaging_api", 'diskless_kernel')
             if self.cp.has_option("imaging_api", 'diskless_initrd'):
@@ -333,9 +333,9 @@ class P2PServerCP(pulse2.utils.Singleton):
             if self.cp.has_option("imaging_api", 'diskless_memtest'):
                 diskless_memtest = self.cp.get("imaging_api", 'diskless_memtest')
             if self.cp.has_option('imaging_api', 'inventories_folder'):
-                inventories_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'inventories_folder'))
+                inventories_folder = self.cp.get('imaging_api', 'inventories_folder')
             if self.cp.has_option('imaging_api', 'masters_folder'):
-                masters_folder = os.path.join(self.base_folder, self.cp.get('imaging_api', 'masters_folder'))
+                masters_folder = self.cp.get('imaging_api', 'masters_folder')
             if self.cp.has_option('imaging_api', 'uuid_cache_file'):
                 uuid_cache_file = os.path.join(self.base_folder, self.cp.get('imaging_api', 'uuid_cache_file'))
             if self.cp.has_option("imaging_api", 'uuid'):
