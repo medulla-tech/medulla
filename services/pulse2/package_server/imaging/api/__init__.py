@@ -56,6 +56,9 @@ class ImagingApi(MyXmlrpc):
     def xmlrpc_getServerDetails(self):
         pass
 
+    def xmlrpc_logClientAction(self):
+        pass
+
     def xmlrpc_imagingServerStatus(self):
         """
         Returns the percentage of remaining size from the part where the images
@@ -226,7 +229,7 @@ class ImagingApi(MyXmlrpc):
         @param menus: list of (uuid, menu) couples
         @type menus: list
 
-        @ret: 
+        @ret:
         """
         for uuid, menu in menus:
             pass
