@@ -33,6 +33,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
+from pulse2.imaging.menu import isMenuStructure, ImagingMenuBuilder
 
 from pulse2.utils import isMACAddress, splitComputerPath
 from pulse2.apis import makeURL
@@ -51,7 +52,7 @@ class ImagingApi(MyXmlrpc):
         self.logger = logging.getLogger()
         self.logger.info("Initializing %s" % self.myType)
         # Read and check configuration
-        self.config = PackageServerConfig()
+        self.config = config
 
     def xmlrpc_getServerDetails(self):
         pass
@@ -222,15 +223,28 @@ class ImagingApi(MyXmlrpc):
             d.addCallbacks(onSuccess, client.onError, errbackArgs = ('imaging.getComputerByMac', MACAddress, 0))
             return d
 
-    def xmlrpc_computersMenuSet(menus):
+    def xmlrpc_computersMenuSet(self, menus):
         """
         Set computers imaging boot menu.
 
         @param menus: list of (uuid, menu) couples
         @type menus: list
 
-        @ret:
+        @ret: list of the computer uuid which menu have not been set because of
+              an error
+        @rtype: list
         """
+        ret = []
         for uuid, menu in menus:
-            pass
-        return 1
+            if not isMenuStructure(menu):
+                ret.append(uuid)
+            else:
+                imb = ImagingMenuBuilder()
+                try:
+                    imenu = imb.make(self.config, uuid, menu)
+                    imenu.write()
+                except Exception, e:
+                    self.logger.error("Error while setting new menu of computer %s: %s" % (uuid, str(e)))
+                    ret.append(uuid)
+                    # FIXME: Rollback to the previous menu
+        return ret
