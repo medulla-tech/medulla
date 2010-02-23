@@ -54,14 +54,18 @@ if (($type == '' && xmlrpc_isComputerRegistered($target_uuid)) || ($type == 'gro
     
     switch($mod) {
         case 'edit':
-            image_edit($type, $images);
+            image_edit($type, $images, $masters);
             break;
         case 'add':
             image_add($type, $target_uuid);
             break;
+        case 'convert':
+            image_convert();
+            break;
         default:
-            if(empty($type))
+            if (empty($type)) {
                 image_list($type, "Available images", $images);
+            }
             image_list($type, "Available masters", $masters, false);
             break;
     }
@@ -91,26 +95,32 @@ function image_add($type, $target_uuid) {
     }
 }
 
-function image_edit($type, $menu) {
+function image_edit($type, $images, $masters) {
 
     $params = getParams();
     $id = $_GET['itemid'];
+    $target_uuid = $_GET['target_uuid'];
     $label = urldecode($_GET['itemlabel']);
-    foreach ($menu[1] as $m) {
+    print $id;
+    $all = array_merge($images[1], $masters[1]);
+    foreach ($all as $m) {
         if ($m['imaging_uuid'] == $id) {
-            $menu = $m;
+            $image = $m;
             continue;
         }
     }
-
-    if(count($_POST) == 0) {
     
+
+    if (count($_POST) == 0) {
         printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
                 
         // get current values
-        $desc = $menu["desc"];
+        $desc = $image["desc"];
         
         $f = new ValidatingForm();
+        $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
+        $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
+        $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
         $f->push(new Table());
         $f->add(
             new TrFormElement(_T("Label", "imaging"), new InputTpl("image_label")),
@@ -120,26 +130,70 @@ function image_edit($type, $menu) {
             new TrFormElement(_T("Description", "imaging"), new InputTpl("image_description")),
             array("value" => $desc)
         );
-        $postInstall = new SelectItem("post_install");
-        $postInstall->setElements(array("none" => "No post-installation script", "sysprep1" => "Sysprep sur la première partition"));
-        $postInstall->setElementsVal(array("none" => "none", "sysprep1" => "sysprep1"));
-        // set selected
-        // ...
-        $f->add(
-            new TrFormElement(_T("Post-installation script", "imaging"), $postInstall)
-        );
+        
         $f->pop();
         $f->addButton("bvalid", _T("Validate"));
+        if ($image['is_master']) {
+            $f->addButton("bconvert_image", _T("Validate and convert to image"));
+        } else {
+            $f->addButton("bconvert_master", _T("Validate and convert to master"));
+        }
         $f->pop();
         $f->display();
-    }
-    else {
-        // set new values
-        foreach($_POST as $key => $value) {
-            // ...
+    } else {
+        if (isset($_POST['bvalid'])) {
+            $item_uuid = $id;
+            $params['name'] = $_POST['image_label'];
+            $params['desc'] = $_POST['image_description'];
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            // goto images list
+            header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        } elseif (isset($_POST['bconvert_master'])) {
+            $f = new ValidatingForm();
+            $f->push(new Table());
+
+            $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
+            $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
+            $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
+            $f->add(new HiddenTpl('image_label'),                   array("value" => $_POST['image_label'],          "hide" => True));
+            $f->add(new HiddenTpl('image_description'),             array("value" => $_POST['image_description'],    "hide" => True));
+            
+            $post_installs = xmlrpc_getAllTargetPostInstallScript($target_uuid);
+            $post_installs = $post_installs[1];
+
+            $elements = array();
+            $elementsVal = array();
+            foreach ($post_installs as $ps) {
+                $elements[$ps['imaging_uuid']] = $ps['default_name'].' / '.$ps['default_desc'];
+                $elementsVal[$ps['imaging_uuid']] = $ps['imaging_uuid'];
+            }
+
+            $postInstall = new SelectItem("post_install");
+            $postInstall->setElements($elements);
+            $postInstall->setElementsVal($elementsVal);
+            $f->add(
+                new TrFormElement(_T("Post-installation script", "imaging"), $postInstall)
+            );
+            $f->pop();
+            $f->addButton("bvalid_master", _T("Validate"));
+            $f->display();
+
+        } elseif (isset($_POST['bvalid_master'])) {
+            $item_uuid = $id;
+            $params['name'] = $_POST['image_label'];
+            $params['desc'] = $_POST['image_description'];
+            $params['post_install_script'] = $_POST['post_install'];
+            $params['is_master'] = True;
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
+        } elseif (isset($_POST['bconvert_image'])) {
+            $item_uuid = $id;
+            $params['name'] = $_POST['image_label'];
+            $params['desc'] = $_POST['image_description'];
+            $params['is_master'] = False;
+            $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params);
+            header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
         }
-        // goto images list
-        header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
     }    
 }
 
@@ -157,6 +211,9 @@ function image_list($type, $title, $images, $actions=true) {
     $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
     $delAction = new ActionPopupItem(_T("Remove from boot menu"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
     $emptyAction = new EmptyActionItem();
+
+    $editActions = array();
+    $editAction = new ActionItem(_T("Edit image", "imaging"), "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit");
     
     // forge params
     list($count, $images) = $images;
@@ -176,6 +233,7 @@ function image_list($type, $title, $images, $actions=true) {
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $image['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($name);
+        $list_params[$i]["target_uuid"] = $_GET['target_uuid'];
         
         // don't show action if image is in bootmenu
         if(!isset($image['menu_item'])) {
@@ -183,6 +241,12 @@ function image_list($type, $title, $images, $actions=true) {
         } else {
             $addActions[] = $delAction;
             $list_params[$i]['mi_itemid'] = $image['menu_item']['imaging_uuid'];
+        }
+
+        if ($_GET['target_uuid'] == $image['mastered_on_target_uuid']) {
+            $editActions[] = $editAction;
+        } else {
+            $editActions[] = $emptyAction;
         }
         
         # TODO no label in image!
@@ -200,12 +264,12 @@ function image_list($type, $title, $images, $actions=true) {
     $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
     $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));    
     $l->addActionItemArray($addActions);
-    $l->addActionItem(
+/* TODO!    $l->addActionItem(
         new ActionPopupItem(_T("Create bootable iso", "imaging"), 
         "images_iso", "backup", "image", "base", "computers")
-    );
+    );*/
     // if not in boot menu
-    if($actions) {
+    if ($actions) {
         $l->addActionItem(
             new ActionItem(_T("Edit image", "imaging"), 
             "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
@@ -214,6 +278,8 @@ function image_list($type, $title, $images, $actions=true) {
             new ActionPopupItem(_T("Delete", "imaging"), 
             "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete")
         );
+    } else {
+        $l->addActionItemArray($editActions);
     }
     $l->disableFirstColumnActionLink();
     $l->display();

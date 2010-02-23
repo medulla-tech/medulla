@@ -108,6 +108,10 @@ function xmlrpc_delImageToLocation($item_uuid, $loc_id) {
     return xmlCall("imaging.delImageToLocation", array($item_uuid, $loc_id));
 }
 
+function xmlrpc_editImage($item_uuid, $target_uuid, $params) {
+    return xmlCall("imaging.editImage", array($item_uuid, $target_uuid, $params));
+}
+
 
 /* BootServices */
 function xmlrpc_getPossibleBootServices($id, $start = 0, $end = -1, $filter = '') {
@@ -210,6 +214,10 @@ function xmlrpc_setImagingServerConfig($location, $config) {
 }
 
 /* postinstall scripts */
+function xmlrpc_getAllTargetPostInstallScript($target_uuid, $start = 0, $end = -1, $filter = '') {
+    return xmlCall("imaging.getAllTargetPostInstallScript", array($target_uuid, $start, $end, $filter));
+}
+
 function xmlrpc_getAllPostInstallScripts($location, $start = 0, $end = -1, $filter = '') {
     return xmlCall("imaging.getAllPostInstallScripts", array($location, $start, $end, $filter));
 }
