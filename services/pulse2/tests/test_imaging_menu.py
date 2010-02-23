@@ -43,16 +43,17 @@ menu = { 'timeout' : 20,
          'default_item_wol' : 1,
          'bootservices' : { 1: { 'name' : u'Continue Normal Startup',
                                  'desc' : u'Start as usual',
-                                 'value' : u'root (hd0)\r\nchainloader +1', 
+                                 'value' : u'root (hd0)\nchainloader +1',
                                  'hidden' : 0,
                                  'hidden_WOL' : 0,
-                                 'value' : u'root (hd0)\r\nchainloader +1' },
+                                 'value' : u'root (hd0)\nchainloader +1' },
                            2: { 'name' : u'Register a Pulse 2 Client',
                                 'desc' : u'Record this computer in Pulse 2 Server',
                                 'value' : u'identify L=##PULSE2_LANG## P=none\nreboot' }
                             },
-         'images' : { 5 : { 'name' : u'...',
-                            'desc' : u'...',
+         'images' : { 5 : { 'uuid': u'302c19d2-212b-4b9a-b04e-4fced0b83466',
+                            'name' : u'Image computer.example.net',
+                            'desc' : u'(Thu Dec  3 15:20:02 2009)',
                             'post_install_script' : { 'id' : id,
                                                       'name' : u'...',
                                                       'desc' : u'...',
@@ -77,7 +78,7 @@ class MenuTests(unittest.TestCase):
         m = ImagingMenuBuilder(config, 'dfb7cadf-2c0a-4dd2-a852-4558ffd5de99', menu)
         im = m.make()
         grubmenu = im.buildMenu()
-        self.assertEqual(len(grubmenu.split('\n')), 17)
+        self.assertEqual(len(grubmenu.split('\n')), 22)
 
 
 if __name__ == '__main__':
