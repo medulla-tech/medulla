@@ -25,6 +25,8 @@
 -- ----------------------------------------------------------------------
 
 SET storage_engine=INNODB;
+SET GLOBAL character_set_server=UTF8;
+SET SESSION character_set_server=UTF8;
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
