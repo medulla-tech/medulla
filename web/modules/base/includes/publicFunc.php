@@ -48,4 +48,13 @@ function _base_delGroup($group) {
     xmlCall("base.delGroup", $group);
 }
 
+function _base_completeUserEntry(&$entry) {
+    $attrs = array("title", "mail", "mobile", "facsimileTelephoneNumber", "homePhone");
+    foreach($attrs as $attr) {
+        if (!isset($entry[$attr])) {
+            $entry[$attr] = array(null);
+        }
+    }
+}
+
 ?>
